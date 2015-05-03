@@ -1,4 +1,11 @@
 ================================================================
+NEATEN
+
+* prune pix
+* makefile go/d/rs stuff -> language-comparisons
+* catc.c/catc0.c -> language-comparisons
+
+================================================================
 FEATURES
 !! sort -nr !!
 !! quantiles !!

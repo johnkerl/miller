@@ -14,9 +14,10 @@ the principles of <i>touching each byte as few times as possible</i>, and
 free-on-last-use memory-management pattern which works well enough.  As well,
 Miller doesn&rsquo;t require a complex collections library: mostly simple hash
 maps, hash sets, and linked lists which aren&rsquo;t difficult to code.
-Moreover, though, Miller&rsquo;s primary data structure, the <tt>lrec_t</tt>
-(xxx insert xref), is hand-tuned to Miller&rsquo;s use case and would have
-required hand-coding in any case.
+Moreover, though, Miller&rsquo;s primary data structure, the
+<a href="https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h"><tt>lrec_t</tt></a>,
+is hand-tuned to Miller&rsquo;s use case and would have required hand-coding in
+any case.
 
 <h1>C vs. Go, D, Rust, etc.; C is fast</h1>
 
@@ -197,4 +198,5 @@ reader_t* reader_csv_alloc(...) {
   ...
 </pre>
 
-<p/>xxx insert gh hrefs
+<p/>More details are at
+<a href="https://github.com/johnkerl/miller/tree/master/c/containers">https://github.com/johnkerl/miller/tree/master/c/containers</a>.

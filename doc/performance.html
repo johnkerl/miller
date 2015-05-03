@@ -56,7 +56,7 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
 <br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
 <br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
       <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
       <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
       <br/> <br/> <br/> <br/> <br/> <br/>
@@ -91,11 +91,6 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 </pre>
 </div>
 <p/>
@@ -109,11 +104,6 @@ eks,pan,2,0.7586799647899636,0.5221511083334797
 wye,wye,3,0.20460330576630303,0.33831852551664776
 eks,wye,4,0.38139939387114097,0.13418874328430463
 wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
 </pre>
 </div>
 <p/>
@@ -133,9 +123,10 @@ linearities and so I produced no file-size-dependent plots for your viewing plea
 The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
 were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
 nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
-line-printer (source xxx here) which is intermediate between Miller (which is
-record-aware as well as line-aware) and <tt>cat</tt> (which is only
-byte-aware).
+line-printer (<a
+href="https://github.com/johnkerl/miller/blob/master/c/tools/catc.c">source
+here</a>) which is intermediate between Miller (which is record-aware as well
+as line-aware) and <tt>cat</tt> (which is only byte-aware).
 
 <h1>Raw results</h1>  <a id="Raw_results"/>
 Note that for CSV data, the command is <tt>mlr --csv ...</tt> rather than <tt>mlr ...</tt>.

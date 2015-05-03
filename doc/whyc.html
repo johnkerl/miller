@@ -56,7 +56,7 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
 <br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
 <br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
       <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
       <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
       <br/> <br/> <br/> <br/> <br/> <br/>
@@ -94,9 +94,10 @@ the principles of <i>touching each byte as few times as possible</i>, and
 free-on-last-use memory-management pattern which works well enough.  As well,
 Miller doesn&rsquo;t require a complex collections library: mostly simple hash
 maps, hash sets, and linked lists which aren&rsquo;t difficult to code.
-Moreover, though, Miller&rsquo;s primary data structure, the <tt>lrec_t</tt>
-(xxx insert xref), is hand-tuned to Miller&rsquo;s use case and would have
-required hand-coding in any case.
+Moreover, though, Miller&rsquo;s primary data structure, the
+<a href="https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h"><tt>lrec_t</tt></a>,
+is hand-tuned to Miller&rsquo;s use case and would have required hand-coding in
+any case.
 
 <h1>C vs. Go, D, Rust, etc.; C is fast</h1>  <a id="C_vs._Go,_D,_Rust,_etc.;_C_is_fast"/>
 <p/>I love Go (<a href="http://golang.org">https://golang.org</a>): I think
@@ -271,7 +272,8 @@ reader_t* reader_csv_alloc(...) {
   ...
 </pre>
 
-<p/>xxx insert gh hrefs
+<p/>More details are at
+<a href="https://github.com/johnkerl/miller/tree/master/c/containers">https://github.com/johnkerl/miller/tree/master/c/containers</a>.
   </td>
 
 </table>

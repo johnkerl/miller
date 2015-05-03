@@ -5,9 +5,9 @@ POKI_PUT_TOC_HERE
 Test data were of the form
 
 <table><tr><td>
-POKI_INCLUDE_ESCAPED(../c2/data/small)HERE
+POKI_INCLUDE_ESCAPED(./data/small)HERE
 </td><td>
-POKI_INCLUDE_ESCAPED(../c2/data/small.csv)HERE
+POKI_INCLUDE_ESCAPED(./data/small.csv)HERE
 </td></tr></table>
 
 for DKVP and CSV, respectively, where fields <tt>a</tt> and <tt>b</tt> take one of five text values,
@@ -25,9 +25,10 @@ linearities and so I produced no file-size-dependent plots for your viewing plea
 The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
 were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
 nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
-line-printer (source xxx here) which is intermediate between Miller (which is
-record-aware as well as line-aware) and <tt>cat</tt> (which is only
-byte-aware).
+line-printer (<a
+href="https://github.com/johnkerl/miller/blob/master/c/tools/catc.c">source
+here</a>) which is intermediate between Miller (which is record-aware as well
+as line-aware) and <tt>cat</tt> (which is only byte-aware).
 
 <h1>Raw results</h1>
 
