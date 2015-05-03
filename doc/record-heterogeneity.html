@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-record-heterogeneity.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <title> Record-heterogeneity </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/>User info:
+<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>Developer info:
+<br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <center> <titleinbody> Record-heterogeneity </titleinbody> </center>
+    <p>
+    
+<!-- BODY COPIED FROM content-for-record-heterogeneity.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#For_I/O">For I/O</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#CSV_and_pretty-print">CSV and pretty-print</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Key-value-pair,_vertical-tabular,_and_index-numbered_formats">Key-value-pair, vertical-tabular, and index-numbered formats</a><br/>
+&bull;&nbsp;<a href="#For_processing">For processing</a><br/>
+</div>
+<p/>
+
+We think of CSV tables as rectangular: if there are 17 columns in the header then there are 17 columns for every row, else the data have a formatting error.
+
+<p/>But heterogeneous data abound (today&rsquo;s no-SQL databases for example). Miller handles this.
+
+<h1>For I/O</h1>  <a id="For_I/O"/>
+<h2>CSV and pretty-print</h2>  <a id="CSV_and_pretty-print"/>
+Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get standard CSV as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. For example:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ocsv cat data/het.dkvp
+resource,loadsec,ok
+/path/to/file,0.45,true
+
+record_count,resource
+100,/path/to/file
+
+resource,loadsec,ok
+/path/to/second/file,0.32,true
+
+record_count,resource
+150,/path/to/second/file
+
+resource,loadsec,ok
+/some/other/path,0.97,false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/het.dkvp
+resource      loadsec ok
+/path/to/file 0.45    true
+
+record_count resource
+100          /path/to/file
+
+resource             loadsec ok
+/path/to/second/file 0.32    true
+
+record_count resource
+150          /path/to/second/file
+
+resource         loadsec ok
+/some/other/path 0.97    false
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/> You may also find Miller&rsquo;s <tt>group-like</tt> feature handy (see also
+<a href="reference.html">Reference</a>):
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv group-like data/het.dkvp
+resource=/path/to/file,loadsec=0.45
+record_count=100,resource=/path/to/file
+record_count=150,resource=/path/to/second/file
+
+resource=/path/to/file,loadsec=0.45,ok=true
+resource=/path/to/second/file,loadsec=0.32,ok=true
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint group-like data/het.dkvp
+resource             loadsec ok
+/path/to/file        0.45    true
+/path/to/second/file 0.32    true
+/some/other/path     0.97    false
+
+record_count resource
+100          /path/to/file
+150          /path/to/second/file
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<h2>Key-value-pair, vertical-tabular, and index-numbered formats</h2>  <a id="Key-value-pair,_vertical-tabular,_and_index-numbered_formats"/>
+For these formats, record-heterogeneity comes naturally:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --onidx --ofs ' ' cat data/het.dkvp
+/path/to/file 0.45 true
+100 /path/to/file
+/path/to/second/file 0.32 true
+150 /path/to/second/file
+/some/other/path 0.97 false
+</pre>
+</div>
+<p/>
+</td> </tr><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab cat data/het.dkvp
+resource /path/to/file
+loadsec  0.45
+ok       true
+
+record_count 100
+resource     /path/to/file
+
+resource /path/to/second/file
+loadsec  0.32
+ok       true
+
+record_count 150
+resource     /path/to/second/file
+
+resource /some/other/path
+loadsec  0.97
+ok       false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab group-like data/het.dkvp
+resource /path/to/file
+loadsec  0.45
+ok       true
+
+resource /path/to/second/file
+loadsec  0.32
+ok       true
+
+resource /some/other/path
+loadsec  0.97
+ok       false
+
+record_count 100
+resource     /path/to/file
+
+record_count 150
+resource     /path/to/second/file
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<h1>For processing</h1>  <a id="For_processing"/>
+<p/> Miller operates on specified fields and takes the rest along: for example if you are sorting on the
+<tt>count</tt> field then all records in the input stream must have a <tt>count</tt> field but the other fields can
+vary, and moreover the sorted-on field name(s) don&rsquo;t need to be in the same position on each line:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/sort-het.dkvp
+count=500,color=green
+count=600
+status=ok,count=250,hours=0.22
+status=ok,count=200,hours=3.4
+count=300,color=blue
+count=100,color=green
+count=450
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort count data/sort-het.dkvp
+count=100,color=green
+status=ok,count=200,hours=3.4
+status=ok,count=250,hours=0.22
+count=300,color=blue
+count=450
+count=500,color=green
+count=600
+</pre>
+</div>
+<p/>
+</td></tr></table>
+  </td>
+
+</table>
+</body>
+</html>

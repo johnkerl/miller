@@ -1,0 +1,26 @@
+I build with
+<pre>
+gcc -std=gnu99 -Wall -Werror -O3
+</pre>
+
+and I&rsquo;ve done so successfully on Ubuntu 12.04 LTS, SELinux, and Darwin (MacOS
+Yosemite). I also use <a href="http://valgrind.org/">valgrind</a> for detection
+of memory leaks and runtime memory-access errors.
+
+<p/> In addition to GCC, the standard C library, and <tt>lex</tt> (all part of
+the Linux/Darwin distributions), Miller uses the following dependencies, which
+are included within the <a href="https://github.com/johnkerl/miller">Miller source tree</a>:
+<ul>
+<li> <a href="http://www.jera.com/techinfo/jtns/jtn002.html">MinUnit</a>  for unit-testing,
+with as-is-no-warranty license <a href="http://www.jera.com/techinfo/jtns/jtn002.html#License">http://www.jera.com/techinfo/jtns/jtn002.html#License</a>.
+<li> The <a href="http://www.hwaci.com/sw/lemon/">Lemon parser-generator</a>, the author of which explicitly disclaims
+copyright.
+</ul>
+
+Lastly, this documentation pageset is built using Poki:
+<a href="http://johnkerl.org/poki/doc">docs here</a>,
+<a href="https://github.com/johnkerl/poki">source code here</a>.
+
+<p/> Miller uses MinUnit unit-test for key classes including <tt>lrec_t</tt>.
+The remaining coverage (which is exhaustive) is regression coverage of Miller
+using all data-transform options and all I/O-format pairs.

@@ -1,0 +1,97 @@
+POKI_PUT_TOC_HERE
+
+<h1>CSV/TSV</h1> When <tt>mlr</tt> is invoked with the <tt>--csv</tt> option,
+key names are found on the first record and values are taken from subsequent
+records.  This includes the case of CSV-formatted files.  See
+POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
+changes of field names within a single data stream.
+
+<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt> to convert TSV to
+CSV, use <tt>--ifs TAB --ofs ,</tt> etc.  (See also
+POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
+
+<h1>Pretty-printed</h1>
+Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --ocsv cat data/small}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td></tr></table>
+
+Note that while Miller is a line-at-a-time processor and retains input lines in
+memory only where necessary (e.g. for sort), pretty-print output requires it to
+accumulate all input lines (so that it can compute maximum column widths)
+before producing any output. This has two consequences: (a) pretty-print output
+won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
+an end-of-file marker which never arrives; (b) pretty-print output for large
+files is constrained by available machine memory.
+
+<p/> See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller
+handles changes of field names within a single data stream.
+
+<h1>Key-value pairs</h1>
+Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
+
+POKI_RUN_COMMAND{{mlr cat data/small}}HERE
+
+Such data are easy to generate, e.g. in Ruby with
+<pre>
+  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+</pre>
+or <tt>print</tt> statements in various languages.
+
+<p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, Miller handles
+changes of field names within the same data stream. But using DKVP format this is particularly
+natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
+of lines such as
+
+<div class="pokipanel">
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</div>
+
+etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
+to analyze my logs.
+
+<p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
+the default equals-sign and comma.
+
+<h1>Index-numbered (toolkit style)</h1>
+
+With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
+assigns integer field names starting with 1. This recapitulates Unix-toolkit
+behavor.
+
+<p/> Example with index-numbered output:
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{cat data/small}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --onidx --ofs ' ' cat data/small}}HERE
+</td> </tr></table>
+
+<p/> Example with index-numbered input:
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt}}HERE
+</td> </tr></table>
+
+<h1>Vertical tabular</h1>
+
+<p/>This is perhaps most useful for looking a very wide and/or multi-column
+data which causes line-wraps on the screen (but see also <a
+href="https://github.com/twosigma/ngrid">https://github.com/twosigma/ngrid</a>
+for an entirely different, very poweful option). Namely:
+
+<table><tr> <td>
+POKI_INCLUDE_ESCAPED(system-file-opprint-example.txt)HERE
+</td></tr> <tr><td>
+POKI_INCLUDE_ESCAPED(system-file-oxtab-example.txt)HERE
+</td> </tr></table>
+

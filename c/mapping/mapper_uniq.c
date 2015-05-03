@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include "lib/mlrutil.h"
+#include "containers/sllv.h"
+#include "containers/lhmslv.h"
+#include "containers/lhmsv.h"
+#include "containers/mixutil.h"
+#include "mapping/mappers.h"
+#include "cli/argparse.h"
+
+// ================================================================
+typedef struct _mapper_uniq_state_t {
+	slls_t* pgroup_by_field_names;
+	int show_counts;
+	lhmslv_t* pcounts_by_group;
+} mapper_uniq_state_t;
+
+// ----------------------------------------------------------------
+sllv_t* mapper_uniq_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_uniq_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+
+		unsigned long long* pcount = lhmslv_get(pstate->pcounts_by_group, pgroup_by_field_values);
+		if (pcount == NULL) {
+			pcount = mlr_malloc_or_die(sizeof(unsigned long long));
+			*pcount = 1LL;
+			lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+		} else {
+			(*pcount)++;
+		}
+
+		lrec_free(pinrec);
+		return NULL;
+	}
+	else {
+		sllv_t* poutrecs = sllv_alloc();
+
+		for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
+			lrec_t* poutrec = lrec_unbacked_alloc();
+
+			slls_t* pgroup_by_field_values = pa->key;
+
+			sllse_t* pb = pstate->pgroup_by_field_names->phead;
+			sllse_t* pc =         pgroup_by_field_values->phead;
+			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+				lrec_put(poutrec, pb->value, pc->value, 0);
+			}
+
+			if (pstate->show_counts) {
+				unsigned long long* pcount = pa->value;
+				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), LREC_FREE_ENTRY_VALUE);
+			}
+
+			sllv_add(poutrecs, poutrec);
+		}
+		sllv_add(poutrecs, NULL);
+		return poutrecs;
+	}
+}
+
+// ----------------------------------------------------------------
+static void mapper_uniq_free(void* pvstate) {
+	mapper_uniq_state_t* pstate = pvstate;
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the void-star payload
+	lhmslv_free(pstate->pcounts_by_group);
+
+	// xxx temp
+	pstate->pgroup_by_field_names = NULL;
+	pstate->pcounts_by_group = NULL;
+}
+
+mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_uniq_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_uniq_state_t));
+
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->show_counts           = show_counts;
+	pstate->pcounts_by_group      = lhmslv_alloc();
+
+	pmapper->pvstate              = pstate;
+	pmapper->pmapper_process_func = mapper_uniq_func;
+	pmapper->pmapper_free_func    = mapper_uniq_free;
+
+	return pmapper;
+}
+
+// ----------------------------------------------------------------
+void mapper_uniq_usage(char* argv0, char* verb) {
+	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(stdout, "-g {d,e,f}    Group-by-field names for uniq counts\n");
+	fprintf(stdout, "-c            Show repeat counts in addition to unique values\n");
+}
+
+mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* pgroup_by_field_names = NULL;
+	int     show_counts     = FALSE;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
+	ap_define_true_flag(pstate, "-c", &show_counts);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_uniq_usage(argv[0], verb);
+		return NULL;
+	}
+
+	if (pgroup_by_field_names == NULL) {
+		mapper_uniq_usage(argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_uniq_alloc(pgroup_by_field_names, show_counts);
+}
+
+mapper_setup_t mapper_uniq_setup = {
+	.verb = "uniq",
+	.pusage_func = mapper_uniq_usage,
+	.pparse_func = mapper_uniq_parse_cli
+};

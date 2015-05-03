@@ -1,0 +1,17 @@
+<ul>
+
+<li/> Miller&rsquo;s record, field, and pair separators can only be single
+characters (e.g. newline, comma, equals sign), optionally allowing repeats on
+input (e.g. multiple spaces treated as one). It would be nice if strings were
+supported, e.g. <tt>"\n\n"</tt> paragraph-oriented record separation, or mix of
+space and tab for field separation.
+
+<li/> Quoting isn&rsquo;t supported in CSV. For example, Miller splits
+<tt>a,"b,c",d</tt> as <tt>a</tt> then <tt>"b</tt> then <tt>c"</tt> then
+<tt>d</tt>.
+
+<li/> String-oriented functions such as <tt>sub</tt>, and Miller&rsquo;s
+<tt>filter</tt> could be made far more powerful if a regular-expression library
+were included.
+
+</ul>

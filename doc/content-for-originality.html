@@ -1,0 +1,69 @@
+<p/> It isn&rsquo;t. Miller is one of many, many participants in the
+online-analytical-processing culture. Other key participants include
+<tt>awk</tt>, SQL, spreadsheets, etc. etc.  etc.  Far from being an original
+concept, Miller explicitly strives to imitate several existing tools:
+
+<p/>
+<boldmaroon>Unix toolkit</boldmaroon>: Intentional similarities as described in
+POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE.
+
+<p/>Recipes abound for command-line data analysis using the Unix toolkit. Here are just a couple of my favorites:
+<ul>
+<li/> <a href="http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line">http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line</a>
+<li/> <a href="http://www.gregreda.com/2013/07/15/unix-commands-for-data-science">http://www.gregreda.com/2013/07/15/unix-commands-for-data-science</a>
+</ul>
+
+<p/> <boldmaroon>RecordStream</boldmaroon>: Miller owes particular inspiration
+to <a href="https://github.com/benbernard/RecordStream">RecordStream</a>. The
+key difference is that RecordStream is a Perl-based tool for manipulating JSON
+(including requiring it to separately manipulate other formats such as CSV into
+and out of JSON), while Miller is fast C which handles its formats natively.
+The similarities include the <tt>sort</tt>, <tt>stats1</tt> (analog of
+RecordStream&rsquo;s <tt>collate</tt>), and <tt>delta</tt> operations, as well
+as <tt>filter</tt> and <tt>put</tt>, and pretty-print formatting.
+
+<p/> <boldmaroon>stats_m</boldmaroon>: A third source of lineage is my Python
+<a href="https://github.com/johnkerl/scripts-math/tree/master/stats">stats_m</a>
+module.  This includes simple single-pass algorithms which form Miller&rsquo;s
+<tt>stats1</tt> and <tt>stats2</tt> subcommands.
+
+<p/> <boldmaroon>SQL</boldmaroon>: Fourthly, Miller&rsquo;s <tt>group-by</tt> command
+name is from SQL, as is the term <tt>aggregate</tt>.
+
+<p/> <boldmaroon>Added value</boldmaroon>:
+Miller&rsquo;s added values include:
+<ul>
+<li> Name-indexing, compared to the Unix toolkit&rsquo;s positional indexing.
+<li> Raw speed, compared to <tt>awk</tt>, RecordStream, <tt>stats_m</tt>, or various other kinds of Python/Ruby/etc. scripts one can easily create.
+<li> Ability to handle text files on the Unix pipe, without need for creating database tables, compared to SQL databases.
+</ul>
+
+<p/><boldmaroon>jq</boldmaroon>: Miller does for name-indexed text what <a
+href="http://stedolan.github.io/jq/">jq</a> does for JSON. If you&rsquo;re not
+already familiar with <tt>jq</tt>, please check it out!
+
+<p/><boldmaroon>What about DOTADIW?</boldmaroon> One of the key points of the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a> is
+that a tool should do one thing and do it well.  Hence <tt>sort</tt> and
+<tt>cut</tt> do just one thing. Why does Miller put <tt>awk</tt>-like
+processing, a few SQL-like operations, and statistical reduction all into one
+tool (see also POKI_PUT_LINK_FOR_PAGE(reference.html)HERE)?  This is a fair
+question. First note that many standard tools, such as <tt>awk</tt> and
+<tt>perl</tt>, do quite a few things &mdash; as does <tt>jq</tt>.  But I could
+have pushed for putting format awareness and name-indexing options into
+<tt>cut</tt>, <tt>awk</tt>, and so on (so you could do <tt>cut -f
+hostname,uptime</tt> or <tt>awk '{sum += $x*$y}END{print sum}'</tt>).  Patching
+<tt>cut</tt>, <tt>sort</tt>, etc. on multiple operating systems is a
+non-starter in terms of uptake.  Moreover, it makes sense for me to have Miller
+be a tool which collects together format-aware record-stream processing into
+one place, with good reuse of Miller-internal library code.
+
+<p/> <boldmaroon>No, really, why one more command-line data-manipulation
+tool?</boldmaroon> I wrote Miller because I was frustrated with tools like
+<tt>grep</tt>, <tt>sed</tt>, and so on being <i>line-aware</i> without being
+<i>format-aware</i>. The single most poignant example I can think of is seeing
+people grep data lines out of their CSV files and sadly losing their header
+lines.  While some lighter-than-SQL processing is very nice to have, at core I
+wanted the format-awareness of <a
+href="https://github.com/benbernard/RecordStream">RecordStream</a> combined
+with the raw speed of the Unix toolkit. Miller does precisely that.

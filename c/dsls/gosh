@@ -1,0 +1,7 @@
+echo; ./pdm '$y=rand()'
+echo; ./pdm '$y=2*sum($a)'
+echo; ./pdm '$y=2*sum($a,$b)'
+echo; ./pdm '$y=2*sum($a,$b,$c)'
+echo; ./pdm '$x=3*$y**4/$z'
+echo; ./pdm '$y=2*log($x)'
+echo; ./pdm '$y=2*log($x);$z=$y**2'

@@ -1,0 +1,4 @@
+% cut  -d, -f 11,17 mydata.csv
+% sort -t, -k 11,17 mydata.csv
+% awk -F, '{print $7+2.7*$8}' mydata.csv
+% awk -F, '$15 != "down" {print}' mydata.csv

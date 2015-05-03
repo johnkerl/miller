@@ -1,0 +1,1601 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-reference.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <title> Reference </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/>User info:
+<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>Developer info:
+<br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <center> <titleinbody> Reference </titleinbody> </center>
+    <p>
+    
+<!-- BODY COPIED FROM content-for-reference.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#Command_overview">Command overview</a><br/>
+&bull;&nbsp;<a href="#On-line_help">On-line help</a><br/>
+&bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
+&bull;&nbsp;<a href="#I/O_options">I/O options</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
+&bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-by">group-by</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-like">group-like</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#having-fields">having-fields</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#head">head</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#histogram">histogram</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats1">stats1</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats2">stats2</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#step">step</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#tac">tac</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#tail">tail</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
+&bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
+</div>
+<p/>
+
+<h1>Command overview</h1>  <a id="Command_overview"/>
+<p>
+Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>tail</tt>, <tt>cut</tt>,
+<tt>sort</tt>, etc., Miller has subcommands, invoked as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr tac *.dat
+mlr cut --complement -f os_version *.dat
+mlr sort hostname,uptime *.dat
+</pre>
+</div>
+<p/>
+
+<p/>These falls into categories as follows:
+
+<table border=1>
+  <tr bgcolor=#e8d9bc>
+    <th>Commands </th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="#cat"><tt>cat</tt></a>,
+      <a href="#cut"><tt>cut</tt></a>,
+      <a href="#head"><tt>head</tt></a>,
+      <a href="#sort"><tt>sort</tt></a>,
+      <a href="#tac"><tt>tac</tt></a>,
+      <a href="#tail"><tt>tail</tt></a>,
+      <a href="#top"><tt>top</tt></a>,
+      <a href="#uniq"><tt>uniq</tt></a>
+    </td>
+    <td> Analogs of their Unix-toolkit namesakes, discussed below as well as in
+    <a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a> </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#filter"><tt>filter</tt></a>,
+      <a href="#put"><tt>put</tt></a>,
+      <a href="#step"><tt>step</tt></a>
+    </td>
+    <td> <tt>awk</tt>-like functionality </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#histogram"><tt>histogram</tt></a>,
+      <a href="#stats1"><tt>stats1</tt></a>,
+      <a href="#stats2"><tt>stats2</tt></a>
+    </td>
+    <td> Statistically oriented </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#group-by"><tt>group-by</tt></a>,
+      <a href="#group-like"><tt>group-like</tt></a>,
+      <a href="#having-fields"><tt>having-fields</tt></a>
+    </td>
+    <td> Particularly oriented toward <a href="record-heterogeneity.html">Record-heterogeneity</a>, although
+      all Miller commands can handle heterogeneous records
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#count-distinct"><tt>count-distinct</tt></a>,
+      <a href="#rename"><tt>rename</tt></a>
+    </td>
+    <td> These draw from other sources (see also <a href="originality.html">How original is Miller?</a>):
+      <a href="#count-distinct"><tt>count-distinct</tt></a> is SQL-ish, and
+      <a href="#rename"><tt>rename</tt></a> can be done by <tt>sed</tt> (which does it faster:
+        see <a href="performance.html">Performance</a>).
+    </td>
+  </tr>
+
+</table>
+
+<h1>On-line help</h1>  <a id="On-line_help"/>
+<p/>Examples:<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help | fold -s
+Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
+verbs:
+cat count-distinct cut filter group-by group-like having-fields head histogram
+put rename reorder sort stats1 stats2 step tac tail top uniq
+Please use "mlr {verb name} --help" for verb-specific help.
+
+I/O options:
+  --rs      --irs     --ors
+  --fs      --ifs     --ofs    --repifs
+  --ps      --ips     --ops
+  --dkvp    --idkvp   --odkvp
+  --nidx    --inidx   --onidx
+  --csv     --icsv    --ocsv
+  --pprint  --ipprint --opprint --right
+  --xtab    --ixtab   --oxtab
+  --ofmt
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort --help
+Usage: mlr sort {comma-separated field names}
+</pre>
+</div>
+<p/>
+
+<h1>then-chaining</h1>  <a id="then-chaining"/>
+<p/>
+In accord with the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
+Miller. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version *.dat | mlr sort hostname,uptime
+</pre>
+</div>
+<p/>
+
+<p/>
+For better performance (avoiding redundant string-parsing and string-formatting
+when you pipe Miller commands together) you can, if you like, instead simply
+chain commands together using the <tt>then</tt> keyword:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version then sort hostname,uptime *.dat
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h1>I/O options</h1>  <a id="I/O_options"/>
+<!-- ================================================================ -->
+<h2>Formats</h2>  <a id="Formats"/>
+<p/> Options:
+
+<pre>
+  --dkvp    --idkvp   --odkvp
+  --nidx    --inidx   --onidx
+  --csv     --icsv    --ocsv
+  --pprint  --ipprint --ppprint --right
+  --xtab    --ixtab   --oxtab
+</pre>
+
+<p/> These are as discussed in <a href="file-formats.html">File formats</a>, with the exception of <tt>--right</tt>
+which makes pretty-printed output right-aligned:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --right cat data/small
+  a   b i                   x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>Additional notes:
+
+<ul>
+
+<li/> Use <tt>--csv</tt>, <tt>--pprint</tt>, etc. when the input and output formats are the same.
+
+<li/> Use <tt>--icsv --opprint</tt>, etc. when you want format conversion as part of what Miller does to your data.
+
+<li/> DKVP (key-value-pair) format is the default for input and output. So,
+<tt>--oxtab</tt> is the same as <tt>--idkvp --oxtab</tt>.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Record/field/pair separators</h2>  <a id="Record/field/pair_separators"/>
+<p/> Miller has record separators <tt>IRS</tt> and <tt>ORS</tt>, field
+separators <tt>IFS</tt> and <tt>OFS</tt>, and pair separators <tt>IPS</tt> and
+<tt>OPS</tt>.  For example, in the DKVP line <tt>a=1,b=2,c=3</tt>, the record
+separator is newline, field separator is comma, and pair separator is the
+equals sign. These are the default values.
+
+<p/> Options:
+<pre>
+  --rs --irs --ors
+  --fs --ifs --ofs --repifs
+  --ps --ips --ops
+</pre>
+
+<ul>
+
+<li/> You can change a separator from input to output via e.g. <tt>--ifs =
+--ofs :</tt>. Or, you can specify that the same separator is to be used for
+input and output via e.g. <tt>--fs :</tt>.
+
+<li/> The pair separator is only relevant to DKVP format.
+
+<li/> Pretty-print and xtab formats ignore the separator arguments altogether.
+
+<li/> The <tt>--repifs</tt> means that multiple successive occurrences of the
+field separator count as one.  For example, in CSV data we often signify nulls
+by empty strings, e.g. <tt>2,9,,,,,6,5,4</tt>. On the other hand, if the field
+separator is a space, it might be more natural to parse <tt>2 4    5</tt> the
+same as <tt>2 4 5</tt>: <tt>--repifs --ifs ' '</tt> lets this happen.  In fact,
+the <tt>--ipprint</tt> option above is internally implemented in terms of
+<tt>--repifs</tt>.
+
+<li/> Just write out the desired separator, e.g. <tt>--ofs '|'</tt>. But you may use
+the symbolic names <tt>NEWLINE</tt>, <tt>TAB</tt>, <tt>PIPE</tt>, or <tt>SEMICOLON</tt> if you like.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Number formatting</h2>  <a id="Number_formatting"/>
+Options:
+<pre>
+  --ofmt {format string}
+</pre>
+
+<p/> This is the global number format for commands which generate numeric
+output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
+<tt>step</tt>. Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
+</pre>
+</div>
+<p/>
+
+<p/> These are just C <tt>printf</tt> formats applied to double-precision
+numbers.  Please don&rsquo;t use <tt>%s</tt> or <tt>%d</tt>. Additionally, if
+you use leading with (e.g. <tt>%18.12lf</tt>) then the output will contain
+embedded whitespace, which may not be what you want if you pipe the output to
+something else.
+
+<!-- ================================================================ -->
+<h1>Data transformations</h1>  <a id="Data_transformations"/>
+<!-- ================================================================ -->
+<h2>cat</h2>  <a id="cat"/>
+<p/> Most useful for format conversions (see
+<a href="file-formats.html">File formats</a>), and concatenating multiple
+same-schema CSV files to have the same header:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat a.csv
+a,b,c
+1,2,3
+4,5,6
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat b.csv
+a,b,c
+7,8,9
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv cat a.csv b.csv
+a,b,c
+1,2,3
+4,5,6
+7,8,9
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --oxtab cat a.csv b.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+a 7
+b 8
+c 9
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>count-distinct</h2>  <a id="count-distinct"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count-distinct --help
+Usage: mlr count-distinct [options]
+-f {a,b,c}   Field names for distinct count.
+</pre>
+</div>
+<p/>
+
+<p/>xxx great oppo for sort -nr
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count-distinct -f a,b then sort count data/medium
+a=eks,b=zee,count=357
+a=hat,b=pan,count=363
+a=eks,b=pan,count=371
+a=wye,b=wye,count=377
+a=hat,b=hat,count=381
+a=hat,b=zee,count=385
+a=wye,b=zee,count=385
+a=wye,b=eks,count=386
+a=zee,b=pan,count=389
+a=hat,b=eks,count=389
+a=zee,b=eks,count=391
+a=wye,b=pan,count=392
+a=pan,b=wye,count=395
+a=zee,b=zee,count=403
+a=eks,b=wye,count=407
+a=zee,b=hat,count=409
+a=eks,b=eks,count=413
+a=pan,b=zee,count=413
+a=pan,b=hat,count=417
+a=eks,b=hat,count=417
+a=hat,b=wye,count=423
+a=wye,b=hat,count=426
+a=pan,b=pan,count=427
+a=pan,b=eks,count=429
+a=zee,b=wye,count=455
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h2>cut</h2>  <a id="cut"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cut --help
+Usage: mlr cut [options]
+-f {a,b,c}       Field names to cut.
+-x|--complement  Exclude, rather that include, field names specified by -f.
+</pre>
+</div>
+<p/>
+
+<p/>Note that <tt>cut</tt> doesn&rsquo;t reorder field names &mdash; for that, use
+<a href="#reorder"><tt>reorder</tt></a>.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cut -f y,x,i data/small
+i x                   y
+1 0.3467901443380824  0.7268028627434533
+2 0.7586799647899636  0.5221511083334797
+3 0.20460330576630303 0.33831852551664776
+4 0.38139939387114097 0.13418874328430463
+5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>
+<!-- ================================================================ -->
+<h2>filter</h2>  <a id="filter"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter --help
+Usage: mlr filter [options]
+[-v] {expression} xxx needs more doc here please.
+</pre>
+</div>
+<p/>
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> expressions, even though they don&rsquo;t
+appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'
+i j         k
+0 1.000000  1.000000
+1 2.000000  3.000000
+2 3.000000  5.000000
+3 4.000000  7.000000
+4 5.000000  9.000000
+5 6.000000  11.000000
+6 7.000000  13.000000
+7 8.000000  15.000000
+8 9.000000  17.000000
+9 10.000000 19.000000
+</pre>
+</div>
+<p/>
+
+<p/>The <tt>filter</tt> command supports the same built-in variables as for <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This selects the 2nd record from each matching file:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter 'FNR == 2' data/small*
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
+</pre>
+</div>
+<p/>
+
+<p/>Expressions may be arbitrarily complex:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint filter '$a == "pan" || $b == "wye"' data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+</pre>
+</div>
+<p/>
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint filter '($x &gt; 0.5 &amp;&amp; $y &gt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &lt; 0.5)' then stats2 -a corr -f x,y data/medium
+x_y_corr
+0.756439
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint filter '($x &gt; 0.5 &amp;&amp; $y &lt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' then stats2 -a corr -f x,y data/medium
+x_y_corr
+-0.747994
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>group-by</h2>  <a id="group-by"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr group-by --help
+Usage: mlr group-by {comma-separated field names}
+</pre>
+</div>
+<p/>
+
+<p/>This is similar to <tt>sort</tt> but with less work. Namely, Miller&rsquo;s
+sort has three steps: read through the data and append linked lists of records,
+one for each unique combination of the key-field values; after all records
+are read, sort the key-field values; then print each record-list. The group-by
+operation simply omits the middle sort.  An example should make this more
+clear.
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint group-by a data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye wye 3 0.20460330576630303 0.33831852551664776
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint sort a data/small
+a   b   i x                   y
+eks pan 2 0.7586799647899636  0.5221511083334797
+eks wye 4 0.38139939387114097 0.13418874328430463
+pan pan 1 0.3467901443380824  0.7268028627434533
+wye wye 3 0.20460330576630303 0.33831852551664776
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
+<p/>In this example, since the sort is on field <tt>a</tt>, the first step is
+to group together all records having the same value for field <tt>a</tt>; the
+second step is to sort the distinct <tt>a</tt>-field values <tt>pan</tt>,
+<tt>eks</tt>, and <tt>wye</tt> into <tt>eks</tt>, <tt>pan</tt>, and
+<tt>wye</tt>; the third step is to print out the record-list for
+<tt>a=eks</tt>, then the record-list for <tt>a=pan</tt>, then the record-list
+for <tt>a=wye</tt>.  The group-by operation omits the middle sort and just puts
+like records together, for those times when a sort isn&rsquo;t desired. In
+particular, the ordering of group-by fields for group-by is the order in which
+they were encountered in the data stream, which in some cases may be more interesting
+to you.
+
+<!-- ================================================================ -->
+<h2>group-like</h2>  <a id="group-like"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr group-like --help
+Usage: mlr group-like
+</pre>
+</div>
+<p/>
+
+<p/> This groups together records having the same schema (i.e. same ordered list of field names)
+which is useful for making sense of time-ordered output as described in
+<a href="record-heterogeneity.html">Record-heterogeneity</a> &mdash; in particular, in
+preparation for CSV or pretty-print output.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint group-like data/het.dkvp
+resource             loadsec ok
+/path/to/file        0.45    true
+/path/to/second/file 0.32    true
+/some/other/path     0.97    false
+
+record_count resource
+100          /path/to/file
+150          /path/to/second/file
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>having-fields</h2>  <a id="having-fields"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr having-fields --help
+Usage: mlr having-fields [options]
+--at-least {a,b,c}
+--which-are {a,b,c}
+--at-most {a,b,c}
+</pre>
+</div>
+<p/>
+
+<p/> Similar to <tt>group-like</tt>, this retains records with specified schema.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr having-fields --at-least resource data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true
+resource=/path/to/second/file,loadsec=0.32,ok=true
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>head</h2>  <a id="head"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr head --help
+Usage: mlr head [options]
+-n {count}    Head count to print; default 10
+-g {a,b,c}    Group-by-field names for head counts
+</pre>
+</div>
+<p/>
+
+Note that <tt>head</tt> is distinct from <a href="#top"><tt>top</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint head -n 4 data/medium
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint head -n 1 -g b data/medium
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee eks 17 0.29081949506712723 0.054478717073354166
+wye hat 24 0.7286126830627567  0.19441962592638418
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>histogram</h2>  <a id="histogram"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr histogram --help
+Usage: mlr histogram [options]
+-f {a,b,c}    Value-field names for histogram counts
+--lo {lo}     Histogram low value
+--hi {hi}     Histogram high value
+--nbins {n}   Number of histogram bins
+</pre>
+</div>
+<p/>
+
+Just a histogram.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
+bin_lo   bin_hi   x_count x2_count x3_count
+0.000000 0.100000 1072    3231     4661
+0.100000 0.200000 938     1254     1184
+0.200000 0.300000 1037    988      845
+0.300000 0.400000 988     832      676
+0.400000 0.500000 950     774      576
+0.500000 0.600000 1002    692      476
+0.600000 0.700000 1007    591      438
+0.700000 0.800000 1007    560      420
+0.800000 0.900000 986     571      383
+0.900000 1.000000 1013    507      341
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h2>put</h2>  <a id="put"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put --help
+Usage: mlr put [options]
+[-v] {expression} xxx needs more doc here please.
+</pre>
+</div>
+<p/>
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>put</tt> expressions, even though they don&rsquo;t
+appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+Multiple expressions may be given, separated by semicolons, and each may refer to the ones before.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'
+i j         k
+0 1.000000  1.000000
+1 2.000000  3.000000
+2 3.000000  5.000000
+3 4.000000  7.000000
+4 5.000000  9.000000
+5 6.000000  11.000000
+6 7.000000  13.000000
+7 8.000000  15.000000
+8 9.000000  17.000000
+9 10.000000 19.000000
+</pre>
+</div>
+<p/>
+
+<p/>Miller supports the following five built-in variables for <tt>filter</tt>
+and <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2
+a   b   i     x                    y                    nf nr fnr filenum filename
+pan pan 1     0.3467901443380824   0.7268028627434533   5  1  1   1       data/small
+eks pan 2     0.7586799647899636   0.5221511083334797   5  2  2   1       data/small
+wye wye 3     0.20460330576630303  0.33831852551664776  5  3  3   1       data/small
+eks wye 4     0.38139939387114097  0.13418874328430463  5  4  4   1       data/small
+wye pan 5     0.5732889198020006   0.8636244699032729   5  5  5   1       data/small
+pan eks 9999  0.267481232652199086 0.557077185510228001 5  6  1   2       data/small2
+wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/small2
+pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
+hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
+pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h2>rename</h2>  <a id="rename"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr rename --help
+Usage: mlr rename {old1,new1,old2,new2,...}
+</pre>
+</div>
+<p/>
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint rename i,INDEX,b,COLUMN2 data/small
+a   COLUMN2 INDEX x                   y
+pan pan     1     0.3467901443380824  0.7268028627434533
+eks pan     2     0.7586799647899636  0.5221511083334797
+wye wye     3     0.20460330576630303 0.33831852551664776
+eks wye     4     0.38139939387114097 0.13418874328430463
+wye pan     5     0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>As discussed in <a href="performance.html">Performance</a>, <tt>sed</tt>
+is significantly faster than Miller at doing this. However, Miller is
+format-aware, so it knows to do renames only within specified field keys and
+not any others, nor in field values which may happen to contain the same
+pattern. Example:
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ sed 's/y/COLUMN5/g' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
+a=wCOLUMN5e,b=wCOLUMN5e,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
+a=eks,b=wCOLUMN5e,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
+a=wCOLUMN5e,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr rename y,COLUMN5 data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>reorder</h2>  <a id="reorder"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr reorder --help
+Usage: mlr reorder [options]
+-f {a,b,c}       Field names to reorder.
+-e           Put specified field names at record end: default is to put at record start.
+Example: mlr reorder    -f a,b sends input record d=4,b=2,a=1,c=3 to a=1,b=2,d=4,c=3.
+Example: mlr reorder -e -f a,b sends input record d=4,b=2,a=1,c=3 to d=4,c=3,a=1,b=2.
+</pre>
+</div>
+<p/>
+
+This pivots specified field names to the start or end of the record &mdash; for
+example when you have highly multi-column data and you want to bring a field or
+two to the front of line where you can give a quick visual scan.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint reorder -f i,b data/small
+i b   a   x                   y
+1 pan pan 0.3467901443380824  0.7268028627434533
+2 pan eks 0.7586799647899636  0.5221511083334797
+3 wye wye 0.20460330576630303 0.33831852551664776
+4 wye eks 0.38139939387114097 0.13418874328430463
+5 pan wye 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint reorder -e -f i,b data/small
+a   x                   y                   i b
+pan 0.3467901443380824  0.7268028627434533  1 pan
+eks 0.7586799647899636  0.5221511083334797  2 pan
+wye 0.20460330576630303 0.33831852551664776 3 wye
+eks 0.38139939387114097 0.13418874328430463 4 wye
+wye 0.5732889198020006  0.8636244699032729  5 pan
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>sort</h2>  <a id="sort"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort --help
+Usage: mlr sort {comma-separated field names}
+</pre>
+</div>
+<p/>
+
+<p/>xxx write up after -n/-r.
+
+<!-- ================================================================ -->
+<h2>stats1</h2>  <a id="stats1"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 --help
+Usage: mlr stats1 [options]
+-a {sum,count,...}    Names of accumulators: one or more of
+                      count sum avg stddev avgeb min max
+-f {a,b,c}            Value-field names on which to compute statistics
+-g {d,e,f}            Group-by-field names
+</pre>
+</div>
+<p/>
+
+These are simple univariate statistics on one or more number-valued fields,
+optionally categorized by one or more fields.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -a count,sum,avg -f x,y data/medium
+x_count 10000
+x_sum   4986.019682
+x_avg   0.498602
+y_count 10000
+y_sum   5062.057445
+y_avg   0.506206
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a avg -f x,y -g b then sort b data/medium
+b   x_avg    y_avg
+eks 0.506361 0.510293
+hat 0.487899 0.513118
+pan 0.497304 0.499599
+wye 0.497593 0.504596
+zee 0.504242 0.502997
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>stats2</h2>  <a id="stats2"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats2 --help
+Usage: mlr stats2 [options]
+-a {linreg,corr,...}    Names of accumulators: one or more of
+                      linreg corr cov r2
+-f {a,b,c,d}          Value-field names on which to compute statistics.
+                      There must be an even number of these.
+-g {d,e,f}            Group-by-field names
+</pre>
+</div>
+<p/>
+
+These are simple bivariate statistics on one or more pairs of number-valued
+fields, optionally categorized by one or more fields.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
+x_y_cov    0.000043
+x_y_corr   0.000504
+y_y_cov    0.084611
+y_y_corr   1.000000
+x2_xy_cov  0.041884
+x2_xy_corr 0.630174
+x2_y2_cov  -0.000310
+x2_y2_corr -0.003425
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg,r2 -f x,y,y,y,xy,y2 -g a data/medium
+a   x_y_m     x_y_b    x_y_r2   y_y_m    y_y_b    y_y_r2   xy_y2_m  xy_y2_b  xy_y2_r2
+pan 0.017026  0.500403 0.000287 1.000000 0.000000 1.000000 0.878132 0.119082 0.417498
+eks 0.040780  0.481402 0.001646 1.000000 0.000000 1.000000 0.897873 0.107341 0.455632
+wye -0.039153 0.525510 0.001505 1.000000 0.000000 1.000000 0.853832 0.126745 0.389917
+zee 0.002781  0.504307 0.000008 1.000000 0.000000 1.000000 0.852444 0.124017 0.393566
+hat -0.018621 0.517901 0.000352 1.000000 0.000000 1.000000 0.841230 0.135573 0.368794
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
+fields of the <tt>data/medium</tt> dataset are just independent uniformly
+distributed on the unit interval. Here we remove half the data and fit a line to it.
+
+<p/>
+<div class="pokipanel">
+<pre>
+
+mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)' data/medium &gt; data/medium-squares
+
+mlr --ofs NEWLINE stats2 -a linreg -f x,y data/medium-squares
+x_y_m=0.764675
+x_y_b=0.124841
+
+# Set x_y_m and x_y_b as shell variables
+eval $(mlr --ofs NEWLINE stats2 -a linreg -f x,y data/medium-squares)
+
+# In addition to x and y, make a new yfit which is the line fit. Plot using your favorite tool.
+mlr --onidx put '$yfit='$x_y_m'*$x+'$x_y_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg example'
+</pre>
+</div>
+<p/>
+
+<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+plotting; here&rsquo;s a screenshot.
+
+<center>
+<img src="data/linreg-example.jpg"/>
+</center>
+
+
+<!-- ================================================================ -->
+<h2>step</h2>  <a id="step"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr step --help
+Usage: mlr step [options]
+-a {delta,rsum,...}    Names of steppers: one or more of
+                      delta rsum counter
+-f {a,b,c}            Value-field names on which to compute statistics
+-g {d,e,f}            Group-by-field names
+</pre>
+</div>
+<p/>
+
+Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
+<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
+<tt>step</tt> command is intermediate: it allows the option of adding fields
+which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
+
+<p/>xxx rename rsum then so it doesn&rsquo;t need explaining!! <tt>:)</tt>
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta,rsum,counter -f x data/medium | head -15
+a   b   i     x                      y                      x_delta   x_rsum      x_counter
+pan pan 1     0.3467901443380824     0.7268028627434533     0.346790  0.346790    1
+eks pan 2     0.7586799647899636     0.5221511083334797     0.411890  1.105470    2
+wye wye 3     0.20460330576630303    0.33831852551664776    -0.554077 1.310073    3
+eks wye 4     0.38139939387114097    0.13418874328430463    0.176796  1.691473    4
+wye pan 5     0.5732889198020006     0.8636244699032729     0.191890  2.264762    5
+zee pan 6     0.5271261600918548     0.49322128674835697    -0.046163 2.791888    6
+eks zee 7     0.6117840605678454     0.1878849191181694     0.084658  3.403672    7
+zee wye 8     0.5985540091064224     0.976181385699006      -0.013230 4.002226    8
+hat wye 9     0.03144187646093577    0.7495507603507059     -0.567112 4.033668    9
+pan wye 10    0.5026260055412137     0.9526183602969864     0.471184  4.536294    10
+pan pan 11    0.7930488423451967     0.6505816637259333     0.290423  5.329343    11
+zee pan 12    0.3676141320555616     0.23614420670296965    -0.425435 5.696957    12
+eks pan 13    0.4915175580479536     0.7709126592971468     0.123903  6.188474    13
+eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  6.709213    14
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15
+a   b   i     x                      y                      x_delta   x_rsum      x_counter
+pan pan 1     0.3467901443380824     0.7268028627434533     0.346790  0.346790    1
+eks pan 2     0.7586799647899636     0.5221511083334797     0.758680  0.758680    1
+wye wye 3     0.20460330576630303    0.33831852551664776    0.204603  0.204603    1
+eks wye 4     0.38139939387114097    0.13418874328430463    -0.377281 1.140079    2
+wye pan 5     0.5732889198020006     0.8636244699032729     0.368686  0.777892    2
+zee pan 6     0.5271261600918548     0.49322128674835697    0.527126  0.527126    1
+eks zee 7     0.6117840605678454     0.1878849191181694     0.230385  1.751863    3
+zee wye 8     0.5985540091064224     0.976181385699006      0.071428  1.125680    2
+hat wye 9     0.03144187646093577    0.7495507603507059     0.031442  0.031442    1
+pan wye 10    0.5026260055412137     0.9526183602969864     0.155836  0.849416    2
+pan pan 11    0.7930488423451967     0.6505816637259333     0.290423  1.642465    3
+zee pan 12    0.3676141320555616     0.23614420670296965    -0.230940 1.493294    3
+eks pan 13    0.4915175580479536     0.7709126592971468     -0.120267 2.243381    4
+eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  2.764119    5
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>tac</h2>  <a id="tac"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr tac --help
+Usage: mlr tac
+</pre>
+</div>
+<p/>
+
+<p/>Prints the records in the input stream in reverse order. Note: this
+requires Miller to retain all input records in memory before any output records
+are produced.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint cat a.csv
+a b c
+1 2 3
+4 5 6
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint cat b.csv
+a b c
+7 8 9
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint tac a.csv b.csv
+a b c
+7 8 9
+4 5 6
+1 2 3
+</pre>
+</div>
+<p/>
+</td></tr></table>
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint put '$filename=FILENAME' then tac a.csv b.csv
+a b c filename
+7 8 9 b.csv
+4 5 6 a.csv
+1 2 3 a.csv
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>tail</h2>  <a id="tail"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr tail --help
+Usage: mlr tail [options]
+-n {count}    Tail count to print; default 10
+-g {a,b,c}    Group-by-field names for tail counts
+</pre>
+</div>
+<p/>
+
+<p/> Prints the last <i>n</i> records in the input stream, optionally by category.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint tail -n 4 data/colored-shapes.dkvp
+color  shape    flag i      u                  v                  w                   x
+yellow circle   1    99997  0.5228034832314841 0.7478634261534541 0.49477944033468396 6.085638633037881
+red    triangle 0    99998  0.8566019561040149 0.5583785393850178 0.4993735796215503  6.393409471109115
+yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.5064468446479313  3.2682256831629695
+green  square   0    100000 0.0277485352321325 0.5303062901341336 0.5274344049261097  5.806843329974349
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
+color  shape    flag i      u                  v                  w                   x
+yellow circle   1    99997  0.5228034832314841 0.7478634261534541 0.49477944033468396 6.085638633037881
+green  square   0    100000 0.0277485352321325 0.5303062901341336 0.5274344049261097  5.806843329974349
+yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.5064468446479313  3.2682256831629695
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>top</h2>  <a id="top"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr top --help
+Usage: mlr top [options]
+-f {a,b,c}    Value-field names for top counts
+-g {d,e,f}    Group-by-field names for top counts
+-n {count}    Top n records to print; default 1
+-a            Print all fields for top-value records; default is
+              to print only value and group-by fields.
+--min         Print top smallest values; default is top largest values
+</pre>
+</div>
+<p/>
+
+Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint top -n 4 -f x data/medium
+top_idx x_top
+1       0.999953
+2       0.999823
+3       0.999733
+4       0.999563
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint top -n 2 -f x -g a then sort a data/medium
+a   top_idx x_top
+eks 1       0.998811
+eks 2       0.998534
+hat 1       0.999953
+hat 2       0.999733
+pan 1       0.999403
+pan 2       0.999044
+wye 1       0.999823
+wye 2       0.999264
+zee 1       0.999490
+zee 2       0.999438
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>uniq</h2>  <a id="uniq"/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr uniq --help
+Usage: mlr uniq [options]
+-g {d,e,f}    Group-by-field names for uniq counts
+-c            Show repeat counts in addition to unique values
+</pre>
+</div>
+<p/>
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ wc -l data/colored-shapes.dkvp
+  100000 data/colored-shapes.dkvp
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr uniq -g color,shape data/colored-shapes.dkvp
+color=green,shape=circle
+color=red,shape=square
+color=yellow,shape=circle
+color=red,shape=circle
+color=blue,shape=circle
+color=purple,shape=triangle
+color=blue,shape=triangle
+color=green,shape=square
+color=red,shape=triangle
+color=yellow,shape=triangle
+color=purple,shape=square
+color=blue,shape=square
+color=yellow,shape=square
+color=green,shape=triangle
+color=purple,shape=circle
+color=orange,shape=triangle
+color=orange,shape=square
+color=orange,shape=circle
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -g color,shape -c then sort color,shape data/colored-shapes.dkvp
+color  shape    count
+blue   circle   3578
+blue   square   6016
+blue   triangle 4843
+green  circle   2832
+green  square   4678
+green  triangle 3924
+orange circle   705
+orange square   1196
+orange triangle 954
+purple circle   2861
+purple square   4808
+purple triangle 3841
+red    circle   11477
+red    square   19051
+red    triangle 15248
+yellow circle   3482
+yellow square   5839
+yellow triangle 4667
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>Functions for filter and put</h1>  <a id="Functions_for_filter_and_put"/>
+Miller&rsquo;s
+<a href="#filter"><tt>filter</tt></a> and <a href="#put"><tt>put</tt></a>
+support the following operators and functions:
+
+<table border=1>
+  <tr bgcolor=#e8d9bc>
+    <th>Operators/functions </th>
+    <th>Description</th>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>==</tt>,
+      <tt>!=</tt>,
+      <tt>&lt;</tt>,
+      <tt>&lt;=</tt>,
+      <tt>&gt;</tt>,
+      <tt>&gt;=</tt>,
+      <tt>&amp;&amp;</tt>,
+      <tt>||</tt>
+    </td>
+    <td>Filter-only. Comparisons are string-valued or number-valued depending on absence/presence of double-quotes in the literal value:
+      <br/><tt> mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2' </tt>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>+</tt>,
+      <tt>-</tt> (unary or binary),
+      <tt>*</tt>,
+      <tt>/</tt>,
+      <tt>**</tt>
+    </td>
+    <td>Number-valued.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>.</tt>
+    </td>
+    <td>String concatenation
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>systime</tt> (seconds since epoch),
+      <tt>urand</tt>
+    </td>
+    <td>Functions of no arguments returning numbers
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>abs</tt>,
+      <tt>ceil</tt>,
+      <tt>cos</tt>,
+      <tt>exp</tt>,
+      <tt>floor</tt>,
+      <tt>log</tt>,
+      <tt>log10</tt>,
+      <tt>pow</tt>,
+      <tt>round</tt>,
+      <tt>sin</tt>,
+      <tt>tan</tt>
+    </td>
+    <td>Number-to-number functions with one argument
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>atan2</tt>
+    </td>
+    <td>Number-to-number functions with two arguments
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>tolower</tt>,
+      <tt>toupper</tt>
+    </td>
+    <td>String-to-string functions with one argument
+    </td>
+  </tr>
+
+</table>
+
+<p/>See also the <tt>awk</tt>-like built-in variables <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt> as described in the section on <a href="#put"><tt>put</tt></a>.
+  </td>
+
+</table>
+</body>
+</html>

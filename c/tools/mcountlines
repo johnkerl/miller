@@ -1,0 +1,13 @@
+#!/bin/bash
+
+wc -l \
+  cli/*.[ch] \
+  containers/*.[ch] \
+  input/*.[ch] \
+  lib/*.[ch] \
+  mapping/*.[ch] \
+  output/*.[ch] \
+  stream/*.[ch] \
+  dsls/*.[ly] \
+  dsls/*wrapper*.[ch] \
+  | sort -n

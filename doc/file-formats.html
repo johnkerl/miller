@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-file-formats.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <title> File formats </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/>User info:
+<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>Developer info:
+<br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <center> <titleinbody> File formats </titleinbody> </center>
+    <p>
+    
+<!-- BODY COPIED FROM content-for-file-formats.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#CSV/TSV">CSV/TSV</a><br/>
+&bull;&nbsp;<a href="#Pretty-printed">Pretty-printed</a><br/>
+&bull;&nbsp;<a href="#Key-value_pairs">Key-value pairs</a><br/>
+&bull;&nbsp;<a href="#Index-numbered_(toolkit_style)">Index-numbered (toolkit style)</a><br/>
+&bull;&nbsp;<a href="#Vertical_tabular">Vertical tabular</a><br/>
+</div>
+<p/>
+
+<h1>CSV/TSV</h1> When <tt>mlr</tt> is invoked with the <tt>--csv</tt> option,  <a id="CSV/TSV"/>key names are found on the first record and values are taken from subsequent
+records.  This includes the case of CSV-formatted files.  See
+<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
+changes of field names within a single data stream.
+
+<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt> to convert TSV to
+CSV, use <tt>--ifs TAB --ofs ,</tt> etc.  (See also
+<a href="reference.html">Reference</a>.)
+
+<h1>Pretty-printed</h1>  <a id="Pretty-printed"/>Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ocsv cat data/small
+a,b,i,x,y
+pan,pan,1,0.3467901443380824,0.7268028627434533
+eks,pan,2,0.7586799647899636,0.5221511083334797
+wye,wye,3,0.20460330576630303,0.33831852551664776
+eks,wye,4,0.38139939387114097,0.13418874328430463
+wye,pan,5,0.5732889198020006,0.8636244699032729
+</pre>
+</div>
+<p/>
+</td>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+Note that while Miller is a line-at-a-time processor and retains input lines in
+memory only where necessary (e.g. for sort), pretty-print output requires it to
+accumulate all input lines (so that it can compute maximum column widths)
+before producing any output. This has two consequences: (a) pretty-print output
+won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
+an end-of-file marker which never arrives; (b) pretty-print output for large
+files is constrained by available machine memory.
+
+<p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
+handles changes of field names within a single data stream.
+
+<h1>Key-value pairs</h1>  <a id="Key-value_pairs"/>Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+Such data are easy to generate, e.g. in Ruby with
+<pre>
+  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+</pre>
+or <tt>print</tt> statements in various languages.
+
+<p/> As discussed in <a href="record-heterogeneity.html">Record-heterogeneity</a>, Miller handles
+changes of field names within the same data stream. But using DKVP format this is particularly
+natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
+of lines such as
+
+<div class="pokipanel">
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</div>
+
+etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
+to analyze my logs.
+
+<p/>See <a href="reference.html">Reference</a> regarding how to specify separators other than
+the default equals-sign and comma.
+
+<h1>Index-numbered (toolkit style)</h1>  <a id="Index-numbered_(toolkit_style)"/>
+With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
+assigns integer field names starting with 1. This recapitulates Unix-toolkit
+behavor.
+
+<p/> Example with index-numbered output:
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --onidx --ofs ' ' cat data/small
+pan pan 1 0.3467901443380824 0.7268028627434533
+eks pan 2 0.7586799647899636 0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006 0.8636244699032729
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
+<p/> Example with index-numbered input:
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/mydata.txt
+oh say can you see
+by the dawn's
+early light
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
+1=oh,2=say,3=can,4=you,5=see
+1=by,2=the,3=dawn's
+1=early,2=light
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
+<h1>Vertical tabular</h1>  <a id="Vertical_tabular"/>
+<p/>This is perhaps most useful for looking a very wide and/or multi-column
+data which causes line-wraps on the screen (but see also <a
+href="https://github.com/twosigma/ngrid">https://github.com/twosigma/ngrid</a>
+for an entirely different, very poweful option). Namely:
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat
+1          2 3  4  5                          6               7
+nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
+root       * 0  0  System Administrator       /var/root       /bin/sh
+daemon     * 1  1  System Services            /var/root       /usr/bin/false
+_uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
+_taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
+_networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
+</pre>
+</div>
+<p/>
+</td></tr> <tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
+1 nobody
+2 *
+3 -2
+4 -2
+5 Unprivileged User
+6 /var/empty
+7 /usr/bin/false
+
+1 root
+2 *
+3 0
+4 0
+5 System Administrator
+6 /var/root
+7 /bin/sh
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
+  </td>
+
+</table>
+</body>
+</html>

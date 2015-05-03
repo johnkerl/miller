@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-originality.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <title> How original is Miller? </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/>User info:
+<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>Developer info:
+<br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <center> <titleinbody> How original is Miller? </titleinbody> </center>
+    <p>
+    
+<!-- BODY COPIED FROM content-for-originality.html BY poki -->
+<p/> It isn&rsquo;t. Miller is one of many, many participants in the
+online-analytical-processing culture. Other key participants include
+<tt>awk</tt>, SQL, spreadsheets, etc. etc.  etc.  Far from being an original
+concept, Miller explicitly strives to imitate several existing tools:
+
+<p/>
+<boldmaroon>Unix toolkit</boldmaroon>: Intentional similarities as described in
+<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>.
+
+<p/>Recipes abound for command-line data analysis using the Unix toolkit. Here are just a couple of my favorites:
+<ul>
+<li/> <a href="http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line">http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line</a>
+<li/> <a href="http://www.gregreda.com/2013/07/15/unix-commands-for-data-science">http://www.gregreda.com/2013/07/15/unix-commands-for-data-science</a>
+</ul>
+
+<p/> <boldmaroon>RecordStream</boldmaroon>: Miller owes particular inspiration
+to <a href="https://github.com/benbernard/RecordStream">RecordStream</a>. The
+key difference is that RecordStream is a Perl-based tool for manipulating JSON
+(including requiring it to separately manipulate other formats such as CSV into
+and out of JSON), while Miller is fast C which handles its formats natively.
+The similarities include the <tt>sort</tt>, <tt>stats1</tt> (analog of
+RecordStream&rsquo;s <tt>collate</tt>), and <tt>delta</tt> operations, as well
+as <tt>filter</tt> and <tt>put</tt>, and pretty-print formatting.
+
+<p/> <boldmaroon>stats_m</boldmaroon>: A third source of lineage is my Python
+<a href="https://github.com/johnkerl/scripts-math/tree/master/stats">stats_m</a>
+module.  This includes simple single-pass algorithms which form Miller&rsquo;s
+<tt>stats1</tt> and <tt>stats2</tt> subcommands.
+
+<p/> <boldmaroon>SQL</boldmaroon>: Fourthly, Miller&rsquo;s <tt>group-by</tt> command
+name is from SQL, as is the term <tt>aggregate</tt>.
+
+<p/> <boldmaroon>Added value</boldmaroon>:
+Miller&rsquo;s added values include:
+<ul>
+<li> Name-indexing, compared to the Unix toolkit&rsquo;s positional indexing.
+<li> Raw speed, compared to <tt>awk</tt>, RecordStream, <tt>stats_m</tt>, or various other kinds of Python/Ruby/etc. scripts one can easily create.
+<li> Ability to handle text files on the Unix pipe, without need for creating database tables, compared to SQL databases.
+</ul>
+
+<p/><boldmaroon>jq</boldmaroon>: Miller does for name-indexed text what <a
+href="http://stedolan.github.io/jq/">jq</a> does for JSON. If you&rsquo;re not
+already familiar with <tt>jq</tt>, please check it out!
+
+<p/><boldmaroon>What about DOTADIW?</boldmaroon> One of the key points of the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a> is
+that a tool should do one thing and do it well.  Hence <tt>sort</tt> and
+<tt>cut</tt> do just one thing. Why does Miller put <tt>awk</tt>-like
+processing, a few SQL-like operations, and statistical reduction all into one
+tool (see also <a href="reference.html">Reference</a>)?  This is a fair
+question. First note that many standard tools, such as <tt>awk</tt> and
+<tt>perl</tt>, do quite a few things &mdash; as does <tt>jq</tt>.  But I could
+have pushed for putting format awareness and name-indexing options into
+<tt>cut</tt>, <tt>awk</tt>, and so on (so you could do <tt>cut -f
+hostname,uptime</tt> or <tt>awk '{sum += $x*$y}END{print sum}'</tt>).  Patching
+<tt>cut</tt>, <tt>sort</tt>, etc. on multiple operating systems is a
+non-starter in terms of uptake.  Moreover, it makes sense for me to have Miller
+be a tool which collects together format-aware record-stream processing into
+one place, with good reuse of Miller-internal library code.
+
+<p/> <boldmaroon>No, really, why one more command-line data-manipulation
+tool?</boldmaroon> I wrote Miller because I was frustrated with tools like
+<tt>grep</tt>, <tt>sed</tt>, and so on being <i>line-aware</i> without being
+<i>format-aware</i>. The single most poignant example I can think of is seeing
+people grep data lines out of their CSV files and sadly losing their header
+lines.  While some lighter-than-SQL processing is very nice to have, at core I
+wanted the format-awareness of <a
+href="https://github.com/benbernard/RecordStream">RecordStream</a> combined
+with the raw speed of the Unix toolkit. Miller does precisely that.
+  </td>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<center><table border=1 width="60%"><tr><td><center>
+<b>
+Miller is like sed, awk, cut, and sort for name-indexed data such as CSV.
+</b>
+</center> </td></tr></table></center>
+
+<p/> For example, compare
+
+<table><tr><td>
+POKI_INCLUDE_ESCAPED(index-snippet-1.txt)HERE
+</td><td>
+&nbsp;
+&nbsp;
+&nbsp;
+to
+&nbsp;
+&nbsp;
+&nbsp;
+</td><td>
+POKI_INCLUDE_ESCAPED(index-snippet-2.txt)HERE
+</td></tr></table>
+
+<p/> With Miller you get to use named fields without needing to count
+positional indices. This is something the Unix toolkit always could have done,
+and arguably always should have done.  It operates on key-value-pair data while
+the familiar Unix tools operate on integer-indexed fields: if the natural
+data structure for the latter is the array, then Miller&rsquo;s natural data
+structure is the insertion-ordered hash map.  This encompasses a <b>variety of
+data formats</b>, including but not limited to the familiar CSV.  (Miller can
+handle positionally-indexed data as a special case.)
+
+<p/> Features:
+<ul>
+
+<li> I/O formats including <b>tabular pretty-printing</b>
+<li> <b>Conversion</b> between formats
+<li> Format-aware processing: e.g. CSV sort and tac keep header lines first
+<li> High-throughput <b>performance</b> on par with the Unix toolkit
+
+<li/> Miller is <b>pipe-friendly</b> and interoperates with Unix toolkit.
+
+<li/> It complements SQL <b>databases</b>: you can slice, dice, and reformat
+data on the client side on its way into or out of a database. You can also reap
+some of the benefits of databases for quick, setup-free one-off tasks when just
+need to query some data in disk files in a hurry.
+
+<li/>Miller also goes beyond classic Unix tools by stepping into our modern,
+<b>no-SQL</b> world: its essential record-heterogeneity property allows it to
+operate on data where records with different schema (field names) are
+interleaved.
+
+<li/> Like <a href="http://stedolan.github.io/jq/">jq</a> (for JSON), Miller is
+written in portable C, and it has zero runtime dependencies. You can download
+or compile a single binary, <tt>scp</tt> it to a faraway machine, and expect it
+to work.
+</ul>

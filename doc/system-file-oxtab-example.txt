@@ -1,0 +1,16 @@
+$ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
+1 nobody
+2 *
+3 -2
+4 -2
+5 Unprivileged User
+6 /var/empty
+7 /usr/bin/false
+
+1 root
+2 *
+3 0
+4 0
+5 System Administrator
+6 /var/root
+7 /bin/sh

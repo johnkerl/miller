@@ -1,0 +1,54 @@
+POKI_PUT_TOC_HERE
+
+<h1>Data</h1>
+
+Test data were of the form
+
+<table><tr><td>
+POKI_INCLUDE_ESCAPED(../c2/data/small)HERE
+</td><td>
+POKI_INCLUDE_ESCAPED(../c2/data/small.csv)HERE
+</td></tr></table>
+
+for DKVP and CSV, respectively, where fields <tt>a</tt> and <tt>b</tt> take one of five text values,
+uniformly distributed; <tt>i</tt> is a 1-up line counter; <tt>x</tt> and <tt>y</tt>
+are independent uniformly distributed floating-point numbers in the unit
+interval.
+
+<p>Data files of one million lines (totalling about 50MB for CSV and 60MB for
+DKVP) were used. In experiments not shown here, I also varied the file sizes;
+the size-dependent results were the expected, completely unsurprising
+linearities and so I produced no file-size-dependent plots for your viewing pleasure.
+
+<h1>Comparands</h1>
+
+The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
+were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
+nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
+line-printer (source xxx here) which is intermediate between Miller (which is
+record-aware as well as line-aware) and <tt>cat</tt> (which is only
+byte-aware).
+
+<h1>Raw results</h1>
+
+Note that for CSV data, the command is <tt>mlr --csv ...</tt> rather than <tt>mlr ...</tt>.
+
+POKI_INCLUDE_ESCAPED(perftbl.txt)HERE
+
+<h1>Analysis</h1>
+
+<ul>
+<li/> As expected, <tt>cat</tt> is very fast &mdash; it needs only stream bytes as quickly as possible; it doesn&rsquo;t even need to touch individual bytes.
+<li/> My <tt>catc</tt> is also faster than Miller: it needs to read and write lines, but it doesn&rsquo;t segment lines into records; in fact it does no iteration over bytes in each line.
+<li/> Miller does not outperform <tt>sed</tt>, which is string-oriented rather than record-oriented.
+<li/> For the tools which do need to pick apart fields (<tt>cut</tt>,
+<tt>awk</tt>, <tt>sort</tt>), Miller is comparable or outperforms. As noted above, this effect
+persists linearly across file sizes.
+<li/> For univariate and bivariate statistics, I didn&rsquo;t attempt to
+compare to other tools wherein such computations are less straightforward;
+rather, I attempted only to show that Miller&rsquo;s processing time here is comparable to its own processing time for other problems.
+</ul>
+
+<h1>Conclusion</h1>
+
+For record-oriented data transformations, Miller is worth consideration. Record renames are worth doing as a pre-pipe or post-pipe using <tt>sed</tt>.

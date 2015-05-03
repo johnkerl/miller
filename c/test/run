@@ -1,0 +1,184 @@
+#!/bin/bash
+
+# NEEDING COVERAGE:
+# group-like
+# head
+# sort
+# tail
+# top
+# uniq
+
+# I/O
+
+# ================================================================
+set -e
+
+ourdir=$(dirname $0)
+mlr=$ourdir/../mlr
+indir=$ourdir/input
+expdir=$ourdir/expected
+outdir=$ourdir/output
+mkdir -p $outdir
+
+rm -f $outdir/out
+touch $outdir/out
+echo
+
+num_passed=0
+
+announce() {
+	echo >> $outdir/out
+	echo "================================================================" >> $outdir/out
+	echo "$@" >> $outdir/out
+	echo >> $outdir/out
+}
+
+run_command() {
+	echo "$@"
+	echo "$@" >> $outdir/out
+	"$@" >> $outdir/out
+	echo >> $outdir/out
+	# since set -e
+	num_passed=$[num_passed+1]
+}
+
+# ================================================================
+announce STATELESS MAPPERS
+
+run_command $mlr cat $indir/abixy
+run_command $mlr cat /dev/null
+
+run_command $mlr cut -f a,x $indir/abixy
+run_command $mlr cut --complement -f a,x $indir/abixy
+
+run_command $mlr having-fields --at-least  a,b         $indir/abixy
+run_command $mlr having-fields --at-least  a,c         $indir/abixy
+run_command $mlr having-fields --at-least  a,b,i,x,y   $indir/abixy
+run_command $mlr having-fields --which-are a,b,i,x     $indir/abixy
+run_command $mlr having-fields --which-are a,b,i,x,y   $indir/abixy
+run_command $mlr having-fields --which-are a,b,i,y,x   $indir/abixy
+run_command $mlr having-fields --which-are a,b,i,x,w   $indir/abixy
+run_command $mlr having-fields --which-are a,b,i,x,y,z $indir/abixy
+run_command $mlr having-fields --at-most   a,c         $indir/abixy
+run_command $mlr having-fields --at-most   a,b,i,x,y   $indir/abixy
+run_command $mlr having-fields --at-most   a,b,i,x,y,z $indir/abixy
+
+run_command $mlr rename b,BEE,x,EKS $indir/abixy
+run_command $mlr rename nonesuch,nonesuch,x,EKS $indir/abixy
+
+# ----------------------------------------------------------------
+announce TRIVIAL RETAINERS
+
+run_command $mlr group-by a   $indir/abixy
+run_command $mlr group-by a,b $indir/abixy
+
+run_command $mlr group-like $indir/het.dkvp
+
+run_command $mlr tac $indir/abixy
+run_command $mlr tac /dev/null
+
+# ----------------------------------------------------------------
+announce STATS
+run_command $mlr count-distinct -f a,b $indir/small $indir/abixy
+
+run_command $mlr --opprint stats1 -a avg,sum,count,min,max -f i,x,y -g a,b $indir/abixy
+run_command $mlr --opprint stats2 -a linreg,r2,corr,cov -f x,y,xy,y2,x2,x2 -g a,b $indir/abixy-wide
+run_command $mlr --opprint step -a rsum,delta,counter -f x,y -g a $indir/abixy
+run_command $mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
+
+# ----------------------------------------------------------------
+announce DSLs
+
+run_command $mlr filter '$x>.3'    $indir/abixy
+run_command $mlr filter '$x>0.3'   $indir/abixy
+run_command $mlr filter '$x>0.3 && $y>0.3'   $indir/abixy
+run_command $mlr filter '$x>0.3 || $y>0.3'   $indir/abixy
+run_command $mlr filter 'NR>=4 && NR <= 7'   $indir/abixy
+# xxx more ...
+
+run_command $mlr put '$x2 = $x**2' $indir/abixy
+run_command $mlr put '$z = -0.024*$x+0.13' $indir/abixy
+run_command $mlr put '$c = $a . $b' $indir/abixy
+# xxx more ...
+run_command $mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM;$filename=FILENAME' $indir/abixy $indir/abixy
+
+# ----------------------------------------------------------------
+announce CHAINING
+
+run_command $mlr cat then cat $indir/short
+run_command $mlr cat then tac $indir/short
+run_command $mlr tac then cat $indir/short
+run_command $mlr tac then tac $indir/short
+
+run_command $mlr cat then cat then cat $indir/short
+run_command $mlr cat then cat then tac $indir/short
+run_command $mlr cat then tac then cat $indir/short
+run_command $mlr cat then tac then tac $indir/short
+run_command $mlr tac then cat then cat $indir/short
+run_command $mlr tac then cat then tac $indir/short
+run_command $mlr tac then tac then cat $indir/short
+run_command $mlr tac then tac then tac $indir/short
+
+# ----------------------------------------------------------------
+announce HET-CSV INPUT
+
+run_command $mlr --icsv --odkvp cat test/input/a.csv
+run_command $mlr --icsv --odkvp cat test/input/b.csv
+run_command $mlr --icsv --odkvp cat test/input/c.csv
+run_command $mlr --icsv --odkvp cat test/input/d.csv
+run_command $mlr --icsv --odkvp cat test/input/e.csv
+run_command $mlr --icsv --odkvp cat test/input/f.csv
+run_command $mlr --icsv --odkvp cat test/input/g.csv
+
+run_command $mlr --icsv --odkvp cat test/input/a.csv test/input/a.csv
+run_command $mlr --icsv --odkvp cat test/input/b.csv test/input/b.csv
+run_command $mlr --icsv --odkvp cat test/input/c.csv test/input/c.csv
+run_command $mlr --icsv --odkvp cat test/input/d.csv test/input/d.csv
+run_command $mlr --icsv --odkvp cat test/input/e.csv test/input/e.csv
+run_command $mlr --icsv --odkvp cat test/input/f.csv test/input/f.csv
+run_command $mlr --icsv --odkvp cat test/input/g.csv test/input/g.csv
+
+run_command $mlr --icsv --odkvp cat test/input/a.csv test/input/b.csv
+run_command $mlr --icsv --odkvp cat test/input/b.csv test/input/c.csv
+run_command $mlr --icsv --odkvp cat test/input/c.csv test/input/d.csv
+run_command $mlr --icsv --odkvp cat test/input/d.csv test/input/e.csv
+run_command $mlr --icsv --odkvp cat test/input/e.csv test/input/f.csv
+run_command $mlr --icsv --odkvp cat test/input/f.csv test/input/g.csv
+
+run_command $mlr --icsv --odkvp cat test/input/{a,b,c,d,e,f,g}.csv
+run_command $mlr --icsv --odkvp tac test/input/het.csv
+
+# ----------------------------------------------------------------
+announce HET-PPRINT INPUT
+
+run_command $mlr --ipprint --odkvp cat test/input/a.pprint
+run_command $mlr --ipprint --odkvp cat test/input/b.pprint
+run_command $mlr --ipprint --odkvp cat test/input/c.pprint
+run_command $mlr --ipprint --odkvp cat test/input/d.pprint
+run_command $mlr --ipprint --odkvp cat test/input/e.pprint
+run_command $mlr --ipprint --odkvp cat test/input/f.pprint
+run_command $mlr --ipprint --odkvp cat test/input/g.pprint
+
+run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/a.pprint
+run_command $mlr --ipprint --odkvp cat test/input/b.pprint test/input/b.pprint
+run_command $mlr --ipprint --odkvp cat test/input/c.pprint test/input/c.pprint
+run_command $mlr --ipprint --odkvp cat test/input/d.pprint test/input/d.pprint
+run_command $mlr --ipprint --odkvp cat test/input/e.pprint test/input/e.pprint
+run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/f.pprint
+run_command $mlr --ipprint --odkvp cat test/input/g.pprint test/input/g.pprint
+
+run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/b.pprint
+run_command $mlr --ipprint --odkvp cat test/input/b.pprint test/input/c.pprint
+run_command $mlr --ipprint --odkvp cat test/input/c.pprint test/input/d.pprint
+run_command $mlr --ipprint --odkvp cat test/input/d.pprint test/input/e.pprint
+run_command $mlr --ipprint --odkvp cat test/input/e.pprint test/input/f.pprint
+run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/g.pprint
+
+run_command $mlr --ipprint --odkvp cat test/input/{a,b,c,d,e,f,g}.pprint
+
+# ================================================================
+diff $expdir/out $outdir/out
+
+# ================================================================
+echo ALL REGRESSION TESTS PASSED
+echo Tests completed: $num_passed

@@ -1,0 +1,631 @@
+POKI_PUT_TOC_HERE
+
+<h1>Command overview</h1>
+
+<p>
+Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>tail</tt>, <tt>cut</tt>,
+<tt>sort</tt>, etc., Miller has subcommands, invoked as follows:
+
+POKI_INCLUDE_ESCAPED(subcommand-example.txt)HERE
+
+<p/>These falls into categories as follows:
+
+<table border=1>
+  <tr bgcolor=#e8d9bc>
+    <th>Commands </th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="#cat"><tt>cat</tt></a>,
+      <a href="#cut"><tt>cut</tt></a>,
+      <a href="#head"><tt>head</tt></a>,
+      <a href="#sort"><tt>sort</tt></a>,
+      <a href="#tac"><tt>tac</tt></a>,
+      <a href="#tail"><tt>tail</tt></a>,
+      <a href="#top"><tt>top</tt></a>,
+      <a href="#uniq"><tt>uniq</tt></a>
+    </td>
+    <td> Analogs of their Unix-toolkit namesakes, discussed below as well as in
+    POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#filter"><tt>filter</tt></a>,
+      <a href="#put"><tt>put</tt></a>,
+      <a href="#step"><tt>step</tt></a>
+    </td>
+    <td> <tt>awk</tt>-like functionality </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#histogram"><tt>histogram</tt></a>,
+      <a href="#stats1"><tt>stats1</tt></a>,
+      <a href="#stats2"><tt>stats2</tt></a>
+    </td>
+    <td> Statistically oriented </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#group-by"><tt>group-by</tt></a>,
+      <a href="#group-like"><tt>group-like</tt></a>,
+      <a href="#having-fields"><tt>having-fields</tt></a>
+    </td>
+    <td> Particularly oriented toward POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, although
+      all Miller commands can handle heterogeneous records
+  </tr>
+
+  <tr>
+    <td>
+      <a href="#count-distinct"><tt>count-distinct</tt></a>,
+      <a href="#rename"><tt>rename</tt></a>
+    </td>
+    <td> These draw from other sources (see also POKI_PUT_LINK_FOR_PAGE(originality.html)HERE):
+      <a href="#count-distinct"><tt>count-distinct</tt></a> is SQL-ish, and
+      <a href="#rename"><tt>rename</tt></a> can be done by <tt>sed</tt> (which does it faster:
+        see POKI_PUT_LINK_FOR_PAGE(performance.html)HERE).
+    </td>
+  </tr>
+
+</table>
+
+<h1>On-line help</h1>
+
+<p/>Examples:<p/>
+
+POKI_RUN_COMMAND{{mlr --help | fold -s}}HERE
+
+POKI_RUN_COMMAND{{mlr sort --help}}HERE
+
+<h1>then-chaining</h1>
+
+<p/>
+In accord with the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
+Miller. For example:
+
+POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort hostname,uptime)HERE
+
+<p/>
+For better performance (avoiding redundant string-parsing and string-formatting
+when you pipe Miller commands together) you can, if you like, instead simply
+chain commands together using the <tt>then</tt> keyword:
+
+POKI_CARDIFY(mlr cut --complement -f os_version then sort hostname,uptime *.dat)HERE
+
+<!-- ================================================================ -->
+<h1>I/O options</h1>
+
+<!-- ================================================================ -->
+<h2>Formats</h2>
+
+<p/> Options:
+
+<pre>
+  --dkvp    --idkvp   --odkvp
+  --nidx    --inidx   --onidx
+  --csv     --icsv    --ocsv
+  --pprint  --ipprint --ppprint --right
+  --xtab    --ixtab   --oxtab
+</pre>
+
+<p/> These are as discussed in POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, with the exception of <tt>--right</tt>
+which makes pretty-printed output right-aligned:
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint --right cat data/small}}HERE
+</td></tr></table>
+
+<p/>Additional notes:
+
+<ul>
+
+<li/> Use <tt>--csv</tt>, <tt>--pprint</tt>, etc. when the input and output formats are the same.
+
+<li/> Use <tt>--icsv --opprint</tt>, etc. when you want format conversion as part of what Miller does to your data.
+
+<li/> DKVP (key-value-pair) format is the default for input and output. So,
+<tt>--oxtab</tt> is the same as <tt>--idkvp --oxtab</tt>.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Record/field/pair separators</h2>
+
+<p/> Miller has record separators <tt>IRS</tt> and <tt>ORS</tt>, field
+separators <tt>IFS</tt> and <tt>OFS</tt>, and pair separators <tt>IPS</tt> and
+<tt>OPS</tt>.  For example, in the DKVP line <tt>a=1,b=2,c=3</tt>, the record
+separator is newline, field separator is comma, and pair separator is the
+equals sign. These are the default values.
+
+<p/> Options:
+<pre>
+  --rs --irs --ors
+  --fs --ifs --ofs --repifs
+  --ps --ips --ops
+</pre>
+
+<ul>
+
+<li/> You can change a separator from input to output via e.g. <tt>--ifs =
+--ofs :</tt>. Or, you can specify that the same separator is to be used for
+input and output via e.g. <tt>--fs :</tt>.
+
+<li/> The pair separator is only relevant to DKVP format.
+
+<li/> Pretty-print and xtab formats ignore the separator arguments altogether.
+
+<li/> The <tt>--repifs</tt> means that multiple successive occurrences of the
+field separator count as one.  For example, in CSV data we often signify nulls
+by empty strings, e.g. <tt>2,9,,,,,6,5,4</tt>. On the other hand, if the field
+separator is a space, it might be more natural to parse <tt>2 4    5</tt> the
+same as <tt>2 4 5</tt>: <tt>--repifs --ifs ' '</tt> lets this happen.  In fact,
+the <tt>--ipprint</tt> option above is internally implemented in terms of
+<tt>--repifs</tt>.
+
+<li/> Just write out the desired separator, e.g. <tt>--ofs '|'</tt>. But you may use
+the symbolic names <tt>NEWLINE</tt>, <tt>TAB</tt>, <tt>PIPE</tt>, or <tt>SEMICOLON</tt> if you like.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Number formatting</h2>
+
+Options:
+<pre>
+  --ofmt {format string}
+</pre>
+
+<p/> This is the global number format for commands which generate numeric
+output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
+<tt>step</tt>. Examples:
+
+POKI_CARDIFY(--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf)HERE
+
+<p/> These are just C <tt>printf</tt> formats applied to double-precision
+numbers.  Please don&rsquo;t use <tt>%s</tt> or <tt>%d</tt>. Additionally, if
+you use leading with (e.g. <tt>%18.12lf</tt>) then the output will contain
+embedded whitespace, which may not be what you want if you pipe the output to
+something else.
+
+<!-- ================================================================ -->
+<h1>Data transformations</h1>
+
+<!-- ================================================================ -->
+<h2>cat</h2>
+
+<p/> Most useful for format conversions (see
+POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE), and concatenating multiple
+same-schema CSV files to have the same header:
+
+<table><tr><td>
+POKI_RUN_COMMAND{{cat a.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{cat b.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --csv cat a.csv b.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --icsv --oxtab cat a.csv b.csv}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>count-distinct</h2>
+
+POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
+
+<p/>xxx great oppo for sort -nr
+
+POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort count data/medium}}HERE
+
+<!-- ================================================================ -->
+<h2>cut</h2>
+
+POKI_RUN_COMMAND{{mlr cut --help}}HERE
+
+<p/>Note that <tt>cut</tt> doesn&rsquo;t reorder field names &mdash; for that, use
+<a href="#reorder"><tt>reorder</tt></a>.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint cut -f y,x,i data/small}}HERE
+</td></tr></table>
+
+<p/>
+<!-- ================================================================ -->
+<h2>filter</h2>
+
+POKI_RUN_COMMAND{{mlr filter --help}}HERE
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> expressions, even though they don&rsquo;t
+appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+
+POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'}}HERE
+
+<p/>The <tt>filter</tt> command supports the same built-in variables as for <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This selects the 2nd record from each matching file:
+
+POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
+
+<p/>Expressions may be arbitrarily complex:
+
+POKI_RUN_COMMAND{{mlr --opprint filter '$a == "pan" || $b == "wye"' data/small}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y > 0.5) || ($x < 0.5 && $y < 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>group-by</h2>
+
+POKI_RUN_COMMAND{{mlr group-by --help}}HERE
+
+<p/>This is similar to <tt>sort</tt> but with less work. Namely, Miller&rsquo;s
+sort has three steps: read through the data and append linked lists of records,
+one for each unique combination of the key-field values; after all records
+are read, sort the key-field values; then print each record-list. The group-by
+operation simply omits the middle sort.  An example should make this more
+clear.
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{mlr --opprint group-by a data/small}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --opprint sort a data/small}}HERE
+</td> </tr></table>
+
+<p/>In this example, since the sort is on field <tt>a</tt>, the first step is
+to group together all records having the same value for field <tt>a</tt>; the
+second step is to sort the distinct <tt>a</tt>-field values <tt>pan</tt>,
+<tt>eks</tt>, and <tt>wye</tt> into <tt>eks</tt>, <tt>pan</tt>, and
+<tt>wye</tt>; the third step is to print out the record-list for
+<tt>a=eks</tt>, then the record-list for <tt>a=pan</tt>, then the record-list
+for <tt>a=wye</tt>.  The group-by operation omits the middle sort and just puts
+like records together, for those times when a sort isn&rsquo;t desired. In
+particular, the ordering of group-by fields for group-by is the order in which
+they were encountered in the data stream, which in some cases may be more interesting
+to you.
+
+<!-- ================================================================ -->
+<h2>group-like</h2>
+
+POKI_RUN_COMMAND{{mlr group-like --help}}HERE
+
+<p/> This groups together records having the same schema (i.e. same ordered list of field names)
+which is useful for making sense of time-ordered output as described in
+POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE &mdash; in particular, in
+preparation for CSV or pretty-print output.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>having-fields</h2>
+
+POKI_RUN_COMMAND{{mlr having-fields --help}}HERE
+
+<p/> Similar to <tt>group-like</tt>, this retains records with specified schema.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr having-fields --at-least resource data/het.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr having-fields --which-are resource,ok,loadsec data/het.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>head</h2>
+
+POKI_RUN_COMMAND{{mlr head --help}}HERE
+
+Note that <tt>head</tt> is distinct from <a href="#top"><tt>top</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint head -n 4 data/medium}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint head -n 1 -g b data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>histogram</h2>
+
+POKI_RUN_COMMAND{{mlr histogram --help}}HERE
+
+Just a histogram.
+
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
+
+<!-- ================================================================ -->
+<h2>put</h2>
+
+POKI_RUN_COMMAND{{mlr put --help}}HERE
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>put</tt> expressions, even though they don&rsquo;t
+appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+Multiple expressions may be given, separated by semicolons, and each may refer to the ones before.
+
+POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'}}HERE
+
+<p/>Miller supports the following five built-in variables for <tt>filter</tt>
+and <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>.
+
+POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2}}HERE
+
+<!-- ================================================================ -->
+<h2>rename</h2>
+
+POKI_RUN_COMMAND{{mlr rename --help}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint rename i,INDEX,b,COLUMN2 data/small}}HERE
+</td></tr></table>
+
+<p/>As discussed in POKI_PUT_LINK_FOR_PAGE(performance.html)HERE, <tt>sed</tt>
+is significantly faster than Miller at doing this. However, Miller is
+format-aware, so it knows to do renames only within specified field keys and
+not any others, nor in field values which may happen to contain the same
+pattern. Example:
+
+<table><tr><td>
+POKI_RUN_COMMAND{{sed 's/y/COLUMN5/g' data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>reorder</h2>
+
+POKI_RUN_COMMAND{{mlr reorder --help}}HERE
+
+This pivots specified field names to the start or end of the record &mdash; for
+example when you have highly multi-column data and you want to bring a field or
+two to the front of line where you can give a quick visual scan.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint reorder -f i,b data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>sort</h2>
+
+POKI_RUN_COMMAND{{mlr sort --help}}HERE
+
+<p/>xxx write up after -n/-r.
+
+<!-- ================================================================ -->
+<h2>stats1</h2>
+
+POKI_RUN_COMMAND{{mlr stats1 --help}}HERE
+
+These are simple univariate statistics on one or more number-valued fields,
+optionally categorized by one or more fields.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,avg -f x,y data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a avg -f x,y -g b then sort b data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>stats2</h2>
+
+POKI_RUN_COMMAND{{mlr stats2 --help}}HERE
+
+These are simple bivariate statistics on one or more pairs of number-valued
+fields, optionally categorized by one or more fields.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
+</td></tr></table>
+
+<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
+fields of the <tt>data/medium</tt> dataset are just independent uniformly
+distributed on the unit interval. Here we remove half the data and fit a line to it.
+
+POKI_INCLUDE_ESCAPED(data/linreg-example.txt)HERE
+
+<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+plotting; here&rsquo;s a screenshot.
+
+<center>
+<img src="data/linreg-example.jpg"/>
+</center>
+
+
+<!-- ================================================================ -->
+<h2>step</h2>
+
+POKI_RUN_COMMAND{{mlr step --help}}HERE
+
+Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
+<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
+<tt>step</tt> command is intermediate: it allows the option of adding fields
+which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
+
+<p/>xxx rename rsum then so it doesn&rsquo;t need explaining!! <tt>:)</tt>
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x data/medium | head -15}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>tac</h2>
+
+POKI_RUN_COMMAND{{mlr tac --help}}HERE
+
+<p/>Prints the records in the input stream in reverse order. Note: this
+requires Miller to retain all input records in memory before any output records
+are produced.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat a.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat b.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint tac a.csv b.csv}}HERE
+</td></tr></table>
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac a.csv b.csv}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>tail</h2>
+
+POKI_RUN_COMMAND{{mlr tail --help}}HERE
+
+<p/> Prints the last <i>n</i> records in the input stream, optionally by category.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint tail -n 4 data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>top</h2>
+
+POKI_RUN_COMMAND{{mlr top --help}}HERE
+
+Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x data/medium}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort a data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h2>uniq</h2>
+
+POKI_RUN_COMMAND{{mlr uniq --help}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr uniq -g color,shape data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort color,shape data/colored-shapes.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>Functions for filter and put</h1>
+
+Miller&rsquo;s
+<a href="#filter"><tt>filter</tt></a> and <a href="#put"><tt>put</tt></a>
+support the following operators and functions:
+
+<table border=1>
+  <tr bgcolor=#e8d9bc>
+    <th>Operators/functions </th>
+    <th>Description</th>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>==</tt>,
+      <tt>!=</tt>,
+      <tt>&lt;</tt>,
+      <tt>&lt;=</tt>,
+      <tt>&gt;</tt>,
+      <tt>&gt;=</tt>,
+      <tt>&amp;&amp;</tt>,
+      <tt>||</tt>
+    </td>
+    <td>Filter-only. Comparisons are string-valued or number-valued depending on absence/presence of double-quotes in the literal value:
+      <br/><tt> mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2' </tt>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>+</tt>,
+      <tt>-</tt> (unary or binary),
+      <tt>*</tt>,
+      <tt>/</tt>,
+      <tt>**</tt>
+    </td>
+    <td>Number-valued.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>.</tt>
+    </td>
+    <td>String concatenation
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>systime</tt> (seconds since epoch),
+      <tt>urand</tt>
+    </td>
+    <td>Functions of no arguments returning numbers
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>abs</tt>,
+      <tt>ceil</tt>,
+      <tt>cos</tt>,
+      <tt>exp</tt>,
+      <tt>floor</tt>,
+      <tt>log</tt>,
+      <tt>log10</tt>,
+      <tt>pow</tt>,
+      <tt>round</tt>,
+      <tt>sin</tt>,
+      <tt>tan</tt>
+    </td>
+    <td>Number-to-number functions with one argument
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>atan2</tt>
+    </td>
+    <td>Number-to-number functions with two arguments
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <tt>tolower</tt>,
+      <tt>toupper</tt>
+    </td>
+    <td>String-to-string functions with one argument
+    </td>
+  </tr>
+
+</table>
+
+<p/>See also the <tt>awk</tt>-like built-in variables <tt>NF</tt>, <tt>NR</tt>,
+<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt> as described in the section on <a href="#put"><tt>put</tt></a>.

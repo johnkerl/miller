@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-data-examples.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <title> Data examples </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/>User info:
+<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>Developer info:
+<br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="http://johnkerl.org/miller/c2">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <center> <titleinbody> Data examples </titleinbody> </center>
+    <p>
+    
+<!-- BODY COPIED FROM content-for-data-examples.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#flins_data">flins data</a><br/>
+&bull;&nbsp;<a href="#Color/shape_data">Color/shape data</a><br/>
+&bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
+</div>
+<p/>
+<h1>flins data</h1>  <a id="flins_data"/>
+<p/> The <a href="data/flins.csv">flins.csv</a> file is some sample data
+obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data">https://support.spatialkey.com/spatialkey-sample-csv-data</a>.
+
+<p/>Vertical-tabular format is good for a quick look at CSV data layout &mdash; seeing what columns you have to work with:
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 2 data/flins.csv | mlr --icsv --oxtab cat
+policyID           119736
+statecode          FL
+county             CLAY COUNTY
+eq_site_limit      498960
+hu_site_limit      498960
+fl_site_limit      498960
+fr_site_limit      498960
+tiv_2011           498960
+tiv_2012           792148.9
+eq_site_deductible 0
+hu_site_deductible 9979.2
+fl_site_deductible 0
+fr_site_deductible 0
+point_latitude     30.102261
+point_longitude    -81.711777
+line               Residential
+construction       Masonry
+point_granularity  1
+</pre>
+</div>
+<p/>
+<p/> A few simple queries:
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/flins.csv | mlr --icsv --opprint count-distinct -f county | head
+county              count
+CLAY COUNTY         363
+SUWANNEE COUNTY     154
+NASSAU COUNTY       135
+COLUMBIA COUNTY     125
+ST  JOHNS COUNTY    657
+BAKER COUNTY        70
+BRADFORD COUNTY     31
+HAMILTON COUNTY     35
+UNION COUNTY        15
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/flins.csv | mlr --icsv --opprint count-distinct -f construction,line
+construction        line        count
+Masonry             Residential 9257
+Wood                Residential 21581
+Reinforced Concrete Commercial  1299
+Reinforced Masonry  Commercial  4225
+Steel Frame         Commercial  272
+</pre>
+</div>
+<p/>
+<p/> Categorization of total insured value:
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012
+tiv_2012_min tiv_2012_avg   tiv_2012_max
+73.370000    2571004.097342 1701000000.000000
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012 -g construction,line
+construction        line        tiv_2012_min    tiv_2012_avg     tiv_2012_max
+Masonry             Residential 261168.070000   1041986.129217   3234970.920000
+Wood                Residential 73.370000       113493.017049    649046.120000
+Reinforced Concrete Commercial  6416016.010000  20212428.681840  60570000.000000
+Reinforced Masonry  Commercial  1287817.340000  4621372.981117   16650000.000000
+Steel Frame         Commercial  29790000.000000 133492500.000000 1701000000.000000
+</pre>
+</div>
+<p/>
+
+<p/> xxx more Q's after sort -nr and quantiles:
+<pre>
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
+echo
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
+echo
+cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f eq_site_deductible,tiv_2012 -g county
+echo
+cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f tiv_2011,tiv_2012
+echo
+cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f tiv_2011,tiv_2012 -g county
+</pre>
+
+<p/> xxx plaintext hardlinks
+
+<h1>Color/shape data</h1>  <a id="Color/shape_data"/>
+<p/> The <a href="data/colored-shapes.dkvp">colored-shapes.dkvp</a> file is some sample data produced by xxx put link here. The idea is
+<ul>
+<li> Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
+<li> Each record is labeled with one of a few colors and one of a few shapes.
+<li> The <tt>flag</tt> field is 0 or 1, with probability dependent on color
+<li> The <tt>u</tt> field is plain uniform on the unit interval.
+<li> The <tt>v</tt> field is the same, except tightly correlated with <tt>u</tt> for red circles.
+<li> The <tt>w</tt> field is autocorrelated for each color/shape pair.
+<li> The <tt>x</tt> field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+</ul>
+
+<p/> Peek at the data:
+<p/>
+<div class="pokipanel">
+<pre>
+$ wc -l data/colored-shapes.dkvp
+  100000 data/colored-shapes.dkvp
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
+color  shape    flag i u                  v                   w                    x
+green  circle   1    1 0.3333681345949695 0.21376251997142037 0.500764608334147    5.335248996137616
+red    square   0    2 0.9698237361677843 0.49622821725976396 0.8040548802590068   4.860269966304398
+yellow circle   1    3 0.9879523154172577 0.8487346180375205  0.6423100990686053   5.277708912462331
+red    circle   0    4 0.4622496635675988 0.5046956653096718  0.13094461569540355  5.370828092344023
+blue   circle   1    5 0.9992738066015238 0.08847422779789516 0.020449531719886935 4.712152492660485
+purple triangle 0    6 0.983871885308542  0.5390716976565088  0.8211678541134113   3.873918555931081
+</pre>
+</div>
+<p/>
+
+<p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><tt>creach</tt></a> for spacing).
+Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up with <tt>v</tt> but we can't yet see what:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -a min,avg,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+flag_min 0.000000
+flag_avg 0.397960
+flag_max 1.000000
+
+u_min    0.000010
+u_avg    0.501086
+u_max    0.999983
+
+v_min    -0.096195
+v_avg    0.500016
+v_max    1.095540
+</pre>
+</div>
+<p/>
+<p/>The histogram shows the different distribution of 0/1 flags:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
+bin_lo    bin_hi   flag_count u_count v_count
+-0.100000 0.000000 60204      0       287
+0.000000  0.100000 0          10089   9613
+0.100000  0.200000 0          9844    10022
+0.200000  0.300000 0          9976    10115
+0.300000  0.400000 0          9923    10027
+0.400000  0.500000 0          9918    9988
+0.500000  0.600000 0          10017   9934
+0.600000  0.700000 0          9998    9968
+0.700000  0.800000 0          10202   10124
+0.800000  0.900000 0          10003   9970
+0.900000  1.000000 39796      10030   9650
+1.000000  1.100000 0          0       302
+</pre>
+</div>
+<p/>
+
+<p/> Look at univariate stats by color and shape. In particular,
+color-dependent flag probabilities pop out, aligning with their original
+Bernoulli probablities from the data-generator script:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort color data/colored-shapes.dkvp
+color  flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
+blue   0.000000 0.599086 1.000000 0.000044 0.503581 0.999976 0.000057  0.496972 0.999870
+green  0.000000 0.207102 1.000000 0.000010 0.504358 0.999983 0.000079  0.498956 0.999889
+orange 0.000000 0.505079 1.000000 0.000464 0.496712 0.999574 0.000185  0.493220 0.999967
+purple 0.000000 0.098957 1.000000 0.000037 0.498311 0.999693 0.000011  0.502892 0.999993
+red    0.000000 0.297820 1.000000 0.000019 0.499904 0.999946 -0.096195 0.500635 1.095540
+yellow 0.000000 0.898270 1.000000 0.000327 0.502877 0.999923 0.000138  0.501022 0.999983
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort shape data/colored-shapes.dkvp
+shape    flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
+circle   0.000000 0.398115 1.000000 0.000037 0.502212 0.999976 -0.096195 0.496996 1.095540
+square   0.000000 0.397398 1.000000 0.000037 0.499935 0.999970 0.000088  0.500389 0.999975
+triangle 0.000000 0.398542 1.000000 0.000010 0.501676 0.999983 0.000010  0.501804 0.999995
+</pre>
+</div>
+<p/>
+
+<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out (xxx sort -n oppo):
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
+u_v_corr w_x_corr
+0.115078 0.000020
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort u_v_corr data/colored-shapes.dkvp
+ color    shape  u_v_corr  w_x_corr
+   red triangle -0.000349  0.003179
+yellow triangle -0.001735  0.032633
+yellow   circle -0.002083 -0.012606
+purple triangle -0.004290  0.006341
+ green   square -0.006983  0.001269
+purple   square -0.011754 -0.003372
+  blue   circle -0.017771  0.014975
+  blue   square -0.019537 -0.006952
+ green   circle -0.034313 -0.049415
+orange triangle  0.000620 -0.013529
+yellow   square  0.001905 -0.002849
+orange   square  0.005342  0.042003
+   red   square  0.006553 -0.007587
+ green triangle  0.010633 -0.025945
+purple   circle  0.021701  0.037687
+orange   circle  0.021871 -0.040626
+  blue triangle  0.029301  0.017138
+   red   circle  0.980343  0.004277
+</pre>
+</div>
+<p/>
+
+<h1>Program timing</h1>  <a id="Program_timing"/>
+This admittedly artificial example demonstrates using Miller time and stats
+functions to introspectly acquire some information about Miller&rsquo;s own
+runtime. The <tt>delta</tt> function computes the difference between successive
+timestamps..
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
+
+$ head -n 5 lines.txt
+i=1
+i=2
+i=3
+i=4
+i=5
+
+mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
+i     t                 t_delta
+1     1430603027.018016 1.430603027e+09
+2     1430603027.018043 2.694129944e-05
+3     1430603027.018048 5.006790161e-06
+4     1430603027.018052 4.053115845e-06
+5     1430603027.018055 2.861022949e-06
+6     1430603027.018058 3.099441528e-06
+
+mlr --ofmt '%.9le' --oxtab \
+  put '$t=systime()' then \
+  step -a delta -f t then \
+  filter '$i&gt;1' then \
+  stats1 -a min,avg,max -f t_delta \
+  lines.txt
+t_delta_min 2.861022949e-06
+t_delta_avg 4.077508505e-06
+t_delta_max 5.388259888e-05
+</pre>
+</div>
+<p/>
+  </td>
+
+</table>
+</body>
+</html>

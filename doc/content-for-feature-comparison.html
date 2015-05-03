@@ -1,0 +1,57 @@
+POKI_PUT_TOC_HERE
+
+<h1>File-format awareness</h1>
+
+Miller respects CSV headers. If you do <tt>mlr --csv-input cat *.csv</tt> then the header line is written once:
+
+<table><tr>
+<td>
+POKI_RUN_COMMAND{{cat a.csv}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{cat b.csv}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{mlr --csv cat a.csv b.csv}}HERE
+</td>
+</tr></table>
+
+Likewise with <tt>mlr sort</tt>, <tt>mlr tac</tt>, and so on.
+
+<h1>awk-like features: mlr filter and mlr put</h1>
+
+<ul>
+
+<li/> <tt>mlr filter</tt> includes/excludes records based on a filter
+expression, e.g. <tt>mlr filter '$count &gt; 10'</tt>.
+
+<li/> <tt>mlr put</tt> adds a new field as a function of others, e.g. <tt>mlr
+put '$xy = $x * $y'</tt> or <tt>mlr put '$counter = NR'</tt>.
+
+<li/> The <tt>$name</tt> syntax is straight from <tt>awk</tt>&rsquo;s <tt>$1 $2
+$3</tt> (adapted to name-based indexing), as are the variables <tt>FS</tt>,
+<tt>OFS</tt>, <tt>RS</tt>, <tt>ORS</tt>, <tt>NF</tt>, <tt>NR</tt>, and
+<tt>FILENAME</tt>.
+
+<li/> While <tt>awk</tt> functions are record-based, Miller subcommands (or
+functions, if you like) are stream-based: each of them maps a stream of records
+into another stream of records.
+
+<li/> Unlike <tt>awk</tt>, Miller doesn&rsquo;t allow you to define new functions.
+Its domain-specific languages are limited to the <tt>filter</tt> and
+<tt>put</tt> syntax. Futher programmability comes from chaining with
+<tt>then</tt>.
+
+<li/> Miller is faster than <tt>awk</tt>, <tt>cut</tt>, and so on (depending on
+platform; see also POKI_PUT_LINK_FOR_PAGE(performance.html)HERE). In
+particular, Miller&rsquo;s DSL syntax is parsed into C control structures at
+startup time, with the bulk data-stream processing all done in C.
+
+</ul>
+
+<h1>See also</h1>
+
+<p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE for more on Miller&rsquo;s
+subcommands <tt>cat</tt>, <tt>cut</tt>, <tt>head</tt>, <tt>sort</tt>,
+<tt>tac</tt>, <tt>tail</tt>, <tt>top</tt>, and <tt>uniq</tt>, as well as awk-like
+<tt>mlr filter</tt> and <tt>mlr put</tt>.

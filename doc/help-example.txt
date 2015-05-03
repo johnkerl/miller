@@ -1,0 +1,4 @@
+mlr --help
+mlr sort --help
+mlr histogram --help
+# etc.
