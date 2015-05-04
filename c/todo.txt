@@ -4,6 +4,8 @@ NEATEN
 * prune pix
 * makefile go/d/rs stuff -> language-comparisons
 * catc.c/catc0.c -> language-comparisons
+* remove/coalesce/gzip the large data files
+* mk perfcomp dir
 
 ================================================================
 FEATURES

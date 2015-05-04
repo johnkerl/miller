@@ -831,7 +831,12 @@ Usage: mlr histogram [options]
 </div>
 <p/>
 
-Just a histogram.
+This is just a histogram; there&rsquo;s not too much to say here. A note about
+binning, by example: Suppose you use <tt>--lo 0.0 --hi 1.0 --nbins 10 -f
+x</tt>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
+in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin
+0 has <tt>0.0 &le; x &lt; 0.1</tt>, bin 1 has <tt>0.1 &le; x &lt; 0.2</tt>,
+etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
 
 <p/>
 <div class="pokipanel">
@@ -1211,8 +1216,6 @@ Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>
 <tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
 <tt>step</tt> command is intermediate: it allows the option of adding fields
 which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
-
-<p/>xxx rename rsum then so it doesn&rsquo;t need explaining!! <tt>:)</tt>
 
 <table><tr><td>
 <p/>

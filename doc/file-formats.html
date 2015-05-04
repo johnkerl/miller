@@ -159,11 +159,13 @@ changes of field names within the same data stream. But using DKVP format this i
 natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
 of lines such as
 
+<p/>
 <div class="pokipanel">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100, resource=/path/to/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </div>
+<p/>
 
 etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
 to analyze my logs.
@@ -232,11 +234,37 @@ $ mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
 <p/>
 </td> </tr></table>
 
+<p/> Example with index-numbered input and output:
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/mydata.txt
+oh say can you see
+by the dawn's
+early light
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
+say can
+the dawn's
+light
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
 <h1>Vertical tabular</h1>  <a id="Vertical_tabular"/>
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
 data which causes line-wraps on the screen (but see also <a
 href="https://github.com/twosigma/ngrid">https://github.com/twosigma/ngrid</a>
-for an entirely different, very poweful option). Namely:
+for an entirely different, very powerful option). Namely:
 
 <table><tr> <td>
 <p/>
