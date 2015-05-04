@@ -11,6 +11,8 @@ NEATEN
 FEATURES
 !! sort -nr !!
 !! quantiles !!
+  http://en.wikipedia.org/wiki/Order_statistic_tree
+* stats1 mode
 ! mod op!! (c-like, or sane) and put into wikidoc if so.
 * needs sub function. e.g. "300ms" -> "300"
 * online help: have a categorized function lister -- by string/math or arity, or some such ...
@@ -72,3 +74,41 @@ MEM MGMT:
 * _free funcptr/funcs for mappers
 * free last rec in streamer?
 
+================================================================
+FCNS INCL. STRxTIME
+? length     i_s_
+! fmtnum     s_f_, s_i_
+? strptime   f_s_
+? strftime   s_f_, s_i_
+? match      b_ss
+? sub, gsub  s_sss (w/ regexes!!)
+? index      i_ss
+? bit ops & | ^ << >> ???    i_ii
+
+================================================================
+UT/REG
+* general coverage
+  - include -D__XXX_MAIN__ content
+* cat/X/cat for all X
+* tac/X/cat for all X
+* cat/X/tac for all X
+* tac/X/tac for all X
+* put & filter
+* multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
+* het-xtab out
+
+================================================================
+I/O
+? right-align only some in --opprint?
+
+================================================================
+INTERNAL DOCS (e.g. README)
+* sllv==NULL vs. sllv_single(NULL); and mem-mgmt cmts thruout
+
+================================================================
+HARDER HYGIENE
+* eliminate compiler warnings for *.l/*.y/etc.
+
+================================================================
+PYTHON
+* pgr + stats_m same I/O modules??
