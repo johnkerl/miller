@@ -1,6 +1,6 @@
 // ================================================================
 // This is a hashless implementation of insertion-ordered key-value pairs.
-// It implements that same interface as the hashed version (see lhmss.h).
+// It implements the same interface as the hashed version (see lhmss.h).
 //
 // Design:
 //
@@ -12,7 +12,7 @@
 //
 // Motivation:
 //
-// * The use case for records in Miller is the *all* fields are read from
+// * The use case for records in Miller is that *all* fields are read from
 //   strings & written to strings (split/join), while only *some* fields are
 //   operated on.
 //
@@ -26,10 +26,10 @@
 // * The hashed impl computes hashsums for *all* fields whether operated on or not,
 //   for the benefit of the *few* fields looked up during the mapping operation.
 //
-// * The hashless impl only keeps string pointers with strdups.  Lookups are
-//   done at runtime doing prefix search on the key names. Assuming field names
-//   are distinct, this is just a few char-ptr accesses which (in experiments)
-//   turn out to offer about a 10-15% performance improvement.
+// * The hashless impl only keeps string pointers.  Lookups are done at runtime
+//   doing prefix search on the key names. Assuming field names are distinct,
+//   this is just a few char-ptr accesses which (in experiments) turn out to
+//   offer about a 10-15% performance improvement.
 //
 // * Added benefit: the field-rename operation (preserving field order) becomes
 //   trivial.

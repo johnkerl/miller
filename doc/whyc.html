@@ -88,13 +88,13 @@ hash-map/linked-list literals built into the language (e.g.
 <tt>mymap={"a"=&gt;1,"b"=&gt;2}</tt> or <tt>mylist=[3,4,5]</tt>), autodoc (e.g.
 Javadoc), and so on.  Yet, while memory management is indeed Miller&rsquo;s
 trickiest aspect, its garbage-collection needs are well-delineated and so the
-absence of GC is no great loss.  Moreover, Miller&rsquo;s performance relies on
+absence of GC is no great loss.  Miller&rsquo;s performance relies on
 the principles of <i>touching each byte as few times as possible</i>, and
 <i>copying bytes only when necessary</i>. This results in a baton-passing,
-free-on-last-use memory-management pattern which works well enough.  As well,
+free-on-last-use memory-management pattern which works well enough.
 Miller doesn&rsquo;t require a complex collections library: mostly simple hash
 maps, hash sets, and linked lists which aren&rsquo;t difficult to code.
-Moreover, though, Miller&rsquo;s primary data structure, the
+Moreover, Miller&rsquo;s primary data structure, the
 <a href="https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h"><tt>lrec_t</tt></a>,
 is hand-tuned to Miller&rsquo;s use case and would have required hand-coding in
 any case.

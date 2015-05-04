@@ -6,6 +6,8 @@ NEATEN
 * catc.c/catc0.c -> language-comparisons
 * remove/coalesce/gzip the large data files
 * mk perfcomp dir
+* "index-numbered" -> "implicitly index-numbered" in mlrwik
+* source hygiene: xxx's, top-of-header comments, readme re memory management, etc.
 
 ================================================================
 FEATURES

@@ -85,7 +85,7 @@ records.  This includes the case of CSV-formatted files.  See
 changes of field names within a single data stream.
 
 <p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt> to convert TSV to
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt>; to convert TSV to
 CSV, use <tt>--ifs TAB --ofs ,</tt> etc.  (See also
 <a href="reference.html">Reference</a>.)
 
@@ -161,9 +161,11 @@ of lines such as
 
 <p/>
 <div class="pokipanel">
+<pre>
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100, resource=/path/to/file
 resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
 </div>
 <p/>
 

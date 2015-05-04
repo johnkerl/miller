@@ -7,7 +7,7 @@ POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
 changes of field names within a single data stream.
 
 <p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt> to convert TSV to
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt>; to convert TSV to
 CSV, use <tt>--ifs TAB --ofs ,</tt> etc.  (See also
 POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
 
@@ -50,9 +50,11 @@ of lines such as
 
 <p/>
 <div class="pokipanel">
+<pre>
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100, resource=/path/to/file
 resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
 </div>
 <p/>
 
