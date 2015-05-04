@@ -88,6 +88,8 @@ static void check_arg_count(char** argv, int argi, int argc, int n) {
 static char sep_from_arg(char* arg, char* argv0) {
 	if (streq(arg, "TAB"))
 		return '\t';
+	if (streq(arg, "SPACE"))
+		return ' ';
 	if (streq(arg, "NEWLINE"))
 		return '\n';
 	if (streq(arg, "PIPE"))
