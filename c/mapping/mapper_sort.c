@@ -71,7 +71,6 @@ sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	}
 }
 
-// xxx move to mlrutil?
 static int string_list_compare(const void* pva, const void* pvb) {
 	const lhmslve_t* pea = pva;
 	const lhmslve_t* peb = pvb;

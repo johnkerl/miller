@@ -13,6 +13,10 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define DO_CORR 0x11
+#define DO_COV  0x22
+#define DO_COVX 0x33
+
 // ----------------------------------------------------------------
 typedef void stats2_put_func_t(void* pvstate, double x, double y);
 typedef void stats2_get_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
@@ -133,79 +137,6 @@ stats2_t* stats2_linreg_alloc(static_context_t* pstatx) {
 }
 
 // ----------------------------------------------------------------
-// def find_sample_covariance(xs, ys):
-//      N = len(xs)
-//      mean_x = find_mean(xs)
-//      mean_y = find_mean(ys)
-//
-//      sum = 0.0
-//      for k in range(0, N):
-//              sum += (xs[k] - mean_x) * (ys[k] - mean_y)
-//
-//      return sum / (N-1.0)
-
-// Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
-typedef struct _stats2_corr_cov_state_t {
-	unsigned long long count;
-	double sumx;
-	double sumy;
-	double sumx2;
-	double sumxy;
-	double sumy2;
-	int    do_corr;
-	static_context_t* pstatx;
-} stats2_corr_cov_state_t;
-void stats2_corr_cov_put(void* pvstate, double x, double y) {
-	stats2_corr_cov_state_t* pstate = pvstate;
-	pstate->count++;
-	pstate->sumx  += x;
-	pstate->sumy  += y;
-	pstate->sumx2 += x*x;
-	pstate->sumxy += x*y;
-	pstate->sumy2 += y*y;
-}
-
-void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
-	stats2_corr_cov_state_t* pstate = pvstate;
-	char* suffix = (pstate->do_corr) ? "corr" : "cov";
-	char* key = mlr_paste_5_strings(name1, "_", name2, "_", suffix);
-	if (pstate->count < 2LL) {
-		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
-	} else {
-		double output = mlr_get_cov(pstate->count, pstate->sumx, pstate->sumy, pstate->sumxy);
-		if (pstate->do_corr) {
-			double sigmax = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
-			double sigmay = mlr_get_stddev(pstate->count, pstate->sumy, pstate->sumy2);
-			output = output / sigmax / sigmay;
-		}
-		char* val = mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
-		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-	}
-}
-stats2_t* stats2_corr_cov_alloc(int do_corr, static_context_t* pstatx) {
-	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
-	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
-	pstate->count     = 0LL;
-	pstate->sumx      = 0.0;
-	pstate->sumy      = 0.0;
-	pstate->sumx2     = 0.0;
-	pstate->sumxy     = 0.0;
-	pstate->sumy2     = 0.0;
-	pstate->do_corr   = do_corr;
-	pstate->pstatx = pstatx;
-	pstats2->pvstate   = (void*)pstate;
-	pstats2->pput_func = &stats2_corr_cov_put;
-	pstats2->pget_func = &stats2_corr_cov_get;
-	return pstats2;
-}
-stats2_t* stats2_corr_alloc(static_context_t* pstatx) {
-	return stats2_corr_cov_alloc(TRUE, pstatx);
-}
-stats2_t* stats2_cov_alloc(static_context_t* pstatx) {
-	return stats2_corr_cov_alloc(FALSE, pstatx);
-}
-
-// ----------------------------------------------------------------
 // http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
 // Alternatively, just use sqrt(corr) as defined above.
 
@@ -265,6 +196,108 @@ stats2_t* stats2_r2_alloc(static_context_t* pstatx) {
 }
 
 // ----------------------------------------------------------------
+// def find_sample_covariance(xs, ys):
+//      N = len(xs)
+//      mean_x = find_mean(xs)
+//      mean_y = find_mean(ys)
+//
+//      sum = 0.0
+//      for k in range(0, N):
+//              sum += (xs[k] - mean_x) * (ys[k] - mean_y)
+//
+//      return sum / (N-1.0)
+
+// Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
+typedef struct _stats2_corr_cov_state_t {
+	unsigned long long count;
+	double sumx;
+	double sumy;
+	double sumx2;
+	double sumxy;
+	double sumy2;
+	int    do_which;
+	static_context_t* pstatx;
+} stats2_corr_cov_state_t;
+void stats2_corr_cov_put(void* pvstate, double x, double y) {
+	stats2_corr_cov_state_t* pstate = pvstate;
+	pstate->count++;
+	pstate->sumx  += x;
+	pstate->sumy  += y;
+	pstate->sumx2 += x*x;
+	pstate->sumxy += x*y;
+	pstate->sumy2 += y*y;
+}
+
+void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+	stats2_corr_cov_state_t* pstate = pvstate;
+	if (pstate->do_which == DO_COVX) {
+		char* key00 = mlr_paste_4_strings(name1, "_", name2, "_q00");
+		char* key01 = mlr_paste_4_strings(name1, "_", name2, "_q01");
+		char* key10 = mlr_paste_4_strings(name1, "_", name2, "_q10");
+		char* key11 = mlr_paste_4_strings(name1, "_", name2, "_q11");
+		if (pstate->count < 2LL) {
+			lrec_put(poutrec, key00, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, key01, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, key10, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, key11, "", LREC_FREE_ENTRY_KEY);
+		} else {
+			double q00, q01, q10, q11;
+			mlr_get_cov_matrix(pstate->count,
+				pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy,
+				&q00, &q01, &q10, &q11);
+			char* val00 = mlr_alloc_string_from_double(q00, pstate->pstatx->ofmt);
+			char* val01 = mlr_alloc_string_from_double(q01, pstate->pstatx->ofmt);
+			char* val10 = mlr_alloc_string_from_double(q10, pstate->pstatx->ofmt);
+			char* val11 = mlr_alloc_string_from_double(q11, pstate->pstatx->ofmt);
+			lrec_put(poutrec, key00, val00, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, key01, val01, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, key10, val10, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, key11, val11, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		}
+	} else {
+		char* suffix = (pstate->do_which == DO_CORR) ? "corr" : "cov";
+		char* key = mlr_paste_5_strings(name1, "_", name2, "_", suffix);
+		if (pstate->count < 2LL) {
+			lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
+		} else {
+			double output = mlr_get_cov(pstate->count, pstate->sumx, pstate->sumy, pstate->sumxy);
+			if (pstate->do_which == DO_CORR) {
+				double sigmax = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
+				double sigmay = mlr_get_stddev(pstate->count, pstate->sumy, pstate->sumy2);
+				output = output / sigmax / sigmay;
+			}
+			char* val = mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
+			lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		}
+	}
+}
+stats2_t* stats2_corr_cov_alloc(int do_which, static_context_t* pstatx) {
+	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
+	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
+	pstate->count      = 0LL;
+	pstate->sumx       = 0.0;
+	pstate->sumy       = 0.0;
+	pstate->sumx2      = 0.0;
+	pstate->sumxy      = 0.0;
+	pstate->sumy2      = 0.0;
+	pstate->do_which   = do_which;
+	pstate->pstatx     = pstatx;
+	pstats2->pvstate   = (void*)pstate;
+	pstats2->pput_func = &stats2_corr_cov_put;
+	pstats2->pget_func = &stats2_corr_cov_get;
+	return pstats2;
+}
+stats2_t* stats2_corr_alloc(static_context_t* pstatx) {
+	return stats2_corr_cov_alloc(DO_CORR, pstatx);
+}
+stats2_t* stats2_cov_alloc(static_context_t* pstatx) {
+	return stats2_corr_cov_alloc(DO_COV, pstatx);
+}
+stats2_t* stats2_covx_alloc(static_context_t* pstatx) {
+	return stats2_corr_cov_alloc(DO_COVX, pstatx);
+}
+
+// ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
 	char* name;
 	stats2_alloc_func_t* pnew_func;
@@ -272,9 +305,10 @@ typedef struct _stats2_lookup_t {
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
 	{"linreg", stats2_linreg_alloc},
+	{"r2",     stats2_r2_alloc},
 	{"corr",   stats2_corr_alloc},
 	{"cov",    stats2_cov_alloc},
-	{"r2",     stats2_r2_alloc},
+	{"covx",   stats2_covx_alloc},
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
 
@@ -486,3 +520,6 @@ mapper_setup_t mapper_stats2_setup = {
 	.pusage_func = mapper_stats2_usage,
 	.pparse_func = mapper_stats2_parse_cli
 };
+
+// 1/(n-1) sumx2 - sumx**2 / n
+// 1/(n-1) sumxy - sumx*sumy / n
