@@ -86,15 +86,15 @@ static void check_arg_count(char** argv, int argi, int argc, int n) {
 }
 
 static char sep_from_arg(char* arg, char* argv0) {
-	if (streq(arg, "TAB"))
+	if (streq(arg, "tab"))
 		return '\t';
-	if (streq(arg, "SPACE"))
+	if (streq(arg, "space"))
 		return ' ';
-	if (streq(arg, "NEWLINE"))
+	if (streq(arg, "newline"))
 		return '\n';
-	if (streq(arg, "PIPE"))
+	if (streq(arg, "pipe"))
 		return '|';
-	if (streq(arg, "SEMICOLON"))
+	if (streq(arg, "semicolon"))
 		return '|';
 	if (strlen(arg) != 1)
 		main_usage(argv0);

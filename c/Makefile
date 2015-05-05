@@ -19,7 +19,7 @@ FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_ds
 
 top: tags mlr test
 
-install: mlr
+install: top
 	cp mlr $(HOME)/bin/
 
 mlr: .always tags dsls

@@ -338,8 +338,9 @@ same as <tt>2 4 5</tt>: <tt>--repifs --ifs ' '</tt> lets this happen.  In fact,
 the <tt>--ipprint</tt> option above is internally implemented in terms of
 <tt>--repifs</tt>.
 
-<li/> Just write out the desired separator, e.g. <tt>--ofs '|'</tt>. But you may use
-the symbolic names <tt>NEWLINE</tt>, <tt>TAB</tt>, <tt>PIPE</tt>, or <tt>SEMICOLON</tt> if you like.
+<li/> Just write out the desired separator, e.g. <tt>--ofs '|'</tt>. But you
+may use the symbolic names <tt>newline</tt>, <tt>space</tt>, <tt>tab</tt>,
+<tt>pipe</tt>, or <tt>semicolon</tt> if you like.
 
 </ul>
 
@@ -1175,12 +1176,12 @@ distributed on the unit interval. Here we remove half the data and fit a line to
 
 mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)' data/medium &gt; data/medium-squares
 
-mlr --ofs NEWLINE stats2 -a linreg -f x,y data/medium-squares
+mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares
 x_y_m=0.764675
 x_y_b=0.124841
 
 # Set x_y_m and x_y_b as shell variables
-eval $(mlr --ofs NEWLINE stats2 -a linreg -f x,y data/medium-squares)
+eval $(mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares)
 
 # In addition to x and y, make a new yfit which is the line fit. Plot using your favorite tool.
 mlr --onidx put '$yfit='$x_y_m'*$x+'$x_y_b then cut -x -f a,b,i data/medium-squares \
