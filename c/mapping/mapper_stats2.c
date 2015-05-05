@@ -231,10 +231,10 @@ void stats2_corr_cov_put(void* pvstate, double x, double y) {
 void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	if (pstate->do_which == DO_COVX) {
-		char* key00 = mlr_paste_4_strings(name1, "_", name2, "_q00");
-		char* key01 = mlr_paste_4_strings(name1, "_", name2, "_q01");
-		char* key10 = mlr_paste_4_strings(name1, "_", name2, "_q10");
-		char* key11 = mlr_paste_4_strings(name1, "_", name2, "_q11");
+		char* key00 = mlr_paste_4_strings(name1, "_", name1, "_covx");
+		char* key01 = mlr_paste_4_strings(name1, "_", name2, "_covx");
+		char* key10 = mlr_paste_4_strings(name2, "_", name1, "_covx");
+		char* key11 = mlr_paste_4_strings(name2, "_", name2, "_covx");
 		if (pstate->count < 2LL) {
 			lrec_put(poutrec, key00, "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, key01, "", LREC_FREE_ENTRY_KEY);
