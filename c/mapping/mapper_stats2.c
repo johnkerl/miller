@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "lib/mlrutil.h"
+#include "lib/mlrmath.h"
 #include "lib/mlrstat.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
@@ -13,9 +14,10 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-#define DO_CORR 0x11
-#define DO_COV  0x22
-#define DO_COVX 0x33
+#define DO_CORR       0x11
+#define DO_COV        0x22
+#define DO_COVX       0x33
+#define DO_LINREG_PCA 0x44
 
 // ----------------------------------------------------------------
 typedef void stats2_put_func_t(void* pvstate, double x, double y);
@@ -28,6 +30,8 @@ typedef struct _stats2_t {
 } stats2_t;
 
 typedef stats2_t* stats2_alloc_func_t(static_context_t* pstatx);
+
+// xxx move to mlrstat.h/c
 
 // ----------------------------------------------------------------
 // Univariate linear regression
@@ -216,6 +220,7 @@ typedef struct _stats2_corr_cov_state_t {
 	double sumxy;
 	double sumy2;
 	int    do_which;
+	// xxx do_verbose;
 	static_context_t* pstatx;
 } stats2_corr_cov_state_t;
 void stats2_corr_cov_put(void* pvstate, double x, double y) {
@@ -241,18 +246,61 @@ void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutre
 			lrec_put(poutrec, key10, "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, key11, "", LREC_FREE_ENTRY_KEY);
 		} else {
-			double q00, q01, q10, q11;
+			double Q[2][2];
 			mlr_get_cov_matrix(pstate->count,
-				pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy,
-				&q00, &q01, &q10, &q11);
-			char* val00 = mlr_alloc_string_from_double(q00, pstate->pstatx->ofmt);
-			char* val01 = mlr_alloc_string_from_double(q01, pstate->pstatx->ofmt);
-			char* val10 = mlr_alloc_string_from_double(q10, pstate->pstatx->ofmt);
-			char* val11 = mlr_alloc_string_from_double(q11, pstate->pstatx->ofmt);
+				pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy, Q);
+			char* val00 = mlr_alloc_string_from_double(Q[0][0], pstate->pstatx->ofmt);
+			char* val01 = mlr_alloc_string_from_double(Q[0][1], pstate->pstatx->ofmt);
+			char* val10 = mlr_alloc_string_from_double(Q[1][0], pstate->pstatx->ofmt);
+			char* val11 = mlr_alloc_string_from_double(Q[1][1], pstate->pstatx->ofmt);
 			lrec_put(poutrec, key00, val00, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key01, val01, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key10, val10, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key11, val11, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		}
+	} else if (pstate->do_which == DO_LINREG_PCA) {
+		char* keym   = mlr_paste_4_strings(name1, "_", name1, "_pca_m");
+		char* keyb   = mlr_paste_4_strings(name1, "_", name2, "_pca_b");
+		char* keyq   = mlr_paste_4_strings(name2, "_", name1, "_pca_quality");
+		char* keyl1  = mlr_paste_4_strings(name2, "_", name1, "_pca_eival1");
+		char* keyl2  = mlr_paste_4_strings(name2, "_", name1, "_pca_eival2");
+		char* keyv11 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec11");
+		char* keyv12 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec12");
+		char* keyv21 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec21");
+		char* keyv22 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec22");
+		if (pstate->count < 2LL) {
+			lrec_put(poutrec, keym,   "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyb,   "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyq,   "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyl1,  "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyl2,  "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyv11, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyv12, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyv21, "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyv22, "", LREC_FREE_ENTRY_KEY);
+		} else {
+			double Q[2][2];
+			mlr_get_cov_matrix(pstate->count,
+				pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy, Q);
+
+			double l1, l2;       // Eigenvalues
+			double v1[2], v2[2]; // Eigenvectors
+			mlr_get_real_symmetric_eigensystem(Q, &l1, &l2, v1, v2);
+
+			double x_mean = pstate->sumx / pstate->count;
+			double y_mean = pstate->sumy / pstate->count;
+			double m, b, q;
+			mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
+
+			lrec_put(poutrec, keym,   mlr_alloc_string_from_double(m,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyb,   mlr_alloc_string_from_double(b,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyq,   mlr_alloc_string_from_double(q,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,  pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,  pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 		}
 	} else {
 		char* suffix = (pstate->do_which == DO_CORR) ? "corr" : "cov";
@@ -296,6 +344,9 @@ stats2_t* stats2_cov_alloc(static_context_t* pstatx) {
 stats2_t* stats2_covx_alloc(static_context_t* pstatx) {
 	return stats2_corr_cov_alloc(DO_COVX, pstatx);
 }
+stats2_t* stats2_linreg_pca_alloc(static_context_t* pstatx) {
+	return stats2_corr_cov_alloc(DO_LINREG_PCA, pstatx);
+}
 
 // ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
@@ -304,11 +355,12 @@ typedef struct _stats2_lookup_t {
 	static_context_t* pstatx;
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
-	{"linreg", stats2_linreg_alloc},
-	{"r2",     stats2_r2_alloc},
-	{"corr",   stats2_corr_alloc},
-	{"cov",    stats2_cov_alloc},
-	{"covx",   stats2_covx_alloc},
+	{"linreg",    stats2_linreg_alloc},
+	{"r2",        stats2_r2_alloc},
+	{"corr",      stats2_corr_alloc},
+	{"cov",       stats2_cov_alloc},
+	{"covx",      stats2_covx_alloc},
+	{"linregpca", stats2_linreg_pca_alloc},
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
 
