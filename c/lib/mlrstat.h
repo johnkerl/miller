@@ -1,9 +1,12 @@
 #ifndef MLRSTAT_H
 #define MLRSTAT_H
 
-double mlr_get_stddev(unsigned long long count, double sum, double sum2);
+void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sumx2, double sumxy, double sumy,
+	double* pm, double* pb);
 
-double mlr_get_cov(unsigned long long count, double sumx, double sumy, double sumxy);
+double mlr_get_stddev(unsigned long long n, double sum, double sum2);
+
+double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy);
 
 void mlr_get_cov_matrix(unsigned long long n,
 	double sumx, double sumx2, double sumy, double sumy2, double sumxy, double Q[2][2]);

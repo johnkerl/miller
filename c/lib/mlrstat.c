@@ -1,8 +1,34 @@
 #include <math.h>
 #include "lib/mlrstat.h"
 
-// xxx cmt intended for streaming applications. otherwise the formulas are
-// different (and more intuitive).
+void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sumx2, double sumxy, double sumy,
+	double* pm, double* pb)
+{
+	double D =  n * sumx2 - sumx*sumx;
+	double m = (n * sumxy - sumx * sumy) / D;
+	double b = (-sumx * sumxy + sumx2 * sumy) / D;
+
+	*pm = m;
+	*pb = b;
+}
+
+// xxx gah ... need a 2nd pass through the data to get the error-bars.
+// xxx make a 2nd filter to compute the error-bars given the data & the m & the b?
+//
+//	# Young 1962, pp. 122-124.  Compute sample variance of linear
+//	# approximations, then variances of m and b.
+//	var_z = 0.0
+//	for i in range(0, N):
+//		var_z += (m * xs[i] + b - ys[i])**2
+//	var_z /= N
+//
+//	var_m = (N * var_z) / D
+//	var_b = (var_z * sumx2) / D
+//
+//	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
+
+// This is intended for streaming (i.e. single-pass) applications. Otherwise
+// the formulas look different (and are more intuitive).
 double mlr_get_stddev(unsigned long long n, double sum, double sum2) {
 	double mean = sum / n;
 	double numerator = sum2 - 2.0*mean*sum + n*mean*mean;

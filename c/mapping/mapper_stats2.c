@@ -93,29 +93,9 @@ void stats2_linreg_ols_put(void* pvstate, double x, double y) {
 }
 void stats2_linreg_ols_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
-	int n = pstate->count;
-	double sumx  = pstate->sumx;
-	double sumy  = pstate->sumy;
-	double sumx2 = pstate->sumx2;
-	double sumxy = pstate->sumxy;
-	double D =  n * sumx2 - sumx*sumx;
-	double m = (n * sumxy - sumx * sumy) / D;
-	double b = (-sumx * sumxy + sumx2 * sumy) / D;
-	// xxx gah ... need a 2nd pass through the data to get the error-bars.
+	double m, b;
 
-	// xxx make a 2nd filter to compute the error-bars given the data & the m & the b?
-	//
-	//	# Young 1962, pp. 122-124.  Compute sample variance of linear
-	//	# approximations, then variances of m and b.
-	//	var_z = 0.0
-	//	for i in range(0, N):
-	//		var_z += (m * xs[i] + b - ys[i])**2
-	//	var_z /= N
-	//
-	//	var_m = (N * var_z) / D
-	//	var_b = (var_z * sumx2) / D
-	//
-	//	return [m, b, math.sqrt(var_m), math.sqrt(var_b)]
+	mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
 
 	char* key = mlr_paste_4_strings(name1, "_", name2, "_ols_m");
 	char* val = mlr_alloc_string_from_double(m, pstate->pstatx->ofmt);
@@ -537,6 +517,7 @@ void mapper_stats2_usage(char* argv0, char* verb) {
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
 		fprintf(stdout, " %s", stats2_lookup_table[i].name);
 	}
+	fprintf(stdout, "                      r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.");
 	fprintf(stdout, "\n");
 	fprintf(stdout, "-f {a,b,c,d}          Value-field names on which to compute statistics.\n");
 	fprintf(stdout, "                      There must be an even number of these.\n");
