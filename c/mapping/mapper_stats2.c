@@ -239,15 +239,15 @@ void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutre
 			lrec_put(poutrec, key11, val11, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 		}
 	} else if (pstate->do_which == DO_LINREG_PCA) {
-		char* keym   = mlr_paste_4_strings(name1, "_", name1, "_pca_m");
+		char* keym   = mlr_paste_4_strings(name1, "_", name2, "_pca_m");
 		char* keyb   = mlr_paste_4_strings(name1, "_", name2, "_pca_b");
-		char* keyq   = mlr_paste_4_strings(name2, "_", name1, "_pca_quality");
-		char* keyl1  = mlr_paste_4_strings(name2, "_", name1, "_pca_eival1");
-		char* keyl2  = mlr_paste_4_strings(name2, "_", name1, "_pca_eival2");
-		char* keyv11 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec11");
-		char* keyv12 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec12");
-		char* keyv21 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec21");
-		char* keyv22 = mlr_paste_4_strings(name2, "_", name1, "_pca_eivec22");
+		char* keyq   = mlr_paste_4_strings(name1, "_", name2, "_pca_quality");
+		char* keyl1  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival1");
+		char* keyl2  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival2");
+		char* keyv11 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec11");
+		char* keyv12 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec12");
+		char* keyv21 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec21");
+		char* keyv22 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec22");
 		if (pstate->count < 2LL) {
 			lrec_put(poutrec, keym,   "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, keyb,   "", LREC_FREE_ENTRY_KEY);

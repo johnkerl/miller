@@ -1177,16 +1177,17 @@ distributed on the unit interval. Here we remove half the data and fit a line to
 
 mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)' data/medium &gt; data/medium-squares
 
-mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares
-x_y_ols_m=0.764675
-x_y_ols_b=0.124841
+mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares
+x_y_pca_m=1.014419
+x_y_pca_b=0.000308
+x_y_pca_quality=0.861354
 
-# Set x_y_ols_m and x_y_ols_b as shell variables
-eval $(mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares)
+# Set x_y_pca_m and x_y_pca_b as shell variables
+eval $(mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares)
 
 # In addition to x and y, make a new yfit which is the line fit. Plot using your favorite tool.
-mlr --onidx put '$yfit='$x_y_ols_m'*$x+'$x_y_ols_b then cut -x -f a,b,i data/medium-squares \
-  | pgr -p -title 'linreg-ols example'
+mlr --onidx put '$yfit='$x_y_pca_m'*$x+'$x_y_pca_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-pca example' -xmin 0 -xmax 1 -ymin 0 -ymax 1
 </pre>
 </div>
 <p/>
@@ -1198,11 +1199,7 @@ plotting; here&rsquo;s a screenshot.
 <img src="data/linreg-example.jpg"/>
 </center>
 
-<p/>
-(Perhaps surprisingly, the fit line doesn&rsquo;t have slope 1. This appears to
-be due to Miller&rsquo;s doing RMS minimization of vertical residuals; a PCA
-analysis gives slope 1 on the dominant eigenvector &mdash; thanks Drew Kunas for
-a good conversation!)
+<p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
 <!-- ================================================================ -->
 <h2>step</h2>  <a id="step"/>
