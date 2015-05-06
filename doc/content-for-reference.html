@@ -442,7 +442,7 @@ fields, optionally categorized by one or more fields.
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
 </td></tr></table>
 
 <p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>

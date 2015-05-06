@@ -1122,8 +1122,8 @@ zee 0.504242 0.502997
 <pre>
 $ mlr stats2 --help
 Usage: mlr stats2 [options]
--a {linreg,corr,...}    Names of accumulators: one or more of
-                      linreg r2 corr cov covx
+-a {linreg-ols,corr,...}    Names of accumulators: one or more of
+                      linreg-ols r2 corr cov covx linreg-pca
 -f {a,b,c,d}          Value-field names on which to compute statistics.
                       There must be an even number of these.
 -g {d,e,f}            Group-by-field names
@@ -1154,13 +1154,13 @@ x2_y2_corr -0.003425
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg,r2 -f x,y,y,y,xy,y2 -g a data/medium
-a   x_y_m     x_y_b    x_y_r2   y_y_m    y_y_b    y_y_r2   xy_y2_m  xy_y2_b  xy_y2_r2
-pan 0.017026  0.500403 0.000287 1.000000 0.000000 1.000000 0.878132 0.119082 0.417498
-eks 0.040780  0.481402 0.001646 1.000000 0.000000 1.000000 0.897873 0.107341 0.455632
-wye -0.039153 0.525510 0.001505 1.000000 0.000000 1.000000 0.853832 0.126745 0.389917
-zee 0.002781  0.504307 0.000008 1.000000 0.000000 1.000000 0.852444 0.124017 0.393566
-hat -0.018621 0.517901 0.000352 1.000000 0.000000 1.000000 0.841230 0.135573 0.368794
+$ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
+a   x_y_ols_m x_y_ols_b x_y_r2   y_y_ols_m y_y_ols_b y_y_r2   xy_y2_ols_m xy_y2_ols_b xy_y2_r2
+pan 0.017026  0.500403  0.000287 1.000000  0.000000  1.000000 0.878132    0.119082    0.417498
+eks 0.040780  0.481402  0.001646 1.000000  0.000000  1.000000 0.897873    0.107341    0.455632
+wye -0.039153 0.525510  0.001505 1.000000  0.000000  1.000000 0.853832    0.126745    0.389917
+zee 0.002781  0.504307  0.000008 1.000000  0.000000  1.000000 0.852444    0.124017    0.393566
+hat -0.018621 0.517901  0.000352 1.000000  0.000000  1.000000 0.841230    0.135573    0.368794
 </pre>
 </div>
 <p/>
@@ -1176,16 +1176,16 @@ distributed on the unit interval. Here we remove half the data and fit a line to
 
 mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)' data/medium &gt; data/medium-squares
 
-mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares
-x_y_m=0.764675
-x_y_b=0.124841
+mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares
+x_y_ols_m=0.764675
+x_y_ols_b=0.124841
 
-# Set x_y_m and x_y_b as shell variables
-eval $(mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares)
+# Set x_y_ols_m and x_y_ols_b as shell variables
+eval $(mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares)
 
 # In addition to x and y, make a new yfit which is the line fit. Plot using your favorite tool.
-mlr --onidx put '$yfit='$x_y_m'*$x+'$x_y_b then cut -x -f a,b,i data/medium-squares \
-  | pgr -p -title 'linreg example'
+mlr --onidx put '$yfit='$x_y_ols_m'*$x+'$x_y_ols_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-ols example'
 </pre>
 </div>
 <p/>

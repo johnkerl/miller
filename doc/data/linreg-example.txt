@@ -1,13 +1,13 @@
 
 mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)' data/medium > data/medium-squares
 
-mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares
-x_y_m=0.764675
-x_y_b=0.124841
+mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares
+x_y_ols_m=0.764675
+x_y_ols_b=0.124841
 
-# Set x_y_m and x_y_b as shell variables
-eval $(mlr --ofs newline stats2 -a linreg -f x,y data/medium-squares)
+# Set x_y_ols_m and x_y_ols_b as shell variables
+eval $(mlr --ofs newline stats2 -a linreg-ols -f x,y data/medium-squares)
 
 # In addition to x and y, make a new yfit which is the line fit. Plot using your favorite tool.
-mlr --onidx put '$yfit='$x_y_m'*$x+'$x_y_b then cut -x -f a,b,i data/medium-squares \
-  | pgr -p -title 'linreg example'
+mlr --onidx put '$yfit='$x_y_ols_m'*$x+'$x_y_ols_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-ols example'
