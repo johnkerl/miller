@@ -358,16 +358,16 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x2=0.000989
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x2=0.252633
 
 ./test/../mlr put $z = -0.024*$x+0.13 ./test/input/abixy
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=-0.138323
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=-0.148208
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,z=-0.134910
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=-0.139154
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=-0.143759
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,z=-0.142651
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,z=-0.144683
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,z=-0.144365
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,z=-0.130755
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=-0.142063
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=0.121677
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.111792
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,z=0.125090
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=0.120846
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.116241
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,z=0.117349
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,z=0.115317
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,z=0.115635
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,z=0.129245
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=0.117937
 
 ./test/../mlr put $c = $a . $b ./test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,c=panpan
@@ -403,6 +403,452 @@ eks zee 7  0.6117840605678454  0.1878849191181694  17 7   7  2       ./test/inpu
 zee wye 8  0.5985540091064224  0.976181385699006   18 8   7  2       ./test/input/abixy
 hat wye 9  0.03144187646093577 0.7495507603507059  19 9   7  2       ./test/input/abixy
 pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2       ./test/input/abixy
+
+
+================================================================
+OPERATOR PRECEDENCE AND ASSOCIATIVITY
+
+mlr put -v $x=$a+$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b-$c /dev/null
+= (operator):
+    x (field_name).
+    - (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a-$b-$c /dev/null
+= (operator):
+    x (field_name).
+    - (operator):
+        - (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a-$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        - (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a*$b*$c /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a*$b/$c /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a/$b/$c /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        / (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a/$b*$c /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        / (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b*$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            b (field_name).
+            c (field_name).
+
+mlr put -v $x=$a*$b*$c /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a*$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b**$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        ** (operator):
+            b (field_name).
+            c (field_name).
+
+mlr put -v $x=$a**$b**$c /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        a (field_name).
+        ** (operator):
+            b (field_name).
+            c (field_name).
+
+mlr put -v $x=$a**$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        ** (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a.$b.$c /dev/null
+= (operator):
+    x (field_name).
+    . (operator):
+        . (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=-$a+$b*$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        - (operator):
+            a (field_name).
+        * (operator):
+            b (field_name).
+            c (field_name).
+
+mlr put -v $x=-$a*$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            - (operator):
+                a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+-$b*$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            - (operator):
+                b (field_name).
+            c (field_name).
+
+mlr put -v $x=$a*-$b+$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            - (operator):
+                b (field_name).
+        c (field_name).
+
+mlr put -v $x=$a+$b*-$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            b (field_name).
+            - (operator):
+                c (field_name).
+
+mlr put -v $x=$a*$b+-$c /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        - (operator):
+            c (field_name).
+
+mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
+&& (operator):
+    && (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
+|| (operator):
+    == (operator):
+        a (field_name).
+        1 (literal).
+    && (operator):
+        == (operator):
+            b (field_name).
+            1 (literal).
+        == (operator):
+            c (field_name).
+            1 (literal).
+
+mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
+|| (operator):
+    || (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
+|| (operator):
+    && (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+mlr filter -v $x<$a*$b*$c /dev/null
+< (operator):
+    x (field_name).
+    * (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a*$b/$c /dev/null
+< (operator):
+    x (field_name).
+    / (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a/$b/$c /dev/null
+< (operator):
+    x (field_name).
+    / (operator):
+        / (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a/$b*$c /dev/null
+< (operator):
+    x (field_name).
+    * (operator):
+        / (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+$b*$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            b (field_name).
+            c (field_name).
+
+mlr filter -v $x<$a*$b*$c /dev/null
+< (operator):
+    x (field_name).
+    * (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a*$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+$b**$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        ** (operator):
+            b (field_name).
+            c (field_name).
+
+mlr filter -v $x<$a**$b**$c /dev/null
+< (operator):
+    x (field_name).
+    ** (operator):
+        ** (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a**$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        ** (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a.$b.$c /dev/null
+< (operator):
+    x (field_name).
+    . (operator):
+        . (operator):
+            a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<-$a+$b*$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        - (operator):
+            a (field_name).
+        * (operator):
+            b (field_name).
+            c (field_name).
+
+mlr filter -v $x<-$a*$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            - (operator):
+                a (field_name).
+            b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+-$b*$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            - (operator):
+                b (field_name).
+            c (field_name).
+
+mlr filter -v $x<$a*-$b+$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            - (operator):
+                b (field_name).
+        c (field_name).
+
+mlr filter -v $x<$a+$b*-$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        a (field_name).
+        * (operator):
+            b (field_name).
+            - (operator):
+                c (field_name).
+
+mlr filter -v $x<$a*$b+-$c /dev/null
+< (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            a (field_name).
+            b (field_name).
+        - (operator):
+            c (field_name).
 
 
 ================================================================

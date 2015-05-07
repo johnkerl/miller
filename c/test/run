@@ -102,6 +102,68 @@ run_command $mlr put '$c = $a . $b' $indir/abixy
 # xxx more ...
 run_command $mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM;$filename=FILENAME' $indir/abixy $indir/abixy
 
+announce OPERATOR PRECEDENCE AND ASSOCIATIVITY
+
+# filter -v and put -v print the AST
+run_command mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command mlr put -v '$x=$a+$b-$c'   /dev/null
+run_command mlr put -v '$x=$a-$b-$c'   /dev/null
+run_command mlr put -v '$x=$a-$b+$c'   /dev/null
+
+run_command mlr put -v '$x=$a*$b*$c'   /dev/null
+run_command mlr put -v '$x=$a*$b/$c'   /dev/null
+run_command mlr put -v '$x=$a/$b/$c'   /dev/null
+run_command mlr put -v '$x=$a/$b*$c'   /dev/null
+
+run_command mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command mlr put -v '$x=$a+$b*$c'   /dev/null
+run_command mlr put -v '$x=$a*$b*$c'   /dev/null
+run_command mlr put -v '$x=$a*$b+$c'   /dev/null
+
+run_command mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command mlr put -v '$x=$a+$b**$c'  /dev/null
+run_command mlr put -v '$x=$a**$b**$c' /dev/null
+run_command mlr put -v '$x=$a**$b+$c'  /dev/null
+
+run_command mlr put -v '$x=$a.$b.$c'   /dev/null
+
+run_command mlr put -v '$x=-$a+$b*$c'  /dev/null
+run_command mlr put -v '$x=-$a*$b+$c'  /dev/null
+run_command mlr put -v '$x=$a+-$b*$c'  /dev/null
+run_command mlr put -v '$x=$a*-$b+$c'  /dev/null
+run_command mlr put -v '$x=$a+$b*-$c'  /dev/null
+run_command mlr put -v '$x=$a*$b+-$c'  /dev/null
+
+
+run_command mlr filter -v '$a==1 && $b == 1 && $c == 1'   /dev/null
+run_command mlr filter -v '$a==1 || $b == 1 && $c == 1'   /dev/null
+run_command mlr filter -v '$a==1 || $b == 1 || $c == 1'   /dev/null
+run_command mlr filter -v '$a==1 && $b == 1 || $c == 1'   /dev/null
+
+run_command mlr filter -v '$x<$a*$b*$c'   /dev/null
+run_command mlr filter -v '$x<$a*$b/$c'   /dev/null
+run_command mlr filter -v '$x<$a/$b/$c'   /dev/null
+run_command mlr filter -v '$x<$a/$b*$c'   /dev/null
+
+run_command mlr filter -v '$x<$a+$b+$c'   /dev/null
+run_command mlr filter -v '$x<$a+$b*$c'   /dev/null
+run_command mlr filter -v '$x<$a*$b*$c'   /dev/null
+run_command mlr filter -v '$x<$a*$b+$c'   /dev/null
+
+run_command mlr filter -v '$x<$a+$b+$c'   /dev/null
+run_command mlr filter -v '$x<$a+$b**$c'  /dev/null
+run_command mlr filter -v '$x<$a**$b**$c' /dev/null
+run_command mlr filter -v '$x<$a**$b+$c'  /dev/null
+
+run_command mlr filter -v '$x<$a.$b.$c'   /dev/null
+
+run_command mlr filter -v '$x<-$a+$b*$c'  /dev/null
+run_command mlr filter -v '$x<-$a*$b+$c'  /dev/null
+run_command mlr filter -v '$x<$a+-$b*$c'  /dev/null
+run_command mlr filter -v '$x<$a*-$b+$c'  /dev/null
+run_command mlr filter -v '$x<$a+$b*-$c'  /dev/null
+run_command mlr filter -v '$x<$a*$b+-$c'  /dev/null
+
 # ----------------------------------------------------------------
 announce CHAINING
 
@@ -177,7 +239,8 @@ run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/g.pprint
 run_command $mlr --ipprint --odkvp cat test/input/{a,b,c,d,e,f,g}.pprint
 
 # ================================================================
-diff $expdir/out $outdir/out
+#diff $expdir/out $outdir/out
+diff -C5 $expdir/out $outdir/out
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED

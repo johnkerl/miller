@@ -118,6 +118,10 @@ static inline mlr_val_t f_f_tan_func(mlr_val_t* pval1) {
 	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = tan(pval1->u.double_val)};
 	return rv;
 }
+static inline mlr_val_t f_f_sqrt_func(mlr_val_t* pval1) {
+	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = sqrt(pval1->u.double_val)};
+	return rv;
+}
 static inline mlr_val_t f_f_round_func(mlr_val_t* pval1) {
 	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = round(pval1->u.double_val)};
 	return rv;

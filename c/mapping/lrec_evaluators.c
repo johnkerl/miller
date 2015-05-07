@@ -401,19 +401,20 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 // xxx make a lookup table
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name, lrec_evaluator_t* parg1) {
 	if        (streq(function_name, "not"))     { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
-    } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
-    } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
     } else if (streq(function_name, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
     } else if (streq(function_name, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
+    } else if (streq(function_name, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
+    } else if (streq(function_name, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
+    } else if (streq(function_name, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
+    } else if (streq(function_name, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
     } else if (streq(function_name, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
     } else if (streq(function_name, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
-    } else if (streq(function_name, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
-    } else if (streq(function_name, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
-    } else if (streq(function_name, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
-    } else if (streq(function_name, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
-    } else if (streq(function_name, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
-    } else if (streq(function_name, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
     } else if (streq(function_name, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
+    } else if (streq(function_name, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
+    } else if (streq(function_name, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
+    } else if (streq(function_name, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
+    } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
+    } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
 
 	} else  { return NULL; /* xxx handle me better */ }
 }

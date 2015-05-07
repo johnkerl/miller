@@ -62,16 +62,13 @@ put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_expr(
 put_dsl_expr(A) ::= put_dsl_term(B). {
 	A = B;
 }
-put_dsl_expr(A) ::= put_dsl_term(B) PUT_DSL_PLUS(O) put_dsl_expr(C). {
+put_dsl_expr(A) ::= put_dsl_expr(B) PUT_DSL_PLUS(O) put_dsl_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-put_dsl_expr(A) ::= put_dsl_term(B) PUT_DSL_MINUS(O) put_dsl_expr(C). {
+put_dsl_expr(A) ::= put_dsl_expr(B) PUT_DSL_MINUS(O) put_dsl_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-put_dsl_expr(A) ::= PUT_DSL_MINUS(O) put_dsl_expr(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B);
-}
-put_dsl_expr(A) ::= put_dsl_term(B) PUT_DSL_DOT(O) put_dsl_expr(C). {
+put_dsl_expr(A) ::= put_dsl_expr(B) PUT_DSL_DOT(O) put_dsl_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -79,10 +76,10 @@ put_dsl_expr(A) ::= put_dsl_term(B) PUT_DSL_DOT(O) put_dsl_expr(C). {
 put_dsl_term(A) ::= put_dsl_factor(B). {
 	A = B;
 }
-put_dsl_term(A) ::= put_dsl_factor(B) PUT_DSL_TIMES(O) put_dsl_term(C). {
+put_dsl_term(A) ::= put_dsl_term(B) PUT_DSL_TIMES(O) put_dsl_factor(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-put_dsl_term(A) ::= put_dsl_factor(B) PUT_DSL_DIVIDE(O) put_dsl_term(C).{
+put_dsl_term(A) ::= put_dsl_term(B) PUT_DSL_DIVIDE(O) put_dsl_factor(C).{
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -122,6 +119,9 @@ put_dsl_expitem(A) ::= PUT_DSL_CONTEXT_VARIABLE(B). {
 
 put_dsl_expitem(A) ::= PUT_DSL_LPAREN put_dsl_expr(B) PUT_DSL_RPAREN. {
 	A = B;
+}
+put_dsl_expitem(A) ::= PUT_DSL_MINUS(O) put_dsl_expitem(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B);
 }
 
 // Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",

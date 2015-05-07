@@ -1,31 +1,14 @@
 ================================================================
 !! BUGFIX !!
 
-$ echo 'x=0' | mlr put '$y=-2*$x+3'
-x=0,y=-3.000000
-
-$ echo 'x=0' | mlr put '$y=(-2*$x)+3'
-x=0,y=3.000000
-
-$ echo 'x=0' | mlr put '$y=-(2*$x)+3'
-x=0,y=-3.000000
+mlr put w/o lhs segfaults
+mlr put w/  syntax error segfaults
+stats1/stats2/step w/ unrecognized subcmd segfaults
 
 ----------------------------------------------------------------
 !! BUGFIX !!
 
-mlr put '$x/$y*$z' not right
-
-================================================================
-NEATEN
-
-* prune pix
-* makefile go/d/rs stuff -> language-comparisons
-* catc.c/catc0.c -> language-comparisons
-* remove/coalesce/gzip the large data files
-* mk perfcomp dir
-* "index-numbered" -> "implicitly index-numbered" in mlrwik
-* source hygiene: xxx's, top-of-header comments, readme re memory management, etc.
-* "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
+mlr filter '$>5' ok -- empty variable name isn't being disallowed
 
 ================================================================
 FEATURES
@@ -39,6 +22,21 @@ FEATURES
 * nidx feature: bulk rename cols 1,2,3,4,5 this,that,something,foo,bar
 * feature: ordered cut (a la reorder)
 * impl mlr check: no output
+* linreq-quality 2nd pass -- code it up in stats2 w/ -m {m} -b {b} -- ?
+
+================================================================
+NEATEN
+
+* prune pix/ dir
+* makefile go/d/rs stuff -> language-comparisons/ dir
+* catc.c/catc0.c -> language-comparisons/ dir
+* remove/coalesce/gzip the large data files
+* mk perfcomp dir
+* "index-numbered" -> "implicitly index-numbered" in mlrwik
+* source hygiene: xxx's, top-of-header comments, readme re memory management, etc.
+* "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
+
+* play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
 ================================================================
 ONLINE HELP
@@ -48,6 +46,7 @@ ONLINE HELP
 ================================================================
 IMPROVEMENTS
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
+  lmhsi: column name -> char index??
 * xtab -> vtab everywhere? (code+doc)
 * null-handling everywhere!! :/
 * 80-column-wrap slls printer (for mlr --help)
@@ -80,6 +79,7 @@ DOC
 * doc: section on to-do things, e.g. multichar rs/fs/ps; & regexes; & quantiles
 * put colored-shapes.dkvp in more places in wikset
 * ref to http://datapipes.okfnlabs.org/
+* emph all variables are stream variables and all functions are stream functions
 
 ================================================================
 DATA
