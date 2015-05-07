@@ -5,7 +5,7 @@ FEATURES
   http://en.wikipedia.org/wiki/Order_statistic_tree
 * stats1 mode
 ! mod op!! (c-like, or sane) and put into wikidoc if so.
-* needs sub function. e.g. "300ms" -> "300"
+* sub function. e.g. "300ms" -> "300"
 * online help: have a categorized function lister -- by string/math or arity, or some such ...
 * nidx feature: bulk rename cols 1,2,3,4,5 this,that,something,foo,bar
 * feature: ordered cut (a la reorder)
