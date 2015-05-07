@@ -78,7 +78,7 @@
 	return FILTER_DSL_NOT;
 }
 
-\$[a-zA-Z_0-9]* {
+\$[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
@@ -125,7 +125,7 @@
 	return FILTER_DSL_RPAREN;
 }
 
-[a-zA-Z_][a-zA-Z_0-9]* {
+[a-zA-Z_][a-zA-Z_0-9]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 	return FILTER_DSL_FCN_NAME;
 }

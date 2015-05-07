@@ -208,7 +208,11 @@ sllv_t* mapper_step_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			step_t* pstep = lhmsv_get(pmaps_level_3, step_name);
 			if (pstep == NULL) {
 				pstep = make_step(step_name, value_field_name, &pctx->statx);
-				// xxx fix me when lookup is null; and/or check at ctor time
+				if (pstep == NULL) {
+					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
+						step_name);
+					exit(1);
+				}
 				lhmsv_put(pmaps_level_3, step_name, pstep);
 			}
 

@@ -115,6 +115,10 @@ mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 
 	// Linked list of mlr_dsl_ast_node_t*.
 	sllv_t* pasts = put_dsl_parse(mlr_dsl_expression);
+	if (pasts == NULL) {
+		mapper_put_usage(argv[0], verb);
+		return NULL;
+	}
 	if (print_asts) {
 		for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext)
 			mlr_dsl_ast_node_print(pe->pvdata);

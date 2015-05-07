@@ -80,6 +80,10 @@ mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	mlr_dsl_expression = argv[(*pargi)++];
 
 	mlr_dsl_ast_node_holder_t* past = filter_dsl_parse(mlr_dsl_expression);
+	if (past == NULL) {
+		mapper_filter_usage(argv[0], verb);
+		return NULL;
+	}
 	if (print_asts) {
 		mlr_dsl_ast_node_print(past->proot);
 	}
