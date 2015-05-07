@@ -1,16 +1,4 @@
 ================================================================
-!! BUGFIX !!
-
-mlr put w/o lhs segfaults
-mlr put w/  syntax error segfaults
-stats1/stats2/step w/ unrecognized subcmd segfaults
-
-----------------------------------------------------------------
-!! BUGFIX !!
-
-mlr filter '$>5' ok -- empty variable name isn't being disallowed
-
-================================================================
 FEATURES
 !! sort -nr !!
 !! quantiles !!
