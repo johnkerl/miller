@@ -31,6 +31,19 @@ sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			plist = sllv_alloc();
 			sllv_add(plist, pinrec);
 			lhmslv_put(pstate->precords_by_key_field_names, slls_copy(pkey_field_values), plist);
+			// need num/lex & +/- flags for the sort -- static context for the non-reentrant qsort
+			// 'v' payload should be a pair of:
+			// * union of double & char*: here do the sscanf of the double if doing numeric sort on that field || abend
+			// * record-list as now
+			// at the end make an array of the pairs and qsort them on the union part
+			// then emit the record-lists as now
+			//
+			// before doing that, do the num/lex & the +/- at the CLI interface & handle (inefficiently)
+			// via repeated sscanf in the comparator:
+			// -rn a,b -fn c,d,e -r f,g -f h,i,j,k -- OR--
+			// -nr a,b -nf c,d,e -r f,g -f h,i,j,k
+			//
+			// data structure down there: sllv of sort info which is triple of char* field_name, char do_num, char do_rev.
 		} else {
 			sllv_add(plist, pinrec);
 		}

@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis
@@ -77,7 +91,8 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
-<h1>File-format awareness</h1>  <a id="File-format_awareness"/>
+<a id="File-format_awareness"/><h1>File-format awareness</h1>
+
 Miller respects CSV headers. If you do <tt>mlr --csv-input cat *.csv</tt> then the header line is written once:
 
 <table><tr>
@@ -121,7 +136,8 @@ a,b,c
 
 Likewise with <tt>mlr sort</tt>, <tt>mlr tac</tt>, and so on.
 
-<h1>awk-like features: mlr filter and mlr put</h1>  <a id="awk-like_features:_mlr_filter_and_mlr_put"/>
+<a id="awk-like_features:_mlr_filter_and_mlr_put"/><h1>awk-like features: mlr filter and mlr put</h1>
+
 <ul>
 
 <li/> <tt>mlr filter</tt> includes/excludes records based on a filter
@@ -151,7 +167,8 @@ startup time, with the bulk data-stream processing all done in C.
 
 </ul>
 
-<h1>See also</h1>  <a id="See_also"/>
+<a id="See_also"/><h1>See also</h1>
+
 <p/>See <a href="reference.html">Reference</a> for more on Miller&rsquo;s
 subcommands <tt>cat</tt>, <tt>cut</tt>, <tt>head</tt>, <tt>sort</tt>,
 <tt>tac</tt>, <tt>tail</tt>, <tt>top</tt>, and <tt>uniq</tt>, as well as awk-like

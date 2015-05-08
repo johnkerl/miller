@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis
@@ -76,7 +90,8 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 </div>
 <p/>
-<h1>flins data</h1>  <a id="flins_data"/>
+<a id="flins_data"/><h1>flins data</h1>
+
 <p/> The <a href="data/flins.csv">flins.csv</a> file is some sample data
 obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data">https://support.spatialkey.com/spatialkey-sample-csv-data</a>.
 
@@ -176,7 +191,8 @@ cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,ti
 
 <p/> xxx plaintext hardlinks
 
-<h1>Color/shape data</h1>  <a id="Color/shape_data"/>
+<a id="Color/shape_data"/><h1>Color/shape data</h1>
+
 <p/> The <a href="data/colored-shapes.dkvp">colored-shapes.dkvp</a> file is some sample data produced by the
 <a href="https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2">mkdat2</a> script. The idea is
 <ul>
@@ -322,7 +338,8 @@ orange   circle  0.021871 -0.040626
 </div>
 <p/>
 
-<h1>Program timing</h1>  <a id="Program_timing"/>
+<a id="Program_timing"/><h1>Program timing</h1>
+
 This admittedly artificial example demonstrates using Miller time and stats
 functions to introspectly acquire some information about Miller&rsquo;s own
 runtime. The <tt>delta</tt> function computes the difference between successive

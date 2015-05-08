@@ -31,20 +31,24 @@ titleinbody {
   color: maroon;
   font-size: 120%
 }
+
 h1 {
   font-weight: bold;
   color: maroon;
-  font-size: 110%
+  font-size: 110%;
+  border-bottom: 1px solid #aaaaaa;
 }
 h2 {
   font-weight: bold;
   color: maroon;
-  font-size: 105%
+  font-size: 105%;
+  border-bottom: 1px solid #aaaaaa;
 }
 h3 {
   font-weight: bold;
   color: maroon;
-  font-size: 110%
+  font-size: 100%;
+  border-bottom: 1px solid #aaaaaa;
 }
 
 table {

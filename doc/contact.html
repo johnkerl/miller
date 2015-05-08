@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis

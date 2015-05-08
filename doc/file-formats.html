@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis
@@ -79,7 +93,9 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
-<h1>CSV/TSV</h1> When <tt>mlr</tt> is invoked with the <tt>--csv</tt> option,  <a id="CSV/TSV"/>key names are found on the first record and values are taken from subsequent
+<a id="CSV/TSV"/><h1>CSV/TSV</h1>
+When <tt>mlr</tt> is invoked with the <tt>--csv</tt> option,
+key names are found on the first record and values are taken from subsequent
 records.  This includes the case of CSV-formatted files.  See
 <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
 changes of field names within a single data stream.
@@ -89,7 +105,8 @@ just as <tt>awk</tt> does.  For TSV, use <tt>--fs TAB</tt>; to convert TSV to
 CSV, use <tt>--ifs TAB --ofs ,</tt> etc.  (See also
 <a href="reference.html">Reference</a>.)
 
-<h1>Pretty-printed</h1>  <a id="Pretty-printed"/>Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
+<a id="Pretty-printed"/><h1>Pretty-printed</h1>
+Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 
 <table><tr><td>
 <p/>
@@ -133,7 +150,8 @@ files is constrained by available machine memory.
 <p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
 handles changes of field names within a single data stream.
 
-<h1>Key-value pairs</h1>  <a id="Key-value_pairs"/>Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
+<a id="Key-value_pairs"/><h1>Key-value pairs</h1>
+Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
 
 <p/>
 <div class="pokipanel">
@@ -175,7 +193,8 @@ to analyze my logs.
 <p/>See <a href="reference.html">Reference</a> regarding how to specify separators other than
 the default equals-sign and comma.
 
-<h1>Index-numbered (toolkit style)</h1>  <a id="Index-numbered_(toolkit_style)"/>
+<a id="Index-numbered_(toolkit_style)"/><h1>Index-numbered (toolkit style)</h1>
+
 With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
 assigns integer field names starting with 1. This recapitulates Unix-toolkit
 behavor.
@@ -262,7 +281,8 @@ light
 <p/>
 </td> </tr></table>
 
-<h1>Vertical tabular</h1>  <a id="Vertical_tabular"/>
+<a id="Vertical_tabular"/><h1>Vertical tabular</h1>
+
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
 data which causes line-wraps on the screen (but see also <a
 href="https://github.com/twosigma/ngrid">https://github.com/twosigma/ngrid</a>

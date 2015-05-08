@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis
@@ -103,7 +117,8 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
-<h1>Command overview</h1>  <a id="Command_overview"/>
+<a id="Command_overview"/><h1>Command overview</h1>
+
 <p>
 Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>tail</tt>, <tt>cut</tt>,
 <tt>sort</tt>, etc., Miller has subcommands, invoked as follows:
@@ -182,7 +197,8 @@ mlr sort hostname,uptime *.dat
 
 </table>
 
-<h1>On-line help</h1>  <a id="On-line_help"/>
+<a id="On-line_help"/><h1>On-line help</h1>
+
 <p/>Examples:<p/>
 
 <p/>
@@ -218,7 +234,8 @@ Usage: mlr sort {comma-separated field names}
 </div>
 <p/>
 
-<h1>then-chaining</h1>  <a id="then-chaining"/>
+<a id="then-chaining"/><h1>then-chaining</h1>
+
 <p/>
 In accord with the
 <a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
@@ -246,9 +263,11 @@ mlr cut --complement -f os_version then sort hostname,uptime *.dat
 <p/>
 
 <!-- ================================================================ -->
-<h1>I/O options</h1>  <a id="I/O_options"/>
+<a id="I/O_options"/><h1>I/O options</h1>
+
 <!-- ================================================================ -->
-<h2>Formats</h2>  <a id="Formats"/>
+<a id="Formats"/><h2>Formats</h2>
+
 <p/> Options:
 
 <pre>
@@ -306,7 +325,8 @@ wye pan 5  0.5732889198020006  0.8636244699032729
 </ul>
 
 <!-- ================================================================ -->
-<h2>Record/field/pair separators</h2>  <a id="Record/field/pair_separators"/>
+<a id="Record/field/pair_separators"/><h2>Record/field/pair separators</h2>
+
 <p/> Miller has record separators <tt>IRS</tt> and <tt>ORS</tt>, field
 separators <tt>IFS</tt> and <tt>OFS</tt>, and pair separators <tt>IPS</tt> and
 <tt>OPS</tt>.  For example, in the DKVP line <tt>a=1,b=2,c=3</tt>, the record
@@ -345,7 +365,8 @@ may use the symbolic names <tt>newline</tt>, <tt>space</tt>, <tt>tab</tt>,
 </ul>
 
 <!-- ================================================================ -->
-<h2>Number formatting</h2>  <a id="Number_formatting"/>
+<a id="Number_formatting"/><h2>Number formatting</h2>
+
 Options:
 <pre>
   --ofmt {format string}
@@ -370,9 +391,11 @@ embedded whitespace, which may not be what you want if you pipe the output to
 something else.
 
 <!-- ================================================================ -->
-<h1>Data transformations</h1>  <a id="Data_transformations"/>
+<a id="Data_transformations"/><h1>Data transformations</h1>
+
 <!-- ================================================================ -->
-<h2>cat</h2>  <a id="cat"/>
+<a id="cat"/><h2>cat</h2>
+
 <p/> Most useful for format conversions (see
 <a href="file-formats.html">File formats</a>), and concatenating multiple
 same-schema CSV files to have the same header:
@@ -432,7 +455,8 @@ c 9
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>count-distinct</h2>  <a id="count-distinct"/>
+<a id="count-distinct"/><h2>count-distinct</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -479,7 +503,8 @@ a=zee,b=wye,count=455
 <p/>
 
 <!-- ================================================================ -->
-<h2>cut</h2>  <a id="cut"/>
+<a id="cut"/><h2>cut</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -526,7 +551,8 @@ i x                   y
 
 <p/>
 <!-- ================================================================ -->
-<h2>filter</h2>  <a id="filter"/>
+<a id="filter"/><h2>filter</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -610,7 +636,8 @@ x_y_corr
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>group-by</h2>  <a id="group-by"/>
+<a id="group-by"/><h2>group-by</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -670,7 +697,8 @@ they were encountered in the data stream, which in some cases may be more intere
 to you.
 
 <!-- ================================================================ -->
-<h2>group-like</h2>  <a id="group-like"/>
+<a id="group-like"/><h2>group-like</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -717,7 +745,8 @@ record_count resource
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>having-fields</h2>  <a id="having-fields"/>
+<a id="having-fields"/><h2>having-fields</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -772,7 +801,8 @@ resource=/some/other/path,loadsec=0.97,ok=false
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>head</h2>  <a id="head"/>
+<a id="head"/><h2>head</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -818,7 +848,8 @@ wye hat 24 0.7286126830627567  0.19441962592638418
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>histogram</h2>  <a id="histogram"/>
+<a id="histogram"/><h2>histogram</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -859,7 +890,8 @@ bin_lo   bin_hi   x_count x2_count x3_count
 <p/>
 
 <!-- ================================================================ -->
-<h2>put</h2>  <a id="put"/>
+<a id="put"/><h2>put</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -917,7 +949,8 @@ pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/s
 <p/>
 
 <!-- ================================================================ -->
-<h2>rename</h2>  <a id="rename"/>
+<a id="rename"/><h2>rename</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -992,7 +1025,8 @@ a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>reorder</h2>  <a id="reorder"/>
+<a id="reorder"/><h2>reorder</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1055,7 +1089,8 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>sort</h2>  <a id="sort"/>
+<a id="sort"/><h2>sort</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1068,7 +1103,8 @@ Usage: mlr sort {comma-separated field names}
 <p/>xxx write up after -n/-r.
 
 <!-- ================================================================ -->
-<h2>stats1</h2>  <a id="stats1"/>
+<a id="stats1"/><h2>stats1</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1116,7 +1152,8 @@ zee 0.504242 0.502997
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>stats2</h2>  <a id="stats2"/>
+<a id="stats2"/><h2>stats2</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1202,7 +1239,8 @@ plotting; here&rsquo;s a screenshot.
 <p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
 <!-- ================================================================ -->
-<h2>step</h2>  <a id="step"/>
+<a id="step"/><h2>step</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1270,7 +1308,8 @@ eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  2.764119  
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>tac</h2>  <a id="tac"/>
+<a id="tac"/><h2>tac</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1333,7 +1372,8 @@ a b c filename
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>tail</h2>  <a id="tail"/>
+<a id="tail"/><h2>tail</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1375,7 +1415,8 @@ yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.506446844647
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>top</h2>  <a id="top"/>
+<a id="top"/><h2>top</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1430,7 +1471,8 @@ zee 2       0.999438
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h2>uniq</h2>  <a id="uniq"/>
+<a id="uniq"/><h2>uniq</h2>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1507,7 +1549,8 @@ yellow triangle 4667
 </td></tr></table>
 
 <!-- ================================================================ -->
-<h1>Functions for filter and put</h1>  <a id="Functions_for_filter_and_put"/>
+<a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
+
 Miller&rsquo;s
 <a href="#filter"><tt>filter</tt></a> and <a href="#put"><tt>put</tt></a>
 support the following operators and functions:

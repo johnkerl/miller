@@ -21,7 +21,21 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 try {
 var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
-} catch(err) {}</script>
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
 
 <!--
 The background image is from a screenshot of a Google search for "data analysis
@@ -79,7 +93,8 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
-<h1>Data</h1>  <a id="Data"/>
+<a id="Data"/><h1>Data</h1>
+
 Test data were of the form
 
 <table><tr><td>
@@ -119,7 +134,8 @@ DKVP) were used. In experiments not shown here, I also varied the file sizes;
 the size-dependent results were the expected, completely unsurprising
 linearities and so I produced no file-size-dependent plots for your viewing pleasure.
 
-<h1>Comparands</h1>  <a id="Comparands"/>
+<a id="Comparands"/><h1>Comparands</h1>
+
 The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
 were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
 nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
@@ -128,7 +144,8 @@ href="https://github.com/johnkerl/miller/blob/master/c/tools/catc.c">source
 here</a>) which is intermediate between Miller (which is record-aware as well
 as line-aware) and <tt>cat</tt> (which is only byte-aware).
 
-<h1>Raw results</h1>  <a id="Raw_results"/>
+<a id="Raw_results"/><h1>Raw results</h1>
+
 Note that for CSV data, the command is <tt>mlr --csv ...</tt> rather than <tt>mlr ...</tt>.
 
 <p/>
@@ -167,7 +184,8 @@ Note that for CSV data, the command is <tt>mlr --csv ...</tt> rather than <tt>ml
 </div>
 <p/>
 
-<h1>Analysis</h1>  <a id="Analysis"/>
+<a id="Analysis"/><h1>Analysis</h1>
+
 <ul>
 <li/> As expected, <tt>cat</tt> is very fast &mdash; it needs only stream bytes as quickly as possible; it doesn&rsquo;t even need to touch individual bytes.
 <li/> My <tt>catc</tt> is also faster than Miller: it needs to read and write lines, but it doesn&rsquo;t segment lines into records; in fact it does no iteration over bytes in each line.
@@ -180,7 +198,8 @@ compare to other tools wherein such computations are less straightforward;
 rather, I attempted only to show that Miller&rsquo;s processing time here is comparable to its own processing time for other problems.
 </ul>
 
-<h1>Conclusion</h1>  <a id="Conclusion"/>
+<a id="Conclusion"/><h1>Conclusion</h1>
+
 For record-oriented data transformations, Miller is worth consideration. Field renames are worth doing as a pre-pipe or post-pipe using <tt>sed</tt>.
   </td>
 
