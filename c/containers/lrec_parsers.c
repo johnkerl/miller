@@ -174,13 +174,16 @@ lrec_t* lrec_parse_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int
 	char* value = data_line;
 
 	// xxx needs hdr/data length check!!!!!!
-
 	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = phdr_keeper->pkeys->phead;
 	for (char* p = data_line; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 
+			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
+				fprintf(stderr, "Header-data length mismatch!\n");
+				exit(1);
+			}
 			key = pe->value;
 			lrec_put_no_free(prec, key, value);
 
@@ -195,8 +198,16 @@ lrec_t* lrec_parse_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int
 			p++;
 		}
 	}
+	if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
 	key = pe->value;
 	lrec_put_no_free(prec, key, value);
+	if (pe->pnext != NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
 
 	return prec;
 }

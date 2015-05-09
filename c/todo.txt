@@ -2,9 +2,6 @@
 ! BUGFIXES !
 
 * --ofmt ignored in put. perhaps best to reglobalize.
-* csv hdr/data length check!!
-* echo a|mlr --dkvp --oxtab cat puts 'a a'
-
 
 ================================================================
 FEATURES

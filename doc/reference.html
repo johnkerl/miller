@@ -99,6 +99,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#check">check</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
@@ -469,6 +470,20 @@ c 9
 </td></tr></table>
 
 <!-- ================================================================ -->
+<a id="check"/><h2>check</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr check --help
+Usage: mlr check
+Consumes records without printing any output.
+Useful for doing a well-formatted check on CSV input data.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="count-distinct"/><h2>count-distinct</h2>
 
 <p/>
@@ -605,7 +620,7 @@ i j         k
 <pre>
 $ mlr filter 'FNR == 2' data/small*
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-pan=pan,1=1,0.3467901443380824=0.3467901443380824,0.7268028627434533=0.7268028627434533
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </pre>
 </div>

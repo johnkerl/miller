@@ -23,7 +23,7 @@ mapper_t* mapper_check_alloc() {
 void mapper_check_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
 	fprintf(stdout, "Consumes records without printing any output.\n");
-	fprintf(stdout, "Useful for doing a well-formatted check on input data.\n");
+	fprintf(stdout, "Useful for doing a well-formatted check on CSV input data.\n");
 }
 
 mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv) {
