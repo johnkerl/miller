@@ -145,19 +145,22 @@ lrec_t* lrec_parse_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int
 
 	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = phdr_keeper->pkeys->phead;
-	for (char* p = data_line; *p; p++) {
+	for (char* p = data_line; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
+
+			key = pe->value;
+			lrec_put_no_free(prec, key, value);
+
 			p++;
-			// xxx hoist loop invariant at the cost of some code duplication
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
-			key = pe->value;
-			lrec_put_no_free(prec, key, value);
 			value = p;
 			pe = pe->pnext;
+		} else {
+			p++;
 		}
 	}
 	key = pe->value;

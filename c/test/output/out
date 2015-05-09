@@ -1319,10 +1319,10 @@ NULL-FIELD INPUT
 
 ./test/../mlr --icsv --odkvp cat test/input/null-fields.csv
 a=1,b=2,c=3,d=4,e=5
-a=6,b=,,c=,10
-a=,b=,,c=11,d=12
-a=13,b=14,c=,,d=
-a=,b=,,c=,
+a=6,b=,c=,d=,e=10
+a=,b=,c=,d=11,e=12
+a=13,b=14,c=,d=,e=
+a=,b=,c=,d=,e=
 
 ./test/../mlr --inidx --odkvp cat test/input/null-fields.nidx
 1=a,2=b,3=c,4=d,5=e
