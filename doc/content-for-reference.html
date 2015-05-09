@@ -312,7 +312,7 @@ POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
 
 POKI_RUN_COMMAND{{mlr having-fields --help}}HERE
 
-<p/> Similar to <tt>group-like</tt>, this retains records with specified schema.
+<p/> Similar to <a href="#group-like"><tt>group-like</tt></a>, this retains records with specified schema.
 
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
@@ -350,6 +350,18 @@ in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin
 etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
+
+<!-- ================================================================ -->
+<h2>label</h2>
+
+POKI_RUN_COMMAND{{mlr label --help}}HERE
+
+See also <a href="#rename"><tt>rename</tt></a>.
+
+<p/>Example: Files such as <tt>/etc/passwd</tt>, <tt>/etc/group</tt>, and so on
+have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
+
+POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
 
 <!-- ================================================================ -->
 <h2>put</h2>
@@ -390,6 +402,8 @@ POKI_RUN_COMMAND{{sed 's/y/COLUMN5/g' data/small}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
 </td></tr></table>
+
+See also <a href="#label"><tt>label</tt></a>.
 
 <!-- ================================================================ -->
 <h2>reorder</h2>

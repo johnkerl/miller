@@ -8,7 +8,8 @@ typedef struct _mapper_rename_state_t {
 } mapper_rename_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_rename_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+// xxx make all such file-static
+static sllv_t* mapper_rename_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_rename_state_t* pstate = (mapper_rename_state_t*)pvstate;
 		for (lhmsse_t* pe = pstate->pold_to_new->phead; pe != NULL; pe = pe->pnext) {

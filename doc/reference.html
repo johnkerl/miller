@@ -107,6 +107,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#having-fields">having-fields</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#head">head</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#histogram">histogram</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -213,7 +214,7 @@ $ mlr --help | fold -s
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 verbs:
 cat check count-distinct cut filter group-by group-like having-fields head
-histogram put rename reorder sort stats1 stats2 step tac tail top uniq
+histogram label put rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 
 I/O options:
@@ -770,7 +771,7 @@ Usage: mlr having-fields [options]
 </div>
 <p/>
 
-<p/> Similar to <tt>group-like</tt>, this retains records with specified schema.
+<p/> Similar to <a href="#group-like"><tt>group-like</tt></a>, this retains records with specified schema.
 
 <table><tr><td>
 <p/>
@@ -896,6 +897,45 @@ bin_lo   bin_hi   x_count x2_count x3_count
 0.700000 0.800000 1007    560      420
 0.800000 0.900000 986     571      383
 0.900000 1.000000 1013    507      341
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="label"/><h2>label</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr label --help
+Usage: mlr label {new1,new2,new3,...}
+Given n comma-separated names, renames the first n fields of each record to
+have the specified name. (Fields past the nth are left with their original
+names.) Particularly useful with --inidx, to give useful names to otherwise
+integer-indexed fields.
+</pre>
+</div>
+<p/>
+
+See also <a href="#rename"><tt>rename</tt></a>.
+
+<p/>Example: Files such as <tt>/etc/passwd</tt>, <tt>/etc/group</tt>, and so on
+have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+% grep -v '^#' /etc/passwd | mlr --nidx --fs : --opprint label name,password,uid,gid,gecos,home_dir,shell | head
+name                  password uid gid gecos                         home_dir           shell
+nobody                *        -2  -2  Unprivileged User             /var/empty         /usr/bin/false
+root                  *        0   0   System Administrator          /var/root          /bin/sh
+daemon                *        1   1   System Services               /var/root          /usr/bin/false
+_uucp                 *        4   4   Unix to Unix Copy Protocol    /var/spool/uucp    /usr/sbin/uucico
+_taskgated            *        13  13  Task Gate Daemon              /var/empty         /usr/bin/false
+_networkd             *        24  24  Network Services              /var/networkd      /usr/bin/false
+_installassistant     *        25  25  Install Assistant             /var/empty         /usr/bin/false
+_lp                   *        26  26  Printing Services             /var/spool/cups    /usr/bin/false
+_postfix              *        27  27  Postfix Mail Server           /var/spool/postfix /usr/bin/false
 </pre>
 </div>
 <p/>
@@ -1034,6 +1074,8 @@ a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 </div>
 <p/>
 </td></tr></table>
+
+See also <a href="#label"><tt>label</tt></a>.
 
 <!-- ================================================================ -->
 <a id="reorder"/><h2>reorder</h2>

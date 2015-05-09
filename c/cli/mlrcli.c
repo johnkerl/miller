@@ -24,6 +24,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_having_fields_setup,
 	&mapper_head_setup,
 	&mapper_histogram_setup,
+	&mapper_label_setup,
 	&mapper_put_setup,
 	&mapper_rename_setup,
 	&mapper_reorder_setup,

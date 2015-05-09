@@ -189,6 +189,15 @@ void lrec_rename(lrec_t* prec, char* old_key, char* new_key) {
 	}
 }
 
+// xxx comment
+void lrec_set_name(lrec_t* prec, lrece_t* pfield, char* new_key) {
+	if (pfield->free_flags & LREC_FREE_ENTRY_VALUE) {
+		free(pfield->value);
+	}
+	pfield->key = new_key;
+	pfield->free_flags |= ~LREC_FREE_ENTRY_VALUE;
+}
+
 // ----------------------------------------------------------------
 void lrec_move_to_head(lrec_t* prec, char* key) {
 	lrece_t* pe = lrec_find_entry(prec, key);

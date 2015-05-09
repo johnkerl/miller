@@ -13,7 +13,7 @@ FEATURES
 !! quantiles !!
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
-! bulk rename cols 1,2,3,4,5 this,that,something,foo,bar
+! bulk rename cols 1,2,3,4,5 this,that,something,foo,bar: needs doc
 ! sub function. e.g. "300ms" -> "300"
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 * stats1 mode: lhmsi & then sort. what about "1"=="1.0"?

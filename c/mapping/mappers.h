@@ -21,6 +21,7 @@ extern mapper_setup_t mapper_group_like_setup;
 extern mapper_setup_t mapper_having_fields_setup;
 extern mapper_setup_t mapper_head_setup;
 extern mapper_setup_t mapper_histogram_setup;
+extern mapper_setup_t mapper_label_setup;
 extern mapper_setup_t mapper_put_setup;
 extern mapper_setup_t mapper_rename_setup;
 extern mapper_setup_t mapper_reorder_setup;
