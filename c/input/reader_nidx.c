@@ -10,7 +10,6 @@ typedef struct _reader_nidx_state_t {
 
 // ----------------------------------------------------------------
 // xxx repeated ifs ...
-//
 
 static lrec_t* reader_nidx_func(FILE* input_stream, void* pvstate, context_t* pctx) {
 	reader_nidx_state_t* pstate = pvstate;

@@ -25,6 +25,7 @@ extern mapper_setup_t mapper_put_setup;
 extern mapper_setup_t mapper_rename_setup;
 extern mapper_setup_t mapper_reorder_setup;
 extern mapper_setup_t mapper_sort_setup;
+extern mapper_setup_t mapper_sortv2_setup;
 extern mapper_setup_t mapper_stats1_setup;
 extern mapper_setup_t mapper_stats2_setup;
 extern mapper_setup_t mapper_step_setup;

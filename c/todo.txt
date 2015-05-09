@@ -1,21 +1,23 @@
 ================================================================
-! BUGFIX !
+! BUGFIXES !
 
---ofmt ignored in put. perhaps best to reglobalize.
+* --ofmt ignored in put. perhaps best to reglobalize.
+* nidx not handling empty values -- ?
 
 ================================================================
 FEATURES
 !! sort -nr !!
+  -> put uniq & count-distinct into the same file. then rm extraneous extern @ .h
 !! quantiles !!
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
+! bulk rename cols 1,2,3,4,5 this,that,something,foo,bar
+! sub function. e.g. "300ms" -> "300"
+! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 * stats1 mode: lhmsi & then sort. what about "1"=="1.0"?
-! mod op!! (c-like, or sane) and put into wikidoc if so.
-* sub function. e.g. "300ms" -> "300"
-* bulk rename cols 1,2,3,4,5 this,that,something,foo,bar
-* ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
+* mod op (either c-like, or sane) and put into wikidoc if so.
 * impl/doc mlr check: no output
-* linreq-quality 2nd pass -- code it up in stats2 w/ -m {m} -b {b} -- ?
+* linreg-quality 2nd pass -- code it up in stats2 w/ -m {m} -b {b} -- ?
 
 ================================================================
 NEATEN
