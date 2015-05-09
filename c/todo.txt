@@ -8,6 +8,8 @@
 FEATURES
 !! sort -nr !!
   -> put uniq & count-distinct into the same file. then rm extraneous extern @ .h
+  -> check 1 vs. 1.0 etc in sort -n
+  -> cmp heap/merge/quick/...
 !! quantiles !!
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree

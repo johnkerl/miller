@@ -234,8 +234,15 @@ I/O options:
 <div class="pokipanel">
 <pre>
 $ mlr sort --help
-Usage: mlr sort {xxx}
-       xxx info goes here
+Usage: mlr sort {flags}
+Flags:
+  -f  {comma-separated field names}  Lexical ascending
+  -n  {comma-separated field names}  Numerical ascending
+  -nf {comma-separated field names}  Numerical ascending
+  -r  {comma-separated field names}  Lexical descending
+  -nr {comma-separated field names}  Numerical descending
+Example:
+  mlr sort -f a,b -nr x,y,z
 </pre>
 </div>
 <p/>
@@ -1099,8 +1106,15 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 <div class="pokipanel">
 <pre>
 $ mlr sort --help
-Usage: mlr sort {xxx}
-       xxx info goes here
+Usage: mlr sort {flags}
+Flags:
+  -f  {comma-separated field names}  Lexical ascending
+  -n  {comma-separated field names}  Numerical ascending
+  -nf {comma-separated field names}  Numerical ascending
+  -r  {comma-separated field names}  Lexical descending
+  -nr {comma-separated field names}  Numerical descending
+Example:
+  mlr sort -f a,b -nr x,y,z
 </pre>
 </div>
 <p/>

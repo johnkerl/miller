@@ -81,7 +81,7 @@ run("sortsort1", "sort -t, -k 1,2      < data/big > /dev/null")
 run("SORTMLR1",  "mlr sort -f a,b      < data/big > /dev/null")
 puts
 
-run("sortsort2", "sort -t, -n -k 4,5   < data/big > /dev/null")
+run("sortsort2", "sort -t,    -k 4,5   < data/big > /dev/null")
 run("SORTMLR2",  "mlr sort -n x,y      < data/big > /dev/null")
 puts
 puts
