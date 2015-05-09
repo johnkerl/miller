@@ -25,25 +25,38 @@ lrec_t* lrec_parse_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	char* key   = line;
 	char* value = line;
 
-	// xxx use lib func as in reader_csv & then further split the pairs on IPS?
-	// no. and cmt why not: double seeks on the strings; want to do that only once.
+	// It would be easier to split the line on field separator (e.g. ","), then
+	// split each key-value pair on pair separator (e.g. "="). But, that
+	// requires two passes through the data. Here we do it in one pass.
 
-	for (char* p = line; *p; p++) {
+	for (char* p = line; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
+
+			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+				fprintf(stderr, "Empty key disallowed.\n");
+				exit(1);
+			}
+			lrec_put_no_free(prec, key, value);
+
 			p++;
-			// xxx hoist loop invariant at the cost of some code duplication
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
-			lrec_put_no_free(prec, key, value);
 			key = p;
 			value = p;
 		} else if (*p == ips) {
 			*p = 0;
-			value = p+1;
+			p++;
+			value = p;
+		} else {
+			p++;
 		}
+	}
+	if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+		fprintf(stderr, "Empty key disallowed.\n");
+		exit(1);
 	}
 	lrec_put_no_free(prec, key, value);
 

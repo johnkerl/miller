@@ -3,6 +3,7 @@
 
 * --ofmt ignored in put. perhaps best to reglobalize.
 * nidx not handling empty values -- ? same bug w/ csv. make UTs.
+* csv hdr/data length check!!
 
 ================================================================
 FEATURES

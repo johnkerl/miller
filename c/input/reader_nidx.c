@@ -19,7 +19,6 @@ static lrec_t* reader_nidx_func(FILE* input_stream, void* pvstate, context_t* pc
 		return lrec_parse_nidx(line, pstate->ifs, pstate->allow_repeat_ifs);
 }
 
-
 // No-op for stateless readers such as this one.
 static void reset_nidx_func(void* pvstate) {
 }
