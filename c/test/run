@@ -260,8 +260,14 @@ run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/g.pprint
 run_command $mlr --ipprint --odkvp cat test/input/{a,b,c,d,e,f,g}.pprint
 
 # ================================================================
-#diff $expdir/out $outdir/out
-diff -C5 $expdir/out $outdir/out
+announce NULL-FIELD INPUT
+
+run_command $mlr --icsv  --odkvp cat test/input/null-fields.csv
+run_command $mlr --inidx --odkvp cat test/input/null-fields.nidx
+
+# ================================================================
+diff $expdir/out $outdir/out
+#diff -C5 $expdir/out $outdir/out
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED

@@ -230,7 +230,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	// xxx use lookup tables?
 	if      (streq(rdesc, "dkvp")) popts->preader = reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	else if (streq(rdesc, "csv"))  popts->preader = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-	else if (streq(rdesc, "nidx")) popts->preader = reader_nidx_alloc(popts->irs, popts->ifs);
+	else if (streq(rdesc, "nidx")) popts->preader = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	else if (streq(rdesc, "xtab")) popts->preader = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
 	else {
 		fprintf(stderr, "b01k!\n");

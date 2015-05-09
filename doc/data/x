@@ -1,9 +1,0 @@
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
-echo
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f eq_site_deductible,tiv_2012 -g county
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f tiv_2011,tiv_2012
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg,r2 -f tiv_2011,tiv_2012 -g county

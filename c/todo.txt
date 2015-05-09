@@ -2,7 +2,7 @@
 ! BUGFIXES !
 
 * --ofmt ignored in put. perhaps best to reglobalize.
-* nidx not handling empty values -- ?
+* nidx not handling empty values -- ? same bug w/ csv. make UTs.
 
 ================================================================
 FEATURES

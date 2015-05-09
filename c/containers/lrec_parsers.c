@@ -84,19 +84,22 @@ lrec_t* lrec_parse_nidx(char* line, char ifs, int allow_repeat_ifs) {
 	char* value = line;
 	char  free_flags = 0;
 
-	for (char* p = line; *p; p++) {
+	for (char* p = line; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
+
+			idx++;
+			key = make_nidx_key(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
 			p++;
-			// xxx hoist loop invariant at the cost of some code duplication
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
-			idx++;
-			key = make_nidx_key(idx, &free_flags);
-			lrec_put(prec, key, value, free_flags);
 			value = p;
+		} else {
+			p++;
 		}
 	}
 	idx++;
