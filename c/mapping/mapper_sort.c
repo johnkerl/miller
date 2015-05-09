@@ -165,7 +165,12 @@ sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 
 		pcmp_sort_params  = pstate->sort_params;
 		cmp_params_length = pstate->pkey_field_names->length;
+
+		// xxx to do: allow the user to specify the sort algorithm from the CLI, assuming portability
 		qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+		//heapsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+		//mergesort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+
 		pcmp_sort_params  = NULL;
 		cmp_params_length = 0;
 

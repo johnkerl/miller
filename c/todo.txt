@@ -6,14 +6,10 @@
 
 ================================================================
 FEATURES
-!! sort -nr !!
-  -> put uniq & count-distinct into the same file. then rm extraneous extern @ .h
-  -> check 1 vs. 1.0 etc in sort -n
   -> cmp heap/merge/quick/...
 !! quantiles !!
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
-! bulk rename cols 1,2,3,4,5 this,that,something,foo,bar: needs doc
 ! sub function. e.g. "300ms" -> "300"
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 * stats1 mode: lhmsi & then sort. what about "1"=="1.0"?
@@ -34,6 +30,7 @@ NEATEN
 * "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
 * rip through filenames @ start & abend unless -f each.
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
+* put uniq & count-distinct into the same file. then rm extraneous extern @ .h
 
 ! re-do mlr sort -n stats in t1.rb -> mlrwik
 

@@ -14,17 +14,22 @@ FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_ds
 
 # ----------------------------------------------------------------
 # mlr  for default use.
-# mlrd for valgrind.
-#top: mlr catc catc0 test
+# mlrg for valgrind.
 
 top: tags mlr test
 
 install: top
 	cp mlr $(HOME)/bin/
 
+all: tags mlr mlrd mlrg mlrp catc catc0 catd catgo catrust cutd cutgo
+
+tags: .always
+	ctags -R .
+
 mlr: .always tags dsls
 	$(CC) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
 
+# Memcheck version
 mlrk: .always tags dsls
 	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
 
@@ -48,6 +53,9 @@ dsls: .always
 # ----------------------------------------------------------------
 test: unit-test reg-test
 
+# Unfortunately --error-exitcode=1 doesn't work well since there are
+# valgrind-detected errors in stdlibs. :(
+
 unit-test: test-mlrutil test-lrec
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
@@ -58,16 +66,21 @@ unit-test: test-mlrutil test-lrec
 reg-test:
 	./test/run
 
+# Run this after unit-test expected output has changed, and is verified to be
+# OK. (Example: after adding new test cases in test/run.)
 regtest-copy:
 	cp test/output/out test/expected
 
 # ----------------------------------------------------------------
+# Unit-test executables
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ lib/mlrutil.c containers/lrec.c containers/hdr_keeper.c containers/sllv.c containers/slls.c containers/lrec_parsers.c containers/test_lrec.c -o test-lrec
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
 
+# ----------------------------------------------------------------
+# Standalone mains
 dheap:
 	$(CCDEBUG) -D__DHEAP_MAIN__ containers/dheap.c lib/mlrutil.c
 
@@ -105,6 +118,8 @@ evl:
 	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c -lm
 
 # ----------------------------------------------------------------
+# xxx to do: move these to ../language-comparisons.
+
 catc: tools/catc.c
 	$(CC) tools/catc.c -o catc
 catc0: tools/catc0.c
@@ -120,12 +135,6 @@ cutd: cutd.d
 	dmd -O cutd.d
 cutgo: cutgo.go
 	go build cutgo.go
-
-# ----------------------------------------------------------------
-all: tags mlr mlrd mlrg mlrp catc catc0 catd catgo catrust cutd cutgo
-
-tags: .always
-	ctags -R .
 
 # ----------------------------------------------------------------
 clean:
