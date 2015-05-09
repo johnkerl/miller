@@ -2,15 +2,21 @@
 ! BUGFIXES !
 
 * --ofmt ignored in put. perhaps best to reglobalize.
-* nidx not handling empty values -- ? same bug w/ csv. make UTs.
 * csv hdr/data length check!!
+* echo a|mlr --dkvp --oxtab cat puts 'a a'
+
 
 ================================================================
 FEATURES
-  -> cmp heap/merge/quick/...
 !! quantiles !!
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
+!! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
+   tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
+   some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
+   presumably with a different name.  something about "header with data" or
+   "key with value"?? lower-cased only rather than making it an acronym?
+
 ! sub function. e.g. "300ms" -> "300"
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 * stats1 mode: lhmsi & then sort. what about "1"=="1.0"?
@@ -35,6 +41,8 @@ NEATEN
 
 ! re-do mlr sort -n stats in t1.rb -> mlrwik
 
+* trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
+
 ================================================================
 ONLINE HELP
 * then-chaining note into mlr online help
@@ -51,6 +59,7 @@ IMPROVEMENTS
 * char -> char* for RS/FS/PS. then, NEWLINENEWLINE + repifs -> xtab is a more or less special case of dkvp.
   BUT this makes mlr_get_line harder :/
 * ofmts for stepper/stats1/stats2 *defaulting* to global ofmt
+* mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 ================================================================
 TESTING
@@ -59,6 +68,7 @@ TESTING
 * reorder UTs per se in test_lrec
 * reorder reg-test cases
 * ut cases: multifile & multimapper often. e.g. wrapping everything in cat then X then cat ...
+* ut cases: make should-fail machinery & use it for null-key dkvp cases.
 
 ================================================================
 DOC
@@ -78,6 +88,28 @@ DOC
 * put colored-shapes.dkvp in more places in wikset
 * ref to http://datapipes.okfnlabs.org/
 * emph all variables are stream variables and all functions are stream functions
+
+* t1.rb & mlrwik perfdoc:
+
+  kerl@kerl-mbp[s2j0d1][c]$ time sort -k 1 -k 2 -k 3 -k 4 -k 5 data/big > /dev/null
+  real  0m20.453s
+  user  0m20.384s
+  sys 0m0.062s
+
+  kerl@kerl-mbp[s0j0d1][c]$ time mlr sort -f a,b,i,x,y data/big > /dev/null
+  real  0m6.966s
+  user  0m6.559s
+  sys 0m0.398s
+
+  kerl@kerl-mbp[s0j0d1][c]$ time mlr sort -f a,b -n i,x,y data/big > /dev/null
+  real  0m8.053s
+  user  0m7.643s
+  sys 0m0.401s
+
+================================================================
+PERF
+
+* try mmap(2) for non-stdin case. 1st experiment w/ catc.c.
 
 ================================================================
 DATA

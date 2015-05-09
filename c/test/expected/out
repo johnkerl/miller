@@ -1331,3 +1331,27 @@ a=,b=,c=,d=,e=
 1=j,2=k,3=,4=,5=
 1=,2=,3=,4=,5=
 
+./test/../mlr --idkvp --oxtab cat test/input/missings.dkvp
+a 1
+b 2
+c 3
+d 4
+e 5
+f 6
+
+1 a
+b 
+x 4
+c 3
+5 d
+6 e
+7 f
+
+1 a
+b 
+x 4
+c 3
+5 d
+6 e
+f 6
+

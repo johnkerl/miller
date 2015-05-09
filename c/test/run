@@ -264,6 +264,7 @@ announce NULL-FIELD INPUT
 
 run_command $mlr --icsv  --odkvp cat test/input/null-fields.csv
 run_command $mlr --inidx --odkvp cat test/input/null-fields.nidx
+run_command $mlr --idkvp --oxtab cat test/input/missings.dkvp
 
 # ================================================================
 diff $expdir/out $outdir/out
