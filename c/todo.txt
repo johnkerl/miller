@@ -30,7 +30,7 @@ NEATEN
 * "index-numbered" -> "implicitly index-numbered" in mlrwik
 * source hygiene: xxx's, top-of-header comments, readme re memory management, etc.
 * "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
-
+* rip through filenames @ start & abend unless -f each.
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
 ================================================================

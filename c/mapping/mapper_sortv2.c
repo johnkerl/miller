@@ -23,7 +23,7 @@ typedef struct _mapper_sortv2_state_t {
 	int do_sort;
 } mapper_sortv2_state_t;
 
-static int string_list_compare(const void* pva, const void* pvb);
+static int cmp_for_qsort(const void* pva, const void* pvb);
 
 // state for bucket choices:
 // o slls of key-field values
@@ -44,6 +44,41 @@ static int string_list_compare(const void* pva, const void* pvb);
 // -nr a,b -nf c,d,e -r f,g -f h,i,j,k
 //
 // data structure down there: sllv of sortv2 info which is triple of char* field_name, char do_num, char do_rev.
+
+// xxx cmt about re-entrancy
+static int* pcmp_sort_params = NULL;
+static int cmp_for_qsort(const void* pva, const void* pvb) {
+	const lhmslve_t* pea = pva;
+	const lhmslve_t* peb = pvb;
+	slls_t* pa = pea->key;
+	slls_t* pb = peb->key;
+	if (pa->length != pb->length)
+		return pa->length - pb->length;
+	sllse_t* pe = pa->phead;
+	sllse_t* pf = pb->phead;
+	for (int i = 0; pe != NULL && pf != NULL; pe = pe->pnext, pf = pf->pnext, i++) {
+		if (pcmp_sort_params[i] & SORT_NUMERIC) {
+			double e, f;
+			if (sscanf(pe->value, "%lf", &e) != 1) {
+				fprintf(stderr, "xxx b04k!\n");
+				exit(1);
+			}
+			if (sscanf(pf->value, "%lf", &f) != 1) {
+				fprintf(stderr, "xxx b04k!\n");
+				exit(1);
+			}
+			double d = e - f;
+			int s = (d < 0) ? -1 : 1;
+			if (s != 0)
+				return (pcmp_sort_params[i] & SORT_DESCENDING) ? -s : s;
+		} else {
+			int s = strcmp(pe->value, pf->value);
+			if (s != 0)
+				return (pcmp_sort_params[i] & SORT_DESCENDING) ? -s : s;
+		}
+	}
+	return 0;
+}
 
 // ----------------------------------------------------------------
 sllv_t* mapper_sortv2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
@@ -80,7 +115,9 @@ sllv_t* mapper_sortv2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			pairs[i].value = pe->value;
 		}
 
-		qsort(pairs, num_lists, sizeof(pairs[0]), string_list_compare);
+		pcmp_sort_params = pstate->psort_params;
+		qsort(pairs, num_lists, sizeof(pairs[0]), cmp_for_qsort);
+		pcmp_sort_params = NULL;
 
 		sllv_t* poutput = sllv_alloc();
 		for (i = 0; i < num_lists; i++) {
@@ -93,23 +130,6 @@ sllv_t* mapper_sortv2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 		sllv_add(poutput, NULL);
 		return poutput;
 	}
-}
-
-static int string_list_compare(const void* pva, const void* pvb) {
-	const lhmslve_t* pea = pva;
-	const lhmslve_t* peb = pvb;
-	slls_t* pa = pea->key;
-	slls_t* pb = peb->key;
-	if (pa->length != pb->length)
-		return pa->length - pb->length;
-	sllse_t* pe = pa->phead;
-	sllse_t* pf = pb->phead;
-	for (; pe != NULL && pf != NULL; pe = pe->pnext, pf = pf->pnext) {
-		int s = strcmp(pe->value, pf->value);
-		if (s != 0)
-			return s;
-	}
-	return 0;
 }
 
 // ----------------------------------------------------------------
@@ -180,7 +200,7 @@ mapper_t* mapper_sortv2_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pnames = slls_alloc();
 	slls_t* pflags = slls_alloc();
 
-	while (((argc - *pargi) >= 1) && (argv[*pargi][0] == '-')) {
+	while ((argc - *pargi) >= 1 && argv[*pargi][0] == '-') {
 		if ((argc - *pargi) < 2)
 			mapper_sortv2_usage(argv[0], verb);
 		char* flag  = argv[*pargi];
@@ -215,7 +235,7 @@ mapper_t* mapper_sortv2_parse_cli(int* pargi, int argc, char** argv) {
 			streq(flag, "-r")  ? SORT_DESCENDING :
 			streq(flag, "-nr") ? SORT_NUMERIC|SORT_DESCENDING :
 			0;
-		opt_array[di++] = opt;
+		opt_array[di] =opt;
 	}
 	slls_free(pflags);
 
