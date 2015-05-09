@@ -517,6 +517,7 @@ void mapper_stats2_usage(char* argv0, char* verb) {
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
 		fprintf(stdout, " %s", stats2_lookup_table[i].name);
 	}
+	fprintf(stdout, "\n");
 	fprintf(stdout, "                      r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.");
 	fprintf(stdout, "\n");
 	fprintf(stdout, "-f {a,b,c,d}          Value-field names on which to compute statistics.\n");
