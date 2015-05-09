@@ -78,6 +78,27 @@ run_command $mlr tac $indir/abixy
 run_command $mlr tac /dev/null
 
 # ----------------------------------------------------------------
+announce SORT
+
+run_command $mlr sort -f a   $indir/abixy
+run_command $mlr sort -r a   $indir/abixy
+run_command $mlr sort -f x   $indir/abixy
+run_command $mlr sort -r x   $indir/abixy
+run_command $mlr sort -nf x  $indir/abixy
+run_command $mlr sort -nr x  $indir/abixy
+
+run_command $mlr sort -f a,b   $indir/abixy
+run_command $mlr sort -r a,b   $indir/abixy
+run_command $mlr sort -f x,y   $indir/abixy
+run_command $mlr sort -r x,y   $indir/abixy
+run_command $mlr sort -nf x,y  $indir/abixy
+run_command $mlr sort -nr x,y  $indir/abixy
+
+run_command $mlr sort -f a -nr x $indir/abixy
+run_command $mlr sort -nr y -f a $indir/abixy
+run_command $mlr sort -f a -r b -nf x -nr y $indir/abixy
+
+# ----------------------------------------------------------------
 announce STATS
 run_command $mlr count-distinct -f a,b $indir/small $indir/abixy
 

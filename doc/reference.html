@@ -133,7 +133,7 @@ Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>t
 <pre>
 mlr tac *.dat
 mlr cut --complement -f os_version *.dat
-mlr sort hostname,uptime *.dat
+mlr sort -f hostname,uptime *.dat
 </pre>
 </div>
 <p/>
@@ -234,7 +234,8 @@ I/O options:
 <div class="pokipanel">
 <pre>
 $ mlr sort --help
-Usage: mlr sort {comma-separated field names}
+Usage: mlr sort {xxx}
+       xxx info goes here
 </pre>
 </div>
 <p/>
@@ -249,7 +250,7 @@ Miller. For example:
 <p/>
 <div class="pokipanel">
 <pre>
-mlr cut --complement -f os_version *.dat | mlr sort hostname,uptime
+mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
 </pre>
 </div>
 <p/>
@@ -262,7 +263,7 @@ chain commands together using the <tt>then</tt> keyword:
 <p/>
 <div class="pokipanel">
 <pre>
-mlr cut --complement -f os_version then sort hostname,uptime *.dat
+mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
 </pre>
 </div>
 <p/>
@@ -472,37 +473,35 @@ Usage: mlr count-distinct [options]
 </div>
 <p/>
 
-<p/>xxx great oppo for sort -nr
-
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr count-distinct -f a,b then sort count data/medium
-a=eks,b=zee,count=357
-a=hat,b=pan,count=363
-a=eks,b=pan,count=371
-a=wye,b=wye,count=377
-a=hat,b=hat,count=381
-a=hat,b=zee,count=385
-a=wye,b=zee,count=385
-a=wye,b=eks,count=386
-a=zee,b=pan,count=389
-a=hat,b=eks,count=389
-a=zee,b=eks,count=391
-a=wye,b=pan,count=392
-a=pan,b=wye,count=395
-a=zee,b=zee,count=403
-a=eks,b=wye,count=407
-a=zee,b=hat,count=409
-a=eks,b=eks,count=413
-a=pan,b=zee,count=413
+$ mlr count-distinct -f a,b then sort -nr count data/medium
+a=zee,b=wye,count=455
+a=pan,b=eks,count=429
+a=pan,b=pan,count=427
+a=wye,b=hat,count=426
+a=hat,b=wye,count=423
 a=pan,b=hat,count=417
 a=eks,b=hat,count=417
-a=hat,b=wye,count=423
-a=wye,b=hat,count=426
-a=pan,b=pan,count=427
-a=pan,b=eks,count=429
-a=zee,b=wye,count=455
+a=eks,b=eks,count=413
+a=pan,b=zee,count=413
+a=zee,b=hat,count=409
+a=eks,b=wye,count=407
+a=zee,b=zee,count=403
+a=pan,b=wye,count=395
+a=wye,b=pan,count=392
+a=zee,b=eks,count=391
+a=zee,b=pan,count=389
+a=hat,b=eks,count=389
+a=wye,b=eks,count=386
+a=hat,b=zee,count=385
+a=wye,b=zee,count=385
+a=hat,b=hat,count=381
+a=wye,b=wye,count=377
+a=eks,b=pan,count=371
+a=hat,b=pan,count=363
+a=eks,b=zee,count=357
 </pre>
 </div>
 <p/>
@@ -677,7 +676,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint sort a data/small
+$ mlr --opprint sort -f a data/small
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
@@ -1100,7 +1099,8 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 <div class="pokipanel">
 <pre>
 $ mlr sort --help
-Usage: mlr sort {comma-separated field names}
+Usage: mlr sort {xxx}
+       xxx info goes here
 </pre>
 </div>
 <p/>
@@ -1144,7 +1144,7 @@ y_avg   0.506206
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a avg -f x,y -g b then sort b data/medium
+$ mlr --opprint stats1 -a avg -f x,y -g b then sort -f b data/medium
 b   x_avg    y_avg
 eks 0.506361 0.510293
 hat 0.487899 0.513118
@@ -1458,7 +1458,7 @@ top_idx x_top
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint top -n 2 -f x -g a then sort a data/medium
+$ mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
 a   top_idx x_top
 eks 1       0.998811
 eks 2       0.998534
@@ -1528,7 +1528,7 @@ color=orange,shape=circle
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint uniq -g color,shape -c then sort color,shape data/colored-shapes.dkvp
+$ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
 color  shape    count
 blue   circle   3578
 blue   square   6016

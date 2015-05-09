@@ -33,6 +33,8 @@ NEATEN
 * rip through filenames @ start & abend unless -f each.
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
+! re-do mlr sort -n stats in t1.rb -> mlrwik
+
 ================================================================
 ONLINE HELP
 * then-chaining note into mlr online help

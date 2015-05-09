@@ -87,14 +87,14 @@ In accord with the
 <a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
 Miller. For example:
 
-POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort hostname,uptime)HERE
+POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime)HERE
 
 <p/>
 For better performance (avoiding redundant string-parsing and string-formatting
 when you pipe Miller commands together) you can, if you like, instead simply
 chain commands together using the <tt>then</tt> keyword:
 
-POKI_CARDIFY(mlr cut --complement -f os_version then sort hostname,uptime *.dat)HERE
+POKI_CARDIFY(mlr cut --complement -f os_version then sort -f hostname,uptime *.dat)HERE
 
 <!-- ================================================================ -->
 <h1>I/O options</h1>
@@ -219,9 +219,7 @@ POKI_RUN_COMMAND{{mlr --icsv --oxtab cat a.csv b.csv}}HERE
 
 POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
 
-<p/>xxx great oppo for sort -nr
-
-POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort count data/medium}}HERE
+POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HERE
 
 <!-- ================================================================ -->
 <h2>cut</h2>
@@ -278,7 +276,7 @@ clear.
 <table><tr> <td>
 POKI_RUN_COMMAND{{mlr --opprint group-by a data/small}}HERE
 </td> <td>
-POKI_RUN_COMMAND{{mlr --opprint sort a data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint sort -f a data/small}}HERE
 </td> </tr></table>
 
 <p/>In this example, since the sort is on field <tt>a</tt>, the first step is
@@ -428,7 +426,7 @@ optionally categorized by one or more fields.
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,avg -f x,y data/medium}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a avg -f x,y -g b then sort b data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a avg -f x,y -g b then sort -f b data/medium}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
@@ -521,7 +519,7 @@ Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x data/medium}}HERE
 </td><td>
-POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort a data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
@@ -534,7 +532,7 @@ POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr uniq -g color,shape data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort color,shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->

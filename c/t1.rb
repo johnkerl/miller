@@ -37,7 +37,6 @@ run("CATMLRV",   "mlr --csv cat       < data/big.csv > /dev/null")
 puts
 puts
 
-
 run("cutcut",    "cut -d , -f 1,4          < data/big > /dev/null")
 run("cutawk",    "awk -F, '{print $1,$4}'  < data/big > /dev/null")
 run("CUTMLR",    "mlr cut -f a,x           < data/big > /dev/null")
@@ -51,7 +50,6 @@ run("CUTMLRXV",  "mlr --csv cut -x -f a,x       < data/big.csv > /dev/null")
 puts
 puts
 
-
 run("rensed",    "sed -e 's/x=/EKS=/' -e 's/b=/BEE=/' < data/big > /dev/null")
 run("RENMLR",    "mlr rename x,EKS,b,BEE              < data/big > /dev/null")
 puts
@@ -60,7 +58,6 @@ run("rensedv",   "sed -e 's/x=/EKS=/' -e 's/b=/BEE=/' < data/big.csv > /dev/null
 run("RENMLRV",   "mlr --csv rename x,EKS,b,BEE        < data/big.csv > /dev/null")
 puts
 puts
-
 
 run("addawk",    "awk -F, '{gsub(\"x=\",\"\",$4);gsub(\"y=\",\"\",$5);print $4+$5}' < data/big > /dev/null")
 run("ADDMLR",    "mlr put '$z=$x+$y'                  < data/big > /dev/null")
@@ -71,7 +68,6 @@ run("ADDMLRV",   "mlr --csv put '$z=$x+$y'            < data/big.csv > /dev/null
 puts
 puts
 
-
 run("MEANMLR",   "mlr       stats1 -a avg  -f x,y -g a,b < data/big > /dev/null")
 run('CORRMLR',   "mlr       stats2 -a corr -f x,y -g a,b < data/big > /dev/null")
 puts
@@ -81,20 +77,18 @@ run('CORRMLRV',  "mlr      --csv  stats2 -a corr -f x,y -g a,b < data/big.csv > 
 puts
 puts
 
-
 run("sortsort1", "sort -t, -k 1,2      < data/big > /dev/null")
-run("SORTMLR1",  "mlr sort a,b         < data/big > /dev/null")
+run("SORTMLR1",  "mlr sort -f a,b      < data/big > /dev/null")
 puts
 
-run("sortsort2", "sort -t, -k 4,5      < data/big > /dev/null")
-run("SORTMLR2",  "mlr sort x,y         < data/big > /dev/null")
+run("sortsort2", "sort -t, -n -k 4,5   < data/big > /dev/null")
+run("SORTMLR2",  "mlr sort -n x,y      < data/big > /dev/null")
 puts
 puts
-
 
 run("sortsort1v",  "sort -t, -k 1,4            < data/big.csv > /dev/null")
-run("SORTMLR1V",   "mlr      --csv sort a,x    < data/big.csv > /dev/null")
+run("SORTMLR1V",   "mlr      --csv sort -f a,x < data/big.csv > /dev/null")
 puts
 
 run("sortsort2v",  "sort -t, -k 4,5            < data/big.csv > /dev/null")
-run("SORTMLR2V",   "mlr      --csv sort x,y    < data/big.csv > /dev/null")
+run("SORTMLR2V",   "mlr      --csv sort -n x,y < data/big.csv > /dev/null")

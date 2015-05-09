@@ -28,7 +28,6 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_rename_setup,
 	&mapper_reorder_setup,
 	&mapper_sort_setup,
-	&mapper_sortv2_setup,
 	&mapper_stats1_setup,
 	&mapper_stats2_setup,
 	&mapper_step_setup,

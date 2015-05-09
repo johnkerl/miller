@@ -56,12 +56,12 @@ POKI_RUN_COMMAND{{mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins
 color-dependent flag probabilities pop out, aligning with their original
 Bernoulli probablities from the data-generator script:
 
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort color data/colored-shapes.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp}}HERE
 
-<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out (xxx sort -n oppo):
+<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort u_v_corr data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp}}HERE
 
 <h1>Program timing</h1>
 

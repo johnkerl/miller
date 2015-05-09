@@ -23,7 +23,7 @@
    2.587   2.389       mlr stats2 -a corr -f x,y -g a,b
 
   23.247  14.466       sort -t, -k 1,2
-   3.023   5.658       mlr sort a,b
+   3.023   5.658       mlr sort -f a,b
 
   17.224  15.523       sort -t, -k 4,5
-   5.807   5.194       mlr sort x,y
+   5.807   5.194       mlr sort -n x,y

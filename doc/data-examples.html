@@ -283,7 +283,7 @@ Bernoulli probablities from the data-generator script:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort color data/colored-shapes.dkvp
+$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
 color  flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
 blue   0.000000 0.599086 1.000000 0.000044 0.503581 0.999976 0.000057  0.496972 0.999870
 green  0.000000 0.207102 1.000000 0.000010 0.504358 0.999983 0.000079  0.498956 0.999889
@@ -297,7 +297,7 @@ yellow 0.000000 0.898270 1.000000 0.000327 0.502877 0.999923 0.000138  0.501022 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort shape data/colored-shapes.dkvp
+$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
 shape    flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
 circle   0.000000 0.398115 1.000000 0.000037 0.502212 0.999976 -0.096195 0.496996 1.095540
 square   0.000000 0.397398 1.000000 0.000037 0.499935 0.999970 0.000088  0.500389 0.999975
@@ -306,7 +306,7 @@ triangle 0.000000 0.398542 1.000000 0.000010 0.501676 0.999983 0.000010  0.50180
 </div>
 <p/>
 
-<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out (xxx sort -n oppo):
+<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
 <p/>
 <div class="pokipanel">
 <pre>
@@ -319,8 +319,17 @@ u_v_corr w_x_corr
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort u_v_corr data/colored-shapes.dkvp
+$ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
  color    shape  u_v_corr  w_x_corr
+   red   circle  0.980343  0.004277
+  blue triangle  0.029301  0.017138
+orange   circle  0.021871 -0.040626
+purple   circle  0.021701  0.037687
+ green triangle  0.010633 -0.025945
+   red   square  0.006553 -0.007587
+orange   square  0.005342  0.042003
+yellow   square  0.001905 -0.002849
+orange triangle  0.000620 -0.013529
    red triangle -0.000349  0.003179
 yellow triangle -0.001735  0.032633
 yellow   circle -0.002083 -0.012606
@@ -330,15 +339,6 @@ purple   square -0.011754 -0.003372
   blue   circle -0.017771  0.014975
   blue   square -0.019537 -0.006952
  green   circle -0.034313 -0.049415
-orange triangle  0.000620 -0.013529
-yellow   square  0.001905 -0.002849
-orange   square  0.005342  0.042003
-   red   square  0.006553 -0.007587
- green triangle  0.010633 -0.025945
-purple   circle  0.021701  0.037687
-orange   circle  0.021871 -0.040626
-  blue triangle  0.029301  0.017138
-   red   circle  0.980343  0.004277
 </pre>
 </div>
 <p/>
