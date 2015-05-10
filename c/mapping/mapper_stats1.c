@@ -370,122 +370,128 @@ typedef struct _mapper_stats1_state_t {
 // }
 
 // ----------------------------------------------------------------
+static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+
 sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		// ["s", "t"]
-		// xxx make value_field_values into a hashmap. then accept partial population on that.
-		// xxx but retain full-population requirement on group-by.
-		// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
-		slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-
-		// xxx cmt
-		if (pvalue_field_values->length != pstate->pvalue_field_names->length) {
-			lrec_free(pinrec);
-			return NULL;
-		}
-		if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
-			lrec_free(pinrec);
-			return NULL;
-		}
-
-		lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
-		if (group_to_acc_field == NULL) {
-			group_to_acc_field = lhmsv_alloc();
-			lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
-		}
-
-		sllse_t* pa = pstate->pvalue_field_names->phead;
-		sllse_t* pb =         pvalue_field_values->phead;
-		// for "x", "y" and "1", "2"
-		for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
-			char* value_field_name = pa->value;
-			char* value_field_sval = pb->value;
-			int   have_dval = FALSE;
-			double value_field_dval = -999.0;
-
-			lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
-			if (acc_field_to_acc_state == NULL) {
-				acc_field_to_acc_state = lhmsv_alloc();
-				lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
-			}
-
-			// for "sum", "count"
-			sllse_t* pc = pstate->paccumulator_names->phead;
-			for ( ; pc != NULL; pc = pc->pnext) {
-				char* acc_name = pc->value;
-				// XXX add another map for accs_set_up
-				// XXX do all the accs in a separate function
-				// XXX subscribe all the pn's to the single quantile tracker
-				// XXX pre: modify acc api to take poutrec (like stats2)
-				// XXX pre: make a resize-batched-array ... chunks of 1000 perhaps?
-				//     going to need to qsort it at some point ...
-				acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
-				if (pacc == NULL) {
-					pacc = make_acc(acc_name, &pctx->statx);
-					if (pacc == NULL) {
-						fprintf(stderr, "mlr stats1: accumulator \"%s\" not found.\n",
-							acc_name);
-						exit(1);
-					}
-					lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
-				}
-				if (pacc == NULL) {
-					// xxx needs argv[0] from mlr_globals.
-					fprintf(stderr, "stats1: could not find accumulator named \"%s\".\n", acc_name);
-					exit(1);
-				}
-
-				if (pacc->psingest_func != NULL) {
-					pacc->psingest_func(pacc->pvstate, value_field_sval);
-				}
-				if (pacc->pdingest_func != NULL) {
-					if (!have_dval) {
-						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-						have_dval = TRUE;
-					}
-					pacc->pdingest_func(pacc->pvstate, value_field_dval);
-				}
-			}
-		}
-
+		mapper_stats1_ingest(pinrec, pctx, pstate);
 		lrec_free(pinrec);
 		return NULL;
+	} else {
+		return mapper_stats1_emit(pstate);
 	}
-	else {
-		sllv_t* poutrecs = sllv_alloc();
+}
 
-		for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
-			lrec_t* poutrec = lrec_unbacked_alloc();
+// ----------------------------------------------------------------
+static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_state_t* pstate) {
+	// ["s", "t"]
+	// xxx make value_field_values into a hashmap. then accept partial population on that.
+	// xxx but retain full-population requirement on group-by.
+	// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
+	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
-			slls_t* pgroup_by_field_values = pa->key;
+	// xxx cmt
+	if (pvalue_field_values->length != pstate->pvalue_field_names->length)
+		return;
+	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length)
+		return;
 
-			// Add in a=s,b=t fields:
-			sllse_t* pb = pstate->pgroup_by_field_names->phead;
-			sllse_t* pc =         pgroup_by_field_values->phead;
-			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-				lrec_put(poutrec, pb->value, pc->value, 0);
-			}
+	lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	if (group_to_acc_field == NULL) {
+		group_to_acc_field = lhmsv_alloc();
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+	}
 
-			// Add in fields such as x_sum=#, y_count=#, etc.:
-			lhmsv_t* group_to_acc_field = pa->value;
-			// for "x", "y"
-			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
-				char* value_field_name = pd->key;
-				lhmsv_t* acc_field_to_acc_state = pd->value;
-				// for "count", "sum"
-				for (lhmsve_t* pe = acc_field_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-					acc_t* pacc = pe->value;
-					pacc->pemit_func(pacc->pvstate, value_field_name, poutrec);
-				}
-			}
+	sllse_t* pa = pstate->pvalue_field_names->phead;
+	sllse_t* pb =         pvalue_field_values->phead;
+	// for "x", "y" and "1", "2"
+	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
+		char* value_field_name = pa->value;
+		char* value_field_sval = pb->value;
+		int   have_dval = FALSE;
+		double value_field_dval = -999.0;
 
-			sllv_add(poutrecs, poutrec);
+		lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
+		if (acc_field_to_acc_state == NULL) {
+			acc_field_to_acc_state = lhmsv_alloc();
+			lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
 		}
-		sllv_add(poutrecs, NULL);
-		return poutrecs;
+
+		// for "sum", "count"
+		sllse_t* pc = pstate->paccumulator_names->phead;
+		for ( ; pc != NULL; pc = pc->pnext) {
+			char* acc_name = pc->value;
+			// XXX add another map for accs_set_up
+			// XXX do all the accs in a separate function
+			// XXX subscribe all the pn's to the single quantile tracker
+			// XXX pre: make a resize-batched-array ... chunks of 1000 perhaps?
+			//     going to need to qsort it at some point ...
+			acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
+			if (pacc == NULL) {
+				pacc = make_acc(acc_name, &pctx->statx);
+				if (pacc == NULL) {
+					fprintf(stderr, "mlr stats1: accumulator \"%s\" not found.\n",
+						acc_name);
+					exit(1);
+				}
+				lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
+			}
+			if (pacc == NULL) {
+				// xxx needs argv[0] from mlr_globals.
+				fprintf(stderr, "stats1: could not find accumulator named \"%s\".\n", acc_name);
+				exit(1);
+			}
+
+			if (pacc->psingest_func != NULL) {
+				pacc->psingest_func(pacc->pvstate, value_field_sval);
+			}
+			if (pacc->pdingest_func != NULL) {
+				if (!have_dval) {
+					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+					have_dval = TRUE;
+				}
+				pacc->pdingest_func(pacc->pvstate, value_field_dval);
+			}
+		}
 	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		slls_t* pgroup_by_field_values = pa->key;
+
+		// Add in a=s,b=t fields:
+		sllse_t* pb = pstate->pgroup_by_field_names->phead;
+		sllse_t* pc =         pgroup_by_field_values->phead;
+		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+			lrec_put(poutrec, pb->value, pc->value, 0);
+		}
+
+		// Add in fields such as x_sum=#, y_count=#, etc.:
+		lhmsv_t* group_to_acc_field = pa->value;
+		// for "x", "y"
+		for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+			char* value_field_name = pd->key;
+			lhmsv_t* acc_field_to_acc_state = pd->value;
+			// for "count", "sum"
+			for (lhmsve_t* pe = acc_field_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+				acc_t* pacc = pe->value;
+				pacc->pemit_func(pacc->pvstate, value_field_name, poutrec);
+			}
+		}
+
+		sllv_add(poutrecs, poutrec);
+	}
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
 }
 
 // ----------------------------------------------------------------

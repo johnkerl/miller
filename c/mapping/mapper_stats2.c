@@ -344,103 +344,114 @@ typedef struct _mapper_stats2_state_t {
 // }
 
 // ----------------------------------------------------------------
+static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate);
+
 sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-
-		// ["s", "t"]
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-		if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
-			lrec_free(pinrec);
-			slls_free(pgroup_by_field_values);
-			return NULL;
-		}
-
-		lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
-		if (group_to_acc_field == NULL) {
-			group_to_acc_field = lhms2v_alloc();
-			lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
-		}
-
-		// for [["x","y"]]
-		for (sllse_t* pa = pstate->pvalue_field_name_pairs->phead; pa != NULL; pa = pa->pnext->pnext) {
-			char* value_field_name_1 = pa->value;
-			char* value_field_name_2 = pa->pnext->value;
-
-			lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
-			if (acc_fields_to_acc_state == NULL) {
-				acc_fields_to_acc_state = lhmsv_alloc();
-				lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
-			}
-
-			char* sval1 = lrec_get(pinrec, value_field_name_1);
-			if (sval1 == NULL)
-				continue;
-
-			char* sval2 = lrec_get(pinrec, value_field_name_2);
-			if (sval2 == NULL)
-				continue;
-
-			// for ["corr", "cov"]
-			sllse_t* pc = pstate->paccumulator_names->phead;
-			for ( ; pc != NULL; pc = pc->pnext) {
-				char* stats2_name = pc->value;
-				stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
-				if (pstats2 == NULL) {
-					pstats2 = make_stats2(stats2_name, pstate->do_verbose, &pctx->statx);
-					if (pstats2 == NULL) {
-						fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
-							stats2_name);
-						exit(1);
-					}
-					lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
-				}
-
-				double dval1 = mlr_double_from_string_or_die(sval1);
-				double dval2 = mlr_double_from_string_or_die(sval2);
-				pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
-			}
-		}
-
-		slls_free(pgroup_by_field_values);
+		mapper_stats2_ingest(pinrec, pctx, pstate);
 		lrec_free(pinrec);
 		return NULL;
 	}
 	else {
-		sllv_t* poutrecs = sllv_alloc();
-
-		for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
-			lrec_t* poutrec = lrec_unbacked_alloc();
-
-			// Add in a=s,b=t fields:
-			slls_t* pgroup_by_field_values = pa->key;
-			sllse_t* pb = pstate->pgroup_by_field_names->phead;
-			sllse_t* pc =         pgroup_by_field_values->phead;
-			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-				lrec_put(poutrec, pb->value, pc->value, 0);
-			}
-
-			// Add in fields such as x_y_corr, etc.
-			lhms2v_t* group_to_acc_field = pa->value;
-
-			// For "x","y"
-			for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
-				char*    value_field_name_1 = pd->key1;
-				char*    value_field_name_2 = pd->key2;
-				lhmsv_t* acc_fields_to_acc_state = pd->value;
-
-				// For "corr", "linreg"
-				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-					stats2_t* pstats2  = pe->value;
-					pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
-				}
-			}
-
-			sllv_add(poutrecs, poutrec);
-		}
-		sllv_add(poutrecs, NULL);
-		return poutrecs;
+		return mapper_stats2_emit(pstate);
 	}
+}
+
+// ----------------------------------------------------------------
+static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
+	// ["s", "t"]
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		slls_free(pgroup_by_field_values);
+		return;
+	}
+
+	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	if (group_to_acc_field == NULL) {
+		group_to_acc_field = lhms2v_alloc();
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+	}
+
+	// for [["x","y"]]
+	for (sllse_t* pa = pstate->pvalue_field_name_pairs->phead; pa != NULL; pa = pa->pnext->pnext) {
+		char* value_field_name_1 = pa->value;
+		char* value_field_name_2 = pa->pnext->value;
+
+		lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
+		if (acc_fields_to_acc_state == NULL) {
+			acc_fields_to_acc_state = lhmsv_alloc();
+			lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
+		}
+
+		char* sval1 = lrec_get(pinrec, value_field_name_1);
+		if (sval1 == NULL)
+			continue;
+
+		char* sval2 = lrec_get(pinrec, value_field_name_2);
+		if (sval2 == NULL)
+			continue;
+
+		// for ["corr", "cov"]
+		sllse_t* pc = pstate->paccumulator_names->phead;
+		for ( ; pc != NULL; pc = pc->pnext) {
+			char* stats2_name = pc->value;
+			stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
+			if (pstats2 == NULL) {
+				pstats2 = make_stats2(stats2_name, pstate->do_verbose, &pctx->statx);
+				if (pstats2 == NULL) {
+					fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
+						stats2_name);
+					exit(1);
+				}
+				lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
+			}
+
+			double dval1 = mlr_double_from_string_or_die(sval1);
+			double dval2 = mlr_double_from_string_or_die(sval2);
+			pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
+		}
+	}
+
+	slls_free(pgroup_by_field_values);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		// Add in a=s,b=t fields:
+		slls_t* pgroup_by_field_values = pa->key;
+		sllse_t* pb = pstate->pgroup_by_field_names->phead;
+		sllse_t* pc =         pgroup_by_field_values->phead;
+		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+			lrec_put(poutrec, pb->value, pc->value, 0);
+		}
+
+		// Add in fields such as x_y_corr, etc.
+		lhms2v_t* group_to_acc_field = pa->value;
+
+		// For "x","y"
+		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+			char*    value_field_name_1 = pd->key1;
+			char*    value_field_name_2 = pd->key2;
+			lhmsv_t* acc_fields_to_acc_state = pd->value;
+
+			// For "corr", "linreg"
+			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+				stats2_t* pstats2  = pe->value;
+				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
+			}
+		}
+
+		sllv_add(poutrecs, poutrec);
+	}
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
 }
 
 // ----------------------------------------------------------------
