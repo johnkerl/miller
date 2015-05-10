@@ -102,7 +102,7 @@ run_command $mlr sort -f a -r b -nf x -nr y $indir/abixy
 announce STATS
 run_command $mlr count-distinct -f a,b $indir/small $indir/abixy
 
-run_command $mlr --opprint stats1 -a avg,sum,count,min,max -f i,x,y -g a,b $indir/abixy
+run_command $mlr --opprint stats1 -a avg,sum,count,min,max,mode -f i,x,y -g a,b $indir/abixy
 run_command $mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 -g a,b $indir/abixy-wide
 run_command $mlr --opprint step -a rsum,delta,counter -f x,y -g a $indir/abixy
 run_command $mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small

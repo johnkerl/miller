@@ -8,6 +8,7 @@
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
+#include "containers/lhmsi.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
@@ -24,6 +25,7 @@
 //   char* get();
 
 // ================================================================
+// put -> ingest/consume/something
 typedef void  acc_dput_func_t(void* pvstate, double val);
 typedef void  acc_sput_func_t(void* pvstate, char*  val);
 typedef char* acc_get_func_t (void* pvstate, char* pfree_flags);
@@ -252,6 +254,52 @@ acc_t* acc_max_alloc(static_context_t* pstatx) {
 }
 
 // ----------------------------------------------------------------
+typedef struct _acc_mode_state_t {
+	lhmsi_t* pcounts_for_value;
+	static_context_t* pstatx;
+} acc_mode_state_t;
+// mode on strings? what about "1.0" and "1" and "1.0000" ??
+void acc_mode_sput(void* pvstate, char* val) {
+	acc_mode_state_t* pstate = pvstate;
+	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
+	if (pe == NULL) {
+		// xxx at the moment, lhmsi does a strdup so we needn't.
+		lhmsi_put(pstate->pcounts_for_value, val, 1);
+	} else {
+		pe->value++;
+	}
+}
+char* acc_mode_get(void* pvstate, char* pfree_flags) {
+	acc_mode_state_t* pstate = pvstate;
+	int max_count = 0;
+	char* max_key = NULL;
+	for (lhmsie_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
+		int count = pe->value;
+		if (count > max_count) {
+			max_key = pe->key;
+			max_count = count;
+		}
+	}
+	return max_key;
+}
+// xxx somewhere note a crucial assumption: while pctx is passed in
+// to the mapper on a per-row basis, we stash it here on first use and
+// use it on subsequent rows. assumptions:
+// * the address doesn't change
+// * the content we use (namely, ofmt) isn't row-dependent
+acc_t* acc_mode_alloc(static_context_t* pstatx) {
+	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
+	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
+	pstate->pcounts_for_value = lhmsi_alloc();
+	pstate->pstatx   = pstatx;
+	pacc->pvstate    = (void*)pstate;
+	pacc->psput_func = &acc_mode_sput;
+	pacc->pdput_func = NULL;
+	pacc->pget_func  = &acc_mode_get;
+	return pacc;
+}
+
+// ----------------------------------------------------------------
 typedef struct _acc_lookup_t {
 	char* name;
 	acc_alloc_func_t* pnew_func;
@@ -264,6 +312,7 @@ static acc_lookup_t acc_lookup_table[] = {
 	{"avgeb",  acc_avgeb_alloc},
 	{"min",    acc_min_alloc},
 	{"max",    acc_max_alloc},
+	{"mode",   acc_mode_alloc},
 };
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
@@ -281,7 +330,7 @@ typedef struct _mapper_stats1_state_t {
 	slls_t* pvalue_field_names;
 	slls_t* pgroup_by_field_names;
 
-	lhmslv_t* pmaps_level_1;
+	lhmslv_t* groups;
 
 } mapper_stats1_state_t;
 
@@ -293,10 +342,10 @@ typedef struct _mapper_stats1_state_t {
 //   s t 5 6            u w 1       7     1       9
 //   u w 7 9
 
-// ["s","t"] |--> "x" |--> "sum" |--> acc_sum_t* (as void*)
+// ["s","t"] |--> "x" |--> "sum" |--> acc_t* (as void*)
 // level_1      level_2   level_3
 // lhmslv_t     lhmsv_t   lhmsv_t
-// acc_sum_t implements interface:
+// acc_t implements interface:
 //   void  init();
 //   void  dacc(double dval);
 //   void  sacc(char*  sval);
@@ -323,10 +372,10 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			return NULL;
 		}
 
-		lhmsv_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
-		if (pmaps_level_2 == NULL) {
-			pmaps_level_2 = lhmsv_alloc();
-			lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
+		lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+		if (group_to_acc_field == NULL) {
+			group_to_acc_field = lhmsv_alloc();
+			lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 		}
 
 		sllse_t* pa = pstate->pvalue_field_names->phead;
@@ -338,17 +387,17 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			int   have_dval = FALSE;
 			double value_field_dval = -999.0;
 
-			lhmsv_t* pmaps_level_3 = lhmsv_get(pmaps_level_2, value_field_name);
-			if (pmaps_level_3 == NULL) {
-				pmaps_level_3 = lhmsv_alloc();
-				lhmsv_put(pmaps_level_2, value_field_name, pmaps_level_3);
+			lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
+			if (acc_field_to_acc_state == NULL) {
+				acc_field_to_acc_state = lhmsv_alloc();
+				lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
 			}
 
 			// for "sum", "count"
 			sllse_t* pc = pstate->paccumulator_names->phead;
 			for ( ; pc != NULL; pc = pc->pnext) {
 				char* acc_name = pc->value;
-				acc_t* pacc = lhmsv_get(pmaps_level_3, acc_name);
+				acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
 				if (pacc == NULL) {
 					pacc = make_acc(acc_name, &pctx->statx);
 					if (pacc == NULL) {
@@ -356,7 +405,7 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 							acc_name);
 						exit(1);
 					}
-					lhmsv_put(pmaps_level_3, acc_name, pacc);
+					lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
 				}
 				if (pacc == NULL) {
 					// xxx needs argv[0] somewhere ...
@@ -383,7 +432,7 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	else {
 		sllv_t* poutrecs = sllv_alloc();
 
-		for (lhmslve_t* pa = pstate->pmaps_level_1->phead; pa != NULL; pa = pa->pnext) {
+		for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 
 			slls_t* pgroup_by_field_values = pa->key;
@@ -396,13 +445,13 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			}
 
 			// Add in fields such as x_sum=#, y_count=#, etc.:
-			lhmsv_t* pmaps_level_2 = pa->value;
+			lhmsv_t* group_to_acc_field = pa->value;
 			// for "x", "y"
-			for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				char* value_field_name = pd->key;
-				lhmsv_t* pmaps_level_3 = pd->value;
+				lhmsv_t* acc_field_to_acc_state = pd->value;
 				// for "count", "sum"
-				for (lhmsve_t* pe = pmaps_level_3->phead; pe != NULL; pe = pe->pnext) {
+				for (lhmsve_t* pe = acc_field_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 					char* acc_name = pe->key;
 					acc_t* pacc = pe->value;
 
@@ -427,7 +476,7 @@ static void mapper_stats1_free(void* pvstate) {
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
-	lhmslv_free(pstate->pmaps_level_1);
+	lhmslv_free(pstate->groups);
 }
 
 mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
@@ -438,7 +487,7 @@ mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_n
 	pstate->paccumulator_names    = paccumulator_names;
 	pstate->pvalue_field_names    = pvalue_field_names;
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
-	pstate->pmaps_level_1         = lhmslv_alloc();
+	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
 	pmapper->pmapper_process_func = mapper_stats1_func;

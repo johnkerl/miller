@@ -89,6 +89,8 @@ Miller. For example:
 
 POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime)HERE
 
+POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)HERE
+
 <p/>
 For better performance (avoiding redundant string-parsing and string-formatting
 when you pipe Miller commands together) you can, if you like, instead simply
@@ -448,6 +450,49 @@ POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,avg -f x,y data/medium}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a avg -f x,y -g b then sort -f b data/medium}}HERE
 </td></tr></table>
+
+<!--
+kerl@kerl-mbp[s1j0d1][c]$ mlr --opprint count-distinct -f b then sort -nr count data/small
+b   count
+wye 5
+pan 4
+zee 1
+kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint count-distinct -f a then sort -nr count data/small
+a   count
+eks 3
+pan 2
+wye 2
+zee 2
+hat 1
+kerl@kerl-mbp[s0j0d1][c]$ mlr --omlr --opprint stats1 -a mode -f a,b data/small
+a_mode b_mode
+eks    wye
+kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint sort -f a data/small
+a   b   i  x                   y
+eks pan 2  0.7586799647899636  0.5221511083334797
+eks wye 4  0.38139939387114097 0.13418874328430463
+eks zee 7  0.6117840605678454  0.1878849191181694
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan pan 1  0.3467901443380824  0.7268028627434533
+pan wye 10 0.5026260055412137  0.9526183602969864
+wye wye 3  0.20460330576630303 0.33831852551664776
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+zee wye 8  0.5985540091064224  0.976181385699006
+kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint sort -f b data/small
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+eks zee 7  0.6117840605678454  0.1878849191181694
+
+-->
 
 <!-- ================================================================ -->
 <h2>stats2</h2>

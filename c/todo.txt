@@ -6,6 +6,9 @@
 ================================================================
 FEATURES
 !! quantiles !!
+   -> be sure to include p99/p50 example (with then-chaining) in mlrwik
+!! mode
+
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
 !! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
@@ -18,7 +21,6 @@ FEATURES
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 * stats1 mode: lhmsi & then sort. what about "1"=="1.0"?
 * mod op (either c-like, or sane) and put into wikidoc if so.
-* impl/doc mlr check: no output
 * linreg-quality 2nd pass -- code it up in stats2 w/ -m {m} -b {b} -- ?
 
 ================================================================
@@ -66,6 +68,7 @@ TESTING
 * reorder reg-test cases
 * ut cases: multifile & multimapper often. e.g. wrapping everything in cat then X then cat ...
 * ut cases: make should-fail machinery & use it for null-key dkvp cases.
+* ut case for stats1 mode
 
 ================================================================
 DOC

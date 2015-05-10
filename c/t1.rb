@@ -77,7 +77,7 @@ run('CORRMLRV',  "mlr      --csv  stats2 -a corr -f x,y -g a,b < data/big.csv > 
 puts
 puts
 
-run("sortsort1", "sort -t, -k 1,2      < data/big > /dev/null")
+run("sortsort1", "sort -t= -k 1,2      < data/big > /dev/null")
 run("SORTMLR1",  "mlr sort -f a,b      < data/big > /dev/null")
 puts
 
@@ -90,5 +90,5 @@ run("sortsort1v",  "sort -t, -k 1,4            < data/big.csv > /dev/null")
 run("SORTMLR1V",   "mlr      --csv sort -f a,x < data/big.csv > /dev/null")
 puts
 
-run("sortsort2v",  "sort -t, -k 4,5            < data/big.csv > /dev/null")
+run("sortsort2v",  "sort -t, -n -k 4,5         < data/big.csv > /dev/null")
 run("SORTMLR2V",   "mlr      --csv sort -n x,y < data/big.csv > /dev/null")

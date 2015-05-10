@@ -1,5 +1,5 @@
 // ================================================================
-// Array-only (open addressing) string-to-string linked hash map with linear
+// Array-only (open addressing) string-to-void linked hash map with linear
 // probing for collisions.
 //
 // John Kerl 2012-08-13
