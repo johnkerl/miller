@@ -89,6 +89,19 @@ double mlr_get_stddev(unsigned long long n, double sum, double sum2) {
 }
 
 // ----------------------------------------------------------------
+// Non-streaming implementation:
+//
+// def find_sample_covariance(xs, ys):
+//      n = len(xs)
+//      mean_x = find_mean(xs)
+//      mean_y = find_mean(ys)
+//
+//      sum = 0.0
+//      for k in range(0, n):
+//              sum += (xs[k] - mean_x) * (ys[k] - mean_y)
+//
+//      return sum / (n-1.0)
+
 double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy) {
 	double meanx = sumx / n;
 	double meany = sumy / n;

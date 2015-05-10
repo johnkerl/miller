@@ -14,27 +14,15 @@
 #include "cli/argparse.h"
 
 // ================================================================
-// -a min,max -v x,y -g a,b
-
-// ["s","t"] |--> "x" |--> "sum" |--> acc_sum_t* (as void*)
-// level 1      level 2   level 3
-// lhmslv_t     lhmsv_t   lhmsv_t
-// acc_sum_t implements interface:
-//   void  dacc(double dval);
-//   void  sacc(char*  sval);
-//   char* get();
-
-// ================================================================
-// put -> ingest/consume/something
-typedef void  acc_dput_func_t(void* pvstate, double val);
-typedef void  acc_sput_func_t(void* pvstate, char*  val);
-typedef char* acc_get_func_t (void* pvstate, char* pfree_flags);
+typedef void  acc_dingest_func_t(void* pvstate, double val);
+typedef void  acc_singest_func_t(void* pvstate, char*  val);
+typedef char* acc_emit_func_t (void* pvstate, char* pfree_flags);
 
 typedef struct _acc_t {
 	void* pvstate;
-	acc_sput_func_t* psput_func;
-	acc_dput_func_t* pdput_func;
-	acc_get_func_t*  pget_func;
+	acc_singest_func_t* psingest_func;
+	acc_dingest_func_t* pdingest_func;
+	acc_emit_func_t*  pemit_func;
 } acc_t;
 
 typedef acc_t* acc_alloc_func_t(static_context_t* pstatx);
@@ -44,11 +32,11 @@ typedef struct _acc_count_state_t {
 	unsigned long long count;
 	static_context_t* pstatx;
 } acc_count_state_t;
-void acc_count_sput(void* pvstate, char* val) {
+void acc_count_singest(void* pvstate, char* val) {
 	acc_count_state_t* pstate = pvstate;
 	pstate->count++;
 }
-char* acc_count_get(void* pvstate, char* pfree_flags) {
+char* acc_count_emit(void* pvstate, char* pfree_flags) {
 	acc_count_state_t* pstate = pvstate;
 	*pfree_flags |= LREC_FREE_ENTRY_VALUE;
 	return mlr_alloc_string_from_ull(pstate->count);
@@ -64,9 +52,9 @@ acc_t* acc_count_alloc(static_context_t* pstatx) {
 	pstate->count    = 0LL;
 	pstate->pstatx   = pstatx;
 	pacc->pvstate    = (void*)pstate;
-	pacc->psput_func = &acc_count_sput;
-	pacc->pdput_func = NULL;
-	pacc->pget_func  = &acc_count_get;
+	pacc->psingest_func = &acc_count_singest;
+	pacc->pdingest_func = NULL;
+	pacc->pemit_func  = &acc_count_emit;
 	return pacc;
 }
 
@@ -75,11 +63,11 @@ typedef struct _acc_sum_state_t {
 	double sum;
 	static_context_t* pstatx;
 } acc_sum_state_t;
-void acc_sum_dput(void* pvstate, double val) {
+void acc_sum_dingest(void* pvstate, double val) {
 	acc_sum_state_t* pstate = pvstate;
 	pstate->sum += val;
 }
-char* acc_sum_get(void* pvstate, char* pfree_flags) {
+char* acc_sum_emit(void* pvstate, char* pfree_flags) {
 	acc_sum_state_t* pstate = pvstate;
 	*pfree_flags |= LREC_FREE_ENTRY_VALUE;
 	return mlr_alloc_string_from_double(pstate->sum, pstate->pstatx->ofmt);
@@ -90,9 +78,9 @@ acc_t* acc_sum_alloc(static_context_t* pstatx) {
 	pstate->sum      = 0LL;
 	pstate->pstatx   = pstatx;
 	pacc->pvstate    = (void*)pstate;
-	pacc->psput_func = NULL;
-	pacc->pdput_func = &acc_sum_dput;
-	pacc->pget_func  = &acc_sum_get;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_sum_dingest;
+	pacc->pemit_func  = &acc_sum_emit;
 	return pacc;
 }
 
@@ -102,12 +90,12 @@ typedef struct _acc_avg_state_t {
 	unsigned long long count;
 	static_context_t* pstatx;
 } acc_avg_state_t;
-void acc_avg_dput(void* pvstate, double val) {
+void acc_avg_dingest(void* pvstate, double val) {
 	acc_avg_state_t* pstate = pvstate;
 	pstate->sum   += val;
 	pstate->count++;
 }
-char* acc_avg_get(void* pvstate, char* pfree_flags) {
+char* acc_avg_emit(void* pvstate, char* pfree_flags) {
 	acc_avg_state_t* pstate = pvstate;
 	double quot = pstate->sum / pstate->count;
 	// xxx decide: format "NaN" or "" when count is zeo. and, when *can* count be zero?
@@ -121,9 +109,9 @@ acc_t* acc_avg_alloc(static_context_t* pstatx) {
 	pstate->count  = 0LL;
 	pstate->pstatx = pstatx;
 	pacc->pvstate  = (void*)pstate;
-	pacc->psput_func = NULL;
-	pacc->pdput_func = &acc_avg_dput;
-	pacc->pget_func  = &acc_avg_get;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_avg_dingest;
+	pacc->pemit_func  = &acc_avg_emit;
 	return pacc;
 }
 
@@ -135,13 +123,13 @@ typedef struct _acc_stddev_avgeb_state_t {
 	int    do_avgeb;
 	static_context_t* pstatx;
 } acc_stddev_avgeb_state_t;
-void acc_stddev_avgeb_dput(void* pvstate, double val) {
+void acc_stddev_avgeb_dingest(void* pvstate, double val) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
-char* acc_stddev_avgeb_get(void* pvstate, char* pfree_flags) {
+char* acc_stddev_avgeb_emit(void* pvstate, char* pfree_flags) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
 		*pfree_flags &= ~LREC_FREE_ENTRY_VALUE;
@@ -163,9 +151,9 @@ acc_t* acc_stddev_avgeb_alloc(int do_avgeb, static_context_t* pstatx) {
 	pstate->do_avgeb  = do_avgeb;
 	pstate->pstatx    = pstatx;
 	pacc->pvstate     = (void*)pstate;
-	pacc->psput_func  = NULL;
-	pacc->pdput_func  = &acc_stddev_avgeb_dput;
-	pacc->pget_func   = &acc_stddev_avgeb_get;
+	pacc->psingest_func  = NULL;
+	pacc->pdingest_func  = &acc_stddev_avgeb_dingest;
+	pacc->pemit_func   = &acc_stddev_avgeb_emit;
 	return pacc;
 }
 acc_t* acc_stddev_alloc(static_context_t* pstatx) {
@@ -181,7 +169,7 @@ typedef struct _acc_min_state_t {
 	double min;
 	static_context_t* pstatx;
 } acc_min_state_t;
-void acc_min_dput(void* pvstate, double val) {
+void acc_min_dingest(void* pvstate, double val) {
 	acc_min_state_t* pstate = pvstate;
 	if (pstate->have_min) {
 		if (val < pstate->min)
@@ -191,7 +179,7 @@ void acc_min_dput(void* pvstate, double val) {
 		pstate->min = val;
 	}
 }
-char* acc_min_get(void* pvstate, char* pfree_flags) {
+char* acc_min_emit(void* pvstate, char* pfree_flags) {
 	acc_min_state_t* pstate = pvstate;
 	if (pstate->have_min) {
 		*pfree_flags |= LREC_FREE_ENTRY_VALUE;
@@ -208,9 +196,9 @@ acc_t* acc_min_alloc(static_context_t* pstatx) {
 	pstate->min      = -999.0;
 	pstate->pstatx   = pstatx;
 	pacc->pvstate    = (void*)pstate;
-	pacc->psput_func = NULL;
-	pacc->pdput_func = &acc_min_dput;
-	pacc->pget_func  = &acc_min_get;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_min_dingest;
+	pacc->pemit_func  = &acc_min_emit;
 	return pacc;
 }
 
@@ -220,7 +208,7 @@ typedef struct _acc_max_state_t {
 	double max;
 	static_context_t* pstatx;
 } acc_max_state_t;
-void acc_max_dput(void* pvstate, double val) {
+void acc_max_dingest(void* pvstate, double val) {
 	acc_max_state_t* pstate = pvstate;
 	if (pstate->have_max) {
 		if (val > pstate->max)
@@ -230,7 +218,7 @@ void acc_max_dput(void* pvstate, double val) {
 		pstate->max = val;
 	}
 }
-char* acc_max_get(void* pvstate, char* pfree_flags) {
+char* acc_max_emit(void* pvstate, char* pfree_flags) {
 	acc_max_state_t* pstate = pvstate;
 	if (pstate->have_max) {
 		*pfree_flags &= ~LREC_FREE_ENTRY_VALUE;
@@ -247,9 +235,9 @@ acc_t* acc_max_alloc(static_context_t* pstatx) {
 	pstate->max      = -999.0;
 	pstate->pstatx   = pstatx;
 	pacc->pvstate    = (void*)pstate;
-	pacc->psput_func = NULL;
-	pacc->pdput_func = &acc_max_dput;
-	pacc->pget_func  = &acc_max_get;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_max_dingest;
+	pacc->pemit_func  = &acc_max_emit;
 	return pacc;
 }
 
@@ -259,7 +247,7 @@ typedef struct _acc_mode_state_t {
 	static_context_t* pstatx;
 } acc_mode_state_t;
 // mode on strings? what about "1.0" and "1" and "1.0000" ??
-void acc_mode_sput(void* pvstate, char* val) {
+void acc_mode_singest(void* pvstate, char* val) {
 	acc_mode_state_t* pstate = pvstate;
 	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
 	if (pe == NULL) {
@@ -269,7 +257,7 @@ void acc_mode_sput(void* pvstate, char* val) {
 		pe->value++;
 	}
 }
-char* acc_mode_get(void* pvstate, char* pfree_flags) {
+char* acc_mode_emit(void* pvstate, char* pfree_flags) {
 	acc_mode_state_t* pstate = pvstate;
 	int max_count = 0;
 	char* max_key = NULL;
@@ -296,9 +284,9 @@ acc_t* acc_mode_alloc(static_context_t* pstatx) {
 	pstate->pcounts_for_value = lhmsi_alloc();
 	pstate->pstatx   = pstatx;
 	pacc->pvstate    = (void*)pstate;
-	pacc->psput_func = &acc_mode_sput;
-	pacc->pdput_func = NULL;
-	pacc->pget_func  = &acc_mode_get;
+	pacc->psingest_func = &acc_mode_singest;
+	pacc->pdingest_func = NULL;
+	pacc->pemit_func  = &acc_mode_emit;
 	return pacc;
 }
 
@@ -338,20 +326,49 @@ typedef struct _mapper_stats1_state_t {
 	slls_t* pgroup_by_field_names;
 
 	lhmslv_t* groups;
-
 } mapper_stats1_state_t;
 
-// given: accumulate count,sum on values x,y group by a,b
-// example input:       example output:
+// Given: accumulate count,sum on values x,y group by a,b.
+// Example input:       Example output:
 //   a b x y            a b x_count x_sum y_count y_sum
 //   s t 1 2            s t 2       6     2       8
 //   u v 3 4            u v 1       3     1       4
 //   s t 5 6            u w 1       7     1       9
 //   u w 7 9
-
-// ["s","t"] |--> "x" |--> "sum" |--> acc_t* (as void*)
-// level_1      level_2   level_3
-// lhmslv_t     lhmsv_t   lhmsv_t
+//
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {
+//     ["x"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//     ["y"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//   },
+//   ["u","v"] : {
+//     ["x"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//     ["y"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//   },
+//   ["u","w"] : {
+//     ["x"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//     ["y"] : {
+//       "count" : C stats2_count_t object,
+//       "sum"   : C stats2_sum_t  object
+//     },
+//   },
+// }
 
 // ----------------------------------------------------------------
 sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
@@ -399,6 +416,12 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			sllse_t* pc = pstate->paccumulator_names->phead;
 			for ( ; pc != NULL; pc = pc->pnext) {
 				char* acc_name = pc->value;
+				// XXX add another map for accs_set_up
+				// XXX do all the accs in a separate function
+				// XXX subscribe all the pn's to the single quantile tracker
+				// XXX pre: modify acc api to take poutrec (like stats2)
+				// XXX pre: make a resize-batched-array ... chunks of 1000 perhaps?
+				//     going to need to qsort it at some point ...
 				acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
 				if (pacc == NULL) {
 					pacc = make_acc(acc_name, &pctx->statx);
@@ -410,20 +433,20 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 					lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
 				}
 				if (pacc == NULL) {
-					// xxx needs argv[0] somewhere ...
+					// xxx needs argv[0] from mlr_globals.
 					fprintf(stderr, "stats1: could not find accumulator named \"%s\".\n", acc_name);
 					exit(1);
 				}
 
-				if (pacc->psput_func != NULL) {
-					pacc->psput_func(pacc->pvstate, value_field_sval);
+				if (pacc->psingest_func != NULL) {
+					pacc->psingest_func(pacc->pvstate, value_field_sval);
 				}
-				if (pacc->pdput_func != NULL) {
+				if (pacc->pdingest_func != NULL) {
 					if (!have_dval) {
 						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 						have_dval = TRUE;
 					}
-					pacc->pdput_func(pacc->pvstate, value_field_dval);
+					pacc->pdingest_func(pacc->pvstate, value_field_dval);
 				}
 			}
 		}
@@ -459,7 +482,7 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 
 					char free_flags = LREC_FREE_ENTRY_KEY;
 					char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
-					char* val = pacc->pget_func(pacc->pvstate, &free_flags);
+					char* val = pacc->pemit_func(pacc->pvstate, &free_flags);
 					lrec_put(poutrec, key, val, free_flags);
 				}
 			}

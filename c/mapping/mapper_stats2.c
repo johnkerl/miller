@@ -20,17 +20,18 @@
 #define DO_LINREG_PCA 0x44
 
 // ----------------------------------------------------------------
-typedef void stats2_put_func_t(void* pvstate, double x, double y);
-typedef void stats2_get_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
+typedef void stats2_ingest_func_t(void* pvstate, double x, double y);
+typedef void stats2_emit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
 
 typedef struct _stats2_t {
 	void* pvstate;
-	stats2_put_func_t* pput_func;
-	stats2_get_func_t* pget_func;
+	stats2_ingest_func_t* pingest_func;
+	stats2_emit_func_t*   pemit_func;
 } stats2_t;
 
 typedef stats2_t* stats2_alloc_func_t(static_context_t* pstatx, int do_verbose);
 
+// ----------------------------------------------------------------
 typedef struct _stats2_linreg_ols_state_t {
 	unsigned long long count;
 	double sumx;
@@ -39,7 +40,7 @@ typedef struct _stats2_linreg_ols_state_t {
 	double sumxy;
 	static_context_t* pstatx;
 } stats2_linreg_ols_state_t;
-void stats2_linreg_ols_put(void* pvstate, double x, double y) {
+void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -47,7 +48,7 @@ void stats2_linreg_ols_put(void* pvstate, double x, double y) {
 	pstate->sumx2 += x*x;
 	pstate->sumxy += x*y;
 }
-void stats2_linreg_ols_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 	double m, b;
 
@@ -71,8 +72,8 @@ stats2_t* stats2_linreg_ols_alloc(static_context_t* pstatx, int do_verbose) {
 	pstate->sumxy = 0.0;
 	pstate->pstatx = pstatx;
 	pstats2->pvstate = (void*)pstate;
-	pstats2->pput_func = &stats2_linreg_ols_put;
-	pstats2->pget_func = &stats2_linreg_ols_get;
+	pstats2->pingest_func = &stats2_linreg_ols_ingest;
+	pstats2->pemit_func = &stats2_linreg_ols_emit;
 	return pstats2;
 }
 
@@ -89,7 +90,7 @@ typedef struct _stats2_r2_state_t {
 	double sumy2;
 	static_context_t* pstatx;
 } stats2_r2_state_t;
-void stats2_r2_put(void* pvstate, double x, double y) {
+void stats2_r2_ingest(void* pvstate, double x, double y) {
 	stats2_r2_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -98,7 +99,7 @@ void stats2_r2_put(void* pvstate, double x, double y) {
 	pstate->sumxy += x*y;
 	pstate->sumy2 += y*y;
 }
-void stats2_r2_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_r2_state_t* pstate = pvstate;
 	char* suffix = "r2";
 	char* key = mlr_paste_5_strings(name1, "_", name2, "_", suffix);
@@ -130,23 +131,12 @@ stats2_t* stats2_r2_alloc(static_context_t* pstatx, int do_verbose) {
 	pstate->sumy2     = 0.0;
 	pstate->pstatx = pstatx;
 	pstats2->pvstate   = (void*)pstate;
-	pstats2->pput_func = &stats2_r2_put;
-	pstats2->pget_func = &stats2_r2_get;
+	pstats2->pingest_func = &stats2_r2_ingest;
+	pstats2->pemit_func = &stats2_r2_emit;
 	return pstats2;
 }
 
 // ----------------------------------------------------------------
-// def find_sample_covariance(xs, ys):
-//      N = len(xs)
-//      mean_x = find_mean(xs)
-//      mean_y = find_mean(ys)
-//
-//      sum = 0.0
-//      for k in range(0, N):
-//              sum += (xs[k] - mean_x) * (ys[k] - mean_y)
-//
-//      return sum / (N-1.0)
-
 // Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
 typedef struct _stats2_corr_cov_state_t {
 	unsigned long long count;
@@ -159,7 +149,7 @@ typedef struct _stats2_corr_cov_state_t {
 	int    do_verbose;
 	static_context_t* pstatx;
 } stats2_corr_cov_state_t;
-void stats2_corr_cov_put(void* pvstate, double x, double y) {
+void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -169,7 +159,7 @@ void stats2_corr_cov_put(void* pvstate, double x, double y) {
 	pstate->sumy2 += y*y;
 }
 
-void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	if (pstate->do_which == DO_COVX) {
 		char* key00 = mlr_paste_4_strings(name1, "_", name1, "_covx");
@@ -230,16 +220,17 @@ void stats2_corr_cov_get(void* pvstate, char* name1, char* name2, lrec_t* poutre
 			double m, b, q;
 			mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
 
-			lrec_put(poutrec, keym,   mlr_alloc_string_from_double(m,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			lrec_put(poutrec, keyb,   mlr_alloc_string_from_double(b,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			lrec_put(poutrec, keyq,   mlr_alloc_string_from_double(q,   pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
+			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, pstate->pstatx->ofmt), free_flags);
+			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, pstate->pstatx->ofmt), free_flags);
+			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, pstate->pstatx->ofmt), free_flags);
 			if (pstate->do_verbose) {
-				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,  pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,  pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], pstate->pstatx->ofmt), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], pstate->pstatx->ofmt), free_flags);
 			}
 		}
 	} else {
@@ -272,8 +263,8 @@ stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose, static_context_t* 
 	pstate->do_verbose = do_verbose;
 	pstate->pstatx     = pstatx;
 	pstats2->pvstate   = (void*)pstate;
-	pstats2->pput_func = &stats2_corr_cov_put;
-	pstats2->pget_func = &stats2_corr_cov_get;
+	pstats2->pingest_func = &stats2_corr_cov_ingest;
+	pstats2->pemit_func = &stats2_corr_cov_emit;
 	return pstats2;
 }
 stats2_t* stats2_corr_alloc(static_context_t* pstatx, int do_verbose) {
@@ -318,32 +309,46 @@ typedef struct _mapper_stats2_state_t {
 	slls_t* pvalue_field_name_pairs;
 	slls_t* pgroup_by_field_names;
 
-	lhmslv_t* pmaps_level_1;
+	lhmslv_t* groups;
 	int     do_verbose;
 } mapper_stats2_state_t;
 
-// given: accumulate count,sum on values x,y group by a,b
-// example input:       example output:
-//   a b x y            a b x_count x_sum y_count y_sum
-//   s t 1 2            s t 2       6     2       8
-//   u v 3 4            u v 1       3     1       4
-//   s t 5 6            u w 1       7     1       9
+// Given: accumulate corr,cov on values x,y group by a,b.
+// Example input:       Example output:
+//   a b x y            a b x_corr x_cov y_corr y_cov
+//   s t 1 2            s t 2       6    2      8
+//   u v 3 4            u v 1       3    1      4
+//   s t 5 6            u w 1       7    1      9
 //   u w 7 9
-
-// ["s","t"] |--> "x","y" |--> "corr" |--> stats2_corr_t* (as void*)
-// level 1        level 2      level 3
-// lhmslv_t       lhms2v_t     lhmsv_t
-// stats2_sum_t implements interface:
-//   void  init();
-//   void  dacc(double dval);
-//   void  sacc(char*  sval);
-//   char* get();
+//
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","v"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","w"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+// }
 
 // ----------------------------------------------------------------
 sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 
+		// ["s", "t"]
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
 			lrec_free(pinrec);
@@ -351,20 +356,21 @@ sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			return NULL;
 		}
 
-		lhms2v_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
-		if (pmaps_level_2 == NULL) {
-			pmaps_level_2 = lhms2v_alloc();
-			lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
+		lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+		if (group_to_acc_field == NULL) {
+			group_to_acc_field = lhms2v_alloc();
+			lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 		}
 
+		// for [["x","y"]]
 		for (sllse_t* pa = pstate->pvalue_field_name_pairs->phead; pa != NULL; pa = pa->pnext->pnext) {
 			char* value_field_name_1 = pa->value;
 			char* value_field_name_2 = pa->pnext->value;
 
-			lhmsv_t* pmaps_level_3 = lhms2v_get(pmaps_level_2, value_field_name_1, value_field_name_2);
-			if (pmaps_level_3 == NULL) {
-				pmaps_level_3 = lhmsv_alloc();
-				lhms2v_put(pmaps_level_2, value_field_name_1, value_field_name_2, pmaps_level_3);
+			lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
+			if (acc_fields_to_acc_state == NULL) {
+				acc_fields_to_acc_state = lhmsv_alloc();
+				lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
 			}
 
 			char* sval1 = lrec_get(pinrec, value_field_name_1);
@@ -375,10 +381,11 @@ sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			if (sval2 == NULL)
 				continue;
 
+			// for ["corr", "cov"]
 			sllse_t* pc = pstate->paccumulator_names->phead;
 			for ( ; pc != NULL; pc = pc->pnext) {
 				char* stats2_name = pc->value;
-				stats2_t* pstats2 = lhmsv_get(pmaps_level_3, stats2_name);
+				stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
 				if (pstats2 == NULL) {
 					pstats2 = make_stats2(stats2_name, pstate->do_verbose, &pctx->statx);
 					if (pstats2 == NULL) {
@@ -386,12 +393,12 @@ sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 							stats2_name);
 						exit(1);
 					}
-					lhmsv_put(pmaps_level_3, stats2_name, pstats2);
+					lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
 				}
 
 				double dval1 = mlr_double_from_string_or_die(sval1);
 				double dval2 = mlr_double_from_string_or_die(sval2);
-				pstats2->pput_func(pstats2->pvstate, dval1, dval2);
+				pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
 			}
 		}
 
@@ -402,7 +409,7 @@ sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	else {
 		sllv_t* poutrecs = sllv_alloc();
 
-		for (lhmslve_t* pa = pstate->pmaps_level_1->phead; pa != NULL; pa = pa->pnext) {
+		for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 
 			// Add in a=s,b=t fields:
@@ -414,18 +421,18 @@ sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			}
 
 			// Add in fields such as x_y_corr, etc.
-			lhms2v_t* pmaps_level_2 = pa->value;
+			lhms2v_t* group_to_acc_field = pa->value;
 
 			// For "x","y"
-			for (lhms2ve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+			for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				char*    value_field_name_1 = pd->key1;
 				char*    value_field_name_2 = pd->key2;
-				lhmsv_t* pmaps_level_3      = pd->value;
+				lhmsv_t* acc_fields_to_acc_state = pd->value;
 
 				// For "corr", "linreg"
-				for (lhmsve_t* pe = pmaps_level_3->phead; pe != NULL; pe = pe->pnext) {
+				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 					stats2_t* pstats2  = pe->value;
-					pstats2->pget_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
+					pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 				}
 			}
 
@@ -443,7 +450,7 @@ static void mapper_stats2_free(void* pvstate) {
 	slls_free(pstate->pvalue_field_name_pairs);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
-	lhmslv_free(pstate->pmaps_level_1);
+	lhmslv_free(pstate->groups);
 }
 
 mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
@@ -455,7 +462,7 @@ mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_n
 	pstate->paccumulator_names      = paccumulator_names;
 	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // xxx validate length is even
 	pstate->pgroup_by_field_names   = pgroup_by_field_names;
-	pstate->pmaps_level_1           = lhmslv_alloc();
+	pstate->groups                  = lhmslv_alloc();
 	pstate->do_verbose              = do_verbose;
 
 	pmapper->pvstate                = pstate;

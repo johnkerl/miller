@@ -37,6 +37,8 @@ FEATURES
 ================================================================
 NEATEN
 
+!! xxx's in the code
+
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
 * catc.c/catc0.c -> language-comparisons/ dir
