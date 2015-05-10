@@ -14,15 +14,15 @@
 #include "cli/argparse.h"
 
 // ================================================================
-typedef void  acc_dingest_func_t(void* pvstate, double val);
-typedef void  acc_singest_func_t(void* pvstate, char*  val);
-typedef char* acc_emit_func_t (void* pvstate, char* pfree_flags);
+typedef void acc_dingest_func_t(void* pvstate, double val);
+typedef void acc_singest_func_t(void* pvstate, char*  val);
+typedef void acc_emit_func_t(void* pvstate, char* value_field_name, lrec_t* poutrec);
 
 typedef struct _acc_t {
 	void* pvstate;
 	acc_singest_func_t* psingest_func;
 	acc_dingest_func_t* pdingest_func;
-	acc_emit_func_t*  pemit_func;
+	acc_emit_func_t*    pemit_func;
 } acc_t;
 
 typedef acc_t* acc_alloc_func_t(static_context_t* pstatx);
@@ -36,16 +36,12 @@ void acc_count_singest(void* pvstate, char* val) {
 	acc_count_state_t* pstate = pvstate;
 	pstate->count++;
 }
-char* acc_count_emit(void* pvstate, char* pfree_flags) {
+void acc_count_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_count_state_t* pstate = pvstate;
-	*pfree_flags |= LREC_FREE_ENTRY_VALUE;
-	return mlr_alloc_string_from_ull(pstate->count);
+	char* key = mlr_paste_2_strings(value_field_name, "_count");
+	char* val = mlr_alloc_string_from_ull(pstate->count);
+	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-// xxx somewhere note a crucial assumption: while pctx is passed in
-// to the mapper on a per-row basis, we stash it here on first use and
-// use it on subsequent rows. assumptions:
-// * the address doesn't change
-// * the content we use (namely, ofmt) isn't row-dependent
 acc_t* acc_count_alloc(static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_count_state_t* pstate = mlr_malloc_or_die(sizeof(acc_count_state_t));
@@ -67,10 +63,11 @@ void acc_sum_dingest(void* pvstate, double val) {
 	acc_sum_state_t* pstate = pvstate;
 	pstate->sum += val;
 }
-char* acc_sum_emit(void* pvstate, char* pfree_flags) {
+void acc_sum_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_sum_state_t* pstate = pvstate;
-	*pfree_flags |= LREC_FREE_ENTRY_VALUE;
-	return mlr_alloc_string_from_double(pstate->sum, pstate->pstatx->ofmt);
+	char* key = mlr_paste_2_strings(value_field_name, "_sum");
+	char* val = mlr_alloc_string_from_double(pstate->sum, pstate->pstatx->ofmt);
+	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 acc_t* acc_sum_alloc(static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
@@ -95,12 +92,12 @@ void acc_avg_dingest(void* pvstate, double val) {
 	pstate->sum   += val;
 	pstate->count++;
 }
-char* acc_avg_emit(void* pvstate, char* pfree_flags) {
+void acc_avg_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_avg_state_t* pstate = pvstate;
 	double quot = pstate->sum / pstate->count;
-	// xxx decide: format "NaN" or "" when count is zeo. and, when *can* count be zero?
-	*pfree_flags |= LREC_FREE_ENTRY_VALUE;
-	return mlr_alloc_string_from_double(quot, pstate->pstatx->ofmt);
+	char* key = mlr_paste_2_strings(value_field_name, "_avg");
+	char* val = mlr_alloc_string_from_double(quot, pstate->pstatx->ofmt);
+	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 acc_t* acc_avg_alloc(static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
@@ -129,31 +126,32 @@ void acc_stddev_avgeb_dingest(void* pvstate, double val) {
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
-char* acc_stddev_avgeb_emit(void* pvstate, char* pfree_flags) {
+void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
+	char* key = mlr_paste_2_strings(value_field_name, pstate->do_avgeb ? "_avgeb" : "_stddev");
 	if (pstate->count < 2LL) {
-		*pfree_flags &= ~LREC_FREE_ENTRY_VALUE;
-		return "";
+		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	} else {
 		double output = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
-		*pfree_flags |= LREC_FREE_ENTRY_VALUE;
 		if (pstate->do_avgeb)
 			output = output / sqrt(pstate->count);
-		return mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
+		char* val =  mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
+		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
+
 acc_t* acc_stddev_avgeb_alloc(int do_avgeb, static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_stddev_avgeb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_avgeb_state_t));
-	pstate->count     = 0LL;
-	pstate->sumx      = 0.0;
-	pstate->sumx2     = 0.0;
-	pstate->do_avgeb  = do_avgeb;
-	pstate->pstatx    = pstatx;
-	pacc->pvstate     = (void*)pstate;
-	pacc->psingest_func  = NULL;
-	pacc->pdingest_func  = &acc_stddev_avgeb_dingest;
-	pacc->pemit_func   = &acc_stddev_avgeb_emit;
+	pstate->count       = 0LL;
+	pstate->sumx        = 0.0;
+	pstate->sumx2       = 0.0;
+	pstate->do_avgeb    = do_avgeb;
+	pstate->pstatx      = pstatx;
+	pacc->pvstate       = (void*)pstate;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_stddev_avgeb_dingest;
+	pacc->pemit_func    = &acc_stddev_avgeb_emit;
 	return pacc;
 }
 acc_t* acc_stddev_alloc(static_context_t* pstatx) {
@@ -179,14 +177,14 @@ void acc_min_dingest(void* pvstate, double val) {
 		pstate->min = val;
 	}
 }
-char* acc_min_emit(void* pvstate, char* pfree_flags) {
+void acc_min_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_min_state_t* pstate = pvstate;
+	char* key = mlr_paste_2_strings(value_field_name, "_min");
 	if (pstate->have_min) {
-		*pfree_flags |= LREC_FREE_ENTRY_VALUE;
-		return mlr_alloc_string_from_double(pstate->min, pstate->pstatx->ofmt);
+		char* val = mlr_alloc_string_from_double(pstate->min, pstate->pstatx->ofmt);
+		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	} else {
-		*pfree_flags &= ~LREC_FREE_ENTRY_VALUE;
-		return "";
+		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	}
 }
 acc_t* acc_min_alloc(static_context_t* pstatx) {
@@ -218,14 +216,14 @@ void acc_max_dingest(void* pvstate, double val) {
 		pstate->max = val;
 	}
 }
-char* acc_max_emit(void* pvstate, char* pfree_flags) {
+void acc_max_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_max_state_t* pstate = pvstate;
+	char* key = mlr_paste_2_strings(value_field_name, "_max");
 	if (pstate->have_max) {
-		*pfree_flags &= ~LREC_FREE_ENTRY_VALUE;
-		return mlr_alloc_string_from_double(pstate->max, pstate->pstatx->ofmt);
+		char* val = mlr_alloc_string_from_double(pstate->max, pstate->pstatx->ofmt);
+		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	} else {
-		*pfree_flags |= LREC_FREE_ENTRY_VALUE;
-		return "";
+		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	}
 }
 acc_t* acc_max_alloc(static_context_t* pstatx) {
@@ -257,10 +255,10 @@ void acc_mode_singest(void* pvstate, char* val) {
 		pe->value++;
 	}
 }
-char* acc_mode_emit(void* pvstate, char* pfree_flags) {
+void acc_mode_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
 	acc_mode_state_t* pstate = pvstate;
 	int max_count = 0;
-	char* max_key = NULL;
+	char* max_key = "";
 	for (lhmsie_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
 		int count = pe->value;
 		if (count > max_count) {
@@ -268,7 +266,8 @@ char* acc_mode_emit(void* pvstate, char* pfree_flags) {
 			max_count = count;
 		}
 	}
-	return max_key;
+	char* key = mlr_paste_2_strings(value_field_name, "_mode");
+	lrec_put(poutrec, key, max_key, LREC_FREE_ENTRY_KEY);
 }
 // xxx somewhere note a crucial assumption: while pctx is passed in
 // to the mapper on a per-row basis, we stash it here on first use and
@@ -477,13 +476,8 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 				lhmsv_t* acc_field_to_acc_state = pd->value;
 				// for "count", "sum"
 				for (lhmsve_t* pe = acc_field_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-					char* acc_name = pe->key;
 					acc_t* pacc = pe->value;
-
-					char free_flags = LREC_FREE_ENTRY_KEY;
-					char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
-					char* val = pacc->pemit_func(pacc->pvstate, &free_flags);
-					lrec_put(poutrec, key, val, free_flags);
+					pacc->pemit_func(pacc->pvstate, value_field_name, poutrec);
 				}
 			}
 
