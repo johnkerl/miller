@@ -287,6 +287,9 @@ char* acc_mode_get(void* pvstate, char* pfree_flags) {
 // use it on subsequent rows. assumptions:
 // * the address doesn't change
 // * the content we use (namely, ofmt) isn't row-dependent
+// Option 1:
+// * modify make_acc to special-case p{n}. needs multi-level hashmap keys
+// * do it outside make_acc; requires separate hash maps for percentiles/deciles/quartiles/etc.
 acc_t* acc_mode_alloc(static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
@@ -317,6 +320,10 @@ static acc_lookup_t acc_lookup_table[] = {
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
 // xxx make this a hashmap?
+// xxx what if acc_name is p50? need:
+// * here and here alone is cross-dependence between accumulators
+// * if there are min,p10,p50,avg,p90,max then the values array should be
+//   shared between p10,p50,p90
 static acc_t* make_acc(char* acc_name, static_context_t* pstatx) {
 	for (int i = 0; i < acc_lookup_table_length; i++)
 		if (streq(acc_name, acc_lookup_table[i].name))
@@ -345,11 +352,6 @@ typedef struct _mapper_stats1_state_t {
 // ["s","t"] |--> "x" |--> "sum" |--> acc_t* (as void*)
 // level_1      level_2   level_3
 // lhmslv_t     lhmsv_t   lhmsv_t
-// acc_t implements interface:
-//   void  init();
-//   void  dacc(double dval);
-//   void  sacc(char*  sval);
-//   char* get();
 
 // ----------------------------------------------------------------
 sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {

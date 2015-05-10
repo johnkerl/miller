@@ -109,7 +109,6 @@ lrec_t* lrec_parse_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 				lrec_put_no_free(prec, key, value);
 			}
 
-
 			p++;
 			if (allow_repeat_ifs) {
 				while (*p == ifs)

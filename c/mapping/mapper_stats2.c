@@ -31,50 +31,6 @@ typedef struct _stats2_t {
 
 typedef stats2_t* stats2_alloc_func_t(static_context_t* pstatx, int do_verbose);
 
-// xxx move to mlrstat.h/c
-
-// ----------------------------------------------------------------
-// Univariate linear regression
-// ----------------------------------------------------------------
-// There are N (xi, yi) pairs.
-//
-// E = sum (yi - m xi - b)^2
-//
-// DE/Dm = sum 2 (yi - m xi - b) (-xi) = 0
-// DE/Db = sum 2 (yi - m xi - b) (-1)  = 0
-//
-// sum (yi - m xi - b) (xi) = 0
-// sum (yi - m xi - b)      = 0
-//
-// sum (xi yi - m xi^2 - b xi) = 0
-// sum (yi - m xi - b)         = 0
-//
-// m sum(xi^2) + b sum(xi) = sum(xi yi)
-// m sum(xi)   + b N       = sum(yi)
-//
-// [ sum(xi^2)   sum(xi) ] [ m ] = [ sum(xi yi) ]
-// [ sum(xi)     N       ] [ b ] = [ sum(yi)    ]
-//
-// [ m ] = [ sum(xi^2) sum(xi) ]^-1  [ sum(xi yi) ]
-// [ b ]   [ sum(xi)   N       ]     [ sum(yi)    ]
-//
-//       = [ N         -sum(xi)  ]  [ sum(xi yi) ] * 1/D
-//         [ -sum(xi)   sum(xi^2)]  [ sum(yi)    ]
-//
-// where
-//
-//   D = N sum(xi^2) - sum(xi)^2.
-//
-// So
-//
-//      N sum(xi yi) - sum(xi) sum(yi)
-// m = --------------------------------
-//                   D
-//
-//      -sum(xi)sum(xi yi) + sum(xi^2) sum(yi)
-// b = ----------------------------------------
-//                   D
-
 typedef struct _stats2_linreg_ols_state_t {
 	unsigned long long count;
 	double sumx;

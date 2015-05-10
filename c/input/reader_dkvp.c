@@ -20,7 +20,7 @@ static lrec_t* reader_dkvp_func(FILE* input_stream, void* pvstate, context_t* pc
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_dkvp(line, pstate->ifs, pstate->ips, FALSE);
+		return lrec_parse_dkvp(line, pstate->ifs, pstate->ips, pstate->allow_repeat_ifs);
 }
 
 // No-op for stateless readers such as this one.

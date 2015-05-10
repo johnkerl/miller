@@ -1,6 +1,57 @@
 #include <math.h>
 #include "lib/mlrstat.h"
 
+// ================================================================
+// These are intended for streaming (i.e. single-pass) applications. Otherwise
+// the formulas look different (and are more intuitive).
+// ================================================================
+
+// ----------------------------------------------------------------
+// Univariate linear regression
+// ----------------------------------------------------------------
+// There are N (xi, yi) pairs.
+//
+// minimize E = sum (yi - m xi - b)^2
+//
+// Set the two partial derivatives to zero and solve for m and b:
+//
+// DE/Dm = sum 2 (yi - m xi - b) (-xi) = 0
+// DE/Db = sum 2 (yi - m xi - b) (-1)  = 0
+//
+// sum (yi - m xi - b) (xi) = 0
+// sum (yi - m xi - b)      = 0
+//
+// sum (xi yi - m xi^2 - b xi) = 0
+// sum (yi - m xi - b)         = 0
+//
+// m sum(xi^2) + b sum(xi) = sum(xi yi)
+// m sum(xi)   + b N       = sum(yi)
+//
+// [ sum(xi^2)   sum(xi) ] [ m ] = [ sum(xi yi) ]
+// [ sum(xi)     N       ] [ b ] = [ sum(yi)    ]
+//
+// [ m ] = [ sum(xi^2) sum(xi) ]^-1  [ sum(xi yi) ]
+// [ b ]   [ sum(xi)   N       ]     [ sum(yi)    ]
+//
+//       = [ N         -sum(xi)  ]  [ sum(xi yi) ] * 1/D
+//         [ -sum(xi)   sum(xi^2)]  [ sum(yi)    ]
+//
+// where
+//
+//   D = N sum(xi^2) - sum(xi)^2.
+//
+// So
+//
+//      N sum(xi yi) - sum(xi) sum(yi)
+// m = --------------------------------
+//                   D
+//
+//      -sum(xi)sum(xi yi) + sum(xi^2) sum(yi)
+// b = ----------------------------------------
+//                   D
+//
+// ----------------------------------------------------------------
+
 void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sumx2, double sumxy, double sumy,
 	double* pm, double* pb)
 {
@@ -27,8 +78,7 @@ void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sum
 //
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
-// This is intended for streaming (i.e. single-pass) applications. Otherwise
-// the formulas look different (and are more intuitive).
+// ----------------------------------------------------------------
 double mlr_get_stddev(unsigned long long n, double sum, double sum2) {
 	double mean = sum / n;
 	double numerator = sum2 - 2.0*mean*sum + n*mean*mean;
@@ -38,6 +88,7 @@ double mlr_get_stddev(unsigned long long n, double sum, double sum2) {
 	return sqrt(numerator / denominator);
 }
 
+// ----------------------------------------------------------------
 double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy) {
 	double meanx = sumx / n;
 	double meany = sumy / n;
@@ -46,6 +97,7 @@ double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy)
 	return numerator / denominator;
 }
 
+// ----------------------------------------------------------------
 void mlr_get_cov_matrix(unsigned long long n,
 	double sumx, double sumx2, double sumy, double sumy2, double sumxy,
 	double Q[2][2])
@@ -59,17 +111,22 @@ void mlr_get_cov_matrix(unsigned long long n,
 
 // ----------------------------------------------------------------
 // Principal component analysis can be used for linear regression:
+//
 // * Compute the covariance matrix for the x's and y's.
+//
 // * Find its eigenvalues and eigenvectors of the cov. (This is real-symmetric
 //   so Jacobi iteration is simple and fine.)
+//
 // * The principal eigenvector points in the direction of the fit.
+//
 // * The covariance matrix is computed on zero-mean data so the intercept
-//   is zero, of the form (y - nu) = m*(x - mu) where mu and nu are x and y
-//   means, respectively.
+//   is zero. The fit equation is of the form (y - nu) = m*(x - mu) where mu
+//   and nu are x and y means, respectively.
+//
 // * If the fit is perfect then the 2nd eigenvalue will be zero; if the fit is
 //   good then the 2nd eigenvalue will be smaller; if the fit is bad then
-//   they'll be about the same. I use 1 minus ratio of absolute values
-//   of 2nd to 1st eigenvalues as an indication of quality of the fit.
+//   they'll be about the same. I use 1 - |lambda2|/|lambda1| as an indication
+//   of quality of the fit.
 //
 // Standard ("ordinary least-squares") linear regression is appropriate when
 // the errors are thought to be all in the y's. PCA ("total least-squares") is
