@@ -23,112 +23,121 @@ typedef struct _mapper_top_state_t {
 } mapper_top_state_t;
 
 // ----------------------------------------------------------------
+static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
+static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
+
 sllv_t* mapper_top_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_top_state_t* pstate = pvstate;
+
 	if (pinrec != NULL) {
-
-		// ["s", "t"]
-		// xxx make value_field_values into a hashmap. then accept partial population on that.
-		// xxx but retain full-population requirement on group-by.
-		// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
-		slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-
-		// xxx cmt
-		if (pvalue_field_values->length != pstate->pvalue_field_names->length) {
-			lrec_free(pinrec);
-			return NULL;
-		}
-		if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
-			lrec_free(pinrec);
-			return NULL;
-		}
-
-		lhmsv_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
-		if (pmaps_level_2 == NULL) {
-			pmaps_level_2 = lhmsv_alloc();
-			lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
-		}
-
-		sllse_t* pa = pstate->pvalue_field_names->phead;
-		sllse_t* pb =         pvalue_field_values->phead;
-		// for "x", "y" and "1", "2"
-		for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
-			char* value_field_name = pa->value;
-			char* value_field_sval = pb->value;
-			double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-
-			// xxx rename: for group and value-field-name
-			top_keeper_t* ptop_keeper_for_group = lhmsv_get(pmaps_level_2, value_field_name);
-			if (ptop_keeper_for_group == NULL) {
-				ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);
-				lhmsv_put(pmaps_level_2, value_field_name, ptop_keeper_for_group);
-			}
-
-			top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign, pinrec);
-		}
-
+		mapper_top_ingest(pinrec, pstate);
 		lrec_free(pinrec);
 		return NULL;
+	} else {
+		return mapper_top_emit(pstate, pctx);
 	}
-	else {
-		sllv_t* poutrecs = sllv_alloc();
+}
 
-		for (lhmslve_t* pa = pstate->pmaps_level_1->phead; pa != NULL; pa = pa->pnext) {
+// ----------------------------------------------------------------
+static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
+	// ["s", "t"]
+	// xxx make value_field_values into a hashmap. then accept partial population on that.
+	// xxx but retain full-population requirement on group-by.
+	// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
+	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
-			if (pstate->show_full_records) {
-				// xxx if i do it this way (entire record) then there can only be one value column.
-				// xxx assert on that, or at the very least note how confusing it is.
-				lhmsv_t* pmaps_level_2 = pa->value;
-				for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
-					top_keeper_t* ptop_keeper_for_group = pd->value;
-					for (int i = 0;  i < ptop_keeper_for_group->size; i++)
-						sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
-				}
-			}
+	// xxx cmt
+	if (pvalue_field_values->length != pstate->pvalue_field_names->length) {
+		return;
+	}
+	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		return;
+	}
 
-			else {
-				slls_t* pgroup_by_field_values = pa->key;
-				for (int i = 0; i < pstate->top_count; i++) {
-					lrec_t* poutrec = lrec_unbacked_alloc();
+	lhmsv_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
+	if (pmaps_level_2 == NULL) {
+		pmaps_level_2 = lhmsv_alloc();
+		lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
+	}
 
-					// Add in a=s,b=t fields:
-					sllse_t* pb = pstate->pgroup_by_field_names->phead;
-					sllse_t* pc =         pgroup_by_field_values->phead;
-					for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-						lrec_put(poutrec, pb->value, pc->value, 0);
-					}
+	sllse_t* pa = pstate->pvalue_field_names->phead;
+	sllse_t* pb =         pvalue_field_values->phead;
+	// for "x", "y" and "1", "2"
+	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
+		char* value_field_name = pa->value;
+		char* value_field_sval = pb->value;
+		double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 
-					char* sidx = mlr_alloc_string_from_ull(i+1);
-					lrec_put(poutrec, "top_idx", sidx, LREC_FREE_ENTRY_VALUE);
-					free(sidx);
+		// xxx rename: for group and value-field-name
+		top_keeper_t* ptop_keeper_for_group = lhmsv_get(pmaps_level_2, value_field_name);
+		if (ptop_keeper_for_group == NULL) {
+			ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);
+			lhmsv_put(pmaps_level_2, value_field_name, ptop_keeper_for_group);
+		}
 
-					// Add in fields such as x_top_1=#
-					lhmsv_t* pmaps_level_2 = pa->value;
-					// for "x", "y"
-					for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
-						char* value_field_name = pd->key;
-						top_keeper_t* ptop_keeper_for_group = pd->value;
+		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign, pinrec);
+	}
+}
 
-						char* key = mlr_paste_2_strings(value_field_name, "_top");
-						if (i < ptop_keeper_for_group->size) {
-							// xxx temp fmt
-							double dval = ptop_keeper_for_group->top_values[i] * pstate->sign;
-							char* sval = mlr_alloc_string_from_double(dval, pctx->statx.ofmt);
-							lrec_put(poutrec, key, sval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-							free(sval);
-						} else {
-							lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
-						}
-					}
-					sllv_add(poutrecs, poutrec);
-				}
+// ----------------------------------------------------------------
+static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	for (lhmslve_t* pa = pstate->pmaps_level_1->phead; pa != NULL; pa = pa->pnext) {
+
+		if (pstate->show_full_records) {
+			// xxx if i do it this way (entire record) then there can only be one value column.
+			// xxx assert on that, or at the very least note how confusing it is.
+			lhmsv_t* pmaps_level_2 = pa->value;
+			for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+				top_keeper_t* ptop_keeper_for_group = pd->value;
+				for (int i = 0;  i < ptop_keeper_for_group->size; i++)
+					sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
 			}
 		}
 
-		sllv_add(poutrecs, NULL);
-		return poutrecs;
+		else {
+			slls_t* pgroup_by_field_values = pa->key;
+			for (int i = 0; i < pstate->top_count; i++) {
+				lrec_t* poutrec = lrec_unbacked_alloc();
+
+				// Add in a=s,b=t fields:
+				sllse_t* pb = pstate->pgroup_by_field_names->phead;
+				sllse_t* pc =         pgroup_by_field_values->phead;
+				for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+					lrec_put(poutrec, pb->value, pc->value, 0);
+				}
+
+				char* sidx = mlr_alloc_string_from_ull(i+1);
+				lrec_put(poutrec, "top_idx", sidx, LREC_FREE_ENTRY_VALUE);
+				free(sidx);
+
+				// Add in fields such as x_top_1=#
+				lhmsv_t* pmaps_level_2 = pa->value;
+				// for "x", "y"
+				for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+					char* value_field_name = pd->key;
+					top_keeper_t* ptop_keeper_for_group = pd->value;
+
+					char* key = mlr_paste_2_strings(value_field_name, "_top");
+					if (i < ptop_keeper_for_group->size) {
+						// xxx temp fmt
+						double dval = ptop_keeper_for_group->top_values[i] * pstate->sign;
+						char* sval = mlr_alloc_string_from_double(dval, pctx->statx.ofmt);
+						lrec_put(poutrec, key, sval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+						free(sval);
+					} else {
+						lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
+					}
+				}
+				sllv_add(poutrecs, poutrec);
+			}
+		}
 	}
+
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
 }
 
 // ----------------------------------------------------------------
