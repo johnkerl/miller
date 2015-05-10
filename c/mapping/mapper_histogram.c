@@ -21,68 +21,78 @@ typedef struct _mapper_histogram_state_t {
 } mapper_histogram_state_t;
 
 // ----------------------------------------------------------------
+static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
+static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate, context_t* pctx);
+
 sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_histogram_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
-			char* value_field_name = pe->value;
-			char* sval = lrec_get(pinrec, value_field_name);
-			unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
-			if (sval != NULL) {
-				double val = mlr_double_from_string_or_die(sval);
-				if ((val >= pstate->lo) && (val < pstate->hi)) {
-					int idx = (int)((val-pstate->lo) * pstate->mul);
-					pcounts[idx]++;
-				} else if (val == pstate->hi) {
-					int idx = pstate->nbins - 1;
-					pcounts[idx]++;
-				}
-			}
-		}
+		mapper_histogram_ingest(pinrec, pstate);
 		lrec_free(pinrec);
-
 		return NULL;
 	}
 	else {
-		sllv_t* poutrecs = sllv_alloc();
+		return mapper_histogram_emit(pstate, pctx);
+	}
+}
 
-		lhmss_t* pcount_field_names = lhmss_alloc();
+static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate) {
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		char* sval = lrec_get(pinrec, value_field_name);
+		unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
+		if (sval != NULL) {
+			double val = mlr_double_from_string_or_die(sval);
+			if ((val >= pstate->lo) && (val < pstate->hi)) {
+				int idx = (int)((val-pstate->lo) * pstate->mul);
+				pcounts[idx]++;
+			} else if (val == pstate->hi) {
+				int idx = pstate->nbins - 1;
+				pcounts[idx]++;
+			}
+		}
+	}
+}
+
+static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate, context_t* pctx) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	lhmss_t* pcount_field_names = lhmss_alloc();
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
+		lhmss_put(pcount_field_names, value_field_name, count_field_name);
+	}
+
+	for (int i = 0; i < pstate->nbins; i++) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, pctx->statx.ofmt);
+		lrec_put(poutrec, "bin_lo", value, LREC_FREE_ENTRY_VALUE);
+		free(value);
+
+		value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, pctx->statx.ofmt);
+		lrec_put(poutrec, "bin_hi", value, LREC_FREE_ENTRY_VALUE);
+		free(value);
+
 		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 			char* value_field_name = pe->value;
-			char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
-			lhmss_put(pcount_field_names, value_field_name, count_field_name);
+			unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
+
+			char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
+
+			value = mlr_alloc_string_from_ull(pcounts[i]);
+			lrec_put(poutrec, count_field_name, value, LREC_FREE_ENTRY_VALUE);
+			free(value);
 		}
 
-		for (int i = 0; i < pstate->nbins; i++) {
-			lrec_t* poutrec = lrec_unbacked_alloc();
-
-			char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, pctx->statx.ofmt);
-			lrec_put(poutrec, "bin_lo", value, LREC_FREE_ENTRY_VALUE);
-			free(value);
-
-			value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, pctx->statx.ofmt);
-			lrec_put(poutrec, "bin_hi", value, LREC_FREE_ENTRY_VALUE);
-			free(value);
-
-			for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
-				char* value_field_name = pe->value;
-				unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
-
-				char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
-
-				value = mlr_alloc_string_from_ull(pcounts[i]);
-				lrec_put(poutrec, count_field_name, value, LREC_FREE_ENTRY_VALUE);
-				free(value);
-			}
-
-			sllv_add(poutrecs, poutrec);
-		}
-
-		lhmss_free(pcount_field_names);
-
-		sllv_add(poutrecs, NULL);
-		return poutrecs;
+		sllv_add(poutrecs, poutrec);
 	}
+
+	lhmss_free(pcount_field_names);
+
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
 }
 
 // ----------------------------------------------------------------
