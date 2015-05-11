@@ -126,6 +126,7 @@ void acc_stddev_avgeb_dingest(void* pvstate, double val) {
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
+// xxx recast this in terms of providable outputs
 void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
@@ -290,6 +291,37 @@ acc_t* acc_mode_alloc(static_context_t* pstatx) {
 }
 
 // ----------------------------------------------------------------
+typedef struct _acc_percentile_state_t {
+	static_context_t* pstatx;
+	// xxx place here a percentile_keeper object
+} acc_percentile_state_t;
+void acc_percentile_dingest(void* pvstate, double val) {
+	//acc_percentile_state_t* pstate = pvstate;
+	// xxx invoke the percentile_keeper object's ingest method
+}
+void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+	acc_percentile_state_t* pstate = pvstate;
+	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
+	// xxx invoke the percentile_keeper object's emit method
+	// xxx temp
+	double foo = 999.0;
+	(void)sscanf(acc_name, "p%lf", &foo);
+	char* val = mlr_alloc_string_from_double(foo, pstate->pstatx->ofmt);
+	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+}
+acc_t* acc_percentile_alloc(static_context_t* pstatx) {
+	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
+	acc_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(acc_percentile_state_t));
+	pstate->pstatx          = pstatx;
+	// xxx instantiate and point to a percentile_keeper object
+	pacc->pvstate           = (void*)pstate;
+	pacc->psingest_func     = NULL;
+	pacc->pdingest_func     = &acc_percentile_dingest;
+	pacc->pemit_func        = &acc_percentile_emit;
+	return pacc;
+}
+
+// ----------------------------------------------------------------
 typedef struct _acc_lookup_t {
 	char* name;
 	acc_alloc_func_t* pnew_func;
@@ -432,6 +464,13 @@ static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
 		}
 
+		// There isn't a one-to-one mapping between user-specified acc_names
+		// and internal acc_t's. Here in the ingestor we feed each datum into
+		// an acc_t.  In the emitter, we loop over the acc_names in
+		// user-specified order. Example: they ask for p10,avg,p90. Then there
+		// is only one percentiles accumulator to be told about each point. In
+		// the emitter it will be asked to produce output twice: once for the
+		// 10th percentile & once for the 90th.
 		for (lhmsve_t* pc = acc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
 			char* acc_name = pc->key;
 			if (streq(acc_name, fake_acc_name_for_setups))
@@ -453,6 +492,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_
 }
 
 // ----------------------------------------------------------------
+// xxx abend here on n out of range.
 static int is_percentile_acc_name(char* acc_name) {
 	double percentile;
 	return (1 == sscanf(acc_name, "p%lf", &percentile));
@@ -464,14 +504,16 @@ static void make_accs(
 	context_t* pctx,                   // Input
 	lhmsv_t*   acc_field_to_acc_state) // Output
 {
+	acc_t* ppercentile_acc = NULL;
 	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 		// for "sum", "count"
 		char* acc_name = pc->value;
-		slls_t* ppercentile_names = slls_alloc();
 
 		if (is_percentile_acc_name(acc_name)) {
-			// crap. this isn't cool. it moves the order of the pnn's within the user-provided arg. :/
-			slls_add_no_free(ppercentile_names, acc_name);
+			if (ppercentile_acc == NULL) {
+				ppercentile_acc = acc_percentile_alloc(&pctx->statx);
+			}
+			lhmsv_put(acc_field_to_acc_state, acc_name, ppercentile_acc);
 		} else {
 			acc_t* pacc = make_acc(acc_name, &pctx->statx);
 			if (pacc == NULL) {
