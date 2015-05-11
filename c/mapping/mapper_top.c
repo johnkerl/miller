@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -124,7 +126,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					if (i < ptop_keeper_for_group->size) {
 						// xxx temp fmt
 						double dval = ptop_keeper_for_group->top_values[i] * pstate->sign;
-						char* sval = mlr_alloc_string_from_double(dval, pctx->statx.ofmt);
+						char* sval = mlr_alloc_string_from_double(dval, MLR_GLOBALS.ofmt);
 						lrec_put(poutrec, key, sval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 						free(sval);
 					} else {

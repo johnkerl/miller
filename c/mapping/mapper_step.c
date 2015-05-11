@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -30,17 +31,15 @@ typedef struct _step_t {
 	void* pvstate;
 	step_sput_func_t* psput_func;
 	step_dput_func_t* pdput_func;
-	static_context_t* pstatx;
 } step_t;
 
-typedef step_t* step_alloc_func_t(char* input_field_name, static_context_t* pstatx);
+typedef step_t* step_alloc_func_t(char* input_field_name);
 
 // ----------------------------------------------------------------
 typedef struct _step_delta_state_t {
 	double prev;
 	int    have_prev;
 	char*  output_field_name;
-	static_context_t* pstatx;
 } step_delta_state_t;
 void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
@@ -50,17 +49,16 @@ void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
 	} else {
 		pstate->have_prev = TRUE;
 	}
-	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(delta, pstate->pstatx->ofmt),
+	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(delta, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
 	pstate->prev = dval;
 }
-step_t* step_delta_alloc(char* input_field_name, static_context_t* pstatx) {
+step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
 	pstate->prev      = -999.0;
 	pstate->have_prev = FALSE;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
-	pstate->pstatx    = pstatx;
 	pstep->pvstate    = (void*)pstate;
 	pstep->psput_func = NULL;
 	pstep->pdput_func = &step_delta_dput;
@@ -72,20 +70,18 @@ step_t* step_delta_alloc(char* input_field_name, static_context_t* pstatx) {
 typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
-	static_context_t* pstatx;
 } step_rsum_state_t;
 void step_rsum_dput(void* pvstate, double dval, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum += dval;
-	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, pstate->pstatx->ofmt),
+	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
 }
-step_t* step_rsum_alloc(char* input_field_name, static_context_t* pstatx) {
+step_t* step_rsum_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
 	pstate->rsum      = 0.0;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-	pstate->pstatx    = pstatx;
 	pstep->pvstate    = (void*)pstate;
 	pstep->psput_func = NULL;
 	pstep->pdput_func = &step_rsum_dput;
@@ -96,7 +92,6 @@ step_t* step_rsum_alloc(char* input_field_name, static_context_t* pstatx) {
 typedef struct _step_counter_state_t {
 	unsigned long long counter;
 	char*  output_field_name;
-	static_context_t* pstatx;
 } step_counter_state_t;
 void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
@@ -104,12 +99,11 @@ void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),
 		LREC_FREE_ENTRY_VALUE);
 }
-step_t* step_counter_alloc(char* input_field_name, static_context_t* pstatx) {
+step_t* step_counter_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
 	pstate->counter   = 0LL;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
-	pstate->pstatx    = pstatx;
 	pstep->pvstate    = (void*)pstate;
 	pstep->psput_func = &step_counter_sput;
 	pstep->pdput_func = NULL;
@@ -128,10 +122,10 @@ static step_lookup_t step_lookup_table[] = {
 };
 static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lookup_table[0]);
 
-static step_t* make_step(char* step_name, char* input_field_name, static_context_t* pstatx) {
+static step_t* make_step(char* step_name, char* input_field_name) {
 	for (int i = 0; i < step_lookup_table_length; i++)
 		if (streq(step_name, step_lookup_table[i].name))
-			return step_lookup_table[i].pnew_func(input_field_name, pstatx);
+			return step_lookup_table[i].pnew_func(input_field_name);
 	return NULL;
 }
 
@@ -207,7 +201,7 @@ sllv_t* mapper_step_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 			char* step_name = pc->value;
 			step_t* pstep = lhmsv_get(pmaps_level_3, step_name);
 			if (pstep == NULL) {
-				pstep = make_step(step_name, value_field_name, &pctx->statx);
+				pstep = make_step(step_name, value_field_name);
 				if (pstep == NULL) {
 					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
 						step_name);

@@ -329,7 +329,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 
 // ----------------------------------------------------------------
 mlr_val_t lrec_evaluator_NR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->dynx.nr};
+	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->nr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -340,7 +340,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 
 // ----------------------------------------------------------------
 mlr_val_t lrec_evaluator_FNR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->dynx.fnr};
+	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->fnr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -351,7 +351,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mlr_val_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mlr_val_t) {.type = MT_STRING, .u.string_val = strdup(pctx->dynx.filename)};
+	return (mlr_val_t) {.type = MT_STRING, .u.string_val = strdup(pctx->filename)};
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
@@ -363,7 +363,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 
 // ----------------------------------------------------------------
 mlr_val_t lrec_evaluator_FILENUM_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->dynx.filenum};
+	return (mlr_val_t) {.type = MT_INT, .u.int_val = pctx->filenum};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -513,7 +513,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
 int main(int argc, char** argv) {
 	mtrand_init_default();
 
-	context_t ctx = {.statx={.ofmt="%lf"},.dynx={.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"}};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
 	// ----------------------------------------------------------------

@@ -7,6 +7,7 @@
 
 #include "cli/mlrcli.h"
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "input/readers.h"
@@ -24,12 +25,14 @@ int main(int argc, char** argv) {
 #endif
 	cli_opts_t* popts = parse_command_line(argc, argv);
 
+	mlr_global_init(argv[0], popts->ofmt);
+
 	reader_t* preader = popts->preader;
 	sllv_t* pmapper_list = popts->pmapper_list;
 	writer_t* pwriter = popts->pwriter;
 	char**    filenames = popts->filenames;
 
-	int ok = do_stream_chained(argv[0], filenames, preader, pmapper_list, pwriter, popts->ofmt);
+	int ok = do_stream_chained(filenames, preader, pmapper_list, pwriter, popts->ofmt);
 
 	cli_opts_free(popts);
 

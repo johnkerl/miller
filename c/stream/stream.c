@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "input/readers.h"
@@ -17,24 +18,21 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, writer_t* pwriter, FILE* output_stream);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char* argv0, char** filenames, reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, char* ofmt) {
+int do_stream_chained(char** filenames, reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, char* ofmt) {
 	FILE* output_stream = stdout;
 
-	context_t ctx = {
-		.statx = { .argv0 = argv0, .ofmt = ofmt},
-		.dynx  = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL }
-	};
+	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
 	int ok = 1;
 	if (*filenames == NULL) {
-		ctx.dynx.filenum++;
-		ctx.dynx.filename = "(stdin)";
-		ctx.dynx.fnr = 0;
+		ctx.filenum++;
+		ctx.filename = "(stdin)";
+		ctx.fnr = 0;
 		ok = do_file_chained("-", &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
 	} else {
 		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
-			ctx.dynx.filenum++;
-			ctx.dynx.filename = *pfilename;
-			ctx.dynx.fnr = 0;
+			ctx.filenum++;
+			ctx.filename = *pfilename;
+			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
 			preader->preset_func(preader->pvstate);
 		    ok = do_file_chained(*pfilename, &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
@@ -62,7 +60,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 	if (!streq(filename, "-")) {
 		input_stream = fopen(filename, "r");
 		if (input_stream == NULL) {
-			fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", pctx->statx.argv0, filename);
+			fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
 			perror(filename);
 			return 0;
 		}
@@ -72,8 +70,8 @@ static int do_file_chained(char* filename, context_t* pctx,
 		lrec_t* pinrec = preader->preader_func(input_stream, preader->pvstate, pctx);
 		if (pinrec == NULL)
 			break;
-		pctx->dynx.nr++;
-		pctx->dynx.fnr++;
+		pctx->nr++;
+		pctx->fnr++;
 		drive_lrec(pinrec, pctx, pmapper_list->phead, pwriter, output_stream);
 	}
 	if (input_stream != stdin)

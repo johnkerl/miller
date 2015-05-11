@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "lib/mlrmath.h"
 #include "lib/mlrstat.h"
 #include "containers/sllv.h"
@@ -29,7 +30,7 @@ typedef struct _stats2_t {
 	stats2_emit_func_t*   pemit_func;
 } stats2_t;
 
-typedef stats2_t* stats2_alloc_func_t(static_context_t* pstatx, int do_verbose);
+typedef stats2_t* stats2_alloc_func_t(int do_verbose);
 
 // ----------------------------------------------------------------
 typedef struct _stats2_linreg_ols_state_t {
@@ -38,7 +39,6 @@ typedef struct _stats2_linreg_ols_state_t {
 	double sumy;
 	double sumx2;
 	double sumxy;
-	static_context_t* pstatx;
 } stats2_linreg_ols_state_t;
 void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
@@ -55,14 +55,14 @@ void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* pou
 	mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
 
 	char* key = mlr_paste_4_strings(name1, "_", name2, "_ols_m");
-	char* val = mlr_alloc_string_from_double(m, pstate->pstatx->ofmt);
+	char* val = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 
 	key = mlr_paste_4_strings(name1, "_", name2, "_ols_b");
-	val = mlr_alloc_string_from_double(b, pstate->pstatx->ofmt);
+	val = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-stats2_t* stats2_linreg_ols_alloc(static_context_t* pstatx, int do_verbose) {
+stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_linreg_ols_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_linreg_ols_state_t));
 	pstate->count = 0LL;
@@ -70,7 +70,6 @@ stats2_t* stats2_linreg_ols_alloc(static_context_t* pstatx, int do_verbose) {
 	pstate->sumy  = 0.0;
 	pstate->sumx2 = 0.0;
 	pstate->sumxy = 0.0;
-	pstate->pstatx = pstatx;
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = &stats2_linreg_ols_ingest;
 	pstats2->pemit_func = &stats2_linreg_ols_emit;
@@ -88,7 +87,6 @@ typedef struct _stats2_r2_state_t {
 	double sumx2;
 	double sumxy;
 	double sumy2;
-	static_context_t* pstatx;
 } stats2_r2_state_t;
 void stats2_r2_ingest(void* pvstate, double x, double y) {
 	stats2_r2_state_t* pstate = pvstate;
@@ -116,11 +114,11 @@ void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 		numerator = numerator * numerator;
 		double denominator = (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy);
 		double output = numerator/denominator;
-		char* val = mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
+		char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-stats2_t* stats2_r2_alloc(static_context_t* pstatx, int do_verbose) {
+stats2_t* stats2_r2_alloc(int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_r2_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_r2_state_t));
 	pstate->count     = 0LL;
@@ -129,7 +127,6 @@ stats2_t* stats2_r2_alloc(static_context_t* pstatx, int do_verbose) {
 	pstate->sumx2     = 0.0;
 	pstate->sumxy     = 0.0;
 	pstate->sumy2     = 0.0;
-	pstate->pstatx = pstatx;
 	pstats2->pvstate   = (void*)pstate;
 	pstats2->pingest_func = &stats2_r2_ingest;
 	pstats2->pemit_func = &stats2_r2_emit;
@@ -147,7 +144,6 @@ typedef struct _stats2_corr_cov_state_t {
 	double sumy2;
 	int    do_which;
 	int    do_verbose;
-	static_context_t* pstatx;
 } stats2_corr_cov_state_t;
 void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
 	stats2_corr_cov_state_t* pstate = pvstate;
@@ -175,10 +171,10 @@ void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutr
 			double Q[2][2];
 			mlr_get_cov_matrix(pstate->count,
 				pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy, Q);
-			char* val00 = mlr_alloc_string_from_double(Q[0][0], pstate->pstatx->ofmt);
-			char* val01 = mlr_alloc_string_from_double(Q[0][1], pstate->pstatx->ofmt);
-			char* val10 = mlr_alloc_string_from_double(Q[1][0], pstate->pstatx->ofmt);
-			char* val11 = mlr_alloc_string_from_double(Q[1][1], pstate->pstatx->ofmt);
+			char* val00 = mlr_alloc_string_from_double(Q[0][0], MLR_GLOBALS.ofmt);
+			char* val01 = mlr_alloc_string_from_double(Q[0][1], MLR_GLOBALS.ofmt);
+			char* val10 = mlr_alloc_string_from_double(Q[1][0], MLR_GLOBALS.ofmt);
+			char* val11 = mlr_alloc_string_from_double(Q[1][1], MLR_GLOBALS.ofmt);
 			lrec_put(poutrec, key00, val00, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key01, val01, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key10, val10, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
@@ -221,16 +217,16 @@ void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutr
 			mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
 
 			char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
-			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, pstate->pstatx->ofmt), free_flags);
-			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, pstate->pstatx->ofmt), free_flags);
-			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, pstate->pstatx->ofmt), free_flags);
+			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, MLR_GLOBALS.ofmt), free_flags);
 			if (pstate->do_verbose) {
-				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    pstate->pstatx->ofmt), free_flags);
-				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    pstate->pstatx->ofmt), free_flags);
-				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], pstate->pstatx->ofmt), free_flags);
-				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], pstate->pstatx->ofmt), free_flags);
-				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], pstate->pstatx->ofmt), free_flags);
-				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], pstate->pstatx->ofmt), free_flags);
+				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    MLR_GLOBALS.ofmt), free_flags);
+				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    MLR_GLOBALS.ofmt), free_flags);
+				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], MLR_GLOBALS.ofmt), free_flags);
 			}
 		}
 	} else {
@@ -245,12 +241,12 @@ void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutr
 				double sigmay = mlr_get_stddev(pstate->count, pstate->sumy, pstate->sumy2);
 				output = output / sigmax / sigmay;
 			}
-			char* val = mlr_alloc_string_from_double(output, pstate->pstatx->ofmt);
+			char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
 			lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 		}
 	}
 }
-stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose, static_context_t* pstatx) {
+stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
 	pstate->count      = 0LL;
@@ -261,30 +257,28 @@ stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose, static_context_t* 
 	pstate->sumy2      = 0.0;
 	pstate->do_which   = do_which;
 	pstate->do_verbose = do_verbose;
-	pstate->pstatx     = pstatx;
 	pstats2->pvstate   = (void*)pstate;
 	pstats2->pingest_func = &stats2_corr_cov_ingest;
 	pstats2->pemit_func = &stats2_corr_cov_emit;
 	return pstats2;
 }
-stats2_t* stats2_corr_alloc(static_context_t* pstatx, int do_verbose) {
-	return stats2_corr_cov_alloc(DO_CORR, do_verbose, pstatx);
+stats2_t* stats2_corr_alloc(int do_verbose) {
+	return stats2_corr_cov_alloc(DO_CORR, do_verbose);
 }
-stats2_t* stats2_cov_alloc(static_context_t* pstatx, int do_verbose) {
-	return stats2_corr_cov_alloc(DO_COV, do_verbose, pstatx);
+stats2_t* stats2_cov_alloc(int do_verbose) {
+	return stats2_corr_cov_alloc(DO_COV, do_verbose);
 }
-stats2_t* stats2_covx_alloc(static_context_t* pstatx, int do_verbose) {
-	return stats2_corr_cov_alloc(DO_COVX, do_verbose, pstatx);
+stats2_t* stats2_covx_alloc(int do_verbose) {
+	return stats2_corr_cov_alloc(DO_COVX, do_verbose);
 }
-stats2_t* stats2_linreg_pca_alloc(static_context_t* pstatx, int do_verbose) {
-	return stats2_corr_cov_alloc(DO_LINREG_PCA, do_verbose, pstatx);
+stats2_t* stats2_linreg_pca_alloc(int do_verbose) {
+	return stats2_corr_cov_alloc(DO_LINREG_PCA, do_verbose);
 }
 
 // ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
 	char* name;
 	stats2_alloc_func_t* pnew_func;
-	static_context_t* pstatx;
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
 	{"linreg-ols", stats2_linreg_ols_alloc},
@@ -296,10 +290,10 @@ static stats2_lookup_t stats2_lookup_table[] = {
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
 
-static stats2_t* make_stats2(char* stats2_name, int do_verbose, static_context_t* pstatx) {
+static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
 	for (int i = 0; i < stats2_lookup_table_length; i++)
 		if (streq(stats2_name, stats2_lookup_table[i].name))
-			return stats2_lookup_table[i].pnew_func(pstatx, do_verbose);
+			return stats2_lookup_table[i].pnew_func(do_verbose);
 	return NULL;
 }
 
@@ -399,7 +393,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 			char* stats2_name = pc->value;
 			stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
 			if (pstats2 == NULL) {
-				pstats2 = make_stats2(stats2_name, pstate->do_verbose, &pctx->statx);
+				pstats2 = make_stats2(stats2_name, pstate->do_verbose);
 				if (pstats2 == NULL) {
 					fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
 						stats2_name);

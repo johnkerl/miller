@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -22,7 +23,7 @@ typedef struct _mapper_histogram_state_t {
 
 // ----------------------------------------------------------------
 static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
-static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate, context_t* pctx);
+static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate);
 
 sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_histogram_state_t* pstate = pvstate;
@@ -32,7 +33,7 @@ sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 		return NULL;
 	}
 	else {
-		return mapper_histogram_emit(pstate, pctx);
+		return mapper_histogram_emit(pstate);
 	}
 }
 
@@ -54,7 +55,7 @@ static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* ps
 	}
 }
 
-static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate, context_t* pctx) {
+static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
 	lhmss_t* pcount_field_names = lhmss_alloc();
@@ -67,11 +68,11 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate, context_t
 	for (int i = 0; i < pstate->nbins; i++) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
-		char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, pctx->statx.ofmt);
+		char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, "bin_lo", value, LREC_FREE_ENTRY_VALUE);
 		free(value);
 
-		value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, pctx->statx.ofmt);
+		value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, "bin_hi", value, LREC_FREE_ENTRY_VALUE);
 		free(value);
 
