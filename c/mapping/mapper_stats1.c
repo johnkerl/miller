@@ -10,6 +10,7 @@
 #include "containers/lhmsv.h"
 #include "containers/lhmsi.h"
 #include "containers/mixutil.h"
+#include "containers/percentile_keeper.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
@@ -293,27 +294,27 @@ acc_t* acc_mode_alloc(static_context_t* pstatx) {
 // ----------------------------------------------------------------
 typedef struct _acc_percentile_state_t {
 	static_context_t* pstatx;
-	// xxx place here a percentile_keeper object
+	percentile_keeper_t* ppercentile_keeper;
 } acc_percentile_state_t;
 void acc_percentile_dingest(void* pvstate, double val) {
-	//acc_percentile_state_t* pstate = pvstate;
-	// xxx invoke the percentile_keeper object's ingest method
+	acc_percentile_state_t* pstate = pvstate;
+	percentile_keeper_ingest(pstate->ppercentile_keeper, val);
 }
 void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_percentile_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
-	// xxx invoke the percentile_keeper object's emit method
-	// xxx temp
-	double foo = 999.0;
-	(void)sscanf(acc_name, "p%lf", &foo);
-	char* val = mlr_alloc_string_from_double(foo, pstate->pstatx->ofmt);
-	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+
+	double p; // xxx cmt error-checked already
+	(void)sscanf(acc_name, "p%lf", &p);
+	double v = percentile_keeper_emit(pstate->ppercentile_keeper, p);
+	char* s = mlr_alloc_string_from_double(v, pstate->pstatx->ofmt);
+	lrec_put(poutrec, key, s, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 acc_t* acc_percentile_alloc(static_context_t* pstatx) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(acc_percentile_state_t));
 	pstate->pstatx          = pstatx;
-	// xxx instantiate and point to a percentile_keeper object
+	pstate->ppercentile_keeper = percentile_keeper_alloc();
 	pacc->pvstate           = (void*)pstate;
 	pacc->psingest_func     = NULL;
 	pacc->pdingest_func     = &acc_percentile_dingest;
@@ -492,7 +493,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_
 }
 
 // ----------------------------------------------------------------
-// xxx abend here on n out of range.
+// xxx abend here on p out of range.
 static int is_percentile_acc_name(char* acc_name) {
 	double percentile;
 	return (1 == sscanf(acc_name, "p%lf", &percentile));

@@ -108,8 +108,10 @@ lhmsv:
 lrec:
 	$(CCDEBUG) -D__LREC_MAIN__ containers/lrec.c  lib/mlrutil.c
 
-top_keeper:
-	$(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
+top_keeper: $(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
+
+pk:
+	$(CCDEBUG) -D__PERCENTILE_KEEPER_MAIN__ containers/percentile_keeper.c lib/mlrutil.c
 
 ap:
 	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c

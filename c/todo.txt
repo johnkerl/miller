@@ -19,6 +19,8 @@ FEATURES
    presumably with a different name.  something about "header with data" or
    "key with value"?? lower-cased only rather than making it an acronym?
 
+   > maybe call dkvp labeled-index fmt
+
 !! use 1-(|l2|/|l1|)^2 as pca quality metric? verify against r2 in munch plots.
 
 ! sub function. e.g. "300ms" -> "300"

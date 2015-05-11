@@ -2,12 +2,11 @@
 #define TOP_KEEPER_H
 #include "containers/lrec.h"
 
-// xxx option to keep entire records ...
 typedef struct _top_keeper_t {
 	double*  top_values;
 	lrec_t** top_precords;
-	int     capacity;
 	int     size;
+	int     capacity;
 } top_keeper_t;
 
 top_keeper_t* top_keeper_alloc(int capacity);
