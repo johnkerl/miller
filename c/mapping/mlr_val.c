@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/mlr_globals.h"
 #include "mapping/mlr_val.h"
 
 // ----------------------------------------------------------------
@@ -42,7 +43,7 @@ char* mt_format_val(mlr_val_t* pval) {
 	case MT_DOUBLE:
 		// xxx what is worst-case here ...
 		string = mlr_malloc_or_die(32);
-		sprintf(string, "%lf", pval->u.double_val);
+		sprintf(string, MLR_GLOBALS.ofmt, pval->u.double_val);
 		return string;
 		break;
 	case MT_INT:

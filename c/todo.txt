@@ -1,8 +1,7 @@
 ================================================================
 ! BUGFIXES !
 
-* --ofmt ignored in put. perhaps best to reglobalize.
-  rid of ctx.statx; make a mlr_globals_t which is the same.
+* --ofmt ignored in put. fix.
 
 ================================================================
 FEATURES
