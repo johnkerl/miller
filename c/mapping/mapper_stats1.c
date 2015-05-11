@@ -290,6 +290,49 @@ acc_t* acc_mode_alloc(static_context_t* pstatx) {
 }
 
 // ----------------------------------------------------------------
+typedef struct _acc_foo_state_t {
+	int have_foo;
+	double foo;
+	static_context_t* pstatx;
+} acc_foo_state_t;
+void acc_foo_dingest(void* pvstate, double val) {
+	acc_foo_state_t* pstate = pvstate;
+	if (pstate->have_foo) {
+		if (val > pstate->foo)
+			pstate->foo = val;
+	} else {
+		pstate->have_foo = TRUE;
+		pstate->foo = val;
+	}
+}
+void acc_foo_emit(void* pvstate, char* value_field_name, lrec_t* poutrec) {
+	acc_foo_state_t* pstate = pvstate;
+	char* key1 = mlr_paste_2_strings(value_field_name, "_foo");
+	char* key2 = mlr_paste_2_strings(value_field_name, "_bar");
+	if (pstate->have_foo) {
+		char* val = mlr_alloc_string_from_double(pstate->foo, pstate->pstatx->ofmt);
+		lrec_put(poutrec, key1, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		val = mlr_alloc_string_from_double(-pstate->foo, pstate->pstatx->ofmt);
+		lrec_put(poutrec, key2, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	} else {
+		lrec_put(poutrec, key1, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, key2, "", LREC_FREE_ENTRY_KEY);
+	}
+}
+acc_t* acc_foo_alloc(static_context_t* pstatx) {
+	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
+	acc_foo_state_t* pstate = mlr_malloc_or_die(sizeof(acc_foo_state_t));
+	pstate->have_foo = FALSE;
+	pstate->foo      = -999.0;
+	pstate->pstatx   = pstatx;
+	pacc->pvstate    = (void*)pstate;
+	pacc->psingest_func = NULL;
+	pacc->pdingest_func = &acc_foo_dingest;
+	pacc->pemit_func  = &acc_foo_emit;
+	return pacc;
+}
+
+// ----------------------------------------------------------------
 typedef struct _acc_lookup_t {
 	char* name;
 	acc_alloc_func_t* pnew_func;
@@ -303,6 +346,7 @@ static acc_lookup_t acc_lookup_table[] = {
 	{"min",    acc_min_alloc},
 	{"max",    acc_max_alloc},
 	{"mode",   acc_mode_alloc},
+	{"foo",    acc_foo_alloc},
 };
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
@@ -372,6 +416,11 @@ typedef struct _mapper_stats1_state_t {
 // ----------------------------------------------------------------
 static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_state_t* pstate);
 static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+static void make_accs(
+	slls_t*    paccumulator_names,      // Input
+	context_t* pctx,                    // Input
+	lhmsv_t*   acc_field_to_acc_state); // Output
+char* fake_acc_name_for_setups = "__setup_done__";
 
 sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
@@ -420,30 +469,18 @@ static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_
 			lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
 		}
 
-		// for "sum", "count"
-		sllse_t* pc = pstate->paccumulator_names->phead;
-		for ( ; pc != NULL; pc = pc->pnext) {
-			char* acc_name = pc->value;
-			// XXX add another map for accs_set_up
-			// XXX do all the accs in a separate function
-			// XXX subscribe all the pn's to the single quantile tracker
-			// XXX pre: make a resize-batched-array ... chunks of 1000 perhaps?
-			//     going to need to qsort it at some point ...
-			acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
-			if (pacc == NULL) {
-				pacc = make_acc(acc_name, &pctx->statx);
-				if (pacc == NULL) {
-					fprintf(stderr, "mlr stats1: accumulator \"%s\" not found.\n",
-						acc_name);
-					exit(1);
-				}
-				lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
-			}
-			if (pacc == NULL) {
-				// xxx needs argv[0] from mlr_globals.
-				fprintf(stderr, "stats1: could not find accumulator named \"%s\".\n", acc_name);
-				exit(1);
-			}
+		// xxx cmt
+		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
+		if (presence == NULL) {
+			make_accs(pstate->paccumulator_names, pctx, acc_field_to_acc_state);
+			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
+		}
+
+		for (lhmsve_t* pc = acc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
+			char* acc_name = pc->key;
+			if (streq(acc_name, fake_acc_name_for_setups))
+				continue;
+			acc_t* pacc = pc->value;
 
 			if (pacc->psingest_func != NULL) {
 				pacc->psingest_func(pacc->pvstate, value_field_sval);
@@ -455,6 +492,39 @@ static void mapper_stats1_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats1_
 				}
 				pacc->pdingest_func(pacc->pvstate, value_field_dval);
 			}
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+static int is_percentile_acc_name(char* acc_name) {
+	double percentile;
+	return (1 == sscanf(acc_name, "p%lf", &percentile));
+}
+
+// ----------------------------------------------------------------
+static void make_accs(
+	slls_t*    paccumulator_names,     // Input
+	context_t* pctx,                   // Input
+	lhmsv_t*   acc_field_to_acc_state) // Output
+{
+	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
+		// for "sum", "count"
+		char* acc_name = pc->value;
+		slls_t* ppercentile_names = slls_alloc();
+
+		if (is_percentile_acc_name(acc_name)) {
+			// crap. this isn't cool. it moves the order of the pnn's within the user-provided arg. :/
+			slls_add_no_free(ppercentile_names, acc_name);
+		} else {
+			acc_t* pacc = make_acc(acc_name, &pctx->statx);
+			if (pacc == NULL) {
+				// xxx needs argv[0] from mlr_globals.
+				fprintf(stderr, "mlr stats1: accumulator \"%s\" not found.\n",
+					acc_name);
+				exit(1);
+			}
+			lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
 		}
 	}
 }
@@ -483,6 +553,8 @@ static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate) {
 			lhmsv_t* acc_field_to_acc_state = pd->value;
 			// for "count", "sum"
 			for (lhmsve_t* pe = acc_field_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+				if (streq(pe->key, fake_acc_name_for_setups))
+					continue;
 				acc_t* pacc = pe->value;
 				pacc->pemit_func(pacc->pvstate, value_field_name, poutrec);
 			}
