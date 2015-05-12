@@ -41,7 +41,7 @@ typedef struct _step_delta_state_t {
 	int    have_prev;
 	char*  output_field_name;
 } step_delta_state_t;
-void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
+static void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
 	double delta = dval;
 	if (pstate->have_prev) {
@@ -53,7 +53,7 @@ void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
 		LREC_FREE_ENTRY_VALUE);
 	pstate->prev = dval;
 }
-step_t* step_delta_alloc(char* input_field_name) {
+static step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
 	pstate->prev      = -999.0;
@@ -71,13 +71,13 @@ typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
 } step_rsum_state_t;
-void step_rsum_dput(void* pvstate, double dval, lrec_t* prec) {
+static void step_rsum_dput(void* pvstate, double dval, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum += dval;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
 }
-step_t* step_rsum_alloc(char* input_field_name) {
+static step_t* step_rsum_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
 	pstate->rsum      = 0.0;
@@ -93,13 +93,13 @@ typedef struct _step_counter_state_t {
 	unsigned long long counter;
 	char*  output_field_name;
 } step_counter_state_t;
-void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
+static void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
 	pstate->counter++;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),
 		LREC_FREE_ENTRY_VALUE);
 }
-step_t* step_counter_alloc(char* input_field_name) {
+static step_t* step_counter_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
 	pstate->counter   = 0LL;
@@ -157,7 +157,7 @@ typedef struct _mapper_step_state_t {
 //   char* get();
 
 // ----------------------------------------------------------------
-sllv_t* mapper_step_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_step_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_step_state_t* pstate = pvstate;
 	if (pinrec == NULL)
 		return sllv_single(NULL);
@@ -235,7 +235,7 @@ static void mapper_step_free(void* pvstate) {
 	lhmslv_free(pstate->pmaps_level_1);
 }
 
-mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
+static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_step_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_step_state_t));
@@ -253,7 +253,7 @@ mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, 
 }
 
 // ----------------------------------------------------------------
-void mapper_step_usage(char* argv0, char* verb) {
+static void mapper_step_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-a {delta,rsum,...}    Names of steppers: one or more of\n");
 	fprintf(stdout, "                     ");
@@ -265,7 +265,7 @@ void mapper_step_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
 }
 
-mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pstepper_names        = NULL;
 	slls_t* pvalue_field_names    = NULL;
 	slls_t* pgroup_by_field_names = slls_alloc();

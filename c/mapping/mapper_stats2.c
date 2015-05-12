@@ -40,7 +40,7 @@ typedef struct _stats2_linreg_ols_state_t {
 	double sumx2;
 	double sumxy;
 } stats2_linreg_ols_state_t;
-void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
+static void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -48,7 +48,7 @@ void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	pstate->sumx2 += x*x;
 	pstate->sumxy += x*y;
 }
-void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 	double m, b;
 
@@ -62,7 +62,7 @@ void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* pou
 	val = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
+static stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_linreg_ols_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_linreg_ols_state_t));
 	pstate->count = 0LL;
@@ -88,7 +88,7 @@ typedef struct _stats2_r2_state_t {
 	double sumxy;
 	double sumy2;
 } stats2_r2_state_t;
-void stats2_r2_ingest(void* pvstate, double x, double y) {
+static void stats2_r2_ingest(void* pvstate, double x, double y) {
 	stats2_r2_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -97,7 +97,7 @@ void stats2_r2_ingest(void* pvstate, double x, double y) {
 	pstate->sumxy += x*y;
 	pstate->sumy2 += y*y;
 }
-void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_r2_state_t* pstate = pvstate;
 	char* suffix = "r2";
 	char* key = mlr_paste_5_strings(name1, "_", name2, "_", suffix);
@@ -118,7 +118,7 @@ void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-stats2_t* stats2_r2_alloc(int do_verbose) {
+static stats2_t* stats2_r2_alloc(int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_r2_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_r2_state_t));
 	pstate->count     = 0LL;
@@ -145,7 +145,7 @@ typedef struct _stats2_corr_cov_state_t {
 	int    do_which;
 	int    do_verbose;
 } stats2_corr_cov_state_t;
-void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
+static void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += x;
@@ -155,7 +155,7 @@ void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
 	pstate->sumy2 += y*y;
 }
 
-void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	if (pstate->do_which == DO_COVX) {
 		char* key00 = mlr_paste_4_strings(name1, "_", name1, "_covx");
@@ -246,7 +246,7 @@ void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutr
 		}
 	}
 }
-stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
+static stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
 	pstate->count      = 0LL;
@@ -262,16 +262,16 @@ stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
 	pstats2->pemit_func = &stats2_corr_cov_emit;
 	return pstats2;
 }
-stats2_t* stats2_corr_alloc(int do_verbose) {
+static stats2_t* stats2_corr_alloc(int do_verbose) {
 	return stats2_corr_cov_alloc(DO_CORR, do_verbose);
 }
-stats2_t* stats2_cov_alloc(int do_verbose) {
+static stats2_t* stats2_cov_alloc(int do_verbose) {
 	return stats2_corr_cov_alloc(DO_COV, do_verbose);
 }
-stats2_t* stats2_covx_alloc(int do_verbose) {
+static stats2_t* stats2_covx_alloc(int do_verbose) {
 	return stats2_corr_cov_alloc(DO_COVX, do_verbose);
 }
-stats2_t* stats2_linreg_pca_alloc(int do_verbose) {
+static stats2_t* stats2_linreg_pca_alloc(int do_verbose) {
 	return stats2_corr_cov_alloc(DO_LINREG_PCA, do_verbose);
 }
 
@@ -341,7 +341,7 @@ typedef struct _mapper_stats2_state_t {
 static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate);
 
-sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_stats2_ingest(pinrec, pctx, pstate);
@@ -458,7 +458,7 @@ static void mapper_stats2_free(void* pvstate) {
 	lhmslv_free(pstate->groups);
 }
 
-mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
+static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
 	slls_t* pgroup_by_field_names, int do_verbose)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -478,7 +478,7 @@ mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_n
 }
 
 // ----------------------------------------------------------------
-void mapper_stats2_usage(char* argv0, char* verb) {
+static void mapper_stats2_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-a {linreg-ols,corr,...}    Names of accumulators: one or more of\n");
 	fprintf(stdout, "                     ");
@@ -494,7 +494,7 @@ void mapper_stats2_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-v                    Print additional output for linreg-pca.\n");
 }
 
-mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* paccumulator_names    = NULL;
 	slls_t* pvalue_field_names    = NULL;
 	slls_t* pgroup_by_field_names = slls_alloc();
@@ -531,6 +531,3 @@ mapper_setup_t mapper_stats2_setup = {
 	.pusage_func = mapper_stats2_usage,
 	.pparse_func = mapper_stats2_parse_cli
 };
-
-// 1/(n-1) sumx2 - sumx**2 / n
-// 1/(n-1) sumxy - sumx*sumy / n

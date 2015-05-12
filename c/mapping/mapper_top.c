@@ -28,7 +28,7 @@ typedef struct _mapper_top_state_t {
 static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 
-sllv_t* mapper_top_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_top_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_top_state_t* pstate = pvstate;
 
 	if (pinrec != NULL) {
@@ -151,7 +151,7 @@ static void mapper_top_free(void* pvstate) {
 	lhmslv_free(pstate->pmaps_level_1);
 }
 
-mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
+static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -173,7 +173,7 @@ mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_n
 }
 
 // ----------------------------------------------------------------
-void mapper_top_usage(char* argv0, char* verb) {
+static void mapper_top_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}    Value-field names for top counts\n");
 	fprintf(stdout, "-g {d,e,f}    Group-by-field names for top counts\n");
@@ -183,7 +183,7 @@ void mapper_top_usage(char* argv0, char* verb) {
 	fprintf(stdout, "--min         Print top smallest values; default is top largest values\n");
 }
 
-mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	int     top_count             = 1;
 	slls_t* pvalue_field_names    = NULL;
 	slls_t* pgroup_by_field_names = slls_alloc();

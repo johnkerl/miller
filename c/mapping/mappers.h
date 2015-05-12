@@ -8,9 +8,6 @@
 #define HAVING_FIELDS_WHICH_ARE 0x5b
 #define HAVING_FIELDS_AT_MOST   0x6c
 
-// Used by count-distinct
-mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts);
-
 extern mapper_setup_t mapper_cat_setup;
 extern mapper_setup_t mapper_check_setup;
 extern mapper_setup_t mapper_count_distinct_setup;

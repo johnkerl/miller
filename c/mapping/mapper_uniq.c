@@ -18,7 +18,7 @@ typedef struct _mapper_uniq_state_t {
 } mapper_uniq_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_uniq_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -73,7 +73,7 @@ static void mapper_uniq_free(void* pvstate) {
 	pstate->pcounts_by_group = NULL;
 }
 
-mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts) {
+static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_uniq_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_uniq_state_t));
@@ -90,13 +90,13 @@ mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts) {
 }
 
 // ----------------------------------------------------------------
-void mapper_uniq_usage(char* argv0, char* verb) {
+static void mapper_uniq_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-g {d,e,f}    Group-by-field names for uniq counts\n");
 	fprintf(stdout, "-c            Show repeat counts in addition to unique values\n");
 }
 
-mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pgroup_by_field_names = NULL;
 	int     show_counts     = FALSE;
 
@@ -123,4 +123,39 @@ mapper_setup_t mapper_uniq_setup = {
 	.verb = "uniq",
 	.pusage_func = mapper_uniq_usage,
 	.pparse_func = mapper_uniq_parse_cli
+};
+
+// ----------------------------------------------------------------
+static void mapper_count_distinct_usage(char* argv0, char* verb) {
+	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(stdout, "-f {a,b,c}   Field names for distinct count.\n");
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* pfield_names  = NULL;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-f", &pfield_names);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_count_distinct_usage(argv[0], verb);
+		return NULL;
+	}
+
+	if (pfield_names == NULL) {
+		mapper_count_distinct_usage(argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_uniq_alloc(pfield_names, TRUE);
+}
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_count_distinct_setup = {
+	.verb = "count-distinct",
+	.pusage_func = mapper_count_distinct_usage,
+	.pparse_func = mapper_count_distinct_parse_cli,
 };

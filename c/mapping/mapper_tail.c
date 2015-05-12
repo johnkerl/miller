@@ -19,7 +19,7 @@ typedef struct _mapper_tail_state_t {
 } mapper_tail_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_tail_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_tail_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -61,8 +61,7 @@ static void mapper_tail_free(void* pvstate) {
 		lhmslv_free(pstate->precord_lists_by_group);
 }
 
-// xxx make these all static?
-mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count) {
+static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_tail_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_tail_state_t));
@@ -79,13 +78,13 @@ mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long ta
 }
 
 // ----------------------------------------------------------------
-void mapper_tail_usage(char* argv0, char* verb) {
+static void mapper_tail_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-n {count}    Tail count to print; default 10\n");
 	fprintf(stdout, "-g {a,b,c}    Group-by-field names for tail counts\n");
 }
 
-mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
 	int     tail_count             = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
