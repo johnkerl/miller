@@ -70,6 +70,8 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --pprint  --ipprint --opprint --right\n");
 	fprintf(o, "  --xtab    --ixtab   --oxtab\n");
 	fprintf(o, "  --ofmt\n");
+	fprintf(o, "Other options:\n");
+	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 
 	exit(exit_code);
 }
