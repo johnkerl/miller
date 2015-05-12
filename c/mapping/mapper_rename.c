@@ -34,7 +34,7 @@ static void mapper_rename_free(void* pvstate) {
 		lhmss_free(pstate->pold_to_new);
 }
 
-mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
+static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_rename_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_rename_state_t));
@@ -48,10 +48,11 @@ mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
 }
 
 // ----------------------------------------------------------------
-void mapper_rename_usage(char* argv0, char* verb) {
+static void mapper_rename_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {old1,new1,old2,new2,...}\n", argv0, verb);
 }
-mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
+
+static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 2) {
 		mapper_rename_usage(argv[0], argv[*pargi]);
 		return NULL;

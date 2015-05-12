@@ -123,7 +123,7 @@ typedef struct _mapper_sort_state_t {
 } mapper_sort_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		// Consume another input record.
@@ -202,7 +202,7 @@ static void mapper_sort_free(void* pvstate) {
 		free(pstate->sort_params);
 }
 
-mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {
+static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_sort_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sort_state_t));
@@ -220,10 +220,11 @@ mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_s
 }
 
 // ----------------------------------------------------------------
-void mapper_group_by_usage(char* argv0, char* verb) {
+static void mapper_group_by_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
 }
-mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
+
+static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 2) {
 		mapper_group_by_usage(argv[0], argv[*pargi]);
 		return NULL;
@@ -246,7 +247,7 @@ mapper_setup_t mapper_group_by_setup = {
 };
 
 // ----------------------------------------------------------------
-void mapper_sort_usage(char* argv0, char* verb) {
+static void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {flags}\n", argv0, verb);
 	fprintf(stdout, "Flags:\n");
 	fprintf(stdout, "  -f  {comma-separated field names}  Lexical ascending\n");
@@ -257,7 +258,8 @@ void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Example:\n");
 	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
 }
-mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
+
+static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 3) {
 		mapper_sort_usage(argv[0], argv[*pargi]);
 		return NULL;

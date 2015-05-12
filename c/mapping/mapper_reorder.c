@@ -14,7 +14,7 @@ typedef struct _mapper_reorder_state_t {
 // xxx all mappers: make static
 // xxx all mappers: rename to mapper_reorder_process_func
 
-sllv_t* mapper_reorder_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_reorder_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pinrec != NULL) {
 		if (!pstate->put_at_end) {
@@ -38,7 +38,7 @@ static void mapper_reorder_free(void* pvstate) {
 		slls_free(pstate->pfield_name_list);
 }
 
-mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
+static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_reorder_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_reorder_state_t));
@@ -55,7 +55,7 @@ mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
 }
 
 // ----------------------------------------------------------------
-void mapper_reorder_usage(char* argv0, char* verb) {
+static void mapper_reorder_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}       Field names to reorder.\n");
 	fprintf(stdout, "-e           Put specified field names at record end: default is to put at record start.\n");
@@ -64,7 +64,7 @@ void mapper_reorder_usage(char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_name_list  = NULL;
 	int     put_at_end = FALSE;
 

@@ -33,17 +33,17 @@ typedef acc_t* acc_alloc_func_t();
 typedef struct _acc_count_state_t {
 	unsigned long long count;
 } acc_count_state_t;
-void acc_count_singest(void* pvstate, char* val) {
+static void acc_count_singest(void* pvstate, char* val) {
 	acc_count_state_t* pstate = pvstate;
 	pstate->count++;
 }
-void acc_count_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_count_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_count_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	char* val = mlr_alloc_string_from_ull(pstate->count);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-acc_t* acc_count_alloc() {
+static acc_t* acc_count_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_count_state_t* pstate = mlr_malloc_or_die(sizeof(acc_count_state_t));
 	pstate->count    = 0LL;
@@ -58,17 +58,17 @@ acc_t* acc_count_alloc() {
 typedef struct _acc_sum_state_t {
 	double sum;
 } acc_sum_state_t;
-void acc_sum_dingest(void* pvstate, double val) {
+static void acc_sum_dingest(void* pvstate, double val) {
 	acc_sum_state_t* pstate = pvstate;
 	pstate->sum += val;
 }
-void acc_sum_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_sum_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_sum_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	char* val = mlr_alloc_string_from_double(pstate->sum, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-acc_t* acc_sum_alloc() {
+static acc_t* acc_sum_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_sum_state_t* pstate = mlr_malloc_or_die(sizeof(acc_sum_state_t));
 	pstate->sum      = 0LL;
@@ -84,19 +84,19 @@ typedef struct _acc_avg_state_t {
 	double sum;
 	unsigned long long count;
 } acc_avg_state_t;
-void acc_avg_dingest(void* pvstate, double val) {
+static void acc_avg_dingest(void* pvstate, double val) {
 	acc_avg_state_t* pstate = pvstate;
 	pstate->sum   += val;
 	pstate->count++;
 }
-void acc_avg_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_avg_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_avg_state_t* pstate = pvstate;
 	double quot = pstate->sum / pstate->count;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-acc_t* acc_avg_alloc() {
+static acc_t* acc_avg_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_avg_state_t* pstate = mlr_malloc_or_die(sizeof(acc_avg_state_t));
 	pstate->sum    = 0.0;
@@ -115,14 +115,14 @@ typedef struct _acc_stddev_avgeb_state_t {
 	double sumx2;
 	int    do_avgeb;
 } acc_stddev_avgeb_state_t;
-void acc_stddev_avgeb_dingest(void* pvstate, double val) {
+static void acc_stddev_avgeb_dingest(void* pvstate, double val) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
-// xxx recast this in terms of providable outputs
-void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+// xxx recast all of these in terms of providable outputs
+static void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_stddev_avgeb_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	if (pstate->count < 2LL) {
@@ -136,7 +136,7 @@ void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, char* acc_name
 	}
 }
 
-acc_t* acc_stddev_avgeb_alloc(int do_avgeb) {
+static acc_t* acc_stddev_avgeb_alloc(int do_avgeb) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_stddev_avgeb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_avgeb_state_t));
 	pstate->count       = 0LL;
@@ -149,10 +149,10 @@ acc_t* acc_stddev_avgeb_alloc(int do_avgeb) {
 	pacc->pemit_func    = &acc_stddev_avgeb_emit;
 	return pacc;
 }
-acc_t* acc_stddev_alloc() {
+static acc_t* acc_stddev_alloc() {
 	return acc_stddev_avgeb_alloc(FALSE);
 }
-acc_t* acc_avgeb_alloc() {
+static acc_t* acc_avgeb_alloc() {
 	return acc_stddev_avgeb_alloc(TRUE);
 }
 
@@ -161,7 +161,7 @@ typedef struct _acc_min_state_t {
 	int have_min;
 	double min;
 } acc_min_state_t;
-void acc_min_dingest(void* pvstate, double val) {
+static void acc_min_dingest(void* pvstate, double val) {
 	acc_min_state_t* pstate = pvstate;
 	if (pstate->have_min) {
 		if (val < pstate->min)
@@ -171,7 +171,7 @@ void acc_min_dingest(void* pvstate, double val) {
 		pstate->min = val;
 	}
 }
-void acc_min_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_min_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_min_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	if (pstate->have_min) {
@@ -181,7 +181,7 @@ void acc_min_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t*
 		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	}
 }
-acc_t* acc_min_alloc() {
+static acc_t* acc_min_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_min_state_t* pstate = mlr_malloc_or_die(sizeof(acc_min_state_t));
 	pstate->have_min = FALSE;
@@ -198,7 +198,7 @@ typedef struct _acc_max_state_t {
 	int have_max;
 	double max;
 } acc_max_state_t;
-void acc_max_dingest(void* pvstate, double val) {
+static void acc_max_dingest(void* pvstate, double val) {
 	acc_max_state_t* pstate = pvstate;
 	if (pstate->have_max) {
 		if (val > pstate->max)
@@ -208,7 +208,7 @@ void acc_max_dingest(void* pvstate, double val) {
 		pstate->max = val;
 	}
 }
-void acc_max_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_max_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_max_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	if (pstate->have_max) {
@@ -218,7 +218,7 @@ void acc_max_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t*
 		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	}
 }
-acc_t* acc_max_alloc() {
+static acc_t* acc_max_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_max_state_t* pstate = mlr_malloc_or_die(sizeof(acc_max_state_t));
 	pstate->have_max = FALSE;
@@ -235,7 +235,7 @@ typedef struct _acc_mode_state_t {
 	lhmsi_t* pcounts_for_value;
 } acc_mode_state_t;
 // mode on strings? what about "1.0" and "1" and "1.0000" ??
-void acc_mode_singest(void* pvstate, char* val) {
+static void acc_mode_singest(void* pvstate, char* val) {
 	acc_mode_state_t* pstate = pvstate;
 	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
 	if (pe == NULL) {
@@ -245,7 +245,7 @@ void acc_mode_singest(void* pvstate, char* val) {
 		pe->value++;
 	}
 }
-void acc_mode_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_mode_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_mode_state_t* pstate = pvstate;
 	int max_count = 0;
 	char* max_key = "";
@@ -259,7 +259,7 @@ void acc_mode_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	lrec_put(poutrec, key, max_key, LREC_FREE_ENTRY_KEY);
 }
-acc_t* acc_mode_alloc() {
+static acc_t* acc_mode_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
 	pstate->pcounts_for_value = lhmsi_alloc();
@@ -274,11 +274,11 @@ acc_t* acc_mode_alloc() {
 typedef struct _acc_percentile_state_t {
 	percentile_keeper_t* ppercentile_keeper;
 } acc_percentile_state_t;
-void acc_percentile_dingest(void* pvstate, double val) {
+static void acc_percentile_dingest(void* pvstate, double val) {
 	acc_percentile_state_t* pstate = pvstate;
 	percentile_keeper_ingest(pstate->ppercentile_keeper, val);
 }
-void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+static void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_percentile_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 
@@ -288,7 +288,7 @@ void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, 
 	char* s = mlr_alloc_string_from_double(v, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, s, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-acc_t* acc_percentile_alloc() {
+static acc_t* acc_percentile_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(acc_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
@@ -387,7 +387,7 @@ static void make_accs(
 	lhmsv_t*   acc_field_to_acc_state); // Output
 char* fake_acc_name_for_setups = "__setup_done__";
 
-sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_stats1_ingest(pinrec, pstate);
@@ -558,7 +558,7 @@ static void mapper_stats1_free(void* pvstate) {
 	lhmslv_free(pstate->groups);
 }
 
-mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_stats1_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
@@ -577,7 +577,7 @@ mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_n
 
 // ----------------------------------------------------------------
 // xxx argify the stdout/stderr in ALL usages
-void mapper_stats1_usage(char* argv0, char* verb) {
+static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-a {sum,count,...}    Names of accumulators: one or more of\n");
 	fprintf(stdout, "                     ");
@@ -589,7 +589,7 @@ void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
 }
 
-mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* paccumulator_names    = NULL;
 	slls_t* pvalue_field_names    = NULL;
 	slls_t* pgroup_by_field_names = slls_alloc();
