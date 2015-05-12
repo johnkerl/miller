@@ -23,7 +23,7 @@ typedef struct _lhms2ve_t {
 	int   ideal_index;
 	char* key1;
 	char* key2;
-	void* value;
+	void* pvvalue;
 	struct _lhms2ve_t *pprev;
 	struct _lhms2ve_t *pnext;
 } lhms2ve_t;
@@ -43,7 +43,7 @@ typedef struct _lhms2v_t {
 
 lhms2v_t* lhms2v_alloc();
 void   lhms2v_free(lhms2v_t* pmap);
-void*  lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* value);
+void*  lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue);
 void*  lhms2v_get(lhms2v_t* pmap, char* key1, char* key2);
 int    lhms2v_has_key(lhms2v_t* pmap, char* key1, char* key2);
 void*  lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2);

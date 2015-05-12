@@ -116,7 +116,7 @@ static void reset_csv_func(void* pvstate) {
 static void reader_csv_free(void* pvstate) {
 	reader_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->phdr_keepers->phead; pe != NULL; pe = pe->pnext) {
-		hdr_keeper_t* phdr_keeper = pe->value;
+		hdr_keeper_t* phdr_keeper = pe->pvvalue;
 		hdr_keeper_free(phdr_keeper);
 	}
 }

@@ -437,7 +437,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
 			make_accs(pstate->paccumulator_names, acc_field_to_acc_state);
-			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
+			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, NULL);
 		}
 
 		// There isn't a one-to-one mapping between user-specified acc_names
@@ -451,7 +451,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			char* acc_name = pc->key;
 			if (streq(acc_name, fake_acc_name_for_setups))
 				continue;
-			acc_t* pacc = pc->value;
+			acc_t* pacc = pc->pvvalue;
 
 			if (pacc->psingest_func != NULL) {
 				pacc->psingest_func(pacc->pvstate, value_field_sval);
@@ -523,11 +523,11 @@ static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate) {
 		}
 
 		// Add in fields such as x_sum=#, y_count=#, etc.:
-		lhmsv_t* group_to_acc_field = pa->value;
+		lhmsv_t* group_to_acc_field = pa->pvvalue;
 		// for "x", "y"
 		for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 			char* value_field_name = pd->key;
-			lhmsv_t* acc_field_to_acc_state = pd->value;
+			lhmsv_t* acc_field_to_acc_state = pd->pvvalue;
 
 			for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
 				char* acc_name = pe->value;

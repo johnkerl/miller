@@ -373,7 +373,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 }
 
 // ================================================================
-// xxx make a lookup table
 lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name) {
 	if        (streq(variable_name, "NF"))       { return lrec_evaluator_alloc_from_NF();
     } else if (streq(variable_name, "NR"))       { return lrec_evaluator_alloc_from_NR();
@@ -386,7 +385,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name
 }
 
 // ================================================================
-// xxx make a lookup table
 lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) {
 	if        (streq(function_name, "urand")) {
 		return lrec_evaluator_alloc_from_f_z_func(f_z_urand_func);
@@ -416,7 +414,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name,
     } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
     } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
 
-	} else  { return NULL; /* xxx handle me better */ }
+	} else return NULL; // xxx handle me better
 }
 
 // ================================================================

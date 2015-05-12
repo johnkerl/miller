@@ -41,7 +41,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_t* poutrecs = sllv_alloc();
 
 		for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
-			sllv_t* precord_list_for_group = pa->value;
+			sllv_t* precord_list_for_group = pa->pvvalue;
 			for (sllve_t* pb = precord_list_for_group->phead; pb != NULL; pb = pb->pnext) {
 				sllv_add(poutrecs, pb->pvdata);
 			}

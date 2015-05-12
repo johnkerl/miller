@@ -40,7 +40,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* value);
+static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue);
 static void lhmsv_enlarge(lhmsv_t* pmap);
 
 static void lhmsv_init(lhmsv_t *pmap, int length) {
@@ -123,20 +123,20 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmsv_put(lhmsv_t* pmap, char* key, void* value) {
+void lhmsv_put(lhmsv_t* pmap, char* key, void* pvvalue) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmsv_enlarge(pmap);
-	lhmsv_put_no_enlarge(pmap, key, value);
+	lhmsv_put_no_enlarge(pmap, key, pvvalue);
 }
 
-static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* value) {
+static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue) {
 	int index = lhmsv_find_index_for_key(pmap, key);
 	lhmsve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (streq(pe->key, key)) {
-			pe->value = value;
+			pe->pvvalue = pvvalue;
 		}
 	}
 	else if (pmap->states[index] == EMPTY) {
@@ -144,7 +144,7 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* value) {
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
 		// xxx comment all malloced.
 		pe->key = strdup(key);
-		pe->value = value;
+		pe->pvvalue = pvvalue;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -172,7 +172,7 @@ void* lhmsv_get(lhmsv_t* pmap, char* key) {
 	lhmsve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
-		return pe->value;
+		return pe->pvvalue;
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
@@ -202,7 +202,7 @@ void lhmsv_remove(lhmsv_t* pmap, char* key) {
 	if (pmap->states[index] == OCCUPIED) {
 		pe->ideal_index = -1;
 		pe->key         = NULL;
-		pe->value       = NULL;
+		pe->pvvalue       = NULL;
 		pmap->states[index] = DELETED;
 
 		if (pe == pmap->phead) {
@@ -239,7 +239,7 @@ static void lhmsv_enlarge(lhmsv_t* pmap) {
 	lhmsv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		lhmsv_put_no_enlarge(pmap, pe->key, pe->value);
+		lhmsv_put_no_enlarge(pmap, pe->key, pe->pvvalue);
 	}
 	free(old_entries);
 	free(old_states);
@@ -288,8 +288,8 @@ void lhmsv_dump(lhmsv_t* pmap) {
 			pe->key;
 
 		printf(
-		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | value: %p |\n",
-			get_state_name(pmap->states[index]), index, pe->ideal_index, key_string, pe->value);
+		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | pvvalue: %p |\n",
+			get_state_name(pmap->states[index]), index, pe->ideal_index, key_string, pe->pvvalue);
 	}
 	printf("+\n");
 	printf("| phead: %p | ptail %p\n", pmap->phead, pmap->ptail);
@@ -299,9 +299,9 @@ void lhmsv_dump(lhmsv_t* pmap) {
 			pe->key == NULL ? "null" :
 			pe->key;
 		printf(
-		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | value: %p |\n",
+		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | pvvalue: %p |\n",
 			pe->pprev, pe, pe->pnext,
-			pe->ideal_index, key_string, pe->value);
+			pe->ideal_index, key_string, pe->pvvalue);
 	}
 }
 

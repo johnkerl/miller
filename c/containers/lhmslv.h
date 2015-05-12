@@ -22,7 +22,7 @@
 typedef struct _lhmslve_t {
 	int   ideal_index;
 	slls_t* key;
-	void* value; // xxx rename pvvalue
+	void* pvvalue; // xxx rename pvvalue
 	struct _lhmslve_t *pprev;
 	struct _lhmslve_t *pnext;
 } lhmslve_t;
@@ -42,7 +42,7 @@ typedef struct _lhmslv_t {
 
 lhmslv_t* lhmslv_alloc();
 void   lhmslv_free(lhmslv_t* pmap);
-void*  lhmslv_put(lhmslv_t* pmap, slls_t* key, void* value);
+void*  lhmslv_put(lhmslv_t* pmap, slls_t* key, void* pvvalue);
 void*  lhmslv_get(lhmslv_t* pmap, slls_t* key);
 int    lhmslv_has_key(lhmslv_t* pmap, slls_t* key);
 void*  lhmslv_remove(lhmslv_t* pmap, slls_t* key);

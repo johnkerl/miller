@@ -91,9 +91,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 		if (pstate->show_full_records) {
 			// xxx if i do it this way (entire record) then there can only be one value column.
 			// xxx assert on that, or at the very least note how confusing it is.
-			lhmsv_t* pmaps_level_2 = pa->value;
+			lhmsv_t* pmaps_level_2 = pa->pvvalue;
 			for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
-				top_keeper_t* ptop_keeper_for_group = pd->value;
+				top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 				for (int i = 0;  i < ptop_keeper_for_group->size; i++)
 					sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
 			}
@@ -116,11 +116,11 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 				free(sidx);
 
 				// Add in fields such as x_top_1=#
-				lhmsv_t* pmaps_level_2 = pa->value;
+				lhmsv_t* pmaps_level_2 = pa->pvvalue;
 				// for "x", "y"
 				for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
 					char* value_field_name = pd->key;
-					top_keeper_t* ptop_keeper_for_group = pd->value;
+					top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
 					if (i < ptop_keeper_for_group->size) {

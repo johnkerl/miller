@@ -427,17 +427,17 @@ static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
 		}
 
 		// Add in fields such as x_y_corr, etc.
-		lhms2v_t* group_to_acc_field = pa->value;
+		lhms2v_t* group_to_acc_field = pa->pvvalue;
 
 		// For "x","y"
 		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 			char*    value_field_name_1 = pd->key1;
 			char*    value_field_name_2 = pd->key2;
-			lhmsv_t* acc_fields_to_acc_state = pd->value;
+			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
 
 			// For "corr", "linreg"
 			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-				stats2_t* pstats2  = pe->value;
+				stats2_t* pstats2  = pe->pvvalue;
 				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 			}
 		}

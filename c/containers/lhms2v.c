@@ -40,7 +40,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* value);
+static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue);
 static void lhms2v_enlarge(lhms2v_t* pmap);
 
 // ================================================================
@@ -48,7 +48,7 @@ static void lhms2ve_clear(lhms2ve_t *pentry) {
 	pentry->ideal_index = -1;
 	pentry->key1        = NULL;
 	pentry->key2        = NULL;
-	pentry->value       = NULL;
+	pentry->pvvalue     = NULL;
 	pentry->pprev       = NULL;
 	pentry->pnext       = NULL;
 }
@@ -131,21 +131,21 @@ static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2) {
 }
 
 // ----------------------------------------------------------------
-void* lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* value) {
+void* lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhms2v_enlarge(pmap);
-	return lhms2v_put_no_enlarge(pmap, key1, key2, value);
+	return lhms2v_put_no_enlarge(pmap, key1, key2, pvvalue);
 }
 
-static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* value) {
+static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue) {
 	int index = lhms2v_find_index_for_key(pmap, key1, key2);
 	lhms2ve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (streq(pe->key1, key1) && streq(pe->key2, key2)) {
-			pe->value = value;
-			return value;
+			pe->pvvalue = pvvalue;
+			return pvvalue;
 		}
 	}
 	else if (pmap->states[index] == EMPTY) {
@@ -154,7 +154,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 		// xxx comment memmgt.
 		pe->key1 = strdup(key1);
 		pe->key2 = strdup(key2);
-		pe->value = value;
+		pe->pvvalue = pvvalue;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -169,7 +169,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
-		return value;
+		return pvvalue;
 	}
 	else {
 		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain");
@@ -184,7 +184,7 @@ void* lhms2v_get(lhms2v_t* pmap, char* key1, char* key2) {
 	lhms2ve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
-		return pe->value;
+		return pe->pvvalue;
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
@@ -212,11 +212,11 @@ void* lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2) {
 	int index = lhms2v_find_index_for_key(pmap, key1, key2);
 	lhms2ve_t* pe = &pmap->entries[index];
 	if (pmap->states[index] == OCCUPIED) {
-		void* value     = pe->value;
+		void* pvvalue   = pe->pvvalue;
 		pe->ideal_index = -1;
 		pe->key1        = NULL;
 		pe->key2        = NULL;
-		pe->value       = NULL;
+		pe->pvvalue     = NULL;
 		pmap->states[index] = DELETED;
 
 		if (pe == pmap->phead) {
@@ -234,7 +234,7 @@ void* lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2) {
 
 		pmap->num_freed++;
 		pmap->num_occupied--;
-		return value;
+		return pvvalue;
 	}
 	else if (pmap->states[index] == EMPTY) {
 		return NULL;
@@ -267,7 +267,7 @@ static void lhms2v_enlarge(lhms2v_t* pmap) {
 	lhms2v_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhms2ve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		lhms2v_put_no_enlarge(pmap, pe->key1, pe->key2, pe->value);
+		lhms2v_put_no_enlarge(pmap, pe->key1, pe->key2, pe->pvvalue);
 	}
 	free(old_entries);
 	free(old_states);
@@ -318,11 +318,11 @@ void lhms2v_dump(lhms2v_t* pmap) {
 			pe->key2 == NULL ? "null" :
 			pe->key2;
 		const char* value_string = (pe == NULL) ? "none" :
-			pe->value == NULL ? "null" :
-			pe->value;
+			pe->pvvalue == NULL ? "null" :
+			pe->pvvalue;
 
 		printf(
-		"| stt: %-8s  | idx: %6d | nidx: %6d | key1: %12s | key2: %12s | value: %12s |\n",
+		"| stt: %-8s  | idx: %6d | nidx: %6d | key1: %12s | key2: %12s | pvvalue: %12s |\n",
 			get_state_name(pmap->states[index]), index, pe->ideal_index,
 			key1_string, key2_string, value_string);
 	}
@@ -337,10 +337,10 @@ void lhms2v_dump(lhms2v_t* pmap) {
 			pe->key2 == NULL ? "null" :
 			pe->key2;
 		const char* value_string = (pe == NULL) ? "none" :
-			pe->value == NULL ? "null" :
-			pe->value;
+			pe->pvvalue == NULL ? "null" :
+			pe->pvvalue;
 		printf(
-		"| prev: %p curr: %p next: %p | nidx: %6d | key1: %12s | key2: %12s | value: %12s |\n",
+		"| prev: %p curr: %p next: %p | nidx: %6d | key1: %12s | key2: %12s | pvvalue: %12s |\n",
 			pe->pprev, pe, pe->pnext,
 			pe->ideal_index, key1_string, key2_string, value_string);
 	}

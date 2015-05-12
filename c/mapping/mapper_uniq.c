@@ -50,7 +50,7 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			}
 
 			if (pstate->show_counts) {
-				unsigned long long* pcount = pa->value;
+				unsigned long long* pcount = pa->pvvalue;
 				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), LREC_FREE_ENTRY_VALUE);
 			}
 
