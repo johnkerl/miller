@@ -25,7 +25,7 @@ typedef struct _mapper_histogram_state_t {
 static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
 static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate);
 
-sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_histogram_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_histogram_ingest(pinrec, pstate);
@@ -105,7 +105,7 @@ static void mapper_histogram_free(void* pvstate) {
 		lhmsv_free(pstate->pcounts_by_field);
 }
 
-mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi) {
+static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_histogram_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_histogram_state_t));
@@ -132,7 +132,7 @@ mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins
 }
 
 // ----------------------------------------------------------------
-void mapper_histogram_usage(char* argv0, char* verb) {
+static void mapper_histogram_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}    Value-field names for histogram counts\n");
 	fprintf(stdout, "--lo {lo}     Histogram low value\n");
@@ -140,7 +140,7 @@ void mapper_histogram_usage(char* argv0, char* verb) {
 	fprintf(stdout, "--nbins {n}   Number of histogram bins\n");
 }
 
-mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pvalue_field_names = NULL;
 	double lo = 0.0;
 	double hi = 0.0;

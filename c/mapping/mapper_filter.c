@@ -11,7 +11,7 @@ typedef struct _mapper_filter_state_t {
 } mapper_filter_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_filter_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_filter_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mlr_val_t val = pstate->pevaluator->pevaluator_func(pinrec,
@@ -38,7 +38,7 @@ static void mapper_filter_free(void* pvstate) {
 }
 
 // xxx comment me ...
-mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 
 	// xxx attempt to determine: does this AST evaluate to boolean? rather than
@@ -55,13 +55,13 @@ mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 }
 
 // ----------------------------------------------------------------
-void mapper_filter_usage(char* argv0, char* verb) {
+static void mapper_filter_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "[-v] {expression} xxx needs more doc here please.\n");
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
 	int   print_asts = FALSE;

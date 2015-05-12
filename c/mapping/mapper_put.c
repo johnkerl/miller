@@ -13,7 +13,7 @@ typedef struct _mapper_put_state_t {
 } mapper_put_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_put_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_put_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 		for (int i = 0; i < pstate->num_evaluators; i++) {
@@ -42,7 +42,7 @@ static void mapper_put_free(void* pvstate) {
 }
 
 // xxx comment me ...
-mapper_t* mapper_put_alloc(sllv_t* pasts) {
+static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
@@ -90,13 +90,13 @@ mapper_t* mapper_put_alloc(sllv_t* pasts) {
 }
 
 // ----------------------------------------------------------------
-void mapper_put_usage(char* argv0, char* verb) {
+static void mapper_put_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "[-v] {expression} xxx needs more doc here please.\n");
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
 	int   print_asts = FALSE;

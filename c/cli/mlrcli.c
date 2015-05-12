@@ -12,7 +12,6 @@
 #include "cli/argparse.h"
 
 // ----------------------------------------------------------------
-// xxx move me
 static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_cat_setup,
 	&mapper_check_setup,
@@ -46,8 +45,9 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 #define DEFAULT_OFMT "%lf"
 
 // ----------------------------------------------------------------
-static void main_usage(char* argv0) {
-	FILE* o = stdout;
+// xxx cmt stdout/err & 0/1
+static void main_usage(char* argv0, int exit_code) {
+	FILE* o = exit_code == 0 ? stdout : stderr;
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
 	fprintf(o, "verbs:\n");
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
@@ -71,18 +71,18 @@ static void main_usage(char* argv0) {
 	fprintf(o, "  --xtab    --ixtab   --oxtab\n");
 	fprintf(o, "  --ofmt\n");
 
-	exit(0);
+	exit(exit_code);
 }
 
 static void nusage(char* argv0, char* arg) {
 	fprintf(stdout, "%s: option \"%s\" not recognized.\n", argv0, arg);
 	fprintf(stdout, "\n");
-	main_usage(argv0);
+	main_usage(argv0, 1);
 }
 
 static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
-		main_usage(argv[0]);
+		main_usage(argv[0], 1);
 	}
 }
 
@@ -98,7 +98,7 @@ static char sep_from_arg(char* arg, char* argv0) {
 	if (streq(arg, "semicolon"))
 		return '|';
 	if (strlen(arg) != 1)
-		main_usage(argv0);
+		main_usage(argv0, 1);
 	return arg[0];
 }
 
@@ -135,15 +135,17 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	char* wdesc = "dkvp";
 	int left_align_pprint = TRUE;
 
+	unsigned rand_seed = 0;
+
 	int argi = 1;
 	for (; argi < argc; argi++) {
 		if (argv[argi][0] != '-')
 			break;
 
 		else if (streq(argv[argi], "-h"))
-			main_usage(argv[0]);
+			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help"))
-			main_usage(argv[0]);
+			main_usage(argv[0], 0);
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -223,33 +225,41 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
+		else if (streq(argv[argi], "--seed")) {
+			check_arg_count(argv, argi, argc, 2);
+			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
+				// OK
+			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
+				// OK
+			} else {
+				main_usage(argv[0], 1);
+			}
+			argi++;
+		}
+
 		else
 			nusage(argv[0], argv[argi]);
 	}
 
-	// xxx use lookup tables?
 	if      (streq(rdesc, "dkvp")) popts->preader = reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	else if (streq(rdesc, "csv"))  popts->preader = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	else if (streq(rdesc, "nidx")) popts->preader = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	else if (streq(rdesc, "xtab")) popts->preader = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
 	else {
-		fprintf(stderr, "b01k!\n");
-		exit(1);
+		main_usage(argv[0], 1);
 	}
 
-	// xxx use lookup tables?
 	if      (streq(wdesc, "dkvp"))   popts->pwriter = writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(wdesc, "csv"))    popts->pwriter = writer_csv_alloc(popts->ors, popts->ofs);
 	else if (streq(wdesc, "nidx"))   popts->pwriter = writer_nidx_alloc(popts->ors, popts->ofs);
 	else if (streq(wdesc, "xtab"))   popts->pwriter = writer_xtab_alloc();
 	else if (streq(wdesc, "pprint")) popts->pwriter = writer_pprint_alloc(left_align_pprint);
 	else {
-		fprintf(stderr, "b02k!\n");
-		exit(1);
+		main_usage(argv[0], 1);
 	}
 
 	if ((argc - argi) < 1) {
-		main_usage(argv[0]);
+		main_usage(argv[0], 1);
 	}
 
 	// xxx needs clopt for --seed

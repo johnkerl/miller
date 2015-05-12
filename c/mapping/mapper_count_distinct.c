@@ -10,13 +10,13 @@
 #include "cli/argparse.h"
 
 // ----------------------------------------------------------------
-void mapper_count_distinct_usage(char* argv0, char* verb) {
+static void mapper_count_distinct_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}   Field names for distinct count.\n");
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_names  = NULL;
 
 	char* verb = argv[(*pargi)++];

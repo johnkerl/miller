@@ -14,7 +14,7 @@ typedef struct _mapper_having_fields_state_t {
 // ----------------------------------------------------------------
 // record = a,b,c,d,e
 // at least b,c
-sllv_t* mapper_having_fields_at_least_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_at_least_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL);
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -30,7 +30,7 @@ sllv_t* mapper_having_fields_at_least_func(lrec_t* pinrec, context_t* pctx, void
 	return NULL;
 }
 
-sllv_t* mapper_having_fields_which_are_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_which_are_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL);
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -48,7 +48,7 @@ sllv_t* mapper_having_fields_which_are_func(lrec_t* pinrec, context_t* pctx, voi
 }
 
 // ----------------------------------------------------------------
-sllv_t* mapper_having_fields_at_most_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_at_most_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL); // xxx cmt all of these, in all mappers
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -70,7 +70,7 @@ static void mapper_having_fields_free(void* pvstate) {
 		lhmsi_free(pstate->pfield_name_set);
 }
 
-mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
+static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_having_fields_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_having_fields_state_t));
@@ -93,7 +93,7 @@ mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
 }
 
 // ----------------------------------------------------------------
-void mapper_having_fields_usage(char* argv0, char* verb) {
+static void mapper_having_fields_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "--at-least {a,b,c}\n");
 	fprintf(stdout, "--which-are {a,b,c}\n");
@@ -101,7 +101,7 @@ void mapper_having_fields_usage(char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_names  = NULL;
 	int     criterion = FALSE;
 

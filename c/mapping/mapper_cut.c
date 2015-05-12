@@ -15,7 +15,7 @@ typedef struct _mapper_cut_state_t {
 // xxx all mappers: make static
 // xxx all mappers: rename to mapper_cut_process_func
 
-sllv_t* mapper_cut_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_cut_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
 		if (!pstate->do_complement) {
@@ -54,7 +54,7 @@ static void mapper_cut_free(void* pvstate) {
 		hss_free(pstate->pfield_name_set);
 }
 
-mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
+static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
@@ -72,14 +72,14 @@ mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 }
 
 // ----------------------------------------------------------------
-void mapper_cut_usage(char* argv0, char* verb) {
+static void mapper_cut_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}       Field names to cut.\n");
 	fprintf(stdout, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
 }
 
 // ----------------------------------------------------------------
-mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_name_list  = NULL;
 	int     do_complement = FALSE;
 

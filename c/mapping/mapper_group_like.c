@@ -14,7 +14,7 @@ typedef struct _mapper_group_like_state_t {
 } mapper_group_like_state_t;
 
 // ----------------------------------------------------------------
-sllv_t* mapper_group_like_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_group_like_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_group_like_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pkey_field_names = mlr_keys_from_record(pinrec);
@@ -51,7 +51,7 @@ static void mapper_group_like_free(void* pvstate) {
 		lhmslv_free(pstate->precords_by_key_field_names);
 }
 
-mapper_t* mapper_group_like_alloc() {
+static mapper_t* mapper_group_like_alloc() {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_group_like_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_group_like_state_t));
@@ -65,10 +65,10 @@ mapper_t* mapper_group_like_alloc() {
 }
 
 // ----------------------------------------------------------------
-void mapper_group_like_usage(char* argv0, char* verb) {
+static void mapper_group_like_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
 }
-mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {
 		mapper_group_like_usage(argv[0], argv[*pargi]);
 		return NULL;

@@ -20,7 +20,7 @@ typedef struct _mapper_head_state_t {
 // ----------------------------------------------------------------
 // xxx if empty key then make a way to communicate back to the reader that it
 // can stop reading further records -- ?
-sllv_t* mapper_head_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_head_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_head_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -53,7 +53,7 @@ static void mapper_head_free(void* pvstate) {
 		lhmslv_free(pstate->precord_lists_by_group);
 }
 
-mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count) {
+static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_head_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_head_state_t));
@@ -70,13 +70,13 @@ mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long he
 }
 
 // ----------------------------------------------------------------
-void mapper_head_usage(char* argv0, char* verb) {
+static void mapper_head_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-n {count}    Head count to print; default 10\n");
 	fprintf(stdout, "-g {a,b,c}    Group-by-field names for head counts\n");
 }
 
-mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
 	int     head_count             = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
