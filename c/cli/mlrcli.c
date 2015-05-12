@@ -135,6 +135,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	char* wdesc = "dkvp";
 	int left_align_pprint = TRUE;
 
+	int have_rand_seed = FALSE;
 	unsigned rand_seed = 0;
 
 	int argi = 1;
@@ -228,9 +229,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
-				// OK
+				have_rand_seed = TRUE;
 			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
-				// OK
+				have_rand_seed = TRUE;
 			} else {
 				main_usage(argv[0], 1);
 			}
@@ -262,8 +263,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		main_usage(argv[0], 1);
 	}
 
-	// xxx needs clopt for --seed
-	mtrand_init_default();
+	if (have_rand_seed) {
+		mtrand_init(rand_seed);
+	} else {
+		mtrand_init_default();
+	}
 
 	popts->pmapper_list = sllv_alloc();
 	while (TRUE) {
