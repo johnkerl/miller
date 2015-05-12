@@ -1,13 +1,15 @@
 ================================================================
 ! BUGFIXES !
 
-* --ofmt ignored in put. fix.
+... :D
 
 ================================================================
 FEATURES
 
 !! quantiles !!
    -> be sure to include p99/p50 example (with then-chaining) in mlrwik
+
+!! update t1.rb including numeric sort; fix appropriateness of -t=
 
 !! reminder pgr legend is broken !!
   http://en.wikipedia.org/wiki/Order_statistic_tree
@@ -19,6 +21,8 @@ FEATURES
    "key with value"?? lower-cased only rather than making it an acronym?
 
    > maybe call dkvp labeled-index fmt
+
+   > definitely put nidx before dkvp in the mlrwik/formats page
 
 !! use 1-(|l2|/|l1|)^2 as pca quality metric? verify against r2 in munch plots.
 

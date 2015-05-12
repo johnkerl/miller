@@ -79,8 +79,8 @@ mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
 	for (sllse_t* pe = pfield_names->phead; pe != NULL; pe = pe->pnext)
 		lhmsi_put(pstate->pfield_name_set, pe->value, 0);
 	pstate->criterion = criterion;
-	pmapper->pvstate = (void*)pstate;
 
+	pmapper->pvstate = (void*)pstate;
 	if (criterion == HAVING_FIELDS_AT_LEAST)
 		pmapper->pmapper_process_func = mapper_having_fields_at_least_func;
 	else if (criterion == HAVING_FIELDS_WHICH_ARE)

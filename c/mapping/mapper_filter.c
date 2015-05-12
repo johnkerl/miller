@@ -46,7 +46,8 @@ mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past);
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-	pmapper->pvstate = (void*)pstate;
+
+	pmapper->pvstate              = (void*)pstate;
 	pmapper->pmapper_process_func = mapper_filter_func;
 	pmapper->pmapper_free_func    = mapper_filter_free;
 

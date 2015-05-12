@@ -36,8 +36,8 @@ mapper_t* mapper_tac_alloc() {
 
 	mapper_tac_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_tac_state_t));
 	pstate->records  = sllv_alloc();
-	pmapper->pvstate = pstate;
 
+	pmapper->pvstate              = pstate;
 	pmapper->pmapper_process_func = mapper_tac_func;
 	pmapper->pmapper_free_func    = mapper_tac_free;
 

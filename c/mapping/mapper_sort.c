@@ -212,8 +212,7 @@ mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_s
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
 	pstate->do_sort                     = do_sort;
 
-	// xxx put this line by the next x all mapper_*_allocs
-	pmapper->pvstate = pstate;
+	pmapper->pvstate              = pstate;
 	pmapper->pmapper_process_func = mapper_sort_func;
 	pmapper->pmapper_free_func    = mapper_sort_free;
 

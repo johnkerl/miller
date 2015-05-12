@@ -81,9 +81,11 @@ mapper_t* mapper_put_alloc(sllv_t* pasts) {
 	}
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-	pmapper->pvstate = (void*)pstate;
+
+	pmapper->pvstate              = (void*)pstate;
 	pmapper->pmapper_process_func = mapper_put_func;
 	pmapper->pmapper_free_func    = mapper_put_free;
+
 	return pmapper;
 }
 

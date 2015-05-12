@@ -282,8 +282,8 @@ void acc_percentile_emit(void* pvstate, char* value_field_name, char* acc_name, 
 	acc_percentile_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 
-	double p; // xxx cmt error-checked already
-	(void)sscanf(acc_name, "p%lf", &p);
+	double p;
+	(void)sscanf(acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
 	double v = percentile_keeper_emit(pstate->ppercentile_keeper, p);
 	char* s = mlr_alloc_string_from_double(v, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, s, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
@@ -300,6 +300,7 @@ acc_t* acc_percentile_alloc() {
 }
 
 // ----------------------------------------------------------------
+// Lookups for all but percentiles, which are a special case.
 typedef struct _acc_lookup_t {
 	char* name;
 	acc_alloc_func_t* pnew_func;
@@ -316,11 +317,6 @@ static acc_lookup_t acc_lookup_table[] = {
 };
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
-// xxx make this a hashmap?
-// xxx what if acc_name is p50? need:
-// * here and here alone is cross-dependence between accumulators
-// * if there are min,p10,p50,avg,p90,max then the values array should be
-//   shared between p10,p50,p90
 static acc_t* make_acc(char* acc_name) {
 	for (int i = 0; i < acc_lookup_table_length; i++)
 		if (streq(acc_name, acc_lookup_table[i].name))
@@ -337,6 +333,9 @@ typedef struct _mapper_stats1_state_t {
 	lhmslv_t* groups;
 } mapper_stats1_state_t;
 
+// ================================================================
+// OVERVIEW OF DATA STRUCTURES:
+//
 // Given: accumulate count,sum on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_count x_sum y_count y_sum
@@ -349,35 +348,36 @@ typedef struct _mapper_stats1_state_t {
 // {
 //   ["s","t"] : {
 //     ["x"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //   },
 //   ["u","v"] : {
 //     ["x"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //   },
 //   ["u","w"] : {
 //     ["x"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : C stats2_count_t object,
-//       "sum"   : C stats2_sum_t  object
+//       "count" : stats2_count_t object,
+//       "sum"   : stats2_sum_t  object
 //     },
 //   },
 // }
+// ================================================================
 
 // ----------------------------------------------------------------
 static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
@@ -400,14 +400,13 @@ sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 
 // ----------------------------------------------------------------
 static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
-	// ["s", "t"]
-	// xxx make value_field_values into a hashmap. then accept partial population on that.
-	// xxx but retain full-population requirement on group-by.
-	// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
+	// E.g. ["s", "t"]
+	// To do: make value_field_values into a hashmap. Then accept partial
+	// population on that, but retain full-population requirement on group-by.
+	// E.g. if accumulating stats of x,y on a,b then skip record with x,y,a but
+	// process record with x,a,b.
 	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-
-	// xxx cmt
 	if (pvalue_field_values->length != pstate->pvalue_field_names->length)
 		return;
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length)
@@ -421,7 +420,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 
 	sllse_t* pa = pstate->pvalue_field_names->phead;
 	sllse_t* pb =         pvalue_field_values->phead;
-	// for "x", "y" and "1", "2"
+	// for x=1 and y=2
 	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
 		char* value_field_name = pa->value;
 		char* value_field_sval = pb->value;
@@ -434,7 +433,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
 		}
 
-		// xxx cmt
+		// Look up presence of all accumulators at this level's hashmap.
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
 			make_accs(pstate->paccumulator_names, acc_field_to_acc_state);
@@ -469,10 +468,16 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 }
 
 // ----------------------------------------------------------------
-// xxx abend here on p out of range.
 static int is_percentile_acc_name(char* acc_name) {
 	double percentile;
-	return (1 == sscanf(acc_name, "p%lf", &percentile));
+	if (sscanf(acc_name, "p%lf", &percentile) != 1)
+		return FALSE;
+	if (percentile < 0.0 || percentile > 100.0) {
+		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
+			MLR_GLOBALS.argv0, acc_name);
+		exit(1);
+	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -493,9 +498,8 @@ static void make_accs(
 		} else {
 			acc_t* pacc = make_acc(acc_name);
 			if (pacc == NULL) {
-				// xxx needs argv[0] from mlr_globals.
-				fprintf(stderr, "mlr stats1: accumulator \"%s\" not found.\n",
-					acc_name);
+				fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
+					MLR_GLOBALS.argv0, acc_name);
 				exit(1);
 			}
 			lhmsv_put(acc_field_to_acc_state, acc_name, pacc);
@@ -531,9 +535,8 @@ static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate) {
 					continue;
 				acc_t* pacc = lhmsv_get(acc_field_to_acc_state, acc_name);
 				if (pacc == NULL) {
-					// xxx needs argv0 from mlr_globals
-					fprintf(stderr, "mlr stats1: internal coding error: acc_name \"%s\" has gone missing.\n",
-						acc_name);
+					fprintf(stderr, "%s stats1: internal coding error: acc_name \"%s\" has gone missing.\n",
+						MLR_GLOBALS.argv0, acc_name);
 					exit(1);
 				}
 				pacc->pemit_func(pacc->pvstate, value_field_name, acc_name, poutrec);

@@ -16,7 +16,7 @@ static void mapper_cat_free(void* pvstate) {
 
 mapper_t* mapper_cat_alloc() {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-	pmapper->pvstate = NULL;
+	pmapper->pvstate              = NULL;
 	pmapper->pmapper_process_func = mapper_cat_func;
 	pmapper->pmapper_free_func    = mapper_cat_free;
 	return pmapper;
