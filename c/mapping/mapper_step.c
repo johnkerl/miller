@@ -157,7 +157,7 @@ typedef struct _mapper_step_state_t {
 //   char* get();
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_step_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_step_state_t* pstate = pvstate;
 	if (pinrec == NULL)
 		return sllv_single(NULL);
@@ -246,7 +246,7 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 	pstate->pmaps_level_1         = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_step_func;
+	pmapper->pmapper_process_func = mapper_step_process;
 	pmapper->pmapper_free_func    = mapper_step_free;
 
 	return pmapper;

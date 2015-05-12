@@ -3,7 +3,7 @@
 #include "containers/sllv.h"
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_check_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	return sllv_single(NULL);
 }
 
@@ -14,7 +14,7 @@ static void mapper_check_free(void* pvstate) {
 static mapper_t* mapper_check_alloc() {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate              = NULL;
-	pmapper->pmapper_process_func = mapper_check_func;
+	pmapper->pmapper_process_func = mapper_check_process;
 	pmapper->pmapper_free_func    = mapper_check_free;
 	return pmapper;
 }

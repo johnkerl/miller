@@ -14,7 +14,7 @@ typedef struct _mapper_having_fields_state_t {
 // ----------------------------------------------------------------
 // record = a,b,c,d,e
 // at least b,c
-static sllv_t* mapper_having_fields_at_least_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL);
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -30,7 +30,7 @@ static sllv_t* mapper_having_fields_at_least_func(lrec_t* pinrec, context_t* pct
 	return NULL;
 }
 
-static sllv_t* mapper_having_fields_which_are_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_which_are_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL);
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -48,7 +48,7 @@ static sllv_t* mapper_having_fields_which_are_func(lrec_t* pinrec, context_t* pc
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_having_fields_at_most_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_having_fields_at_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
 		return sllv_single(NULL); // xxx cmt all of these, in all mappers
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
@@ -82,11 +82,11 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 
 	pmapper->pvstate = (void*)pstate;
 	if (criterion == HAVING_FIELDS_AT_LEAST)
-		pmapper->pmapper_process_func = mapper_having_fields_at_least_func;
+		pmapper->pmapper_process_func = mapper_having_fields_at_least_process;
 	else if (criterion == HAVING_FIELDS_WHICH_ARE)
-		pmapper->pmapper_process_func = mapper_having_fields_which_are_func;
+		pmapper->pmapper_process_func = mapper_having_fields_which_are_process;
 	else if (criterion == HAVING_FIELDS_AT_MOST)
-		pmapper->pmapper_process_func = mapper_having_fields_at_most_func;
+		pmapper->pmapper_process_func = mapper_having_fields_at_most_process;
 	pmapper->pmapper_free_func = mapper_having_fields_free;
 
 	return pmapper;

@@ -25,7 +25,7 @@ typedef struct _mapper_histogram_state_t {
 static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
 static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate);
 
-static sllv_t* mapper_histogram_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_histogram_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_histogram_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_histogram_ingest(pinrec, pstate);
@@ -125,7 +125,7 @@ static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, in
 	}
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_histogram_func;
+	pmapper->pmapper_process_func = mapper_histogram_process;
 	pmapper->pmapper_free_func    = mapper_histogram_free;
 
 	return pmapper;

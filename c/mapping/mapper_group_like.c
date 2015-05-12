@@ -14,7 +14,7 @@ typedef struct _mapper_group_like_state_t {
 } mapper_group_like_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_group_like_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_group_like_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pkey_field_names = mlr_keys_from_record(pinrec);
@@ -58,7 +58,7 @@ static mapper_t* mapper_group_like_alloc() {
 	pstate->precords_by_key_field_names = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_group_like_func;
+	pmapper->pmapper_process_func = mapper_group_like_process;
 	pmapper->pmapper_free_func    = mapper_group_like_free;
 
 	return pmapper;

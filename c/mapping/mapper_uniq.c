@@ -18,7 +18,7 @@ typedef struct _mapper_uniq_state_t {
 } mapper_uniq_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_uniq_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -83,7 +83,7 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 	pstate->pcounts_by_group      = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_uniq_func;
+	pmapper->pmapper_process_func = mapper_uniq_process;
 	pmapper->pmapper_free_func    = mapper_uniq_free;
 
 	return pmapper;

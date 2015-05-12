@@ -19,7 +19,7 @@ typedef struct _mapper_tail_state_t {
 } mapper_tail_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_tail_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -71,7 +71,7 @@ static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long 
 	pstate->precord_lists_by_group = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_tail_func;
+	pmapper->pmapper_process_func = mapper_tail_process;
 	pmapper->pmapper_free_func    = mapper_tail_free;
 
 	return pmapper;

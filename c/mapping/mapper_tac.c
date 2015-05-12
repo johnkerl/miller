@@ -8,7 +8,7 @@ typedef struct _mapper_tac_state_t {
 } mapper_tac_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_tac_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tac_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		sllv_add(pstate->records, pinrec);
@@ -38,7 +38,7 @@ static mapper_t* mapper_tac_alloc() {
 	pstate->records  = sllv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_tac_func;
+	pmapper->pmapper_process_func = mapper_tac_process;
 	pmapper->pmapper_free_func    = mapper_tac_free;
 
 	return pmapper;

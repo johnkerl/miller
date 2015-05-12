@@ -11,10 +11,7 @@ typedef struct _mapper_reorder_state_t {
 } mapper_reorder_state_t;
 
 // ----------------------------------------------------------------
-// xxx all mappers: make static
-// xxx all mappers: rename to mapper_reorder_process_func
-
-static sllv_t* mapper_reorder_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pinrec != NULL) {
 		if (!pstate->put_at_end) {
@@ -48,7 +45,7 @@ static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) 
 		slls_reverse(pstate->pfield_name_list);
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_reorder_func;
+	pmapper->pmapper_process_func = mapper_reorder_process;
 	pmapper->pmapper_free_func    = mapper_reorder_free;
 
 	return pmapper;

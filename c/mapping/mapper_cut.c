@@ -12,10 +12,7 @@ typedef struct _mapper_cut_state_t {
 } mapper_cut_state_t;
 
 // ----------------------------------------------------------------
-// xxx all mappers: make static
-// xxx all mappers: rename to mapper_cut_process_func
-
-static sllv_t* mapper_cut_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_cut_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
 		if (!pstate->do_complement) {
@@ -65,7 +62,7 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 	pstate->do_complement = do_complement;
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_cut_func;
+	pmapper->pmapper_process_func = mapper_cut_process;
 	pmapper->pmapper_free_func    = mapper_cut_free;
 
 	return pmapper;

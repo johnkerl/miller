@@ -13,7 +13,7 @@ typedef struct _mapper_put_state_t {
 } mapper_put_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_put_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 		for (int i = 0; i < pstate->num_evaluators; i++) {
@@ -83,7 +83,7 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_put_func;
+	pmapper->pmapper_process_func = mapper_put_process;
 	pmapper->pmapper_free_func    = mapper_put_free;
 
 	return pmapper;

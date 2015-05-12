@@ -28,7 +28,7 @@ typedef struct _mapper_top_state_t {
 static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 
-static sllv_t* mapper_top_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_top_state_t* pstate = pvstate;
 
 	if (pinrec != NULL) {
@@ -166,7 +166,7 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 	pstate->pmaps_level_1         = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_top_func;
+	pmapper->pmapper_process_func = mapper_top_process;
 	pmapper->pmapper_free_func    = mapper_top_free;
 
 	return pmapper;

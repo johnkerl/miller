@@ -11,7 +11,7 @@ typedef struct _mapper_filter_state_t {
 } mapper_filter_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_filter_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mlr_val_t val = pstate->pevaluator->pevaluator_func(pinrec,
@@ -48,7 +48,7 @@ static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_filter_func;
+	pmapper->pmapper_process_func = mapper_filter_process;
 	pmapper->pmapper_free_func    = mapper_filter_free;
 
 	return pmapper;

@@ -123,7 +123,7 @@ typedef struct _mapper_sort_state_t {
 } mapper_sort_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		// Consume another input record.
@@ -190,7 +190,7 @@ static sllv_t* mapper_sort_func(lrec_t* pinrec, context_t* pctx, void* pvstate) 
 
 // ----------------------------------------------------------------
 // xxx to do: at end of sort, free and nullify the things populated within
-// mapper_sort_func.  here, free the things allocated as setup time.
+// mapper_sort_process.  here, free the things allocated as setup time.
 static void mapper_sort_free(void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pstate->pkey_field_names != NULL)
@@ -213,7 +213,7 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 	pstate->do_sort                     = do_sort;
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_sort_func;
+	pmapper->pmapper_process_func = mapper_sort_process;
 	pmapper->pmapper_free_func    = mapper_sort_free;
 
 	return pmapper;

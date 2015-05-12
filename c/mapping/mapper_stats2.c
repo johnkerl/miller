@@ -341,7 +341,7 @@ typedef struct _mapper_stats2_state_t {
 static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate);
 
-static sllv_t* mapper_stats2_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_stats2_ingest(pinrec, pctx, pstate);
@@ -471,7 +471,7 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->do_verbose              = do_verbose;
 
 	pmapper->pvstate                = pstate;
-	pmapper->pmapper_process_func   = mapper_stats2_func;
+	pmapper->pmapper_process_func   = mapper_stats2_process;
 	pmapper->pmapper_free_func      = mapper_stats2_free;
 
 	return pmapper;

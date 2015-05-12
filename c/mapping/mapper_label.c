@@ -11,8 +11,7 @@ typedef struct _mapper_label_state_t {
 // xxx comment why (--inidx)
 // xxx comment what happens after end-of-list (or before)
 
-// xxx make all such file-static
-static sllv_t* mapper_label_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
 		lrece_t* pe = pinrec->phead;
@@ -43,7 +42,7 @@ static mapper_t* mapper_label_alloc(slls_t* pnames) {
 	pstate->pnames   = pnames;
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_label_func;
+	pmapper->pmapper_process_func = mapper_label_process;
 	pmapper->pmapper_free_func    = mapper_label_free;
 
 	return pmapper;

@@ -387,7 +387,7 @@ static void make_accs(
 	lhmsv_t*   acc_field_to_acc_state); // Output
 char* fake_acc_name_for_setups = "__setup_done__";
 
-static sllv_t* mapper_stats1_func(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		mapper_stats1_ingest(pinrec, pstate);
@@ -569,7 +569,7 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_stats1_func;
+	pmapper->pmapper_process_func = mapper_stats1_process;
 	pmapper->pmapper_free_func    = mapper_stats1_free;
 
 	return pmapper;
