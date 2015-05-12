@@ -48,7 +48,6 @@
 #define LREC_FREE_ENTRY_KEY        0x08
 #define LREC_FREE_ENTRY_VALUE      0x80
 
-// xxx cmt for virtual-function ptrs; not for API use
 struct _lrec_t; // forward reference
 typedef struct _lrec_t lrec_t;
 
@@ -58,7 +57,11 @@ typedef void lrec_free_func_t(lrec_t* prec);
 typedef struct _lrece_t {
 	char* key;
 	char* value;
-	// xxx cmt
+	// These indicate whether the key/value should be freed on lrec_free().
+	// Affirmative example: key/value is strdup of something.
+	// Negative example: key/value are pointers into a line the memory
+	// management of which is separately managed.
+	// Another negative example: key/value is a string literal, e.g. "".
 	char free_flags;
 
 	struct _lrece_t *pprev;
@@ -72,13 +75,13 @@ struct _lrec_t {
 	lrece_t* ptail;
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// xxx cmt why (baton-handoff memory management)
-	// xxx cmt csv hdr-alloc handled at reader
+	// See comments above free_flags. Used to track a mallocked pointer to be
+	// freed at lrec_free().
 
+	// E.g. for NIDX, DKVP, and CSV formats (header handled separately in the latter case).
 	char* psingle_line;
 
-	char* pcsv_data_line; // xxx merge w/ single-line
-
+	// For XTAB format.
 	slls_t* pxtab_lines;
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
