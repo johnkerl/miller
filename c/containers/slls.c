@@ -89,10 +89,6 @@ int slls_equals(slls_t* pa, slls_t* pb) {
 }
 
 // ----------------------------------------------------------------
-// xxx name this split or some such.
-// xxx cmt mem-mgt
-// xxx use some kind of hungarian notation for memmgt conventions??
-// xxx note destructive, non-copying.
 slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 	slls_t* plist = slls_alloc();
 	if (*line == 0) // empty string splits to empty list
@@ -103,7 +99,6 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 		if (*p == ifs) {
 			*p = 0;
 			p++;
-			// xxx hoist loop invarant at the cost of some code duplication
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
