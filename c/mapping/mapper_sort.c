@@ -231,7 +231,7 @@ static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	slls_t* pnames = slls_from_line(argv[*pargi+1], ',', FALSE);
-	int* opt_array  = mlr_malloc_or_die(pnames->length * sizeof(int));
+	int* opt_array = mlr_malloc_or_die(pnames->length * sizeof(int));
 	for (int i = 0; i < pnames->length; i++)
 		opt_array[i] = 0;
 
@@ -298,7 +298,7 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 
 	// Convert the list such as ["-nf","-nf","-r","-r","-r"] into an array of
 	// bit-flags, one per sort-key field.
-	int* opt_array  = mlr_malloc_or_die(pnames->length * sizeof(int));
+	int* opt_array = mlr_malloc_or_die(pnames->length * sizeof(int));
 	sllse_t* pe;
 	int di;
 	for (pe = pflags->phead, di = 0; pe != NULL; pe = pe->pnext, di++) {

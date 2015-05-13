@@ -22,7 +22,7 @@
 typedef struct _lhmslve_t {
 	int   ideal_index;
 	slls_t* key;
-	void* pvvalue; // xxx rename pvvalue
+	void* pvvalue;
 	struct _lhmslve_t *pprev;
 	struct _lhmslve_t *pnext;
 } lhmslve_t;

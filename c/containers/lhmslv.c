@@ -54,7 +54,7 @@ static void lhmslve_clear(lhmslve_t *pentry) {
 
 static void lhmslv_init(lhmslv_t *pmap, int length) {
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
 	pmap->entries      = (lhmslve_t*)mlr_malloc_or_die(sizeof(lhmslve_t) * length);
@@ -86,7 +86,7 @@ void lhmslv_free(lhmslv_t* pmap) {
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = 0;
 	free(pmap);
 }

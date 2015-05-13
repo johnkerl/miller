@@ -617,25 +617,6 @@ int main(int argc, char** argv) {
 	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
 	printf("\n");
 
-	// ----------------------------------------------------------------
-	// $a >= 10 || $a == 5
-
-//	lrec_evaluator_t* pa  = lrec_evaluator_alloc_from_field_name("a");
-//	lrec_evaluator_t* p5  = lrec_evaluator_alloc_from_literal("5");
-//	lrec_evaluator_t* p10 = lrec_evaluator_alloc_from_literal("10");
-
-//	lrec_evaluator_t* pge = lrec_evaluator_alloc_from_binary_func(">=", T_BOOL, pa,  T_XXX,  p10, T_XXX);
-//	lrec_evaluator_t* peq = lrec_evaluator_alloc_from_binary_func("==", T_BOOL, pa,  T_XXX,  p5,  T_XXX);
-//	lrec_evaluator_t* por = lrec_evaluator_alloc_from_binary_func("||", T_BOOL, pge, T_BOOL, peq, T_BOOL);
-
-//	lrec_evaluator_t* pge = lrec_evaluator_alloc_from_binary_func(me_ge, pa,  p10);
-//	lrec_evaluator_t* peq = lrec_evaluator_alloc_from_binary_func(me_eq, pa,  p5);
-//	lrec_evaluator_t* por = lrec_evaluator_alloc_from_binary_func(me_or, pge, peq);
-
-//	lrec_evaluator_t* lrec_evaluator_alloc_ge(pa,  p10);
-//	lrec_evaluator_t* lrec_evaluator_alloc_eq(pa,  p5);
-//	lrec_evaluator_t* lrec_evaluator_alloc_or(pge, peq);
-
 	return 0;
 }
 #endif // __LREC_EVALUATORS_MAIN__

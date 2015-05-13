@@ -70,9 +70,9 @@ static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long 
 	pstate->tail_count             = tail_count;
 	pstate->precord_lists_by_group = lhmslv_alloc();
 
-	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_tail_process;
-	pmapper->pmapper_free_func    = mapper_tail_free;
+	pmapper->pvstate               = pstate;
+	pmapper->pmapper_process_func  = mapper_tail_process;
+	pmapper->pmapper_free_func     = mapper_tail_free;
 
 	return pmapper;
 }
@@ -85,7 +85,7 @@ static void mapper_tail_usage(char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
-	int     tail_count             = 10;
+	int     tail_count            = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
 	char* verb = argv[(*pargi)++];

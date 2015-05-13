@@ -39,7 +39,7 @@ static mapper_t* mapper_label_alloc(slls_t* pnames) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_label_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_label_state_t));
-	pstate->pnames   = pnames;
+	pstate->pnames = pnames;
 
 	pmapper->pvstate              = (void*)pstate;
 	pmapper->pmapper_process_func = mapper_label_process;

@@ -43,18 +43,9 @@
 static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value);
 static void lhmss_enlarge(lhmss_t* pmap);
 
-// ================================================================
-//static void lhmsse_clear(lhmsse_t *pentry) {
-//	pentry->ideal_index = -1;
-//	pentry->key         = NULL;
-//	pentry->value       = NULL;
-//	pentry->pprev       = NULL;
-//	pentry->pnext       = NULL;
-//}
-
 static void lhmss_init(lhmss_t *pmap, int length) {
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
 	pmap->entries      = (lhmsse_t*)mlr_malloc_or_die(sizeof(lhmsse_t) * length);
@@ -98,7 +89,7 @@ void lhmss_free(lhmss_t* pmap) {
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = 0;
 	free(pmap);
 }

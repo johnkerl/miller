@@ -46,11 +46,11 @@ static void acc_count_emit(void* pvstate, char* value_field_name, char* acc_name
 static acc_t* acc_count_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_count_state_t* pstate = mlr_malloc_or_die(sizeof(acc_count_state_t));
-	pstate->count    = 0LL;
-	pacc->pvstate    = (void*)pstate;
+	pstate->count       = 0LL;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = &acc_count_singest;
 	pacc->pdingest_func = NULL;
-	pacc->pemit_func  = &acc_count_emit;
+	pacc->pemit_func    = &acc_count_emit;
 	return pacc;
 }
 
@@ -71,11 +71,11 @@ static void acc_sum_emit(void* pvstate, char* value_field_name, char* acc_name, 
 static acc_t* acc_sum_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_sum_state_t* pstate = mlr_malloc_or_die(sizeof(acc_sum_state_t));
-	pstate->sum      = 0LL;
-	pacc->pvstate    = (void*)pstate;
+	pstate->sum         = 0LL;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_sum_dingest;
-	pacc->pemit_func  = &acc_sum_emit;
+	pacc->pemit_func    = &acc_sum_emit;
 	return pacc;
 }
 
@@ -99,12 +99,12 @@ static void acc_avg_emit(void* pvstate, char* value_field_name, char* acc_name, 
 static acc_t* acc_avg_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_avg_state_t* pstate = mlr_malloc_or_die(sizeof(acc_avg_state_t));
-	pstate->sum    = 0.0;
-	pstate->count  = 0LL;
-	pacc->pvstate  = (void*)pstate;
+	pstate->sum         = 0.0;
+	pstate->count       = 0LL;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_avg_dingest;
-	pacc->pemit_func  = &acc_avg_emit;
+	pacc->pemit_func    = &acc_avg_emit;
 	return pacc;
 }
 
@@ -184,12 +184,12 @@ static void acc_min_emit(void* pvstate, char* value_field_name, char* acc_name, 
 static acc_t* acc_min_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_min_state_t* pstate = mlr_malloc_or_die(sizeof(acc_min_state_t));
-	pstate->have_min = FALSE;
-	pstate->min      = -999.0;
-	pacc->pvstate    = (void*)pstate;
+	pstate->have_min    = FALSE;
+	pstate->min         = -999.0;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_min_dingest;
-	pacc->pemit_func  = &acc_min_emit;
+	pacc->pemit_func    = &acc_min_emit;
 	return pacc;
 }
 
@@ -221,12 +221,12 @@ static void acc_max_emit(void* pvstate, char* value_field_name, char* acc_name, 
 static acc_t* acc_max_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_max_state_t* pstate = mlr_malloc_or_die(sizeof(acc_max_state_t));
-	pstate->have_max = FALSE;
-	pstate->max      = -999.0;
-	pacc->pvstate    = (void*)pstate;
+	pstate->have_max    = FALSE;
+	pstate->max         = -999.0;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_max_dingest;
-	pacc->pemit_func  = &acc_max_emit;
+	pacc->pemit_func    = &acc_max_emit;
 	return pacc;
 }
 
@@ -263,10 +263,10 @@ static acc_t* acc_mode_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
 	pstate->pcounts_for_value = lhmsi_alloc();
-	pacc->pvstate    = (void*)pstate;
+	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = &acc_mode_singest;
 	pacc->pdingest_func = NULL;
-	pacc->pemit_func  = &acc_mode_emit;
+	pacc->pemit_func    = &acc_mode_emit;
 	return pacc;
 }
 
@@ -292,10 +292,10 @@ static acc_t* acc_percentile_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(acc_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
-	pacc->pvstate           = (void*)pstate;
-	pacc->psingest_func     = NULL;
-	pacc->pdingest_func     = &acc_percentile_dingest;
-	pacc->pemit_func        = &acc_percentile_emit;
+	pacc->pvstate        = (void*)pstate;
+	pacc->psingest_func  = NULL;
+	pacc->pdingest_func  = &acc_percentile_dingest;
+	pacc->pemit_func     = &acc_percentile_emit;
 	return pacc;
 }
 

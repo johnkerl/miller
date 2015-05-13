@@ -34,8 +34,8 @@ lrec_t* lrec_parse_nidx(char* line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_nidx_alloc(line);
 
 	int idx = 0;
-	char* key   = NULL;
-	char* value = line;
+	char* key        = NULL;
+	char* value      = line;
 	char  free_flags = 0;
 
 	for (char* p = line; *p; ) {

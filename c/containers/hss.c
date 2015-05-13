@@ -30,8 +30,8 @@
 
 // ================================================================
 static void hsse_clear(hsse_t *pentry) {
-	pentry->key        = NULL;
-	pentry->state      = EMPTY;
+	pentry->key         = NULL;
+	pentry->state       = EMPTY;
 	pentry->ideal_index = -1;
 }
 
@@ -45,7 +45,7 @@ static hsse_t* hss_make_alloc_array(int length) {
 
 static void hss_init(hss_t *pset, int length) {
 	pset->num_occupied = 0;
-	pset->num_freed  = 0;
+	pset->num_freed    = 0;
 	pset->array_length = length;
 	pset->array        = hss_make_alloc_array(length);
 }
@@ -62,7 +62,7 @@ void hss_free(hss_t* pset) {
 	free(pset->array);
 	pset->array = NULL;
 	pset->num_occupied = 0;
-	pset->num_freed  = 0;
+	pset->num_freed    = 0;
 	pset->array_length = 0;
 	free(pset);
 }
@@ -168,8 +168,8 @@ void hss_remove(hss_t* pset, char* key) {
 	int index = hss_find_index_for_key(pset, key);
 	hsse_t* pe = &pset->array[index];
 	if (pe->state == OCCUPIED) {
-		pe->key         = NULL;
-		pe->state       = DELETED;
+		pe->key          = NULL;
+		pe->state        = DELETED;
 		pe->ideal_index  = -1;
 		pset->num_freed++;
 		pset->num_occupied--;

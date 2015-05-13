@@ -4,8 +4,8 @@
 
 hdr_keeper_t* hdr_keeper_alloc(char* line, slls_t* pkeys) {
 	hdr_keeper_t* phdr_keeper = mlr_malloc_or_die(sizeof(hdr_keeper_t));
-	phdr_keeper->line   = line;
-	phdr_keeper->pkeys  = pkeys;
+	phdr_keeper->line  = line;
+	phdr_keeper->pkeys = pkeys;
 
 	return phdr_keeper;
 }

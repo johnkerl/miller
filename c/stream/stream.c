@@ -53,7 +53,7 @@ int do_stream_chained(char** filenames, reader_t* preader, sllv_t* pmapper_list,
 static int do_file_chained(char* filename, context_t* pctx,
 	reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream)
 {
-	FILE* input_stream  = stdin;
+	FILE* input_stream = stdin;
 
 	// xxx assert pmapper_list non-empty ...
 

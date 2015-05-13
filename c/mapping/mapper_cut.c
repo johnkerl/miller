@@ -55,8 +55,8 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
-	pstate->pfield_name_list  = pfield_name_list;
-	pstate->pfield_name_set = hss_alloc();
+	pstate->pfield_name_list   = pfield_name_list;
+	pstate->pfield_name_set    = hss_alloc();
 	for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext)
 		hss_add(pstate->pfield_name_set, pe->value);
 	pstate->do_complement = do_complement;
@@ -78,7 +78,7 @@ static void mapper_cut_usage(char* argv0, char* verb) {
 // ----------------------------------------------------------------
 static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_name_list  = NULL;
-	int     do_complement = FALSE;
+	int     do_complement     = FALSE;
 
 	char* verb = argv[(*pargi)++];
 

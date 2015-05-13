@@ -104,7 +104,7 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate, "-c", &show_counts);
+	ap_define_true_flag(pstate,        "-c", &show_counts);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_uniq_usage(argv[0], verb);
@@ -133,7 +133,7 @@ static void mapper_count_distinct_usage(char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pfield_names  = NULL;
+	slls_t* pfield_names = NULL;
 
 	char* verb = argv[(*pargi)++];
 

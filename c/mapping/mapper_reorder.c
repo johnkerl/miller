@@ -39,7 +39,7 @@ static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_reorder_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_reorder_state_t));
-	pstate->pfield_name_list  = pfield_name_list;
+	pstate->pfield_name_list = pfield_name_list;
 	pstate->put_at_end = put_at_end;
 	if (!put_at_end)
 		slls_reverse(pstate->pfield_name_list);
@@ -62,8 +62,8 @@ static void mapper_reorder_usage(char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pfield_name_list  = NULL;
-	int     put_at_end = FALSE;
+	slls_t* pfield_name_list = NULL;
+	int     put_at_end       = FALSE;
 
 	char* verb = argv[(*pargi)++];
 

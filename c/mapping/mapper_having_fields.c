@@ -103,7 +103,7 @@ static void mapper_having_fields_usage(char* argv0, char* verb) {
 // ----------------------------------------------------------------
 static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pfield_names  = NULL;
-	int     criterion = FALSE;
+	int     criterion     = FALSE;
 
 	char* verb = argv[(*pargi)++];
 

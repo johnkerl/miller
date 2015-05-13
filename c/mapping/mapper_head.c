@@ -77,7 +77,7 @@ static void mapper_head_usage(char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
-	int     head_count             = 10;
+	int     head_count            = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
 	char* verb = argv[(*pargi)++];

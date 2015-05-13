@@ -193,12 +193,12 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_int_flag(pstate, "-n", &top_count);
-	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate, "-a", &show_full_records);
-	ap_define_true_flag(pstate, "--max", &do_max);
-	ap_define_false_flag(pstate, "--min", &do_max);
+	ap_define_int_flag(pstate,         "-n",    &top_count);
+	ap_define_string_list_flag(pstate, "-f",    &pvalue_field_names);
+	ap_define_string_list_flag(pstate, "-g",    &pgroup_by_field_names);
+	ap_define_true_flag(pstate,        "-a",    &show_full_records);
+	ap_define_true_flag(pstate,        "--max", &do_max);
+	ap_define_false_flag(pstate,       "--min", &do_max);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_top_usage(argv[0], verb);

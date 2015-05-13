@@ -36,7 +36,7 @@ lrec_t* lrec_dkvp_alloc(char* line) {
 lrec_t* lrec_nidx_alloc(char* line) {
 	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
 	memset(prec, 0, sizeof(lrec_t));
-	prec->psingle_line    = line;
+	prec->psingle_line  = line;
 	prec->pfree_backing_func = lrec_free_single_line_backing;
 	return prec;
 }
@@ -44,7 +44,7 @@ lrec_t* lrec_nidx_alloc(char* line) {
 lrec_t* lrec_csv_alloc(char* data_line) {
 	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
 	memset(prec, 0, sizeof(lrec_t));
-	prec->psingle_line  = data_line;
+	prec->psingle_line = data_line;
 	prec->pfree_backing_func = lrec_free_csv_backing;
 	return prec;
 }
@@ -99,9 +99,9 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 		pe->free_flags |= LREC_FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
-		pe->key        = strdup(key);
-		pe->value      = strdup(value);
-		pe->free_flags = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
+		pe->key         = strdup(key);
+		pe->value       = strdup(value);
+		pe->free_flags  = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;

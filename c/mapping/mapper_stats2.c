@@ -127,7 +127,7 @@ static stats2_t* stats2_r2_alloc(int do_verbose) {
 	pstate->sumx2     = 0.0;
 	pstate->sumxy     = 0.0;
 	pstate->sumy2     = 0.0;
-	pstats2->pvstate   = (void*)pstate;
+	pstats2->pvstate  = (void*)pstate;
 	pstats2->pingest_func = &stats2_r2_ingest;
 	pstats2->pemit_func = &stats2_r2_emit;
 	return pstats2;
@@ -437,7 +437,7 @@ static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
 
 			// For "corr", "linreg"
 			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-				stats2_t* pstats2  = pe->pvvalue;
+				stats2_t* pstats2 = pe->pvvalue;
 				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 			}
 		}

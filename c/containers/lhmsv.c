@@ -45,7 +45,7 @@ static void lhmsv_enlarge(lhmsv_t* pmap);
 
 static void lhmsv_init(lhmsv_t *pmap, int length) {
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
 	pmap->entries      = (lhmsve_t*)mlr_malloc_or_die(sizeof(lhmsve_t) * length);
@@ -80,7 +80,7 @@ void lhmsv_free(lhmsv_t* pmap) {
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = 0;
 	free(pmap);
 }
@@ -200,9 +200,9 @@ void lhmsv_remove(lhmsv_t* pmap, char* key) {
 	int index = lhmsv_find_index_for_key(pmap, key);
 	lhmsve_t* pe = &pmap->entries[index];
 	if (pmap->states[index] == OCCUPIED) {
-		pe->ideal_index = -1;
-		pe->key         = NULL;
-		pe->pvvalue       = NULL;
+		pe->ideal_index     = -1;
+		pe->key             = NULL;
+		pe->pvvalue         = NULL;
 		pmap->states[index] = DELETED;
 
 		if (pe == pmap->phead) {

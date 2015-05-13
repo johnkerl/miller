@@ -78,15 +78,15 @@ struct _lrec_t {
 	// See comments above free_flags. Used to track a mallocked pointer to be
 	// freed at lrec_free().
 
-	// E.g. for NIDX, DKVP, and CSV formats (header handled separately in the latter case).
+	// E.g. for NIDX, DKVP, and CSV formats (header handled separately in the
+	// latter case).
 	char* psingle_line;
 
 	// For XTAB format.
 	slls_t* pxtab_lines;
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// xxx cmt virtual-function pointers:
-
+	// Format-dependent virtual-function pointer:
 	lrec_free_func_t* pfree_backing_func;
 };
 

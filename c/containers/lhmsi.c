@@ -46,7 +46,7 @@ static void lhmsi_enlarge(lhmsi_t* pmap);
 // ================================================================
 static void lhmsi_init(lhmsi_t *pmap, int length) {
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
 	pmap->entries      = (lhmsie_t*)mlr_malloc_or_die(sizeof(lhmsie_t) * length);
@@ -88,7 +88,7 @@ void lhmsi_free(lhmsi_t* pmap) {
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
-	pmap->num_freed  = 0;
+	pmap->num_freed    = 0;
 	pmap->array_length = 0;
 	free(pmap);
 }

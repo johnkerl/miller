@@ -163,21 +163,21 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 // ================================================================
 #ifdef __AP_MAIN__
 int main(int argc, char** argv) {
-	int bflag    = TRUE;
-	int ival     = 0;
-	double dval  = 0.0;
+	int     bflag  = TRUE;
+	int     ival   = 0;
+	double  dval   = 0.0;
 	char*   string = NULL;
-	slls_t* plist = NULL;
+	slls_t* plist  = NULL;
 	ap_state_t* pstate = ap_alloc();
 
-	ap_define_true_flag(pstate, "-t", &bflag);
-	ap_define_false_flag(pstate, "-f", &bflag);
-	ap_define_int_value_flag(pstate, "-100", 100, &ival);
-	ap_define_int_value_flag(pstate, "-200", 200, &ival);
-	ap_define_int_flag(pstate, "-i", &ival);
-	ap_define_double_flag(pstate, "-d", &dval);
-	ap_define_string_flag(pstate, "-s", &string);
-	ap_define_string_list_flag(pstate, "-S", &plist);
+	ap_define_true_flag(pstate,        "-t",   &bflag);
+	ap_define_false_flag(pstate,       "-f",   &bflag);
+	ap_define_int_value_flag(pstate,   "-100", 100,      &ival);
+	ap_define_int_value_flag(pstate,   "-200", 200,      &ival);
+	ap_define_int_flag(pstate,         "-i",   &ival);
+	ap_define_double_flag(pstate,      "-d",   &dval);
+	ap_define_string_flag(pstate,      "-s",   &string);
+	ap_define_string_list_flag(pstate, "-S",   &plist);
 
 	char* verb = "stub";
 	int argi = 1;

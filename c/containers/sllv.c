@@ -12,10 +12,18 @@ sllv_t* sllv_alloc() {
 
 // ----------------------------------------------------------------
 void sllv_free(sllv_t* plist) {
-	sllve_t* pnode = plist->phead; while (pnode != NULL) { sllve_t* pdel =
-	pnode; pnode = pnode->pnext; free(pdel); } plist->phead  = NULL;
-	plist->ptail  = 0; plist->length = 0;
-	free(plist); }
+	sllve_t* pnode = plist->phead;
+	while (pnode != NULL) {
+		sllve_t* pdel = pnode;
+		pnode = pnode->pnext;
+		free(pdel);
+	}
+	plist->phead  = NULL;
+	plist->ptail  = 0;
+	plist->length = 0;
+
+	free(plist);
+}
 
 // ----------------------------------------------------------------
 sllv_t* sllv_single(void* pvdata) {
@@ -71,8 +79,8 @@ void* sllv_pop(sllv_t* plist) {
 	// One entry in list
 	if (plist->phead->pnext == NULL) {
 		free(plist->phead);
-		plist->phead = NULL;
-		plist->ptail = NULL;
+		plist->phead  = NULL;
+		plist->ptail  = NULL;
 		plist->length = 0;
 	}
 	// Two or more entries in list
