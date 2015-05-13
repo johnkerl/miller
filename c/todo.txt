@@ -25,12 +25,13 @@ FEATURES
    > definitely put nidx before dkvp in the mlrwik/formats page
 
 !! use 1-(|l2|/|l1|)^2 as pca quality metric? verify against r2 in munch plots.
+  -> after pgr legend fix
 
 ! sub function. e.g. "300ms" -> "300"
 
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 
-* stats1 mode: lhmsi & then sort. what about "1"=="1.0"? doc this, or impl option
+* stats1 mode: what about "1"=="1.0"? doc this, or impl option
   w/ temporary sscanf & reformat @ maxlen
 
 * mod op (either c-like, or sane) and put into wikidoc if so.
@@ -39,10 +40,15 @@ FEATURES
 
 * RV-coefficient -- ?
 
+* jko mlrdoc & gh/jk/mlr urls into mlr online help
+
+* more about I/O and OFMT options @ online help
+
 ================================================================
 NEATEN
 
 !! xxx's in the code
+* source hygiene: top-of-header comments, readme re memory management, etc.
 
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
@@ -50,13 +56,9 @@ NEATEN
 * remove/coalesce/gzip the large data files
 * mk perfcomp dir
 * "index-numbered" -> "implicitly index-numbered" in mlrwik
-* source hygiene: xxx's, top-of-header comments, readme re memory management, etc.
 * "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
-* rip through filenames @ start & abend unless -f each.
+* rip through filenames @ start & abend unless -f each: fail fast.
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
-* put uniq & count-distinct into the same file. then rm extraneous extern @ .h
-
-! re-do mlr sort -n stats in t1.rb -> mlrwik
 
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
 
@@ -64,67 +66,36 @@ NEATEN
 ONLINE HELP
 
 * then-chaining note into mlr online help
-* jko mlrdoc & gh/jk/mlr urls into mlr online help
 * put/filter: have a categorized function lister -- by string/math or arity, or some such ...
-* more about I/O and OFMT options @ online help
 
 ================================================================
 IMPROVEMENTS
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
   lmhsi: column name -> char index??
-* xtab -> vtab everywhere? (code+doc)
 * null-handling everywhere!! :/
 * 80-column-wrap slls printer (for mlr --help)
 * char -> char* for RS/FS/PS. then, NEWLINENEWLINE + repifs -> xtab is a more or less special case of dkvp.
   BUT this makes mlr_get_line harder :/
-* ofmts for stepper/stats1/stats2 *defaulting* to global ofmt
 * mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 ================================================================
 TESTING
 * xtab input & UTs for it
-* CSV uts
-* reorder UTs per se in test_lrec
-* reorder reg-test cases
 * ut cases: multifile & multimapper often. e.g. wrapping everything in cat then X then cat ...
 * ut cases: make should-fail machinery & use it for null-key dkvp cases.
-* ut case for stats1 mode
 
 ================================================================
 DOC
-* doc: to-do page e.g. multi-char separators (harder for getline); quantiles; what else.
 * doc: reference: be sure to include no-sql examples throughout
 * doc: mem-mgmt: streaming & as near stateless as possible. e.g. csv cat retains only the header line.
   dkvp cat completely stateless. stats1/2 retain only agg state. tac/sort/etc. obvious retain all lines.
   you can snarf a 20GB file with 4GB RAM no problem.
-* doc: performance: Go/D/Rust ...
+* doc: performance: Go/D/Rust #'s ... also GH link from mlrwik
 * doc: intro note about more structuring: grep/sed/ruby/perl/sed etc. for some structuring, then pipe to miller?
 * doc: maybe restore mem-mgmt page for dev-info? or a readme?!?
-* doc: somewhere in mlrwik put perf-stat analysis (my tn.rb)
 * doc: somewhere in mlrwik put some realistic log-dive data -- not abixy & not just resource/ok.
 * doc: at the top link to data/small/etc. make small.txt hardlinks for browser download.
-* doc: rename data/big to data/large or data/1m everywhere (code+doc)
-* doc: section on to-do things, e.g. multichar rs/fs/ps; & regexes; & quantiles
-* put colored-shapes.dkvp in more places in wikset
-* ref to http://datapipes.okfnlabs.org/
 * emph all variables are stream variables and all functions are stream functions
-
-* t1.rb & mlrwik perfdoc:
-
-  kerl@kerl-mbp[s2j0d1][c]$ time sort -k 1 -k 2 -k 3 -k 4 -k 5 data/big > /dev/null
-  real  0m20.453s
-  user  0m20.384s
-  sys 0m0.062s
-
-  kerl@kerl-mbp[s0j0d1][c]$ time mlr sort -f a,b,i,x,y data/big > /dev/null
-  real  0m6.966s
-  user  0m6.559s
-  sys 0m0.398s
-
-  kerl@kerl-mbp[s0j0d1][c]$ time mlr sort -f a,b -n i,x,y data/big > /dev/null
-  real  0m8.053s
-  user  0m7.643s
-  sys 0m0.401s
 
 ================================================================
 PERF
@@ -165,7 +136,6 @@ UT/REG
 * tac/X/cat for all X
 * cat/X/tac for all X
 * tac/X/tac for all X
-* put & filter
 * multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
 
