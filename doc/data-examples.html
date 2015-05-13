@@ -163,8 +163,8 @@ Steel Frame         Commercial  272
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012
-tiv_2012_min  tiv_2012_avg  tiv_2012_max
-596003.670000 596003.670000 596003.670000
+tiv_2012_min tiv_2012_avg   tiv_2012_max
+73.370000    2571004.097342 1701000000.000000
 </pre>
 </div>
 <p/>
@@ -172,12 +172,12 @@ tiv_2012_min  tiv_2012_avg  tiv_2012_max
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012 -g construction,line
-construction        line        tiv_2012_min     tiv_2012_avg     tiv_2012_max
-Masonry             Residential 596003.670000    596003.670000    596003.670000
-Wood                Residential 205527.970000    205527.970000    205527.970000
-Reinforced Concrete Commercial  27000000.000000  27000000.000000  27000000.000000
-Reinforced Masonry  Commercial  4209183.220000   4209183.220000   4209183.220000
-Steel Frame         Commercial  260100000.000000 260100000.000000 260100000.000000
+construction        line        tiv_2012_min    tiv_2012_avg     tiv_2012_max
+Masonry             Residential 261168.070000   1041986.129217   3234970.920000
+Wood                Residential 73.370000       113493.017049    649046.120000
+Reinforced Concrete Commercial  6416016.010000  20212428.681840  60570000.000000
+Reinforced Masonry  Commercial  1287817.340000  4621372.981117   16650000.000000
+Steel Frame         Commercial  29790000.000000 133492500.000000 1701000000.000000
 </pre>
 </div>
 <p/>
@@ -242,16 +242,16 @@ Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up w
 <pre>
 $ mlr --oxtab stats1 -a min,avg,max -f flag,u,v data/colored-shapes.dkvp | creach 3
 flag_min 0.000000
-flag_avg 0.000000
-flag_max 0.000000
+flag_avg 0.397960
+flag_max 1.000000
 
-u_min    0.027749
-u_avg    0.027749
-u_max    0.027749
+u_min    0.000010
+u_avg    0.501086
+u_max    0.999983
 
-v_min    0.530306
-v_avg    0.530306
-v_max    0.530306
+v_min    -0.096195
+v_avg    0.500016
+v_max    1.095540
 </pre>
 </div>
 <p/>
@@ -285,13 +285,13 @@ Bernoulli probablities from the data-generator script:
 <div class="pokipanel">
 <pre>
 $ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
-color  flag_min flag_avg flag_max u_min    u_avg    u_max    v_min    v_avg    v_max
-blue   1.000000 1.000000 1.000000 0.707181 0.707181 0.707181 0.110682 0.110682 0.110682
-green  0.000000 0.000000 0.000000 0.027749 0.027749 0.027749 0.530306 0.530306 0.530306
-orange 0.000000 0.000000 0.000000 0.601538 0.601538 0.601538 0.139090 0.139090 0.139090
-purple 0.000000 0.000000 0.000000 0.370021 0.370021 0.370021 0.407608 0.407608 0.407608
-red    0.000000 0.000000 0.000000 0.856602 0.856602 0.856602 0.558379 0.558379 0.558379
-yellow 1.000000 1.000000 1.000000 0.536935 0.536935 0.536935 0.519762 0.519762 0.519762
+color  flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
+blue   0.000000 0.599086 1.000000 0.000044 0.503581 0.999976 0.000057  0.496972 0.999870
+green  0.000000 0.207102 1.000000 0.000010 0.504358 0.999983 0.000079  0.498956 0.999889
+orange 0.000000 0.505079 1.000000 0.000464 0.496712 0.999574 0.000185  0.493220 0.999967
+purple 0.000000 0.098957 1.000000 0.000037 0.498311 0.999693 0.000011  0.502892 0.999993
+red    0.000000 0.297820 1.000000 0.000019 0.499904 0.999946 -0.096195 0.500635 1.095540
+yellow 0.000000 0.898270 1.000000 0.000327 0.502877 0.999923 0.000138  0.501022 0.999983
 </pre>
 </div>
 <p/>
@@ -299,10 +299,10 @@ yellow 1.000000 1.000000 1.000000 0.536935 0.536935 0.536935 0.519762 0.519762 0
 <div class="pokipanel">
 <pre>
 $ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
-shape    flag_min flag_avg flag_max u_min    u_avg    u_max    v_min    v_avg    v_max
-circle   1.000000 1.000000 1.000000 0.522803 0.522803 0.522803 0.747863 0.747863 0.747863
-square   0.000000 0.000000 0.000000 0.027749 0.027749 0.027749 0.530306 0.530306 0.530306
-triangle 1.000000 1.000000 1.000000 0.536935 0.536935 0.536935 0.519762 0.519762 0.519762
+shape    flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
+circle   0.000000 0.398115 1.000000 0.000037 0.502212 0.999976 -0.096195 0.496996 1.095540
+square   0.000000 0.397398 1.000000 0.000037 0.499935 0.999970 0.000088  0.500389 0.999975
+triangle 0.000000 0.398542 1.000000 0.000010 0.501676 0.999983 0.000010  0.501804 0.999995
 </pre>
 </div>
 <p/>
