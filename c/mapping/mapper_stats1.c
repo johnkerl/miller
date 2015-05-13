@@ -437,7 +437,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
 			make_accs(pstate->paccumulator_names, acc_field_to_acc_state);
-			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, NULL);
+			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
 		}
 
 		// There isn't a one-to-one mapping between user-specified acc_names

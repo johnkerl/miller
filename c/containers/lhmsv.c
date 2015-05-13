@@ -6,7 +6,7 @@
 //
 // Notes:
 // * null key is not supported.
-// * null value is supported.
+// * null value is not supported.
 //
 // See also:
 // * http://en.wikipedia.org/wiki/Hash_table
