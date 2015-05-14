@@ -124,9 +124,31 @@ typedef struct _mapper_step_state_t {
 	slls_t* pvalue_field_names;
 	slls_t* pgroup_by_field_names;
 
-	lhmslv_t* pmaps_level_1;
+	lhmslv_t* groups;
 
 } mapper_step_state_t;
+
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {              <--- group-by field names
+//     ["x","y"] : {            <--- value field names
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","v"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","w"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+// }
 
 static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_step_state_t* pstate = pvstate;
@@ -142,10 +164,10 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		return NULL;
 	}
 
-	lhmsv_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
-	if (pmaps_level_2 == NULL) {
-		pmaps_level_2 = lhmsv_alloc();
-		lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
+	lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	if (group_to_acc_field == NULL) {
+		group_to_acc_field = lhmsv_alloc();
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 	}
 
 	sllse_t* pa = pstate->pvalue_field_names->phead;
@@ -157,17 +179,17 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		int   have_dval = FALSE;
 		double value_field_dval = -999.0;
 
-		lhmsv_t* pmaps_level_3 = lhmsv_get(pmaps_level_2, value_field_name);
-		if (pmaps_level_3 == NULL) {
-			pmaps_level_3 = lhmsv_alloc();
-			lhmsv_put(pmaps_level_2, value_field_name, pmaps_level_3);
+		lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
+		if (acc_field_to_acc_state == NULL) {
+			acc_field_to_acc_state = lhmsv_alloc();
+			lhmsv_put(group_to_acc_field, value_field_name, acc_field_to_acc_state);
 		}
 
 		// for "delta", "rsum"
 		sllse_t* pc = pstate->pstepper_names->phead;
 		for ( ; pc != NULL; pc = pc->pnext) {
 			char* step_name = pc->value;
-			step_t* pstep = lhmsv_get(pmaps_level_3, step_name);
+			step_t* pstep = lhmsv_get(acc_field_to_acc_state, step_name);
 			if (pstep == NULL) {
 				pstep = make_step(step_name, value_field_name);
 				if (pstep == NULL) {
@@ -175,7 +197,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 						step_name);
 					exit(1);
 				}
-				lhmsv_put(pmaps_level_3, step_name, pstep);
+				lhmsv_put(acc_field_to_acc_state, step_name, pstep);
 			}
 
 			if (pstep->psprocess_func != NULL) {
@@ -200,7 +222,7 @@ static void mapper_step_free(void* pvstate) {
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
-	lhmslv_free(pstate->pmaps_level_1);
+	lhmslv_free(pstate->groups);
 }
 
 static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
@@ -211,7 +233,7 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 	pstate->pstepper_names        = pstepper_names;
 	pstate->pvalue_field_names    = pvalue_field_names;
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
-	pstate->pmaps_level_1         = lhmslv_alloc();
+	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
 	pmapper->pmapper_process_func = mapper_step_process;

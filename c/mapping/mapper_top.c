@@ -21,7 +21,7 @@ typedef struct _mapper_top_state_t {
 	int show_full_records;
 	int top_count;
 	double sign; // for +1 for max; -1 for min
-	lhmslv_t* pmaps_level_1;
+	lhmslv_t* groups;
 } mapper_top_state_t;
 
 // ----------------------------------------------------------------
@@ -54,10 +54,10 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		return;
 	}
 
-	lhmsv_t* pmaps_level_2 = lhmslv_get(pstate->pmaps_level_1, pgroup_by_field_values);
-	if (pmaps_level_2 == NULL) {
-		pmaps_level_2 = lhmsv_alloc();
-		lhmslv_put(pstate->pmaps_level_1, slls_copy(pgroup_by_field_values), pmaps_level_2);
+	lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	if (group_to_acc_field == NULL) {
+		group_to_acc_field = lhmsv_alloc();
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 	}
 
 	sllse_t* pa = pstate->pvalue_field_names->phead;
@@ -69,10 +69,10 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 
 		// xxx rename: for group and value-field-name
-		top_keeper_t* ptop_keeper_for_group = lhmsv_get(pmaps_level_2, value_field_name);
+		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
 		if (ptop_keeper_for_group == NULL) {
 			ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);
-			lhmsv_put(pmaps_level_2, value_field_name, ptop_keeper_for_group);
+			lhmsv_put(group_to_acc_field, value_field_name, ptop_keeper_for_group);
 		}
 
 		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign, pinrec);
@@ -83,13 +83,13 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 	sllv_t* poutrecs = sllv_alloc();
 
-	for (lhmslve_t* pa = pstate->pmaps_level_1->phead; pa != NULL; pa = pa->pnext) {
+	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
 
 		if (pstate->show_full_records) {
-			// xxx if i do it this way (entire record) then there can only be one value column.
+			// Doing it this way (entire record) there can only be one value column.
 			// xxx assert on that, or at the very least note how confusing it is.
-			lhmsv_t* pmaps_level_2 = pa->pvvalue;
-			for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+			lhmsv_t* group_to_acc_field = pa->pvvalue;
+			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 				for (int i = 0;  i < ptop_keeper_for_group->size; i++)
 					sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
@@ -113,9 +113,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 				free(sidx);
 
 				// Add in fields such as x_top_1=#
-				lhmsv_t* pmaps_level_2 = pa->pvvalue;
+				lhmsv_t* group_to_acc_field = pa->pvvalue;
 				// for "x", "y"
-				for (lhmsve_t* pd = pmaps_level_2->phead; pd != NULL; pd = pd->pnext) {
+				for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 					char* value_field_name = pd->key;
 					top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 
@@ -145,7 +145,7 @@ static void mapper_top_free(void* pvstate) {
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
-	lhmslv_free(pstate->pmaps_level_1);
+	lhmslv_free(pstate->groups);
 }
 
 static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
@@ -160,7 +160,7 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 	pstate->show_full_records     = show_full_records;
 	pstate->top_count             = top_count;
 	pstate->sign                  = do_max ? 1.0 : -1.0;
-	pstate->pmaps_level_1         = lhmslv_alloc();
+	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
 	pmapper->pmapper_process_func = mapper_top_process;

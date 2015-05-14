@@ -6,9 +6,6 @@
 ================================================================
 FEATURES
 
-!! quantiles !!
-   -> be sure to include p99/p50 example (with then-chaining) in mlrwik
-
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
 !! reminder pgr legend is broken !!
@@ -57,7 +54,6 @@ NEATEN
 * remove/coalesce/gzip the large data files
 * mk perfcomp dir
 * "index-numbered" -> "implicitly index-numbered" in mlrwik
-* "level_1", "level_2", etc. are just confusing. come up with more descriptive names.
 * rip through filenames @ start & abend unless -f each: fail fast.
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
