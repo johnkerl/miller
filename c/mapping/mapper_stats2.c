@@ -237,8 +237,8 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		} else {
 			double output = mlr_get_cov(pstate->count, pstate->sumx, pstate->sumy, pstate->sumxy);
 			if (pstate->do_which == DO_CORR) {
-				double sigmax = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
-				double sigmay = mlr_get_stddev(pstate->count, pstate->sumy, pstate->sumy2);
+				double sigmax = sqrt(mlr_get_var(pstate->count, pstate->sumx, pstate->sumx2));
+				double sigmay = sqrt(mlr_get_var(pstate->count, pstate->sumy, pstate->sumy2));
 				output = output / sigmax / sigmay;
 			}
 			char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
@@ -281,12 +281,12 @@ typedef struct _stats2_lookup_t {
 	stats2_alloc_func_t* pnew_func;
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
+	{"linreg-pca", stats2_linreg_pca_alloc},
 	{"linreg-ols", stats2_linreg_ols_alloc},
 	{"r2",         stats2_r2_alloc},
 	{"corr",       stats2_corr_alloc},
 	{"cov",        stats2_cov_alloc},
 	{"covx",       stats2_covx_alloc},
-	{"linreg-pca", stats2_linreg_pca_alloc},
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
 
@@ -482,18 +482,21 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 // ----------------------------------------------------------------
 static void mapper_stats2_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-a {linreg-ols,corr,...}    Names of accumulators: one or more of\n");
-	fprintf(stdout, "                     ");
+	fprintf(stdout, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of\n");
+	fprintf(stdout, "                         ");
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
 		fprintf(stdout, " %s", stats2_lookup_table[i].name);
 	}
 	fprintf(stdout, "\n");
-	fprintf(stdout, "                      r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.");
+	fprintf(stdout, "                          r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.");
 	fprintf(stdout, "\n");
-	fprintf(stdout, "-f {a,b,c,d}          Value-field names on which to compute statistics.\n");
-	fprintf(stdout, "                      There must be an even number of these.\n");
-	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
-	fprintf(stdout, "-v                    Print additional output for linreg-pca.\n");
+	fprintf(stdout, "-f {a,b,c,d}              Value-field name-pairs on which to compute statistics.\n");
+	fprintf(stdout, "                          There must be an even number of names.\n");
+	fprintf(stdout, "-g {e,f,g}                Optional group-by-field names.\n");
+	fprintf(stdout, "-v                        Print additional output for linreg-pca.\n");
+	fprintf(stdout, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -a corr -f x,y\n", argv0, verb);
 }
 
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {

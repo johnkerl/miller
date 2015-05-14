@@ -1229,13 +1229,14 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 <pre>
 $ mlr stats1 --help
 Usage: mlr stats1 [options]
--a {sum,count,...}    Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of
-                      count mode sum mean stddev meaneb min max
 Options:
--f {a,b,c}            Value-field names on which to compute statistics
--g {d,e,f}            Group-by-field names
-Example: mlr stats1 -f value
-Example: mlr stats1 -f value -g size,shape
+-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of
+                    count mode sum mean stddev var meaneb min max
+-f {a,b,c}          Value-field names on which to compute statistics
+-g {d,e,f}          Optional group-by-field names
+Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
+Example: mlr stats1 -a count,mode -f size
+Example: mlr stats1 -a count,mode -f size -g shape
 Notes:
 * p50 is a synonym for median.
 * min and max output the same results as p0 and p100, respectively, but use less memory.
@@ -1337,13 +1338,16 @@ triangle red
 <pre>
 $ mlr stats2 --help
 Usage: mlr stats2 [options]
--a {linreg-ols,corr,...}    Names of accumulators: one or more of
-                      linreg-ols r2 corr cov covx linreg-pca
-                      r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.
--f {a,b,c,d}          Value-field names on which to compute statistics.
-                      There must be an even number of these.
--g {d,e,f}            Group-by-field names
--v                    Print additional output for linreg-pca.
+-a {linreg-ols,corr,...}  Names of accumulators: one or more of
+                          linreg-pca linreg-ols r2 corr cov covx
+                          r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.
+-f {a,b,c,d}              Value-field name-pairs on which to compute statistics.
+                          There must be an even number of names.
+-g {e,f,g}                Optional group-by-field names.
+-v                        Print additional output for linreg-pca.
+Example: mlr stats2 -a linreg-pca -f x,y
+Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
+Example: mlr stats2 -a corr -f x,y
 </pre>
 </div>
 <p/>
@@ -1823,8 +1827,8 @@ support the following operators and functions:
 
 </table>
 
-<p/>To set the seed for <tt>urand()</tt>, please use e.g <tt>mlr --seed
-123456789</tt> or <tt>mlr --seed 0xcafefeed</tt>.
+<p/>To set the seed for <tt>urand()</tt>, you may specify decimal or hexadecimal
+32-bit numbers of the form <tt>mlr --seed 123456789</tt> or <tt>mlr --seed 0xcafefeed</tt>.
 
 <p/>See also the <tt>awk</tt>-like built-in variables <tt>NF</tt>, <tt>NR</tt>,
 <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt> as described in the section on <a href="#put"><tt>put</tt></a>.

@@ -4,7 +4,7 @@
 void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sumx2, double sumxy, double sumy,
 	double* pm, double* pb);
 
-double mlr_get_stddev(unsigned long long n, double sum, double sum2);
+double mlr_get_var(unsigned long long n, double sum, double sum2);
 
 double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy);
 

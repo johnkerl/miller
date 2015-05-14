@@ -15,6 +15,10 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define DO_STDDEV 0xc1
+#define DO_VAR    0xc2
+#define DO_MEANEB 0xc3
+
 // ================================================================
 typedef void acc_dingest_func_t(void* pvstate, double val);
 typedef void acc_singest_func_t(void* pvstate, char*  val);
@@ -149,51 +153,56 @@ static acc_t* acc_mean_alloc() {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_stddev_meaneb_state_t {
+typedef struct _acc_stddev_var_meaneb_state_t {
 	unsigned long long count;
 	double sumx;
 	double sumx2;
-	int    do_meaneb;
-} acc_stddev_meaneb_state_t;
-static void acc_stddev_meaneb_dingest(void* pvstate, double val) {
-	acc_stddev_meaneb_state_t* pstate = pvstate;
+	int    do_which;
+} acc_stddev_var_meaneb_state_t;
+static void acc_stddev_var_meaneb_dingest(void* pvstate, double val) {
+	acc_stddev_var_meaneb_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
 // xxx recast all of these in terms of providable outputs
-static void acc_stddev_meaneb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
-	acc_stddev_meaneb_state_t* pstate = pvstate;
+static void acc_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+	acc_stddev_var_meaneb_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	if (pstate->count < 2LL) {
 		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		double output = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
-		if (pstate->do_meaneb)
-			output = output / sqrt(pstate->count);
+		double output = mlr_get_var(pstate->count, pstate->sumx, pstate->sumx2);
+		if (pstate->do_which == DO_STDDEV)
+			output = sqrt(output);
+		else if (pstate->do_which == DO_MEANEB)
+			output = sqrt(output / pstate->count);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
 
-static acc_t* acc_stddev_meaneb_alloc(int do_meaneb) {
+static acc_t* acc_stddev_var_meaneb_alloc(int do_which) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
-	acc_stddev_meaneb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_meaneb_state_t));
+	acc_stddev_var_meaneb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_var_meaneb_state_t));
 	pstate->count       = 0LL;
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
-	pstate->do_meaneb   = do_meaneb;
+	pstate->do_which    = do_which;
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_stddev_meaneb_dingest;
-	pacc->pemit_func    = &acc_stddev_meaneb_emit;
+	pacc->pdingest_func = &acc_stddev_var_meaneb_dingest;
+	pacc->pemit_func    = &acc_stddev_var_meaneb_emit;
 	return pacc;
 }
 static acc_t* acc_stddev_alloc() {
-	return acc_stddev_meaneb_alloc(FALSE);
+	return acc_stddev_var_meaneb_alloc(DO_STDDEV);
+}
+static acc_t* acc_var_alloc() {
+	return acc_stddev_var_meaneb_alloc(DO_VAR);
 }
 static acc_t* acc_meaneb_alloc() {
-	return acc_stddev_meaneb_alloc(TRUE);
+	return acc_stddev_var_meaneb_alloc(DO_MEANEB);
 }
 
 // ----------------------------------------------------------------
@@ -311,6 +320,7 @@ static acc_lookup_t acc_lookup_table[] = {
 	{"sum",    acc_sum_alloc},
 	{"mean",   acc_mean_alloc},
 	{"stddev", acc_stddev_alloc},
+	{"var",    acc_var_alloc},
 	{"meaneb", acc_meaneb_alloc},
 	{"min",    acc_min_alloc},
 	{"max",    acc_max_alloc},
@@ -577,17 +587,18 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 // xxx argify the stdout/stderr in ALL usages
 static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-a {sum,count,...}    Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of\n");
-	fprintf(stdout, "                     ");
+	fprintf(stdout, "Options:\n");
+	fprintf(stdout, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of\n");
+	fprintf(stdout, "                   ");
 	for (int i = 0; i < acc_lookup_table_length; i++) {
 		fprintf(stdout, " %s", acc_lookup_table[i].name);
 	}
 	fprintf(stdout, "\n");
-	fprintf(stdout, "Options:\n");
-	fprintf(stdout, "-f {a,b,c}            Value-field names on which to compute statistics\n");
-	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
-	fprintf(stdout, "Example: %s %s -f value\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -f value -g size,shape\n", argv0, verb);
+	fprintf(stdout, "-f {a,b,c}          Value-field names on which to compute statistics\n");
+	fprintf(stdout, "-g {d,e,f}          Optional group-by-field names\n");
+	fprintf(stdout, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -a count,mode -f size\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
 	fprintf(stdout, "Notes:\n");
 	fprintf(stdout, "* p50 is a synonym for median.\n");
 	fprintf(stdout, "* min and max output the same results as p0 and p100, respectively, but use less memory.\n");

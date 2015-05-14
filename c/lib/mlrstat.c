@@ -79,13 +79,13 @@ void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sum
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
 // ----------------------------------------------------------------
-double mlr_get_stddev(unsigned long long n, double sum, double sum2) {
+double mlr_get_var(unsigned long long n, double sum, double sum2) {
 	double mean = sum / n;
 	double numerator = sum2 - 2.0*mean*sum + n*mean*mean;
 	if (numerator < 0.0) // round-off error
 		numerator = 0.0;
 	double denominator = n - 1LL;
-	return sqrt(numerator / denominator);
+	return numerator / denominator;
 }
 
 // ----------------------------------------------------------------
