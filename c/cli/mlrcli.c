@@ -53,11 +53,11 @@ static void main_usage(char* argv0, int exit_code) {
 	int linelen = 0;
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
 		linelen += 1 + strlen(mapper_lookup_table[i]->verb);
-		if (linelen > 80) {
+		if (linelen > 100) {
 			fprintf(o, "\n");
 			linelen = 0;
 		}
-		if (i > 0)
+		if ((i > 0) && (linelen > 0))
 			fprintf(o, " ");
 		fprintf(o, "%s", mapper_lookup_table[i]->verb);
 	}
