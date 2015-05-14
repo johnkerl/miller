@@ -73,6 +73,7 @@ static void mapper_cut_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}       Field names to cut.\n");
 	fprintf(stdout, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
+	fprintf(stdout, "Passes through input records with specified fields included/excluded.\n");
 }
 
 // ----------------------------------------------------------------

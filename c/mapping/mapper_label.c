@@ -52,7 +52,7 @@ static mapper_t* mapper_label_alloc(slls_t* pnames) {
 static void mapper_label_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {new1,new2,new3,...}\n", argv0, verb);
 	fprintf(stdout, "Given n comma-separated names, renames the first n fields of each record to\n");
-	fprintf(stdout, "have the specified name. (Fields past the nth are left with their original\n");
+	fprintf(stdout, "have the respective name. (Fields past the nth are left with their original\n");
 	fprintf(stdout, "names.) Particularly useful with --inidx, to give useful names to otherwise\n");
 	fprintf(stdout, "integer-indexed fields.\n");
 }

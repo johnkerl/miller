@@ -57,6 +57,7 @@ static void main_usage(char* argv0, int exit_code) {
 	}
 	fprintf(o, "\n");
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
+	fprintf(o, "Please use \"%s {verb name} --help-all-verbs\" for help on all verbs.\n", argv0);
 
 	fprintf(o, "\n");
 	fprintf(o, "I/O options:\n");
@@ -74,6 +75,18 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 
 	exit(exit_code);
+}
+
+static void usage_all_verbs(char* argv0) {
+	char* separator = "================================================================";
+
+	for (int i = 0; i < mapper_lookup_table_length; i++) {
+		fprintf(stdout, "%s\n", separator);
+		mapper_lookup_table[i]->pusage_func(argv0, mapper_lookup_table[i]->verb);
+		fprintf(stdout, "\n");
+	}
+	fprintf(stdout, "%s\n", separator);
+	exit(0);
 }
 
 static void nusage(char* argv0, char* arg) {
@@ -149,6 +162,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help"))
 			main_usage(argv[0], 0);
+		else if (streq(argv[argi], "--help-all-verbs"))
+			usage_all_verbs(argv[0]);
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);

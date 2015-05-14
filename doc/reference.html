@@ -218,6 +218,7 @@ verbs:
 cat check count-distinct cut filter group-by group-like having-fields head
 histogram label put rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
+Please use "mlr {verb name} --help-all-verbs" for help on all verbs.
 
 I/O options:
   --rs      --irs     --ors
@@ -246,6 +247,7 @@ Flags:
   -nf {comma-separated field names}  Numerical ascending
   -r  {comma-separated field names}  Lexical descending
   -nr {comma-separated field names}  Numerical descending
+Sorts records primarily by the first specified field, secondarily by the second field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
@@ -506,7 +508,7 @@ c 9
 $ mlr check --help
 Usage: mlr check
 Consumes records without printing any output.
-Useful for doing a well-formatted check on CSV input data.
+Useful for doing a well-formatted check on input data.
 </pre>
 </div>
 <p/>
@@ -520,6 +522,7 @@ Useful for doing a well-formatted check on CSV input data.
 $ mlr count-distinct --help
 Usage: mlr count-distinct [options]
 -f {a,b,c}   Field names for distinct count.
+Prints number of records having distinct values for specified field names. Same as uniq -c.
 </pre>
 </div>
 <p/>
@@ -567,6 +570,7 @@ $ mlr cut --help
 Usage: mlr cut [options]
 -f {a,b,c}       Field names to cut.
 -x|--complement  Exclude, rather that include, field names specified by -f.
+Passes through input records with specified fields included/excluded.
 </pre>
 </div>
 <p/>
@@ -612,8 +616,19 @@ i x                   y
 <div class="pokipanel">
 <pre>
 $ mlr filter --help
-Usage: mlr filter [options]
-[-v] {expression} xxx needs more doc here please.
+Usage: mlr filter [-v] {expression}
+Prints records for which {expression} evaluates to true.
+With -v, first prints the AST (abstract syntax tree) for the expression, which
+gives full transparency on the precedence and associativity rules of Miller's grammar.
+Please use a dollar sign for field names and double-quotes for string literals.
+Miller built-in variables are NF NR FNR FILENUM FILENAME.
+Examples:
+  mlr filter 'log10($count) &gt; 4.0'
+  mlr filter 'FNR == 2'
+  mlr filter 'urand() &lt; 0.001'
+  mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
+  mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
+Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
 </pre>
 </div>
 <p/>
@@ -698,6 +713,7 @@ x_y_corr
 <pre>
 $ mlr group-by --help
 Usage: mlr group-by {comma-separated field names}
+Outputs records in batches having identical values at specified field names.
 </pre>
 </div>
 <p/>
@@ -759,6 +775,7 @@ to you.
 <pre>
 $ mlr group-like --help
 Usage: mlr group-like
+Outputs records in batches having identical field names.
 </pre>
 </div>
 <p/>
@@ -807,9 +824,10 @@ record_count resource
 <pre>
 $ mlr having-fields --help
 Usage: mlr having-fields [options]
---at-least {a,b,c}
+--at-least  {a,b,c}
 --which-are {a,b,c}
---at-most {a,b,c}
+--at-most   {a,b,c}
+Conditionally passes through records depending on each record's field names.
 </pre>
 </div>
 <p/>
@@ -864,7 +882,8 @@ resource=/some/other/path,loadsec=0.97,ok=false
 $ mlr head --help
 Usage: mlr head [options]
 -n {count}    Head count to print; default 10
--g {a,b,c}    Group-by-field names for head counts
+-g {a,b,c}    Optional group-by-field names for head counts
+Passes through the first n records, optionally by category.
 </pre>
 </div>
 <p/>
@@ -914,6 +933,7 @@ Usage: mlr histogram [options]
 --lo {lo}     Histogram low value
 --hi {hi}     Histogram high value
 --nbins {n}   Number of histogram bins
+Just a histogram. Input values &lt; lo or &gt; hi are not counted.
 </pre>
 </div>
 <p/>
@@ -953,7 +973,7 @@ bin_lo   bin_hi   x_count x2_count x3_count
 $ mlr label --help
 Usage: mlr label {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
-have the specified name. (Fields past the nth are left with their original
+have the respective name. (Fields past the nth are left with their original
 names.) Particularly useful with --inidx, to give useful names to otherwise
 integer-indexed fields.
 </pre>
@@ -990,8 +1010,19 @@ _postfix              *        27  27  Postfix Mail Server           /var/spool/
 <div class="pokipanel">
 <pre>
 $ mlr put --help
-Usage: mlr put [options]
-[-v] {expression} xxx needs more doc here please.
+Usage: mlr put [-v] {expression}
+Adds/updates specified field(s).
+With -v, first prints the AST (abstract syntax tree) for the expression, which
+gives full transparency on the precedence and associativity rules of Miller's grammar.
+Please use a dollar sign for field names and double-quotes for string literals.
+Miller built-in variables are NF NR FNR FILENUM FILENAME.
+Multiple assignments may be separated with a semicolon.
+Examples:
+  mlr put '$y = log10($x); $z = sqrt($y)'
+  mlr put '$filename = FILENAME'
+  mlr put '$colored_shape = $color . "_" . $shape'
+  mlr put '$y = cos($theta); $z = atan2($y, $x)'
+Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
 </pre>
 </div>
 <p/>
@@ -1050,6 +1081,7 @@ pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/s
 <pre>
 $ mlr rename --help
 Usage: mlr rename {old1,new1,old2,new2,...}
+Renames specified fields.
 </pre>
 </div>
 <p/>
@@ -1128,10 +1160,10 @@ See also <a href="#label"><tt>label</tt></a>.
 <pre>
 $ mlr reorder --help
 Usage: mlr reorder [options]
--f {a,b,c}       Field names to reorder.
+-f {a,b,c}   Field names to reorder.
 -e           Put specified field names at record end: default is to put at record start.
-Example: mlr reorder    -f a,b sends input record d=4,b=2,a=1,c=3 to a=1,b=2,d=4,c=3.
-Example: mlr reorder -e -f a,b sends input record d=4,b=2,a=1,c=3 to d=4,c=3,a=1,b=2.
+Example: mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
+Example: mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
 </pre>
 </div>
 <p/>
@@ -1198,6 +1230,7 @@ Flags:
   -nf {comma-separated field names}  Numerical ascending
   -r  {comma-separated field names}  Lexical descending
   -nr {comma-separated field names}  Numerical descending
+Sorts records primarily by the first specified field, secondarily by the second field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
@@ -1429,10 +1462,11 @@ plotting; here&rsquo;s a screenshot.
 <pre>
 $ mlr step --help
 Usage: mlr step [options]
--a {delta,rsum,...}    Names of steppers: one or more of
+-a {delta,rsum,...}   Names of steppers: one or more of
                       delta rsum counter
 -f {a,b,c}            Value-field names on which to compute statistics
 -g {d,e,f}            Group-by-field names
+Computes values dependent on the previous record, optionally grouped by category.
 </pre>
 </div>
 <p/>
@@ -1498,6 +1532,7 @@ eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  2.764119  
 <pre>
 $ mlr tac --help
 Usage: mlr tac
+Prints records in reverse order from the order in which they were encountered.
 </pre>
 </div>
 <p/>
@@ -1563,7 +1598,8 @@ a b c filename
 $ mlr tail --help
 Usage: mlr tail [options]
 -n {count}    Tail count to print; default 10
--g {a,b,c}    Group-by-field names for tail counts
+-g {a,b,c}    Optional group-by-field names for tail counts
+Passes through the last n records, optionally by category.
 </pre>
 </div>
 <p/>
@@ -1606,11 +1642,12 @@ yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.506446844647
 $ mlr top --help
 Usage: mlr top [options]
 -f {a,b,c}    Value-field names for top counts
--g {d,e,f}    Group-by-field names for top counts
--n {count}    Top n records to print; default 1
+-g {d,e,f}    Optional group-by-field names for top counts
+-n {count}    How many records to print per category; default 1
 -a            Print all fields for top-value records; default is
               to print only value and group-by fields.
 --min         Print top smallest values; default is top largest values
+Prints the n records with smallest/largest values at specified fields, optionally by category.
 </pre>
 </div>
 <p/>
@@ -1663,6 +1700,7 @@ $ mlr uniq --help
 Usage: mlr uniq [options]
 -g {d,e,f}    Group-by-field names for uniq counts
 -c            Show repeat counts in addition to unique values
+Prints distinct values for specified field names. With -c, same as count-distinct.
 </pre>
 </div>
 <p/>

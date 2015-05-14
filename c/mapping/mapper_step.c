@@ -245,7 +245,7 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 // ----------------------------------------------------------------
 static void mapper_step_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-a {delta,rsum,...}    Names of steppers: one or more of\n");
+	fprintf(stdout, "-a {delta,rsum,...}   Names of steppers: one or more of\n");
 	fprintf(stdout, "                     ");
 	for (int i = 0; i < step_lookup_table_length; i++) {
 		fprintf(stdout, " %s", step_lookup_table[i].name);
@@ -253,6 +253,7 @@ static void mapper_step_usage(char* argv0, char* verb) {
 	fprintf(stdout, "\n");
 	fprintf(stdout, "-f {a,b,c}            Value-field names on which to compute statistics\n");
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
+	fprintf(stdout, "Computes values dependent on the previous record, optionally grouped by category.\n");
 }
 
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {

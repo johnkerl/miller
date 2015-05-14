@@ -54,10 +54,12 @@ static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) 
 // ----------------------------------------------------------------
 static void mapper_reorder_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}       Field names to reorder.\n");
+	fprintf(stdout, "-f {a,b,c}   Field names to reorder.\n");
 	fprintf(stdout, "-e           Put specified field names at record end: default is to put at record start.\n");
-	fprintf(stdout, "Example: %s %s    -f a,b sends input record d=4,b=2,a=1,c=3 to a=1,b=2,d=4,c=3.\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -e -f a,b sends input record d=4,b=2,a=1,c=3 to d=4,c=3,a=1,b=2.\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
+		argv0, verb);
+	fprintf(stdout, "Example: %s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
+		argv0, verb);
 }
 
 // ----------------------------------------------------------------

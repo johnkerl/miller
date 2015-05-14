@@ -56,8 +56,19 @@ static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 
 // ----------------------------------------------------------------
 static void mapper_filter_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "[-v] {expression} xxx needs more doc here please.\n");
+	fprintf(stdout, "Usage: %s %s [-v] {expression}\n", argv0, verb);
+	fprintf(stdout, "Prints records for which {expression} evaluates to true.\n");
+	fprintf(stdout, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
+	fprintf(stdout, "gives full transparency on the precedence and associativity rules of Miller's grammar.\n");
+	fprintf(stdout, "Please use a dollar sign for field names and double-quotes for string literals.\n");
+	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME.\n");
+	fprintf(stdout, "Examples:\n");
+	fprintf(stdout, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
+	fprintf(stdout, "  %s %s 'FNR == 2'\n", argv0, verb);
+	fprintf(stdout, "  %s %s 'urand() < 0.001'\n", argv0, verb);
+	fprintf(stdout, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
+	fprintf(stdout, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
+	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.\n");
 }
 
 // ----------------------------------------------------------------

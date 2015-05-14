@@ -91,8 +91,19 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 
 // ----------------------------------------------------------------
 static void mapper_put_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "[-v] {expression} xxx needs more doc here please.\n");
+	fprintf(stdout, "Usage: %s %s [-v] {expression}\n", argv0, verb);
+	fprintf(stdout, "Adds/updates specified field(s).\n");
+	fprintf(stdout, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
+	fprintf(stdout, "gives full transparency on the precedence and associativity rules of Miller's grammar.\n");
+	fprintf(stdout, "Please use a dollar sign for field names and double-quotes for string literals.\n");
+	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME.\n");
+	fprintf(stdout, "Multiple assignments may be separated with a semicolon.\n");
+	fprintf(stdout, "Examples:\n");
+	fprintf(stdout, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
+	fprintf(stdout, "  %s %s '$filename = FILENAME'\n", argv0, verb);
+	fprintf(stdout, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
+	fprintf(stdout, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
+	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.\n");
 }
 
 // ----------------------------------------------------------------

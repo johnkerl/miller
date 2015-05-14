@@ -73,7 +73,8 @@ static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long 
 static void mapper_head_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-n {count}    Head count to print; default 10\n");
-	fprintf(stdout, "-g {a,b,c}    Group-by-field names for head counts\n");
+	fprintf(stdout, "-g {a,b,c}    Optional group-by-field names for head counts\n");
+	fprintf(stdout, "Passes through the first n records, optionally by category.\n");
 }
 
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {

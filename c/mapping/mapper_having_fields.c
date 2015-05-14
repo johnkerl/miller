@@ -95,9 +95,10 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 // ----------------------------------------------------------------
 static void mapper_having_fields_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "--at-least {a,b,c}\n");
+	fprintf(stdout, "--at-least  {a,b,c}\n");
 	fprintf(stdout, "--which-are {a,b,c}\n");
-	fprintf(stdout, "--at-most {a,b,c}\n");
+	fprintf(stdout, "--at-most   {a,b,c}\n");
+	fprintf(stdout, "Conditionally passes through records depending on each record's field names.\n");
 }
 
 // ----------------------------------------------------------------

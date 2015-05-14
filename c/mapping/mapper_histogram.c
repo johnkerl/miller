@@ -138,6 +138,7 @@ static void mapper_histogram_usage(char* argv0, char* verb) {
 	fprintf(stdout, "--lo {lo}     Histogram low value\n");
 	fprintf(stdout, "--hi {hi}     Histogram high value\n");
 	fprintf(stdout, "--nbins {n}   Number of histogram bins\n");
+	fprintf(stdout, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {

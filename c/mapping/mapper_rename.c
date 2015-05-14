@@ -49,6 +49,7 @@ static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
 // ----------------------------------------------------------------
 static void mapper_rename_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {old1,new1,old2,new2,...}\n", argv0, verb);
+	fprintf(stdout, "Renames specified fields.\n");
 }
 
 static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {

@@ -25,6 +25,7 @@ static mapper_t* mapper_cat_alloc() {
 // ----------------------------------------------------------------
 static void mapper_cat_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
+	fprintf(stdout, "Passes input records directly to output. Most useful for format conversion.\n");
 }
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {

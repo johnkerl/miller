@@ -173,11 +173,12 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 static void mapper_top_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}    Value-field names for top counts\n");
-	fprintf(stdout, "-g {d,e,f}    Group-by-field names for top counts\n");
-	fprintf(stdout, "-n {count}    Top n records to print; default 1\n");
+	fprintf(stdout, "-g {d,e,f}    Optional group-by-field names for top counts\n");
+	fprintf(stdout, "-n {count}    How many records to print per category; default 1\n");
 	fprintf(stdout, "-a            Print all fields for top-value records; default is\n");
 	fprintf(stdout, "              to print only value and group-by fields.\n");
 	fprintf(stdout, "--min         Print top smallest values; default is top largest values\n");
+	fprintf(stdout, "Prints the n records with smallest/largest values at specified fields, optionally by category.\n");
 }
 
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {

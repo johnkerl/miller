@@ -222,6 +222,7 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 // ----------------------------------------------------------------
 static void mapper_group_by_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
+	fprintf(stdout, "Outputs records in batches having identical values at specified field names.\n");
 }
 
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
@@ -255,6 +256,7 @@ static void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "  -nf {comma-separated field names}  Numerical ascending\n");
 	fprintf(stdout, "  -r  {comma-separated field names}  Lexical descending\n");
 	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending\n");
+	fprintf(stdout, "Sorts records primarily by the first specified field, secondarily by the second field, and so on.\n");
 	fprintf(stdout, "Example:\n");
 	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
 	fprintf(stdout, "which is the same as:\n");

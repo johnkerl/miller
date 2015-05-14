@@ -47,6 +47,7 @@ static mapper_t* mapper_tac_alloc() {
 // ----------------------------------------------------------------
 static void mapper_tac_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
+	fprintf(stdout, "Prints records in reverse order from the order in which they were encountered.\n");
 }
 
 static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv) {

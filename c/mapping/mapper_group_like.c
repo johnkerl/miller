@@ -67,6 +67,7 @@ static mapper_t* mapper_group_like_alloc() {
 // ----------------------------------------------------------------
 static void mapper_group_like_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
+	fprintf(stdout, "Outputs records in batches having identical field names.\n");
 }
 static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {
