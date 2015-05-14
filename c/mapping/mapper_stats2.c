@@ -307,6 +307,7 @@ typedef struct _mapper_stats2_state_t {
 	int     do_verbose;
 } mapper_stats2_state_t;
 
+// ================================================================
 // Given: accumulate corr,cov on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_corr x_cov y_corr y_cov
@@ -317,8 +318,8 @@ typedef struct _mapper_stats2_state_t {
 //
 // Multilevel hashmap structure:
 // {
-//   ["s","t"] : {
-//     ["x","y"] : {
+//   ["s","t"] : {                    <--- group-by field names
+//     ["x","y"] : {                  <--- value field names
 //       "corr" : C stats2_corr_t object,
 //       "cov"  : C stats2_cov_t  object
 //     }
@@ -336,6 +337,7 @@ typedef struct _mapper_stats2_state_t {
 //     }
 //   },
 // }
+// ================================================================
 
 // ----------------------------------------------------------------
 static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);

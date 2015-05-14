@@ -43,9 +43,6 @@ static sllv_t* mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 // ----------------------------------------------------------------
 static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	// ["s", "t"]
-	// xxx make value_field_values into a hashmap. then accept partial population on that.
-	// xxx but retain full-population requirement on group-by.
-	// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
 	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 

@@ -49,6 +49,7 @@ NEATEN
 
 !! xxx's in the code
 * source hygiene: top-of-header comments, readme re memory management, etc.
+* check all usage messages
 
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
@@ -61,6 +62,9 @@ NEATEN
 * play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
+
+* doc-tech: make sure all html stylings are moved into css
+* doc-tech: emphasize in poki doc that nav is place into callbacks for consistent all-in-one-place
 
 ================================================================
 ONLINE HELP

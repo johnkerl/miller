@@ -13,24 +13,13 @@
 #include "cli/argparse.h"
 
 // ================================================================
-// -a min,max -v x,y -g a,b
-
-// ["s","t"] |--> "x" |--> "sum" |--> step_sum_t* (as void*)
-// level 1      level 2   level 3
-// lhmslv_t     lhmsv_t   lhmsv_t
-// step_sum_t implements interface:
-//   void  dacc(double dval);
-//   void  sacc(char*  sval);
-//   char* get();
-
-// ================================================================
-typedef void  step_dput_func_t(void* pvstate, double dval, lrec_t* prec);
-typedef void  step_sput_func_t(void* pvstate, char*  sval, lrec_t* prec);
+typedef void  step_dprocess_func_t(void* pvstate, double dval, lrec_t* prec);
+typedef void  step_sprocess_func_t(void* pvstate, char*  sval, lrec_t* prec);
 
 typedef struct _step_t {
 	void* pvstate;
-	step_sput_func_t* psput_func;
-	step_dput_func_t* pdput_func;
+	step_sprocess_func_t* psprocess_func;
+	step_dprocess_func_t* pdprocess_func;
 } step_t;
 
 typedef step_t* step_alloc_func_t(char* input_field_name);
@@ -41,7 +30,7 @@ typedef struct _step_delta_state_t {
 	int    have_prev;
 	char*  output_field_name;
 } step_delta_state_t;
-static void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
+static void step_delta_dprocess(void* pvstate, double dval, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
 	double delta = dval;
 	if (pstate->have_prev) {
@@ -56,12 +45,12 @@ static void step_delta_dput(void* pvstate, double dval, lrec_t* prec) {
 static step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
-	pstate->prev      = -999.0;
-	pstate->have_prev = FALSE;
+	pstate->prev          = -999.0;
+	pstate->have_prev     = FALSE;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
-	pstep->pvstate    = (void*)pstate;
-	pstep->psput_func = NULL;
-	pstep->pdput_func = &step_delta_dput;
+	pstep->pvstate        = (void*)pstate;
+	pstep->psprocess_func = NULL;
+	pstep->pdprocess_func = &step_delta_dprocess;
 	return pstep;
 }
 // xxx step_delta_free et al.
@@ -71,7 +60,7 @@ typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
 } step_rsum_state_t;
-static void step_rsum_dput(void* pvstate, double dval, lrec_t* prec) {
+static void step_rsum_dprocess(void* pvstate, double dval, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum += dval;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
@@ -80,11 +69,11 @@ static void step_rsum_dput(void* pvstate, double dval, lrec_t* prec) {
 static step_t* step_rsum_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-	pstate->rsum      = 0.0;
+	pstate->rsum          = 0.0;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-	pstep->pvstate    = (void*)pstate;
-	pstep->psput_func = NULL;
-	pstep->pdput_func = &step_rsum_dput;
+	pstep->pvstate        = (void*)pstate;
+	pstep->psprocess_func = NULL;
+	pstep->pdprocess_func = &step_rsum_dprocess;
 	return pstep;
 }
 
@@ -93,7 +82,7 @@ typedef struct _step_counter_state_t {
 	unsigned long long counter;
 	char*  output_field_name;
 } step_counter_state_t;
-static void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
+static void step_counter_sprocess(void* pvstate, char* sval, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
 	pstate->counter++;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),
@@ -102,11 +91,11 @@ static void step_counter_sput(void* pvstate, char* sval, lrec_t* prec) {
 static step_t* step_counter_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
-	pstate->counter   = 0LL;
+	pstate->counter       = 0LL;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
-	pstep->pvstate    = (void*)pstate;
-	pstep->psput_func = &step_counter_sput;
-	pstep->pdput_func = NULL;
+	pstep->pvstate        = (void*)pstate;
+	pstep->psprocess_func = &step_counter_sprocess;
+	pstep->pdprocess_func = NULL;
 	return pstep;
 }
 
@@ -139,34 +128,13 @@ typedef struct _mapper_step_state_t {
 
 } mapper_step_state_t;
 
-// given: step rsum,delta values x,y group by a,b
-// example input:       example output:
-//   a b x y            a b x_count x_sum y_count y_sum
-//   s t 1 2            s t 2       6     2       8
-//   u v 3 4            u v 1       3     1       4
-//   s t 5 6            u w 1       7     1       9
-//   u w 7 9
-
-// ["s","t"] |--> "x" |--> "sum" |--> step_sum_t* (as void*)
-// level_1      level_2   level_3
-// lhmslv_t     lhmsv_t   lhmsv_t
-// step_sum_t implements interface:
-//   void  init();
-//   void  dacc(double dval);
-//   void  sacc(char*  sval);
-//   char* get();
-
-// ----------------------------------------------------------------
 static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_step_state_t* pstate = pvstate;
 	if (pinrec == NULL)
 		return sllv_single(NULL);
 
 	// ["s", "t"]
-	// xxx make value_field_values into a hashmap. then accept partial population on that.
-	// xxx but retain full-population requirement on group-by.
-	// e.g. if accumulating stats of x,y on a,b then skip row with x,y,a but process row with x,a,b.
-	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names); // xxx this can be slls or sllv
+	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
@@ -182,7 +150,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 	sllse_t* pa = pstate->pvalue_field_names->phead;
 	sllse_t* pb =         pvalue_field_values->phead;
-	// for "x", "y" and "1", "2"
+	// for x=1 and y=2
 	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
 		char* value_field_name = pa->value;
 		char* value_field_sval = pb->value;
@@ -210,15 +178,15 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				lhmsv_put(pmaps_level_3, step_name, pstep);
 			}
 
-			if (pstep->psput_func != NULL) {
-				pstep->psput_func(pstep->pvstate, value_field_sval, pinrec);
+			if (pstep->psprocess_func != NULL) {
+				pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
 			}
-			if (pstep->pdput_func != NULL) {
+			if (pstep->pdprocess_func != NULL) {
 				if (!have_dval) {
 					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 					have_dval = TRUE;
 				}
-				pstep->pdput_func(pstep->pvstate, value_field_dval, pinrec);
+				pstep->pdprocess_func(pstep->pvstate, value_field_dval, pinrec);
 			}
 		}
 	}

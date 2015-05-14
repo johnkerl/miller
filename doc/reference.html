@@ -84,7 +84,7 @@ Miller commands were run with pretty-print-tabular output format.
 
   <!-- page body -->
   <td>
-    <div style="overflow-y:scroll;height:600px">
+    <div style="overflow-y:scroll;height:1500px">
     <center> <titleinbody> Reference </titleinbody> </center>
     <p/>
     
@@ -1225,28 +1225,41 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 <pre>
 $ mlr stats1 --help
 Usage: mlr stats1 [options]
--a {sum,count,...}    Names of accumulators: one or more of
-                      count sum avg stddev avgeb min max mode
+-a {sum,count,...}    Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of
+                      count mode sum avg stddev avgeb min max
 -f {a,b,c}            Value-field names on which to compute statistics
 -g {d,e,f}            Group-by-field names
+Example: mlr stats1 -nr value
+Example: mlr stats1 -nr value g size,shape
 </pre>
 </div>
 <p/>
 
-These are simple univariate statistics on one or more number-valued fields,
-optionally categorized by one or more fields.
+These are simple univariate statistics on one or more number-valued fields
+(<tt>count</tt> and <tt>mode</tt> apply to non-numeric fields as well),
+optionally categorized by one or more other fields.
 
 <table><tr><td>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --oxtab stats1 -a count,sum,avg -f x,y data/medium
+$ mlr --oxtab stats1 -a count,sum,min,p10,p50,avg,p90,max -f x,y data/medium
 x_count 10000
 x_sum   4986.019682
+x_min   0.000045
+x_p10   0.093322
+x_p50   0.501159
 x_avg   0.498602
+x_p90   0.900794
+x_max   0.999953
 y_count 10000
 y_sum   5062.057445
+y_min   0.000088
+y_p10   0.102132
+y_p50   0.506021
 y_avg   0.506206
+y_p90   0.905366
+y_max   0.999965
 </pre>
 </div>
 <p/>
@@ -1264,50 +1277,46 @@ zee 0.504242 0.502997
 </pre>
 </div>
 <p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
+color  u_p50    u_p99    v_p50    v_p99    ur       vr
+green  0.505848 0.990764 0.500787 0.989642 1.958620 1.976174
+red    0.500564 0.989587 0.500415 0.996280 1.976944 1.990908
+yellow 0.506272 0.989401 0.502912 0.989215 1.954287 1.966974
+blue   0.506270 0.990783 0.490120 0.990957 1.957025 2.021866
+purple 0.500051 0.990108 0.505464 0.990086 1.980014 1.958767
+orange 0.488821 0.991091 0.491891 0.991451 2.027513 2.015591
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
+shape    count
+square   41588
+triangle 33477
+circle   24935
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
+shape    color_mode
+circle   red
+square   red
+triangle red
+</pre>
+</div>
+<p/>
 </td></tr></table>
-
-<!--
-kerl@kerl-mbp[s1j0d1][c]$ mlr --opprint count-distinct -f b then sort -nr count data/small
-b   count
-wye 5
-pan 4
-zee 1
-kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint count-distinct -f a then sort -nr count data/small
-a   count
-eks 3
-pan 2
-wye 2
-zee 2
-hat 1
-kerl@kerl-mbp[s0j0d1][c]$ mlr --omlr --opprint stats1 -a mode -f a,b data/small
-a_mode b_mode
-eks    wye
-kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint sort -f a data/small
-a   b   i  x                   y
-eks pan 2  0.7586799647899636  0.5221511083334797
-eks wye 4  0.38139939387114097 0.13418874328430463
-eks zee 7  0.6117840605678454  0.1878849191181694
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan pan 1  0.3467901443380824  0.7268028627434533
-pan wye 10 0.5026260055412137  0.9526183602969864
-wye wye 3  0.20460330576630303 0.33831852551664776
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-zee wye 8  0.5985540091064224  0.976181385699006
-kerl@kerl-mbp[s0j0d1][c]$ mlr --opprint sort -f b data/small
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-eks zee 7  0.6117840605678454  0.1878849191181694
-
--->
 
 <!-- ================================================================ -->
 <a id="stats2"/><h2>stats2</h2>

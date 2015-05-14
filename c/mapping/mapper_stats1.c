@@ -55,6 +55,46 @@ static acc_t* acc_count_alloc() {
 }
 
 // ----------------------------------------------------------------
+typedef struct _acc_mode_state_t {
+	lhmsi_t* pcounts_for_value;
+} acc_mode_state_t;
+// mode on strings? what about "1.0" and "1" and "1.0000" ??
+static void acc_mode_singest(void* pvstate, char* val) {
+	acc_mode_state_t* pstate = pvstate;
+	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
+	if (pe == NULL) {
+		// xxx at the moment, lhmsi does a strdup so we needn't.
+		lhmsi_put(pstate->pcounts_for_value, val, 1);
+	} else {
+		pe->value++;
+	}
+}
+static void acc_mode_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+	acc_mode_state_t* pstate = pvstate;
+	int max_count = 0;
+	char* max_key = "";
+	for (lhmsie_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
+		int count = pe->value;
+		if (count > max_count) {
+			max_key = pe->key;
+			max_count = count;
+		}
+	}
+	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
+	lrec_put(poutrec, key, max_key, LREC_FREE_ENTRY_KEY);
+}
+static acc_t* acc_mode_alloc() {
+	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
+	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
+	pstate->pcounts_for_value = lhmsi_alloc();
+	pacc->pvstate       = (void*)pstate;
+	pacc->psingest_func = &acc_mode_singest;
+	pacc->pdingest_func = NULL;
+	pacc->pemit_func    = &acc_mode_emit;
+	return pacc;
+}
+
+// ----------------------------------------------------------------
 typedef struct _acc_sum_state_t {
 	double sum;
 } acc_sum_state_t;
@@ -231,46 +271,6 @@ static acc_t* acc_max_alloc() {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_mode_state_t {
-	lhmsi_t* pcounts_for_value;
-} acc_mode_state_t;
-// mode on strings? what about "1.0" and "1" and "1.0000" ??
-static void acc_mode_singest(void* pvstate, char* val) {
-	acc_mode_state_t* pstate = pvstate;
-	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
-	if (pe == NULL) {
-		// xxx at the moment, lhmsi does a strdup so we needn't.
-		lhmsi_put(pstate->pcounts_for_value, val, 1);
-	} else {
-		pe->value++;
-	}
-}
-static void acc_mode_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
-	acc_mode_state_t* pstate = pvstate;
-	int max_count = 0;
-	char* max_key = "";
-	for (lhmsie_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
-		int count = pe->value;
-		if (count > max_count) {
-			max_key = pe->key;
-			max_count = count;
-		}
-	}
-	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
-	lrec_put(poutrec, key, max_key, LREC_FREE_ENTRY_KEY);
-}
-static acc_t* acc_mode_alloc() {
-	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
-	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
-	pstate->pcounts_for_value = lhmsi_alloc();
-	pacc->pvstate       = (void*)pstate;
-	pacc->psingest_func = &acc_mode_singest;
-	pacc->pdingest_func = NULL;
-	pacc->pemit_func    = &acc_mode_emit;
-	return pacc;
-}
-
-// ----------------------------------------------------------------
 typedef struct _acc_percentile_state_t {
 	percentile_keeper_t* ppercentile_keeper;
 } acc_percentile_state_t;
@@ -307,13 +307,13 @@ typedef struct _acc_lookup_t {
 } acc_lookup_t;
 static acc_lookup_t acc_lookup_table[] = {
 	{"count",  acc_count_alloc},
+	{"mode",   acc_mode_alloc},
 	{"sum",    acc_sum_alloc},
 	{"avg",    acc_avg_alloc},
 	{"stddev", acc_stddev_alloc},
 	{"avgeb",  acc_avgeb_alloc},
 	{"min",    acc_min_alloc},
 	{"max",    acc_max_alloc},
-	{"mode",   acc_mode_alloc},
 };
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
@@ -334,8 +334,6 @@ typedef struct _mapper_stats1_state_t {
 } mapper_stats1_state_t;
 
 // ================================================================
-// OVERVIEW OF DATA STRUCTURES:
-//
 // Given: accumulate count,sum on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_count x_sum y_count y_sum
@@ -346,8 +344,8 @@ typedef struct _mapper_stats1_state_t {
 //
 // Multilevel hashmap structure:
 // {
-//   ["s","t"] : {
-//     ["x"] : {
+//   ["s","t"] : {                <--- group-by field names
+//     ["x"] : {                  <--- value field names
 //       "count" : stats2_count_t object,
 //       "sum"   : stats2_sum_t  object
 //     },
@@ -579,7 +577,7 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 // xxx argify the stdout/stderr in ALL usages
 static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-a {sum,count,...}    Names of accumulators: one or more of\n");
+	fprintf(stdout, "-a {sum,count,...}    Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of\n");
 	fprintf(stdout, "                     ");
 	for (int i = 0; i < acc_lookup_table_length; i++) {
 		fprintf(stdout, " %s", acc_lookup_table[i].name);
@@ -587,6 +585,8 @@ static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "\n");
 	fprintf(stdout, "-f {a,b,c}            Value-field names on which to compute statistics\n");
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
+	fprintf(stdout, "Example: %s %s -nr value\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -nr value g size,shape\n", argv0, verb);
 }
 
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
