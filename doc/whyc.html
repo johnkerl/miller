@@ -160,8 +160,8 @@ comments; enough said.)
 
 I have a strong personal distaste for C++: its syntax is an ugly layer over the
 simplicity of C++; templates and STL are even more awkward and even less
-elegant. (Meanwhile I find Java, Go, and D to be both elegant and modern; they
-were ruled out not for aesthetics but for performance as described above.)
+elegant. (Meanwhile I find Java, Go, and D to be both elegant and modern; I
+ruled them out not for aesthetics but for performance as described above.)
 Meanwhile all the positive features I would want from C++ are easily
 implementable in C:
 
@@ -228,8 +228,11 @@ void lrec_free(lrec_t* prec) {
   free(prec);
 }
 // Methods
-int lrec_foo(lrec_t* prec) {
+int lrec_foo(lrec_t* prec, ...) {
   return prec-&gt;...;
+}
+void lrec_bar(lrec_t* prec, ...) {
+  prec-&gt;...;
 }
 </pre>
 
@@ -237,7 +240,7 @@ int lrec_foo(lrec_t* prec) {
 <a id="Interfaces_and_virtual-function_pointers"/><h2>Interfaces and virtual-function pointers</h2>
 
 Coding conventions again do most of the work, here accompanied by typdeffed function pointers.
-For example, here is Miller&rsquo;s record reader interface:
+For example, here is Miller&rsquo;s record-reader interface:
 <pre>
 #include &lt;stdio.h&gt;
 #include &lt;containers/lrec.h&gt;

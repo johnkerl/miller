@@ -13,20 +13,10 @@ POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint count-distinct -f co
 POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012}}HERE
 POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line}}HERE
 
-<p/> xxx more Q's after sort -nr and quantiles:
-<pre>
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
-echo
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f eq_site_deductible,tiv_2012 -g county
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
-echo
-cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
-</pre>
-
-<p/> xxx plaintext hardlinks
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible}}HERE
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head}}HERE
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012}}HERE
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county}}HERE
 
 <h1>Color/shape data</h1>
 
@@ -68,6 +58,6 @@ POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape
 This admittedly artificial example demonstrates using Miller time and stats
 functions to introspectly acquire some information about Miller&rsquo;s own
 runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps..
+timestamps.
 
 POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
