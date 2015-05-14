@@ -10,14 +10,14 @@ POKI_RUN_COMMAND{{head -n 2 data/flins.csv | mlr --icsv --oxtab cat}}HERE
 POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint count-distinct -f county | head}}HERE
 POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint count-distinct -f construction,line}}HERE
 <p/> Categorization of total insured value:
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012 -g construction,line}}HERE
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012}}HERE
+POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line}}HERE
 
 <p/> xxx more Q's after sort -nr and quantiles:
 <pre>
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
 echo
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
 echo
 cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f eq_site_deductible,tiv_2012 -g county
 echo
@@ -48,7 +48,7 @@ POKI_RUN_COMMAND{{head -n 6 data/colored-shapes.dkvp | mlr --opprint cat}}HERE
 
 <p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><tt>creach</tt></a> for spacing).
 Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up with <tt>v</tt> but we can't yet see what:
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,avg,max -f flag,u,v data/colored-shapes.dkvp | creach 3}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3}}HERE
 <p/>The histogram shows the different distribution of 0/1 flags:
 POKI_RUN_COMMAND{{mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp}}HERE
 
@@ -56,8 +56,8 @@ POKI_RUN_COMMAND{{mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins
 color-dependent flag probabilities pop out, aligning with their original
 Bernoulli probablities from the data-generator script:
 
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp}}HERE
 
 <p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE

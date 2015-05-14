@@ -257,6 +257,8 @@ static void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending\n");
 	fprintf(stdout, "Example:\n");
 	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
+	fprintf(stdout, "which is the same as:\n");
+	fprintf(stdout, "  %s %s -f a -f b -nr x -nr y -nr z\n", argv0, verb);
 }
 
 static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {

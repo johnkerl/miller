@@ -68,12 +68,12 @@ run("ADDMLRV",   "mlr --csv put '$z=$x+$y'            < data/big.csv > /dev/null
 puts
 puts
 
-run("MEANMLR",   "mlr       stats1 -a avg  -f x,y -g a,b < data/big > /dev/null")
+run("MEANMLR",   "mlr       stats1 -a mean -f x,y -g a,b < data/big > /dev/null")
 run('CORRMLR',   "mlr       stats2 -a corr -f x,y -g a,b < data/big > /dev/null")
 run('LINREGMLR', "mlr       stats2 -a linreg-ols,linreg-pca -f x,y -g a,b < data/big > /dev/null")
 puts
 
-run("MEANMLRV",  "mlr      --csv  stats1 -a avg  -f x,y -g a,b < data/big.csv > /dev/null")
+run("MEANMLRV",  "mlr      --csv  stats1 -a mean -f x,y -g a,b < data/big.csv > /dev/null")
 run('CORRMLRV',  "mlr      --csv  stats2 -a corr -f x,y -g a,b < data/big.csv > /dev/null")
 run('LINREGMLRV', "mlr     --csv  stats2 -a linreg-ols,linreg-pca -f x,y -g a,b < data/big.csv > /dev/null")
 puts

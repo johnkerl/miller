@@ -162,8 +162,8 @@ Steel Frame         Commercial  272
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012
-tiv_2012_min tiv_2012_avg   tiv_2012_max
+$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012
+tiv_2012_min tiv_2012_mean  tiv_2012_max
 73.370000    2571004.097342 1701000000.000000
 </pre>
 </div>
@@ -171,8 +171,8 @@ tiv_2012_min tiv_2012_avg   tiv_2012_max
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,avg,max -f tiv_2012 -g construction,line
-construction        line        tiv_2012_min    tiv_2012_avg     tiv_2012_max
+$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
+construction        line        tiv_2012_min    tiv_2012_mean    tiv_2012_max
 Masonry             Residential 261168.070000   1041986.129217   3234970.920000
 Wood                Residential 73.370000       113493.017049    649046.120000
 Reinforced Concrete Commercial  6416016.010000  20212428.681840  60570000.000000
@@ -184,9 +184,9 @@ Steel Frame         Commercial  29790000.000000 133492500.000000 1701000000.0000
 
 <p/> xxx more Q's after sort -nr and quantiles:
 <pre>
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible
 echo
-cat flins.csv | mlr --icsv --oxtab stats1 -a min,avg,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
+cat flins.csv | mlr --icsv --oxtab stats1 -a min,mean,max -f eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible -g county
 echo
 cat flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f eq_site_deductible,tiv_2012 -g county
 echo
@@ -240,18 +240,18 @@ Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up w
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --oxtab stats1 -a min,avg,max -f flag,u,v data/colored-shapes.dkvp | creach 3
-flag_min 0.000000
-flag_avg 0.397960
-flag_max 1.000000
+$ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+flag_min  0.000000
+flag_mean 0.397960
+flag_max  1.000000
 
-u_min    0.000010
-u_avg    0.501086
-u_max    0.999983
+u_min     0.000010
+u_mean    0.501086
+u_max     0.999983
 
-v_min    -0.096195
-v_avg    0.500016
-v_max    1.095540
+v_min     -0.096195
+v_mean    0.500016
+v_max     1.095540
 </pre>
 </div>
 <p/>
@@ -284,25 +284,25 @@ Bernoulli probablities from the data-generator script:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
-color  flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
-blue   0.000000 0.599086 1.000000 0.000044 0.503581 0.999976 0.000057  0.496972 0.999870
-green  0.000000 0.207102 1.000000 0.000010 0.504358 0.999983 0.000079  0.498956 0.999889
-orange 0.000000 0.505079 1.000000 0.000464 0.496712 0.999574 0.000185  0.493220 0.999967
-purple 0.000000 0.098957 1.000000 0.000037 0.498311 0.999693 0.000011  0.502892 0.999993
-red    0.000000 0.297820 1.000000 0.000019 0.499904 0.999946 -0.096195 0.500635 1.095540
-yellow 0.000000 0.898270 1.000000 0.000327 0.502877 0.999923 0.000138  0.501022 0.999983
+$ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
+color  flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
+blue   0.000000 0.599086  1.000000 0.000044 0.503581 0.999976 0.000057  0.496972 0.999870
+green  0.000000 0.207102  1.000000 0.000010 0.504358 0.999983 0.000079  0.498956 0.999889
+orange 0.000000 0.505079  1.000000 0.000464 0.496712 0.999574 0.000185  0.493220 0.999967
+purple 0.000000 0.098957  1.000000 0.000037 0.498311 0.999693 0.000011  0.502892 0.999993
+red    0.000000 0.297820  1.000000 0.000019 0.499904 0.999946 -0.096195 0.500635 1.095540
+yellow 0.000000 0.898270  1.000000 0.000327 0.502877 0.999923 0.000138  0.501022 0.999983
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a min,avg,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
-shape    flag_min flag_avg flag_max u_min    u_avg    u_max    v_min     v_avg    v_max
-circle   0.000000 0.398115 1.000000 0.000037 0.502212 0.999976 -0.096195 0.496996 1.095540
-square   0.000000 0.397398 1.000000 0.000037 0.499935 0.999970 0.000088  0.500389 0.999975
-triangle 0.000000 0.398542 1.000000 0.000010 0.501676 0.999983 0.000010  0.501804 0.999995
+$ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
+shape    flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
+circle   0.000000 0.398115  1.000000 0.000037 0.502212 0.999976 -0.096195 0.496996 1.095540
+square   0.000000 0.397398  1.000000 0.000037 0.499935 0.999970 0.000088  0.500389 0.999975
+triangle 0.000000 0.398542  1.000000 0.000010 0.501676 0.999983 0.000010  0.501804 0.999995
 </pre>
 </div>
 <p/>
@@ -376,11 +376,11 @@ mlr --ofmt '%.9le' --oxtab \
   put '$t=systime()' then \
   step -a delta -f t then \
   filter '$i&gt;1' then \
-  stats1 -a min,avg,max -f t_delta \
+  stats1 -a min,mean,max -f t_delta \
   lines.txt
-t_delta_min 2.861022949e-06
-t_delta_avg 4.077508505e-06
-t_delta_max 5.388259888e-05
+t_delta_min  2.861022949e-06
+t_delta_mean 4.077508505e-06
+t_delta_max  5.388259888e-05
 </pre>
 </div>
 <p/>

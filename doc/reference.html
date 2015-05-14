@@ -248,6 +248,8 @@ Flags:
   -nr {comma-separated field names}  Numerical descending
 Example:
   mlr sort -f a,b -nr x,y,z
+which is the same as:
+  mlr sort -f a -f b -nr x -nr y -nr z
 </pre>
 </div>
 <p/>
@@ -1198,6 +1200,8 @@ Flags:
   -nr {comma-separated field names}  Numerical descending
 Example:
   mlr sort -f a,b -nr x,y,z
+which is the same as:
+  mlr sort -f a -f b -nr x -nr y -nr z
 </pre>
 </div>
 <p/>
@@ -1226,11 +1230,18 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 $ mlr stats1 --help
 Usage: mlr stats1 [options]
 -a {sum,count,...}    Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of
-                      count mode sum avg stddev avgeb min max
+                      count mode sum mean stddev meaneb min max
+Options:
 -f {a,b,c}            Value-field names on which to compute statistics
 -g {d,e,f}            Group-by-field names
-Example: mlr stats1 -nr value
-Example: mlr stats1 -nr value g size,shape
+Example: mlr stats1 -f value
+Example: mlr stats1 -f value -g size,shape
+Notes:
+* p50 is a synonym for median.
+* min and max output the same results as p0 and p100, respectively, but use less memory.
+* count and mode allow text input; the rest require numeric input. In particular, 1 and 1.0
+  are distinct text for count and mode.
+* When there are mode ties, the first-encountered datum wins.
 </pre>
 </div>
 <p/>
@@ -1243,13 +1254,13 @@ optionally categorized by one or more other fields.
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --oxtab stats1 -a count,sum,min,p10,p50,avg,p90,max -f x,y data/medium
+$ mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
 x_count 10000
 x_sum   4986.019682
 x_min   0.000045
 x_p10   0.093322
 x_p50   0.501159
-x_avg   0.498602
+x_mean  0.498602
 x_p90   0.900794
 x_max   0.999953
 y_count 10000
@@ -1257,7 +1268,7 @@ y_sum   5062.057445
 y_min   0.000088
 y_p10   0.102132
 y_p50   0.506021
-y_avg   0.506206
+y_mean  0.506206
 y_p90   0.905366
 y_max   0.999965
 </pre>
@@ -1267,8 +1278,8 @@ y_max   0.999965
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a avg -f x,y -g b then sort -f b data/medium
-b   x_avg    y_avg
+$ mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
+b   x_mean   y_mean
 eks 0.506361 0.510293
 hat 0.487899 0.513118
 pan 0.497304 0.499599

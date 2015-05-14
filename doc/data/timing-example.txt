@@ -20,8 +20,8 @@ mlr --ofmt '%.9le' --oxtab \
   put '$t=systime()' then \
   step -a delta -f t then \
   filter '$i>1' then \
-  stats1 -a min,avg,max -f t_delta \
+  stats1 -a min,mean,max -f t_delta \
   lines.txt
-t_delta_min 2.861022949e-06
-t_delta_avg 4.077508505e-06
-t_delta_max 5.388259888e-05
+t_delta_min  2.861022949e-06
+t_delta_mean 4.077508505e-06
+t_delta_max  5.388259888e-05

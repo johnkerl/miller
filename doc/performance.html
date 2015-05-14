@@ -177,7 +177,7 @@ Note that for CSV data, the command is <tt>mlr --csv ...</tt> rather than <tt>ml
    5.643   5.031       awk -F, '{gsub("x=","",$4);gsub("y=","",$5);print $4+$5}'
    4.019   3.679       mlr put '$z=$x+$y'
 
-   2.481   2.628       mlr stats1 -a avg  -f x,y -g a,b
+   2.481   2.628       mlr stats1 -a mean -f x,y -g a,b
 
    2.587   2.389       mlr stats2 -a corr -f x,y -g a,b
 

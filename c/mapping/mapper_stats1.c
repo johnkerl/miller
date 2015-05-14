@@ -120,80 +120,80 @@ static acc_t* acc_sum_alloc() {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_avg_state_t {
+typedef struct _acc_mean_state_t {
 	double sum;
 	unsigned long long count;
-} acc_avg_state_t;
-static void acc_avg_dingest(void* pvstate, double val) {
-	acc_avg_state_t* pstate = pvstate;
+} acc_mean_state_t;
+static void acc_mean_dingest(void* pvstate, double val) {
+	acc_mean_state_t* pstate = pvstate;
 	pstate->sum   += val;
 	pstate->count++;
 }
-static void acc_avg_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
-	acc_avg_state_t* pstate = pvstate;
+static void acc_mean_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+	acc_mean_state_t* pstate = pvstate;
 	double quot = pstate->sum / pstate->count;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-static acc_t* acc_avg_alloc() {
+static acc_t* acc_mean_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
-	acc_avg_state_t* pstate = mlr_malloc_or_die(sizeof(acc_avg_state_t));
+	acc_mean_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mean_state_t));
 	pstate->sum         = 0.0;
 	pstate->count       = 0LL;
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_avg_dingest;
-	pacc->pemit_func    = &acc_avg_emit;
+	pacc->pdingest_func = &acc_mean_dingest;
+	pacc->pemit_func    = &acc_mean_emit;
 	return pacc;
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_stddev_avgeb_state_t {
+typedef struct _acc_stddev_meaneb_state_t {
 	unsigned long long count;
 	double sumx;
 	double sumx2;
-	int    do_avgeb;
-} acc_stddev_avgeb_state_t;
-static void acc_stddev_avgeb_dingest(void* pvstate, double val) {
-	acc_stddev_avgeb_state_t* pstate = pvstate;
+	int    do_meaneb;
+} acc_stddev_meaneb_state_t;
+static void acc_stddev_meaneb_dingest(void* pvstate, double val) {
+	acc_stddev_meaneb_state_t* pstate = pvstate;
 	pstate->count++;
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
 // xxx recast all of these in terms of providable outputs
-static void acc_stddev_avgeb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
-	acc_stddev_avgeb_state_t* pstate = pvstate;
+static void acc_stddev_meaneb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
+	acc_stddev_meaneb_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);
 	if (pstate->count < 2LL) {
 		lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 	} else {
 		double output = mlr_get_stddev(pstate->count, pstate->sumx, pstate->sumx2);
-		if (pstate->do_avgeb)
+		if (pstate->do_meaneb)
 			output = output / sqrt(pstate->count);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
 
-static acc_t* acc_stddev_avgeb_alloc(int do_avgeb) {
+static acc_t* acc_stddev_meaneb_alloc(int do_meaneb) {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
-	acc_stddev_avgeb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_avgeb_state_t));
+	acc_stddev_meaneb_state_t* pstate = mlr_malloc_or_die(sizeof(acc_stddev_meaneb_state_t));
 	pstate->count       = 0LL;
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
-	pstate->do_avgeb    = do_avgeb;
+	pstate->do_meaneb   = do_meaneb;
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_stddev_avgeb_dingest;
-	pacc->pemit_func    = &acc_stddev_avgeb_emit;
+	pacc->pdingest_func = &acc_stddev_meaneb_dingest;
+	pacc->pemit_func    = &acc_stddev_meaneb_emit;
 	return pacc;
 }
 static acc_t* acc_stddev_alloc() {
-	return acc_stddev_avgeb_alloc(FALSE);
+	return acc_stddev_meaneb_alloc(FALSE);
 }
-static acc_t* acc_avgeb_alloc() {
-	return acc_stddev_avgeb_alloc(TRUE);
+static acc_t* acc_meaneb_alloc() {
+	return acc_stddev_meaneb_alloc(TRUE);
 }
 
 // ----------------------------------------------------------------
@@ -309,9 +309,9 @@ static acc_lookup_t acc_lookup_table[] = {
 	{"count",  acc_count_alloc},
 	{"mode",   acc_mode_alloc},
 	{"sum",    acc_sum_alloc},
-	{"avg",    acc_avg_alloc},
+	{"mean",   acc_mean_alloc},
 	{"stddev", acc_stddev_alloc},
-	{"avgeb",  acc_avgeb_alloc},
+	{"meaneb", acc_meaneb_alloc},
 	{"min",    acc_min_alloc},
 	{"max",    acc_max_alloc},
 };
@@ -441,7 +441,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// There isn't a one-to-one mapping between user-specified acc_names
 		// and internal acc_t's. Here in the ingestor we feed each datum into
 		// an acc_t.  In the emitter, we loop over the acc_names in
-		// user-specified order. Example: they ask for p10,avg,p90. Then there
+		// user-specified order. Example: they ask for p10,mean,p90. Then there
 		// is only one percentiles accumulator to be told about each point. In
 		// the emitter it will be asked to produce output twice: once for the
 		// 10th percentile & once for the 90th.
@@ -583,10 +583,17 @@ static void mapper_stats1_usage(char* argv0, char* verb) {
 		fprintf(stdout, " %s", acc_lookup_table[i].name);
 	}
 	fprintf(stdout, "\n");
+	fprintf(stdout, "Options:\n");
 	fprintf(stdout, "-f {a,b,c}            Value-field names on which to compute statistics\n");
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
-	fprintf(stdout, "Example: %s %s -nr value\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -nr value g size,shape\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -f value\n", argv0, verb);
+	fprintf(stdout, "Example: %s %s -f value -g size,shape\n", argv0, verb);
+	fprintf(stdout, "Notes:\n");
+	fprintf(stdout, "* p50 is a synonym for median.\n");
+	fprintf(stdout, "* min and max output the same results as p0 and p100, respectively, but use less memory.\n");
+	fprintf(stdout, "* count and mode allow text input; the rest require numeric input. In particular, 1 and 1.0\n");
+	fprintf(stdout, "  are distinct text for count and mode.\n");
+	fprintf(stdout, "* When there are mode ties, the first-encountered datum wins.\n");
 }
 
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {

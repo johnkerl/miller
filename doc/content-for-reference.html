@@ -447,9 +447,9 @@ These are simple univariate statistics on one or more number-valued fields
 optionally categorized by one or more other fields.
 
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,min,p10,p50,avg,p90,max -f x,y data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a avg -f x,y -g b then sort -f b data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>

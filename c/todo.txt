@@ -60,7 +60,7 @@ NEATEN
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
 
 * doc-tech: make sure all html stylings are moved into css
-* doc-tech: emphasize in poki doc that nav is place into callbacks for consistent all-in-one-place
+* doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
 
 ================================================================
 ONLINE HELP
@@ -86,16 +86,17 @@ TESTING
 
 ================================================================
 DOC
-* doc: reference: be sure to include no-sql examples throughout
-* doc: mem-mgmt: streaming & as near stateless as possible. e.g. csv cat retains only the header line.
+* reference: be sure to include no-sql examples throughout
+* mem-mgmt: streaming & as near stateless as possible. e.g. csv cat retains only the header line.
   dkvp cat completely stateless. stats1/2 retain only agg state. tac/sort/etc. obvious retain all lines.
   you can snarf a 20GB file with 4GB RAM no problem.
-* doc: performance: Go/D/Rust #'s ... also GH link from mlrwik
-* doc: intro note about more structuring: grep/sed/ruby/perl/sed etc. for some structuring, then pipe to miller?
-* doc: maybe restore mem-mgmt page for dev-info? or a readme?!?
-* doc: somewhere in mlrwik put some realistic log-dive data -- not abixy & not just resource/ok.
-* doc: at the top link to data/small/etc. make small.txt hardlinks for browser download.
+* performance: Go/D/Rust #'s ... also GH link from mlrwik
+* intro note about more structuring: grep/sed/ruby/perl/sed etc. for some structuring, then pipe to miller?
+* maybe restore mem-mgmt page for dev-info? or a readme?!?
+* somewhere in mlrwik put some realistic log-dive data -- not abixy & not just resource/ok.
+* at the top link to data/small/etc. make small.txt hardlinks for browser download.
 * emph all variables are stream variables and all functions are stream functions
+* meaneb: assumes uncorr. code/doc link to appxb :)
 
 ================================================================
 PERF
