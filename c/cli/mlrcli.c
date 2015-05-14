@@ -49,30 +49,41 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 static void main_usage(char* argv0, int exit_code) {
 	FILE* o = exit_code == 0 ? stdout : stderr;
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
-	fprintf(o, "verbs:\n");
+	fprintf(o, "Verbs:\n");
+	int linelen = 0;
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
+		linelen += 1 + strlen(mapper_lookup_table[i]->verb);
+		if (linelen > 80) {
+			fprintf(o, "\n");
+			linelen = 0;
+		}
 		if (i > 0)
 			fprintf(o, " ");
 		fprintf(o, "%s", mapper_lookup_table[i]->verb);
 	}
 	fprintf(o, "\n");
-	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
-	fprintf(o, "Please use \"%s {verb name} --help-all-verbs\" for help on all verbs.\n", argv0);
-
 	fprintf(o, "\n");
-	fprintf(o, "I/O options:\n");
-	// xxx type up more here
-	fprintf(o, "  --rs      --irs     --ors\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs\n");
-	fprintf(o, "  --ps      --ips     --ops\n");
-	fprintf(o, "  --dkvp    --idkvp   --odkvp\n");
-	fprintf(o, "  --nidx    --inidx   --onidx\n");
-	fprintf(o, "  --csv     --icsv    --ocsv\n");
-	fprintf(o, "  --pprint  --ipprint --opprint --right\n");
-	fprintf(o, "  --xtab    --ixtab   --oxtab\n");
-	fprintf(o, "  --ofmt\n");
+	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
+	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
+
+	fprintf(o, "Separator options, for input, output, or both:\n");
+	fprintf(o, "  --rs      --irs     --ors                  Record separators, defaulting to newline\n");
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
+	fprintf(o, "  --ps      --ips     --ops                  Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
+	fprintf(o, "Data-format options, for input, output, or both:\n");
+	fprintf(o, "  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
+	fprintf(o, "  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)\n");
+	fprintf(o, "  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)\n");
+	fprintf(o, "  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)\n");
+	fprintf(o, "  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for highly multi-column data)\n");
+	fprintf(o, "Numerical format:\n");
+	fprintf(o, "  --ofmt {format}                            E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
+	fprintf(o, "                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
+	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
+	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
+	fprintf(o, "Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.\n");
 
 	exit(exit_code);
 }
