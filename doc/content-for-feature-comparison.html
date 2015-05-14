@@ -42,6 +42,13 @@ Its domain-specific languages are limited to the <tt>filter</tt> and
 <tt>put</tt> syntax. Futher programmability comes from chaining with
 <tt>then</tt>.
 
+<li/> Unlike with <tt>awk</tt>, all variables are stream variables and all
+functions are stream functions.  This means <tt>NF</tt>, <tt>NR</tt>, etc.
+change from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in
+the current record, and the input to <tt>sqrt($x)</tt> changes from one record
+to the next.  Miller doesn&rsquo;t let you set, say, <tt>sum=0</tt> and then
+update that on each record.
+
 <li/> Miller is faster than <tt>awk</tt>, <tt>cut</tt>, and so on (depending on
 platform; see also POKI_PUT_LINK_FOR_PAGE(performance.html)HERE). In
 particular, Miller&rsquo;s DSL syntax is parsed into C control structures at

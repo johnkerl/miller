@@ -34,17 +34,23 @@ def usage():
    print >> sys.stderr, "  -P {ps}   Input/output key-value-pair separator"
    print >> sys.stderr, "  -v {name=value} xxx needs more doc"
    print >> sys.stderr, ""
-   print >> sys.stderr, "  --idfl      Input  format is delimited by IRS,IFS,IPS"
-   print >> sys.stderr, "  --odfl      Output format is delimited by IRS,IFS,IPS"
-   print >> sys.stderr, "  --ihdrdata  Input  format is delimited by IRS,IFS,IPS, with header line followed by data lines (e.g. CSV)"
-   print >> sys.stderr, "  --ohdrdata  Output format is delimited by IRS,IFS,IPS, with header line followed by data lines (e.g. CSV)"
-   print >> sys.stderr, "  --iidx      Input  format is implicitly integer-indexed (awk-style)"
-   print >> sys.stderr, "  --oidx      Output format is implicitly integer-indexed (awk-style)"
-   print >> sys.stderr, "  --itbl      Input  format is tabular-pretty-print"
-   print >> sys.stderr, "  --otbl      Output format is tabular-pretty-print"
-   print >> sys.stderr, "  --ixtbl     Input  format is transposed-tabular-pretty-print"
-   print >> sys.stderr, "  --oxtbl     Output format is transposed-tabular-pretty-print"
-   print >> sys.stderr, "Modulator-spec help is TBD."
+   print >> sys.stderr, "  --idkvp  Input  format is delimited by IRS,IFS,IPS"
+   print >> sys.stderr, "  --odkvp  Output format is delimited by IRS,IFS,IPS"
+   print >> sys.stderr, "  --icsv   Input  format is delimited by IRS,IFS,IPS, with header line followed by data lines (e.g. CSV)"
+   print >> sys.stderr, "  --ocsv   Output format is delimited by IRS,IFS,IPS, with header line followed by data lines (e.g. CSV)"
+   print >> sys.stderr, "  --inidx  Input  format is implicitly integer-indexed (awk-style)"
+   print >> sys.stderr, "  --onidx  Output format is implicitly integer-indexed (awk-style)"
+   print >> sys.stderr, "  --ixtab  Input  format is transposed-tabular-pretty-print"
+   print >> sys.stderr, "  --oxtab  Output format is transposed-tabular-pretty-print"
+   print >> sys.stderr, "Modulator specs:"
+   print >> sys.stderr, '--cat'
+   print >> sys.stderr, '--tac'
+   print >> sys.stderr, '--cut'
+   print >> sys.stderr, '--cutx'
+   print >> sys.stderr, '--sortfields'
+   print >> sys.stderr, '--sortfieldsup'
+   print >> sys.stderr, '--sortfieldsdown'
+
    sys.exit(1)
 
 # ----------------------------------------------------------------
@@ -56,8 +62,8 @@ def parse_command_line():
 
    try:
       optargs, non_option_args = getopt.getopt(sys.argv[1:], "R:F:P:v:h", [
-		  'help', 'idfl', 'odfl', 'ihdrdata', 'ohdrdata', 'iidx', 'oidx', 'itbl', 'otbl', 'ixtbl',
-		  'oxtbl', 'cat', 'tac', 'inclflds=', 'exclflds=', 'sortfields', 'sortfieldsup', 'sortfieldsdown'])
+		  'help', 'idkvp', 'odkvp', 'icsv', 'ocsv', 'inidx', 'onidx', 'ixtab', 'oxtab',
+		  'cat', 'tac', 'cut=', 'cutx=', 'sortfields', 'sortfieldsup', 'sortfieldsdown'])
 
    except getopt.GetoptError, err:
       print str(err)
@@ -78,35 +84,35 @@ def parse_command_line():
          kv = string.split(arg, "=", 1)
          namespace.put(kv[0], kv[1])
 
-      elif opt == '--idfl':
+      elif opt == '--idkvp':
          rreader = RecordReaderDefault(istream=sys.stdin, namespace=namespace, irs=namespace.get("IRS"), ifs=namespace.get("IFS"), ips=namespace.get("IPS"))
-      elif opt == '--odfl':
+      elif opt == '--odkvp':
          rwriter = RecordWriterDefault(ostream=sys.stdout, ors=namespace.get("ORS"), ofs=namespace.get("OFS"), ops=namespace.get("OPS"))
 
-      elif opt == '--ihdrdata':
+      elif opt == '--icsv':
          rreader = RecordReaderHeaderFirst(istream=sys.stdin, namespace=namespace, irs=namespace.get("IRS"), ifs=namespace.get("IFS"))
-      elif opt == '--ohdrdata':
+      elif opt == '--ocsv':
          rwriter = RecordWriterHeaderFirst(ostream=sys.stdout, ors=namespace.get("ORS"), ofs=namespace.get("OFS"))
 
-      elif opt == '--iidx':
+      elif opt == '--inidx':
          rreader = RecordReaderIntegerIndexed(istream=sys.stdin, namespace=namespace, irs=namespace.get("IRS"), ifs=namespace.get("IFS"))
-      elif opt == '--oidx':
+      elif opt == '--onidx':
          rwriter = RecordWriterIntegerIndexed(ostream=sys.stdout, ors=namespace.get("ORS"), ofs=namespace.get("OFS"))
 
-      #elif opt == '--ixtbl':
+      #elif opt == '--ixtab':
       #   pass
-      elif opt == '--oxtbl':
+      elif opt == '--oxtab':
          rwriter = RecordWriterVerticallyTabulated(ostream=sys.stdout) # xxx args w/r/t/ RS/FS/PS?!?
 
       elif opt == '--cat':
          rmodulator = CatModulator()
       elif opt == '--tac':
          rmodulator = TacModulator()
-      elif opt == '--inclflds':
+      elif opt == '--cut':
          rmodulator = SelectFieldsModulator(string.split(arg, namespace.get("IFS")))
-      elif opt == '--exclflds':
+      elif opt == '--cutx':
          rmodulator = DeselectFieldsModulator(string.split(arg, namespace.get("IFS")))
-      elif opt == '--exclflds':
+      elif opt == '--cutx':
          rmodulator = DeselectFieldsModulator(string.split(arg, namespace.get("IFS")))
       elif opt == '--sortfields':
          rmodulator = SortFieldsInRecordModulator(True)
@@ -114,8 +120,6 @@ def parse_command_line():
          rmodulator = SortFieldsInRecordModulator(True)
       elif opt == '--sortfieldsdown':
          rmodulator = SortFieldsInRecordModulator(False)
-      #--mean i,x,y@a,b ... *NOT* the @-sign!
-      #rmodulator = MeanModulator(["i","x","y"],["a","b"])
 
       elif opt == '--help':
          usage()
@@ -138,8 +142,8 @@ def main():
    options = parse_command_line()
 
    # parse ARGV:
-   # * --ifmt: dfl,hdr1st,iidxed,align,xposealign
-   # * --ofmt: dfl,hdr1st,iidxed,align,xposealign
+   # * --ifmt: dkvp,hdr1st,iidxed,align,xposealign
+   # * --ofmt: dkvp,hdr1st,iidxed,align,xposealign
    # * which-control-language spec?!?
    # * modulators/script ... this is the key decision area for language(s) design.
    # * filenames
@@ -466,9 +470,6 @@ class MeanModulator:
 class StreamModulator:
    def __init__(self):
       pass
-   # xxx clearly define duck-ops for istream & ostream.
-   # * sys.stdin, sys.stdout, file ops need to impl it (maybe need to decorate them to do so).
-   # * likewise need to be able to compose one stream modulator inside another. e.g. sort(sum(inclflds(...)...)...).
    def modulate(self, rreader, rmodulator, rwriter):
       while True:
          in_record = rreader.read()

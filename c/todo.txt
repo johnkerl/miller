@@ -21,6 +21,8 @@ FEATURES
 
    > definitely put nidx before dkvp in the mlrwik/formats page
 
+   > "index-numbered" -> "implicitly index-numbered" in mlrwik
+
 !! use 1-(|l2|/|l1|)^2 as pca quality metric? verify against r2 in munch plots.
   -> after pgr legend fix
 
@@ -28,8 +30,9 @@ FEATURES
 
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 
-* stats1 mode: what about "1"=="1.0"? doc this, or impl option
-  w/ temporary sscanf & reformat @ maxlen
+! rip through filenames @ start & abend unless -f each: fail fast.
+
+! mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 * mod op (either c-like, or sane) and put into wikidoc if so.
 
@@ -46,16 +49,12 @@ NEATEN
 
 !! xxx's in the code
 * source hygiene: top-of-header comments, readme re memory management, etc.
-* check all usage messages
 
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
 * catc.c/catc0.c -> language-comparisons/ dir
 * remove/coalesce/gzip the large data files
 * mk perfcomp dir
-* "index-numbered" -> "implicitly index-numbered" in mlrwik
-* rip through filenames @ start & abend unless -f each: fail fast.
-* play with python sketch.py (& rename -- mlr.py??) & make sure it's at least usable for something
 
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
 
@@ -65,7 +64,6 @@ NEATEN
 ================================================================
 ONLINE HELP
 
-* then-chaining note into mlr online help
 * put/filter: have a categorized function lister -- by string/math or arity, or some such ...
 
 ================================================================
@@ -73,10 +71,6 @@ IMPROVEMENTS
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
   lmhsi: column name -> char index??
 * null-handling everywhere!! :/
-* 80-column-wrap slls printer (for mlr --help)
-* char -> char* for RS/FS/PS. then, NEWLINENEWLINE + repifs -> xtab is a more or less special case of dkvp.
-  BUT this makes mlr_get_line harder :/
-* mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 ================================================================
 TESTING
@@ -91,11 +85,7 @@ DOC
   dkvp cat completely stateless. stats1/2 retain only agg state. tac/sort/etc. obvious retain all lines.
   you can snarf a 20GB file with 4GB RAM no problem.
 * performance: Go/D/Rust #'s ... also GH link from mlrwik
-* intro note about more structuring: grep/sed/ruby/perl/sed etc. for some structuring, then pipe to miller?
 * maybe restore mem-mgmt page for dev-info? or a readme?!?
-* somewhere in mlrwik put some realistic log-dive data -- not abixy & not just resource/ok.
-* at the top link to data/small/etc. make small.txt hardlinks for browser download.
-* emph all variables are stream variables and all functions are stream functions
 * meaneb: assumes uncorr. code/doc link to appxb :)
 
 ================================================================
@@ -139,10 +129,6 @@ UT/REG
 * tac/X/tac for all X
 * multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
-
-================================================================
-I/O
-? right-align only some in --opprint?
 
 ================================================================
 INTERNAL DOCS (e.g. README)

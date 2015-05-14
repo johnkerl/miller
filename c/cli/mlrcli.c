@@ -59,9 +59,10 @@ static void main_usage(char* argv0, int exit_code) {
 		}
 		if ((i > 0) && (linelen > 0))
 			fprintf(o, " ");
+		else
+			fprintf(o, "   ");
 		fprintf(o, "%s", mapper_lookup_table[i]->verb);
 	}
-	fprintf(o, "\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
