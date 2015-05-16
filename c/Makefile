@@ -21,7 +21,7 @@ top: tags mlr test
 install: top
 	cp mlr $(HOME)/bin/
 
-all: tags mlr mlrd mlrg mlrp catc catc0 catd catgo catrust cutd cutgo
+all: tags mlr mlrd mlrg mlrp catc catc0 catm catd catgo catrust cutd cutgo
 
 tags: .always
 	ctags -R .
@@ -126,6 +126,8 @@ catc: tools/catc.c
 	$(CC) tools/catc.c -o catc
 catc0: tools/catc0.c
 	$(CC) tools/catc0.c -o catc0
+catm: tools/catm.c
+	$(CC) tools/catm.c -o catm
 catd: catd.d
 	dmd -O catd.d
 catgo: catgo.go
@@ -140,7 +142,7 @@ cutgo: cutgo.go
 
 # ----------------------------------------------------------------
 clean:
-	@rm -vf mlr mlrd mlrg mlrp tester catc catc0 catd catgo catrust cutd cutgo mlr-unit-tester
+	@rm -vf mlr mlrd mlrg mlrp tester catc catc0 catm catd catgo catrust cutd cutgo mlr-unit-tester
 	@make -C dsls clean
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old

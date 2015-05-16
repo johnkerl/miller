@@ -23,15 +23,21 @@ end
 
 # ----------------------------------------------------------------
 run("(cat)",     "cat                 < data/big > /dev/null")
-run("catc0",     "catc0               < data/big > /dev/null")
-run("catc",      "catc                < data/big > /dev/null")
+run("catc0",     "tools/catc0         < data/big > /dev/null")
+run("catc0",     "tools/catc0           data/big > /dev/null")
+run("catc",      "tools/catc          < data/big > /dev/null")
+run("catc",      "tools/catc            data/big > /dev/null")
+run("catm",      "tools/catm            data/big > /dev/null")
 run("catawk",    "awk -F, '{print}'   < data/big > /dev/null")
 run("CATMLR",    "mlr cat             < data/big > /dev/null")
 puts
 
 run("(catv)",    "cat                 < data/big.csv > /dev/null")
-run("catc0v",    "catc0               < data/big.csv > /dev/null")
-run("catcv",     "catc                < data/big.csv > /dev/null")
+run("catc0v",    "tools/catc0               < data/big.csv > /dev/null")
+run("catc0v",    "tools/catc0                 data/big.csv > /dev/null")
+run("catcv",     "tools/catc                < data/big.csv > /dev/null")
+run("catcv",     "tools/catc                  data/big.csv > /dev/null")
+run("catmv",     "tools/catm                  data/big.csv > /dev/null")
 run("catawkv",   "awk -F, '{print}'   < data/big.csv > /dev/null")
 run("CATMLRV",   "mlr --csv cat       < data/big.csv > /dev/null")
 puts
