@@ -144,7 +144,7 @@ mlr sort -f hostname,uptime *.dat
 <p/>These falls into categories as follows:
 
 <table border=1>
-  <tr bgcolor=#e8d9bc>
+  <tr class="mlrbg">
     <th>Commands </th>
     <th>Description</th>
   </tr>
@@ -215,9 +215,9 @@ mlr sort -f hostname,uptime *.dat
 $ mlr --help | fold -s
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
-cat check count-distinct cut filter group-by group-like having-fields head
- histogram label put rename reorder sort stats1 stats2 step tac tail top uniq
-
+   cat check count-distinct cut filter group-by group-like having-fields head
+histogram label put
+   rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 Separator options, for input, output, or both:

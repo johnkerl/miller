@@ -8,8 +8,6 @@ FEATURES
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
-!! reminder pgr legend is broken !!
-
 !! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
    tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
    some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
@@ -21,9 +19,6 @@ FEATURES
    > definitely put nidx before dkvp in the mlrwik/formats page
 
    > "index-numbered" -> "implicitly index-numbered" in mlrwik
-
-!! use 1-(|l2|/|l1|)^2 as pca quality metric? verify against r2 in munch plots.
-  -> after pgr legend fix
 
 ! sub function. e.g. "300ms" -> "300"
 
