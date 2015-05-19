@@ -3,9 +3,17 @@ I build with
 gcc -std=gnu99 -Wall -Werror -O3
 </pre>
 
-and I&rsquo;ve done so successfully on Ubuntu 12.04 LTS, SELinux, and Darwin (MacOS
-Yosemite). I also use <a href="http://valgrind.org/">valgrind</a> for detection
-of memory leaks and runtime memory-access errors.
+(see the <a
+href="https://github.com/johnkerl/miller/blob/master/c/Makefile">makefile</a>
+for details) and I&rsquo;ve done so successfully on Ubuntu 12.04 LTS, SELinux,
+and Darwin (MacOS Yosemite). I also use <a
+href="http://valgrind.org/">valgrind</a> for detection of memory leaks and
+runtime memory-access errors.
+
+<p/>To build, just run <tt>make</tt> in the <tt>c/</tt> subdirectory of <a
+href="https://github.com/johnkerl/miller">the repo</a>. To install, run
+<tt>make install</tt> after editing the <tt>install</tt> target in the
+makefile.
 
 <p/> In addition to GCC, the standard C library, and <tt>lex</tt> (all part of
 the Linux/Darwin distributions), Miller uses the following dependencies, which

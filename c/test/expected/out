@@ -671,7 +671,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2       ./test/inpu
 ================================================================
 OPERATOR PRECEDENCE AND ASSOCIATIVITY
 
-mlr put -v $x=$a+$b+$c /dev/null
+./test/../mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -680,7 +680,7 @@ mlr put -v $x=$a+$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b-$c /dev/null
+./test/../mlr put -v $x=$a+$b-$c /dev/null
 = (operator):
     x (field_name).
     - (operator):
@@ -689,7 +689,7 @@ mlr put -v $x=$a+$b-$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a-$b-$c /dev/null
+./test/../mlr put -v $x=$a-$b-$c /dev/null
 = (operator):
     x (field_name).
     - (operator):
@@ -698,7 +698,7 @@ mlr put -v $x=$a-$b-$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a-$b+$c /dev/null
+./test/../mlr put -v $x=$a-$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -707,7 +707,7 @@ mlr put -v $x=$a-$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a*$b*$c /dev/null
+./test/../mlr put -v $x=$a*$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -716,7 +716,7 @@ mlr put -v $x=$a*$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a*$b/$c /dev/null
+./test/../mlr put -v $x=$a*$b/$c /dev/null
 = (operator):
     x (field_name).
     / (operator):
@@ -725,7 +725,7 @@ mlr put -v $x=$a*$b/$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a/$b/$c /dev/null
+./test/../mlr put -v $x=$a/$b/$c /dev/null
 = (operator):
     x (field_name).
     / (operator):
@@ -734,7 +734,7 @@ mlr put -v $x=$a/$b/$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a/$b*$c /dev/null
+./test/../mlr put -v $x=$a/$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -743,7 +743,7 @@ mlr put -v $x=$a/$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b+$c /dev/null
+./test/../mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -752,7 +752,7 @@ mlr put -v $x=$a+$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b*$c /dev/null
+./test/../mlr put -v $x=$a+$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -761,7 +761,7 @@ mlr put -v $x=$a+$b*$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr put -v $x=$a*$b*$c /dev/null
+./test/../mlr put -v $x=$a*$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -770,7 +770,7 @@ mlr put -v $x=$a*$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a*$b+$c /dev/null
+./test/../mlr put -v $x=$a*$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -779,7 +779,7 @@ mlr put -v $x=$a*$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b+$c /dev/null
+./test/../mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -788,7 +788,7 @@ mlr put -v $x=$a+$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b**$c /dev/null
+./test/../mlr put -v $x=$a+$b**$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -797,7 +797,7 @@ mlr put -v $x=$a+$b**$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr put -v $x=$a**$b**$c /dev/null
+./test/../mlr put -v $x=$a**$b**$c /dev/null
 = (operator):
     x (field_name).
     ** (operator):
@@ -806,7 +806,7 @@ mlr put -v $x=$a**$b**$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr put -v $x=$a**$b+$c /dev/null
+./test/../mlr put -v $x=$a**$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -815,7 +815,7 @@ mlr put -v $x=$a**$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a.$b.$c /dev/null
+./test/../mlr put -v $x=$a.$b.$c /dev/null
 = (operator):
     x (field_name).
     . (operator):
@@ -824,7 +824,7 @@ mlr put -v $x=$a.$b.$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=-$a+$b*$c /dev/null
+./test/../mlr put -v $x=-$a+$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -834,7 +834,7 @@ mlr put -v $x=-$a+$b*$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr put -v $x=-$a*$b+$c /dev/null
+./test/../mlr put -v $x=-$a*$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -844,7 +844,7 @@ mlr put -v $x=-$a*$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+-$b*$c /dev/null
+./test/../mlr put -v $x=$a+-$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -854,7 +854,7 @@ mlr put -v $x=$a+-$b*$c /dev/null
                 b (field_name).
             c (field_name).
 
-mlr put -v $x=$a*-$b+$c /dev/null
+./test/../mlr put -v $x=$a*-$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -864,7 +864,7 @@ mlr put -v $x=$a*-$b+$c /dev/null
                 b (field_name).
         c (field_name).
 
-mlr put -v $x=$a+$b*-$c /dev/null
+./test/../mlr put -v $x=$a+$b*-$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -874,7 +874,7 @@ mlr put -v $x=$a+$b*-$c /dev/null
             - (operator):
                 c (field_name).
 
-mlr put -v $x=$a*$b+-$c /dev/null
+./test/../mlr put -v $x=$a*$b+-$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -884,7 +884,7 @@ mlr put -v $x=$a*$b+-$c /dev/null
         - (operator):
             c (field_name).
 
-mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
+./test/../mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
 && (operator):
     && (operator):
         == (operator):
@@ -897,7 +897,7 @@ mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
         c (field_name).
         1 (literal).
 
-mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
+./test/../mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
 || (operator):
     == (operator):
         a (field_name).
@@ -910,7 +910,7 @@ mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
             c (field_name).
             1 (literal).
 
-mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
+./test/../mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
 || (operator):
     || (operator):
         == (operator):
@@ -923,7 +923,7 @@ mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
         c (field_name).
         1 (literal).
 
-mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
+./test/../mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
 || (operator):
     && (operator):
         == (operator):
@@ -936,7 +936,7 @@ mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
         c (field_name).
         1 (literal).
 
-mlr filter -v $x<$a*$b*$c /dev/null
+./test/../mlr filter -v $x<$a*$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -945,7 +945,7 @@ mlr filter -v $x<$a*$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a*$b/$c /dev/null
+./test/../mlr filter -v $x<$a*$b/$c /dev/null
 < (operator):
     x (field_name).
     / (operator):
@@ -954,7 +954,7 @@ mlr filter -v $x<$a*$b/$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a/$b/$c /dev/null
+./test/../mlr filter -v $x<$a/$b/$c /dev/null
 < (operator):
     x (field_name).
     / (operator):
@@ -963,7 +963,7 @@ mlr filter -v $x<$a/$b/$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a/$b*$c /dev/null
+./test/../mlr filter -v $x<$a/$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -972,7 +972,7 @@ mlr filter -v $x<$a/$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+$b+$c /dev/null
+./test/../mlr filter -v $x<$a+$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -981,7 +981,7 @@ mlr filter -v $x<$a+$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+$b*$c /dev/null
+./test/../mlr filter -v $x<$a+$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -990,7 +990,7 @@ mlr filter -v $x<$a+$b*$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr filter -v $x<$a*$b*$c /dev/null
+./test/../mlr filter -v $x<$a*$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -999,7 +999,7 @@ mlr filter -v $x<$a*$b*$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a*$b+$c /dev/null
+./test/../mlr filter -v $x<$a*$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1008,7 +1008,7 @@ mlr filter -v $x<$a*$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+$b+$c /dev/null
+./test/../mlr filter -v $x<$a+$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1017,7 +1017,7 @@ mlr filter -v $x<$a+$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+$b**$c /dev/null
+./test/../mlr filter -v $x<$a+$b**$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1026,7 +1026,7 @@ mlr filter -v $x<$a+$b**$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr filter -v $x<$a**$b**$c /dev/null
+./test/../mlr filter -v $x<$a**$b**$c /dev/null
 < (operator):
     x (field_name).
     ** (operator):
@@ -1035,7 +1035,7 @@ mlr filter -v $x<$a**$b**$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a**$b+$c /dev/null
+./test/../mlr filter -v $x<$a**$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1044,7 +1044,7 @@ mlr filter -v $x<$a**$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a.$b.$c /dev/null
+./test/../mlr filter -v $x<$a.$b.$c /dev/null
 < (operator):
     x (field_name).
     . (operator):
@@ -1053,7 +1053,7 @@ mlr filter -v $x<$a.$b.$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<-$a+$b*$c /dev/null
+./test/../mlr filter -v $x<-$a+$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1063,7 +1063,7 @@ mlr filter -v $x<-$a+$b*$c /dev/null
             b (field_name).
             c (field_name).
 
-mlr filter -v $x<-$a*$b+$c /dev/null
+./test/../mlr filter -v $x<-$a*$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1073,7 +1073,7 @@ mlr filter -v $x<-$a*$b+$c /dev/null
             b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+-$b*$c /dev/null
+./test/../mlr filter -v $x<$a+-$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1083,7 +1083,7 @@ mlr filter -v $x<$a+-$b*$c /dev/null
                 b (field_name).
             c (field_name).
 
-mlr filter -v $x<$a*-$b+$c /dev/null
+./test/../mlr filter -v $x<$a*-$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1093,7 +1093,7 @@ mlr filter -v $x<$a*-$b+$c /dev/null
                 b (field_name).
         c (field_name).
 
-mlr filter -v $x<$a+$b*-$c /dev/null
+./test/../mlr filter -v $x<$a+$b*-$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1103,7 +1103,7 @@ mlr filter -v $x<$a+$b*-$c /dev/null
             - (operator):
                 c (field_name).
 
-mlr filter -v $x<$a*$b+-$c /dev/null
+./test/../mlr filter -v $x<$a*$b+-$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1112,6 +1112,40 @@ mlr filter -v $x<$a*$b+-$c /dev/null
             b (field_name).
         - (operator):
             c (field_name).
+
+./test/../mlr --csv put $gmt=sec2gmt($sec) ./test/input/sec2gmt
+sec,gmt
+0,1970-01-01T00:00:00Z
+1,1970-01-01T00:00:01Z
+10,1970-01-01T00:00:10Z
+100,1970-01-01T00:01:40Z
+1000,1970-01-01T00:16:40Z
+10000,1970-01-01T02:46:40Z
+100000,1970-01-02T03:46:40Z
+1000000,1970-01-12T13:46:40Z
+10000000,1970-04-26T17:46:40Z
+100000000,1973-03-03T09:46:40Z
+1000000000,2001-09-09T01:46:40Z
+1432036180,2015-05-19T11:49:40Z
+1500000000,2017-07-14T02:40:00Z
+2000000000,2033-05-18T03:33:20Z
+
+./test/../mlr --csv put $sec=gmt2sec($gmt) ./test/input/gmt2sec
+gmt,sec
+1970-01-01T00:00:00Z,0.000000
+1970-01-01T00:00:01Z,1.000000
+1970-01-01T00:00:10Z,10.000000
+1970-01-01T00:01:40Z,100.000000
+1970-01-01T00:16:40Z,1000.000000
+1970-01-01T02:46:40Z,10000.000000
+1970-01-02T03:46:40Z,100000.000000
+1970-01-12T13:46:40Z,1000000.000000
+1970-04-26T17:46:40Z,10000000.000000
+1973-03-03T09:46:40Z,100000000.000000
+2001-09-09T01:46:40Z,1000000000.000000
+2015-05-19T11:49:40Z,1432036180.000000
+2017-07-14T02:40:00Z,1500000000.000000
+2033-05-18T03:33:20Z,2000000000.000000
 
 
 ================================================================

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "lib/mlr_globals.h"
 #include "mapping/mlr_val.h"
 
@@ -131,6 +132,35 @@ mlr_val_t s_ss_dot_func(mlr_val_t* pval1, mlr_val_t* pval2) {
 }
 
 // ----------------------------------------------------------------
+mlr_val_t s_sss_sub_func(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3) {
+	char* substr = strstr(pval1->u.string_val, pval2->u.string_val);
+	if (substr == NULL) {
+		return *pval1;
+	} else {
+		int  len1 = substr - pval1->u.string_val;
+		int olen2 = strlen(pval2->u.string_val);
+		int nlen2 = strlen(pval3->u.string_val);
+		int  len3 = strlen(&pval1->u.string_val[len1 + olen2]);
+		int  len4 = len1 + nlen2 + len3;
+
+		char* string4 = mlr_malloc_or_die(len4);
+		strncpy(&string4[0],    pval1->u.string_val, len1);
+		strncpy(&string4[len1], pval3->u.string_val, nlen2);
+		strncpy(&string4[len1+nlen2], &pval1->u.string_val[len1+olen2], len3);
+
+		free(pval1->u.string_val);
+		free(pval2->u.string_val);
+		free(pval3->u.string_val);
+		pval1->u.string_val = NULL;
+		pval2->u.string_val = NULL;
+		pval3->u.string_val = NULL;
+
+		mlr_val_t rv = {.type = MT_STRING, .u.string_val = string4};
+		return rv;
+	}
+}
+
+// ----------------------------------------------------------------
 // xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
 mlr_val_t s_s_tolower_func(mlr_val_t* pval1) {
 	char* string = strdup(pval1->u.string_val);
@@ -154,6 +184,33 @@ mlr_val_t s_s_toupper_func(mlr_val_t* pval1) {
 	pval1->u.string_val = NULL;
 
 	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string};
+	return rv;
+}
+
+// ----------------------------------------------------------------
+mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1) {
+	NULL_OR_ERROR_OUT(*pval1);
+	mt_get_double_strict(pval1);
+	if (pval1->type != MT_DOUBLE)
+		return MV_ERROR;
+	time_t clock = (time_t) pval1->u.double_val;
+	struct tm tm;
+	struct tm *ptm = gmtime_r(&clock, &tm);
+	// xxx use retval which is size_t
+	// xxx error-check all of this ...
+	char* string = mlr_malloc_or_die(32);
+	(void)strftime(string, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
+
+	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string};
+	return rv;
+}
+
+mlr_val_t f_s_gmt2sec_func(mlr_val_t* pval1) {
+	struct tm tm;
+	strptime(pval1->u.string_val, "%Y-%m-%dT%H:%M:%SZ", &tm);
+	time_t t = timegm(&tm);
+
+	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = (double)t};
 	return rv;
 }
 

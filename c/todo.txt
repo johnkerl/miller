@@ -1,10 +1,27 @@
 ================================================================
 ! BUGFIXES !
 
-... :D
+* $ echo 'x=abcms' | mlr put '$y=sub($x,"ms","")'
+  x=abcms,y=abc
+
+  $ echo 'x=300ms' | mlr put '$y=sub($x,"ms","")'
+  x=300ms,y=(error)
+
+  $ echo t=0 | mlr put '$y=sec2gmt($x)'   <-- explicitly nullify
+  t=0,y=(null)
+
+  $ echo x=2017-07-14T02:40:00Z|mlr put '$y=gmt2sec($x)' <-- leading number :/
+  x=2017-07-14T02:40:00Z,y=(error)
+
+-> impl full-num scanner thruout including pnnx etc etc etc
 
 ================================================================
 FEATURES
+
+!! mmap
+!! nidx via field widths; left/right space-strip
+!! sub fcn; also, full-width parse
+!! simple/full strxtime: including fractional seconds if at all possible
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
@@ -77,6 +94,7 @@ DOC
 * performance: Go/D/Rust #'s ... also GH link from mlrwik
 * maybe restore mem-mgmt page for dev-info? or a readme?!?
 * meaneb: assumes uncorr. code/doc link to appxb :)
+* cookbook page? random subsampling via urand()<0.001 ... what else ...
 
 ================================================================
 PERF

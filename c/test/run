@@ -139,64 +139,67 @@ run_command $mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM;$filenam
 announce OPERATOR PRECEDENCE AND ASSOCIATIVITY
 
 # filter -v and put -v print the AST
-run_command mlr put -v '$x=$a+$b+$c'   /dev/null
-run_command mlr put -v '$x=$a+$b-$c'   /dev/null
-run_command mlr put -v '$x=$a-$b-$c'   /dev/null
-run_command mlr put -v '$x=$a-$b+$c'   /dev/null
+run_command $mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command $mlr put -v '$x=$a+$b-$c'   /dev/null
+run_command $mlr put -v '$x=$a-$b-$c'   /dev/null
+run_command $mlr put -v '$x=$a-$b+$c'   /dev/null
 
-run_command mlr put -v '$x=$a*$b*$c'   /dev/null
-run_command mlr put -v '$x=$a*$b/$c'   /dev/null
-run_command mlr put -v '$x=$a/$b/$c'   /dev/null
-run_command mlr put -v '$x=$a/$b*$c'   /dev/null
+run_command $mlr put -v '$x=$a*$b*$c'   /dev/null
+run_command $mlr put -v '$x=$a*$b/$c'   /dev/null
+run_command $mlr put -v '$x=$a/$b/$c'   /dev/null
+run_command $mlr put -v '$x=$a/$b*$c'   /dev/null
 
-run_command mlr put -v '$x=$a+$b+$c'   /dev/null
-run_command mlr put -v '$x=$a+$b*$c'   /dev/null
-run_command mlr put -v '$x=$a*$b*$c'   /dev/null
-run_command mlr put -v '$x=$a*$b+$c'   /dev/null
+run_command $mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command $mlr put -v '$x=$a+$b*$c'   /dev/null
+run_command $mlr put -v '$x=$a*$b*$c'   /dev/null
+run_command $mlr put -v '$x=$a*$b+$c'   /dev/null
 
-run_command mlr put -v '$x=$a+$b+$c'   /dev/null
-run_command mlr put -v '$x=$a+$b**$c'  /dev/null
-run_command mlr put -v '$x=$a**$b**$c' /dev/null
-run_command mlr put -v '$x=$a**$b+$c'  /dev/null
+run_command $mlr put -v '$x=$a+$b+$c'   /dev/null
+run_command $mlr put -v '$x=$a+$b**$c'  /dev/null
+run_command $mlr put -v '$x=$a**$b**$c' /dev/null
+run_command $mlr put -v '$x=$a**$b+$c'  /dev/null
 
-run_command mlr put -v '$x=$a.$b.$c'   /dev/null
+run_command $mlr put -v '$x=$a.$b.$c'   /dev/null
 
-run_command mlr put -v '$x=-$a+$b*$c'  /dev/null
-run_command mlr put -v '$x=-$a*$b+$c'  /dev/null
-run_command mlr put -v '$x=$a+-$b*$c'  /dev/null
-run_command mlr put -v '$x=$a*-$b+$c'  /dev/null
-run_command mlr put -v '$x=$a+$b*-$c'  /dev/null
-run_command mlr put -v '$x=$a*$b+-$c'  /dev/null
+run_command $mlr put -v '$x=-$a+$b*$c'  /dev/null
+run_command $mlr put -v '$x=-$a*$b+$c'  /dev/null
+run_command $mlr put -v '$x=$a+-$b*$c'  /dev/null
+run_command $mlr put -v '$x=$a*-$b+$c'  /dev/null
+run_command $mlr put -v '$x=$a+$b*-$c'  /dev/null
+run_command $mlr put -v '$x=$a*$b+-$c'  /dev/null
 
 
-run_command mlr filter -v '$a==1 && $b == 1 && $c == 1'   /dev/null
-run_command mlr filter -v '$a==1 || $b == 1 && $c == 1'   /dev/null
-run_command mlr filter -v '$a==1 || $b == 1 || $c == 1'   /dev/null
-run_command mlr filter -v '$a==1 && $b == 1 || $c == 1'   /dev/null
+run_command $mlr filter -v '$a==1 && $b == 1 && $c == 1'   /dev/null
+run_command $mlr filter -v '$a==1 || $b == 1 && $c == 1'   /dev/null
+run_command $mlr filter -v '$a==1 || $b == 1 || $c == 1'   /dev/null
+run_command $mlr filter -v '$a==1 && $b == 1 || $c == 1'   /dev/null
 
-run_command mlr filter -v '$x<$a*$b*$c'   /dev/null
-run_command mlr filter -v '$x<$a*$b/$c'   /dev/null
-run_command mlr filter -v '$x<$a/$b/$c'   /dev/null
-run_command mlr filter -v '$x<$a/$b*$c'   /dev/null
+run_command $mlr filter -v '$x<$a*$b*$c'   /dev/null
+run_command $mlr filter -v '$x<$a*$b/$c'   /dev/null
+run_command $mlr filter -v '$x<$a/$b/$c'   /dev/null
+run_command $mlr filter -v '$x<$a/$b*$c'   /dev/null
 
-run_command mlr filter -v '$x<$a+$b+$c'   /dev/null
-run_command mlr filter -v '$x<$a+$b*$c'   /dev/null
-run_command mlr filter -v '$x<$a*$b*$c'   /dev/null
-run_command mlr filter -v '$x<$a*$b+$c'   /dev/null
+run_command $mlr filter -v '$x<$a+$b+$c'   /dev/null
+run_command $mlr filter -v '$x<$a+$b*$c'   /dev/null
+run_command $mlr filter -v '$x<$a*$b*$c'   /dev/null
+run_command $mlr filter -v '$x<$a*$b+$c'   /dev/null
 
-run_command mlr filter -v '$x<$a+$b+$c'   /dev/null
-run_command mlr filter -v '$x<$a+$b**$c'  /dev/null
-run_command mlr filter -v '$x<$a**$b**$c' /dev/null
-run_command mlr filter -v '$x<$a**$b+$c'  /dev/null
+run_command $mlr filter -v '$x<$a+$b+$c'   /dev/null
+run_command $mlr filter -v '$x<$a+$b**$c'  /dev/null
+run_command $mlr filter -v '$x<$a**$b**$c' /dev/null
+run_command $mlr filter -v '$x<$a**$b+$c'  /dev/null
 
-run_command mlr filter -v '$x<$a.$b.$c'   /dev/null
+run_command $mlr filter -v '$x<$a.$b.$c'   /dev/null
 
-run_command mlr filter -v '$x<-$a+$b*$c'  /dev/null
-run_command mlr filter -v '$x<-$a*$b+$c'  /dev/null
-run_command mlr filter -v '$x<$a+-$b*$c'  /dev/null
-run_command mlr filter -v '$x<$a*-$b+$c'  /dev/null
-run_command mlr filter -v '$x<$a+$b*-$c'  /dev/null
-run_command mlr filter -v '$x<$a*$b+-$c'  /dev/null
+run_command $mlr filter -v '$x<-$a+$b*$c'  /dev/null
+run_command $mlr filter -v '$x<-$a*$b+$c'  /dev/null
+run_command $mlr filter -v '$x<$a+-$b*$c'  /dev/null
+run_command $mlr filter -v '$x<$a*-$b+$c'  /dev/null
+run_command $mlr filter -v '$x<$a+$b*-$c'  /dev/null
+run_command $mlr filter -v '$x<$a*$b+-$c'  /dev/null
+
+run_command $mlr --csv put '$gmt=sec2gmt($sec)' $indir/sec2gmt
+run_command $mlr --csv put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 
 # ----------------------------------------------------------------
 announce CHAINING

@@ -102,13 +102,23 @@ char* mlr_alloc_string_from_int(int value) {
 }
 
 double mlr_double_from_string_or_die(char* string) {
-	double dval = -888.0;
-	int rc = sscanf(string, "%lf", &dval);
-	if (rc != 1) {
+	double d;
+	if (!mlr_try_double_from_string(string, &d)) {
 		fprintf(stderr, "Couldn't parse \"%s\" as number.\n", string);
 		exit(1);
 	}
-	return dval;
+	return d;
+}
+
+// E.g. "300" is a number; "300ms" is not.
+int mlr_try_double_from_string(char* string, double* pval) {
+	int num_bytes_scanned;
+	int rc = sscanf(string, "%lf%n", pval, &num_bytes_scanned);
+	if (rc != 1)
+		return 0;
+	if (string[num_bytes_scanned] != 0) // scanned to end of string?
+		return 0;
+	return 1;
 }
 
 // ----------------------------------------------------------------

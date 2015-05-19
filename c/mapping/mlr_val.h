@@ -7,12 +7,13 @@
 #include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 
+// ================================================================
 // MT for Miller type -- highly abbreviated here since these are
 // spelled out a lot in lrec_evaluators.c.
+// ================================================================
 
-// Among other things, these are used in mlr_val.c to index disposition matrices.
+// Among other things, these defines are used in mlr_val.c to index disposition matrices.
 // So if the numeric values are changed, the matrices must be as well.
-
 #define MT_NULL   0 // E.g. field name not present in input record -- not a problem.
 #define MT_ERROR  1 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_BOOL   2
@@ -36,29 +37,27 @@ extern mlr_val_t MV_NULL;
 extern mlr_val_t MV_ERROR;
 
 #define NULL_OR_ERROR_OUT(val) { \
-	if (val.type == MT_ERROR) \
+	if ((val).type == MT_ERROR) \
 		return MV_ERROR; \
-	if (val.type == MT_NULL) \
+	if ((val).type == MT_NULL) \
 		return MV_NULL; \
 }
 
 // ----------------------------------------------------------------
 char* mt_describe_type(int type);
 
-// xxx cmt mem-mgt
-char* mt_format_val(mlr_val_t* pval);
-
 char* mt_describe_type(int type);
-char* mt_format_val(mlr_val_t* pval);
+char* mt_format_val(mlr_val_t* pval); // xxx cmt mem-mgt
 char* mt_describe_val(mlr_val_t val);
-int mt_get_boolean_strict(mlr_val_t* pval);
+// xxx explain why one is void & the other isn't
+int  mt_get_boolean_strict(mlr_val_t* pval);
 void mt_get_double_strict(mlr_val_t* pval);
-int mt_get_boolean_strict(mlr_val_t* pval);
 
 // ----------------------------------------------------------------
 typedef mlr_val_t mv_zary_func_t();
 typedef mlr_val_t mv_unary_func_t(mlr_val_t* pval1);
 typedef mlr_val_t mv_binary_func_t(mlr_val_t* pval1, mlr_val_t* pval2);
+typedef mlr_val_t mv_ternary_func_t(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3);
 
 // ----------------------------------------------------------------
 static inline mlr_val_t b_b_not_func(mlr_val_t* pval1) {
@@ -166,6 +165,12 @@ mlr_val_t s_s_tolower_func(mlr_val_t* pval1);
 mlr_val_t s_s_toupper_func(mlr_val_t* pval1);
 
 mlr_val_t s_ss_dot_func(mlr_val_t* pval1, mlr_val_t* pval2);
+
+mlr_val_t s_sss_sub_func(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3);
+
+// ----------------------------------------------------------------
+mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1);
+mlr_val_t f_s_gmt2sec_func(mlr_val_t* pval1);
 
 // ----------------------------------------------------------------
 mlr_val_t eq_op_func(mlr_val_t* pval1, mlr_val_t* pval2);

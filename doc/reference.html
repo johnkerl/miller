@@ -650,30 +650,18 @@ Please see http://johnkerl.org/miller/doc/reference.html for more information in
 </div>
 <p/>
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> expressions, even though they don&rsquo;t
-appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and
+<a href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear in the data
+stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
+<tt>$1,$2,$3</tt>.  Likewise, enclose string literals in double quotes in
+<tt>filter</tt> expressions even though they don&rsquo;t appear in file data.
+In particular, <tt>mlr filter '$x=="abc"'</tt> passes through the record
+<tt>x=abc</tt>.
 
-<p/>
-<div class="pokipanel">
-<pre>
-$ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'
-i j         k
-0 1.000000  1.000000
-1 2.000000  3.000000
-2 3.000000  5.000000
-3 4.000000  7.000000
-4 5.000000  9.000000
-5 6.000000  11.000000
-6 7.000000  13.000000
-7 8.000000  15.000000
-8 9.000000  17.000000
-9 10.000000 19.000000
-</pre>
-</div>
-<p/>
-
-<p/>The <tt>filter</tt> command supports the same built-in variables as for <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
-<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This selects the 2nd record from each matching file:
+<p/>The <tt>filter</tt> command supports the same built-in variables as for
+<a href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
+<tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This
+selects the 2nd record from each matching file:
 
 <p/>
 <div class="pokipanel">
@@ -1044,9 +1032,14 @@ Please see http://johnkerl.org/miller/doc/reference.html for more information in
 </div>
 <p/>
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>put</tt> expressions, even though they don&rsquo;t
-appear in the data stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
-Multiple expressions may be given, separated by semicolons, and each may refer to the ones before.
+<p/>Field names must be specified using a <tt>$</tt> in <a href="#filter"><tt>filter</tt></a> and <tt>put</tt>
+expressions, even though they don&rsquo;t appear in the data stream. For
+integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
+Likewise, enclose string literals in double quotes in <tt>put</tt>
+expressions even though they don&rsquo;t appear in file data. In particular,
+<tt>mlr put '$x=="abc"'</tt> creates the field <tt>x=abc</tt>.
+
+<p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
 <p/>
 <div class="pokipanel">
@@ -1067,7 +1060,7 @@ i j         k
 </div>
 <p/>
 
-<p/>Miller supports the following five built-in variables for <tt>filter</tt>
+<p/>Miller supports the following five built-in variables for <a href="#filter"><tt>filter</tt></a>
 and <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
 <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>.
 

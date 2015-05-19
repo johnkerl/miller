@@ -191,6 +191,65 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_s_s_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_s_f_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_s_f_state_t;
+
+mlr_val_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_s_f_state_t* pstate = pvstate;
+	mlr_val_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	// xxx decide & document whether to do the typing here or in the pfunc
+	//if (val1.type != MT_STRING) // xxx conversions?
+		//return MV_ERROR;
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_s_f_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_s_f_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_f_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_s_f_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+typedef struct _lrec_evaluator_f_s_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_f_s_state_t;
+
+// xxx func -> process_func thruout
+mlr_val_t lrec_evaluator_f_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_f_s_state_t* pstate = pvstate;
+	mlr_val_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	// xxx decide & document whether to do the typing here or in the pfunc
+	if (val1.type != MT_STRING) // xxx conversions?
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_f_s_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_f_s_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_s_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_f_s_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_xx_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -252,6 +311,50 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_s_ss_func(mv_binary_func_t* pfunc, l
 	return pevaluator;
 }
 
+// ----------------------------------------------------------------
+typedef struct _lrec_evaluator_s_sss_state_t {
+	mv_ternary_func_t* pfunc;
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+	lrec_evaluator_t* parg3;
+} lrec_evaluator_s_sss_state_t;
+
+mlr_val_t lrec_evaluator_s_sss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_s_sss_state_t* pstate = pvstate;
+	mlr_val_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type != MT_STRING) // xxx conversions?
+		return MV_ERROR;
+
+	mlr_val_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	if (val2.type != MT_STRING)
+		return MV_ERROR;
+
+	mlr_val_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
+	NULL_OR_ERROR_OUT(val3);
+	if (val3.type != MT_STRING)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2, &val3);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_s_sss_func(mv_ternary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
+{
+	lrec_evaluator_s_sss_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_sss_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+	pstate->parg3 = parg3;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_s_sss_func;
+
+	return pevaluator;
+}
+
 // ================================================================
 typedef struct _lrec_evaluator_field_name_state_t {
 	char* field_name;
@@ -264,7 +367,7 @@ mlr_val_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pv
 		return (mlr_val_t) {.type = MT_NULL, .u.int_val = 0};
 	} else {
 		double double_val;
-		if (sscanf(string, "%lf", &double_val) == 1) {
+		if (mlr_try_double_from_string(string, &double_val)) {
 			return (mlr_val_t) {.type = MT_DOUBLE, .u.double_val = double_val};
 		} else {
 			return (mlr_val_t) {.type = MT_STRING, .u.string_val = strdup(string)};
@@ -304,7 +407,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
 	double double_val;
-	if (sscanf(string, "%lf", &double_val) == 1) {
+	if (mlr_try_double_from_string(string, &double_val)) {
 		pstate->literal = (mlr_val_t) {.type = MT_DOUBLE, .u.double_val = double_val};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
@@ -413,12 +516,14 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name,
     } else if (streq(function_name, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
     } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
     } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
+    } else if (streq(function_name, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
+    } else if (streq(function_name, "gmt2sec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_gmt2sec_func, parg1);
 
 	} else return NULL; // xxx handle me better
 }
 
 // ================================================================
-// xxx make a lookup table
+// xxx make a lookup table. also, leverage the lookup tables for online help.
 lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* function_name, lrec_evaluator_t* parg1, lrec_evaluator_t* parg2) {
 	if        (streq(function_name, "&&"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,    parg1, parg2);
 	} else if (streq(function_name, "||"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,     parg1, parg2);
@@ -436,6 +541,15 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* function_name
 	} else if (streq(function_name, "/"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func, parg1, parg2);
 	} else if (streq(function_name, "**"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
 	} else if (streq(function_name, "atan2")) { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,  parg1, parg2);
+	} else  { return NULL; /* xxx handle me better */ }
+}
+
+// ================================================================
+// xxx make a lookup table. also, leverage the lookup tables for online help.
+lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* function_name,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
+{
+	if (streq(function_name, "sub")) { return lrec_evaluator_alloc_from_s_sss_func(s_sss_sub_func,   parg1, parg2, parg3);
 	} else  { return NULL; /* xxx handle me better */ }
 }
 
@@ -459,7 +573,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return NULL;
 		}
 		char* func_name = pnode->text;
-// xxx implement this. don't want "log: no such function" just b/c they invoked
+// xxx implement this. i don't want "log: no such function" just b/c they invoked
 // it with the wrong # args.  rather, want "log: wrong # args ...".
 //
 //		int required_arity = look_up_arity(arity_lookups, func_name);
@@ -486,6 +600,14 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node/*, arity_lookups*/);
 			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node/*, arity_lookups*/);
 			pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
+		} else if (user_provided_arity == 3) {
+			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
+			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
+			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node/*, arity_lookups*/);
+			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node/*, arity_lookups*/);
+			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node/*, arity_lookups*/);
+			pevaluator = lrec_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 		} else {
 			fprintf(stderr, "Internal coding error:  arity for function name \"%s\" misdetected.\n",
 				func_name);
