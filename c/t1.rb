@@ -28,8 +28,9 @@ run("catc0",     "tools/catc0           data/big > /dev/null")
 run("catc",      "tools/catc          < data/big > /dev/null")
 run("catc",      "tools/catc            data/big > /dev/null")
 run("catm",      "tools/catm            data/big > /dev/null")
-run("catawk",    "awk -F, '{print}'   < data/big > /dev/null")
-run("CATMLR",    "mlr cat             < data/big > /dev/null")
+run("catawk",    "awk -F, '{print}'     data/big > /dev/null")
+run("CATMLR",    "mlr cat               data/big > /dev/null")
+run("CATMLRM",   "mlr --mmap cat        data/big > /dev/null")
 puts
 
 run("(catv)",    "cat                 < data/big.csv > /dev/null")
@@ -43,10 +44,12 @@ run("CATMLRV",   "mlr --csv cat       < data/big.csv > /dev/null")
 puts
 puts
 
-run("cutcut",    "cut -d , -f 1,4          < data/big > /dev/null")
-run("cutawk",    "awk -F, '{print $1,$4}'  < data/big > /dev/null")
-run("CUTMLR",    "mlr cut -f a,x           < data/big > /dev/null")
-run("CUTMLRX",   "mlr cut -x -f a,x        < data/big > /dev/null")
+run("cutcut",    "cut -d , -f 1,4            data/big > /dev/null")
+run("cutawk",    "awk -F, '{print $1,$4}'    data/big > /dev/null")
+run("CUTMLR",    "mlr cut -f a,x             data/big > /dev/null")
+run("CUTMLRM",   "mlr --mmap cut -f a,x      data/big > /dev/null")
+run("CUTMLRX",   "mlr cut -x -f a,x          data/big > /dev/null")
+run("CUTMLRXM",  "mlr --mmap cut -x -f a,x   data/big > /dev/null")
 puts
 
 run("cutcutv",   "cut -d , -f 1,4               < data/big.csv > /dev/null")

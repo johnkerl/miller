@@ -10,11 +10,11 @@
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data
 // stream, including header-schema changes in the input stream. This means we
-// need to keep headers intact as long as lrecs are pointing to them.  One
+// need to keep headers intact as long as any lrecs are pointing to them.  One
 // option is reference-counting which I experimented with; it was messy and
 // error-prone. The approach used here is to keep a hash map from header-schema
-// to hdr_keeper object. The current phdr_keeper is a pointer into one of those.
-// Then when the reader is freed, all the header-keepers are freed.
+// to hdr_keeper object. The current phdr_keeper is a pointer into one of
+// those.  Then when the reader is freed, all the header-keepers are freed.
 
 typedef struct _reader_csv_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx

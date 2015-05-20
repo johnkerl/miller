@@ -158,6 +158,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->pwriter = NULL;
 	popts->filenames = NULL;
 
+	popts->use_mmap_reader = FALSE;
+
 	char* rdesc = "dkvp";
 	char* wdesc = "dkvp";
 	int left_align_pprint = TRUE;
@@ -255,6 +257,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
+		// xxx negate the default once this is working
+		// xxx put into online help
+		else if (streq(argv[argi], "--mmap")) {
+			popts->use_mmap_reader = TRUE;
+		}
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
@@ -271,11 +278,21 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	if      (streq(rdesc, "dkvp")) popts->preader = reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
-	else if (streq(rdesc, "csv"))  popts->preader = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-	else if (streq(rdesc, "nidx")) popts->preader = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-	else if (streq(rdesc, "xtab")) popts->preader = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
-	else {
+	// xxx alloc mmap readers here too
+	// xxx have use-mmap-readers flag ...
+	if (streq(rdesc, "dkvp")) {
+		popts->preader      =      reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->preader_mmap = reader_dkvp_mmap_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+	} else if (streq(rdesc, "csv")) {
+		popts->preader      = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->preader_mmap = NULL;
+	} else if (streq(rdesc, "nidx")) {
+		popts->preader      = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->preader_mmap = NULL;
+	} else if (streq(rdesc, "xtab")) {
+		popts->preader      = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
+		popts->preader_mmap = NULL;
+	} else {
 		main_usage(argv[0], 1);
 	}
 

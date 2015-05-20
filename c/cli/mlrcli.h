@@ -3,6 +3,7 @@
 
 #include "containers/sllv.h"
 #include "input/reader.h"
+#include "input/reader_mmap.h"
 #include "mapping/mapper.h"
 #include "output/writer.h"
 
@@ -18,9 +19,11 @@ typedef struct _cli_opts_t {
 
 	char* ofmt;
 
-	reader_t* preader;
-	sllv_t*   pmapper_list;
-	writer_t* pwriter;
+	int            use_mmap_reader;
+	reader_t*      preader;
+	reader_mmap_t* preader_mmap;
+	sllv_t*        pmapper_list;
+	writer_t*      pwriter;
 
 	char** filenames; // null-terminated
 

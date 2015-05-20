@@ -12,13 +12,18 @@
 
 static int do_file_chained(char* filename, context_t* pctx,
 	reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream);
+static int do_file_chained_mmap(char* filename, context_t* pctx,
+	reader_mmap_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
 static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, writer_t* pwriter, FILE* output_stream);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char** filenames, reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, char* ofmt) {
+// xxx assert pmapper_list non-empty ...
+int do_stream_chained(char** filenames, int use_mmap_reader, reader_t* preader, reader_mmap_t* preader_mmap,
+	sllv_t* pmapper_list, writer_t* pwriter, char* ofmt)
+{
 	FILE* output_stream = stdout;
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
@@ -34,8 +39,13 @@ int do_stream_chained(char** filenames, reader_t* preader, sllv_t* pmapper_list,
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
-			preader->preset_func(preader->pvstate);
-		    ok = do_file_chained(*pfilename, &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
+			if (use_mmap_reader) {
+				preader_mmap->preset_func(preader_mmap->pvstate);
+				ok = do_file_chained_mmap(*pfilename, &ctx, preader_mmap, pmapper_list, pwriter, output_stream) && ok;
+			} else {
+				preader->preset_func(preader->pvstate);
+				ok = do_file_chained(*pfilename, &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
+			}
 		}
 	}
 
@@ -74,9 +84,30 @@ static int do_file_chained(char* filename, context_t* pctx,
 		pctx->fnr++;
 		drive_lrec(pinrec, pctx, pmapper_list->phead, pwriter, output_stream);
 	}
+
 	if (input_stream != stdin)
 		fclose(input_stream);
 
+	return 1;
+}
+
+// ----------------------------------------------------------------
+static int do_file_chained_mmap(char* filename, context_t* pctx,
+	reader_mmap_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream)
+{
+	// xxx communicate error back from open, or rename it to ..._open_or_die
+	mmap_reader_state_t handle = mmap_reader_open(filename);
+
+	while (1) {
+		lrec_t* pinrec = preader->preader_func(&handle, preader->pvstate, pctx);
+		if (pinrec == NULL)
+			break;
+		pctx->nr++;
+		pctx->fnr++;
+		drive_lrec(pinrec, pctx, pmapper_list->phead, pwriter, output_stream);
+	}
+
+	mmap_reader_close(&handle);
 	return 1;
 }
 

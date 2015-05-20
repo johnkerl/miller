@@ -51,17 +51,6 @@ static int do_stream(char* file_name) {
 		}
 	}
 
-//	while (1) {
-//		char* line = NULL;
-//		size_t linecap = 0;
-//		ssize_t linelen = getdelim(&line, &linecap, '\n', input_stream);
-//		if (linelen <= 0) {
-//			break;
-//		}
-//		fputs(line, output_stream);
-//		free(line);
-//	}
-
 	if (close(fd) < 0) {
 		perror("close");
 		exit(1);

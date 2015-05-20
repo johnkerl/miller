@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "input/mmap.h"
 #include "containers/lrec.h"
 #include "containers/lrec_parsers.h"
 
@@ -91,6 +92,71 @@ lrec_t* lrec_parse_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	int idx = 0;
 	for (char* p = line; *p; ) {
 		if (*p == ifs) {
+			*p = 0;
+
+			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+				fprintf(stderr, "Empty key disallowed.\n");
+				exit(1);
+			}
+			idx++;
+			if (value <= key) {
+				// E.g the pair has no equals sign: "a" rather than "a=1" or
+				// "a=".  Here we use the positional index as the key. This way
+				// DKVP is a generalization of NIDX.
+				char  free_flags = 0;
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			}
+			else {
+				lrec_put_no_free(prec, key, value);
+			}
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			key = p;
+			value = p;
+		} else if (*p == ips) {
+			*p = 0;
+			p++;
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	idx++;
+	if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+		fprintf(stderr, "Empty key disallowed.\n");
+		exit(1);
+	}
+	if (value <= key) {
+		char  free_flags = 0;
+		lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+	}
+	else {
+		lrec_put_no_free(prec, key, value);
+	}
+
+	return prec;
+}
+
+lrec_t* lrec_parse_dkvp_mmap(mmap_reader_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+	char* key   = line;
+	char* value = line;
+	char* eol   = NULL;
+
+	int idx = 0;
+	for (char* p = line; *p; ) {
+		if (*p == irs) {
+			*p = 0;
+			eol = p;
+			phandle->sol = p+1;
+			break;
+		} else if (*p == ifs) {
 			*p = 0;
 
 			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
