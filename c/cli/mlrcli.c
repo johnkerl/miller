@@ -285,13 +285,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->preader_mmap = reader_dkvp_mmap_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "csv")) {
 		popts->preader      = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->preader_mmap = NULL;
+		popts->preader_mmap = reader_csv_mmap_alloc(popts->irs, popts->ifs, popts->ips);
 	} else if (streq(rdesc, "nidx")) {
 		popts->preader      = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->preader_mmap = NULL;
+		popts->preader_mmap = reader_nidx_mmap_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "xtab")) {
 		popts->preader      = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
-		popts->preader_mmap = NULL;
+		popts->preader_mmap = reader_xtab_mmap_alloc(popts->irs, popts->ips, TRUE/*popts->allow_repeat_ips*/);
 	} else {
 		main_usage(argv[0], 1);
 	}

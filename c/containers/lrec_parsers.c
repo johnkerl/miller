@@ -43,6 +43,45 @@ lrec_t* lrec_parse_nidx(char* line, char ifs, int allow_repeat_ifs) {
 		if (*p == ifs) {
 			*p = 0;
 
+			idx++; key = make_nidx_key(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	idx++;
+	key = make_nidx_key(idx, &free_flags);
+	lrec_put(prec, key, value, free_flags);
+
+	return prec;
+}
+
+lrec_t* lrec_parse_nidx_mmap(mmap_reader_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+	int idx = 0;
+	char* key   = NULL;
+	char* value = line;
+	char* eol   = NULL;
+	char free_flags = 0;
+
+	for (char* p = line; *p; ) {
+		if (*p == irs) {
+			*p = 0;
+			eol = p;
+			phandle->sol = p+1;
+			break;
+		} else if (*p == ifs) {
+			*p = 0;
+
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
@@ -275,6 +314,11 @@ lrec_t* lrec_parse_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int
 	}
 
 	return prec;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_csv_mmap(hdr_keeper_t* phdr_keeper, mmap_reader_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
+	return NULL; // xxx stub
 }
 
 // ----------------------------------------------------------------
