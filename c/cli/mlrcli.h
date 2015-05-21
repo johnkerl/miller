@@ -5,7 +5,7 @@
 #include "input/reader.h"
 #include "input/reader_mmap.h"
 #include "mapping/mapper.h"
-#include "output/writer.h"
+#include "output/lrec_writer.h"
 
 typedef struct _cli_opts_t {
 	char irs;

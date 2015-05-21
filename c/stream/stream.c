@@ -8,7 +8,7 @@
 #include "containers/sllv.h"
 #include "input/readers.h"
 #include "mapping/mappers.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 
 static int do_file_chained(char* filename, context_t* pctx,
 	reader_t* preader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);

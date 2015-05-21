@@ -1,5 +1,5 @@
-#ifndef WRITER_H
-#define WRITER_H
+#ifndef LREC_WRITER_H
+#define LREC_WRITER_H
 
 #include <stdio.h>
 #include "containers/lrec.h"
@@ -13,4 +13,4 @@ typedef struct _lrec_writer_t {
 	lrec_writer_free_func_t* pfree_func;
 } lrec_writer_t;
 
-#endif // WRITER_H
+#endif // LREC_WRITER_H

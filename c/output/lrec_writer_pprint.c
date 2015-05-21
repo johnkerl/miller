@@ -4,7 +4,7 @@
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/mixutil.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 
 typedef struct _lrec_writer_pprint_state_t {
 	sllv_t*    precords;

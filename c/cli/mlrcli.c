@@ -7,7 +7,7 @@
 #include "containers/slls.h"
 #include "input/readers.h"
 #include "mapping/mappers.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
 

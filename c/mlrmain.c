@@ -12,7 +12,7 @@
 #include "containers/sllv.h"
 #include "input/readers.h"
 #include "mapping/mappers.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 #include "stream/stream.h"
 
 int main(int argc, char** argv) {

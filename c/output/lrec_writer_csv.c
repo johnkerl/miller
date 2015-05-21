@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "containers/mixutil.h"
 #include "lib/mlrutil.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 
 typedef struct _lrec_writer_csv_state_t {
 	int  onr;

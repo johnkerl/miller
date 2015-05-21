@@ -4,7 +4,7 @@
 #include "containers/sllv.h"
 #include "input/readers.h"
 #include "mapping/mappers.h"
-#include "output/writers.h"
+#include "output/lrec_writers.h"
 
 // filenames must be null-terminated
 int do_stream_chained(char** filenames, int use_mmap_reader, reader_t* preader, reader_mmap_t* preader_mmap,
