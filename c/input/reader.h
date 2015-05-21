@@ -5,7 +5,7 @@
 #include "containers/lrec.h"
 #include "mapping/context.h"
 
-// xxx void* pfile_handle
+// xxx rename to lrec_reader
 typedef lrec_t* reader_func_t(FILE* fp, void* pvstate, context_t* pctx);
 // xxx rename to sof_resetter or some such
 typedef void    reset_func_t(void* pvstate);
