@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/mlrutil.h"
 #include "input/mmap.h"
 #include "containers/lrec.h"
 #include "containers/lrec_parsers.h"
 
 // ----------------------------------------------------------------
 static char* static_nidx_keys[] = {
-	"0",  "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",
+	"0",   "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",
 	"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 	"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
 	"30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
@@ -344,4 +345,60 @@ lrec_t* lrec_parse_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
 	}
 
 	return prec;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_xtab_mmap(mmap_reader_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
+
+	if (phandle->sol >= phandle->eof)
+		return NULL;
+
+	lrec_t* prec = lrec_unbacked_alloc();
+	while (*phandle->sol == irs)
+		phandle->sol++;
+
+	if (phandle->sol >= phandle->eof)
+		return NULL;
+
+	// Loop over fields, one per line
+	while (TRUE) {
+		char* line  = phandle->sol;
+		char* key   = line;
+		char* value = "";
+		char* eol   = NULL;
+		char* p;
+
+		// Construct one field
+		for (p = line; *p; ) {
+			if (*p == irs) {
+				*p = 0;
+				eol = p;
+				phandle->sol = p+1;
+				break;
+			} else if (*p == ips) {
+				key = line;
+				*p = 0;
+
+				p++;
+				if (allow_repeat_ips) {
+					while (*p == ips)
+						p++;
+				}
+				value = p;
+			} else {
+				p++;
+			}
+		}
+
+		lrec_put_no_free(prec, key, value);
+
+		if (phandle->sol >= phandle->eof || *phandle->sol == irs)
+			break;
+	}
+	if (prec->field_count == 0) {
+		lrec_free(prec);
+		return NULL;
+	} else {
+		return prec;
+	}
 }

@@ -15,31 +15,12 @@ typedef struct _reader_xtab_mmap_state_t {
 
 // ----------------------------------------------------------------
 static lrec_t* reader_xtab_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
-//	reader_xtab_mmap_state_t* pstate = pvstate;
+	reader_xtab_mmap_state_t* pstate = pvstate;
 
-//	if (pstate->at_eof)
+	if (pstate->at_eof)
 		return NULL;
-
-//	slls_t* pxtab_lines = slls_alloc();
-
-//	while (TRUE) {
-//		char* line = mlr_get_line(input_stream, '\n'); // xxx parameterize
-//		if (line == NULL) { // EOF
-//			// xxx cmt EOF terminates the stanza etc.
-//			pstate->at_eof = TRUE;
-//			if (pxtab_lines->length == 0) {
-//				return NULL;
-//			} else {
-//				return lrec_parse_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
-//			}
-//		} else if (*line == '\0') {
-//			if (pxtab_lines->length > 0) { // xxx make an is_empty_modulo_whitespace()
-//				return lrec_parse_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
-//			}
-//		} else {
-//			slls_add_with_free(pxtab_lines, line);
-//		}
-//	}
+	else
+		return lrec_parse_xtab_mmap(phandle, pstate->irs, pstate->ips, pstate->allow_repeat_ips);
 }
 
 // xxx rename resets to sof_reset or some such

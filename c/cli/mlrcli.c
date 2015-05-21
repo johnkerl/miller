@@ -154,10 +154,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ops  = DEFAULT_PS;
 	popts->ofmt = DEFAULT_OFMT;
 
-	popts->preader = NULL;
-	popts->pwriter = NULL;
-	popts->filenames = NULL;
-
+	popts->preader      = NULL;
+	popts->preader_mmap = NULL;
+	popts->pwriter      = NULL;
+	popts->filenames    = NULL;
 	popts->use_mmap_reader = FALSE;
 
 	char* rdesc = "dkvp";
@@ -257,8 +257,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		// xxx negate the default once this is working
-		// xxx put into online help
+		// xxx negate the default once this is working.
+		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
 			popts->use_mmap_reader = TRUE;
 		}

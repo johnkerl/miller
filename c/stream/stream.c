@@ -65,8 +65,6 @@ static int do_file_chained(char* filename, context_t* pctx,
 {
 	FILE* input_stream = stdin;
 
-	// xxx assert pmapper_list non-empty ...
-
 	if (!streq(filename, "-")) {
 		input_stream = fopen(filename, "r");
 		if (input_stream == NULL) {
