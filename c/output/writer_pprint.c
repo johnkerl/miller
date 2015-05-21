@@ -6,18 +6,18 @@
 #include "containers/mixutil.h"
 #include "output/writers.h"
 
-typedef struct _writer_pprint_state_t {
+typedef struct _lrec_writer_pprint_state_t {
 	sllv_t*    precords;
 	slls_t*    pprev_keys;
 	int        left_align;
 	long long  num_blocks_written;
-} writer_pprint_state_t;
+} lrec_writer_pprint_state_t;
 
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, int left_align);
 
 // ----------------------------------------------------------------
-static void writer_pprint_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
-	writer_pprint_state_t* pstate = pvstate;
+static void lrec_writer_pprint_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+	lrec_writer_pprint_state_t* pstate = pvstate;
 
 	int drain = FALSE;
 	slls_t* pcurr_keys = NULL;
@@ -120,8 +120,8 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, in
 	sllv_free(precords);
 }
 
-static void writer_pprint_free(void* pvstate) {
-	writer_pprint_state_t* pstate = pvstate;
+static void lrec_writer_pprint_free(void* pvstate) {
+	lrec_writer_pprint_state_t* pstate = pvstate;
 	if (pstate->precords != NULL) {
 		sllv_free(pstate->precords);
 		pstate->precords = NULL;
@@ -132,18 +132,18 @@ static void writer_pprint_free(void* pvstate) {
 	}
 }
 
-writer_t* writer_pprint_alloc(int left_align) {
-	writer_t* pwriter = mlr_malloc_or_die(sizeof(writer_t));
+lrec_writer_t* lrec_writer_pprint_alloc(int left_align) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
-	writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(writer_pprint_state_t));
+	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
 	pstate->precords           = sllv_alloc();
 	pstate->pprev_keys         = NULL;
 	pstate->left_align         = left_align;
 	pstate->num_blocks_written = 0LL;
-	pwriter->pvstate           = pstate;
+	plrec_writer->pvstate           = pstate;
 
-	pwriter->pwriter_func = &writer_pprint_func;
-	pwriter->pfree_func   = &writer_pprint_free;
+	plrec_writer->plrec_writer_func = &lrec_writer_pprint_func;
+	plrec_writer->pfree_func   = &lrec_writer_pprint_free;
 
-	return pwriter;
+	return plrec_writer;
 }

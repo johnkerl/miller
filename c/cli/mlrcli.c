@@ -156,7 +156,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->preader      = NULL;
 	popts->preader_mmap = NULL;
-	popts->pwriter      = NULL;
+	popts->plrec_writer      = NULL;
 	popts->filenames    = NULL;
 	popts->use_mmap_reader = FALSE;
 
@@ -296,11 +296,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		main_usage(argv[0], 1);
 	}
 
-	if      (streq(wdesc, "dkvp"))   popts->pwriter = writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(wdesc, "csv"))    popts->pwriter = writer_csv_alloc(popts->ors, popts->ofs);
-	else if (streq(wdesc, "nidx"))   popts->pwriter = writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(wdesc, "xtab"))   popts->pwriter = writer_xtab_alloc();
-	else if (streq(wdesc, "pprint")) popts->pwriter = writer_pprint_alloc(left_align_pprint);
+	if      (streq(wdesc, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(wdesc, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
+	else if (streq(wdesc, "nidx"))   popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(wdesc, "xtab"))   popts->plrec_writer = lrec_writer_xtab_alloc();
+	else if (streq(wdesc, "pprint")) popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}
@@ -363,6 +363,6 @@ void cli_opts_free(cli_opts_t* popts) {
 	}
 	sllv_free(popts->pmapper_list);
 
-	popts->pwriter->pfree_func(popts->pwriter->pvstate);
+	popts->plrec_writer->pfree_func(popts->plrec_writer->pvstate);
 	free(popts);
 }

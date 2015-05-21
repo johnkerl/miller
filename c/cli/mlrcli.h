@@ -23,7 +23,7 @@ typedef struct _cli_opts_t {
 	reader_t*      preader;
 	reader_mmap_t* preader_mmap;
 	sllv_t*        pmapper_list;
-	writer_t*      pwriter;
+	lrec_writer_t*      plrec_writer;
 
 	char** filenames; // null-terminated
 

@@ -11,18 +11,18 @@
 #include "output/writers.h"
 
 static int do_file_chained(char* filename, context_t* pctx,
-	reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream);
+	reader_t* preader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 static int do_file_chained_mmap(char* filename, context_t* pctx,
-	reader_mmap_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream);
+	reader_mmap_t* preader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
-static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, writer_t* pwriter, FILE* output_stream);
+static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer, FILE* output_stream);
 
 // ----------------------------------------------------------------
 // xxx assert pmapper_list non-empty ...
 int do_stream_chained(char** filenames, int use_mmap_reader, reader_t* preader, reader_mmap_t* preader_mmap,
-	sllv_t* pmapper_list, writer_t* pwriter, char* ofmt)
+	sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
 
@@ -32,7 +32,7 @@ int do_stream_chained(char** filenames, int use_mmap_reader, reader_t* preader, 
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
-		ok = do_file_chained("-", &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
+		ok = do_file_chained("-", &ctx, preader, pmapper_list, plrec_writer, output_stream) && ok;
 	} else {
 		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
 			ctx.filenum++;
@@ -41,27 +41,27 @@ int do_stream_chained(char** filenames, int use_mmap_reader, reader_t* preader, 
 			// Start-of-file hook, e.g. expecting CSV headers on input.
 			if (use_mmap_reader) {
 				preader_mmap->preset_func(preader_mmap->pvstate);
-				ok = do_file_chained_mmap(*pfilename, &ctx, preader_mmap, pmapper_list, pwriter, output_stream) && ok;
+				ok = do_file_chained_mmap(*pfilename, &ctx, preader_mmap, pmapper_list, plrec_writer, output_stream) && ok;
 			} else {
 				preader->preset_func(preader->pvstate);
-				ok = do_file_chained(*pfilename, &ctx, preader, pmapper_list, pwriter, output_stream) && ok;
+				ok = do_file_chained(*pfilename, &ctx, preader, pmapper_list, plrec_writer, output_stream) && ok;
 			}
 		}
 	}
 
 	// Mappers and writers receive end-of-stream notifications via null input record.
 	// Do that, now that data from all input file(s) have been exhausted.
-	drive_lrec(NULL, &ctx, pmapper_list->phead, pwriter, output_stream);
+	drive_lrec(NULL, &ctx, pmapper_list->phead, plrec_writer, output_stream);
 
 	// Drain the pretty-printer.
-	pwriter->pwriter_func(output_stream, NULL, pwriter->pvstate);
+	plrec_writer->plrec_writer_func(output_stream, NULL, plrec_writer->pvstate);
 
 	return ok;
 }
 
 // ----------------------------------------------------------------
 static int do_file_chained(char* filename, context_t* pctx,
-	reader_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream)
+	reader_t* preader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	FILE* input_stream = stdin;
 
@@ -80,7 +80,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 			break;
 		pctx->nr++;
 		pctx->fnr++;
-		drive_lrec(pinrec, pctx, pmapper_list->phead, pwriter, output_stream);
+		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
 	if (input_stream != stdin)
@@ -91,7 +91,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 
 // ----------------------------------------------------------------
 static int do_file_chained_mmap(char* filename, context_t* pctx,
-	reader_mmap_t* preader, sllv_t* pmapper_list, writer_t* pwriter, FILE* output_stream)
+	reader_mmap_t* preader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	// xxx communicate error back from open, or rename it to ..._open_or_die
 	mmap_reader_state_t handle = mmap_reader_open(filename);
@@ -102,7 +102,7 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 			break;
 		pctx->nr++;
 		pctx->fnr++;
-		drive_lrec(pinrec, pctx, pmapper_list->phead, pwriter, output_stream);
+		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
 	mmap_reader_close(&handle);
@@ -110,13 +110,13 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 }
 
 // ----------------------------------------------------------------
-static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, writer_t* pwriter, FILE* output_stream) {
+static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer, FILE* output_stream) {
 	sllv_t* outrecs = chain_map(pinrec, pctx, pmapper_list_head);
 	if (outrecs != NULL) {
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvdata;
 			if (poutrec != NULL)
-				pwriter->pwriter_func(output_stream, poutrec, pwriter->pvstate);
+				plrec_writer->plrec_writer_func(output_stream, poutrec, plrec_writer->pvstate);
 			// doc & encode convention that writer frees.
 		}
 		sllv_free(outrecs); // xxx cmt mem-mgmt

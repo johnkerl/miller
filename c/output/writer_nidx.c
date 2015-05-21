@@ -2,16 +2,16 @@
 #include "lib/mlrutil.h"
 #include "output/writers.h"
 
-typedef struct _writer_nidx_state_t {
+typedef struct _lrec_writer_nidx_state_t {
 	char rs;
 	char fs;
-} writer_nidx_state_t;
+} lrec_writer_nidx_state_t;
 
 // ----------------------------------------------------------------
-static void writer_nidx_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_nidx_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
-	writer_nidx_state_t* pstate = pvstate;
+	lrec_writer_nidx_state_t* pstate = pvstate;
 	char rs = pstate->rs;
 	char fs = pstate->fs;
 
@@ -26,19 +26,19 @@ static void writer_nidx_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
 
-static void writer_nidx_free(void* pvstate) {
+static void lrec_writer_nidx_free(void* pvstate) {
 }
 
-writer_t* writer_nidx_alloc(char rs, char fs) {
-	writer_t* pwriter = mlr_malloc_or_die(sizeof(writer_t));
+lrec_writer_t* lrec_writer_nidx_alloc(char rs, char fs) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
-	writer_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(writer_nidx_state_t));
+	lrec_writer_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_nidx_state_t));
 	pstate->rs = rs;
 	pstate->fs = fs;
-	pwriter->pvstate = (void*)pstate;
+	plrec_writer->pvstate = (void*)pstate;
 
-	pwriter->pwriter_func = &writer_nidx_func;
-	pwriter->pfree_func   = &writer_nidx_free;
+	plrec_writer->plrec_writer_func = &lrec_writer_nidx_func;
+	plrec_writer->pfree_func   = &lrec_writer_nidx_free;
 
-	return pwriter;
+	return plrec_writer;
 }

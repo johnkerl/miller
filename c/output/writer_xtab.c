@@ -3,15 +3,15 @@
 #include "lib/mlrutil.h"
 #include "output/writers.h"
 
-typedef struct _writer_xtab_state_t {
+typedef struct _lrec_writer_xtab_state_t {
 	long long record_count;
-} writer_xtab_state_t;
+} lrec_writer_xtab_state_t;
 
 // ----------------------------------------------------------------
-static void writer_xtab_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_xtab_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
-	writer_xtab_state_t* pstate = pvstate;
+	lrec_writer_xtab_state_t* pstate = pvstate;
 	if (pstate->record_count > 0LL)
 		fprintf(output_stream, "\n");
 	pstate->record_count++;
@@ -29,18 +29,18 @@ static void writer_xtab_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
 
-static void writer_xtab_free(void* pvstate) {
+static void lrec_writer_xtab_free(void* pvstate) {
 }
 
-writer_t* writer_xtab_alloc() {
-	writer_t* pwriter = mlr_malloc_or_die(sizeof(writer_t));
+lrec_writer_t* lrec_writer_xtab_alloc() {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
-	writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(writer_xtab_state_t));
+	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
 	pstate->record_count = 0LL;
-	pwriter->pvstate = pstate;
+	plrec_writer->pvstate = pstate;
 
-	pwriter->pwriter_func = &writer_xtab_func;
-	pwriter->pfree_func   = &writer_xtab_free;
+	plrec_writer->plrec_writer_func = &lrec_writer_xtab_func;
+	plrec_writer->pfree_func   = &lrec_writer_xtab_free;
 
-	return pwriter;
+	return plrec_writer;
 }
