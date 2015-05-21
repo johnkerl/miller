@@ -2,8 +2,8 @@
 #define MLRCLI_H
 
 #include "containers/sllv.h"
-#include "input/reader.h"
-#include "input/reader_mmap.h"
+#include "input/lrec_reader.h"
+#include "input/lrec_reader_mmap.h"
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
 
@@ -20,7 +20,7 @@ typedef struct _cli_opts_t {
 	char* ofmt;
 
 	int            use_mmap_reader;
-	reader_t*      preader;
+	lrec_reader_t*      plrec_reader;
 	reader_mmap_t* preader_mmap;
 	sllv_t*        pmapper_list;
 	lrec_writer_t*      plrec_writer;

@@ -5,7 +5,7 @@
 #include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 #include "containers/slls.h"
-#include "input/readers.h"
+#include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
@@ -154,7 +154,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ops  = DEFAULT_PS;
 	popts->ofmt = DEFAULT_OFMT;
 
-	popts->preader      = NULL;
+	popts->plrec_reader      = NULL;
 	popts->preader_mmap = NULL;
 	popts->plrec_writer      = NULL;
 	popts->filenames    = NULL;
@@ -281,16 +281,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	// xxx alloc mmap readers here too
 	// xxx have use-mmap-readers flag ...
 	if (streq(rdesc, "dkvp")) {
-		popts->preader      =      reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->plrec_reader      =      lrec_reader_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 		popts->preader_mmap = reader_dkvp_mmap_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "csv")) {
-		popts->preader      = reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->plrec_reader      = lrec_reader_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 		popts->preader_mmap = reader_csv_mmap_alloc(popts->irs, popts->ifs, popts->ips);
 	} else if (streq(rdesc, "nidx")) {
-		popts->preader      = reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->plrec_reader      = lrec_reader_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 		popts->preader_mmap = reader_nidx_mmap_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "xtab")) {
-		popts->preader      = reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
+		popts->plrec_reader      = lrec_reader_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
 		popts->preader_mmap = reader_xtab_mmap_alloc(popts->irs, popts->ips, TRUE/*popts->allow_repeat_ips*/);
 	} else {
 		main_usage(argv[0], 1);
@@ -355,7 +355,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 // ----------------------------------------------------------------
 void cli_opts_free(cli_opts_t* popts) {
 
-	popts->preader->pfree_func(popts->preader->pvstate);
+	popts->plrec_reader->pfree_func(popts->plrec_reader->pvstate);
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvdata;

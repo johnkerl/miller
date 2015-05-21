@@ -1,7 +1,7 @@
 #ifndef LREC_PARSERS_H
 #define LREC_PARSERS_H
 
-#include "input/mmap.h"
+#include "input/file_reader_mmap.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "containers/lrec.h"

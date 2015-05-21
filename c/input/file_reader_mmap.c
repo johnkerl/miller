@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include "mmap.h"
+#include "file_reader_mmap.h"
 
 mmap_reader_state_t mmap_reader_open(char* file_name) {
 	mmap_reader_state_t state;

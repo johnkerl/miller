@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lib/mlrutil.h"
-#include "input/mmap.h"
+#include "input/file_reader_mmap.h"
 #include "containers/lrec.h"
 #include "containers/lrec_parsers.h"
 

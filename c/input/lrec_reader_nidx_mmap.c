@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "containers/lrec_parsers.h"
-#include "input/mmap.h"
-#include "input/readers.h"
+#include "input/file_reader_mmap.h"
+#include "input/lrec_readers.h"
 
 typedef struct _reader_nidx_mmap_state_t {
 	char irs;
@@ -24,16 +24,16 @@ static void reset_nidx_func(void* pvstate) {
 }
 
 reader_mmap_t* reader_nidx_mmap_alloc(char irs, char ifs, int allow_repeat_ifs) {
-	reader_mmap_t* preader = mlr_malloc_or_die(sizeof(reader_mmap_t));
+	reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(reader_mmap_t));
 
 	reader_nidx_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(reader_nidx_mmap_state_t));
 	pstate->irs              = irs;
 	pstate->ifs              = ifs;
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	preader->pvstate         = (void*)pstate;
+	plrec_reader->pvstate         = (void*)pstate;
 
-	preader->preader_func = &reader_nidx_mmap_func;
-	preader->preset_func  = &reset_nidx_func;
+	plrec_reader->plrec_reader_func = &reader_nidx_mmap_func;
+	plrec_reader->preset_func  = &reset_nidx_func;
 
-	return preader;
+	return plrec_reader;
 }

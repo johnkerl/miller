@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "containers/lrec_parsers.h"
-#include "input/readers.h"
+#include "input/lrec_readers.h"
 
-typedef struct _reader_xtab_state_t {
+typedef struct _lrec_reader_xtab_state_t {
 	char ips; // xxx make me real
 	int allow_repeat_ips;
 	int at_eof;
 	// xxx need to remember EOF for subsequent read
-} reader_xtab_state_t;
+} lrec_reader_xtab_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* reader_xtab_func(FILE* input_stream, void* pvstate, context_t* pctx) {
-	reader_xtab_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_xtab_func(FILE* input_stream, void* pvstate, context_t* pctx) {
+	lrec_reader_xtab_state_t* pstate = pvstate;
 
 	if (pstate->at_eof)
 		return NULL;
@@ -43,27 +43,27 @@ static lrec_t* reader_xtab_func(FILE* input_stream, void* pvstate, context_t* pc
 
 // xxx rename resets to sof_reset or some such
 static void reset_xtab_func(void* pvstate) {
-	reader_xtab_state_t* pstate = pvstate;
+	lrec_reader_xtab_state_t* pstate = pvstate;
 	pstate->at_eof = FALSE;
 }
 
-static void reader_xtab_free(void* pvstate) {
+static void lrec_reader_xtab_free(void* pvstate) {
 }
 
-reader_t* reader_xtab_alloc(char ips, int allow_repeat_ips) {
-	reader_t* preader = mlr_malloc_or_die(sizeof(reader_t));
+lrec_reader_t* lrec_reader_xtab_alloc(char ips, int allow_repeat_ips) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	reader_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(reader_xtab_state_t));
+	lrec_reader_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_xtab_state_t));
 	//pstate->ips              = ips;
 	//pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->ips              = ' ';
 	pstate->allow_repeat_ips = TRUE;
 	pstate->at_eof           = FALSE;
-	preader->pvstate         = (void*)pstate;
+	plrec_reader->pvstate         = (void*)pstate;
 
-	preader->preader_func = &reader_xtab_func;
-	preader->preset_func  = &reset_xtab_func;
-	preader->pfree_func   = &reader_xtab_free;;
+	plrec_reader->plrec_reader_func = &lrec_reader_xtab_func;
+	plrec_reader->preset_func  = &reset_xtab_func;
+	plrec_reader->pfree_func   = &lrec_reader_xtab_free;;
 
-	return preader;
+	return plrec_reader;
 }
