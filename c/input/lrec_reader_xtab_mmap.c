@@ -5,17 +5,17 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
-typedef struct _reader_xtab_mmap_state_t {
+typedef struct _lrec_reader_xtab_mmap_state_t {
 	char irs;
 	char ips; // xxx make me real
 	int allow_repeat_ips;
 	int at_eof;
 	// xxx need to remember EOF for subsequent read
-} reader_xtab_mmap_state_t;
+} lrec_reader_xtab_mmap_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* reader_xtab_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
-	reader_xtab_mmap_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_xtab_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
+	lrec_reader_xtab_mmap_state_t* pstate = pvstate;
 
 	if (pstate->at_eof)
 		return NULL;
@@ -25,14 +25,14 @@ static lrec_t* reader_xtab_mmap_func(mmap_reader_state_t* phandle, void* pvstate
 
 // xxx rename resets to sof_reset or some such
 static void reset_xtab_func(void* pvstate) {
-	reader_xtab_mmap_state_t* pstate = pvstate;
+	lrec_reader_xtab_mmap_state_t* pstate = pvstate;
 	pstate->at_eof = FALSE;
 }
 
-reader_mmap_t* reader_xtab_mmap_alloc(char irs, char ips, int allow_repeat_ips) {
-	reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(reader_mmap_t));
+lrec_reader_mmap_t* lrec_reader_xtab_mmap_alloc(char irs, char ips, int allow_repeat_ips) {
+	lrec_reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
-	reader_xtab_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(reader_xtab_mmap_state_t));
+	lrec_reader_xtab_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_xtab_mmap_state_t));
 	//pstate->ips              = ips;
 	//pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->irs              = irs;
@@ -41,7 +41,7 @@ reader_mmap_t* reader_xtab_mmap_alloc(char irs, char ips, int allow_repeat_ips) 
 	pstate->at_eof           = FALSE;
 	plrec_reader->pvstate         = (void*)pstate;
 
-	plrec_reader->plrec_reader_func = &reader_xtab_mmap_func;
+	plrec_reader->plrec_reader_func = &lrec_reader_xtab_mmap_func;
 	plrec_reader->preset_func  = &reset_xtab_func;
 
 	return plrec_reader;

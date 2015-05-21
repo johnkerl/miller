@@ -17,7 +17,7 @@
 // to hdr_keeper object. The current phdr_keeper is a pointer into one of
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
-typedef struct _reader_csv_mmap_state_t {
+typedef struct _lrec_reader_csv_mmap_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
 	char irs;
@@ -27,7 +27,7 @@ typedef struct _reader_csv_mmap_state_t {
 	int  expect_header_line_next;
 	hdr_keeper_t* phdr_keeper; // xxx rename to header_keeper
 	lhmslv_t*     phdr_keepers;
-} reader_csv_mmap_state_t;
+} lrec_reader_csv_mmap_state_t;
 
 // Cases:
 //
@@ -52,9 +52,9 @@ typedef struct _reader_csv_mmap_state_t {
 //
 // etc.
 
-static lrec_t* reader_csv_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_csv_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
 	return NULL; // xxx stub
-//	reader_csv_mmap_state_t* pstate = pvstate;
+//	lrec_reader_csv_mmap_state_t* pstate = pvstate;
 //
 //	while (TRUE) {
 //		if (pstate->expect_header_line_next) {
@@ -106,7 +106,7 @@ static lrec_t* reader_csv_mmap_func(mmap_reader_state_t* phandle, void* pvstate,
 
 // ----------------------------------------------------------------
 static void reset_csv_mmap_func(void* pvstate) {
-	reader_csv_mmap_state_t* pstate = pvstate;
+	lrec_reader_csv_mmap_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
@@ -115,10 +115,10 @@ static void reset_csv_mmap_func(void* pvstate) {
 // xxx restore free func for hdr_keepers ... ?
 
 // ----------------------------------------------------------------
-reader_mmap_t* reader_csv_mmap_alloc(char irs, char ifs, int allow_repeat_ifs) {
-	reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(reader_mmap_t));
+lrec_reader_mmap_t* lrec_reader_csv_mmap_alloc(char irs, char ifs, int allow_repeat_ifs) {
+	lrec_reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
-	reader_csv_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(reader_csv_mmap_state_t));
+	lrec_reader_csv_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_mmap_state_t));
 	pstate->ifnr                    = 0LL;
 	pstate->irs                     = irs;
 	pstate->ifs                     = ifs;
@@ -129,7 +129,7 @@ reader_mmap_t* reader_csv_mmap_alloc(char irs, char ifs, int allow_repeat_ifs) {
 	plrec_reader->pvstate                = (void*)pstate;
 
 	// xxx homogenize these names, for all readers & writers
-	plrec_reader->plrec_reader_func = &reader_csv_mmap_func;
+	plrec_reader->plrec_reader_func = &lrec_reader_csv_mmap_func;
 	plrec_reader->preset_func  = &reset_csv_mmap_func;
 
 	return plrec_reader;
