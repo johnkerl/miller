@@ -1,4 +1,3 @@
-// xxx rename me
 #include <stdio.h>
 #include <stdlib.h>
 #include "put_dsl_wrapper.h"

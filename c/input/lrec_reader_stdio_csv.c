@@ -24,7 +24,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int  allow_repeat_ifs;
 
 	int  expect_header_line_next;
-	hdr_keeper_t* phdr_keeper; // xxx rename to header_keeper
+	hdr_keeper_t* phdr_keeper;
 	lhmslv_t*     phdr_keepers;
 } lrec_reader_stdio_csv_state_t;
 

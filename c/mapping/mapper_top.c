@@ -68,7 +68,6 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		char* value_field_sval = pb->value;
 		double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 
-		// xxx rename: for group and value-field-name
 		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
 		if (ptop_keeper_for_group == NULL) {
 			ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);

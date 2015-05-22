@@ -10,7 +10,6 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	char ips; // xxx make me real
 	int allow_repeat_ips;
 	int at_eof;
-	// xxx need to remember EOF for subsequent read
 } lrec_reader_mmap_xtab_state_t;
 
 // ----------------------------------------------------------------
@@ -23,7 +22,6 @@ static lrec_t* lrec_reader_mmap_xtab_process(file_reader_mmap_state_t* phandle, 
 		return lrec_parse_mmap_xtab(phandle, pstate->irs, pstate->ips, pstate->allow_repeat_ips);
 }
 
-// xxx rename resets to sof_reset or some such
 static void lrec_reader_mmap_xtab_sof(void* pvstate) {
 	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
 	pstate->at_eof = FALSE;

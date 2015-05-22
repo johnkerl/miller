@@ -1,4 +1,3 @@
-// xxx rename me
 #include <stdio.h>
 #include <stdlib.h>
 #include "filter_dsl_wrapper.h"
@@ -7,7 +6,6 @@
 #include "../lib/mlrutil.h"
 #include "../containers/mlr_dsl_ast.h"
 
-// xxx temp
 void *filter_dsl_lemon_parser_alloc(void *(*mallocProc)(size_t));
 
 // ----------------------------------------------------------------

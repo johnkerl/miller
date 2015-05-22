@@ -6,7 +6,6 @@
 #include "mapping/context.h"
 
 typedef lrec_t* lrec_reader_stdio_process_func_t(FILE* fp, void* pvstate, context_t* pctx);
-// xxx rename to sof_func or some such
 typedef void    lrec_reader_stdio_sof_func_t(void* pvstate);
 typedef void    lrec_reader_stdio_free_func_t(void* pvstate);
 
