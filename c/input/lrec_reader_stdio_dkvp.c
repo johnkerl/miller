@@ -12,7 +12,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 } lrec_reader_stdio_dkvp_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_dkvp_func(FILE* input_stream, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_dkvp_process(FILE* input_stream, void* pvstate, context_t* pctx) {
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 
 	char* line = mlr_get_line(input_stream, pstate->irs);
@@ -24,7 +24,7 @@ static lrec_t* lrec_reader_stdio_dkvp_func(FILE* input_stream, void* pvstate, co
 }
 
 // No-op for stateless readers such as this one.
-static void reset_dkvp_func(void* pvstate) {
+static void lrec_reader_csv_sof(void* pvstate) {
 }
 
 // No-op for stateless readers such as this one.
@@ -35,15 +35,15 @@ lrec_reader_stdio_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, 
 	lrec_reader_stdio_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_stdio_t));
 
 	lrec_reader_stdio_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_dkvp_state_t));
-	pstate->irs = irs;
-	pstate->ifs = ifs;
-	pstate->ips = ips;
+	pstate->irs              = irs;
+	pstate->ifs              = ifs;
+	pstate->ips              = ips;
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	plrec_reader_stdio->pvstate = (void*)pstate;
 
-	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_dkvp_func;
-	plrec_reader_stdio->psof_func  = &reset_dkvp_func;
-	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_dkvp_free;;
+	plrec_reader_stdio->pvstate       = (void*)pstate;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_dkvp_process;
+	plrec_reader_stdio->psof_func     = &lrec_reader_csv_sof;
+	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_dkvp_free;
 
 	return plrec_reader_stdio;
 }

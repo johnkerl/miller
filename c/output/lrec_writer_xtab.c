@@ -8,7 +8,7 @@ typedef struct _lrec_writer_xtab_state_t {
 } lrec_writer_xtab_state_t;
 
 // ----------------------------------------------------------------
-static void lrec_writer_xtab_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
@@ -37,10 +37,10 @@ lrec_writer_t* lrec_writer_xtab_alloc() {
 
 	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
 	pstate->record_count = 0LL;
-	plrec_writer->pvstate = pstate;
 
-	plrec_writer->pprocess_func = &lrec_writer_xtab_func;
-	plrec_writer->pfree_func   = &lrec_writer_xtab_free;
+	plrec_writer->pvstate       = pstate;
+	plrec_writer->pprocess_func = &lrec_writer_xtab_process;
+	plrec_writer->pfree_func    = &lrec_writer_xtab_free;
 
 	return plrec_writer;
 }

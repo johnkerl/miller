@@ -11,7 +11,7 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 } lrec_reader_mmap_nidx_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_mmap_nidx_func(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_nidx_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	lrec_reader_mmap_nidx_state_t* pstate = pvstate;
 	if (phandle->sol >= phandle->eof) // xxx encapsulate a method for this ...
 		return NULL;
@@ -20,20 +20,20 @@ static lrec_t* lrec_reader_mmap_nidx_func(file_reader_mmap_state_t* phandle, voi
 }
 
 // No-op for stateless readers such as this one.
-static void reset_nidx_func(void* pvstate) {
+static void lrec_reader_mmap_nidx_sof(void* pvstate) {
 }
 
 lrec_reader_mmap_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_repeat_ifs) {
 	lrec_reader_mmap_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_mmap_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_nidx_state_t));
-	pstate->irs              = irs;
-	pstate->ifs              = ifs;
-	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	plrec_reader_stdio->pvstate         = (void*)pstate;
+	pstate->irs                       = irs;
+	pstate->ifs                       = ifs;
+	pstate->allow_repeat_ifs          = allow_repeat_ifs;
 
-	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_nidx_func;
-	plrec_reader_stdio->psof_func  = &reset_nidx_func;
+	plrec_reader_stdio->pvstate       = (void*)pstate;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_nidx_process;
+	plrec_reader_stdio->psof_func     = &lrec_reader_mmap_nidx_sof;
 
 	return plrec_reader_stdio;
 }

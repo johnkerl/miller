@@ -51,7 +51,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_stdio_csv_func(FILE* input_stream, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_csv_process(FILE* input_stream, void* pvstate, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 
 	while (TRUE) {
@@ -105,7 +105,7 @@ static lrec_t* lrec_reader_stdio_csv_func(FILE* input_stream, void* pvstate, con
 }
 
 // ----------------------------------------------------------------
-static void reset_csv_func(void* pvstate) {
+static void lrec_reader_stdio_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
@@ -133,12 +133,11 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 	pstate->expect_header_line_next = TRUE;
 	pstate->phdr_keeper             = NULL;
 	pstate->phdr_keepers            = lhmslv_alloc();
-	plrec_reader_stdio->pvstate     = (void*)pstate;
 
-	// xxx homogenize these names, for all readers & writers
-	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_csv_func;
-	plrec_reader_stdio->psof_func  = &reset_csv_func;
-	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_csv_free;
+	plrec_reader_stdio->pvstate       = (void*)pstate;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_csv_process;
+	plrec_reader_stdio->psof_func     = &lrec_reader_stdio_sof;
+	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader_stdio;
 }

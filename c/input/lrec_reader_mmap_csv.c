@@ -52,7 +52,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_mmap_csv_func(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	return NULL; // xxx stub
 //	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 //
@@ -105,7 +105,7 @@ static lrec_t* lrec_reader_mmap_csv_func(file_reader_mmap_state_t* phandle, void
 }
 
 // ----------------------------------------------------------------
-static void reset_mmap_csv_func(void* pvstate) {
+static void lrec_reader_mmap_csv_sof(void* pvstate) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
@@ -126,11 +126,10 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 	pstate->expect_header_line_next = TRUE;
 	pstate->phdr_keeper             = NULL;
 	pstate->phdr_keepers            = lhmslv_alloc();
-	plrec_reader_stdio->pvstate     = (void*)pstate;
 
-	// xxx homogenize these names, for all readers & writers
-	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_csv_func;
-	plrec_reader_stdio->psof_func  = &reset_mmap_csv_func;
+	plrec_reader_stdio->pvstate       = (void*)pstate;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_csv_process;
+	plrec_reader_stdio->psof_func     = &lrec_reader_mmap_csv_sof;
 
 	return plrec_reader_stdio;
 }

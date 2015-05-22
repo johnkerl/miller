@@ -16,7 +16,7 @@ typedef struct _lrec_writer_pprint_state_t {
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, int left_align);
 
 // ----------------------------------------------------------------
-static void lrec_writer_pprint_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_writer_pprint_state_t* pstate = pvstate;
 
 	int drain = FALSE;
@@ -140,10 +140,10 @@ lrec_writer_t* lrec_writer_pprint_alloc(int left_align) {
 	pstate->pprev_keys         = NULL;
 	pstate->left_align         = left_align;
 	pstate->num_blocks_written = 0LL;
-	plrec_writer->pvstate           = pstate;
 
-	plrec_writer->pprocess_func = &lrec_writer_pprint_func;
-	plrec_writer->pfree_func   = &lrec_writer_pprint_free;
+	plrec_writer->pvstate       = pstate;
+	plrec_writer->pprocess_func = &lrec_writer_pprint_process;
+	plrec_writer->pfree_func    = &lrec_writer_pprint_free;
 
 	return plrec_writer;
 }

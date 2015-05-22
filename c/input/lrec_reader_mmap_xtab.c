@@ -14,7 +14,7 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 } lrec_reader_mmap_xtab_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_mmap_xtab_func(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_xtab_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
 
 	if (pstate->at_eof)
@@ -24,7 +24,7 @@ static lrec_t* lrec_reader_mmap_xtab_func(file_reader_mmap_state_t* phandle, voi
 }
 
 // xxx rename resets to sof_reset or some such
-static void reset_xtab_func(void* pvstate) {
+static void lrec_reader_mmap_xtab_sof(void* pvstate) {
 	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
 	pstate->at_eof = FALSE;
 }
@@ -35,14 +35,14 @@ lrec_reader_mmap_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_re
 	lrec_reader_mmap_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_xtab_state_t));
 	//pstate->ips              = ips;
 	//pstate->allow_repeat_ips = allow_repeat_ips;
-	pstate->irs              = irs;
-	pstate->ips              = ' ';
-	pstate->allow_repeat_ips = TRUE;
-	pstate->at_eof           = FALSE;
-	plrec_reader_stdio->pvstate         = (void*)pstate;
+	pstate->irs                 = irs;
+	pstate->ips                 = ' ';
+	pstate->allow_repeat_ips    = TRUE;
+	pstate->at_eof              = FALSE;
 
-	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_xtab_func;
-	plrec_reader_stdio->psof_func  = &reset_xtab_func;
+	plrec_reader_stdio->pvstate       = (void*)pstate;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_xtab_process;
+	plrec_reader_stdio->psof_func     = &lrec_reader_mmap_xtab_sof;
 
 	return plrec_reader_stdio;
 }

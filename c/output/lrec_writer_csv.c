@@ -14,7 +14,7 @@ typedef struct _lrec_writer_csv_state_t {
 // ----------------------------------------------------------------
 // xxx cmt mem-mgmt
 
-static void lrec_writer_csv_func(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
 	lrec_writer_csv_state_t* pstate = pvstate;
@@ -76,10 +76,10 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
 	pstate->ofs                     = ofs;
 	pstate->num_header_lines_output = 0LL;
 	pstate->plast_header_output     = NULL;
-	plrec_writer->pvstate                = (void*)pstate;
 
-	plrec_writer->pprocess_func = lrec_writer_csv_func;
-	plrec_writer->pfree_func   = lrec_writer_csv_free;
+	plrec_writer->pvstate       = (void*)pstate;
+	plrec_writer->pprocess_func = lrec_writer_csv_process;
+	plrec_writer->pfree_func    = lrec_writer_csv_free;
 
 	return plrec_writer;
 }
