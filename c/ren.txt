@@ -3,20 +3,9 @@
 * search for "xxx rename"
 * pvstate paragraphing
 ----------------------------------------------------------------
-rid of "_func" suffixes for non typedefs/ptrs
-readers
-writers
-mappers
 
 mmap.*stdio & v.v. ???
 
-
-reset_xtab_func
-
-and double-checks for reset funcs
-and double-checks for all funcs
-
-free without free func?
 
 ----------------------------------------------------------------
 xxx file renames too!!!

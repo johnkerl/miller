@@ -24,16 +24,16 @@ static void lrec_reader_mmap_nidx_sof(void* pvstate) {
 }
 
 lrec_reader_mmap_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_repeat_ifs) {
-	lrec_reader_mmap_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
+	lrec_reader_mmap_t* plrec_reader_mmap = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_mmap_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_nidx_state_t));
 	pstate->irs                       = irs;
 	pstate->ifs                       = ifs;
 	pstate->allow_repeat_ifs          = allow_repeat_ifs;
 
-	plrec_reader_stdio->pvstate       = (void*)pstate;
-	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_nidx_process;
-	plrec_reader_stdio->psof_func     = &lrec_reader_mmap_nidx_sof;
+	plrec_reader_mmap->pvstate       = (void*)pstate;
+	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_nidx_process;
+	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_nidx_sof;
 
-	return plrec_reader_stdio;
+	return plrec_reader_mmap;
 }
