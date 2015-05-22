@@ -44,7 +44,8 @@ lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs) {
 		if (*p == ifs) {
 			*p = 0;
 
-			idx++; key = make_nidx_key(idx, &free_flags);
+			idx++;
+			key = make_nidx_key(idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
 
 			p++;

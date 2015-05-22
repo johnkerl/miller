@@ -48,6 +48,7 @@ static step_t* step_delta_alloc(char* input_field_name) {
 	pstate->prev          = -999.0;
 	pstate->have_prev     = FALSE;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
+
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = NULL;
 	pstep->pdprocess_func = &step_delta_dprocess;
@@ -71,6 +72,7 @@ static step_t* step_rsum_alloc(char* input_field_name) {
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
 	pstate->rsum          = 0.0;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
+
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = NULL;
 	pstep->pdprocess_func = &step_rsum_dprocess;
@@ -93,6 +95,7 @@ static step_t* step_counter_alloc(char* input_field_name) {
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
 	pstate->counter       = 0LL;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
+
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = &step_counter_sprocess;
 	pstep->pdprocess_func = NULL;
@@ -235,7 +238,7 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->groups                = lhmslv_alloc();
 
-	pmapper->pvstate              = pstate;
+	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_step_process;
 	pmapper->pfree_func    = mapper_step_free;
 

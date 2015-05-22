@@ -82,7 +82,7 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 	pstate->show_counts           = show_counts;
 	pstate->pcounts_by_group      = lhmslv_alloc();
 
-	pmapper->pvstate              = pstate;
+	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_uniq_process;
 	pmapper->pfree_func    = mapper_uniq_free;
 
@@ -99,7 +99,7 @@ static void mapper_uniq_usage(char* argv0, char* verb) {
 
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pgroup_by_field_names = NULL;
-	int     show_counts     = FALSE;
+	int     show_counts = FALSE;
 
 	char* verb = argv[(*pargi)++];
 

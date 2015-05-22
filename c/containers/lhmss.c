@@ -57,11 +57,11 @@ static void lhmss_init(lhmss_t *pmap, int length) {
 	//for (int i = 0; i < length; i++)
 	//	lhmsse_clear(&entries[i]);
 
-	pmap->states       = (lhmsse_state_t*)mlr_malloc_or_die(sizeof(lhmsse_state_t) * length);
+	pmap->states = (lhmsse_state_t*)mlr_malloc_or_die(sizeof(lhmsse_state_t) * length);
 	memset(pmap->states, EMPTY, length);
 
-	pmap->phead        = NULL;
-	pmap->ptail        = NULL;
+	pmap->phead = NULL;
+	pmap->ptail = NULL;
 }
 
 lhmss_t* lhmss_alloc() {

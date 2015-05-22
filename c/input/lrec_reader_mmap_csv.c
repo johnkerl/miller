@@ -119,15 +119,15 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 	lrec_reader_mmap_t* plrec_reader_mmap = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));
-	pstate->ifnr                    = 0LL;
-	pstate->irs                     = irs;
-	pstate->ifs                     = ifs;
-	pstate->allow_repeat_ifs        = allow_repeat_ifs;
-	pstate->expect_header_line_next = TRUE;
-	pstate->phdr_keeper             = NULL;
-	pstate->phdr_keepers            = lhmslv_alloc();
+	pstate->ifnr                     = 0LL;
+	pstate->irs                      = irs;
+	pstate->ifs                      = ifs;
+	pstate->allow_repeat_ifs         = allow_repeat_ifs;
+	pstate->expect_header_line_next  = TRUE;
+	pstate->phdr_keeper              = NULL;
+	pstate->phdr_keepers             = lhmslv_alloc();
 
-	plrec_reader_mmap->pvstate      = (void*)pstate;
+	plrec_reader_mmap->pvstate       = (void*)pstate;
 	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_csv_process;
 	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_csv_sof;
 

@@ -39,7 +39,7 @@ static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
 	mapper_rename_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_rename_state_t));
 	pstate->pold_to_new = pold_to_new;
 
-	pmapper->pvstate              = (void*)pstate;
+	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_rename_process;
 	pmapper->pfree_func    = mapper_rename_free;
 

@@ -27,9 +27,9 @@ lrec_reader_mmap_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_re
 	lrec_reader_mmap_t* plrec_reader_mmap = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_mmap_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_nidx_state_t));
-	pstate->irs                       = irs;
-	pstate->ifs                       = ifs;
-	pstate->allow_repeat_ifs          = allow_repeat_ifs;
+	pstate->irs                      = irs;
+	pstate->ifs                      = ifs;
+	pstate->allow_repeat_ifs         = allow_repeat_ifs;
 
 	plrec_reader_mmap->pvstate       = (void*)pstate;
 	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_nidx_process;

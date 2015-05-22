@@ -57,7 +57,7 @@ static mapper_t* mapper_group_like_alloc() {
 	mapper_group_like_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_group_like_state_t));
 	pstate->precords_by_key_field_names = lhmslv_alloc();
 
-	pmapper->pvstate              = pstate;
+	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_group_like_process;
 	pmapper->pfree_func    = mapper_group_like_free;
 

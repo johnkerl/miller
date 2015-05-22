@@ -70,6 +70,7 @@ static stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
 	pstate->sumy  = 0.0;
 	pstate->sumx2 = 0.0;
 	pstate->sumxy = 0.0;
+
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = &stats2_linreg_ols_ingest;
 	pstats2->pemit_func = &stats2_linreg_ols_emit;
@@ -127,9 +128,11 @@ static stats2_t* stats2_r2_alloc(int do_verbose) {
 	pstate->sumx2     = 0.0;
 	pstate->sumxy     = 0.0;
 	pstate->sumy2     = 0.0;
-	pstats2->pvstate  = (void*)pstate;
+
+	pstats2->pvstate      = (void*)pstate;
 	pstats2->pingest_func = &stats2_r2_ingest;
-	pstats2->pemit_func = &stats2_r2_emit;
+	pstats2->pemit_func   = &stats2_r2_emit;
+
 	return pstats2;
 }
 
@@ -257,9 +260,11 @@ static stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
 	pstate->sumy2      = 0.0;
 	pstate->do_which   = do_which;
 	pstate->do_verbose = do_verbose;
-	pstats2->pvstate   = (void*)pstate;
+
+	pstats2->pvstate      = (void*)pstate;
 	pstats2->pingest_func = &stats2_corr_cov_ingest;
-	pstats2->pemit_func = &stats2_corr_cov_emit;
+	pstats2->pemit_func   = &stats2_corr_cov_emit;
+
 	return pstats2;
 }
 static stats2_t* stats2_corr_alloc(int do_verbose) {
@@ -472,9 +477,9 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->groups                  = lhmslv_alloc();
 	pstate->do_verbose              = do_verbose;
 
-	pmapper->pvstate                = pstate;
-	pmapper->pprocess_func   = mapper_stats2_process;
-	pmapper->pfree_func      = mapper_stats2_free;
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_stats2_process;
+	pmapper->pfree_func    = mapper_stats2_free;
 
 	return pmapper;
 }

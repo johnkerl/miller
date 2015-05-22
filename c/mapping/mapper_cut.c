@@ -61,7 +61,7 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 		hss_add(pstate->pfield_name_set, pe->value);
 	pstate->do_complement = do_complement;
 
-	pmapper->pvstate              = (void*)pstate;
+	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_cut_process;
 	pmapper->pfree_func    = mapper_cut_free;
 

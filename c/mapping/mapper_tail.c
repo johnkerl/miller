@@ -70,9 +70,9 @@ static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long 
 	pstate->tail_count             = tail_count;
 	pstate->precord_lists_by_group = lhmslv_alloc();
 
-	pmapper->pvstate               = pstate;
-	pmapper->pprocess_func  = mapper_tail_process;
-	pmapper->pfree_func     = mapper_tail_free;
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_tail_process;
+	pmapper->pfree_func    = mapper_tail_free;
 
 	return pmapper;
 }

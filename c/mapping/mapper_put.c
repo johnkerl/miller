@@ -82,7 +82,7 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	pmapper->pvstate              = (void*)pstate;
+	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_put_process;
 	pmapper->pfree_func    = mapper_put_free;
 

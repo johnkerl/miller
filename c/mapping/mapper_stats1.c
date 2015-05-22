@@ -51,6 +51,7 @@ static acc_t* acc_count_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_count_state_t* pstate = mlr_malloc_or_die(sizeof(acc_count_state_t));
 	pstate->count       = 0LL;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = &acc_count_singest;
 	pacc->pdingest_func = NULL;
@@ -91,6 +92,7 @@ static acc_t* acc_mode_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_mode_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mode_state_t));
 	pstate->pcounts_for_value = lhmsi_alloc();
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = &acc_mode_singest;
 	pacc->pdingest_func = NULL;
@@ -116,6 +118,7 @@ static acc_t* acc_sum_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_sum_state_t* pstate = mlr_malloc_or_die(sizeof(acc_sum_state_t));
 	pstate->sum         = 0LL;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_sum_dingest;
@@ -145,6 +148,7 @@ static acc_t* acc_mean_alloc() {
 	acc_mean_state_t* pstate = mlr_malloc_or_die(sizeof(acc_mean_state_t));
 	pstate->sum         = 0.0;
 	pstate->count       = 0LL;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_mean_dingest;
@@ -189,6 +193,7 @@ static acc_t* acc_stddev_var_meaneb_alloc(int do_which) {
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
 	pstate->do_which    = do_which;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_stddev_var_meaneb_dingest;
@@ -235,6 +240,7 @@ static acc_t* acc_min_alloc() {
 	acc_min_state_t* pstate = mlr_malloc_or_die(sizeof(acc_min_state_t));
 	pstate->have_min    = FALSE;
 	pstate->min         = -999.0;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_min_dingest;
@@ -272,6 +278,7 @@ static acc_t* acc_max_alloc() {
 	acc_max_state_t* pstate = mlr_malloc_or_die(sizeof(acc_max_state_t));
 	pstate->have_max    = FALSE;
 	pstate->max         = -999.0;
+
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
 	pacc->pdingest_func = &acc_max_dingest;
@@ -301,6 +308,7 @@ static acc_t* acc_percentile_alloc() {
 	acc_t* pacc = mlr_malloc_or_die(sizeof(acc_t));
 	acc_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(acc_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
+
 	pacc->pvstate        = (void*)pstate;
 	pacc->psingest_func  = NULL;
 	pacc->pdingest_func  = &acc_percentile_dingest;
@@ -576,7 +584,7 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->groups                = lhmslv_alloc();
 
-	pmapper->pvstate              = pstate;
+	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
 	pmapper->pfree_func    = mapper_stats1_free;
 

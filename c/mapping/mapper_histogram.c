@@ -124,7 +124,7 @@ static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, in
 		lhmsv_put(pstate->pcounts_by_field, value_field_name, pcounts);
 	}
 
-	pmapper->pvstate              = pstate;
+	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_histogram_process;
 	pmapper->pfree_func    = mapper_histogram_free;
 
