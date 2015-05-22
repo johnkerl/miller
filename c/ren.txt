@@ -1,0 +1,37 @@
+
+ lrec_reader_stdio_func_t
+lrec_reader_csv_stdio_func
+lrec_reader_dkvp_stdio_func
+lrec_reader_nidx_stdio_func
+lrec_reader_xtab_stdio_func
+
+ lrec_reader_mmap_func_t
+lrec_reader_csv_mmap_func
+lrec_reader_dkvp_mmap_func
+lrec_reader_nidx_mmap_func
+lrec_reader_xtab_mmap_func
+
+ lrec_writer_func_t
+lrec_writer_csv_func
+lrec_writer_dkvp_func
+lrec_writer_nidx_func
+lrec_writer_pprint_func
+lrec_writer_xtab_func
+
+plrec_reader_stdio_func
+
+--> also rename to include stdio
+--> also rename to include sof
+ reset_func_t
+reset_csv_func
+reset_csv_mmap_func
+reset_dkvp_func
+reset_dkvp_mmap_func
+reset_nidx_func
+reset_xtab_func
+
+xxx mapper funcs -- ?!?
+
+----------------------------------------------------------------
+xxx file renames too!!!
+xxx HDR_TOP_H renames too!!!

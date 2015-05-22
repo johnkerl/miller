@@ -54,6 +54,8 @@ NEATEN
 !! xxx's in the code
 * source hygiene: top-of-header comments, readme re memory management, etc.
 
+* make an automated hdrtop checker & put it into the makefile
+
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
 * catc.c/catc0.c -> language-comparisons/ dir
