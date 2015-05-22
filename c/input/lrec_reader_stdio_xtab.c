@@ -4,16 +4,16 @@
 #include "containers/lrec_parsers.h"
 #include "input/lrec_readers.h"
 
-typedef struct _lrec_reader_xtab_stdio_state_t {
+typedef struct _lrec_reader_stdio_xtab_state_t {
 	char ips; // xxx make me real
 	int allow_repeat_ips;
 	int at_eof;
 	// xxx need to remember EOF for subsequent read
-} lrec_reader_xtab_stdio_state_t;
+} lrec_reader_stdio_xtab_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_xtab_stdio_func(FILE* input_stream, void* pvstate, context_t* pctx) {
-	lrec_reader_xtab_stdio_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_stdio_xtab_func(FILE* input_stream, void* pvstate, context_t* pctx) {
+	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
 
 	if (pstate->at_eof)
 		return NULL;
@@ -28,12 +28,12 @@ static lrec_t* lrec_reader_xtab_stdio_func(FILE* input_stream, void* pvstate, co
 			if (pxtab_lines->length == 0) {
 				return NULL;
 			} else {
-				return lrec_parse_xtab_stdio(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
+				return lrec_parse_stdio_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
 			}
 		} else if (*line == '\0') {
 			free(line);
 			if (pxtab_lines->length > 0) { // xxx make an is_empty_modulo_whitespace()
-				return lrec_parse_xtab_stdio(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
+				return lrec_parse_stdio_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
 			}
 		} else {
 			slls_add_with_free(pxtab_lines, line);
@@ -43,17 +43,17 @@ static lrec_t* lrec_reader_xtab_stdio_func(FILE* input_stream, void* pvstate, co
 
 // xxx rename resets to sof_reset or some such
 static void reset_xtab_func(void* pvstate) {
-	lrec_reader_xtab_stdio_state_t* pstate = pvstate;
+	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
 	pstate->at_eof = FALSE;
 }
 
-static void lrec_reader_xtab_stdio_free(void* pvstate) {
+static void lrec_reader_stdio_xtab_free(void* pvstate) {
 }
 
-lrec_reader_stdio_t* lrec_reader_xtab_stdio_alloc(char ips, int allow_repeat_ips) {
+lrec_reader_stdio_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips) {
 	lrec_reader_stdio_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_stdio_t));
 
-	lrec_reader_xtab_stdio_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_xtab_stdio_state_t));
+	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
 	//pstate->ips              = ips;
 	//pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->ips              = ' ';
@@ -61,9 +61,9 @@ lrec_reader_stdio_t* lrec_reader_xtab_stdio_alloc(char ips, int allow_repeat_ips
 	pstate->at_eof           = FALSE;
 	plrec_reader_stdio->pvstate         = (void*)pstate;
 
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_xtab_stdio_func;
+	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_stdio_xtab_func;
 	plrec_reader_stdio->preset_func  = &reset_xtab_func;
-	plrec_reader_stdio->pfree_func   = &lrec_reader_xtab_stdio_free;;
+	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_xtab_free;;
 
 	return plrec_reader_stdio;
 }

@@ -16,7 +16,7 @@
 // to hdr_keeper object. The current phdr_keeper is a pointer into one of
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
-typedef struct _lrec_reader_csv_stdio_state_t {
+typedef struct _lrec_reader_stdio_csv_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
 	char irs;
@@ -26,7 +26,7 @@ typedef struct _lrec_reader_csv_stdio_state_t {
 	int  expect_header_line_next;
 	hdr_keeper_t* phdr_keeper; // xxx rename to header_keeper
 	lhmslv_t*     phdr_keepers;
-} lrec_reader_csv_stdio_state_t;
+} lrec_reader_stdio_csv_state_t;
 
 // Cases:
 //
@@ -51,8 +51,8 @@ typedef struct _lrec_reader_csv_stdio_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_csv_stdio_func(FILE* input_stream, void* pvstate, context_t* pctx) {
-	lrec_reader_csv_stdio_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_stdio_csv_func(FILE* input_stream, void* pvstate, context_t* pctx) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
@@ -99,22 +99,22 @@ static lrec_t* lrec_reader_csv_stdio_func(FILE* input_stream, void* pvstate, con
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_csv_stdio(pstate->phdr_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			return lrec_parse_stdio_csv(pstate->phdr_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
 		}
 	}
 }
 
 // ----------------------------------------------------------------
 static void reset_csv_func(void* pvstate) {
-	lrec_reader_csv_stdio_state_t* pstate = pvstate;
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_csv_stdio_free(void* pvstate) {
-	lrec_reader_csv_stdio_state_t* pstate = pvstate;
+static void lrec_reader_stdio_csv_free(void* pvstate) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->phdr_keepers->phead; pe != NULL; pe = pe->pnext) {
 		hdr_keeper_t* phdr_keeper = pe->pvvalue;
 		hdr_keeper_free(phdr_keeper);
@@ -122,10 +122,10 @@ static void lrec_reader_csv_stdio_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_stdio_t* lrec_reader_csv_stdio_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
 	lrec_reader_stdio_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_stdio_t));
 
-	lrec_reader_csv_stdio_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_stdio_state_t));
+	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
 	pstate->ifnr                    = 0LL;
 	pstate->irs                     = irs;
 	pstate->ifs                     = ifs;
@@ -133,12 +133,12 @@ lrec_reader_stdio_t* lrec_reader_csv_stdio_alloc(char irs, char ifs, int allow_r
 	pstate->expect_header_line_next = TRUE;
 	pstate->phdr_keeper             = NULL;
 	pstate->phdr_keepers            = lhmslv_alloc();
-	plrec_reader_stdio->pvstate                = (void*)pstate;
+	plrec_reader_stdio->pvstate     = (void*)pstate;
 
 	// xxx homogenize these names, for all readers & writers
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_csv_stdio_func;
+	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_stdio_csv_func;
 	plrec_reader_stdio->preset_func  = &reset_csv_func;
-	plrec_reader_stdio->pfree_func   = &lrec_reader_csv_stdio_free;
+	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader_stdio;
 }

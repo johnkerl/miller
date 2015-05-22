@@ -154,10 +154,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ops  = DEFAULT_PS;
 	popts->ofmt = DEFAULT_OFMT;
 
-	popts->plrec_reader_stdio      = NULL;
-	popts->plrec_reader_mmap = NULL;
-	popts->plrec_writer      = NULL;
-	popts->filenames    = NULL;
+	popts->plrec_reader_stdio   = NULL;
+	popts->plrec_reader_mmap    = NULL;
+	popts->plrec_writer         = NULL;
+	popts->filenames            = NULL;
 	popts->use_file_reader_mmap = FALSE;
 
 	char* rdesc = "dkvp";
@@ -281,17 +281,17 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	// xxx alloc mmap readers here too
 	// xxx have use-mmap-readers flag ...
 	if (streq(rdesc, "dkvp")) {
-		popts->plrec_reader_stdio      =      lrec_reader_dkvp_stdio_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap = lrec_reader_dkvp_mmap_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->plrec_reader_stdio      =      lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->plrec_reader_mmap = lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "csv")) {
-		popts->plrec_reader_stdio      = lrec_reader_csv_stdio_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap = lrec_reader_csv_mmap_alloc(popts->irs, popts->ifs, popts->ips);
+		popts->plrec_reader_stdio      = lrec_reader_stdio_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->plrec_reader_mmap = lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->ips);
 	} else if (streq(rdesc, "nidx")) {
-		popts->plrec_reader_stdio      = lrec_reader_nidx_stdio_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap = lrec_reader_nidx_mmap_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->plrec_reader_stdio      = lrec_reader_stdio_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
+		popts->plrec_reader_mmap = lrec_reader_mmap_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "xtab")) {
-		popts->plrec_reader_stdio      = lrec_reader_xtab_stdio_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
-		popts->plrec_reader_mmap = lrec_reader_xtab_mmap_alloc(popts->irs, popts->ips, TRUE/*popts->allow_repeat_ips*/);
+		popts->plrec_reader_stdio      = lrec_reader_stdio_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
+		popts->plrec_reader_mmap = lrec_reader_mmap_xtab_alloc(popts->irs, popts->ips, TRUE/*popts->allow_repeat_ips*/);
 	} else {
 		main_usage(argv[0], 1);
 	}

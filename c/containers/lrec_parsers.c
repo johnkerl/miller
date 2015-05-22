@@ -32,7 +32,7 @@ static char* make_nidx_key(int idx, char* pfree_flags) {
 	}
 }
 
-lrec_t* lrec_parse_nidx_stdio(char* line, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_nidx_alloc(line);
 
 	int idx = 0;
@@ -64,7 +64,7 @@ lrec_t* lrec_parse_nidx_stdio(char* line, char ifs, int allow_repeat_ifs) {
 	return prec;
 }
 
-lrec_t* lrec_parse_nidx_mmap(file_reader_mmap_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
@@ -119,7 +119,7 @@ lrec_t* lrec_parse_nidx_mmap(file_reader_mmap_state_t *phandle, char irs, char i
 // I couldn't find a performance gain using stdlib index(3) ... *maybe* even a
 // fraction of a percent *slower*.
 
-lrec_t* lrec_parse_dkvp_stdio(char* line, char ifs, char ips, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 
 	char* key   = line;
@@ -181,7 +181,7 @@ lrec_t* lrec_parse_dkvp_stdio(char* line, char ifs, char ips, int allow_repeat_i
 	return prec;
 }
 
-lrec_t* lrec_parse_dkvp_mmap(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
+lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
@@ -273,7 +273,7 @@ slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_csv_stdio(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_csv_alloc(data_line);
 	char* key = NULL;
 	char* value = data_line;
@@ -318,12 +318,12 @@ lrec_t* lrec_parse_csv_stdio(hdr_keeper_t* phdr_keeper, char* data_line, char if
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_csv_mmap(hdr_keeper_t* phdr_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_mmap_csv(hdr_keeper_t* phdr_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
 	return NULL; // xxx stub
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_xtab_stdio(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
+lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
 	lrec_t* prec = lrec_xtab_alloc(pxtab_lines);
 
 	for (sllse_t* pe = pxtab_lines->phead; pe != NULL; pe = pe->pnext) {
@@ -348,7 +348,7 @@ lrec_t* lrec_parse_xtab_stdio(slls_t* pxtab_lines, char ips, int allow_repeat_ip
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_xtab_mmap(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
+lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;

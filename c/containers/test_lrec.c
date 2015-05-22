@@ -74,7 +74,7 @@ static char* test_lrec_unbacked_api() {
 // ----------------------------------------------------------------
 static char* test_lrec_dkvp_api() {
 	char* line = strdup("w=2,x=3,y=4,z=5");
-	lrec_t* prec = lrec_parse_dkvp_stdio(line, ',', '=', FALSE);
+	lrec_t* prec = lrec_parse_stdio_dkvp(line, ',', '=', FALSE);
 	mu_assert_lf(prec->field_count == 4);
 
 	mu_assert_lf(streq(lrec_get(prec, "w"), "2"));
@@ -112,7 +112,7 @@ static char* test_lrec_dkvp_api() {
 // ----------------------------------------------------------------
 static char* test_lrec_nidx_api() {
 	char* line = strdup("a,b,c,d");
-	lrec_t* prec = lrec_parse_nidx_stdio(line, ',', FALSE);
+	lrec_t* prec = lrec_parse_stdio_nidx(line, ',', FALSE);
 	mu_assert_lf(prec->field_count == 4);
 
 	mu_assert_lf(streq(lrec_get(prec, "1"), "a"));
@@ -154,10 +154,10 @@ static char* test_lrec_csv_api() {
 	hdr_keeper_t* phdr_keeper = hdr_keeper_alloc(hdr_line, hdr_fields);
 
 	char* data_line_1 = strdup("2,3,4,5");
-	lrec_t* prec_1 = lrec_parse_csv_stdio(phdr_keeper, data_line_1, ',', FALSE);
+	lrec_t* prec_1 = lrec_parse_stdio_csv(phdr_keeper, data_line_1, ',', FALSE);
 
 	char* data_line_2 = strdup("6,7,8,9");
-	lrec_t* prec_2 = lrec_parse_csv_stdio(phdr_keeper, data_line_2, ',', FALSE);
+	lrec_t* prec_2 = lrec_parse_stdio_csv(phdr_keeper, data_line_2, ',', FALSE);
 
 	mu_assert_lf(prec_1->field_count == 4);
 	mu_assert_lf(prec_2->field_count == 4);
@@ -216,7 +216,7 @@ static char* test_lrec_xtab_api() {
 	slls_add_with_free(pxtab_lines, line_3);
 	slls_add_with_free(pxtab_lines, line_4);
 
-	lrec_t* prec = lrec_parse_xtab_stdio(pxtab_lines, ' ', TRUE);
+	lrec_t* prec = lrec_parse_stdio_xtab(pxtab_lines, ' ', TRUE);
 	mu_assert_lf(prec->field_count == 4);
 
 	mu_assert_lf(streq(lrec_get(prec, "w"), "2"));
