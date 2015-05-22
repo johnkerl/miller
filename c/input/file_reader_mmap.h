@@ -2,13 +2,13 @@
 #define FILE_READER_MMAP_H
 
 // xxx rename to mmap_file_reader
-typedef struct _mmap_reader_state_t {
+typedef struct _file_reader_mmap_state_t {
 	char* sol;
 	char* eof;
 	int   fd;
-} mmap_reader_state_t;
+} file_reader_mmap_state_t;
 
-mmap_reader_state_t mmap_reader_open(char* file_name);
-void mmap_reader_close(mmap_reader_state_t* pstate);
+file_reader_mmap_state_t file_reader_mmap_open(char* file_name);
+void file_reader_mmap_close(file_reader_mmap_state_t* pstate);
 
 #endif // FILE_READER_MMAP_H

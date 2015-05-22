@@ -7,8 +7,8 @@
 #include <sys/mman.h>
 #include "file_reader_mmap.h"
 
-mmap_reader_state_t mmap_reader_open(char* file_name) {
-	mmap_reader_state_t state;
+file_reader_mmap_state_t file_reader_mmap_open(char* file_name) {
+	file_reader_mmap_state_t state;
 	state.fd = open(file_name, O_RDONLY);
 	if (state.fd < 0) {
 		perror("open");
@@ -28,7 +28,7 @@ mmap_reader_state_t mmap_reader_open(char* file_name) {
 	return state;
 }
 
-void mmap_reader_close(mmap_reader_state_t* pstate) {
+void file_reader_mmap_close(file_reader_mmap_state_t* pstate) {
 	if (close(pstate->fd) < 0) {
 		perror("close");
 		exit(1);

@@ -64,7 +64,7 @@ lrec_t* lrec_parse_nidx(char* line, char ifs, int allow_repeat_ifs) {
 	return prec;
 }
 
-lrec_t* lrec_parse_nidx_mmap(mmap_reader_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_nidx_mmap(file_reader_mmap_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
@@ -181,7 +181,7 @@ lrec_t* lrec_parse_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	return prec;
 }
 
-lrec_t* lrec_parse_dkvp_mmap(mmap_reader_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
+lrec_t* lrec_parse_dkvp_mmap(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
@@ -318,7 +318,7 @@ lrec_t* lrec_parse_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_csv_mmap(hdr_keeper_t* phdr_keeper, mmap_reader_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_csv_mmap(hdr_keeper_t* phdr_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
 	return NULL; // xxx stub
 }
 
@@ -348,7 +348,7 @@ lrec_t* lrec_parse_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_xtab_mmap(mmap_reader_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
+lrec_t* lrec_parse_xtab_mmap(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;

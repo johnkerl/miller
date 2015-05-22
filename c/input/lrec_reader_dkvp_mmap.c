@@ -13,7 +13,7 @@ typedef struct _lrec_reader_dkvp_mmap_state_t {
 } lrec_reader_dkvp_mmap_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_dkvp_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_dkvp_mmap_func(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	lrec_reader_dkvp_mmap_state_t* pstate = pvstate;
 	if (phandle->sol >= phandle->eof) // xxx encapsulate a method for this ...
 		return NULL;

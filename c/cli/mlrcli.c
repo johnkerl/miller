@@ -158,7 +158,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_reader_mmap = NULL;
 	popts->plrec_writer      = NULL;
 	popts->filenames    = NULL;
-	popts->use_mmap_reader = FALSE;
+	popts->use_file_reader_mmap = FALSE;
 
 	char* rdesc = "dkvp";
 	char* wdesc = "dkvp";
@@ -260,7 +260,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		// xxx negate the default once this is working.
 		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
-			popts->use_mmap_reader = TRUE;
+			popts->use_file_reader_mmap = TRUE;
 		}
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);

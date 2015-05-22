@@ -52,7 +52,7 @@ typedef struct _lrec_reader_csv_mmap_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_csv_mmap_func(mmap_reader_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_csv_mmap_func(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	return NULL; // xxx stub
 //	lrec_reader_csv_mmap_state_t* pstate = pvstate;
 //

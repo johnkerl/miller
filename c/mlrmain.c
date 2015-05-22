@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	lrec_writer_t*      plrec_writer      = popts->plrec_writer;
 	char**         filenames    = popts->filenames;
 
-	int ok = do_stream_chained(filenames, popts->use_mmap_reader, plrec_reader, plrec_reader_mmap,
+	int ok = do_stream_chained(filenames, popts->use_file_reader_mmap, plrec_reader, plrec_reader_mmap,
 		pmapper_list, plrec_writer, popts->ofmt);
 
 	cli_opts_free(popts);

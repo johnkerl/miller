@@ -21,7 +21,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 
 // ----------------------------------------------------------------
 // xxx assert pmapper_list non-empty ...
-int do_stream_chained(char** filenames, int use_mmap_reader, lrec_reader_t* plrec_reader, lrec_reader_mmap_t* plrec_reader_mmap,
+int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_t* plrec_reader, lrec_reader_mmap_t* plrec_reader_mmap,
 	sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
@@ -39,7 +39,7 @@ int do_stream_chained(char** filenames, int use_mmap_reader, lrec_reader_t* plre
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
-			if (use_mmap_reader) {
+			if (use_file_reader_mmap) {
 				plrec_reader_mmap->preset_func(plrec_reader_mmap->pvstate);
 				ok = do_file_chained_mmap(*pfilename, &ctx, plrec_reader_mmap, pmapper_list, plrec_writer, output_stream) && ok;
 			} else {
@@ -94,7 +94,7 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 	lrec_reader_mmap_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	// xxx communicate error back from open, or rename it to ..._open_or_die
-	mmap_reader_state_t handle = mmap_reader_open(filename);
+	file_reader_mmap_state_t handle = file_reader_mmap_open(filename);
 
 	while (1) {
 		lrec_t* pinrec = plrec_reader->plrec_reader_func(&handle, plrec_reader->pvstate, pctx);
@@ -105,7 +105,7 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
-	mmap_reader_close(&handle);
+	file_reader_mmap_close(&handle);
 	return 1;
 }
 
