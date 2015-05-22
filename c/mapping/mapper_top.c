@@ -163,8 +163,8 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_top_process;
-	pmapper->pmapper_free_func    = mapper_top_free;
+	pmapper->pprocess_func = mapper_top_process;
+	pmapper->pfree_func    = mapper_top_free;
 
 	return pmapper;
 }

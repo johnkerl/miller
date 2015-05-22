@@ -39,7 +39,7 @@ lrec_writer_t* lrec_writer_xtab_alloc() {
 	pstate->record_count = 0LL;
 	plrec_writer->pvstate = pstate;
 
-	plrec_writer->plrec_writer_func = &lrec_writer_xtab_func;
+	plrec_writer->pprocess_func = &lrec_writer_xtab_func;
 	plrec_writer->pfree_func   = &lrec_writer_xtab_free;
 
 	return plrec_writer;

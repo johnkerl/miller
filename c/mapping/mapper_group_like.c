@@ -58,8 +58,8 @@ static mapper_t* mapper_group_like_alloc() {
 	pstate->precords_by_key_field_names = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_group_like_process;
-	pmapper->pmapper_free_func    = mapper_group_like_free;
+	pmapper->pprocess_func = mapper_group_like_process;
+	pmapper->pfree_func    = mapper_group_like_free;
 
 	return pmapper;
 }

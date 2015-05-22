@@ -38,8 +38,8 @@ static mapper_t* mapper_tac_alloc() {
 	pstate->records = sllv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_tac_process;
-	pmapper->pmapper_free_func    = mapper_tac_free;
+	pmapper->pprocess_func = mapper_tac_process;
+	pmapper->pfree_func    = mapper_tac_free;
 
 	return pmapper;
 }

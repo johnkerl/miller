@@ -213,8 +213,8 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 	pstate->do_sort                     = do_sort;
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_sort_process;
-	pmapper->pmapper_free_func    = mapper_sort_free;
+	pmapper->pprocess_func = mapper_sort_process;
+	pmapper->pfree_func    = mapper_sort_free;
 
 	return pmapper;
 }

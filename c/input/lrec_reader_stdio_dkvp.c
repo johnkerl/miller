@@ -41,8 +41,8 @@ lrec_reader_stdio_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, 
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 	plrec_reader_stdio->pvstate = (void*)pstate;
 
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_stdio_dkvp_func;
-	plrec_reader_stdio->preset_func  = &reset_dkvp_func;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_dkvp_func;
+	plrec_reader_stdio->psof_func  = &reset_dkvp_func;
 	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_dkvp_free;;
 
 	return plrec_reader_stdio;

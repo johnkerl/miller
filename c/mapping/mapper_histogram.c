@@ -125,8 +125,8 @@ static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, in
 	}
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_histogram_process;
-	pmapper->pmapper_free_func    = mapper_histogram_free;
+	pmapper->pprocess_func = mapper_histogram_process;
+	pmapper->pfree_func    = mapper_histogram_free;
 
 	return pmapper;
 }

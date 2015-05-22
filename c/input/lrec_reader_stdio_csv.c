@@ -136,8 +136,8 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 	plrec_reader_stdio->pvstate     = (void*)pstate;
 
 	// xxx homogenize these names, for all readers & writers
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_stdio_csv_func;
-	plrec_reader_stdio->preset_func  = &reset_csv_func;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_csv_func;
+	plrec_reader_stdio->psof_func  = &reset_csv_func;
 	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader_stdio;

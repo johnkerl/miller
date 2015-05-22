@@ -78,7 +78,7 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
 	pstate->plast_header_output     = NULL;
 	plrec_writer->pvstate                = (void*)pstate;
 
-	plrec_writer->plrec_writer_func = lrec_writer_csv_func;
+	plrec_writer->pprocess_func = lrec_writer_csv_func;
 	plrec_writer->pfree_func   = lrec_writer_csv_free;
 
 	return plrec_writer;

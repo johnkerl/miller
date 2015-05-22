@@ -40,10 +40,10 @@ int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_st
 			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
 			if (use_file_reader_mmap) {
-				plrec_reader_mmap->preset_func(plrec_reader_mmap->pvstate);
+				plrec_reader_mmap->psof_func(plrec_reader_mmap->pvstate);
 				ok = do_file_chained_mmap(*pfilename, &ctx, plrec_reader_mmap, pmapper_list, plrec_writer, output_stream) && ok;
 			} else {
-				plrec_reader_stdio->preset_func(plrec_reader_stdio->pvstate);
+				plrec_reader_stdio->psof_func(plrec_reader_stdio->pvstate);
 				ok = do_file_chained(*pfilename, &ctx, plrec_reader_stdio, pmapper_list, plrec_writer, output_stream) && ok;
 			}
 		}
@@ -54,7 +54,7 @@ int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_st
 	drive_lrec(NULL, &ctx, pmapper_list->phead, plrec_writer, output_stream);
 
 	// Drain the pretty-printer.
-	plrec_writer->plrec_writer_func(output_stream, NULL, plrec_writer->pvstate);
+	plrec_writer->pprocess_func(output_stream, NULL, plrec_writer->pvstate);
 
 	return ok;
 }
@@ -75,7 +75,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 	}
 
 	while (1) {
-		lrec_t* pinrec = plrec_reader_stdio->plrec_reader_stdio_func(input_stream, plrec_reader_stdio->pvstate, pctx);
+		lrec_t* pinrec = plrec_reader_stdio->pprocess_func(input_stream, plrec_reader_stdio->pvstate, pctx);
 		if (pinrec == NULL)
 			break;
 		pctx->nr++;
@@ -97,7 +97,7 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 	file_reader_mmap_state_t handle = file_reader_mmap_open(filename);
 
 	while (1) {
-		lrec_t* pinrec = plrec_reader_stdio->plrec_reader_stdio_func(&handle, plrec_reader_stdio->pvstate, pctx);
+		lrec_t* pinrec = plrec_reader_stdio->pprocess_func(&handle, plrec_reader_stdio->pvstate, pctx);
 		if (pinrec == NULL)
 			break;
 		pctx->nr++;
@@ -116,7 +116,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvdata;
 			if (poutrec != NULL)
-				plrec_writer->plrec_writer_func(output_stream, poutrec, plrec_writer->pvstate);
+				plrec_writer->pprocess_func(output_stream, poutrec, plrec_writer->pvstate);
 			// doc & encode convention that writer frees.
 		}
 		sllv_free(outrecs); // xxx cmt mem-mgmt
@@ -129,7 +129,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 // xxx need to figure out mem-mgmt here
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head) {
 	mapper_t* pmapper = pmapper_list_head->pvdata;
-	sllv_t* outrecs = pmapper->pmapper_process_func(pinrec, pctx, pmapper->pvstate);
+	sllv_t* outrecs = pmapper->pprocess_func(pinrec, pctx, pmapper->pvstate);
 	if (pmapper_list_head->pnext == NULL) {
 		return outrecs;
 	} else if (outrecs == NULL) { // xxx cmt

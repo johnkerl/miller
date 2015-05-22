@@ -32,8 +32,8 @@ lrec_reader_mmap_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_re
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 	plrec_reader_stdio->pvstate         = (void*)pstate;
 
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_mmap_nidx_func;
-	plrec_reader_stdio->preset_func  = &reset_nidx_func;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_nidx_func;
+	plrec_reader_stdio->psof_func  = &reset_nidx_func;
 
 	return plrec_reader_stdio;
 }

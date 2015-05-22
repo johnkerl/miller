@@ -19,8 +19,8 @@ typedef void    mapper_free_func_t(void* pvstate);
 
 typedef struct _mapper_t {
 	void* pvstate;
-	mapper_process_func_t* pmapper_process_func;
-	mapper_free_func_t*    pmapper_free_func;
+	mapper_process_func_t* pprocess_func;
+	mapper_free_func_t*    pfree_func;
 } mapper_t;
 
 // ----------------------------------------------------------------

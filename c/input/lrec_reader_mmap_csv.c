@@ -129,8 +129,8 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 	plrec_reader_stdio->pvstate     = (void*)pstate;
 
 	// xxx homogenize these names, for all readers & writers
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_mmap_csv_func;
-	plrec_reader_stdio->preset_func  = &reset_mmap_csv_func;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_mmap_csv_func;
+	plrec_reader_stdio->psof_func  = &reset_mmap_csv_func;
 
 	return plrec_reader_stdio;
 }

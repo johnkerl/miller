@@ -83,8 +83,8 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 	pstate->pcounts_by_group      = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_uniq_process;
-	pmapper->pmapper_free_func    = mapper_uniq_free;
+	pmapper->pprocess_func = mapper_uniq_process;
+	pmapper->pfree_func    = mapper_uniq_free;
 
 	return pmapper;
 }

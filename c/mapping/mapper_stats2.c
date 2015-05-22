@@ -473,8 +473,8 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->do_verbose              = do_verbose;
 
 	pmapper->pvstate                = pstate;
-	pmapper->pmapper_process_func   = mapper_stats2_process;
-	pmapper->pmapper_free_func      = mapper_stats2_free;
+	pmapper->pprocess_func   = mapper_stats2_process;
+	pmapper->pfree_func      = mapper_stats2_free;
 
 	return pmapper;
 }

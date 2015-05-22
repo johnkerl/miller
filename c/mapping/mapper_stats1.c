@@ -577,8 +577,8 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_stats1_process;
-	pmapper->pmapper_free_func    = mapper_stats1_free;
+	pmapper->pprocess_func = mapper_stats1_process;
+	pmapper->pfree_func    = mapper_stats1_free;
 
 	return pmapper;
 }

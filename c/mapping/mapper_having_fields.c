@@ -82,12 +82,12 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 
 	pmapper->pvstate = (void*)pstate;
 	if (criterion == HAVING_FIELDS_AT_LEAST)
-		pmapper->pmapper_process_func = mapper_having_fields_at_least_process;
+		pmapper->pprocess_func = mapper_having_fields_at_least_process;
 	else if (criterion == HAVING_FIELDS_WHICH_ARE)
-		pmapper->pmapper_process_func = mapper_having_fields_which_are_process;
+		pmapper->pprocess_func = mapper_having_fields_which_are_process;
 	else if (criterion == HAVING_FIELDS_AT_MOST)
-		pmapper->pmapper_process_func = mapper_having_fields_at_most_process;
-	pmapper->pmapper_free_func = mapper_having_fields_free;
+		pmapper->pprocess_func = mapper_having_fields_at_most_process;
+	pmapper->pfree_func = mapper_having_fields_free;
 
 	return pmapper;
 }

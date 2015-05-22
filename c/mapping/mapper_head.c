@@ -63,8 +63,8 @@ static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long 
 	pstate->precord_lists_by_group = lhmslv_alloc();
 
 	pmapper->pvstate               = pstate;
-	pmapper->pmapper_process_func  = mapper_head_process;
-	pmapper->pmapper_free_func     = mapper_head_free;
+	pmapper->pprocess_func  = mapper_head_process;
+	pmapper->pfree_func     = mapper_head_free;
 
 	return pmapper;
 }

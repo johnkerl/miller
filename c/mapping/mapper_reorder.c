@@ -45,8 +45,8 @@ static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) 
 		slls_reverse(pstate->pfield_name_list);
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_reorder_process;
-	pmapper->pmapper_free_func    = mapper_reorder_free;
+	pmapper->pprocess_func = mapper_reorder_process;
+	pmapper->pfree_func    = mapper_reorder_free;
 
 	return pmapper;
 }

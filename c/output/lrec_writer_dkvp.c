@@ -42,7 +42,7 @@ lrec_writer_t* lrec_writer_dkvp_alloc(char rs, char fs, char ps) {
 	pstate->ps = ps;
 	plrec_writer->pvstate = (void*)pstate;
 
-	plrec_writer->plrec_writer_func = &lrec_writer_dkvp_func;
+	plrec_writer->pprocess_func = &lrec_writer_dkvp_func;
 	plrec_writer->pfree_func   = &lrec_writer_dkvp_free;
 
 	return plrec_writer;

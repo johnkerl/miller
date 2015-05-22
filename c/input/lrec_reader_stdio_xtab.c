@@ -61,8 +61,8 @@ lrec_reader_stdio_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips
 	pstate->at_eof           = FALSE;
 	plrec_reader_stdio->pvstate         = (void*)pstate;
 
-	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_stdio_xtab_func;
-	plrec_reader_stdio->preset_func  = &reset_xtab_func;
+	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_xtab_func;
+	plrec_reader_stdio->psof_func  = &reset_xtab_func;
 	plrec_reader_stdio->pfree_func   = &lrec_reader_stdio_xtab_free;;
 
 	return plrec_reader_stdio;

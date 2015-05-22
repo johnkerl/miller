@@ -359,7 +359,7 @@ void cli_opts_free(cli_opts_t* popts) {
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvdata;
-		pmapper->pmapper_free_func(pmapper->pvstate);
+		pmapper->pfree_func(pmapper->pvstate);
 	}
 	sllv_free(popts->pmapper_list);
 

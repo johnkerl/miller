@@ -62,8 +62,8 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_complement) {
 	pstate->do_complement = do_complement;
 
 	pmapper->pvstate              = (void*)pstate;
-	pmapper->pmapper_process_func = mapper_cut_process;
-	pmapper->pmapper_free_func    = mapper_cut_free;
+	pmapper->pprocess_func = mapper_cut_process;
+	pmapper->pfree_func    = mapper_cut_free;
 
 	return pmapper;
 }

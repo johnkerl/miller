@@ -14,8 +14,8 @@ static void mapper_check_free(void* pvstate) {
 static mapper_t* mapper_check_alloc() {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate              = NULL;
-	pmapper->pmapper_process_func = mapper_check_process;
-	pmapper->pmapper_free_func    = mapper_check_free;
+	pmapper->pprocess_func = mapper_check_process;
+	pmapper->pfree_func    = mapper_check_free;
 	return pmapper;
 }
 

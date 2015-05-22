@@ -236,8 +236,8 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate              = pstate;
-	pmapper->pmapper_process_func = mapper_step_process;
-	pmapper->pmapper_free_func    = mapper_step_free;
+	pmapper->pprocess_func = mapper_step_process;
+	pmapper->pfree_func    = mapper_step_free;
 
 	return pmapper;
 }
