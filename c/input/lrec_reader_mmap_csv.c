@@ -60,6 +60,9 @@ static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, v
 //		if (pstate->expect_header_line_next) {
 //			// xxx cmt
 //			while (TRUE) {
+
+//				xxx need a func to take mmap handle & return slls_t* pheader_fields
+
 //				char* hline = mlr_get_line(input_stream, pstate->irs);
 //				if (hline == NULL) // EOF
 //					return NULL;
@@ -86,6 +89,9 @@ static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, v
 //			}
 //		}
 //
+
+//		xxx func not unlike the mmapnidx parser
+
 //		char* line = mlr_get_line(input_stream, pstate->irs);
 //		if (line == NULL) // EOF
 //			return NULL;

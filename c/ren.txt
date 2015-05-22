@@ -1,6 +1,0 @@
-* \s+= alignment ... :/
-* search for "xxx rename"
-* pvstate paragraphing
-----------------------------------------------------------------
-xxx file renames too!!!
-xxx HDR_TOP_H renames too!!! -- hdrtop --check?

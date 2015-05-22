@@ -11,9 +11,12 @@
 ================================================================
 FEATURES
 
-!! ren.txt
-
+!! lrec_parsers -> readers severally
 !! mmap impl: csv
+!! --mmap by default
+!! mmap/stdio UTs
+
+* readme incl. sof et al.
 
 !! nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
