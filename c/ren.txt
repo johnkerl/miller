@@ -1,12 +1,6 @@
 * \s+= alignment ... :/
-* also look for mapper funcs ...
 * search for "xxx rename"
 * pvstate paragraphing
 ----------------------------------------------------------------
-
-mmap.*stdio & v.v. ???
-
-
-----------------------------------------------------------------
 xxx file renames too!!!
-xxx HDR_TOP_H renames too!!!
+xxx HDR_TOP_H renames too!!! -- hdrtop --check?

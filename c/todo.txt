@@ -6,18 +6,12 @@
 
 -> impl full-num scanner thruout including pnnx etc etc etc
 
+* note mtrand in extdeps @ mlrwik
+
 ================================================================
 FEATURES
 
 !! mmap impl: csv
-
-!! mmap renames x many
-   grep -i mmap tags|cpick 1|grep mmap|sort -u
-   * rename process funcs et al. while we're at it
-   * x_mmap vs. x_what?
-   * reader -> lrec_reader or file_reader
-   * mmap.c -> mmap_file_reader
-   * _x_mmap_ vs. _mmap_x_
 
 !! nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
