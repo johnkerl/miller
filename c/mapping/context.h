@@ -1,6 +1,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+// xxx cmt
 typedef struct _context_t {
 	long long nr;
 	long long fnr;

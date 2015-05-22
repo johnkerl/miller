@@ -30,7 +30,7 @@ static void reset_xtab_func(void* pvstate) {
 }
 
 lrec_reader_mmap_t* lrec_reader_xtab_mmap_alloc(char irs, char ips, int allow_repeat_ips) {
-	lrec_reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
+	lrec_reader_mmap_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_xtab_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_xtab_mmap_state_t));
 	//pstate->ips              = ips;
@@ -39,10 +39,10 @@ lrec_reader_mmap_t* lrec_reader_xtab_mmap_alloc(char irs, char ips, int allow_re
 	pstate->ips              = ' ';
 	pstate->allow_repeat_ips = TRUE;
 	pstate->at_eof           = FALSE;
-	plrec_reader->pvstate         = (void*)pstate;
+	plrec_reader_stdio->pvstate         = (void*)pstate;
 
-	plrec_reader->plrec_reader_func = &lrec_reader_xtab_mmap_func;
-	plrec_reader->preset_func  = &reset_xtab_func;
+	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_xtab_mmap_func;
+	plrec_reader_stdio->preset_func  = &reset_xtab_func;
 
-	return plrec_reader;
+	return plrec_reader_stdio;
 }

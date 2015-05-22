@@ -15,7 +15,7 @@ typedef void    lrec_reader_reset_mmap_func_t(void* pvstate);
 
 typedef struct _lrec_reader_mmap_t {
 	void*               pvstate;
-	lrec_reader_mmap_func_t* plrec_reader_func;
+	lrec_reader_mmap_func_t* plrec_reader_stdio_func;
 	lrec_reader_reset_mmap_func_t*  preset_func;
 } lrec_reader_mmap_t;
 

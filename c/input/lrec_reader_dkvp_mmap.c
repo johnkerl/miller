@@ -26,17 +26,17 @@ static void reset_dkvp_mmap_func(void* pvstate) {
 }
 
 lrec_reader_mmap_t* lrec_reader_dkvp_mmap_alloc(char irs, char ifs, char ips, int allow_repeat_ifs) {
-	lrec_reader_mmap_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
+	lrec_reader_mmap_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
 
 	lrec_reader_dkvp_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_dkvp_mmap_state_t));
 	pstate->irs = irs;
 	pstate->ifs = ifs;
 	pstate->ips = ips;
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	plrec_reader->pvstate = (void*)pstate;
+	plrec_reader_stdio->pvstate = (void*)pstate;
 
-	plrec_reader->plrec_reader_func = &lrec_reader_dkvp_mmap_func;
-	plrec_reader->preset_func  = &reset_dkvp_mmap_func;
+	plrec_reader_stdio->plrec_reader_stdio_func = &lrec_reader_dkvp_mmap_func;
+	plrec_reader_stdio->preset_func  = &reset_dkvp_mmap_func;
 
-	return plrec_reader;
+	return plrec_reader_stdio;
 }
