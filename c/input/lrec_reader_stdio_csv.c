@@ -6,14 +6,14 @@
 #include "containers/lrec_parsers.h"
 #include "input/lrec_readers.h"
 
-// Idea of phdr_keepers: each hdr_keeper object retains the input-line backing
+// Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data
 // stream, including header-schema changes in the input stream. This means we
 // need to keep headers intact as long as any lrecs are pointing to them.  One
 // option is reference-counting which I experimented with; it was messy and
 // error-prone. The approach used here is to keep a hash map from header-schema
-// to hdr_keeper object. The current phdr_keeper is a pointer into one of
+// to header_keeper object. The current pheader_keeper is a pointer into one of
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
 typedef struct _lrec_reader_stdio_csv_state_t {
@@ -24,8 +24,8 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int  allow_repeat_ifs;
 
 	int  expect_header_line_next;
-	hdr_keeper_t* phdr_keeper;
-	lhmslv_t*     phdr_keepers;
+	header_keeper_t* pheader_keeper;
+	lhmslv_t*     pheader_keepers;
 } lrec_reader_stdio_csv_state_t;
 
 // Cases:
@@ -66,16 +66,16 @@ static lrec_t* lrec_reader_stdio_csv_process(FILE* input_stream, void* pvstate, 
 				slls_t* pheader_fields = split_csv_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
 				if (pheader_fields->length == 0) {
 					pstate->expect_header_line_next = TRUE;
-					if (pstate->phdr_keeper != NULL) {
-						pstate->phdr_keeper = NULL;
+					if (pstate->pheader_keeper != NULL) {
+						pstate->pheader_keeper = NULL;
 					}
 				} else {
 					pstate->expect_header_line_next = FALSE;
 
-					pstate->phdr_keeper = lhmslv_get(pstate->phdr_keepers, pheader_fields);
-					if (pstate->phdr_keeper == NULL) {
-						pstate->phdr_keeper = hdr_keeper_alloc(hline, pheader_fields);
-						lhmslv_put(pstate->phdr_keepers, pheader_fields, pstate->phdr_keeper);
+					pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
+					if (pstate->pheader_keeper == NULL) {
+						pstate->pheader_keeper = header_keeper_alloc(hline, pheader_fields);
+						lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
 					} else { // Re-use the header-keeper in the header cache
 						slls_free(pheader_fields);
 						free(hline);
@@ -91,15 +91,15 @@ static lrec_t* lrec_reader_stdio_csv_process(FILE* input_stream, void* pvstate, 
 
 		// xxx empty-line check ... make a lib func is_empty_modulo_whitespace().
 		if (!*line) {
-			if (pstate->phdr_keeper != NULL) {
-				pstate->phdr_keeper = NULL;
+			if (pstate->pheader_keeper != NULL) {
+				pstate->pheader_keeper = NULL;
 				pstate->expect_header_line_next = TRUE;
 				free(line);
 				continue;
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_stdio_csv(pstate->phdr_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			return lrec_parse_stdio_csv(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
 		}
 	}
 }
@@ -115,9 +115,9 @@ static void lrec_reader_stdio_sof(void* pvstate) {
 // ----------------------------------------------------------------
 static void lrec_reader_stdio_csv_free(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
-	for (lhmslve_t* pe = pstate->phdr_keepers->phead; pe != NULL; pe = pe->pnext) {
-		hdr_keeper_t* phdr_keeper = pe->pvvalue;
-		hdr_keeper_free(phdr_keeper);
+	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
+		header_keeper_t* pheader_keeper = pe->pvvalue;
+		header_keeper_free(pheader_keeper);
 	}
 }
 
@@ -131,8 +131,8 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 	pstate->ifs                       = ifs;
 	pstate->allow_repeat_ifs          = allow_repeat_ifs;
 	pstate->expect_header_line_next   = TRUE;
-	pstate->phdr_keeper               = NULL;
-	pstate->phdr_keepers              = lhmslv_alloc();
+	pstate->pheader_keeper            = NULL;
+	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader_stdio->pvstate       = (void*)pstate;
 	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_csv_process;

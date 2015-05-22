@@ -74,7 +74,7 @@ regtest-copy:
 # ----------------------------------------------------------------
 # Unit-test executables
 test-lrec: .always
-	$(CCDEBUG) -D__TEST_LREC_MAIN__ lib/mlrutil.c containers/lrec.c containers/hdr_keeper.c containers/sllv.c containers/slls.c containers/lrec_parsers.c containers/test_lrec.c -o test-lrec
+	$(CCDEBUG) -D__TEST_LREC_MAIN__ lib/mlrutil.c containers/lrec.c containers/header_keeper.c containers/sllv.c containers/slls.c containers/lrec_parsers.c containers/test_lrec.c -o test-lrec
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil

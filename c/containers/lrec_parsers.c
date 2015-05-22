@@ -274,14 +274,14 @@ slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csv(hdr_keeper_t* phdr_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_csv(header_keeper_t* pheader_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_csv_alloc(data_line);
 	char* key = NULL;
 	char* value = data_line;
 
 	// xxx needs hdr/data length check!!!!!!
 	// xxx needs pe-non-null (hdr-empty) check:
-	sllse_t* pe = phdr_keeper->pkeys->phead;
+	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for (char* p = data_line; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
@@ -319,7 +319,7 @@ lrec_t* lrec_parse_stdio_csv(hdr_keeper_t* phdr_keeper, char* data_line, char if
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_csv(hdr_keeper_t* phdr_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_mmap_csv(header_keeper_t* pheader_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
 	return NULL; // xxx stub
 }
 
