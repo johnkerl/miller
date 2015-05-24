@@ -100,7 +100,7 @@ static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_pa
 	int i = 0;
 	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
 		if (sort_params[i] & SORT_NUMERIC) {
-			if (sscanf(pe->value, "%lf", &typed_sort_keys[i].u.d) != 1) {
+			if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
 				// xxx to do: print some more context here, e.g. file name & line number
 				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
 				exit(1);

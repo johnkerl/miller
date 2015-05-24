@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 			if (line[len-1] == '\n')
 				line[len-1] = 0;
 		double v;
-		if (sscanf(line, "%lf", &v) == 1) {
+		if (!mlr_try_double_from_string(line, &v)) {
 			percentile_keeper_ingest(ppercentile_keeper, v);
 		} else {
 			printf("meh? >>%s<<\n", line);

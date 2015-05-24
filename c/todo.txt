@@ -11,12 +11,12 @@
 ================================================================
 FEATURES
 
-!! lrec_parsers -> readers severally
+!! move lrec_parsers -> readers severally
 !! mmap impl: csv
-!! --mmap by default
-!! mmap/stdio UTs
+!! then: --mmap by default
+!! mmap/stdio UTs; maybe run all cases with --mmap and again with --no-mmap
 
-* readme incl. sof et al.
+* readme @ each level incl. sof et al. @ base
 
 !! nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
@@ -34,6 +34,8 @@ FEATURES
    > definitely put nidx before dkvp in the mlrwik/formats page
 
    > "index-numbered" -> "implicitly index-numbered" in mlrwik
+
+----------------------------------------------------------------
 
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 
@@ -93,11 +95,6 @@ DOC
 * maybe restore mem-mgmt page for dev-info? or a readme?!?
 * meaneb: assumes uncorr. code/doc link to appxb :)
 * cookbook page? random subsampling via urand()<0.001 ... what else ...
-
-================================================================
-PERF
-
-* try mmap(2) for non-stdin case. 1st experiment w/ catc.c, & make a cutc.c.
 
 ================================================================
 DATA

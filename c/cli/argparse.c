@@ -129,7 +129,7 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 				fprintf(stderr, "\n");
 			}
 		} else if (pdef->type == AP_DOUBLE_FLAG) {
-			if (sscanf(argv[argi+1], "%lf", (double *)pdef->pval) != 1) {
+			if (!mlr_try_double_from_string(argv[argi+1], (double *)pdef->pval)) {
 				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as double.\n",
 					argv[0], verb, argv[argi+1], argv[argi]);
 				fprintf(stderr, "\n");

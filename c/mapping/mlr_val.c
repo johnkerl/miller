@@ -95,7 +95,7 @@ void mt_get_double_strict(mlr_val_t* pval) {
 		return;
 	if (pval->type == MT_STRING) {
 		double double_val;
-		if (sscanf(pval->u.string_val, "%lf", &double_val) != 1) {
+		if (!mlr_try_double_from_string(pval->u.string_val, &double_val)) {
 			pval->type = MT_ERROR;
 			pval->u.int_val = 0;
 		} else {

@@ -486,7 +486,10 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 // ----------------------------------------------------------------
 static int is_percentile_acc_name(char* acc_name) {
 	double percentile;
-	if (sscanf(acc_name, "p%lf", &percentile) != 1)
+	// sscanf(acc_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
+	if (acc_name[0] != 'p')
+		return FALSE;
+	if (!mlr_try_double_from_string(&acc_name[1], &percentile))
 		return FALSE;
 	if (percentile < 0.0 || percentile > 100.0) {
 		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",

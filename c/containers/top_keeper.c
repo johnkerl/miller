@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 			printf("\n");
 		} else {
 			double v;
-			if (sscanf(line, "%lf", &v) == 1) {
+			if (!mlr_try_double_from_string(line, &v)) {
 				top_keeper_add(ptop_keeper, v, NULL);
 				top_keeper_dump(ptop_keeper);
 				printf("\n");
