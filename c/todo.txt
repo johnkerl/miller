@@ -4,10 +4,6 @@
 * $ echo t=0 | mlr put '$y=sec2gmt($x)'   <-- explicitly nullify
   t=0,y=(null)
 
--> impl full-num scanner thruout including pnnx etc etc etc
-
-* note mtrand in extdeps @ mlrwik
-
 ================================================================
 FEATURES
 
