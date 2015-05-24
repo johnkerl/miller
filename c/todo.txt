@@ -4,6 +4,8 @@
 * $ echo t=0 | mlr put '$y=sec2gmt($x)'   <-- explicitly nullify
   t=0,y=(null)
 
+! --pprint isn't doing pprint output
+
 ================================================================
 FEATURES
 
@@ -35,23 +37,17 @@ FEATURES
 
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 
-! rip through filenames @ start & abend unless -f each: fail fast.
-
 ! mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 * mod op (either c-like, or sane) and put into wikidoc if so.
 
-* linreg-quality 2nd pass -- code it up in stats2 w/ -m {m} -b {b} -- ?
-
-* RV-coefficient -- ?
+? rip through filenames @ start & abend unless -f each: fail fast.
 
 ================================================================
 NEATEN
 
 !! xxx's in the code
 * source hygiene: top-of-header comments, readme re memory management, etc.
-
-* make an automated hdrtop checker & put it into the makefile
 
 * prune pix/ dir
 * makefile go/d/rs stuff -> language-comparisons/ dir
@@ -61,9 +57,6 @@ NEATEN
 
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
 
-* doc-tech: make sure all html stylings are moved into css
-* doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
-
 ================================================================
 ONLINE HELP
 
@@ -71,6 +64,7 @@ ONLINE HELP
 
 ================================================================
 IMPROVEMENTS
+
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
   lmhsi: column name -> char index??
 * null-handling everywhere!! :/
@@ -91,6 +85,7 @@ DOC
 * maybe restore mem-mgmt page for dev-info? or a readme?!?
 * meaneb: assumes uncorr. code/doc link to appxb :)
 * cookbook page? random subsampling via urand()<0.001 ... what else ...
+* doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
 
 ================================================================
 DATA
