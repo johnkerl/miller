@@ -212,43 +212,31 @@ mlr sort -f hostname,uptime *.dat
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --help | fold -s
+$ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
-   cat check count-distinct cut filter group-by group-like having-fields head
-histogram label put
+   cat check count-distinct cut filter group-by group-like having-fields head histogram label put
    rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 Separator options, for input, output, or both:
-  --rs      --irs     --ors                  Record separators, defaulting to
-newline
-  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to
-","
-  --ps      --ips     --ops                  Pair   separators, defaulting to
-"="
+  --rs      --irs     --ors                  Record separators, defaulting to newline
+  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to ","
+  --ps      --ips     --ops                  Pair   separators, defaulting to "="
 Data-format options, for input, output, or both:
-  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g
-"a=1,b=2" (default)
-  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields
-(Unix-toolkit style)
-  --csv     --icsv    --ocsv                 Comma-separated value (or
-tab-separated with --fs tab, etc.)
-  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces
-no output until all input is in)
-  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for
-highly multi-column data)
+  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g "a=1,b=2" (default)
+  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)
+  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)
+  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)
+  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for highly multi-column data)
 Numerical format:
-  --ofmt {format}                            E.g. %.18lf, %.0lf. Please use
-sprintf-style codes for double-precision.
-                                             Applies to verbs which compute new
-values, e.g. put, stats1, stats2.
+  --ofmt {format}                            E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
+                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-Please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller for more information.
+Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
 </pre>
 </div>
 <p/>
