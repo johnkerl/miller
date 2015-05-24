@@ -248,7 +248,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ipprint")) { rdesc = "csv"; popts->ifs = ' '; popts->allow_repeat_ifs = TRUE;}
 		else if (streq(argv[argi], "--opprint")) { wdesc = "pprint"; }
-		else if (streq(argv[argi], "--pprint"))  { rdesc = wdesc = "csv"; popts->ifs = ' '; popts->allow_repeat_ifs = TRUE;}
+		else if (streq(argv[argi], "--pprint"))  { rdesc = "csv"; popts->ifs = ' '; popts->allow_repeat_ifs = TRUE; wdesc="pprint";}
 		else if (streq(argv[argi], "--right"))   { left_align_pprint = FALSE; }
 
 		else if (streq(argv[argi], "--ofmt")) {
