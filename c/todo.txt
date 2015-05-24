@@ -4,8 +4,6 @@
 * $ echo t=0 | mlr put '$y=sec2gmt($x)'   <-- explicitly nullify
   t=0,y=(null)
 
-! --pprint isn't doing pprint output
-
 ================================================================
 FEATURES
 
