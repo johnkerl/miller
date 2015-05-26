@@ -233,13 +233,14 @@ POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HER
 
 POKI_RUN_COMMAND{{mlr cut --help}}HERE
 
-<p/>Note that <tt>cut</tt> doesn&rsquo;t reorder field names &mdash; for that, use
-<a href="#reorder"><tt>reorder</tt></a>.
-
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
 </td><td>
 POKI_RUN_COMMAND{{mlr --opprint cut -f y,x,i data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -f b,c,a}}HERE
+</td><td>
+POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 </td></tr></table>
 
 <p/>

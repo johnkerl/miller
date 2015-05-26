@@ -573,15 +573,14 @@ a=eks,b=zee,count=357
 <pre>
 $ mlr cut --help
 Usage: mlr cut [options]
--f {a,b,c}       Field names to cut.
+-f {a,b,c}       Field names to include for cut.
+-o               Retain fields in the order specified here in the argument list.
+                 Default is to retain them in the order found in the input data.
 -x|--complement  Exclude, rather that include, field names specified by -f.
 Passes through input records with specified fields included/excluded.
 </pre>
 </div>
 <p/>
-
-<p/>Note that <tt>cut</tt> doesn&rsquo;t reorder field names &mdash; for that, use
-<a href="#reorder"><tt>reorder</tt></a>.
 
 <table><tr><td>
 <p/>
@@ -608,6 +607,24 @@ i x                   y
 3 0.20460330576630303 0.33831852551664776
 4 0.38139939387114097 0.13418874328430463
 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
+a=1,b=2,c=3
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
+b=2,c=3,a=1
 </pre>
 </div>
 <p/>
