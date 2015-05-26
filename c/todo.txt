@@ -7,7 +7,6 @@
 ================================================================
 FEATURES/+
 
-!! move lrec_parsers -> readers severally
 !! mmap impl: csv
 !! then: --mmap by default
 !! mmap/stdio UTs; maybe run all cases with --mmap and again with --no-mmap

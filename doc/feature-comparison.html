@@ -170,8 +170,10 @@ Its domain-specific languages are limited to the <tt>filter</tt> and
 functions are stream functions.  This means <tt>NF</tt>, <tt>NR</tt>, etc.
 change from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in
 the current record, and the input to <tt>sqrt($x)</tt> changes from one record
-to the next.  Miller doesn&rsquo;t let you set, say, <tt>sum=0</tt> and then
-update that on each record.
+to the next.  Miller doesn&rsquo;t let you set <tt>sum=0</tt> before
+records are read, then update that sum on each record, then print its value at the
+end. (However, do see <tt>mlr step -a rsum</tt> in the
+<a href="reference.html">Reference</a>) page.)
 
 <li/> Miller is faster than <tt>awk</tt>, <tt>cut</tt>, and so on (depending on
 platform; see also <a href="performance.html">Performance</a>). In

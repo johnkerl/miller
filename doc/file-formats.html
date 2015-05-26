@@ -95,6 +95,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Pretty-printed">Pretty-printed</a><br/>
 &bull;&nbsp;<a href="#Key-value_pairs">Key-value pairs</a><br/>
 &bull;&nbsp;<a href="#Index-numbered_(toolkit_style)">Index-numbered (toolkit style)</a><br/>
+&bull;&nbsp;<a href="#Index-numbered_(toolkit_style)">Index-numbered (toolkit style)</a><br/>
 &bull;&nbsp;<a href="#Vertical_tabular">Vertical tabular</a><br/>
 </div>
 <p/>
@@ -173,6 +174,64 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <p/>
 
 Such data are easy to generate, e.g. in Ruby with
+<p/>
+<div class="pokipanel">
+<pre>
+puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+</pre>
+</div>
+<p/>
+or <tt>print</tt> statements in various languages, e.g.
+<p/>
+<div class="pokipanel">
+<pre>
+echo "type=3,user=$USER,date=$date\n";
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+logger.log("type=3,user=$USER,date=$date\n");
+</pre>
+</div>
+<p/>
+
+<p/> As discussed in <a href="record-heterogeneity.html">Record-heterogeneity</a>, Miller handles
+changes of field names within the same data stream. But using DKVP format this is particularly
+natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
+of lines such as
+
+<p/>
+<div class="pokipanel">
+<pre>
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+
+etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
+to analyze my logs.
+
+<p/>See <a href="reference.html">Reference</a> regarding how to specify separators other than
+the default equals-sign and comma.
+
+<a id="Index-numbered_(toolkit_style)"/><h1>Index-numbered (toolkit style)</h1>
+
+With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
+assigns integer field names starting with 1. This recapitulates Unix-toolkit
+behavor.
+
+<p/> Example with index-numbered output:
 <pre>
   puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 </pre>
