@@ -32,6 +32,7 @@ FEATURES
 ----------------------------------------------------------------
 
 * readme @ each level incl. sof et al. @ base
+  -> & perfopt: lrec_t not hashmap per se; stdio backings with minimal copying; mmap entirely; ... ?
 
 ! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
 
