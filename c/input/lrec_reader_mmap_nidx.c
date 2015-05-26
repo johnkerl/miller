@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
-#include "containers/lrec_parsers.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
@@ -36,4 +35,44 @@ lrec_reader_mmap_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_re
 	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_nidx_sof;
 
 	return plrec_reader_mmap;
+}
+
+lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char ifs, int allow_repeat_ifs) {
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+	int idx = 0;
+	char* key   = NULL;
+	char* value = line;
+	char* eol   = NULL;
+	char free_flags = 0;
+
+	for (char* p = line; *p; ) {
+		if (*p == irs) {
+			*p = 0;
+			eol = p;
+			phandle->sol = p+1;
+			break;
+		} else if (*p == ifs) {
+			*p = 0;
+
+			idx++;
+			key = make_nidx_key(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	idx++;
+	key = make_nidx_key(idx, &free_flags);
+	lrec_put(prec, key, value, free_flags);
+
+	return prec;
 }

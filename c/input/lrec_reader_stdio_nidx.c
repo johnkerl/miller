@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
-#include "containers/lrec_parsers.h"
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_nidx_state_t {
@@ -40,4 +39,38 @@ lrec_reader_stdio_t* lrec_reader_stdio_nidx_alloc(char irs, char ifs, int allow_
 	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_nidx_free;
 
 	return plrec_reader_stdio;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs) {
+	lrec_t* prec = lrec_nidx_alloc(line);
+
+	int idx = 0;
+	char* key        = NULL;
+	char* value      = line;
+	char  free_flags = 0;
+
+	for (char* p = line; *p; ) {
+		if (*p == ifs) {
+			*p = 0;
+
+			idx++;
+			key = make_nidx_key(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	idx++;
+	key = make_nidx_key(idx, &free_flags);
+	lrec_put(prec, key, value, free_flags);
+
+	return prec;
 }

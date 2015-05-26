@@ -3,7 +3,6 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
-#include "containers/lrec_parsers.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
@@ -138,4 +137,9 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_csv_sof;
 
 	return plrec_reader_mmap;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_mmap_csv(header_keeper_t* pheader_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
+	return NULL; // xxx stub
 }

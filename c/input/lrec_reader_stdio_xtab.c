@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlrutil.h"
-#include "containers/lrec_parsers.h"
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_xtab_state_t {
@@ -65,4 +64,29 @@ lrec_reader_stdio_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips
 	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_xtab_free;
 
 	return plrec_reader_stdio;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
+	lrec_t* prec = lrec_xtab_alloc(pxtab_lines);
+
+	for (sllse_t* pe = pxtab_lines->phead; pe != NULL; pe = pe->pnext) {
+		char* line = pe->value;
+		char* p = line;
+		char* key = p;
+
+		while (*p != 0 && *p != ips)
+			p++;
+		if (*p == 0) {
+			lrec_put_no_free(prec, key, "");
+		} else {
+			while (*p != 0 && *p == ips) {
+				*p = 0;
+				p++;
+			}
+			lrec_put_no_free(prec, key, p);
+		}
+	}
+
+	return prec;
 }

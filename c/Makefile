@@ -12,6 +12,15 @@ NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
 FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
 
+TEST_LREC_SRCS = lib/mlrutil.c containers/lrec.c containers/header_keeper.c containers/sllv.c \
+containers/slls.c containers/lhmslv.c \
+input/file_reader_mmap.c \
+input/lrec_reader_mmap_csv.c input/lrec_reader_stdio_csv.c \
+input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+containers/test_lrec.c
+
 # ----------------------------------------------------------------
 # mlr  for default use.
 # mlrg for valgrind.
@@ -74,7 +83,7 @@ regtest-copy:
 # ----------------------------------------------------------------
 # Unit-test executables
 test-lrec: .always
-	$(CCDEBUG) -D__TEST_LREC_MAIN__ lib/mlrutil.c containers/lrec.c containers/header_keeper.c containers/sllv.c containers/slls.c containers/lrec_parsers.c containers/test_lrec.c -o test-lrec
+	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil

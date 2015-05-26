@@ -3,7 +3,6 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
-#include "containers/lrec_parsers.h"
 #include "input/lrec_readers.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
@@ -140,4 +139,75 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader_stdio;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_stdio_csv(header_keeper_t* pheader_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
+	lrec_t* prec = lrec_csv_alloc(data_line);
+	char* key = NULL;
+	char* value = data_line;
+
+	// xxx needs hdr/data length check!!!!!!
+	// xxx needs pe-non-null (hdr-empty) check:
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	for (char* p = data_line; *p; ) {
+		if (*p == ifs) {
+			*p = 0;
+
+			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
+				fprintf(stderr, "Header-data length mismatch!\n");
+				exit(1);
+			}
+			key = pe->value;
+			lrec_put_no_free(prec, key, value);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+			pe = pe->pnext;
+		} else {
+			p++;
+		}
+	}
+	if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+	key = pe->value;
+	lrec_put_no_free(prec, key, value);
+	if (pe->pnext != NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+
+	return prec;
+}
+
+// ----------------------------------------------------------------
+// xxx cmt mem-mgt
+slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
+	slls_t* plist = slls_alloc();
+	if (*line == 0) // empty string splits to empty list
+		return plist;
+
+	char* start = line;
+	for (char* p = line; *p; p++) {
+		if (*p == ifs) {
+			*p = 0;
+			p++;
+			// xxx hoist loop invariant at the cost of some code duplication
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			slls_add_no_free(plist, start);
+			start = p;
+		}
+	}
+	slls_add_no_free(plist, start);
+
+	return plist;
 }

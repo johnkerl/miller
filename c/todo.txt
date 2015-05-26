@@ -34,8 +34,6 @@ FEATURES
 * readme @ each level incl. sof et al. @ base
   -> & perfopt: lrec_t not hashmap per se; stdio backings with minimal copying; mmap entirely; ... ?
 
-! ordered cut (a la reorder). either a new command (yeck) or cut option (e.g. cut -o)
-
 ! mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 * mod op (either c-like, or sane) and put into wikidoc if so.

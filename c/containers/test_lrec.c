@@ -7,7 +7,7 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "containers/lrec_parsers.h"
+#include "input/lrec_readers.h"
 
 #ifdef __TEST_LREC_MAIN__
 int tests_run         = 0;
