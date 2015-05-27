@@ -35,14 +35,9 @@ FEATURES/+
   -> move datadirs too ..... unify c & doc data dirs to parent?
   -> remove/coalesce/gzip the large data files
 
-* readme @ each level incl. sof et al. @ base
-  -> & perfopt: lrec_t not hashmap per se; stdio backings with minimal copying; mmap entirely; ... ?
-
 ! mlr sort CLI opt for choice of heap/merge/quick -- ?
 
 * mod op (either c-like, or sane) and put into wikidoc if so.
-
-? rip through filenames @ start & abend unless -f each: fail fast.
 
 ================================================================
 NEATEN
@@ -123,6 +118,7 @@ UT/REG
 * tac/X/tac for all X
 * multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
+* modulus
 
 ================================================================
 INTERNAL DOCS (e.g. README)

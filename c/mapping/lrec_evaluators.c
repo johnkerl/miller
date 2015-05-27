@@ -518,6 +518,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name,
     } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
     } else if (streq(function_name, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
     } else if (streq(function_name, "gmt2sec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_gmt2sec_func, parg1);
+    } else if (streq(function_name, "strlen"))  { return lrec_evaluator_alloc_from_s_f_func(f_s_strlen_func,  parg1);
 
 	} else return NULL; // xxx handle me better
 }

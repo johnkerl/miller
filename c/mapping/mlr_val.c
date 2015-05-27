@@ -215,6 +215,12 @@ mlr_val_t f_s_gmt2sec_func(mlr_val_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+mlr_val_t f_s_strlen_func(mlr_val_t* pval1) {
+	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = strlen(pval1->u.string_val)};
+	return rv;
+}
+
+// ----------------------------------------------------------------
 // xxx cmt us!!!!
 
 static mlr_val_t op_n_xx(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_NULL, .u.int_val = 0}; }
