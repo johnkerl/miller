@@ -11,7 +11,8 @@ header_keeper_t* header_keeper_alloc(char* line, slls_t* pkeys) {
 }
 
 void header_keeper_free(header_keeper_t* pheader_keeper) {
-	free(pheader_keeper->line);
+	if (pheader_keeper->line != NULL)
+		free(pheader_keeper->line);
 	slls_free(pheader_keeper->pkeys);
 	free(pheader_keeper);
 }

@@ -51,7 +51,7 @@ lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char i
 		return NULL;
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	while (*phandle->sol == irs)
+	while (phandle->sol < phandle->eof && *phandle->sol == irs)
 		phandle->sol++;
 
 	if (phandle->sol >= phandle->eof)

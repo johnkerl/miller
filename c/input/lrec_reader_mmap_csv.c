@@ -51,45 +51,62 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
-	return NULL; // xxx stub
-//	lrec_reader_mmap_csv_state_t* pstate = pvstate;
-//
-//	while (TRUE) {
-//		if (pstate->expect_header_line_next) {
-//			// xxx cmt
-//			while (TRUE) {
+static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle, lrec_reader_mmap_csv_state_t* pstate) {
+	char irs = pstate->irs;
+	char ifs = pstate->ifs;
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
-//				xxx need a func to take mmap handle & return slls_t* pheader_fields
+	slls_t* pheader_names = slls_alloc();
 
-//				char* hline = mlr_get_line(input_stream, pstate->irs);
-//				if (hline == NULL) // EOF
-//					return NULL;
-//				pstate->ilno++;
-//
-//				slls_t* pheader_fields = split_csv_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
-//				if (pheader_fields->length == 0) {
-//					pstate->expect_header_line_next = TRUE;
-//					if (pstate->pheader_keeper != NULL) {
-//						pstate->pheader_keeper = NULL;
-//					}
-//				} else {
-//					pstate->expect_header_line_next = FALSE;
-//
-//					pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
-//					if (pstate->pheader_keeper == NULL) {
-//						pstate->pheader_keeper = header_keeper_alloc(hline, pheader_fields);
-//						lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
-//					} else { // Re-use the header-keeper in the header cache
-//						slls_free(pheader_fields);
-//					}
-//					break;
-//				}
-//			}
-//		}
-//
+	while (phandle->sol < phandle->eof && *phandle->sol == irs) {
+		phandle->sol++;
+		pstate->ilno++;
+	}
+
+	char* header_name = phandle->sol;
+	char* eol         = NULL;
+
+	// xxx UT cases with no final newline
+	// xxx eof check here & for other lrec mmap readers!!
+	for (char* p = phandle->sol; *p; ) {
+		if (*p == irs) {
+			*p = 0;
+			eol = p;
+			phandle->sol = p+1;
+			pstate->ilno++;
+			break;
+		} else if (*p == ifs) {
+			*p = 0;
+
+			slls_add_no_free(pheader_names, header_name);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			header_name = p;
+		} else {
+			p++;
+		}
+	}
+	slls_add_no_free(pheader_names, header_name);
+
+	// xxx EOF!!
+
+	return pheader_names;
+}
 
 //		xxx func not unlike the mmapnidx parser
+static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle, lrec_reader_mmap_csv_state_t* pstate,
+	header_keeper_t* pheader_keeper, int* pend_of_stanza)
+{
+
+//			xxx pstate->ilno++;
+//			xxx pstate->ilno++;
+
+	return NULL;
+}
 
 //		char* line = mlr_get_line(input_stream, pstate->irs);
 //		if (line == NULL) // EOF
@@ -106,7 +123,40 @@ static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, v
 //			pstate->ifnr++;
 //			return lrec_parse_mmap_csv(pstate->pheader_keeper, phandle, pstate->irs, pstate->ifs, pstate->allow_repeat_ifs);
 //		}
-//	}
+
+// xxx no header_keeper. just the slls
+static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+	return NULL; // xxx stub
+	lrec_reader_mmap_csv_state_t* pstate = pvstate;
+
+	while (TRUE) {
+		if (pstate->expect_header_line_next) {
+
+			slls_t* pheader_fields = lrec_reader_mmap_csv_get_header(phandle, pstate);
+			if (pheader_fields == NULL) // EOF
+				return NULL;
+
+			pstate->expect_header_line_next = FALSE;
+
+			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
+			if (pstate->pheader_keeper == NULL) {
+				pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
+				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
+			} else { // Re-use the header-keeper in the header cache
+				slls_free(pheader_fields);
+			}
+		}
+
+		int end_of_stanza = FALSE;
+		lrec_t* prec = lrec_reader_mmap_csv_get_record(phandle, pstate, pstate->pheader_keeper, &end_of_stanza);
+		if (prec == NULL) { // EOF
+			return NULL;
+		} else if (end_of_stanza) {
+			pstate->expect_header_line_next = TRUE;
+		} else {
+			return prec;
+		}
+	}
 }
 
 // ----------------------------------------------------------------
