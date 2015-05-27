@@ -7,6 +7,8 @@
 ================================================================
 FEATURES/+
 
+!! gmt2sec and strlen should be integer funcs
+
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 
@@ -99,8 +101,7 @@ MEM MGMT:
 
 ================================================================
 FCNS INCL. STRxTIME
-? length     i_s_
-! fmtnum     s_f_, s_i_
+! fmtnum     s_sf_, s_si_
 ? strptime   f_s_
 ? strftime   s_f_, s_i_
 ? match      b_ss
@@ -119,6 +120,7 @@ UT/REG
 * multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
 * modulus
+* strlen
 
 ================================================================
 INTERNAL DOCS (e.g. README)
