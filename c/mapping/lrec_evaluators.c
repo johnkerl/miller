@@ -540,6 +540,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* function_name
 	} else if (streq(function_name, "*"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,  parg1, parg2);
 	} else if (streq(function_name, "/"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func, parg1, parg2);
 	} else if (streq(function_name, "**"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
+	} else if (streq(function_name, "%"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,    parg1, parg2);
 	} else if (streq(function_name, "atan2")) { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,  parg1, parg2);
 	} else  { return NULL; /* xxx handle me better */ }
 }

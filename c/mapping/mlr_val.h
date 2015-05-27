@@ -155,6 +155,15 @@ static inline mlr_val_t f_ff_pow_func(mlr_val_t* pval1, mlr_val_t* pval2) {
 	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = pow(pval1->u.double_val, pval2->u.double_val)};
 	return rv;
 }
+static inline mlr_val_t f_ff_mod_func(mlr_val_t* pval1, mlr_val_t* pval2) {
+	long long i1 = (long long)pval1->u.double_val;
+	long long i2 = (long long)pval2->u.double_val;
+	long long i3 = i1 % i2;
+	if (i3 < 0)
+		i3 += i2; // C mod is insane
+	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = (double)i3};
+	return rv;
+}
 static inline mlr_val_t f_ff_atan2_func(mlr_val_t* pval1, mlr_val_t* pval2) {
 	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = atan2(pval1->u.double_val, pval2->u.double_val)};
 	return rv;

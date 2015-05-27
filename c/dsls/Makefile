@@ -5,7 +5,7 @@ CFLAGS=-I.. -O3
 
 # ----------------------------------------------------------------
 pdm: put_dsl_parse.o put_dsl_lexer.o put_dsl_wrapper.o ../containers/mlr_dsl_ast.c ../containers/mlr_dsl_ast.h
-	gcc $(CFLAGS) -std=gnu99 -D __PUT_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/hdr_keeper.c put_dsl_parse.c put_dsl_lexer.c ../containers/mlr_dsl_ast.c put_dsl_wrapper.c -o pdm -lm
+	gcc $(CFLAGS) -std=gnu99 -D __PUT_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c put_dsl_parse.c put_dsl_lexer.c ../containers/mlr_dsl_ast.c put_dsl_wrapper.c -o pdm -lm
 
 put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h
 	gcc -Wall $(CFLAGS) -c -std=gnu99 put_dsl_wrapper.c
@@ -41,7 +41,7 @@ put_dsl_lexer.c put_dsl_lexer.h: put_dsl_lexer.l
 
 # ----------------------------------------------------------------
 fdm: filter_dsl_parse.o filter_dsl_lexer.o filter_dsl_wrapper.o ../containers/mlr_dsl_ast.c ../containers/mlr_dsl_ast.h
-	gcc $(CFLAGS) -std=gnu99 -D __FILTER_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/hdr_keeper.c filter_dsl_parse.c filter_dsl_lexer.c ..//containers/mlr_dsl_ast.c filter_dsl_wrapper.c -o fdm -lm
+	gcc $(CFLAGS) -std=gnu99 -D __FILTER_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c filter_dsl_parse.c filter_dsl_lexer.c ..//containers/mlr_dsl_ast.c filter_dsl_wrapper.c -o fdm -lm
 
 filter_dsl_wrapper.o: filter_dsl_wrapper.c filter_dsl_wrapper.h
 	gcc -Wall $(CFLAGS) -c -std=gnu99 filter_dsl_wrapper.c

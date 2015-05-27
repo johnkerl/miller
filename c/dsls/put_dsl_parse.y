@@ -82,6 +82,9 @@ put_dsl_term(A) ::= put_dsl_term(B) PUT_DSL_TIMES(O) put_dsl_factor(C). {
 put_dsl_term(A) ::= put_dsl_term(B) PUT_DSL_DIVIDE(O) put_dsl_factor(C).{
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
+put_dsl_term(A) ::= put_dsl_term(B) PUT_DSL_MOD(O) put_dsl_factor(C).{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
 
 // ----------------------------------------------------------------
 put_dsl_factor(A) ::= put_dsl_expitem(B). {
