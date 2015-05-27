@@ -7,7 +7,7 @@
 #include <sys/mman.h>
 #include "file_reader_mmap.h"
 
-static char empty_buf[1];
+static char empty_buf[1] = { 0 };
 
 file_reader_mmap_state_t file_reader_mmap_open(char* file_name) {
 	file_reader_mmap_state_t state;

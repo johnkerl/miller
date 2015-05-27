@@ -230,8 +230,3 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 
 	return plrec_reader_mmap;
 }
-
-// ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_csv(header_keeper_t* pheader_keeper, file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs) {
-	return NULL; // xxx stub
-}
