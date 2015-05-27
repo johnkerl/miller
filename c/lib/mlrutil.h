@@ -18,18 +18,18 @@ static inline int mlr_canonical_mod(int a, int n) {
 		return r+n;
 }
 
+// ----------------------------------------------------------------
+static inline int streq(char* a, char* b) {
+	return !strcmp(a, b);
+}
+
+// ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value);
 
 // seconds since the epoch
 double get_systime();
 
-// ----------------------------------------------------------------
 void* mlr_malloc_or_die(size_t size);
-
-// ----------------------------------------------------------------
-static inline int streq(char* a, char* b) {
-	return !strcmp(a, b);
-}
 
 // xxx cmt mem mgt
 char* mlr_alloc_string_from_double(double value, char* fmt);

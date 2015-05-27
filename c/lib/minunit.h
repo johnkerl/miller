@@ -1,6 +1,6 @@
 // http://www.jera.com/techinfo/jtns/jtn002.html
-// License:
-// You may use the code in this tech note for any purpose, with the understanding that it comes with NO WARRANTY.
+// MinUnit license:
+// "You may use the code in this tech note for any purpose, with the understanding that it comes with NO WARRANTY."
 
 #ifndef MINUNIT_H
 #define MINUNIT_H

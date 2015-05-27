@@ -1,4 +1,4 @@
-// Singly-linked list of string, with tail for append.
+// Singly linked list of string, with tail for append.
 #ifndef SLLS_H
 #define SLLS_H
 

@@ -3,7 +3,7 @@
 
 #include "containers/slls.h"
 
-// xxx cmt
+// xxx cmt w/ xref
 
 typedef struct _header_keeper_t {
 	char*   line;

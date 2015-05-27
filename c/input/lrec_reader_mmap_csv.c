@@ -6,6 +6,8 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
+// xxx move to README.md
+
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data

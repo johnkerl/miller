@@ -20,10 +20,6 @@ static mlr_dsl_ast_node_holder_t* filter_dsl_parse_inner(yyscan_t scanner, void*
 	do {
 		lex_code = filter_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;
-#if 0
-		if (lex_code > 0)
-			printf("[FDSL-LEX]   lex_code=%d (%s) pln=%p\n", lex_code, (char*)filter_dsl_ParseTokenName(lex_code), plexed_node);
-#endif
 		parse_code = filter_dsl_lemon_parser_parse_token(pvparser, lex_code, plexed_node, past);
 		if (parse_code == 0)
 			return NULL;

@@ -2,6 +2,8 @@
 #define PERCENTILE_KEEPER_H
 #include "containers/lrec.h"
 
+// For mlr stats1 percentiles
+
 typedef struct _percentile_keeper_t {
 	double* data;
 	int     size;

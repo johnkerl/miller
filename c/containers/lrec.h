@@ -1,13 +1,14 @@
 // ================================================================
-// This is a hashless implementation of insertion-ordered key-value pairs.
-// It implements the same interface as the hashed version (see lhmss.h).
+// This is a hashless implementation of insertion-ordered key-value pairs for
+// Miller's fundamental record data structure.  It implements the same
+// interface as the hashed version (see lhmss.h).
 //
 // Design:
 //
 // * It keeps a doubly-linked list of key-value pairs.
 // * No hash functions are computed when the map is written to or read from.
 // * Gets are implemented by sequential scan through the list: given a key,
-//   scan through the key-value pairs until a match is (or is not) found.
+//   the key-value pairs are scanned through until a match is (or is not) found.
 // * Performance improvement of 10-15% percent over lhmss is found (for test data).
 //
 // Motivation:
@@ -20,8 +21,8 @@
 //   access-to-construct ratio is quite low for Miller data records.  Miller
 //   instantiates thousands, millions, billions of records (depending on the
 //   input data) but accesses each record only once per mapping operation.
-//   (This is in contrast to hashmaps which are repeatedly accessed during a
-//   stats run.)
+//   (This is in contrast to accumulator hashmaps which are repeatedly accessed
+//   during a stats run.)
 //
 // * The hashed impl computes hashsums for *all* fields whether operated on or not,
 //   for the benefit of the *few* fields looked up during the mapping operation.

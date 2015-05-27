@@ -21,10 +21,6 @@ static sllv_t* put_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast
 	do {
 		lex_code = put_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;
-#if 0
-		if (lex_code > 0)
-			printf("[PDSL-LEX]   lex_code=%d (%s) pln=%p\n", lex_code, (char*)filter_dsl_ParseTokenName(lex_code), plexed_node);
-#endif
 		parse_code = put_dsl_lemon_parser_parse_token(pvparser, lex_code, plexed_node, pasts);
 		if (parse_code == 0)
 			return NULL;

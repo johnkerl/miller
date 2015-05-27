@@ -2,6 +2,10 @@
 #define MLR_DSL_AST_H
 #include "sllv.h"
 
+// ================================================================
+// Miller abstract syntax tree for put and filter.
+// ================================================================
+
 #define MLR_DSL_AST_NODE_TYPE_LITERAL          0xaaaa
 #define MLR_DSL_AST_NODE_TYPE_FIELD_NAME       0xbbbb
 #define MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME    0xcccc

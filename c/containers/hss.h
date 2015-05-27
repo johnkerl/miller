@@ -2,10 +2,8 @@
 #define HSS_H
 
 // ================================================================
-// Array-only (open addressing) string-valued hash set with linear probing
-// for collisions.
-//
-// xxx cmt mem mgmt
+// Array-only (open addressing) string-valued hash set with linear probing for
+// collisions.
 //
 // Notes:
 // * null key is not supported.
