@@ -158,7 +158,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_reader_mmap    = NULL;
 	popts->plrec_writer         = NULL;
 	popts->filenames            = NULL;
-	popts->use_file_reader_mmap = FALSE;
+	popts->use_file_reader_mmap = TRUE;
 
 	char* rdesc = "dkvp";
 	char* wdesc = "dkvp";
@@ -262,6 +262,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--mmap")) {
 			popts->use_file_reader_mmap = TRUE;
 		}
+		else if (streq(argv[argi], "--no-mmap")) {
+			popts->use_file_reader_mmap = FALSE;
+		}
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
@@ -281,11 +284,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	// xxx alloc mmap readers here too
 	// xxx have use-mmap-readers flag ...
 	if (streq(rdesc, "dkvp")) {
-		popts->plrec_reader_stdio =      lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->plrec_reader_stdio = lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 		popts->plrec_reader_mmap  = lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "csv")) {
 		popts->plrec_reader_stdio = lrec_reader_stdio_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap  = lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->ips);
+		popts->plrec_reader_mmap  = lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "nidx")) {
 		popts->plrec_reader_stdio = lrec_reader_stdio_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 		popts->plrec_reader_mmap  = lrec_reader_mmap_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);

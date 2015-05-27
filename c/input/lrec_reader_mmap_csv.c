@@ -97,36 +97,78 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 	return pheader_names;
 }
 
-//		xxx func not unlike the mmapnidx parser
+// xxx handle EOF as well as dataless end of stanza
 static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle, lrec_reader_mmap_csv_state_t* pstate,
 	header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
+	if (phandle->sol >= phandle->eof)
+		return NULL;
 
-//			xxx pstate->ilno++;
-//			xxx pstate->ilno++;
+	char irs = pstate->irs;
+	char ifs = pstate->ifs;
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
-	return NULL;
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+	char* key   = NULL;
+	char* value = line;
+	char* eol   = NULL;
+
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	for (char* p = line; *p; ) {
+		if (*p == irs) {
+			if (p == line) {
+				*pend_of_stanza = TRUE;
+				return NULL;
+			}
+			*p = 0;
+			eol = p;
+			phandle->sol = p+1;
+			break;
+		} else if (*p == ifs) {
+			if (pe == NULL) {
+				// xxx to do: get file-name/line-number context in here.
+				// xxx to do: print what the lengths are.
+				fprintf(stderr, "Header-data length mismatch!\n");
+				exit(1);
+			}
+
+			*p = 0;
+			key = pe->value;
+			lrec_put_no_free(prec, key, value);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+			pe = pe->pnext;
+		} else {
+			p++;
+		}
+	}
+	if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+	key = pe->value;
+	lrec_put_no_free(prec, key, value);
+	pe = pe->pnext;
+	if (pe != NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+
+	return prec;
 }
 
-//		char* line = mlr_get_line(input_stream, pstate->irs);
-//		if (line == NULL) // EOF
-//			return NULL;
-//
-//		// xxx empty-line check ... make a lib func is_empty_modulo_whitespace().
-//		if (!*line) {
-//			if (pstate->pheader_keeper != NULL) {
-//				pstate->pheader_keeper = NULL;
-//				pstate->expect_header_line_next = TRUE;
-//				continue;
-//			}
-//		} else {
-//			pstate->ifnr++;
-//			return lrec_parse_mmap_csv(pstate->pheader_keeper, phandle, pstate->irs, pstate->ifs, pstate->allow_repeat_ifs);
-//		}
+//			xxx pstate->ilno++;
+//			xxx pstate->ifnr++;
 
 // xxx no header_keeper. just the slls
 static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
-	return NULL; // xxx stub
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 
 	while (TRUE) {
@@ -149,10 +191,10 @@ static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, v
 
 		int end_of_stanza = FALSE;
 		lrec_t* prec = lrec_reader_mmap_csv_get_record(phandle, pstate, pstate->pheader_keeper, &end_of_stanza);
-		if (prec == NULL) { // EOF
-			return NULL;
-		} else if (end_of_stanza) {
+		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
+		} else if (prec == NULL) { // EOF
+			return NULL;
 		} else {
 			return prec;
 		}

@@ -98,7 +98,7 @@ static lrec_t* lrec_reader_stdio_csv_process(FILE* input_stream, void* pvstate, 
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_stdio_csv(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			return lrec_parse_stdio_csv_data_line(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
 		}
 	}
 }
@@ -142,12 +142,11 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csv(header_keeper_t* pheader_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_csv_alloc(data_line);
 	char* key = NULL;
 	char* value = data_line;
 
-	// xxx needs hdr/data length check!!!!!!
 	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for (char* p = data_line; *p; ) {
