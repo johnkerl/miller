@@ -17,12 +17,13 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
-static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer, FILE* output_stream);
+static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer,
+	FILE* output_stream);
 
 // ----------------------------------------------------------------
 // xxx assert pmapper_list non-empty ...
-int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_stdio_t* plrec_reader_stdio, lrec_reader_mmap_t* plrec_reader_mmap,
-	sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
+int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_stdio_t* plrec_reader_stdio,
+	lrec_reader_mmap_t* plrec_reader_mmap, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
 
@@ -110,23 +111,24 @@ static int do_file_chained_mmap(char* filename, context_t* pctx,
 }
 
 // ----------------------------------------------------------------
-static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer, FILE* output_stream) {
+static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer,
+	FILE* output_stream)
+{
 	sllv_t* outrecs = chain_map(pinrec, pctx, pmapper_list_head);
 	if (outrecs != NULL) {
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvdata;
-			if (poutrec != NULL)
+			if (poutrec != NULL) // writer frees records (sllv void-star payload)
 				plrec_writer->pprocess_func(output_stream, poutrec, plrec_writer->pvstate);
-			// doc & encode convention that writer frees.
 		}
-		sllv_free(outrecs); // xxx cmt mem-mgmt
+		sllv_free(outrecs); // we free the list
 	}
 }
 
 // ----------------------------------------------------------------
-// Map a single input record (maybe null at end of input stream) to zero or more output record.
+// Map a single input record (maybe null at end of input stream) to zero or more output records.
 // Return: list of lrec_t*. Input: lrec_t* and list of mapper_t*.
-// xxx need to figure out mem-mgmt here
+
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head) {
 	mapper_t* pmapper = pmapper_list_head->pvdata;
 	sllv_t* outrecs = pmapper->pprocess_func(pinrec, pctx, pmapper->pvstate);

@@ -37,6 +37,24 @@ Similarly, `mlr cut -x` and any other mappers which modify record objects
 without creating new ones. By contrast,`stats1` et al. produce their own
 records; they free what they do not pass on.
 
+# Null-lrec conventions
+
+Record-readers return a null lrec-pointer to signify end of input stream.
+
+Each mapper takes an lrec-pointer as input and returns a linked list of lrec-pointer.
+
+Null-lrec is input to mappers to signify end of stream: e.g. `sort` or `tac`
+should use this as a signal to deliver the sorted/reversed list of rows.
+
+When a mapper has no output before end of stream (e.g. `sort` or `tac` while
+accumulating inputs) it returns a null lrec-pointer.
+
+At end of stream, a mapper returns a linked list ending in a null lrec-pointer.
+
+A null lrec-pointer at end of stream is passed to lrec writers so that they may
+produce final output (e.g. pretty-print which produces no output until end of
+stream).
+
 # Performance optimizations
 
 The initial implementation of Miller used `hss` (insertion-ordered string-to-string hash map) for record objects.
