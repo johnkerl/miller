@@ -5,7 +5,7 @@
 #include "mapping/mlr_val.h"
 #include "mapping/context.h"
 
-typedef mlr_val_t lrec_evaluator_func_t(lrec_t* prec, context_t* pctx, void* pvstate);
+typedef mv_t lrec_evaluator_func_t(lrec_t* prec, context_t* pctx, void* pvstate);
 
 typedef struct _lrec_evaluator_t {
 	void* pvstate;

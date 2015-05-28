@@ -8,9 +8,10 @@ FEATURES/+
 
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
-!! RM: null as synonym for empty list
 
-!! line widths
+!! line widths (120)
+  -> shorten lrec_evaluator_alloc_from_...
+  -> shorten mlr_val_t ?
 
 !! nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
@@ -125,3 +126,7 @@ HARDER HYGIENE
 ================================================================
 PYTHON
 * pgr + stats_m same I/O modules??
+
+================================================================
+OTHER
+linesort !use printf, or printf w/ %s

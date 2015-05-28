@@ -14,7 +14,7 @@ typedef struct _mapper_filter_state_t {
 static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		mlr_val_t val = pstate->pevaluator->pevaluator_func(pinrec,
+		mv_t val = pstate->pevaluator->pevaluator_func(pinrec,
 			pctx, pstate->pevaluator->pvstate);
 		int bool_val = mt_get_boolean_strict(&val);
 		if (bool_val) {

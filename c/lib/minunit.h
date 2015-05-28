@@ -10,7 +10,14 @@
 
 #define mu_assert_lf(test) mu_assert(__FILE__ " line " MU_STRINGIFY_1(__LINE__), test)
 
-#define mu_assert(message, test) do { assertions_run++; if (!(test)) {assertions_failed++; return message;} } while (0)
+#define mu_assert(message, test) do { \
+	assertions_run++; \
+	if (!(test)) { \
+		assertions_failed++; \
+		return message; \
+	} \
+} while (0)
+
 #define mu_run_test(test) do { \
 	char *message = test(); \
 	tests_run++; \

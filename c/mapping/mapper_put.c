@@ -18,7 +18,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 		for (int i = 0; i < pstate->num_evaluators; i++) {
 			// xxx decide ownership location for type conversions ...
-			mlr_val_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
+			mv_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
 				pctx, pstate->pevaluators[i]->pvstate);
 			char* string = mt_format_val(&val);
 			lrec_put(pinrec, pstate->output_field_names[i], string, LREC_FREE_ENTRY_VALUE);

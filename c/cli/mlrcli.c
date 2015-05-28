@@ -68,18 +68,18 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors                  Record separators, defaulting to newline\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
-	fprintf(o, "  --ps      --ips     --ops                  Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
+	fprintf(o, "  --rs      --irs     --ors              Record separators, defaulting to newline\n");
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
+	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
 	fprintf(o, "Data-format options, for input, output, or both:\n");
-	fprintf(o, "  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
-	fprintf(o, "  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)\n");
-	fprintf(o, "  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)\n");
-	fprintf(o, "  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)\n");
-	fprintf(o, "  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for highly multi-column data)\n");
+	fprintf(o, "  --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
+	fprintf(o, "  --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)\n");
+	fprintf(o, "  --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)\n");
+	fprintf(o, "  --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)\n");
+	fprintf(o, "  --xtab    --ixtab   --oxtab            Transposed-tabular (useful for highly multi-column data)\n");
 	fprintf(o, "Numerical format:\n");
-	fprintf(o, "  --ofmt {format}                            E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
-	fprintf(o, "                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
+	fprintf(o, "  --ofmt {format}                        E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
+	fprintf(o, "                                         Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");

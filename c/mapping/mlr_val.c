@@ -5,11 +5,11 @@
 #include "mapping/mlr_val.h"
 
 // ----------------------------------------------------------------
-mlr_val_t MV_NULL = {
+mv_t MV_NULL = {
 	.type = MT_NULL,
 	.u.int_val = 0
 };
-mlr_val_t MV_ERROR = {
+mv_t MV_ERROR = {
 	.type = MT_ERROR,
 	.u.int_val = 0
 };
@@ -29,7 +29,7 @@ char* mt_describe_type(int type) {
 
 // xxx cmt mem-mgt
 // xxx put "alloc" in the name
-char* mt_format_val(mlr_val_t* pval) {
+char* mt_format_val(mv_t* pval) {
 	char* string = NULL;
 	switch(pval->type) {
 	case MT_NULL:
@@ -62,7 +62,7 @@ char* mt_format_val(mlr_val_t* pval) {
 	}
 }
 
-char* mt_describe_val(mlr_val_t val) {
+char* mt_describe_val(mv_t val) {
 	char* stype = mt_describe_type(val.type);
 	char* sval  = mt_format_val(&val);
 	char* desc  = mlr_malloc_or_die(strlen(stype) + strlen(sval) + 4);
@@ -74,7 +74,7 @@ char* mt_describe_val(mlr_val_t val) {
 }
 
 // ----------------------------------------------------------------
-int mt_get_boolean_strict(mlr_val_t* pval) {
+int mt_get_boolean_strict(mv_t* pval) {
 	if (pval->type != MT_BOOL) {
 		char* desc = mt_describe_type(pval->type);
 		fprintf(stderr, "Expression does not evaluate to boolean: got %s.\n", desc);
@@ -86,7 +86,7 @@ int mt_get_boolean_strict(mlr_val_t* pval) {
 
 // ----------------------------------------------------------------
 // xxx check for semantics comparable to mt_get_boolean_strict
-void mt_get_double_strict(mlr_val_t* pval) {
+void mt_get_double_strict(mv_t* pval) {
 	if (pval->type == MT_NULL)
 		return;
 	if (pval->type == MT_ERROR)
@@ -113,7 +113,7 @@ void mt_get_double_strict(mlr_val_t* pval) {
 }
 
 // ----------------------------------------------------------------
-mlr_val_t s_ss_dot_func(mlr_val_t* pval1, mlr_val_t* pval2) {
+mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	int len1 = strlen(pval1->u.string_val);
 	int len2 = strlen(pval1->u.string_val);
 	int len3 = len1 + len2 + 1; // for the null-terminator byte
@@ -127,12 +127,12 @@ mlr_val_t s_ss_dot_func(mlr_val_t* pval1, mlr_val_t* pval2) {
 	pval1->u.string_val = NULL;
 	pval2->u.string_val = NULL;
 
-	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string3};
+	mv_t rv = {.type = MT_STRING, .u.string_val = string3};
 	return rv;
 }
 
 // ----------------------------------------------------------------
-mlr_val_t s_sss_sub_func(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3) {
+mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	char* substr = strstr(pval1->u.string_val, pval2->u.string_val);
 	if (substr == NULL) {
 		return *pval1;
@@ -155,14 +155,14 @@ mlr_val_t s_sss_sub_func(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3) {
 		pval2->u.string_val = NULL;
 		pval3->u.string_val = NULL;
 
-		mlr_val_t rv = {.type = MT_STRING, .u.string_val = string4};
+		mv_t rv = {.type = MT_STRING, .u.string_val = string4};
 		return rv;
 	}
 }
 
 // ----------------------------------------------------------------
 // xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
-mlr_val_t s_s_tolower_func(mlr_val_t* pval1) {
+mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = strdup(pval1->u.string_val);
 	for (char* c = string; *c; c++)
 		*c = tolower(*c);
@@ -170,12 +170,12 @@ mlr_val_t s_s_tolower_func(mlr_val_t* pval1) {
 	free(pval1->u.string_val);
 	pval1->u.string_val = NULL;
 
-	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string};
+	mv_t rv = {.type = MT_STRING, .u.string_val = string};
 	return rv;
 }
 
 // xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
-mlr_val_t s_s_toupper_func(mlr_val_t* pval1) {
+mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = strdup(pval1->u.string_val);
 	for (char* c = string; *c; c++)
 		*c = toupper(*c);
@@ -183,12 +183,12 @@ mlr_val_t s_s_toupper_func(mlr_val_t* pval1) {
 	free(pval1->u.string_val);
 	pval1->u.string_val = NULL;
 
-	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string};
+	mv_t rv = {.type = MT_STRING, .u.string_val = string};
 	return rv;
 }
 
 // ----------------------------------------------------------------
-mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1) {
+mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	NULL_OR_ERROR_OUT(*pval1);
 	mt_get_double_strict(pval1);
 	if (pval1->type != MT_DOUBLE)
@@ -201,139 +201,139 @@ mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1) {
 	char* string = mlr_malloc_or_die(32);
 	(void)strftime(string, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
 
-	mlr_val_t rv = {.type = MT_STRING, .u.string_val = string};
+	mv_t rv = {.type = MT_STRING, .u.string_val = string};
 	return rv;
 }
 
-mlr_val_t i_s_gmt2sec_func(mlr_val_t* pval1) {
+mv_t i_s_gmt2sec_func(mv_t* pval1) {
 	struct tm tm;
 	strptime(pval1->u.string_val, "%Y-%m-%dT%H:%M:%SZ", &tm);
 	time_t t = timegm(&tm);
 
-	mlr_val_t rv = {.type = MT_INT, .u.int_val = (long long)t};
+	mv_t rv = {.type = MT_INT, .u.int_val = (long long)t};
 	return rv;
 }
 
 // ----------------------------------------------------------------
-mlr_val_t i_s_strlen_func(mlr_val_t* pval1) {
-	mlr_val_t rv = {.type = MT_INT, .u.int_val = strlen(pval1->u.string_val)};
+mv_t i_s_strlen_func(mv_t* pval1) {
+	mv_t rv = {.type = MT_INT, .u.int_val = strlen(pval1->u.string_val)};
 	return rv;
 }
 
 // ----------------------------------------------------------------
 // xxx cmt us!!!!
 
-static mlr_val_t op_n_xx(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_NULL, .u.int_val = 0}; }
-static mlr_val_t op_e_xx(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_ERROR, .u.int_val = 0}; }
+static mv_t op_n_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_NULL, .u.int_val = 0}; }
+static mv_t op_e_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_ERROR, .u.int_val = 0}; }
 
-static  mlr_val_t eq_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val == pb->u.int_val}; }
-static  mlr_val_t ne_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val != pb->u.int_val}; }
-static  mlr_val_t gt_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >  pb->u.int_val}; }
-static  mlr_val_t ge_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >= pb->u.int_val}; }
-static  mlr_val_t lt_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <  pb->u.int_val}; }
-static  mlr_val_t le_b_ii(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <= pb->u.int_val}; }
+static  mv_t eq_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val == pb->u.int_val}; }
+static  mv_t ne_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val != pb->u.int_val}; }
+static  mv_t gt_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >  pb->u.int_val}; }
+static  mv_t ge_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >= pb->u.int_val}; }
+static  mv_t lt_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <  pb->u.int_val}; }
+static  mv_t le_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <= pb->u.int_val}; }
 
-static  mlr_val_t eq_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val == pb->u.double_val}; }
-static  mlr_val_t ne_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val != pb->u.double_val}; }
-static  mlr_val_t gt_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >  pb->u.double_val}; }
-static  mlr_val_t ge_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >= pb->u.double_val}; }
-static  mlr_val_t lt_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <  pb->u.double_val}; }
-static  mlr_val_t le_b_ff(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <= pb->u.double_val}; }
+static  mv_t eq_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val == pb->u.double_val}; }
+static  mv_t ne_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val != pb->u.double_val}; }
+static  mv_t gt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >  pb->u.double_val}; }
+static  mv_t ge_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >= pb->u.double_val}; }
+static  mv_t lt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <  pb->u.double_val}; }
+static  mv_t le_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <= pb->u.double_val}; }
 
-static  mlr_val_t eq_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val == pb->u.int_val}; }
-static  mlr_val_t ne_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val != pb->u.int_val}; }
-static  mlr_val_t gt_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >  pb->u.int_val}; }
-static  mlr_val_t ge_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >= pb->u.int_val}; }
-static  mlr_val_t lt_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <  pb->u.int_val}; }
-static  mlr_val_t le_b_fi(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <= pb->u.int_val}; }
+static  mv_t eq_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val == pb->u.int_val}; }
+static  mv_t ne_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val != pb->u.int_val}; }
+static  mv_t gt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >  pb->u.int_val}; }
+static  mv_t ge_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val >= pb->u.int_val}; }
+static  mv_t lt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <  pb->u.int_val}; }
+static  mv_t le_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.double_val <= pb->u.int_val}; }
 
-static  mlr_val_t eq_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val == pb->u.double_val}; }
-static  mlr_val_t ne_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val != pb->u.double_val}; }
-static  mlr_val_t gt_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >  pb->u.double_val}; }
-static  mlr_val_t ge_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >= pb->u.double_val}; }
-static  mlr_val_t lt_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <  pb->u.double_val}; }
-static  mlr_val_t le_b_if(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <= pb->u.double_val}; }
+static  mv_t eq_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val == pb->u.double_val}; }
+static  mv_t ne_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val != pb->u.double_val}; }
+static  mv_t gt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >  pb->u.double_val}; }
+static  mv_t ge_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val >= pb->u.double_val}; }
+static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <  pb->u.double_val}; }
+static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = pa->u.int_val <= pb->u.double_val}; }
 
-static  mlr_val_t eq_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) == 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) == 0};
 	free(a);
 	return rv;
 }
-static  mlr_val_t ne_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) != 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) != 0};
 	free(a);
 	return rv;
 }
-static  mlr_val_t gt_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) >  0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) >  0};
 	free(a);
 	return rv;
 }
-static  mlr_val_t ge_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) >= 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) >= 0};
 	free(a);
 	return rv;
 }
-static  mlr_val_t lt_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) <  0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) <  0};
 	free(a);
 	return rv;
 }
-static  mlr_val_t le_b_xs(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t le_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) <= 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(a, pb->u.string_val) <= 0};
 	free(a);
 	return rv;
 }
 
-static  mlr_val_t eq_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) == 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) == 0};
 	free(b);
 	return rv;
 }
-static  mlr_val_t ne_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) != 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) != 0};
 	free(b);
 	return rv;
 }
-static  mlr_val_t gt_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) >  0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) >  0};
 	free(b);
 	return rv;
 }
-static  mlr_val_t ge_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) >= 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) >= 0};
 	free(b);
 	return rv;
 }
-static  mlr_val_t lt_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) <  0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) <  0};
 	free(b);
 	return rv;
 }
-static  mlr_val_t le_b_sx(mlr_val_t* pa, mlr_val_t* pb) {
+static  mv_t le_b_sx(mv_t* pa, mv_t* pb) {
 	char* b = mt_format_val(pb);
-	mlr_val_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) <= 0};
+	mv_t rv = {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, b) <= 0};
 	free(b);
 	return rv;
 }
 
-static  mlr_val_t eq_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) == 0}; }
-static  mlr_val_t ne_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) != 0}; }
-static  mlr_val_t gt_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) >  0}; }
-static  mlr_val_t ge_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) >= 0}; }
-static  mlr_val_t lt_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) <  0}; }
-static  mlr_val_t le_b_ss(mlr_val_t* pa, mlr_val_t* pb) { return (mlr_val_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) <= 0}; }
+static  mv_t eq_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) == 0}; }
+static  mv_t ne_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) != 0}; }
+static  mv_t gt_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) >  0}; }
+static  mv_t ge_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) >= 0}; }
+static  mv_t lt_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) <  0}; }
+static  mv_t le_b_ss(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bool_val = strcmp(pa->u.string_val, pb->u.string_val) <= 0}; }
 
 static mv_binary_func_t* eq_dispositions[MT_MAX][MT_MAX] = {
     //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
@@ -395,9 +395,9 @@ static mv_binary_func_t* le_dispositions[MT_MAX][MT_MAX] = {
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, le_b_sx, le_b_sx, le_b_ss},
 };
 
-mlr_val_t eq_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (eq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-mlr_val_t ne_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (ne_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-mlr_val_t gt_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (gt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-mlr_val_t ge_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (ge_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-mlr_val_t lt_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-mlr_val_t le_op_func(mlr_val_t* pval1, mlr_val_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t eq_op_func(mv_t* pval1, mv_t* pval2) { return (eq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t ne_op_func(mv_t* pval1, mv_t* pval2) { return (ne_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t gt_op_func(mv_t* pval1, mv_t* pval2) { return (gt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t ge_op_func(mv_t* pval1, mv_t* pval2) { return (ge_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
