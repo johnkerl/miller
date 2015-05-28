@@ -33,7 +33,7 @@ char* mt_format_val(mlr_val_t* pval) {
 	char* string = NULL;
 	switch(pval->type) {
 	case MT_NULL:
-		return strdup("(null)");
+		return strdup("");
 		break;
 	case MT_ERROR:
 		return strdup("(error)");

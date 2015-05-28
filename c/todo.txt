@@ -7,8 +7,6 @@
 ================================================================
 FEATURES/+
 
-!! gmt2sec and strlen should be integer i_s_ funcs not f_s_
-
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 
@@ -38,8 +36,6 @@ FEATURES/+
   -> remove/coalesce/gzip the large data files
 
 ! mlr sort CLI opt for choice of heap/merge/quick -- ?
-
-* mod op (either c-like, or sane) and put into wikidoc if so.
 
 ================================================================
 NEATEN
@@ -102,9 +98,7 @@ MEM MGMT:
 ================================================================
 FCNS INCL. STRxTIME
 ! fmtnum     s_sf_, s_si_
-? strptime   f_s_
-? strftime   s_f_, s_i_
-? match      b_ss
+? match      b_ss  (w/ regexes!!)
 ? sub, gsub  s_sss (w/ regexes!!)
 ? index      i_ss
 ? bit ops & | ^ << >> ???    i_ii
@@ -119,7 +113,7 @@ UT/REG
 * tac/X/tac for all X
 * multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
-* modulus
+* modulus operator
 * strlen
 
 ================================================================
