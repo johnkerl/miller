@@ -205,18 +205,18 @@ mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1) {
 	return rv;
 }
 
-mlr_val_t f_s_gmt2sec_func(mlr_val_t* pval1) {
+mlr_val_t i_s_gmt2sec_func(mlr_val_t* pval1) {
 	struct tm tm;
 	strptime(pval1->u.string_val, "%Y-%m-%dT%H:%M:%SZ", &tm);
 	time_t t = timegm(&tm);
 
-	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = (double)t};
+	mlr_val_t rv = {.type = MT_INT, .u.int_val = (long long)t};
 	return rv;
 }
 
 // ----------------------------------------------------------------
-mlr_val_t f_s_strlen_func(mlr_val_t* pval1) {
-	mlr_val_t rv = {.type = MT_DOUBLE, .u.double_val = strlen(pval1->u.string_val)};
+mlr_val_t i_s_strlen_func(mlr_val_t* pval1) {
+	mlr_val_t rv = {.type = MT_INT, .u.int_val = strlen(pval1->u.string_val)};
 	return rv;
 }
 

@@ -250,6 +250,35 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_s_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_i_s_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_i_s_state_t;
+
+mlr_val_t lrec_evaluator_i_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_i_s_state_t* pstate = pvstate;
+	mlr_val_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	// xxx decide & document whether to do the typing here or in the pfunc
+	if (val1.type != MT_STRING) // xxx conversions?
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_i_s_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_i_s_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_i_s_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_xx_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -517,8 +546,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name,
     } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
     } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
     } else if (streq(function_name, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
-    } else if (streq(function_name, "gmt2sec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_gmt2sec_func, parg1);
-    } else if (streq(function_name, "strlen"))  { return lrec_evaluator_alloc_from_s_f_func(f_s_strlen_func,  parg1);
+    } else if (streq(function_name, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
+    } else if (streq(function_name, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
 
 	} else return NULL; // xxx handle me better
 }

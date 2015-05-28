@@ -179,8 +179,8 @@ mlr_val_t s_sss_sub_func(mlr_val_t* pval1, mlr_val_t* pval2, mlr_val_t* pval3);
 
 // ----------------------------------------------------------------
 mlr_val_t s_f_sec2gmt_func(mlr_val_t* pval1);
-mlr_val_t f_s_gmt2sec_func(mlr_val_t* pval1);
-mlr_val_t f_s_strlen_func(mlr_val_t* pval1);
+mlr_val_t i_s_gmt2sec_func(mlr_val_t* pval1);
+mlr_val_t i_s_strlen_func(mlr_val_t* pval1);
 
 // ----------------------------------------------------------------
 mlr_val_t eq_op_func(mlr_val_t* pval1, mlr_val_t* pval2);
