@@ -25,8 +25,7 @@ file_reader_mmap_state_t file_reader_mmap_open(char* file_name) {
 		// mmap doesn't allow us to map zero-length files but zero-length files do exist.
 		state.sol = &empty_buf[0];
 	} else {
-		state.sol = mmap(NULL, (size_t)stat.st_size, PROT_READ|PROT_WRITE, MAP_FILE|MAP_PRIVATE,
-			state.fd, (off_t)0);
+		state.sol = mmap(NULL, (size_t)stat.st_size, PROT_READ|PROT_WRITE, MAP_FILE|MAP_PRIVATE, state.fd, (off_t)0);
 		if (state.sol == MAP_FAILED) {
 			perror("mmap");
 			exit(1);

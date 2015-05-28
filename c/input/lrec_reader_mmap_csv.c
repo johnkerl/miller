@@ -53,7 +53,9 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 //
 // etc.
 
-static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle, lrec_reader_mmap_csv_state_t* pstate) {
+static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csv_state_t* pstate)
+{
 	char irs = pstate->irs;
 	char ifs = pstate->ifs;
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
@@ -100,8 +102,8 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 }
 
 // xxx handle EOF as well as dataless end of stanza
-static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle, lrec_reader_mmap_csv_state_t* pstate,
-	header_keeper_t* pheader_keeper, int* pend_of_stanza)
+static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csv_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
 	if (phandle->sol >= phandle->eof)
 		return NULL;

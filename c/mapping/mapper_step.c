@@ -13,8 +13,8 @@
 #include "cli/argparse.h"
 
 // ================================================================
-typedef void  step_dprocess_func_t(void* pvstate, double dval, lrec_t* prec);
-typedef void  step_sprocess_func_t(void* pvstate, char*  sval, lrec_t* prec);
+typedef void  step_dprocess_func_t(void* pvstate, double dblv, lrec_t* prec);
+typedef void  step_sprocess_func_t(void* pvstate, char*  strv, lrec_t* prec);
 
 typedef struct _step_t {
 	void* pvstate;
@@ -30,17 +30,17 @@ typedef struct _step_delta_state_t {
 	int    have_prev;
 	char*  output_field_name;
 } step_delta_state_t;
-static void step_delta_dprocess(void* pvstate, double dval, lrec_t* prec) {
+static void step_delta_dprocess(void* pvstate, double dblv, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
-	double delta = dval;
+	double delta = dblv;
 	if (pstate->have_prev) {
-		delta = dval - pstate->prev;
+		delta = dblv - pstate->prev;
 	} else {
 		pstate->have_prev = TRUE;
 	}
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(delta, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
-	pstate->prev = dval;
+	pstate->prev = dblv;
 }
 static step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
@@ -61,9 +61,9 @@ typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
 } step_rsum_state_t;
-static void step_rsum_dprocess(void* pvstate, double dval, lrec_t* prec) {
+static void step_rsum_dprocess(void* pvstate, double dblv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
-	pstate->rsum += dval;
+	pstate->rsum += dblv;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
 }
@@ -84,7 +84,7 @@ typedef struct _step_counter_state_t {
 	unsigned long long counter;
 	char*  output_field_name;
 } step_counter_state_t;
-static void step_counter_sprocess(void* pvstate, char* sval, lrec_t* prec) {
+static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
 	pstate->counter++;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),

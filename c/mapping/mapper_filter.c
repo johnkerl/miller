@@ -16,8 +16,8 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	if (pinrec != NULL) {
 		mv_t val = pstate->pevaluator->pevaluator_func(pinrec,
 			pctx, pstate->pevaluator->pvstate);
-		int bval = mt_get_boolean_strict(&val);
-		if (bval) {
+		int boolv = mt_get_boolean_strict(&val);
+		if (boolv) {
 			return sllv_single(pinrec);
 		} else {
 			lrec_free(pinrec);

@@ -24,10 +24,10 @@
 
 typedef struct _mlr_val_t {
 	union {
-		int        bval;
-		double     dval;
-		long long  ival;
-		char*      string_val;
+		int        boolv;
+		double     dblv;
+		long long  intv;
+		char*      strv;
 	} u;
 	unsigned char type;
 } mv_t;
@@ -61,111 +61,111 @@ typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 
 // ----------------------------------------------------------------
 static inline mv_t b_b_not_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_BOOL, .u.bval = !pval1->u.bval};
+	mv_t rv = {.type = MT_BOOL, .u.boolv = !pval1->u.boolv};
 	return rv;
 }
 
 static inline mv_t b_bb_or_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_BOOL, .u.bval = pval1->u.bval || pval2->u.bval};
+	mv_t rv = {.type = MT_BOOL, .u.boolv = pval1->u.boolv || pval2->u.boolv};
 	return rv;
 }
 static inline mv_t b_bb_and_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_BOOL, .u.bval = pval1->u.bval && pval2->u.bval};
+	mv_t rv = {.type = MT_BOOL, .u.boolv = pval1->u.boolv && pval2->u.boolv};
 	return rv;
 }
 
 // ----------------------------------------------------------------
 static inline mv_t f_z_urand_func() {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = get_mtrand_double()}; // mtrand.h
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = get_mtrand_double()}; // mtrand.h
 	return rv;
 }
 static inline mv_t f_z_systime_func() {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = get_systime()}; // mlrutil.h
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = get_systime()}; // mlrutil.h
 	return rv;
 }
 
 // ----------------------------------------------------------------
 static inline mv_t f_f_uneg_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = -pval1->u.dval};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = -pval1->u.dblv};
 	return rv;
 }
 static inline mv_t f_f_abs_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = fabs(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = fabs(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_log_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = log(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = log(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_log10_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = log10(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = log10(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_exp_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = exp(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = exp(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_sin_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = sin(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = sin(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_cos_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = cos(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = cos(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_tan_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = tan(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = tan(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_sqrt_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = sqrt(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = sqrt(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_round_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = round(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = round(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_floor_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = floor(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = floor(pval1->u.dblv)};
 	return rv;
 }
 static inline mv_t f_f_ceil_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = ceil(pval1->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = ceil(pval1->u.dblv)};
 	return rv;
 }
 
 // ----------------------------------------------------------------
 static inline mv_t f_ff_plus_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = pval1->u.dval + pval2->u.dval};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv + pval2->u.dblv};
 	return rv;
 }
 static inline mv_t f_ff_minus_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = pval1->u.dval - pval2->u.dval};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv - pval2->u.dblv};
 	return rv;
 }
 static inline mv_t f_ff_times_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = pval1->u.dval * pval2->u.dval};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv * pval2->u.dblv};
 	return rv;
 }
 static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = pval1->u.dval / pval2->u.dval};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv / pval2->u.dblv};
 	return rv;
 }
 static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = pow(pval1->u.dval, pval2->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pow(pval1->u.dblv, pval2->u.dblv)};
 	return rv;
 }
 static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
-	long long i1 = (long long)pval1->u.dval;
-	long long i2 = (long long)pval2->u.dval;
+	long long i1 = (long long)pval1->u.dblv;
+	long long i2 = (long long)pval2->u.dblv;
 	long long i3 = i1 % i2;
 	if (i3 < 0)
 		i3 += i2; // C mod is insane
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = (double)i3};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = (double)i3};
 	return rv;
 }
 static inline mv_t f_ff_atan2_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dval = atan2(pval1->u.dval, pval2->u.dval)};
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = atan2(pval1->u.dblv, pval2->u.dblv)};
 	return rv;
 }
 

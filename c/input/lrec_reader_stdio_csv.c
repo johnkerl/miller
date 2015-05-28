@@ -142,7 +142,9 @@ lrec_reader_stdio_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_r
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
+	int allow_repeat_ifs)
+{
 	lrec_t* prec = lrec_csv_alloc(data_line);
 	char* key = NULL;
 	char* value = data_line;

@@ -40,10 +40,10 @@ static sllv_t* mapper_histogram_process(lrec_t* pinrec, context_t* pctx, void* p
 static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate) {
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* value_field_name = pe->value;
-		char* sval = lrec_get(pinrec, value_field_name);
+		char* strv = lrec_get(pinrec, value_field_name);
 		unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
-		if (sval != NULL) {
-			double val = mlr_double_from_string_or_die(sval);
+		if (strv != NULL) {
+			double val = mlr_double_from_string_or_die(strv);
 			if ((val >= pstate->lo) && (val < pstate->hi)) {
 				int idx = (int)((val-pstate->lo) * pstate->mul);
 				pcounts[idx]++;

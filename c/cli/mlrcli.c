@@ -68,18 +68,18 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, defaulting to newline\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
-	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
+	fprintf(o, "  --rs      --irs     --ors                  Record separators, defaulting to newline\n");
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
+	fprintf(o, "  --ps      --ips     --ops                  Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
 	fprintf(o, "Data-format options, for input, output, or both:\n");
-	fprintf(o, "  --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
-	fprintf(o, "  --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)\n");
-	fprintf(o, "  --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)\n");
-	fprintf(o, "  --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)\n");
-	fprintf(o, "  --xtab    --ixtab   --oxtab            Transposed-tabular (useful for highly multi-column data)\n");
+	fprintf(o, "  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
+	fprintf(o, "  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)\n");
+	fprintf(o, "  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)\n");
+	fprintf(o, "  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)\n");
+	fprintf(o, "  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for highly multi-column data)\n");
 	fprintf(o, "Numerical format:\n");
-	fprintf(o, "  --ofmt {format}                        E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
-	fprintf(o, "                                         Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
+	fprintf(o, "  --ofmt {format}                            E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
+	fprintf(o, "                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
@@ -246,10 +246,24 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--ixtab"))   { rdesc = "xtab"; }
 		else if (streq(argv[argi], "--oxtab"))   { wdesc = "xtab"; }
 
-		else if (streq(argv[argi], "--ipprint")) { rdesc = "csv"; popts->ifs = ' '; popts->allow_repeat_ifs = TRUE;}
-		else if (streq(argv[argi], "--opprint")) { wdesc = "pprint"; }
-		else if (streq(argv[argi], "--pprint"))  { rdesc = "csv"; popts->ifs = ' '; popts->allow_repeat_ifs = TRUE; wdesc="pprint";}
-		else if (streq(argv[argi], "--right"))   { left_align_pprint = FALSE; }
+		else if (streq(argv[argi], "--ipprint")) {
+			rdesc                   = "csv";
+			popts->ifs              = ' ';
+			popts->allow_repeat_ifs = TRUE;
+
+		}
+		else if (streq(argv[argi], "--opprint")) {
+			wdesc = "pprint";
+		}
+		else if (streq(argv[argi], "--pprint")) {
+			rdesc                   = "csv";
+			popts->ifs              = ' ';
+			popts->allow_repeat_ifs = TRUE;
+			wdesc                   = "pprint";
+		}
+		else if (streq(argv[argi], "--right"))   {
+			left_align_pprint = FALSE;
+		}
 
 		else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -284,8 +298,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	// xxx alloc mmap readers here too
 	// xxx have use-mmap-readers flag ...
 	if (streq(rdesc, "dkvp")) {
-		popts->plrec_reader_stdio = lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap  = lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
+		popts->plrec_reader_stdio = lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips,
+			popts->allow_repeat_ifs);
+		popts->plrec_reader_mmap  = lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips,
+			popts->allow_repeat_ifs);
 	} else if (streq(rdesc, "csv")) {
 		popts->plrec_reader_stdio = lrec_reader_stdio_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
 		popts->plrec_reader_mmap  = lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);

@@ -12,9 +12,7 @@ void *filter_dsl_lemon_parser_alloc(void *(*mallocProc)(size_t));
 // http://flex.sourceforge.net/manual/Init-and-Destroy-Functions.html
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
-static mlr_dsl_ast_node_holder_t* filter_dsl_parse_inner(yyscan_t scanner, void* pvparser,
-	mlr_dsl_ast_node_t** ppnode)
-{
+static mlr_dsl_ast_node_holder_t* filter_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast_node_t** ppnode) {
 	int lex_code;
 	int parse_code;
 	mlr_dsl_ast_node_holder_t* past = mlr_malloc_or_die(sizeof(mlr_dsl_ast_node_holder_t));

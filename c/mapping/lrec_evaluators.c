@@ -401,13 +401,13 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.ival = 0};
+		return (mv_t) {.type = MT_NULL, .u.intv = 0};
 	} else {
-		double dval;
-		if (mlr_try_double_from_string(string, &dval)) {
-			return (mv_t) {.type = MT_DOUBLE, .u.dval = dval};
+		double dblv;
+		if (mlr_try_double_from_string(string, &dblv)) {
+			return (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
 		} else {
-			return (mv_t) {.type = MT_STRING, .u.string_val = strdup(string)};
+			return (mv_t) {.type = MT_STRING, .u.strv = strdup(string)};
 		}
 	}
 }
@@ -436,19 +436,19 @@ mv_t lrec_evaluator_double_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	// xxx cmt strdup semantics :(
-	return (mv_t) {.type = MT_STRING, .u.string_val = strdup(pstate->literal.u.string_val)};
+	return (mv_t) {.type = MT_STRING, .u.strv = strdup(pstate->literal.u.strv)};
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
-	double dval;
-	if (mlr_try_double_from_string(string, &dval)) {
-		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.dval = dval};
+	double dblv;
+	if (mlr_try_double_from_string(string, &dblv)) {
+		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
-		pstate->literal = (mv_t) {.type = MT_STRING, .u.string_val = strdup(string)};
+		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = strdup(string)};
 		pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
 	}
 	pevaluator->pvstate = pstate;
@@ -458,7 +458,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 
 // ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.ival = prec->field_count};
+	return (mv_t) {.type = MT_INT, .u.intv = prec->field_count};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -469,7 +469,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_NR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.ival = pctx->nr};
+	return (mv_t) {.type = MT_INT, .u.intv = pctx->nr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -480,7 +480,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FNR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.ival = pctx->fnr};
+	return (mv_t) {.type = MT_INT, .u.intv = pctx->fnr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -491,7 +491,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_STRING, .u.string_val = strdup(pctx->filename)};
+	return (mv_t) {.type = MT_STRING, .u.strv = strdup(pctx->filename)};
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
@@ -503,7 +503,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENUM_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.ival = pctx->filenum};
+	return (mv_t) {.type = MT_INT, .u.intv = pctx->filenum};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -537,25 +537,25 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 
 // ================================================================
 // xxx make a lookup table
-lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* function_name, lrec_evaluator_t* parg1) {
-	if        (streq(function_name, "not"))     { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
-    } else if (streq(function_name, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
-    } else if (streq(function_name, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
-    } else if (streq(function_name, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
-    } else if (streq(function_name, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
-    } else if (streq(function_name, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
-    } else if (streq(function_name, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
-    } else if (streq(function_name, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
-    } else if (streq(function_name, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
-    } else if (streq(function_name, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
-    } else if (streq(function_name, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
-    } else if (streq(function_name, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
-    } else if (streq(function_name, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
-    } else if (streq(function_name, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
-    } else if (streq(function_name, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
-    } else if (streq(function_name, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
-    } else if (streq(function_name, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
-    } else if (streq(function_name, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
+lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1) {
+	if        (streq(fnnm, "not"))     { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
+    } else if (streq(fnnm, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
+    } else if (streq(fnnm, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
+    } else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
+    } else if (streq(fnnm, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
+    } else if (streq(fnnm, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
+    } else if (streq(fnnm, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
+    } else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
+    } else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
+    } else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
+    } else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
+    } else if (streq(fnnm, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
+    } else if (streq(fnnm, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
+    } else if (streq(fnnm, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
+    } else if (streq(fnnm, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
+    } else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
+    } else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
+    } else if (streq(fnnm, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
 
 	} else return NULL; // xxx handle me better
 }
@@ -585,14 +585,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm, lrec_ev
 
 // ================================================================
 // xxx make a lookup table. also, leverage the lookup tables for online help.
-lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* function_name,
+lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
 {
-	if (streq(function_name, "sub")) {
-		return lrec_evaluator_alloc_from_s_sss_func(s_sss_sub_func, parg1, parg2, parg3);
-	} else  {
-		return NULL; /* xxx handle me better */
-	}
+	if (streq(fnnm, "sub")) { return lrec_evaluator_alloc_from_s_sss_func(s_sss_sub_func,   parg1, parg2, parg3);
+	} else  { return NULL; /* xxx handle me better */ }
 }
 
 // ================================================================
@@ -739,7 +736,8 @@ int main(int argc, char** argv) {
 	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 	mlr_dsl_ast_node_t* plogxnode  = mlr_dsl_ast_node_append_arg(plognode, pxnode);
 	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MLR_DSL_AST_NODE_TYPE_LITERAL);
-	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MLR_DSL_AST_NODE_TYPE_OPERATOR, p2node, plogxnode);
+	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MLR_DSL_AST_NODE_TYPE_OPERATOR,
+		p2node, plogxnode);
 
 	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode);
 
