@@ -401,11 +401,11 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.int_val = 0};
+		return (mv_t) {.type = MT_NULL, .u.ival = 0};
 	} else {
-		double double_val;
-		if (mlr_try_double_from_string(string, &double_val)) {
-			return (mv_t) {.type = MT_DOUBLE, .u.double_val = double_val};
+		double dval;
+		if (mlr_try_double_from_string(string, &dval)) {
+			return (mv_t) {.type = MT_DOUBLE, .u.dval = dval};
 		} else {
 			return (mv_t) {.type = MT_STRING, .u.string_val = strdup(string)};
 		}
@@ -443,9 +443,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
-	double double_val;
-	if (mlr_try_double_from_string(string, &double_val)) {
-		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.double_val = double_val};
+	double dval;
+	if (mlr_try_double_from_string(string, &dval)) {
+		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.dval = dval};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
 		pstate->literal = (mv_t) {.type = MT_STRING, .u.string_val = strdup(string)};
@@ -458,7 +458,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 
 // ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.int_val = prec->field_count};
+	return (mv_t) {.type = MT_INT, .u.ival = prec->field_count};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -469,7 +469,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_NR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.int_val = pctx->nr};
+	return (mv_t) {.type = MT_INT, .u.ival = pctx->nr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -480,7 +480,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FNR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.int_val = pctx->fnr};
+	return (mv_t) {.type = MT_INT, .u.ival = pctx->fnr};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -503,7 +503,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENUM_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.int_val = pctx->filenum};
+	return (mv_t) {.type = MT_INT, .u.ival = pctx->filenum};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
