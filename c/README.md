@@ -47,9 +47,11 @@ Null-lrec is input to mappers to signify end of stream: e.g. `sort` or `tac`
 should use this as a signal to deliver the sorted/reversed list of rows.
 
 When a mapper has no output before end of stream (e.g. `sort` or `tac` while
-accumulating inputs) it returns a null lrec-pointer.
+accumulating inputs) it returns a null lrec-pointer which is treated as
+synonymous with returning an empty list.
 
-At end of stream, a mapper returns a linked list ending in a null lrec-pointer.
+At end of stream, a mapper returns a linked list of records ending in a null
+lrec-pointer.
 
 A null lrec-pointer at end of stream is passed to lrec writers so that they may
 produce final output (e.g. pretty-print which produces no output until end of

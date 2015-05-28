@@ -8,6 +8,7 @@ FEATURES/+
 
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
+!! RM: null as synonym for empty list
 
 !! line widths
 
