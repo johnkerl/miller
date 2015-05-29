@@ -6,18 +6,6 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
-// xxx move to README.md
-
-// Idea of pheader_keepers: each header_keeper object retains the input-line backing
-// and the slls_t for a CSV header line which is used by one or more CSV data
-// lines.  Meanwhile some mappers retain input records from the entire data
-// stream, including header-schema changes in the input stream. This means we
-// need to keep headers intact as long as any lrecs are pointing to them.  One
-// option is reference-counting which I experimented with; it was messy and
-// error-prone. The approach used here is to keep a hash map from header-schema
-// to header_keeper object. The current pheader_keeper is a pointer into one of
-// those.  Then when the reader is freed, all the header-keepers are freed.
-
 typedef struct _lrec_reader_mmap_csv_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
@@ -70,8 +58,6 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 	char* header_name = phandle->sol;
 	char* eol         = NULL;
 
-	// xxx UT cases with no final newline
-	// xxx eof check here & for other lrec mmap readers!!
 	for (char* p = phandle->sol; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
@@ -96,12 +82,9 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 	}
 	slls_add_no_free(pheader_names, header_name);
 
-	// xxx EOF!!
-
 	return pheader_names;
 }
 
-// xxx handle EOF as well as dataless end of stanza
 static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csv_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
@@ -168,10 +151,6 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 	return prec;
 }
 
-//			xxx pstate->ilno++;
-//			xxx pstate->ifnr++;
-
-// xxx no header_keeper. just the slls
 static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 

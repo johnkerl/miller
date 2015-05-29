@@ -7,7 +7,6 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	char ips; // xxx make me real
 	int allow_repeat_ips;
 	int at_eof;
-	// xxx need to remember EOF for subsequent read
 } lrec_reader_stdio_xtab_state_t;
 
 // ----------------------------------------------------------------
@@ -22,7 +21,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(FILE* input_stream, void* pvstate,
 	while (TRUE) {
 		char* line = mlr_get_line(input_stream, '\n'); // xxx parameterize
 		if (line == NULL) { // EOF
-			// xxx cmt EOF terminates the stanza etc.
+			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;
 			if (pxtab_lines->length == 0) {
 				return NULL;

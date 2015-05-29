@@ -29,7 +29,7 @@ FEATURES/+
 ----------------------------------------------------------------
 
 ! reprio rust/go/d post-tc
-  -> macos tools install x 3
+  -> macos tools install x 3. and/or just use sprax.
   -> file moves -> lang compares; perfcomp dir?
   -> move datadirs too ..... unify c & doc data dirs to parent?
   -> remove/coalesce/gzip the large data files
@@ -61,12 +61,6 @@ IMPROVEMENTS
 * null-handling everywhere!! :/
 
 ================================================================
-TESTING
-* xtab input & UTs for it
-* ut cases: multifile & multimapper often. e.g. wrapping everything in cat then X then cat ...
-* ut cases: make should-fail machinery & use it for null-key dkvp cases.
-
-================================================================
 DOC
 * reference: be sure to include no-sql examples throughout
 * mem-mgmt: streaming & as near stateless as possible. e.g. csv cat retains only the header line.
@@ -77,10 +71,6 @@ DOC
 * meaneb: assumes uncorr. code/doc link to appxb :)
 * cookbook page? random subsampling via urand()<0.001 ... what else ...
 * doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
-
-================================================================
-DATA
-* move out of c dir ...
 
 ================================================================
 MEM MGMT:
@@ -113,6 +103,8 @@ UT/REG
 * het-xtab out
 * modulus operator
 * strlen
+* xtab i/o
+* make should-fail machinery & use it for null-key dkvp cases.
 
 ================================================================
 HARDER HYGIENE
