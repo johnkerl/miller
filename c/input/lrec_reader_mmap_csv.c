@@ -72,7 +72,7 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 
 	// xxx UT cases with no final newline
 	// xxx eof check here & for other lrec mmap readers!!
-	for (char* p = phandle->sol; *p; ) {
+	for (char* p = phandle->sol; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			eol = p;
@@ -120,7 +120,7 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 	char* eol   = NULL;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for (char* p = line; *p; ) {
+	for (char* p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;

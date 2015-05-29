@@ -8,22 +8,19 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	char irs;
 	char ips; // xxx make me real
 	int allow_repeat_ips;
-	int at_eof;
 } lrec_reader_mmap_xtab_state_t;
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_xtab_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
 	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
 
-	if (pstate->at_eof)
+	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
 		return lrec_parse_mmap_xtab(phandle, pstate->irs, pstate->ips, pstate->allow_repeat_ips);
 }
 
 static void lrec_reader_mmap_xtab_sof(void* pvstate) {
-	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
-	pstate->at_eof = FALSE;
 }
 
 lrec_reader_mmap_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_ips) {
@@ -35,7 +32,6 @@ lrec_reader_mmap_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_re
 	pstate->irs                 = irs;
 	pstate->ips                 = ' ';
 	pstate->allow_repeat_ips    = TRUE;
-	pstate->at_eof              = FALSE;
 
 	plrec_reader_mmap->pvstate       = (void*)pstate;
 	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_xtab_process;
@@ -47,15 +43,13 @@ lrec_reader_mmap_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_re
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
 
-	if (phandle->sol >= phandle->eof)
-		return NULL;
-
-	lrec_t* prec = lrec_unbacked_alloc();
 	while (phandle->sol < phandle->eof && *phandle->sol == irs)
 		phandle->sol++;
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
+
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	// Loop over fields, one per line
 	while (TRUE) {
@@ -66,7 +60,7 @@ lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char i
 		char* p;
 
 		// Construct one field
-		for (p = line; *p; ) {
+		for (p = line; p < phandle->eof && *p; ) {
 			if (*p == irs) {
 				*p = 0;
 				eol = p;

@@ -47,7 +47,7 @@ lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char i
 	char* eol   = NULL;
 	char free_flags = 0;
 
-	for (char* p = line; *p; ) {
+	for (char* p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			eol = p;
