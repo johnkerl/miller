@@ -4,7 +4,8 @@
 #include <unistd.h>
 
 // Samples unit-uniform x,y pairs, conditioned on being in two subboxes the size
-// of which is described by the "chomp" parameter.
+// of which is described by the "chomp" parameter. Intended for compare/contrast
+// of OLS and PCA linear-regression algorithms.
 //
 // 0 < chomp < 1:
 //

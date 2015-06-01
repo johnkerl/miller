@@ -11,3 +11,17 @@ wc -l \
   dsls/*.[ly] \
   dsls/*wrapper*.[ch] \
   | sort -n
+
+echo
+wc -c \
+  cli/*.[ch] \
+  containers/*.[ch] \
+  input/*.[ch] \
+  lib/*.[ch] \
+  mapping/*.[ch] \
+  output/*.[ch] \
+  stream/*.[ch] \
+  dsls/*.[ly] \
+  dsls/*wrapper*.[ch] \
+  | sort -n | tail -n 5
+

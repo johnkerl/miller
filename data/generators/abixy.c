@@ -1,4 +1,3 @@
-#ifdef __GEN_MAIN__
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -18,7 +17,6 @@ int main(void) {
     }
 	return 0;
 }
-#endif // __GEN_MAIN__
 
 // a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 // a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
