@@ -9,6 +9,7 @@ a.out
 *.dSYM
 catc
 catc0
+catm
 *.o
 .*.swp
 .*.swo
