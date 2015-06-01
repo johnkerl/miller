@@ -32,11 +32,8 @@ FEATURES/+
 
 ! reprio rust/go/d post-tc
   -> macos tools install x 3. and/or just use sprax.
-  -> file moves -> lang compares; perfcomp dir?
-  -> move datadirs too ..... unify c & doc data dirs to parent?
-  -> remove/coalesce/gzip the large data files
 
-! mlr sort CLI opt for choice of heap/merge/quick -- ?
+! mlr sort CLI opt for choice of heap/merge/quick -- ? needs error-handling case
 
 ================================================================
 NEATEN
