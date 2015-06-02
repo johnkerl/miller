@@ -35,6 +35,8 @@ FEATURES/+
 
 ! mlr sort CLI opt for choice of heap/merge/quick -- ? needs error-handling case
 
+! merge data dir w/ doc/data dir
+
 ================================================================
 NEATEN
 
