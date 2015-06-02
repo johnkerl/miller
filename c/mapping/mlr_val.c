@@ -4,6 +4,9 @@
 #include "lib/mlr_globals.h"
 #include "mapping/mlr_val.h"
 
+// For some Linux distros, in spite of including time.h:
+char *strptime(const char *s, const char *format, struct tm *tm);
+
 // ----------------------------------------------------------------
 mv_t MV_NULL = {
 	.type = MT_NULL,

@@ -14,7 +14,6 @@ TOP OF LIST
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
-!! mlrwik README.md w/ poki link
 !! top-level notes: make -C c, & poki in poki dir. add poki chdir/out-of-pwd feature?
 
 !! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
