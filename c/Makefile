@@ -30,7 +30,7 @@ top: tags mlr test
 install: top
 	cp mlr $(HOME)/bin/
 
-all: tags mlr mlrd mlrg mlrp catc catc0 catm catd catgo catrust cutd cutgo
+all: tags mlr mlrd mlrg mlrp
 
 tags: .always
 	ctags -R .
@@ -129,33 +129,10 @@ evl:
 	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c -lm
 
 # ----------------------------------------------------------------
-# xxx to do: move these to ../language-comparisons.
-
-catc: tools/catc.c
-	$(CC) tools/catc.c -o catc
-catc0: tools/catc0.c
-	$(CC) tools/catc0.c -o catc0
-catm: tools/catm.c
-	$(CC) tools/catm.c -o catm
-catd: catd.d
-	dmd -O catd.d
-catgo: catgo.go
-	go build catgo.go
-catrust: catrust.rs
-	rustc catrust.rs
-
-cutd: cutd.d
-	dmd -O cutd.d
-cutgo: cutgo.go
-	go build cutgo.go
-
-# ----------------------------------------------------------------
 clean:
-	@rm -vf mlr mlrd mlrg mlrp tester catc catc0 catm catd catgo catrust cutd cutgo mlr-unit-tester
+	@rm -vf mlr mlrd mlrg mlrp tester
 	@make -C dsls clean
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old
-tar:
-	tar zcf mlrc.tgz *.c *.h Makefile
 .always:
 	@true

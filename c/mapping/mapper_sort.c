@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -52,6 +53,11 @@
 // ----------------------------------------------------------------
 #define SORT_NUMERIC    0x80
 #define SORT_DESCENDING 0x40
+
+#define DO_QUICKSORT    0xf3
+#define DO_HEAPSORT     0xf4
+#define DO_MERGESORT    0xf5
+#define DO_NOT_SORT     0xf6
 
 // Each sort key is string or number; use union to save space.
 typedef struct _typed_sort_key_t {
@@ -118,6 +124,7 @@ typedef struct _mapper_sort_state_t {
 	slls_t* pkey_field_names; // Fields to sort on
 	int*    sort_params;      // Lexical/numeric; ascending/descending
 	int do_sort;              // If false, just do group-by
+	int sort_algo;
 	// Sort state: buckets of like records.
 	lhmslv_t* pbuckets_by_key_field_names;
 } mapper_sort_state_t;
@@ -166,10 +173,25 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		pcmp_sort_params  = pstate->sort_params;
 		cmp_params_length = pstate->pkey_field_names->length;
 
-		// xxx to do: allow the user to specify the sort algorithm from the CLI, assuming portability
-		qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
-		//heapsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
-		//mergesort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+		if (pstate->sort_algo == DO_QUICKSORT) {
+			qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+		} else if (pstate->sort_algo == DO_HEAPSORT) {
+			int rc = heapsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+			if (rc != 0) {
+				perror("heapsort");
+				exit(1);
+			}
+		} else if (pstate->sort_algo == DO_MERGESORT) {
+			int rc = mergesort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+			if (rc != 0) {
+				perror("mergesort");
+				exit(1);
+			}
+		} else {
+			fprintf(stderr, "%s: internal coding error: sorting algorithm %d unrecognized.\n",
+				MLR_GLOBALS.argv0, pstate->sort_algo);
+			exit(1);
+		}
 
 		pcmp_sort_params  = NULL;
 		cmp_params_length = 0;
@@ -190,7 +212,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 // ----------------------------------------------------------------
 // xxx to do: at end of sort, free and nullify the things populated within
-// mapper_sort_process.  here, free the things allocated as setup time.
+// mapper_sort_process.  here, free the things allocated at setup time.
 static void mapper_sort_free(void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pstate->pkey_field_names != NULL)
@@ -202,7 +224,7 @@ static void mapper_sort_free(void* pvstate) {
 		free(pstate->sort_params);
 }
 
-static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {
+static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort, int sort_algo) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_sort_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sort_state_t));
@@ -211,6 +233,7 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 	pstate->sort_params                 = sort_params;
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
 	pstate->do_sort                     = do_sort;
+	pstate->sort_algo                   = sort_algo;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_sort_process;
@@ -226,6 +249,7 @@ static void mapper_group_by_usage(char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
+	int sort_algo = DO_NOT_SORT;
 	if ((argc - *pargi) < 2) {
 		mapper_group_by_usage(argv[0], argv[*pargi]);
 		return NULL;
@@ -237,7 +261,7 @@ static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
 		opt_array[i] = 0;
 
 	*pargi += 2;
-	return mapper_sort_alloc(pnames, opt_array, FALSE);
+	return mapper_sort_alloc(pnames, opt_array, FALSE, sort_algo);
 }
 
 // ----------------------------------------------------------------
@@ -272,11 +296,26 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 1;
 	slls_t* pnames = slls_alloc();
 	slls_t* pflags = slls_alloc();
+	int sort_algo = DO_QUICKSORT;
 
 	while ((argc - *pargi) >= 1 && argv[*pargi][0] == '-') {
+		char* flag  = argv[*pargi];
+		if (streq(flag, "--quicksort") || streq(flag, "--quick")) {
+			sort_algo = DO_QUICKSORT;
+			*pargi += 1;
+			continue;
+		} else if (streq(flag, "--heapsort") || streq(flag, "--heap")) {
+			sort_algo = DO_HEAPSORT;
+			*pargi += 1;
+			continue;
+		} else if (streq(flag, "--mergesort") || streq(flag, "--merge")) {
+			sort_algo = DO_MERGESORT;
+			*pargi += 1;
+			continue;
+		}
+
 		if ((argc - *pargi) < 2)
 			mapper_sort_usage(argv[0], verb);
-		char* flag  = argv[*pargi];
 		char* value = argv[*pargi+1];
 		*pargi += 2;
 
@@ -317,7 +356,7 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	slls_free(pflags);
 
-	return mapper_sort_alloc(pnames, opt_array, TRUE);
+	return mapper_sort_alloc(pnames, opt_array, TRUE, sort_algo);
 }
 
 // ----------------------------------------------------------------

@@ -4,12 +4,10 @@ import std.stdio;
 import std.string;
 import std.array;
 
-void main()
-
-{
+void main() {
 	string[] includeFields = ["a", "x"];
-    string line;
-    while ((line = stdin.readln()) !is null) {
+	string line;
+	while ((line = stdin.readln()) !is null) {
 		// Input string to hashmap.
 		string[string] oldmap;
 		string[] fields = split(line, ',');

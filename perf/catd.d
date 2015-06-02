@@ -3,7 +3,7 @@ import std.stdio;
 
 void main()
 {
-    string line;
-    while ((line = stdin.readln()) !is null)
-        write(line);
+	string line;
+	while ((line = stdin.readln()) !is null)
+		write(line);
 }
