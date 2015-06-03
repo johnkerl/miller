@@ -30,6 +30,8 @@ TOP OF LIST
 
 ? nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 
+!! __X_MAIN__ -> UT code (effectively all-but-dead code at present)
+
 ----------------------------------------------------------------
 
 ! reprio rust/go/d post-tc

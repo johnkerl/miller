@@ -536,6 +536,71 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
+typedef struct _arity_lookup_t {
+	char* function_name;
+	int   arity;
+} arity_lookup_t;
+
+static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
+	{  "urand",   0 },
+	{  "systime", 0 },
+
+	{  "not",     1 },
+	{  "-",       1 },
+	{  "abs",     1 },
+	{  "ceil",    1 },
+	{  "cos",     1 },
+	{  "exp",     1 },
+	{  "floor",   1 },
+	{  "log",     1 },
+	{  "log10",   1 },
+	{  "round",   1 },
+	{  "sin",     1 },
+	{  "sqrt",    1 },
+	{  "tan",     1 },
+	{  "tolower", 1 },
+	{  "toupper", 1 },
+	{  "sec2gmt", 1 },
+	{  "gmt2sec", 1 },
+	{  "strlen",  1 },
+
+	{  "&&",      2 },
+	{  "||",      2 },
+	{  "==",      2 },
+	{  "!=",      2 },
+	{  ">",       2 },
+	{  ">=",      2 },
+	{  "<",       2 },
+	{  "<=",      2 },
+	{  ".",       2 },
+	{  "pow",     2 },
+	{  "+",       2 },
+	{  "-",       2 },
+	{  "*",       2 },
+	{  "/",       2 },
+	{  "**",      2 },
+	{  "%",       2 },
+	{  "atan2",   2 },
+
+	{  "sub",     3 },
+
+	{  NULL,      -1 }, // null terminator
+};
+
+static int look_up_arity(arity_lookup_t lookup_table[], char* function_name) {
+	for (int i = 0; ; i++) {
+		arity_lookup_t* plookup = &lookup_table[i];
+		if (plookup->function_name == NULL)
+			break;
+		if (streq(function_name, plookup->function_name))
+			return plookup->arity;
+	}
+	return -1;
+}
+
+// xxx on-line-help function using the arity table ..............
+
+// ================================================================
 // xxx make a lookup table
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1) {
 	if        (streq(fnnm, "not"))     { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
@@ -593,7 +658,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 }
 
 // ================================================================
-static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode/*, arity_lookup_t* arity_lookups*/) {
+static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
+	arity_lookup_t* arity_lookup_table)
+{
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			return lrec_evaluator_alloc_from_field_name(pnode->text);
@@ -612,40 +679,38 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return NULL;
 		}
 		char* func_name = pnode->text;
-// xxx implement this. i don't want "log: no such function" just b/c they invoked
-// it with the wrong # args.  rather, want "log: wrong # args ...".
-//
-//		int required_arity = look_up_arity(arity_lookups, func_name);
-//		if (required_arity == -1) {
-//			fprintf(stderr, "Function name \"%s\" not found.\n", func_name);
-//			return NULL;
-//		}
+
+		int required_arity = look_up_arity(arity_lookup_table, func_name);
+		if (required_arity == -1) {
+			fprintf(stderr, "Function name \"%s\" not found.\n", func_name);
+			return NULL;
+		}
 		int user_provided_arity = pnode->pchildren->length;
-//		if (required_arity != user_provided_arity) {
-//			fprintf(stderr, "Function name \"%s\" requires arity of %d; got %d.\n",
-//				func_name, required_arity, user_provided_arity);
-//			return NULL;
-//		}
+		if (required_arity != user_provided_arity) {
+			fprintf(stderr, "Function name \"%s\" requires arity of %d; got %d.\n",
+				func_name, required_arity, user_provided_arity);
+			return NULL;
+		}
 		lrec_evaluator_t* pevaluator = NULL;
 		if (user_provided_arity == 0) {
 			pevaluator = lrec_evaluator_alloc_from_zary_func_name(func_name);
 		} else if (user_provided_arity == 1) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_unary_func_name(func_name, parg1);
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node/*, arity_lookups*/);
-			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node/*, arity_lookups*/);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
+			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, arity_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
 		} else if (user_provided_arity == 3) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
 			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node/*, arity_lookups*/);
-			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node/*, arity_lookups*/);
-			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node/*, arity_lookups*/);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
+			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, arity_lookup_table);
+			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, arity_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 		} else {
 			fprintf(stderr, "Internal coding error:  arity for function name \"%s\" misdetected.\n",
@@ -661,9 +726,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
-//	xxx arity_lookup_t* arity_lookups = get_arity_lookups();
-	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode/*, arity_lookups*/);
-//	xxx free(arity_lookups);
+	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, ARITY_LOOKUP_TABLE);
 	return pevaluator;
 }
 
