@@ -542,27 +542,27 @@ typedef struct _arity_lookup_t {
 } arity_lookup_t;
 
 static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
-	{  "urand",   0 },
 	{  "systime", 0 },
+	{  "urand",   0 },
 
-	{  "not",     1 },
 	{  "-",       1 },
 	{  "abs",     1 },
 	{  "ceil",    1 },
 	{  "cos",     1 },
 	{  "exp",     1 },
 	{  "floor",   1 },
+	{  "gmt2sec", 1 },
 	{  "log",     1 },
 	{  "log10",   1 },
 	{  "round",   1 },
+	{  "sec2gmt", 1 },
 	{  "sin",     1 },
 	{  "sqrt",    1 },
+	{  "strlen",  1 },
 	{  "tan",     1 },
 	{  "tolower", 1 },
 	{  "toupper", 1 },
-	{  "sec2gmt", 1 },
-	{  "gmt2sec", 1 },
-	{  "strlen",  1 },
+	{  "!",       1 },
 
 	{  "&&",      2 },
 	{  "||",      2 },
@@ -573,7 +573,6 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 	{  "<",       2 },
 	{  "<=",      2 },
 	{  ".",       2 },
-	{  "pow",     2 },
 	{  "+",       2 },
 	{  "-",       2 },
 	{  "*",       2 },
@@ -581,6 +580,7 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 	{  "**",      2 },
 	{  "%",       2 },
 	{  "atan2",   2 },
+	{  "pow",     2 },
 
 	{  "sub",     3 },
 
@@ -598,12 +598,35 @@ static int look_up_arity(arity_lookup_t lookup_table[], char* function_name) {
 	return -1;
 }
 
-// xxx on-line-help function using the arity table ..............
+static void list_functions_with_arity(arity_lookup_t lookup_table[], int arity) {
+	printf("   ");
+	for (int i = 0; ; i++) {
+		arity_lookup_t* plookup = &lookup_table[i];
+		if (plookup->function_name == NULL)
+			break;
+		if (arity == plookup->arity) {
+			printf(" %s", plookup->function_name);
+		}
+	}
+	printf("\n");
+}
+
+void lrec_evaluator_describe_functions(FILE* output_stream) {
+	fprintf(output_stream, "Functions for filter and put:\n");
+	fprintf(output_stream, "  Functions with no arguments:\n");
+	list_functions_with_arity(ARITY_LOOKUP_TABLE, 0);
+	fprintf(output_stream, "  Functions with one argument:\n");
+	list_functions_with_arity(ARITY_LOOKUP_TABLE, 1);
+	fprintf(output_stream, "  Functions with two arguments:\n");
+	list_functions_with_arity(ARITY_LOOKUP_TABLE, 2);
+	fprintf(output_stream, "  Functions with three arguments:\n");
+	list_functions_with_arity(ARITY_LOOKUP_TABLE, 3);
+}
 
 // ================================================================
 // xxx make a lookup table
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1) {
-	if        (streq(fnnm, "not"))     { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
+	if        (streq(fnnm, "!"))       { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
     } else if (streq(fnnm, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
     } else if (streq(fnnm, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
     } else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);

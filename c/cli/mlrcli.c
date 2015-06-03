@@ -7,6 +7,7 @@
 #include "containers/slls.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
+#include "mapping/lrec_evaluators.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
@@ -66,6 +67,10 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "\n");
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
+
+	fprintf(o, "\n");
+	lrec_evaluator_describe_functions(o);
+	fprintf(o, "\n");
 
 	fprintf(o, "Separator options, for input, output, or both:\n");
 	fprintf(o, "  --rs      --irs     --ors                  Record separators, defaulting to newline\n");
