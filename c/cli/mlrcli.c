@@ -69,7 +69,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
 	fprintf(o, "\n");
-	lrec_evaluator_describe_functions(o);
+	lrec_evaluator_list_functions(o);
 	fprintf(o, "\n");
 
 	fprintf(o, "Separator options, for input, output, or both:\n");
@@ -183,6 +183,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help-all-verbs"))
 			usage_all_verbs(argv[0]);
+		else if (streq(argv[argi], "--help-all-functions")) {
+			lrec_evaluator_function_usage(stdout, NULL);
+			exit(0);
+		}
+
+		else if (streq(argv[argi], "--help-function")) {
+			check_arg_count(argv, argi, argc, 2);
+			lrec_evaluator_function_usage(stdout, argv[argi+1]);
+			exit(0);
+		}
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
