@@ -597,7 +597,8 @@ support the following operators and functions:
       <tt>&gt;</tt>,
       <tt>&gt;=</tt>,
       <tt>&amp;&amp;</tt>,
-      <tt>||</tt>
+      <tt>||</tt>,
+      <tt>!</tt>,
     </td>
     <td>Filter-only. Comparisons are string-valued or number-valued depending on absence/presence of double-quotes in the literal value:
       <br/><tt> mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2' </tt>
@@ -627,10 +628,14 @@ support the following operators and functions:
 
   <tr>
     <td>
-      <tt>systime</tt> (seconds since epoch),
-      <tt>urand</tt>
+      <tt>systime</tt>: seconds since epoch
+      <br/>
+      <tt>urand</tt>: floating numbers 0 &le; <i>x</i> &lt; 1.
+      <br/>Example producing integers between 20 and 30 inclusive:
+      <tt>mlr put '$y=floor(20+urand()*11)'</tt>
+
     </td>
-    <td>Functions of no arguments returning numbers
+    <td>Functions of no arguments returning numbers.
     </td>
   </tr>
 
@@ -655,7 +660,8 @@ support the following operators and functions:
 
   <tr>
     <td>
-      <tt>atan2</tt>
+      <tt>atan2</tt>,
+      <tt>pow</tt> (same as <tt>**</tt>)
     </td>
     <td>Number-to-number functions with two arguments
     </td>
@@ -671,6 +677,15 @@ support the following operators and functions:
   </tr>
 
 </table>
+
+<!--
+    gmt2sec sec2gmt strlen
+  Functions with two arguments:
+    && || == != > >= < <= . + - * / ** % atan2 pow
+  Functions with three arguments:
+    sub
+
+-->
 
 <p/>To set the seed for <tt>urand()</tt>, you may specify decimal or hexadecimal
 32-bit numbers of the form <tt>mlr --seed 123456789</tt> or <tt>mlr --seed 0xcafefeed</tt>.

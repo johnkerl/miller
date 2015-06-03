@@ -546,6 +546,7 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 	{  "urand",   0 },
 
 	{  "-",       1 },
+	{  "!",       1 },
 	{  "abs",     1 },
 	{  "ceil",    1 },
 	{  "cos",     1 },
@@ -562,7 +563,6 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 	{  "tan",     1 },
 	{  "tolower", 1 },
 	{  "toupper", 1 },
-	{  "!",       1 },
 
 	{  "&&",      2 },
 	{  "||",      2 },
@@ -587,15 +587,52 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 	{  NULL,      -1 }, // null terminator
 };
 
-static int look_up_arity(arity_lookup_t lookup_table[], char* function_name) {
+#define ARITY_CHECK_PASS    0xbb
+#define ARITY_CHECK_FAIL    0xbc
+#define ARITY_CHECK_NO_SUCH 0xbd
+
+static int check_arity(arity_lookup_t lookup_table[], char* function_name, int user_provided_arity, int *parity) {
+	*parity = -1;
+	int found_function_name = FALSE;
 	for (int i = 0; ; i++) {
 		arity_lookup_t* plookup = &lookup_table[i];
 		if (plookup->function_name == NULL)
 			break;
-		if (streq(function_name, plookup->function_name))
-			return plookup->arity;
+		if (streq(function_name, plookup->function_name)) {
+			found_function_name = TRUE;
+			*parity = plookup->arity;
+			if (user_provided_arity == plookup->arity) {
+				return ARITY_CHECK_PASS;
+			}
+		}
 	}
-	return -1;
+	if (found_function_name) {
+		return ARITY_CHECK_FAIL;
+	} else {
+		return ARITY_CHECK_NO_SUCH;
+	}
+}
+
+static void check_arity_with_report(arity_lookup_t arity_lookup_table[], char* function_name, int user_provided_arity) {
+	int arity = -1;
+	int result = check_arity(arity_lookup_table, function_name, user_provided_arity, &arity);
+	if (result == ARITY_CHECK_NO_SUCH) {
+		fprintf(stderr, "Function name \"%s\" not found.\n", function_name);
+		exit(1);
+	}
+	if (result == ARITY_CHECK_FAIL) {
+		// More flexibly, I'd have a list of arities supported by each
+		// function. But this is overkill: there are unary and binary minus,
+		// and everything else has a single arity.
+		if (streq(function_name, "-")) {
+			fprintf(stderr, "Function named \"%s\" takes one argument or two; got %d.\n",
+				function_name, user_provided_arity);
+		} else {
+		}
+			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
+				function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);
+		exit(1);
+	}
 }
 
 static void list_functions_with_arity(arity_lookup_t lookup_table[], int arity) {
@@ -703,17 +740,10 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		}
 		char* func_name = pnode->text;
 
-		int required_arity = look_up_arity(arity_lookup_table, func_name);
-		if (required_arity == -1) {
-			fprintf(stderr, "Function name \"%s\" not found.\n", func_name);
-			return NULL;
-		}
 		int user_provided_arity = pnode->pchildren->length;
-		if (required_arity != user_provided_arity) {
-			fprintf(stderr, "Function name \"%s\" requires arity of %d; got %d.\n",
-				func_name, required_arity, user_provided_arity);
-			return NULL;
-		}
+
+		check_arity_with_report(arity_lookup_table, func_name, user_provided_arity);
+
 		lrec_evaluator_t* pevaluator = NULL;
 		if (user_provided_arity == 0) {
 			pevaluator = lrec_evaluator_alloc_from_zary_func_name(func_name);

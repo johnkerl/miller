@@ -1,6 +1,8 @@
 ================================================================
 ! BUGFIXES !
 
+!! double arity for minus!!
+
 :D
 
 ================================================================
@@ -11,10 +13,14 @@ TOP OF LIST
 ! doc stats1/stats2 accums via then-statements ...
 
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
+-> or replace with all online help
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
 !! top-level notes: make -C c, & poki in poki dir. add poki chdir/out-of-pwd feature?
+
+!! consider detailed on-line help (& help-all) for functions too. expand arity lookup
+   to include usage-func ptr
 
 !! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
    tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
