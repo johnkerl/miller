@@ -536,55 +536,61 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
+typedef void function_usage_func_t(FILE* output_stream);
 typedef struct _arity_lookup_t {
 	char* function_name;
 	int   arity;
+	function_usage_func_t *pusage_func;
+	char* usage_string;
 } arity_lookup_t;
 
+
+// maybe just put strings here???????????
+// or better: string & usage-func ptrs; invoke the latter if the former is null.
 static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
-	{  "systime", 0 },
-	{  "urand",   0 },
+	{  "systime", 0 , NULL, "Floating-point seconds since the epoch." },
+	{  "urand",   0 , NULL, "Floating-point numbers on the unit interval. Int-valued example: '$y=floor(20+urand()*11)'." },
 
-	{  "-",       1 },
-	{  "!",       1 },
-	{  "abs",     1 },
-	{  "ceil",    1 },
-	{  "cos",     1 },
-	{  "exp",     1 },
-	{  "floor",   1 },
-	{  "gmt2sec", 1 },
-	{  "log",     1 },
-	{  "log10",   1 },
-	{  "round",   1 },
-	{  "sec2gmt", 1 },
-	{  "sin",     1 },
-	{  "sqrt",    1 },
-	{  "strlen",  1 },
-	{  "tan",     1 },
-	{  "tolower", 1 },
-	{  "toupper", 1 },
+	{  "-",       1 , NULL, "Unary minus."},
+	{  "!",       1 , NULL, "Logical negation."},
+	{  "abs",     1 , NULL, "Absolute value"},
+	{  "ceil",    1 , NULL, "Ceiling."},
+	{  "cos",     1 , NULL, "Cosine."},
+	{  "exp",     1 , NULL, "Exponential function e**x."},
+	{  "floor",   1 , NULL, "Floor."},
+	{  "gmt2sec", 1 , NULL, "xxx."},
+	{  "log",     1 , NULL, "Natural (base-e) logarithm."},
+	{  "log10",   1 , NULL, "Base-10 logarithm."},
+	{  "round",   1 , NULL, "Integer round."},
+	{  "sec2gmt", 1 , NULL, "xxx."},
+	{  "sin",     1 , NULL, "Sine."},
+	{  "sqrt",    1 , NULL, "Square root."},
+	{  "strlen",  1 , NULL, "String length."},
+	{  "tan",     1 , NULL, "Tangent."},
+	{  "tolower", 1 , NULL, "Convert string to lowercase."},
+	{  "toupper", 1 , NULL, "Convert string to uppercase."},
 
-	{  "&&",      2 },
-	{  "||",      2 },
-	{  "==",      2 },
-	{  "!=",      2 },
-	{  ">",       2 },
-	{  ">=",      2 },
-	{  "<",       2 },
-	{  "<=",      2 },
-	{  ".",       2 },
-	{  "+",       2 },
-	{  "-",       2 },
-	{  "*",       2 },
-	{  "/",       2 },
-	{  "**",      2 },
-	{  "%",       2 },
-	{  "atan2",   2 },
-	{  "pow",     2 },
+	{  "&&",      2 , NULL, "Logical AND."},
+	{  "||",      2 , NULL, "Logical OR."},
+	{  "==",      2 , NULL, "xxx."},
+	{  "!=",      2 , NULL, "xxx."},
+	{  ">",       2 , NULL, "xxx."},
+	{  ">=",      2 , NULL, "xxx."},
+	{  "<",       2 , NULL, "xxx."},
+	{  "<=",      2 , NULL, "xxx."},
+	{  ".",       2 , NULL, "String concatenation."},
+	{  "+",       2 , NULL, "Addition."},
+	{  "-",       2 , NULL, "Subtraction."},
+	{  "*",       2 , NULL, "Multiplication."},
+	{  "/",       2 , NULL, "Division."},
+	{  "**",      2 , NULL, "Exponentiation; same as pow."},
+	{  "%",       2 , NULL, "Remainder; never negative-valued."},
+	{  "atan2",   2 , NULL, "Two-argument arctangent."},
+	{  "pow",     2 , NULL, "Exponentiation; same as **."},
 
-	{  "sub",     3 },
+	{  "sub",     3 , NULL, "xxx."},
 
-	{  NULL,      -1 }, // null terminator
+	{  NULL,      -1 , NULL, NULL}, // table terminator
 };
 
 #define ARITY_CHECK_PASS    0xbb
