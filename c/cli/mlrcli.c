@@ -183,14 +183,14 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help"))
 			main_usage(argv[0], 0);
-		else if (streq(argv[argi], "--help-all-verbs"))
+		else if (streq(argv[argi], "--help-all-verbs") || streq(argv[argi], "--hav"))
 			usage_all_verbs(argv[0]);
-		else if (streq(argv[argi], "--help-all-functions")) {
+		else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "--haf")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
 		}
 
-		else if (streq(argv[argi], "--help-function")) {
+		else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 			check_arg_count(argv, argi, argc, 2);
 			lrec_evaluator_function_usage(stdout, argv[argi+1]);
 			exit(0);
