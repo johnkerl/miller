@@ -70,6 +70,8 @@ static void main_usage(char* argv0, int exit_code) {
 
 	fprintf(o, "\n");
 	lrec_evaluator_list_functions(o);
+	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
+	fprintf(o, "Please use \"%s --help-all-functions\" for help on all functions.\n", argv0);
 	fprintf(o, "\n");
 
 	fprintf(o, "Separator options, for input, output, or both:\n");

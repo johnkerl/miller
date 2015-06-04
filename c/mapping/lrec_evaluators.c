@@ -229,7 +229,6 @@ typedef struct _lrec_evaluator_f_s_state_t {
 	lrec_evaluator_t* parg1;
 } lrec_evaluator_f_s_state_t;
 
-// xxx func -> process_func thruout
 mv_t lrec_evaluator_f_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
@@ -428,7 +427,6 @@ typedef struct _lrec_evaluator_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_literal_state_t;
 
-// xxx cmt removing a runtime-if via fcn ptrs ...
 mv_t lrec_evaluator_double_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	return pstate->literal;
@@ -536,58 +534,64 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
-typedef struct _arity_lookup_t {
+typedef struct _function_lookup_t {
 	char* function_name;
 	int   arity;
 	char* usage_string;
-} arity_lookup_t;
+} function_lookup_t;
 
-
-// maybe just put strings here???????????
-// or better: string & usage-func ptrs; invoke the latter if the former is null.
-static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
-	{  "systime", 0 , "Floating-point seconds since the epoch." },
-	{  "urand",   0 , "Floating-point numbers on the unit interval. Int-valued example: '$y=floor(20+urand()*11)'." },
-
-	{  "-",       1 , "Unary minus."},
-	{  "!",       1 , "Logical negation."},
-	{  "abs",     1 , "Absolute value"},
-	{  "ceil",    1 , "Ceiling."},
-	{  "cos",     1 , "Cosine."},
+static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
+	{  "abs",     1 , "Absolute value."},
+	{  "acos",    1 , "Inverse trigonometric cosine."},
+	{  "acosh",   1 , "Inverse hyperbolic cosine."},
+	{  "asinh",   1 , "Inverse hyperbolic sine."},
+	{  "atan",    1 , "One-argument arctangent."},
+	{  "atan2",   2 , "Two-argument arctangent."},
+	{  "atanh",   1 , "Inverse hyperbolic tangent."},
+	{  "ceil",    1 , "Ceiling: nearest integer at or above."},
+	{  "cos",     1 , "Trigonometric cosine."},
+	{  "cosh",    1 , "Hyperbolic cosine."},
+	{  "erf",     1 , "Error function."},
+	{  "erfc",    1 , "Complementary error function."},
 	{  "exp",     1 , "Exponential function e**x."},
-	{  "floor",   1 , "Floor."},
+	{  "floor",   1 , "Floor: nearest integer at or below."},
 	{  "gmt2sec", 1 , "Parses GMT timestamp as integer seconds since epoch."},
 	{  "log",     1 , "Natural (base-e) logarithm."},
 	{  "log10",   1 , "Base-10 logarithm."},
-	{  "round",   1 , "Integer round."},
+	{  "pow",     2 , "Exponentiation; same as **."},
+	{  "round",   1 , "Nearest integer."},
 	{  "sec2gmt", 1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
-	{  "sin",     1 , "Sine."},
+	{  "sin",     1 , "Trigonometric sine."},
+	{  "sinh",    1 , "Hyperbolic sine."},
+	{  "sinh",    1 , "Inverse trigonometric sine."},
 	{  "sqrt",    1 , "Square root."},
 	{  "strlen",  1 , "String length."},
-	{  "tan",     1 , "Tangent."},
+	{  "sub",     3 , "Example: sub($name, \"old\", \"new\"). Regexes not supported."},
+	{  "systime", 0 , "Floating-point seconds since the epoch." },
+	{  "tan",     1 , "Hyperbolic tangent."},
+	{  "tan",     1 , "Trigonometric tangent."},
+	{  "tanh",    1 , "Inverse trigonometric tangent."},
 	{  "tolower", 1 , "Convert string to lowercase."},
 	{  "toupper", 1 , "Convert string to uppercase."},
+	{  "urand",   0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
 
-	{  "&&",      2 , "Logical AND."},
-	{  "||",      2 , "Logical OR."},
 	{  "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
 	{  "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
 	{  ">",       2 , "String/numeric greater-than. Mixing number and string results in string compare."},
 	{  ">=",      2 , "String/numeric greater-than-or-equals. Mixing number and string results in string compare."},
 	{  "<",       2 , "String/numeric less-than. Mixing number and string results in string compare."},
 	{  "<=",      2 , "String/numeric less-than-or-equals. Mixing number and string results in string compare."},
-	{  ".",       2 , "String concatenation."},
+	{  "&&",      2 , "Logical AND."},
+	{  "||",      2 , "Logical OR."},
+	{  "!",       1 , "Logical negation."},
 	{  "+",       2 , "Addition."},
+	{  "-",       1 , "Unary minus."},
 	{  "-",       2 , "Subtraction."},
 	{  "*",       2 , "Multiplication."},
 	{  "/",       2 , "Division."},
-	{  "**",      2 , "Exponentiation; same as pow."},
 	{  "%",       2 , "Remainder; never negative-valued."},
-	{  "atan2",   2 , "Two-argument arctangent."},
-	{  "pow",     2 , "Exponentiation; same as **."},
-
-	{  "sub",     3 , "Example: sub($name, \"old\", \"new\"). Regexes not supported."},
-
+	{  "**",      2 , "Exponentiation; same as pow."},
+	{  ".",       2 , "String concatenation."},
 	{  NULL,      -1 , NULL}, // table terminator
 };
 
@@ -595,11 +599,11 @@ static arity_lookup_t ARITY_LOOKUP_TABLE[] = {
 #define ARITY_CHECK_FAIL    0xbc
 #define ARITY_CHECK_NO_SUCH 0xbd
 
-static int check_arity(arity_lookup_t lookup_table[], char* function_name, int user_provided_arity, int *parity) {
+static int check_arity(function_lookup_t lookup_table[], char* function_name, int user_provided_arity, int *parity) {
 	*parity = -1;
 	int found_function_name = FALSE;
 	for (int i = 0; ; i++) {
-		arity_lookup_t* plookup = &lookup_table[i];
+		function_lookup_t* plookup = &lookup_table[i];
 		if (plookup->function_name == NULL)
 			break;
 		if (streq(function_name, plookup->function_name)) {
@@ -617,9 +621,11 @@ static int check_arity(arity_lookup_t lookup_table[], char* function_name, int u
 	}
 }
 
-static void check_arity_with_report(arity_lookup_t arity_lookup_table[], char* function_name, int user_provided_arity) {
+static void check_arity_with_report(function_lookup_t function_lookup_table[], char* function_name,
+	int user_provided_arity)
+{
 	int arity = -1;
-	int result = check_arity(arity_lookup_table, function_name, user_provided_arity, &arity);
+	int result = check_arity(function_lookup_table, function_name, user_provided_arity, &arity);
 	if (result == ARITY_CHECK_NO_SUCH) {
 		fprintf(stderr, "Function name \"%s\" not found.\n", function_name);
 		exit(1);
@@ -639,10 +645,10 @@ static void check_arity_with_report(arity_lookup_t arity_lookup_table[], char* f
 	}
 }
 
-static void list_functions_with_arity(arity_lookup_t lookup_table[], int arity) {
-	printf("   ");
+static void list_functions_with_arity(function_lookup_t lookup_table[], int arity) {
+	printf(" ");
 	for (int i = 0; ; i++) {
-		arity_lookup_t* plookup = &lookup_table[i];
+		function_lookup_t* plookup = &lookup_table[i];
 		if (plookup->function_name == NULL)
 			break;
 		if (arity == plookup->arity) {
@@ -654,27 +660,25 @@ static void list_functions_with_arity(arity_lookup_t lookup_table[], int arity) 
 
 void lrec_evaluator_list_functions(FILE* output_stream) {
 	fprintf(output_stream, "Functions for filter and put:\n");
-	fprintf(output_stream, "  Functions with no arguments:\n");
-	list_functions_with_arity(ARITY_LOOKUP_TABLE, 0);
-	fprintf(output_stream, "  Functions with one argument:\n");
-	list_functions_with_arity(ARITY_LOOKUP_TABLE, 1);
-	fprintf(output_stream, "  Functions with two arguments:\n");
-	list_functions_with_arity(ARITY_LOOKUP_TABLE, 2);
-	fprintf(output_stream, "  Functions with three arguments:\n");
-	list_functions_with_arity(ARITY_LOOKUP_TABLE, 3);
+	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 0);
+	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 1);
+	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 2);
+	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 3);
 }
 
 // Pass function_name == NULL to get usage for all functions.
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 	int found = FALSE;
-	char* fmt = (function_name == NULL) ? "%-20s: %s\n" : "%s: %s\n";
+	char* fmt = (function_name == NULL)
+		? "%-10s (#args=%d): %s\n"
+		: "%s (#args=%d): %s\n";
 
 	for (int i = 0; ; i++) {
-		arity_lookup_t* plookup = &ARITY_LOOKUP_TABLE[i];
+		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
 		if (plookup->function_name == NULL)
 			break;
 		if (function_name == NULL || streq(function_name, plookup->function_name)) {
-			fprintf(output_stream, fmt, plookup->function_name, plookup->usage_string);
+			fprintf(output_stream, fmt, plookup->function_name, plookup->arity, plookup->usage_string);
 			found = TRUE;
 		}
 	}
@@ -685,29 +689,42 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1) {
 	if        (streq(fnnm, "!"))       { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
-    } else if (streq(fnnm, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
-    } else if (streq(fnnm, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
-    } else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
-    } else if (streq(fnnm, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
-    } else if (streq(fnnm, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
-    } else if (streq(fnnm, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
-    } else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
-    } else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
-    } else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
-    } else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
-    } else if (streq(fnnm, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
-    } else if (streq(fnnm, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
-    } else if (streq(fnnm, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
-    } else if (streq(fnnm, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
-    } else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
-    } else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
-    } else if (streq(fnnm, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
+	} else if (streq(fnnm, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
+	} else if (streq(fnnm, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
+	} else if (streq(fnnm, "acos"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,    parg1);
+	} else if (streq(fnnm, "acosh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,   parg1);
+	} else if (streq(fnnm, "asin"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_asin_func,    parg1);
+	} else if (streq(fnnm, "asinh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,   parg1);
+	} else if (streq(fnnm, "atan"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,    parg1);
+	} else if (streq(fnnm, "atanh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,   parg1);
+	} else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
+	} else if (streq(fnnm, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
+	} else if (streq(fnnm, "cosh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,    parg1);
+	} else if (streq(fnnm, "erf"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,     parg1);
+	} else if (streq(fnnm, "erfc"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,    parg1);
+	} else if (streq(fnnm, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
+	} else if (streq(fnnm, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
+	} else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
+	} else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
+	} else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
+	} else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
+	} else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
+	} else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
+	} else if (streq(fnnm, "sinh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,    parg1);
+	} else if (streq(fnnm, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
+	} else if (streq(fnnm, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
+	} else if (streq(fnnm, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
+	} else if (streq(fnnm, "tanh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_tanh_func,    parg1);
+	} else if (streq(fnnm, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
+	} else if (streq(fnnm, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
 
 	} else return NULL; // xxx handle me better
 }
 
 // ================================================================
-lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm, lrec_evaluator_t* parg1, lrec_evaluator_t* parg2) {
+lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
 	if        (streq(fnnm, "&&"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,    parg1, parg2);
 	} else if (streq(fnnm, "||"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,     parg1, parg2);
 	} else if (streq(fnnm, "=="))    { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,       parg1, parg2);
@@ -738,7 +755,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 
 // ================================================================
 static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
-	arity_lookup_t* arity_lookup_table)
+	function_lookup_t* function_lookup_table)
 {
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
@@ -761,28 +778,28 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 
 		int user_provided_arity = pnode->pchildren->length;
 
-		check_arity_with_report(arity_lookup_table, func_name, user_provided_arity);
+		check_arity_with_report(function_lookup_table, func_name, user_provided_arity);
 
 		lrec_evaluator_t* pevaluator = NULL;
 		if (user_provided_arity == 0) {
 			pevaluator = lrec_evaluator_alloc_from_zary_func_name(func_name);
 		} else if (user_provided_arity == 1) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_unary_func_name(func_name, parg1);
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
-			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, arity_lookup_table);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
 		} else if (user_provided_arity == 3) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
 			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, arity_lookup_table);
-			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, arity_lookup_table);
-			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, arity_lookup_table);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
+			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 		} else {
 			fprintf(stderr, "Internal coding error:  arity for function name \"%s\" misdetected.\n",
@@ -798,7 +815,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
-	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, ARITY_LOOKUP_TABLE);
+	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, FUNCTION_LOOKUP_TABLE);
 	return pevaluator;
 }
 
