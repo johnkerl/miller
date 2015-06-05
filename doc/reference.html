@@ -7,6 +7,9 @@
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
   <meta name="description" content="Miller documentation"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <meta name="keywords"
+	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
+
   <title> Reference </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
@@ -215,20 +218,17 @@ mlr sort -f hostname,uptime *.dat
 $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
-   cat check count-distinct cut filter group-by group-like having-fields head histogram label put
-   rename reorder sort stats1 stats2 step tac tail top uniq
+   cat check count-distinct cut filter group-by group-like having-fields head
+   histogram label put rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
-  Functions with no arguments:
-    systime urand
-  Functions with one argument:
-    - ! abs ceil cos exp floor gmt2sec log log10 round sec2gmt sin sqrt strlen tan tolower toupper
-  Functions with two arguments:
-    &amp;&amp; || == != &gt; &gt;= &lt; &lt;= . + - * / ** % atan2 pow
-  Functions with three arguments:
-    sub
+   abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
+   expm1 floor gmt2sec log log10 log1p pow round sec2gmt sin sinh sqrt strlen sub
+   systime tan tan tanh tolower toupper urand == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! + - - * / % ** .
+Please use "mlr --help-function {function name}" for function-specific help.
+Please use "mlr --help-all-functions" for help on all functions.
 
 Separator options, for input, output, or both:
   --rs      --irs     --ors                  Record separators, defaulting to newline
@@ -654,7 +654,7 @@ Prints records for which {expression} evaluates to true.
 With -v, first prints the AST (abstract syntax tree) for the expression, which
 gives full transparency on the precedence and associativity rules of Miller's grammar.
 Please use a dollar sign for field names and double-quotes for string literals.
-Miller built-in variables are NF NR FNR FILENUM FILENAME.
+Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
   mlr filter 'FNR == 2'
@@ -1036,7 +1036,7 @@ Adds/updates specified field(s).
 With -v, first prints the AST (abstract syntax tree) for the expression, which
 gives full transparency on the precedence and associativity rules of Miller's grammar.
 Please use a dollar sign for field names and double-quotes for string literals.
-Miller built-in variables are NF NR FNR FILENUM FILENAME.
+Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Multiple assignments may be separated with a semicolon.
 Examples:
   mlr put '$y = log10($x); $z = sqrt($y)'
