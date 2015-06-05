@@ -672,25 +672,26 @@ static void check_arity_with_report(function_lookup_t function_lookup_table[], c
 	}
 }
 
-static void list_functions_with_arity(function_lookup_t lookup_table[], int arity) {
-	printf(" ");
-	for (int i = 0; ; i++) {
-		function_lookup_t* plookup = &lookup_table[i];
-		if (plookup->function_name == NULL)
-			break;
-		if (arity == plookup->arity) {
-			printf(" %s", plookup->function_name);
-		}
-	}
-	printf("\n");
-}
-
 void lrec_evaluator_list_functions(FILE* output_stream) {
 	fprintf(output_stream, "Functions for filter and put:\n");
-	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 0);
-	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 1);
-	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 2);
-	list_functions_with_arity(FUNCTION_LOOKUP_TABLE, 3);
+
+	int linelen = 0;
+	for (int i = 0; ; i++) {
+		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
+		if (plookup->function_name == NULL)
+			break;
+		linelen += 1 + strlen(FUNCTION_LOOKUP_TABLE[i].function_name);
+		if (linelen > 80) {
+			fprintf(output_stream, "\n");
+			linelen = 0;
+		}
+		if ((i > 0) && (linelen > 0))
+			fprintf(output_stream, " ");
+		else
+			fprintf(output_stream, "   ");
+		fprintf(output_stream, "%s", FUNCTION_LOOKUP_TABLE[i].function_name);
+	}
+	fprintf(output_stream, "\n");
 }
 
 // Pass function_name == NULL to get usage for all functions.

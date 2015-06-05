@@ -12,10 +12,11 @@ TOP OF LIST
 
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
 -> or replace with all online help
--> line-wrap the function list. & alphabetize entirely. arity is not the primary index for the user.
+-> line-wrap the function list.
 -> int() and float() functions ... including string input ...
 -> string() function
--> fmod()
+-> fmod() function
+-> cmod() function
 -> help-all-functions incl. mlrwik grist
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
