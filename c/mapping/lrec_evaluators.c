@@ -573,6 +573,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  "atan",    1 , "One-argument arctangent."},
 	{  "atan2",   2 , "Two-argument arctangent."},
 	{  "atanh",   1 , "Inverse hyperbolic tangent."},
+	{  "cbrt",    1 , "Cube root."},
 	{  "ceil",    1 , "Ceiling: nearest integer at or above."},
 	{  "cos",     1 , "Trigonometric cosine."},
 	{  "cosh",    1 , "Hyperbolic cosine."},
@@ -592,7 +593,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  "sinh",    1 , "Hyperbolic sine."},
 	{  "sqrt",    1 , "Square root."},
 	{  "strlen",  1 , "String length."},
-	{  "sub",     3 , "Example: sub($name, \"old\", \"new\"). Regexes not supported."},
+	{  "sub",     3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
 	{  "systime", 0 , "Floating-point seconds since the epoch." },
 	{  "tan",     1 , "Hyperbolic tangent."},
 	{  "tan",     1 , "Trigonometric tangent."},
@@ -723,6 +724,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "asinh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,   parg1);
 	} else if (streq(fnnm, "atan"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,    parg1);
 	} else if (streq(fnnm, "atanh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,   parg1);
+	} else if (streq(fnnm, "cbrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,    parg1);
 	} else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
 	} else if (streq(fnnm, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
 	} else if (streq(fnnm, "cosh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,    parg1);

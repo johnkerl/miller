@@ -92,6 +92,7 @@ static inline mv_t f_f_asin_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=
 static inline mv_t f_f_asinh_func(mv_t* pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=asinh(pval1->u.dblv)}; return rv;}
 static inline mv_t f_f_atan_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=atan(pval1->u.dblv)};  return rv;}
 static inline mv_t f_f_atanh_func(mv_t* pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=atanh(pval1->u.dblv)}; return rv;}
+static inline mv_t f_f_cbrt_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=cbrt(pval1->u.dblv)};  return rv;}
 static inline mv_t f_f_ceil_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=ceil(pval1->u.dblv)};  return rv;}
 static inline mv_t f_f_cos_func(mv_t*   pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=cos(pval1->u.dblv)};   return rv;}
 static inline mv_t f_f_cosh_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=cosh(pval1->u.dblv)};  return rv;}
