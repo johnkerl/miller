@@ -12,14 +12,12 @@ TOP OF LIST
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
-!! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
--> or replace with all online help
--> dynamic maxlen for --haf
--> line-wrap the function list.
+-> update mlrwik ref w/ fcn list ...
 -> int() and float() functions ... including string input ...
 -> string() function
 -> fmod() function
 -> cmod() function
+-> log2 & exp2?
 -> help-all-functions incl. mlrwik grist
 -> qnorm(x) = 0.5 * erfc(-x/sqrt(2))
 
