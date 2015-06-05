@@ -1,8 +1,6 @@
 ================================================================
 ! BUGFIXES !
 
-!! double arity for minus!!
-
 :D
 
 ================================================================
@@ -14,7 +12,6 @@ TOP OF LIST
 
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
 -> or replace with all online help
-! fcns: inv trig; hyp/invhyp; erf & erfc
 -> line-wrap the function list. & alphabetize entirely. arity is not the primary index for the user.
 ! int() and float() functions ... including string input ...
 ! expm1, log1p, atan
