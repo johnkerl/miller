@@ -510,6 +510,28 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 	return pevaluator;
 }
 
+// ----------------------------------------------------------------
+mv_t lrec_evaluator_PI_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = M_PI};
+}
+lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pevaluator_func = lrec_evaluator_PI_func;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t lrec_evaluator_E_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = M_E};
+}
+lrec_evaluator_t* lrec_evaluator_alloc_from_E() {
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pevaluator_func = lrec_evaluator_E_func;
+	return pevaluator;
+}
+
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name) {
 	if        (streq(variable_name, "NF"))       { return lrec_evaluator_alloc_from_NF();
@@ -517,6 +539,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name
     } else if (streq(variable_name, "FNR"))      { return lrec_evaluator_alloc_from_FNR();
     } else if (streq(variable_name, "FILENAME")) { return lrec_evaluator_alloc_from_FILENAME();
     } else if (streq(variable_name, "FILENUM"))  { return lrec_evaluator_alloc_from_FILENUM();
+    } else if (streq(variable_name, "PI"))       { return lrec_evaluator_alloc_from_PI();
+    } else if (streq(variable_name, "E"))        { return lrec_evaluator_alloc_from_E();
 
 	} else  { return NULL; // xxx handle me better
 	}

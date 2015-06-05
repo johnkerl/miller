@@ -61,7 +61,7 @@ static void mapper_filter_usage(char* argv0, char* verb) {
 	fprintf(stdout, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
 	fprintf(stdout, "gives full transparency on the precedence and associativity rules of Miller's grammar.\n");
 	fprintf(stdout, "Please use a dollar sign for field names and double-quotes for string literals.\n");
-	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME.\n");
+	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(stdout, "Examples:\n");
 	fprintf(stdout, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
 	fprintf(stdout, "  %s %s 'FNR == 2'\n", argv0, verb);

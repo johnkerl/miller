@@ -96,7 +96,7 @@ static void mapper_put_usage(char* argv0, char* verb) {
 	fprintf(stdout, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
 	fprintf(stdout, "gives full transparency on the precedence and associativity rules of Miller's grammar.\n");
 	fprintf(stdout, "Please use a dollar sign for field names and double-quotes for string literals.\n");
-	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME.\n");
+	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(stdout, "Multiple assignments may be separated with a semicolon.\n");
 	fprintf(stdout, "Examples:\n");
 	fprintf(stdout, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);

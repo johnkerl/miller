@@ -42,6 +42,14 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return PUT_DSL_CONTEXT_VARIABLE;
 }
+"PI" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return PUT_DSL_CONTEXT_VARIABLE;
+}
+"E" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return PUT_DSL_CONTEXT_VARIABLE;
+}
 
 [a-zA-Z_][a-zA-Z_0-9]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);

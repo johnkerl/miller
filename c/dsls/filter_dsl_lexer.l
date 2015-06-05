@@ -114,6 +114,14 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return FILTER_DSL_CONTEXT_VARIABLE;
 }
+"PI" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return FILTER_DSL_CONTEXT_VARIABLE;
+}
+"E" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return FILTER_DSL_CONTEXT_VARIABLE;
+}
 
 \"[^"]*\" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);

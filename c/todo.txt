@@ -20,6 +20,7 @@ TOP OF LIST
 ! expm1, log1p, atan
 -> PI, E ?
 -> help-all-functions incl. mlrwik grist
+-> proofread fcn helps
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
