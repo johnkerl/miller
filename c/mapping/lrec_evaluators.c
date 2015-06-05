@@ -587,6 +587,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  "log10",   1 , "Base-10 logarithm."},
 	{  "log1p",   1 , "log(1-x)."},
 	{  "pow",     2 , "Exponentiation; same as **."},
+	{  "qnorm",   1 , "Normal cumulative distribution function."},
 	{  "round",   1 , "Nearest integer."},
 	{  "sec2gmt", 1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
 	{  "sin",     1 , "Trigonometric sine."},
@@ -736,6 +737,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
 	} else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
 	} else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
+	} else if (streq(fnnm, "qnorm"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,   parg1);
 	} else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
 	} else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
 	} else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);

@@ -185,7 +185,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help-all-verbs") || streq(argv[argi], "--hav"))
 			usage_all_verbs(argv[0]);
-		else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "--haf")) {
+		else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "--haf") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
 		}

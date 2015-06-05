@@ -1,6 +1,8 @@
 ================================================================
 ! BUGFIXES !
 
+* should be able to do: mlr put '$ok = $x < 10'
+
 :D
 
 ================================================================
@@ -12,12 +14,14 @@ TOP OF LIST
 
 !! doc sub,sec2gmt,gmt2sec @ mlrwik. note fractional seconds are discarded due to clib.
 -> or replace with all online help
+-> dynamic maxlen for --haf
 -> line-wrap the function list.
 -> int() and float() functions ... including string input ...
 -> string() function
 -> fmod() function
 -> cmod() function
 -> help-all-functions incl. mlrwik grist
+-> qnorm(x) = 0.5 * erfc(-x/sqrt(2))
 
 ! mlrwik readme note which copy of mlr; PATH
 

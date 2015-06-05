@@ -112,6 +112,12 @@ static inline mv_t f_f_tan_func(mv_t*   pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=
 static inline mv_t f_f_tanh_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=tanh(pval1->u.dblv)};  return rv;}
 static inline mv_t f_f_uneg_func(mv_t*  pval1){mv_t rv={.type=MT_DOUBLE,.u.dblv=-pval1->u.dblv};       return rv;}
 
+static inline mv_t f_f_qnorm_func(mv_t* pval1) {
+	double qnorm = 0.5 * erfc(-pval1->u.dblv * M_SQRT1_2);
+	mv_t rv = { .type=MT_DOUBLE,.u.dblv = qnorm };
+	return rv;
+}
+
 // ----------------------------------------------------------------
 static inline mv_t f_ff_plus_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv + pval2->u.dblv};
