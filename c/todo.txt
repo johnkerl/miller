@@ -12,12 +12,14 @@ TOP OF LIST
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
+-> mlr -f -> mlr -h
 -> int() and float() functions ... including string input ...
 -> string() function
 -> fmod() function
 -> cmod() function
 -> fmtnum() function
 -> log2 & exp2?
+-> hex-fmt fcn ... maybe together w/ fmtnum
 
 ! mlrwik readme note which copy of mlr; PATH
 
@@ -67,6 +69,7 @@ IMPROVEMENTS
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
   lmhsi: column name -> char index??
 * null-handling everywhere!! :/
+* free-flag for string mlrvals
 
 ================================================================
 DOC
@@ -111,6 +114,7 @@ UT/REG
 * strlen
 * xtab i/o
 * make should-fail machinery & use it for null-key dkvp cases.
+* all mathlib funcs
 
 ================================================================
 HARDER HYGIENE

@@ -34,10 +34,12 @@ void* mlr_malloc_or_die(size_t size);
 // xxx cmt mem mgt
 char* mlr_alloc_string_from_double(double value, char* fmt);
 char* mlr_alloc_string_from_ull(unsigned long long value);
+char* mlr_alloc_string_from_ll(long long value);
 char* mlr_alloc_string_from_int(int value);
 
 double mlr_double_from_string_or_die(char* string);
 int    mlr_try_double_from_string(char* string, double* pval);
+int    mlr_try_int_from_string(char* string, long long* pval);
 
 // xxx cmt infrequently used; also cmt mem mgt
 char* mlr_paste_2_strings(char* s1, char* s2);

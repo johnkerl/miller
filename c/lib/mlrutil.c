@@ -94,6 +94,13 @@ char* mlr_alloc_string_from_ull(unsigned long  long value) {
 	return string;
 }
 
+char* mlr_alloc_string_from_ll(long  long value) {
+	int n = snprintf(NULL, 0, "%lli", value);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, "%lli", value);
+	return string;
+}
+
 char* mlr_alloc_string_from_int(int value) {
 	int n = snprintf(NULL, 0, "%d", value);
 	char* string = mlr_malloc_or_die(n+1);
@@ -114,6 +121,17 @@ double mlr_double_from_string_or_die(char* string) {
 int mlr_try_double_from_string(char* string, double* pval) {
 	int num_bytes_scanned;
 	int rc = sscanf(string, "%lf%n", pval, &num_bytes_scanned);
+	if (rc != 1)
+		return 0;
+	if (string[num_bytes_scanned] != 0) // scanned to end of string?
+		return 0;
+	return 1;
+}
+
+// E.g. "300" is a number; "300ms" is not.
+int mlr_try_int_from_string(char* string, long long* pval) {
+	int num_bytes_scanned;
+	int rc = sscanf(string, "%lli%n", pval, &num_bytes_scanned);
 	if (rc != 1)
 		return 0;
 	if (string[num_bytes_scanned] != 0) // scanned to end of string?

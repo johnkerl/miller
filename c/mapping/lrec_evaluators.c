@@ -283,6 +283,84 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
+// xxx decide if i need all these flavors at this level. maybe not.
+
+typedef struct _lrec_evaluator_i_x_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_i_x_state_t;
+
+mv_t lrec_evaluator_i_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_i_x_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_i_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_i_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_i_x_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_i_x_func;
+
+	return pevaluator;
+}
+
+typedef struct _lrec_evaluator_f_x_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_f_x_state_t;
+
+mv_t lrec_evaluator_f_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_f_x_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_f_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_f_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_x_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_f_x_func;
+
+	return pevaluator;
+}
+
+typedef struct _lrec_evaluator_s_x_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_s_x_state_t;
+
+mv_t lrec_evaluator_s_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_s_x_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_s_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_s_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_x_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_s_x_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_xx_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -582,8 +660,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  "erfc",    1 , "Complementary error function."},
 	{  "exp",     1 , "Exponential function e**x."},
 	{  "expm1",   1 , "e**x - 1."},
+	{  "float",   1 , "Convert int/float/bool/string to float."},
 	{  "floor",   1 , "Floor: nearest integer at or below."},
 	{  "gmt2sec", 1 , "Parses GMT timestamp as integer seconds since epoch."},
+	{  "int",     1 , "Convert int/float/bool/string to int."},
 	{  "log",     1 , "Natural (base-e) logarithm."},
 	{  "log10",   1 , "Base-10 logarithm."},
 	{  "log1p",   1 , "log(1-x)."},
@@ -594,12 +674,12 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  "sin",     1 , "Trigonometric sine."},
 	{  "sinh",    1 , "Hyperbolic sine."},
 	{  "sqrt",    1 , "Square root."},
+	{  "string",  1 , "Convert int/float/bool/string to string."},
 	{  "strlen",  1 , "String length."},
 	{  "sub",     3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
 	{  "systime", 0 , "Floating-point seconds since the epoch." },
-	{  "tan",     1 , "Hyperbolic tangent."},
 	{  "tan",     1 , "Trigonometric tangent."},
-	{  "tanh",    1 , "Inverse trigonometric tangent."},
+	{  "tanh",    1 , "Hyperbolic tangent."},
 	{  "tolower", 1 , "Convert string to lowercase."},
 	{  "toupper", 1 , "Convert string to uppercase."},
 	{  "urand",   0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
@@ -741,16 +821,21 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "erf"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,     parg1);
 	} else if (streq(fnnm, "erfc"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,    parg1);
 	} else if (streq(fnnm, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
+	} else if (streq(fnnm, "expm1"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,   parg1);
+	} else if (streq(fnnm, "float"))   { return lrec_evaluator_alloc_from_f_x_func(f_x_float_func,   parg1);
 	} else if (streq(fnnm, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
 	} else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
+	} else if (streq(fnnm, "int"))     { return lrec_evaluator_alloc_from_i_x_func(i_x_int_func,     parg1);
 	} else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
 	} else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
+	} else if (streq(fnnm, "log1p"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,   parg1);
 	} else if (streq(fnnm, "qnorm"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,   parg1);
 	} else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
 	} else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
 	} else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
 	} else if (streq(fnnm, "sinh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,    parg1);
 	} else if (streq(fnnm, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
+	} else if (streq(fnnm, "string"))  { return lrec_evaluator_alloc_from_s_x_func(s_x_string_func,  parg1);
 	} else if (streq(fnnm, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
 	} else if (streq(fnnm, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
 	} else if (streq(fnnm, "tanh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_tanh_func,    parg1);

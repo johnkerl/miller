@@ -224,6 +224,76 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
+static mv_t int_i_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
+static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.boolv ? 1 : 0}; }
+static mv_t int_i_d(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long long)round(pa->u.dblv)}; }
+static mv_t int_i_i(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.intv}; }
+static mv_t int_i_s(mv_t* pa) {
+	mv_t retval = (mv_t) {.type = MT_INT };
+	if (!mlr_try_int_from_string(pa->u.strv, &retval.u.intv))
+		retval.type = MT_ERROR;
+	return retval;
+}
+
+static mv_unary_func_t* int_dispositions[MT_MAX] = {
+    /*NULL*/   int_i_n,
+    /*ERROR*/  int_i_e,
+    /*BOOL*/   int_i_b,
+    /*DOUBLE*/ int_i_d,
+    /*INT*/    int_i_i,
+    /*STRING*/ int_i_s,
+};
+
+mv_t i_x_int_func(mv_t* pval1) { return (int_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+// xxx i'm using double & long long but saying double & int. this is confusing & needs fixing.
+static mv_t float_f_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
+static mv_t float_f_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
+static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.boolv ? 1.0 : 0.0}; }
+static mv_t float_f_d(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.dblv}; }
+static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.intv}; }
+static mv_t float_f_s(mv_t* pa) {
+	mv_t retval = (mv_t) {.type = MT_DOUBLE };
+	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.dblv))
+		retval.type = MT_ERROR;
+	return retval;
+}
+
+static mv_unary_func_t* float_dispositions[MT_MAX] = {
+    /*NULL*/   float_f_n,
+    /*ERROR*/  float_f_e,
+    /*BOOL*/   float_f_b,
+    /*DOUBLE*/ float_f_d,
+    /*INT*/    float_f_i,
+    /*STRING*/ float_f_s,
+};
+
+mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+static mv_t string_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
+static mv_t string_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
+static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"true":"false")}; }
+static mv_t string_s_d(mv_t* pa) {
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, MLR_GLOBALS.ofmt)};
+}
+static mv_t string_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_ll(pa->u.intv)}; }
+static mv_t string_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = pa->u.strv}; }
+
+static mv_unary_func_t* string_dispositions[MT_MAX] = {
+    /*NULL*/   string_s_n,
+    /*ERROR*/  string_s_e,
+    /*BOOL*/   string_s_b,
+    /*DOUBLE*/ string_s_d,
+    /*INT*/    string_s_i,
+    /*STRING*/ string_s_s,
+};
+
+mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 // xxx cmt us!!!!
 
 static mv_t op_n_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_NULL, .u.intv = 0}; }

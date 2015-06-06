@@ -118,6 +118,10 @@ static inline mv_t f_f_qnorm_func(mv_t* pval1) {
 	return rv;
 }
 
+mv_t i_x_int_func(mv_t* pval1);
+mv_t f_x_float_func(mv_t* pval1);
+mv_t s_x_string_func(mv_t* pval1);
+
 // ----------------------------------------------------------------
 static inline mv_t f_ff_plus_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv + pval2->u.dblv};
