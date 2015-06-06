@@ -13,8 +13,6 @@ TOP OF LIST
 ! doc stats1/stats2 accums via then-statements ...
 
 -> mlr -f -> mlr -h
--> int() and float() functions ... including string input ...
--> string() function
 -> fmod() function
 -> cmod() function
 -> fmtnum() function
@@ -115,6 +113,7 @@ UT/REG
 * xtab i/o
 * make should-fail machinery & use it for null-key dkvp cases.
 * all mathlib funcs
+* int/float/string
 
 ================================================================
 HARDER HYGIENE
