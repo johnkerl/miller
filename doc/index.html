@@ -99,13 +99,26 @@ Miller is like sed, awk, cut, and sort for name-indexed data such as CSV.
 </center> </td></tr></table></center>
 
 <p/> With Miller you get to use named fields without needing to count
-positional indices. This is something the Unix toolkit always could have done,
-and arguably always should have done.  It operates on key-value-pair data while
-the familiar Unix tools operate on integer-indexed fields: if the natural
-data structure for the latter is the array, then Miller&rsquo;s natural data
-structure is the insertion-ordered hash map.  This encompasses a <b>variety of
-data formats</b>, including but not limited to the familiar CSV.  (Miller can
-handle positionally-indexed data as a special case.)
+positional indices. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+% mlr --csv cut -f hostname,uptime mydata.csv
+% mlr --csv sort   hostname,uptime mydata.csv
+% mlr --csv put '$z = $x + 2.7*$y' mydata.csv
+% mlr --csv filter '$status != "down"' mydata.csv
+</pre>
+</div>
+<p/>
+
+<p/>This is something the Unix toolkit always could have done, and arguably
+always should have done.  It operates on key-value-pair data while the familiar
+Unix tools operate on integer-indexed fields: if the natural data structure for
+the latter is the array, then Miller&rsquo;s natural data structure is the
+insertion-ordered hash map.  This encompasses a <b>variety of data formats</b>,
+including but not limited to the familiar CSV.  (Miller can handle
+positionally-indexed data as a special case.)
 
 <p/> Features:
 <ul>
@@ -128,10 +141,9 @@ operate on data where records with different schema (field names) are
 interleaved.
 
 <li/> Like <a href="http://stedolan.github.io/jq/">jq</a> (for JSON), Miller is
-written in portable C, and it has zero runtime dependencies. You can download
-or compile a single binary, <tt>scp</tt> it to a faraway machine, and expect it
-to work.
-</ul>
+written in portable C, and it has <b>zero runtime dependencies</b>. You can
+download or compile a single binary, <tt>scp</tt> it to a faraway machine, and
+expect it to work.  </ul>
     </div>
   </td>
 
