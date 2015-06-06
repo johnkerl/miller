@@ -3,6 +3,7 @@
 #include <math.h>
 #include <ctype.h> // for tolower(), toupper()
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "mapping/lrec_evaluators.h"
@@ -713,6 +714,13 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 	}
 	if (!found)
 		fprintf(output_stream, "%s: no such function.\n", function_name);
+	if (function_name == NULL) {
+		fprintf(output_stream, "To set the seed for urand, you may specify decimal or hexadecimal 32-bit\n");
+		fprintf(output_stream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
+			MLR_GLOBALS.argv0, MLR_GLOBALS.argv0);
+		fprintf(output_stream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
+		fprintf(output_stream, "along with the mathematical constants PI and E.\n");
+	}
 }
 
 // ================================================================

@@ -225,7 +225,7 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 floor gmt2sec log log10 log1p pow round sec2gmt sin sinh sqrt strlen sub
+   expm1 floor gmt2sec log log10 log1p pow qnorm round sec2gmt sin sinh sqrt strlen sub
    systime tan tan tanh tolower toupper urand == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! + - - * / % ** .
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" for help on all functions.
@@ -1798,120 +1798,71 @@ yellow triangle 4667
 <!-- ================================================================ -->
 <a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
 
-Miller&rsquo;s
-<a href="#filter"><tt>filter</tt></a> and <a href="#put"><tt>put</tt></a>
-support the following operators and functions:
-
-<table border=1>
-  <tr bgcolor=#e8d9bc>
-    <th>Operators/functions </th>
-    <th>Description</th>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>==</tt>,
-      <tt>!=</tt>,
-      <tt>&lt;</tt>,
-      <tt>&lt;=</tt>,
-      <tt>&gt;</tt>,
-      <tt>&gt;=</tt>,
-      <tt>&amp;&amp;</tt>,
-      <tt>||</tt>,
-      <tt>!</tt>,
-    </td>
-    <td>Filter-only. Comparisons are string-valued or number-valued depending on absence/presence of double-quotes in the literal value:
-      <br/><tt> mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2' </tt>
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>+</tt>,
-      <tt>-</tt> (unary or binary),
-      <tt>*</tt>,
-      <tt>/</tt>,
-      <tt>%</tt> (never negative),
-      <tt>**</tt>
-    </td>
-    <td>Number-valued.
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>.</tt>
-    </td>
-    <td>String concatenation
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>systime</tt>: seconds since epoch
-      <br/>
-      <tt>urand</tt>: floating numbers 0 &le; <i>x</i> &lt; 1.
-      <br/>Example producing integers between 20 and 30 inclusive:
-      <tt>mlr put '$y=floor(20+urand()*11)'</tt>
-
-    </td>
-    <td>Functions of no arguments returning numbers.
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>abs</tt>,
-      <tt>ceil</tt>,
-      <tt>cos</tt>,
-      <tt>exp</tt>,
-      <tt>floor</tt>,
-      <tt>log</tt>,
-      <tt>log10</tt>,
-      <tt>pow</tt>,
-      <tt>round</tt>,
-      <tt>sin</tt>,
-      <tt>sqrt</tt>,
-      <tt>tan</tt>
-    </td>
-    <td>Number-to-number functions with one argument
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>atan2</tt>,
-      <tt>pow</tt> (same as <tt>**</tt>)
-    </td>
-    <td>Number-to-number functions with two arguments
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <tt>tolower</tt>,
-      <tt>toupper</tt>
-    </td>
-    <td>String-to-string functions with one argument
-    </td>
-  </tr>
-
-</table>
-
-<!--
-    gmt2sec sec2gmt strlen
-  Functions with two arguments:
-    && || == != > >= < <= . + - * / ** % atan2 pow
-  Functions with three arguments:
-    sub
-
--->
-
-<p/>To set the seed for <tt>urand()</tt>, you may specify decimal or hexadecimal
-32-bit numbers of the form <tt>mlr --seed 123456789</tt> or <tt>mlr --seed 0xcafefeed</tt>.
-
-<p/>See also the <tt>awk</tt>-like built-in variables <tt>NF</tt>, <tt>NR</tt>,
-<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt> as described in the section on <a href="#put"><tt>put</tt></a>.
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-all-functions
+abs        (#args=1): Absolute value.
+acos       (#args=1): Inverse trigonometric cosine.
+acosh      (#args=1): Inverse hyperbolic cosine.
+asin       (#args=1): Inverse trigonometric sine.
+asinh      (#args=1): Inverse hyperbolic sine.
+atan       (#args=1): One-argument arctangent.
+atan2      (#args=2): Two-argument arctangent.
+atanh      (#args=1): Inverse hyperbolic tangent.
+cbrt       (#args=1): Cube root.
+ceil       (#args=1): Ceiling: nearest integer at or above.
+cos        (#args=1): Trigonometric cosine.
+cosh       (#args=1): Hyperbolic cosine.
+erf        (#args=1): Error function.
+erfc       (#args=1): Complementary error function.
+exp        (#args=1): Exponential function e**x.
+expm1      (#args=1): e**x - 1.
+floor      (#args=1): Floor: nearest integer at or below.
+gmt2sec    (#args=1): Parses GMT timestamp as integer seconds since epoch.
+log        (#args=1): Natural (base-e) logarithm.
+log10      (#args=1): Base-10 logarithm.
+log1p      (#args=1): log(1-x).
+pow        (#args=2): Exponentiation; same as **.
+qnorm      (#args=1): Normal cumulative distribution function.
+round      (#args=1): Nearest integer.
+sec2gmt    (#args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
+sin        (#args=1): Trigonometric sine.
+sinh       (#args=1): Hyperbolic sine.
+sqrt       (#args=1): Square root.
+strlen     (#args=1): String length.
+sub        (#args=3): Example: '$name=sub($name, "old", "new")'. Regexes not supported.
+systime    (#args=0): Floating-point seconds since the epoch.
+tan        (#args=1): Hyperbolic tangent.
+tan        (#args=1): Trigonometric tangent.
+tanh       (#args=1): Inverse trigonometric tangent.
+tolower    (#args=1): Convert string to lowercase.
+toupper    (#args=1): Convert string to uppercase.
+urand      (#args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
+==         (#args=2): String/numeric equality. Mixing number and string results in string compare.
+!=         (#args=2): String/numeric inequality. Mixing number and string results in string compare.
+&gt;          (#args=2): String/numeric greater-than. Mixing number and string results in string compare.
+&gt;=         (#args=2): String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+&lt;          (#args=2): String/numeric less-than. Mixing number and string results in string compare.
+&lt;=         (#args=2): String/numeric less-than-or-equals. Mixing number and string results in string compare.
+&amp;&amp;         (#args=2): Logical AND.
+||         (#args=2): Logical OR.
+!          (#args=1): Logical negation.
++          (#args=2): Addition.
+-          (#args=1): Unary minus.
+-          (#args=2): Subtraction.
+*          (#args=2): Multiplication.
+/          (#args=2): Division.
+%          (#args=2): Remainder; never negative-valued.
+**         (#args=2): Exponentiation; same as pow.
+.          (#args=2): String concatenation.
+To set the seed for urand, you may specify decimal or hexadecimal 32-bit
+numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
+Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)
+along with the mathematical constants PI and E.
+</pre>
+</div>
+<p/>
     </div>
   </td>
 

@@ -23,8 +23,8 @@ int main(int argc, char** argv) {
 	}
 	fprintf(stderr, "Set up mcheck\n");
 #endif
+	mlr_global_init(argv[0], NULL);
 	cli_opts_t* popts = parse_command_line(argc, argv);
-
 	mlr_global_init(argv[0], popts->ofmt);
 
 	lrec_reader_stdio_t* plrec_reader_stdio = popts->plrec_reader_stdio;
