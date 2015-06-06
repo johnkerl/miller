@@ -1,25 +1,23 @@
 ================================================================
 ! BUGFIXES !
 
-* should be able to do: mlr put '$ok = $x < 10'
-
 :D
 
 ================================================================
 TOP OF LIST
 
+!! should be able to do: mlr put '$ok = $x < 10'
+
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
--> update mlrwik ref w/ fcn list ...
 -> int() and float() functions ... including string input ...
 -> string() function
 -> fmod() function
 -> cmod() function
+-> fmtnum() function
 -> log2 & exp2?
--> help-all-functions incl. mlrwik grist
--> qnorm(x) = 0.5 * erfc(-x/sqrt(2))
 
 ! mlrwik readme note which copy of mlr; PATH
 
@@ -51,10 +49,6 @@ TOP OF LIST
 ! reprio rust/go/d post-tc
   -> macos tools install x 3. and/or just use sprax.
 
-! mlr sort CLI opt for choice of heap/merge/quick -- ? needs error-handling case
-
-! merge data dir w/ doc/data dir
-
 ================================================================
 FEATURES
 
@@ -67,15 +61,8 @@ NEATEN
 * source hygiene: top-of-header comments, readme re memory management, etc.
 
 * prune pix/ dir
-* makefile go/d/rs stuff -> language-comparisons/ dir
-* catc.c/catc0.c -> language-comparisons/ dir
 
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
-
-================================================================
-ONLINE HELP
-
-* put/filter: have a categorized function lister -- by string/math or arity, or some such ...
 
 ================================================================
 IMPROVEMENTS
@@ -90,8 +77,6 @@ DOC
 * mem-mgmt: streaming & as near stateless as possible. e.g. csv cat retains only the header line.
   dkvp cat completely stateless. stats1/2 retain only agg state. tac/sort/etc. obvious retain all lines.
   you can snarf a 20GB file with 4GB RAM no problem.
-* performance: Go/D/Rust #'s ... also GH link from mlrwik
-* maybe restore mem-mgmt page for dev-info? or a readme?!?
 * meaneb: assumes uncorr. code/doc link to appxb :)
 * cookbook page? random subsampling via urand()<0.001 ... what else ...
 * doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
@@ -108,7 +93,7 @@ MEM MGMT:
 * look at any other strdups
 
 ================================================================
-FCNS INCL. STRxTIME
+FUNCTIONS
 ! fmtnum     s_sf_, s_si_
 ? match      b_ss  (w/ regexes!!)
 ? sub, gsub  s_sss (w/ regexes!!)
