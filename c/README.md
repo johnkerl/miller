@@ -7,11 +7,11 @@ in `cli/`.
 
 # Memory management
 
-Miller classes are in general highly modular, following a
-constructor/destructor model with minimal dependencies between classes.  As a
-general rule, void-star payloads (`sllv`, `lhmslv`) must be freed by the callee
-(which has access to the data type) whereas non-void-star payloads (`slls`,
-`hss`) are freed by the container class.
+Miller classes are in general modular, following a constructor/destructor model
+with minimal dependencies between classes.  As a general rule, void-star
+payloads (`sllv`, `lhmslv`) must be freed by the callee (which has access to
+the data type) whereas non-void-star payloads (`slls`, `hss`) are freed by the
+container class.
 
 One complication is for free-flags in `lrec` and `slls`: the idea is that an
 entire line is mallocked and presented by the record reader; then indivual
