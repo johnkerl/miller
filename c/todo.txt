@@ -25,9 +25,6 @@ TOP OF LIST
 
 !! top-level notes: make -C c, & poki in poki dir. add poki chdir/out-of-pwd feature?
 
-!! consider detailed on-line help (& help-all) for functions too. expand arity lookup
-   to include usage-func ptr
-
 !! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
    tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
    some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;

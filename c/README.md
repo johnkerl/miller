@@ -59,7 +59,7 @@ stream).
 
 # Performance optimizations
 
-The initial implementation of Miller used `hss` (insertion-ordered string-to-string hash map) for record objects.
+The initial implementation of Miller used `lhmss` (insertion-ordered string-to-string hash map) for record objects.
 Keys and values were strduped out of file-input lines. Each of the following produced from 5 to 30 percent performance gains:
 * The `lrec` object is a hashless map suited to low access-to-creation ratio. See detailed comments in https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h.
 * Free-flags as discussed above removed additional occurrences of string copies.
