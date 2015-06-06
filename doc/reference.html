@@ -227,8 +227,9 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 floor gmt2sec log log10 log1p pow qnorm round sec2gmt sin sinh sqrt strlen sub
-   systime tan tan tanh tolower toupper urand == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! + - - * / % ** .
+   expm1 float floor gmt2sec int log log10 log1p pow qnorm round sec2gmt sin sinh sqrt
+   string strlen sub systime tan tanh tolower toupper urand == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! + - -
+   * / % ** .
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" for help on all functions.
 
@@ -1820,8 +1821,10 @@ erf        (#args=1): Error function.
 erfc       (#args=1): Complementary error function.
 exp        (#args=1): Exponential function e**x.
 expm1      (#args=1): e**x - 1.
+float      (#args=1): Convert int/float/bool/string to float.
 floor      (#args=1): Floor: nearest integer at or below.
 gmt2sec    (#args=1): Parses GMT timestamp as integer seconds since epoch.
+int        (#args=1): Convert int/float/bool/string to int.
 log        (#args=1): Natural (base-e) logarithm.
 log10      (#args=1): Base-10 logarithm.
 log1p      (#args=1): log(1-x).
@@ -1832,12 +1835,12 @@ sec2gmt    (#args=1): Formats seconds since epoch (integer part only) as GMT tim
 sin        (#args=1): Trigonometric sine.
 sinh       (#args=1): Hyperbolic sine.
 sqrt       (#args=1): Square root.
+string     (#args=1): Convert int/float/bool/string to string.
 strlen     (#args=1): String length.
 sub        (#args=3): Example: '$name=sub($name, "old", "new")'. Regexes not supported.
 systime    (#args=0): Floating-point seconds since the epoch.
-tan        (#args=1): Hyperbolic tangent.
 tan        (#args=1): Trigonometric tangent.
-tanh       (#args=1): Inverse trigonometric tangent.
+tanh       (#args=1): Hyperbolic tangent.
 tolower    (#args=1): Convert string to lowercase.
 toupper    (#args=1): Convert string to uppercase.
 urand      (#args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
