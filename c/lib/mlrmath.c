@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "mlrmath.h"
+#include "mlr_globals.h"
 
 #define JACOBI_TOLERANCE 1e-12
 #define JACOBI_MAXITER   20
@@ -143,4 +144,57 @@ static void matmul2t(
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < n; j++)
 			C[i][j] = T[i][j];
+}
+
+// ----------------------------------------------------------------
+// Normal cumulative distribution function, expressed in terms of erfc library
+// function (which is awkward, but exists).
+double qnorm(double x) {
+	return 0.5 * erfc(-x * M_SQRT1_2);
+}
+
+// ----------------------------------------------------------------
+// This is essentially Newton-Raphson.
+// * We can compute qnorm(y) = integral from -infinity to y of (1/sqrt(2pi)) exp(-t^2/2) dt.
+// * We can compute derivative of qnorm(y) = (1/sqrt(2pi)) exp(-y^2/2).
+// * We cannot explicitly compute invqnorm(y).
+// * If dx/dy = (1/sqrt(2pi)) exp(-y^2/2) then dy/dx = sqrt(2pi) exp(y^2/2).
+// * Even though we can't compute y = q^-1(x) we can compute x = q(y).
+// * Start with linear approximation for y.
+// * Find x = q(y). Since q (and therefore q^-1) are 1-1, we're done if qnorm(invqnorm(x)) is small.
+// * Else iterate: using point-slope form, (y_{n+1} - y_n) / (x_{n+1} - x_n) = m = sqrt(2pi) exp(y_n^2/2).
+//   Here x_2 = x (the input) and x_1 = q(y_1).
+// * Solve for y_{n+1} and repeat.
+
+#define INVQNORM_TOL 1e-9
+#define INVQNORM_MAXITER 30
+
+double invqnorm(double x) {
+	// Initial approximation is linear. Starting with y0 = 0.0 works just as well.
+	double y0 = x - 0.5;
+	if (x <= 0.0)
+		return 0.0;
+	if (x >= 1.0)
+		return 0.0;
+
+	double y = y0;
+	int niter = 0;
+	while (1) {
+		double backx = qnorm(y);
+		double err = fabs(x - backx);
+		if (err < INVQNORM_TOL)
+			break;
+		if (niter > INVQNORM_MAXITER) {
+			fprintf(stderr, "%s: coding error: max iterations %d exceeded in invqnorm.\n",
+				MLR_GLOBALS.argv0, INVQNORM_MAXITER);
+			exit(1);
+		}
+		double m = sqrt(2*M_PI) * exp(y*y/2.0);
+		double delta_y = m * (x - backx);
+
+		y += delta_y;
+		niter++;
+
+	}
+	return y;
 }

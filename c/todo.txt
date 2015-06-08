@@ -16,10 +16,10 @@ TOP OF LIST
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
--> mlr -f -> mlr -h
 -> fmtnum() function
    -> hex-fmt fcn ... maybe together w/ fmtnum
 -> log2 & exp2?
+-> order funcs by type -- ?
 
 ! mlrwik readme note which copy of mlr; PATH
 

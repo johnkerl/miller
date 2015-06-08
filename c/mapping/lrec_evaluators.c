@@ -644,45 +644,46 @@ typedef struct _function_lookup_t {
 } function_lookup_t;
 
 static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
-	{  "abs",     1 , "Absolute value."},
-	{  "acos",    1 , "Inverse trigonometric cosine."},
-	{  "acosh",   1 , "Inverse hyperbolic cosine."},
-	{  "asin",    1 , "Inverse trigonometric sine."},
-	{  "asinh",   1 , "Inverse hyperbolic sine."},
-	{  "atan",    1 , "One-argument arctangent."},
-	{  "atan2",   2 , "Two-argument arctangent."},
-	{  "atanh",   1 , "Inverse hyperbolic tangent."},
-	{  "cbrt",    1 , "Cube root."},
-	{  "ceil",    1 , "Ceiling: nearest integer at or above."},
-	{  "cos",     1 , "Trigonometric cosine."},
-	{  "cosh",    1 , "Hyperbolic cosine."},
-	{  "erf",     1 , "Error function."},
-	{  "erfc",    1 , "Complementary error function."},
-	{  "exp",     1 , "Exponential function e**x."},
-	{  "expm1",   1 , "e**x - 1."},
-	{  "float",   1 , "Convert int/float/bool/string to float."},
-	{  "floor",   1 , "Floor: nearest integer at or below."},
-	{  "gmt2sec", 1 , "Parses GMT timestamp as integer seconds since epoch."},
-	{  "int",     1 , "Convert int/float/bool/string to int."},
-	{  "log",     1 , "Natural (base-e) logarithm."},
-	{  "log10",   1 , "Base-10 logarithm."},
-	{  "log1p",   1 , "log(1-x)."},
-	{  "pow",     2 , "Exponentiation; same as **."},
-	{  "qnorm",   1 , "Normal cumulative distribution function."},
-	{  "round",   1 , "Nearest integer."},
-	{  "sec2gmt", 1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
-	{  "sin",     1 , "Trigonometric sine."},
-	{  "sinh",    1 , "Hyperbolic sine."},
-	{  "sqrt",    1 , "Square root."},
-	{  "string",  1 , "Convert int/float/bool/string to string."},
-	{  "strlen",  1 , "String length."},
-	{  "sub",     3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
-	{  "systime", 0 , "Floating-point seconds since the epoch." },
-	{  "tan",     1 , "Trigonometric tangent."},
-	{  "tanh",    1 , "Hyperbolic tangent."},
-	{  "tolower", 1 , "Convert string to lowercase."},
-	{  "toupper", 1 , "Convert string to uppercase."},
-	{  "urand",   0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
+	{  "abs",      1 , "Absolute value."},
+	{  "acos",     1 , "Inverse trigonometric cosine."},
+	{  "acosh",    1 , "Inverse hyperbolic cosine."},
+	{  "asin",     1 , "Inverse trigonometric sine."},
+	{  "asinh",    1 , "Inverse hyperbolic sine."},
+	{  "atan",     1 , "One-argument arctangent."},
+	{  "atan2",    2 , "Two-argument arctangent."},
+	{  "atanh",    1 , "Inverse hyperbolic tangent."},
+	{  "cbrt",     1 , "Cube root."},
+	{  "ceil",     1 , "Ceiling: nearest integer at or above."},
+	{  "cos",      1 , "Trigonometric cosine."},
+	{  "cosh",     1 , "Hyperbolic cosine."},
+	{  "erf",      1 , "Error function."},
+	{  "erfc",     1 , "Complementary error function."},
+	{  "exp",      1 , "Exponential function e**x."},
+	{  "expm1",    1 , "e**x - 1."},
+	{  "float",    1 , "Convert int/float/bool/string to float."},
+	{  "floor",    1 , "Floor: nearest integer at or below."},
+	{  "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
+	{  "int",      1 , "Convert int/float/bool/string to int."},
+	{  "invqnorm", 1 , "Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed."},
+	{  "log",      1 , "Natural (base-e) logarithm."},
+	{  "log10",    1 , "Base-10 logarithm."},
+	{  "log1p",    1 , "log(1-x)."},
+	{  "pow",      2 , "Exponentiation; same as **."},
+	{  "qnorm",    1 , "Normal cumulative distribution function."},
+	{  "round",    1 , "Nearest integer."},
+	{  "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
+	{  "sin",      1 , "Trigonometric sine."},
+	{  "sinh",     1 , "Hyperbolic sine."},
+	{  "sqrt",     1 , "Square root."},
+	{  "string",   1 , "Convert int/float/bool/string to string."},
+	{  "strlen",   1 , "String length."},
+	{  "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
+	{  "systime",  0 , "Floating-point seconds since the epoch." },
+	{  "tan",      1 , "Trigonometric tangent."},
+	{  "tanh",     1 , "Hyperbolic tangent."},
+	{  "tolower",  1 , "Convert string to lowercase."},
+	{  "toupper",  1 , "Convert string to uppercase."},
+	{  "urand",    0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
 
 	{  "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
 	{  "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
@@ -805,42 +806,43 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1) {
-	if        (streq(fnnm, "!"))       { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
-	} else if (streq(fnnm, "-"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,    parg1);
-	} else if (streq(fnnm, "abs"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,     parg1);
-	} else if (streq(fnnm, "acos"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,    parg1);
-	} else if (streq(fnnm, "acosh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,   parg1);
-	} else if (streq(fnnm, "asin"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_asin_func,    parg1);
-	} else if (streq(fnnm, "asinh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,   parg1);
-	} else if (streq(fnnm, "atan"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,    parg1);
-	} else if (streq(fnnm, "atanh"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,   parg1);
-	} else if (streq(fnnm, "cbrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,    parg1);
-	} else if (streq(fnnm, "ceil"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,    parg1);
-	} else if (streq(fnnm, "cos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,     parg1);
-	} else if (streq(fnnm, "cosh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,    parg1);
-	} else if (streq(fnnm, "erf"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,     parg1);
-	} else if (streq(fnnm, "erfc"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,    parg1);
-	} else if (streq(fnnm, "exp"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,     parg1);
-	} else if (streq(fnnm, "expm1"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,   parg1);
-	} else if (streq(fnnm, "float"))   { return lrec_evaluator_alloc_from_f_x_func(f_x_float_func,   parg1);
-	} else if (streq(fnnm, "floor"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,   parg1);
-	} else if (streq(fnnm, "gmt2sec")) { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func, parg1);
-	} else if (streq(fnnm, "int"))     { return lrec_evaluator_alloc_from_i_x_func(i_x_int_func,     parg1);
-	} else if (streq(fnnm, "log"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,     parg1);
-	} else if (streq(fnnm, "log10"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,   parg1);
-	} else if (streq(fnnm, "log1p"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,   parg1);
-	} else if (streq(fnnm, "qnorm"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,   parg1);
-	} else if (streq(fnnm, "round"))   { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,   parg1);
-	} else if (streq(fnnm, "sec2gmt")) { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func, parg1);
-	} else if (streq(fnnm, "sin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,     parg1);
-	} else if (streq(fnnm, "sinh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,    parg1);
-	} else if (streq(fnnm, "sqrt"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,    parg1);
-	} else if (streq(fnnm, "string"))  { return lrec_evaluator_alloc_from_s_x_func(s_x_string_func,  parg1);
-	} else if (streq(fnnm, "strlen"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,  parg1);
-	} else if (streq(fnnm, "tan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,     parg1);
-	} else if (streq(fnnm, "tanh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_tanh_func,    parg1);
-	} else if (streq(fnnm, "tolower")) { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, parg1);
-	} else if (streq(fnnm, "toupper")) { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, parg1);
+	if        (streq(fnnm, "!"))        { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,     parg1);
+	} else if (streq(fnnm, "-"))        { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,     parg1);
+	} else if (streq(fnnm, "abs"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,      parg1);
+	} else if (streq(fnnm, "acos"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,     parg1);
+	} else if (streq(fnnm, "acosh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,    parg1);
+	} else if (streq(fnnm, "asin"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_asin_func,     parg1);
+	} else if (streq(fnnm, "asinh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,    parg1);
+	} else if (streq(fnnm, "atan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,     parg1);
+	} else if (streq(fnnm, "atanh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,    parg1);
+	} else if (streq(fnnm, "cbrt"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,     parg1);
+	} else if (streq(fnnm, "ceil"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,     parg1);
+	} else if (streq(fnnm, "cos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,      parg1);
+	} else if (streq(fnnm, "cosh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,     parg1);
+	} else if (streq(fnnm, "erf"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,      parg1);
+	} else if (streq(fnnm, "erfc"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,     parg1);
+	} else if (streq(fnnm, "exp"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,      parg1);
+	} else if (streq(fnnm, "expm1"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,    parg1);
+	} else if (streq(fnnm, "float"))    { return lrec_evaluator_alloc_from_f_x_func(f_x_float_func,    parg1);
+	} else if (streq(fnnm, "floor"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,    parg1);
+	} else if (streq(fnnm, "gmt2sec"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,  parg1);
+	} else if (streq(fnnm, "int"))      { return lrec_evaluator_alloc_from_i_x_func(i_x_int_func,      parg1);
+	} else if (streq(fnnm, "log"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,      parg1);
+	} else if (streq(fnnm, "log10"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,    parg1);
+	} else if (streq(fnnm, "log1p"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,    parg1);
+	} else if (streq(fnnm, "qnorm"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,    parg1);
+	} else if (streq(fnnm, "invqnorm")) { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func, parg1);
+	} else if (streq(fnnm, "round"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,    parg1);
+	} else if (streq(fnnm, "sec2gmt"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func,  parg1);
+	} else if (streq(fnnm, "sin"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,      parg1);
+	} else if (streq(fnnm, "sinh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,     parg1);
+	} else if (streq(fnnm, "sqrt"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,     parg1);
+	} else if (streq(fnnm, "string"))   { return lrec_evaluator_alloc_from_s_x_func(s_x_string_func,   parg1);
+	} else if (streq(fnnm, "strlen"))   { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,   parg1);
+	} else if (streq(fnnm, "tan"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,      parg1);
+	} else if (streq(fnnm, "tanh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_tanh_func,     parg1);
+	} else if (streq(fnnm, "tolower"))  { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func,  parg1);
+	} else if (streq(fnnm, "toupper"))  { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func,  parg1);
 
 	} else return NULL; // xxx handle me better
 }

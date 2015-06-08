@@ -8,4 +8,7 @@ void mlr_get_real_symmetric_eigensystem(
 	double  eigenvector_1[2],  // Output: corresponding to dominant eigenvalue
 	double  eigenvector_2[2]); // Output: corresponding to less-dominant eigenvalue
 
+double qnorm(double x);
+double invqnorm(double x);
+
 #endif // MLRMATH_H
