@@ -8,16 +8,18 @@ TOP OF LIST
 
 !! should be able to do: mlr put '$ok = $x < 10'
 
+!! join
+
+!! newton's method invqnorm -> gaussian as invqnorm(urand())
+
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
 -> mlr -f -> mlr -h
--> fmod() function
--> cmod() function
 -> fmtnum() function
+   -> hex-fmt fcn ... maybe together w/ fmtnum
 -> log2 & exp2?
--> hex-fmt fcn ... maybe together w/ fmtnum
 
 ! mlrwik readme note which copy of mlr; PATH
 
@@ -45,11 +47,6 @@ TOP OF LIST
 
 ! reprio rust/go/d post-tc
   -> macos tools install x 3. and/or just use sprax.
-
-================================================================
-FEATURES
-
-* join
 
 ================================================================
 NEATEN
