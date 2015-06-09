@@ -10,8 +10,6 @@ TOP OF LIST
 
 !! join
 
-!! newton's method invqnorm -> gaussian as invqnorm(urand())
-
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
@@ -19,7 +17,6 @@ TOP OF LIST
 -> fmtnum() function
    -> hex-fmt fcn ... maybe together w/ fmtnum
 -> log2 & exp2?
--> order funcs by type -- ?
 
 ! mlrwik readme note which copy of mlr; PATH
 
