@@ -62,6 +62,7 @@ IMPROVEMENTS
   lmhsi: column name -> char index??
 * null-handling everywhere!! :/
 * free-flag for string mlrvals
+* cubic approximation for invqnorm?
 
 ================================================================
 DOC
