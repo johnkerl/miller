@@ -668,6 +668,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "exp",      1 , "Exponential function e**x."},
 	{ FUNC_CLASS_MATH, "expm1",    1 , "e**x - 1."},
 	{ FUNC_CLASS_MATH, "floor",    1 , "Floor: nearest integer at or below."},
+	// See also http://johnkerl.org/doc/randuv.pdf for more about urand() -> other distributions
 	{ FUNC_CLASS_MATH, "invqnorm", 1 , "Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed."},
 	{ FUNC_CLASS_MATH, "log",      1 , "Natural (base-e) logarithm."},
 	{ FUNC_CLASS_MATH, "log10",    1 , "Base-10 logarithm."},
