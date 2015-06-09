@@ -227,9 +227,9 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 float floor gmt2sec int invqnorm log log10 log1p pow qnorm round sec2gmt sin
-   sinh sqrt string strlen sub systime tan tanh tolower toupper urand == != &gt; &gt;= &lt; &lt;=
-   &amp;&amp; || ! + - - * / % ** .
+   expm1 floor invqnorm log log10 log1p pow qnorm round sin sinh sqrt tan tanh urand + -
+   - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper . float int string
+   gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "-f" for help on all functions.
 
@@ -1805,63 +1805,63 @@ yellow triangle 4667
 <div class="pokipanel">
 <pre>
 $ mlr --help-all-functions
-abs        (#args=1): Absolute value.
-acos       (#args=1): Inverse trigonometric cosine.
-acosh      (#args=1): Inverse hyperbolic cosine.
-asin       (#args=1): Inverse trigonometric sine.
-asinh      (#args=1): Inverse hyperbolic sine.
-atan       (#args=1): One-argument arctangent.
-atan2      (#args=2): Two-argument arctangent.
-atanh      (#args=1): Inverse hyperbolic tangent.
-cbrt       (#args=1): Cube root.
-ceil       (#args=1): Ceiling: nearest integer at or above.
-cos        (#args=1): Trigonometric cosine.
-cosh       (#args=1): Hyperbolic cosine.
-erf        (#args=1): Error function.
-erfc       (#args=1): Complementary error function.
-exp        (#args=1): Exponential function e**x.
-expm1      (#args=1): e**x - 1.
-float      (#args=1): Convert int/float/bool/string to float.
-floor      (#args=1): Floor: nearest integer at or below.
-gmt2sec    (#args=1): Parses GMT timestamp as integer seconds since epoch.
-int        (#args=1): Convert int/float/bool/string to int.
-invqnorm   (#args=1): Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
-log        (#args=1): Natural (base-e) logarithm.
-log10      (#args=1): Base-10 logarithm.
-log1p      (#args=1): log(1-x).
-pow        (#args=2): Exponentiation; same as **.
-qnorm      (#args=1): Normal cumulative distribution function.
-round      (#args=1): Nearest integer.
-sec2gmt    (#args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
-sin        (#args=1): Trigonometric sine.
-sinh       (#args=1): Hyperbolic sine.
-sqrt       (#args=1): Square root.
-string     (#args=1): Convert int/float/bool/string to string.
-strlen     (#args=1): String length.
-sub        (#args=3): Example: '$name=sub($name, "old", "new")'. Regexes not supported.
-systime    (#args=0): Floating-point seconds since the epoch.
-tan        (#args=1): Trigonometric tangent.
-tanh       (#args=1): Hyperbolic tangent.
-tolower    (#args=1): Convert string to lowercase.
-toupper    (#args=1): Convert string to uppercase.
-urand      (#args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
-==         (#args=2): String/numeric equality. Mixing number and string results in string compare.
-!=         (#args=2): String/numeric inequality. Mixing number and string results in string compare.
-&gt;          (#args=2): String/numeric greater-than. Mixing number and string results in string compare.
-&gt;=         (#args=2): String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-&lt;          (#args=2): String/numeric less-than. Mixing number and string results in string compare.
-&lt;=         (#args=2): String/numeric less-than-or-equals. Mixing number and string results in string compare.
-&amp;&amp;         (#args=2): Logical AND.
-||         (#args=2): Logical OR.
-!          (#args=1): Logical negation.
-+          (#args=2): Addition.
--          (#args=1): Unary minus.
--          (#args=2): Subtraction.
-*          (#args=2): Multiplication.
-/          (#args=2): Division.
-%          (#args=2): Remainder; never negative-valued.
-**         (#args=2): Exponentiation; same as pow.
-.          (#args=2): String concatenation.
+abs        (math:       #args=1): Absolute value.
+acos       (math:       #args=1): Inverse trigonometric cosine.
+acosh      (math:       #args=1): Inverse hyperbolic cosine.
+asin       (math:       #args=1): Inverse trigonometric sine.
+asinh      (math:       #args=1): Inverse hyperbolic sine.
+atan       (math:       #args=1): One-argument arctangent.
+atan2      (math:       #args=2): Two-argument arctangent.
+atanh      (math:       #args=1): Inverse hyperbolic tangent.
+cbrt       (math:       #args=1): Cube root.
+ceil       (math:       #args=1): Ceiling: nearest integer at or above.
+cos        (math:       #args=1): Trigonometric cosine.
+cosh       (math:       #args=1): Hyperbolic cosine.
+erf        (math:       #args=1): Error function.
+erfc       (math:       #args=1): Complementary error function.
+exp        (math:       #args=1): Exponential function e**x.
+expm1      (math:       #args=1): e**x - 1.
+floor      (math:       #args=1): Floor: nearest integer at or below.
+invqnorm   (math:       #args=1): Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
+log        (math:       #args=1): Natural (base-e) logarithm.
+log10      (math:       #args=1): Base-10 logarithm.
+log1p      (math:       #args=1): log(1-x).
+pow        (math:       #args=2): Exponentiation; same as **.
+qnorm      (math:       #args=1): Normal cumulative distribution function.
+round      (math:       #args=1): Nearest integer.
+sin        (math:       #args=1): Trigonometric sine.
+sinh       (math:       #args=1): Hyperbolic sine.
+sqrt       (math:       #args=1): Square root.
+tan        (math:       #args=1): Trigonometric tangent.
+tanh       (math:       #args=1): Hyperbolic tangent.
+urand      (math:       #args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
++          (math:       #args=2): Addition.
+-          (math:       #args=1): Unary minus.
+-          (math:       #args=2): Subtraction.
+*          (math:       #args=2): Multiplication.
+/          (math:       #args=2): Division.
+%          (math:       #args=2): Remainder; never negative-valued.
+**         (math:       #args=2): Exponentiation; same as pow.
+==         (boolean:    #args=2): String/numeric equality. Mixing number and string results in string compare.
+!=         (boolean:    #args=2): String/numeric inequality. Mixing number and string results in string compare.
+&gt;          (boolean:    #args=2): String/numeric greater-than. Mixing number and string results in string compare.
+&gt;=         (boolean:    #args=2): String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+&lt;          (boolean:    #args=2): String/numeric less-than. Mixing number and string results in string compare.
+&lt;=         (boolean:    #args=2): String/numeric less-than-or-equals. Mixing number and string results in string compare.
+&amp;&amp;         (boolean:    #args=2): Logical AND.
+||         (boolean:    #args=2): Logical OR.
+!          (boolean:    #args=1): Logical negation.
+strlen     (string:     #args=1): String length.
+sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")'. Regexes not supported.
+tolower    (string:     #args=1): Convert string to lowercase.
+toupper    (string:     #args=1): Convert string to uppercase.
+.          (string:     #args=2): String concatenation.
+float      (conversion: #args=1): Convert int/float/bool/string to float.
+int        (conversion: #args=1): Convert int/float/bool/string to int.
+string     (conversion: #args=1): Convert int/float/bool/string to string.
+gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
+sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
+systime    (time:       #args=0): Floating-point seconds since the epoch.
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit
 numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
 Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)

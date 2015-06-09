@@ -638,71 +638,83 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 
 // ================================================================
 typedef struct _function_lookup_t {
+	int   function_class;
 	char* function_name;
 	int   arity;
 	char* usage_string;
 } function_lookup_t;
 
-static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
-	{  "abs",      1 , "Absolute value."},
-	{  "acos",     1 , "Inverse trigonometric cosine."},
-	{  "acosh",    1 , "Inverse hyperbolic cosine."},
-	{  "asin",     1 , "Inverse trigonometric sine."},
-	{  "asinh",    1 , "Inverse hyperbolic sine."},
-	{  "atan",     1 , "One-argument arctangent."},
-	{  "atan2",    2 , "Two-argument arctangent."},
-	{  "atanh",    1 , "Inverse hyperbolic tangent."},
-	{  "cbrt",     1 , "Cube root."},
-	{  "ceil",     1 , "Ceiling: nearest integer at or above."},
-	{  "cos",      1 , "Trigonometric cosine."},
-	{  "cosh",     1 , "Hyperbolic cosine."},
-	{  "erf",      1 , "Error function."},
-	{  "erfc",     1 , "Complementary error function."},
-	{  "exp",      1 , "Exponential function e**x."},
-	{  "expm1",    1 , "e**x - 1."},
-	{  "float",    1 , "Convert int/float/bool/string to float."},
-	{  "floor",    1 , "Floor: nearest integer at or below."},
-	{  "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
-	{  "int",      1 , "Convert int/float/bool/string to int."},
-	{  "invqnorm", 1 , "Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed."},
-	{  "log",      1 , "Natural (base-e) logarithm."},
-	{  "log10",    1 , "Base-10 logarithm."},
-	{  "log1p",    1 , "log(1-x)."},
-	{  "pow",      2 , "Exponentiation; same as **."},
-	{  "qnorm",    1 , "Normal cumulative distribution function."},
-	{  "round",    1 , "Nearest integer."},
-	{  "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
-	{  "sin",      1 , "Trigonometric sine."},
-	{  "sinh",     1 , "Hyperbolic sine."},
-	{  "sqrt",     1 , "Square root."},
-	{  "string",   1 , "Convert int/float/bool/string to string."},
-	{  "strlen",   1 , "String length."},
-	{  "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
-	{  "systime",  0 , "Floating-point seconds since the epoch." },
-	{  "tan",      1 , "Trigonometric tangent."},
-	{  "tanh",     1 , "Hyperbolic tangent."},
-	{  "tolower",  1 , "Convert string to lowercase."},
-	{  "toupper",  1 , "Convert string to uppercase."},
-	{  "urand",    0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
+#define FUNC_CLASS_MATH       0xa0
+#define FUNC_CLASS_BOOLEAN    0xa1
+#define FUNC_CLASS_STRING     0xa3
+#define FUNC_CLASS_CONVERSION 0xa4
+#define FUNC_CLASS_TIME       0xa2
 
-	{  "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
-	{  "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
-	{  ">",       2 , "String/numeric greater-than. Mixing number and string results in string compare."},
-	{  ">=",      2 , "String/numeric greater-than-or-equals. Mixing number and string results in string compare."},
-	{  "<",       2 , "String/numeric less-than. Mixing number and string results in string compare."},
-	{  "<=",      2 , "String/numeric less-than-or-equals. Mixing number and string results in string compare."},
-	{  "&&",      2 , "Logical AND."},
-	{  "||",      2 , "Logical OR."},
-	{  "!",       1 , "Logical negation."},
-	{  "+",       2 , "Addition."},
-	{  "-",       1 , "Unary minus."},
-	{  "-",       2 , "Subtraction."},
-	{  "*",       2 , "Multiplication."},
-	{  "/",       2 , "Division."},
-	{  "%",       2 , "Remainder; never negative-valued."},
-	{  "**",      2 , "Exponentiation; same as pow."},
-	{  ".",       2 , "String concatenation."},
-	{  NULL,      -1 , NULL}, // table terminator
+static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
+	{ FUNC_CLASS_MATH, "abs",      1 , "Absolute value."},
+	{ FUNC_CLASS_MATH, "acos",     1 , "Inverse trigonometric cosine."},
+	{ FUNC_CLASS_MATH, "acosh",    1 , "Inverse hyperbolic cosine."},
+	{ FUNC_CLASS_MATH, "asin",     1 , "Inverse trigonometric sine."},
+	{ FUNC_CLASS_MATH, "asinh",    1 , "Inverse hyperbolic sine."},
+	{ FUNC_CLASS_MATH, "atan",     1 , "One-argument arctangent."},
+	{ FUNC_CLASS_MATH, "atan2",    2 , "Two-argument arctangent."},
+	{ FUNC_CLASS_MATH, "atanh",    1 , "Inverse hyperbolic tangent."},
+	{ FUNC_CLASS_MATH, "cbrt",     1 , "Cube root."},
+	{ FUNC_CLASS_MATH, "ceil",     1 , "Ceiling: nearest integer at or above."},
+	{ FUNC_CLASS_MATH, "cos",      1 , "Trigonometric cosine."},
+	{ FUNC_CLASS_MATH, "cosh",     1 , "Hyperbolic cosine."},
+	{ FUNC_CLASS_MATH, "erf",      1 , "Error function."},
+	{ FUNC_CLASS_MATH, "erfc",     1 , "Complementary error function."},
+	{ FUNC_CLASS_MATH, "exp",      1 , "Exponential function e**x."},
+	{ FUNC_CLASS_MATH, "expm1",    1 , "e**x - 1."},
+	{ FUNC_CLASS_MATH, "floor",    1 , "Floor: nearest integer at or below."},
+	{ FUNC_CLASS_MATH, "invqnorm", 1 , "Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed."},
+	{ FUNC_CLASS_MATH, "log",      1 , "Natural (base-e) logarithm."},
+	{ FUNC_CLASS_MATH, "log10",    1 , "Base-10 logarithm."},
+	{ FUNC_CLASS_MATH, "log1p",    1 , "log(1-x)."},
+	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
+	{ FUNC_CLASS_MATH, "qnorm",    1 , "Normal cumulative distribution function."},
+	{ FUNC_CLASS_MATH, "round",    1 , "Nearest integer."},
+	{ FUNC_CLASS_MATH, "sin",      1 , "Trigonometric sine."},
+	{ FUNC_CLASS_MATH, "sinh",     1 , "Hyperbolic sine."},
+	{ FUNC_CLASS_MATH, "sqrt",     1 , "Square root."},
+	{ FUNC_CLASS_MATH, "tan",      1 , "Trigonometric tangent."},
+	{ FUNC_CLASS_MATH, "tanh",     1 , "Hyperbolic tangent."},
+	{ FUNC_CLASS_MATH, "urand",    0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
+
+	{ FUNC_CLASS_MATH, "+",       2 , "Addition."},
+	{ FUNC_CLASS_MATH, "-",       1 , "Unary minus."},
+	{ FUNC_CLASS_MATH, "-",       2 , "Subtraction."},
+	{ FUNC_CLASS_MATH, "*",       2 , "Multiplication."},
+	{ FUNC_CLASS_MATH, "/",       2 , "Division."},
+	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
+	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
+
+	{ FUNC_CLASS_BOOLEAN, "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, ">",       2 , "String/numeric greater-than. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, ">=",      2 , "String/numeric greater-than-or-equals. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "<",       2 , "String/numeric less-than. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "<=",      2 , "String/numeric less-than-or-equals. Mixing number and string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "&&",      2 , "Logical AND."},
+	{ FUNC_CLASS_BOOLEAN, "||",      2 , "Logical OR."},
+	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
+
+	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
+	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
+	{ FUNC_CLASS_STRING, "tolower",  1 , "Convert string to lowercase."},
+	{ FUNC_CLASS_STRING, "toupper",  1 , "Convert string to uppercase."},
+	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
+
+	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
+	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
+	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
+
+	{ FUNC_CLASS_TIME, "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
+	{ FUNC_CLASS_TIME, "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
+	{ FUNC_CLASS_TIME, "systime",  0 , "Floating-point seconds since the epoch." },
+
+	{  0, NULL,      -1 , NULL}, // table terminator
 };
 
 #define ARITY_CHECK_PASS    0xbb
@@ -755,6 +767,17 @@ static void check_arity_with_report(function_lookup_t function_lookup_table[], c
 	}
 }
 
+static char* function_class_to_desc(int function_class) {
+	switch(function_class) {
+	case FUNC_CLASS_MATH:       return "math";       break;
+	case FUNC_CLASS_BOOLEAN:    return "boolean";    break;
+	case FUNC_CLASS_STRING:     return "string";     break;
+	case FUNC_CLASS_CONVERSION: return "conversion"; break;
+	case FUNC_CLASS_TIME:       return "time";       break;
+	default:                    return "???";        break;
+	}
+}
+
 void lrec_evaluator_list_functions(FILE* output_stream) {
 	fprintf(output_stream, "Functions for filter and put:\n");
 
@@ -780,16 +803,19 @@ void lrec_evaluator_list_functions(FILE* output_stream) {
 // Pass function_name == NULL to get usage for all functions.
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 	int found = FALSE;
+	char class_and_colon[128];
 	char* fmt = (function_name == NULL)
-		? "%-10s (#args=%d): %s\n"
-		: "%s (#args=%d): %s\n";
+		? "%-10s (%-11s #args=%d): %s\n"
+		: "%s (%s #args=%d): %s\n";
 
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
 		if (plookup->function_name == NULL)
 			break;
 		if (function_name == NULL || streq(function_name, plookup->function_name)) {
-			fprintf(output_stream, fmt, plookup->function_name, plookup->arity, plookup->usage_string);
+			sprintf(class_and_colon, "%s:", function_class_to_desc(plookup->function_class));
+			fprintf(output_stream, fmt, plookup->function_name, class_and_colon,
+				plookup->arity, plookup->usage_string);
 			found = TRUE;
 		}
 	}
