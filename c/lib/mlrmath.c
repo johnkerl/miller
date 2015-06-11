@@ -154,13 +154,20 @@ double qnorm(double x) {
 }
 
 // ----------------------------------------------------------------
-// This is essentially Newton-Raphson.
+// This is a tangent-following method not unlike Newton-Raphson:
 // * We can compute qnorm(y) = integral from -infinity to y of (1/sqrt(2pi)) exp(-t^2/2) dt.
 // * We can compute derivative of qnorm(y) = (1/sqrt(2pi)) exp(-y^2/2).
 // * We cannot explicitly compute invqnorm(y).
 // * If dx/dy = (1/sqrt(2pi)) exp(-y^2/2) then dy/dx = sqrt(2pi) exp(y^2/2).
+//
+// This means we *can* compute the derivative of invqnorm even though we
+// can't compute the function itself. So the essence of the method is to
+// follow the tangent line to form successive approximations: we have known function input x
+// and unknown function output y and initial guess y0.  At each step we find the intersection
+// of the tangent line at y_n with the vertical line at x, to find y_{n+1}. Specificall:
+//
 // * Even though we can't compute y = q^-1(x) we can compute x = q(y).
-// * Start with linear approximation for y.
+// * Start with initial guess for y (y0 = 0.0 or y0 = x both are OK).
 // * Find x = q(y). Since q (and therefore q^-1) are 1-1, we're done if qnorm(invqnorm(x)) is small.
 // * Else iterate: using point-slope form, (y_{n+1} - y_n) / (x_{n+1} - x_n) = m = sqrt(2pi) exp(y_n^2/2).
 //   Here x_2 = x (the input) and x_1 = q(y_1).
