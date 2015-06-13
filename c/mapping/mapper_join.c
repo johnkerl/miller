@@ -40,8 +40,11 @@ static void ingest_left_file(mapper_join_state_t* pstate);
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
-	if (pright_rec == NULL) // End of input record stream
+	if (pright_rec == NULL) { // End of input record stream
+		// xxx stub: if emit_left_unpairables then dump them out here.
+		// requires was-used hashset/hashmap on buckets.
 		return sllv_single(NULL);
+	}
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
 	if (pstate->pbuckets_by_key_field_names == NULL) // First call
@@ -50,9 +53,10 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->pright_field_names);
 	sllv_t* pleft_records = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
 	if (pleft_records == NULL) {
+		// right unpairable
 		// xxx stub:
 		return NULL;
-	} else {
+	} else if (pstate->emit_pairables) {
 		sllv_t* pout_records = sllv_alloc();
 		for (sllve_t* pe = pleft_records->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* pleft_rec = pe->pvdata;
@@ -85,6 +89,9 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			sllv_add(pout_records, pout_rec);
 		}
 		return pout_records;
+	} else {
+		// xxx stub
+		return NULL;
 	}
 }
 
@@ -239,6 +246,8 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_join_usage(argv[0], verb);
 		return NULL;
 	}
+
+	// xxx check not all emit-flags are off -- else no output.
 
 	// xxx check lengths equal!!
 	if (pright_field_names == NULL)
