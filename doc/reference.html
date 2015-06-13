@@ -221,7 +221,7 @@ $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
    cat check count-distinct cut filter group-by group-like having-fields head
-   histogram label put rename reorder sort stats1 stats2 step tac tail top uniq
+   histogram join label put rename reorder sort stats1 stats2 step tac tail top uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 
@@ -231,7 +231,7 @@ Functions for filter and put:
    - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper . float int string
    gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
-Please use "mlr --help-all-functions" or "-f" for help on all functions.
+Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
 Separator options, for input, output, or both:
   --rs      --irs     --ors                  Record separators, defaulting to newline
