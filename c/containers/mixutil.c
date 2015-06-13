@@ -31,3 +31,11 @@ slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_na
 	}
 	return pvalue_list;
 }
+
+// ----------------------------------------------------------------
+hss_t* hss_from_slls(slls_t* plist) {
+	hss_t* pset = hss_alloc();
+	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
+		hss_add(pset, pe->value);
+	return pset;
+}

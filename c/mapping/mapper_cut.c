@@ -2,6 +2,7 @@
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "containers/hss.h"
+#include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
@@ -65,11 +66,9 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_arg_order, in
 	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
 	pstate->pfield_name_list   = pfield_name_list;
 	slls_reverse(pstate->pfield_name_list);
-	pstate->pfield_name_set    = hss_alloc();
-	for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext)
-		hss_add(pstate->pfield_name_set, pe->value);
-	pstate->do_arg_order  = do_arg_order;
-	pstate->do_complement = do_complement;
+	pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
+	pstate->do_arg_order       = do_arg_order;
+	pstate->do_complement      = do_complement;
 
 	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_cut_process;
