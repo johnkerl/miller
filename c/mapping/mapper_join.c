@@ -45,12 +45,26 @@ typedef struct _join_bucket_t {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
-	if (pright_rec == NULL) { // End of input record stream
-		// xxx stub: if emit_left_unpairables then dump them out here.
-		// requires was-used hashset/hashmap on buckets.
-		return sllv_single(NULL);
-	}
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
+
+	if (pright_rec == NULL) { // End of input record stream
+		if (pstate->emit_left_unpairables) {
+			sllv_t* poutrecs = sllv_alloc();
+			for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
+				join_bucket_t* pbucket = pe->pvvalue;
+				if (!pbucket->was_paired) {
+					for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
+						lrec_t* pleft_rec = pf->pvdata;
+						sllv_add(poutrecs, pleft_rec);
+					}
+				}
+			}
+			sllv_add(poutrecs, NULL);
+			return poutrecs;
+		} else {
+			return sllv_single(NULL);
+		}
+	}
 
 	if (pstate->pbuckets_by_key_field_names == NULL) // First call
 		ingest_left_file(pstate);
@@ -58,9 +72,11 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->pright_field_names);
 	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
 	if (pleft_bucket == NULL) {
-		// right unpairable
-		// xxx stub:
-		return NULL;
+		if (pstate->emit_right_unpairables) {
+			return sllv_single(pright_rec);
+		} else {
+			return NULL;
+		}
 	} else if (pstate->emit_pairables) {
 		sllv_t* pout_records = sllv_alloc();
 		pleft_bucket->was_paired = TRUE;
@@ -69,7 +85,6 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			lrec_t* pout_rec = lrec_unbacked_alloc();
 
 			// add the joined-on fields
-			// xxx do this conditionally on cli flags
 			sllse_t* pg = pstate->pleft_field_names->phead;
 			sllse_t* ph = pstate->pright_field_names->phead;
 			sllse_t* pi = pstate->poutput_field_names->phead;
@@ -79,14 +94,12 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			}
 
 			// add the left-record fields not already added
-			// xxx do this conditionally on cli flags
 			for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
 				if (!hss_has(pstate->pleft_field_name_set, pl->key))
-					lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), 0);
+					lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			}
 
 			// add the right-record fields not already added
-			// xxx do this conditionally on cli flags
 			for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
 				if (!hss_has(pstate->pright_field_name_set, pr->key))
 					lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
@@ -96,7 +109,6 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 		return pout_records;
 	} else {
-		// xxx stub
 		return NULL;
 	}
 }
@@ -235,8 +247,8 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-r",   &pright_field_names);
 	ap_define_string_list_flag(pstate, "-o",   &poutput_field_names);
 	ap_define_false_flag(pstate,       "--np", &emit_pairables);
-	ap_define_int_flag(pstate,         "--ul", &emit_left_unpairables);
-	ap_define_int_flag(pstate,         "--ur", &emit_left_unpairables);
+	ap_define_true_flag(pstate,        "--ul", &emit_left_unpairables);
+	ap_define_true_flag(pstate,        "--ur", &emit_right_unpairables);
 	ap_define_true_flag(pstate,        "-u",   &allow_unsorted_input);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {

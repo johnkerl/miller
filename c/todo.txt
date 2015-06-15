@@ -3,6 +3,8 @@
 
 * empty-null handling on numeric sort
 
+* put-math on nulls should have null value
+
 :D
 
 ================================================================
