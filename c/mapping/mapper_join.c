@@ -275,6 +275,15 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	if (poutput_field_names == NULL)
 		poutput_field_names = slls_copy(pleft_field_names);
 
+	int llen = pleft_field_names->length;
+	int rlen = pright_field_names->length;
+	int olen = poutput_field_names->length;
+	if (llen != rlen || llen != olen) {
+		fprintf(stderr,
+			"%s %s: must have equal left,right,output field-name lists; got %d,%d,%d.\n",
+			MLR_GLOBALS.argv0, verb, llen, rlen, olen);
+		exit(1);
+	}
 	return mapper_join_alloc(pleft_field_names, pright_field_names, poutput_field_names,
 		allow_unsorted_input, emit_pairables, emit_left_unpairables, emit_right_unpairables,
 		left_file_name);
