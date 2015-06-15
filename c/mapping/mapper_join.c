@@ -269,7 +269,6 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 
 	// xxx check not all emit-flags are off -- else no output.
 
-	// xxx check lengths equal!!
 	if (pright_field_names == NULL)
 		pright_field_names = slls_copy(pleft_field_names);
 	if (poutput_field_names == NULL)
@@ -280,10 +279,11 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	int olen = poutput_field_names->length;
 	if (llen != rlen || llen != olen) {
 		fprintf(stderr,
-			"%s %s: must have equal left,right,output field-name lists; got %d,%d,%d.\n",
+			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
 			MLR_GLOBALS.argv0, verb, llen, rlen, olen);
 		exit(1);
 	}
+
 	return mapper_join_alloc(pleft_field_names, pright_field_names, poutput_field_names,
 		allow_unsorted_input, emit_pairables, emit_left_unpairables, emit_right_unpairables,
 		left_file_name);
