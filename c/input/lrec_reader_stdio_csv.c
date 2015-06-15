@@ -50,7 +50,8 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_stdio_csv_process(FILE* input_stream, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
+	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 
 	while (TRUE) {

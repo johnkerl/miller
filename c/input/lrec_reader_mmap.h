@@ -6,7 +6,7 @@
 #include "mapping/context.h"
 #include "input/file_reader_mmap.h"
 
-typedef lrec_t* lrec_reader_mmap_process_func_t(file_reader_mmap_state_t* pfh, void* pvstate, context_t* pctx);
+typedef lrec_t* lrec_reader_mmap_process_func_t(void* pvhandle, void* pvstate, context_t* pctx);
 typedef void    lrec_reader_mmap_sof_func_t(void* pvstate);
 
 typedef struct _lrec_reader_mmap_t {

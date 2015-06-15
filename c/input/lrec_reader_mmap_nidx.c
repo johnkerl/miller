@@ -10,7 +10,8 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 } lrec_reader_mmap_nidx_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_mmap_nidx_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_nidx_process(void* pvhandle, void* pvstate, context_t* pctx) {
+	file_reader_mmap_state_t* phandle = pvhandle;
 	lrec_reader_mmap_nidx_state_t* pstate = pvstate;
 	if (phandle->sol >= phandle->eof) // xxx encapsulate a method for this ...
 		return NULL;

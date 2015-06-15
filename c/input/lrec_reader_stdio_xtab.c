@@ -10,7 +10,8 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 } lrec_reader_stdio_xtab_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_xtab_process(FILE* input_stream, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_xtab_process(void* pvhandle, void* pvstate, context_t* pctx) {
+	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
 
 	if (pstate->at_eof)

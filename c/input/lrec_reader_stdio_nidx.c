@@ -9,7 +9,8 @@ typedef struct _lrec_reader_stdio_nidx_state_t {
 } lrec_reader_stdio_nidx_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_nidx_process(FILE* input_stream, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_nidx_process(void* pvhandle, void* pvstate, context_t* pctx) {
+	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
 	char* line = mlr_get_line(input_stream, pstate->irs);
 	if (line == NULL)

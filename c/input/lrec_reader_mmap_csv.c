@@ -151,7 +151,8 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 	return prec;
 }
 
-static lrec_t* lrec_reader_mmap_csv_process(file_reader_mmap_state_t* phandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
+	file_reader_mmap_state_t* phandle = pvhandle;
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 
 	while (TRUE) {
