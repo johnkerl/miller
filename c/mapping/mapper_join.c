@@ -26,6 +26,11 @@ typedef struct _mapper_join_state_t {
 
 static void ingest_left_file(mapper_join_state_t* pstate);
 
+typedef struct _join_bucket_t {
+	sllv_t* precords;
+	int was_paired;
+} join_bucket_t;
+
 // xxx need several pieces of info to construct the reader.
 // xxx may as well put all of cli_opts into MLR_GLOBALS.cli_opts_for_join.
 // xxx 2nd step, allow the joiner to have its own different format/delimiter.
@@ -51,14 +56,15 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		ingest_left_file(pstate);
 
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->pright_field_names);
-	sllv_t* pleft_records = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
-	if (pleft_records == NULL) {
+	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
+	if (pleft_bucket == NULL) {
 		// right unpairable
 		// xxx stub:
 		return NULL;
 	} else if (pstate->emit_pairables) {
 		sllv_t* pout_records = sllv_alloc();
-		for (sllve_t* pe = pleft_records->phead; pe != NULL; pe = pe->pnext) {
+		pleft_bucket->was_paired = TRUE;
+		for (sllve_t* pe = pleft_bucket->precords->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* pleft_rec = pe->pvdata;
 			lrec_t* pout_rec = lrec_unbacked_alloc();
 
@@ -143,14 +149,16 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 			break;
 
 		slls_t* pleft_field_values = mlr_selected_values_from_record(pleft_rec, pstate->pleft_field_names);
-		sllv_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pleft_field_values);
+		join_bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pleft_field_values);
 		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 			slls_t* pkey_field_values_copy = slls_copy(pleft_field_values);
-			pbucket = sllv_alloc();
-			sllv_add(pbucket, pleft_rec);
+			join_bucket_t* pbucket = mlr_malloc_or_die(sizeof(join_bucket_t));
+			pbucket->precords = sllv_alloc();
+			pbucket->was_paired = FALSE;
+			sllv_add(pbucket->precords, pleft_rec);
 			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
 		} else { // Previously seen key-field-value: append record to bucket
-			sllv_add(pbucket, pleft_rec);
+			sllv_add(pbucket->precords, pleft_rec);
 		}
 	}
 
