@@ -156,6 +156,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ifs  = DEFAULT_FS;
 	popts->ips  = DEFAULT_PS;
 	popts->allow_repeat_ifs = FALSE;
+	popts->allow_repeat_ips = FALSE;
 
 	popts->ors  = DEFAULT_RS;
 	popts->ofs  = DEFAULT_FS;
@@ -313,25 +314,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	// xxx alloc mmap readers here too
-	// xxx have use-mmap-readers flag ...
-	if (streq(rdesc, "dkvp")) {
-		popts->plrec_reader_stdio = lrec_reader_stdio_dkvp_alloc(popts->irs, popts->ifs, popts->ips,
-			popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap  = lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips,
-			popts->allow_repeat_ifs);
-	} else if (streq(rdesc, "csv")) {
-		popts->plrec_reader_stdio = lrec_reader_stdio_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap  = lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-	} else if (streq(rdesc, "nidx")) {
-		popts->plrec_reader_stdio = lrec_reader_stdio_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-		popts->plrec_reader_mmap  = lrec_reader_mmap_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs);
-	} else if (streq(rdesc, "xtab")) {
-		popts->plrec_reader_stdio = lrec_reader_stdio_xtab_alloc(popts->ips, TRUE); // xxx parameterize allow_repeat_ips
-		popts->plrec_reader_mmap  = lrec_reader_mmap_xtab_alloc(popts->irs, popts->ips, TRUE/*popts->allow_repeat_ips*/);
-	} else {
+	// xxx final coalesce: file count -> 0 <-> no mmap
+	popts->plrec_reader_mmap  = lrec_reader_alloc(rdesc, TRUE,
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+	popts->plrec_reader_stdio = lrec_reader_alloc(rdesc, FALSE,
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+	if (popts->plrec_reader_mmap == NULL || popts->plrec_reader_stdio == NULL)
 		main_usage(argv[0], 1);
-	}
 
 	if      (streq(wdesc, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(wdesc, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);

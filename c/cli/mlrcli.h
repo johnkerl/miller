@@ -11,6 +11,7 @@ typedef struct _cli_opts_t {
 	char ifs;
 	char ips;
 	int  allow_repeat_ifs;
+	int  allow_repeat_ips;
 
 	char ors;
 	char ofs;
