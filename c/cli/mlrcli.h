@@ -19,9 +19,7 @@ typedef struct _cli_opts_t {
 
 	char* ofmt;
 
-	int            use_file_reader_mmap;
-	lrec_reader_t* plrec_reader_stdio;
-	lrec_reader_t* plrec_reader_mmap;
+	lrec_reader_t* plrec_reader;
 	sllv_t*        pmapper_list;
 	lrec_writer_t* plrec_writer;
 

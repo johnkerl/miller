@@ -27,14 +27,12 @@ int main(int argc, char** argv) {
 	cli_opts_t* popts = parse_command_line(argc, argv);
 	mlr_global_init(argv[0], popts->ofmt);
 
-	lrec_reader_t* plrec_reader_stdio = popts->plrec_reader_stdio;
-	lrec_reader_t* plrec_reader_mmap  = popts->plrec_reader_mmap;
-	sllv_t*        pmapper_list       = popts->pmapper_list;
-	lrec_writer_t* plrec_writer       = popts->plrec_writer;
-	char**         filenames          = popts->filenames;
+	lrec_reader_t* plrec_reader = popts->plrec_reader;
+	sllv_t*        pmapper_list = popts->pmapper_list;
+	lrec_writer_t* plrec_writer = popts->plrec_writer;
+	char**         filenames    = popts->filenames;
 
-	int ok = do_stream_chained(filenames, popts->use_file_reader_mmap, plrec_reader_stdio, plrec_reader_mmap,
-		pmapper_list, plrec_writer, popts->ofmt);
+	int ok = do_stream_chained(filenames, plrec_reader, pmapper_list, plrec_writer, popts->ofmt);
 
 	cli_opts_free(popts);
 

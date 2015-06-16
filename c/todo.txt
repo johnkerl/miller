@@ -10,6 +10,8 @@
 ================================================================
 TOP OF LIST
 
+* mapper_list -> lrec_mapper_list etc.
+
 !! should be able to do: mlr put '$ok = $x < 10'
 
 !! join

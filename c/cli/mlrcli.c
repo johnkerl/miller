@@ -163,11 +163,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ops  = DEFAULT_PS;
 	popts->ofmt = DEFAULT_OFMT;
 
-	popts->plrec_reader_stdio   = NULL;
-	popts->plrec_reader_mmap    = NULL;
-	popts->plrec_writer         = NULL;
-	popts->filenames            = NULL;
-	popts->use_file_reader_mmap = TRUE;
+	popts->plrec_reader = NULL;
+	popts->plrec_writer = NULL;
+	popts->filenames    = NULL;
+
+	int use_file_reader_mmap = TRUE;
 
 	char* rdesc = "dkvp";
 	char* wdesc = "dkvp";
@@ -293,10 +293,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		// xxx negate the default once this is working.
 		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
-			popts->use_file_reader_mmap = TRUE;
+			use_file_reader_mmap = TRUE;
 		}
 		else if (streq(argv[argi], "--no-mmap")) {
-			popts->use_file_reader_mmap = FALSE;
+			use_file_reader_mmap = FALSE;
 		}
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -313,14 +313,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else
 			nusage(argv[0], argv[argi]);
 	}
-
-	// xxx final coalesce: file count -> 0 <-> no mmap
-	popts->plrec_reader_mmap  = lrec_reader_alloc(rdesc, TRUE,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
-	popts->plrec_reader_stdio = lrec_reader_alloc(rdesc, FALSE,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
-	if (popts->plrec_reader_mmap == NULL || popts->plrec_reader_stdio == NULL)
-		main_usage(argv[0], 1);
 
 	if      (streq(wdesc, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(wdesc, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
@@ -375,13 +367,22 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->filenames = &argv[argi];
 
+	// No filenames means read from standard input, and standard input cannot be mmaped.
+	if (argi == argc)
+		use_file_reader_mmap = FALSE;
+
+	popts->plrec_reader = lrec_reader_alloc(rdesc, use_file_reader_mmap,
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+	if (popts->plrec_reader == NULL)
+		main_usage(argv[0], 1);
+
 	return popts;
 }
 
 // ----------------------------------------------------------------
 void cli_opts_free(cli_opts_t* popts) {
-
-	popts->plrec_reader_stdio->pfree_func(popts->plrec_reader_stdio->pvstate);
+	if (popts->plrec_reader->pfree_func != NULL)
+		popts->plrec_reader->pfree_func(popts->plrec_reader->pvstate);
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvdata;
