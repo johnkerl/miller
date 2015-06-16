@@ -139,26 +139,19 @@ static void mapper_join_free(void* pvstate) {
 
 static void ingest_left_file(mapper_join_state_t* pstate) {
 
-	FILE* input_stream = fopen(pstate->left_file_name, "r");
-	if (input_stream == NULL) {
-		fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n",
-			MLR_GLOBALS.argv0, pstate->left_file_name);
-		perror(pstate->left_file_name);
-		exit(1);
-	}
+	// xxx temp
+	lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", TRUE, '\n', ',', FALSE, '=', FALSE);
+
+	void* pvhandle = plrec_reader->popen_func(pstate->left_file_name);
+	plrec_reader->psof_func(plrec_reader->pvstate);
+
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->left_file_name };
 	context_t* pctx = &ctx;
-
-	// xxx temp
-	//lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", TRUE, '\n', ',', FALSE, '=', FALSE);
-	lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", FALSE, '\n', ',', FALSE, '=', FALSE);
-
-	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
 
 	while (TRUE) {
-		lrec_t* pleft_rec = plrec_reader->pprocess_func(input_stream, plrec_reader->pvstate, pctx);
+		lrec_t* pleft_rec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
 		if (pleft_rec == NULL)
 			break;
 
@@ -176,7 +169,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		}
 	}
 
-	fclose(input_stream);
+	plrec_reader->pclose_func(pvhandle);
 }
 
 // ----------------------------------------------------------------
