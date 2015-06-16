@@ -48,8 +48,8 @@ static void lrec_reader_stdio_xtab_sof(void* pvstate) {
 static void lrec_reader_stdio_xtab_free(void* pvstate) {
 }
 
-lrec_reader_stdio_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips) {
-	lrec_reader_stdio_t* plrec_reader_stdio = mlr_malloc_or_die(sizeof(lrec_reader_stdio_t));
+lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
 	//pstate->ips              = ips;
@@ -58,12 +58,12 @@ lrec_reader_stdio_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips
 	pstate->allow_repeat_ips = TRUE;
 	pstate->at_eof           = FALSE;
 
-	plrec_reader_stdio->pvstate       = (void*)pstate;
-	plrec_reader_stdio->pprocess_func = &lrec_reader_stdio_xtab_process;
-	plrec_reader_stdio->psof_func     = &lrec_reader_stdio_xtab_sof;
-	plrec_reader_stdio->pfree_func    = &lrec_reader_stdio_xtab_free;
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->pprocess_func = &lrec_reader_stdio_xtab_process;
+	plrec_reader->psof_func     = &lrec_reader_stdio_xtab_sof;
+	plrec_reader->pfree_func    = &lrec_reader_stdio_xtab_free;
 
-	return plrec_reader_stdio;
+	return plrec_reader;
 }
 
 // ----------------------------------------------------------------

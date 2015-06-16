@@ -11,9 +11,9 @@
 #include "output/lrec_writers.h"
 
 static int do_file_chained(char* filename, context_t* pctx,
-	lrec_reader_stdio_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
+	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 static int do_file_chained_mmap(char* filename, context_t* pctx,
-	lrec_reader_mmap_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
+	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
@@ -22,8 +22,8 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 
 // ----------------------------------------------------------------
 // xxx assert pmapper_list non-empty ...
-int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_stdio_t* plrec_reader_stdio,
-	lrec_reader_mmap_t* plrec_reader_mmap, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
+int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_t* plrec_reader_stdio,
+	lrec_reader_t* plrec_reader_mmap, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
 
@@ -62,7 +62,7 @@ int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_st
 
 // ----------------------------------------------------------------
 static int do_file_chained(char* filename, context_t* pctx,
-	lrec_reader_stdio_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
+	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	FILE* input_stream = stdin;
 
@@ -92,7 +92,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 
 // ----------------------------------------------------------------
 static int do_file_chained_mmap(char* filename, context_t* pctx,
-	lrec_reader_mmap_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
+	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	// xxx communicate error back from open, or rename it to ..._open_or_die
 	file_reader_mmap_state_t handle = file_reader_mmap_open(filename);

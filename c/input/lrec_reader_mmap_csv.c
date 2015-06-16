@@ -196,8 +196,8 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 // xxx restore free func for header_keepers ... ?
 
 // ----------------------------------------------------------------
-lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
-	lrec_reader_mmap_t* plrec_reader_mmap = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
+lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));
 	pstate->ifnr                     = 0LL;
@@ -208,9 +208,10 @@ lrec_reader_mmap_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_rep
 	pstate->pheader_keeper           = NULL;
 	pstate->pheader_keepers          = lhmslv_alloc();
 
-	plrec_reader_mmap->pvstate       = (void*)pstate;
-	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_csv_process;
-	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_csv_sof;
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->pprocess_func = &lrec_reader_mmap_csv_process;
+	plrec_reader->psof_func     = &lrec_reader_mmap_csv_sof;
+	plrec_reader->pfree_func    = NULL;
 
-	return plrec_reader_mmap;
+	return plrec_reader;
 }

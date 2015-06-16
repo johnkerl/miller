@@ -25,8 +25,8 @@ static lrec_t* lrec_reader_mmap_dkvp_process(void* pvhandle, void* pvstate, cont
 static void lrec_reader_mmap_dkvp_sof(void* pvstate) {
 }
 
-lrec_reader_mmap_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs) {
-	lrec_reader_mmap_t* plrec_reader_mmap = mlr_malloc_or_die(sizeof(lrec_reader_mmap_t));
+lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_dkvp_state_t));
 	pstate->irs              = irs;
@@ -34,11 +34,12 @@ lrec_reader_mmap_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, in
 	pstate->ips              = ips;
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
-	plrec_reader_mmap->pvstate       = (void*)pstate;
-	plrec_reader_mmap->pprocess_func = &lrec_reader_mmap_dkvp_process;
-	plrec_reader_mmap->psof_func     = &lrec_reader_mmap_dkvp_sof;
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->pprocess_func = &lrec_reader_mmap_dkvp_process;
+	plrec_reader->psof_func     = &lrec_reader_mmap_dkvp_sof;
+	plrec_reader->pfree_func    = NULL;
 
-	return plrec_reader_mmap;
+	return plrec_reader;
 }
 
 lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {

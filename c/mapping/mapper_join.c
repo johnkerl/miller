@@ -5,7 +5,6 @@
 #include "containers/lhmslv.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
-#include "input/lrec_reader_stdio.h" // xxx temp
 #include "input/lrec_readers.h" // xxx temp
 #include "cli/argparse.h"
 
@@ -150,13 +149,13 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->left_file_name };
 	context_t* pctx = &ctx;
 
-	lrec_reader_stdio_t* plrec_reader_stdio = lrec_reader_stdio_dkvp_alloc('\n', ',', '=', FALSE);
-	plrec_reader_stdio->psof_func(plrec_reader_stdio->pvstate);
+	lrec_reader_t* plrec_reader = lrec_reader_stdio_dkvp_alloc('\n', ',', '=', FALSE);
+	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
 
 	while (TRUE) {
-		lrec_t* pleft_rec = plrec_reader_stdio->pprocess_func(input_stream, plrec_reader_stdio->pvstate, pctx);
+		lrec_t* pleft_rec = plrec_reader->pprocess_func(input_stream, plrec_reader->pvstate, pctx);
 		if (pleft_rec == NULL)
 			break;
 
