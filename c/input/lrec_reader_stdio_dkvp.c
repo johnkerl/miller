@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlrutil.h"
+#include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_dkvp_state_t {
@@ -41,6 +42,8 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int al
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = &file_reader_stdio_vopen;
+	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_stdio_dkvp_process;
 	plrec_reader->psof_func     = &lrec_reader_csv_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_dkvp_free;

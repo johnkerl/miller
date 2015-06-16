@@ -12,10 +12,10 @@ NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
 FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
 
-TEST_LREC_SRCS = lib/mlrutil.c containers/lrec.c containers/header_keeper.c containers/sllv.c \
+TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c containers/lhmslv.c \
-input/file_reader_mmap.c \
-input/lrec_reader_mmap_csv.c input/lrec_reader_stdio_csv.c \
+input/file_reader_mmap.c      input/file_reader_stdio.c \
+input/lrec_reader_mmap_csv.c  input/lrec_reader_stdio_csv.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \

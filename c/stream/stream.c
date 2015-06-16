@@ -12,8 +12,6 @@
 
 static int do_file_chained(char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
-static int do_file_chained_mmap(char* filename, context_t* pctx,
-	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
@@ -39,14 +37,10 @@ int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_t*
 			ctx.filenum++;
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
+			lrec_reader_t* plrec_reader = use_file_reader_mmap ? plrec_reader_mmap : plrec_reader_stdio;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
-			if (use_file_reader_mmap) {
-				plrec_reader_mmap->psof_func(plrec_reader_mmap->pvstate);
-				ok = do_file_chained_mmap(*pfilename, &ctx, plrec_reader_mmap, pmapper_list, plrec_writer, output_stream) && ok;
-			} else {
-				plrec_reader_stdio->psof_func(plrec_reader_stdio->pvstate);
-				ok = do_file_chained(*pfilename, &ctx, plrec_reader_stdio, pmapper_list, plrec_writer, output_stream) && ok;
-			}
+			plrec_reader->psof_func(plrec_reader->pvstate);
+			ok = do_file_chained(*pfilename, &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
 		}
 	}
 
@@ -62,21 +56,12 @@ int do_stream_chained(char** filenames, int use_file_reader_mmap, lrec_reader_t*
 
 // ----------------------------------------------------------------
 static int do_file_chained(char* filename, context_t* pctx,
-	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
+	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
-	FILE* input_stream = stdin;
-
-	if (!streq(filename, "-")) {
-		input_stream = fopen(filename, "r");
-		if (input_stream == NULL) {
-			fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
-			perror(filename);
-			return 0;
-		}
-	}
+	void* pvhandle = plrec_reader->popen_func(filename);
 
 	while (1) {
-		lrec_t* pinrec = plrec_reader_stdio->pprocess_func(input_stream, plrec_reader_stdio->pvstate, pctx);
+		lrec_t* pinrec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
 		if (pinrec == NULL)
 			break;
 		pctx->nr++;
@@ -84,29 +69,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
-	if (input_stream != stdin)
-		fclose(input_stream);
-
-	return 1;
-}
-
-// ----------------------------------------------------------------
-static int do_file_chained_mmap(char* filename, context_t* pctx,
-	lrec_reader_t* plrec_reader_stdio, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
-{
-	// xxx communicate error back from open, or rename it to ..._open_or_die
-	file_reader_mmap_state_t handle = file_reader_mmap_open(filename);
-
-	while (1) {
-		lrec_t* pinrec = plrec_reader_stdio->pprocess_func(&handle, plrec_reader_stdio->pvstate, pctx);
-		if (pinrec == NULL)
-			break;
-		pctx->nr++;
-		pctx->fnr++;
-		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
-	}
-
-	file_reader_mmap_close(&handle);
+	plrec_reader->pclose_func(pvhandle);
 	return 1;
 }
 

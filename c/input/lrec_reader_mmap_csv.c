@@ -209,6 +209,9 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_i
 	pstate->pheader_keepers          = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = &file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = &file_reader_mmap_vclose;
+	plrec_reader->pprocess_func = &lrec_reader_mmap_csv_process;
 	plrec_reader->pprocess_func = &lrec_reader_mmap_csv_process;
 	plrec_reader->psof_func     = &lrec_reader_mmap_csv_sof;
 	plrec_reader->pfree_func    = NULL;

@@ -3,6 +3,7 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
+#include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
@@ -135,6 +136,8 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = &file_reader_stdio_vopen;
+	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_stdio_csv_process;
 	plrec_reader->psof_func     = &lrec_reader_stdio_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_csv_free;

@@ -35,6 +35,8 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, int all
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = &file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = &file_reader_mmap_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_mmap_dkvp_process;
 	plrec_reader->psof_func     = &lrec_reader_mmap_dkvp_sof;
 	plrec_reader->pfree_func    = NULL;
