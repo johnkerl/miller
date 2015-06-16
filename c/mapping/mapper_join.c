@@ -149,7 +149,10 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->left_file_name };
 	context_t* pctx = &ctx;
 
-	lrec_reader_t* plrec_reader = lrec_reader_stdio_dkvp_alloc('\n', ',', '=', FALSE);
+	// xxx temp
+	//lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", TRUE, '\n', ',', FALSE, '=', FALSE);
+	lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", FALSE, '\n', ',', FALSE, '=', FALSE);
+
 	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();

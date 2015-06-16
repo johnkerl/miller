@@ -15,6 +15,7 @@ TOP OF LIST
 !! should be able to do: mlr put '$ok = $x < 10'
 
 !! join
+-> UTs
 
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap

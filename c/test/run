@@ -99,6 +99,13 @@ run_command $mlr sort -nr y -f a $indir/abixy
 run_command $mlr sort -f a -r b -nf x -nr y $indir/abixy
 
 # ----------------------------------------------------------------
+announce JOIN
+
+run_command $mlr join      -u -f $indir/joina.dkvp -l l -r r -o o $indir/joinb.dkvp
+run_command $mlr join --ul -u -f $indir/joina.dkvp -l l -r r -o o $indir/joinb.dkvp
+run_command $mlr join --ur -u -f $indir/joina.dkvp -l l -r r -o o $indir/joinb.dkvp
+
+# ----------------------------------------------------------------
 announce STATS
 run_command $mlr count-distinct -f a,b $indir/small $indir/abixy
 

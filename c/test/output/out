@@ -388,6 +388,57 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 
 
 ================================================================
+JOIN
+
+./test/../mlr join -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+o=1,x=a,y=s
+o=2,x=b,y=t
+o=2,x=c,y=t
+o=2,x=d,y=t
+o=2,x=b,y=v
+o=2,x=c,y=v
+o=2,x=d,y=v
+o=3,x=e,y=w
+o=3,x=f,y=w
+o=3,x=e,y=x
+o=3,x=f,y=x
+o=3,x=e,y=y
+o=3,x=f,y=y
+
+./test/../mlr join --ul -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+o=1,x=a,y=s
+o=2,x=b,y=t
+o=2,x=c,y=t
+o=2,x=d,y=t
+o=2,x=b,y=v
+o=2,x=c,y=v
+o=2,x=d,y=v
+o=3,x=e,y=w
+o=3,x=f,y=w
+o=3,x=e,y=x
+o=3,x=f,y=x
+o=3,x=e,y=y
+o=3,x=f,y=y
+l=4,x=g
+
+./test/../mlr join --ur -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+o=1,x=a,y=s
+o=2,x=b,y=t
+o=2,x=c,y=t
+o=2,x=d,y=t
+o=2,x=b,y=v
+o=2,x=c,y=v
+o=2,x=d,y=v
+o=3,x=e,y=w
+o=3,x=f,y=w
+o=3,x=e,y=x
+o=3,x=f,y=x
+o=3,x=e,y=y
+o=3,x=f,y=y
+r=5,y=z
+
+
+================================================================
 STATS
 
 ./test/../mlr count-distinct -f a,b ./test/input/small ./test/input/abixy
