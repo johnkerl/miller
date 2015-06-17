@@ -167,10 +167,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer = NULL;
 	popts->filenames    = NULL;
 
-	popts->use_mmap_for_read = TRUE;
 	popts->ifmt = "dkvp";
 	char* ofmt  = "dkvp";
-	int left_align_pprint = TRUE;
+
+	popts->use_mmap_for_read = TRUE;
+	int left_align_pprint    = TRUE;
 
 	int have_rand_seed = FALSE;
 	unsigned rand_seed = 0;
@@ -325,12 +326,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		main_usage(argv[0], 1);
 	}
 
-	if (have_rand_seed) {
-		mtrand_init(rand_seed);
-	} else {
-		mtrand_init_default();
-	}
-
 	popts->pmapper_list = sllv_alloc();
 	while (TRUE) {
 		check_arg_count(argv, argi, argc, 1);
@@ -365,7 +360,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->filenames = &argv[argi];
 
-	// No filenames means read from standard input, and standard input cannot be mmaped.
+	// No filenames means read from standard input, and standard input cannot be mmapped.
 	if (argi == argc)
 		popts->use_mmap_for_read = FALSE;
 
@@ -373,6 +368,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 	if (popts->plrec_reader == NULL)
 		main_usage(argv[0], 1);
+
+	if (have_rand_seed) {
+		mtrand_init(rand_seed);
+	} else {
+		mtrand_init_default();
+	}
 
 	return popts;
 }
