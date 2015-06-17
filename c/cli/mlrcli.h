@@ -7,11 +7,13 @@
 #include "output/lrec_writer.h"
 
 typedef struct _cli_opts_t {
-	char irs;
-	char ifs;
-	char ips;
-	int  allow_repeat_ifs;
-	int  allow_repeat_ips;
+	char  irs;
+	char  ifs;
+	char  ips;
+	int   allow_repeat_ifs;
+	int   allow_repeat_ips;
+	int   use_mmap_for_read;
+	char* ifmt;
 
 	char ors;
 	char ofs;

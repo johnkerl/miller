@@ -133,14 +133,18 @@ static void mapper_join_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-// xxx void-abstract the stdio/mmap readers. this is a pita. also neaten up stream.c.
-// xxx have a reader factory which can be called here.
-// xxx for the moment, just dev with hard-coded separator & format parameters.
+// Format and separator flags are passed to mapper_join in MLR_GLOBALS rather
+// than on the stack, since the latter would require complicating the interface
+// for all the other mappers which don't do their own file I/O.  (Also, while
+// some of the information needed to construct an lrec_reader is available on
+// the command line before the mapper-allocators are called, some is not
+// available until after.  Hence our obtaining these flags after mapper-alloc.)
 
 static void ingest_left_file(mapper_join_state_t* pstate) {
 
-	// xxx temp
-	lrec_reader_t* plrec_reader = lrec_reader_alloc("dkvp", TRUE, '\n', ',', FALSE, '=', FALSE);
+	cli_opts_t* popts = MLR_GLOBALS.popts;
+	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->ifmt, popts->use_mmap_for_read,
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 
 	void* pvhandle = plrec_reader->popen_func(pstate->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);
@@ -262,7 +266,12 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	// xxx check not all emit-flags are off -- else no output.
+	if (!emit_pairables && !emit_left_unpairables && !emit_right_unpairables) {
+		fprintf(stderr, "%s %s: all emit flags are unset; no output is possible.\n",
+			MLR_GLOBALS.argv0, verb);
+		mapper_join_usage(argv[0], verb);
+		return NULL;
+	}
 
 	if (pright_field_names == NULL)
 		pright_field_names = slls_copy(pleft_field_names);

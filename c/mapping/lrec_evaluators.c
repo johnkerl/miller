@@ -144,7 +144,7 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT(val2);
 	mt_get_double_strict(&val2);
 	if (val2.type != MT_DOUBLE)
 		return MV_ERROR;

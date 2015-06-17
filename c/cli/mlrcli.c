@@ -167,10 +167,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer = NULL;
 	popts->filenames    = NULL;
 
-	int use_file_reader_mmap = TRUE;
-
-	char* rdesc = "dkvp";
-	char* wdesc = "dkvp";
+	popts->use_mmap_for_read = TRUE;
+	popts->ifmt = "dkvp";
+	char* ofmt  = "dkvp";
 	int left_align_pprint = TRUE;
 
 	int have_rand_seed = FALSE;
@@ -249,36 +248,36 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		else if (streq(argv[argi], "--dkvp"))    { rdesc = wdesc = "dkvp"; }
-		else if (streq(argv[argi], "--idkvp"))   { rdesc = "dkvp"; }
-		else if (streq(argv[argi], "--odkvp"))   { wdesc = "dkvp"; }
+		else if (streq(argv[argi], "--dkvp"))    { popts->ifmt = ofmt = "dkvp"; }
+		else if (streq(argv[argi], "--idkvp"))   { popts->ifmt = "dkvp"; }
+		else if (streq(argv[argi], "--odkvp"))   { ofmt = "dkvp"; }
 
-		else if (streq(argv[argi], "--csv"))     { rdesc = wdesc = "csv";  }
-		else if (streq(argv[argi], "--icsv"))    { rdesc = "csv";  }
-		else if (streq(argv[argi], "--ocsv"))    { wdesc = "csv";  }
+		else if (streq(argv[argi], "--csv"))     { popts->ifmt = ofmt = "csv";  }
+		else if (streq(argv[argi], "--icsv"))    { popts->ifmt = "csv";  }
+		else if (streq(argv[argi], "--ocsv"))    { ofmt = "csv";  }
 
-		else if (streq(argv[argi], "--nidx"))    { rdesc = wdesc = "nidx"; }
-		else if (streq(argv[argi], "--inidx"))   { rdesc = "nidx"; }
-		else if (streq(argv[argi], "--onidx"))   { wdesc = "nidx"; }
+		else if (streq(argv[argi], "--nidx"))    { popts->ifmt = ofmt = "nidx"; }
+		else if (streq(argv[argi], "--inidx"))   { popts->ifmt = "nidx"; }
+		else if (streq(argv[argi], "--onidx"))   { ofmt = "nidx"; }
 
-		else if (streq(argv[argi], "--xtab"))    { rdesc = wdesc = "xtab"; }
-		else if (streq(argv[argi], "--ixtab"))   { rdesc = "xtab"; }
-		else if (streq(argv[argi], "--oxtab"))   { wdesc = "xtab"; }
+		else if (streq(argv[argi], "--xtab"))    { popts->ifmt = ofmt = "xtab"; }
+		else if (streq(argv[argi], "--ixtab"))   { popts->ifmt = "xtab"; }
+		else if (streq(argv[argi], "--oxtab"))   { ofmt = "xtab"; }
 
 		else if (streq(argv[argi], "--ipprint")) {
-			rdesc                   = "csv";
+			popts->ifmt             = "csv";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
 
 		}
 		else if (streq(argv[argi], "--opprint")) {
-			wdesc = "pprint";
+			ofmt = "pprint";
 		}
 		else if (streq(argv[argi], "--pprint")) {
-			rdesc                   = "csv";
+			popts->ifmt             = "csv";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
-			wdesc                   = "pprint";
+			ofmt                    = "pprint";
 		}
 		else if (streq(argv[argi], "--right"))   {
 			left_align_pprint = FALSE;
@@ -290,13 +289,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		// xxx negate the default once this is working.
 		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
-			use_file_reader_mmap = TRUE;
+			popts->use_mmap_for_read = TRUE;
 		}
 		else if (streq(argv[argi], "--no-mmap")) {
-			use_file_reader_mmap = FALSE;
+			popts->use_mmap_for_read = FALSE;
 		}
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -314,11 +312,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	if      (streq(wdesc, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(wdesc, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
-	else if (streq(wdesc, "nidx"))   popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(wdesc, "xtab"))   popts->plrec_writer = lrec_writer_xtab_alloc();
-	else if (streq(wdesc, "pprint")) popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
+	if      (streq(ofmt, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(ofmt, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "nidx"))   popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "xtab"))   popts->plrec_writer = lrec_writer_xtab_alloc();
+	else if (streq(ofmt, "pprint")) popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}
@@ -369,9 +367,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	// No filenames means read from standard input, and standard input cannot be mmaped.
 	if (argi == argc)
-		use_file_reader_mmap = FALSE;
+		popts->use_mmap_for_read = FALSE;
 
-	popts->plrec_reader = lrec_reader_alloc(rdesc, use_file_reader_mmap,
+	popts->plrec_reader = lrec_reader_alloc(popts->ifmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 	if (popts->plrec_reader == NULL)
 		main_usage(argv[0], 1);

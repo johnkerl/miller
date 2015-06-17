@@ -23,9 +23,9 @@ int main(int argc, char** argv) {
 	}
 	fprintf(stderr, "Set up mcheck\n");
 #endif
-	mlr_global_init(argv[0], NULL);
+	mlr_global_init(argv[0], NULL, NULL);
 	cli_opts_t* popts = parse_command_line(argc, argv);
-	mlr_global_init(argv[0], popts->ofmt);
+	mlr_global_init(argv[0], popts->ofmt, popts);
 
 	lrec_reader_t* plrec_reader = popts->plrec_reader;
 	sllv_t*        pmapper_list = popts->pmapper_list;
