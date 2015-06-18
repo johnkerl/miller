@@ -26,6 +26,7 @@ typedef struct _mapper_join_opts_t {
 
 	// These allow the joiner to have its own different format/delimiter for
 	// the left-file:
+	char*    input_file_format;
 	char     irs;
 	char     ifs;
 	char     ips;
@@ -215,12 +216,14 @@ static void mapper_join_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-f {left file name}\n");
 	fprintf(stdout, "-l {a,b,c}\n");
 	fprintf(stdout, "-r {a,b,c}\n");
-	fprintf(stdout, "-o {a,b,c}\n");
+	fprintf(stdout, "-j {a,b,c}\n");
 	fprintf(stdout, "--np\n");
 	fprintf(stdout, "--ul\n");
 	fprintf(stdout, "--ur\n");
 	fprintf(stdout, "-u\n");
-	fprintf(stdout, "-e EMPTY\n");
+	fprintf(stdout, "-e EMPTY\n"); // xxx implement this
+	fprintf(stdout, "-i {xxx ffmt}\n");
+	fprintf(stdout, "-ifs {etc.}\n");
 }
 
 // ----------------------------------------------------------------
@@ -235,6 +238,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->emit_left_unpairables   = FALSE;
 	popts->emit_right_unpairables  = FALSE;
 
+	popts->input_file_format = NULL;
 	popts->irs               = OPTION_UNSPECIFIED;
 	popts->ifs               = OPTION_UNSPECIFIED;
 	popts->ips               = OPTION_UNSPECIFIED;
@@ -249,7 +253,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_flag(pstate,      "-f",   &popts->left_file_name);
 	ap_define_string_list_flag(pstate, "-l",   &popts->pleft_field_names);
 	ap_define_string_list_flag(pstate, "-r",   &popts->pright_field_names);
-	ap_define_string_list_flag(pstate, "-o",   &popts->poutput_field_names);
+	ap_define_string_list_flag(pstate, "-j",   &popts->poutput_field_names);
 	ap_define_false_flag(pstate,       "--np", &popts->emit_pairables);
 	ap_define_true_flag(pstate,        "--ul", &popts->emit_left_unpairables);
 	ap_define_true_flag(pstate,        "--ur", &popts->emit_right_unpairables);
@@ -261,10 +265,12 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 //  --ifs x
 //  --ips x
 
+	ap_define_string_flag(pstate,      "-i",  &popts->input_file_format);
 	// xxx to impl
 	// ap_define_char_flag(pstate,        "--irs",  &popts->irs);
 	// ap_define_char_flag(pstate,        "--ifs",  &popts->ifs);
 	// ap_define_char_flag(pstate,        "--ips",  &popts->ips);
+
 	ap_define_true_flag(pstate,        "--repifs",  &popts->allow_repeat_ifs);
 	ap_define_true_flag(pstate,        "--repips",  &popts->allow_repeat_ips);
 	ap_define_true_flag(pstate,        "--use-mmap",  &popts->use_mmap_for_read);
@@ -290,11 +296,6 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_join_usage(argv[0], verb);
 		return NULL;
 	}
-	if (popts->pleft_field_names == NULL) {
-		fprintf(stderr, "%s %s: need left field names\n", MLR_GLOBALS.argv0, verb);
-		mapper_join_usage(argv[0], verb);
-		return NULL;
-	}
 
 	if (!popts->emit_pairables && !popts->emit_left_unpairables && !popts->emit_right_unpairables) {
 		fprintf(stderr, "%s %s: all emit flags are unset; no output is possible.\n",
@@ -303,10 +304,15 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
+	if (popts->poutput_field_names == NULL) {
+		fprintf(stderr, "%s %s: need output field names\n", MLR_GLOBALS.argv0, verb);
+		mapper_join_usage(argv[0], verb);
+		return NULL;
+	}
+	if (popts->pleft_field_names == NULL)
+		popts->pleft_field_names = slls_copy(popts->poutput_field_names);
 	if (popts->pright_field_names == NULL)
 		popts->pright_field_names = slls_copy(popts->pleft_field_names);
-	if (popts->poutput_field_names == NULL)
-		popts->poutput_field_names = slls_copy(popts->pleft_field_names);
 
 	int llen = popts->pleft_field_names->length;
 	int rlen = popts->pright_field_names->length;

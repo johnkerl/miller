@@ -390,7 +390,7 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 ================================================================
 JOIN
 
-./test/../mlr join -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+./test/../mlr join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 o=1,x=a,y=s
 o=2,x=b,y=t
 o=2,x=c,y=t
@@ -405,7 +405,7 @@ o=3,x=f,y=x
 o=3,x=e,y=y
 o=3,x=f,y=y
 
-./test/../mlr join --ul -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+./test/../mlr join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 o=1,x=a,y=s
 o=2,x=b,y=t
 o=2,x=c,y=t
@@ -421,7 +421,7 @@ o=3,x=e,y=y
 o=3,x=f,y=y
 l=4,x=g
 
-./test/../mlr join --ur -u -f ./test/input/joina.dkvp -l l -r r -o o ./test/input/joinb.dkvp
+./test/../mlr join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 o=1,x=a,y=s
 o=2,x=b,y=t
 o=2,x=c,y=t
