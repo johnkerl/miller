@@ -5,9 +5,10 @@
 // ================================================================
 #define AP_INT_VALUE_FLAG   0xf6
 #define AP_INT_FLAG         0xe7
-#define AP_DOUBLE_FLAG      0xd8
-#define AP_STRING_FLAG      0xc9
-#define AP_STRING_LIST_FLAG 0xba
+#define AP_CHAR_FLAG        0xd8
+#define AP_DOUBLE_FLAG      0xc9
+#define AP_STRING_FLAG      0xba
+#define AP_STRING_LIST_FLAG 0xab
 
 typedef struct _ap_flag_def_t {
 	char* flag_name;

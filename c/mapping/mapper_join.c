@@ -223,25 +223,6 @@ static void mapper_join_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-e EMPTY\n");
 }
 
-//  --irs x
-//  --ifs x
-//  --ips x
-//  --idkvp
-//  --inidx
-//  --icsv
-//  --ipprint
-//  --ixtab
-//  --use-mmap
-//  --no-mmap
-
-//	char     irs;
-//	char     ifs;
-//	char     ips;
-//	int      allow_repeat_ifs;
-//	int      allow_repeat_ips;
-//	char*    ifmt;
-//	int      use_mmap_for_read;
-
 // ----------------------------------------------------------------
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
@@ -254,6 +235,14 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->emit_left_unpairables   = FALSE;
 	popts->emit_right_unpairables  = FALSE;
 
+	popts->irs               = OPTION_UNSPECIFIED;
+	popts->ifs               = OPTION_UNSPECIFIED;
+	popts->ips               = OPTION_UNSPECIFIED;
+	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
+	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
+	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
+	// xxx ifmt ...
+
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
@@ -265,6 +254,31 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "--ul", &popts->emit_left_unpairables);
 	ap_define_true_flag(pstate,        "--ur", &popts->emit_right_unpairables);
 	ap_define_true_flag(pstate,        "-u",   &popts->allow_unsorted_input);
+
+// xxx to do:
+// char flags:
+//  --irs x
+//  --ifs x
+//  --ips x
+
+	// xxx to impl
+	// ap_define_char_flag(pstate,        "--irs",  &popts->irs);
+	// ap_define_char_flag(pstate,        "--ifs",  &popts->ifs);
+	// ap_define_char_flag(pstate,        "--ips",  &popts->ips);
+	ap_define_true_flag(pstate,        "--repifs",  &popts->allow_repeat_ifs);
+	ap_define_true_flag(pstate,        "--repips",  &popts->allow_repeat_ips);
+	ap_define_true_flag(pstate,        "--use-mmap",  &popts->use_mmap_for_read);
+	ap_define_false_flag(pstate,       "--no-mmap",   &popts->use_mmap_for_read);
+
+// string flags:
+//	char*    ifmt;
+//  --idkvp
+//  --inidx
+//  --icsv
+//  --ipprint
+//  --ixtab
+//  --use-mmap
+//  --no-mmap
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_join_usage(argv[0], verb);
