@@ -9,7 +9,7 @@
 #include "cli/argparse.h"
 
 // xxx comment
-#define OPTION_UNSPECIFIED 0xff
+#define OPTION_UNSPECIFIED ((char)0xff)
 
 typedef struct _mapper_join_opts_t {
 	// xxx prefix for left  non-join field names
@@ -151,10 +151,28 @@ static void mapper_join_free(void* pvstate) {
 // the command line before the mapper-allocators are called, some is not
 // available until after.  Hence our obtaining these flags after mapper-alloc.)
 
-static void ingest_left_file(mapper_join_state_t* pstate) {
+static void merge_options(mapper_join_opts_t* popts) {
+	if (popts->input_file_format == NULL)
+		popts->input_file_format = MLR_GLOBALS.popts->ifmt;
+	if (popts->irs               == OPTION_UNSPECIFIED)
+		popts->irs = MLR_GLOBALS.popts->irs;
+	if (popts->ifs               == OPTION_UNSPECIFIED)
+		popts->ifs = MLR_GLOBALS.popts->ifs;
+	if (popts->ips               == OPTION_UNSPECIFIED)
+		popts->ips = MLR_GLOBALS.popts->ips;
+	if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
+		popts->allow_repeat_ifs = MLR_GLOBALS.popts->allow_repeat_ifs;
+	if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
+		popts->allow_repeat_ips = MLR_GLOBALS.popts->allow_repeat_ips;
+	if (popts->use_mmap_for_read == OPTION_UNSPECIFIED)
+		popts->use_mmap_for_read = MLR_GLOBALS.popts->use_mmap_for_read;
+}
 
-	cli_opts_t* popts = MLR_GLOBALS.popts;
-	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->ifmt, popts->use_mmap_for_read,
+static void ingest_left_file(mapper_join_state_t* pstate) {
+	mapper_join_opts_t* popts = pstate->popts;
+	merge_options(popts);
+
+	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 
 	void* pvhandle = plrec_reader->popen_func(pstate->popts->left_file_name);
@@ -245,7 +263,6 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
 	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
 	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
-	// xxx ifmt ...
 
 	char* verb = argv[(*pargi)++];
 
@@ -259,32 +276,14 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "--ur", &popts->emit_right_unpairables);
 	ap_define_true_flag(pstate,        "-u",   &popts->allow_unsorted_input);
 
-// xxx to do:
-// char flags:
-//  --irs x
-//  --ifs x
-//  --ips x
-
-	ap_define_string_flag(pstate,      "-i",  &popts->input_file_format);
-	// xxx to impl
-	// ap_define_char_flag(pstate,        "--irs",  &popts->irs);
-	// ap_define_char_flag(pstate,        "--ifs",  &popts->ifs);
-	// ap_define_char_flag(pstate,        "--ips",  &popts->ips);
-
-	ap_define_true_flag(pstate,        "--repifs",  &popts->allow_repeat_ifs);
-	ap_define_true_flag(pstate,        "--repips",  &popts->allow_repeat_ips);
-	ap_define_true_flag(pstate,        "--use-mmap",  &popts->use_mmap_for_read);
-	ap_define_false_flag(pstate,       "--no-mmap",   &popts->use_mmap_for_read);
-
-// string flags:
-//	char*    ifmt;
-//  --idkvp
-//  --inidx
-//  --icsv
-//  --ipprint
-//  --ixtab
-//  --use-mmap
-//  --no-mmap
+	ap_define_string_flag(pstate, "-i",         &popts->input_file_format);
+	ap_define_char_flag(pstate,   "--irs",      &popts->irs);
+	ap_define_char_flag(pstate,   "--ifs",      &popts->ifs);
+	ap_define_char_flag(pstate,   "--ips",      &popts->ips);
+	ap_define_true_flag(pstate,   "--repifs",   &popts->allow_repeat_ifs);
+	ap_define_true_flag(pstate,   "--repips",   &popts->allow_repeat_ips);
+	ap_define_true_flag(pstate,   "--use-mmap", &popts->use_mmap_for_read);
+	ap_define_false_flag(pstate,  "--no-mmap",  &popts->use_mmap_for_read);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_join_usage(argv[0], verb);

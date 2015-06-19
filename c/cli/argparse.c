@@ -76,6 +76,10 @@ void ap_define_int_value_flag(ap_state_t* pstate, char* flag_name, int intval, i
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, intval, pintval, 1));
 }
 
+void ap_define_char_flag(ap_state_t* pstate, char* flag_name, char* pcharval) {
+	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_CHAR_FLAG, 0, pcharval, 2));
+}
+
 void ap_define_int_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_FLAG, 0, pintval, 2));
 }
@@ -90,6 +94,24 @@ void ap_define_string_flag(ap_state_t* pstate, char* flag_name, char** pstring) 
 
 void ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pplist) {
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_LIST_FLAG, 0, pplist, 2));
+}
+
+// xxx make common w/ mlrcli.c: libify
+static int try_sep_from_arg(char* arg, char* pout) {
+	if (streq(arg, "tab"))
+		*pout = '\t';
+	else if (streq(arg, "space"))
+		*pout = ' ';
+	else if (streq(arg, "newline"))
+		*pout = '\n';
+	else if (streq(arg, "pipe"))
+		*pout = '|';
+	else if (streq(arg, "semicolon"))
+		*pout = '|';
+	else if (strlen(arg) != 1)
+		return FALSE;
+	*pout = arg[0];
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -123,12 +145,20 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 
 		if (pdef->type == AP_INT_VALUE_FLAG) {
 			*(int *)pdef->pval = pdef->intval;
+		} else if (pdef->type == AP_CHAR_FLAG) {
+			if (!try_sep_from_arg(argv[argi+1], (char *)pdef->pval)) {
+				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as character.\n",
+					argv[0], verb, argv[argi+1], argv[argi]);
+				fprintf(stderr, "\n");
+			}
+
 		} else if (pdef->type == AP_INT_FLAG) {
 			if (sscanf(argv[argi+1], "%d", (int *)pdef->pval) != 1) {
 				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as integer.\n",
 					argv[0], verb, argv[argi+1], argv[argi]);
 				fprintf(stderr, "\n");
 			}
+
 		} else if (pdef->type == AP_DOUBLE_FLAG) {
 			if (!mlr_try_double_from_string(argv[argi+1], (double *)pdef->pval)) {
 				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as double.\n",

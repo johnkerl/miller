@@ -15,6 +15,7 @@ TOP OF LIST
 !! join
 -> parametrized reader; global cliopts; overrides for join per se
 -> UTs
+-> mixed-format/separator UT cases
 
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
