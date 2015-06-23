@@ -17,7 +17,6 @@ typedef struct _join_bucket_t {
 } join_bucket_t;
 
 typedef struct _join_bucket_keeper_t {
-	slls_t*        pleft_field_names;
 	lrec_reader_t* plrec_reader;
 	void*          pvhandle;
 	context_t*     pctx;
@@ -58,7 +57,7 @@ typedef struct _mapper_join_state_t {
 	// xxx cmt for sorted
 	join_bucket_keeper_t* pjoin_bucket_keeper;
 
-	// xxx key_field -> join_field thruout
+	// xxx key_field -> join_field (or left_field?) thruout
 	lhmslv_t* pbuckets_by_key_field_names; // For unsorted input
 
 } mapper_join_state_t;
@@ -69,24 +68,8 @@ static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 
 // ----------------------------------------------------------------
-// xxx join_bucket_keeper_t:
-// ctor:
-// * lrec_reader_t* plrec_reader
-// * char* left_file_name
-// * slls_t* pleft_field_names
-// state:
-// * pvhandle
-// * lrec_reader_t* plrec_reader
-// * join_bucket_t* pbucket
-// method input:
-// * slls_t* (???) pjoin_field_values
-// method output:
-// * sllv_t* current_bucket (caller does not free)
-// * sllv_t* previous_bucket (caller frees)
-
 static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts) {
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
-	pkeeper->pleft_field_names = slls_copy(popts->pleft_field_names);
 
 	merge_options(popts);
 	pkeeper->plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
@@ -113,6 +96,19 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
 }
 
+// xxx join_bucket_keeper_t:
+// method input:
+// * slls_t* (???) pjoin_field_values
+// method output:
+// * sllv_t* current_bucket (caller does not free)
+// * sllv_t* previous_bucket (caller frees)
+
+// xxx cmt re who frees
+static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
+	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+{
+}
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	if (pright_rec == NULL) // End of input record stream
@@ -127,13 +123,18 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate, pctx);
 
+	sllv_t* pbucket_paired = NULL;
+	sllv_t* pbucket_left_unpaired = NULL;
+
+	join_bucket_keeper_emit(pkeeper, &pbucket_paired, &pbucket_left_unpaired);
+
+	sllv_t* pout_recs = sllv_alloc();
+
 	// xxx stub
-	sllv_t* pfoo = sllv_alloc();
 	if (pleft_rec != NULL)
-		sllv_add(pfoo, pleft_rec);
-	sllv_add(pfoo, pright_rec);
-	return pfoo;
-	//return sllv_single(pright_rec);
+		sllv_add(pout_recs, pleft_rec);
+	sllv_add(pout_recs, pright_rec);
+	return pout_recs;
 }
 
 // ----------------------------------------------------------------
