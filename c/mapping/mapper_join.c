@@ -17,8 +17,10 @@ typedef struct _join_bucket_t {
 } join_bucket_t;
 
 typedef struct _join_bucket_keeper_t {
+	slls_t*        pleft_field_names;
 	lrec_reader_t* plrec_reader;
 	void*          pvhandle;
+	context_t*     pctx;
 	join_bucket_t* pbucket;
 } join_bucket_keeper_t;
 
@@ -61,6 +63,9 @@ typedef struct _mapper_join_state_t {
 
 } mapper_join_state_t;
 
+// xxx reorder declarations & bodies ... use more prototypes if necessary.
+
+static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 
 // ----------------------------------------------------------------
@@ -79,17 +84,33 @@ static void ingest_left_file(mapper_join_state_t* pstate);
 // * sllv_t* current_bucket (caller does not free)
 // * sllv_t* previous_bucket (caller frees)
 
-static join_bucket_keeper_t* join_bucket_keeper_alloc(char* left_file_name) {
-	join_bucket_keeper_t* pjoin_bucket_keeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
+static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts) {
+	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
+	pkeeper->pleft_field_names = slls_copy(popts->pleft_field_names);
 
-	return pjoin_bucket_keeper;
+	merge_options(popts);
+	pkeeper->plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+
+	pkeeper->pvhandle = pkeeper->plrec_reader->popen_func(popts->left_file_name);
+	pkeeper->plrec_reader->psof_func(pkeeper->plrec_reader->pvstate);
+
+	pkeeper->pctx = mlr_malloc_or_die(sizeof(context_t));
+
+	pkeeper->pctx->nr = 0;
+	pkeeper->pctx->fnr = 0;
+	pkeeper->pctx->filenum = 1;
+	pkeeper->pctx->filename = popts->left_file_name;
+
+	return pkeeper;
 }
 
-static void join_bucket_keeper_free(join_bucket_keeper_t* pjoin_bucket_keeper) {
-	if (pjoin_bucket_keeper->pbucket != NULL)
-		if (pjoin_bucket_keeper->pbucket->precords != NULL)
-			sllv_free(pjoin_bucket_keeper->pbucket->precords);
-	free(pjoin_bucket_keeper);
+static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
+	if (pkeeper->pbucket != NULL)
+		if (pkeeper->pbucket->precords != NULL)
+			sllv_free(pkeeper->pbucket->precords);
+	free(pkeeper);
+	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
 }
 
 // ----------------------------------------------------------------
@@ -98,11 +119,21 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		return sllv_single(NULL);
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
-	if (pstate->popts->emit_pairables) {
-	}
+	// This can't be done in the CLI-parser since it requires information which
+	// isn't known until after the CLI-parser is called.
+	if (pstate->pjoin_bucket_keeper == NULL)
+		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(pstate->popts);
+	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper;
+
+	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate, pctx);
 
 	// xxx stub
-	return sllv_single(pright_rec);
+	sllv_t* pfoo = sllv_alloc();
+	if (pleft_rec != NULL)
+		sllv_add(pfoo, pleft_rec);
+	sllv_add(pfoo, pright_rec);
+	return pfoo;
+	//return sllv_single(pright_rec);
 }
 
 // ----------------------------------------------------------------
@@ -128,6 +159,8 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 	}
 
+	// This can't be done in the CLI-parser since it requires information which
+	// isn't known until after the CLI-parser is called.
 	if (pstate->pbuckets_by_key_field_names == NULL) // First call
 		ingest_left_file(pstate);
 
@@ -261,14 +294,13 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 	pstate->pleft_field_name_set        = hss_from_slls(popts->pleft_field_names);
 	pstate->pright_field_name_set       = hss_from_slls(popts->pright_field_names);
 	pstate->pbuckets_by_key_field_names = NULL;
+	pstate->pjoin_bucket_keeper = NULL;
 
 	pmapper->pvstate = (void*)pstate;
 	if (popts->allow_unsorted_input) {
 		pmapper->pprocess_func = mapper_join_process_unsorted;
-		pstate->pjoin_bucket_keeper = NULL;
 	} else {
 		pmapper->pprocess_func = mapper_join_process_sorted;
-		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(pstate->popts->left_file_name);
 	}
 	pmapper->pfree_func = mapper_join_free;
 
