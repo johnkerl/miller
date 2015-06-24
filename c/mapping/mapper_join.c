@@ -21,6 +21,8 @@ typedef struct _join_bucket_keeper_t {
 	void*          pvhandle;
 	context_t*     pctx;
 	join_bucket_t* pbucket;
+	lrec_t*        prec_peek;
+	int            exhausted;
 } join_bucket_keeper_t;
 
 typedef struct _mapper_join_opts_t {
@@ -79,11 +81,16 @@ static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts)
 	pkeeper->plrec_reader->psof_func(pkeeper->plrec_reader->pvstate);
 
 	pkeeper->pctx = mlr_malloc_or_die(sizeof(context_t));
-
-	pkeeper->pctx->nr = 0;
-	pkeeper->pctx->fnr = 0;
-	pkeeper->pctx->filenum = 1;
+	pkeeper->pctx->nr       = 0; // xxx make an init func & use it here & in stream.c?
+	pkeeper->pctx->fnr      = 0; // xxx incr this in the readers ...
+	pkeeper->pctx->filenum  = 1;
 	pkeeper->pctx->filename = popts->left_file_name;
+
+	pkeeper->pbucket             = mlr_malloc_or_die(sizeof(join_bucket_t));
+	pkeeper->pbucket->precords   = sllv_alloc();
+	pkeeper->pbucket->was_paired = FALSE;
+	pkeeper->prec_peek           = NULL;
+	pkeeper->exhausted           = FALSE;
 
 	return pkeeper;
 }
@@ -105,35 +112,106 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 
 // xxx cmt re who frees
 static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+	slls_t* pright_field_values, sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
+	*ppbucket_paired = pkeeper->pbucket->precords;
+	*ppbucket_left_unpaired = sllv_alloc(); // xxx temp
+
+	// xxx stub
+	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
+		pkeeper->pctx);
+	sllv_t* pfoo = sllv_alloc();
+	if (pleft_rec != NULL)
+		sllv_add(pfoo, pleft_rec);
+	*ppbucket_paired = pfoo;
 }
+
+// +-----------+-----------+-----------+-----------+-----------+-----------+
+// |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
+// + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  +
+// |       a   |       a   |   e       |       a   |   e   e   |   e   e   |
+// |       b   |   e       |   e       |   e   e   |   e       |   e   e   |
+// |   e       |   e       |   e       |   e       |   e       |   e       |
+// |   e       |   e       |       f   |   e       |       f   |   g   g   |
+// |   e       |       f   |   g       |   g       |   g       |   g       |
+// |   g       |   g       |   g       |   g       |   g       |           |
+// |   g       |   g       |       h   |           |           |           |
+// +-----------+-----------+-----------+-----------+-----------+-----------+
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
-	if (pright_rec == NULL) // End of input record stream
-		return sllv_single(NULL);
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	if (pstate->pjoin_bucket_keeper == NULL)
 		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(pstate->popts);
-	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper;
+	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
-	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate, pctx);
+	if (pright_rec == NULL) { // End of input record stream
+		if (!pstate->popts->emit_left_unpairables) {
+			return sllv_single(NULL);
+		}
 
-	sllv_t* pbucket_paired = NULL;
+		// xxx stub
+		return sllv_single(NULL);
+	}
+
+	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_field_names);
+	sllv_t* pleft_bucket = NULL;
 	sllv_t* pbucket_left_unpaired = NULL;
 
-	join_bucket_keeper_emit(pkeeper, &pbucket_paired, &pbucket_left_unpaired);
+	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
 
+	// xxx can we have left & right unpaired on the same call? work out some cases & ascii them in.
 	sllv_t* pout_recs = sllv_alloc();
 
-	// xxx stub
-	if (pleft_rec != NULL)
-		sllv_add(pout_recs, pleft_rec);
-	sllv_add(pout_recs, pright_rec);
+	if (pstate->popts->emit_left_unpairables) {
+		if (pbucket_left_unpaired->length >= 0) {
+			sllv_add_all(pout_recs, pbucket_left_unpaired);
+			sllv_free(pbucket_left_unpaired);
+		}
+	}
+
+	if (pstate->popts->emit_right_unpairables) {
+		if (pleft_bucket->length == 0) {
+			sllv_add(pout_recs, pright_rec);
+		}
+	}
+
+	if (pstate->popts->emit_pairables) {
+
+		// xxx make a method here shared between sorted & unsorted
+		for (sllve_t* pe = pleft_bucket->phead; pe != NULL; pe = pe->pnext) {
+			lrec_t* pleft_rec = pe->pvdata;
+			lrec_t* pout_rec = lrec_unbacked_alloc();
+
+			// add the joined-on fields
+			sllse_t* pg = pstate->popts->pleft_field_names->phead;
+			sllse_t* ph = pstate->popts->pright_field_names->phead;
+			sllse_t* pi = pstate->popts->poutput_field_names->phead;
+			for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
+				char* v = lrec_get(pleft_rec, pg->value);
+				lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
+			}
+
+			// add the left-record fields not already added
+			for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
+				if (!hss_has(pstate->pleft_field_name_set, pl->key))
+					lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			}
+
+			// add the right-record fields not already added
+			for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
+				if (!hss_has(pstate->pright_field_name_set, pr->key))
+					lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			}
+
+			sllv_add(pout_recs, pout_rec);
+		}
+
+	}
+
 	return pout_recs;
 }
 

@@ -18,6 +18,7 @@ void    sllv_free(sllv_t* plist);
 sllv_t* sllv_single(void* pvdata);
 void    sllv_add(sllv_t* plist, void* pvdata);
 void    sllv_reverse(sllv_t* plist);
+void    sllv_add_all(sllv_t* pthis, sllv_t* pthat);
 
 void*   sllv_pop(sllv_t* plist);
 

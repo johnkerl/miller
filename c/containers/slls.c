@@ -175,6 +175,25 @@ int slls_hash_func(slls_t *plist) {
 }
 
 // ----------------------------------------------------------------
+int slls_compare_lexically(slls_t* pa, slls_t* pb) {
+	sllse_t* pe = pa->phead;
+	sllse_t* pf = pb->phead;
+	while (TRUE) {
+		if (pe == NULL && pf == NULL)
+			return 0;
+		if (pe == NULL)
+			return 1;
+		if (pf == NULL)
+			return -1;
+		int rc = strcmp(pe->value, pf->value);
+		if (rc != 0)
+			return rc;
+		pe = pe->pnext;
+		pf = pf->pnext;
+	}
+}
+
+// ----------------------------------------------------------------
 #ifdef __SLLS_MAIN__
 int main(int argc, char** argv)  {
 	slls_t* plist = slls_from_line(argv[1], ',', FALSE);

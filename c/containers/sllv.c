@@ -69,6 +69,12 @@ void sllv_reverse(sllv_t* plist) {
 	plist->ptail = pnewtail;
 }
 
+void sllv_add_all(sllv_t* pthis, sllv_t* pthat) {
+	for (sllve_t* pe = pthat->phead; pe != NULL; pe = pe->pnext) {
+		sllv_add(pthis, pe->pvdata);
+	}
+}
+
 // ----------------------------------------------------------------
 void* sllv_pop(sllv_t* plist) {
 	// Zero entries in list

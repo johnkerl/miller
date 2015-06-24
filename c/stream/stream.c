@@ -63,6 +63,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 		lrec_t* pinrec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
 		if (pinrec == NULL)
 			break;
+		// incr inside the readers
 		pctx->nr++;
 		pctx->fnr++;
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
