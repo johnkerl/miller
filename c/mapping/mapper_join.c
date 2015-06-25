@@ -12,6 +12,7 @@
 #define OPTION_UNSPECIFIED ((char)0xff)
 
 typedef struct _join_bucket_t {
+	slls_t* pjoin_values;
 	sllv_t* precords;
 	int was_paired;
 } join_bucket_t;
@@ -86,16 +87,19 @@ static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts)
 	pkeeper->pctx->filenum  = 1;
 	pkeeper->pctx->filename = popts->left_file_name;
 
-	pkeeper->pbucket             = mlr_malloc_or_die(sizeof(join_bucket_t));
-	pkeeper->pbucket->precords   = sllv_alloc();
-	pkeeper->pbucket->was_paired = FALSE;
-	pkeeper->prec_peek           = NULL;
-	pkeeper->exhausted           = FALSE;
+	pkeeper->pbucket               = mlr_malloc_or_die(sizeof(join_bucket_t));
+	pkeeper->pbucket->pjoin_values = NULL;
+	pkeeper->pbucket->precords     = sllv_alloc();
+	pkeeper->pbucket->was_paired   = FALSE;
+	pkeeper->prec_peek             = NULL;
+	pkeeper->exhausted             = FALSE;
 
 	return pkeeper;
 }
 
 static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
+	if (pkeeper->pbucket->pjoin_values != NULL)
+		slls_free(pkeeper->pbucket->pjoin_values);
 	if (pkeeper->pbucket != NULL)
 		if (pkeeper->pbucket->precords != NULL)
 			sllv_free(pkeeper->pbucket->precords);
@@ -111,11 +115,34 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 // * sllv_t* previous_bucket (caller frees)
 
 // xxx cmt re who frees
-static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
-	slls_t* pright_field_values, sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
+	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
-	*ppbucket_paired = pkeeper->pbucket->precords;
-	*ppbucket_left_unpaired = sllv_alloc(); // xxx temp
+	*ppbucket_paired        = NULL;
+	*ppbucket_left_unpaired = NULL;
+
+	// xxx cmt why rec-peek
+	if (!pkeeper->exhausted && pkeeper->prec_peek == NULL) {
+		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+		if (pkeeper->prec_peek == NULL)
+			pkeeper->exhausted = TRUE;
+	}
+
+	if (pkeeper->exhausted) {
+		// xxx put pkeeper->pjoin_values into join_bucket_t
+		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
+		// xxx think through various cases
+		if (/* xxx stub */ cmp == 999) {
+			// rename: "bucket" used at different nesting levels. it's confusing.
+			*ppbucket_paired = pkeeper->pbucket->precords;
+		} else {
+			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+		}
+		pkeeper->pbucket = NULL;
+		return;
+	}
+
 
 	// xxx stub
 	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
@@ -137,6 +164,20 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 // |   g       |   g       |   g       |   g       |   g       |           |
 // |   g       |   g       |       h   |           |           |           |
 // +-----------+-----------+-----------+-----------+-----------+-----------+
+
+// Cases:
+// * 1st emit, right row <  1st left row
+// * 1st emit, right row == 1st left row
+// * 1st emit, right row >  1st left row
+// * subsequent emit, right row <  1st left row
+// * subsequent emit, right row == 1st left row
+// * subsequent emit, right row >  1st left row
+// * new left EOF, right row <  1st left row
+// * new left EOF, right row == 1st left row
+// * new left EOF, right row >  1st left row
+// * old left EOF, right row <  1st left row
+// * old left EOF, right row == 1st left row
+// * old left EOF, right row >  1st left row
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
@@ -167,7 +208,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	sllv_t* pout_recs = sllv_alloc();
 
 	if (pstate->popts->emit_left_unpairables) {
-		if (pbucket_left_unpaired->length >= 0) {
+		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length >= 0) {
 			sllv_add_all(pout_recs, pbucket_left_unpaired);
 			sllv_free(pbucket_left_unpaired);
 		}
