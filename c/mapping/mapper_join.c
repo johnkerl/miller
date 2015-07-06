@@ -11,6 +11,53 @@
 // xxx comment
 #define OPTION_UNSPECIFIED ((char)0xff)
 
+// ----------------------------------------------------------------
+// xxx left stats:
+// (0) pre-fill:    Lv == null, peek == null, leof = false
+// (1) midstream:   Lv != null, peek != null, leof = false
+// (2) last bucket: Lv != null, peek == null, leof = true
+// (3) leof:        Lv == null, peek == null, leof = true
+// ----------------------------------------------------------------
+// action on right input:
+//
+// if state == 0:
+//   try fill Lv & peek; next state is 1,2,3 & continue from there.
+
+// if state == 1:
+//   if Rv > Lv:
+//     Lunp <- bucket
+//     paired = null
+//     next state is 2
+//   else if Rv == Lv:
+//     Lunp = null
+//     paired = bucket
+//     next state is 1
+//   else if Rv < Lv:
+//     Lunp = null
+//     paired = null
+//     next state is 1
+
+// if state == 2:
+//   if Rv > Lv:
+//     Lunp <- bucket
+//     paired = null
+//     next state is 3
+//   else if Rv == Lv:
+//     Lunp = null
+//     paired = bucket
+//     next state is 2
+//   else if Rv < Lv:
+//     Lunp = null
+//     paired = null
+//     next state is 2
+
+// if state == 3:
+//   paired = null
+//   Lunp   = null
+//   next state is 3
+
+// ----------------------------------------------------------------
+
 typedef struct _join_bucket_t {
 	slls_t* pjoin_values;
 	sllv_t* precords;
