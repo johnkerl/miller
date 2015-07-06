@@ -129,8 +129,8 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* prigh
 			pkeeper->exhausted = TRUE;
 	}
 
+	// xxx not quite: only if *already* exhausted.
 	if (pkeeper->exhausted) {
-		// xxx put pkeeper->pjoin_values into join_bucket_t
 		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
 		// xxx think through various cases
 		if (/* xxx stub */ cmp == 999) {
@@ -143,6 +143,25 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* prigh
 		return;
 	}
 
+	// xxx now that we've got a peek record: fill the bucket with like records
+	// until there's a non-like on-deck.
+	//
+	// xxx do this only if it's time for a change.
+	//
+	// xxx rename "peek" to "on-deck"?
+
+#if 0
+	sllv_empty(pkeeper->pbucket);
+	while (TRUE) {
+		sllv_add(pkeeper->pbucket, pkeeper->prec_peek);
+		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+		get selected keys
+		if (pkeeper->prec_peek == NULL)
+			pkeeper->exhausted = TRUE;
+		x
+	}
+#endif
 
 	// xxx stub
 	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
