@@ -11,50 +11,18 @@
 // xxx comment
 #define OPTION_UNSPECIFIED ((char)0xff)
 
+#define LEFT_STATE_0_PREFILL     0
+#define LEFT_STATE_1_FULL        1
+#define LEFT_STATE_2_LAST_BUCKET 2
+#define LEFT_STATE_3_EOF         3
+
 // ----------------------------------------------------------------
-// xxx left stats:
+// xxx left state:
 // (0) pre-fill:    Lv == null, peek == null, leof = false
 // (1) midstream:   Lv != null, peek != null, leof = false
 // (2) last bucket: Lv != null, peek == null, leof = true
 // (3) leof:        Lv == null, peek == null, leof = true
 // ----------------------------------------------------------------
-// action on right input:
-//
-// if state == 0:
-//   try fill Lv & peek; next state is 1,2,3 & continue from there.
-
-// if state == 1:
-//   if Rv > Lv:
-//     Lunp <- bucket
-//     paired = null
-//     next state is 2
-//   else if Rv == Lv:
-//     Lunp = null
-//     paired = bucket
-//     next state is 1
-//   else if Rv < Lv:
-//     Lunp = null
-//     paired = null
-//     next state is 1
-
-// if state == 2:
-//   if Rv > Lv:
-//     Lunp <- bucket
-//     paired = null
-//     next state is 3
-//   else if Rv == Lv:
-//     Lunp = null
-//     paired = bucket
-//     next state is 2
-//   else if Rv < Lv:
-//     Lunp = null
-//     paired = null
-//     next state is 2
-
-// if state == 3:
-//   paired = null
-//   Lunp   = null
-//   next state is 3
 
 // ----------------------------------------------------------------
 
@@ -68,9 +36,13 @@ typedef struct _join_bucket_keeper_t {
 	lrec_reader_t* plrec_reader;
 	void*          pvhandle;
 	context_t*     pctx;
+
+	int            state;
+	slls_t*        pleft_field_values;
 	join_bucket_t* pbucket;
 	lrec_t*        prec_peek;
-	int            exhausted;
+	int            leof;
+
 } join_bucket_keeper_t;
 
 typedef struct _mapper_join_opts_t {
@@ -139,7 +111,8 @@ static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts)
 	pkeeper->pbucket->precords     = sllv_alloc();
 	pkeeper->pbucket->was_paired   = FALSE;
 	pkeeper->prec_peek             = NULL;
-	pkeeper->exhausted             = FALSE;
+	pkeeper->leof                  = FALSE;
+	pkeeper->state                 = LEFT_STATE_0_PREFILL;
 
 	return pkeeper;
 }
@@ -154,12 +127,26 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
 }
 
-// xxx join_bucket_keeper_t:
-// method input:
-// * slls_t* (???) pjoin_field_values
-// method output:
-// * sllv_t* current_bucket (caller does not free)
-// * sllv_t* previous_bucket (caller frees)
+// ----------------------------------------------------------------
+// xxx left state:
+// (0) pre-fill:    Lv == null, peek == null, leof = false
+// (1) midstream:   Lv != null, peek != null, leof = false
+// (2) last bucket: Lv != null, peek == null, leof = true
+// (3) leof:        Lv == null, peek == null, leof = true
+
+static int join_bucket_keeper_state(join_bucket_keeper_t* pkeeper) {
+	if (pkeeper->pleft_field_values == NULL) {
+		if (pkeeper->leof)
+			return LEFT_STATE_3_EOF;
+		else
+			return LEFT_STATE_0_PREFILL;
+	} else {
+		if (pkeeper->prec_peek == NULL)
+			return LEFT_STATE_2_LAST_BUCKET;
+		else
+			return LEFT_STATE_1_FULL;
+	}
+}
 
 // xxx cmt re who frees
 static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
@@ -167,57 +154,100 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* prigh
 {
 	*ppbucket_paired        = NULL;
 	*ppbucket_left_unpaired = NULL;
+	int cmp = 0;
 
-	// xxx cmt why rec-peek
-	if (!pkeeper->exhausted && pkeeper->prec_peek == NULL) {
-		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
-		if (pkeeper->prec_peek == NULL)
-			pkeeper->exhausted = TRUE;
+	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
+		// try fill Lv & peek; next state is 1,2,3 & continue from there.
+		pkeeper->state = join_bucket_keeper_state(pkeeper);
 	}
 
-	// xxx not quite: only if *already* exhausted.
-	if (pkeeper->exhausted) {
-		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
-		// xxx think through various cases
-		if (/* xxx stub */ cmp == 999) {
-			// rename: "bucket" used at different nesting levels. it's confusing.
-			*ppbucket_paired = pkeeper->pbucket->precords;
+	switch (pkeeper->state) {
+	case LEFT_STATE_1_FULL:
+	case LEFT_STATE_2_LAST_BUCKET: // Intentional fall-through
+		cmp = slls_compare_lexically(pkeeper->pleft_field_values, pright_field_values);
+		if (cmp < 0) {
+			//     Lunp <- bucket
+			//     paired = null
+			//     next state is 2 / 3 respectively
+		} else if (cmp == 0) {
+			//     Lunp = null
+			//     paired = bucket
+			//     next state is 1 / 2 respectively
 		} else {
-			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+			//     Lunp = null
+			//     paired = null
+			//     next state is 1 / 2 respectively
 		}
-		pkeeper->pbucket = NULL;
-		return;
+
+		break;
+
+	case LEFT_STATE_3_EOF:
+		break;
+
+	default:
+		fprintf(stderr, "%s: internal coding error: failed transition from prefill state.\n",
+			MLR_GLOBALS.argv0);
+		exit(1);
+		break;
 	}
 
-	// xxx now that we've got a peek record: fill the bucket with like records
-	// until there's a non-like on-deck.
-	//
-	// xxx do this only if it's time for a change.
-	//
-	// xxx rename "peek" to "on-deck"?
+	pkeeper->state = join_bucket_keeper_state(pkeeper);
 
-#if 0
-	sllv_empty(pkeeper->pbucket);
-	while (TRUE) {
-		sllv_add(pkeeper->pbucket, pkeeper->prec_peek);
-		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
-		get selected keys
-		if (pkeeper->prec_peek == NULL)
-			pkeeper->exhausted = TRUE;
-		x
-	}
-#endif
+//	// xxx cmt why rec-peek
+//	if (!pkeeper->leof && pkeeper->prec_peek == NULL) {
+//		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+//			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+//		if (pkeeper->prec_peek == NULL)
+//			pkeeper->leof = TRUE;
+//	}
+//
+//	// xxx not quite: only if *already* leof.
+//	if (pkeeper->leof) {
+//		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
+//		// xxx think through various cases
+//		if (/* xxx stub */ cmp == 999) {
+//			// rename: "bucket" used at different nesting levels. it's confusing.
+//			*ppbucket_paired = pkeeper->pbucket->precords;
+//		} else {
+//			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+//		}
+//		pkeeper->pbucket = NULL;
+//		return;
+//	}
+//
+//	// xxx now that we've got a peek record: fill the bucket with like records
+//	// until there's a non-like on-deck.
+//	//
+//	// xxx do this only if it's time for a change.
+//	//
+//	// xxx rename "peek" to "on-deck"?
+//
+//#if 0
+//	sllv_empty(pkeeper->pbucket);
+//	while (TRUE) {
+//		sllv_add(pkeeper->pbucket, pkeeper->prec_peek);
+//		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+//			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+//		get selected keys
+//		if (pkeeper->prec_peek == NULL)
+//			pkeeper->leof = TRUE;
+//		x
+//	}
+//#endif
+//
+//	// xxx stub
+//	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
+//		pkeeper->pctx);
+//	sllv_t* pfoo = sllv_alloc();
+//	if (pleft_rec != NULL)
+//		sllv_add(pfoo, pleft_rec);
+//	*ppbucket_paired = pfoo;
 
-	// xxx stub
-	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
-		pkeeper->pctx);
-	sllv_t* pfoo = sllv_alloc();
-	if (pleft_rec != NULL)
-		sllv_add(pfoo, pleft_rec);
-	*ppbucket_paired = pfoo;
 }
+
+// xxx need a drain-hook for returning the final left-unpaireds after right EOF.
+
+// ----------------------------------------------------------------
 
 // +-----------+-----------+-----------+-----------+-----------+-----------+
 // |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
