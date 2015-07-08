@@ -7,6 +7,10 @@
 
 * --ifs comma etc
 
+* allow multiline in put & filter DSLs: mlr put '$x=3;
+    $y=4;
+    $z=5'
+
 ================================================================
 TOP OF LIST
 

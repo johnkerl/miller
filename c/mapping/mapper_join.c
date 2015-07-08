@@ -27,9 +27,9 @@
 // ----------------------------------------------------------------
 
 typedef struct _join_bucket_t {
-	slls_t* pjoin_values;
+	slls_t* pleft_field_values;
 	sllv_t* precords;
-	int was_paired;
+	int     was_paired;
 } join_bucket_t;
 
 typedef struct _join_bucket_keeper_t {
@@ -38,7 +38,6 @@ typedef struct _join_bucket_keeper_t {
 	context_t*     pctx;
 
 	int            state;
-	slls_t*        pleft_field_values;
 	join_bucket_t* pbucket;
 	lrec_t*        prec_peek;
 	int            leof;
@@ -106,20 +105,20 @@ static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts)
 	pkeeper->pctx->filenum  = 1;
 	pkeeper->pctx->filename = popts->left_file_name;
 
-	pkeeper->pbucket               = mlr_malloc_or_die(sizeof(join_bucket_t));
-	pkeeper->pbucket->pjoin_values = NULL;
-	pkeeper->pbucket->precords     = sllv_alloc();
-	pkeeper->pbucket->was_paired   = FALSE;
-	pkeeper->prec_peek             = NULL;
-	pkeeper->leof                  = FALSE;
-	pkeeper->state                 = LEFT_STATE_0_PREFILL;
+	pkeeper->pbucket                     = mlr_malloc_or_die(sizeof(join_bucket_t));
+	pkeeper->pbucket->pleft_field_values = NULL;
+	pkeeper->pbucket->precords           = sllv_alloc();
+	pkeeper->prec_peek                   = NULL;
+	pkeeper->leof                        = FALSE;
+	pkeeper->state                       = LEFT_STATE_0_PREFILL;
 
 	return pkeeper;
 }
 
+// ----------------------------------------------------------------
 static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
-	if (pkeeper->pbucket->pjoin_values != NULL)
-		slls_free(pkeeper->pbucket->pjoin_values);
+	if (pkeeper->pbucket->pleft_field_values != NULL)
+		slls_free(pkeeper->pbucket->pleft_field_values);
 	if (pkeeper->pbucket != NULL)
 		if (pkeeper->pbucket->precords != NULL)
 			sllv_free(pkeeper->pbucket->precords);
@@ -134,8 +133,8 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 // (2) last bucket: Lv != null, peek == null, leof = true
 // (3) leof:        Lv == null, peek == null, leof = true
 
-static int join_bucket_keeper_state(join_bucket_keeper_t* pkeeper) {
-	if (pkeeper->pleft_field_values == NULL) {
+static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
+	if (pkeeper->pbucket->pleft_field_values == NULL) {
 		if (pkeeper->leof)
 			return LEFT_STATE_3_EOF;
 		else
@@ -148,8 +147,94 @@ static int join_bucket_keeper_state(join_bucket_keeper_t* pkeeper) {
 	}
 }
 
+// xxx put bucket & bucket-keeper into separate files with separate UTs
+static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_t* pleft_field_names) {
+	//pkeeper->pbucket;
+	//pkeeper->prec_peek;
+	//pkeeper->leof;
+
+	//pkeeper->plrec_reader;
+	//pkeeper->pvhandle;
+	//pkeeper->pctx;
+
+	//pbucket->pleft_field_values;
+	//pbucket->precords;
+
+	pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+		pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+	if (pkeeper->prec_peek == NULL) {
+		pkeeper->leof = TRUE;
+		return;
+	}
+	pkeeper->pbucket->pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+		pleft_field_names);
+
+	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+	pkeeper->prec_peek = NULL;
+	while (TRUE) {
+		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+		if (pkeeper->prec_peek == NULL) {
+			pkeeper->leof = TRUE;
+			break;
+		}
+		// xxx make a function to compare w/o copy
+		slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+			pleft_field_names);
+		int cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pnext_field_values);
+		if (cmp != 0) {
+			break;
+		}
+		sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+		pkeeper->prec_peek = NULL;
+	}
+
+//	if (pkeeper->leof) {
+//		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
+//		// xxx think through various cases
+//		if (/* xxx stub */ cmp == 999) {
+//			// rename: "bucket" used at different nesting levels. it's confusing.
+//			*ppbucket_paired = pkeeper->pbucket->precords;
+//		} else {
+//			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+//		}
+//		pkeeper->pbucket = NULL;
+//		return;
+//	}
+//
+//	// xxx now that we've got a peek record: fill the bucket with like records
+//	// until there's a non-like on-deck.
+//	//
+//	// xxx do this only if it's time for a change.
+//	//
+//	// xxx rename "peek" to "on-deck"?
+//
+//#if 0
+//	sllv_empty(pkeeper->pbucket);
+//	while (TRUE) {
+//		sllv_add(pkeeper->pbucket, pkeeper->prec_peek);
+//		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+//			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+//		get selected keys
+//		if (pkeeper->prec_peek == NULL)
+//			pkeeper->leof = TRUE;
+//		x
+//	}
+//#endif
+//
+//	// xxx stub
+//	lrec_t* pleft_rec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle, pkeeper->plrec_reader->pvstate,
+//		pkeeper->pctx);
+//	sllv_t* pfoo = sllv_alloc();
+//	if (pleft_rec != NULL)
+//		sllv_add(pfoo, pleft_rec);
+//	*ppbucket_paired = pfoo;
+
+}
+
 // xxx cmt re who frees
-static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
+static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
+	slls_t* pleft_field_names, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
 	*ppbucket_paired        = NULL;
@@ -158,13 +243,14 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* prigh
 
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
 		// try fill Lv & peek; next state is 1,2,3 & continue from there.
-		pkeeper->state = join_bucket_keeper_state(pkeeper);
+		join_bucket_keeper_initial_fill(pkeeper, pleft_field_names);
+		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
 
 	switch (pkeeper->state) {
 	case LEFT_STATE_1_FULL:
 	case LEFT_STATE_2_LAST_BUCKET: // Intentional fall-through
-		cmp = slls_compare_lexically(pkeeper->pleft_field_values, pright_field_values);
+		cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 		if (cmp < 0) {
 			//     Lunp <- bucket
 			//     paired = null
@@ -191,7 +277,7 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* prigh
 		break;
 	}
 
-	pkeeper->state = join_bucket_keeper_state(pkeeper);
+	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 
 //	// xxx cmt why rec-peek
 //	if (!pkeeper->leof && pkeeper->prec_peek == NULL) {
@@ -298,7 +384,8 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	sllv_t* pleft_bucket = NULL;
 	sllv_t* pbucket_left_unpaired = NULL;
 
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
+	join_bucket_keeper_emit(pkeeper, pstate->popts->pleft_field_names,
+		pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
 
 	// xxx can we have left & right unpaired on the same call? work out some cases & ascii them in.
 	sllv_t* pout_recs = sllv_alloc();
