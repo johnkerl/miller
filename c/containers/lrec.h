@@ -116,4 +116,12 @@ void lrec_dump_titled(char* msg, lrec_t* prec);
 // xxx cmt
 char* make_nidx_key(int idx, char* pfree_flags);
 
+// for unit-test
+lrec_t* lrec_literal_1(char* k1, char* v1);
+lrec_t* lrec_literal_2(char* k1, char* v1, char* k2, char* v2);
+lrec_t* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3);
+lrec_t* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3, char* k4, char* v4);
+
+void lrec_print(lrec_t* prec);
+
 #endif // LREC_H

@@ -387,3 +387,51 @@ static lrece_t* lrec_find_entry(lrec_t* prec, char* key) {
 	return NULL;
 #endif
 }
+
+// ----------------------------------------------------------------
+lrec_t* lrec_literal_1(char* k1, char* v1) {
+	lrec_t* prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, k1, v1);
+	return prec;
+}
+
+lrec_t* lrec_literal_2(char* k1, char* v1, char* k2, char* v2) {
+	lrec_t* prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, k1, v1);
+	lrec_put_no_free(prec, k2, v2);
+	return prec;
+}
+
+lrec_t* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3) {
+	lrec_t* prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, k1, v1);
+	lrec_put_no_free(prec, k2, v2);
+	lrec_put_no_free(prec, k3, v3);
+	return prec;
+}
+
+lrec_t* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3, char* k4, char* v4) {
+	lrec_t* prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, k1, v1);
+	lrec_put_no_free(prec, k2, v2);
+	lrec_put_no_free(prec, k3, v3);
+	lrec_put_no_free(prec, k4, v4);
+	return prec;
+}
+
+void lrec_print(lrec_t* prec) {
+	FILE* output_stream = stdout;
+	char rs = '\n';
+	char fs = ',';
+	char ps = '=';
+	int nf = 0;
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		if (nf > 0)
+			fputc(fs, output_stream);
+		fputs(pe->key, output_stream);
+		fputc(ps, output_stream);
+		fputs(pe->value, output_stream);
+		nf++;
+	}
+	fputc(rs, output_stream);
+}

@@ -38,7 +38,8 @@ typedef struct _join_bucket_keeper_t {
 	context_t*     pctx;
 
 	int            state;
-	join_bucket_t* pbucket;
+	slls_t*        pleft_field_values;
+	sllv_t*        precords;
 	lrec_t*        prec_peek;
 	int            leof;
 
@@ -105,23 +106,21 @@ static join_bucket_keeper_t* join_bucket_keeper_alloc(mapper_join_opts_t* popts)
 	pkeeper->pctx->filenum  = 1;
 	pkeeper->pctx->filename = popts->left_file_name;
 
-	pkeeper->pbucket                     = mlr_malloc_or_die(sizeof(join_bucket_t));
-	pkeeper->pbucket->pleft_field_values = NULL;
-	pkeeper->pbucket->precords           = sllv_alloc();
-	pkeeper->prec_peek                   = NULL;
-	pkeeper->leof                        = FALSE;
-	pkeeper->state                       = LEFT_STATE_0_PREFILL;
+	pkeeper->pleft_field_values = NULL;
+	pkeeper->precords           = sllv_alloc();
+	pkeeper->prec_peek          = NULL;
+	pkeeper->leof               = FALSE;
+	pkeeper->state              = LEFT_STATE_0_PREFILL;
 
 	return pkeeper;
 }
 
 // ----------------------------------------------------------------
 static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
-	if (pkeeper->pbucket->pleft_field_values != NULL)
-		slls_free(pkeeper->pbucket->pleft_field_values);
-	if (pkeeper->pbucket != NULL)
-		if (pkeeper->pbucket->precords != NULL)
-			sllv_free(pkeeper->pbucket->precords);
+	if (pkeeper->pleft_field_values != NULL)
+		slls_free(pkeeper->pleft_field_values);
+	if (pkeeper->precords != NULL)
+		sllv_free(pkeeper->precords);
 	free(pkeeper);
 	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
 }
@@ -134,7 +133,7 @@ static void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 // (3) leof:        Lv == null, peek == null, leof = true
 
 static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
-	if (pkeeper->pbucket->pleft_field_values == NULL) {
+	if (pkeeper->pleft_field_values == NULL) {
 		if (pkeeper->leof)
 			return LEFT_STATE_3_EOF;
 		else
@@ -155,10 +154,10 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_
 		pkeeper->leof = TRUE;
 		return;
 	}
-	pkeeper->pbucket->pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+	pkeeper->pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 		pleft_field_names);
 
-	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+	sllv_add(pkeeper->precords, pkeeper->prec_peek);
 	pkeeper->prec_peek = NULL;
 	while (TRUE) {
 		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
@@ -170,11 +169,11 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_
 		// xxx make a function to compare w/o copy
 		slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 			pleft_field_names);
-		int cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pnext_field_values);
+		int cmp = slls_compare_lexically(pkeeper->pleft_field_values, pnext_field_values);
 		if (cmp != 0) {
 			break;
 		}
-		sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+		sllv_add(pkeeper->precords, pkeeper->prec_peek);
 		pkeeper->prec_peek = NULL;
 	}
 }
@@ -184,9 +183,9 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_
 //		// xxx think through various cases
 //		if (/* xxx stub */ cmp == 999) {
 //			// rename: "bucket" used at different nesting levels. it's confusing.
-//			*ppbucket_paired = pkeeper->pbucket->precords;
+//			*ppbucket_paired = pkeeper->precords;
 //		} else {
-//			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+//			*ppbucket_left_unpaired = pkeeper->precords;
 //		}
 //		pkeeper->pbucket = NULL;
 //		return;
@@ -235,11 +234,6 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
 
-//typedef struct _join_bucket_t {
-//	slls_t* pleft_field_values;
-//	sllv_t* precords;
-//	int     was_paired;
-//} join_bucket_t;
 //
 //typedef struct _join_bucket_keeper_t {
 //	lrec_reader_t* plrec_reader;
@@ -247,7 +241,8 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 //	context_t*     pctx;
 //
 //	int            state;
-//	join_bucket_t* pbucket;
+//	slls_t* pleft_field_values;
+//	sllv_t* precords;
 //	lrec_t*        prec_peek;
 //	int            leof;
 //} join_bucket_keeper_t;
@@ -255,12 +250,12 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 	switch (pkeeper->state) {
 	case LEFT_STATE_1_FULL:
 	case LEFT_STATE_2_LAST_BUCKET: // Intentional fall-through
-		cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
+		cmp = slls_compare_lexically(pkeeper->pleft_field_values, pright_field_values);
 		if (cmp < 0) {
-			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+			*ppbucket_left_unpaired = pkeeper->precords;
 			// xxx advance left ...
 		} else if (cmp == 0) {
-			*ppbucket_paired = pkeeper->pbucket->precords;
+			*ppbucket_paired = pkeeper->precords;
 		}
 
 		break;
@@ -291,9 +286,9 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 //		// xxx think through various cases
 //		if (/* xxx stub */ cmp == 999) {
 //			// rename: "bucket" used at different nesting levels. it's confusing.
-//			*ppbucket_paired = pkeeper->pbucket->precords;
+//			*ppbucket_paired = pkeeper->precords;
 //		} else {
-//			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+//			*ppbucket_left_unpaired = pkeeper->precords;
 //		}
 //		pkeeper->pbucket = NULL;
 //		return;
