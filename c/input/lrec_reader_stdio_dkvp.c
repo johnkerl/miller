@@ -25,7 +25,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process(void* pvhandle, void* pvstate, con
 }
 
 // No-op for stateless readers such as this one.
-static void lrec_reader_csv_sof(void* pvstate) {
+static void lrec_reader_stdio_dkvp_sof(void* pvstate) {
 }
 
 // No-op for stateless readers such as this one.
@@ -45,7 +45,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int al
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_stdio_dkvp_process;
-	plrec_reader->psof_func     = &lrec_reader_csv_sof;
+	plrec_reader->psof_func     = &lrec_reader_stdio_dkvp_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_dkvp_free;
 
 	return plrec_reader;

@@ -19,6 +19,8 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, int all
 lrec_reader_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_ips);
 
+lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords);
+
 // ----------------------------------------------------------------
 // These entry points are made public for unit test
 lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs);

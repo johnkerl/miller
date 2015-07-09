@@ -149,17 +149,6 @@ static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 
 // xxx put bucket & bucket-keeper into separate files with separate UTs
 static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_t* pleft_field_names) {
-	//pkeeper->pbucket;
-	//pkeeper->prec_peek;
-	//pkeeper->leof;
-
-	//pkeeper->plrec_reader;
-	//pkeeper->pvhandle;
-	//pkeeper->pctx;
-
-	//pbucket->pleft_field_values;
-	//pbucket->precords;
-
 	pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
 		pkeeper->plrec_reader->pvstate, pkeeper->pctx);
 	if (pkeeper->prec_peek == NULL) {
@@ -188,6 +177,7 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_
 		sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
 		pkeeper->prec_peek = NULL;
 	}
+}
 
 //	if (pkeeper->leof) {
 //		int cmp = slls_compare_lexically(pkeeper->pbucket->pjoin_values, pright_field_values);
@@ -230,8 +220,6 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper, slls_
 //		sllv_add(pfoo, pleft_rec);
 //	*ppbucket_paired = pfoo;
 
-}
-
 // xxx cmt re who frees
 static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 	slls_t* pleft_field_names, slls_t* pright_field_values,
@@ -247,22 +235,32 @@ static void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper,
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
 
+//typedef struct _join_bucket_t {
+//	slls_t* pleft_field_values;
+//	sllv_t* precords;
+//	int     was_paired;
+//} join_bucket_t;
+//
+//typedef struct _join_bucket_keeper_t {
+//	lrec_reader_t* plrec_reader;
+//	void*          pvhandle;
+//	context_t*     pctx;
+//
+//	int            state;
+//	join_bucket_t* pbucket;
+//	lrec_t*        prec_peek;
+//	int            leof;
+//} join_bucket_keeper_t;
+
 	switch (pkeeper->state) {
 	case LEFT_STATE_1_FULL:
 	case LEFT_STATE_2_LAST_BUCKET: // Intentional fall-through
 		cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 		if (cmp < 0) {
-			//     Lunp <- bucket
-			//     paired = null
-			//     next state is 2 / 3 respectively
+			*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+			// xxx advance left ...
 		} else if (cmp == 0) {
-			//     Lunp = null
-			//     paired = bucket
-			//     next state is 1 / 2 respectively
-		} else {
-			//     Lunp = null
-			//     paired = null
-			//     next state is 1 / 2 respectively
+			*ppbucket_paired = pkeeper->pbucket->precords;
 		}
 
 		break;
