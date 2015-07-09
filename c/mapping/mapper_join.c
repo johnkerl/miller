@@ -69,8 +69,10 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
-	if (pstate->pjoin_bucket_keeper == NULL)
+	if (pstate->pjoin_bucket_keeper == NULL) {
+		merge_options(pstate->popts);
 		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(pstate->popts);
+	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
 	if (pright_rec == NULL) { // End of input record stream
