@@ -52,8 +52,7 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 }
 
 // ================================================================
-#ifdef LREC_READER_IN_MEMORY_MAIN
-// xxx move into separate dir
+#ifdef __LREC_READER_IN_MEMORY_MAIN__
 #include "output/lrec_writers.h"
 
 int main(int argc, char** argv) {
@@ -75,4 +74,4 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-#endif // LREC_READER_IN_MEMORY_MAIN
+#endif // __LREC_READER_IN_MEMORY_MAIN__
