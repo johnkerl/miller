@@ -5,6 +5,7 @@ mlrp
 mlr-unit-tester
 test-mlrutil
 test-lrec
+test-join-bucket-keeper
 a.out
 *.dSYM
 catc

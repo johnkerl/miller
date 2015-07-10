@@ -21,6 +21,18 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 containers/test_lrec.c
 
+TEST_JOIN_BUCKET_KEEPER_SRCS = lib/mlrutil.c lib/mlr_globals.c containers/lrec.c \
+containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
+containers/header_keeper.c \
+containers/join_bucket_keeper.c \
+input/lrec_reader_in_memory.c input/lrec_readers.c \
+input/lrec_reader_mmap_csv.c input/lrec_reader_stdio_csv.c \
+input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+input/file_reader_mmap.c input/file_reader_stdio.c \
+containers/test_join_bucket_keeper.c
+
 # ----------------------------------------------------------------
 # mlr  for default use.
 # mlrg for valgrind.
@@ -65,10 +77,11 @@ test: unit-test reg-test
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
 
-unit-test: test-mlrutil test-lrec
+unit-test: test-mlrutil test-lrec test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-lrec
+	valgrind --leak-check=full ./test-join-bucket-keeper
 	@echo
 	@echo DONE
 
@@ -87,6 +100,9 @@ test-lrec: .always
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
+
+test-join-bucket-keeper: .always
+	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
 
 # ----------------------------------------------------------------
 # Standalone mains
