@@ -18,31 +18,6 @@
 // (3) leof:        Lv == null, peek == null, leof = true
 // ----------------------------------------------------------------
 
-typedef struct _mapper_join_opts_t {
-	// xxx prefix for left  non-join field names
-	// xxx prefix for right non-join field names
-	slls_t*  pleft_field_names;
-	slls_t*  pright_field_names;
-	slls_t*  poutput_field_names;
-	int      allow_unsorted_input;
-	int      emit_pairables;
-	int      emit_left_unpairables;
-	int      emit_right_unpairables;
-
-	char*    left_file_name;
-
-	// These allow the joiner to have its own different format/delimiter for
-	// the left-file:
-	char*    input_file_format;
-	char     irs;
-	char     ifs;
-	char     ips;
-	int      allow_repeat_ifs;
-	int      allow_repeat_ips;
-	char*    ifmt;
-	int      use_mmap_for_read;
-} mapper_join_opts_t;
-
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* left_file_name,
