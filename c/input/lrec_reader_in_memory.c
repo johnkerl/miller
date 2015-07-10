@@ -53,7 +53,6 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 
 // ================================================================
 #ifdef __LREC_READER_IN_MEMORY_MAIN__
-#include "output/lrec_writers.h"
 
 int main(int argc, char** argv) {
 	sllv_t* precords = sllv_alloc();

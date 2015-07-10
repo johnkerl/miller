@@ -279,10 +279,8 @@ int main(int argc, char **argv) {
 	else {
 		printf("TEST_LREC: ALL UNIT TESTS PASSED\n");
 	}
-	printf("Tests      run:    %d\n", tests_run);
-	printf("Tests      failed: %d\n", tests_failed);
-	printf("Assertions run:    %d\n", assertions_run);
-	printf("Assertions failed: %d\n", assertions_failed);
+	printf("Tests      passed: %d of %d\n", tests_run - tests_failed, tests_run);
+	printf("Assertions passed: %d of %d\n", assertions_run - assertions_failed, assertions_run);
 
 	return result != 0;
 }
