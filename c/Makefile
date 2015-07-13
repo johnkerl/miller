@@ -21,7 +21,10 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 containers/test_lrec.c
 
-TEST_JOIN_BUCKET_KEEPER_SRCS = lib/mlrutil.c lib/mlr_globals.c containers/lrec.c \
+TEST_JOIN_BUCKET_KEEPER_SRCS = \
+lib/mlrutil.c lib/mlr_globals.c \
+mapping/context.c \
+containers/lrec.c \
 containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
 containers/header_keeper.c \
 containers/join_bucket_keeper.c \
@@ -87,6 +90,9 @@ unit-test: test-mlrutil test-lrec test-join-bucket-keeper
 
 reg-test:
 	./test/run
+
+tj: test-join-bucket-keeper
+	./test-join-bucket-keeper
 
 # Run this after unit-test expected output has changed, and is verified to be
 # OK. (Example: after adding new test cases in test/run.)

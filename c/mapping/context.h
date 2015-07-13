@@ -9,4 +9,6 @@ typedef struct _context_t {
 	char*     filename;
 } context_t;
 
+void context_init(context_t* pctx, char* first_file_name);
+
 #endif // CONTEXT_H
