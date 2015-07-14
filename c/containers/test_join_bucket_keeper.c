@@ -36,6 +36,23 @@ static void set_up(
 }
 
 // ----------------------------------------------------------------
+// xxx cases:
+//
+// * empty left
+// * single-key left, right >
+// * single-key left, right == then >
+// * single-key left, right < then >
+// * single-key left, right < then ==
+
+// * double-key left, right >
+// * double-key left, right == last then >
+// * double-key left, right between then >
+// * double-key left, right between then == then >
+
+
+
+
+// ----------------------------------------------------------------
 static char* test1() {
 	printf("test1 enter\n");
 
