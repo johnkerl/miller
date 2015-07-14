@@ -99,7 +99,20 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 
 	// Return the final left-unpaireds after right EOF.
 	if (pright_field_values == NULL) {
+		if (pkeeper->prec_peek != NULL) {
+			sllv_add(pkeeper->precords, pkeeper->prec_peek);
+			pkeeper->prec_peek = NULL;
+		}
+		while (TRUE) {
+			lrec_t* prec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
+				pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+			if (prec == NULL)
+				break;
+			sllv_add(pkeeper->precords, prec);
+		}
 		*ppbucket_left_unpaired = pkeeper->precords;
+		pkeeper->precords = NULL;
+
 		return;
 	}
 

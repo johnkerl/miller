@@ -52,20 +52,20 @@ static char* test1() {
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
 
+	char* rval = "0";
 	slls_t* pright_field_values = slls_alloc();
-	slls_add_no_free(pright_field_values, "0");
+	slls_add_no_free(pright_field_values, rval);
 	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	printf("match 0:\n");
+	printf("match %s:\n", rval);
 	mu_assert_lf(pbucket_paired == NULL);
 	mu_assert_lf(pbucket_left_unpaired == NULL);
 
 	join_bucket_keeper_emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	printf("unpaired 2:\n");
+	printf("unpaired:\n");
 	mu_assert_lf(pbucket_paired == NULL);
 	mu_assert_lf(pbucket_left_unpaired != NULL);
 	printf("#lunp=%d\n", pbucket_left_unpaired->length);
 	mu_assert_lf(pbucket_left_unpaired->length == 6);
-	mu_assert_lf(pbucket_left_unpaired == NULL);
 	for (sllve_t* pe = pbucket_left_unpaired->phead; pe != NULL; pe = pe->pnext) {
 		lrec_t* prec = pe->pvdata;
 		lrec_print(prec);
@@ -93,10 +93,11 @@ static char* test2() {
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
 
+	char* rval = "6";
 	slls_t* pright_field_values = slls_alloc();
-	slls_add_no_free(pright_field_values, "6");
+	slls_add_no_free(pright_field_values, rval);
 	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	printf("match 6:\n");
+	printf("match %s:\n", rval);
 	mu_assert_lf(pbucket_paired == NULL);
 	mu_assert_lf(pbucket_left_unpaired != NULL);
 	printf("#lunp=%d\n", pbucket_left_unpaired->length);
