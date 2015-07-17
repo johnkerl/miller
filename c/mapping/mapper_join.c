@@ -4,17 +4,12 @@
 #include "containers/sllv.h"
 #include "containers/lhmslv.h"
 #include "containers/mixutil.h"
+#include "containers/join_bucket_keeper.h"
 #include "mapping/mappers.h"
 #include "input/lrec_readers.h"
 #include "cli/argparse.h"
 
 #define OPTION_UNSPECIFIED ((char)0xff) // xxx comment
-
-typedef struct _join_bucket_t {
-	slls_t* pleft_field_values;
-	sllv_t* precords;
-	int     was_paired;
-} join_bucket_t;
 
 // ----------------------------------------------------------------
 
