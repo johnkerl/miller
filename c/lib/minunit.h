@@ -8,6 +8,8 @@
 #define MU_STRINGIFY_2(x) #x
 #define MU_STRINGIFY_1(x) MU_STRINGIFY_2(x)
 
+// xxx temp #define mu_assert_lf_spec(test, file, line) mu_assert(file " line " MU_STRINGIFY_1(line), test)
+
 #define mu_assert_lf(test) mu_assert(__FILE__ " line " MU_STRINGIFY_1(__LINE__), test)
 
 #define mu_assert(message, test) do { assertions_run++; if (!(test)) {assertions_failed++; return message;} } while (0)

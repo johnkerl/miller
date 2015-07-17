@@ -214,7 +214,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
-	if (pkeeper->pbucket->was_paired) {
+	if (!pkeeper->pbucket->was_paired) {
 		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
 	} else {
 		sllv_free(pkeeper->pbucket->precords);
