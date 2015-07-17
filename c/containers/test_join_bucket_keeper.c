@@ -126,9 +126,7 @@ static char* test2() {
 	sllv_t* pbucket_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("6");
-
 	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", pright_field_values->phead->value));
 
