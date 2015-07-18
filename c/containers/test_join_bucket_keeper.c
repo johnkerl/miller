@@ -41,6 +41,7 @@ static int list_is_null(sllv_t* plist, char* desc, char* rval) {
 		return TRUE;
 	} else {
 		printf("%s should be null with rval=\"%s\" and is not\n", desc, rval);
+		lrec_print_list_with_prefix(plist, "  ");
 		return FALSE;
 	}
 }
@@ -78,6 +79,7 @@ static int list_has_length(sllv_t* plist, int length, char* desc, char* rval) {
 
 // ----------------------------------------------------------------
 static char* test1() {
+	printf("----------------------------------------------------------------\n");
 	printf("test1 enter\n");
 
 	slls_t* pleft_field_names;
@@ -110,6 +112,7 @@ static char* test1() {
 
 // ----------------------------------------------------------------
 static char* test2() {
+	printf("----------------------------------------------------------------\n");
 	printf("test2 enter\n");
 
 	slls_t* pleft_field_names;
@@ -136,6 +139,7 @@ static char* test2() {
 
 // ----------------------------------------------------------------
 static char* test3() {
+	printf("----------------------------------------------------------------\n");
 	printf("test3 enter\n");
 
 	slls_t* pleft_field_names;
@@ -175,6 +179,7 @@ static char* test3() {
 
 // ----------------------------------------------------------------
 static char* test4() {
+	printf("----------------------------------------------------------------\n");
 	printf("test4 enter\n");
 
 	slls_t* pleft_field_names;
@@ -190,13 +195,10 @@ static char* test4() {
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
 
-	slls_t* pright_field_values = slls_alloc();
-	slls_add_no_free(pright_field_values, "2");
-
+	slls_t* pright_field_values = slls_single_no_free("2");
 	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(pbucket_paired == NULL);
-	mu_assert_lf(pbucket_left_unpaired != NULL);
-	mu_assert_lf(pbucket_left_unpaired->length == 2);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(pbucket_left_unpaired, 2, "unpaired", pright_field_values->phead->value));
 
 	printf("test4 exit\n");
 	printf("\n");
@@ -205,15 +207,10 @@ static char* test4() {
 
 // ================================================================
 static char * run_all_tests() {
-	printf("----------------------------------------------------------------\n");
 	mu_run_test(test1);
-	printf("----------------------------------------------------------------\n");
 	mu_run_test(test2);
-	printf("----------------------------------------------------------------\n");
 	mu_run_test(test3);
-	printf("----------------------------------------------------------------\n");
 	mu_run_test(test4);
-	printf("----------------------------------------------------------------\n");
 	return 0;
 }
 
