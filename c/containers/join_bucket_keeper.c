@@ -44,34 +44,35 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(input_file_format, use_mmap_for_read,
 		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips);
 
-	void* pvhandle = plrec_reader->popen_func(left_file_name); // xxx move this ...
-	plrec_reader->psof_func(plrec_reader->pvstate); // xxx move this ...
-
-	context_t* pctx = mlr_malloc_or_die(sizeof(context_t));
-	context_init(pctx, left_file_name);
-
-	return join_bucket_keeper_alloc_from_reader(plrec_reader, pvhandle, pctx, pleft_field_names);
+	return join_bucket_keeper_alloc_from_reader(plrec_reader, left_file_name, pleft_field_names);
 }
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	lrec_reader_t* plrec_reader,
-	void* pvhandle,
-	context_t* pctx,
-	slls_t* pleft_field_names
-) {
+	char*          left_file_name,
+	slls_t*        pleft_field_names)
+{
 
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
+
+	void* pvhandle = plrec_reader->popen_func(left_file_name);
+	plrec_reader->psof_func(plrec_reader->pvstate);
+
+	context_t* pctx = mlr_malloc_or_die(sizeof(context_t));
+	context_init(pctx, left_file_name);
 
 	pkeeper->plrec_reader = plrec_reader;
 	pkeeper->pvhandle = pvhandle;
 	pkeeper->pctx = pctx;
 
 	pkeeper->pleft_field_names           = slls_copy(pleft_field_names); // xxx be sure the caller frees its own
+
 	pkeeper->pbucket                     = mlr_malloc_or_die(sizeof(join_bucket_t));
 	pkeeper->pbucket->precords           = sllv_alloc();
 	pkeeper->pbucket->pleft_field_values = NULL;
 	pkeeper->pbucket->was_paired         = FALSE;
+
 	pkeeper->prec_peek                   = NULL;
 	pkeeper->leof                        = FALSE;
 	pkeeper->state                       = LEFT_STATE_0_PREFILL;
@@ -165,6 +166,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 	pkeeper->pbucket->pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 		pkeeper->pleft_field_names);
 	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+	pkeeper->pbucket->was_paired = FALSE;
 	pkeeper->prec_peek = NULL;
 	while (TRUE) {
 		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
@@ -274,7 +276,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		// keep seeking & filling the bucket until change of lvals; try to get a rec peek.
 		// this will not be a match.
 		join_bucket_keeper_fill(pkeeper);
-		pkeeper->pbucket->was_paired = FALSE;
 		*ppbucket_paired = pkeeper->pbucket->precords;
 
 		// xxx undup some code from initial_fill?

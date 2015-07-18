@@ -86,11 +86,7 @@ static char* test1() {
 	lrec_reader_t* preader;
 	set_up(&pleft_field_names, &preader);
 
-	void* pvhandle = NULL;  // xxx move these into the jbk obj?
-	context_t* pctx = NULL; // xxx revisit
-
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, pvhandle, pctx,
-		pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
 
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
@@ -119,10 +115,7 @@ static char* test2() {
 	lrec_reader_t* preader;
 	set_up(&pleft_field_names, &preader);
 
-	void* pvhandle = NULL;  // xxx move these into the jbk obj?
-	context_t* pctx = NULL; // xxx revisit
-
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, pvhandle, pctx, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
 
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
@@ -146,11 +139,7 @@ static char* test3() {
 	lrec_reader_t* preader;
 	set_up(&pleft_field_names, &preader);
 
-	void* pvhandle = NULL;  // xxx move these into the jbk obj?
-	context_t* pctx = NULL; // xxx revisit
-
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, pvhandle, pctx,
-		pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
 
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;
@@ -186,11 +175,7 @@ static char* test4() {
 	lrec_reader_t* preader;
 	set_up(&pleft_field_names, &preader);
 
-	void* pvhandle = NULL;  // xxx move these into the jbk obj?
-	context_t* pctx = NULL; // xxx revisit
-
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, pvhandle, pctx,
-		pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
 
 	sllv_t* pbucket_paired;
 	sllv_t* pbucket_left_unpaired;

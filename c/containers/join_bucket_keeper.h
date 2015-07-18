@@ -40,9 +40,8 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	lrec_reader_t* plrec_reader,
-	void* pvhandle,
-	context_t* pctx,
-	slls_t* pleft_field_names);
+	char*          left_file_name,
+	slls_t*        pleft_field_names);
 
 void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper);
 
