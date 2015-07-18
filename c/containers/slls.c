@@ -133,9 +133,14 @@ char* slls_join(slls_t* plist, char fs) {
 }
 
 void slls_debug_print(slls_t* plist, FILE* output_stream) {
-	char* string = slls_join(plist, ',');
-	fprintf(output_stream, "%s\n", string);
-	free(string);
+	if (plist == NULL) {
+		fprintf(output_stream, "NULL\n");
+	} else {
+		// xxx redo this without join ... just for-loop and print it
+		char* string = slls_join(plist, ',');
+		fprintf(output_stream, "[%s]\n", string);
+		free(string);
+	}
 }
 
 // ----------------------------------------------------------------

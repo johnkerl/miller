@@ -51,4 +51,7 @@ void join_bucket_keeper_emit(
 	sllv_t**              ppbucket_paired,
 	sllv_t**              ppbucket_left_unpaired);
 
+void join_bucket_print(join_bucket_t* pbucket, char* indent);
+void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper);
+
 #endif // JOIN_BUCKET_KEEPER_H

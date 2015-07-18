@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
@@ -103,10 +104,14 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 		join_bucket_keeper_initial_fill(pkeeper);
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
+	printf("YYY\n"); join_bucket_keeper_print(pkeeper); printf("\n"); // xxx
 
 	if (pright_field_values != NULL) {
 		if (pkeeper->state == LEFT_STATE_1_FULL || pkeeper->state == LEFT_STATE_2_LAST_BUCKET) {
 			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
+			printf("LFV = "); slls_debug_print(pkeeper->pbucket->pleft_field_values, stdout);
+			printf("RFV = "); slls_debug_print(pright_field_values, stdout);
+			printf("CMP = %d\n", cmp); // xxx
 			if (cmp < 0) {
 				// Advance left until match or LEOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
@@ -216,11 +221,11 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
-	if (!pkeeper->pbucket->was_paired) {
-		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
-	} else {
+	if (pkeeper->pbucket->was_paired) {
 		sllv_free(pkeeper->pbucket->precords);
 		*ppbucket_left_unpaired = sllv_alloc();
+	} else {
+		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
 	}
 	pkeeper->pbucket->precords = sllv_alloc();
 
@@ -245,6 +250,9 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	// xxx method to compare without extracting slls
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek, pkeeper->pleft_field_names);
 	int cmp = slls_compare_lexically(pleft_field_values, pright_field_values);
+	printf("PLFV = "); slls_debug_print(pleft_field_values, stdout);
+	printf("PRFV = "); slls_debug_print(pright_field_values, stdout);
+	printf("PCMP = %d\n", cmp); // xxx
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
 
@@ -273,6 +281,9 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		pkeeper->pbucket->was_paired = TRUE;
 		*ppbucket_paired = pkeeper->pbucket->precords;
 	} else if (cmp > 0) {
+
+		// xxx to do
+
 		// keep seeking & filling the bucket until change of lvals; try to get a rec peek.
 		// this will not be a match.
 		join_bucket_keeper_fill(pkeeper);
@@ -307,6 +318,38 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 	}
 
 	pkeeper->pbucket->precords = NULL;
+}
+
+void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper) {
+	printf("pbucket at %p:\n", pkeeper);
+	printf("  pvhandle = %p\n", pkeeper->pvhandle);
+	context_print(pkeeper->pctx, "  ");
+	printf("  pleft_field_names = ");
+	slls_debug_print(pkeeper->pleft_field_names, stdout); // xxx remove stdout from api; xxx remove embedded "\n"
+	join_bucket_print(pkeeper->pbucket, "  ");
+	printf("  prec_peek = ");
+	if (pkeeper->prec_peek == NULL) {
+		printf("null\n");
+	} else {
+		lrec_print(pkeeper->prec_peek);
+	}
+	printf("  leof  = %d\n", pkeeper->leof);
+	printf("  state = %d\n", pkeeper->state);
+}
+
+void join_bucket_print(join_bucket_t* pbucket, char* indent) {
+	printf("%spbucket at %p:\n", indent, pbucket);
+	printf("%s  pleft_field_values = ", indent);
+	slls_debug_print(pbucket->pleft_field_values, stdout);
+	if (pbucket->precords == NULL) {
+		printf("%s  precords:\n", indent);
+		printf("%s    (null)\n", indent);
+	} else {
+		// xxx throughout, replace indent string with indent level ...
+		printf("%s  precords (length=%d):\n", indent, pbucket->precords->length);
+		lrec_print_list_with_prefix(pbucket->precords, "      ");
+	}
+	printf("%s  was_paired = %d\n", indent, pbucket->was_paired);
 }
 
 // +-----------+-----------+-----------+-----------+-----------+-----------+
