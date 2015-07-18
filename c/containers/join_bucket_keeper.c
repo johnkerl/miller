@@ -104,14 +104,10 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 		join_bucket_keeper_initial_fill(pkeeper);
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
-	printf("YYY\n"); join_bucket_keeper_print(pkeeper); printf("\n"); // xxx
 
 	if (pright_field_values != NULL) {
 		if (pkeeper->state == LEFT_STATE_1_FULL || pkeeper->state == LEFT_STATE_2_LAST_BUCKET) {
 			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
-			printf("LFV = "); slls_debug_print(pkeeper->pbucket->pleft_field_values, stdout);
-			printf("RFV = "); slls_debug_print(pright_field_values, stdout);
-			printf("CMP = %d\n", cmp); // xxx
 			if (cmp < 0) {
 				// Advance left until match or LEOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
@@ -227,7 +223,14 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	} else {
 		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
 	}
+
+	// xxx make an init method
 	pkeeper->pbucket->precords = sllv_alloc();
+	if (pkeeper->pbucket->pleft_field_values != NULL) {
+		slls_free(pkeeper->pbucket->pleft_field_values);
+		pkeeper->pbucket->pleft_field_values = NULL;
+	}
+	pkeeper->pbucket->was_paired = FALSE;
 
 	if (pkeeper->prec_peek == NULL) { // left EOF
 		return;
@@ -250,9 +253,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	// xxx method to compare without extracting slls
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek, pkeeper->pleft_field_names);
 	int cmp = slls_compare_lexically(pleft_field_values, pright_field_values);
-	printf("PLFV = "); slls_debug_print(pleft_field_values, stdout);
-	printf("PRFV = "); slls_debug_print(pright_field_values, stdout);
-	printf("PCMP = %d\n", cmp); // xxx
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
 
@@ -269,7 +269,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 			// xxx make a function to compare w/o copy
 			slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 				pkeeper->pleft_field_names);
-			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pnext_field_values);
+			cmp = slls_compare_lexically(pnext_field_values, pright_field_values);
 			if (cmp >= 0)
 				break;
 		}
@@ -287,9 +287,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		// keep seeking & filling the bucket until change of lvals; try to get a rec peek.
 		// this will not be a match.
 		join_bucket_keeper_fill(pkeeper);
-		*ppbucket_paired = pkeeper->pbucket->precords;
 
-		// xxx undup some code from initial_fill?
 	}
 }
 

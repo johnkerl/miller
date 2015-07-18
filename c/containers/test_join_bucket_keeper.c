@@ -14,6 +14,8 @@ int tests_failed      = 0;
 int assertions_run    = 0;
 int assertions_failed = 0;
 
+static int tjbk_verbose = FALSE;
+
 // ----------------------------------------------------------------
 static void set_up(
 	slls_t** ppleft_field_names,
@@ -36,6 +38,22 @@ static void set_up(
 
 	*ppleft_field_names = pleft_field_names;
 	*ppreader = preader;
+}
+
+static void emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
+	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+{
+	if (tjbk_verbose) {
+		printf("BEFORE\n");
+		join_bucket_keeper_print(pkeeper);
+		printf("\n");
+	}
+	join_bucket_keeper_emit(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
+	if (tjbk_verbose) {
+		printf("AFTER\n");
+		join_bucket_keeper_print(pkeeper);
+		printf("\n");
+	}
 }
 
 static int list_is_null(sllv_t* plist, char* desc, char* rval) {
@@ -80,12 +98,12 @@ static char* test1() {
 	sllv_t* pbucket_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 
 	printf("\n");
-	join_bucket_keeper_emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
 	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", "(eof)"));
 
@@ -109,7 +127,7 @@ static char* test2() {
 	sllv_t* pbucket_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("6");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", pright_field_values->phead->value));
 
@@ -133,19 +151,19 @@ static char* test3() {
 	sllv_t* pbucket_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 
 	printf("\n");
 	pright_field_values = slls_single_no_free("1");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 
 	printf("\n");
 	pright_field_values = slls_single_no_free("1");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 
@@ -171,9 +189,7 @@ static char* test4() {
 
 	slls_t* pright_field_values = slls_single_no_free("2");
 
-	printf("AAA\n"); join_bucket_keeper_print(pkeeper); printf("\n");
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	printf("BBB\n"); join_bucket_keeper_print(pkeeper); printf("\n");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_has_length(pbucket_left_unpaired, 2, "unpaired", pright_field_values->phead->value));
@@ -221,7 +237,11 @@ static char * run_all_tests() {
 	return 0;
 }
 
+// xxx make a -v flag with conditional bucket-dumps :)
 int main(int argc, char **argv) {
+	if ((argc == 2) && streq(argv[1], "-v"))
+		tjbk_verbose = TRUE;
+
 	char *result = run_all_tests();
 	printf("\n");
 	if (result != 0) {
