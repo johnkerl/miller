@@ -105,7 +105,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 	}
 
-	if (pright_field_values != NULL) {
+	if (pright_field_values != NULL) { // Not right EOF
 		if (pkeeper->state == LEFT_STATE_1_FULL || pkeeper->state == LEFT_STATE_2_LAST_BUCKET) {
 			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 			if (cmp < 0) {
@@ -123,7 +123,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 			exit(1);
 		}
 
-	} else { // Return the final left-unpaireds after right EOF.
+	} else { // Right EOF: return the final left-unpaireds.
 		join_bucket_keeper_drain(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
 	}
 
@@ -296,7 +296,6 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 {
 	// 1. Any records already in pkeeper->pbucket->precords (current bucket)
 	if (pkeeper->pbucket->was_paired) {
-		*ppbucket_paired = pkeeper->pbucket->precords;
 		*ppbucket_left_unpaired = sllv_alloc();
 	} else {
 		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
