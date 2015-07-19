@@ -219,7 +219,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 {
 	if (pkeeper->pbucket->was_paired) {
 		sllv_free(pkeeper->pbucket->precords);
-		*ppbucket_left_unpaired = sllv_alloc();
 	} else {
 		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
 	}
@@ -255,6 +254,9 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	int cmp = slls_compare_lexically(pleft_field_values, pright_field_values);
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
+
+		if (ppbucket_left_unpaired == NULL)
+			*ppbucket_left_unpaired = sllv_alloc();
 
 		while (TRUE) {
 			sllv_add(*ppbucket_left_unpaired, pkeeper->prec_peek);
