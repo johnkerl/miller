@@ -17,6 +17,12 @@ int assertions_failed = 0;
 static int tjbk_verbose = FALSE;
 
 // ----------------------------------------------------------------
+static sllv_t* make_records_empty() {
+	sllv_t* precords = sllv_alloc();
+	return precords;
+}
+
+// ----------------------------------------------------------------
 static sllv_t* make_records_113335() {
 	sllv_t* precords = sllv_alloc();
 	sllv_add(precords, lrec_literal_2("l","1", "b","10"));
@@ -91,6 +97,56 @@ static int list_has_length(sllv_t* plist, int length, char* desc, char* rval) {
 		lrec_print_list_with_prefix(plist, "  ");
 		return FALSE;
 	}
+}
+
+// ----------------------------------------------------------------
+static char* test00() {
+	printf("----------------------------------------------------------------\n");
+	printf("test00 enter\n");
+
+	slls_t* pleft_field_names;
+	lrec_reader_t* preader;
+	set_up(make_records_empty(), &pleft_field_names, &preader);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	sllv_t* pbucket_paired;
+	sllv_t* pbucket_left_unpaired;
+
+	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", "(eof)"));
+	printf("\n");
+
+	printf("test00 exit\n");
+	printf("\n");
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char* test01() {
+	printf("----------------------------------------------------------------\n");
+	printf("test01 enter\n");
+
+	slls_t* pleft_field_names;
+	lrec_reader_t* preader;
+	set_up(make_records_empty(), &pleft_field_names, &preader);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	sllv_t* pbucket_paired;
+	sllv_t* pbucket_left_unpaired;
+
+	slls_t* pright_field_values = slls_single_no_free("0");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
+	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", "(eof)"));
+	printf("\n");
+
+	printf("test01 exit\n");
+	printf("\n");
+	return 0;
 }
 
 // ----------------------------------------------------------------
@@ -359,6 +415,8 @@ static char* test5() {
 
 // ================================================================
 static char * run_all_tests() {
+	mu_run_test(test00);
+	mu_run_test(test01);
 	mu_run_test(test0);
 	mu_run_test(test1);
 	mu_run_test(test2);

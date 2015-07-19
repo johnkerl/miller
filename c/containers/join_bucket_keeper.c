@@ -255,7 +255,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
 
-		if (ppbucket_left_unpaired == NULL)
+		if (*ppbucket_left_unpaired == NULL)
 			*ppbucket_left_unpaired = sllv_alloc();
 
 		while (TRUE) {

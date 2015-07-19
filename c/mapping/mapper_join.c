@@ -44,10 +44,11 @@ typedef struct _mapper_join_state_t {
 	hss_t*   pleft_field_name_set;
 	hss_t*   pright_field_name_set;
 
-	// xxx cmt for sorted
-	//xxx join_bucket_keeper_t* pjoin_bucket_keeper;
+	// For sorted input
+	join_bucket_keeper_t* pjoin_bucket_keeper;
 
-	// xxx key_field -> join_field (or left_field?) thruout
+	// For unsorted input
+	// xxx rename: key_field -> join_field (or left_field?) thruout
 	lhmslv_t* pbuckets_by_key_field_names; // For unsorted input
 
 } mapper_join_state_t;
@@ -59,14 +60,23 @@ static void ingest_left_file(mapper_join_state_t* pstate);
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
-#if 0
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	if (pstate->pjoin_bucket_keeper == NULL) {
+		mapper_join_opts_t* popts = pstate->popts;
 		merge_options(pstate->popts);
-		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(pstate->popts);
+		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
+			popts->left_file_name,
+			popts->input_file_format,
+			popts->use_mmap_for_read,
+			popts->irs,
+			popts->ifs,
+			popts->allow_repeat_ifs,
+			popts->ips,
+			popts->allow_repeat_ips,
+			popts->pleft_field_names);
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
@@ -83,8 +93,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	sllv_t* pleft_bucket = NULL;
 	sllv_t* pbucket_left_unpaired = NULL;
 
-	join_bucket_keeper_emit(pkeeper, pstate->popts->pleft_field_names,
-		pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
+	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
 
 	// xxx can we have left & right unpaired on the same call? work out some cases & ascii them in.
 	sllv_t* pout_recs = sllv_alloc();
@@ -97,12 +106,12 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	if (pstate->popts->emit_right_unpairables) {
-		if (pleft_bucket->length == 0) {
+		if (pleft_bucket == NULL || pleft_bucket->length == 0) {
 			sllv_add(pout_recs, pright_rec);
 		}
 	}
 
-	if (pstate->popts->emit_pairables) {
+	if (pstate->popts->emit_pairables && pleft_bucket != NULL) {
 
 		// xxx make a method here shared between sorted & unsorted
 		for (sllve_t* pe = pleft_bucket->phead; pe != NULL; pe = pe->pnext) {
@@ -136,9 +145,6 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	return pout_recs;
-#else
-	return NULL;
-#endif
 }
 
 // ----------------------------------------------------------------
@@ -222,10 +228,8 @@ static void mapper_join_free(void* pvstate) {
 		slls_free(pstate->popts->pright_field_names);
 	if (pstate->popts->poutput_field_names != NULL)
 		slls_free(pstate->popts->poutput_field_names);
-
-	// xxx
-	// if (pstate->pjoin_bucket_keeper != NULL)
-		// join_bucket_keeper_free(pstate->pjoin_bucket_keeper);
+	if (pstate->pjoin_bucket_keeper != NULL)
+		join_bucket_keeper_free(pstate->pjoin_bucket_keeper);
 }
 
 // ----------------------------------------------------------------
