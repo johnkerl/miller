@@ -305,6 +305,18 @@ static char* test5() {
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
+	pright_field_values = slls_single_no_free("3");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_has_length(pbucket_paired, 3, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
+	pright_field_values = slls_single_no_free("4");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
 	pright_field_values = slls_single_no_free("4");
 	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
@@ -317,15 +329,27 @@ static char* test5() {
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
+	pright_field_values = slls_single_no_free("5");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_has_length(pbucket_paired, 1, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
 	pright_field_values = slls_single_no_free("6");
 	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 3, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
+	pright_field_values = slls_single_no_free("6");
+	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
+	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
 	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
 	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 1, "unpaired", "(eof)"));
+	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	printf("test5 exit\n");
