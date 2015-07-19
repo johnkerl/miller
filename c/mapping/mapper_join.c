@@ -153,12 +153,14 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 	if (pright_rec == NULL) { // End of input record stream
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_t* poutrecs = sllv_alloc();
-			for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
-				join_bucket_t* pbucket = pe->pvvalue;
-				if (!pbucket->was_paired) {
-					for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
-						lrec_t* pleft_rec = pf->pvdata;
-						sllv_add(poutrecs, pleft_rec);
+			if (pstate->pbuckets_by_key_field_names != NULL) { // E.g. empty right input
+				for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
+					join_bucket_t* pbucket = pe->pvvalue;
+					if (!pbucket->was_paired) {
+						for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
+							lrec_t* pleft_rec = pf->pvdata;
+							sllv_add(poutrecs, pleft_rec);
+						}
 					}
 				}
 			}
