@@ -112,6 +112,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#having-fields">having-fields</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#head">head</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#histogram">histogram</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#join">join</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
@@ -984,6 +985,42 @@ bin_lo   bin_hi   x_count x2_count x3_count
 0.700000 0.800000 1007    560      420
 0.800000 0.900000 986     571      383
 0.900000 1.000000 1013    507      341
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="join"/><h2>join</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr join --help
+Usage: mlr join [options]
+Joins records from specified left file name with records from all file names at the end of the Miller argument list.
+Functionality is essentially the same as the system "join" command, but for record streams.
+Options:
+  -f {left file name}
+  -j {a,b,c}   Comma-separated join-field names for output
+  -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.
+  -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.
+  --np         Do not emit paired records
+  --ul         Emit unpaired records from the left file
+  --ur         Emit unpaired records from the right file(s)
+  -u           Enable unsorted input. In this case, the entire left file will be loaded into memory.
+               Without -u, records must be sorted lexically by their join-field names, else not all
+               records will be paired.
+File-format options default to those for the right file names on the Miller argument list, but may be overridden
+for the left file as follows. Please see the main "mlr --help" for more information on syntax for these arguments.
+  -i {one of csv,dkvp,nidx,pprint,xtab}
+  --irs {record-separator character}
+  --ifs {field-separator character}
+  --ips {pair-separator character}
+  --repifs
+  --repips
+  --use-mmap
+  --no-mmap
+Please see http://johnkerl.org/miller/doc/reference.html for more information including examples.
 </pre>
 </div>
 <p/>
