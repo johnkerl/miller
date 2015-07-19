@@ -390,52 +390,265 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 ================================================================
 JOIN
 
-./test/../mlr join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o=1,x=a,y=s
-o=2,x=b,y=t
-o=2,x=c,y=t
-o=2,x=d,y=t
-o=2,x=b,y=v
-o=2,x=c,y=v
-o=2,x=d,y=v
-o=3,x=e,y=w
-o=3,x=f,y=w
-o=3,x=e,y=x
-o=3,x=f,y=x
-o=3,x=e,y=y
-o=3,x=f,y=y
+./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
 
-./test/../mlr join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o=1,x=a,y=s
-o=2,x=b,y=t
-o=2,x=c,y=t
-o=2,x=d,y=t
-o=2,x=b,y=v
-o=2,x=c,y=v
-o=2,x=d,y=v
-o=3,x=e,y=w
-o=3,x=f,y=w
-o=3,x=e,y=x
-o=3,x=f,y=x
-o=3,x=e,y=y
-o=3,x=f,y=y
-l=4,x=g
+./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
 
-./test/../mlr join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o=1,x=a,y=s
-o=2,x=b,y=t
-o=2,x=c,y=t
-o=2,x=d,y=t
-o=2,x=b,y=v
-o=2,x=c,y=v
-o=2,x=d,y=v
-o=3,x=e,y=w
-o=3,x=f,y=w
-o=3,x=e,y=x
-o=3,x=f,y=x
-o=3,x=e,y=y
-o=3,x=f,y=y
-r=5,y=z
+l x
+4 g
+
+./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+./test/../mlr --opprint join --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+r y
+5 z
+
+./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+./test/../mlr --opprint join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+./test/../mlr --opprint join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+./test/../mlr --opprint join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+./test/../mlr --opprint join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+./test/../mlr --opprint join --ul --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+l x
+4 g
 
 
 ================================================================

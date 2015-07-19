@@ -91,6 +91,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		}
 		sllv_free(pbucket_left_unpaired);
 		sllv_add(pout_recs, NULL);
+		return pout_recs;
 	}
 
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_field_names);

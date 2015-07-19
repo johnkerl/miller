@@ -101,9 +101,21 @@ run_command $mlr sort -f a -r b -nf x -nr y $indir/abixy
 # ----------------------------------------------------------------
 announce JOIN
 
-run_command $mlr join      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr join --ul -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr join --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ur      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+
+run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ur      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
 
 # ----------------------------------------------------------------
 announce STATS
