@@ -38,7 +38,6 @@
 }
 
 put_dsl_body ::= put_dsl_assignments.                // For scan-from-string
-put_dsl_body ::= put_dsl_assignments PUT_DSL_EOL. // For scan-from-stdin
 
 // ----------------------------------------------------------------
 put_dsl_assignments ::= put_dsl_assignment.
