@@ -9,7 +9,8 @@
 #include "input/lrec_readers.h"
 #include "cli/argparse.h"
 
-#define OPTION_UNSPECIFIED ((char)0xff) // xxx comment
+// Join options, if unspecified, default to respective main options.
+#define OPTION_UNSPECIFIED ((char)0xff)
 
 // ----------------------------------------------------------------
 

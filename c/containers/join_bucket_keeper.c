@@ -105,7 +105,6 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt re who frees, and which
 void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
@@ -122,7 +121,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 		if (pkeeper->state == LEFT_STATE_1_FULL || pkeeper->state == LEFT_STATE_2_LAST_BUCKET) {
 			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 			if (cmp < 0) {
-				// Advance left until match or LEOF.
+				// Advance left until match or left EOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
 			} else if (cmp == 0) {
 				pkeeper->pbucket->was_paired = TRUE;
@@ -215,7 +214,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		*pprecords_left_unpaired = pkeeper->pbucket->precords;
 	}
 
-	// xxx make an init method
 	pkeeper->pbucket->precords = sllv_alloc();
 	if (pkeeper->pbucket->pleft_field_values != NULL) {
 		slls_free(pkeeper->pbucket->pleft_field_values);
@@ -226,20 +224,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (pkeeper->prec_peek == NULL) { // left EOF
 		return;
 	}
-
-	// +-----------+-----------+-----------+-----------+-----------+-----------+
-	// |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
-	// + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  +
-	// |       a   |       a   |   e       |       a   |   e   e   |   e   e   |
-	// |       b   |   e       |   e       |   e   e   |   e       |   e   e   |
-	// |   e       |   e       |   e       |   e       |   e       |   e       |
-	// |   e       |   e       |       f * |   e       |       f * |   g   g * |
-	// |   e       |       f * |   g p     |   g       |   g p     |   g       |
-	// |   g       |   g p     |   g       |   g       |   g       |           |
-	// |   g       |   g       |       h * |           |           | (no p)    |
-	// +-----------+-----------+-----------+-----------+-----------+-----------+
-	// |           |   #####   |   #####   |           |   #####   |   #####   |
-	// +-----------+-----------+-----------+-----------+-----------+-----------+
 
 	// xxx method to compare without extracting slls
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek, pkeeper->pleft_field_names);
@@ -332,7 +316,6 @@ void join_bucket_print(join_bucket_t* pbucket, char* indent) {
 		printf("%s  precords:\n", indent);
 		printf("%s    (null)\n", indent);
 	} else {
-		// xxx throughout, replace indent string with indent level ...
 		printf("%s  precords (length=%d):\n", indent, pbucket->precords->length);
 		lrec_print_list_with_prefix(pbucket->precords, "      ");
 	}

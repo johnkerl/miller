@@ -45,6 +45,8 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 
 void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper);
 
+// *pprecords_paired should not be freed by the caller.
+// *pprecords_left_unpaired should be freed by the caller.
 void join_bucket_keeper_emit(
 	join_bucket_keeper_t* pkeeper,
 	slls_t*               pright_field_values,
