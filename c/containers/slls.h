@@ -27,11 +27,13 @@ void    slls_add_with_free(slls_t* plist, char* value);
 void    slls_add_no_free(slls_t* plist, char* value);
 int     slls_equals(slls_t* pa, slls_t* pb);
 slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs);
-// xxx cmt for debug: inefficient. (wideband usage is direct-to-ostream.)
-char*   slls_join(slls_t* plist, char fs);
-void    slls_debug_print(slls_t* plist, FILE* output_stream);
+
 void    slls_reverse(slls_t* plist);
 int     slls_hash_func(slls_t *plist);
 int     slls_compare_lexically(slls_t* pa, slls_t* pb);
+
+// Debug routines:
+char*   slls_join(slls_t* plist, char fs);
+void    slls_print(slls_t* plist);
 
 #endif // SLLS_H

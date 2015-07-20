@@ -7,6 +7,20 @@
 #include "containers/join_bucket_keeper.h"
 #include "input/lrec_readers.h"
 
+// xxx overview here ...
+
+// +-----------+-----------+-----------+-----------+-----------+-----------+
+// |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
+// + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  +
+// |       a   |       a   |   e       |       a   |   e   e   |   e   e   |
+// |       b   |   e       |   e       |   e   e   |   e       |   e   e   |
+// |   e       |   e       |   e       |   e       |   e       |   e       |
+// |   e       |   e       |       f   |   e       |       f   |   g   g   |
+// |   e       |       f   |   g       |   g       |   g       |   g       |
+// |   g       |   g       |   g       |   g       |   g       |           |
+// |   g       |   g       |       h   |           |           |           |
+// +-----------+-----------+-----------+-----------+-----------+-----------+
+
 #define LEFT_STATE_0_PREFILL     0
 #define LEFT_STATE_1_FULL        1
 #define LEFT_STATE_2_LAST_BUCKET 2
@@ -191,8 +205,6 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 //   else ... parallel initial_fill. :)
 // Post-conditions:
 // * xxx
-// * xxx
-// * xxx
 
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
@@ -298,7 +310,8 @@ void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper) {
 	printf("  pvhandle = %p\n", pkeeper->pvhandle);
 	context_print(pkeeper->pctx, "  ");
 	printf("  pleft_field_names = ");
-	slls_debug_print(pkeeper->pleft_field_names, stdout); // xxx remove stdout from api; xxx remove embedded "\n"
+	slls_print(pkeeper->pleft_field_names);
+	printf("\n");
 	join_bucket_print(pkeeper->pbucket, "  ");
 	printf("  prec_peek = ");
 	if (pkeeper->prec_peek == NULL) {
@@ -313,7 +326,8 @@ void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper) {
 void join_bucket_print(join_bucket_t* pbucket, char* indent) {
 	printf("%spbucket at %p:\n", indent, pbucket);
 	printf("%s  pleft_field_values = ", indent);
-	slls_debug_print(pbucket->pleft_field_values, stdout);
+	slls_print(pbucket->pleft_field_values);
+	printf("\n");
 	if (pbucket->precords == NULL) {
 		printf("%s  precords:\n", indent);
 		printf("%s    (null)\n", indent);
@@ -324,30 +338,3 @@ void join_bucket_print(join_bucket_t* pbucket, char* indent) {
 	}
 	printf("%s  was_paired = %d\n", indent, pbucket->was_paired);
 }
-
-// +-----------+-----------+-----------+-----------+-----------+-----------+
-// |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
-// + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  +
-// |       a   |       a   |   e       |       a   |   e   e   |   e   e   |
-// |       b   |   e       |   e       |   e   e   |   e       |   e   e   |
-// |   e       |   e       |   e       |   e       |   e       |   e       |
-// |   e       |   e       |       f   |   e       |       f   |   g   g   |
-// |   e       |       f   |   g       |   g       |   g       |   g       |
-// |   g       |   g       |   g       |   g       |   g       |           |
-// |   g       |   g       |       h   |           |           |           |
-// +-----------+-----------+-----------+-----------+-----------+-----------+
-
-// Cases:
-// * 1st emit, right row <  1st left row
-// * 1st emit, right row == 1st left row
-// * 1st emit, right row >  1st left row
-// * subsequent emit, right row <  1st left row
-// * subsequent emit, right row == 1st left row
-// * subsequent emit, right row >  1st left row
-// * new left EOF, right row <  1st left row
-// * new left EOF, right row == 1st left row
-// * new left EOF, right row >  1st left row
-// * old left EOF, right row <  1st left row
-// * old left EOF, right row == 1st left row
-// * old left EOF, right row >  1st left row
-
