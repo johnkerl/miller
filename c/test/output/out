@@ -406,6 +406,22 @@ o x y
 3 e y
 3 f y
 
+./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
 ./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 o x y
 1 a s
@@ -425,7 +441,45 @@ o x y
 l x
 4 g
 
+./test/../mlr --opprint join -u --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
 ./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+./test/../mlr --opprint join -u --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -466,11 +520,41 @@ l x
 r y
 5 z
 
+./test/../mlr --opprint join -u --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+l x
+4 g
+
 ./test/../mlr --opprint join --np --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 l x
 4 g
 
+./test/../mlr --opprint join -u --np --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+l x
+4 g
+
 ./test/../mlr --opprint join --np --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+r y
+5 z
+
+./test/../mlr --opprint join -u --np --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
 r y
 5 z
 
@@ -481,11 +565,32 @@ l x
 r y
 5 z
 
+./test/../mlr --opprint join -u --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+r y
+5 z
+
+l x
+4 g
+
 ./test/../mlr --opprint join -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+
+./test/../mlr --opprint join -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
 
 ./test/../mlr --opprint join --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
 
+./test/../mlr --opprint join -u --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+
 ./test/../mlr --opprint join --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+r y
+1 s
+2 t
+2 v
+3 w
+3 x
+3 y
+5 z
+
+./test/../mlr --opprint join -u --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -505,9 +610,31 @@ r y
 3 y
 5 z
 
+./test/../mlr --opprint join -u --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+r y
+1 s
+2 t
+2 v
+3 w
+3 x
+3 y
+5 z
+
 ./test/../mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
 
+./test/../mlr --opprint join -u --np --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+
 ./test/../mlr --opprint join --np --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+r y
+1 s
+2 t
+2 v
+3 w
+3 x
+3 y
+5 z
+
+./test/../mlr --opprint join -u --np --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -527,7 +654,19 @@ r y
 3 y
 5 z
 
+./test/../mlr --opprint join -u --np --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+r y
+1 s
+2 t
+2 v
+3 w
+3 x
+3 y
+5 z
+
 ./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+
+./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 
 ./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
@@ -539,9 +678,31 @@ l x
 3 f
 4 g
 
+./test/../mlr --opprint join -u --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+l x
+1 a
+2 b
+2 c
+2 d
+3 e
+3 f
+4 g
+
 ./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 
+./test/../mlr --opprint join -u --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+
 ./test/../mlr --opprint join --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+l x
+1 a
+2 b
+2 c
+2 d
+3 e
+3 f
+4 g
+
+./test/../mlr --opprint join -u --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -561,7 +722,19 @@ l x
 3 f
 4 g
 
+./test/../mlr --opprint join -u --np --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+l x
+1 a
+2 b
+2 c
+2 d
+3 e
+3 f
+4 g
+
 ./test/../mlr --opprint join --np --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+
+./test/../mlr --opprint join -u --np --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 
 ./test/../mlr --opprint join --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
@@ -573,156 +746,15 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-./test/../mlr --opprint join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
+./test/../mlr --opprint join -u --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
+1 a
+2 b
+2 c
+2 d
+3 e
+3 f
 4 g
-
-./test/../mlr --opprint join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-./test/../mlr --opprint join --ul --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-l x
-4 g
-
-./test/../mlr --opprint join --np --ul -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-l x
-4 g
-
-./test/../mlr --opprint join --np --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-r y
-5 z
-
-./test/../mlr --opprint join --np --ul --ur -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-r y
-5 z
-
-l x
-4 g
-
-./test/../mlr --opprint join -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-
-./test/../mlr --opprint join --ul -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-
-./test/../mlr --opprint join --ur -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-r y
-1 s
-2 t
-2 v
-3 w
-3 x
-3 y
-5 z
-
-./test/../mlr --opprint join --ul --ur -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-r y
-1 s
-2 t
-2 v
-3 w
-3 x
-3 y
-5 z
-
-./test/../mlr --opprint join --np --ul -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-
-./test/../mlr --opprint join --np --ur -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-r y
-1 s
-2 t
-2 v
-3 w
-3 x
-3 y
-5 z
-
-./test/../mlr --opprint join --np --ul --ur -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
-r y
-1 s
-2 t
-2 v
-3 w
-3 x
-3 y
-5 z
-
-./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --ul -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --ur -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --ul --ur -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --np --ul -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --np --ur -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
-
-./test/../mlr --opprint join --np --ul --ur -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
 
 
 ================================================================

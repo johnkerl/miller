@@ -150,6 +150,11 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
+	// This can't be done in the CLI-parser since it requires information which
+	// isn't known until after the CLI-parser is called.
+	if (pstate->pbuckets_by_key_field_names == NULL) // First call
+		ingest_left_file(pstate);
+
 	if (pright_rec == NULL) { // End of input record stream
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_t* poutrecs = sllv_alloc();
@@ -167,11 +172,6 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			return sllv_single(NULL);
 		}
 	}
-
-	// This can't be done in the CLI-parser since it requires information which
-	// isn't known until after the CLI-parser is called.
-	if (pstate->pbuckets_by_key_field_names == NULL) // First call
-		ingest_left_file(pstate);
 
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_field_names);
 	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
