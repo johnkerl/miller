@@ -303,7 +303,7 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 	pstate->pleft_field_name_set        = hss_from_slls(popts->pleft_field_names);
 	pstate->pright_field_name_set       = hss_from_slls(popts->pright_field_names);
 	pstate->pbuckets_by_key_field_names = NULL;
-	// xxx pstate->pjoin_bucket_keeper = NULL;
+	pstate->pjoin_bucket_keeper         = NULL;
 
 	pmapper->pvstate = (void*)pstate;
 	if (popts->allow_unsorted_input) {

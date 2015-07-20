@@ -13,7 +13,6 @@
 #define LEFT_STATE_3_EOF         3
 
 // ----------------------------------------------------------------
-// xxx left state:
 // (0) pre-fill:    Lv == null, peek == null, leof = false
 // (1) midstream:   Lv != null, peek != null, leof = false
 // (2) last bucket: Lv != null, peek == null, leof = true
@@ -130,13 +129,6 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 }
 
-// ----------------------------------------------------------------
-// xxx left state:
-// (0) pre-fill:    Lv == null, peek == null, leof = false
-// (1) midstream:   Lv != null, peek != null, leof = false
-// (2) last bucket: Lv != null, peek == null, leof = true
-// (3) leof:        Lv == null, peek == null, leof = true
-
 static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 	if (pkeeper->pbucket->pleft_field_values == NULL) {
 		if (pkeeper->leof)
@@ -201,18 +193,6 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 // * xxx
 // * xxx
 // * xxx
-
-//	// xxx collect into a join_bucket_t
-//  join_bucket_t* pbucket {
-//	  slls_t*        pleft_field_values;
-//	  sllv_t*        precords;
-//	  int            was_paired;
-//	}
-//
-//	lrec_t*        prec_peek;
-//	int            leof;
-//	int            state;
-//} join_bucket_keeper_t;
 
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
@@ -283,13 +263,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		pkeeper->pbucket->was_paired = TRUE;
 		*ppbucket_paired = pkeeper->pbucket->precords;
 	} else if (cmp > 0) {
-
-		// xxx to do
-
-		// keep seeking & filling the bucket until change of lvals; try to get a rec peek.
-		// this will not be a match.
 		join_bucket_keeper_fill(pkeeper);
-
 	}
 }
 

@@ -5,20 +5,14 @@
 
 * put-math on nulls should have null value
 
-* --ifs comma etc
-
-* allow multiline in put & filter DSLs: mlr put '$x=3;
-    $y=4;
-    $z=5'
-
 ================================================================
 TOP OF LIST
 
 !! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
 
 !! join
--> UTs incl. --np
-   -> check all: e.g.  join --np --ul -u ... /dev/null looks wrong
+-> xxx cleanup
+-> left/right prefix ...
 -> mixed-format/separator UT cases
 -> doc
 

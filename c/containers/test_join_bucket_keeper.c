@@ -426,7 +426,6 @@ static char * run_all_tests() {
 	return 0;
 }
 
-// xxx make a -v flag with conditional bucket-dumps :)
 int main(int argc, char **argv) {
 	if ((argc == 2) && streq(argv[1], "-v"))
 		tjbk_verbose = TRUE;
