@@ -57,6 +57,8 @@ typedef struct _mapper_join_state_t {
 
 static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
+static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
+	sllv_t* pout_recs);
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
@@ -111,36 +113,8 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	if (pstate->popts->emit_pairables && pleft_bucket != NULL) {
-
-		// xxx make a method here shared between sorted & unsorted
-		for (sllve_t* pe = pleft_bucket->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* pleft_rec = pe->pvdata;
-			lrec_t* pout_rec = lrec_unbacked_alloc();
-
-			// add the joined-on fields
-			sllse_t* pg = pstate->popts->pleft_field_names->phead;
-			sllse_t* ph = pstate->popts->pright_field_names->phead;
-			sllse_t* pi = pstate->popts->poutput_field_names->phead;
-			for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
-				char* v = lrec_get(pleft_rec, pg->value);
-				lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
-			}
-
-			// add the left-record fields not already added
-			for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
-				if (!hss_has(pstate->pleft_field_name_set, pl->key))
-					lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			}
-
-			// add the right-record fields not already added
-			for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
-				if (!hss_has(pstate->pright_field_name_set, pr->key))
-					lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			}
-
-			sllv_add(pout_recs, pout_rec);
-		}
-
+		// xxx rename "bucket" here
+		mapper_join_form_pairs(pleft_bucket, pright_rec, pstate, pout_recs);
 	}
 
 	return pout_recs;
@@ -182,39 +156,46 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			return NULL;
 		}
 	} else if (pstate->popts->emit_pairables) {
-		sllv_t* pout_records = sllv_alloc();
+		sllv_t* pout_recs = sllv_alloc();
 		pleft_bucket->was_paired = TRUE;
-		for (sllve_t* pe = pleft_bucket->precords->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* pleft_rec = pe->pvdata;
-			lrec_t* pout_rec = lrec_unbacked_alloc();
-
-			// add the joined-on fields
-			sllse_t* pg = pstate->popts->pleft_field_names->phead;
-			sllse_t* ph = pstate->popts->pright_field_names->phead;
-			sllse_t* pi = pstate->popts->poutput_field_names->phead;
-			for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
-				char* v = lrec_get(pleft_rec, pg->value);
-				lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
-			}
-
-			// add the left-record fields not already added
-			for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
-				if (!hss_has(pstate->pleft_field_name_set, pl->key))
-					lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			}
-
-			// add the right-record fields not already added
-			for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
-				if (!hss_has(pstate->pright_field_name_set, pr->key))
-					lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-			}
-
-			sllv_add(pout_records, pout_rec);
-		}
-		return pout_records;
+		mapper_join_form_pairs(pleft_bucket->precords, pright_rec, pstate, pout_recs);
+		return pout_recs;
 	} else {
 		pleft_bucket->was_paired = TRUE;
 		return NULL;
+	}
+}
+
+// ----------------------------------------------------------------
+static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
+	sllv_t* pout_recs)
+{
+	for (sllve_t* pe = pleft_records->phead; pe != NULL; pe = pe->pnext) {
+		lrec_t* pleft_rec = pe->pvdata;
+		lrec_t* pout_rec = lrec_unbacked_alloc();
+
+		// add the joined-on fields
+		sllse_t* pg = pstate->popts->pleft_field_names->phead;
+		sllse_t* ph = pstate->popts->pright_field_names->phead;
+		sllse_t* pi = pstate->popts->poutput_field_names->phead;
+		for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
+			char* v = lrec_get(pleft_rec, pg->value);
+			lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
+		}
+
+		// add the left-record fields not already added
+		for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
+			if (!hss_has(pstate->pleft_field_name_set, pl->key))
+				lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		}
+
+		// add the right-record fields not already added
+		for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
+			if (!hss_has(pstate->pright_field_name_set, pr->key))
+				lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		}
+
+		sllv_add(pout_recs, pout_rec);
 	}
 }
 
