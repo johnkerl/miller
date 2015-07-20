@@ -730,6 +730,20 @@ x_y_corr
 <p/>
 </td></tr></table>
 
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr --opprint filter '
+  ($x &gt; 0.5 &amp;&amp; $y &lt; 0.5)
+  ||
+  ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' \
+  then stats2 -a corr -f x,y data/medium
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 <a id="group-by"/><h2>group-by</h2>
 
@@ -1251,6 +1265,22 @@ wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/s
 pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
 hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
 pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
+</pre>
+</div>
+<p/>
+
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr --opprint put '
+  $nf       = NF;
+  $nr       = NR;
+  $fnr      = FNR;
+  $filenum  = FILENUM;
+  $filename = FILENAME' \
+  data/small data/small2
 </pre>
 </div>
 <p/>

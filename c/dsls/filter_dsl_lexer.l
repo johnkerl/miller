@@ -147,11 +147,7 @@
 	return FILTER_DSL_COMMA;
 }
 
-\n {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-	return FILTER_DSL_EOL;
-}
-[ \t\r] { }
+[ \t\r\n] { }
 
 . {
 	return -1;

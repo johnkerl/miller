@@ -276,6 +276,10 @@ POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y > 0.5) || ($x < 0.5 && $
 POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
 </td></tr></table>
 
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+POKI_INCLUDE_ESCAPED(filter-multiline-example.txt)HERE
+
 <!-- ================================================================ -->
 <h2>group-by</h2>
 
@@ -418,6 +422,10 @@ and <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
 <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>.
 
 POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2}}HERE
+
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
 
 <!-- ================================================================ -->
 <h2>rename</h2>
