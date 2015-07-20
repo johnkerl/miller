@@ -1025,6 +1025,8 @@ Please see http://johnkerl.org/miller/doc/reference.html for more information in
 </div>
 <p/>
 
+Examples:
+
 <table><tr><td>
 <p/>
 <div class="pokipanel">
@@ -1093,6 +1095,34 @@ id  name  status
 200 bob   present
 400 david present
 300 carol present
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+id  name  status
+100 alice present
+100 alice present
+100 alice missing
+100 alice present
+200 bob   missing
+200 bob   present
+200 bob   missing
+200 bob   present
+200 bob   present
+200 bob   present
+200 bob   present
+300 carol present
+300 carol present
+300 carol present
+400 david present
+400 david present
+400 david present
+400 david missing
+400 david present
 </pre>
 </div>
 <p/>

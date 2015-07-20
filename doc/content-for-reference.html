@@ -371,12 +371,16 @@ POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x
 
 POKI_RUN_COMMAND{{mlr join --help}}HERE
 
+Examples:
+
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-left-example.csv}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-right-example.csv}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
 </td></tr></table>
