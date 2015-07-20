@@ -54,7 +54,7 @@ static void set_up(
 
 // xxx confusing: "bucket" in name but not a bucket_t
 static void emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
 	if (tjbk_verbose) {
 		printf("BEFORE EMIT\n");
@@ -62,7 +62,7 @@ static void emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 		printf("\n");
 	}
 
-	join_bucket_keeper_emit(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
+	join_bucket_keeper_emit(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
 
 	if (tjbk_verbose) {
 		printf("AFTER EMIT\n");
@@ -109,12 +109,12 @@ static char* test00() {
 	lrec_reader_t* preader;
 	set_up(make_records_empty(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test00 exit\n");
@@ -131,18 +131,18 @@ static char* test01() {
 	lrec_reader_t* preader;
 	set_up(make_records_empty(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test01 exit\n");
@@ -159,12 +159,12 @@ static char* test0() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test0 exit\n");
@@ -181,18 +181,18 @@ static char* test1() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test1 exit\n");
@@ -209,18 +209,18 @@ static char* test2() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("6");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 6, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test2 exit\n");
@@ -237,30 +237,30 @@ static char* test3() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("1");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("1");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 4, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test3 exit\n");
@@ -277,30 +277,30 @@ static char* test4() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("2");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 2, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 2, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("2");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("3");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 3, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 3, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 1, "unpaired", "(eof)"));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 1, "unpaired", "(eof)"));
 	printf("\n");
 
 	printf("test4 exit\n");
@@ -317,96 +317,96 @@ static char* test5() {
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
 	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
-	sllv_t* pbucket_paired;
-	sllv_t* pbucket_left_unpaired;
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
 
 	slls_t* pright_field_values = slls_single_no_free("0");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("0");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("1");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("1");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 2, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("2");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("2");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("3");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 3, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 3, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("3");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 3, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 3, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("4");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("4");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("5");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 1, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 1, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("5");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_has_length(pbucket_paired, 1, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_has_length(precords_paired, 1, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("6");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	pright_field_values = slls_single_no_free("6");
-	emit(pkeeper, pright_field_values, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_is_null(pbucket_left_unpaired, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
-	emit(pkeeper, NULL, &pbucket_paired, &pbucket_left_unpaired);
-	mu_assert_lf(list_is_null(pbucket_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(pbucket_left_unpaired, 0, "unpaired", pright_field_values->phead->value));
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	printf("test5 exit\n");

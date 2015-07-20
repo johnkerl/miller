@@ -37,10 +37,10 @@
 static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper);
 static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper);
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired);
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired);
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper);
 static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired);
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired);
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
@@ -107,10 +107,10 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 // ----------------------------------------------------------------
 // xxx cmt re who frees, and which
 void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
-	*ppbucket_paired        = NULL;
-	*ppbucket_left_unpaired = NULL;
+	*pprecords_paired        = NULL;
+	*pprecords_left_unpaired = NULL;
 	int cmp = 0;
 
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
@@ -123,10 +123,10 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 			if (cmp < 0) {
 				// Advance left until match or LEOF.
-				join_bucket_keeper_advance_to(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
+				join_bucket_keeper_advance_to(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
 			} else if (cmp == 0) {
 				pkeeper->pbucket->was_paired = TRUE;
-				*ppbucket_paired = pkeeper->pbucket->precords;
+				*pprecords_paired = pkeeper->pbucket->precords;
 			} else {
 				// No match and no need to advance left; return null lists.
 			}
@@ -137,7 +137,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 		}
 
 	} else { // Right EOF: return the final left-unpaireds.
-		join_bucket_keeper_drain(pkeeper, pright_field_values, ppbucket_paired, ppbucket_left_unpaired);
+		join_bucket_keeper_drain(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
 	}
 
 	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
@@ -207,12 +207,12 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 // * xxx
 
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
 	if (pkeeper->pbucket->was_paired) {
 		sllv_free(pkeeper->pbucket->precords);
 	} else {
-		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+		*pprecords_left_unpaired = pkeeper->pbucket->precords;
 	}
 
 	// xxx make an init method
@@ -247,11 +247,11 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
 
-		if (*ppbucket_left_unpaired == NULL)
-			*ppbucket_left_unpaired = sllv_alloc();
+		if (*pprecords_left_unpaired == NULL)
+			*pprecords_left_unpaired = sllv_alloc();
 
 		while (TRUE) {
-			sllv_add(*ppbucket_left_unpaired, pkeeper->prec_peek);
+			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
 			pkeeper->prec_peek = NULL;
 
 			pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
@@ -273,24 +273,24 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (cmp == 0) {
 		join_bucket_keeper_fill(pkeeper);
 		pkeeper->pbucket->was_paired = TRUE;
-		*ppbucket_paired = pkeeper->pbucket->precords;
+		*pprecords_paired = pkeeper->pbucket->precords;
 	} else if (cmp > 0) {
 		join_bucket_keeper_fill(pkeeper);
 	}
 }
 
 static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
-	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
 	// 1. Any records already in pkeeper->pbucket->precords (current bucket)
 	if (pkeeper->pbucket->was_paired) {
-		*ppbucket_left_unpaired = sllv_alloc();
+		*pprecords_left_unpaired = sllv_alloc();
 	} else {
-		*ppbucket_left_unpaired = pkeeper->pbucket->precords;
+		*pprecords_left_unpaired = pkeeper->pbucket->precords;
 	}
 	// 2. Peek-record, if any
 	if (pkeeper->prec_peek != NULL) {
-		sllv_add(*ppbucket_left_unpaired, pkeeper->prec_peek);
+		sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
 		pkeeper->prec_peek = NULL;
 	}
 	// 3. Remainder of left input stream
@@ -299,7 +299,7 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
 		if (prec == NULL)
 			break;
-		sllv_add(*ppbucket_left_unpaired, prec);
+		sllv_add(*pprecords_left_unpaired, prec);
 	}
 
 	pkeeper->pbucket->precords = NULL;
