@@ -101,54 +101,54 @@ run_command $mlr sort -f a -r b -nf x -nr y $indir/abixy
 # ----------------------------------------------------------------
 announce JOIN
 
-run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ur      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join      --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join                -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --ul      --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul      -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np      --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
 
-run_command $mlr --opprint join           -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ur      -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join           -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join      --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join                -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul      -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul      -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np      --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul --ur -f /dev/null -l l -r r -j o $indir/joinb.dkvp
 
-run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ur      -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join           -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul      -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join      --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join                -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join      --ul      -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join           --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join      --ul --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np --ul      -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np      --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
 
 
-run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ur      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join      --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join                -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul      -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np      --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
 
-run_command $mlr --opprint join           -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ur      -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join           -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul      -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join      --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
-run_command $mlr --opprint join --ul --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join                -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul      -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join           --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join      --ul --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul      -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np      --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
+run_command $mlr --opprint join --np --ul --ur -u -f /dev/null -l l -r r -j o $indir/joinb.dkvp
 
-run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ur      -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join           -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul      -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join      --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
-run_command $mlr --opprint join --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join                -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join      --ul      -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join           --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join      --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np --ul      -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np      --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
+run_command $mlr --opprint join --np --ul --ur -u -f $indir/joina.dkvp -l l -r r -j o /dev/null
 
 # ----------------------------------------------------------------
 announce STATS

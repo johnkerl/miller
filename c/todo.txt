@@ -18,6 +18,7 @@ TOP OF LIST
 
 !! join
 -> UTs incl. --np
+   -> check all: e.g.  join --np --ul -u ... /dev/null looks wrong
 -> mixed-format/separator UT cases
 -> doc
 
