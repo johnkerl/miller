@@ -17,8 +17,7 @@ TOP OF LIST
 !! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
 
 !! join
--> !! --np --ul --ur example from doc is broken
--> UTs
+-> UTs incl. --np
 -> mixed-format/separator UT cases
 -> doc
 
