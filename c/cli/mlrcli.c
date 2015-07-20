@@ -126,12 +126,20 @@ static char sep_from_arg(char* arg, char* argv0) {
 		return '\t';
 	if (streq(arg, "space"))
 		return ' ';
+	if (streq(arg, "comma"))
+		return ',';
 	if (streq(arg, "newline"))
 		return '\n';
 	if (streq(arg, "pipe"))
 		return '|';
+	if (streq(arg, "slash"))
+		return '/';
+	if (streq(arg, "colon"))
+		return ':';
 	if (streq(arg, "semicolon"))
 		return '|';
+	if (streq(arg, "equals"))
+		return '=';
 	if (strlen(arg) != 1)
 		main_usage(argv0, 1);
 	return arg[0];
