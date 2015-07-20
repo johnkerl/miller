@@ -157,10 +157,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 				for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 					join_bucket_t* pbucket = pe->pvvalue;
 					if (!pbucket->was_paired) {
-						for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
-							lrec_t* pleft_rec = pf->pvdata;
-							sllv_add(poutrecs, pleft_rec);
-						}
+						sllv_add_all(poutrecs, pbucket->precords);
 					}
 				}
 			}
@@ -216,6 +213,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 		return pout_records;
 	} else {
+		pleft_bucket->was_paired = TRUE;
 		return NULL;
 	}
 }
