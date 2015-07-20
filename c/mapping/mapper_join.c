@@ -48,12 +48,9 @@ typedef struct _mapper_join_state_t {
 	join_bucket_keeper_t* pjoin_bucket_keeper;
 
 	// For unsorted input
-	// xxx rename: key_field -> join_field (or left_field?) thruout
-	lhmslv_t* pbuckets_by_key_field_names; // For unsorted input
+	lhmslv_t* pleft_buckets_by_join_field_values;
 
 } mapper_join_state_t;
-
-// xxx reorder declarations & bodies ... use more prototypes if necessary.
 
 static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
@@ -82,12 +79,12 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
-	sllv_t* pleft_bucket = NULL;
+	sllv_t* pleft_records = NULL;
 	sllv_t* pbucket_left_unpaired = NULL;
 	sllv_t* pout_recs = sllv_alloc();
 
 	if (pright_rec == NULL) { // End of input record stream
-		join_bucket_keeper_emit(pkeeper, NULL, &pleft_bucket, &pbucket_left_unpaired);
+		join_bucket_keeper_emit(pkeeper, NULL, &pleft_records, &pbucket_left_unpaired);
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_add_all(pout_recs, pbucket_left_unpaired);
 		}
@@ -97,7 +94,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_field_names);
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_bucket, &pbucket_left_unpaired);
+	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
 
 	if (pstate->popts->emit_left_unpairables) {
 		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length >= 0) {
@@ -107,14 +104,13 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	if (pstate->popts->emit_right_unpairables) {
-		if (pleft_bucket == NULL || pleft_bucket->length == 0) {
+		if (pleft_records == NULL || pleft_records->length == 0) {
 			sllv_add(pout_recs, pright_rec);
 		}
 	}
 
-	if (pstate->popts->emit_pairables && pleft_bucket != NULL) {
-		// xxx rename "bucket" here
-		mapper_join_form_pairs(pleft_bucket, pright_rec, pstate, pout_recs);
+	if (pstate->popts->emit_pairables && pleft_records != NULL) {
+		mapper_join_form_pairs(pleft_records, pright_rec, pstate, pout_recs);
 	}
 
 	return pout_recs;
@@ -126,14 +122,14 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
-	if (pstate->pbuckets_by_key_field_names == NULL) // First call
+	if (pstate->pleft_buckets_by_join_field_values == NULL) // First call
 		ingest_left_file(pstate);
 
 	if (pright_rec == NULL) { // End of input record stream
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_t* poutrecs = sllv_alloc();
-			if (pstate->pbuckets_by_key_field_names != NULL) { // E.g. empty right input
-				for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
+			if (pstate->pleft_buckets_by_join_field_values != NULL) { // E.g. empty right input
+				for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
 					join_bucket_t* pbucket = pe->pvvalue;
 					if (!pbucket->was_paired) {
 						sllv_add_all(poutrecs, pbucket->precords);
@@ -148,7 +144,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 	}
 
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_field_names);
-	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pright_field_values);
+	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
 	if (pleft_bucket == NULL) {
 		if (pstate->popts->emit_right_unpairables) {
 			return sllv_single(pright_rec);
@@ -250,7 +246,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->popts->left_file_name };
 	context_t* pctx = &ctx;
 
-	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
+	pstate->pleft_buckets_by_join_field_values = lhmslv_alloc();
 
 	while (TRUE) {
 		lrec_t* pleft_rec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
@@ -258,14 +254,14 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 			break;
 
 		slls_t* pleft_field_values = mlr_selected_values_from_record(pleft_rec, pstate->popts->pleft_field_names);
-		join_bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pleft_field_values);
+		join_bucket_t* pbucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pleft_field_values);
 		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 			slls_t* pkey_field_values_copy = slls_copy(pleft_field_values);
 			join_bucket_t* pbucket = mlr_malloc_or_die(sizeof(join_bucket_t));
 			pbucket->precords = sllv_alloc();
 			pbucket->was_paired = FALSE;
 			sllv_add(pbucket->precords, pleft_rec);
-			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
+			lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket);
 		} else { // Previously seen key-field-value: append record to bucket
 			sllv_add(pbucket->precords, pleft_rec);
 		}
@@ -280,11 +276,11 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_join_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_join_state_t));
-	pstate->popts = popts;
-	pstate->pleft_field_name_set        = hss_from_slls(popts->pleft_field_names);
-	pstate->pright_field_name_set       = hss_from_slls(popts->pright_field_names);
-	pstate->pbuckets_by_key_field_names = NULL;
-	pstate->pjoin_bucket_keeper         = NULL;
+	pstate->popts                              = popts;
+	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_field_names);
+	pstate->pright_field_name_set              = hss_from_slls(popts->pright_field_names);
+	pstate->pleft_buckets_by_join_field_values = NULL;
+	pstate->pjoin_bucket_keeper                = NULL;
 
 	pmapper->pvstate = (void*)pstate;
 	if (popts->allow_unsorted_input) {

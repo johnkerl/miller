@@ -52,6 +52,7 @@ static void set_up(
 	*ppreader = preader;
 }
 
+// xxx confusing: "bucket" in name but not a bucket_t
 static void emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** ppbucket_paired, sllv_t** ppbucket_left_unpaired)
 {
