@@ -100,8 +100,8 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 		slls_free(pkeeper->pbucket->pleft_field_values);
 	if (pkeeper->pbucket->precords != NULL)
 		sllv_free(pkeeper->pbucket->precords);
-	free(pkeeper);
 	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
+	free(pkeeper);
 }
 
 // ----------------------------------------------------------------

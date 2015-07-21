@@ -25,10 +25,6 @@
   1,7,8
   4,9,10
 
-! k1
-  ./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-  ./test/run: line 36: 3454452 Segmentation fault      "$@" >> $outdir/out
-
 ================================================================
 TOP OF LIST
 
