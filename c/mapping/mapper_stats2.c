@@ -61,6 +61,10 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 	key = mlr_paste_4_strings(name1, "_", name2, "_ols_b");
 	val = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+
+	key = mlr_paste_4_strings(name1, "_", name2, "_ols_n");
+	val = mlr_alloc_string_from_ll(pstate->count);
+	lrec_put(poutrec, key, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 static stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
@@ -186,6 +190,7 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 	} else if (pstate->do_which == DO_LINREG_PCA) {
 		char* keym   = mlr_paste_4_strings(name1, "_", name2, "_pca_m");
 		char* keyb   = mlr_paste_4_strings(name1, "_", name2, "_pca_b");
+		char* keyn   = mlr_paste_4_strings(name1, "_", name2, "_pca_n");
 		char* keyq   = mlr_paste_4_strings(name1, "_", name2, "_pca_quality");
 		char* keyl1  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival1");
 		char* keyl2  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival2");
@@ -196,6 +201,7 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		if (pstate->count < 2LL) {
 			lrec_put(poutrec, keym,   "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, keyb,   "", LREC_FREE_ENTRY_KEY);
+			lrec_put(poutrec, keyn,   "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, keyq,   "", LREC_FREE_ENTRY_KEY);
 			if (pstate->do_verbose) {
 				lrec_put(poutrec, keyl1,  "", LREC_FREE_ENTRY_KEY);
@@ -222,6 +228,7 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 			char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
 			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt), free_flags);
 			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put(poutrec, keyn, mlr_alloc_string_from_ll(pstate->count),           free_flags);
 			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, MLR_GLOBALS.ofmt), free_flags);
 			if (pstate->do_verbose) {
 				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    MLR_GLOBALS.ofmt), free_flags);
