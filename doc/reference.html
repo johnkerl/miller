@@ -1018,6 +1018,8 @@ Options:
   -j {a,b,c}   Comma-separated join-field names for output
   -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.
   -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.
+  --lp {text}  Additional prefix for non-join output field names from the left file
+  --rp {text}  Additional prefix for non-join output field names from the right file(s)
   --np         Do not emit paired records
   --ul         Emit unpaired records from the left file
   --ur         Emit unpaired records from the right file(s)
@@ -1040,6 +1042,8 @@ Please see http://johnkerl.org/miller/doc/reference.html for more information in
 <p/>
 
 Examples:
+
+<p/>Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
 
 <table><tr><td>
 <p/>
@@ -1112,7 +1116,10 @@ id  name  status
 </pre>
 </div>
 <p/>
-</td></tr><tr><td>
+</td></tr></table>
+
+<p/>Same, but with sorting the input first:
+<table><tr><td>
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1140,7 +1147,10 @@ id  name  status
 </pre>
 </div>
 <p/>
-</td></tr><tr><td>
+</td></tr></table>
+
+<p/>Same, but showing only unpaired records:
+<table><tr><td>
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1150,6 +1160,51 @@ missing 600
 
 id  name
 500 edgar
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>Use prefixing options to disambiguate between otherwise identical non-join field names:
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --opprint cat data/self-join.csv data/self-join.csv
+a b c
+1 2 3
+1 4 5
+1 2 3
+1 4 5
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+a left_b left_c right_b right_c
+1 2      3      2       3
+1 4      5      2       3
+1 2      3      4       5
+1 4      5      4       5
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>Use zero join columns:
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+left_a left_b left_c right_a right_b right_c
+1      2      3      1       2       3
+1      4      5      1       2       3
+1      2      3      1       4       5
+1      4      5      1       4       5
 </pre>
 </div>
 <p/>

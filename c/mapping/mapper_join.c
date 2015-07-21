@@ -164,14 +164,24 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 }
 
 // ----------------------------------------------------------------
+// This could be optimized in several ways:
+// * Store the prefix length instead of computing its strlen inside
+//   mlr_paste_2_strings
+// * Don't do the if-statement on each call: prefix is null or non-null
+//   at the time the mapper is constructed. Use a function pointer.
+static inline char* compose_keys(char* prefix, char* key) {
+	if (prefix == NULL)
+		return strdup(key);
+	else
+		return mlr_paste_2_strings(prefix, key);
+}
+
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
 	sllv_t* pout_recs)
 {
 	for (sllve_t* pe = pleft_records->phead; pe != NULL; pe = pe->pnext) {
 		lrec_t* pleft_rec = pe->pvdata;
 		lrec_t* pout_rec = lrec_unbacked_alloc();
-
-		// xxx need to incorporate left/right prefixes
 
 		// add the joined-on fields
 		sllse_t* pg = pstate->popts->pleft_join_field_names->phead;
@@ -184,14 +194,18 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 
 		// add the left-record fields not already added
 		for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
-			if (!hss_has(pstate->pleft_field_name_set, pl->key))
-				lrec_put(pout_rec, strdup(pl->key), strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			if (!hss_has(pstate->pleft_field_name_set, pl->key)) {
+				lrec_put(pout_rec, compose_keys(pstate->popts->left_prefix, pl->key),
+					strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			}
 		}
 
 		// add the right-record fields not already added
 		for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
-			if (!hss_has(pstate->pright_field_name_set, pr->key))
-				lrec_put(pout_rec, strdup(pr->key), strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			if (!hss_has(pstate->pright_field_name_set, pr->key)) {
+				lrec_put(pout_rec, compose_keys(pstate->popts->right_prefix, pr->key),
+					strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			}
 		}
 
 		sllv_add(pout_recs, pout_rec);
@@ -306,7 +320,8 @@ static void mapper_join_usage(char* argv0, char* verb) {
 	fprintf(stdout, "  -j {a,b,c}   Comma-separated join-field names for output\n");
 	fprintf(stdout, "  -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.\n");
 	fprintf(stdout, "  -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.\n");
-	// xxx --lp/--rp
+	fprintf(stdout, "  --lp {text}  Additional prefix for non-join output field names from the left file\n");
+	fprintf(stdout, "  --rp {text}  Additional prefix for non-join output field names from the right file(s)\n");
 	fprintf(stdout, "  --np         Do not emit paired records\n");
 	fprintf(stdout, "  --ul         Emit unpaired records from the left file\n");
 	fprintf(stdout, "  --ur         Emit unpaired records from the right file(s)\n");

@@ -5,6 +5,26 @@
 
 * put-math on nulls should have null value
 
+* join:
+
+  $ cat foo
+  a,b,c
+  1,2,3
+  4,5,6
+  
+  $ cat bar
+  a,b,c
+  1,7,8
+  4,9,10
+  
+  $ mlr join -j a -f foo bar
+  Segmentation fault: 11
+  
+  $ mlr --csv join -j a -f foo bar
+  a,b,c
+  1,7,8
+  4,9,10
+
 ================================================================
 TOP OF LIST
 

@@ -377,16 +377,36 @@ POKI_RUN_COMMAND{{mlr join --help}}HERE
 
 Examples:
 
+<p/>Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
+
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-left-example.csv}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-right-example.csv}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
-</td></tr><tr><td>
+</td></tr></table>
+
+<p/>Same, but with sorting the input first:
+<table><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
-</td></tr><tr><td>
+</td></tr></table>
+
+<p/>Same, but showing only unpaired records:
+<table><tr><td>
 POKI_RUN_COMMAND{{mlr --icsv --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+</td></tr></table>
+
+<p/>Use prefixing options to disambiguate between otherwise identical non-join field names:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --csv --opprint cat data/self-join.csv data/self-join.csv}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --csv --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+</td></tr></table>
+
+<p/>Use zero join columns:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --csv --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
