@@ -189,7 +189,9 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		sllse_t* pi = pstate->popts->poutput_join_field_names->phead;
 		for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
 			char* v = lrec_get(pleft_rec, pg->value);
-			lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
+			if (v != NULL) {
+				lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
+			}
 		}
 
 		// add the left-record fields not already added
