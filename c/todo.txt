@@ -12,8 +12,6 @@ TOP OF LIST
 
 ! clarify "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx
 
-! stats2 count: for linreg infoing
-
 ! parlog sort / de-interleave example
 
 ! time-left example for #todo as fcn of sumt
