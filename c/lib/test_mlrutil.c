@@ -49,17 +49,6 @@ static char * test_paste() {
 	return 0;
 }
 
-//int mlr_string_hash_func(char *str);
-//int mlr_string_pair_hash_func(char* str1, char* str2);
-//int slls_hash_func(sllv_t *plist);
-//
-//char*   mlr_get_line(FILE* input_stream, char rs, int do_strip);
-//sllv_t* slls_from_line(char* line, char fs);
-//char*   slls_join(sllv_t* plist, char fs); // xxx cmt mem mgt
-//sllv_t* mlr_keys_from_record(lrec_t* prec);
-//sllv_t* mlr_selected_values_from_record(lrec_t* prec, sllv_t* pselected_field_names, int copy_strings);
-//int     slls_equals(sllv_t* pa, sllv_t* pb);
-
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_canonical_mod);

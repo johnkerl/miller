@@ -17,7 +17,7 @@ typedef struct _mapper_group_like_state_t {
 static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_group_like_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pkey_field_names = mlr_keys_from_record(pinrec);
+		slls_t* pkey_field_names = mlr_reference_keys_from_record(pinrec);
 		sllv_t* plist = lhmslv_get(pstate->precords_by_key_field_names, pkey_field_names);
 		if (plist == NULL) {
 			plist = sllv_alloc();

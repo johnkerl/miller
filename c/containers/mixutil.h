@@ -4,7 +4,7 @@
 #include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/hss.h"
-slls_t* mlr_keys_from_record(lrec_t* prec); // xxx rename to mlr_ref_keys_from_record
+slls_t* mlr_reference_keys_from_record(lrec_t* prec);
 slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
 hss_t*  hss_from_slls(slls_t* plist);

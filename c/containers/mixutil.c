@@ -5,7 +5,7 @@
 // xxx freeing contract
 // xxx return an lrec?
 
-slls_t* mlr_keys_from_record(lrec_t* prec) {
+slls_t* mlr_reference_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		slls_add_no_free(plist, pe->key);
