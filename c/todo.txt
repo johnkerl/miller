@@ -6,21 +6,6 @@
 ================================================================
 TOP OF LIST
 
-----------------------------------------------------------------
-!! get rid of some unnecessary calls to slls_copy:
-
-  ./output/lrec_writer_pprint.c:
-        // xxx make a fcn which does the cmp of lrec & slls w/o the copy
-        pcurr_keys = mlr_keys_from_record(prec);
-        ... slls_equals(pcurr_keys, pstate->pprev_keys)
-
-  ./output/lrec_writer_csv.c:       // xxx make a fcn to compare these w/o copy: put it in mixutil.
-
-        slls_t* ptemp = mlr_keys_from_record(prec);
-        if (!slls_equals(ptemp, pstate->plast_header_output)) ...
-
-----------------------------------------------------------------
-
 * make a -D for hash-collision stats ...
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
