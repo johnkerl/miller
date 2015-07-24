@@ -25,4 +25,9 @@ int lrec_slls_compare_lexically(
 	slls_t* pkeys,
 	slls_t* plist);
 
+// xxx cmt for output writers
+int lrec_keys_equal_list(
+	lrec_t* prec,
+	slls_t* plist);
+
 #endif // MIXUTIL_H

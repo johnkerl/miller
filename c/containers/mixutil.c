@@ -92,3 +92,22 @@ int lrec_slls_compare_lexically(
 {
 	return -slls_lrec_compare_lexically(plist, prec, pkeys);
 }
+
+// ----------------------------------------------------------------
+int lrec_keys_equal_list(
+	lrec_t* prec,
+	slls_t* plist)
+{
+	lrece_t* pe = prec->phead;
+	sllse_t* pf = plist->phead;
+	while (TRUE) {
+		if (pe == NULL && pf == NULL)
+			return TRUE;
+		if (pe == NULL || pf == NULL)
+			return FALSE;
+		if (!streq(pe->value, pf->value))
+			return FALSE;
+		pe = pe->pnext;
+		pf = pf->pnext;
+	}
+}

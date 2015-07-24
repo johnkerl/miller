@@ -9,18 +9,6 @@ TOP OF LIST
 ----------------------------------------------------------------
 !! get rid of some unnecessary calls to slls_copy:
 
-  ./containers/join_bucket_keeper.c:
-        slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
-            pkeeper->pleft_field_names);
-        int cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pnext_field_values);
-
-      int slls_lrec_compare_lexically(
-        slls_t* plist,
-        lrec_t* prec,
-        slls_t* pkeys)
-      {
-      }
-
   ./output/lrec_writer_pprint.c:
         // xxx make a fcn which does the cmp of lrec & slls w/o the copy
         pcurr_keys = mlr_keys_from_record(prec);
@@ -45,8 +33,7 @@ TOP OF LIST
   of one format??
 
 !! join
-  -> cmp w/o slls method; & propagate throughout miller
-  -> xxx cleanup
+  -> cleanup of xxx cmts
   -> left/right-prefix UTs
   -> het UTs
   -> mixed-format/separator UT cases
