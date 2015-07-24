@@ -20,4 +20,9 @@ int slls_lrec_compare_lexically(
 	lrec_t* prec,
 	slls_t* pkeys);
 
+int lrec_slls_compare_lexically(
+	lrec_t* prec,
+	slls_t* pkeys,
+	slls_t* plist);
+
 #endif // MIXUTIL_H

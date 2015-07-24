@@ -227,14 +227,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		return;
 	}
 
-//		int cmp = slls_lrec_compare_lexically(
-//			pkeeper->pbucket->pleft_field_values,
-//			pkeeper->prec_peek,
-//			pkeeper->pleft_field_names);
-
-	// xxx make a function to compare without extracting slls
-	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek, pkeeper->pleft_field_names);
-	int cmp = slls_compare_lexically(pleft_field_values, pright_field_values);
+	int cmp = lrec_slls_compare_lexically(pkeeper->prec_peek, pkeeper->pleft_field_names, pright_field_values);
 	if (cmp < 0) {
 		// keep seeking & filling the bucket until = or >; this may or may not end up being a match.
 
@@ -252,15 +245,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 				break;
 			}
 
-//		cmp = slls_lrec_compare_lexically(
-//			pnext_field_values,
-//			pkeeper->prec_peek,
-//			pkeeper->pleft_field_names);
-
-			// xxx make a function to compare w/o copy
-			slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
-				pkeeper->pleft_field_names);
-			cmp = slls_compare_lexically(pnext_field_values, pright_field_values);
+			cmp = lrec_slls_compare_lexically(pkeeper->prec_peek, pkeeper->pleft_field_names, pright_field_values);
 			if (cmp >= 0)
 				break;
 		}

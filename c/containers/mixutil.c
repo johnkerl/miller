@@ -83,3 +83,12 @@ int slls_lrec_compare_lexically(
 		pf = pf->pnext;
 	}
 }
+
+// ----------------------------------------------------------------
+int lrec_slls_compare_lexically(
+	lrec_t* prec,
+	slls_t* pkeys,
+	slls_t* plist)
+{
+	return -slls_lrec_compare_lexically(plist, prec, pkeys);
+}
