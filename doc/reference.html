@@ -263,10 +263,10 @@ $ mlr sort --help
 Usage: mlr sort {flags}
 Flags:
   -f  {comma-separated field names}  Lexical ascending
-  -n  {comma-separated field names}  Numerical ascending
-  -nf {comma-separated field names}  Numerical ascending
+  -n  {comma-separated field names}  Numerical ascending; nulls sort last
+  -nf {comma-separated field names}  Numerical ascending; nulls sort last
   -r  {comma-separated field names}  Lexical descending
-  -nr {comma-separated field names}  Numerical descending
+  -nr {comma-separated field names}  Numerical descending; nulls sort first
 Sorts records primarily by the first specified field, secondarily by the second field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z
@@ -1493,10 +1493,10 @@ $ mlr sort --help
 Usage: mlr sort {flags}
 Flags:
   -f  {comma-separated field names}  Lexical ascending
-  -n  {comma-separated field names}  Numerical ascending
-  -nf {comma-separated field names}  Numerical ascending
+  -n  {comma-separated field names}  Numerical ascending; nulls sort last
+  -nf {comma-separated field names}  Numerical ascending; nulls sort last
   -r  {comma-separated field names}  Lexical descending
-  -nr {comma-separated field names}  Numerical descending
+  -nr {comma-separated field names}  Numerical descending; nulls sort first
 Sorts records primarily by the first specified field, secondarily by the second field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z

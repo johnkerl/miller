@@ -1,12 +1,7 @@
 ================================================================
 ! BUGFIXES !
 
-* empty-null handling on numeric sort
-
-* put-math on nulls should have null value
-
-$ mlr having-fields
-Segmentation fault
+:D
 
 ================================================================
 TOP OF LIST

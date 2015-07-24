@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "containers/sllv.h"
@@ -82,10 +83,20 @@ static int pbucket_comparator(const void* pva, const void* pvb) {
 	for (int i = 0; i < cmp_params_length; i++) {
 		int sort_param = pcmp_sort_params[i];
 		if (sort_param & SORT_NUMERIC) {
-			double d = akeys[i].u.d - bkeys[i].u.d;
-			int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
-			if (s != 0)
-				return (sort_param & SORT_DESCENDING) ? -s : s;
+			double a = akeys[i].u.d;
+			double b = bkeys[i].u.d;
+			if (isnan(a)) { // null input value
+				if (!isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? -1 : 1;
+				}
+			} else if (isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? 1 : -1;
+			} else {
+				double d = a - b;
+				int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
+				if (s != 0)
+					return (sort_param & SORT_DESCENDING) ? -s : s;
+			}
 		} else {
 			int s = strcmp(akeys[i].u.s, bkeys[i].u.s);
 			if (s != 0)
@@ -101,7 +112,9 @@ static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_pa
 	int i = 0;
 	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
 		if (sort_params[i] & SORT_NUMERIC) {
-			if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
+			if (*pe->value == 0) { // null input value
+				typed_sort_keys[i].u.d = nan("");
+			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
 				// xxx to do: print some more context here, e.g. file name & line number
 				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
 				exit(1);
@@ -250,10 +263,10 @@ static void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s {flags}\n", argv0, verb);
 	fprintf(stdout, "Flags:\n");
 	fprintf(stdout, "  -f  {comma-separated field names}  Lexical ascending\n");
-	fprintf(stdout, "  -n  {comma-separated field names}  Numerical ascending\n");
-	fprintf(stdout, "  -nf {comma-separated field names}  Numerical ascending\n");
+	fprintf(stdout, "  -n  {comma-separated field names}  Numerical ascending; nulls sort last\n");
+	fprintf(stdout, "  -nf {comma-separated field names}  Numerical ascending; nulls sort last\n");
 	fprintf(stdout, "  -r  {comma-separated field names}  Lexical descending\n");
-	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending\n");
+	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
 	fprintf(stdout, "Sorts records primarily by the first specified field, secondarily by the second field, and so on.\n");
 	fprintf(stdout, "Example:\n");
 	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
