@@ -4,6 +4,7 @@
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	lrec_free(pinrec);
 	return sllv_single(NULL);
 }
 
