@@ -41,7 +41,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 			nf++;
 		}
 		fputc(ors, output_stream);
-		// xxx maybe mke a mlr_copy_keys_from_record & mlr_reference_keys_from_record
+		// xxx maybe make a mlr_copy_keys_from_record & mlr_reference_keys_from_record
 		pstate->plast_header_output = slls_copy(mlr_keys_from_record(prec));
 		pstate->num_header_lines_output++;
 	}

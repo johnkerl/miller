@@ -53,3 +53,33 @@ void lrec_print_list_with_prefix(sllv_t* plist, char* prefix) {
 		lrec_print(pe->pvdata);
 	}
 }
+
+// ----------------------------------------------------------------
+int slls_lrec_compare_lexically(
+	slls_t* plist,
+	lrec_t* prec,
+	slls_t* pkeys)
+{
+	sllse_t* pe = plist->phead;
+	sllse_t* pf = pkeys->phead;
+	while (TRUE) {
+		if (pe == NULL && pf == NULL)
+			return 0;
+		if (pe == NULL)
+			return 1;
+		if (pf == NULL)
+			return -1;
+
+		char* precval = lrec_get(prec, pf->value);
+		if (precval == NULL) {
+			return -1;
+		} else {
+			int rc = strcmp(pe->value, precval);
+			if (rc != 0)
+				return rc;
+		}
+
+		pe = pe->pnext;
+		pf = pf->pnext;
+	}
+}

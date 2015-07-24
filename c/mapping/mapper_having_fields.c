@@ -109,7 +109,7 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 	char* verb = argv[(*pargi)++];
 
 	int argi = *pargi;
-	while (argv[argi][0] == '-') {
+	while (argi < argc && argv[argi][0] == '-') {
 		if (streq(argv[argi], "--at-least")) {
 			criterion = HAVING_FIELDS_AT_LEAST;
 		} else if (streq(argv[argi], "--which-are")) {
@@ -131,6 +131,10 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 	}
 
 	if (pfield_names == NULL) {
+		mapper_having_fields_usage(argv[0], verb);
+		return NULL;
+	}
+	if (criterion == FALSE) {
 		mapper_having_fields_usage(argv[0], verb);
 		return NULL;
 	}

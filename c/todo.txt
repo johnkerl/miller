@@ -5,22 +5,56 @@
 
 * put-math on nulls should have null value
 
+$ mlr having-fields
+Segmentation fault
+
 ================================================================
 TOP OF LIST
 
+----------------------------------------------------------------
+!! get rid of some unnecessary calls to slls_copy:
+
+  ./containers/join_bucket_keeper.c:
+        slls_t* pnext_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+            pkeeper->pleft_field_names);
+        int cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pnext_field_values);
+
+      int slls_lrec_compare_lexically(
+        slls_t* plist,
+        lrec_t* prec,
+        slls_t* pkeys)
+      {
+      }
+
+  ./output/lrec_writer_pprint.c:
+        // xxx make a fcn which does the cmp of lrec & slls w/o the copy
+        pcurr_keys = mlr_keys_from_record(prec);
+        ... slls_equals(pcurr_keys, pstate->pprev_keys)
+
+  ./output/lrec_writer_csv.c:       // xxx make a fcn to compare these w/o copy: put it in mixutil.
+
+        slls_t* ptemp = mlr_keys_from_record(prec);
+        if (!slls_equals(ptemp, pstate->plast_header_output)) ...
+
+----------------------------------------------------------------
+
+* doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
+
+! gh/jk/mlr top-level readme: replicate mlrdoc index.html content. *then* link.
+
 !! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
 
-! clarify "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx
+* min/max functions: f_ff
 
-! parlog sort / de-interleave example
-
-! time-left example for #todo as fcn of sumt
+! maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
+  of one format??
 
 !! join
--> xxx cleanup
--> left/right-prefix UTs
--> het UTs
--> mixed-format/separator UT cases
+  -> cmp w/o slls method; & propagate throughout miller
+  -> xxx cleanup
+  -> left/right-prefix UTs
+  -> het UTs
+  -> mixed-format/separator UT cases
 
 !! mmap cleanup, especially csv
 !! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
@@ -29,8 +63,6 @@ TOP OF LIST
 -> fmtnum() function
    -> hex-fmt fcn ... maybe together w/ fmtnum
 -> log2 & exp2?
-
-! mlrwik readme note which copy of mlr; PATH
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
@@ -85,6 +117,16 @@ DOC
 * meaneb: assumes uncorr. code/doc link to appxb :)
 * cookbook page? random subsampling via urand()<0.001 ... what else ...
 * doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
+* parlog sort / de-interleave example via stable sort on concurrency identifier
+* time-left example for #todo as fcn of sumt, w/ linreg
+* mlrwik readme note which copy of mlr; PATH
+
+* sysadm example:
+  $ each 1 "uptime | sed 's/,/ /g'" |  mlr --nidx --repifs --fs space step -a delta -f 11
+   19:00:01 up 30 days 4:52 2 users load average: 51.83 48.66 32.08 51.830000
+   19:00:02 up 30 days 4:52 2 users load average: 51.83 48.66 32.08 0.000000
+   19:00:03 up 30 days 4:52 2 users load average: 51.83 48.66 32.08 0.000000
+   19:00:04 up 30 days 4:52 2 users load average: 52.40 48.83 32.22 0.570000
 
 ================================================================
 MEM MGMT:
