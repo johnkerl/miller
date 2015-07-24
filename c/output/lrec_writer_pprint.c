@@ -20,15 +20,11 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 	lrec_writer_pprint_state_t* pstate = pvstate;
 
 	int drain = FALSE;
-	slls_t* pcurr_keys = NULL;
 
 	if (prec == NULL) {
 		drain = TRUE;
-	}
-	else {
-		// xxx make a fcn which does the cmp of lrec & slls w/o the copy
-		pcurr_keys = mlr_keys_from_record(prec);
-		if (pstate->pprev_keys != NULL && !slls_equals(pcurr_keys, pstate->pprev_keys)) {
+	} else {
+		if (pstate->pprev_keys != NULL && !lrec_keys_equal_list(prec, pstate->pprev_keys)) {
 			drain = TRUE;
 		}
 	}
@@ -47,7 +43,7 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 	if (prec != NULL) {
 		sllv_add(pstate->precords, prec);
 		if (pstate->pprev_keys == NULL)
-			pstate->pprev_keys = slls_copy(pcurr_keys);
+			pstate->pprev_keys = mlr_copy_keys_from_record(prec);
 	}
 }
 

@@ -4,10 +4,19 @@
 // ----------------------------------------------------------------
 // xxx freeing contract
 // xxx return an lrec?
+
 slls_t* mlr_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		slls_add_no_free(plist, pe->key);
+	}
+	return plist;
+}
+
+slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
+	slls_t* plist = slls_alloc();
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		slls_add_with_free(plist, strdup(pe->key));
 	}
 	return plist;
 }
@@ -105,7 +114,7 @@ int lrec_keys_equal_list(
 			return TRUE;
 		if (pe == NULL || pf == NULL)
 			return FALSE;
-		if (!streq(pe->value, pf->value))
+		if (!streq(pe->key, pf->value))
 			return FALSE;
 		pe = pe->pnext;
 		pf = pf->pnext;

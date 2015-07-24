@@ -23,8 +23,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 
 	if (pstate->plast_header_output != NULL) {
 		// xxx make a fcn to compare these w/o copy: put it in mixutil.
-		slls_t* ptemp = mlr_keys_from_record(prec);
-		if (!slls_equals(ptemp, pstate->plast_header_output)) {
+		if (!lrec_keys_equal_list(prec, pstate->plast_header_output)) {
 			slls_free(pstate->plast_header_output);
 			pstate->plast_header_output = NULL;
 			if (pstate->num_header_lines_output > 0LL)
@@ -41,8 +40,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 			nf++;
 		}
 		fputc(ors, output_stream);
-		// xxx maybe make a mlr_copy_keys_from_record & mlr_reference_keys_from_record
-		pstate->plast_header_output = slls_copy(mlr_keys_from_record(prec));
+		pstate->plast_header_output = mlr_copy_keys_from_record(prec);
 		pstate->num_header_lines_output++;
 	}
 
