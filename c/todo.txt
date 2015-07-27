@@ -1,7 +1,7 @@
 ================================================================
 ! BUGFIXES !
 
-:D
+* math of null should be null, e.g. echo x= | mlr put '$y=sin($x)'
 
 ================================================================
 TOP OF LIST
@@ -14,7 +14,7 @@ TOP OF LIST
 
 !! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
 
-* min/max functions: f_ff
+* min/max functions: f_ff. need to impl null-loses logic.
 
 * regularization mapper: when same names, reorder the same as 1st occurrence.
   e.g. one record w/ a,b,c & subsequent with a,c,b.
