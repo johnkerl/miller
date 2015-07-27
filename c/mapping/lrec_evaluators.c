@@ -110,8 +110,7 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	NULL_OR_ERROR_OUT(val1);
 	mt_get_double_nullable(&val1);
-	if (val1.type == MT_NULL)
-		return val1;
+	NULL_OUT(val1);
 	if (val1.type != MT_DOUBLE)
 		return MV_ERROR;
 
@@ -142,16 +141,14 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	mt_get_double_nullable(&val1);
-	if (val1.type == MT_NULL)
-		return val1;
+	NULL_OUT(val1);
 	if (val1.type != MT_DOUBLE)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	mt_get_double_nullable(&val2);
-	if (val2.type == MT_NULL)
-		return val2;
+	NULL_OUT(val2);
 	if (val2.type != MT_DOUBLE)
 		return MV_ERROR;
 

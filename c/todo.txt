@@ -7,7 +7,7 @@ TOP OF LIST
 * make a -D for hash-collision stats ...
 
 * go through remaining functions to decide when null-through is ok.
-* also document thoroughly.
+* also document thoroughly. emphasize this is crucial for heterogeneous data.
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 

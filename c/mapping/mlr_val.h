@@ -44,6 +44,10 @@ extern mv_t MV_ERROR;
 		return MV_NULL; \
 }
 
+#define NULL_OUT(val) { \
+	if ((val).type == MT_NULL) \
+		return MV_NULL; \
+}
 #define ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
 		return MV_ERROR; \
