@@ -44,6 +44,11 @@ extern mv_t MV_ERROR;
 		return MV_NULL; \
 }
 
+#define ERROR_OUT(val) { \
+	if ((val).type == MT_ERROR) \
+		return MV_ERROR; \
+}
+
 // ----------------------------------------------------------------
 char* mt_describe_type(int type);
 
@@ -53,6 +58,7 @@ char* mt_describe_val(mv_t val);
 // xxx explain why one is void & the other isn't
 int  mt_get_boolean_strict(mv_t* pval);
 void mt_get_double_strict(mv_t* pval);
+void mt_get_double_nullable(mv_t* pval);
 
 // ----------------------------------------------------------------
 typedef mv_t mv_zary_func_t();
@@ -137,12 +143,24 @@ static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
 	return rv;
 }
 static inline mv_t f_ff_max_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmax(pval1->u.dblv, pval2->u.dblv)}; // xxx impl: null loses ...
-	return rv;
+	if (pval1->type == MT_NULL) {
+		return *pval2;
+	} else if (pval2->type == MT_NULL) {
+		return *pval1;
+	} else {
+		mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmax(pval1->u.dblv, pval2->u.dblv)};
+		return rv;
+	}
 }
 static inline mv_t f_ff_min_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmin(pval1->u.dblv, pval2->u.dblv)}; // xxx impl: null loses ...
-	return rv;
+	if (pval1->type == MT_NULL) {
+		return *pval2;
+	} else if (pval2->type == MT_NULL) {
+		return *pval1;
+	} else {
+		mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmin(pval1->u.dblv, pval2->u.dblv)};
+		return rv;
+	}
 }
 static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pow(pval1->u.dblv, pval2->u.dblv)};

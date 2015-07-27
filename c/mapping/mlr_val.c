@@ -116,6 +116,37 @@ void mt_get_double_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// xxx merge with mt_get_double_string w/ a nullable parameter
+void mt_get_double_nullable(mv_t* pval) {
+	if (pval->type == MT_NULL)
+		return;
+	if (pval->type == MT_ERROR)
+		return;
+	if (pval->type == MT_DOUBLE)
+		return;
+	if (pval->type == MT_STRING) {
+		double dblv;
+		if (*pval->u.strv == '\0') {
+			pval->type = MT_NULL;
+			pval->u.intv = 0;
+		} else if (!mlr_try_double_from_string(pval->u.strv, &dblv)) {
+			pval->type = MT_ERROR;
+			pval->u.intv = 0;
+		} else {
+			pval->type = MT_DOUBLE;
+			pval->u.dblv = dblv;
+		}
+	} else if (pval->type == MT_INT) {
+		pval ->type = MT_DOUBLE;
+		pval->u.dblv = (double)pval->u.intv;
+	} else if (pval->type == MT_BOOL) {
+		pval->type = MT_ERROR;
+		pval->u.intv = 0;
+	}
+	// xxx else panic
+}
+
+// ----------------------------------------------------------------
 mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	int len1 = strlen(pval1->u.strv);
 	int len2 = strlen(pval1->u.strv);

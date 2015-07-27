@@ -167,6 +167,38 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 	return pevaluator;
 }
 
+mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_f_ff_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	ERROR_OUT(val1);
+	mt_get_double_nullable(&val1);
+	if (val1.type != MT_DOUBLE && val1.type != MT_NULL)
+		return MV_ERROR;
+
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	ERROR_OUT(val2);
+	mt_get_double_nullable(&val2);
+	if (val2.type != MT_DOUBLE && val2.type != MT_NULL)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_nullable_func(mv_binary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
+	lrec_evaluator_f_ff_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_ff_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_f_ff_nullable_func;
+
+	return pevaluator;
+}
+
 // ----------------------------------------------------------------
 typedef struct _lrec_evaluator_s_s_state_t {
 	mv_unary_func_t*  pfunc;
@@ -889,8 +921,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "<"))     { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,       parg1, parg2);
 	} else if (streq(fnnm, "<="))    { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,       parg1, parg2);
 	} else if (streq(fnnm, "."))     { return lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func,    parg1, parg2);
-	} else if (streq(fnnm, "max"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_max_func,    parg1, parg2);
-	} else if (streq(fnnm, "min"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_min_func,    parg1, parg2);
+	} else if (streq(fnnm, "max"))   { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func, parg1, parg2);
+	} else if (streq(fnnm, "min"))   { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func, parg1, parg2);
 	} else if (streq(fnnm, "pow"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
 	} else if (streq(fnnm, "+"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,   parg1, parg2);
 	} else if (streq(fnnm, "-"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,  parg1, parg2);

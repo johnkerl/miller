@@ -269,6 +269,9 @@ run_command $mlr filter -v '$x<$a*$b+-$c'  /dev/null
 run_command $mlr --csv put '$gmt=sec2gmt($sec)' $indir/sec2gmt
 run_command $mlr --csv put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 
+run_command $mlr put '$z=min($x, $y)' $indir/minmax.dkvp
+run_command $mlr put '$z=max($x, $y)' $indir/minmax.dkvp
+
 # ----------------------------------------------------------------
 announce CHAINING
 
