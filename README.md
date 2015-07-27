@@ -17,11 +17,11 @@ Features:
 
 * **Conversion** between formats
 
-* **Format-aware processing**: e.g. CSV sort and tac keep header lines first
+* **Format-aware processing**: e.g. CSV `sort` and `tac` keep header lines first
 
 * High-throughput **performance** on par with the Unix toolkit
 
-* Miller is **pipe-friendly** and interoperates with Unix toolkit.
+* Miller is **pipe-friendly** and interoperates with Unix toolkit
 
 * It complements SQL **databases**: you can slice, dice, and reformat data on the client side on its way into or out of a database. You can also reap some of the benefits of databases for quick, setup-free one-off tasks when just need to query some data in disk files in a hurry.
 
