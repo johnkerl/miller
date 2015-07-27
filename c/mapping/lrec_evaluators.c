@@ -109,7 +109,9 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_double_strict(&val1);
+	mt_get_double_nullable(&val1);
+	if (val1.type == MT_NULL)
+		return val1;
 	if (val1.type != MT_DOUBLE)
 		return MV_ERROR;
 
@@ -139,13 +141,17 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_double_strict(&val1);
+	mt_get_double_nullable(&val1);
+	if (val1.type == MT_NULL)
+		return val1;
 	if (val1.type != MT_DOUBLE)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mt_get_double_strict(&val2);
+	mt_get_double_nullable(&val2);
+	if (val2.type == MT_NULL)
+		return val2;
 	if (val2.type != MT_DOUBLE)
 		return MV_ERROR;
 
@@ -167,6 +173,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 	return pevaluator;
 }
 
+// xxx rename, and comment: this is for min/max which can return non-null when
+// one argument is null -- in comparison to other functions which return null
+// if *any* argument is null.
 mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);

@@ -1,12 +1,13 @@
 ================================================================
 ! BUGFIXES !
 
-* math of null should be null, e.g. echo x= | mlr put '$y=sin($x)'
-
 ================================================================
 TOP OF LIST
 
 * make a -D for hash-collision stats ...
+
+* go through remaining functions to decide when null-through is ok.
+* also document thoroughly.
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
