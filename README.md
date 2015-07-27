@@ -1,4 +1,4 @@
-Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.
+**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.**
 
 With Miller you get to use named fields without needing to count positional indices. For example:
 
@@ -14,8 +14,11 @@ This is something the Unix toolkit always could have done, and arguably always s
 Features:
 
 * I/O formats including **tabular pretty-printing**
+
 * **Conversion** between formats
+
 * **Format-aware processing**: e.g. CSV sort and tac keep header lines first
+
 * High-throughput **performance** on par with the Unix toolkit
 
 * Miller is **pipe-friendly** and interoperates with Unix toolkit.
