@@ -673,6 +673,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "log",      1 , "Natural (base-e) logarithm."},
 	{ FUNC_CLASS_MATH, "log10",    1 , "Base-10 logarithm."},
 	{ FUNC_CLASS_MATH, "log1p",    1 , "log(1-x)."},
+	{ FUNC_CLASS_MATH, "max",      2 , "max of two numbers; null loses"},
+	{ FUNC_CLASS_MATH, "min",      2 , "min of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
 	{ FUNC_CLASS_MATH, "qnorm",    1 , "Normal cumulative distribution function."},
 	{ FUNC_CLASS_MATH, "round",    1 , "Nearest integer."},
@@ -887,6 +889,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "<"))     { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,       parg1, parg2);
 	} else if (streq(fnnm, "<="))    { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,       parg1, parg2);
 	} else if (streq(fnnm, "."))     { return lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func,    parg1, parg2);
+	} else if (streq(fnnm, "max"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_max_func,    parg1, parg2);
+	} else if (streq(fnnm, "min"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_min_func,    parg1, parg2);
 	} else if (streq(fnnm, "pow"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
 	} else if (streq(fnnm, "+"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,   parg1, parg2);
 	} else if (streq(fnnm, "-"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,  parg1, parg2);

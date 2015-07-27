@@ -136,6 +136,14 @@ static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pval1->u.dblv / pval2->u.dblv};
 	return rv;
 }
+static inline mv_t f_ff_max_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmax(pval1->u.dblv, pval2->u.dblv)}; // xxx impl: null loses ...
+	return rv;
+}
+static inline mv_t f_ff_min_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = fmin(pval1->u.dblv, pval2->u.dblv)}; // xxx impl: null loses ...
+	return rv;
+}
 static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = pow(pval1->u.dblv, pval2->u.dblv)};
 	return rv;
