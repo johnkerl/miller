@@ -223,8 +223,9 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 
 // ----------------------------------------------------------------
 mv_t s_f_sec2gmt_func(mv_t* pval1) {
-	NULL_OR_ERROR_OUT(*pval1);
-	mt_get_double_strict(pval1);
+	ERROR_OUT(*pval1);
+	mt_get_double_nullable(pval1);
+	NULL_OUT(*pval1);
 	if (pval1->type != MT_DOUBLE)
 		return MV_ERROR;
 	time_t clock = (time_t) pval1->u.dblv;
@@ -241,11 +242,15 @@ mv_t s_f_sec2gmt_func(mv_t* pval1) {
 
 mv_t i_s_gmt2sec_func(mv_t* pval1) {
 	struct tm tm;
-	strptime(pval1->u.strv, "%Y-%m-%dT%H:%M:%SZ", &tm);
-	time_t t = timegm(&tm);
+	if (*pval1->u.strv == '\0') {
+		return MV_NULL;
+	} else {
+		strptime(pval1->u.strv, "%Y-%m-%dT%H:%M:%SZ", &tm);
+		time_t t = timegm(&tm);
 
-	mv_t rv = {.type = MT_INT, .u.intv = (long long)t};
-	return rv;
+		mv_t rv = {.type = MT_INT, .u.intv = (long long)t};
+		return rv;
+	}
 }
 
 // ----------------------------------------------------------------
@@ -262,6 +267,8 @@ static mv_t int_i_d(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long
 static mv_t int_i_i(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.intv}; }
 static mv_t int_i_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_INT };
+	if (*pa->u.strv == '\0')
+		return MV_NULL;
 	if (!mlr_try_int_from_string(pa->u.strv, &retval.u.intv))
 		retval.type = MT_ERROR;
 	return retval;
@@ -287,6 +294,8 @@ static mv_t float_f_d(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa
 static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.intv}; }
 static mv_t float_f_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_DOUBLE };
+	if (*pa->u.strv == '\0')
+		return MV_NULL;
 	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.dblv))
 		retval.type = MT_ERROR;
 	return retval;
