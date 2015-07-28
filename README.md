@@ -9,7 +9,7 @@ With Miller you get to use named fields without needing to count positional indi
 % mlr --csv filter '$status != "down"' mydata.csv
 ```
 
-This is something the Unix toolkit always could have done, and arguably always should have done.  It operates on key-value-pair data while the familiar Unix tools operate on integer-indexed fields: if the natural data structure for the latter is the array, then Miller's natural data structure is the insertion-ordered hash map.  This encompasses a **variety of data formats**, including but not limited to the familiar CSV.  (Miller can handle positionally-indexed data as a special case.) 
+This is something the Unix toolkit always could have done, and arguably always should have done.  It operates on **key-value-pair data** while the familiar Unix tools operate on integer-indexed fields: if the natural data structure for the latter is the array, then Miller's natural data structure is the insertion-ordered hash map.  This encompasses a **variety of data formats**, including but not limited to the familiar **CSV**.  (Miller can handle positionally-indexed data as a special case.) 
 
 Features:
 
