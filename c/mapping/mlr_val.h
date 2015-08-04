@@ -127,6 +127,7 @@ static inline mv_t f_f_uneg_func(mv_t*     pval1){mv_t rv={.type=MT_DOUBLE,.u.db
 
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
+mv_t b_x_boolean_func(mv_t* pval1);
 mv_t s_x_string_func(mv_t* pval1);
 
 // ----------------------------------------------------------------

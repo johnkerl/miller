@@ -399,6 +399,32 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_s_x_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_b_x_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_b_x_state_t;
+
+mv_t lrec_evaluator_b_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_b_x_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_b_x_func(mv_unary_func_t* pfunc,
+	lrec_evaluator_t* parg1)
+{
+	lrec_evaluator_b_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_b_x_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_b_x_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_xx_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -751,6 +777,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
 	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
 	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
+	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
 
 	{ FUNC_CLASS_TIME, "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
 	{ FUNC_CLASS_TIME, "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
@@ -883,6 +910,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "asinh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,    parg1);
 	} else if (streq(fnnm, "atan"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,     parg1);
 	} else if (streq(fnnm, "atanh"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,    parg1);
+	} else if (streq(fnnm, "boolean"))  { return lrec_evaluator_alloc_from_b_x_func(b_x_boolean_func,  parg1);
 	} else if (streq(fnnm, "cbrt"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,     parg1);
 	} else if (streq(fnnm, "ceil"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,     parg1);
 	} else if (streq(fnnm, "cos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,      parg1);

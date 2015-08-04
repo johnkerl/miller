@@ -313,6 +313,28 @@ static mv_unary_func_t* float_dispositions[MT_MAX] = {
 mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t boolean_b_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
+static mv_t boolean_b_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
+static mv_t boolean_b_b(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = pa->u.boolv}; }
+static mv_t boolean_b_d(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.dblv == 0.0) ? FALSE : TRUE}; }
+static mv_t boolean_b_i(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.intv == 0LL) ? FALSE : TRUE}; }
+static mv_t boolean_b_s(mv_t* pa) { return (mv_t) {.type = MT_BOOL,
+		.u.boolv = (streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE
+	};
+}
+
+static mv_unary_func_t* boolean_dispositions[MT_MAX] = {
+    /*NULL*/   boolean_b_n,
+    /*ERROR*/  boolean_b_e,
+    /*BOOL*/   boolean_b_b,
+    /*DOUBLE*/ boolean_b_d,
+    /*INT*/    boolean_b_i,
+    /*STRING*/ boolean_b_s,
+};
+
+mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 static mv_t string_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t string_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"true":"false")}; }

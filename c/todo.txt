@@ -10,6 +10,7 @@ TOP OF LIST
 !! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
   -> boolean literal parsing? on by default? doc why not if not. (various words in text columns,
      some ('true','false') suddenly changing type -- ick.)
+  -> boolean() function then??
   -> certainly, for output: want mlr put '$z=true'
   -> UTs
 
