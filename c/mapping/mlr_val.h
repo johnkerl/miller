@@ -179,8 +179,16 @@ static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = (double)i3};
 	return rv;
 }
+
 static inline mv_t f_ff_atan2_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_DOUBLE, .u.dblv = atan2(pval1->u.dblv, pval2->u.dblv)};
+	return rv;
+}
+
+static inline mv_t f_ff_roundm_func(mv_t* pval1, mv_t* pval2) {
+	double x = pval1->u.dblv;
+	double m = pval2->u.dblv;
+	mv_t rv = {.type = MT_DOUBLE, .u.dblv = round(x / m) * m};
 	return rv;
 }
 

@@ -715,7 +715,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "min",      2 , "min of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
 	{ FUNC_CLASS_MATH, "qnorm",    1 , "Normal cumulative distribution function."},
-	{ FUNC_CLASS_MATH, "round",    1 , "Nearest integer."},
+	{ FUNC_CLASS_MATH, "round",    1 , "Round to nearest integer."},
+	{ FUNC_CLASS_MATH, "roundm",   2 , "Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m"},
 	{ FUNC_CLASS_MATH, "sin",      1 , "Trigonometric sine."},
 	{ FUNC_CLASS_MATH, "sinh",     1 , "Hyperbolic sine."},
 	{ FUNC_CLASS_MATH, "sqrt",     1 , "Square root."},
@@ -918,25 +919,26 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
 {
-	if        (streq(fnnm, "&&"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,    parg1, parg2);
-	} else if (streq(fnnm, "||"))    { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,     parg1, parg2);
-	} else if (streq(fnnm, "=="))    { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,       parg1, parg2);
-	} else if (streq(fnnm, "!="))    { return lrec_evaluator_alloc_from_b_xx_func(ne_op_func,       parg1, parg2);
-	} else if (streq(fnnm, ">"))     { return lrec_evaluator_alloc_from_b_xx_func(gt_op_func,       parg1, parg2);
-	} else if (streq(fnnm, ">="))    { return lrec_evaluator_alloc_from_b_xx_func(ge_op_func,       parg1, parg2);
-	} else if (streq(fnnm, "<"))     { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,       parg1, parg2);
-	} else if (streq(fnnm, "<="))    { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,       parg1, parg2);
-	} else if (streq(fnnm, "."))     { return lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func,    parg1, parg2);
-	} else if (streq(fnnm, "+"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,   parg1, parg2);
-	} else if (streq(fnnm, "-"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,  parg1, parg2);
-	} else if (streq(fnnm, "*"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,  parg1, parg2);
-	} else if (streq(fnnm, "/"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func, parg1, parg2);
-	} else if (streq(fnnm, "**"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
-	} else if (streq(fnnm, "pow"))   { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,    parg1, parg2);
-	} else if (streq(fnnm, "%"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,    parg1, parg2);
-	} else if (streq(fnnm, "atan2")) { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,  parg1, parg2);
-	} else if (streq(fnnm, "max"))   { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func, parg1, parg2);
-	} else if (streq(fnnm, "min"))   { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func, parg1, parg2);
+	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,             parg1, parg2);
+	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,              parg1, parg2);
+	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,                parg1, parg2);
+	} else if (streq(fnnm, "!="))     { return lrec_evaluator_alloc_from_b_xx_func(ne_op_func,                parg1, parg2);
+	} else if (streq(fnnm, ">"))      { return lrec_evaluator_alloc_from_b_xx_func(gt_op_func,                parg1, parg2);
+	} else if (streq(fnnm, ">="))     { return lrec_evaluator_alloc_from_b_xx_func(ge_op_func,                parg1, parg2);
+	} else if (streq(fnnm, "<"))      { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,                parg1, parg2);
+	} else if (streq(fnnm, "<="))     { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,                parg1, parg2);
+	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func,             parg1, parg2);
+	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,            parg1, parg2);
+	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,           parg1, parg2);
+	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,           parg1, parg2);
+	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func,          parg1, parg2);
+	} else if (streq(fnnm, "**"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,             parg1, parg2);
+	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,             parg1, parg2);
+	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,             parg1, parg2);
+	} else if (streq(fnnm, "atan2"))  { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,           parg1, parg2);
+	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,    parg1, parg2);
+	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,    parg1, parg2);
+	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func, parg1, parg2);
 	} else  { return NULL; /* xxx handle me better */ }
 }
 
