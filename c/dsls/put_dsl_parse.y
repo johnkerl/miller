@@ -48,7 +48,7 @@ put_dsl_assignments ::= put_dsl_assignment PUT_DSL_SEMICOLON put_dsl_assignments
 // within Miller internally, field names are of the form "x".  We coded the
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
-put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_expr(C). {
+put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_bool_expr(C). {
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
@@ -56,6 +56,51 @@ put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_expr(
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 	sllv_add(pasts, A);
 }
+
+// ----------------------------------------------------------------
+put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) FILTER_DSL_OR(O) put_dsl_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_bool_expr(A) ::= put_dsl_or_term(B). {
+	A = B;
+}
+
+// ----------------------------------------------------------------
+put_dsl_or_term(A) ::= put_dsl_or_term(B) FILTER_DSL_AND(O) put_dsl_and_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_or_term(A) ::= put_dsl_and_term(B). {
+	A = B;
+}
+
+// ----------------------------------------------------------------
+put_dsl_and_term(A) ::= put_dsl_eqne_term(B) FILTER_DSL_EQ(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_and_term(A) ::= put_dsl_eqne_term(B) FILTER_DSL_NE(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_and_term(A) ::= put_dsl_eqne_term(B). {
+	A = B;
+}
+
+// ----------------------------------------------------------------
+put_dsl_eqne_term(A) ::= put_dsl_expr(B). {
+	A = B;
+}
+put_dsl_eqne_term(A) ::= put_dsl_expr(B) FILTER_DSL_GT(O) put_dsl_expr(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_eqne_term(A) ::= put_dsl_expr(B) FILTER_DSL_GE(O) put_dsl_expr(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_eqne_term(A) ::= put_dsl_expr(B) FILTER_DSL_LT(O) put_dsl_expr(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_eqne_term(A) ::= put_dsl_expr(B) FILTER_DSL_LE(O) put_dsl_expr(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
 
 // ----------------------------------------------------------------
 put_dsl_expr(A) ::= put_dsl_term(B). {
@@ -99,7 +144,8 @@ put_dsl_factor(A) ::= put_dsl_expitem(B) PUT_DSL_POW(O) put_dsl_factor(C). {
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 put_dsl_expitem(A) ::= PUT_DSL_FIELD_NAME(B). {
-	//A = B;
+	// not:
+  // A = B;
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
@@ -119,7 +165,7 @@ put_dsl_expitem(A) ::= PUT_DSL_CONTEXT_VARIABLE(B). {
 	A = B;
 }
 
-put_dsl_expitem(A) ::= PUT_DSL_LPAREN put_dsl_expr(B) PUT_DSL_RPAREN. {
+put_dsl_expitem(A) ::= PUT_DSL_LPAREN put_dsl_bool_expr(B) PUT_DSL_RPAREN. {
 	A = B;
 }
 put_dsl_expitem(A) ::= PUT_DSL_MINUS(O) put_dsl_expitem(B). {
@@ -141,9 +187,9 @@ put_dsl_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 }
 
-put_dsl_fcn_args(A) ::= put_dsl_expr(B). {
+put_dsl_fcn_args(A) ::= put_dsl_bool_expr(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME, B);
 }
-put_dsl_fcn_args(A) ::= put_dsl_fcn_args(B) PUT_DSL_COMMA put_dsl_expr(C). {
+put_dsl_fcn_args(A) ::= put_dsl_fcn_args(B) PUT_DSL_COMMA put_dsl_bool_expr(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }

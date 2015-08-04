@@ -38,7 +38,7 @@
 }
 
 // ----------------------------------------------------------------
-filter_dsl_body(A) ::= filter_dsl_bool_expr(B). {                 // For scan-from-string
+filter_dsl_body(A) ::= filter_dsl_bool_expr(B). {
   A = B;
 	past->proot = A;
 }

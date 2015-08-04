@@ -95,6 +95,39 @@
 	return PUT_DSL_POW;
 }
 
+"<" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+"<=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+">" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+">=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+"&&" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+"||" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+"==" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+"!=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_MOD;
+}
+
 "(" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
 	return PUT_DSL_LPAREN;

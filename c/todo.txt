@@ -4,6 +4,14 @@
 ================================================================
 TOP OF LIST
 
+* roundm function: round to multiple of m
+
+!! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
+  -> boolean literal parsing? on by default? doc why not if not. (various words in text columns,
+     some ('true','false') suddenly changing type -- ick.)
+  -> certainly, for output: want mlr put '$z=true'
+  -> UTs
+
 * make a -D for hash-collision stats ...
 
 * document nullability thoroughly: emphasize this is crucial for heterogeneous data.
@@ -12,11 +20,6 @@ TOP OF LIST
   - separate doc section?
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
-
-! gh/jk/mlr top-level readme: replicate mlrdoc index.html content. *then* link.
-
-!! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
-
 
 * regularization mapper: when same names, reorder the same as 1st occurrence.
   e.g. one record w/ a,b,c & subsequent with a,c,b.
