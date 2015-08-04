@@ -229,8 +229,8 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
-   tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper . float
-   int string gmt2sec sec2gmt systime
+   tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper .
+   boolean float int string gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -2097,6 +2097,7 @@ sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")'. Reg
 tolower    (string:     #args=1): Convert string to lowercase.
 toupper    (string:     #args=1): Convert string to uppercase.
 .          (string:     #args=2): String concatenation.
+boolean    (conversion: #args=1): Convert int/float/bool/string to boolean.
 float      (conversion: #args=1): Convert int/float/bool/string to float.
 int        (conversion: #args=1): Convert int/float/bool/string to int.
 string     (conversion: #args=1): Convert int/float/bool/string to string.

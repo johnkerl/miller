@@ -774,10 +774,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_STRING, "toupper",  1 , "Convert string to uppercase."},
 	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
 
+	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
 	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
 	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
 	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
-	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
 
 	{ FUNC_CLASS_TIME, "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
 	{ FUNC_CLASS_TIME, "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
