@@ -228,9 +228,9 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 floor invqnorm log log10 log1p max min pow qnorm round sin sinh sqrt tan tanh
-   urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper . float int
-   string gmt2sec sec2gmt systime
+   expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
+   tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper . float
+   int string gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -2068,7 +2068,8 @@ max        (math:       #args=2): max of two numbers; null loses
 min        (math:       #args=2): min of two numbers; null loses
 pow        (math:       #args=2): Exponentiation; same as **.
 qnorm      (math:       #args=1): Normal cumulative distribution function.
-round      (math:       #args=1): Nearest integer.
+round      (math:       #args=1): Round to nearest integer.
+roundm     (math:       #args=2): Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m
 sin        (math:       #args=1): Trigonometric sine.
 sinh       (math:       #args=1): Hyperbolic sine.
 sqrt       (math:       #args=1): Square root.
