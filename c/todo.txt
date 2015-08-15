@@ -6,16 +6,14 @@
 ================================================================
 TOP OF LIST
 
+* run go/d/etc on sprax & include #'s in perf pg, and/or rm xref in the latter & just post xlang perf #'s there
+* link to gh/jk/m xlang impls ... and/or cardify their sources :) ... or maybe just link to gh/jk/m xlang dir
+* ack c impl has been repeatedly optimized but even the original version (also cutc.c ...) outperforms
+
 * default some cli args differently depending on others:
   - for sure: --nidx, default to fs=space & allow_repeat_ifs=true
   - think through others
   - doc them @ online help & mlrwik
-
-* UTs:
-  - roundm function: round to multiple of m
-  - boolean() function
-  - boolean-valued put, e.g. mlr put '$ok = $x <= 10'
-  - nullability cases, esp. sort, and math funcs
 
 * make a -D for hash-collision stats ...
 
@@ -24,14 +22,17 @@ TOP OF LIST
 ! maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
   of one format??
 
-!! join
-  -> cleanup of xxx cmts
-  -> left/right-prefix UTs
-  -> het UTs
-  -> mixed-format/separator UT cases
+!! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
+   tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
+   some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
+   presumably with a different name.  something about "header with data" or
+   "key with value"?? lower-cased only rather than making it an acronym?
+
+? nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
+
+!! join: cleanup of xxx cmts
 
 !! mmap cleanup, especially csv
-!! mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 ! doc stats1/stats2 accums via then-statements ...
 
 -> fmtnum() function
@@ -40,23 +41,11 @@ TOP OF LIST
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
-!! top-level notes: make -C c, & poki in poki dir. add poki chdir/out-of-pwd feature?
-
-!! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
-   tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
-   some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
-   presumably with a different name.  something about "header with data" or
-   "key with value"?? lower-cased only rather than making it an acronym?
-
    > maybe call dkvp labeled-index fmt
 
    > definitely put nidx before dkvp in the mlrwik/formats page
 
    > "index-numbered" -> "implicitly index-numbered" in mlrwik
-
-? nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
-
-!! __X_MAIN__ -> UT code (effectively all-but-dead code at present)
 
 ----------------------------------------------------------------
 
@@ -137,6 +126,15 @@ UT/REG
 * make should-fail machinery & use it for null-key dkvp cases.
 * all mathlib funcs
 * int/float/string
+* roundm function: round to multiple of m
+* boolean() function
+* boolean-valued put, e.g. mlr put '$ok = $x <= 10'
+* nullability cases, esp. sort, and math funcs
+* join with het data
+* join with mixed-format/separator (left vs. right)
+* join with left/right-prefix
+* mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
+* all __X_MAIN__ instances -> UT code (effectively all-but-dead code at present)
 
 ================================================================
 HARDER HYGIENE
