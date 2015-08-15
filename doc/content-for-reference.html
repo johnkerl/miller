@@ -62,6 +62,7 @@ POKI_INCLUDE_ESCAPED(subcommand-example.txt)HERE
     <td>
       <a href="#count-distinct"><tt>count-distinct</tt></a>,
       <a href="#label"><tt>label</tt></a>,
+      <a href="#regularize"><tt>rename</tt></a>,
       <a href="#rename"><tt>rename</tt></a>,
       <a href="#reorder"><tt>reorder</tt></a>
     </td>
@@ -446,6 +447,17 @@ POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM;
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
 POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
+
+<!-- ================================================================ -->
+<h2>regularize</h2>
+
+POKI_RUN_COMMAND{{mlr regularize --help}}HERE
+
+<p/>This exists since hash-map software in various languages and tools
+encountered in the wild does not always print similar rows with fields in the
+same order: <tt>mlr regularize</tt> helps clean that up.
+
+<p/>See also <a href="#reorder"><tt>reorder</tt></a>.
 
 <!-- ================================================================ -->
 <h2>rename</h2>

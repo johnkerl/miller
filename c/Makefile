@@ -115,6 +115,9 @@ test-join-bucket-keeper: .always
 dheap:
 	$(CCDEBUG) -D__DHEAP_MAIN__ containers/dheap.c lib/mlrutil.c
 
+slls:
+	$(CCDEBUG) -D__SLLS_MAIN__ containers/slls.c lib/mlrutil.c
+
 sllv:
 	$(CCDEBUG) -D__SLLV_MAIN__ containers/sllv.c lib/mlrutil.c
 

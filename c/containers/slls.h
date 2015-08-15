@@ -32,6 +32,8 @@ void    slls_reverse(slls_t* plist);
 int     slls_hash_func(slls_t *plist);
 int     slls_compare_lexically(slls_t* pa, slls_t* pb);
 
+void    slls_sort(slls_t* plist);
+
 // Debug routines:
 char*   slls_join(slls_t* plist, char fs);
 void    slls_print(slls_t* plist);

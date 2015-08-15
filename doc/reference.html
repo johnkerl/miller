@@ -115,6 +115,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#join">join</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
@@ -199,6 +200,7 @@ mlr sort -f hostname,uptime *.dat
     <td>
       <a href="#count-distinct"><tt>count-distinct</tt></a>,
       <a href="#label"><tt>label</tt></a>,
+      <a href="#regularize"><tt>rename</tt></a>,
       <a href="#rename"><tt>rename</tt></a>,
       <a href="#reorder"><tt>reorder</tt></a>
     </td>
@@ -222,7 +224,8 @@ $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
    cat check count-distinct cut filter group-by group-like having-fields head
-   histogram join label put rename reorder sort stats1 stats2 step tac tail top uniq
+   histogram join label put regularize rename reorder sort stats1 stats2 step tac tail top
+   uniq
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 
@@ -1339,6 +1342,28 @@ mlr --opprint put '
 </pre>
 </div>
 <p/>
+
+<!-- ================================================================ -->
+<a id="regularize"/><h2>regularize</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr regularize --help
+Usage: mlr regularize
+For records seen earlier in the data stream with same field names in a different order,
+outputs them with field names in the previously encountered order.
+Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
+output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+</pre>
+</div>
+<p/>
+
+<p/>This exists since hash-map software in various languages and tools
+encountered in the wild does not always print similar rows with fields in the
+same order: <tt>mlr regularize</tt> helps clean that up.
+
+<p/>See also <a href="#reorder"><tt>reorder</tt></a>.
 
 <!-- ================================================================ -->
 <a id="rename"/><h2>rename</h2>

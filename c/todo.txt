@@ -30,9 +30,6 @@ TOP OF LIST
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
-* regularization mapper: when same names, reorder the same as 1st occurrence.
-  e.g. one record w/ a,b,c & subsequent with a,c,b.
-
 ! maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
   of one format??
 

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 
@@ -201,9 +202,47 @@ int slls_compare_lexically(slls_t* pa, slls_t* pb) {
 }
 
 // ----------------------------------------------------------------
+static int sllse_vcmp(const void* pva, const void* pvb) {
+	const sllse_t** pa = (const sllse_t**)pva;
+	const sllse_t** pb = (const sllse_t**)pvb;
+	return strcmp((*pa)->value, (*pb)->value);
+}
+
+void slls_sort(slls_t* plist) {
+	if (plist->length < 2)
+		return;
+
+	int i;
+	sllse_t* pe;
+
+	// Copy to array
+	sllse_t** node_array = mlr_malloc_or_die(sizeof(sllse_t*) * plist->length);
+	for (i = 0, pe = plist->phead; pe != NULL; i++, pe = pe->pnext)
+		node_array[i] = pe;
+
+	// Sort the array
+	qsort(node_array, plist->length, sizeof(sllse_t*), sllse_vcmp);
+
+	// Copy back
+	plist->phead = node_array[0];
+	plist->ptail = node_array[plist->length - 1];
+	for (i = 1; i < plist->length; i++) {
+		node_array[i-1]->pnext = node_array[i];
+	}
+	plist->ptail->pnext = NULL;
+
+	free(node_array);
+}
+
+// ----------------------------------------------------------------
 #ifdef __SLLS_MAIN__
 int main(int argc, char** argv)  {
 	slls_t* plist = slls_from_line(argv[1], ',', FALSE);
+	printf("len=%d\n", plist->length);
+	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
+		printf("val=%s\n", (char*)pe->value);
+	slls_sort(plist);
+	printf("\n");
 	printf("len=%d\n", plist->length);
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
 		printf("val=%s\n", (char*)pe->value);

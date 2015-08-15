@@ -83,6 +83,7 @@ lhmslv_t* lhmslv_alloc() {
 void lhmslv_free(lhmslv_t* pmap) {
 	if (pmap == NULL)
 		return;
+	// xxx free each key
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;

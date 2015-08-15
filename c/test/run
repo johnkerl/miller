@@ -66,6 +66,8 @@ run_command $mlr having-fields --at-most   a,b,i,x,y,z $indir/abixy
 run_command $mlr rename b,BEE,x,EKS $indir/abixy
 run_command $mlr rename nonesuch,nonesuch,x,EKS $indir/abixy
 
+run_command $mlr regularize $indir/regularize.dkvp
+
 # ----------------------------------------------------------------
 announce TRIVIAL RETAINERS
 
