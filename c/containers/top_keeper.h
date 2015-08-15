@@ -1,3 +1,7 @@
+// ================================================================
+// Data structure for mlr top: just a decorated array.
+// ================================================================
+
 #ifndef TOP_KEEPER_H
 #define TOP_KEEPER_H
 #include "containers/lrec.h"

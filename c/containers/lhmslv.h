@@ -1,8 +1,3 @@
-#ifndef LHMSLV_H
-#define LHMSLV_H
-
-#include "containers/slls.h"
-
 // ================================================================
 // Array-only (open addressing) string-list-to-void-star linked hash map with
 // linear probing for collisions.
@@ -17,6 +12,11 @@
 // * http://en.wikipedia.org/wiki/Hash_table
 // * http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 // ================================================================
+
+#ifndef LHMSLV_H
+#define LHMSLV_H
+
+#include "containers/slls.h"
 
 // ----------------------------------------------------------------
 typedef struct _lhmslve_t {

@@ -1,3 +1,7 @@
+// ================================================================
+// Abstraction layer for mmapped file-read logic.
+// ================================================================
+
 #ifndef FILE_READER_MMAP_H
 #define FILE_READER_MMAP_H
 

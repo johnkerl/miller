@@ -1,9 +1,12 @@
+// ================================================================
+// Retains field names from CSV header lines across record reads.
+// See also c/README.md.
+// ================================================================
+
 #ifndef HEADER_KEEPER_H
 #define HEADER_KEEPER_H
 
 #include "containers/slls.h"
-
-// xxx cmt w/ xref
 
 typedef struct _header_keeper_t {
 	char*   line;

@@ -1,8 +1,3 @@
-#ifndef LHMS2V_H
-#define LHMS2V_H
-
-#include "containers/slls.h"
-
 // ================================================================
 // Array-only (open addressing) string-pair-to-void-star linked hash map with
 // linear probing for collisions.
@@ -17,6 +12,9 @@
 // * http://en.wikipedia.org/wiki/Hash_table
 // * http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 // ================================================================
+
+#ifndef LHMS2V_H
+#define LHMS2V_H
 
 // ----------------------------------------------------------------
 typedef struct _lhms2ve_t {

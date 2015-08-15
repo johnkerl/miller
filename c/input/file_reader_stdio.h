@@ -1,3 +1,7 @@
+// ================================================================
+// Abstraction layer for stdio file-read logic.
+// ================================================================
+
 #ifndef FILE_READER_STDIO_H
 #define FILE_READER_STDIO_H
 

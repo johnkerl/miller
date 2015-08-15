@@ -1,6 +1,3 @@
-#ifndef HSS_H
-#define HSS_H
-
 // ================================================================
 // Array-only (open addressing) string-valued hash set with linear probing for
 // collisions.
@@ -12,6 +9,9 @@
 // * http://en.wikipedia.org/wiki/Hash_table
 // * http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 // ================================================================
+
+#ifndef HSS_H
+#define HSS_H
 
 // ----------------------------------------------------------------
 typedef struct _hsse_t {
@@ -28,6 +28,7 @@ typedef struct _hss_t {
 	hsse_t* array;
 } hss_t;
 
+// ----------------------------------------------------------------
 hss_t* hss_alloc();
 void   hss_free(hss_t* pset);
 void   hss_add(hss_t* pset, char* key);

@@ -1,3 +1,7 @@
+// ================================================================
+// Data structures for mlr join
+// ================================================================
+
 #ifndef JOIN_BUCKET_KEEPER_H
 #define JOIN_BUCKET_KEEPER_H
 

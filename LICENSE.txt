@@ -1,4 +1,4 @@
-Copyright (c) 2015 John Kerl
+Copyright (c) 2015- John Kerl
 
 All rights reserved.
 

@@ -1,8 +1,3 @@
-#ifndef LHMSS_H
-#define LHMSS_H
-
-#include "containers/sllv.h"
-
 // ================================================================
 // Array-only (open addressing) string-to-string linked hash map with linear
 // probing for collisions.
@@ -17,6 +12,11 @@
 // * http://en.wikipedia.org/wiki/Hash_table
 // * http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 // ================================================================
+
+#ifndef LHMSS_H
+#define LHMSS_H
+
+#include "containers/sllv.h"
 
 // ----------------------------------------------------------------
 typedef struct _lhmsse_t {

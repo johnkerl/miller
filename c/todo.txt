@@ -14,9 +14,6 @@ TOP OF LIST
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
-!! join: cleanup of xxx cmts
-
-!! mmap cleanup, especially csv
 ! doc stats1/stats2 accums via then-statements ...
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
@@ -122,6 +119,12 @@ UT/REG
 * join with left/right-prefix
 * mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 * all __X_MAIN__ instances -> UT code (effectively all-but-dead code at present)
+
+================================================================
+HYGIENE
+
+!! join: cleanup of xxx cmts
+!! mmap cleanup, especially csv
 
 ================================================================
 HARDER HYGIENE

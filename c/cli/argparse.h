@@ -1,3 +1,7 @@
+// ================================================================
+// Argument-parsing library, with non-getopt semantics.
+// ================================================================
+
 #ifndef ARGPARSE_H
 #define ARGPARSE_H
 #include "containers/slls.h"

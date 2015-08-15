@@ -1,4 +1,7 @@
+// ================================================================
 // Functions involving more than one container type
+// ================================================================
+
 #ifndef MIXUTIL_H
 #define MIXUTIL_H
 #include "containers/lrec.h"

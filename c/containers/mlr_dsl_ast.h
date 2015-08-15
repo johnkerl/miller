@@ -1,10 +1,10 @@
-#ifndef MLR_DSL_AST_H
-#define MLR_DSL_AST_H
-#include "sllv.h"
-
 // ================================================================
 // Miller abstract syntax tree for put and filter.
 // ================================================================
+
+#ifndef MLR_DSL_AST_H
+#define MLR_DSL_AST_H
+#include "sllv.h"
 
 #define MLR_DSL_AST_NODE_TYPE_LITERAL          0xaaaa
 #define MLR_DSL_AST_NODE_TYPE_FIELD_NAME       0xbbbb
