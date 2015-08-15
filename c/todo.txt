@@ -28,10 +28,13 @@ TOP OF LIST
 NEATEN
 
 !! xxx's in the code
+
+! copyright headers ...
+
 * source hygiene: top-of-header comments, readme re memory management, etc.
+* mmap cleanup, especially csv
 
 * prune pix/ dir
-
 * trawl around sysadmin docs etc. looking for more use-cases. not just data analysis or devops/logdive.
 
 ================================================================
@@ -39,7 +42,6 @@ IMPROVEMENTS
 
 * pprint reader: read using field widths?!? with strip ... that would solve the embedded-whitespace problem.
   lmhsi: column name -> char index??
-* null-handling everywhere!! :/
 * free-flag for string mlrvals
 
 ================================================================
@@ -119,12 +121,6 @@ UT/REG
 * join with left/right-prefix
 * mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 * all __X_MAIN__ instances -> UT code (effectively all-but-dead code at present)
-
-================================================================
-HYGIENE
-
-!! join: cleanup of xxx cmts
-!! mmap cleanup, especially csv
 
 ================================================================
 HARDER HYGIENE
