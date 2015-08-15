@@ -85,7 +85,8 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)\n");
 	fprintf(o, "  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)\n");
 	fprintf(o, "  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)\n");
-	fprintf(o, "  --xtab    --ixtab   --oxtab                Transposed-tabular (useful for highly multi-column data)\n");
+	fprintf(o, "  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)\n");
+	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Numerical format:\n");
 	fprintf(o, "  --ofmt {format}                            E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
 	fprintf(o, "                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
@@ -240,6 +241,14 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 		else if (streq(argv[argi], "--repifs")) {
+			popts->allow_repeat_ifs = TRUE;
+		}
+
+		else if (streq(argv[argi], "-p")) {
+			popts->ifmt = "nidx";
+			ofmt = "nidx";
+			popts->ifs = ' ';
+			popts->ofs = ' ';
 			popts->allow_repeat_ifs = TRUE;
 		}
 

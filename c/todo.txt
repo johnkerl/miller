@@ -10,32 +10,14 @@ TOP OF LIST
 * link to gh/jk/m xlang impls ... and/or cardify their sources :) ... or maybe just link to gh/jk/m xlang dir
 * ack c impl has been repeatedly optimized but even the original version (also cutc.c ...) outperforms
 
-* default some cli args differently depending on others:
-  - for sure: --nidx, default to fs=space & allow_repeat_ifs=true
-  - think through others
-  - doc them @ online help & mlrwik
-
 * make a -D for hash-collision stats ...
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
-
-! maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
-  of one format??
-
-!! dkvp as generalization of nidx. restructure mlrwik to emphasize this.
-   tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
-   some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
-   presumably with a different name.  something about "header with data" or
-   "key with value"?? lower-cased only rather than making it an acronym?
-
-? nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 
 !! join: cleanup of xxx cmts
 
 !! mmap cleanup, especially csv
 ! doc stats1/stats2 accums via then-statements ...
-
--> log2 & exp2?
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
 
@@ -93,12 +75,27 @@ MEM MGMT:
 * look at any other strdups
 
 ================================================================
+NIDX/DKVP/...:
+
+* maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
+  of one format??
+
+* dkvp as generalization of nidx. restructure mlrwik to emphasize this.
+  tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
+  some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
+  presumably with a different name.  something about "header with data" or
+  "key with value"?? lower-cased only rather than making it an acronym?
+
+* nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
+
+================================================================
 FUNCTIONS
 ? match      b_ss  (w/ regexes!!)
 ? sub, gsub  s_sss (w/ regexes!!)
 ? index      i_ss
 ? bit ops & | ^ << >> ???    i_ii
   (really needs hex-fmt to be useful ...)
+? log2, exp2
 
 ================================================================
 UT/REG
