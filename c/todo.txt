@@ -14,15 +14,7 @@ TOP OF LIST
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
-! doc stats1/stats2 accums via then-statements ...
-
-!! update t1.rb including numeric sort; fix appropriateness of -t=
-
-   > maybe call dkvp labeled-index fmt
-
-   > definitely put nidx before dkvp in the mlrwik/formats page
-
-   > "index-numbered" -> "implicitly index-numbered" in mlrwik
+* update t1.rb including numeric sort; fix appropriateness of -t=
 
 ================================================================
 NEATEN
@@ -87,13 +79,16 @@ NIDX/DKVP/...:
 
 * nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
 
+* maybe call dkvp labeled-index fmt
+* definitely put nidx before dkvp in the mlrwik/formats page
+* "index-numbered" -> "implicitly index-numbered" in mlrwik
+
 ================================================================
 FUNCTIONS
-? match      b_ss  (w/ regexes!!)
-? sub, gsub  s_sss (w/ regexes!!)
-? index      i_ss
+? match b_ss  (w/ regexes!!)
+? gsub  s_sss (w/ regexes!!)
+? index i_ss -- not very useful unless there are functions which take an index as an argument ...
 ? bit ops & | ^ << >> ???    i_ii
-  (really needs hex-fmt to be useful ...)
 ? log2, exp2
 
 ================================================================
