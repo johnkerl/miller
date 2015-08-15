@@ -195,9 +195,10 @@ POKI_CARDIFY(--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf)HERE
 
 <p/> These are just C <tt>printf</tt> formats applied to double-precision
 numbers.  Please don&rsquo;t use <tt>%s</tt> or <tt>%d</tt>. Additionally, if
-you use leading with (e.g. <tt>%18.12lf</tt>) then the output will contain
+you use leading width (e.g. <tt>%18.12lf</tt>) then the output will contain
 embedded whitespace, which may not be what you want if you pipe the output to
-something else.
+something else, particularly CSV. I use Miller&rsquo;s pretty-print format
+(<tt>mlr --opprint</tt>) to column-align numerical data.
 
 <!-- ================================================================ -->
 <h1>Data transformations</h1>
@@ -640,3 +641,70 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort -f color,shape 
 <h1>Functions for filter and put</h1>
 
 POKI_RUN_COMMAND{{mlr --help-all-functions}}HERE
+
+<!-- ================================================================ -->
+<h1>Data types</h1>
+
+<p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
+August 2015 anyway) no support for binary record packing. In this sense,
+everything is a string in and out of Miller.  During processing, field names
+are always strings, even if they have names like "3"; field values are usually
+strings.  Field values&rsquo; ability to be interpreted as a non-string type
+only has meaning when comparison or function operations are done on them.  And
+it is an error condition if Miller encounters non-numeric (or otherwise
+mistyped) data in a field in which it has been asked to do numeric (or
+otherwise type-specific) operations.
+
+<p/> Field values are treated as numeric for the following:
+<ul>
+<li/> Numeric sort: <tt>mlr sort -n</tt>, <tt>mlr sort -nr</tt>.
+<li/> Statistics: <tt>mlr histogram</tt>, <tt>mlr stats1</tt>, <tt>mlr stats2</tt>.
+<li/> Cross-record arithmetic: <tt>mlr step</tt>.
+</ul>
+
+<p/>For <tt>mlr put</tt> and <tt>mlr filter</tt>:
+<ul>
+<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision), <b>int</b> (64-bit signed), and <b>boolean</b>.
+<li/> On input, string values representable as numbers (e.g. "3" or "3.1") are treated as float. If a record
+  has <tt>x=1,y=2</tt> then <tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and
+  <tt>mlr put '$z=$x.$y'</tt> gives an error.  To coerce back to string for
+  processing, use the <tt>string</tt> function:
+  <tt>mlr put '$z=string($x).string($y)'</tt> will produce <tt>x=1,y=2,z=12</tt>.
+<li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
+  <tt>"false"</tt>) are <i>not</i> automatically treated as boolean.
+  (This is because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto string-to-boolean
+  on a column consisting of words would result in some strings mixed with some booleans.)
+  Use the <tt>boolean</tt> function to coerce: e.g. giving the record <tt>x=1,y=2,w=false</tt> to
+  <tt>mlr put '$z=($x&lt;$y) || boolean($w)'</tt>.
+<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>: for example, <tt>log10</tt>
+  takes float input and produces float output, <tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt>
+  maps int to string.
+<li/> All math functions described in <tt>mlr --help-all-functions</tt> take integer as well as float input.
+</ul>
+
+<!-- ================================================================ -->
+<h1>Null data</h1>
+
+<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
+Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
+stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although you could
+pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
+Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
+
+<p/> Field values may also be null by being
+specified with present key but empty value: e.g. sending <tt>x=,y=2</tt> to <tt>mlr put '$z=$x+$y'</tt>.
+
+<p/>
+Rules for null-handling:
+<ul>
+<li> Records with one or more null sort-field values sort after records with all sort-field values present:
+POKI_RUN_COMMAND{{mlr --opprint cat data/sort-null.dat}}HERE
+POKI_RUN_COMMAND{{mlr --opprint sort -n  a data/sort-null.dat}}HERE
+POKI_RUN_COMMAND{{mlr --opprint sort -nr a data/sort-null.dat}}HERE
+<li> Functions which have one or more null arguments produce null output: e.g.
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$y'}}HERE
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=$x+$y'}}HERE
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'}}HERE
+<li> The <tt>min</tt> and <tt>max</tt> functions are special: if one argument is non-null, it wins:
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
+</ul>

@@ -13,20 +13,11 @@ TOP OF LIST
 
 * UTs:
   - roundm function: round to multiple of m
-  -> boolean() function
-  -> boolean-valued put, e.g. mlr put '$ok = $x <= 10'
-
-* boolean literals:
-  - doc conversion on read off by default: various words in text columns, some
-    ('true','false') suddenly changing type -- ick.
-  - doc for input '$z="true"' or '$z=boolean("true")' or '$z=boolean($x)'
+  - boolean() function
+  - boolean-valued put, e.g. mlr put '$ok = $x <= 10'
+  - nullability cases, esp. sort, and math funcs
 
 * make a -D for hash-collision stats ...
-
-* document nullability thoroughly: emphasize this is crucial for heterogeneous data.
-  - UTs cases for all
-  - note null-loses logic for min/max.
-  - separate doc section?
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
