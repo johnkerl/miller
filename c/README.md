@@ -7,6 +7,15 @@ in `cli/`.
 
 # Memory management
 
+Miller is streaming and as near stateless as possible. For most Miller
+functions, you can ingest a 20GB file with 4GB RAM, no problem.  For example,
+`mlr cat` of a DKVP file retains no data in memory from one line to another;
+`mlr cat` of a CSV file retains only the field names from the header line. The
+`stats1` and `stats2` commands retain only aggregation state (e.g. count and
+sum over specified fields needed to compute mean of specified fields). The `mlr
+tac` and `mlr sort` commands, obviously, need to consume and retain all input
+records before emitting any output records.
+
 Miller classes are in general modular, following a constructor/destructor model
 with minimal dependencies between classes.  As a general rule, void-star
 payloads (`sllv`, `lhmslv`) must be freed by the callee (which has access to
