@@ -35,6 +35,7 @@ void* mlr_malloc_or_die(size_t size);
 char* mlr_alloc_string_from_double(double value, char* fmt);
 char* mlr_alloc_string_from_ull(unsigned long long value);
 char* mlr_alloc_string_from_ll(long long value);
+char* mlr_alloc_string_from_ll_and_format(long long value, char* fmt);
 char* mlr_alloc_string_from_int(int value);
 
 char* mlr_alloc_hexfmt_from_ll(long long value);

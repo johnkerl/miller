@@ -377,6 +377,29 @@ static mv_unary_func_t* hexfmt_dispositions[MT_MAX] = {
 mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
+static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
+static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"0x1":"0x0")}; }
+static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, pfmt->u.strv)};
+}
+static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) {
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv)};
+}
+static mv_t fmtnum_s_ss(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
+
+static mv_binary_func_t* fmtnum_dispositions[MT_MAX] = {
+    /*NULL*/   fmtnum_s_ns,
+    /*ERROR*/  fmtnum_s_es,
+    /*BOOL*/   fmtnum_s_bs,
+    /*DOUBLE*/ fmtnum_s_ds,
+    /*INT*/    fmtnum_s_is,
+    /*STRING*/ fmtnum_s_ss,
+};
+
+mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2) { return (fmtnum_dispositions[pval1->type])(pval1, pval2); }
+
+// ----------------------------------------------------------------
 // xxx cmt us!!!!
 
 static mv_t op_n_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_NULL, .u.intv = 0}; }

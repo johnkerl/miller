@@ -235,7 +235,7 @@ Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
    tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper .
-   boolean float int string hexfmt gmt2sec sec2gmt systime
+   boolean float int string hexfmt fmtnum gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -252,6 +252,7 @@ Data-format options, for input, output, or both:
 Numerical format:
   --ofmt {format}                            E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
                                              Applies to verbs which compute new values, e.g. put, stats1, stats2.
+                                             See also the fmtnum function within mlr put (mlr --help-all-functions).
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
 Output of one verb may be chained as input to another using "then", e.g.
@@ -437,14 +438,10 @@ may use the symbolic names <tt>newline</tt>, <tt>space</tt>, <tt>tab</tt>,
 <!-- ================================================================ -->
 <a id="Number_formatting"/><h2>Number formatting</h2>
 
-Options:
-<pre>
-  --ofmt {format string}
-</pre>
-
-<p/> This is the global number format for commands which generate numeric
-output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
-<tt>step</tt>, as well as <tt>mlr put</tt>. Examples:
+<p/> The command-line option <tt>--ofmt {format string}</tt> is the global
+number format for commands which generate numeric output, e.g.
+<tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and <tt>step</tt>, as
+well as <tt>mlr put</tt>. Examples:
 
 <p/>
 <div class="pokipanel">
@@ -462,18 +459,35 @@ something else, particularly CSV. I use Miller&rsquo;s pretty-print format
 (<tt>mlr --opprint</tt>) to column-align numerical data.
 
 <p/> To apply formatting to a single field, overriding the global
-<tt>ofmt</tt>, (xxx to do: general fmtnum info here).
+<tt>ofmt</tt>, use <tt>fmtnum</tt> function within <tt>mlr put</tt>. For example:
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
+x=3.1,y=4.3,z=13.330000
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
+x=0xffff,y=0xff,z=00feff01
+</pre>
+</div>
+<p/>
 
 <p/>Input conversion from hexadecimal is done automatically on fields handled
 by <tt>mlr put</tt> and <tt>mlr filter</tt> as long as the field value begins
-with "0x".  To apply output conversion to hexadecimal on a single column, use
-the <tt>hexfmt</tt> function (xxx to do: general fmtnum).  Example:
+with "0x".  To apply output conversion to hexadecimal on a single column, you
+may use <tt>fmtnum</tt>, or the keystroke-saving <tt>hexfmt</tt> function.
+Example:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'x=0xffff,y=0xffff' | mlr put '$z=hexfmt($x*$y)'
-x=0xffff,y=0xffff,z=0xfffe0001
+$ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
+x=0xffff,y=0xff,z=0xfeff01
 </pre>
 </div>
 <p/>
@@ -2147,6 +2161,7 @@ float      (conversion: #args=1): Convert int/float/bool/string to float.
 int        (conversion: #args=1): Convert int/float/bool/string to int.
 string     (conversion: #args=1): Convert int/float/bool/string to string.
 hexfmt     (conversion: #args=1): Convert int to string, e.g. 255 to "0xff".
+fmtnum     (conversion: #args=2): Convert int/float/bool to string using printf-style format string, e.g. "%06lld".
 gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
 sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
 systime    (time:       #args=0): Floating-point seconds since the epoch.

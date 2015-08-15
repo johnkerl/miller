@@ -101,6 +101,13 @@ char* mlr_alloc_string_from_ll(long  long value) {
 	return string;
 }
 
+char* mlr_alloc_string_from_ll_and_format(long long value, char* fmt) {
+	int n = snprintf(NULL, 0, fmt, value);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, value);
+	return string;
+}
+
 char* mlr_alloc_string_from_int(int value) {
 	int n = snprintf(NULL, 0, "%d", value);
 	char* string = mlr_malloc_or_die(n+1);

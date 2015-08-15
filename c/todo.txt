@@ -35,8 +35,6 @@ TOP OF LIST
 !! mmap cleanup, especially csv
 ! doc stats1/stats2 accums via then-statements ...
 
--> fmtnum() function
-   -> hex-fmt fcn ... maybe together w/ fmtnum
 -> log2 & exp2?
 
 !! update t1.rb including numeric sort; fix appropriateness of -t=
@@ -46,11 +44,6 @@ TOP OF LIST
    > definitely put nidx before dkvp in the mlrwik/formats page
 
    > "index-numbered" -> "implicitly index-numbered" in mlrwik
-
-----------------------------------------------------------------
-
-! reprio rust/go/d post-tc
-  -> macos tools install x 3. and/or just use sprax.
 
 ================================================================
 NEATEN
@@ -69,7 +62,6 @@ IMPROVEMENTS
   lmhsi: column name -> char index??
 * null-handling everywhere!! :/
 * free-flag for string mlrvals
-* cubic approximation for invqnorm?
 
 ================================================================
 DOC
@@ -78,8 +70,6 @@ DOC
   dkvp cat completely stateless. stats1/2 retain only agg state. tac/sort/etc. obvious retain all lines.
   you can snarf a 20GB file with 4GB RAM no problem.
 * meaneb: assumes uncorr. code/doc link to appxb :)
-* cookbook page? random subsampling via urand()<0.001 ... what else ...
-* doc-tech: emphasize in poki doc that nav is placed into callbacks for consistent all-in-one-place
 * parlog sort / de-interleave example via stable sort on concurrency identifier
 * time-left example for #todo as fcn of sumt, w/ linreg
 * mlrwik readme note which copy of mlr; PATH
@@ -104,11 +94,11 @@ MEM MGMT:
 
 ================================================================
 FUNCTIONS
-! fmtnum     s_sf_, s_si_
 ? match      b_ss  (w/ regexes!!)
 ? sub, gsub  s_sss (w/ regexes!!)
 ? index      i_ss
 ? bit ops & | ^ << >> ???    i_ii
+  (really needs hex-fmt to be useful ...)
 
 ================================================================
 UT/REG

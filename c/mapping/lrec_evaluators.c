@@ -491,6 +491,40 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_s_ss_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_s_xs_state_t {
+	mv_binary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+} lrec_evaluator_s_xs_state_t;
+
+mv_t lrec_evaluator_s_xs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_s_xs_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	if (val2.type != MT_STRING)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_s_xs_func(mv_binary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
+	lrec_evaluator_s_xs_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_xs_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_s_xs_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_s_sss_state_t {
 	mv_ternary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -779,6 +813,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
 	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
 	{ FUNC_CLASS_CONVERSION, "hexfmt",   1 , "Convert int to string, e.g. 255 to \"0xff\"."},
+	{ FUNC_CLASS_CONVERSION, "fmtnum",   2 , "Convert int/float/bool to string using printf-style format string, e.g. \"%06lld\"."},
 
 	{ FUNC_CLASS_TIME, "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
 	{ FUNC_CLASS_TIME, "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
@@ -969,6 +1004,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,    parg1, parg2);
 	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,    parg1, parg2);
 	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func, parg1, parg2);
+	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,          parg1, parg2);
 	} else  { return NULL; /* xxx handle me better */ }
 }
 

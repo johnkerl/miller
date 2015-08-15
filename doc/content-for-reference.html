@@ -182,14 +182,10 @@ may use the symbolic names <tt>newline</tt>, <tt>space</tt>, <tt>tab</tt>,
 <!-- ================================================================ -->
 <h2>Number formatting</h2>
 
-Options:
-<pre>
-  --ofmt {format string}
-</pre>
-
-<p/> This is the global number format for commands which generate numeric
-output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
-<tt>step</tt>, as well as <tt>mlr put</tt>. Examples:
+<p/> The command-line option <tt>--ofmt {format string}</tt> is the global
+number format for commands which generate numeric output, e.g.
+<tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and <tt>step</tt>, as
+well as <tt>mlr put</tt>. Examples:
 
 POKI_CARDIFY(--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf)HERE
 
@@ -201,14 +197,17 @@ something else, particularly CSV. I use Miller&rsquo;s pretty-print format
 (<tt>mlr --opprint</tt>) to column-align numerical data.
 
 <p/> To apply formatting to a single field, overriding the global
-<tt>ofmt</tt>, (xxx to do: general fmtnum info here).
+<tt>ofmt</tt>, use <tt>fmtnum</tt> function within <tt>mlr put</tt>. For example:
+POKI_RUN_COMMAND{{echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'}}HERE
+POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'}}HERE
 
 <p/>Input conversion from hexadecimal is done automatically on fields handled
 by <tt>mlr put</tt> and <tt>mlr filter</tt> as long as the field value begins
-with "0x".  To apply output conversion to hexadecimal on a single column, use
-the <tt>hexfmt</tt> function (xxx to do: general fmtnum).  Example:
+with "0x".  To apply output conversion to hexadecimal on a single column, you
+may use <tt>fmtnum</tt>, or the keystroke-saving <tt>hexfmt</tt> function.
+Example:
 
-POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xffff' | mlr put '$z=hexfmt($x*$y)'}}HERE
+POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 
 <!-- ================================================================ -->
 <h1>Data transformations</h1>

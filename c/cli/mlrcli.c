@@ -89,6 +89,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Numerical format:\n");
 	fprintf(o, "  --ofmt {format}                            E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
 	fprintf(o, "                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
+	fprintf(o, "                                             See also the fmtnum function within mlr put (mlr --help-all-functions).\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
