@@ -778,6 +778,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
 	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
 	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
+	{ FUNC_CLASS_CONVERSION, "hexfmt",   1 , "Convert int to string, e.g. 255 to \"0xff\"."},
 
 	{ FUNC_CLASS_TIME, "gmt2sec",  1 , "Parses GMT timestamp as integer seconds since epoch."},
 	{ FUNC_CLASS_TIME, "sec2gmt",  1 , "Formats seconds since epoch (integer part only) as GMT timestamp."},
@@ -922,6 +923,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "float"))    { return lrec_evaluator_alloc_from_f_x_func(f_x_float_func,    parg1);
 	} else if (streq(fnnm, "floor"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,    parg1);
 	} else if (streq(fnnm, "gmt2sec"))  { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,  parg1);
+	} else if (streq(fnnm, "hexfmt"))   { return lrec_evaluator_alloc_from_s_x_func(s_x_hexfmt_func,   parg1);
 	} else if (streq(fnnm, "int"))      { return lrec_evaluator_alloc_from_i_x_func(i_x_int_func,      parg1);
 	} else if (streq(fnnm, "log"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,      parg1);
 	} else if (streq(fnnm, "log10"))    { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,    parg1);

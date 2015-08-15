@@ -189,7 +189,7 @@ Options:
 
 <p/> This is the global number format for commands which generate numeric
 output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
-<tt>step</tt>. Examples:
+<tt>step</tt>, as well as <tt>mlr put</tt>. Examples:
 
 POKI_CARDIFY(--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf)HERE
 
@@ -199,6 +199,16 @@ you use leading width (e.g. <tt>%18.12lf</tt>) then the output will contain
 embedded whitespace, which may not be what you want if you pipe the output to
 something else, particularly CSV. I use Miller&rsquo;s pretty-print format
 (<tt>mlr --opprint</tt>) to column-align numerical data.
+
+<p/> To apply formatting to a single field, overriding the global
+<tt>ofmt</tt>, (xxx to do: general fmtnum info here).
+
+<p/>Input conversion from hexadecimal is done automatically on fields handled
+by <tt>mlr put</tt> and <tt>mlr filter</tt> as long as the field value begins
+with "0x".  To apply output conversion to hexadecimal on a single column, use
+the <tt>hexfmt</tt> function (xxx to do: general fmtnum).  Example:
+
+POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xffff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 
 <!-- ================================================================ -->
 <h1>Data transformations</h1>

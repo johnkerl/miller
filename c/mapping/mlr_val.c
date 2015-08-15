@@ -356,6 +356,27 @@ static mv_unary_func_t* string_dispositions[MT_MAX] = {
 mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t hexfmt_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
+static mv_t hexfmt_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
+static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"0x1":"0x0")}; }
+static mv_t hexfmt_s_d(mv_t* pa) {
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.dblv)};
+}
+static mv_t hexfmt_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll(pa->u.intv)}; }
+static mv_t hexfmt_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = pa->u.strv}; }
+
+static mv_unary_func_t* hexfmt_dispositions[MT_MAX] = {
+    /*NULL*/   hexfmt_s_n,
+    /*ERROR*/  hexfmt_s_e,
+    /*BOOL*/   hexfmt_s_b,
+    /*DOUBLE*/ hexfmt_s_d,
+    /*INT*/    hexfmt_s_i,
+    /*STRING*/ hexfmt_s_s,
+};
+
+mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 // xxx cmt us!!!!
 
 static mv_t op_n_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_NULL, .u.intv = 0}; }

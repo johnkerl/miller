@@ -37,6 +37,8 @@ char* mlr_alloc_string_from_ull(unsigned long long value);
 char* mlr_alloc_string_from_ll(long long value);
 char* mlr_alloc_string_from_int(int value);
 
+char* mlr_alloc_hexfmt_from_ll(long long value);
+
 double mlr_double_from_string_or_die(char* string);
 int    mlr_try_double_from_string(char* string, double* pval);
 int    mlr_try_int_from_string(char* string, long long* pval);

@@ -108,6 +108,13 @@ char* mlr_alloc_string_from_int(int value) {
 	return string;
 }
 
+char* mlr_alloc_hexfmt_from_ll(long  long value) {
+	int n = snprintf(NULL, 0, "0x%llx", (unsigned long long)value);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, "0x%llx", value);
+	return string;
+}
+
 double mlr_double_from_string_or_die(char* string) {
 	double d;
 	if (!mlr_try_double_from_string(string, &d)) {

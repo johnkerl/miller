@@ -235,7 +235,7 @@ Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
    tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper .
-   boolean float int string gmt2sec sec2gmt systime
+   boolean float int string hexfmt gmt2sec sec2gmt systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -444,7 +444,7 @@ Options:
 
 <p/> This is the global number format for commands which generate numeric
 output, e.g.  <tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and
-<tt>step</tt>. Examples:
+<tt>step</tt>, as well as <tt>mlr put</tt>. Examples:
 
 <p/>
 <div class="pokipanel">
@@ -460,6 +460,23 @@ you use leading width (e.g. <tt>%18.12lf</tt>) then the output will contain
 embedded whitespace, which may not be what you want if you pipe the output to
 something else, particularly CSV. I use Miller&rsquo;s pretty-print format
 (<tt>mlr --opprint</tt>) to column-align numerical data.
+
+<p/> To apply formatting to a single field, overriding the global
+<tt>ofmt</tt>, (xxx to do: general fmtnum info here).
+
+<p/>Input conversion from hexadecimal is done automatically on fields handled
+by <tt>mlr put</tt> and <tt>mlr filter</tt> as long as the field value begins
+with "0x".  To apply output conversion to hexadecimal on a single column, use
+the <tt>hexfmt</tt> function (xxx to do: general fmtnum).  Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=0xffff,y=0xffff' | mlr put '$z=hexfmt($x*$y)'
+x=0xffff,y=0xffff,z=0xfffe0001
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Data_transformations"/><h1>Data transformations</h1>
@@ -2129,6 +2146,7 @@ boolean    (conversion: #args=1): Convert int/float/bool/string to boolean.
 float      (conversion: #args=1): Convert int/float/bool/string to float.
 int        (conversion: #args=1): Convert int/float/bool/string to int.
 string     (conversion: #args=1): Convert int/float/bool/string to string.
+hexfmt     (conversion: #args=1): Convert int to string, e.g. 255 to "0xff".
 gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
 sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
 systime    (time:       #args=0): Floating-point seconds since the epoch.
