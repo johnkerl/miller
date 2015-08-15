@@ -1,18 +1,25 @@
 ================================================================
 ! BUGFIXES !
 
+:D
+
 ================================================================
 TOP OF LIST
 
-* roundm function: round to multiple of m
-  -> UTs
+* default some cli args differently depending on others:
+  - for sure: --nidx, default to fs=space & allow_repeat_ifs=true
+  - think through others
+  - doc them @ online help & mlrwik
 
-!! booleans into put-dsl: should be able to do: mlr put '$ok = $x < 10'
-  -> boolean literal parsing? on by default? doc why not if not. (various words in text columns,
-     some ('true','false') suddenly changing type -- ick.)
-  -> boolean() function UTs
-  -> certainly, for output: want mlr put '$z=true' ... doc that it's '$z=boolean("true")'
-  -> UTs
+* UTs:
+  - roundm function: round to multiple of m
+  -> boolean() function
+  -> boolean-valued put, e.g. mlr put '$ok = $x <= 10'
+
+* boolean literals:
+  - doc conversion on read off by default: various words in text columns, some
+    ('true','false') suddenly changing type -- ick.
+  - doc for input '$z="true"' or '$z=boolean("true")' or '$z=boolean($x)'
 
 * make a -D for hash-collision stats ...
 
