@@ -1,0 +1,11 @@
+$ each 10 uptime | mlr -p step -a delta -f 11 
+...
+20:08 up 36 days, 10:38, 5 users, load averages: 1.42 1.62 1.73 0.000000
+20:08 up 36 days, 10:38, 5 users, load averages: 1.55 1.64 1.74 0.020000
+20:08 up 36 days, 10:38, 7 users, load averages: 1.58 1.65 1.74 0.010000
+20:08 up 36 days, 10:38, 9 users, load averages: 1.78 1.69 1.76 0.040000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.12 1.76 1.78 0.070000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.51 1.85 1.81 0.090000
+20:08 up 36 days, 10:39, 8 users, load averages: 2.79 1.92 1.83 0.070000
+20:08 up 36 days, 10:39, 4 users, load averages: 2.64 1.90 1.83 -0.020000
+
