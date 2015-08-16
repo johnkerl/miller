@@ -31,8 +31,6 @@ COOKBOOK
 
 * doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
-* parlog sort / de-interleave example via stable sort on concurrency identifier
-
 ================================================================
 MEM MGMT:
 
