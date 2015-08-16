@@ -1581,6 +1581,59 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 </div>
 <p/>
 
+<p/>Here&rsquo;s an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 10 data/multicountdown.dat
+upsec=0.002,color=green,count=1203
+upsec=0.083,color=red,count=3817
+upsec=0.188,color=red,count=3801
+upsec=0.395,color=blue,count=2697
+upsec=0.526,color=purple,count=953
+upsec=0.671,color=blue,count=2684
+upsec=0.899,color=purple,count=926
+upsec=0.912,color=red,count=3798
+upsec=1.093,color=blue,count=2662
+upsec=1.327,color=purple,count=917
+</pre>
+</div>
+<p/>
+
+<p/> We can group these by thread by sorting on the thread ID (here,
+<tt>color</tt>). Since Miller&rsquo;s sort is stable, this means that
+timestamps within each thread&rsquo;s log data are still chronological:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
+upsec              color  count
+0.395              blue   2697
+0.671              blue   2684
+1.093              blue   2662
+2.064              blue   2659
+2.2880000000000003 blue   2647
+0.002              green  1203
+1.407              green  1187
+1.448              green  1177
+2.313              green  1161
+0.526              purple 953
+0.899              purple 926
+1.327              purple 917
+1.703              purple 908
+0.083              red    3817
+0.188              red    3801
+0.912              red    3798
+1.416              red    3788
+1.587              red    3782
+1.601              red    3755
+1.832              red    3717
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 <a id="stats1"/><h2>stats1</h2>
 
@@ -1781,8 +1834,9 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
-<p/> Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file,
-with number of work units left to do in the <tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+<p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
+Input data comes from a log file, with number of work units left to do in the
+<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
 labeled by the <tt>color</tt> field:
 
 <p/>

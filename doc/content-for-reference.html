@@ -519,6 +519,16 @@ POKI_RUN_COMMAND{{mlr sort --help}}HERE
 <p/>Example:
 POKI_RUN_COMMAND{{mlr --opprint sort -f a -nr x data/small}}HERE
 
+<p/>Here&rsquo;s an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
+
+POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+
+<p/> We can group these by thread by sorting on the thread ID (here,
+<tt>color</tt>). Since Miller&rsquo;s sort is stable, this means that
+timestamps within each thread&rsquo;s log data are still chronological:
+
+POKI_RUN_COMMAND{{head -n 20 data/multicountdown.dat | mlr --opprint sort -f color}}HERE
+
 <!-- ================================================================ -->
 <h2>stats1</h2>
 
@@ -569,8 +579,9 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
-<p/> Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file,
-with number of work units left to do in the <tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+<p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
+Input data comes from a log file, with number of work units left to do in the
+<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
 labeled by the <tt>color</tt> field:
 
 POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
