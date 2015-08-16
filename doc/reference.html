@@ -699,8 +699,8 @@ Please use a dollar sign for field names and double-quotes for string literals.
 Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
-  mlr filter 'FNR == 2'
-  mlr filter 'urand() &lt; 0.001'
+  mlr filter 'FNR == 2          (second record in each file)'
+  mlr filter 'urand() &lt; 0.001'  (subsampling)
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
 Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
@@ -1781,6 +1781,66 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
+<p/> Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file,
+with number of work units left to do in the <tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+labeled by the <tt>color</tt> field:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 10 data/multicountdown.dat
+upsec=0.002,color=green,count=1203
+upsec=0.083,color=red,count=3817
+upsec=0.188,color=red,count=3801
+upsec=0.395,color=blue,count=2697
+upsec=0.526,color=purple,count=953
+upsec=0.671,color=blue,count=2684
+upsec=0.899,color=purple,count=926
+upsec=0.912,color=red,count=3798
+upsec=1.093,color=blue,count=2662
+upsec=1.327,color=purple,count=917
+</pre>
+</div>
+<p/>
+
+We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
+time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
+color                   green
+upsec_count_pca_m       -32.756917
+upsec_count_pca_b       1213.722730
+upsec_count_pca_n       24
+upsec_count_pca_quality 0.999984
+donesec                 37.052410
+
+color                   red
+upsec_count_pca_m       -37.367646
+upsec_count_pca_b       3810.133400
+upsec_count_pca_n       30
+upsec_count_pca_quality 0.999989
+donesec                 101.963431
+
+color                   blue
+upsec_count_pca_m       -29.231212
+upsec_count_pca_b       2698.932820
+upsec_count_pca_n       25
+upsec_count_pca_quality 0.999959
+donesec                 92.330514
+
+color                   purple
+upsec_count_pca_m       -39.030097
+upsec_count_pca_b       979.988341
+upsec_count_pca_n       21
+upsec_count_pca_quality 0.999991
+donesec                 25.108529
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 <a id="step"/><h2>step</h2>
 
@@ -1850,6 +1910,26 @@ eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  2.764119  
 </div>
 <p/>
 </td></tr></table>
+
+Example deriving uptime-delta from system uptime:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ each 10 uptime | mlr -p step -a delta -f 11
+...
+20:08 up 36 days, 10:38, 5 users, load averages: 1.42 1.62 1.73 0.000000
+20:08 up 36 days, 10:38, 5 users, load averages: 1.55 1.64 1.74 0.020000
+20:08 up 36 days, 10:38, 7 users, load averages: 1.58 1.65 1.74 0.010000
+20:08 up 36 days, 10:38, 9 users, load averages: 1.78 1.69 1.76 0.040000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.12 1.76 1.78 0.070000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.51 1.85 1.81 0.090000
+20:08 up 36 days, 10:39, 8 users, load averages: 2.79 1.92 1.83 0.070000
+20:08 up 36 days, 10:39, 4 users, load averages: 2.64 1.90 1.83 -0.020000
+
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="tac"/><h2>tac</h2>

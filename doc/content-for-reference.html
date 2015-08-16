@@ -569,6 +569,17 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> (Thanks Drew Kunas for a good conversation about PCA!)
 
+<p/> Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file,
+with number of work units left to do in the <tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+labeled by the <tt>color</tt> field:
+
+POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+
+We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
+time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+
+POKI_RUN_COMMAND{{mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat}}HERE
+
 <!-- ================================================================ -->
 <h2>step</h2>
 
@@ -584,6 +595,10 @@ POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x data/medium | he
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15}}HERE
 </td></tr></table>
+
+Example deriving uptime-delta from system uptime:
+
+POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
 
 <!-- ================================================================ -->
 <h2>tac</h2>

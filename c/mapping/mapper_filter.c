@@ -64,8 +64,8 @@ static void mapper_filter_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(stdout, "Examples:\n");
 	fprintf(stdout, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
-	fprintf(stdout, "  %s %s 'FNR == 2'\n", argv0, verb);
-	fprintf(stdout, "  %s %s 'urand() < 0.001'\n", argv0, verb);
+	fprintf(stdout, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
+	fprintf(stdout, "  %s %s 'urand() < 0.001'  (subsampling)\n", argv0, verb);
 	fprintf(stdout, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
 	fprintf(stdout, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
 	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.\n");
