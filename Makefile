@@ -1,4 +1,4 @@
-all: c doc
+all: c
 c: .always
 	make -C c install
 doc: .always
