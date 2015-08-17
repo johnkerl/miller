@@ -34,9 +34,7 @@ packaging:
 * .deb
 
 doc etc.:
-* "portable"
-* clarify license
-* clarify ext/int deps
+* poki cover
 
 ================================================================
 TOP OF LIST
