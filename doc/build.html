@@ -109,10 +109,21 @@ and Darwin (MacOS Yosemite). I also use <a
 href="http://valgrind.org/">valgrind</a> for detection of memory leaks and
 runtime memory-access errors.
 
-<p/><boldmaroon>Dependencies</boldmaroon>: In addition to GCC, the standard C
-library, and <tt>lex</tt> (all of which are part of the Linux/Darwin
-distributions), Miller uses the following dependencies which
-are included within the <a href="https://github.com/johnkerl/miller">Miller source tree</a>:
+<p/><boldmaroon>External dependencies</boldmaroon>:
+<ul>
+</li> <tt>gcc</tt> (or presumably other compilers; please open an issue or send me a pull request if you have information for me
+about other 21st-century compilers)
+</li> The standard C library
+</li> <tt>flex</tt>
+</ul>
+
+As well, this documentation pageset is built using Poki:
+<a href="http://johnkerl.org/poki/doc">docs here</a>,
+<a href="https://github.com/johnkerl/poki">source code here</a>.
+
+<p/><boldmaroon>Internal dependencies</boldmaroon>:
+These are included within the <a href="https://github.com/johnkerl/miller">Miller source tree</a> and do not
+need to be separately installed (and in fact any separate installation will not be picked up in the Miller build):
 <ul>
 <li/><a href="http://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> for pseudorandom-number
   generation: <a href="https://github.com/johnkerl/miller/blob/master/c/lib/mtrand.c">C implementation by Nishimura and Matsumoto</a> with license terms respected.
@@ -125,14 +136,14 @@ https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h</a>.
 copyright</a>.
 </ul>
 
-Lastly, this documentation pageset is built using Poki:
-<a href="http://johnkerl.org/poki/doc">docs here</a>,
-<a href="https://github.com/johnkerl/poki">source code here</a>.
-
 <p/><boldmaroon>Testing</boldmaroon>: Miller uses MinUnit unit-test for key
-classes including <tt>lrec_t</tt>.  The remaining coverage (which is
-exhaustive) is regression coverage of Miller using all data-transform options
-and all I/O-format pairs.
+classes including <tt>lrec_t</tt>.  The remaining coverage (which aims to be
+exhaustive, although this is a work in progress) is regression coverage of
+Miller using all data-transform options and all I/O-format pairs.
+
+<p/><boldmaroon>License</boldmaroon>: Two-clause BSD license
+<a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
+https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
     </div>
   </td>
 
