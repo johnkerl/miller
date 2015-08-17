@@ -6,6 +6,39 @@
   (apparently roundoff error w/ large x, in the x**2 terms)
 
 ================================================================
+HN FEEDBACKS 2015-08-15
+
+look-ats:
+* cq?
+* https://github.com/harelba/q
+* https://github.com/google/crush-tools
+* https://github.com/BurntSushi/xsv
+* https://github.com/pydata/pandas/blob/master/pandas/io/tests/test_parsers.py
+* https://drill.apache.org
+* https://github.com/dbro/csvquote
+
+xperf:
+* post rust/go cmps
+
+features:
+* number-commas/locale
+* double quotes
+
+build:
+* ctags/etc -> make dev
+* -Wno-error=unused-but-set-variable ?
+* top-level make: c dir at top of PATH
+
+packaging:
+* homebrew
+* .deb
+
+doc etc.:
+* "portable"
+* clarify license
+* clarify ext/int deps
+
+================================================================
 TOP OF LIST
 
 * run go/d/etc on sprax & include #'s in perf pg, and/or rm xref in the latter & just post xlang perf #'s there
