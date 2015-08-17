@@ -13,7 +13,7 @@ put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h
 put_dsl_parse.o: put_dsl_parse.c put_dsl_parse.h
 	gcc $(CFLAGS) -c -std=gnu99 put_dsl_parse.c
 put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
-	lemon put_dsl_parse.y
+	./lemon put_dsl_parse.y
 	mv put_dsl_parse.c put_dsl_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/put_dsl_ParseTrace/g' \
@@ -49,7 +49,7 @@ filter_dsl_wrapper.o: filter_dsl_wrapper.c filter_dsl_wrapper.h
 filter_dsl_parse.o: filter_dsl_parse.c filter_dsl_parse.h
 	gcc $(CFLAGS) -c -std=gnu99 filter_dsl_parse.c
 filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lemon
-	lemon filter_dsl_parse.y
+	./lemon filter_dsl_parse.y
 	mv filter_dsl_parse.c filter_dsl_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/filter_dsl_ParseTrace/g' \
