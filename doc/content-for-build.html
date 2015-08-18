@@ -3,10 +3,9 @@ href="https://github.com/johnkerl/miller">the repo</a>. To install, run
 <tt>make install</tt> after editing the <tt>install</tt> target in the
 makefile to configure the destination.
 
-<p/><boldmaroon>C compiler</boldmaroon>: I use
-<pre>
-gcc -std=gnu99 -Wall -Werror -O3
-</pre>
+<p/><boldmaroon>C compiler</boldmaroon>: I normally use <b>gcc</b>:
+
+POKI_CARDIFY(gcc -std=gnu99 -Wall -Werror -O3 ...)HERE
 
 (see the <a
 href="https://github.com/johnkerl/miller/blob/master/c/Makefile">makefile</a>
@@ -14,6 +13,14 @@ for details) and I&rsquo;ve done so successfully on Ubuntu 12.04 LTS, SELinux,
 and Darwin (MacOS Yosemite). I also use <a
 href="http://valgrind.org/">valgrind</a> for detection of memory leaks and
 runtime memory-access errors.
+
+<p/>I&rsquo;ve also used <b>clang</b> on MacOS Yosemite. To use <tt>clang</tt>, I simply did
+
+POKI_CARDIFY(make -C c -e CCOMP=clang)HERE
+
+Alternatively, one may edit <tt>c/Makefile</tt> and change <tt>CCOMP=gcc</tt>
+to <tt>CCOMP=clang</tt>. (If you encounter issues I haven&rsquo;t, please open an issue
+at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
 
 <p/><boldmaroon>External dependencies</boldmaroon>:
 <ul>

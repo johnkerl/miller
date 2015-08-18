@@ -48,13 +48,11 @@ lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char i
 	int idx = 0;
 	char* key   = NULL;
 	char* value = line;
-	char* eol   = NULL;
 	char free_flags = 0;
 
 	for (char* p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			eol = p;
 			phandle->sol = p+1;
 			break;
 		} else if (*p == ifs) {

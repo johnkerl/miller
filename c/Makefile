@@ -1,3 +1,4 @@
+# ================================================================
 CCOMP=gcc
 CFLAGS=-std=gnu99
 IFLAGS=-I.
@@ -36,36 +37,31 @@ input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 input/file_reader_mmap.c input/file_reader_stdio.c \
 containers/test_join_bucket_keeper.c
 
-# ----------------------------------------------------------------
-# mlr  for default use.
-# mlrg for valgrind.
+# ================================================================
+# User-make: creates the executable and runs unit & regression tests (without
+# valgrind)
+# ----> This is the default target for anyone pulling the repo and trying to
+#       build it to be able to use it. It just needs flex and the C compiler.
+top: mlr tests
 
-top: tags mlr test
+# Dev-make: updates the tags file, creates the executable, and runs unit &
+# regression tests (with valgrind)
+# ----> This is the target for a developer to run before a commit.
+#       It requires ctags and valgrind in addition to flex and the C compiler.
+dev: tags mlr dev-tests
 
-install: top
+# TODO: make this configurable via a ./configure --install-dir=xyz. For now,
+# you can hand-edit this Makefile to configure your install destination.
+install: mlr test
 	cp mlr $(HOME)/bin/
 
-all: tags mlr mlrd mlrg mlrp
-
+# ================================================================
 tags: .always
 	ctags -R .
 
-mlr: .always tags dsls
+mlr: .always dsls
 	$(CC) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
 
-# Memcheck version
-mlrk: .always tags dsls
-	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
-
-# Debug version
-mlrg: .always tags dsls
-	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrg
-
-# Profile version
-mlrp: .always tags dsls
-	$(CC) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
-
-# ----------------------------------------------------------------
 dsls: .always
 	make -C dsls put_dsl_parse.o
 	make -C dsls put_dsl_lexer.o
@@ -75,24 +71,51 @@ dsls: .always
 	make -C dsls filter_dsl_wrapper.o
 
 # ----------------------------------------------------------------
-test: unit-test reg-test
+# Other executable variants
 
-# Unfortunately --error-exitcode=1 doesn't work well since there are
-# valgrind-detected errors in stdlibs. :(
+# Debug version
+mlrg: .always dsls
+	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrg
+
+# Memcheck version
+mlrk: .always dsls
+	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
+
+# Profile version
+mlrp: .always dsls
+	$(CC) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
+
+# ================================================================
+# User-tests: don't use valgrind: they may not have it, and valgrind is most
+# useful for detecting errors at build time. They don't need it to produce an
+# executable.
+
+tests: unit-test reg-test
 
 unit-test: test-mlrutil test-lrec test-join-bucket-keeper
-	#valgrind --leak-check=full --error-exitcode=1 ./a.out
-	valgrind --leak-check=full ./test-mlrutil
-	valgrind --leak-check=full ./test-lrec
-	valgrind --leak-check=full ./test-join-bucket-keeper
+	./test-mlrutil
+	./test-lrec
+	./test-join-bucket-keeper
 	@echo
 	@echo DONE
 
 reg-test:
 	./test/run
 
-tj: test-join-bucket-keeper
-	./test-join-bucket-keeper
+# ----------------------------------------------------------------
+# Use valgrind at dev time for additional reassurance.
+
+dev-tests: dev-unit-test reg-test
+
+# Unfortunately --error-exitcode=1 doesn't work well since there are
+# valgrind-detected errors in stdlibs. :(
+dev-unit-test: test-mlrutil test-lrec test-join-bucket-keeper
+	#valgrind --leak-check=full --error-exitcode=1 ./a.out
+	valgrind --leak-check=full ./test-mlrutil
+	valgrind --leak-check=full ./test-lrec
+	valgrind --leak-check=full ./test-join-bucket-keeper
+	@echo
+	@echo DONE
 
 # Run this after unit-test expected output has changed, and is verified to be
 # OK. (Example: after adding new test cases in test/run.)
@@ -101,6 +124,7 @@ regtest-copy:
 
 # ----------------------------------------------------------------
 # Unit-test executables
+
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
@@ -112,6 +136,8 @@ test-join-bucket-keeper: .always
 
 # ----------------------------------------------------------------
 # Standalone mains
+# TODO: replace the interesting content with unit tests; jettison the rest
+
 dheap:
 	$(CCDEBUG) -D__DHEAP_MAIN__ containers/dheap.c lib/mlrutil.c
 
@@ -142,7 +168,8 @@ lhmsv:
 lrec:
 	$(CCDEBUG) -D__LREC_MAIN__ containers/lrec.c  lib/mlrutil.c
 
-top_keeper: $(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
+top_keeper:
+	$(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
 
 pk:
 	$(CCDEBUG) -D__PERCENTILE_KEEPER_MAIN__ containers/percentile_keeper.c lib/mlrutil.c
@@ -156,7 +183,7 @@ evl:
 lrim:
 	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
 
-# ----------------------------------------------------------------
+# ================================================================
 clean:
 	@rm -vf mlr mlrd mlrg mlrp tester
 	@make -C dsls clean
