@@ -66,8 +66,7 @@ static void mapper_having_fields_free(void* pvstate) {
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 	if (pstate->pfield_names != NULL)
 		slls_free(pstate->pfield_names);
-	if (pstate->pfield_name_set != NULL)
-		lhmsi_free(pstate->pfield_name_set);
+	lhmsi_free(pstate->pfield_name_set);
 }
 
 static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
