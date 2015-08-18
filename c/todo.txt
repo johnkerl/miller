@@ -1,9 +1,7 @@
 ================================================================
 ! BUGFIXES !
 
-* grep red data/multicountdown.txt | head -n 13 | mlr --opprint stats2 -a linreg-ols -f t,count
-  grep red data/multicountdown.txt | head -n 14 | mlr --opprint stats2 -a linreg-ols -f t,count
-  (apparently roundoff error w/ large x, in the x**2 terms)
+:D
 
 ================================================================
 HN FEEDBACKS 2015-08-15
@@ -124,6 +122,13 @@ UT/REG
 * join with left/right-prefix
 * mmap/stdio UTs; run all cases with --mmap and again with --no-mmap
 * all __X_MAIN__ instances -> UT code (effectively all-but-dead code at present)
+
+================================================================
+DOC
+
+* Note that PCA is better than OLS for roundoff error (sum of squares ...):
+  grep red data/multicountdown.txt | head -n 13 | mlr --opprint stats2 -a linreg-ols -f t,count
+  grep red data/multicountdown.txt | head -n 14 | mlr --opprint stats2 -a linreg-ols -f t,count
 
 ================================================================
 IMPROVEMENTS
