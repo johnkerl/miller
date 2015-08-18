@@ -34,11 +34,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 // ----------------------------------------------------------------
 static void mapper_put_free(void* pvstate) {
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
-	if (pstate->output_field_names != NULL)
-		free(pstate->output_field_names);
+	free(pstate->output_field_names);
 	// xxx recursively free them.
-	if (pstate->pevaluators != NULL)
-		free(pstate->pevaluators);
+	free(pstate->pevaluators);
 }
 
 // xxx comment me ...

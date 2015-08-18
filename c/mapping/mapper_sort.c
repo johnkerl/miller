@@ -209,8 +209,7 @@ static void mapper_sort_free(void* pvstate) {
 	if (pstate->pbuckets_by_key_field_names != NULL)
 		// xxx free void-star payloads 1st
 		lhmslv_free(pstate->pbuckets_by_key_field_names);
-	if (pstate->sort_params != NULL)
-		free(pstate->sort_params);
+	free(pstate->sort_params);
 }
 
 static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {

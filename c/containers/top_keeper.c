@@ -15,14 +15,10 @@ top_keeper_t* top_keeper_alloc(int capacity) {
 
 // ----------------------------------------------------------------
 void top_keeper_free(top_keeper_t* ptop_keeper) {
-	if (ptop_keeper->top_values != NULL) {
-		free(ptop_keeper->top_values);
-		ptop_keeper->top_values = NULL;
-	}
-	if (ptop_keeper->top_precords != NULL) {
-		free(ptop_keeper->top_precords);
-		ptop_keeper->top_precords = NULL;
-	}
+	free(ptop_keeper->top_values);
+	ptop_keeper->top_values = NULL;
+	free(ptop_keeper->top_precords);
+	ptop_keeper->top_precords = NULL;
 	ptop_keeper->size = 0;
 	ptop_keeper->capacity = 0;
 	free(ptop_keeper);

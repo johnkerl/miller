@@ -74,8 +74,7 @@ void lhmsv_free(lhmsv_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		if (pe->key != NULL)
-			free(pe->key);
+		free(pe->key);
 	}
 	free(pmap->entries);
 	pmap->entries      = NULL;
