@@ -50,13 +50,11 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 	char* line  = phandle->sol;
 	char* key   = line;
 	char* value = line;
-	char* eol   = NULL;
 
 	int idx = 0;
 	for (char* p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			eol = p;
 			phandle->sol = p+1;
 			break;
 		} else if (*p == ifs) {

@@ -56,12 +56,10 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 	}
 
 	char* header_name = phandle->sol;
-	char* eol         = NULL;
 
 	for (char* p = phandle->sol; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			eol = p;
 			phandle->sol = p+1;
 			pstate->ilno++;
 			break;
@@ -100,7 +98,6 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 	char* line  = phandle->sol;
 	char* key   = NULL;
 	char* value = line;
-	char* eol   = NULL;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for (char* p = line; p < phandle->eof && *p; ) {
@@ -110,7 +107,6 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 				return NULL;
 			}
 			*p = 0;
-			eol = p;
 			phandle->sol = p+1;
 			break;
 		} else if (*p == ifs) {
