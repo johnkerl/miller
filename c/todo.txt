@@ -4,6 +4,26 @@
 :D
 
 ================================================================
+TOP OF LIST
+
+!!! double-quote CSV I/O
+
+! RFC-compliant CSV I/O
+
+* comma-number -- using locale?
+
+* make it clear in the docs this is at present a purely ASCII tool. (unless by
+  accident some things are somehow working with utf8 etc.)
+
+* homebrew
+
+* .deb
+
+* top-level make: c dir at top of PATH
+
+* poki cover
+
+================================================================
 HN FEEDBACKS 2015-08-15
 
 look-ats:
@@ -17,33 +37,6 @@ look-ats:
 
 xperf:
 * post rust/go cmps
-
-features:
-* number-commas/locale
-* double quotes
-
-build:
-* ctags/etc -> make dev
-* -Wno-error=unused-but-set-variable ?
-* top-level make: c dir at top of PATH
-
-packaging:
-* homebrew
-* .deb
-
-doc etc.:
-* poki cover
-
-================================================================
-TOP OF LIST
-
-* run go/d/etc on sprax & include #'s in perf pg, and/or rm xref in the latter & just post xlang perf #'s there
-* link to gh/jk/m xlang impls ... and/or cardify their sources :) ... or maybe just link to gh/jk/m xlang dir
-* ack c impl has been repeatedly optimized but even the original version (also cutc.c ...) outperforms
-
-* make a -D for hash-collision stats ...
-
-* update t1.rb including numeric sort; fix appropriateness of -t=
 
 ================================================================
 NEATEN
@@ -134,6 +127,14 @@ DOC
 IMPROVEMENTS
 
 * free-flag for string mlrvals
+
+* run go/d/etc on sprax & include #'s in perf pg, and/or rm xref in the latter & just post xlang perf #'s there
+* link to gh/jk/m xlang impls ... and/or cardify their sources :) ... or maybe just link to gh/jk/m xlang dir
+* ack c impl has been repeatedly optimized but even the original version (also cutc.c ...) outperforms
+
+* make a -D for hash-collision stats ...
+
+* update t1.rb including numeric sort; fix appropriateness of -t=
 
 ================================================================
 HARDER HYGIENE
