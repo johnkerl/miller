@@ -1,7 +1,19 @@
 <p/><boldmaroon>To build</boldmaroon>: just run <tt>make</tt> in the <tt>c/</tt> subdirectory of <a
-href="https://github.com/johnkerl/miller">the repo</a>. To install, run
-<tt>make install</tt> after editing the <tt>install</tt> target in the
-makefile to configure the destination.
+href="https://github.com/johnkerl/miller">the repo</a>. This builds the <tt>mlr</tt> executable as well as running
+all unit and regression tests.
+
+<p/>This default make target is also appropriate to run before a commit.
+
+<p/>To install, run <tt>make install</tt> after editing the <tt>install</tt>
+target in the makefile to configure the destination. (See <a
+href="https://github.com/johnkerl/miller/issues/9">https://github.com/johnkerl/miller/issues/9</a>
+which will allow for a <tt>configure --install-dir=...</tt> option.)
+
+<p/>If you are doing development of Miller, you can optionally run <tt>make
+dev</tt> in the <tt>c/</tt> subdirectory. This runs all the same regression
+tests, but with the addition of two niceties: it also updates the <tt>tags</tt>
+file (requires <tt>ctags</tt>), and runs the unit tests with <tt>valgrind</tt>
+which can help illuminate memory issues.
 
 <p/><boldmaroon>C compiler</boldmaroon>: I normally use <b>gcc</b>:
 
@@ -22,7 +34,8 @@ Alternatively, one may edit <tt>c/Makefile</tt> and change <tt>CCOMP=gcc</tt>
 to <tt>CCOMP=clang</tt>. (If you encounter issues I haven&rsquo;t, please open an issue
 at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
 
-<p/><boldmaroon>External dependencies</boldmaroon>:
+<p/><boldmaroon>Required external dependencies</boldmaroon>: These are necessary to produce the <tt>mlr</tt>
+executable.
 <ul>
 <li/> <tt>gcc</tt> (or presumably other compilers; please open an issue or send me a pull request if you have information for me
 about other 21st-century compilers)
@@ -30,9 +43,19 @@ about other 21st-century compilers)
 <li/> <tt>flex</tt>
 </ul>
 
-As well, this documentation pageset is built using Poki:
-<a href="http://johnkerl.org/poki/doc">docs here</a>,
-<a href="https://github.com/johnkerl/poki">source code here</a>.
+<p/><boldmaroon>Optional external dependencies</boldmaroon>:
+<ul>
+<li/>
+  This documentation pageset is built using <b>Poki</b>:
+  <a href="http://johnkerl.org/poki/doc">docs here</a>,
+  <a href="https://github.com/johnkerl/poki">source code here</a>.
+  You&rsquo;ll need this if you modify documents, or if you modify the code in a way that affects the documents
+  (there are auto-run snippets inserted into the doc).
+  The best way to discover this is to run <tt>make devall</tt> in the Miller base directory (which builds the code,
+  then updates the docs), then run <tt>git diff</tt> to see if docs were affected by the code mod.
+  (If so, commit and push them.)
+<li/> The optional <tt>make dev</tt> target in the <tt>c/</tt> subdirectory uses <b>ctags</b> and <b>valgrind</b>.
+</ul>
 
 <p/><boldmaroon>Internal dependencies</boldmaroon>:
 These are included within the <a href="https://github.com/johnkerl/miller">Miller source tree</a> and do not

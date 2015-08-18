@@ -9,5 +9,7 @@ doc: .always
 	cd doc && poki
 install: .always
 	make -C c install
+clean: .always
+	make -C c clean
 .always:
 	@true
