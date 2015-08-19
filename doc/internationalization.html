@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
-<!-- PAGE GENERATED FROM template.html and content-for-to-do.html BY poki. -->
+<!-- PAGE GENERATED FROM template.html and content-for-internationalization.html BY poki. -->
 <!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
@@ -10,7 +10,7 @@
   <meta name="keywords"
 	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> Things to do </title>
+  <title> Internationalization </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -73,8 +73,8 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/>&bull;&nbsp;<a href="to-do.html"><b>Things to do</b></a>
+<br/>&bull;&nbsp;<a href="internationalization.html"><b>Internationalization</b></a>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
 <br/>Developer info:
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
 <br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
@@ -89,34 +89,40 @@ Miller commands were run with pretty-print-tabular output format.
   <!-- page body -->
   <td>
     <div style="overflow-y:scroll;height:1500px">
-    <center> <titleinbody> Things to do </titleinbody> </center>
+    <center> <titleinbody> Internationalization </titleinbody> </center>
     <p/>
     
-<!-- BODY COPIED FROM content-for-to-do.html BY poki -->
-<ul>
+<!-- BODY COPIED FROM content-for-internationalization.html BY poki -->
+<p/>In its current form, Miller handles ASCII data. By and large, this means it also handles UTF-8, albeit by accident.
 
-<li/> Miller&rsquo;s record, field, and pair separators can only be single
-characters (e.g. newline, comma, equals sign), optionally allowing repeats on
-input (e.g. multiple spaces treated as one). It would be nice if strings were
-supported, e.g. <tt>"\n\n"</tt> paragraph-oriented record separation, or mix of
-space and tab for field separation.
+<p/>
+<div class="pokipanel">
+<pre>
+% mlr --csv cat p.csv
+langue,nom,jour
+fran&ccedil;ais,fran&ccedil;ois,vendredi
 
-<li/> Quoting isn&rsquo;t supported in CSV. (This means in particular that as
-of August 2015 Miller supports a &ldquo;CSV-lite&rdquo; format, not fully <a
-href="https://tools.ietf.org/html/rfc4180">RFC-compliant CSV</a>.) For example,
-Miller splits <tt>a,"b,c",d</tt> as <tt>a</tt> then <tt>"b</tt> then
-<tt>c"</tt> then <tt>d</tt>.
+% mlr --csv --oxtab cat p.csv
+langue fran&ccedil;ais
+nom    fran&ccedil;ois
+jour   vendredi
 
-<li/> String-oriented functions such as <tt>sub</tt>, and Miller&rsquo;s
-<tt>filter</tt>, could be made far more powerful if a regular-expression library
-were included.
+% tac p.csv | mlr --csv --opprint cat 
+fran&ccedil;ais fran&ccedil;ois vendredi
+langue    nom       jour
 
-<li/> Various to-do items are listed
-<a href="https://github.com/johnkerl/miller/blob/master/c/todo.txt">here</a>.
+% tac p.csv | mlr --csv --oxtab cat 
+fran&ccedil;ais langue
+fran&ccedil;ois nom
+vendredi  jour
+</pre>
+</div>
 
-<li/> Github issues are <a href="https://github.com/johnkerl/miller/issues">here</a>.
-
-</ul>
+<p/>
+Note that data are passed through and correctly split as fields; the issues are
+misalignment caused by Miller na&iuml;vely counting bytes using the C standard
+library&rsquo;s <tt>strlen</tt> function which, for example, finds that
+<i>fran&ccedil;ais</i> is 9 bytes rather than 8 letters long.
     </div>
   </td>
 

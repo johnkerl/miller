@@ -6,9 +6,11 @@ input (e.g. multiple spaces treated as one). It would be nice if strings were
 supported, e.g. <tt>"\n\n"</tt> paragraph-oriented record separation, or mix of
 space and tab for field separation.
 
-<li/> Quoting isn&rsquo;t supported in CSV. For example, Miller splits
-<tt>a,"b,c",d</tt> as <tt>a</tt> then <tt>"b</tt> then <tt>c"</tt> then
-<tt>d</tt>.
+<li/> Quoting isn&rsquo;t supported in CSV. (This means in particular that as
+of August 2015 Miller supports a &ldquo;CSV-lite&rdquo; format, not fully <a
+href="https://tools.ietf.org/html/rfc4180">RFC-compliant CSV</a>.) For example,
+Miller splits <tt>a,"b,c",d</tt> as <tt>a</tt> then <tt>"b</tt> then
+<tt>c"</tt> then <tt>d</tt>.
 
 <li/> String-oriented functions such as <tt>sub</tt>, and Miller&rsquo;s
 <tt>filter</tt>, could be made far more powerful if a regular-expression library
@@ -16,5 +18,7 @@ were included.
 
 <li/> Various to-do items are listed
 <a href="https://github.com/johnkerl/miller/blob/master/c/todo.txt">here</a>.
+
+<li/> Github issues are <a href="https://github.com/johnkerl/miller/issues">here</a>.
 
 </ul>
