@@ -5,6 +5,13 @@ IFLAGS=-I.
 WFLAGS=-Wall -Werror
 LFLAGS=-lm
 
+# You can do
+#
+#   make -e INSTALLDIR=/usr/local/bin
+#
+# pending https://github.com/johnkerl/miller/issues/9
+INSTALLDIR=$(HOME)/bin
+
 CC=$(CCOMP) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 #CCDEBUG=$(CCOMP) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
 CCDEBUG=$(CCOMP) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
@@ -52,10 +59,8 @@ top: mlr tests
 #       It requires ctags and valgrind in addition to flex and the C compiler.
 dev: tags mlr dev-tests
 
-# TODO: make this configurable via a ./configure --install-dir=xyz. For now,
-# you can hand-edit this Makefile to configure your install destination.
 install: mlr test
-	cp mlr $(HOME)/bin/
+	cp mlr $(INSTALLDIR)
 
 # ================================================================
 tags: .always
