@@ -12,21 +12,21 @@
 // * --csvlite from the command line will maps into the csvlite I/O
 // * --csv     from the command line will maps into the rfc-csv I/O
 
-typedef struct _lrec_writer_csv_state_t {
+typedef struct _lrec_writer_csvlite_state_t {
 	int  onr;
 	char ors;
 	char ofs;
 	long long num_header_lines_output;
 	slls_t* plast_header_output;
-} lrec_writer_csv_state_t;
+} lrec_writer_csvlite_state_t;
 
 // ----------------------------------------------------------------
 // xxx cmt mem-mgmt
 
-static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
-	lrec_writer_csv_state_t* pstate = pvstate;
+	lrec_writer_csvlite_state_t* pstate = pvstate;
 	char ors = pstate->ors;
 	char ofs = pstate->ofs;
 
@@ -66,18 +66,18 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
 
-static void lrec_writer_csv_free(void* pvstate) {
-	lrec_writer_csv_state_t* pstate = pvstate;
+static void lrec_writer_csvlite_free(void* pvstate) {
+	lrec_writer_csvlite_state_t* pstate = pvstate;
 	if (pstate->plast_header_output != NULL) {
 		slls_free(pstate->plast_header_output);
 		pstate->plast_header_output = NULL;
 	}
 }
 
-lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
+lrec_writer_t* lrec_writer_csvlite_alloc(char ors, char ofs) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
-	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
+	lrec_writer_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csvlite_state_t));
 	pstate->onr                     = 0;
 	pstate->ors                     = ors;
 	pstate->ofs                     = ofs;
@@ -85,8 +85,8 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
 	pstate->plast_header_output     = NULL;
 
 	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_csv_process;
-	plrec_writer->pfree_func    = lrec_writer_csv_free;
+	plrec_writer->pprocess_func = lrec_writer_csvlite_process;
+	plrec_writer->pfree_func    = lrec_writer_csvlite_free;
 
 	return plrec_writer;
 }

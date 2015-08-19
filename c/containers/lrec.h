@@ -95,6 +95,7 @@ struct _lrec_t {
 lrec_t* lrec_unbacked_alloc();
 lrec_t* lrec_dkvp_alloc(char* line);
 lrec_t* lrec_nidx_alloc(char* line);
+lrec_t* lrec_csvlite_alloc(char* data_line);
 lrec_t* lrec_csv_alloc(char* data_line);
 lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 

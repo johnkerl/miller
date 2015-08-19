@@ -25,7 +25,7 @@
 // to header_keeper object. The current pheader_keeper is a pointer into one of
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
-typedef struct _lrec_reader_stdio_csv_state_t {
+typedef struct _lrec_reader_stdio_csvlite_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
 	char irs;
@@ -35,7 +35,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
 	lhmslv_t*     pheader_keepers;
-} lrec_reader_stdio_csv_state_t;
+} lrec_reader_stdio_csvlite_state_t;
 
 // Cases:
 //
@@ -60,9 +60,9 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_csvlite_process(void* pvhandle, void* pvstate, context_t* pctx) {
 	FILE* input_stream = pvhandle;
-	lrec_reader_stdio_csv_state_t* pstate = pvstate;
+	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
@@ -73,7 +73,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, cont
 					return NULL;
 				pstate->ilno++;
 
-				slls_t* pheader_fields = split_csv_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
+				slls_t* pheader_fields = split_csvlite_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
 				if (pheader_fields->length == 0) {
 					pstate->expect_header_line_next = TRUE;
 					if (pstate->pheader_keeper != NULL) {
@@ -109,22 +109,22 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, cont
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_stdio_csv_data_line(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			return lrec_parse_stdio_csvlite_data_line(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
 		}
 	}
 }
 
 // ----------------------------------------------------------------
 static void lrec_reader_stdio_sof(void* pvstate) {
-	lrec_reader_stdio_csv_state_t* pstate = pvstate;
+	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_csv_free(void* pvstate) {
-	lrec_reader_stdio_csv_state_t* pstate = pvstate;
+static void lrec_reader_stdio_csvlite_free(void* pvstate) {
+	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
@@ -132,10 +132,10 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
+	lrec_reader_stdio_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvlite_state_t));
 	pstate->ifnr                      = 0LL;
 	pstate->irs                       = irs;
 	pstate->ifs                       = ifs;
@@ -147,18 +147,18 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_stdio_csv_process;
+	plrec_reader->pprocess_func = &lrec_reader_stdio_csvlite_process;
 	plrec_reader->psof_func     = &lrec_reader_stdio_sof;
-	plrec_reader->pfree_func    = &lrec_reader_stdio_csv_free;
+	plrec_reader->pfree_func    = &lrec_reader_stdio_csvlite_free;
 
 	return plrec_reader;
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
+lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
 	int allow_repeat_ifs)
 {
-	lrec_t* prec = lrec_csv_alloc(data_line);
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* key = NULL;
 	char* value = data_line;
 
@@ -202,7 +202,7 @@ lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* da
 
 // ----------------------------------------------------------------
 // xxx cmt mem-mgt
-slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
+slls_t* split_csvlite_header_line(char* line, char ifs, int allow_repeat_ifs) {
 	slls_t* plist = slls_alloc();
 	if (*line == 0) // empty string splits to empty list
 		return plist;

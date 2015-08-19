@@ -41,6 +41,14 @@ lrec_t* lrec_nidx_alloc(char* line) {
 	return prec;
 }
 
+lrec_t* lrec_csvlite_alloc(char* data_line) {
+	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
+	memset(prec, 0, sizeof(lrec_t));
+	prec->psingle_line = data_line;
+	prec->pfree_backing_func = lrec_free_csv_backing;
+	return prec;
+}
+
 lrec_t* lrec_csv_alloc(char* data_line) {
 	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
 	memset(prec, 0, sizeof(lrec_t));

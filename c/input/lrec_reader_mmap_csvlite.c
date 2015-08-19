@@ -15,7 +15,7 @@
 // * --csvlite from the command line will maps into the csvlite I/O
 // * --csv     from the command line will maps into the rfc-csv I/O
 
-typedef struct _lrec_reader_mmap_csv_state_t {
+typedef struct _lrec_reader_mmap_csvlite_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
 	char irs;
@@ -25,7 +25,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
 	lhmslv_t*     pheader_keepers;
-} lrec_reader_mmap_csv_state_t;
+} lrec_reader_mmap_csvlite_state_t;
 
 // Cases:
 //
@@ -50,8 +50,8 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 //
 // etc.
 
-static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csv_state_t* pstate)
+static slls_t* lrec_reader_mmap_csvlite_get_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate)
 {
 	char irs = pstate->irs;
 	char ifs = pstate->ifs;
@@ -92,8 +92,8 @@ static slls_t* lrec_reader_mmap_csv_get_header(file_reader_mmap_state_t* phandle
 	return pheader_names;
 }
 
-static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csv_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -156,14 +156,14 @@ static lrec_t* lrec_reader_mmap_csv_get_record(file_reader_mmap_state_t* phandle
 	return prec;
 }
 
-static lrec_t* lrec_reader_mmap_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_csvlite_process(void* pvhandle, void* pvstate, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
-	lrec_reader_mmap_csv_state_t* pstate = pvstate;
+	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 
-			slls_t* pheader_fields = lrec_reader_mmap_csv_get_header(phandle, pstate);
+			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header(phandle, pstate);
 			if (pheader_fields == NULL) // EOF
 				return NULL;
 
@@ -179,7 +179,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvhandle, void* pvstate, conte
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csv_get_record(phandle, pstate, pstate->pheader_keeper, &end_of_stanza);
+		lrec_t* prec = lrec_reader_mmap_csvlite_get_record(phandle, pstate, pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
@@ -191,8 +191,8 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvhandle, void* pvstate, conte
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_mmap_csv_sof(void* pvstate) {
-	lrec_reader_mmap_csv_state_t* pstate = pvstate;
+static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
+	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
@@ -201,10 +201,10 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 // xxx restore free func for header_keepers ... ?
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));
+	lrec_reader_mmap_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csvlite_state_t));
 	pstate->ifnr                     = 0LL;
 	pstate->irs                      = irs;
 	pstate->ifs                      = ifs;
@@ -216,9 +216,9 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_i
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = &file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = &file_reader_mmap_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_mmap_csv_process;
-	plrec_reader->pprocess_func = &lrec_reader_mmap_csv_process;
-	plrec_reader->psof_func     = &lrec_reader_mmap_csv_sof;
+	plrec_reader->pprocess_func = &lrec_reader_mmap_csvlite_process;
+	plrec_reader->pprocess_func = &lrec_reader_mmap_csvlite_process;
+	plrec_reader->psof_func     = &lrec_reader_mmap_csvlite_sof;
 	plrec_reader->pfree_func    = NULL;
 
 	return plrec_reader;

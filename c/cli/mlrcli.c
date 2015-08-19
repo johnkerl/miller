@@ -268,24 +268,42 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		else if (streq(argv[argi], "--dkvp"))    { popts->ifmt = ofmt = "dkvp"; }
-		else if (streq(argv[argi], "--idkvp"))   { popts->ifmt = "dkvp"; }
-		else if (streq(argv[argi], "--odkvp"))   { ofmt = "dkvp"; }
+		// See https://github.com/johnkerl/miller/issues/4
+		// Temporary status:
+		// * --csv     from the command line maps into the (existing) csvlite I/O
+		// * --csvlite from the command line maps into the (existing) csvlite I/O
+		// * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
+		// Ultimate status:
+		// * --csvlite from the command line will maps into the csvlite I/O
+		// * --csv     from the command line will maps into the rfc-csv I/O
 
-		else if (streq(argv[argi], "--csv"))     { popts->ifmt = ofmt = "csv";  }
-		else if (streq(argv[argi], "--icsv"))    { popts->ifmt = "csv";  }
-		else if (streq(argv[argi], "--ocsv"))    { ofmt = "csv";  }
+		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csvlite";  }
+		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csvlite";  }
+		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csvlite";  }
 
-		else if (streq(argv[argi], "--nidx"))    { popts->ifmt = ofmt = "nidx"; }
-		else if (streq(argv[argi], "--inidx"))   { popts->ifmt = "nidx"; }
-		else if (streq(argv[argi], "--onidx"))   { ofmt = "nidx"; }
+		else if (streq(argv[argi], "--csvlite"))  { popts->ifmt = ofmt = "csvlite";  }
+		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
+		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
 
-		else if (streq(argv[argi], "--xtab"))    { popts->ifmt = ofmt = "xtab"; }
-		else if (streq(argv[argi], "--ixtab"))   { popts->ifmt = "xtab"; }
-		else if (streq(argv[argi], "--oxtab"))   { ofmt = "xtab"; }
+		else if (streq(argv[argi], "--csvex"))    { popts->ifmt = ofmt = "csv";  }
+		else if (streq(argv[argi], "--icsvex"))   { popts->ifmt = "csv";  }
+		else if (streq(argv[argi], "--ocsvex"))   { ofmt = "csv";  }
+
+
+		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
+		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }
+		else if (streq(argv[argi], "--odkvp"))    { ofmt = "dkvp"; }
+
+		else if (streq(argv[argi], "--nidx"))     { popts->ifmt = ofmt = "nidx"; }
+		else if (streq(argv[argi], "--inidx"))    { popts->ifmt = "nidx"; }
+		else if (streq(argv[argi], "--onidx"))    { ofmt = "nidx"; }
+
+		else if (streq(argv[argi], "--xtab"))     { popts->ifmt = ofmt = "xtab"; }
+		else if (streq(argv[argi], "--ixtab"))    { popts->ifmt = "xtab"; }
+		else if (streq(argv[argi], "--oxtab"))    { ofmt = "xtab"; }
 
 		else if (streq(argv[argi], "--ipprint")) {
-			popts->ifmt             = "csv";
+			popts->ifmt             = "csvlite";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
 
@@ -294,7 +312,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			ofmt = "pprint";
 		}
 		else if (streq(argv[argi], "--pprint")) {
-			popts->ifmt             = "csv";
+			popts->ifmt             = "csvlite";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
 			ofmt                    = "pprint";
@@ -332,11 +350,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	if      (streq(ofmt, "dkvp"))   popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(ofmt, "csv"))    popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "nidx"))   popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "xtab"))   popts->plrec_writer = lrec_writer_xtab_alloc();
-	else if (streq(ofmt, "pprint")) popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
+	if      (streq(ofmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(ofmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc();
+	else if (streq(ofmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}

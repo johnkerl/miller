@@ -150,14 +150,14 @@ static char* test_lrec_nidx_api() {
 // ----------------------------------------------------------------
 static char* test_lrec_csv_api() {
 	char* hdr_line = strdup("w,x,y,z");
-	slls_t* hdr_fields = split_csv_header_line(hdr_line, ',', FALSE);
+	slls_t* hdr_fields = split_csvlite_header_line(hdr_line, ',', FALSE);
 	header_keeper_t* pheader_keeper = header_keeper_alloc(hdr_line, hdr_fields);
 
 	char* data_line_1 = strdup("2,3,4,5");
-	lrec_t* prec_1 = lrec_parse_stdio_csv_data_line(pheader_keeper, data_line_1, ',', FALSE);
+	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line(pheader_keeper, data_line_1, ',', FALSE);
 
 	char* data_line_2 = strdup("6,7,8,9");
-	lrec_t* prec_2 = lrec_parse_stdio_csv_data_line(pheader_keeper, data_line_2, ',', FALSE);
+	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line(pheader_keeper, data_line_2, ',', FALSE);
 
 	mu_assert_lf(prec_1->field_count == 4);
 	mu_assert_lf(prec_2->field_count == 4);

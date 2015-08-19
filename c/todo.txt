@@ -1,5 +1,5 @@
 ================================================================
-! BUGFIXES !
+BUGFIXES
 
 :D
 
@@ -7,6 +7,13 @@
 TOP OF LIST
 
 !!! minimal-double-quote CSV I/O
+  - definition of minimal:
+    o single system line-term char
+    o handle existence of double-quotes
+    o handle embedded comma
+    o handle double-double inside?
+    o do not handle CRLF
+    o do not handle embedded newline
   - prework: mlrdoc links for release, pandas suite, the rfc
   - prework: mlrdoc info re csv/csvlite & the current status
   - minimal: handle embedded commas
@@ -26,6 +33,8 @@ TOP OF LIST
   - easier to go full-up RFC w/o the middle step??
 
 ! RFC-compliant CSV I/O
+  - extend current state-machine approach?
+  - use a lemon grammar? make sure it works with streaming ...
 
 * homebrew
 
@@ -164,6 +173,27 @@ HARDER HYGIENE
 PYTHON
 * pgr + stats_m same I/O modules??
 
+================================================================
+I8N
+
+
+  $ mlr --csv cat p
+  langue,nom,jour
+  français,françois,vendredi
+
+  $ mlr --csv --oxtab cat p
+  langue français
+  nom    françois
+  jour   vendredi
+
+  $ revlines p | mlr --csv --oxtab cat 
+  français langue
+  françois nom
+  vendredi  jour
+
+  $ revlines p | mlr --csv --opprint cat 
+  français françois vendredi
+  langue    nom       jour
 
 ================================================================
 N.B. release announcement https://news.ycombinator.com/item?id=10066742 2015-08-15
