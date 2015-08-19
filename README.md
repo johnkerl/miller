@@ -27,6 +27,6 @@ Features:
 
 * Miller also goes beyond classic Unix tools by stepping into our modern, **no-SQL** world: its essential record-heterogeneity property allows it to operate on data where records with different schema (field names) are interleaved.
 
-* Like `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written in portable C, and it has **zero runtime dependencies**. You can download or compile a single binary, `scp` it to a faraway machine, and expect it to work.
+* Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written in modern C, and it has **zero runtime dependencies**. You can download or compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
 For more information please see http://johnkerl.org/miller/doc
