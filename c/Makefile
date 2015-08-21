@@ -99,9 +99,10 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-lrec test-join-bucket-keeper
+unit-test: test-mlrutil test-lrec test-string-builder test-join-bucket-keeper
 	./test-mlrutil
 	./test-lrec
+	./test-string-builder
 	./test-join-bucket-keeper
 	@echo
 	@echo DONE
@@ -116,10 +117,11 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-lrec test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-lrec test-string-builder test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-lrec
+	valgrind --leak-check=full ./test-string-builder
 	valgrind --leak-check=full ./test-join-bucket-keeper
 	@echo
 	@echo DONE
@@ -137,6 +139,9 @@ test-lrec: .always
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
+
+test-string-builder: .always
+	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/test_string_builder.c -o test-string-builder
 
 test-join-bucket-keeper: .always
 	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper

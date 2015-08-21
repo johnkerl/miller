@@ -1,3 +1,30 @@
+================================================================
+--> parser option: write a grammar like the below. be careful to
+    preserve the streaming property!
+
+--> state-machine option:
+    * each field either does or does not begin & end w/ "
+    * possibility of "" inside
+    * pretty simple except for CRLF being a double terminator, & fact I cannot
+      use getline anymore
+    * use fgetc & imitate mmap-style seeking
+    * still char irs needs to be char* irs ... and for rfc-csv it's non-parameterizable.
+    * for general string-fs/rs/ps (for other formats) there will need to be some rework.
+
+    * char p,q = lagged-by-one fgetc: while p != EOF.
+    * have a char* get_field(FILE* fp) function.
+    * enter the function looking at start of field.
+
+    * aux-fcn if SOF isn't DQUOTE: just string-build until COMMA, CRLF, or EOF
+    * aux-fcn if SOF is DQUOTE: just string-build until DQUOTE COMMA,
+      DQUOTE CRLF, or DQUOTE EOF. with special case that DQUOTE DQUOTE
+      maps to DQUOTE.
+
+--> regardless: need a string_builder_t with private int curlen, char* buf,
+    public fcn append_char, public fcn append_string,
+    private fcn realloc resizing with minimal copy, public fcn zterm & produce.
+
+================================================================
 Definition of the CSV Format
 
 While there are various specifications and implementations for the
@@ -86,4 +113,3 @@ The ABNF grammar [2] appears as follows:
   CRLF = CR LF ;as per section 6.1 of RFC 2234 [2]
 
   TEXTDATA =  %x20-21 / %x23-2B / %x2D-7E
-
