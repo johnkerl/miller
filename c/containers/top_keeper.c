@@ -15,6 +15,8 @@ top_keeper_t* top_keeper_alloc(int capacity) {
 
 // ----------------------------------------------------------------
 void top_keeper_free(top_keeper_t* ptop_keeper) {
+	if (ptop_keeper == NULL)
+		return;
 	if (ptop_keeper->top_values != NULL) {
 		free(ptop_keeper->top_values);
 		ptop_keeper->top_values = NULL;

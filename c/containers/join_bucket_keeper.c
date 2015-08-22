@@ -96,6 +96,8 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 
 // ----------------------------------------------------------------
 void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
+	if (pkeeper == NULL)
+		return;
 	if (pkeeper->pbucket->pleft_field_values != NULL)
 		slls_free(pkeeper->pbucket->pleft_field_values);
 	if (pkeeper->pbucket->precords != NULL)

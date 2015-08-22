@@ -12,6 +12,8 @@ sllv_t* sllv_alloc() {
 
 // ----------------------------------------------------------------
 void sllv_free(sllv_t* plist) {
+	if (plist == NULL)
+		return;
 	sllve_t* pnode = plist->phead;
 	while (pnode != NULL) {
 		sllve_t* pdel = pnode;

@@ -22,6 +22,8 @@ slls_t* slls_copy(slls_t* pold) {
 
 // ----------------------------------------------------------------
 void slls_free(slls_t* plist) {
+	if (plist == NULL)
+		return;
 	sllse_t* pnode = plist->phead;
 	while (pnode != NULL) {
 		sllse_t* pdel = pnode;
