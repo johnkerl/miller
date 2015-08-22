@@ -30,8 +30,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		}
 		if (precord_list_for_group->length >= pstate->tail_count) {
 			lrec_t* porec = sllv_pop(precord_list_for_group);
-			if (porec != NULL)
-				lrec_free(porec);
+			lrec_free(porec);
 		}
 		sllv_add(precord_list_for_group, pinrec);
 
@@ -56,9 +55,9 @@ static void mapper_tail_free(void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
-	if (pstate->precord_lists_by_group != NULL)
-		// xxx free the void-star payloads 1st
-		lhmslv_free(pstate->precord_lists_by_group);
+
+	// xxx free the void-star payloads 1st
+	lhmslv_free(pstate->precord_lists_by_group);
 }
 
 static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count) {

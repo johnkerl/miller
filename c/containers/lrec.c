@@ -148,8 +148,7 @@ void lrec_remove(lrec_t* prec, char* key) {
 		free(pe->key);
 	}
 	if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
-		if (pe->value != NULL)
-			free(pe->value);
+		free(pe->value);
 	}
 
 	free(pe);

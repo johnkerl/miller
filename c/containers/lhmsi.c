@@ -82,8 +82,7 @@ void lhmsi_free(lhmsi_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsie_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		if (pe->key != NULL)
-			free(pe->key);
+		free(pe->key);
 	}
 	free(pmap->entries);
 	pmap->entries      = NULL;

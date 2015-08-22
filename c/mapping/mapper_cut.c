@@ -56,8 +56,7 @@ static void mapper_cut_free(void* pvstate) {
 	mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
 	if (pstate->pfield_name_list != NULL)
 		slls_free(pstate->pfield_name_list);
-	if (pstate->pfield_name_set != NULL)
-		hss_free(pstate->pfield_name_set);
+	hss_free(pstate->pfield_name_set);
 }
 
 static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_arg_order, int do_complement) {

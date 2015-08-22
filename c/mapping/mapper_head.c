@@ -48,9 +48,9 @@ static void mapper_head_free(void* pvstate) {
 	mapper_head_state_t* pstate = (mapper_head_state_t*)pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
-	if (pstate->precord_lists_by_group != NULL)
-		// xxx recursively free void-stars ... here & elsewhere.
-		lhmslv_free(pstate->precord_lists_by_group);
+
+	// xxx recursively free void-stars ... here & elsewhere.
+	lhmslv_free(pstate->precord_lists_by_group);
 }
 
 static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count) {
