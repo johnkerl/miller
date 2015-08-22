@@ -61,6 +61,8 @@ dev: tags mlr dev-tests
 
 install: mlr test
 	cp mlr $(INSTALLDIR)
+installhome: mlr test
+	cp mlr $(HOME)/bin
 
 # ================================================================
 tags: .always
