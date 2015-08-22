@@ -1,17 +1,18 @@
 top: pdm fdm
+CCOMP=gcc
 
 CFLAGS=-I.. -O3
 #CFLAGS=-I.. -g
 
 # ----------------------------------------------------------------
 pdm: put_dsl_parse.o put_dsl_lexer.o put_dsl_wrapper.o ../containers/mlr_dsl_ast.c ../containers/mlr_dsl_ast.h
-	gcc $(CFLAGS) -std=gnu99 -D __PUT_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c put_dsl_parse.c put_dsl_lexer.c ../containers/mlr_dsl_ast.c put_dsl_wrapper.c -o pdm -lm
+	$(CCOMP) $(CFLAGS) -std=gnu99 -D __PUT_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c put_dsl_parse.c put_dsl_lexer.c ../containers/mlr_dsl_ast.c put_dsl_wrapper.c -o pdm -lm
 
 put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h
-	gcc -Wall $(CFLAGS) -c -std=gnu99 put_dsl_wrapper.c
+	$(CCOMP) -Wall $(CFLAGS) -c -std=gnu99 put_dsl_wrapper.c
 
 put_dsl_parse.o: put_dsl_parse.c put_dsl_parse.h
-	gcc $(CFLAGS) -c -std=gnu99 put_dsl_parse.c
+	$(CCOMP) $(CFLAGS) -c -std=gnu99 put_dsl_parse.c
 put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
 	./lemon put_dsl_parse.y
 	mv put_dsl_parse.c put_dsl_parse.c.tmp
@@ -35,19 +36,19 @@ put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
 #   yy_destructor
 
 put_dsl_lexer.o: put_dsl_lexer.c put_dsl_lexer.h
-	gcc $(CFLAGS) -c -std=gnu99 put_dsl_lexer.c
+	$(CCOMP) $(CFLAGS) -c -std=gnu99 put_dsl_lexer.c
 put_dsl_lexer.c put_dsl_lexer.h: put_dsl_lexer.l
 	flex --prefix=put_dsl_lexer_ --outfile=put_dsl_lexer.c --header-file=put_dsl_lexer.h put_dsl_lexer.l
 
 # ----------------------------------------------------------------
 fdm: filter_dsl_parse.o filter_dsl_lexer.o filter_dsl_wrapper.o ../containers/mlr_dsl_ast.c ../containers/mlr_dsl_ast.h
-	gcc $(CFLAGS) -std=gnu99 -D __FILTER_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c filter_dsl_parse.c filter_dsl_lexer.c ..//containers/mlr_dsl_ast.c filter_dsl_wrapper.c -o fdm -lm
+	$(CCOMP) $(CFLAGS) -std=gnu99 -D __FILTER_DSL_MAIN__ ../containers/sllv.c ../containers/slls.c ../lib/mlrutil.c ../containers/lrec.c ../containers/header_keeper.c filter_dsl_parse.c filter_dsl_lexer.c ..//containers/mlr_dsl_ast.c filter_dsl_wrapper.c -o fdm -lm
 
 filter_dsl_wrapper.o: filter_dsl_wrapper.c filter_dsl_wrapper.h
-	gcc -Wall $(CFLAGS) -c -std=gnu99 filter_dsl_wrapper.c
+	$(CCOMP) -Wall $(CFLAGS) -c -std=gnu99 filter_dsl_wrapper.c
 
 filter_dsl_parse.o: filter_dsl_parse.c filter_dsl_parse.h
-	gcc $(CFLAGS) -c -std=gnu99 filter_dsl_parse.c
+	$(CCOMP) $(CFLAGS) -c -std=gnu99 filter_dsl_parse.c
 filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lemon
 	./lemon filter_dsl_parse.y
 	mv filter_dsl_parse.c filter_dsl_parse.c.tmp
@@ -62,13 +63,13 @@ filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lemon
 	rm -f filter_dsl_parse.c.tmp
 
 filter_dsl_lexer.o: filter_dsl_lexer.c filter_dsl_lexer.h
-	gcc $(CFLAGS) -c -std=gnu99 filter_dsl_lexer.c
+	$(CCOMP) $(CFLAGS) -c -std=gnu99 filter_dsl_lexer.c
 filter_dsl_lexer.c filter_dsl_lexer.h: filter_dsl_lexer.l
 	flex --prefix=filter_dsl_lexer_ --outfile=filter_dsl_lexer.c --header-file=filter_dsl_lexer.h filter_dsl_lexer.l
 
 # ----------------------------------------------------------------
 lemon: lemon.c lempar.c
-	gcc -o lemon lemon.c
+	$(CCOMP) -o lemon lemon.c
 
 # ----------------------------------------------------------------
 clean:
