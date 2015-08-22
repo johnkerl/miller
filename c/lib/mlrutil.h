@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define TRUE  1
 #define FALSE 0
@@ -55,5 +56,8 @@ int mlr_string_pair_hash_func(char* str1, char* str2);
 
 // xxx cmt mem mgt
 char* mlr_get_line(FILE* input_stream, char rs);
+
+// portable timegm replacement
+time_t mlr_timegm (struct tm *tm);
 
 #endif // MLRUTIL_H
