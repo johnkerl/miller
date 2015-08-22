@@ -101,8 +101,7 @@ static void mapper_histogram_free(void* pvstate) {
 	mapper_histogram_state_t* pstate = (mapper_histogram_state_t*)pvstate;
 	if (pstate->value_field_names != NULL)
 		slls_free(pstate->value_field_names);
-	if (pstate->pcounts_by_field != NULL)
-		lhmsv_free(pstate->pcounts_by_field);
+	lhmsv_free(pstate->pcounts_by_field);
 }
 
 static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi) {

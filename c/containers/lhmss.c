@@ -81,10 +81,8 @@ void lhmss_free(lhmss_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		if (pe->key != NULL)
-			free(pe->key);
-		if (pe->value != NULL)
-			free(pe->value);
+		free(pe->key);
+		free(pe->value);
 	}
 	free(pmap->entries);
 	pmap->entries      = NULL;

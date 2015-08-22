@@ -21,10 +21,8 @@ percentile_keeper_t* percentile_keeper_alloc() {
 void percentile_keeper_free(percentile_keeper_t* ppercentile_keeper) {
 	if (ppercentile_keeper == NULL)
 		return;
-	if (ppercentile_keeper->data != NULL) {
-		free(ppercentile_keeper->data);
-		ppercentile_keeper->data = NULL;
-	}
+	free(ppercentile_keeper->data);
+	ppercentile_keeper->data = NULL;
 	ppercentile_keeper->size = 0;
 	ppercentile_keeper->capacity = 0;
 	free(ppercentile_keeper);

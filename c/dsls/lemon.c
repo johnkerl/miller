@@ -2577,7 +2577,7 @@ PRIVATE FILE *file_open(struct lemon *lemp, char *suffix, char *mode)
 {
 	FILE *fp;
 
-	if (lemp->outname)  free(lemp->outname);
+	free(lemp->outname);
 	lemp->outname = file_makename(lemp, suffix);
 	fp = fopen(lemp->outname,mode);
 	if (fp==0 && *mode=='w') {

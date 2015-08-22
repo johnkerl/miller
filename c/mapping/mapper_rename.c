@@ -29,8 +29,7 @@ static sllv_t* mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvst
 // ----------------------------------------------------------------
 static void mapper_rename_free(void* pvstate) {
 	mapper_rename_state_t* pstate = (mapper_rename_state_t*)pvstate;
-	if (pstate->pold_to_new != NULL)
-		lhmss_free(pstate->pold_to_new);
+	lhmss_free(pstate->pold_to_new);
 }
 
 static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {

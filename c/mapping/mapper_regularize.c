@@ -36,8 +36,7 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 // ----------------------------------------------------------------
 static void mapper_regularize_free(void* pvstate) {
 	mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
-	if (pstate->psorted_to_original != NULL)
-		lhmslv_free(pstate->psorted_to_original);
+	lhmslv_free(pstate->psorted_to_original);
 }
 
 static mapper_t* mapper_regularize_alloc() {
