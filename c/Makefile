@@ -10,7 +10,7 @@ LFLAGS=-lm
 #   make -e INSTALLDIR=/usr/local/bin
 #
 # pending https://github.com/johnkerl/miller/issues/9
-INSTALLDIR=$(HOME)/bin
+INSTALLDIR=/usr/local/bin
 
 CC=$(CCOMP) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 #CCDEBUG=$(CCOMP) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
