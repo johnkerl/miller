@@ -50,7 +50,7 @@ static char * test_simple() {
 	sb_append_char(psb, ' ');
 	sb_append_string(psb, "world");
 	sb_append_char(psb, '!');
-	mu_assert("error: case 5", streq("hello, world!", sb_finish(psb)));
+	mu_assert("error: case 6", streq("hello, world!", sb_finish(psb)));
 
 	sb_init(psb, 2);
 	sb_append_string(psb, "hello");
@@ -58,7 +58,7 @@ static char * test_simple() {
 	sb_append_char(psb, ' ');
 	sb_append_string(psb, "world");
 	sb_append_char(psb, '!');
-	mu_assert("error: case 6", streq("hello, world!", sb_finish(psb)));
+	mu_assert("error: case 7", streq("hello, world!", sb_finish(psb)));
 
 	sb_init(psb, 32768);
 	sb_append_string(psb, "hello");
@@ -66,7 +66,7 @@ static char * test_simple() {
 	sb_append_char(psb, ' ');
 	sb_append_string(psb, "world");
 	sb_append_char(psb, '!');
-	mu_assert("error: case 7", streq("hello, world!", sb_finish(psb)));
+	mu_assert("error: case 8", streq("hello, world!", sb_finish(psb)));
 
 	return 0;
 }

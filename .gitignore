@@ -4,6 +4,7 @@ mlrg
 mlrp
 mlr-unit-tester
 test-mlrutil
+test-string-builder
 test-lrec
 test-join-bucket-keeper
 a.out
