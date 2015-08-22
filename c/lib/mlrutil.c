@@ -242,6 +242,8 @@ char* mlr_get_line(FILE* input_stream, char rs) {
 	return line;
 }
 
+// ----------------------------------------------------------------
+// See the GNU timegm manpage -- this is what it does.
 time_t mlr_timegm (struct tm* tm) {
 	time_t ret;
 	char* tz;
