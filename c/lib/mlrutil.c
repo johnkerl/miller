@@ -241,3 +241,24 @@ char* mlr_get_line(FILE* input_stream, char rs) {
 
 	return line;
 }
+
+time_t mlr_timegm (struct tm* tm) {
+	time_t ret;
+	char* tz;
+
+	tz = getenv("TZ");
+	if (tz) {
+		tz = strdup(tz);
+	}
+	setenv("TZ", "GMT0", 1);
+	tzset();
+	ret = mktime(tm);
+	if (tz) {
+		setenv("TZ", tz, 1);
+		free(tz);
+	} else {
+		unsetenv("TZ");
+	}
+	tzset();
+	return ret;
+}

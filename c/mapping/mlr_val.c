@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "lib/mlr_globals.h"
+#include "lib/mlrutil.h"
 #include "mapping/mlr_val.h"
 
 // For some Linux distros, in spite of including time.h:
@@ -246,7 +247,7 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 		return MV_NULL;
 	} else {
 		strptime(pval1->u.strv, "%Y-%m-%dT%H:%M:%SZ", &tm);
-		time_t t = timegm(&tm);
+		time_t t = mlr_timegm(&tm);
 
 		mv_t rv = {.type = MT_INT, .u.intv = (long long)t};
 		return rv;
