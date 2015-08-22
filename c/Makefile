@@ -59,9 +59,9 @@ top: mlr tests
 #       It requires ctags and valgrind in addition to flex and the C compiler.
 dev: tags mlr dev-tests
 
-install: mlr test
+install: mlr tests
 	cp mlr $(INSTALLDIR)
-installhome: mlr test
+installhome: mlr tests
 	cp mlr $(HOME)/bin
 
 # ================================================================
