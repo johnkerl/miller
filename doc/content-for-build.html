@@ -39,13 +39,11 @@ and Darwin (MacOS Yosemite). I also use <a
 href="http://valgrind.org/">valgrind</a> for detection of memory leaks and
 runtime memory-access errors.
 
-<p/>I&rsquo;ve also used <b>clang</b> on MacOS Yosemite. To use <tt>clang</tt>, I simply did
-
-POKI_CARDIFY(make -C c -e CCOMP=clang)HERE
-
-Alternatively, one may edit <tt>c/Makefile</tt> and change <tt>CCOMP=gcc</tt>
-to <tt>CCOMP=clang</tt>. (If you encounter issues I haven&rsquo;t, please open an issue
-at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
+<p/>I&rsquo;ve also used <b>clang</b> on MacOS Yosemite. To use <tt>clang</tt>,
+one may edit <tt>c/Makefile</tt> as well as <tt>c/dsls/Makefile</tt> and change
+<tt>CCOMP=gcc</tt> to <tt>CCOMP=clang</tt>. (If you encounter issues I
+haven&rsquo;t, please open an issue at <a
+href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
 
 <p/><boldmaroon>Required external dependencies</boldmaroon>: These are necessary to produce the <tt>mlr</tt>
 executable.

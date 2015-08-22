@@ -43,6 +43,8 @@ TOP OF LIST
 ----------------------------------------------------------------
 little:
 
+* keystroke-saver for tsvlite i/o
+
 * comma-number -- using locale?
 
 * make it clear in the docs this is at present a purely ASCII tool. (unless by
