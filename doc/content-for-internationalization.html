@@ -1,30 +1,6 @@
-<p/>In its current form, Miller handles ASCII data. By and large, this means it also handles UTF-8, albeit by accident.
-
-<p/>
-<div class="pokipanel">
-<pre>
-% mlr --csv cat p.csv
-langue,nom,jour
-fran&ccedil;ais,fran&ccedil;ois,vendredi
-
-% mlr --csv --oxtab cat p.csv
-langue fran&ccedil;ais
-nom    fran&ccedil;ois
-jour   vendredi
-
-% tac p.csv | mlr --csv --opprint cat 
-fran&ccedil;ais fran&ccedil;ois vendredi
-langue    nom       jour
-
-% tac p.csv | mlr --csv --oxtab cat 
-fran&ccedil;ais langue
-fran&ccedil;ois nom
-vendredi  jour
-</pre>
-</div>
-
-<p/>
-Note that data are passed through and correctly split as fields; the issues are
-misalignment caused by Miller na&iuml;vely counting bytes using the C standard
-library&rsquo;s <tt>strlen</tt> function which, for example, finds that
-<i>fran&ccedil;ais</i> is 9 bytes rather than 8 letters long.
+<p/>In its current form, Miller handles ASCII data by design. This means it
+also handles UTF-8, albeit mostly by accident. (I have no plans to support
+UTF-16 or ISO-8859-1 is.) Tabular output formats (pprint and xtab) are handled correctly.
+I&rsquo;m not aware of any UTF8-related bugs, but please file an issue at <a
+href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+if you encounter one.
