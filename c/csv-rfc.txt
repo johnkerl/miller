@@ -1,6 +1,13 @@
+
 ================================================================
 --> parser option: write a grammar like the below. be careful to
     preserve the streaming property!
+--> I don't see a way to line-at-a-time it in the formal grammar.
+    Other option is to find end of line via string arithmetic,
+    then pass that (null-terminated) string to the parser. But
+    correctly determining EOL in the presence of double-quote
+    semantics *is* the problem; nothing interesting left for the
+    parser to do.
 
 --> state-machine option:
     * each field either does or does not begin & end w/ "
@@ -24,6 +31,8 @@
     public fcn append_char, public fcn append_string,
     private fcn realloc resizing with minimal copy, public fcn zterm & produce.
 
+================================================================
+Offlineable (subway-tunnelable) excerpt from https://tools.ietf.org/html/rfc4180
 ================================================================
 Definition of the CSV Format
 
