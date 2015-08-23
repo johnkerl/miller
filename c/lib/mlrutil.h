@@ -60,7 +60,6 @@ char* mlr_get_line(FILE* input_stream, char rs);
 // portable timegm replacement
 time_t mlr_timegm (struct tm *tm);
 
-// xxx comment
 int strlen_for_utf8_display(char* str);
 
 #endif // MLRUTIL_H
