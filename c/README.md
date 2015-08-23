@@ -34,8 +34,8 @@ CSV file with header line `a,b,c` and data lines `1,2,3`, then `4,5,6`, then
 they are retained in a single `header_keeper` object.
 
 A bigger complication to the otherwise modular nature of Miller is its
-*baton-passing memory-management model*. Namely, one class may be responsible for
-freeing memory allocated by another class.
+*baton-passing memory-management model*. Namely, one class may be responsible
+for freeing memory allocated by another class.
 
 For example, using `mlr cat`: The record-reader produces records and returns
 pointers to them.  The record-mapper is just a pass-through; it returns the
@@ -50,7 +50,8 @@ records; they free what they do not pass on.
 
 Record-readers return a null lrec-pointer to signify end of input stream.
 
-Each mapper takes an lrec-pointer as input and returns a linked list of lrec-pointer.
+Each mapper takes an lrec-pointer as input and returns a linked list of
+lrec-pointer.
 
 Null-lrec is input to mappers to signify end of stream: e.g. `sort` or `tac`
 should use this as a signal to deliver the sorted/reversed list of rows.
@@ -68,8 +69,15 @@ stream).
 
 # Performance optimizations
 
-The initial implementation of Miller used `lhmss` (insertion-ordered string-to-string hash map) for record objects.
-Keys and values were strduped out of file-input lines. Each of the following produced from 5 to 30 percent performance gains:
-* The `lrec` object is a hashless map suited to low access-to-creation ratio. See detailed comments in https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h.
+The initial implementation of Miller used `lhmss`
+(insertion-ordered string-to-string hash map) for record objects.
+Keys and values were strduped out of file-input lines. Each of the following
+produced from 5 to 30 percent performance gains:
+* The `lrec` object is a hashless map suited to low access-to-creation ratio.
+See detailed comments in
+https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h.
 * Free-flags as discussed above removed additional occurrences of string copies.
-* Using `mmap` to read files gets rid of double passes on record parsing (one to find end of line, and another to separate fields) as well as most use of `malloc`. Note however that standard input cannot be mmapped, so both record-reader options are retained.
+* Using `mmap` to read files gets rid of double passes on record parsing
+(one to find end of line, and another to separate fields) as well as most use
+of `malloc`. Note however that standard input cannot be mmapped, so both
+record-reader options are retained.
