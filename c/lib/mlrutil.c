@@ -266,10 +266,10 @@ time_t mlr_timegm (struct tm* tm) {
 }
 
 // ----------------------------------------------------------------
-// 0x00-0x7f are ASCII and printable.
-// 0x80-0xbf are continuation characters and don't add to printable length.
-// 0xc0-0xfe are leading characters and do add to printable length.
-// (0xff is never a valid UTF-8 byte).
+// 0x00-0x7f (MSB is 0) are ASCII and printable.
+// 0x80-0xbf (MSBs are 10) are continuation characters and don't add to printable length.
+// 0xc0-0xfe (MSBs are 11) are leading characters and do add to printable length.
+// (0xff, incidentally, is never a valid UTF-8 byte).
 int strlen_for_utf8_display(char* str) {
 	int len = 0;
 	for (char* p = str; *p; p++) {
