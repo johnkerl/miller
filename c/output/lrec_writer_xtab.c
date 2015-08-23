@@ -18,7 +18,7 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 
 	int max_key_width = 1;
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-		int key_width = strlen(pe->key);
+		int key_width = strlen_for_utf8_display(pe->key);
 		if (key_width > max_key_width)
 			max_key_width = key_width;
 	}

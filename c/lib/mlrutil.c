@@ -264,3 +264,17 @@ time_t mlr_timegm (struct tm* tm) {
 	tzset();
 	return ret;
 }
+
+// ----------------------------------------------------------------
+// 0x00-0x7f are ASCII and printable.
+// 0x80-0xbf are continuation characters and don't add to printable length.
+// 0xc0-0xfe are leading characters and do add to printable length.
+// (0xff is never a valid UTF-8 byte).
+int strlen_for_utf8_display(char* str) {
+	int len = 0;
+	for (char* p = str; *p; p++) {
+		if ((*p & 0xc0) != 0x80)
+			len++;
+	}
+	return len;
+}

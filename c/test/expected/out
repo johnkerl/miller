@@ -1863,3 +1863,25 @@ c 3
 6 e
 f 6
 
+
+================================================================
+UTF-8 alignment
+
+mlr --icsv --opprint cat test/input/utf8-1.csv
+langue   nom      jour
+français françois vendredi
+
+mlr --icsv --opprint cat test/input/utf8-2.csv
+français françois vendredi
+langue   nom      jour
+
+mlr --icsv --oxtab cat test/input/utf8-1.csv
+langue français
+nom    françois
+jour   vendredi
+
+mlr --icsv --oxtab cat test/input/utf8-2.csv
+français langue
+françois nom
+vendredi jour
+

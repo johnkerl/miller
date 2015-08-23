@@ -56,13 +56,13 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, in
 	int* max_widths = mlr_malloc_or_die(sizeof(int) * prec1->field_count);
 	int j = 0;
 	for (lrece_t* pe = prec1->phead; pe != NULL; pe = pe->pnext, j++) {
-		max_widths[j] = strlen(pe->key);
+		max_widths[j] = strlen_for_utf8_display(pe->key);
 	}
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext) {
 		lrec_t* prec = pnode->pvdata;
 		j = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
-			int width = strlen(pe->value);
+			int width = strlen_for_utf8_display(pe->value);
 			if (width > max_widths[j])
 				max_widths[j] = width;
 		}
