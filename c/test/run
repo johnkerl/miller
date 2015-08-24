@@ -45,7 +45,7 @@ run_command() {
 	"$@" >> $outdir/out
 	echo >> $outdir/out
 	# since set -e
-	num_passed=$[num_passed+1]
+	num_passed=`expr $num_passed + 1`
 }
 
 # ================================================================
