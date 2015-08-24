@@ -70,6 +70,31 @@ xperf:
 * post rust/go cmps
 
 ================================================================
+FILE FORMATS
+
+* #1 HN-release-announcement ask is RFC-CSV -- which insists on CRLF
+* Also should support CRLF for DKVP
+* Also have been wanting to support multi-char I/O RS/FS/PS for some time now
+* Note nidx, pprint, xtab are plain-text; CSV is structured including CRLF even
+  on systems for which that is unnatural; DKVP I think of as plaintext but could
+  be extended to have double-quote support just like CSV, and certainly could
+  have CRLF support.
+
+           rs            fs              ps
+         +---------------------------------------------
+  nidx   | LF/CRLF       fixed@sp*       N/A
+  pprint | LF/CRLF       fixed@sp*       N/A
+  xtab   | LFLF/CRLFCRLF fixed@LF/CRLF   fixed@sp*
+  csv    | fixed@CRLF    fixed@comma     N/A
+  dkvp   | LF/CRLF       varies[,;|etc]  varies[=:etc]
+         +---------------------------------------------
+
+So, to do:
+* impl multichar RF/FS/PS across the board -- including RS CRLF DKVP in particular
+* let CSVLITE handle simple quotes at least (no embedded comma, LF, double-double quote)
+* let DKVP handle full-up CSV-style double quotes. maybe make a DKVPLITE with simple-quote feature.
+
+================================================================
 NEATEN
 
 !! xxx's in the code
