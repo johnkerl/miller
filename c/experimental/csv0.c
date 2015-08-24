@@ -11,7 +11,7 @@
 
 typedef struct _field_wrapper_t {
 	char* contents;
-	int   termination_indicator;
+	int   termind;
 } field_wrapper_t;
 
 typedef struct _record_wrapper_t {
@@ -20,33 +20,23 @@ typedef struct _record_wrapper_t {
 } record_wrapper_t;
 
 static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
-	field_wrapper_t wrapper;
 	// xxx need pfr_advance_past_or_die ...
 	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	while (TRUE) {
 		if (pfr_at_eof(pfr)) {
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_EOF;
-			//printf("---- NDQ EOF FLD >>%s<<\n", wrapper.contents);
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, ",", 1)) {
 			if (!pfr_advance_past(pfr, ",")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_FS;
-			//printf("---- NDQ FS FLD >>%s<<\n", wrapper.contents);
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pfr, "\n", 1)) {
 			if (!pfr_advance_past(pfr, "\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_RS;
-			//printf("---- NDQ RS FLD >>%s<<\n", wrapper.contents);
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));
 		}
@@ -54,7 +44,6 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 }
 
 static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
-	field_wrapper_t wrapper;
 	// xxx need pfr_advance_past_or_die ...
 	if (!pfr_advance_past(pfr, "\"")) {
 		fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
@@ -70,25 +59,19 @@ static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_bui
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_EOF;
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, "\",", 2)) {
 			if (!pfr_advance_past(pfr, "\",")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_FS;
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pfr, "\"\n", 2)) {
 			if (!pfr_advance_past(pfr, "\"\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
-			wrapper.contents = sb_finish(psb);
-			wrapper.termination_indicator = TERMIND_RS;
-			return wrapper;
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));
 		}
@@ -101,7 +84,7 @@ field_wrapper_t get_csv_field(peek_file_reader_t* pfr, string_builder_t* psb) {
 	field_wrapper_t wrapper;
 	if (pfr_at_eof(pfr)) {
 		wrapper.contents = NULL;
-		wrapper.termination_indicator = TERMIND_EOF;
+		wrapper.termind = TERMIND_EOF;
 		return wrapper;
 	} else if (pfr_next_is(pfr, "\"", 1)) {
 		return get_csv_field_dquoted(pfr, psb);
@@ -119,12 +102,12 @@ record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) 
 		field_wrapper_t fwrapper = get_csv_field(pfr, psb);
 		//if (fwrapper.contents != NULL)
 			//printf("FLD >>%s<<\n", fwrapper.contents);
-		if (fwrapper.termination_indicator == TERMIND_EOF) {
+		if (fwrapper.termind == TERMIND_EOF) {
 			rwrapper.at_eof = TRUE;
 			break;
 		}
 		slls_add_with_free(fields, fwrapper.contents);
-		if (fwrapper.termination_indicator != TERMIND_FS)
+		if (fwrapper.termind != TERMIND_FS)
 			break;
 	}
 	if (fields->length == 0 && rwrapper.at_eof) {
@@ -149,7 +132,6 @@ int main() {
 				printf("  [%s]\n", pe->value);
 			}
 			slls_free(rwrapper.contents);
-			printf("\n");
 		}
 		if (rwrapper.at_eof)
 			break;
