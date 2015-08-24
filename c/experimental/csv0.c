@@ -27,6 +27,7 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 		if (pfr_at_eof(pfr)) {
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_EOF;
+			printf("---- NDQ EOF FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
 		} else if (pfr_next_is(pfr, ",", 1)) {
 			if (!pfr_advance_past(pfr, ",")) {
@@ -35,14 +36,16 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 			}
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_FS;
+			printf("---- NDQ FS FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
-		} else if (pfr_next_is(pfr, "\n", 2)) {
+		} else if (pfr_next_is(pfr, "\n", 1)) {
 			if (!pfr_advance_past(pfr, "\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_RS;
+			printf("---- NDQ RS FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));
@@ -137,8 +140,10 @@ int main() {
 
 	while (TRUE) {
 		record_wrapper_t rwrapper = get_csv_record(pfr, psb);
+		printf("++++ [NF=%d]", rwrapper.contents->length);
 		slls_print(rwrapper.contents);
 		slls_free(rwrapper.contents);
+		printf("\n");
 		if (rwrapper.at_eof)
 			break;
 	}
