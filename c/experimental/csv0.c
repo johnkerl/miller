@@ -27,7 +27,7 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 		if (pfr_at_eof(pfr)) {
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_EOF;
-			printf("---- NDQ EOF FLD >>%s<<\n", wrapper.contents);
+			//printf("---- NDQ EOF FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
 		} else if (pfr_next_is(pfr, ",", 1)) {
 			if (!pfr_advance_past(pfr, ",")) {
@@ -36,7 +36,7 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 			}
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_FS;
-			printf("---- NDQ FS FLD >>%s<<\n", wrapper.contents);
+			//printf("---- NDQ FS FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
 		} else if (pfr_next_is(pfr, "\n", 1)) {
 			if (!pfr_advance_past(pfr, "\n")) {
@@ -45,7 +45,7 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 			}
 			wrapper.contents = sb_finish(psb);
 			wrapper.termination_indicator = TERMIND_RS;
-			printf("---- NDQ RS FLD >>%s<<\n", wrapper.contents);
+			//printf("---- NDQ RS FLD >>%s<<\n", wrapper.contents);
 			return wrapper;
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));
@@ -117,8 +117,8 @@ record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) 
 	rwrapper.at_eof = FALSE;
 	while (TRUE) {
 		field_wrapper_t fwrapper = get_csv_field(pfr, psb);
-		if (fwrapper.contents != NULL)
-			printf("FLD >>%s<<\n", fwrapper.contents);
+		//if (fwrapper.contents != NULL)
+			//printf("FLD >>%s<<\n", fwrapper.contents);
 		if (fwrapper.termination_indicator == TERMIND_EOF) {
 			rwrapper.at_eof = TRUE;
 			break;
@@ -127,7 +127,10 @@ record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) 
 		if (fwrapper.termination_indicator != TERMIND_FS)
 			break;
 	}
-	printf("EOR\n");
+	if (fields->length == 0 && rwrapper.at_eof) {
+		slls_free(fields);
+		rwrapper.contents = NULL;
+	}
 	return rwrapper;
 }
 
@@ -140,10 +143,14 @@ int main() {
 
 	while (TRUE) {
 		record_wrapper_t rwrapper = get_csv_record(pfr, psb);
-		printf("++++ [NF=%d]", rwrapper.contents->length);
-		slls_print(rwrapper.contents);
-		slls_free(rwrapper.contents);
-		printf("\n");
+		if (rwrapper.contents != NULL) {
+			printf("++++ [NF=%d]\n", rwrapper.contents->length);
+			for (sllse_t* pe = rwrapper.contents->phead; pe != NULL; pe = pe->pnext) {
+				printf("  [%s]\n", pe->value);
+			}
+			slls_free(rwrapper.contents);
+			printf("\n");
+		}
 		if (rwrapper.at_eof)
 			break;
 	}
