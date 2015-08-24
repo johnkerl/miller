@@ -6,35 +6,23 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-!!! minimal-double-quote CSV I/O
-  - definition of minimal:
-    o single system line-term char
-    o handle existence of double-quotes
-    o handle embedded comma
-    o handle double-double inside?
-    o do not handle CRLF
-    o do not handle embedded newline
-  - prework: mlrdoc links for release, pandas suite, the rfc
-  - prework: mlrdoc info re csv/csvlite & the current status
-  - minimal: handle embedded commas
-  - design question for when to *produce* double quotes on output:
-    ? only if has embedded comma
-    ? always
-    ? stickily from input, but yuck: requires propagation through lrec w/ was_quoted bit ... .
-      easier for unmodified data (e.g. cat, sort, filter) but harder for modified data (put)
-    ? cli opt for emit-always?
-    ? poll users
-    ? check the pandas suite
-    ? check the rfc for advice -- this isn't a format question per se. issue is when
-      to emit wrapped in quotes when *not* necessary.
-  - defer to RFC compliance: embedded "" (escaped)
-  - defer to RFC compliance: embedded newline
-  - defer to RFC compliance: CRLF (needs char -> string RS, and associated getline handling ...)
-  - easier to go full-up RFC w/o the middle step??
-
-! RFC-compliant CSV I/O
-  - extend current state-machine approach?
-  - use a lemon grammar? make sure it works with streaming ...
+! CSV:
+  * minimal double-quote option for csvlite:
+    - off by default
+    - don't try to handle embedded FS or RS or double-double quote
+    - strip if present on input
+    - never produce on output
+  * RFC:
+    - test-peek-file-reader separate UT cases? needs C code to create temp files.
+    - default RS to CRLF
+    - have an option for RS=LF because for goodness sake
+    - will need char* RS/FS/PS throughout, or temp-shims more likely
+    - on output: quote none, quote all, quote minimal, quote non-numeric
+    - test data from miller issues
+    - reg-test cases
+    - profiling & some acknowledgement of future perf mods
+    - switch out --csvex/--csv/--csvlite
+    - mlrdoc updates
 
 * homebrew
 
@@ -46,9 +34,6 @@ little:
 * keystroke-saver for tsvlite i/o
 
 * comma-number -- using locale?
-
-* make it clear in the docs this is at present a purely ASCII tool. (unless by
-  accident some things are somehow working with utf8 etc.)
 
 * top-level make: c dir at top of PATH
 
