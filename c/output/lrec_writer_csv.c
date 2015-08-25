@@ -93,8 +93,8 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs, int oquoting) {
 	switch(oquoting) {
 	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
 	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
-	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_minimal_output_func; break;
-	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_numeric_output_func; break;
+	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_minimal_output_func; break;
+	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_numeric_output_func; break;
 	default:
 		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
 			MLR_GLOBALS.argv0, oquoting);
@@ -148,20 +148,3 @@ static void quote_numeric_output_func(FILE* fp, char* string, char ors, char ofs
 		fputs(string, fp);
 	}
 }
-
-// Checkpoint:
-// $ ./mlr --csvex --quote-all cat b.tmp
-// "a","b","c"
-// "1","2,3","4"
-// $ ./mlr --csvex --quote-none cat b.tmp
-// a,b,c
-// 1,2,3,4
-// $ ./mlr --csvex --quote-minimal cat b.tmp
-// a,b,c
-// "1",2,3,"4"
-// $ ./mlr --csvex --quote-numeric cat b.tmp
-// a,b,c
-// 1,"2,3",4
-// $ ./mlr --csvex --ofs ';' --quote-numeric cat b.tmp
-// a;b;c
-// 1;2,3;4
