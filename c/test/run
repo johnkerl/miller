@@ -367,10 +367,10 @@ run_command $mlr --idkvp --oxtab cat test/input/missings.dkvp
 # ================================================================
 announce UTF-8 alignment
 
-run_command mlr --icsv --opprint cat test/input/utf8-1.csv
-run_command mlr --icsv --opprint cat test/input/utf8-2.csv
-run_command mlr --icsv --oxtab   cat test/input/utf8-1.csv
-run_command mlr --icsv --oxtab   cat test/input/utf8-2.csv
+run_command $mlr --icsv --opprint cat test/input/utf8-1.csv
+run_command $mlr --icsv --opprint cat test/input/utf8-2.csv
+run_command $mlr --icsv --oxtab   cat test/input/utf8-1.csv
+run_command $mlr --icsv --oxtab   cat test/input/utf8-2.csv
 
 # ================================================================
 diff $expdir/out $outdir/out
