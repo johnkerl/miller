@@ -69,9 +69,7 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 static lrec_t*         paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields);
 
 // ----------------------------------------------------------------
-// xxx needs abend on null lhs.
-//
-// etc.
+// xxx needs abend on null lhs. etc.
 
 static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
@@ -213,7 +211,20 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 }
 
 static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields) {
-	return NULL; // xxx stub
+	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
+		// xxx incorporate ctx/ilno/etc.
+		fprintf(stderr, "Header/data length mismatch: %d != %d.\n",
+			pstate->pheader_keeper->pkeys->length, pdata_fields->length);
+		exit(1);
+	}
+	lrec_t* prec = lrec_unbacked_alloc();
+	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
+	sllse_t* pd = pdata_fields->phead;
+	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
+		// xxx reduce the copies here
+		lrec_put(prec, ph->value, strdup(pd->value), LREC_FREE_ENTRY_VALUE);
+	}
+	return prec;
 }
 
 // ----------------------------------------------------------------
@@ -261,75 +272,3 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 
 	return plrec_reader;
 }
-
-// ----------------------------------------------------------------
-//lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
-//	int allow_repeat_ifs)
-//{
-//	lrec_t* prec = lrec_csv_alloc(data_line);
-//	char* key = NULL;
-//	char* value = data_line;
-//
-//	// xxx needs pe-non-null (hdr-empty) check:
-//	sllse_t* pe = pheader_keeper->pkeys->phead;
-//	for (char* p = data_line; *p; ) {
-//		if (*p == ifs) {
-//			*p = 0;
-//
-//			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
-//				fprintf(stderr, "Header-data length mismatch!\n");
-//				exit(1);
-//			}
-//			key = pe->value;
-//			lrec_put_no_free(prec, key, value);
-//
-//			p++;
-//			if (allow_repeat_ifs) {
-//				while (*p == ifs)
-//					p++;
-//			}
-//			value = p;
-//			pe = pe->pnext;
-//		} else {
-//			p++;
-//		}
-//	}
-//	if (pe == NULL) {
-//		fprintf(stderr, "Header-data length mismatch!\n");
-//		exit(1);
-//	}
-//	key = pe->value;
-//	lrec_put_no_free(prec, key, value);
-//	if (pe->pnext != NULL) {
-//		fprintf(stderr, "Header-data length mismatch!\n");
-//		exit(1);
-//	}
-//
-//	return prec;
-//}
-
-//// ----------------------------------------------------------------
-//// xxx cmt mem-mgt
-//slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
-//	slls_t* plist = slls_alloc();
-//	if (*line == 0) // empty string splits to empty list
-//		return plist;
-//
-//	char* start = line;
-//	for (char* p = line; *p; p++) {
-//		if (*p == ifs) {
-//			*p = 0;
-//			p++;
-//			// xxx hoist loop invariant at the cost of some code duplication
-//			if (allow_repeat_ifs) {
-//				while (*p == ifs)
-//					p++;
-//			}
-//			slls_add_no_free(plist, start);
-//			start = p;
-//		}
-//	}
-//	slls_add_no_free(plist, start);
-//
-//	return plist;
-//}
