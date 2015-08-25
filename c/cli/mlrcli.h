@@ -10,6 +10,12 @@
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
 
+// xxx move to another header file ...
+#define QUOTE_ALL     0xb1
+#define QUOTE_NONE    0xb2
+#define QUOTE_MINIMAL 0xb3
+#define QUOTE_NUMERIC 0xb4
+
 typedef struct _cli_opts_t {
 	char  irs;
 	char  ifs;
@@ -24,6 +30,7 @@ typedef struct _cli_opts_t {
 	char ops;
 
 	char* ofmt;
+	int   oquoting;
 
 	lrec_reader_t* plrec_reader;
 	sllv_t*        pmapper_list;

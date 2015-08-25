@@ -1,6 +1,8 @@
 #include <stdlib.h>
-#include "containers/mixutil.h"
+#include "cli/mlrcli.h" // xxx move QUOTE_* to another header file
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
+#include "containers/mixutil.h"
 #include "output/lrec_writers.h"
 
 // See https://github.com/johnkerl/miller/issues/4
@@ -12,10 +14,17 @@
 // * --csvlite from the command line will maps into the csvlite I/O
 // * --csv     from the command line will maps into the rfc-csv I/O
 
+typedef void     quoted_output_func_t(FILE* fp, char* string, char ors, char ofs);
+static void     quote_all_output_func(FILE* fp, char* string, char ors, char ofs);
+static void    quote_none_output_func(FILE* fp, char* string, char ors, char ofs);
+static void quote_minimal_output_func(FILE* fp, char* string, char ors, char ofs);
+static void quote_numeric_output_func(FILE* fp, char* string, char ors, char ofs);
+
 typedef struct _lrec_writer_csv_state_t {
 	int  onr;
-	char ors;
-	char ofs;
+	char ors; // xxx char -> char*
+	char ofs; // xxx char -> char*
+	quoted_output_func_t* pquoted_output_func;
 	long long num_header_lines_output;
 	slls_t* plast_header_output;
 } lrec_writer_csv_state_t;
@@ -45,7 +54,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 			if (nf > 0)
 				fputc(ofs, output_stream);
-			fputs(pe->key, output_stream);
+			pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs);
 			nf++;
 		}
 		fputc(ors, output_stream);
@@ -57,7 +66,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		if (nf > 0)
 			fputc(ofs, output_stream);
-		fputs(pe->value, output_stream);
+		pstate->pquoted_output_func(output_stream, pe->value, pstate->ors, pstate->ofs);
 		nf++;
 	}
 	fputc(ors, output_stream);
@@ -74,13 +83,24 @@ static void lrec_writer_csv_free(void* pvstate) {
 	}
 }
 
-lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
+lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs, int oquoting) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
 	pstate->onr                     = 0;
 	pstate->ors                     = ors;
 	pstate->ofs                     = ofs;
+	switch(oquoting) {
+	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
+	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
+	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_minimal_output_func; break;
+	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_numeric_output_func; break;
+	default:
+		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
+			MLR_GLOBALS.argv0, oquoting);
+		exit(1);
+	}
+
 	pstate->num_header_lines_output = 0LL;
 	pstate->plast_header_output     = NULL;
 
@@ -90,3 +110,58 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs) {
 
 	return plrec_writer;
 }
+
+static void quote_all_output_func(FILE* fp, char* string, char ors, char ofs) {
+	fputc('"', fp);
+	fputs(string, fp);
+	fputc('"', fp);
+}
+
+static void quote_none_output_func(FILE* fp, char* string, char ors, char ofs) {
+	fputs(string, fp);
+}
+
+static void quote_minimal_output_func(FILE* fp, char* string, char ors, char ofs) {
+	int output_quotes = FALSE;
+	for (char* p = string; *p; p++) {
+		if (*p == ors || *p == ofs) {
+			output_quotes = TRUE;
+			break;
+		}
+	}
+	if (output_quotes) {
+		fputc('"', fp);
+		fputs(string, fp);
+		fputc('"', fp);
+	} else {
+		fputs(string, fp);
+	}
+}
+
+static void quote_numeric_output_func(FILE* fp, char* string, char ors, char ofs) {
+	double temp;
+	if (mlr_try_double_from_string(string, &temp)) {
+		fputc('"', fp);
+		fputs(string, fp);
+		fputc('"', fp);
+	} else {
+		fputs(string, fp);
+	}
+}
+
+// Checkpoint:
+// $ ./mlr --csvex --quote-all cat b.tmp
+// "a","b","c"
+// "1","2,3","4"
+// $ ./mlr --csvex --quote-none cat b.tmp
+// a,b,c
+// 1,2,3,4
+// $ ./mlr --csvex --quote-minimal cat b.tmp
+// a,b,c
+// "1",2,3,"4"
+// $ ./mlr --csvex --quote-numeric cat b.tmp
+// a,b,c
+// 1,"2,3",4
+// $ ./mlr --csvex --ofs ';' --quote-numeric cat b.tmp
+// a;b;c
+// 1;2,3;4

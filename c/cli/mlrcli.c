@@ -45,7 +45,10 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 #define DEFAULT_RS   '\n'
 #define DEFAULT_FS   ','
 #define DEFAULT_PS   '='
+
 #define DEFAULT_OFMT "%lf"
+
+#define DEFAULT_OQUOTING QUOTE_NONE
 
 // ----------------------------------------------------------------
 // xxx cmt stdout/err & 0/1
@@ -163,29 +166,30 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
 
-	popts->irs  = DEFAULT_RS;
-	popts->ifs  = DEFAULT_FS;
-	popts->ips  = DEFAULT_PS;
-	popts->allow_repeat_ifs = FALSE;
-	popts->allow_repeat_ips = FALSE;
+	popts->irs               = DEFAULT_RS;
+	popts->ifs               = DEFAULT_FS;
+	popts->ips               = DEFAULT_PS;
+	popts->allow_repeat_ifs  = FALSE;
+	popts->allow_repeat_ips  = FALSE;
 
-	popts->ors  = DEFAULT_RS;
-	popts->ofs  = DEFAULT_FS;
-	popts->ops  = DEFAULT_PS;
-	popts->ofmt = DEFAULT_OFMT;
+	popts->ors               = DEFAULT_RS;
+	popts->ofs               = DEFAULT_FS;
+	popts->ops               = DEFAULT_PS;
+	popts->ofmt              = DEFAULT_OFMT;
+	popts->oquoting          = DEFAULT_OQUOTING;
 
-	popts->plrec_reader = NULL;
-	popts->plrec_writer = NULL;
-	popts->filenames    = NULL;
+	popts->plrec_reader      = NULL;
+	popts->plrec_writer      = NULL;
+	popts->filenames         = NULL;
 
-	popts->ifmt = "dkvp";
-	char* ofmt  = "dkvp";
+	popts->ifmt              = "dkvp";
+	char* ofmt               = "dkvp";
 
 	popts->use_mmap_for_read = TRUE;
 	int left_align_pprint    = TRUE;
 
-	int have_rand_seed = FALSE;
-	unsigned rand_seed = 0;
+	int have_rand_seed       = FALSE;
+	unsigned rand_seed       = 0;
 
 	int argi = 1;
 	for (; argi < argc; argi++) {
@@ -327,6 +331,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
+		else if (streq(argv[argi], "--quote-all"))     { popts->oquoting = QUOTE_ALL;     }
+		else if (streq(argv[argi], "--quote-none"))    { popts->oquoting = QUOTE_NONE;    }
+		else if (streq(argv[argi], "--quote-minimal")) { popts->oquoting = QUOTE_MINIMAL; }
+		else if (streq(argv[argi], "--quote-numeric")) { popts->oquoting = QUOTE_NUMERIC; }
+
 		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
 			popts->use_mmap_for_read = TRUE;
@@ -351,7 +360,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	}
 
 	if      (streq(ofmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(ofmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs);
+	else if (streq(ofmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
 	else if (streq(ofmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
 	else if (streq(ofmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
 	else if (streq(ofmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc();

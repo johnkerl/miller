@@ -16,23 +16,31 @@ x  y
 TOP OF LIST
 
 ! CSV:
-  * minimal double-quote option for csvlite:
+  o minimal double-quote option for csvlite:
     - off by default
     - don't try to handle embedded FS or RS or double-double quote
     - strip if present on input
     - never produce on output
-  * RFC:
-    - xxx's in csv reader
-    ? test-peek-file-reader separate UT cases? needs C code to create temp files.
+  o RFC:
+    ! xxx's in csv reader
+    - '\n' -> '\r\n'
+    - make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
+    ? make separate UT program test-peek-file-reader? needs C code to create its own temp files.
     - default RS to CRLF
     - have an option for RS=LF because for goodness sake
     - will need char* RS/FS/PS throughout, or temp-shims more likely
     - on output: quote none, quote all, quote minimal, quote non-numeric
-    - pull in test data from miller issues
-    - reg-test cases
+    ! pull in test data from miller issues
+    ! reg-test cases
     k profiling & some acknowledgement of future perf mods
     - switch out --csvex/--csv/--csvlite
     - mlrdoc updates
+    - still need separate csvlite/csv on output since the former tolerates heterogeneity
+* then:
+  o incorp all this with other formats.
+  o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
+  o implement mmap-backed psb/pkr via vptr intf and profile that
+  o optimize!
 
 * homebrew
 
