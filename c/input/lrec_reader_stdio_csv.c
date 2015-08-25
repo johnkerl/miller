@@ -5,6 +5,8 @@
 #include "containers/lhmslv.h"
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
+#include "lib/string_builder.h"
+#include "input/peek_file_reader.h"
 
 // See https://github.com/johnkerl/miller/issues/4
 // Temporary status:
@@ -25,35 +27,46 @@
 // to header_keeper object. The current pheader_keeper is a pointer into one of
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
+// ----------------------------------------------------------------
+#define TERMIND_RS  0x1111
+#define TERMIND_FS  0x2222
+#define TERMIND_EOF 0x3333
+
+typedef struct _field_wrapper_t {
+	char* contents;
+	int   termind;
+} field_wrapper_t;
+
+typedef struct _record_wrapper_t {
+	slls_t* contents;
+	int   at_eof;
+} record_wrapper_t;
+
+// ----------------------------------------------------------------
 typedef struct _lrec_reader_stdio_csv_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
-	char irs;
-	char ifs;
-	int  allow_repeat_ifs;
+	char* irs;
+	char* ifs;
+	//int  allow_repeat_ifs;
 
-	int  expect_header_line_next;
-	header_keeper_t* pheader_keeper;
-	lhmslv_t*     pheader_keepers;
+	string_builder_t    sb;
+	string_builder_t*   psb;
+	peek_file_reader_t* pfr;
+
+	int                 expect_header_line_next;
+	header_keeper_t*    pheader_keeper;
+	lhmslv_t*           pheader_keepers;
+
 } lrec_reader_stdio_csv_state_t;
 
-// Cases:
-//
-// a,a        a,b        c          d
-// -- FILE1:  -- FILE1:  -- FILE1:  -- FILE1:
-// a,b,c      a,b,c      a,b,c      a,b,c
-// 1,2,3      1,2,3      1,2,3      1,2,3
-// 4,5,6      4,5,6      4,5,6      4,5,6
-// -- FILE2:  -- FILE2:
-// a,b,c      d,e,f,g    a,b,c      d,e,f
-// 7,8,9      3,4,5,6    7,8,9      3,4,5
-// --OUTPUT:  --OUTPUT:  --OUTPUT:  --OUTPUT:
-// a,b,c      a,b,c      a,b,c      a,b,c
-// 1,2,3      1,2,3      1,2,3      1,2,3
-// 4,5,6      4,5,6      4,5,6      4,5,6
-// 7,8,9                 7,8,9
-//            d,e,f,g               d,e,f
-//            3,4,5,6               3,4,5
+// ----------------------------------------------------------------
+static record_wrapper_t lrec_reader_stdio_csv_get_record(lrec_reader_stdio_csv_state_t* pstate);
+
+static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate);
+static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* pstate);
+static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* pstate);
+static lrec_t*         paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields);
 
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs.
@@ -61,57 +74,146 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 // etc.
 
 static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
-	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
+	if (pstate->pfr == NULL) {
+		pstate->pfr = pfr_alloc((FILE*)pvhandle, 32); // xxx set up via max of all terminds
+	}
 
+	record_wrapper_t rwrapper;
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 			// xxx cmt
 			while (TRUE) {
-				char* hline = mlr_get_line(input_stream, pstate->irs);
-				if (hline == NULL) // EOF
+				rwrapper = lrec_reader_stdio_csv_get_record(pstate);
+
+				if (rwrapper.contents == NULL && rwrapper.at_eof)
 					return NULL;
 				pstate->ilno++;
 
-				slls_t* pheader_fields = split_csv_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
-				if (pheader_fields->length == 0) {
-					pstate->expect_header_line_next = TRUE;
-					if (pstate->pheader_keeper != NULL) {
-						pstate->pheader_keeper = NULL;
-					}
-				} else {
-					pstate->expect_header_line_next = FALSE;
+				pstate->expect_header_line_next = FALSE;
 
-					pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
-					if (pstate->pheader_keeper == NULL) {
-						pstate->pheader_keeper = header_keeper_alloc(hline, pheader_fields);
-						lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
-					} else { // Re-use the header-keeper in the header cache
-						slls_free(pheader_fields);
-						free(hline);
-					}
-					break;
+				pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, rwrapper.contents);
+				if (pstate->pheader_keeper == NULL) {
+					pstate->pheader_keeper = header_keeper_alloc(NULL, rwrapper.contents);
+					lhmslv_put(pstate->pheader_keepers, rwrapper.contents, pstate->pheader_keeper);
+				} else { // Re-use the header-keeper in the header cache
+					slls_free(rwrapper.contents);
 				}
+				break;
 			}
 		}
 
-		char* line = mlr_get_line(input_stream, pstate->irs);
-		if (line == NULL) // EOF
+		rwrapper = lrec_reader_stdio_csv_get_record(pstate);
+		if (rwrapper.contents == NULL && rwrapper.at_eof)
 			return NULL;
 
-		// xxx empty-line check ... make a lib func is_empty_modulo_whitespace().
-		if (!*line) {
-			if (pstate->pheader_keeper != NULL) {
-				pstate->pheader_keeper = NULL;
-				pstate->expect_header_line_next = TRUE;
-				free(line);
-				continue;
+		pstate->ifnr++;
+		return paste_header_and_data(pstate, rwrapper.contents);
+	}
+}
+
+static record_wrapper_t lrec_reader_stdio_csv_get_record(lrec_reader_stdio_csv_state_t* pstate) {
+	slls_t* pfields = slls_alloc();
+	record_wrapper_t rwrapper;
+	rwrapper.contents = pfields;
+	rwrapper.at_eof = FALSE;
+	while (TRUE) {
+		field_wrapper_t fwrapper = get_csv_field(pstate);
+		if (fwrapper.termind == TERMIND_EOF) {
+			rwrapper.at_eof = TRUE;
+			break;
+		}
+		slls_add_with_free(pfields, fwrapper.contents);
+		if (fwrapper.termind != TERMIND_FS)
+			break;
+	}
+	if (pfields->length == 0 && rwrapper.at_eof) {
+		slls_free(pfields);
+		rwrapper.contents = NULL;
+	}
+	return rwrapper;
+}
+
+static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
+	field_wrapper_t wrapper;
+	if (pfr_at_eof(pstate->pfr)) {
+		wrapper.contents = NULL;
+		wrapper.termind = TERMIND_EOF;
+		return wrapper;
+	} else if (pfr_next_is(pstate->pfr, "\"", 1)) {
+		return get_csv_field_dquoted(pstate);
+	} else {
+		return get_csv_field_not_dquoted(pstate);
+	}
+}
+
+static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
+	// xxx need pfr_advance_past_or_die ...
+	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
+	while (TRUE) {
+		if (pfr_at_eof(pstate->pfr)) {
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
+		} else if (pfr_next_is(pstate->pfr, ",\xff", 2)) {
+			if (!pfr_advance_past(pstate->pfr, ",\xff")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
 			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
+		} else if (pfr_next_is(pstate->pfr, ",", 1)) {
+			if (!pfr_advance_past(pstate->pfr, ",")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
+		} else if (pfr_next_is(pstate->pfr, "\n", 1)) {
+			if (!pfr_advance_past(pstate->pfr, "\n")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
 		} else {
-			pstate->ifnr++;
-			return lrec_parse_stdio_csv_data_line(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
 		}
 	}
+}
+
+static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
+	// xxx need pfr_advance_past_or_die ...
+	if (!pfr_advance_past(pstate->pfr, "\"")) {
+		fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+		exit(1);
+	}
+	while (TRUE) {
+		if (pfr_at_eof(pstate->pfr)) {
+			// xxx imbalanced-dquote error
+			fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+			exit(1);
+		} else if (pfr_next_is(pstate->pfr, "\"\xff", 2)) {
+			if (!pfr_advance_past(pstate->pfr, "\"\xff")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
+		} else if (pfr_next_is(pstate->pfr, "\",", 2)) {
+			if (!pfr_advance_past(pstate->pfr, "\",")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
+		} else if (pfr_next_is(pstate->pfr, "\"\n", 2)) {
+			if (!pfr_advance_past(pstate->pfr, "\"\n")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
+			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
+		} else {
+			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
+		}
+	}
+}
+
+static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields) {
+	return NULL; // xxx stub
 }
 
 // ----------------------------------------------------------------
@@ -129,6 +231,7 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
+	pfr_free(pstate->pfr);
 }
 
 // ----------------------------------------------------------------
@@ -137,9 +240,14 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
 	pstate->ifnr                      = 0LL;
-	pstate->irs                       = irs;
-	pstate->ifs                       = ifs;
-	pstate->allow_repeat_ifs          = allow_repeat_ifs;
+	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
+	pstate->ifs                       = ",";   // xxx multi-byte the cli irs/ifs/etc, and integrate here
+	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
+
+	sb_init(&pstate->sb, 1024); // xxx #define at top
+	pstate->psb                       = &pstate->sb;
+	pstate->pfr                       = NULL;
+
 	pstate->expect_header_line_next   = TRUE;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
@@ -155,73 +263,73 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
-	int allow_repeat_ifs)
-{
-	lrec_t* prec = lrec_csv_alloc(data_line);
-	char* key = NULL;
-	char* value = data_line;
+//lrec_t* lrec_parse_stdio_csv_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
+//	int allow_repeat_ifs)
+//{
+//	lrec_t* prec = lrec_csv_alloc(data_line);
+//	char* key = NULL;
+//	char* value = data_line;
+//
+//	// xxx needs pe-non-null (hdr-empty) check:
+//	sllse_t* pe = pheader_keeper->pkeys->phead;
+//	for (char* p = data_line; *p; ) {
+//		if (*p == ifs) {
+//			*p = 0;
+//
+//			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
+//				fprintf(stderr, "Header-data length mismatch!\n");
+//				exit(1);
+//			}
+//			key = pe->value;
+//			lrec_put_no_free(prec, key, value);
+//
+//			p++;
+//			if (allow_repeat_ifs) {
+//				while (*p == ifs)
+//					p++;
+//			}
+//			value = p;
+//			pe = pe->pnext;
+//		} else {
+//			p++;
+//		}
+//	}
+//	if (pe == NULL) {
+//		fprintf(stderr, "Header-data length mismatch!\n");
+//		exit(1);
+//	}
+//	key = pe->value;
+//	lrec_put_no_free(prec, key, value);
+//	if (pe->pnext != NULL) {
+//		fprintf(stderr, "Header-data length mismatch!\n");
+//		exit(1);
+//	}
+//
+//	return prec;
+//}
 
-	// xxx needs pe-non-null (hdr-empty) check:
-	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for (char* p = data_line; *p; ) {
-		if (*p == ifs) {
-			*p = 0;
-
-			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
-				fprintf(stderr, "Header-data length mismatch!\n");
-				exit(1);
-			}
-			key = pe->value;
-			lrec_put_no_free(prec, key, value);
-
-			p++;
-			if (allow_repeat_ifs) {
-				while (*p == ifs)
-					p++;
-			}
-			value = p;
-			pe = pe->pnext;
-		} else {
-			p++;
-		}
-	}
-	if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
-	key = pe->value;
-	lrec_put_no_free(prec, key, value);
-	if (pe->pnext != NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
-
-	return prec;
-}
-
-// ----------------------------------------------------------------
-// xxx cmt mem-mgt
-slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
-	slls_t* plist = slls_alloc();
-	if (*line == 0) // empty string splits to empty list
-		return plist;
-
-	char* start = line;
-	for (char* p = line; *p; p++) {
-		if (*p == ifs) {
-			*p = 0;
-			p++;
-			// xxx hoist loop invariant at the cost of some code duplication
-			if (allow_repeat_ifs) {
-				while (*p == ifs)
-					p++;
-			}
-			slls_add_no_free(plist, start);
-			start = p;
-		}
-	}
-	slls_add_no_free(plist, start);
-
-	return plist;
-}
+//// ----------------------------------------------------------------
+//// xxx cmt mem-mgt
+//slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs) {
+//	slls_t* plist = slls_alloc();
+//	if (*line == 0) // empty string splits to empty list
+//		return plist;
+//
+//	char* start = line;
+//	for (char* p = line; *p; p++) {
+//		if (*p == ifs) {
+//			*p = 0;
+//			p++;
+//			// xxx hoist loop invariant at the cost of some code duplication
+//			if (allow_repeat_ifs) {
+//				while (*p == ifs)
+//					p++;
+//			}
+//			slls_add_no_free(plist, start);
+//			start = p;
+//		}
+//	}
+//	slls_add_no_free(plist, start);
+//
+//	return plist;
+//}

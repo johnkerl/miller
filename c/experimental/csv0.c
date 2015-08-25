@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "lib/mlrutil.h"
-#include "lib/string_builder.h"
 #include "containers/slls.h"
+#include "lib/string_builder.h"
 #include "input/peek_file_reader.h"
 
 #define TERMIND_RS  0x1111
@@ -24,6 +24,12 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	while (TRUE) {
 		if (pfr_at_eof(pfr)) {
+			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
+		} else if (pfr_next_is(pfr, ",\xff", 2)) {
+			if (!pfr_advance_past(pfr, ",\xff")) {
+				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				exit(1);
+			}
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, ",", 1)) {
 			if (!pfr_advance_past(pfr, ",")) {
@@ -78,8 +84,6 @@ static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_bui
 	}
 }
 
-// needs to return the contents, as well as what kind of termination followed
-// (and was consumed): FS, RS, EOF.
 field_wrapper_t get_csv_field(peek_file_reader_t* pfr, string_builder_t* psb) {
 	field_wrapper_t wrapper;
 	if (pfr_at_eof(pfr)) {
@@ -100,8 +104,6 @@ record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) 
 	rwrapper.at_eof = FALSE;
 	while (TRUE) {
 		field_wrapper_t fwrapper = get_csv_field(pfr, psb);
-		//if (fwrapper.contents != NULL)
-			//printf("FLD >>%s<<\n", fwrapper.contents);
 		if (fwrapper.termind == TERMIND_EOF) {
 			rwrapper.at_eof = TRUE;
 			break;
