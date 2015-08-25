@@ -48,7 +48,7 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 
 #define DEFAULT_OFMT "%lf"
 
-#define DEFAULT_OQUOTING QUOTE_NONE
+#define DEFAULT_OQUOTING QUOTE_MINIMAL
 
 // ----------------------------------------------------------------
 // xxx cmt stdout/err & 0/1
