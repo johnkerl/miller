@@ -48,6 +48,13 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	long long  ilno; // xxx cmt w/r/t pctx
 	char* irs;
 	char* ifs;
+	// xxx parameterize dquote_irs
+	// xxx parameterize dquote_ifs
+	// xxx parameterize irs_len
+	// xxx parameterize ifs_len
+	// xxx parameterize dquote_irs_len
+	// xxx parameterize dquote_ifs_len
+	// xxx parameterize maxlen of all of those; for the pfr buf
 	//int  allow_repeat_ifs;
 
 	string_builder_t    sb;
@@ -163,6 +170,7 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
+		// xxx for RFC per se this needs to be "\r\n", 2
 		} else if (pfr_next_is(pstate->pfr, "\n", 1)) {
 			if (!pfr_advance_past(pstate->pfr, "\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);

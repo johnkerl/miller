@@ -12,9 +12,6 @@ x  y
 º a
 Ñº b
 
-
-
-
 ================================================================
 TOP OF LIST
 
@@ -25,14 +22,15 @@ TOP OF LIST
     - strip if present on input
     - never produce on output
   * RFC:
-    - test-peek-file-reader separate UT cases? needs C code to create temp files.
+    - xxx's in csv reader
+    ? test-peek-file-reader separate UT cases? needs C code to create temp files.
     - default RS to CRLF
     - have an option for RS=LF because for goodness sake
     - will need char* RS/FS/PS throughout, or temp-shims more likely
     - on output: quote none, quote all, quote minimal, quote non-numeric
-    - test data from miller issues
+    - pull in test data from miller issues
     - reg-test cases
-    - profiling & some acknowledgement of future perf mods
+    k profiling & some acknowledgement of future perf mods
     - switch out --csvex/--csv/--csvlite
     - mlrdoc updates
 
