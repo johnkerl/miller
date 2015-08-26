@@ -166,9 +166,8 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		// xxx for RFC per se this needs to be "\r\n", 2
-		} else if (pfr_next_is(pstate->pfr, "\n", 1)) {
-			if (!pfr_advance_past(pstate->pfr, "\n")) {
+		} else if (pfr_next_is(pstate->pfr, "\r\n", 2)) {
+			if (!pfr_advance_past(pstate->pfr, "\r\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
@@ -202,8 +201,8 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pstate->pfr, "\"\n", 2)) {
-			if (!pfr_advance_past(pstate->pfr, "\"\n")) {
+		} else if (pfr_next_is(pstate->pfr, "\"\r\n", 3)) {
+			if (!pfr_advance_past(pstate->pfr, "\"\r\n")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}

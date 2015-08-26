@@ -200,6 +200,9 @@ evl:
 lrim:
 	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
 
+termcvt: tools/termcvt.c
+	$(CCDEBUG) tools/termcvt.c -o termcvt
+
 # ================================================================
 clean:
 	@rm -vf mlr mlrd mlrg mlrp tester
