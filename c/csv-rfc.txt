@@ -1,36 +1,3 @@
-
-================================================================
---> parser option: write a grammar like the below. be careful to
-    preserve the streaming property!
---> I don't see a way to line-at-a-time it in the formal grammar.
-    Other option is to find end of line via string arithmetic,
-    then pass that (null-terminated) string to the parser. But
-    correctly determining EOL in the presence of double-quote
-    semantics *is* the problem; nothing interesting left for the
-    parser to do.
-
---> state-machine option:
-    * each field either does or does not begin & end w/ "
-    * possibility of "" inside
-    * pretty simple except for CRLF being a double terminator, & fact I cannot
-      use getline anymore
-    * use fgetc & imitate mmap-style seeking
-    * still char irs needs to be char* irs ... and for rfc-csv it's non-parameterizable.
-    * for general string-fs/rs/ps (for other formats) there will need to be some rework.
-
-    * char p,q = lagged-by-one fgetc: while p != EOF.
-    * have a char* get_field(FILE* fp) function.
-    * enter the function looking at start of field.
-
-    * aux-fcn if SOF isn't DQUOTE: just string-build until COMMA, CRLF, or EOF
-    * aux-fcn if SOF is DQUOTE: just string-build until DQUOTE COMMA,
-      DQUOTE CRLF, or DQUOTE EOF. with special case that DQUOTE DQUOTE
-      maps to DQUOTE.
-
---> regardless: need a string_builder_t with private int curlen, char* buf,
-    public fcn append_char, public fcn append_string,
-    private fcn realloc resizing with minimal copy, public fcn zterm & produce.
-
 ================================================================
 Offlineable (subway-tunnelable) excerpt from https://tools.ietf.org/html/rfc4180
 ================================================================
