@@ -375,6 +375,25 @@ run_command $mlr --icsv --oxtab   cat test/input/utf8-1.csv
 run_command $mlr --icsv --oxtab   cat test/input/utf8-2.csv
 
 # ================================================================
+announce RFC-CSV
+
+# See https://github.com/johnkerl/miller/issues/4
+# Temporary status:
+# * --csv     from the command line maps into the (existing) csvlite I/O
+# * --csvlite from the command line maps into the (existing) csvlite I/O
+# * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
+# Ultimate status:
+# * --csvlite from the command line will maps into the csvlite I/O
+# * --csv     from the command line will maps into the rfc-csv I/O
+
+run_command $mlr --csvex cat test/input/rfc-csv/simple.csv
+run_command $mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
+run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma.csv
+run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma-truncated.csv
+run_command $mlr --csvex cat test/input/rfc-csv/quoted-crlf.csv
+run_command $mlr --csvex cat test/input/rfc-csv/quoted-crlf-truncated.csv
+
+# ================================================================
 diff $expdir/out $outdir/out
 #diff -C5 $expdir/out $outdir/out
 
