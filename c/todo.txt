@@ -24,12 +24,13 @@ TOP OF LIST
   o RFC:
     ! xxx's in csv reader
     - '\n' -> '\r\n'
-    - make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
+    k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
     ? make separate UT program test-peek-file-reader? needs C code to create its own temp files.
-    - default RS to CRLF
-    - have an option for RS=LF because for goodness sake
+    k default RS to CRLF
+    w have an option for RS=LF because for goodness sake
     - will need char* RS/FS/PS throughout, or temp-shims more likely
-    - on output: quote none, quote all, quote minimal, quote non-numeric
+    k on output: quote none, quote all, quote minimal, quote non-numeric
+    - mlrcli --help info for oquoting
     ! pull in test data from miller issues
     ! reg-test cases
     k profiling & some acknowledgement of future perf mods
@@ -41,6 +42,7 @@ TOP OF LIST
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
   o implement mmap-backed psb/pkr via vptr intf and profile that
   o optimize!
+  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns??
 
 * homebrew
 

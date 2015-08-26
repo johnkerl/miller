@@ -120,11 +120,10 @@ static record_wrapper_t lrec_reader_stdio_csv_get_record(lrec_reader_stdio_csv_s
 	rwrapper.at_eof = FALSE;
 	while (TRUE) {
 		field_wrapper_t fwrapper = get_csv_field(pstate);
-		if (fwrapper.termind == TERMIND_EOF) {
+		if (fwrapper.termind == TERMIND_EOF)
 			rwrapper.at_eof = TRUE;
-			break;
-		}
-		slls_add_with_free(pfields, fwrapper.contents);
+		if (fwrapper.contents != NULL)
+			slls_add_with_free(pfields, fwrapper.contents);
 		if (fwrapper.termind != TERMIND_FS)
 			break;
 	}
@@ -153,7 +152,10 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	while (TRUE) {
 		if (pfr_at_eof(pstate->pfr)) {
-			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
+			return (field_wrapper_t) {
+				.contents = sb_is_empty(pstate->psb) ? NULL: sb_finish(pstate->psb),
+				.termind = TERMIND_EOF
+			};
 		} else if (pfr_next_is(pstate->pfr, ",\xff", 2)) {
 			if (!pfr_advance_past(pstate->pfr, ",\xff")) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);

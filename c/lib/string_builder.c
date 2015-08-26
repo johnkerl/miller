@@ -33,6 +33,11 @@ void sb_append_string(string_builder_t* psb, char* s) {
 }
 
 // ----------------------------------------------------------------
+int sb_is_empty(string_builder_t* psb) {
+	return psb->used_length == 0;
+}
+
+// ----------------------------------------------------------------
 // Keep and reuse the internal buffer. Allocate to the caller only
 // the size needed.
 char* sb_finish(string_builder_t* psb) {

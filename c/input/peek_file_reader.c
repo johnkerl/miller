@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <ctype.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "peek_file_reader.h"
@@ -79,7 +81,8 @@ void pfr_dump(peek_file_reader_t* pfr) {
 	printf("  peekbuflen = %d\n", pfr->peekbuflen);
 	printf("  npeeked    = %d\n", pfr->npeeked);
 	for (int i = 0; i < pfr->npeeked; i++) {
-		printf("  i=%d c=%c [%02x]\n", i, pfr->peekbuf[i], pfr->peekbuf[i]);
+		char c = pfr->peekbuf[i];
+		printf("  i=%d c=%c [%02x]\n", i, isprint(c) ? c : ' ', c);
 	}
 	printf("------------------------\n");
 }
