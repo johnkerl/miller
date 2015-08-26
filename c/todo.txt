@@ -23,20 +23,20 @@ TOP OF LIST
     - never produce on output
   o RFC:
     ! xxx's in csv reader
-    k '\n' -> '\r\n'
-    k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
-    n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
-    k default RS to CRLF
-    w have an option for RS=LF because for goodness sake
-    - will need char* RS/FS/PS throughout, or temp-shims more likely
-    k on output: quote none, quote all, quote minimal, quote non-numeric
-    - mlrcli --help info for oquoting
     ! pull in test data from miller issues
     ! reg-test cases
-    k profiling & some acknowledgement of future perf mods
+    - will need char* RS/FS/PS throughout, or temp-shims more likely
+    - mlrcli --help info for oquoting
     - switch out --csvex/--csv/--csvlite
     - mlrdoc updates
-    - still need separate csvlite/csv on output since the former tolerates heterogeneity
+    - profiling & some acknowledgement of future perf mods
+    w have an option for RS=LF because for goodness sake
+    i still need separate csvlite/csv on output since the former tolerates heterogeneity
+    k '\n' -> '\r\n'
+    k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
+    k default RS to CRLF
+    k on output: quote none, quote all, quote minimal, quote non-numeric
+    n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
 * then:
   o incorp all this with other formats.
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
