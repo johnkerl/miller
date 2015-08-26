@@ -27,6 +27,14 @@ positionally-indexed data as a special case.)
 
 <li/> Miller is <b>pipe-friendly</b> and interoperates with Unix toolkit.
 
+<li/> Miller is <b>streaming</b>: most operations need only a single record in
+memory at a time, rather than ingesting all input before producing any output.
+For those operations which require deeper retention (<tt>sort</tt>,
+<tt>tac</tt>, <tt>stats1</tt>), Miller retains only as much data as needed.
+This means that whenever functionally possible you can operate on files which
+are larger than your system&rsquo;s available RAM, and you can use Miller in
+<tt>tail -f</tt> contexts.
+
 <li/> It complements SQL <b>databases</b>: you can slice, dice, and reformat
 data on the client side on its way into or out of a database. You can also reap
 some of the benefits of databases for quick, setup-free one-off tasks when just
