@@ -58,7 +58,7 @@ little:
 * poki cover -> readme
 
 ================================================================
-HN FEEDBACKS 2015-08-15
+HN FEEDBACKS 2015-08-15 (https://news.ycombinator.com/item?id=10066742)
 
 look-ats:
 * cq?
@@ -202,28 +202,3 @@ HARDER HYGIENE
 ================================================================
 PYTHON
 * pgr + stats_m same I/O modules??
-
-================================================================
-I8N
-
-
-  $ mlr --csv cat p
-  langue,nom,jour
-  français,françois,vendredi
-
-  $ mlr --csv --oxtab cat p
-  langue français
-  nom    françois
-  jour   vendredi
-
-  $ revlines p | mlr --csv --oxtab cat 
-  français langue
-  françois nom
-  vendredi  jour
-
-  $ revlines p | mlr --csv --opprint cat 
-  français françois vendredi
-  langue    nom       jour
-
-================================================================
-N.B. release announcement https://news.ycombinator.com/item?id=10066742 2015-08-15
