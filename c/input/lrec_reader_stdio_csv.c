@@ -46,14 +46,20 @@ typedef struct _record_wrapper_t {
 typedef struct _lrec_reader_stdio_csv_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
+
 	char* irs;
 	char* ifs;
-	// xxx parameterize dquote_irs
-	// xxx parameterize dquote_ifs
-	// xxx parameterize irs_len
-	// xxx parameterize ifs_len
-	// xxx parameterize dquote_irs_len
-	// xxx parameterize dquote_ifs_len
+	char* dquote_irs;
+	char* dquote_ifs;
+	char* dquote_eof;
+	char* ifs_eof;
+
+	int   irs_len;
+	int   ifs_len;
+	int   dquote_irs_len;
+	int   dquote_ifs_len;
+	int   dquote_eof_len;
+	int   ifs_eof_len;
 	// xxx parameterize maxlen of all of those; for the pfr buf
 	//int  allow_repeat_ifs;
 
@@ -168,8 +174,8 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pstate->pfr, "\r\n", 2)) {
-			if (!pfr_advance_past(pstate->pfr, "\r\n")) {
+		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->irs)) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
@@ -203,8 +209,8 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pstate->pfr, "\"\r\n", 3)) {
-			if (!pfr_advance_past(pstate->pfr, "\"\r\n")) {
+		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->dquote_irs)) {
 				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 				exit(1);
 			}
@@ -258,6 +264,18 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->ifnr                      = 0LL;
 	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
 	pstate->ifs                       = ",";   // xxx multi-byte the cli irs/ifs/etc, and integrate here
+
+	pstate->dquote_irs                = mlr_paste_2_strings("\"", pstate->irs);
+	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
+	pstate->dquote_eof                = "\"\xff";
+	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
+
+	pstate->irs_len                   = strlen(pstate->irs);
+	pstate->ifs_len                   = strlen(pstate->ifs);
+	pstate->dquote_irs_len            = strlen(pstate->dquote_irs);
+	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
+	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
+	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
 	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
 
 	sb_init(&pstate->sb, 1024); // xxx #define at top
