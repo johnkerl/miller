@@ -23,6 +23,9 @@ static inline int mlr_canonical_mod(int a, int n) {
 static inline int streq(char* a, char* b) {
 	return !strcmp(a, b);
 }
+static inline int strneq(char* a, char* b, int n) {
+	return !strncmp(a, b, n);
+}
 
 // ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value);

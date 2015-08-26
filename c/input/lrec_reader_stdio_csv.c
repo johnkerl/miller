@@ -87,24 +87,20 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, cont
 	record_wrapper_t rwrapper;
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
-			// xxx cmt
-			while (TRUE) {
-				rwrapper = lrec_reader_stdio_csv_get_record(pstate);
+			rwrapper = lrec_reader_stdio_csv_get_record(pstate);
 
-				if (rwrapper.contents == NULL && rwrapper.at_eof)
-					return NULL;
-				pstate->ilno++;
+			if (rwrapper.contents == NULL && rwrapper.at_eof)
+				return NULL;
+			pstate->ilno++;
 
-				pstate->expect_header_line_next = FALSE;
+			pstate->expect_header_line_next = FALSE;
 
-				pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, rwrapper.contents);
-				if (pstate->pheader_keeper == NULL) {
-					pstate->pheader_keeper = header_keeper_alloc(NULL, rwrapper.contents);
-					lhmslv_put(pstate->pheader_keepers, rwrapper.contents, pstate->pheader_keeper);
-				} else { // Re-use the header-keeper in the header cache
-					slls_free(rwrapper.contents);
-				}
-				break;
+			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, rwrapper.contents);
+			if (pstate->pheader_keeper == NULL) {
+				pstate->pheader_keeper = header_keeper_alloc(NULL, rwrapper.contents);
+				lhmslv_put(pstate->pheader_keepers, rwrapper.contents, pstate->pheader_keeper);
+			} else { // Re-use the header-keeper in the header cache
+				slls_free(rwrapper.contents);
 			}
 		}
 

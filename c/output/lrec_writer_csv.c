@@ -14,16 +14,18 @@
 // * --csvlite from the command line will maps into the csvlite I/O
 // * --csv     from the command line will maps into the rfc-csv I/O
 
-typedef void     quoted_output_func_t(FILE* fp, char* string, char ors, char ofs);
-static void     quote_all_output_func(FILE* fp, char* string, char ors, char ofs);
-static void    quote_none_output_func(FILE* fp, char* string, char ors, char ofs);
-static void quote_minimal_output_func(FILE* fp, char* string, char ors, char ofs);
-static void quote_numeric_output_func(FILE* fp, char* string, char ors, char ofs);
+typedef void     quoted_output_func_t(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void     quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void    quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 
 typedef struct _lrec_writer_csv_state_t {
-	int  onr;
-	char ors; // xxx char -> char*
-	char ofs; // xxx char -> char*
+	int   onr;
+	char *ors; // xxx char -> char*
+	char *ofs; // xxx char -> char*
+	int   orslen;
+	int   ofslen;
 	quoted_output_func_t* pquoted_output_func;
 	long long num_header_lines_output;
 	slls_t* plast_header_output;
@@ -36,8 +38,8 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	if (prec == NULL)
 		return;
 	lrec_writer_csv_state_t* pstate = pvstate;
-	char ors = pstate->ors;
-	char ofs = pstate->ofs;
+	char *ors = pstate->ors;
+	char *ofs = pstate->ofs;
 
 	if (pstate->plast_header_output != NULL) {
 		// xxx make a fcn to compare these w/o copy: put it in mixutil.
@@ -45,7 +47,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 			slls_free(pstate->plast_header_output);
 			pstate->plast_header_output = NULL;
 			if (pstate->num_header_lines_output > 0LL)
-				fputc(ors, output_stream);
+				fputs(ors, output_stream);
 		}
 	}
 
@@ -53,11 +55,12 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 		int nf = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 			if (nf > 0)
-				fputc(ofs, output_stream);
-			pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs);
+				fputs(ofs, output_stream);
+			pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
+				pstate->orslen, pstate->ofslen);
 			nf++;
 		}
-		fputc(ors, output_stream);
+		fputs(ors, output_stream);
 		pstate->plast_header_output = mlr_copy_keys_from_record(prec);
 		pstate->num_header_lines_output++;
 	}
@@ -65,11 +68,12 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	int nf = 0;
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		if (nf > 0)
-			fputc(ofs, output_stream);
-		pstate->pquoted_output_func(output_stream, pe->value, pstate->ors, pstate->ofs);
+			fputs(ofs, output_stream);
+		pstate->pquoted_output_func(output_stream, pe->value, pstate->ors, pstate->ofs,
+			pstate->orslen, pstate->ofslen);
 		nf++;
 	}
-	fputc(ors, output_stream);
+	fputs(ors, output_stream);
 	pstate->onr++;
 
 	lrec_free(prec); // xxx cmt mem-mgmt
@@ -87,9 +91,14 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs, int oquoting) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
-	pstate->onr                     = 0;
-	pstate->ors                     = ors;
-	pstate->ofs                     = ofs;
+	pstate->onr    = 0;
+	//pstate->ors  = ors;
+	//pstate->ofs  = ofs;
+	pstate->ors    = "\r\n"; // xxx temp
+	pstate->ofs    = ",";    // xxx temp
+	pstate->orslen = strlen(pstate->ors);
+	pstate->ofslen = strlen(pstate->ofs);
+
 	switch(oquoting) {
 	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
 	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
@@ -111,20 +120,20 @@ lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs, int oquoting) {
 	return plrec_writer;
 }
 
-static void quote_all_output_func(FILE* fp, char* string, char ors, char ofs) {
+static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	fputc('"', fp);
 	fputs(string, fp);
 	fputc('"', fp);
 }
 
-static void quote_none_output_func(FILE* fp, char* string, char ors, char ofs) {
+static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	fputs(string, fp);
 }
 
-static void quote_minimal_output_func(FILE* fp, char* string, char ors, char ofs) {
+static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	int output_quotes = FALSE;
 	for (char* p = string; *p; p++) {
-		if (*p == ors || *p == ofs) {
+		if (strneq(p, ors, orslen) || strneq(p, ofs, ofslen)) {
 			output_quotes = TRUE;
 			break;
 		}
@@ -138,7 +147,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char ors, char ofs
 	}
 }
 
-static void quote_numeric_output_func(FILE* fp, char* string, char ors, char ofs) {
+static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	double temp;
 	if (mlr_try_double_from_string(string, &temp)) {
 		fputc('"', fp);
