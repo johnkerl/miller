@@ -23,9 +23,9 @@ TOP OF LIST
     - never produce on output
   o RFC:
     ! xxx's in csv reader
-    - '\n' -> '\r\n'
+    k '\n' -> '\r\n'
     k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
-    ? make separate UT program test-peek-file-reader? needs C code to create its own temp files.
+    n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
     k default RS to CRLF
     w have an option for RS=LF because for goodness sake
     - will need char* RS/FS/PS throughout, or temp-shims more likely

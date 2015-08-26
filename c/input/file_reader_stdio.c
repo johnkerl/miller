@@ -17,7 +17,7 @@ void* file_reader_stdio_vopen(char* filename) {
 		if (input_stream == NULL) {
 			fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
 			perror(filename);
-			return 0;
+			exit(1);
 		}
 	}
 	return input_stream;
