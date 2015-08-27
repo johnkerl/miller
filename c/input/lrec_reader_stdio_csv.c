@@ -56,6 +56,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	char* dquote_ifs;
 	char* dquote_eof;
 	char* dquote;
+	char* dquote_dquote;
 	char* ifs_eof;
 
 	int   irs_len;
@@ -64,6 +65,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   dquote_ifs_len;
 	int   dquote_eof_len;
 	int   dquote_len;
+	int   dquote_dquote_len;
 	int   ifs_eof_len;
 
 	int   peek_buf_len;
@@ -216,6 +218,13 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
+		} else if (pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
+			// "" inside a dquoted field is an escape for "
+			if (!pfr_advance_past(pstate->pfr, pstate->dquote_dquote)) {
+				fprintf(stderr, "%s: Internal coding error: DQUOTE-DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
+				exit(1);
+			}
+			sb_append_string(pstate->psb, pstate->dquote);
 		} else {
 			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
 		}
@@ -267,6 +276,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
 	pstate->dquote_eof                = "\"\xff";
 	pstate->dquote                    = "\"";
+	pstate->dquote_dquote             = "\"\"";
 	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
 
 	pstate->irs_len                   = strlen(pstate->irs);
@@ -275,6 +285,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
 	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
 	pstate->dquote_len                = strlen(pstate->dquote);
+	pstate->dquote_dquote_len         = strlen(pstate->dquote_dquote);
 	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
 
 	pstate->peek_buf_len              = pstate->irs_len;
@@ -283,6 +294,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_ifs_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_eof_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_dquote_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
 
