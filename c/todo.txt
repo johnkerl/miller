@@ -23,8 +23,9 @@ TOP OF LIST
     - never produce on output
   o RFC:
     - mlrcli --help info for oquoting
-    - switch out --csvex/--csv/--csvlite
     - mlrdoc updates
+    - switch out --csvex/--csv/--csvlite
+    - call csvlite something else -- csvish?!?
     ~ profiling & some acknowledgement of future perf mods
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
@@ -36,6 +37,7 @@ TOP OF LIST
     n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
 * then:
   o incorp all this with other formats.
+  o in particular, rs/fs/ps from char to char*
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
   o implement mmap-backed psb/pkr via vptr intf and profile that
   o optimize!
@@ -73,6 +75,9 @@ xperf:
 
 ================================================================
 FILE FORMATS
+
+! CSV with no records output: somehow emit just the header. likewise consume same on input ...
+  ... & be able to cat header-only input to header-only output.
 
 * #1 HN-release-announcement ask is RFC-CSV -- which insists on CRLF
 * Also should support CRLF for DKVP
