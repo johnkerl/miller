@@ -65,4 +65,6 @@ time_t mlr_timegm (struct tm *tm);
 
 int strlen_for_utf8_display(char* str);
 
+int mlr_imax2(int a, int b);
+
 #endif // MLRUTIL_H

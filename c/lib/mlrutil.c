@@ -278,3 +278,11 @@ int strlen_for_utf8_display(char* str) {
 	}
 	return len;
 }
+
+// ----------------------------------------------------------------
+int mlr_imax2(int a, int b) {
+	if (a >= b)
+		return a;
+	else
+		return b;
+}

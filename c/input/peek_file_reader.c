@@ -31,12 +31,14 @@ int pfr_at_eof(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
+// xxx inline this for perf.
 int pfr_next_is(peek_file_reader_t* pfr, char* string, int len) {
 	// xxx abend on len > peekbuflen
 	while (pfr->npeeked < len) {
 		char c = fgetc(pfr->fp); // maybe EOF
 		pfr->peekbuf[pfr->npeeked++] = c;
 	}
+	// xxx make a memeq, inlined.
 	return memcmp(string, pfr->peekbuf, len) == 0;
 }
 

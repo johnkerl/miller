@@ -93,7 +93,11 @@ mlrg: .always dsls
 mlrk: .always dsls
 	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
 
-# Profile version
+# Profile version. Usage:
+# * make mlrp
+# * mlrp {arguments>
+# * gprof mlrp gmon.out > myfile.txt
+# Note: works on Linux; not on OSX.
 mlrp: .always dsls
 	$(CC) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
 

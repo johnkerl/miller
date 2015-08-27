@@ -28,6 +28,7 @@
 // those.  Then when the reader is freed, all the header-keepers are freed.
 
 // ----------------------------------------------------------------
+#define STRING_BUILDER_INIT_SIZE 1024
 #define TERMIND_RS  0x1111
 #define TERMIND_FS  0x2222
 #define TERMIND_EOF 0x3333
@@ -60,6 +61,8 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   dquote_ifs_len;
 	int   dquote_eof_len;
 	int   ifs_eof_len;
+
+	int   peek_buf_len;
 	// xxx parameterize maxlen of all of those; for the pfr buf
 	//int  allow_repeat_ifs;
 
@@ -87,7 +90,7 @@ static lrec_t*         paste_header_and_data(lrec_reader_stdio_csv_state_t* psta
 static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	if (pstate->pfr == NULL) {
-		pstate->pfr = pfr_alloc((FILE*)pvhandle, 32); // xxx set up via max of all terminds
+		pstate->pfr = pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
 	}
 
 	record_wrapper_t rwrapper;
@@ -155,7 +158,6 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 
 static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
 	// xxx need pfr_advance_past_or_die ...
-	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	while (TRUE) {
 		if (pfr_at_eof(pstate->pfr)) {
 			return (field_wrapper_t) {
@@ -263,7 +265,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
 	pstate->ifnr                      = 0LL;
 	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
-	pstate->ifs                       = ",";   // xxx multi-byte the cli irs/ifs/etc, and integrate here
+	pstate->ifs                       = ",";    // xxx multi-byte the cli irs/ifs/etc, and integrate here
 
 	pstate->dquote_irs                = mlr_paste_2_strings("\"", pstate->irs);
 	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
@@ -276,9 +278,18 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
 	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
 	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
+
+	pstate->peek_buf_len              = pstate->irs_len;
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_irs_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_ifs_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_eof_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
+	pstate->peek_buf_len             += 2;
+
 	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
 
-	sb_init(&pstate->sb, 1024); // xxx #define at top
+	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
 	pstate->pfr                       = NULL;
 
