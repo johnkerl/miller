@@ -1,7 +1,7 @@
 POKI_PUT_TOC_HERE
 
 <h1>CSV/TSV/etc.</h1>
-When <tt>mlr</tt> is invoked with the <tt>--csv</tt> option,
+When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
 key names are found on the first record and values are taken from subsequent
 records.  This includes the case of CSV-formatted files.  See
 POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
@@ -12,12 +12,11 @@ just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
 CSV, use <tt>--ifs tab --ofs ,</tt> etc.  (See also
 POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
 
-<p/> To be precise, as of August 2015 Miller supports a &ldquo;CSV-lite&rdquo;
-format, in the sense of &ldquo;values which are separated by commas&rdquo;.
-Double quotes, and all that goes along with them (see the <a
-href="https://tools.ietf.org/html/rfc4180">RFC</a>), won&rsquo;t be correctly
-handled until resolution of <a
-href="https://github.com/johnkerl/miller/issues/4">https://github.com/johnkerl/miller/issues/4</a>.
+<p/>The <tt>--csvlite</tt> option supports programmable single-byte field and record separators,
+e.g. you can do TSV. Meanwhile <tt>--csv</tt> supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+https://tools.ietf.org/html/rfc4180</a>).
+For more information about the current status of CSV support in Miller, please see
+<a href="https://github.com/johnkerl/miller/releases/tag/v2.0.0">https://github.com/johnkerl/miller/releases/tag/v2.0.0</a>.
 
 <h1>Pretty-printed</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
