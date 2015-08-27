@@ -232,7 +232,6 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		// for performance, xxx reduce the copies here
 		lrec_put_no_free(prec, ph->value, pd->value);
 	}
 	return prec;

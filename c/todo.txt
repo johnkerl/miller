@@ -22,16 +22,13 @@ TOP OF LIST
     - strip if present on input
     - never produce on output
   o RFC:
-    ! xxx's in csv reader
-    ! pull in test data from miller issues
-    ! valgrind --csvex I/O
-    - will need char* RS/FS/PS throughout, or temp-shims more likely
     - mlrcli --help info for oquoting
     - switch out --csvex/--csv/--csvlite
     - mlrdoc updates
-    - profiling & some acknowledgement of future perf mods
+    ~ profiling & some acknowledgement of future perf mods
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
+    i will need char* RS/FS/PS throughout, or temp-shims more likely
     k '\n' -> '\r\n'
     k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
     k default RS to CRLF
