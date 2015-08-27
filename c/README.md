@@ -23,7 +23,7 @@ the data type) whereas non-void-star payloads (`slls`, `hss`) are freed by the
 container class.
 
 One complication is for free-flags in `lrec` and `slls`: the idea is that an
-entire line is mallocked and presented by the record reader; then indivual
+entire line is mallocked and presented by the record reader; then individual
 fields are split out and populated into linked list or records. To reduce the
 amount of strduping there, free-flags are used to track which fields should be
 freed by the destructor and which are freed elsewhere.
