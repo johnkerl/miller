@@ -7,7 +7,7 @@ kerl@kerl-mbp[s146j1d1][c]$ cat y
 x,y
 º,a
 Ñº,b
-kerl@kerl-mbp[s0j1d1][c]$ mlr --icsv --opprint cat y
+kerl@kerl-mbp[s0j1d1][c]$ mlr --icsvlite --opprint cat y
 x  y
 º a
 Ñº b
@@ -23,16 +23,12 @@ TOP OF LIST
     - never produce on output
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
-    ! make a releases page at mlrdoc, or at least link from index page
     ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
     - mlrdoc updates
     - switch out --csvex/--csv/--csvlite
-    - call csvlite something else -- csvish?!?
-    ~ profiling & some acknowledgement of future perf mods
-    w have an option for RS=LF because for goodness sake
-    i still need separate csvlite/csv on output since the former tolerates heterogeneity
-    i will need char* RS/FS/PS throughout, or temp-shims more likely
+    ! make a releases page at mlrdoc, or at least link from index page
 
+    k profiling & some acknowledgement of future perf mods
     k mlrcli --help info for oquoting
     k UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
     k forbid double-quote inside of non-double-quote-wrapped fields
@@ -42,6 +38,8 @@ TOP OF LIST
     k on output: quote none, quote all, quote minimal, quote non-numeric
     n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
 * then:
+  o have an option for RS=LF because for goodness sake
+  o still need separate csvlite/csv on output since the former tolerates heterogeneity
   o incorp all this with other formats.
   o in particular, rs/fs/ps from char to char*
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
@@ -167,7 +165,7 @@ UT/REG
 * tac/X/cat for all X
 * cat/X/tac for all X
 * tac/X/tac for all X
-* multi-csv I/O: include --icsv --odkvp and --idkvp --ocsv, as well as --csv cases
+* multi-csv I/O: include --icsvlite --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
 * modulus operator
 * strlen

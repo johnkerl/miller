@@ -6,15 +6,6 @@
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 
-// See https://github.com/johnkerl/miller/issues/4
-// Temporary status:
-// * --csv     from the command line maps into the (existing) csvlite I/O
-// * --csvlite from the command line maps into the (existing) csvlite I/O
-// * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
-// Ultimate status:
-// * --csvlite from the command line will maps into the csvlite I/O
-// * --csv     from the command line will maps into the rfc-csv I/O
-
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data

@@ -276,8 +276,8 @@ run_command $mlr filter -v '$x<$a*-$b+$c'  /dev/null
 run_command $mlr filter -v '$x<$a+$b*-$c'  /dev/null
 run_command $mlr filter -v '$x<$a*$b+-$c'  /dev/null
 
-run_command $mlr --csv put '$gmt=sec2gmt($sec)' $indir/sec2gmt
-run_command $mlr --csv put '$sec=gmt2sec($gmt)' $indir/gmt2sec
+run_command $mlr --csvlite put '$gmt=sec2gmt($sec)' $indir/sec2gmt
+run_command $mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 
 run_command $mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_command $mlr put '$z=max($x, $y)' $indir/minmax.dkvp
@@ -302,33 +302,33 @@ run_command $mlr tac then tac then tac $indir/short
 # ----------------------------------------------------------------
 announce HET-CSV INPUT
 
-run_command $mlr --icsv --odkvp cat test/input/a.csv
-run_command $mlr --icsv --odkvp cat test/input/b.csv
-run_command $mlr --icsv --odkvp cat test/input/c.csv
-run_command $mlr --icsv --odkvp cat test/input/d.csv
-run_command $mlr --icsv --odkvp cat test/input/e.csv
-run_command $mlr --icsv --odkvp cat test/input/f.csv
-run_command $mlr --icsv --odkvp cat test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat test/input/a.csv
+run_command $mlr --icsvlite --odkvp cat test/input/b.csv
+run_command $mlr --icsvlite --odkvp cat test/input/c.csv
+run_command $mlr --icsvlite --odkvp cat test/input/d.csv
+run_command $mlr --icsvlite --odkvp cat test/input/e.csv
+run_command $mlr --icsvlite --odkvp cat test/input/f.csv
+run_command $mlr --icsvlite --odkvp cat test/input/g.csv
 
-run_command $mlr --icsv --odkvp cat test/input/a.csv test/input/a.csv
-run_command $mlr --icsv --odkvp cat test/input/b.csv test/input/b.csv
-run_command $mlr --icsv --odkvp cat test/input/c.csv test/input/c.csv
-run_command $mlr --icsv --odkvp cat test/input/d.csv test/input/d.csv
-run_command $mlr --icsv --odkvp cat test/input/e.csv test/input/e.csv
-run_command $mlr --icsv --odkvp cat test/input/f.csv test/input/f.csv
-run_command $mlr --icsv --odkvp cat test/input/g.csv test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/a.csv
+run_command $mlr --icsvlite --odkvp cat test/input/b.csv test/input/b.csv
+run_command $mlr --icsvlite --odkvp cat test/input/c.csv test/input/c.csv
+run_command $mlr --icsvlite --odkvp cat test/input/d.csv test/input/d.csv
+run_command $mlr --icsvlite --odkvp cat test/input/e.csv test/input/e.csv
+run_command $mlr --icsvlite --odkvp cat test/input/f.csv test/input/f.csv
+run_command $mlr --icsvlite --odkvp cat test/input/g.csv test/input/g.csv
 
-run_command $mlr --icsv --odkvp cat test/input/a.csv test/input/b.csv
-run_command $mlr --icsv --odkvp cat test/input/b.csv test/input/c.csv
-run_command $mlr --icsv --odkvp cat test/input/c.csv test/input/d.csv
-run_command $mlr --icsv --odkvp cat test/input/d.csv test/input/e.csv
-run_command $mlr --icsv --odkvp cat test/input/e.csv test/input/f.csv
-run_command $mlr --icsv --odkvp cat test/input/f.csv test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv
+run_command $mlr --icsvlite --odkvp cat test/input/b.csv test/input/c.csv
+run_command $mlr --icsvlite --odkvp cat test/input/c.csv test/input/d.csv
+run_command $mlr --icsvlite --odkvp cat test/input/d.csv test/input/e.csv
+run_command $mlr --icsvlite --odkvp cat test/input/e.csv test/input/f.csv
+run_command $mlr --icsvlite --odkvp cat test/input/f.csv test/input/g.csv
 
-run_command $mlr --icsv --odkvp cat test/input/a.csv test/input/b.csv \
+run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv \
   test/input/c.csv test/input/d.csv test/input/e.csv test/input/f.csv test/input/g.csv
 
-run_command $mlr --icsv --odkvp tac test/input/het.csv
+run_command $mlr --icsvlite --odkvp tac test/input/het.csv
 
 # ----------------------------------------------------------------
 announce HET-PPRINT INPUT
@@ -362,38 +362,29 @@ run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/b.pprint \
 # ================================================================
 announce NULL-FIELD INPUT
 
-run_command $mlr --icsv  --odkvp cat test/input/null-fields.csv
+run_command $mlr --icsvlite  --odkvp cat test/input/null-fields.csv
 run_command $mlr --inidx --odkvp cat test/input/null-fields.nidx
 run_command $mlr --idkvp --oxtab cat test/input/missings.dkvp
 
 # ================================================================
 announce UTF-8 alignment
 
-run_command $mlr --icsv --opprint cat test/input/utf8-1.csv
-run_command $mlr --icsv --opprint cat test/input/utf8-2.csv
-run_command $mlr --icsv --oxtab   cat test/input/utf8-1.csv
-run_command $mlr --icsv --oxtab   cat test/input/utf8-2.csv
+run_command $mlr --icsvlite --opprint cat test/input/utf8-1.csv
+run_command $mlr --icsvlite --opprint cat test/input/utf8-2.csv
+run_command $mlr --icsvlite --oxtab   cat test/input/utf8-1.csv
+run_command $mlr --icsvlite --oxtab   cat test/input/utf8-2.csv
 
 # ================================================================
 announce RFC-CSV
 
-# See https://github.com/johnkerl/miller/issues/4
-# Temporary status:
-# * --csv     from the command line maps into the (existing) csvlite I/O
-# * --csvlite from the command line maps into the (existing) csvlite I/O
-# * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
-# Ultimate status:
-# * --csvlite from the command line will maps into the csvlite I/O
-# * --csv     from the command line will maps into the rfc-csv I/O
-
-run_command $mlr --csvex cat test/input/rfc-csv/simple.csv
-run_command $mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
-run_command $mlr --csvex cat test/input/rfc-csv/narrow.csv
-run_command $mlr --csvex cat test/input/rfc-csv/narrow-truncated.csv
-run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma.csv
-run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma-truncated.csv
-run_command $mlr --csvex cat test/input/rfc-csv/quoted-crlf.csv
-run_command $mlr --csvex cat test/input/rfc-csv/quoted-crlf-truncated.csv
+run_command $mlr --csv cat test/input/rfc-csv/simple.csv
+run_command $mlr --csv cat test/input/rfc-csv/simple-truncated.csv
+run_command $mlr --csv cat test/input/rfc-csv/narrow.csv
+run_command $mlr --csv cat test/input/rfc-csv/narrow-truncated.csv
+run_command $mlr --csv cat test/input/rfc-csv/quoted-comma.csv
+run_command $mlr --csv cat test/input/rfc-csv/quoted-comma-truncated.csv
+run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf.csv
+run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf-truncated.csv
 
 # ================================================================
 diff $expdir/out $outdir/out

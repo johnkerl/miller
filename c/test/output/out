@@ -1490,7 +1490,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         - (operator):
             c (field_name).
 
-./test/../mlr --csv put $gmt=sec2gmt($sec) ./test/input/sec2gmt
+./test/../mlr --csvlite put $gmt=sec2gmt($sec) ./test/input/sec2gmt
 sec,gmt
 0,1970-01-01T00:00:00Z
 1,1970-01-01T00:00:01Z
@@ -1507,7 +1507,7 @@ sec,gmt
 1500000000,2017-07-14T02:40:00Z
 2000000000,2033-05-18T03:33:20Z
 
-./test/../mlr --csv put $sec=gmt2sec($gmt) ./test/input/gmt2sec
+./test/../mlr --csvlite put $sec=gmt2sec($gmt) ./test/input/gmt2sec
 gmt,sec
 1970-01-01T00:00:00Z,0
 1970-01-01T00:00:01Z,1
@@ -1612,41 +1612,41 @@ a=1
 ================================================================
 HET-CSV INPUT
 
-./test/../mlr --icsv --odkvp cat test/input/a.csv
+./test/../mlr --icsvlite --odkvp cat test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsv --odkvp cat test/input/b.csv
+./test/../mlr --icsvlite --odkvp cat test/input/b.csv
 d=5,e=6,f=7
 
-./test/../mlr --icsv --odkvp cat test/input/c.csv
+./test/../mlr --icsvlite --odkvp cat test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsv --odkvp cat test/input/d.csv
+./test/../mlr --icsvlite --odkvp cat test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --icsv --odkvp cat test/input/e.csv
+./test/../mlr --icsvlite --odkvp cat test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsv --odkvp cat test/input/f.csv
+./test/../mlr --icsvlite --odkvp cat test/input/f.csv
 
-./test/../mlr --icsv --odkvp cat test/input/g.csv
+./test/../mlr --icsvlite --odkvp cat test/input/g.csv
 
-./test/../mlr --icsv --odkvp cat test/input/a.csv test/input/a.csv
+./test/../mlr --icsvlite --odkvp cat test/input/a.csv test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsv --odkvp cat test/input/b.csv test/input/b.csv
+./test/../mlr --icsvlite --odkvp cat test/input/b.csv test/input/b.csv
 d=5,e=6,f=7
 d=5,e=6,f=7
 
-./test/../mlr --icsv --odkvp cat test/input/c.csv test/input/c.csv
+./test/../mlr --icsvlite --odkvp cat test/input/c.csv test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
@@ -1654,65 +1654,65 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsv --odkvp cat test/input/d.csv test/input/d.csv
+./test/../mlr --icsvlite --odkvp cat test/input/d.csv test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --icsv --odkvp cat test/input/e.csv test/input/e.csv
+./test/../mlr --icsvlite --odkvp cat test/input/e.csv test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsv --odkvp cat test/input/f.csv test/input/f.csv
+./test/../mlr --icsvlite --odkvp cat test/input/f.csv test/input/f.csv
 
-./test/../mlr --icsv --odkvp cat test/input/g.csv test/input/g.csv
+./test/../mlr --icsvlite --odkvp cat test/input/g.csv test/input/g.csv
 
-./test/../mlr --icsv --odkvp cat test/input/a.csv test/input/b.csv
+./test/../mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 d=5,e=6,f=7
 
-./test/../mlr --icsv --odkvp cat test/input/b.csv test/input/c.csv
+./test/../mlr --icsvlite --odkvp cat test/input/b.csv test/input/c.csv
 d=5,e=6,f=7
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsv --odkvp cat test/input/c.csv test/input/d.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-a=7,b=8,c=9
-h=3,i=4,j=5
-m=8,n=9,o=10
-
-./test/../mlr --icsv --odkvp cat test/input/d.csv test/input/e.csv
-h=3,i=4,j=5
-m=8,n=9,o=10
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-./test/../mlr --icsv --odkvp cat test/input/e.csv test/input/f.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-./test/../mlr --icsv --odkvp cat test/input/f.csv test/input/g.csv
-
-./test/../mlr --icsv --odkvp cat test/input/a.csv test/input/b.csv test/input/c.csv test/input/d.csv test/input/e.csv test/input/f.csv test/input/g.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-d=5,e=6,f=7
+./test/../mlr --icsvlite --odkvp cat test/input/c.csv test/input/d.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 h=3,i=4,j=5
 m=8,n=9,o=10
+
+./test/../mlr --icsvlite --odkvp cat test/input/d.csv test/input/e.csv
+h=3,i=4,j=5
+m=8,n=9,o=10
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsv --odkvp tac test/input/het.csv
+./test/../mlr --icsvlite --odkvp cat test/input/e.csv test/input/f.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+./test/../mlr --icsvlite --odkvp cat test/input/f.csv test/input/g.csv
+
+./test/../mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv test/input/c.csv test/input/d.csv test/input/e.csv test/input/f.csv test/input/g.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+d=5,e=6,f=7
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+h=3,i=4,j=5
+m=8,n=9,o=10
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+./test/../mlr --icsvlite --odkvp tac test/input/het.csv
 resource=/some/other/path,loadsec=0.97,ok=false
 record_count=150,resource=/path/to/second/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1827,7 +1827,7 @@ a=4,b=5,c=6
 ================================================================
 NULL-FIELD INPUT
 
-./test/../mlr --icsv --odkvp cat test/input/null-fields.csv
+./test/../mlr --icsvlite --odkvp cat test/input/null-fields.csv
 a=1,b=2,c=3,d=4,e=5
 a=6,b=,c=,d=,e=10
 a=,b=,c=,d=11,e=12
@@ -1869,20 +1869,20 @@ f 6
 ================================================================
 UTF-8 alignment
 
-./test/../mlr --icsv --opprint cat test/input/utf8-1.csv
+./test/../mlr --icsvlite --opprint cat test/input/utf8-1.csv
 langue   nom      jour
 français françois vendredi
 
-./test/../mlr --icsv --opprint cat test/input/utf8-2.csv
+./test/../mlr --icsvlite --opprint cat test/input/utf8-2.csv
 français françois vendredi
 langue   nom      jour
 
-./test/../mlr --icsv --oxtab cat test/input/utf8-1.csv
+./test/../mlr --icsvlite --oxtab cat test/input/utf8-1.csv
 langue français
 nom    françois
 jour   vendredi
 
-./test/../mlr --icsv --oxtab cat test/input/utf8-2.csv
+./test/../mlr --icsvlite --oxtab cat test/input/utf8-2.csv
 français langue
 françois nom
 vendredi jour
@@ -1891,48 +1891,48 @@ vendredi jour
 ================================================================
 RFC-CSV
 
-./test/../mlr --csvex cat test/input/rfc-csv/simple.csv
+./test/../mlr --csv cat test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
 x,y"yy,z
 
-./test/../mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
+./test/../mlr --csv cat test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-./test/../mlr --csvex cat test/input/rfc-csv/narrow.csv
+./test/../mlr --csv cat test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-./test/../mlr --csvex cat test/input/rfc-csv/narrow-truncated.csv
+./test/../mlr --csv cat test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
 3
 4
 
-./test/../mlr --csvex cat test/input/rfc-csv/quoted-comma.csv
+./test/../mlr --csv cat test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-./test/../mlr --csvex cat test/input/rfc-csv/quoted-comma-truncated.csv
+./test/../mlr --csv cat test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-./test/../mlr --csvex cat test/input/rfc-csv/quoted-crlf.csv
+./test/../mlr --csv cat test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-./test/../mlr --csvex cat test/input/rfc-csv/quoted-crlf-truncated.csv
+./test/../mlr --csv cat test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y

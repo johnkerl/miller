@@ -288,27 +288,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		// See https://github.com/johnkerl/miller/issues/4
-		// Temporary status:
-		// * --csv     from the command line maps into the (existing) csvlite I/O
-		// * --csvlite from the command line maps into the (existing) csvlite I/O
-		// * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
-		// Ultimate status:
-		// * --csvlite from the command line will maps into the csvlite I/O
-		// * --csv     from the command line will maps into the rfc-csv I/O
-
-		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csvlite";  }
-		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csvlite";  }
-		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csvlite";  }
+		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csv";  }
+		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csv";  }
+		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csv";  }
 
 		else if (streq(argv[argi], "--csvlite"))  { popts->ifmt = ofmt = "csvlite";  }
 		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
 		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
-
-		else if (streq(argv[argi], "--csvex"))    { popts->ifmt = ofmt = "csv";  }
-		else if (streq(argv[argi], "--icsvex"))   { popts->ifmt = "csv";  }
-		else if (streq(argv[argi], "--ocsvex"))   { ofmt = "csv";  }
-
 
 		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
 		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }

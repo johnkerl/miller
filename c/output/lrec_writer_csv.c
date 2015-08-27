@@ -5,15 +5,6 @@
 #include "containers/mixutil.h"
 #include "output/lrec_writers.h"
 
-// See https://github.com/johnkerl/miller/issues/4
-// Temporary status:
-// * --csv     from the command line maps into the (existing) csvlite I/O
-// * --csvlite from the command line maps into the (existing) csvlite I/O
-// * --csvex   from the command line maps into the (new & experimental & unadvertised) rfc-csv I/O
-// Ultimate status:
-// * --csvlite from the command line will maps into the csvlite I/O
-// * --csv     from the command line will maps into the rfc-csv I/O
-
 typedef void     quoted_output_func_t(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 static void     quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 static void    quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
