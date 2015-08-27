@@ -16,11 +16,12 @@ x  y
 TOP OF LIST
 
 ! CSV:
-  o minimal double-quote option for csvlite:
+  x minimal double-quote option for csvlite:
     - off by default
     - don't try to handle embedded FS or RS or double-double quote
     - strip if present on input
     - never produce on output
+    - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
     ! UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
     ! make a releases page or some such at mlrdoc

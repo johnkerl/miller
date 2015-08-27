@@ -1895,6 +1895,7 @@ RFC-CSV
 a,b,c
 1,x,3
 4,5,6
+x,y"yy,z
 
 ./test/../mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
 a,b,c
