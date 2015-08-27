@@ -1,6 +1,6 @@
 **Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.**
 
-With Miller you get to use named fields without needing to count positional
+With Miller, you get to use named fields without needing to count positional
 indices.
 
 For example:
@@ -36,7 +36,7 @@ Features:
 memory at a time, rather than ingesting all input before producing any output.
 For those operations which require deeper retention (`sort`, `tac`, `stats1`),
 Miller retains only as much data as needed. This means that whenever
-functionally possible you can operate on files which are larger than your
+functionally possible, you can operate on files which are larger than your
 system&rsquo;s available RAM, and you can use Miller in `tail -f`
 contexts.
 
@@ -45,8 +45,8 @@ the client side on its way into or out of a database. You can also reap some of
 the benefits of databases for quick, setup-free one-off tasks when just need to
 query some data in disk files in a hurry.
 
-* Miller also goes beyond classic Unix tools by stepping into our modern,
-**no-SQL** world: its essential record-heterogeneity property allows it to
+* Miller also goes beyond the classic Unix tools by stepping into our modern,
+**no-SQL** world: its essential record-heterogeneity property allows Miller to
 operate on data where records with different schema (field names) are
 interleaved.
 
@@ -54,4 +54,4 @@ interleaved.
 in modern C, and it has **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
-For more information please see http://johnkerl.org/miller/doc
+For more information, please visit http://johnkerl.org/miller/doc
