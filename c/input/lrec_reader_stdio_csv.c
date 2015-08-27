@@ -55,6 +55,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	char* dquote_irs;
 	char* dquote_ifs;
 	char* dquote_eof;
+	char* dquote;
 	char* ifs_eof;
 
 	int   irs_len;
@@ -62,6 +63,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   dquote_irs_len;
 	int   dquote_ifs_len;
 	int   dquote_eof_len;
+	int   dquote_len;
 	int   ifs_eof_len;
 
 	int   peek_buf_len;
@@ -149,7 +151,7 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 		wrapper.contents = NULL;
 		wrapper.termind = TERMIND_EOF;
 		return wrapper;
-	} else if (pfr_next_is(pstate->pfr, "\"", 1)) {
+	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
 		return get_csv_field_dquoted(pstate);
 	} else {
 		return get_csv_field_not_dquoted(pstate);
@@ -157,7 +159,6 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 }
 
 static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
-	// xxx need pfr_advance_past_or_die ...
 	while (TRUE) {
 		if (pfr_at_eof(pstate->pfr)) {
 			return (field_wrapper_t) {
@@ -189,15 +190,13 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 }
 
 static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
-	// xxx need pfr_advance_past_or_die ...
-	if (!pfr_advance_past(pstate->pfr, "\"")) {
-		fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+	if (!pfr_advance_past(pstate->pfr, pstate->dquote)) {
+		fprintf(stderr, "%s: Internal coding error: DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 	while (TRUE) {
 		if (pfr_at_eof(pstate->pfr)) {
-			// xxx imbalanced-dquote error
-			fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
 			exit(1);
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
 			if (!pfr_advance_past(pstate->pfr, pstate->dquote_eof)) {
@@ -268,6 +267,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->dquote_irs                = mlr_paste_2_strings("\"", pstate->irs);
 	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
 	pstate->dquote_eof                = "\"\xff";
+	pstate->dquote                    = "\"";
 	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
 
 	pstate->irs_len                   = strlen(pstate->irs);
@@ -275,6 +275,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->dquote_irs_len            = strlen(pstate->dquote_irs);
 	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
 	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
+	pstate->dquote_len                = strlen(pstate->dquote);
 	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
 
 	pstate->peek_buf_len              = pstate->irs_len;
@@ -282,6 +283,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_irs_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_ifs_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_eof_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
 
