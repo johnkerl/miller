@@ -22,8 +22,7 @@ TOP OF LIST
     - strip if present on input
     - never produce on output
   o RFC:
-    ! need to handle escaped internal "" -> " e.g. "aaa","b""bb","ccc"
-    ! forbid double-quote inside of non-double-quote-wrapped fields
+    ! UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
     ! make a releases page or some such at mlrdoc
     - mlrcli --help info for oquoting
     - mlrdoc updates
@@ -34,6 +33,7 @@ TOP OF LIST
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
     i will need char* RS/FS/PS throughout, or temp-shims more likely
+    k forbid double-quote inside of non-double-quote-wrapped fields
     k '\n' -> '\r\n'
     k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
     k default RS to CRLF

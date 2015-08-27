@@ -185,6 +185,10 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
+		} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+			fprintf(stderr, "%s: non-compliant field-internal double-quote at line %lld.\n",
+				MLR_GLOBALS.argv0, pstate->ilno);
+			exit(1);
 		} else {
 			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
 		}
