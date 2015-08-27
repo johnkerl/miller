@@ -257,7 +257,7 @@ Separator options, for input, output, or both:
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators on Linux/OSX.
   * CSV is intended to handle RFC-4180-compliant data.
-    In particular, this means it *only* handle CRLF line-terminators.
+    In particular, this means it *only* handles CRLF line-terminators.
   * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option
     for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.
 Double-quoting for CSV:
@@ -549,6 +549,7 @@ $ mlr --csv cat a.csv b.csv
 a,b,c
 1,2,3
 4,5,6
+7,8,9
 </pre>
 </div>
 <p/>
@@ -564,6 +565,10 @@ c 3
 a 4
 b 5
 c 6
+
+a 7
+b 8
+c 9
 </pre>
 </div>
 <p/>
@@ -2041,6 +2046,7 @@ a b c
 <pre>
 $ mlr --icsv --opprint tac a.csv b.csv
 a b c
+7 8 9
 4 5 6
 1 2 3
 </pre>
@@ -2053,6 +2059,7 @@ a b c
 <pre>
 $ mlr --icsv --opprint put '$filename=FILENAME' then tac a.csv b.csv
 a b c filename
+7 8 9 b.csv
 4 5 6 a.csv
 1 2 3 a.csv
 </pre>
