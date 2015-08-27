@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -163,21 +164,21 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				.contents = sb_is_empty(pstate->psb) ? NULL: sb_finish(pstate->psb),
 				.termind = TERMIND_EOF
 			};
-		} else if (pfr_next_is(pstate->pfr, ",\xff", 2)) {
-			if (!pfr_advance_past(pstate->pfr, ",\xff")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+		} else if (pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->ifs_eof)) {
+				fprintf(stderr, "%s: Internal coding error: IFS-EOF found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pstate->pfr, ",", 1)) {
-			if (!pfr_advance_past(pstate->pfr, ",")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+		} else if (pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->ifs)) {
+				fprintf(stderr, "%s: Internal coding error: IFS found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
 			if (!pfr_advance_past(pstate->pfr, pstate->irs)) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				fprintf(stderr, "%s: Internal coding error: IRS found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
@@ -198,21 +199,21 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 			// xxx imbalanced-dquote error
 			fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 			exit(1);
-		} else if (pfr_next_is(pstate->pfr, "\"\xff", 2)) {
-			if (!pfr_advance_past(pstate->pfr, "\"\xff")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->dquote_eof)) {
+				fprintf(stderr, "%s: Internal coding error: DQUOTE-EOF found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pstate->pfr, "\",", 2)) {
-			if (!pfr_advance_past(pstate->pfr, "\",")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+		} else if (pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
+			if (!pfr_advance_past(pstate->pfr, pstate->dquote_ifs)) {
+				fprintf(stderr, "%s: Internal coding error: DQUOTE-IFS found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
 			if (!pfr_advance_past(pstate->pfr, pstate->dquote_irs)) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
+				fprintf(stderr, "%s: Internal coding error: DQUOTE-IRS found and lost.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
