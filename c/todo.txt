@@ -22,10 +22,14 @@ TOP OF LIST
     - strip if present on input
     - never produce on output
   o RFC:
+    ! need to handle escaped internal "" -> " e.g. "aaa","b""bb","ccc"
+    ! forbid double-quote inside of non-double-quote-wrapped fields
+    ! make a releases page or some such at mlrdoc
     - mlrcli --help info for oquoting
     - mlrdoc updates
     - switch out --csvex/--csv/--csvlite
     - call csvlite something else -- csvish?!?
+    - malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
     ~ profiling & some acknowledgement of future perf mods
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
@@ -209,3 +213,13 @@ HARDER HYGIENE
 ================================================================
 PYTHON
 * pgr + stats_m same I/O modules??
+
+================================================================
+FYI
+
+Semantic versioning:
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+* MAJOR version when you make incompatible API changes,
+* MINOR version when you add functionality in a backwards-compatible manner, and
+* PATCH version when you make backwards-compatible bug fixes.
