@@ -45,8 +45,9 @@ typedef struct _record_wrapper_t {
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_stdio_csv_state_t {
-	long long  ifnr; // xxx cmt w/r/t pctx
-	long long  ilno; // xxx cmt w/r/t pctx
+	// Input line number is not the same as the record-counter in context_t,
+	// which counts records.
+	long long  ilno;
 
 	char* irs;
 	char* ifs;
@@ -63,7 +64,6 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   ifs_eof_len;
 
 	int   peek_buf_len;
-	// xxx parameterize maxlen of all of those; for the pfr buf
 	//int  allow_repeat_ifs;
 
 	string_builder_t    sb;
@@ -94,32 +94,31 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, cont
 	}
 
 	record_wrapper_t rwrapper;
-	while (TRUE) {
-		if (pstate->expect_header_line_next) {
-			rwrapper = lrec_reader_stdio_csv_get_record(pstate);
 
-			if (rwrapper.contents == NULL && rwrapper.at_eof)
-				return NULL;
-			pstate->ilno++;
-
-			pstate->expect_header_line_next = FALSE;
-
-			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, rwrapper.contents);
-			if (pstate->pheader_keeper == NULL) {
-				pstate->pheader_keeper = header_keeper_alloc(NULL, rwrapper.contents);
-				lhmslv_put(pstate->pheader_keepers, rwrapper.contents, pstate->pheader_keeper);
-			} else { // Re-use the header-keeper in the header cache
-				slls_free(rwrapper.contents);
-			}
-		}
-
+	if (pstate->expect_header_line_next) {
 		rwrapper = lrec_reader_stdio_csv_get_record(pstate);
+
 		if (rwrapper.contents == NULL && rwrapper.at_eof)
 			return NULL;
+		pstate->ilno++;
 
-		pstate->ifnr++;
-		return paste_header_and_data(pstate, rwrapper.contents);
+		pstate->expect_header_line_next = FALSE;
+
+		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, rwrapper.contents);
+		if (pstate->pheader_keeper == NULL) {
+			pstate->pheader_keeper = header_keeper_alloc(NULL, rwrapper.contents);
+			lhmslv_put(pstate->pheader_keepers, rwrapper.contents, pstate->pheader_keeper);
+		} else { // Re-use the header-keeper in the header cache
+			slls_free(rwrapper.contents);
+		}
 	}
+
+	rwrapper = lrec_reader_stdio_csv_get_record(pstate);
+	if (rwrapper.contents == NULL && rwrapper.at_eof)
+		return NULL;
+
+	pstate->ilno++;
+	return paste_header_and_data(pstate, rwrapper.contents);
 }
 
 static record_wrapper_t lrec_reader_stdio_csv_get_record(lrec_reader_stdio_csv_state_t* pstate) {
@@ -225,16 +224,15 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 
 static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
-		// xxx incorporate ctx/ilno/etc.
-		fprintf(stderr, "Header/data length mismatch: %d != %d.\n",
-			pstate->pheader_keeper->pkeys->length, pdata_fields->length);
+		fprintf(stderr, "Header/data length mismatch: %d != %d at line %lld.\n",
+			pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
 		exit(1);
 	}
 	lrec_t* prec = lrec_unbacked_alloc();
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		// xxx reduce the copies here
+		// for performance, xxx reduce the copies here
 		lrec_put(prec, ph->value, strdup(pd->value), LREC_FREE_ENTRY_VALUE);
 	}
 	return prec;
@@ -243,7 +241,6 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls
 // ----------------------------------------------------------------
 static void lrec_reader_stdio_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
-	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
 }
@@ -263,7 +260,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
-	pstate->ifnr                      = 0LL;
+	pstate->ilno                      = 0LL;
 	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
 	pstate->ifs                       = ",";    // xxx multi-byte the cli irs/ifs/etc, and integrate here
 

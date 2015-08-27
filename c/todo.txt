@@ -24,7 +24,6 @@ TOP OF LIST
   o RFC:
     ! xxx's in csv reader
     ! pull in test data from miller issues
-    ! reg-test cases
     ! valgrind --csvex I/O
     - will need char* RS/FS/PS throughout, or temp-shims more likely
     - mlrcli --help info for oquoting
