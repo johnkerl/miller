@@ -2,19 +2,6 @@
 BUGFIXES
 
 ----------------------------------------------------------------
-kerl@kerl-mbp[s0j1d1][doc]$ cat a.csv
-a,b,c
-1,2,3
-4,5,6
-kerl@kerl-mbp[s0j1d1][doc]$ cat b.csv 
-a,b,c
-7,8,9
-kerl@kerl-mbp[s0j1d1][doc]$ mlr --csv cat a.csv b.csv
-a,b,c
-1,2,3
-4,5,6
-
-----------------------------------------------------------------
 kerl@kerl-mbp[s146j1d1][c]$ cat y
 x,y
 º,a
@@ -42,9 +29,9 @@ TOP OF LIST
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
     ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
-    ! multi-file test cases
-    - mlrdoc updates
 
+    k multi-file test cases
+    k mlrdoc updates
     k profiling & some acknowledgement of future perf mods
     k mlrcli --help info for oquoting
     k UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
