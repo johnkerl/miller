@@ -24,15 +24,16 @@ TOP OF LIST
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
     ! make a releases page at mlrdoc, or at least link from index page
-    - mlrcli --help info for oquoting
+    ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
     - mlrdoc updates
     - switch out --csvex/--csv/--csvlite
     - call csvlite something else -- csvish?!?
-    - malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
     ~ profiling & some acknowledgement of future perf mods
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
     i will need char* RS/FS/PS throughout, or temp-shims more likely
+
+    k mlrcli --help info for oquoting
     k UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
     k forbid double-quote inside of non-double-quote-wrapped fields
     k '\n' -> '\r\n'
