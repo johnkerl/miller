@@ -52,6 +52,7 @@ TOP OF LIST
   o implement mmap-backed psb/pkr via vptr intf and profile that
   o optimize!
   o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns??
+  o --no-header option ... iidx
 
 * homebrew
 
