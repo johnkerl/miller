@@ -385,6 +385,7 @@ run_command $mlr --csv cat test/input/rfc-csv/quoted-comma.csv
 run_command $mlr --csv cat test/input/rfc-csv/quoted-comma-truncated.csv
 run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf.csv
 run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf-truncated.csv
+run_command $mlr --csv cat test/input/rfc-csv/simple-truncated.csv test/input/rfc-csv/simple.csv
 
 # ================================================================
 diff $expdir/out $outdir/out

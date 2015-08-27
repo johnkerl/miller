@@ -1938,3 +1938,11 @@ a,b,c
 3",y
 4,5,6
 
+./test/../mlr --csv cat test/input/rfc-csv/simple-truncated.csv test/input/rfc-csv/simple.csv
+a,b,c
+1,x,3
+4,5,6
+1,x,3
+4,5,6
+x,y"yy,z
+

@@ -42,6 +42,7 @@ TOP OF LIST
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
     ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
+    ! multi-file test cases
     - mlrdoc updates
 
     k profiling & some acknowledgement of future perf mods

@@ -246,6 +246,7 @@ static void lrec_reader_stdio_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
+	pstate->pfr = NULL;
 }
 
 // ----------------------------------------------------------------
