@@ -2,7 +2,19 @@
 BUGFIXES
 
 ----------------------------------------------------------------
+kerl@kerl-mbp[s0j1d1][doc]$ cat a.csv
+a,b,c
+1,2,3
+4,5,6
+kerl@kerl-mbp[s0j1d1][doc]$ cat b.csv 
+a,b,c
+7,8,9
+kerl@kerl-mbp[s0j1d1][doc]$ mlr --csv cat a.csv b.csv
+a,b,c
+1,2,3
+4,5,6
 
+----------------------------------------------------------------
 kerl@kerl-mbp[s146j1d1][c]$ cat y
 x,y
 º,a
@@ -11,6 +23,12 @@ kerl@kerl-mbp[s0j1d1][c]$ mlr --icsvlite --opprint cat y
 x  y
 º a
 Ñº b
+
+docfix:
++$ mlr --icsvlite --oxtab cat a.csv b.csv
++a  1
++b  2
++c^M 3
 
 ================================================================
 TOP OF LIST
@@ -25,8 +43,6 @@ TOP OF LIST
   o RFC:
     ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
     - mlrdoc updates
-    - switch out --csvex/--csv/--csvlite
-    ! make a releases page at mlrdoc, or at least link from index page
 
     k profiling & some acknowledgement of future perf mods
     k mlrcli --help info for oquoting
@@ -36,6 +52,8 @@ TOP OF LIST
     k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
     k default RS to CRLF
     k on output: quote none, quote all, quote minimal, quote non-numeric
+    k switch out --csvex/--csv/--csvlite
+    k make a releases page at mlrdoc, or at least link from index page
     n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
 * then:
   o have an option for RS=LF because for goodness sake

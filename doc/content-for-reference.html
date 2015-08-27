@@ -110,11 +110,12 @@ POKI_CARDIFY(mlr cut --complement -f os_version then sort -f hostname,uptime *.d
 <p/> Options:
 
 <pre>
-  --dkvp    --idkvp   --odkvp
-  --nidx    --inidx   --onidx
-  --csv     --icsv    --ocsv
-  --pprint  --ipprint --ppprint --right
-  --xtab    --ixtab   --oxtab
+  --dkvp    --idkvp    --odkvp
+  --nidx    --inidx    --onidx
+  --csv     --icsv     --ocsv
+  --csvlite --icsvlite --ocsvlite
+  --pprint  --ipprint  --ppprint  --right
+  --xtab    --ixtab    --oxtab
 </pre>
 
 <p/> These are as discussed in POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, with the exception of <tt>--right</tt>
@@ -391,33 +392,33 @@ Examples:
 <p/>Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
 
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-left-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-left-example.csv}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-right-example.csv}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
 </td></tr></table>
 
 <p/>Same, but with sorting the input first:
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
 </td></tr></table>
 
 <p/>Same, but showing only unpaired records:
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
 </td></tr></table>
 
 <p/>Use prefixing options to disambiguate between otherwise identical non-join field names:
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --csv --opprint cat data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv}}HERE
 </td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --csv --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
 </td></tr></table>
 
 <p/>Use zero join columns:
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --csv --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->

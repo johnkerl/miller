@@ -97,7 +97,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators on Linux/OSX.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
-	fprintf(o, "    In particular, this means it *only* handle CRLF line-terminators.\n");
+	fprintf(o, "    In particular, this means it *only* handles CRLF line-terminators.\n");
 	fprintf(o, "  * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option\n");
 	fprintf(o, "    for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.\n");
 	fprintf(o, "Double-quoting for CSV:\n");

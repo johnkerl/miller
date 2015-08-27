@@ -240,26 +240,41 @@ Functions for filter and put:
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
-Separator options, for input, output, or both:
-  --rs      --irs     --ors                  Record separators, defaulting to newline
-  --fs      --ifs     --ofs    --repifs      Field  separators, defaulting to ","
-  --ps      --ips     --ops                  Pair   separators, defaulting to "="
 Data-format options, for input, output, or both:
-  --dkvp    --idkvp   --odkvp                Delimited key-value pairs, e.g "a=1,b=2" (default)
-  --nidx    --inidx   --onidx                Implicitly-integer-indexed fields (Unix-toolkit style)
-  --csv     --icsv    --ocsv                 Comma-separated value (or tab-separated with --fs tab, etc.)
-  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)
-  --pprint  --ipprint --opprint --right      Pretty-printed tabular (produces no output until all input is in)
+  --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g "a=1,b=2" (default)
+  --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)
+  --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)
+  --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)
+  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
-Numerical format:
-  --ofmt {format}                            E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
-                                             Applies to verbs which compute new values, e.g. put, stats1, stats2.
-                                             See also the fmtnum function within mlr put (mlr --help-all-functions).
+Separator options, for input, output, or both:
+  --rs      --irs     --ors              Record separators, defaulting to newline
+  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to ","
+  --ps      --ips     --ops              Pair   separators, defaulting to "="
+  Notes (as of Miller v2.0.0):
+  * RS/FS/PS are used for DKVP, NIDX, and CSVLITE formats where they must be single-character.
+  * For CSV, PPRINT, and XTAB formats, RS/FS/PS command-line options are ignored.
+  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
+    In particular, this means LF line-terminators on Linux/OSX.
+  * CSV is intended to handle RFC-4180-compliant data.
+    In particular, this means it *only* handle CRLF line-terminators.
+  * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option
+    for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.
+Double-quoting for CSV:
+  --quote-all                            Wrap all fields in double quotes
+  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
+  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them
+  --quote-numeric                        Wrap fields in double quotes only if they have numbers in them
+Numerical formatting:
+  --ofmt {format}                        E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
+                                         Applies to verbs which compute new values, e.g. put, stats1, stats2.
+                                         See also the fmtnum function within mlr put (mlr --help-all-functions).
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
+This is Miller version &gt;= v2.0.0.
 </pre>
 </div>
 <p/>
@@ -344,11 +359,12 @@ mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
 <p/> Options:
 
 <pre>
-  --dkvp    --idkvp   --odkvp
-  --nidx    --inidx   --onidx
-  --csv     --icsv    --ocsv
-  --pprint  --ipprint --ppprint --right
-  --xtab    --ixtab   --oxtab
+  --dkvp    --idkvp    --odkvp
+  --nidx    --inidx    --onidx
+  --csv     --icsv     --ocsv
+  --csvlite --icsvlite --ocsvlite
+  --pprint  --ipprint  --ppprint  --right
+  --xtab    --ixtab    --oxtab
 </pre>
 
 <p/> These are as discussed in <a href="file-formats.html">File formats</a>, with the exception of <tt>--right</tt>
@@ -533,7 +549,6 @@ $ mlr --csv cat a.csv b.csv
 a,b,c
 1,2,3
 4,5,6
-7,8,9
 </pre>
 </div>
 <p/>
@@ -549,10 +564,6 @@ c 3
 a 4
 b 5
 c 6
-
-a 7
-b 8
-c 9
 </pre>
 </div>
 <p/>
@@ -1088,7 +1099,7 @@ Examples:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --opprint cat data/join-left-example.csv
+$ mlr --icsvlite --opprint cat data/join-left-example.csv
 id  name
 100 alice
 200 bob
@@ -1102,7 +1113,7 @@ id  name
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --opprint cat data/join-right-example.csv
+$ mlr --icsvlite --opprint cat data/join-right-example.csv
 status  idcode
 present 400
 present 100
@@ -1131,7 +1142,7 @@ present 300
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+$ mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
 id  name  status
 400 david present
 100 alice present
@@ -1162,7 +1173,7 @@ id  name  status
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+$ mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
 id  name  status
 100 alice present
 100 alice present
@@ -1193,7 +1204,7 @@ id  name  status
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+$ mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
 status  idcode
 missing 600
 
@@ -1209,7 +1220,7 @@ id  name
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --opprint cat data/self-join.csv data/self-join.csv
+$ mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
 a b c
 1 2 3
 1 4 5
@@ -1222,7 +1233,7 @@ a b c
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+$ mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
 a left_b left_c right_b right_c
 1 2      3      2       3
 1 4      5      2       3
@@ -1238,7 +1249,7 @@ a left_b left_c right_b right_c
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+$ mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
 left_a left_b left_c right_a right_b right_c
 1      2      3      1       2       3
 1      4      5      1       2       3
@@ -2030,7 +2041,6 @@ a b c
 <pre>
 $ mlr --icsv --opprint tac a.csv b.csv
 a b c
-7 8 9
 4 5 6
 1 2 3
 </pre>
@@ -2043,7 +2053,6 @@ a b c
 <pre>
 $ mlr --icsv --opprint put '$filename=FILENAME' then tac a.csv b.csv
 a b c filename
-7 8 9 b.csv
 4 5 6 a.csv
 1 2 3 a.csv
 </pre>

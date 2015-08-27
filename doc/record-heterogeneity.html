@@ -129,7 +129,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --ocsv cat data/het.dkvp
+$ mlr --ocsvlite cat data/het.dkvp
 resource,loadsec,ok
 /path/to/file,0.45,true
 
@@ -178,7 +178,7 @@ resource         loadsec ok
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --ocsv group-like data/het.dkvp
+$ mlr --ocsvlite group-like data/het.dkvp
 resource,loadsec,ok
 /path/to/file,0.45,true
 /path/to/second/file,0.32,true
