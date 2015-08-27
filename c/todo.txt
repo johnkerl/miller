@@ -29,20 +29,6 @@ TOP OF LIST
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
     ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
-
-    k multi-file test cases
-    k mlrdoc updates
-    k profiling & some acknowledgement of future perf mods
-    k mlrcli --help info for oquoting
-    k UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
-    k forbid double-quote inside of non-double-quote-wrapped fields
-    k '\n' -> '\r\n'
-    k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
-    k default RS to CRLF
-    k on output: quote none, quote all, quote minimal, quote non-numeric
-    k switch out --csvex/--csv/--csvlite
-    k make a releases page at mlrdoc, or at least link from index page
-    n make separate UT program test-peek-file-reader? needs C code to create its own temp files.
 * then:
   o have an option for RS=LF because for goodness sake
   o still need separate csvlite/csv on output since the former tolerates heterogeneity
@@ -53,6 +39,16 @@ TOP OF LIST
   o optimize!
   o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns??
   o --no-header option ... iidx
+
+
+* v2.1.0:
+  o --csv will be still be compliant by default, but RS/FS will be
+    programmable: you'll be able to handle TSV or what have you, with double-quote
+    support.
+  o RS/FS/PS for all formats will be able to be multi-character, e.g. you'll be
+    able to use CRLF for DKVP format which will resolve #19.
+  o Read-performance for CSV will be optimized for performance.
+  o Double-quoting will be supported in DKVP as well as in CSV.
 
 * homebrew
 
