@@ -224,8 +224,8 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 
 static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
-		fprintf(stderr, "Header/data length mismatch: %d != %d at line %lld.\n",
-			pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
+		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
+			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
 		exit(1);
 	}
 	lrec_t* prec = lrec_unbacked_alloc();
