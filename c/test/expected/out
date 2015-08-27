@@ -1894,26 +1894,46 @@ RFC-CSV
 ./test/../mlr --csvex cat test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
+4,5,6
 
 ./test/../mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
+4,5,6
+
+./test/../mlr --csvex cat test/input/rfc-csv/narrow.csv
+a
+1
+2
+3
+4
+
+./test/../mlr --csvex cat test/input/rfc-csv/narrow-truncated.csv
+a
+1
+2
+3
+4
 
 ./test/../mlr --csvex cat test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
+4,5,6
 
 ./test/../mlr --csvex cat test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
+4,5,6
 
 ./test/../mlr --csvex cat test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
+4,5,6
 
 ./test/../mlr --csvex cat test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
+4,5,6
 

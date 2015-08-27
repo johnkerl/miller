@@ -388,6 +388,8 @@ announce RFC-CSV
 
 run_command $mlr --csvex cat test/input/rfc-csv/simple.csv
 run_command $mlr --csvex cat test/input/rfc-csv/simple-truncated.csv
+run_command $mlr --csvex cat test/input/rfc-csv/narrow.csv
+run_command $mlr --csvex cat test/input/rfc-csv/narrow-truncated.csv
 run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma.csv
 run_command $mlr --csvex cat test/input/rfc-csv/quoted-comma-truncated.csv
 run_command $mlr --csvex cat test/input/rfc-csv/quoted-crlf.csv
