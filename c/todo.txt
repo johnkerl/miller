@@ -23,8 +23,7 @@ TOP OF LIST
     - never produce on output
     - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
   o RFC:
-    ! UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
-    ! make a releases page or some such at mlrdoc
+    ! make a releases page at mlrdoc, or at least link from index page
     - mlrcli --help info for oquoting
     - mlrdoc updates
     - switch out --csvex/--csv/--csvlite
@@ -34,6 +33,7 @@ TOP OF LIST
     w have an option for RS=LF because for goodness sake
     i still need separate csvlite/csv on output since the former tolerates heterogeneity
     i will need char* RS/FS/PS throughout, or temp-shims more likely
+    k UT case for escaped internal "" -> " e.g. in "aaa","b""bb","ccc"
     k forbid double-quote inside of non-double-quote-wrapped fields
     k '\n' -> '\r\n'
     k make a LF<->CRLF pair of util proggies: dos2unix/unix2dos but right here
