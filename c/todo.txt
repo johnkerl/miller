@@ -1,47 +1,22 @@
 ================================================================
 BUGFIXES
 
-----------------------------------------------------------------
-kerl@kerl-mbp[s146j1d1][c]$ cat y
-x,y
-º,a
-Ñº,b
-kerl@kerl-mbp[s0j1d1][c]$ mlr --icsvlite --opprint cat y
-x  y
-º a
-Ñº b
-
-docfix:
-+$ mlr --icsvlite --oxtab cat a.csv b.csv
-+a  1
-+b  2
-+c^M 3
+* missing-eol mmap hang!
 
 ================================================================
 TOP OF LIST
 
-! CSV:
-  x minimal double-quote option for csvlite:
-    - off by default
-    - don't try to handle embedded FS or RS or double-double quote
-    - strip if present on input
-    - never produce on output
-    - ... this sounds like pre-sedding. just write that up and be done with it.  defer the rest to v2.1.
-  o RFC:
-    ! malformed-CSV tests: manual at least; better, introduce a should-fail into test/run ...
-* then:
-  o have an option for RS=LF because for goodness sake
-  o still need separate csvlite/csv on output since the former tolerates heterogeneity
+* v2.1.0:
+  o parameterize CSV RS/FS
+  i still need separate csvlite/csv on output since the former tolerates heterogeneity
   o incorp all this with other formats.
   o in particular, rs/fs/ps from char to char*
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
   o implement mmap-backed psb/pkr via vptr intf and profile that
   o optimize!
-  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns??
-  o --no-header option ... iidx
+  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
 
-
-* v2.1.0:
+  Note v2.0.0 notes about v2.1.0:
   o --csv will be still be compliant by default, but RS/FS will be
     programmable: you'll be able to handle TSV or what have you, with double-quote
     support.
