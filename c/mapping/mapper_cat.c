@@ -4,9 +4,8 @@
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec != NULL) {
+	if (pinrec != NULL)
 		return sllv_single(pinrec);
-	}
 	else
 		return sllv_single(NULL);
 }
