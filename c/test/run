@@ -374,6 +374,10 @@ run_command $mlr --icsvlite --opprint cat test/input/utf8-2.csv
 run_command $mlr --icsvlite --oxtab   cat test/input/utf8-1.csv
 run_command $mlr --icsvlite --oxtab   cat test/input/utf8-2.csv
 
+run_command $mlr --inidx --ifs space --opprint         cat test/input/utf8-align.nidx
+run_command $mlr --inidx --ifs space --opprint --right cat test/input/utf8-align.nidx
+run_command $mlr --oxtab cat test/input/utf8-align.dkvp 
+
 # ================================================================
 announce RFC-CSV
 

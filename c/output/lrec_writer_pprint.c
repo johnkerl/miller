@@ -79,12 +79,20 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, in
 					fputc(' ', output_stream);
 				}
 				if (left_align) {
-					if (pe->pnext == NULL)
+					if (pe->pnext == NULL) {
 						fprintf(output_stream, "%s", pe->key);
-					else
-						fprintf(output_stream, "%-*s", max_widths[j], pe->key);
+					} else {
+						// "%-*s" fprintf format isn't correct for non-ASCII UTF-8
+						fprintf(output_stream, "%s", pe->key);
+						int d = max_widths[j] - strlen_for_utf8_display(pe->key);
+						for (int i = 0; i < d; i++)
+							fputc(' ', output_stream);
+					}
 				} else {
-					fprintf(output_stream, "%*s", max_widths[j], pe->key);
+					int d = max_widths[j] - strlen_for_utf8_display(pe->key);
+					for (int i = 0; i < d; i++)
+						fputc(' ', output_stream);
+					fprintf(output_stream, "%s", pe->key);
 				}
 			}
 			fputc('\n', output_stream);
@@ -99,12 +107,19 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, in
 			if (*value == 0) // empty string
 				value = "-";
 			if (left_align) {
-				if (pe->pnext == NULL)
+				if (pe->pnext == NULL) {
 					fprintf(output_stream, "%s", value);
-				else
-					fprintf(output_stream, "%-*s", max_widths[j], value);
+				} else {
+					fprintf(output_stream, "%s", value);
+					int d = max_widths[j] - strlen_for_utf8_display(value);
+					for (int i = 0; i < d; i++)
+						fputc(' ', output_stream);
+				}
 			} else {
-				fprintf(output_stream, "%*s", max_widths[j], value);
+				int d = max_widths[j] - strlen_for_utf8_display(value);
+				for (int i = 0; i < d; i++)
+					fputc(' ', output_stream);
+				fprintf(output_stream, "%s", value);
 			}
 		}
 		fputc('\n', output_stream);

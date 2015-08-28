@@ -24,7 +24,12 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 	}
 
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-		fprintf(output_stream, "%-*s %s\n", max_key_width, pe->key, pe->value);
+		// "%-*s" fprintf format isn't correct for non-ASCII UTF-8
+		fprintf(output_stream, "%s", pe->key);
+		int d = max_key_width - strlen_for_utf8_display(pe->key);
+		for (int i = 0; i < d; i++)
+			fputc(' ', output_stream);
+		fprintf(output_stream, " %s\n", pe->value);
 	}
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
