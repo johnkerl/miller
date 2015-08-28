@@ -206,6 +206,16 @@ mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 // ----------------------------------------------------------------
 mv_t s_f_sec2gmt_func(mv_t* pval1);
 mv_t i_s_gmt2sec_func(mv_t* pval1);
+
+mv_t s_i_sec2hms_func(mv_t* pval1);
+mv_t s_f_fsec2hms_func(mv_t* pval1);
+mv_t s_i_sec2dhms_func(mv_t* pval1);
+mv_t s_f_fsec2dhms_func(mv_t* pval1);
+mv_t i_s_hms2sec_func(mv_t* pval1);
+mv_t f_s_hms2fsec_func(mv_t* pval1);
+mv_t i_s_dhms2sec_func(mv_t* pval1);
+mv_t f_s_dhms2fsec_func(mv_t* pval1);
+
 mv_t i_s_strlen_func(mv_t* pval1);
 
 // ----------------------------------------------------------------

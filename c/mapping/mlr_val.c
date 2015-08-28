@@ -254,6 +254,38 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 	}
 }
 
+mv_t s_i_sec2hms_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t s_f_fsec2hms_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t s_i_sec2dhms_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t s_f_fsec2dhms_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t i_s_hms2sec_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t f_s_hms2fsec_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t i_s_dhms2sec_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
+mv_t f_s_dhms2fsec_func(mv_t* pval1) {
+	return MV_NULL; // xxx stub
+}
+
 // ----------------------------------------------------------------
 mv_t i_s_strlen_func(mv_t* pval1) {
 	mv_t rv = {.type = MT_INT, .u.intv = strlen(pval1->u.strv)};
