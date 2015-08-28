@@ -7,23 +7,24 @@ BUGFIXES
 TOP OF LIST
 
 * v2.1.0:
-  o parameterize CSV RS/FS
-  i still need separate csvlite/csv on output since the former tolerates heterogeneity
-  o incorp all this with other formats.
-  o in particular, rs/fs/ps from char to char*
-  o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
-  o implement mmap-backed psb/pkr via vptr intf and profile that
-  o optimize!
-  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+  o perf
+  o rs/fs -> csv
+  o multichar rs/fs/ps for all formats
+  o optimize csv read perf
+  o double-quote feature -> dkvp
 
-  Note v2.0.0 notes about v2.1.0:
-  o --csv will be still be compliant by default, but RS/FS will be
-    programmable: you'll be able to handle TSV or what have you, with double-quote
-    support.
-  o RS/FS/PS for all formats will be able to be multi-character, e.g. you'll be
-    able to use CRLF for DKVP format which will resolve #19.
-  o Read-performance for CSV will be optimized for performance.
-  o Double-quoting will be supported in DKVP as well as in CSV.
+  o optimize!
+  o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
+  o rs/fs/ps from char to char* throughout
+  o parameterize csv rs/fs
+  o implement mmap-backed psb/pkr via vptr intf and profile that
+  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+  o DKVP double-quote support
+  i still need separate csvlite/csv on output since the former tolerates heterogeneity
+
+* dhms2sec and sec2dhms functions
+
+* header-length data mismatch et. al: file/line
 
 * homebrew
 
