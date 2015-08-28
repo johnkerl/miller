@@ -200,7 +200,7 @@ mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = strdup(pval1->u.strv);
 	for (char* c = string; *c; c++)
-		*c = tolower(*c);
+		*c = tolower((unsigned char)*c);
 	// xxx encapsulate this:
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;
@@ -213,7 +213,7 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = strdup(pval1->u.strv);
 	for (char* c = string; *c; c++)
-		*c = toupper(*c);
+		*c = toupper((unsigned char)*c);
 	// xxx encapsulate this:
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;

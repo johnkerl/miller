@@ -84,7 +84,7 @@ void pfr_dump(peek_file_reader_t* pfr) {
 	printf("  npeeked    = %d\n", pfr->npeeked);
 	for (int i = 0; i < pfr->npeeked; i++) {
 		char c = pfr->peekbuf[i];
-		printf("  i=%d c=%c [%02x]\n", i, isprint(c) ? c : ' ', c);
+		printf("  i=%d c=%c [%02x]\n", i, isprint((unsigned char)c) ? c : ' ', c);
 	}
 	printf("------------------------\n");
 }
