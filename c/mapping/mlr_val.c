@@ -329,9 +329,9 @@ mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	double v = pval1->u.dblv;
 	long long h, m, s;
 	long long u = (long long)trunc(v);
-	double f = v - u;
+	double f = fabs(v) - fabs((double)u);
 	split_ull_to_hms(u, &h, &m, &s);
-	char* fmt = "%lld:%02lld:%9.6lf";
+	char* fmt = "%lld:%02lld:%09.6lf";
 	int n = snprintf(NULL, 0, fmt, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s+f);
@@ -353,9 +353,9 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 	double v = pval1->u.dblv;
 	long long d, h, m, s;
 	long long u = (long long)trunc(v); //xxx 
-	double f = v - u;
+	double f = fabs(v) - fabs((double)u);
 	split_ull_to_dhms(u, &d, &h, &m, &s);
-	char* fmt = "%lldd%02lldh%02lldm%9.6lfs";
+	char* fmt = "%lldd%02lldh%02lldm%09.6lfs";
 	int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, d, h, m, s+f);
