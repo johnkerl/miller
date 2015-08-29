@@ -254,36 +254,186 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 	}
 }
 
+// ----------------------------------------------------------------
+static void split_ull_to_hms(long long u, long long* ph, long long* pm, long long* ps) {
+	long long sign = 1LL;
+	long long h = 0LL, m = 0LL, s = 0LL;
+	if (u < 0LL) {
+		sign = -1LL;
+		u = -u;
+	}
+	s = u % 60LL;
+	u = u / 60LL;
+	if (u == 0LL) {
+		s = s * sign;
+	} else {
+		m = u % 60LL;
+		u = u / 60LL;
+		if (u == 0LL) {
+			m = m * sign;
+		} else {
+			h = u * sign;
+		}
+	}
+	*ph = h;
+	*pm = m;
+	*ps = s;
+}
+
+static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long long* pm, long long* ps) {
+	long long sign = 1LL;
+	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
+	if (u < 0LL) {
+		sign = -1LL;
+		u = -u;
+	}
+	s = u % 60LL;
+	u = u / 60LL;
+	if (u == 0LL) {
+		s = s * sign;
+	} else {
+		m = u % 60LL;
+		u = u / 60LL;
+		if (u == 0LL) {
+			m = m * sign;
+		} else {
+			h = u % 60LL;
+			u = u / 60LL;
+			if (u == 0LL) {
+				h = h * sign;
+			} else {
+				d = u * sign;
+			}
+		}
+	}
+	*pd = d;
+	*ph = h;
+	*pm = m;
+	*ps = s;
+}
+
+// ----------------------------------------------------------------
 mv_t s_i_sec2hms_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long u = pval1->u.intv;
+	long long h, m, s;
+
+	split_ull_to_hms(u, &h, &m, &s);
+
+	char* fmt = "%lld:%02lld:%02lld";
+
+	int n = snprintf(NULL, 0, fmt, h, m, s);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, h, m, s);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	double v = pval1->u.dblv;
+	long long h, m, s;
+	long long u = (long long)v;
+	double f = v - u;
+
+	split_ull_to_hms(u, &h, &m, &s);
+
+	char* fmt = "%lld:%02lld:%02lld.%06lf";
+
+	int n = snprintf(NULL, 0, fmt, h, m, s, f);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, h, m, s, f);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_i_sec2dhms_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long u = pval1->u.intv;
+	long long d, h, m, s;
+
+	split_ull_to_dhms(u, &d, &h, &m, &s);
+
+	char* fmt = "%lldd%02lldh%02lldm%02llds";
+
+	int n = snprintf(NULL, 0, fmt, d, h, m, s);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, d, h, m, s);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_f_fsec2dhms_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	double v = pval1->u.intv;
+	long long d, h, m, s;
+	long long u = (long long)v;
+	double f = v - u;
+
+	split_ull_to_dhms(u, &d, &h, &m, &s);
+
+	char* fmt = "%lldd%02lldh%02lldm%02lld.%06lfs";
+
+	int n = snprintf(NULL, 0, fmt, d, h, m, s, f);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, d, h, m, s, f);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
+// ----------------------------------------------------------------
 mv_t i_s_hms2sec_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long h = 0LL, m = 0LL, s = 0LL;
+	long long sec = 0LL;
+	if (sscanf(pval1->u.strv, "%lld:%lld:%lld", &h, &m, &s) == 3) {
+		sec = 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lld:%lld", &m, &s) == 2) {
+		sec = 60*m + s;
+	} else {
+		return MV_ERROR;
+	}
+	return (mv_t) {.type = MT_INT, .u.intv = sec};
 }
 
 mv_t f_s_hms2fsec_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long h = 0LL, m = 0LL;
+	double s = 0.0;
+	double sec = 0.0;
+	if (sscanf(pval1->u.strv, "%lld:%lld:%lf", &h, &m, &s) == 3) {
+		sec = 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lld:%lf", &m, &s) == 2) {
+		sec = 60*m + s;
+	} else {
+		return MV_ERROR;
+	}
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
+	long long sec = 0LL;
+	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%llds", &d, &h, &m, &s) == 4) {
+		sec = 86400*d + 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lldh%lldm%llds", &h, &m, &s) == 3) {
+		sec = 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lldm%llds", &m, &s) == 2) {
+		sec = 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%llds", &s) == 1) {
+		sec = s;
+	} else {
+		return MV_ERROR;
+	}
+	return (mv_t) {.type = MT_INT, .u.intv = sec};
 }
 
 mv_t f_s_dhms2fsec_func(mv_t* pval1) {
-	return MV_NULL; // xxx stub
+	long long d = 0LL, h = 0LL, m = 0LL;
+	double s = 0.0;
+	double sec = 0.0;
+	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
+		sec = 86400*d + 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lldh%lldm%lfs", &h, &m, &s) == 3) {
+		sec = 3600*h + 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lldm%lfs", &m, &s) == 2) {
+		sec = 60*m + s;
+	} else if (sscanf(pval1->u.strv, "%lfs", &s) == 1) {
+		sec = s;
+	} else {
+		return MV_ERROR;
+	}
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
 }
 
 // ----------------------------------------------------------------

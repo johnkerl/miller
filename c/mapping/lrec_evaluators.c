@@ -243,9 +243,14 @@ mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	// xxx decide & document whether to do the typing here or in the pfunc
-	//if (val1.type != MT_STRING) // xxx conversions?
-		//return MV_ERROR;
+	if (val1.type == MT_DOUBLE) {
+		;
+	} else if (val1.type == MT_INT) {
+		val1.type = MT_DOUBLE;
+		val1.u.dblv = (double)val1.u.intv;
+	} else {
+		return MV_ERROR;
+	}
 
 	return pstate->pfunc(&val1);
 }
@@ -258,6 +263,40 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_s_f_func(mv_unary_func_t* pfunc, lre
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
 	pevaluator->pevaluator_func = lrec_evaluator_s_f_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+typedef struct _lrec_evaluator_s_i_state_t {
+	mv_unary_func_t*  pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_s_i_state_t;
+
+mv_t lrec_evaluator_s_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_s_i_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type == MT_INT) {
+		;
+	} else if (val1.type == MT_DOUBLE) {
+		val1.type = MT_INT;
+		val1.u.intv = (long long)val1.u.dblv;
+	} else {
+		return MV_ERROR;
+	}
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_s_i_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_s_i_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_i_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_s_i_func;
 
 	return pevaluator;
 }
@@ -979,9 +1018,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "invqnorm"))  { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
 	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,     parg1);
 	} else if (streq(fnnm, "sec2gmt"))   { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func,   parg1);
-	} else if (streq(fnnm, "sec2hms"))   { return lrec_evaluator_alloc_from_s_f_func(s_i_sec2hms_func,   parg1);
+	} else if (streq(fnnm, "sec2hms"))   { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,   parg1);
 	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
-	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_f_func(s_i_sec2dhms_func,  parg1);
+	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,  parg1);
 	} else if (streq(fnnm, "fsec2dhms")) { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func, parg1);
 	} else if (streq(fnnm, "sin"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,       parg1);
 	} else if (streq(fnnm, "sinh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,      parg1);
