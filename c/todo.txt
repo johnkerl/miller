@@ -38,6 +38,7 @@ little:
   o test cases from the online help
   o fix the 12.0.250000
   o more test cases
+  o on hms2y, handle plain-int
 
 * keystroke-saver for tsvlite i/o
 

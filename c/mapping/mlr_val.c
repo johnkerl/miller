@@ -329,7 +329,7 @@ mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	double v = pval1->u.dblv;
 	long long h, m, s;
 	long long u = (long long)trunc(v);
-	double f = fabs(v) - fabs((double)u);
+	double f = v -u;
 	split_ull_to_hms(u, &h, &m, &s);
 	char* fmt = "%lld:%02lld:%09.6lf";
 	int n = snprintf(NULL, 0, fmt, h, m, s+f);
@@ -342,24 +342,64 @@ mv_t s_i_sec2dhms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
 	long long d, h, m, s;
 	split_ull_to_dhms(u, &d, &h, &m, &s);
-	char* fmt = "%lldd%02lldh%02lldm%02llds";
-	int n = snprintf(NULL, 0, fmt, d, h, m, s);
-	char* string = mlr_malloc_or_die(n+1);
-	sprintf(string, fmt, d, h, m, s);
-	return (mv_t) {.type = MT_STRING, .u.strv = string};
+	if (d != 0.0) {
+		char* fmt = "%lldd%02lldh%02lldm%02llds";
+		int n = snprintf(NULL, 0, fmt, d, h, m, s);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, d, h, m, s);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else if (h != 0.0) {
+		char* fmt = "%lldh%02lldm%02llds";
+		int n = snprintf(NULL, 0, fmt, h, m, s);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, h, m, s);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else if (m != 0.0) {
+		char* fmt = "%lldm%02llds";
+		int n = snprintf(NULL, 0, fmt, m, s);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, m, s);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else {
+		char* fmt = "%llds";
+		int n = snprintf(NULL, 0, fmt, s);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, s);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	}
 }
 
 mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 	double v = pval1->u.dblv;
 	long long d, h, m, s;
-	long long u = (long long)trunc(v); //xxx 
-	double f = fabs(v) - fabs((double)u);
+	long long u = (long long)trunc(v);
+	double f = v - u;
 	split_ull_to_dhms(u, &d, &h, &m, &s);
-	char* fmt = "%lldd%02lldh%02lldm%09.6lfs";
-	int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
-	char* string = mlr_malloc_or_die(n+1);
-	sprintf(string, fmt, d, h, m, s+f);
-	return (mv_t) {.type = MT_STRING, .u.strv = string};
+	if (d != 0.0) {
+		char* fmt = "%lldd%02lldh%02lldm%09.6lfs";
+		int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, d, h, m, s+f);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else if (h != 0.0) {
+		char* fmt = "%lldh%02lldm%09.6lfs";
+		int n = snprintf(NULL, 0, fmt, h, m, s+f);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, h, m, s+f);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else if (m != 0.0) {
+		char* fmt = "%lldm%09.6lfs";
+		int n = snprintf(NULL, 0, fmt, m, s+f);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, m, s+f);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	} else {
+		char* fmt = "%.6lfs";
+		int n = snprintf(NULL, 0, fmt, s+f);
+		char* string = mlr_malloc_or_die(n+1);
+		sprintf(string, fmt, s+f);
+		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	}
 }
 
 // ----------------------------------------------------------------
