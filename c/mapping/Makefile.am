@@ -1,0 +1,36 @@
+noinst_LTLIBRARIES=	libmapping.la
+libmapping_la_SOURCES=	\
+			context.c \
+			context.h \
+			lrec_evaluator.h \
+			lrec_evaluators.c \
+			lrec_evaluators.h \
+			mapper.h \
+			mapper_cat.c \
+			mapper_check.c \
+			mapper_cut.c \
+			mapper_filter.c \
+			mapper_group_like.c \
+			mapper_having_fields.c \
+			mapper_head.c \
+			mapper_histogram.c \
+			mapper_join.c \
+			mapper_label.c \
+			mapper_put.c \
+			mapper_regularize.c \
+			mapper_rename.c \
+			mapper_reorder.c \
+			mapper_sort.c \
+			mapper_stats1.c \
+			mapper_stats2.c \
+			mapper_step.c \
+			mapper_tac.c \
+			mapper_tail.c \
+			mapper_top.c \
+			mapper_uniq.c \
+			mappers.h \
+			mlr_val.c \
+			mlr_val.h
+libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
+libmapping_la_CPPFLAGS=	-I${srcdir}/../
+libmapping_la_CFLAGS=	-std=gnu99

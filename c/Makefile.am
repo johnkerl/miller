@@ -1,53 +1,20 @@
-# ================================================================
-CCOMP=gcc
-CFLAGS=-std=gnu99
-IFLAGS=-I.
-WFLAGS=-Wall -Werror
-LFLAGS=-lm
+SUBDIRS=	lib cli stream input mapping output containers dsls
 
-# You can do
-#
-#   make -e INSTALLDIR=/usr/local/bin
-#
-# pending https://github.com/johnkerl/miller/issues/9
-INSTALLDIR=/usr/local/bin
-
-CC=$(CCOMP) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
-#CCDEBUG=$(CCOMP) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
-CCDEBUG=$(CCOMP) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
-
-NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*.c output/*.c
-PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
-FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
-
-TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-containers/lrec.c containers/header_keeper.c containers/sllv.c \
-containers/slls.c containers/lhmslv.c \
-input/file_reader_mmap.c      input/file_reader_stdio.c \
-input/lrec_reader_stdio_csv.c \
-input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-input/peek_file_reader.c \
-input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-containers/test_lrec.c
-
-TEST_JOIN_BUCKET_KEEPER_SRCS = \
-lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-mapping/context.c \
-containers/lrec.c \
-containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
-containers/header_keeper.c \
-containers/join_bucket_keeper.c \
-input/lrec_reader_in_memory.c input/lrec_readers.c \
-input/lrec_reader_stdio_csv.c \
-input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
-input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-input/file_reader_mmap.c input/file_reader_stdio.c \
-input/peek_file_reader.c \
-containers/test_join_bucket_keeper.c
+AM_CPPFLAGS=	-I${srcdir}
+AM_CFLAGS=	-Wall -Werror -std=gnu99 -O3
+bin_PROGRAMS=	mlr
+mlr_SOURCES=	mlrmain.c
+mlr_LDADD=	\
+		cli/libcli.la \
+		containers/libcontainers.la \
+		stream/libstream.la \
+		input/libinput.la \
+		mapping/libmapping.la \
+		output/liboutput.la \
+		lib/libmlr.la \
+		dsls/libfdsl.la \
+		dsls/libpdsl.la \
+		-lm
 
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
@@ -62,25 +29,9 @@ top: mlr tests
 #       It requires ctags and valgrind in addition to flex and the C compiler.
 dev: tags mlr dev-tests
 
-install: mlr tests
-	cp mlr $(INSTALLDIR)
-installhome: mlr tests
-	cp mlr $(HOME)/bin
-
 # ================================================================
 tags: .always
 	ctags -R .
-
-mlr: .always dsls
-	$(CC) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
-
-dsls: .always
-	make -C dsls put_dsl_parse.o
-	make -C dsls put_dsl_lexer.o
-	make -C dsls put_dsl_wrapper.o
-	make -C dsls filter_dsl_parse.o
-	make -C dsls filter_dsl_lexer.o
-	make -C dsls filter_dsl_wrapper.o
 
 # ----------------------------------------------------------------
 # Other executable variants
@@ -127,7 +78,7 @@ dev-tests: dev-unit-test reg-test
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
 dev-unit-test: test-mlrutil test-lrec test-string-builder test-join-bucket-keeper
-	#valgrind --leak-check=full --error-exitcode=1 ./a.out
+#	valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-lrec
 	valgrind --leak-check=full ./test-string-builder
@@ -208,9 +159,6 @@ termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
 
 # ================================================================
-clean:
-	@rm -vf mlr mlrd mlrg mlrp tester
-	@make -C dsls clean
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old
 .always:
