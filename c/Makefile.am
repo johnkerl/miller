@@ -29,10 +29,6 @@ top: mlr tests
 #       It requires ctags and valgrind in addition to flex and the C compiler.
 dev: tags mlr dev-tests
 
-# ================================================================
-tags: .always
-	ctags -R .
-
 # ----------------------------------------------------------------
 # Other executable variants
 
