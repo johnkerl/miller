@@ -33,6 +33,12 @@ TOP OF LIST
 ----------------------------------------------------------------
 little:
 
+* hms etc.:
+  o round cases for negints/negfloats
+  o test cases from the online help
+  o fix the 12.0.250000
+  o more test cases
+
 * keystroke-saver for tsvlite i/o
 
 * comma-number -- using locale?

@@ -861,10 +861,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "Formats integer seconds as in sec2dhms(500000) = \"5d18h53m20s\""},
 	{ FUNC_CLASS_TIME, "hms2sec",   1 , "Recovers integer seconds as in hms2sec(\"01:23:20\") = 5000"},
 	{ FUNC_CLASS_TIME, "dhms2sec",  1 , "Recovers integer seconds as in dhms2sec(\"5d18h53m20s\") = 500000"},
-	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "Formats floating-point seconds as in sec2hms(5000.25) = \"01:23:20.250000\""},
-	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "Formats floating-point seconds as in sec2dhms(500000.25) = \"5d18h53m20.250000s\""},
-	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "Recovers floating-point seconds as in hms2sec(\"01:23:20.250000\") = 5000.25"},
-	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "Recovers floating-point seconds as in dhms2sec(\"5d18h53m20.250000s\") = 500000.25"},
+	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "Formats floating-point seconds as in fsec2hms(5000.25) = \"01:23:20.250000\""},
+	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "Formats floating-point seconds as in fsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
+	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "Recovers floating-point seconds as in hms2fsec(\"01:23:20.250000\") = 5000.250000"},
+	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "Recovers floating-point seconds as in dhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
 
 	{  0, NULL,      -1 , NULL}, // table terminator
 };

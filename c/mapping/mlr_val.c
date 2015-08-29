@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
@@ -297,8 +298,8 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 		if (u == 0LL) {
 			m = m * sign;
 		} else {
-			h = u % 60LL;
-			u = u / 60LL;
+			h = u % 24LL;
+			u = u / 24LL;
 			if (u == 0LL) {
 				h = h * sign;
 			} else {
@@ -316,11 +317,8 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 mv_t s_i_sec2hms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
 	long long h, m, s;
-
 	split_ull_to_hms(u, &h, &m, &s);
-
 	char* fmt = "%lld:%02lld:%02lld";
-
 	int n = snprintf(NULL, 0, fmt, h, m, s);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s);
@@ -330,27 +328,21 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	double v = pval1->u.dblv;
 	long long h, m, s;
-	long long u = (long long)v;
+	long long u = (long long)trunc(v);
 	double f = v - u;
-
 	split_ull_to_hms(u, &h, &m, &s);
-
-	char* fmt = "%lld:%02lld:%02lld.%06lf";
-
-	int n = snprintf(NULL, 0, fmt, h, m, s, f);
+	char* fmt = "%lld:%02lld:%9.6lf";
+	int n = snprintf(NULL, 0, fmt, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
-	sprintf(string, fmt, h, m, s, f);
+	sprintf(string, fmt, h, m, s+f);
 	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_i_sec2dhms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
 	long long d, h, m, s;
-
 	split_ull_to_dhms(u, &d, &h, &m, &s);
-
 	char* fmt = "%lldd%02lldh%02lldm%02llds";
-
 	int n = snprintf(NULL, 0, fmt, d, h, m, s);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, d, h, m, s);
@@ -358,18 +350,15 @@ mv_t s_i_sec2dhms_func(mv_t* pval1) {
 }
 
 mv_t s_f_fsec2dhms_func(mv_t* pval1) {
-	double v = pval1->u.intv;
+	double v = pval1->u.dblv;
 	long long d, h, m, s;
-	long long u = (long long)v;
+	long long u = (long long)trunc(v); //xxx 
 	double f = v - u;
-
 	split_ull_to_dhms(u, &d, &h, &m, &s);
-
-	char* fmt = "%lldd%02lldh%02lldm%02lld.%06lfs";
-
-	int n = snprintf(NULL, 0, fmt, d, h, m, s, f);
+	char* fmt = "%lldd%02lldh%02lldm%9.6lfs";
+	int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
-	sprintf(string, fmt, d, h, m, s, f);
+	sprintf(string, fmt, d, h, m, s+f);
 	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
