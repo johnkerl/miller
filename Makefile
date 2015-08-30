@@ -12,12 +12,12 @@ doc: .always
 	cd doc && poki
 install: .always
 	make -C c install
-	install -d -m 0755 $(DESTDIR)/$(mandir)
-	install -m 0644 doc/miller.1 $(DESTDIR)/$(mandir)
+	install -d -m 0755 $(DESTDIR)/$(MANDIR)
+	install -m 0644 doc/miller.1 $(DESTDIR)/$(MANDIR)
 clean: .always
 	make -C c clean
 .PHONY: manpage
 manpage: doc/miller.1.txt
-	( cd doc && a2x a2x -d manpage -f manpage miller.1.txt )
+	( cd doc && a2x -d manpage -f manpage miller.1.txt )
 .always:
 	@true
