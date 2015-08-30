@@ -13,7 +13,6 @@ TOP OF LIST
   o optimize csv read perf
   o double-quote feature -> dkvp
 
-  o optimize!
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
   o rs/fs/ps from char to char* throughout
   o parameterize csv rs/fs
@@ -38,7 +37,7 @@ little:
   o test cases from the online help
   o fix the 12.0.250000
   o more test cases
-  o on hms2y, handle plain-int
+  o on hms2y, handle dd, mm:dd, and hh:mm:dd
 
 * keystroke-saver for tsvlite i/o
 

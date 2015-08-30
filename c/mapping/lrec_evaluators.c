@@ -857,14 +857,14 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_TIME, "systime",   0 , "Floating-point seconds since the epoch, e.g. 1440768801.748936." },
 	{ FUNC_CLASS_TIME, "sec2gmt",   1 , "Formats seconds since epoch (integer part only) as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\"."},
 	{ FUNC_CLASS_TIME, "gmt2sec",   1 , "Parses GMT timestamp as integer seconds since epoch."},
-	{ FUNC_CLASS_TIME, "sec2hms",   1 , "Formats integer seconds as in sec2hms(5000) = \"01:23:20\""},
-	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "Formats integer seconds as in sec2dhms(500000) = \"5d18h53m20s\""},
-	{ FUNC_CLASS_TIME, "hms2sec",   1 , "Recovers integer seconds as in hms2sec(\"01:23:20\") = 5000"},
-	{ FUNC_CLASS_TIME, "dhms2sec",  1 , "Recovers integer seconds as in dhms2sec(\"5d18h53m20s\") = 500000"},
-	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "Formats floating-point seconds as in fsec2hms(5000.25) = \"01:23:20.250000\""},
-	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "Formats floating-point seconds as in fsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
-	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "Recovers floating-point seconds as in hms2fsec(\"01:23:20.250000\") = 5000.250000"},
-	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "Recovers floating-point seconds as in dhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
+	{ FUNC_CLASS_TIME, "sec2hms",   1 , "EXPERIMENTAL Formats integer seconds as in sec2hms(5000) = \"01:23:20\""},
+	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "EXPERIMENTAL Formats integer seconds as in sec2dhms(500000) = \"5d18h53m20s\""},
+	{ FUNC_CLASS_TIME, "hms2sec",   1 , "EXPERIMENTAL Recovers integer seconds as in hms2sec(\"01:23:20\") = 5000"},
+	{ FUNC_CLASS_TIME, "dhms2sec",  1 , "EXPERIMENTAL Recovers integer seconds as in dhms2sec(\"5d18h53m20s\") = 500000"},
+	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "EXPERIMENTAL Formats floating-point seconds as in fsec2hms(5000.25) = \"01:23:20.250000\""},
+	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "EXPERIMENTAL Formats floating-point seconds as in fsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
+	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "EXPERIMENTAL Recovers floating-point seconds as in hms2fsec(\"01:23:20.250000\") = 5000.250000"},
+	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "EXPERIMENTAL Recovers floating-point seconds as in dhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
 
 	{  0, NULL,      -1 , NULL}, // table terminator
 };

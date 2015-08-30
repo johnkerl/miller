@@ -282,8 +282,10 @@ run_command $mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 run_command $mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_command $mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
-run_command $mlr --opprint put '$hms=sec2hms($sec)' $indir/sec2xhms
-run_command $mlr --opprint put '$hms=fsec2hms($sec)' $indir/fsec2xhms
+#run_command $mlr --opprint put '$hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec' $indir/sec2xhms
+#run_command $mlr --opprint put '$hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec' $indir/fsec2xhms
+#run_command $mlr --opprint put '$hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec' $indir/sec2xhms
+#run_command $mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec' $indir/fsec2xhms
 
 # ----------------------------------------------------------------
 announce CHAINING
