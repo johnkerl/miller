@@ -2,15 +2,14 @@ language: c
 
 sudo: false
 
-branches:
-    only:
-      - master
-      - travis
-
 addons:
   apt:
     packages:
       - flex
+
+compiler:
+  - clang
+  - gcc
 
 before_script: cd c
 
