@@ -472,36 +472,48 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
 	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
-	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%llds", &d, &h, &m, &s) == 4) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lldd%lldh%lldm%llds", &d, &h, &m, &s) == 4) {
 		sec = 86400*d + 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldh%lldm%llds", &h, &m, &s) == 3) {
+	} else if (sscanf(p, "%lldh%lldm%llds", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldm%llds", &m, &s) == 2) {
+	} else if (sscanf(p, "%lldm%llds", &m, &s) == 2) {
 		sec = 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%llds", &s) == 1) {
+	} else if (sscanf(p, "%llds", &s) == 1) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .u.intv = sec};
+	return (mv_t) {.type = MT_INT, .u.intv = sec * sign};
 }
 
 mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	long long d = 0LL, h = 0LL, m = 0LL;
 	double s = 0.0;
 	double sec = 0.0;
-	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
 		sec = 86400*d + 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldh%lldm%lfs", &h, &m, &s) == 3) {
+	} else if (sscanf(p, "%lldh%lldm%lfs", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldm%lfs", &m, &s) == 2) {
+	} else if (sscanf(p, "%lldm%lfs", &m, &s) == 2) {
 		sec = 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lfs", &s) == 1) {
+	} else if (sscanf(p, "%lfs", &s) == 1) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
 }
 
 // ----------------------------------------------------------------
