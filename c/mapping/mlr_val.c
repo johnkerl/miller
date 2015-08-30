@@ -333,34 +333,20 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	double v = fabs(pval1->u.dblv);
-	long long sign = pval1->u.dblv < 0.0 ? -1LL : 1LL;
+	long long sign = 1LL;
 	long long h, m, s;
+	char* fmt = "%lld:%02lld:%09.6lf";
 	long long u = (long long)trunc(v);
 	double f = v - u;
-	split_ull_to_hms(u, &h, &m, &s);
-	if (h != 0LL) {
-		h = sign * h;
-		char* fmt = "%lld:%02lld:%09.6lf";
-		int n = snprintf(NULL, 0, fmt, h, m, s+f);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, h, m, s+f);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
-	} else if (m != 0LL) {
-		m = sign * m;
-		char* fmt = "%lld:%09.6lf";
-		int n = snprintf(NULL, 0, fmt, m, s+f);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, m, s+f);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
-	} else {
-		s = sign * s;
-		f = sign * f;
-		char* fmt = "%.6lf";
-		int n = snprintf(NULL, 0, fmt, s+f);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, s+f);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	if (pval1->u.dblv < 0.0) {
+		sign = -1LL;
+		fmt = "-%02lld:%02lld:%09.6lf";
 	}
+	split_ull_to_hms(u, &h, &m, &s);
+	int n = snprintf(NULL, 0, fmt, h, m, s+f);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, h, m, s+f);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_i_sec2dhms_func(mv_t* pval1) {
@@ -437,22 +423,28 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 mv_t i_s_hms2sec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
-	if (sscanf(pval1->u.strv, "%lld:%lld:%lld", &h, &m, &s) == 3) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lld:%lld:%lld", &h, &m, &s) == 3) {
 		if (h >= 0LL)
 			sec = 3600LL*h + 60LL*m + s;
 		else
 			sec = -(-3600LL*h + 60LL*m + s);
-	} else if (sscanf(pval1->u.strv, "%lld:%lld", &m, &s) == 2) {
+	} else if (sscanf(p, "%lld:%lld", &m, &s) == 2) {
 		if (m >= 0LL)
 			sec = 60LL*m + s;
 		else
 			sec = -(-60LL*m + s);
-	} else if (sscanf(pval1->u.strv, "%lld", &s) == 1) {
+	} else if (sscanf(p, "%lld", &s) == 1) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .u.intv = sec};
+	return (mv_t) {.type = MT_INT, .u.intv = sec * sign};
 }
 
 mv_t f_s_hms2fsec_func(mv_t* pval1) {
