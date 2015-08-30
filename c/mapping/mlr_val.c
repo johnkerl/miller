@@ -316,27 +316,19 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 // ----------------------------------------------------------------
 mv_t s_i_sec2hms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
+	long long sign = 1LL;
 	long long h, m, s;
-	split_ull_to_hms(u, &h, &m, &s);
-	if (h != 0LL) {
-		char* fmt = "%lld:%02lld:%02lld";
-		int n = snprintf(NULL, 0, fmt, h, m, s);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, h, m, s);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
-	} else if (m != 0LL) {
-		char* fmt = "%lld:%02lld";
-		int n = snprintf(NULL, 0, fmt, m, s);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, m, s);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
-	} else {
-		char* fmt = "%lld";
-		int n = snprintf(NULL, 0, fmt, s);
-		char* string = mlr_malloc_or_die(n+1);
-		sprintf(string, fmt, s);
-		return (mv_t) {.type = MT_STRING, .u.strv = string};
+	char* fmt = "%02lld:%02lld:%02lld";
+	if (u < 0) {
+		sign = -1LL;
+		u = -u;
+		fmt = "-%02lld:%02lld:%02lld";
 	}
+	split_ull_to_hms(u, &h, &m, &s);
+	int n = snprintf(NULL, 0, fmt, h, m, s);
+	char* string = mlr_malloc_or_die(n+1);
+	sprintf(string, fmt, h, m, s);
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
