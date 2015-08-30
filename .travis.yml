@@ -1,0 +1,12 @@
+language: c
+
+branches:
+    only:
+      - master
+      - travis
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq flex
+
+before_script: cd c
