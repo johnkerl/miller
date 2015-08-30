@@ -17,6 +17,7 @@ install: .always
 clean: .always
 	make -C c clean
 .PHONY: manpage
+# OSX: brew install asciidoc; other issues TBD
 manpage: doc/miller.1.txt
 	( cd doc && a2x -d manpage -f manpage miller.1.txt )
 .always:
