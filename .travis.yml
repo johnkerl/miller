@@ -1,12 +1,17 @@
 language: c
 
+sudo: false
+
 branches:
     only:
       - master
       - travis
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq flex
+addons:
+  apt:
+    packages:
+      - flex
 
 before_script: cd c
+
+script: make
