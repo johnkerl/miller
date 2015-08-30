@@ -451,16 +451,22 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL;
 	double s = 0.0;
 	double sec = 0.0;
-	if (sscanf(pval1->u.strv, "%lld:%lld:%lf", &h, &m, &s) == 3) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lld:%lld:%lf", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lld:%lf", &m, &s) == 2) {
+	} else if (sscanf(p, "%lld:%lf", &m, &s) == 2) {
 		sec = 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lf", &s) == 2) {
+	} else if (sscanf(p, "%lf", &s) == 2) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
