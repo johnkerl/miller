@@ -1989,6 +1989,26 @@ f 6
 
 
 ================================================================
+MISSING FINAL LF
+
+./test/../mlr --no-mmap --dkvp cat ./test/input/truncated.dkvp
+a=1,b=2
+c=3
+
+./test/../mlr --dkvp cat ./test/input/truncated.dkvp
+a=1,b=2
+c=3
+
+./test/../mlr --no-mmap --nidx cat ./test/input/truncated.nidx
+1 2 3
+4 5
+
+./test/../mlr --nidx cat ./test/input/truncated.nidx
+1 2 3
+4 5
+
+
+================================================================
 UTF-8 alignment
 
 ./test/../mlr --icsvlite --opprint cat ./test/input/utf8-1.csv
