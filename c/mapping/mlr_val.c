@@ -257,11 +257,11 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 
 // ----------------------------------------------------------------
 static void split_ull_to_hms(long long u, long long* ph, long long* pm, long long* ps) {
-	long long sign = 1LL;
 	long long h = 0LL, m = 0LL, s = 0LL;
+	long long sign = 1LL;
 	if (u < 0LL) {
-		sign = -1LL;
 		u = -u;
+		sign = -1LL;
 	}
 	s = u % 60LL;
 	u = u / 60LL;
@@ -282,11 +282,11 @@ static void split_ull_to_hms(long long u, long long* ph, long long* pm, long lon
 }
 
 static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long long* pm, long long* ps) {
-	long long sign = 1LL;
 	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
+	long long sign = 1LL;
 	if (u < 0LL) {
-		sign = -1LL;
 		u = -u;
+		sign = -1LL;
 	}
 	s = u % 60LL;
 	u = u / 60LL;
@@ -316,11 +316,9 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 // ----------------------------------------------------------------
 mv_t s_i_sec2hms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
-	long long sign = 1LL;
 	long long h, m, s;
 	char* fmt = "%02lld:%02lld:%02lld";
 	if (u < 0) {
-		sign = -1LL;
 		u = -u;
 		fmt = "-%02lld:%02lld:%02lld";
 	}
@@ -333,13 +331,11 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	double v = fabs(pval1->u.dblv);
-	long long sign = 1LL;
 	long long h, m, s;
 	char* fmt = "%lld:%02lld:%09.6lf";
 	long long u = (long long)trunc(v);
 	double f = v - u;
 	if (pval1->u.dblv < 0.0) {
-		sign = -1LL;
 		fmt = "-%02lld:%02lld:%09.6lf";
 	}
 	split_ull_to_hms(u, &h, &m, &s);
