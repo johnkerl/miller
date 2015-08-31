@@ -19,7 +19,11 @@
 # ================================================================
 set -e
 
-ourdir=`dirname $0`
+verb=$0
+if [ "$verb" = "test/run" ]; then
+  verb=./test/run
+fi
+ourdir=`dirname $verb`
 mlr=$ourdir/../mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
