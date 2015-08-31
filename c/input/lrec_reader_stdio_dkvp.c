@@ -69,15 +69,21 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int al
 lrec_t* lrec_parse_stdio_dkvp(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 
-	char* key   = line;
-	char* value = line;
-
 	// It would be easier to split the line on field separator (e.g. ","), then
 	// split each key-value pair on pair separator (e.g. "="). But, that
 	// requires two passes through the data. Here we do it in one pass.
 
 	int idx = 0;
-	for (char* p = line; *p; ) {
+	char* p = line;
+
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = p;
+	char* value = p;
+
+	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 
@@ -113,16 +119,21 @@ lrec_t* lrec_parse_stdio_dkvp(char* line, char ifs, char ips, int allow_repeat_i
 		}
 	}
 	idx++;
-	if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-		fprintf(stderr, "Empty key disallowed.\n");
-		exit(1);
-	}
-	if (value <= key) {
-		char  free_flags = 0;
-		lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
-	}
-	else {
-		lrec_put_no_free(prec, key, value);
+
+	if (allow_repeat_ifs && *key == 0 && *value == 0) {
+		; // OK
+	} else {
+		if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+			fprintf(stderr, "Empty key disallowed.\n");
+			exit(1);
+		}
+		if (value <= key) {
+			char  free_flags = 0;
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+		}
+		else {
+			lrec_put_no_free(prec, key, value);
+		}
 	}
 
 	return prec;

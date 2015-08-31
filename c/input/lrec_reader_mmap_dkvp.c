@@ -48,12 +48,17 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
-	char* key   = line;
-	char* value = line;
 
 	int idx = 0;
-	char* p;
-	for (p = line; p < phandle->eof && *p; ) {
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = p;
+	char* value = p;
+
+	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
@@ -95,16 +100,20 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
-	if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-		fprintf(stderr, "Empty key disallowed.\n");
-		exit(1);
-	}
-	if (value <= key) {
-		char  free_flags = 0;
-		lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
-	}
-	else {
-		lrec_put_no_free(prec, key, value);
+	if (allow_repeat_ifs && *key == 0 && *value == 0) {
+		; // OK
+	} else {
+		if (*key == 0) { // xxx to do: get file-name/line-number context in here.
+			fprintf(stderr, "Empty key disallowed.\n");
+			exit(1);
+		}
+		if (value <= key) {
+			char  free_flags = 0;
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+		}
+		else {
+			lrec_put_no_free(prec, key, value);
+		}
 	}
 
 	return prec;
