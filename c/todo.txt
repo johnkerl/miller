@@ -33,7 +33,7 @@ TOP OF LIST
 ----------------------------------------------------------------
 little:
 
-* -Wall -Wextra -Wpedantic-??
+* -Wall -Wextra -Wpedantic-?? Werror=unused-but-set-variable?
 
 * --mmap into online help ...
 
