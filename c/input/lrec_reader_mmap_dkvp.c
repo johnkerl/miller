@@ -52,7 +52,8 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 	char* value = line;
 
 	int idx = 0;
-	for (char* p = line; p < phandle->eof && *p; ) {
+	char* p;
+	for (p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
@@ -91,6 +92,8 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 			p++;
 		}
 	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
 	idx++;
 	if (*key == 0) { // xxx to do: get file-name/line-number context in here.
 		fprintf(stderr, "Empty key disallowed.\n");
