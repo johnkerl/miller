@@ -50,7 +50,8 @@ lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char i
 	char* value = line;
 	char free_flags = 0;
 
-	for (char* p = line; p < phandle->eof && *p; ) {
+	char* p;
+	for (p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
@@ -72,6 +73,8 @@ lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t *phandle, char irs, char i
 			p++;
 		}
 	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
 	idx++;
 	key = make_nidx_key(idx, &free_flags);
 	lrec_put(prec, key, value, free_flags);

@@ -1999,6 +1999,14 @@ c=3
 a=1,b=2
 c=3
 
+./test/../mlr --no-mmap --nidx cat ./test/input/truncated.nidx
+1 2 3
+4 5
+
+./test/../mlr --nidx cat ./test/input/truncated.nidx
+1 2 3
+4 5
+
 
 ================================================================
 UTF-8 alignment
