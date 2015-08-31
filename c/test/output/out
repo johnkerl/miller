@@ -1989,6 +1989,32 @@ f 6
 
 
 ================================================================
+SPACE-PADDING
+
+./test/../mlr --mmap --idkvp --odkvp --ifs space --repifs cat ./test/input/space-pad.dkvp
+a=1,b=2
+c=3
+
+./test/../mlr --no-mmap --idkvp --odkvp --ifs space --repifs cat ./test/input/space-pad.dkvp
+a=1,b=2
+c=3
+
+./test/../mlr --mmap --inidx --odkvp --ifs space --repifs cat ./test/input/space-pad.nidx
+1=a,2=b,3=c
+1=d,2=e,3=f
+
+./test/../mlr --no-mmap --inidx --odkvp --ifs space --repifs cat ./test/input/space-pad.nidx
+1=a,2=b,3=c
+1=d,2=e,3=f
+
+./test/../mlr --mmap --icsvlite --odkvp --ifs space --repifs cat ./test/input/space-pad.pprint
+a=1,b=2,c=3
+
+./test/../mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat ./test/input/space-pad.pprint
+a=1,b=2,c=3
+
+
+================================================================
 MISSING FINAL LF
 
 ./test/../mlr --no-mmap --csvlite cat ./test/input/truncated.csv

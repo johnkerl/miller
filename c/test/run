@@ -373,6 +373,16 @@ run_command $mlr --inidx    --odkvp cat $indir/null-fields.nidx
 run_command $mlr --idkvp    --oxtab cat $indir/missings.dkvp
 
 # ================================================================
+announce SPACE-PADDING
+
+run_command $mlr --mmap    --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
+run_command $mlr --no-mmap --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
+run_command $mlr --mmap    --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
+run_command $mlr --no-mmap --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
+run_command $mlr --mmap    --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
+run_command $mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
+
+# ================================================================
 announce MISSING FINAL LF
 
 run_command $mlr --no-mmap --csvlite cat $indir/truncated.csv
