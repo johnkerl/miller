@@ -25,6 +25,9 @@ TOP OF LIST
 
 * header-length data mismatch et. al: file/line
 
+* make an updated dependency list, esp. in light of a2x et al.
+* probably its own mlrdoc page ... at least, highlighted in build page
+
 * homebrew
 
 * .deb
