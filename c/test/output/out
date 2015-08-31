@@ -1989,18 +1989,6 @@ f 6
 
 
 ================================================================
-MISSING FINAL LF
-
-./test/../mlr --no-mmap --dkvp cat ./test/input/truncated.dkvp
-a=1,b=2
-c=3
-
-./test/../mlr --dkvp cat ./test/input/truncated.dkvp
-a=1,b=2
-c=3
-
-
-================================================================
 UTF-8 alignment
 
 ./test/../mlr --icsvlite --opprint cat ./test/input/utf8-1.csv
@@ -2102,7 +2090,11 @@ a,b,c
 3",y
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/simple-truncated.csv /rfc-csv/simple.csv
+./test/../mlr --csv cat ./test/input/rfc-csv/simple-truncated.csv ./test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
+1,x,3
+4,5,6
+x,y"yy,z
+
