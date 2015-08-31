@@ -82,6 +82,8 @@ lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char i
 				p++;
 			}
 		}
+		if (p >= phandle->eof)
+			phandle->sol = p+1;
 
 		lrec_put_no_free(prec, key, value);
 

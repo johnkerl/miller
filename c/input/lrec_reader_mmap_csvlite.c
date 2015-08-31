@@ -100,7 +100,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 	char* value = line;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for (char* p = line; p < phandle->eof && *p; ) {
+	char* p;
+	for (p = line; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
@@ -132,6 +133,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 			p++;
 		}
 	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
 	if (pe == NULL) {
 		fprintf(stderr, "Header-data length mismatch!\n");
 		exit(1);

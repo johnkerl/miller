@@ -1991,6 +1991,18 @@ f 6
 ================================================================
 MISSING FINAL LF
 
+./test/../mlr --no-mmap --csvlite cat ./test/input/truncated.csv
+a,b,c
+1,2,3
+4,5,6
+7,8,9
+
+./test/../mlr --csvlite cat ./test/input/truncated.csv
+a,b,c
+1,2,3
+4,5,6
+7,8,9
+
 ./test/../mlr --no-mmap --dkvp cat ./test/input/truncated.dkvp
 a=1,b=2
 c=3
@@ -2006,6 +2018,34 @@ c=3
 ./test/../mlr --nidx cat ./test/input/truncated.nidx
 1 2 3
 4 5
+
+./test/../mlr --no-mmap --pprint cat ./test/input/truncated.pprint
+a b c
+1 2 3
+4 5 6
+7 8 9
+
+./test/../mlr --pprint cat ./test/input/truncated.pprint
+a b c
+1 2 3
+4 5 6
+7 8 9
+
+./test/../mlr --no-mmap --xtab cat ./test/input/truncated.xtab
+a 1
+b 2
+c 3
+
+d 4
+e 5
+
+./test/../mlr --xtab cat ./test/input/truncated.xtab
+a 1
+b 2
+c 3
+
+d 4
+e 5
 
 
 ================================================================
