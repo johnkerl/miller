@@ -1,11 +1,5 @@
 #!/bin/sh
 
-# ================================================================
-# Note: this is invoked from the Makefile as "./test/run".
-# If you invoke it as "test/run" or "sh test/run" then it will
-# produce diff errors.
-# ================================================================
-
 # NEEDING COVERAGE:
 # group-like
 # head
@@ -20,10 +14,13 @@
 set -e
 
 verb=$0
+# Note: this is invoked from the Makefile as "./test/run".  Without this, f you
+# invoke it as "test/run" or "sh test/run" then it will produce diff errors.
 if [ "$verb" = "test/run" ]; then
   verb=./test/run
 fi
 ourdir=`dirname $verb`
+
 mlr=$ourdir/../mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
