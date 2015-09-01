@@ -383,55 +383,55 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+// ================================================================
 // $ ./getl ../data/big.csv 5|tee x
-//
-// $  mlr --opprint sort -nr t then step -a delta -f t x
-// type                    t        n        t_delta
-// fgetc_fixed_len         3.166140 55888899 3.166140
-// fgetc_fixed_len         3.029210 55888899 -0.136930
-// fgetc_fixed_len         3.001850 55888899 -0.027360
-// fgetc_psb               2.984247 55888899 -0.017603
-// fgetc_psb               2.952416 55888899 -0.031831
-// fgetc_fixed_len         2.951750 55888899 -0.000666
-// fgetc_fixed_len         2.931093 55888899 -0.020657
-// fgetc_psb               2.839564 55888899 -0.091529
-// fgetc_psb               2.819264 55888899 -0.020300
-// fgetc_psb               2.806522 55888899 -0.012742
-// getc_unlocked_fixed_len 0.829920 55888899 -1.976602
-// pfr_psb                 0.790989 55888900 -0.038931
-// pfr_psb                 0.736122 55888900 -0.054867
-// pfr_psb                 0.707881 55888900 -0.028241
-// pfr_psb                 0.692827 55888900 -0.015054
-// pfr_psb                 0.689040 55888900 -0.003787
-// getc_unlocked_fixed_len 0.612850 55888899 -0.076190
-// getc_unlocked_fixed_len 0.586335 55888899 -0.026515
-// getc_unlocked_fixed_len 0.518139 55888899 -0.068196
-// getc_unlocked_fixed_len 0.500122 55888899 -0.018017
-// getdelim                0.379211 55888899 -0.120911
-// getc_unlocked_psb       0.312675 55888899 -0.066536
-// getc_unlocked_psb       0.303223 55888899 -0.009452
-// getc_unlocked_psb       0.302722 55888899 -0.000501
-// getc_unlocked_psb       0.295561 55888899 -0.007161
-// mmap_psb                0.291486 55888899 -0.004075
-// mmap_psb                0.280870 55888899 -0.010616
-// getc_unlocked_psb       0.270824 55888899 -0.010046
-// mmap_psb                0.264112 55888899 -0.006712
-// mmap_psb                0.256946 55888899 -0.007166
-// mmap_psb                0.247112 55888899 -0.009834
-// getdelim                0.134491 55888899 -0.112621
-// getdelim                0.124980 55888899 -0.009511
-// getdelim                0.124031 55888899 -0.000949
-// getdelim                0.123838 55888899 -0.000193
 
-// $ mlr --opprint stats1 -a min,mean,max,stddev -f t -g type then sort -n t_mean x
-// type                    t_min    t_mean   t_max    t_stddev
-// getdelim                0.123838 0.177310 0.379211 0.112953
-// mmap_psb                0.247112 0.268105 0.291486 0.017964
-// getc_unlocked_psb       0.270824 0.297001 0.312675 0.015846
-// getc_unlocked_fixed_len 0.500122 0.609473 0.829920 0.131760
-// pfr_psb                 0.689040 0.723372 0.790989 0.042090
-// fgetc_psb               2.806522 2.880403 2.984247 0.081905
-// fgetc_fixed_len         2.931093 3.016009 3.166140 0.092539
+// $ mlr --opprint cat then sort -n t x
+// type                    t        n
+// getdelim                0.118618 55888899
+// getdelim                0.121467 55888899
+// getdelim                0.121943 55888899
+// getdelim                0.124756 55888899
+// getdelim                0.127039 55888899
+// getc_unlocked_fixed_len 0.167563 55888899
+// getc_unlocked_fixed_len 0.167803 55888899
+// getc_unlocked_fixed_len 0.168808 55888899
+// getc_unlocked_fixed_len 0.168980 55888899
+// getc_unlocked_fixed_len 0.176187 55888899
+// getc_unlocked_psb       0.238986 55888899
+// getc_unlocked_psb       0.241325 55888899
+// getc_unlocked_psb       0.246466 55888899
+// getc_unlocked_psb       0.247592 55888899
+// getc_unlocked_psb       0.248112 55888899
+// mmap_psb                0.250021 55888899
+// mmap_psb                0.254118 55888899
+// mmap_psb                0.257428 55888899
+// mmap_psb                0.261807 55888899
+// mmap_psb                0.264367 55888899
+// pfr_psb                 0.760035 55888900
+// pfr_psb                 0.765121 55888900
+// pfr_psb                 0.768731 55888900
+// pfr_psb                 0.771937 55888900
+// pfr_psb                 0.780460 55888900
+// fgetc_fixed_len         2.516459 55888899
+// fgetc_fixed_len         2.522877 55888899
+// fgetc_fixed_len         2.587373 55888899
+// fgetc_psb               2.590090 55888899
+// fgetc_psb               2.590536 55888899
+// fgetc_fixed_len         2.608356 55888899
+// fgetc_psb               2.623930 55888899
+// fgetc_fixed_len         2.624310 55888899
+// fgetc_psb               2.637269 55888899
+
+// $ mlr --opprint cat then stats1 -a min,max,stddev,mean -f t -g type then sort -n t_mean x
+// type                    t_min    t_max    t_stddev t_mean
+// getdelim                0.118618 0.127039 0.003232 0.122765
+// getc_unlocked_fixed_len 0.167563 0.176187 0.003585 0.169868
+// getc_unlocked_psb       0.238986 0.248112 0.004091 0.244496
+// mmap_psb                0.250021 0.264367 0.005768 0.257548
+// pfr_psb                 0.760035 0.780460 0.007667 0.769257
+// fgetc_fixed_len         2.516459 2.624310 0.049478 2.571875
+// fgetc_psb               2.590090 2.680364 0.037489 2.624438
 
 // ----------------------------------------------------------------
 // Analysis:
@@ -439,10 +439,11 @@ int main(int argc, char** argv) {
 //   o maybe i could cobble up a line-stacked iterator which
 //     consumes usually 1, sometimes (double-quote case) multiple
 //     delim lines to make up the data for a given record
-// * as before, maybe a 10% improvement mmap over stdio.
+// * as before, maybe a 5-10% improvement mmap over stdio.
 //   worth doing as a second-level refinement.
 // * getc_unlocked vs. fgetc, no-brainer for this single-threaded code.
-// * string-builder is *better* than fixed-length malloc. yay!!!
+// * string-builder is a little than fixed-length malloc, as expected
+//   -- it's adding value.
 // ! peek_file_reader is where the optimization opportunities are
 
 // type                    t_min    t_mean   t_max    t_stddev
