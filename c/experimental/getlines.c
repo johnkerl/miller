@@ -24,7 +24,7 @@ static FILE* fopen_or_die(char* filename) {
 }
 
 // ================================================================
-static int read_file_mlr_get_line(char* filename) {
+static int read_file_mlr_get_line(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	int bc = 0;
 	while (1) {
@@ -32,6 +32,10 @@ static int read_file_mlr_get_line(char* filename) {
 		if (line == NULL)
 			break;
 		bc += strlen(line);
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		free(line);
 	}
 	fclose(fp);
@@ -60,7 +64,7 @@ static char* read_line_fgetc(FILE* fp, char* irs, int irs_len) {
 	}
 }
 
-static int read_file_fgetc_fixed_len(char* filename) {
+static int read_file_fgetc_fixed_len(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -71,7 +75,12 @@ static int read_file_fgetc_fixed_len(char* filename) {
 		char* line = read_line_fgetc(fp, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
+		free(line);
 	}
 	fclose(fp);
 	return bc;
@@ -100,7 +109,7 @@ static char* read_line_getc_unlocked(FILE* fp, char* irs, int irs_len) {
 	}
 }
 
-static int read_file_getc_unlocked_fixed_len(char* filename) {
+static int read_file_getc_unlocked_fixed_len(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -111,7 +120,12 @@ static int read_file_getc_unlocked_fixed_len(char* filename) {
 		char* line = read_line_getc_unlocked(fp, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
+		free(line);
 	}
 	fclose(fp);
 	return bc;
@@ -134,7 +148,7 @@ static char* read_line_getc_unlocked_psb(FILE* fp, string_builder_t* psb, char* 
 	}
 }
 
-static int read_file_getc_unlocked_psb(char* filename) {
+static int read_file_getc_unlocked_psb(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -149,7 +163,12 @@ static int read_file_getc_unlocked_psb(char* filename) {
 		char* line = read_line_getc_unlocked_psb(fp, psb, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
+		free(line);
 	}
 	fclose(fp);
 	return bc;
@@ -172,7 +191,7 @@ static char* read_line_fgetc_psb(FILE* fp, string_builder_t* psb, char* irs, int
 	}
 }
 
-static int read_file_fgetc_psb(char* filename) {
+static int read_file_fgetc_psb(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -187,7 +206,12 @@ static int read_file_fgetc_psb(char* filename) {
 		char* line = read_line_fgetc_psb(fp, psb, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
+		free(line);
 	}
 	fclose(fp);
 	return bc;
@@ -213,7 +237,7 @@ static char* read_line_mmap_psb(file_reader_mmap_state_t* ph, string_builder_t* 
 	}
 }
 
-static int read_file_mmap_psb(char* filename) {
+static int read_file_mmap_psb(char* filename, int do_write) {
 	file_reader_mmap_state_t* ph = file_reader_mmap_open(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -228,6 +252,10 @@ static int read_file_mmap_psb(char* filename) {
 		char* line = read_line_mmap_psb(ph, psb, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
 	}
 	file_reader_mmap_close(ph);
@@ -254,7 +282,7 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, c
 	}
 }
 
-static int read_file_pfr_psb(char* filename) {
+static int read_file_pfr_psb(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -270,7 +298,12 @@ static int read_file_pfr_psb(char* filename) {
 		char* line = read_line_pfr_psb(pfr, psb, irs, irs_len);
 		if (line == NULL)
 			break;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
 		bc += strlen(line);
+		free(line);
 	}
 	fclose(fp);
 	return bc;
@@ -284,60 +317,63 @@ static void usage(char* argv0) {
 
 int main(int argc, char** argv) {
 	int nreps = 1;
-	if (argc != 2 && argc != 3)
+	int do_write = 0;
+	if (argc != 2 && argc != 3 && argc != 4)
 		usage(argv[0]);
 	char* filename = argv[1];
-	if (argc == 3)
+	if (argc >= 3)
 		(void)sscanf(argv[2], "%d", &nreps);
+	if (argc >= 4)
+		(void)sscanf(argv[3], "%d", &do_write);
 
 	double s, e, t;
 	int bc;
 
 	for (int i = 0; i < nreps; i++) {
 		s = get_systime();
-		bc = read_file_mlr_get_line(filename);
+		bc = read_file_mlr_get_line(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_fgetc_fixed_len(filename);
+		bc = read_file_fgetc_fixed_len(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=fgetc_fixed_len,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_getc_unlocked_fixed_len(filename);
+		bc = read_file_getc_unlocked_fixed_len(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=getc_unlocked_fixed_len,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_getc_unlocked_psb(filename);
+		bc = read_file_getc_unlocked_psb(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=getc_unlocked_psb,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_fgetc_psb(filename);
+		bc = read_file_fgetc_psb(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=fgetc_psb,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_mmap_psb(filename);
+		bc = read_file_mmap_psb(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=mmap_psb,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_pfr_psb(filename);
+		bc = read_file_pfr_psb(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=pfr_psb,t=%.6lf,n=%d\n", t, bc);
@@ -397,12 +433,24 @@ int main(int argc, char** argv) {
 // fgetc_psb               2.806522 2.880403 2.984247 0.081905
 // fgetc_fixed_len         2.931093 3.016009 3.166140 0.092539
 
+// ----------------------------------------------------------------
+// Analysis:
+// * getdelim is good; fatal flaw is single-char line-terminator
+//   o maybe i could cobble up a line-stacked iterator which
+//     consumes usually 1, sometimes (double-quote case) multiple
+//     delim lines to make up the data for a given record
+// * as before, maybe a 10% improvement mmap over stdio.
+//   worth doing as a second-level refinement.
+// * getc_unlocked vs. fgetc, no-brainer for this single-threaded code.
+// * string-builder is *better* than fixed-length malloc. yay!!!
+// ! peek_file_reader is where the optimization opportunities are
 
 // type                    t_min    t_mean   t_max    t_stddev
 // getdelim                0.123838 0.177310 0.379211 0.112953
 
 // mmap_psb                0.247112 0.268105 0.291486 0.017964
 // getc_unlocked_psb       0.270824 0.297001 0.312675 0.015846
+
 // getc_unlocked_fixed_len 0.500122 0.609473 0.829920 0.131760
 // pfr_psb                 0.689040 0.723372 0.790989 0.042090
 
