@@ -28,7 +28,7 @@ peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
 
 // ----------------------------------------------------------------
 int pfr_at_eof(peek_file_reader_t* pfr) {
-	return pfr->npeeked == 1 && pfr->peekbuf[0] == EOF;
+	return pfr->npeeked >= 1 && pfr->peekbuf[0] == EOF;
 }
 
 // ----------------------------------------------------------------

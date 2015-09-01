@@ -445,15 +445,3 @@ int main(int argc, char** argv) {
 // * string-builder is a little than fixed-length malloc, as expected
 //   -- it's adding value.
 // ! peek_file_reader is where the optimization opportunities are
-
-// type                    t_min    t_mean   t_max    t_stddev
-// getdelim                0.123838 0.177310 0.379211 0.112953
-
-// mmap_psb                0.247112 0.268105 0.291486 0.017964
-// getc_unlocked_psb       0.270824 0.297001 0.312675 0.015846
-
-// getc_unlocked_fixed_len 0.500122 0.609473 0.829920 0.131760
-// pfr_psb                 0.689040 0.723372 0.790989 0.042090
-
-// fgetc_psb               2.806522 2.880403 2.984247 0.081905
-// fgetc_fixed_len         2.931093 3.016009 3.166140 0.092539

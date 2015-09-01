@@ -145,6 +145,10 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 		wrapper.termind = TERMIND_EOF;
 		return wrapper;
 	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+		if (!pfr_advance_past(pstate->pfr, pstate->dquote)) {
+			fprintf(stderr, "%s: Internal coding error: DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
+			exit(1);
+		}
 		return get_csv_field_dquoted(pstate);
 	} else {
 		return get_csv_field_not_dquoted(pstate);
@@ -187,10 +191,6 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 }
 
 static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
-	if (!pfr_advance_past(pstate->pfr, pstate->dquote)) {
-		fprintf(stderr, "%s: Internal coding error: DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
-		exit(1);
-	}
 	while (TRUE) {
 		if (pfr_at_eof(pstate->pfr)) {
 			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
