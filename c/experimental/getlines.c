@@ -60,7 +60,7 @@ static char* read_line_fgetc(FILE* fp, char* irs, int irs_len) {
 	}
 }
 
-static int read_file_fgetc(char* filename) {
+static int read_file_fgetc_fixed_len(char* filename) {
 	FILE* fp = fopen_or_die(filename);
 	char* irs = "\n";
 	int irs_len = strlen(irs);
@@ -69,6 +69,84 @@ static int read_file_fgetc(char* filename) {
 
 	while (TRUE) {
 		char* line = read_line_fgetc(fp, irs, irs_len);
+		if (line == NULL)
+			break;
+		bc += strlen(line);
+	}
+	fclose(fp);
+	return bc;
+}
+
+// ================================================================
+static char* read_line_getc_unlocked(FILE* fp, char* irs, int irs_len) {
+	char* line = mlr_malloc_or_die(FIXED_LINE_LEN);
+	char* p = line;
+	while (TRUE) {
+		int i = getc_unlocked(fp);
+		char c = i;
+		if (i == EOF) {
+			if (p == line) {
+				return NULL;
+			} else {
+				*(p++) = 0;
+				return line;
+			}
+		} else if (c == irs[0]) {
+			*(p++) = 0;
+			return line;
+		} else {
+			*(p++) = c;
+		}
+	}
+}
+
+static int read_file_getc_unlocked_fixed_len(char* filename) {
+	FILE* fp = fopen_or_die(filename);
+	char* irs = "\n";
+	int irs_len = strlen(irs);
+
+	int bc = 0;
+
+	while (TRUE) {
+		char* line = read_line_getc_unlocked(fp, irs, irs_len);
+		if (line == NULL)
+			break;
+		bc += strlen(line);
+	}
+	fclose(fp);
+	return bc;
+}
+
+// ================================================================
+static char* read_line_getc_unlocked_psb(FILE* fp, string_builder_t* psb, char* irs, int irs_len) {
+	while (TRUE) {
+		int c = getc_unlocked(fp);
+		if (c == EOF) {
+			if (sb_is_empty(psb))
+				return NULL;
+			else
+				return sb_finish(psb);
+		} else if (c == irs[0]) {
+			return sb_finish(psb);
+		} else {
+			sb_append_char(psb, c);
+		}
+	}
+}
+
+static int read_file_getc_unlocked_psb(char* filename) {
+	FILE* fp = fopen_or_die(filename);
+	char* irs = "\n";
+	int irs_len = strlen(irs);
+
+	int bc = 0;
+
+	string_builder_t  sb;
+	string_builder_t* psb = &sb;
+	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
+
+	while (TRUE) {
+		char* line = read_line_getc_unlocked_psb(fp, psb, irs, irs_len);
 		if (line == NULL)
 			break;
 		bc += strlen(line);
@@ -224,10 +302,24 @@ int main(int argc, char** argv) {
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_fgetc(filename);
+		bc = read_file_fgetc_fixed_len(filename);
 		e = get_systime();
 		t = e - s;
-		printf("type=fgetc,t=%.6lf,n=%d\n", t, bc);
+		printf("type=fgetc_fixed_len,t=%.6lf,n=%d\n", t, bc);
+		fflush(stdout);
+
+		s = get_systime();
+		bc = read_file_getc_unlocked_fixed_len(filename);
+		e = get_systime();
+		t = e - s;
+		printf("type=getc_unlocked_fixed_len,t=%.6lf,n=%d\n", t, bc);
+		fflush(stdout);
+
+		s = get_systime();
+		bc = read_file_getc_unlocked_psb(filename);
+		e = get_systime();
+		t = e - s;
+		printf("type=getc_unlocked_psb,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
@@ -254,3 +346,65 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+
+// $ ./getl ../data/big.csv 5|tee x
+//
+// $  mlr --opprint sort -nr t then step -a delta -f t x
+// type                    t        n        t_delta
+// fgetc_fixed_len         3.166140 55888899 3.166140
+// fgetc_fixed_len         3.029210 55888899 -0.136930
+// fgetc_fixed_len         3.001850 55888899 -0.027360
+// fgetc_psb               2.984247 55888899 -0.017603
+// fgetc_psb               2.952416 55888899 -0.031831
+// fgetc_fixed_len         2.951750 55888899 -0.000666
+// fgetc_fixed_len         2.931093 55888899 -0.020657
+// fgetc_psb               2.839564 55888899 -0.091529
+// fgetc_psb               2.819264 55888899 -0.020300
+// fgetc_psb               2.806522 55888899 -0.012742
+// getc_unlocked_fixed_len 0.829920 55888899 -1.976602
+// pfr_psb                 0.790989 55888900 -0.038931
+// pfr_psb                 0.736122 55888900 -0.054867
+// pfr_psb                 0.707881 55888900 -0.028241
+// pfr_psb                 0.692827 55888900 -0.015054
+// pfr_psb                 0.689040 55888900 -0.003787
+// getc_unlocked_fixed_len 0.612850 55888899 -0.076190
+// getc_unlocked_fixed_len 0.586335 55888899 -0.026515
+// getc_unlocked_fixed_len 0.518139 55888899 -0.068196
+// getc_unlocked_fixed_len 0.500122 55888899 -0.018017
+// getdelim                0.379211 55888899 -0.120911
+// getc_unlocked_psb       0.312675 55888899 -0.066536
+// getc_unlocked_psb       0.303223 55888899 -0.009452
+// getc_unlocked_psb       0.302722 55888899 -0.000501
+// getc_unlocked_psb       0.295561 55888899 -0.007161
+// mmap_psb                0.291486 55888899 -0.004075
+// mmap_psb                0.280870 55888899 -0.010616
+// getc_unlocked_psb       0.270824 55888899 -0.010046
+// mmap_psb                0.264112 55888899 -0.006712
+// mmap_psb                0.256946 55888899 -0.007166
+// mmap_psb                0.247112 55888899 -0.009834
+// getdelim                0.134491 55888899 -0.112621
+// getdelim                0.124980 55888899 -0.009511
+// getdelim                0.124031 55888899 -0.000949
+// getdelim                0.123838 55888899 -0.000193
+
+// $ mlr --opprint stats1 -a min,mean,max,stddev -f t -g type then sort -n t_mean x
+// type                    t_min    t_mean   t_max    t_stddev
+// getdelim                0.123838 0.177310 0.379211 0.112953
+// mmap_psb                0.247112 0.268105 0.291486 0.017964
+// getc_unlocked_psb       0.270824 0.297001 0.312675 0.015846
+// getc_unlocked_fixed_len 0.500122 0.609473 0.829920 0.131760
+// pfr_psb                 0.689040 0.723372 0.790989 0.042090
+// fgetc_psb               2.806522 2.880403 2.984247 0.081905
+// fgetc_fixed_len         2.931093 3.016009 3.166140 0.092539
+
+
+// type                    t_min    t_mean   t_max    t_stddev
+// getdelim                0.123838 0.177310 0.379211 0.112953
+
+// mmap_psb                0.247112 0.268105 0.291486 0.017964
+// getc_unlocked_psb       0.270824 0.297001 0.312675 0.015846
+// getc_unlocked_fixed_len 0.500122 0.609473 0.829920 0.131760
+// pfr_psb                 0.689040 0.723372 0.790989 0.042090
+
+// fgetc_psb               2.806522 2.880403 2.984247 0.081905
+// fgetc_fixed_len         2.931093 3.016009 3.166140 0.092539

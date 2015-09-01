@@ -57,6 +57,37 @@ static step_t* step_delta_alloc(char* input_field_name) {
 // xxx step_delta_free et al.
 
 // ----------------------------------------------------------------
+typedef struct _step_ratio_state_t {
+	double prev;
+	int    have_prev;
+	char*  output_field_name;
+} step_ratio_state_t;
+static void step_ratio_dprocess(void* pvstate, double dblv, lrec_t* prec) {
+	step_ratio_state_t* pstate = pvstate;
+	double ratio = dblv;
+	if (pstate->have_prev) {
+		ratio = dblv / pstate->prev;
+	} else {
+		pstate->have_prev = TRUE;
+	}
+	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
+		LREC_FREE_ENTRY_VALUE);
+	pstate->prev = dblv;
+}
+static step_t* step_ratio_alloc(char* input_field_name) {
+	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+	step_ratio_state_t* pstate = mlr_malloc_or_die(sizeof(step_ratio_state_t));
+	pstate->prev          = -999.0;
+	pstate->have_prev     = FALSE;
+	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
+
+	pstep->pvstate        = (void*)pstate;
+	pstep->psprocess_func = NULL;
+	pstep->pdprocess_func = &step_ratio_dprocess;
+	return pstep;
+}
+
+// ----------------------------------------------------------------
 typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
@@ -109,6 +140,7 @@ typedef struct _step_lookup_t {
 } step_lookup_t;
 static step_lookup_t step_lookup_table[] = {
 	{"delta",   step_delta_alloc},
+	{"ratio",   step_ratio_alloc},
 	{"rsum",    step_rsum_alloc},
 	{"counter", step_counter_alloc},
 };

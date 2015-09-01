@@ -2,7 +2,14 @@
 CCOMP=gcc
 CFLAGS=-std=gnu99
 IFLAGS=-I.
+
 WFLAGS=-Wall -Werror
+# Worth exploring ... but needs handling for unused parameters in functions which comply with interfaces.
+# Best option I'm aware of is to replace "void foo(int bar) {...}" with "void foo(int) {...}" throughout.
+# WFLAGS=-Wall -Wextra -Werror
+# WFLAGS=-Wall -Wextra -pedantic-errors -Werror
+# WFLAGS=-Wall -Wextra -pedantic-errors -Werror=unused-variable
+
 LFLAGS=-lm
 
 # You can do
@@ -48,6 +55,14 @@ input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 input/file_reader_mmap.c input/file_reader_stdio.c \
 input/peek_file_reader.c \
 containers/test_join_bucket_keeper.c
+
+EXPERIMENTAL_READER_SRCS = \
+lib/mlrutil.c \
+lib/mlr_globals.c \
+lib/string_builder.c \
+input/file_reader_mmap.c \
+input/peek_file_reader.c \
+experimental/getlines.c
 
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
@@ -206,6 +221,9 @@ lrim:
 
 termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
+
+getl: .always
+	$(CC) $(EXPERIMENTAL_READER_SRCS) -o getl
 
 # ================================================================
 clean:
