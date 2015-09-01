@@ -64,7 +64,7 @@ typedef struct _step_ratio_state_t {
 } step_ratio_state_t;
 static void step_ratio_dprocess(void* pvstate, double dblv, lrec_t* prec) {
 	step_ratio_state_t* pstate = pvstate;
-	double ratio = dblv;
+	double ratio = 1.0;
 	if (pstate->have_prev) {
 		ratio = dblv / pstate->prev;
 	} else {
