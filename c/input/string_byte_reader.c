@@ -1,5 +1,5 @@
 #include <stdio.h> // For definition of EOF
-#include "input/byte_reader.h"
+#include "input/byte_readers.h"
 #include "lib/mlrutil.h"
 
 typedef struct _string_byte_reader_state_t {

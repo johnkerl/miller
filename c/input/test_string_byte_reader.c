@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include "lib/minunit.h"
 #include "lib/mlrutil.h"
-#include "containers/lrec.h"
-#include "containers/sllv.h"
-#include "input/lrec_readers.h"
+#include "lib/minunit.h"
+#include "input/byte_readers.h"
 
 #ifdef __TEST_STRING_BYTE_READER_MAIN__
 int tests_run         = 0;
@@ -14,9 +12,30 @@ int assertions_failed = 0;
 
 // ----------------------------------------------------------------
 static char* test_it() {
-	mu_assert_lf(0 == 0);
-	mu_assert_lf(1 == 1);
-	mu_assert_lf(2 == 2);
+	byte_reader_t* pbr = string_byte_reader_alloc();
+
+	int ok = pbr->popen_func(pbr, "");
+	mu_assert_lf(ok == TRUE);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	pbr->pclose_func(pbr);
+
+	ok = pbr->popen_func(pbr, "a");
+	mu_assert_lf(ok == TRUE);
+	mu_assert_lf(pbr->pread_func(pbr) == 'a');
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	pbr->pclose_func(pbr);
+
+	ok = pbr->popen_func(pbr, "abc");
+	mu_assert_lf(ok == TRUE);
+	mu_assert_lf(pbr->pread_func(pbr) == 'a');
+	mu_assert_lf(pbr->pread_func(pbr) == 'b');
+	mu_assert_lf(pbr->pread_func(pbr) == 'c');
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	pbr->pclose_func(pbr);
 
 	return NULL;
 }
