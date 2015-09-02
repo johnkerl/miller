@@ -28,6 +28,11 @@ TOP OF LIST
 * make an updated dependency list, esp. in light of a2x et al.
 * probably its own mlrdoc page ... at least, highlighted in build page
 
+* trie-parse to-do:
+  o make a power-of-two ring buffer for pfr & trie
+  o mlr_memeq or mlr_streq, not cmp. and perhaps ring-buffer aware.
+  o find the crucial inlinables via gprof
+
 * homebrew
 
 * .deb
