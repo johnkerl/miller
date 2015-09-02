@@ -43,10 +43,3 @@ byte_reader_t* string_byte_reader_alloc() {
 void string_byte_reader_free(byte_reader_t* pbr) {
 	free(pbr);
 }
-
-//typedef struct _byte_reader_t {
-//	void*                       pvstate;
-//	byte_reader_open_func_t*    popen_func;
-//	byte_reader_read_func_t*    pprocess_func;
-//	byte_reader_close_func_t*   pclose_func;
-//} byte_reader_t;
