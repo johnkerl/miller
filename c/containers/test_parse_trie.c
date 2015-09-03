@@ -41,7 +41,7 @@ static void test_case(
 
 	printf("buf      = %s\n", buf);
 	printf("rc       = %d\n", rc);
-	printf("stridx   = %d\n", stridx);
+	printf("stridx   = %d (%s)\n", stridx, strings[stridx]);
 	printf("matchlen = %d\n", matchlen);
 
 	*prc       = rc;
@@ -50,124 +50,67 @@ static void test_case(
 }
 
 // ----------------------------------------------------------------
-static char* test_new() {
-	int stridx, matchlen, rc;
-	char* strings[] = {
-		"a"
-	};
-	int num_strings = sizeof(strings) / sizeof(strings[0]);
-	char* buf = "a";
-
-	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
-
-	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == 0);
-	mu_assert_lf(matchlen == 1);
-
-	return 0;
-}
-
-// ----------------------------------------------------------------
 static char* test_simplest() {
-	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "a", 0);
-	parse_trie_print(ptrie);
-
+	char* strings[] = { "a" };
 	char* buf = "a";
-	int stridx = -2;
-	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
-	printf("buf      = %s\n", buf);
-	printf("rc       = %d\n", rc);
-	printf("stridx   = %d\n", stridx);
-	printf("matchlen = %d\n", matchlen);
-	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == 0);
-	mu_assert_lf(matchlen == 1);
+	int expect_rc = TRUE, expect_stridx = 0, expect_matchlen = 1;
 
-	parse_trie_free(ptrie);
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	int stridx, matchlen, rc;
+	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	mu_assert_lf(rc == expect_rc);
+	mu_assert_lf(stridx == expect_stridx);
+	mu_assert_lf(matchlen == expect_matchlen);
 	return 0;
 }
 
 // ----------------------------------------------------------------
 static char* test_disjoint() {
-	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "abc", 0);
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "fg", 1);
-	parse_trie_print(ptrie);
-
+	char* strings[] = { "abc" , "fg" };
 	char* buf = "abcde";
-	int stridx = -2;
-	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
-	printf("buf      = %s\n", buf);
-	printf("rc       = %d\n", rc);
-	printf("stridx   = %d\n", stridx);
-	printf("matchlen = %d\n", matchlen);
-	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == 0);
-	mu_assert_lf(matchlen == 3);
+	int expect_rc = TRUE, expect_stridx = 0, expect_matchlen = 3;
 
-	parse_trie_free(ptrie);
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	int stridx, matchlen, rc;
+	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	mu_assert_lf(rc == expect_rc);
+	mu_assert_lf(stridx == expect_stridx);
+	mu_assert_lf(matchlen == expect_matchlen);
 	return 0;
 }
 
 // ----------------------------------------------------------------
 static char* test_short_long() {
-	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "a", 0);
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "aa", 1);
-	parse_trie_print(ptrie);
-
+	char* strings[] = { "a" , "aa" };
 	char* buf = "aaabc";
-	int stridx = -2;
-	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
-	printf("buf      = %s\n", buf);
-	printf("rc       = %d\n", rc);
-	printf("stridx   = %d\n", stridx);
-	printf("matchlen = %d\n", matchlen);
-	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == 0);
-	mu_assert_lf(matchlen == 3);
+	int expect_rc = TRUE, expect_stridx = 1, expect_matchlen = 2;
 
-	parse_trie_free(ptrie);
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	int stridx, matchlen, rc;
+	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	mu_assert_lf(rc == expect_rc);
+	mu_assert_lf(stridx == expect_stridx);
+	mu_assert_lf(matchlen == expect_matchlen);
 	return 0;
 }
 
 // ----------------------------------------------------------------
 static char* test_long_short() {
-	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "aa", 0);
-	parse_trie_print(ptrie);
-	parse_trie_add_string(ptrie, "a", 1);
-	parse_trie_print(ptrie);
-
+	char* strings[] = { "aa" , "a" };
 	char* buf = "aaabc";
-	int stridx = -2;
-	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
-	printf("buf      = %s\n", buf);
-	printf("rc       = %d\n", rc);
-	printf("stridx   = %d\n", stridx);
-	printf("matchlen = %d\n", matchlen);
-	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == 0);
-	mu_assert_lf(matchlen == 3);
+	int expect_rc = TRUE, expect_stridx = 0, expect_matchlen = 2;
 
-	parse_trie_free(ptrie);
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	int stridx, matchlen, rc;
+	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	mu_assert_lf(rc == expect_rc);
+	mu_assert_lf(stridx == expect_stridx);
+	mu_assert_lf(matchlen == expect_matchlen);
 	return 0;
 }
 
 // ================================================================
 static char* all_tests() {
-	mu_run_test(test_new);
 	mu_run_test(test_simplest);
 	mu_run_test(test_disjoint);
 	mu_run_test(test_short_long);
