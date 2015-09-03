@@ -13,7 +13,62 @@ int assertions_failed = 0;
 static char* sep = "================================================================";
 
 // ----------------------------------------------------------------
-static char * test_simplest() {
+static void test_case(
+	char*  test_name,
+	char** strings,
+	int    num_strings,
+	char*  buf,
+	int*   prc,
+	int*   pstridx,
+	int*   pmatchlen)
+{
+	int stridx, matchlen, rc;
+
+	parse_trie_t* ptrie = parse_trie_alloc();
+	printf("%s %s\n", sep, test_name);
+	parse_trie_print(ptrie);
+	for (stridx = 0; stridx < num_strings; stridx++) {
+		printf("Adding string[%d] = %s\n", stridx, strings[stridx]);
+		parse_trie_add_string(ptrie, strings[stridx], stridx);
+		parse_trie_print(ptrie);
+	}
+
+	stridx = -2;
+	matchlen = -2;
+	rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
+
+	parse_trie_free(ptrie);
+
+	printf("buf      = %s\n", buf);
+	printf("rc       = %d\n", rc);
+	printf("stridx   = %d\n", stridx);
+	printf("matchlen = %d\n", matchlen);
+
+	*prc       = rc;
+	*pstridx   = stridx;
+	*pmatchlen = matchlen;
+}
+
+// ----------------------------------------------------------------
+static char* test_new() {
+	int stridx, matchlen, rc;
+	char* strings[] = {
+		"a"
+	};
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	char* buf = "a";
+
+	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == 0);
+	mu_assert_lf(matchlen == 1);
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char* test_simplest() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "a", 0);
@@ -36,7 +91,7 @@ static char * test_simplest() {
 }
 
 // ----------------------------------------------------------------
-static char * test_disjoint() {
+static char* test_disjoint() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "abc", 0);
@@ -61,7 +116,7 @@ static char * test_disjoint() {
 }
 
 // ----------------------------------------------------------------
-static char * test_short_long() {
+static char* test_short_long() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "a", 0);
@@ -86,7 +141,7 @@ static char * test_short_long() {
 }
 
 // ----------------------------------------------------------------
-static char * test_long_short() {
+static char* test_long_short() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "aa", 0);
@@ -111,17 +166,17 @@ static char * test_long_short() {
 }
 
 // ================================================================
-static char * all_tests() {
-	printf("%s\n", sep); mu_run_test(test_simplest);
-	printf("%s\n", sep); mu_run_test(test_disjoint);
-	printf("%s\n", sep); mu_run_test(test_short_long);
-	printf("%s\n", sep); mu_run_test(test_long_short);
-	printf("%s\n", sep);
+static char* all_tests() {
+	mu_run_test(test_new);
+	mu_run_test(test_simplest);
+	mu_run_test(test_disjoint);
+	mu_run_test(test_short_long);
+	mu_run_test(test_long_short);
 	return 0;
 }
 
-int main(int argc, char **argv) {
-	char *result = all_tests();
+int main(int argc, char** argv) {
+	char* result = all_tests();
 	printf("\n");
 	if (result != 0) {
 		//printf("%s\n", result);
