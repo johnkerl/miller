@@ -100,18 +100,24 @@ static void parse_trie_add_string_aux(parse_trie_node_t* pnode, char* string, in
 int parse_trie_match(parse_trie_t* ptrie, char* buf, int buflen, int* pstridx, int* pmatchlen) {
 	parse_trie_node_t* pnode = ptrie->proot;
 	parse_trie_node_t* pnext;
+	parse_trie_node_t* pterm = NULL;
 	int i;
 	for (i = 0; i < buflen; i++) {
 		char c = buf[i];
 		pnext = pnode->pnexts[(unsigned) c];
 		if (pnext == NULL)
-			return FALSE;
+			break;
 		if (pnext->strlen > 0) {
-			*pstridx   = pnext->stridx;
-			*pmatchlen = pnext->strlen;
-			return TRUE;
+			pterm = pnext;
+			break;
 		}
 		pnode = pnext;
 	}
-	return FALSE;
+	if (pterm == NULL) {
+		return FALSE;
+	} else {
+		*pstridx   = pterm->stridx;
+		*pmatchlen = pterm->strlen;
+		return TRUE;
+	}
 }

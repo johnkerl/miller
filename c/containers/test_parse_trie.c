@@ -88,8 +88,11 @@ static char * test_short_long() {
 // ----------------------------------------------------------------
 static char * test_long_short() {
 	parse_trie_t* ptrie = parse_trie_alloc();
+	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "aa", 0);
+	parse_trie_print(ptrie);
 	parse_trie_add_string(ptrie, "a", 1);
+	parse_trie_print(ptrie);
 
 	char* buf = "aaabc";
 	int stridx = -2;
