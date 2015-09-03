@@ -20,7 +20,7 @@ typedef struct _parse_trie_t {
 parse_trie_t* parse_trie_alloc();
 void parse_trie_free(parse_trie_t* ptrie);
 void parse_trie_print(parse_trie_t* ptrie);
-void parse_trie_add_string(parse_trie_t* ptrie, char* string);
+void parse_trie_add_string(parse_trie_t* ptrie, char* string, int stridx);
 int parse_trie_match(parse_trie_t* ptrie, char* buf, int buflen, int* pstridx, int* pmatchlen);
 
 #endif // PARSE_TRIE_H

@@ -11,15 +11,38 @@ int assertions_run    = 0;
 int assertions_failed = 0;
 
 // ----------------------------------------------------------------
-static char * test_disjoint() {
+static char * test_simplest() {
 	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_add_string(ptrie, "abc");
-	parse_trie_add_string(ptrie, "fg");
+	parse_trie_print(ptrie);
+	parse_trie_add_string(ptrie, "a", 0);
 	parse_trie_print(ptrie);
 
 	int stridx = -2;
 	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, "abcde", 2, &stridx, &matchlen);
+	int rc = parse_trie_match(ptrie, "a", 1, &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == 0);
+	mu_assert_lf(matchlen == 1);
+
+	parse_trie_free(ptrie);
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char * test_disjoint() {
+	parse_trie_t* ptrie = parse_trie_alloc();
+	parse_trie_print(ptrie);
+	parse_trie_add_string(ptrie, "abc", 0);
+	parse_trie_print(ptrie);
+	parse_trie_add_string(ptrie, "fg", 1);
+	parse_trie_print(ptrie);
+
+	int stridx = -2;
+	int matchlen = -2;
+	int rc = parse_trie_match(ptrie, "abcde", 5, &stridx, &matchlen);
+	printf("rc       = %d\n", rc);
+	printf("stridx   = %d\n", stridx);
+	printf("matchlen = %d\n", matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == 0);
 	mu_assert_lf(matchlen == 3);
@@ -31,12 +54,12 @@ static char * test_disjoint() {
 // ----------------------------------------------------------------
 static char * test_short_long() {
 	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_add_string(ptrie, "a");
-	parse_trie_add_string(ptrie, "aa");
+	parse_trie_add_string(ptrie, "a", 0);
+	parse_trie_add_string(ptrie, "aa", 1);
 
 	int stridx = -2;
 	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, "aaabc", 2, &stridx, &matchlen);
+	int rc = parse_trie_match(ptrie, "aaabc", 5, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == 0);
 	mu_assert_lf(matchlen == 3);
@@ -48,12 +71,12 @@ static char * test_short_long() {
 // ----------------------------------------------------------------
 static char * test_long_short() {
 	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_add_string(ptrie, "aa");
-	parse_trie_add_string(ptrie, "a");
+	parse_trie_add_string(ptrie, "aa", 0);
+	parse_trie_add_string(ptrie, "a", 1);
 
 	int stridx = -2;
 	int matchlen = -2;
-	int rc = parse_trie_match(ptrie, "aaabc", 2, &stridx, &matchlen);
+	int rc = parse_trie_match(ptrie, "aaabc", 5, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == 0);
 	mu_assert_lf(matchlen == 3);
@@ -64,6 +87,7 @@ static char * test_long_short() {
 
 // ================================================================
 static char * all_tests() {
+	mu_run_test(test_simplest);
 	mu_run_test(test_disjoint);
 	mu_run_test(test_short_long);
 	mu_run_test(test_long_short);
