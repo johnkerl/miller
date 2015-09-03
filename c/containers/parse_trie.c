@@ -97,6 +97,9 @@ static void parse_trie_add_string_aux(parse_trie_node_t* pnode, char* string, in
 // * return value is TRUE
 // * stridx is 1 since longest match is "aa"
 // * matchlen is 2 since "aa" has length 2
+
+// xxx cmt longest-prefix match
+
 int parse_trie_match(parse_trie_t* ptrie, char* buf, int buflen, int* pstridx, int* pmatchlen) {
 	parse_trie_node_t* pnode = ptrie->proot;
 	parse_trie_node_t* pnext;
@@ -109,7 +112,6 @@ int parse_trie_match(parse_trie_t* ptrie, char* buf, int buflen, int* pstridx, i
 			break;
 		if (pnext->strlen > 0) {
 			pterm = pnext;
-			break;
 		}
 		pnode = pnext;
 	}
