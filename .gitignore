@@ -6,6 +6,7 @@ mlr-unit-tester
 test-mlrutil
 test-string-builder
 test-string-byte-reader
+test-parse-trie
 test-lrec
 test-join-bucket-keeper
 termcvt
