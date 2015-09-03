@@ -58,12 +58,15 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 	char* key   = p;
 	char* value = p;
 
+	int saw_ps = FALSE;
+
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
 			break;
 		} else if (*p == ifs) {
+			saw_ps = FALSE;
 			*p = 0;
 
 			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
@@ -89,10 +92,11 @@ lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char i
 			}
 			key = p;
 			value = p;
-		} else if (*p == ips) {
+		} else if (*p == ips && !saw_ps) {
 			*p = 0;
 			p++;
 			value = p;
+			saw_ps = TRUE;
 		} else {
 			p++;
 		}

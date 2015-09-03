@@ -2015,6 +2015,20 @@ a=1,b=2,c=3
 
 
 ================================================================
+DOUBLE PS
+
+./test/../mlr --no-mmap --opprint cat ./test/input/double-ps.dkvp
+a   b    c
+pan wy.e 3
+pan wy=e 3
+
+./test/../mlr --mmap --opprint cat ./test/input/double-ps.dkvp
+a   b    c
+pan wy.e 3
+pan wy=e 3
+
+
+================================================================
 MISSING FINAL LF
 
 ./test/../mlr --no-mmap --csvlite cat ./test/input/truncated.csv

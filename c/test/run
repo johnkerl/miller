@@ -383,6 +383,12 @@ run_command $mlr --mmap    --icsvlite --odkvp --ifs space --repifs cat $indir/sp
 run_command $mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
 
 # ================================================================
+announce DOUBLE PS
+
+run_command $mlr --no-mmap --opprint cat $indir/double-ps.dkvp
+run_command $mlr    --mmap --opprint cat $indir/double-ps.dkvp
+
+# ================================================================
 announce MISSING FINAL LF
 
 run_command $mlr --no-mmap --csvlite cat $indir/truncated.csv

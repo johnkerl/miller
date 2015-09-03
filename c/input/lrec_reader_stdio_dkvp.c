@@ -83,8 +83,11 @@ lrec_t* lrec_parse_stdio_dkvp(char* line, char ifs, char ips, int allow_repeat_i
 	char* key   = p;
 	char* value = p;
 
+	int saw_ps = FALSE;
+
 	for ( ; *p; ) {
 		if (*p == ifs) {
+			saw_ps = FALSE;
 			*p = 0;
 
 			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
@@ -110,10 +113,11 @@ lrec_t* lrec_parse_stdio_dkvp(char* line, char ifs, char ips, int allow_repeat_i
 			}
 			key = p;
 			value = p;
-		} else if (*p == ips) {
+		} else if (*p == ips && !saw_ps) {
 			*p = 0;
 			p++;
 			value = p;
+			saw_ps = TRUE;
 		} else {
 			p++;
 		}
