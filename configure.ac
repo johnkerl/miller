@@ -22,5 +22,6 @@ AC_CONFIG_FILES([Makefile
 		c/mapping/Makefile
 		c/output/Makefile
 		c/stream/Makefile
-		c/Makefile])
+		c/Makefile
+		doc/Makefile])
 AC_OUTPUT
