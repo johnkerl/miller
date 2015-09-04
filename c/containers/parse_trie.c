@@ -50,15 +50,8 @@ static void parse_trie_print_aux(parse_trie_node_t* pnode, int depth) {
 		pnode->strlen);
 	for (int i = 0; i < 256; i++) {
 		parse_trie_node_t* pnext = pnode->pnexts[i];
-		if (pnext != NULL) {
+		if (pnext != NULL)
 			parse_trie_print_aux(pnext, depth+1);
-		} else {
-			//printf("c=%c[%02x],stridx=%d,strlen=%d\n",
-				//isprint((unsigned char)pnode->c) ? pnode->c : '?',
-				//(unsigned)pnode->c,
-				//pnode->stridx,
-				//pnode->strlen);
-		}
 	}
 }
 
@@ -76,13 +69,13 @@ static void parse_trie_add_string_aux(parse_trie_node_t* pnode, char* string, in
 		pnode->stridx = stridx;
 		pnode->strlen = len;
 	} else {
-		parse_trie_node_t* pnext = pnode->pnexts[(unsigned)c];
+		parse_trie_node_t* pnext = pnode->pnexts[(unsigned char)c];
 		if (pnext == NULL) {
 			pnext = parse_trie_node_alloc(c);
 			pnext->c = c;
 			pnext->stridx = -1;
 			pnext->strlen = -1;
-			pnode->pnexts[(unsigned)c] = pnext;
+			pnode->pnexts[(unsigned char)c] = pnext;
 		}
 		parse_trie_add_string_aux(pnext, &string[1], stridx, len);
 	}
@@ -107,7 +100,7 @@ int parse_trie_match(parse_trie_t* ptrie, char* buf, int buflen, int* pstridx, i
 	int i;
 	for (i = 0; i < buflen; i++) {
 		char c = buf[i];
-		pnext = pnode->pnexts[(unsigned) c];
+		pnext = pnode->pnexts[(unsigned char) c];
 		if (pnext == NULL)
 			break;
 		if (pnext->strlen > 0) {

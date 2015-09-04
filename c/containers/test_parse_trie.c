@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "lib/minunit.h"
 #include "lib/mlrutil.h"
 #include "containers/parse_trie.h"
@@ -28,7 +29,7 @@ static void test_case(
 	printf("%s %s\n", sep, test_name);
 	parse_trie_print(ptrie);
 	for (stridx = 0; stridx < num_strings; stridx++) {
-		printf("Adding string[%d] = %s\n", stridx, strings[stridx]);
+		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
 		parse_trie_add_string(ptrie, strings[stridx], stridx);
 		parse_trie_print(ptrie);
 	}
@@ -72,7 +73,7 @@ static char* test_disjoint() {
 
 	int num_strings = sizeof(strings) / sizeof(strings[0]);
 	int stridx, matchlen, rc;
-	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	test_case("disjoint", strings, num_strings, buf, &rc, &stridx, &matchlen);
 	mu_assert_lf(rc == expect_rc);
 	mu_assert_lf(stridx == expect_stridx);
 	mu_assert_lf(matchlen == expect_matchlen);
@@ -87,7 +88,7 @@ static char* test_short_long() {
 
 	int num_strings = sizeof(strings) / sizeof(strings[0]);
 	int stridx, matchlen, rc;
-	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	test_case("short_long", strings, num_strings, buf, &rc, &stridx, &matchlen);
 	mu_assert_lf(rc == expect_rc);
 	mu_assert_lf(stridx == expect_stridx);
 	mu_assert_lf(matchlen == expect_matchlen);
@@ -102,10 +103,138 @@ static char* test_long_short() {
 
 	int num_strings = sizeof(strings) / sizeof(strings[0]);
 	int stridx, matchlen, rc;
-	test_case("simplest", strings, num_strings, buf, &rc, &stridx, &matchlen);
+	test_case("long_short", strings, num_strings, buf, &rc, &stridx, &matchlen);
 	mu_assert_lf(rc == expect_rc);
 	mu_assert_lf(stridx == expect_stridx);
 	mu_assert_lf(matchlen == expect_matchlen);
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char* test_dkvp() {
+	char* test_name = "dkvp";
+	char* strings[] = { "=" , ",", "\r\n", "\xff" };
+	const int PS_TOKEN  = 0;
+	const int FS_TOKEN  = 1;
+	const int RS_TOKEN  = 2;
+	const int EOF_TOKEN = 3;
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	char* buf =
+		"abc=123,def=456\r\n"
+		"ghi=789\xff";
+	char* p = buf;
+
+	printf("%s %s\n", sep, test_name);
+	int stridx, matchlen, rc;
+
+	parse_trie_t* ptrie = parse_trie_alloc();
+	parse_trie_print(ptrie);
+	for (stridx = 0; stridx < num_strings; stridx++) {
+		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
+		parse_trie_add_string(ptrie, strings[stridx], stridx);
+	}
+	parse_trie_print(ptrie);
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == PS_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	p += matchlen;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == FS_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[FS_TOKEN]));
+	p += matchlen;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == PS_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	p += matchlen;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == RS_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[RS_TOKEN]));
+	p += matchlen;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == PS_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	p += matchlen;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+
+	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	mu_assert_lf(rc == TRUE);
+	mu_assert_lf(stridx == EOF_TOKEN);
+	mu_assert_lf(matchlen == strlen(strings[EOF_TOKEN]));
+	p += matchlen;
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char* show_it() {
+	char* test_name = "show_it";
+	char* strings[] = { "=" , ",", "\r\n", "\xff" };
+	const int EOF_TOKEN = 3;
+	int num_strings = sizeof(strings) / sizeof(strings[0]);
+	char* buf =
+		"abc=123,def=456\r\n"
+		"ghi=789\xff";
+	char* p = buf;
+
+	printf("%s %s\n", sep, test_name);
+	int stridx, matchlen, rc;
+
+	parse_trie_t* ptrie = parse_trie_alloc();
+	parse_trie_print(ptrie);
+	for (stridx = 0; stridx < num_strings; stridx++) {
+		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
+		parse_trie_add_string(ptrie, strings[stridx], stridx);
+	}
+	parse_trie_print(ptrie);
+
+	while (TRUE) {
+		rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+		if (rc) {
+			printf("match token %d (%s)\n", stridx, strings[stridx]);
+			p += matchlen;
+			if (stridx == EOF_TOKEN) {
+				break;
+			}
+		} else {
+			char c = *p;
+			printf("c %c[%02x]\n", isprint((unsigned char)c) ? c : '?', (unsigned)c);
+			p++;
+		}
+	}
+
 	return 0;
 }
 
@@ -115,6 +244,8 @@ static char* all_tests() {
 	mu_run_test(test_disjoint);
 	mu_run_test(test_short_long);
 	mu_run_test(test_long_short);
+	mu_run_test(test_dkvp);
+	mu_run_test(show_it);
 	return 0;
 }
 
