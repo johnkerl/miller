@@ -100,27 +100,6 @@ regtest-copy:
 	cp test/output/out test/expected
 
 # ----------------------------------------------------------------
-# Unit-test executables
-
-test-string-byte-reader: .always
-	$(CCDEBUG) -D__TEST_STRING_BYTE_READER_MAIN__ $(TEST_STRING_BYTE_READER_SRCS) -o test-string-byte-reader
-
-test-lrec: .always
-	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
-
-test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
-
-test-string-builder: .always
-	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/test_string_builder.c -o test-string-builder
-
-test-parse-trie: .always
-	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c containers/test_parse_trie.c -o test-parse-trie
-
-test-join-bucket-keeper: .always
-	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
-
-# ----------------------------------------------------------------
 # Standalone mains
 # TODO: replace the interesting content with unit tests; jettison the rest
 

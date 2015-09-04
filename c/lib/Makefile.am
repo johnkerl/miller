@@ -12,6 +12,16 @@ libmlr_la_SOURCES=	minunit.h \
 			mtrand.h \
 			string_builder.c \
 			string_builder.h
-libmlr_la_CPPFLAGS=	-I${srcdir}/../
-libmlr_la_CFLAGS=	-std=gnu99
-#noinst_PROGRAMS=	test_mlrutil test_string_builder
+
+TESTS=		$(check_PROGRAMS)
+check_PROGRAMS=	test_mlrutil test_string_builder
+
+test_mlrutil_LDADD=		libmlr.la
+test_mlrutil_CPPFLAGS=		-D__TEST_MLRUTIL_MAIN__ ${AM_CPPFLAGS}
+
+test_string_builder_LDADD=	libmlr.la
+test_string_builder_CPPFLAGS=	-D__TEST_STRING_BUILDER_MAIN__ ${AM_CPPFLAGS}
+
+
+AM_CPPFLAGS=	-I${srcdir}/../
+AM_CFLAGS=	-std=gnu99

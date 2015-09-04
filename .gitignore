@@ -54,5 +54,7 @@ autotools/
 stamp-h1
 test_join_bucket_keeper
 test_lrec
+test_mlrutil
 test_parse_trie
+test_string_builder
 test_string_byte_reader
