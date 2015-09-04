@@ -8,6 +8,7 @@ typedef struct _string_byte_reader_state_t {
 	char* pend;
 } string_byte_reader_state_t;
 
+// ----------------------------------------------------------------
 static int string_byte_reader_open_func(struct _byte_reader_t* pbr, char* backing) {
 	string_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(string_byte_reader_state_t));
 	pstate->backing = backing;
@@ -27,8 +28,10 @@ static int string_byte_reader_read_func(struct _byte_reader_t* pbr) {
 }
 
 static void string_byte_reader_close_func(struct _byte_reader_t* pbr) {
+	pbr->pvstate = NULL;
 }
 
+// ----------------------------------------------------------------
 byte_reader_t* string_byte_reader_alloc() {
 	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
 
