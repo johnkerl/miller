@@ -38,7 +38,8 @@ libcontainers_la_LIBADD=	\
 			../lib/libmlr.la \
 			../mapping/libmapping.la
 
-noinst_PROGRAMS=		test_join_bucket_keeper test_lrec test_parse_trie
+TESTS=			$(check_PROGRAMS)
+check_PROGRAMS=		test_join_bucket_keeper test_lrec test_parse_trie
 
 test_join_bucket_keeper_LDADD=		../input/libinput.la \
 					../mapping/libmapping.la \

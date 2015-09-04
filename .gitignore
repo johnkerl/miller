@@ -34,6 +34,8 @@ c/dsls/fdm
 tags
 *.la
 *.lo
+*.log
+*.trs
 *~
 .deps/
 .libs/
@@ -52,3 +54,5 @@ autotools/
 stamp-h1
 test_join_bucket_keeper
 test_lrec
+test_parse_trie
+test_string_byte_reader

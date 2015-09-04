@@ -25,8 +25,8 @@ libinput_la_LIBADD=	../lib/libmlr.la
 libinput_la_CPPFLAGS=	-I${srcdir}/../
 libinput_la_CFLAGS=	-std=gnu99
 
-
-noinst_PROGRAMS=	test_string_byte_reader
+TESTS=			$(check_PROGRAMS)
+check_PROGRAMS=		test_string_byte_reader
 
 test_string_byte_reader_LDADD=		libinput.la \
 					../lib/libmlr.la
