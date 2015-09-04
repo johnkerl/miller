@@ -60,3 +60,4 @@ test_string_builder
 test_string_byte_reader
 c/dsls/lemon_prepared
 doc/miller.1
+mlr-[0-9.]*.tar.*
