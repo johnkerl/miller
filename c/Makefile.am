@@ -3,7 +3,7 @@ SUBDIRS=	lib cli stream input mapping output containers dsls
 AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-Wall -Werror -std=gnu99 -O3
 bin_PROGRAMS=	mlr
-mlr_SOURCES=	mlrmain.c
+mlr_SOURCES=	mlrmain.c mlrvers.h
 mlr_LDADD=	\
 		cli/libcli.la \
 		containers/libcontainers.la \

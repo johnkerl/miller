@@ -1,5 +1,7 @@
 noinst_LTLIBRARIES=	libinput.la
 libinput_la_SOURCES=	\
+			byte_reader.h \
+			byte_readers.h \
 			file_reader_mmap.c \
 			file_reader_mmap.h \
 			file_reader_stdio.c \
@@ -19,8 +21,7 @@ libinput_la_SOURCES=	\
 			lrec_readers.h \
 			peek_file_reader.c \
 			peek_file_reader.h \
-			string_byte_reader.c \
-			string_byte_reader.h
+			string_byte_reader.c
 libinput_la_LIBADD=	../lib/libmlr.la
 libinput_la_CPPFLAGS=	-I${srcdir}/../
 libinput_la_CFLAGS=	-std=gnu99

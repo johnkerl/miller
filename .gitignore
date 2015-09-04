@@ -58,3 +58,4 @@ test_mlrutil
 test_parse_trie
 test_string_builder
 test_string_byte_reader
+c/dsls/lemon_prepared
