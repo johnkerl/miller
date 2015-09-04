@@ -20,14 +20,15 @@ peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
 
 	// Pre-read one char into the peekbuf so that we can say pfr_at_eof
 	// right away on the first call on an empty file.
-	pfr->peekbuf[pfr->npeeked++] = fgetc(pfr->fp); // maybe EOF
+	// getc_unlocked() is appropriate since Miller is single-threaded.
+	pfr->peekbuf[pfr->npeeked++] = getc_unlocked(pfr->fp); // maybe EOF
 
 	return pfr;
 }
 
 // ----------------------------------------------------------------
 int pfr_at_eof(peek_file_reader_t* pfr) {
-	return pfr->npeeked == 1 && pfr->peekbuf[0] == EOF;
+	return pfr->npeeked >= 1 && pfr->peekbuf[0] == EOF;
 }
 
 // ----------------------------------------------------------------
@@ -35,7 +36,7 @@ int pfr_at_eof(peek_file_reader_t* pfr) {
 int pfr_next_is(peek_file_reader_t* pfr, char* string, int len) {
 	// xxx abend on len > peekbuflen
 	while (pfr->npeeked < len) {
-		char c = fgetc(pfr->fp); // maybe EOF
+		char c = getc_unlocked(pfr->fp); // maybe EOF
 		pfr->peekbuf[pfr->npeeked++] = c;
 	}
 	// xxx make a memeq, inlined.
@@ -47,7 +48,7 @@ char pfr_read_char(peek_file_reader_t* pfr) {
 	if (pfr->npeeked == 1 && pfr->peekbuf[0] == EOF) {
 		return EOF;
 	} else if (pfr->npeeked == 0) {
-		pfr->peekbuf[0] = fgetc(pfr->fp); // maybe EOF
+		pfr->peekbuf[0] = getc_unlocked(pfr->fp); // maybe EOF
 		pfr->npeeked = 1;
 		return pfr->peekbuf[0];
 	} else {
@@ -60,11 +61,9 @@ char pfr_read_char(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-int pfr_advance_past(peek_file_reader_t* pfr, char* string) {
-	for (char* p = string; *p; p++)
-		if (pfr_read_char(pfr) != *p)
-			return FALSE;
-	return TRUE;
+void pfr_advance_by(peek_file_reader_t* pfr, int len) {
+	for (int i = 0; i < len; i++)
+		pfr_read_char(pfr);
 }
 
 // ----------------------------------------------------------------

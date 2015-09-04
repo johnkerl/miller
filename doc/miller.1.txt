@@ -1,0 +1,482 @@
+MILLER(1)
+=========
+
+NAME
+----
+
+miller - sed, awk, cut, join, and sort for name-indexed data such as CSV
+
+SYNOPSIS
+--------
+
+mlr [I/O options] {verb} [verb-dependent options ...] {file names}
+
+
+DESCRIPTION
+-----------
+
+With Miller you get to use named fields without needing to count positional
+indices. This is something the Unix toolkit always could have done, and
+arguably always should have done. It operates on key-value-pair data while the
+familiar Unix tools operate on integer-indexed fields: if the natural data
+structure for the latter is the array, then Miller’s natural data structure is
+the insertion-ordered hash map. This encompasses a variety of data formats,
+including but not limited to the familiar CSV. (Miller can handle
+positionally-indexed data as a special case.)
+
+
+EXAMPLES
+--------
+
+    % mlr --csv cut -f hostname,uptime mydata.csv
+    % mlr --csv sort -f hostname,uptime mydata.csv
+    % mlr --csv put '$z = $x + 2.7*$y' mydata.csv
+    % mlr --csv filter '$status != "down"' mydata.csv
+
+OPTIONS
+-------
+
+In the following option flags, the version with "i" designates the input
+stream, "o" the output stream, and the version without prefix sets the option
+for both input and output stream. For example: +--irs+ sets the input record
+separator, +--ors+ the output record separator, and +--rs+ sets both the input
+and output separator to the given value.
+
+SEPARATOR
+~~~~~~~~~
+
+--rs, --irs, --ors::
+    Record separators, defaulting to newline
+--fs, --ifs, --ofs, --repifs::
+    Field  separators, defaulting to ","
+--ps, --ips, --ops::
+    Pair   separators, defaulting to "="
+
+DATA-FORMAT
+~~~~~~~~~~~
+
+--dkvp, --idkvp, --odkvp::
+    Delimited key-value pairs, e.g "a=1,b=2" (default)
+--nidx, --inidx, --onidx::
+    Implicitly-integer-indexed fields (Unix-toolkit style)
+--csv, --icsv, --ocsv::
+    Comma-separated value (or tab-separated with --fs tab, etc.)
+--pprint, --ipprint, --opprint, --right::
+    Pretty-printed tabular (produces no output until all input is in)
+--pprint, --ipprint, --opprint, --right::
+    Pretty-printed tabular (produces no output until all input is in)
+
++-p+ is a keystroke-saver for +--nidx --fs space --repifs+
+
+NUMERICAL FORMAT
+~~~~~~~~~~~~~~~~
+
+--ofmt {format}::
+    Sets the numerical format given a printf-style format string.
+
+OTHER
+~~~~~
+
+--seed {n}::
+    Seeds the random number generator used for put/filter +urand()+ with a
+    number n of the form 12345678 or 0xcafefeed.
+
+
+VERBS
+~~~~~
+
+cat
+^^^
+
+Usage: +mlr cat+
+
+Passes input records directly to output. Most useful for format conversion.
+
+check
+^^^^^
+
+Usage: +mlr check+
+
+Consumes records without printing any output. Useful for doing a
+well-formatted check on input data.
+
+count-distinct
+^^^^^^^^^^^^^^
+
+Usage: +mlr count-distinct [options]+
+
+Prints number of records having distinct values for specified field names.
+Same as +uniq -c+.
+
+-f {a,b,c}::
+    Field names for distinct count.
+
+cut
+^^^
+
+Usage: +mlr cut [options]+
+
+Passes through input records with specified fields included/excluded.
+
+-f {a,b,c}::
+    Field names to include for cut.
+-o::
+    Retain fields in the order specified here in the argument list.
+    Default is to retain them in the order found in the input data.
+-x|--complement::
+    Exclude, rather that include, field names specified by -f.
+
+filter
+^^^^^^
+
+Usage: +mlr filter [-v] {expression}+
+
+Prints records for which {expression} evaluates to true.  With -v, first
+prints the AST (abstract syntax tree) for the expression, which gives full
+transparency on the precedence and associativity rules of Miller's grammar.
+Please use a dollar sign for field names and double-quotes for string
+literals.  Miller built-in variables are +NF+, +NR+, +FNR+, +FILENUM+,
++FILENAME+, +PI+, +E+.
+
+Examples:
+
+    mlr filter 'log10($count) > 4.0'
+    mlr filter 'FNR == 2          (second record in each file)'
+    mlr filter 'urand() < 0.001'  (subsampling)
+    mlr filter '$color != "blue" && $value > 4.2'
+    mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
+
+Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
+
+group-by
+^^^^^^^^
+
+Usage: +mlr group-by {comma-separated field names}+
+
+Outputs records in batches having identical values at specified field names.
+
+group-like
+^^^^^^^^^^
+
+Usage: +mlr group-like+
+
+Outputs records in batches having identical field names.
+
+having-fields
+^^^^^^^^^^^^^
+
+Usage: +mlr having-fields [options]+
+
+Conditionally passes through records depending on each record's field names.
+
+Options:
+
+--at-least {a,b,c}
+--which-are {a,b,c}
+--at-most {a,b,c}
+
+head
+^^^^
+
+Usage: +mlr head [options]+
+
+Passes through the first n records, optionally by category.
+
+Options:
+
+-n {count}::
+    Head count to print; default 10
+-g {a,b,c}::
+    Optional group-by-field names for head counts
+
+histogram
+^^^^^^^^^
+
+Usage: +mlr histogram [options]+
+
+Just a histogram. Input values < lo or > hi are not counted.
+
+Options:
+
+-f {a,b,c}::
+    Value-field names for histogram counts
+--lo {lo}::
+    Histogram low value
+--hi {hi}::
+    Histogram high value
+--nbins {n}::
+    Number of histogram bins
+
+join
+^^^^
+
+Usage: +mlr join [options]+
+
+Joins records from specified left file name with records from all file names
+at the end of the Miller argument list.  Functionality is essentially the same
+as the system "join" command, but for record streams.
+
+Options:
+
+  -f {left file name}
+  -j {a,b,c}   Comma-separated join-field names for output
+  -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.
+  -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.
+  --lp {text}  Additional prefix for non-join output field names from the left file
+  --rp {text}  Additional prefix for non-join output field names from the right file(s)
+  --np         Do not emit paired records
+  --ul         Emit unpaired records from the left file
+  --ur         Emit unpaired records from the right file(s)
+  -u           Enable unsorted input. In this case, the entire left file will be loaded into memory.
+               Without -u, records must be sorted lexically by their join-field names, else not all
+               records will be paired.
+
+File-format options default to those for the right file names on the Miller
+argument list, but may be overridden for the left file as follows. Please see
+the main "mlr --help" for more information on syntax for these arguments.
+
+  -i {one of csv,dkvp,nidx,pprint,xtab}
+  --irs {record-separator character}
+  --ifs {field-separator character}
+  --ips {pair-separator character}
+  --repifs
+  --repips
+  --use-mmap
+  --no-mmap
+
+Please see http://johnkerl.org/miller/doc/reference.html for more information
+including examples.
+
+label
+^^^^^
+
+Usage: +mlr label {new1,new2,new3,...}+
+
+Given n comma-separated names, renames the first n fields of each record to
+have the respective name. (Fields past the nth are left with their original
+names.) Particularly useful with --inidx, to give useful names to otherwise
+integer-indexed fields.
+
+put
+^^^
+
+Usage: +mlr put [-v] {expression}+
+
+Adds/updates specified field(s).
+
+With +-v+, first prints the AST (abstract syntax tree) for the expression,
+which gives full transparency on the precedence and associativity rules of
+Miller's grammar.  Please use a dollar sign for field names and double-quotes
+for string literals.  Miller built-in variables are +NF+, +NR+, +FNR+,
++FILENUM+, +FILENAME+, +PI+, +E+.  Multiple assignments may be separated with
+a semicolon.
+
+Examples:
+
+    mlr put '$y = log10($x); $z = sqrt($y)'
+    mlr put '$filename = FILENAME'
+    mlr put '$colored_shape = $color . "_" . $shape'
+    mlr put '$y = cos($theta); $z = atan2($y, $x)'
+
+Please see http://johnkerl.org/miller/doc/reference.html for more information
+including function list.
+
+regularize
+^^^^^^^^^^
+
+Usage: +mlr regularize+
+
+For records seen earlier in the data stream with same field names in a different order,
+outputs them with field names in the previously encountered order.
+
+Example:
+
+input records          a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
+output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+
+rename
+^^^^^^
+
+Usage: +mlr rename {old1,new1,old2,new2,...}+
+
+Renames specified fields.
+
+reorder
+^^^^^^^
+
+Usage: +mlr reorder [options]+
+
+Options:
+
+-f {a,b,c}::
+    Field names to reorder.
+-e::
+    Put specified field names at record end: default is to put at record start.
+
+Examples:
+
+    mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
+    mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+
+sort
+^^^^
+
+Usage: +mlr sort {flags}+
+
+Sorts records primarily by the first specified field, secondarily by the
+second field, and so on.
+
+Flags:
+
+-f  {comma-separated field names}::
+    Lexical ascending
+-n  {comma-separated field names}::
+    Numerical ascending; nulls sort last
+-nf {comma-separated field names}::
+    Numerical ascending; nulls sort last
+-r  {comma-separated field names}::
+    Lexical descending
+-nr {comma-separated field names}::
+    Numerical descending; nulls sort first
+
+Example:
+
+    mlr sort -f a,b -nr x,y,z
+
+which is the same as:
+
+    mlr sort -f a -f b -nr x -nr y -nr z
+
+stats1
+^^^^^^
+
+Usage: +mlr stats1 [options]+
+
+-a {sum,count,...}::
+    Names of accumulators: +p10+, +p25.2+, +p50+, +p98+, +p100+, etc. and/or 
+    one or more of: +count+, +mode+, +sum+, +mean+, +stddev+, +var+, +meaneb+,
+    +min+, +max+.
+-f {a,b,c}::
+    Value-field names on which to compute statistics
+-g {d,e,f}::
+    Optional group-by-field names
+
+Examples:
+
+    mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
+    mlr stats1 -a count,mode -f size
+    mlr stats1 -a count,mode -f size -g shape
+
+Notes:
+
+* p50 is a synonym for median.
+* min and max output the same results as p0 and p100, respectively, but use less memory.
+* count and mode allow text input; the rest require numeric input. In particular, 1 and 1.0
+  are distinct text for count and mode.
+* When there are mode ties, the first-encountered datum wins.
+
+stats2
+^^^^^^
+
+Usage: +mlr stats2 [options]+
+
+-a {linreg-ols,corr,...}::
+    Names of accumulators: one or more of +linreg-pca+, +linreg-ols+, +r2+,
+    +corr+, +cov+, +covx+. +r2+ is a quality metric for +linreg-ols+; 
+    +linrec-pca+ outputs its own quality metric.
+-f {a,b,c,d}::
+    Value-field name-pairs on which to compute statistics. There must be an 
+    even number of names.
+-g {e,f,g}::
+    Optional group-by-field names.
+-v::
+    Print additional output for +linreg-pca+.
+
+Examples:
+
+    mlr stats2 -a linreg-pca -f x,y
+    mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
+    mlr stats2 -a corr -f x,y
+
+step
+^^^^
+
+Usage: +mlr step [options]+
+
+Computes values dependent on the previous record, optionally grouped by
+category.
+
+-a {delta,rsum,...}::
+    Names of steppers: one or more of delta rsum counter
+-f {a,b,c}::
+    Value-field names on which to compute statistics
+-g {d,e,f}::
+    Group-by-field names
+
+tac
+^^^
+
+Usage: +mlr tac+
+
+Prints records in reverse order from the order in which they were encountered.
+
+tail
+^^^^
+
+Usage: +mlr tail [options]+
+
+Passes through the last n records, optionally by category.
+
+-n {count}::
+    Tail count to print; default 10
+-g {a,b,c}::
+    Optional group-by-field names for tail counts
+
+top
+^^^
+
+Usage: +mlr top [options]+
+
+Prints the n records with smallest/largest values at specified fields,
+optionally by category.
+
+-f {a,b,c}::
+    Value-field names for top counts
+-g {d,e,f}::
+    Optional group-by-field names for top counts
+-n {count}::
+    How many records to print per category; default 1
+-a::
+    Print all fields for top-value records; default is to print only 
+    value and group-by fields.
+--min::
+    Print top smallest values; default is top largest values
+
+uniq
+^^^^
+
+Usage: +mlr uniq [options]+
+
+Prints distinct values for specified field names. With -c, same as
+count-distinct.
+
+-g {d,e,f}::
+    Group-by-field names for uniq counts
+-c::
+    Show repeat counts in addition to unique values
+
+AUTHOR
+------
+
+miller is written by John Kerl <kerl.john.r@gmail.com>. 
+
+This manual page has been composed from miller's help output by Eric MSP Veith
+<eveith@veith-m.de>.
+
+
+SEE ALSO
+--------
+
+sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME
+Type for Comma-Separated Values (CSV) Files, the miller website
+http://johnkerl.org/miller/doc

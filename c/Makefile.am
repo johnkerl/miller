@@ -16,6 +16,14 @@ mlr_LDADD=	\
 		dsls/libpdsl.la \
 		-lm
 
+EXPERIMENTAL_READER_SRCS = \
+lib/mlrutil.c \
+lib/mlr_globals.c \
+lib/string_builder.c \
+input/file_reader_mmap.c \
+input/peek_file_reader.c \
+experimental/getlines.c
+
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
 # valgrind)
@@ -55,8 +63,10 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-lrec test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	./test-mlrutil
+	./test-string-byte-reader
+	./test-parse-trie
 	./test-lrec
 	./test-string-builder
 	./test-join-bucket-keeper
@@ -73,9 +83,11 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-lrec test-string-builder test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 #	valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
+	valgrind --leak-check=full ./test-string-byte-reader
+	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
 	valgrind --leak-check=full ./test-string-builder
 	valgrind --leak-check=full ./test-join-bucket-keeper
@@ -90,6 +102,9 @@ regtest-copy:
 # ----------------------------------------------------------------
 # Unit-test executables
 
+test-string-byte-reader: .always
+	$(CCDEBUG) -D__TEST_STRING_BYTE_READER_MAIN__ $(TEST_STRING_BYTE_READER_SRCS) -o test-string-byte-reader
+
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
@@ -98,6 +113,9 @@ test-mlrutil: .always
 
 test-string-builder: .always
 	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/test_string_builder.c -o test-string-builder
+
+test-parse-trie: .always
+	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c containers/test_parse_trie.c -o test-parse-trie
 
 test-join-bucket-keeper: .always
 	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
@@ -153,6 +171,9 @@ lrim:
 
 termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
+
+getl: .always
+	$(CC) $(EXPERIMENTAL_READER_SRCS) -o getl
 
 # ================================================================
 perfclean profclean:

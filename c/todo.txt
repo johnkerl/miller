@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-* missing-eol mmap hang!
+:D
 
 ================================================================
 TOP OF LIST
@@ -13,7 +13,6 @@ TOP OF LIST
   o optimize csv read perf
   o double-quote feature -> dkvp
 
-  o optimize!
   o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
   o rs/fs/ps from char to char* throughout
   o parameterize csv rs/fs
@@ -26,6 +25,14 @@ TOP OF LIST
 
 * header-length data mismatch et. al: file/line
 
+* make an updated dependency list, esp. in light of a2x et al.
+* probably its own mlrdoc page ... at least, highlighted in build page
+
+* trie-parse to-do:
+  o make a power-of-two ring buffer for pfr & trie
+  o mlr_memeq or mlr_streq, not cmp. and perhaps ring-buffer aware.
+  o find the crucial inlinables via gprof
+
 * homebrew
 
 * .deb
@@ -33,12 +40,9 @@ TOP OF LIST
 ----------------------------------------------------------------
 little:
 
-* hms etc.:
-  o round cases for negints/negfloats
-  o test cases from the online help
-  o fix the 12.0.250000
-  o more test cases
-  o on hms2y, handle plain-int
+* -Wall -Wextra -Wpedantic-?? Werror=unused-but-set-variable?
+
+* --mmap into online help ...
 
 * keystroke-saver for tsvlite i/o
 
@@ -47,6 +51,9 @@ little:
 * top-level make: c dir at top of PATH
 
 * poki cover -> readme
+
+* steppers (and stats1/2 -- what else -- ?): include help-string in
+  lookup table, and iterate over that in the online help function
 
 ================================================================
 HN FEEDBACKS 2015-08-15 (https://news.ycombinator.com/item?id=10066742)

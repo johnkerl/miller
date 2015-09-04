@@ -64,7 +64,7 @@ Miller commands were run with pretty-print-tabular output format.
       
 <!-- PAGE LIST GENERATED FROM template.html BY poki -->
 <br/>User info:
-<br/>&bull;&nbsp;<a href="index.html">About</a>
+<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
 <br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
 <br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
 <br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
@@ -236,7 +236,8 @@ Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
    tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper .
-   boolean float int string hexfmt fmtnum gmt2sec sec2gmt systime
+   boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec sec2hms sec2dhms hms2sec
+   dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -1921,7 +1922,7 @@ donesec                 25.108529
 $ mlr step --help
 Usage: mlr step [options]
 -a {delta,rsum,...}   Names of steppers: one or more of
-                      delta rsum counter
+                      delta ratio rsum counter
 -f {a,b,c}            Value-field names on which to compute statistics
 -g {d,e,f}            Group-by-field names
 Computes values dependent on the previous record, optionally grouped by category.
@@ -2314,9 +2315,17 @@ int        (conversion: #args=1): Convert int/float/bool/string to int.
 string     (conversion: #args=1): Convert int/float/bool/string to string.
 hexfmt     (conversion: #args=1): Convert int to string, e.g. 255 to "0xff".
 fmtnum     (conversion: #args=2): Convert int/float/bool to string using printf-style format string, e.g. "%06lld".
+systime    (time:       #args=0): Floating-point seconds since the epoch, e.g. 1440768801.748936.
+sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
-sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp.
-systime    (time:       #args=0): Floating-point seconds since the epoch.
+sec2hms    (time:       #args=1): Formats integer seconds as in sec2hms(5000) = "01:23:20"
+sec2dhms   (time:       #args=1): Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
+hms2sec    (time:       #args=1): Recovers integer seconds as in hms2sec("01:23:20") = 5000
+dhms2sec   (time:       #args=1): Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
+fsec2hms   (time:       #args=1): Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
+fsec2dhms  (time:       #args=1): Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
+hms2fsec   (time:       #args=1): Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
+dhms2fsec  (time:       #args=1): Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit
 numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
 Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)

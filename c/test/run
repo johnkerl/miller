@@ -1,11 +1,5 @@
 #!/bin/sh
 
-# ================================================================
-# Note: this is invoked from the Makefile as "./test/run".
-# If you invoke it as "test/run" or "sh test/run" then it will
-# produce diff errors.
-# ================================================================
-
 # NEEDING COVERAGE:
 # group-like
 # head
@@ -19,7 +13,14 @@
 # ================================================================
 set -e
 
-ourdir=`dirname $0`
+verb=$0
+# Note: this is invoked from the Makefile as "./test/run".  Without this, f you
+# invoke it as "test/run" or "sh test/run" then it will produce diff errors.
+if [ "$verb" = "test/run" ]; then
+  verb=./test/run
+fi
+ourdir=`dirname $verb`
+
 mlr=$ourdir/../mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
@@ -282,8 +283,10 @@ run_command $mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 run_command $mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_command $mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
-run_command $mlr --opprint put '$hms=sec2hms($sec)' $indir/sec2xhms
-run_command $mlr --opprint put '$hms=fsec2hms($sec)' $indir/fsec2xhms
+run_command $mlr --opprint put '$hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec' $indir/sec2xhms
+run_command $mlr --opprint put '$hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec' $indir/fsec2xhms
+run_command $mlr --opprint put '$hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec' $indir/sec2xhms
+run_command $mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec' $indir/fsec2xhms
 
 # ----------------------------------------------------------------
 announce CHAINING
@@ -305,94 +308,124 @@ run_command $mlr tac then tac then tac $indir/short
 # ----------------------------------------------------------------
 announce HET-CSV INPUT
 
-run_command $mlr --icsvlite --odkvp cat test/input/a.csv
-run_command $mlr --icsvlite --odkvp cat test/input/b.csv
-run_command $mlr --icsvlite --odkvp cat test/input/c.csv
-run_command $mlr --icsvlite --odkvp cat test/input/d.csv
-run_command $mlr --icsvlite --odkvp cat test/input/e.csv
-run_command $mlr --icsvlite --odkvp cat test/input/f.csv
-run_command $mlr --icsvlite --odkvp cat test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat $indir/a.csv
+run_command $mlr --icsvlite --odkvp cat $indir/b.csv
+run_command $mlr --icsvlite --odkvp cat $indir/c.csv
+run_command $mlr --icsvlite --odkvp cat $indir/d.csv
+run_command $mlr --icsvlite --odkvp cat $indir/e.csv
+run_command $mlr --icsvlite --odkvp cat $indir/f.csv
+run_command $mlr --icsvlite --odkvp cat $indir/g.csv
 
-run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/a.csv
-run_command $mlr --icsvlite --odkvp cat test/input/b.csv test/input/b.csv
-run_command $mlr --icsvlite --odkvp cat test/input/c.csv test/input/c.csv
-run_command $mlr --icsvlite --odkvp cat test/input/d.csv test/input/d.csv
-run_command $mlr --icsvlite --odkvp cat test/input/e.csv test/input/e.csv
-run_command $mlr --icsvlite --odkvp cat test/input/f.csv test/input/f.csv
-run_command $mlr --icsvlite --odkvp cat test/input/g.csv test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat $indir/a.csv $indir/a.csv
+run_command $mlr --icsvlite --odkvp cat $indir/b.csv $indir/b.csv
+run_command $mlr --icsvlite --odkvp cat $indir/c.csv $indir/c.csv
+run_command $mlr --icsvlite --odkvp cat $indir/d.csv $indir/d.csv
+run_command $mlr --icsvlite --odkvp cat $indir/e.csv $indir/e.csv
+run_command $mlr --icsvlite --odkvp cat $indir/f.csv $indir/f.csv
+run_command $mlr --icsvlite --odkvp cat $indir/g.csv $indir/g.csv
 
-run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv
-run_command $mlr --icsvlite --odkvp cat test/input/b.csv test/input/c.csv
-run_command $mlr --icsvlite --odkvp cat test/input/c.csv test/input/d.csv
-run_command $mlr --icsvlite --odkvp cat test/input/d.csv test/input/e.csv
-run_command $mlr --icsvlite --odkvp cat test/input/e.csv test/input/f.csv
-run_command $mlr --icsvlite --odkvp cat test/input/f.csv test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv
+run_command $mlr --icsvlite --odkvp cat $indir/b.csv $indir/c.csv
+run_command $mlr --icsvlite --odkvp cat $indir/c.csv $indir/d.csv
+run_command $mlr --icsvlite --odkvp cat $indir/d.csv $indir/e.csv
+run_command $mlr --icsvlite --odkvp cat $indir/e.csv $indir/f.csv
+run_command $mlr --icsvlite --odkvp cat $indir/f.csv $indir/g.csv
 
-run_command $mlr --icsvlite --odkvp cat test/input/a.csv test/input/b.csv \
-  test/input/c.csv test/input/d.csv test/input/e.csv test/input/f.csv test/input/g.csv
+run_command $mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv \
+  $indir/c.csv $indir/d.csv $indir/e.csv $indir/f.csv $indir/g.csv
 
-run_command $mlr --icsvlite --odkvp tac test/input/het.csv
+run_command $mlr --icsvlite --odkvp tac $indir/het.csv
 
 # ----------------------------------------------------------------
 announce HET-PPRINT INPUT
 
-run_command $mlr --ipprint --odkvp cat test/input/a.pprint
-run_command $mlr --ipprint --odkvp cat test/input/b.pprint
-run_command $mlr --ipprint --odkvp cat test/input/c.pprint
-run_command $mlr --ipprint --odkvp cat test/input/d.pprint
-run_command $mlr --ipprint --odkvp cat test/input/e.pprint
-run_command $mlr --ipprint --odkvp cat test/input/f.pprint
-run_command $mlr --ipprint --odkvp cat test/input/g.pprint
+run_command $mlr --ipprint --odkvp cat $indir/a.pprint
+run_command $mlr --ipprint --odkvp cat $indir/b.pprint
+run_command $mlr --ipprint --odkvp cat $indir/c.pprint
+run_command $mlr --ipprint --odkvp cat $indir/d.pprint
+run_command $mlr --ipprint --odkvp cat $indir/e.pprint
+run_command $mlr --ipprint --odkvp cat $indir/f.pprint
+run_command $mlr --ipprint --odkvp cat $indir/g.pprint
 
-run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/a.pprint
-run_command $mlr --ipprint --odkvp cat test/input/b.pprint test/input/b.pprint
-run_command $mlr --ipprint --odkvp cat test/input/c.pprint test/input/c.pprint
-run_command $mlr --ipprint --odkvp cat test/input/d.pprint test/input/d.pprint
-run_command $mlr --ipprint --odkvp cat test/input/e.pprint test/input/e.pprint
-run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/f.pprint
-run_command $mlr --ipprint --odkvp cat test/input/g.pprint test/input/g.pprint
+run_command $mlr --ipprint --odkvp cat $indir/a.pprint $indir/a.pprint
+run_command $mlr --ipprint --odkvp cat $indir/b.pprint $indir/b.pprint
+run_command $mlr --ipprint --odkvp cat $indir/c.pprint $indir/c.pprint
+run_command $mlr --ipprint --odkvp cat $indir/d.pprint $indir/d.pprint
+run_command $mlr --ipprint --odkvp cat $indir/e.pprint $indir/e.pprint
+run_command $mlr --ipprint --odkvp cat $indir/f.pprint $indir/f.pprint
+run_command $mlr --ipprint --odkvp cat $indir/g.pprint $indir/g.pprint
 
-run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/b.pprint
-run_command $mlr --ipprint --odkvp cat test/input/b.pprint test/input/c.pprint
-run_command $mlr --ipprint --odkvp cat test/input/c.pprint test/input/d.pprint
-run_command $mlr --ipprint --odkvp cat test/input/d.pprint test/input/e.pprint
-run_command $mlr --ipprint --odkvp cat test/input/e.pprint test/input/f.pprint
-run_command $mlr --ipprint --odkvp cat test/input/f.pprint test/input/g.pprint
+run_command $mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint
+run_command $mlr --ipprint --odkvp cat $indir/b.pprint $indir/c.pprint
+run_command $mlr --ipprint --odkvp cat $indir/c.pprint $indir/d.pprint
+run_command $mlr --ipprint --odkvp cat $indir/d.pprint $indir/e.pprint
+run_command $mlr --ipprint --odkvp cat $indir/e.pprint $indir/f.pprint
+run_command $mlr --ipprint --odkvp cat $indir/f.pprint $indir/g.pprint
 
-run_command $mlr --ipprint --odkvp cat test/input/a.pprint test/input/b.pprint \
-  test/input/c.pprint test/input/d.pprint test/input/e.pprint test/input/f.pprint test/input/g.pprint
+run_command $mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint \
+  $indir/c.pprint $indir/d.pprint $indir/e.pprint $indir/f.pprint $indir/g.pprint
 
 # ================================================================
 announce NULL-FIELD INPUT
 
-run_command $mlr --icsvlite  --odkvp cat test/input/null-fields.csv
-run_command $mlr --inidx --odkvp cat test/input/null-fields.nidx
-run_command $mlr --idkvp --oxtab cat test/input/missings.dkvp
+run_command $mlr --icsvlite --odkvp cat $indir/null-fields.csv
+run_command $mlr --inidx    --odkvp cat $indir/null-fields.nidx
+run_command $mlr --idkvp    --oxtab cat $indir/missings.dkvp
+
+# ================================================================
+announce SPACE-PADDING
+
+run_command $mlr --mmap    --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
+run_command $mlr --no-mmap --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
+run_command $mlr --mmap    --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
+run_command $mlr --no-mmap --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
+run_command $mlr --mmap    --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
+run_command $mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
+
+# ================================================================
+announce DOUBLE PS
+
+run_command $mlr --no-mmap --opprint cat $indir/double-ps.dkvp
+run_command $mlr    --mmap --opprint cat $indir/double-ps.dkvp
+
+# ================================================================
+announce MISSING FINAL LF
+
+run_command $mlr --no-mmap --csvlite cat $indir/truncated.csv
+run_command $mlr           --csvlite cat $indir/truncated.csv
+run_command $mlr --no-mmap --dkvp    cat $indir/truncated.dkvp
+run_command $mlr           --dkvp    cat $indir/truncated.dkvp
+run_command $mlr --no-mmap --nidx    cat $indir/truncated.nidx
+run_command $mlr           --nidx    cat $indir/truncated.nidx
+run_command $mlr --no-mmap --pprint  cat $indir/truncated.pprint
+run_command $mlr           --pprint  cat $indir/truncated.pprint
+run_command $mlr --no-mmap --xtab    cat $indir/truncated.xtab
+run_command $mlr           --xtab    cat $indir/truncated.xtab
 
 # ================================================================
 announce UTF-8 alignment
 
-run_command $mlr --icsvlite --opprint cat test/input/utf8-1.csv
-run_command $mlr --icsvlite --opprint cat test/input/utf8-2.csv
-run_command $mlr --icsvlite --oxtab   cat test/input/utf8-1.csv
-run_command $mlr --icsvlite --oxtab   cat test/input/utf8-2.csv
+run_command $mlr --icsvlite --opprint cat $indir/utf8-1.csv
+run_command $mlr --icsvlite --opprint cat $indir/utf8-2.csv
+run_command $mlr --icsvlite --oxtab   cat $indir/utf8-1.csv
+run_command $mlr --icsvlite --oxtab   cat $indir/utf8-2.csv
 
-run_command $mlr --inidx --ifs space --opprint         cat test/input/utf8-align.nidx
-run_command $mlr --inidx --ifs space --opprint --right cat test/input/utf8-align.nidx
-run_command $mlr --oxtab cat test/input/utf8-align.dkvp 
+run_command $mlr --inidx --ifs space --opprint         cat $indir/utf8-align.nidx
+run_command $mlr --inidx --ifs space --opprint --right cat $indir/utf8-align.nidx
+run_command $mlr --oxtab cat $indir/utf8-align.dkvp 
 
 # ================================================================
 announce RFC-CSV
 
-run_command $mlr --csv cat test/input/rfc-csv/simple.csv
-run_command $mlr --csv cat test/input/rfc-csv/simple-truncated.csv
-run_command $mlr --csv cat test/input/rfc-csv/narrow.csv
-run_command $mlr --csv cat test/input/rfc-csv/narrow-truncated.csv
-run_command $mlr --csv cat test/input/rfc-csv/quoted-comma.csv
-run_command $mlr --csv cat test/input/rfc-csv/quoted-comma-truncated.csv
-run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf.csv
-run_command $mlr --csv cat test/input/rfc-csv/quoted-crlf-truncated.csv
-run_command $mlr --csv cat test/input/rfc-csv/simple-truncated.csv test/input/rfc-csv/simple.csv
+run_command $mlr --csv cat $indir/rfc-csv/simple.csv
+run_command $mlr --csv cat $indir/rfc-csv/simple-truncated.csv
+run_command $mlr --csv cat $indir/rfc-csv/narrow.csv
+run_command $mlr --csv cat $indir/rfc-csv/narrow-truncated.csv
+run_command $mlr --csv cat $indir/rfc-csv/quoted-comma.csv
+run_command $mlr --csv cat $indir/rfc-csv/quoted-comma-truncated.csv
+run_command $mlr --csv cat $indir/rfc-csv/quoted-crlf.csv
+run_command $mlr --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
+run_command $mlr --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv
 
 # ================================================================
 diff $expdir/out $outdir/out

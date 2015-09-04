@@ -100,7 +100,8 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvhandle, void* pvstate, 
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_stdio_csvlite_data_line(pstate->pheader_keeper, line, pstate->ifs, pstate->allow_repeat_ifs);
+			return lrec_parse_stdio_csvlite_data_line(pstate->pheader_keeper, line, pstate->ifs,
+				pstate->allow_repeat_ifs);
 		}
 	}
 }
@@ -150,12 +151,18 @@ lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char
 	int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
-	char* key = NULL;
-	char* value = data_line;
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char* value = p;
 
 	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for (char* p = data_line; *p; ) {
+	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 
@@ -181,11 +188,15 @@ lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char
 		fprintf(stderr, "Header-data length mismatch!\n");
 		exit(1);
 	}
-	key = pe->value;
-	lrec_put_no_free(prec, key, value);
-	if (pe->pnext != NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "Header-data length mismatch!\n");
+			exit(1);
+		}
 	}
 
 	return prec;
@@ -198,8 +209,13 @@ slls_t* split_csvlite_header_line(char* line, char ifs, int allow_repeat_ifs) {
 	if (*line == 0) // empty string splits to empty list
 		return plist;
 
-	char* start = line;
-	for (char* p = line; *p; p++) {
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* start = p;
+	for ( ; *p; p++) {
 		if (*p == ifs) {
 			*p = 0;
 			p++;

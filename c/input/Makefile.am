@@ -18,7 +18,18 @@ libinput_la_SOURCES=	\
 			lrec_readers.c \
 			lrec_readers.h \
 			peek_file_reader.c \
-			peek_file_reader.h
+			peek_file_reader.h \
+			string_byte_reader.c \
+			string_byte_reader.h
 libinput_la_LIBADD=	../lib/libmlr.la
 libinput_la_CPPFLAGS=	-I${srcdir}/../
 libinput_la_CFLAGS=	-std=gnu99
+
+
+noinst_PROGRAMS=	test_string_byte_reader
+
+test_string_byte_reader_LDADD=		libinput.la \
+					../lib/libmlr.la
+test_string_byte_reader_CPPFLAGS=	-D__TEST_STRING_BYTE_READER_MAIN__ ${AM_CPPFLAGS}
+
+AM_CPPFLAGS=	-I${srcdir}/../

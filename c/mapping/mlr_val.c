@@ -257,11 +257,11 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 
 // ----------------------------------------------------------------
 static void split_ull_to_hms(long long u, long long* ph, long long* pm, long long* ps) {
-	long long sign = 1LL;
 	long long h = 0LL, m = 0LL, s = 0LL;
+	long long sign = 1LL;
 	if (u < 0LL) {
-		sign = -1LL;
 		u = -u;
+		sign = -1LL;
 	}
 	s = u % 60LL;
 	u = u / 60LL;
@@ -282,11 +282,11 @@ static void split_ull_to_hms(long long u, long long* ph, long long* pm, long lon
 }
 
 static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long long* pm, long long* ps) {
-	long long sign = 1LL;
 	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
+	long long sign = 1LL;
 	if (u < 0LL) {
-		sign = -1LL;
 		u = -u;
+		sign = -1LL;
 	}
 	s = u % 60LL;
 	u = u / 60LL;
@@ -317,8 +317,12 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 mv_t s_i_sec2hms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
 	long long h, m, s;
+	char* fmt = "%02lld:%02lld:%02lld";
+	if (u < 0) {
+		u = -u;
+		fmt = "-%02lld:%02lld:%02lld";
+	}
 	split_ull_to_hms(u, &h, &m, &s);
-	char* fmt = "%lld:%02lld:%02lld";
 	int n = snprintf(NULL, 0, fmt, h, m, s);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s);
@@ -326,12 +330,15 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 }
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
-	double v = pval1->u.dblv;
+	double v = fabs(pval1->u.dblv);
 	long long h, m, s;
-	long long u = (long long)trunc(v);
-	double f = v -u;
-	split_ull_to_hms(u, &h, &m, &s);
 	char* fmt = "%lld:%02lld:%09.6lf";
+	long long u = (long long)trunc(v);
+	double f = v - u;
+	if (pval1->u.dblv < 0.0) {
+		fmt = "-%02lld:%02lld:%09.6lf";
+	}
+	split_ull_to_hms(u, &h, &m, &s);
 	int n = snprintf(NULL, 0, fmt, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s+f);
@@ -370,30 +377,36 @@ mv_t s_i_sec2dhms_func(mv_t* pval1) {
 }
 
 mv_t s_f_fsec2dhms_func(mv_t* pval1) {
-	double v = pval1->u.dblv;
+	double v = fabs(pval1->u.dblv);
+	long long sign = pval1->u.dblv < 0.0 ? -1LL : 1LL;
 	long long d, h, m, s;
 	long long u = (long long)trunc(v);
 	double f = v - u;
 	split_ull_to_dhms(u, &d, &h, &m, &s);
 	if (d != 0.0) {
+		d = sign * d;
 		char* fmt = "%lldd%02lldh%02lldm%09.6lfs";
 		int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, d, h, m, s+f);
 		return (mv_t) {.type = MT_STRING, .u.strv = string};
 	} else if (h != 0.0) {
+		h = sign * h;
 		char* fmt = "%lldh%02lldm%09.6lfs";
 		int n = snprintf(NULL, 0, fmt, h, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, h, m, s+f);
 		return (mv_t) {.type = MT_STRING, .u.strv = string};
 	} else if (m != 0.0) {
+		m = sign * m;
 		char* fmt = "%lldm%09.6lfs";
 		int n = snprintf(NULL, 0, fmt, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, m, s+f);
 		return (mv_t) {.type = MT_STRING, .u.strv = string};
 	} else {
+		s = sign * s;
+		f = sign * f;
 		char* fmt = "%.6lfs";
 		int n = snprintf(NULL, 0, fmt, s+f);
 		char* string = mlr_malloc_or_die(n+1);
@@ -406,63 +419,97 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 mv_t i_s_hms2sec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
-	if (sscanf(pval1->u.strv, "%lld:%lld:%lld", &h, &m, &s) == 3) {
-		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lld:%lld", &m, &s) == 2) {
-		sec = 60*m + s;
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lld:%lld:%lld", &h, &m, &s) == 3) {
+		if (h >= 0LL)
+			sec = 3600LL*h + 60LL*m + s;
+		else
+			sec = -(-3600LL*h + 60LL*m + s);
+	} else if (sscanf(p, "%lld:%lld", &m, &s) == 2) {
+		if (m >= 0LL)
+			sec = 60LL*m + s;
+		else
+			sec = -(-60LL*m + s);
+	} else if (sscanf(p, "%lld", &s) == 1) {
+		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .u.intv = sec};
+	return (mv_t) {.type = MT_INT, .u.intv = sec * sign};
 }
 
 mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL;
 	double s = 0.0;
 	double sec = 0.0;
-	if (sscanf(pval1->u.strv, "%lld:%lld:%lf", &h, &m, &s) == 3) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lld:%lld:%lf", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lld:%lf", &m, &s) == 2) {
+	} else if (sscanf(p, "%lld:%lf", &m, &s) == 2) {
 		sec = 60*m + s;
+	} else if (sscanf(p, "%lf", &s) == 2) {
+		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
 	long long d = 0LL, h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
-	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%llds", &d, &h, &m, &s) == 4) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lldd%lldh%lldm%llds", &d, &h, &m, &s) == 4) {
 		sec = 86400*d + 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldh%lldm%llds", &h, &m, &s) == 3) {
+	} else if (sscanf(p, "%lldh%lldm%llds", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldm%llds", &m, &s) == 2) {
+	} else if (sscanf(p, "%lldm%llds", &m, &s) == 2) {
 		sec = 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%llds", &s) == 1) {
+	} else if (sscanf(p, "%llds", &s) == 1) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .u.intv = sec};
+	return (mv_t) {.type = MT_INT, .u.intv = sec * sign};
 }
 
 mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	long long d = 0LL, h = 0LL, m = 0LL;
 	double s = 0.0;
 	double sec = 0.0;
-	if (sscanf(pval1->u.strv, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
+	char* p = pval1->u.strv;
+	long long sign = 1LL;
+	if (*p == '-') {
+		p++;
+		sign = -1LL;
+	}
+	if (sscanf(p, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
 		sec = 86400*d + 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldh%lldm%lfs", &h, &m, &s) == 3) {
+	} else if (sscanf(p, "%lldh%lldm%lfs", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lldm%lfs", &m, &s) == 2) {
+	} else if (sscanf(p, "%lldm%lfs", &m, &s) == 2) {
 		sec = 60*m + s;
-	} else if (sscanf(pval1->u.strv, "%lfs", &s) == 1) {
+	} else if (sscanf(p, "%lfs", &s) == 1) {
 		sec = s;
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec};
+	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
 }
 
 // ----------------------------------------------------------------

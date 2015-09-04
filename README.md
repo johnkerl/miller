@@ -1,4 +1,6 @@
-**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.**
+**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.** 
+
+[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
 
 With Miller, you get to use named fields without needing to count positional
 indices.
@@ -55,3 +57,6 @@ in modern C, and it has **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
 For more information, please visit http://johnkerl.org/miller/doc
+
+For notes about issue-labeling in the Github repo, please see
+https://github.com/johnkerl/miller/wiki/Issue-labeling.

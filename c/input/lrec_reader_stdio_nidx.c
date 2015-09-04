@@ -50,11 +50,16 @@ lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_nidx_alloc(line);
 
 	int idx = 0;
-	char* key        = NULL;
-	char* value      = line;
 	char  free_flags = 0;
 
-	for (char* p = line; *p; ) {
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char* value = p;
+	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 
@@ -73,8 +78,13 @@ lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs) {
 		}
 	}
 	idx++;
-	key = make_nidx_key(idx, &free_flags);
-	lrec_put(prec, key, value, free_flags);
+
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = make_nidx_key(idx, &free_flags);
+		lrec_put(prec, key, value, free_flags);
+	}
 
 	return prec;
 }

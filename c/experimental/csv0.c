@@ -21,8 +21,7 @@ typedef struct _record_wrapper_t {
 } record_wrapper_t;
 
 static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
-	// xxx need pfr_advance_past_or_die ...
-	// xxx "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
+	// Note that "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	printf("\n");
 	printf("ENTER\n");
 	while (TRUE) {
@@ -32,26 +31,17 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 			return (field_wrapper_t) { .contents = sb_is_empty(psb) ? NULL: sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, ",\xff", 2)) {
 			printf("--case 2\n");
-			if (!pfr_advance_past(pfr, ",\xff")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 2);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, ",", 1)) {
 			printf("--case 3\n");
-			if (!pfr_advance_past(pfr, ",")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 1);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pfr, "\r\n", 2)) {
 			printf("--case 4\n");
-			if (!pfr_advance_past(pfr, "\r\n")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 2);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
@@ -66,33 +56,20 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 }
 
 static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
-	// xxx need pfr_advance_past_or_die ...
-	if (!pfr_advance_past(pfr, "\"")) {
-		fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-		exit(1);
-	}
+	pfr_advance_by(pfr, 1);
 	while (TRUE) {
 		if (pfr_at_eof(pfr)) {
 			// xxx imbalanced-dquote error
 			fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 			exit(1);
 		} else if (pfr_next_is(pfr, "\"\xff", 2)) {
-			if (!pfr_advance_past(pfr, "\"\xff")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 2);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pfr, "\",", 2)) {
-			if (!pfr_advance_past(pfr, "\",")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 2);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pfr, "\"\r\n", 3)) {
-			if (!pfr_advance_past(pfr, "\"\r\n")) {
-				fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
-				exit(1);
-			}
+			pfr_advance_by(pfr, 3);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));

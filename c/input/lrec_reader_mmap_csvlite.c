@@ -55,9 +55,14 @@ static slls_t* lrec_reader_mmap_csvlite_get_header(file_reader_mmap_state_t* pha
 		pstate->ilno++;
 	}
 
-	char* header_name = phandle->sol;
+	char* p = phandle->sol;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* header_name = p;
 
-	for (char* p = phandle->sol; p < phandle->eof && *p; ) {
+	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
@@ -96,11 +101,16 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
-	char* key   = NULL;
-	char* value = line;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for (char* p = line; p < phandle->eof && *p; ) {
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char* value = p;
+	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
@@ -132,16 +142,22 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 			p++;
 		}
 	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
 	if (pe == NULL) {
 		fprintf(stderr, "Header-data length mismatch!\n");
 		exit(1);
 	}
-	key = pe->value;
-	lrec_put_no_free(prec, key, value);
-	pe = pe->pnext;
-	if (pe != NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
+
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "Header-data length mismatch!\n");
+			exit(1);
+		}
 	}
 
 	return prec;
