@@ -235,6 +235,8 @@ static char* show_it() {
 		}
 	}
 
+	mu_assert_lf(*p == 0);
+
 	return 0;
 }
 
