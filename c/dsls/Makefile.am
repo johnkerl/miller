@@ -9,9 +9,8 @@ libfdsl_la_SOURCES=	filter_dsl_parse.c filter_dsl_lexer.c filter_dsl_wrapper.c
 libpdsl_la_SOURCES=	put_dsl_parse.c put_dsl_lexer.c put_dsl_wrapper.c
 BUILT_SOURCES=		filter_dsl_parse.c put_dsl_parse.c
 CLEANFILES=		${BUILT_SOURCES} \
-			filter_dsl_parse.h filter_dsl_parse.y filter_dsl_parse.out \
-			put_dsl_parse.h put_dsl_parse.y put_dsl_parse.out \
-			lemon_prepared lempar.c
+			filter_dsl_parse.h filter_dsl_parse.out \
+			put_dsl_parse.h put_dsl_parse.out
 EXTRA_DIST=		\
 			filter_dsl_lexer.l \
 			filter_dsl_parse.y \
@@ -26,19 +25,7 @@ pdm_SOURCES=		put_dsl_parse.c put_dsl_parse.h put_dsl_lexer.c put_dsl_lexer.h pu
 pdm_LDADD=		../containers/libcontainers.la ../lib/libmlr.la libpdsl.la -lm
 pdm_CFLAGS=		-D __PUT_DSL_MAIN__ ${AM_CFLAGS}
 
-# TODO: better source handling for lemon sources?
-# perhaps lemon can be improved to survive being called from the build dir
-
-lemon_prepared:
-	if [ "${srcdir}" != "." ]; \
-	then \
-		cp -p ${srcdir}/filter_dsl_parse.y .; \
-		cp -p ${srcdir}/lempar.c .; \
-		cp -p ${srcdir}/put_dsl_parse.y .; \
-	fi
-	touch lemon_prepared
-
-put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lempar.c lemon_prepared lemon
+put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lempar.c lemon
 	./lemon put_dsl_parse.y
 # lemon does not re-generate the file if it exists and is the same
 # this causes problems with the dependency above
@@ -58,7 +45,7 @@ put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lempar.c lemon_prepared lemon
 put_dsl_lexer.c put_dsl_lexer.h: put_dsl_lexer.l
 	flex --prefix=put_dsl_lexer_ --outfile=put_dsl_lexer.c --header-file=put_dsl_lexer.h put_dsl_lexer.l
 
-filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lempar.c lemon_prepared lemon
+filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lempar.c lemon
 	./lemon filter_dsl_parse.y
 # lemon does not re-generate the file if it exists and is the same
 # this causes problems with the dependency above
@@ -76,3 +63,8 @@ filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lempar.c lemon_prepare
 
 filter_dsl_lexer.c filter_dsl_lexer.h: filter_dsl_lexer.l
 	flex --prefix=filter_dsl_lexer_ --outfile=filter_dsl_lexer.c --header-file=filter_dsl_lexer.h filter_dsl_lexer.l
+
+distclean:
+	if [ "${srcdir}" != "." ]; then \
+		rm -f filter_dsl_parse.y lempar.c put_dsl_parse.y; \
+	fi

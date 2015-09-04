@@ -13,6 +13,13 @@ AM_PROG_LEX
 AC_EXEEXT
 LT_INIT
 
+
+# TODO: better source handling for lemon sources?
+# perhaps lemon can be improved to survive being called from the build dir
+AC_CONFIG_LINKS([c/dsls/filter_dsl_parse.y:c/dsls/filter_dsl_parse.y])
+AC_CONFIG_LINKS([c/dsls/lempar.c:c/dsls/lempar.c])
+AC_CONFIG_LINKS([c/dsls/put_dsl_parse.y:c/dsls/put_dsl_parse.y])
+
 AC_CONFIG_FILES([Makefile
 		c/cli/Makefile
 		c/containers/Makefile
