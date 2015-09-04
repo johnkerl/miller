@@ -5,7 +5,7 @@ mlrp
 mlr-unit-tester
 test-mlrutil
 test-string-builder
-test-string-byte-reader
+test-byte-readers
 test-parse-trie
 test-lrec
 test-join-bucket-keeper

@@ -27,9 +27,9 @@ NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
 FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
 
-TEST_STRING_BYTE_READER_SRCS = lib/mlrutil.c \
+TEST_BYTE_READERS_SRCS = lib/mlrutil.c \
 input/string_byte_reader.c \
-input/test_string_byte_reader.c
+input/test_byte_readers.c
 
 TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
@@ -127,9 +127,9 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	./test-mlrutil
-	./test-string-byte-reader
+	./test-byte-readers
 	./test-parse-trie
 	./test-lrec
 	./test-string-builder
@@ -147,10 +147,10 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
-	valgrind --leak-check=full ./test-string-byte-reader
+	valgrind --leak-check=full ./test-byte-readers
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
 	valgrind --leak-check=full ./test-string-builder
@@ -166,8 +166,8 @@ regtest-copy:
 # ----------------------------------------------------------------
 # Unit-test executables
 
-test-string-byte-reader: .always
-	$(CCDEBUG) -D__TEST_STRING_BYTE_READER_MAIN__ $(TEST_STRING_BYTE_READER_SRCS) -o test-string-byte-reader
+test-byte-readers: .always
+	$(CCDEBUG) -D__TEST_BYTE_READERS_MAIN__ $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
 
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
