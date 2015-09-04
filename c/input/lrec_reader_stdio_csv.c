@@ -145,10 +145,7 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 		wrapper.termind = TERMIND_EOF;
 		return wrapper;
 	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
-		if (!pfr_advance_past(pstate->pfr, pstate->dquote)) {
-			fprintf(stderr, "%s: Internal coding error: DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
-			exit(1);
-		}
+		pfr_advance_by(pstate->pfr, pstate->dquote_len);
 		return get_csv_field_dquoted(pstate);
 	} else {
 		return get_csv_field_not_dquoted(pstate);
@@ -163,22 +160,13 @@ static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* 
 				.termind = TERMIND_EOF
 			};
 		} else if (pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->ifs_eof)) {
-				fprintf(stderr, "%s: Internal coding error: IFS-EOF found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->ifs)) {
-				fprintf(stderr, "%s: Internal coding error: IFS found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->ifs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->irs)) {
-				fprintf(stderr, "%s: Internal coding error: IRS found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->irs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
 			fprintf(stderr, "%s: non-compliant field-internal double-quote at line %lld.\n",
@@ -196,29 +184,17 @@ static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* psta
 			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
 			exit(1);
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->dquote_eof)) {
-				fprintf(stderr, "%s: Internal coding error: DQUOTE-EOF found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->dquote_ifs)) {
-				fprintf(stderr, "%s: Internal coding error: DQUOTE-IFS found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
-			if (!pfr_advance_past(pstate->pfr, pstate->dquote_irs)) {
-				fprintf(stderr, "%s: Internal coding error: DQUOTE-IRS found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
 		} else if (pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
 			// "" inside a dquoted field is an escape for "
-			if (!pfr_advance_past(pstate->pfr, pstate->dquote_dquote)) {
-				fprintf(stderr, "%s: Internal coding error: DQUOTE-DQUOTE found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
 			sb_append_string(pstate->psb, pstate->dquote);
 		} else {
 			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));

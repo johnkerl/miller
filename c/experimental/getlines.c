@@ -271,10 +271,7 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, c
 			else
 				return sb_finish(psb);
 		} else if (pfr_next_is(pfr, irs, irs_len)) {
-			if (!pfr_advance_past(pfr, irs)) {
-				fprintf(stderr, "%s: Internal coding error: IRS found and lost.\n", MLR_GLOBALS.argv0);
-				exit(1);
-			}
+			pfr_advance_by(pfr, irs_len);
 			return sb_finish(psb);
 		} else {
 			sb_append_char(psb, pfr_read_char(pfr));

@@ -61,11 +61,9 @@ char pfr_read_char(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-int pfr_advance_past(peek_file_reader_t* pfr, char* string) {
-	for (char* p = string; *p; p++)
-		if (pfr_read_char(pfr) != *p)
-			return FALSE;
-	return TRUE;
+void pfr_advance_by(peek_file_reader_t* pfr, int len) {
+	for (int i = 0; i < len; i++)
+		pfr_read_char(pfr);
 }
 
 // ----------------------------------------------------------------
