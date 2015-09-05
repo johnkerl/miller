@@ -33,6 +33,7 @@ lib/mlr_test_util.c \
 lib/mlr_globals.c \
 input/string_byte_reader.c \
 input/stdio_byte_reader.c \
+input/mmap_byte_reader.c \
 input/test_byte_readers.c
 
 TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \

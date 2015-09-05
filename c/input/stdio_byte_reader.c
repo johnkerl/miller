@@ -16,7 +16,7 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filenam
 	pstate->fp = fopen(filename, "r");
 	if (pstate->fp == NULL) {
 		perror("fopen");
-		fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: Couldn't fopen \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
 		exit(1);
 	}
 	pbr->pvstate = pstate;
