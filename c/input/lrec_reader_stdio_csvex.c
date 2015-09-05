@@ -117,6 +117,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 	return NULL;
 }
 
+// xxx UT all of this with string_byte_reader :)
 // xxx have this return NULL if and only if at EOF.
 //static record_wrapper_t lrec_reader_stdio_csvex_get_record(lrec_reader_stdio_csvex_state_t* pstate) {
 //	slls_t* pfields = slls_alloc();
@@ -124,6 +125,61 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	rwrapper.contents = pfields;
 //	rwrapper.at_eof = FALSE;
 //	while (TRUE) {
+
+//		if (parse_trie_match(pstate->pdquote_parse_trie, xxx buf, ...) {
+
+//			while (TRUE) {
+//				rc = parse_trie_match(pstate->pin_dquote_parse_trie, xxx buf, ...);
+//				if (rc) {
+//					switch(stridx) {
+//					case DQUOTE_EOF:
+//						...; end of record
+//						break;
+//					case DQUOTE_IFS:
+//						...; end of field
+//						break;
+//					case DQUOTE_IRS:
+//						...; end of record
+//						break;
+//					case DQUOTE_DQUOTE:
+//						...; sb append char '"'
+//						break;
+//					default:
+//						...; sb append char of pfr->read_char
+//						break;
+//					}
+//				}
+//			}
+
+//		} else {
+
+//			while (TRUE) {
+//				rc = parse_trie_match(pstate->pin_dquote_parse_trie, xxx buf, ...);
+//				if (rc) {
+//					switch(stridx) {
+//					case EOF:
+//						...;
+//						break;
+//					case IFS:
+//						...;
+//						break;
+//					case IRS:
+//						...;
+//						break;
+//					case DQUOTE:
+//						...;
+//						break;
+//					default:
+//						...;
+//						break;
+//					}
+//				}
+//			}
+
+//		}
+
+
+
 //		field_wrapper_t fwrapper = get_csvex_field(pstate);
 //		if (fwrapper.termind == TERMIND_EOF)
 //			rwrapper.at_eof = TRUE;
