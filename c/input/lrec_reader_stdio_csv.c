@@ -60,7 +60,6 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   ifs_eof_len;
 
 	int   peek_buf_len;
-	//int  allow_repeat_ifs;
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
@@ -236,7 +235,7 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
@@ -269,8 +268,6 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_dquote_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
-
-	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
 
 	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;

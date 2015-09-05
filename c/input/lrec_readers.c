@@ -14,7 +14,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char irs, char if
 		// if (use_mmap)
 			//return lrec_reader_mmap_csv_alloc(irs, ifs, allow_repeat_ifs);
 		//else
-			return lrec_reader_stdio_csv_alloc(irs, ifs, allow_repeat_ifs);
+			return lrec_reader_stdio_csv_alloc(irs, ifs);
 	} else if (streq(fmtdesc, "csvlite")) {
 		if (use_mmap)
 			return lrec_reader_mmap_csvlite_alloc(irs, ifs, allow_repeat_ifs);
