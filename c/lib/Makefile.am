@@ -11,7 +11,9 @@ libmlr_la_SOURCES=	minunit.h \
 			mtrand.c \
 			mtrand.h \
 			string_builder.c \
-			string_builder.h
+			string_builder.h \
+			mlr_test_util.c \
+			mlr_test_util.h
 
 TESTS=		$(check_PROGRAMS)
 check_PROGRAMS=	test_mlrutil test_string_builder

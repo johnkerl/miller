@@ -84,7 +84,7 @@ dev-tests: dev-unit-test reg-test
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
 dev-unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
-	#valgrind --leak-check=full --error-exitcode=1 ./a.out
+#	valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-byte-readers
 	valgrind --leak-check=full ./test-parse-trie
