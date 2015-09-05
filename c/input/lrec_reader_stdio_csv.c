@@ -7,7 +7,7 @@
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
-#include "input/peek_file_reader.h"
+#include "input/old_peek_file_reader.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
@@ -64,7 +64,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
-	peek_file_reader_t* pfr;
+	old_peek_file_reader_t* pfr;
 
 	int                 expect_header_line_next;
 	header_keeper_t*    pheader_keeper;

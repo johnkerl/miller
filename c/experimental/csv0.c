@@ -4,7 +4,7 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "lib/string_builder.h"
-#include "input/peek_file_reader.h"
+#include "input/old_peek_file_reader.h"
 
 #define TERMIND_RS  0x1111
 #define TERMIND_FS  0x2222
@@ -20,7 +20,7 @@ typedef struct _record_wrapper_t {
 	int   at_eof;
 } record_wrapper_t;
 
-static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
+static field_wrapper_t get_csv_field_not_dquoted(old_peek_file_reader_t* pfr, string_builder_t* psb) {
 	// Note that "\"," etc. will be encoded in the rfc_csv_reader_t ctor -- this is just sketch
 	printf("\n");
 	printf("ENTER\n");
@@ -55,7 +55,7 @@ static field_wrapper_t get_csv_field_not_dquoted(peek_file_reader_t* pfr, string
 	}
 }
 
-static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_builder_t* psb) {
+static field_wrapper_t get_csv_field_dquoted(old_peek_file_reader_t* pfr, string_builder_t* psb) {
 	pfr_advance_by(pfr, 1);
 	while (TRUE) {
 		if (pfr_at_eof(pfr)) {
@@ -77,7 +77,7 @@ static field_wrapper_t get_csv_field_dquoted(peek_file_reader_t* pfr, string_bui
 	}
 }
 
-field_wrapper_t get_csv_field(peek_file_reader_t* pfr, string_builder_t* psb) {
+field_wrapper_t get_csv_field(old_peek_file_reader_t* pfr, string_builder_t* psb) {
 	field_wrapper_t wrapper;
 	if (pfr_at_eof(pfr)) {
 		wrapper.contents = NULL;
@@ -90,7 +90,7 @@ field_wrapper_t get_csv_field(peek_file_reader_t* pfr, string_builder_t* psb) {
 	}
 }
 
-record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) {
+record_wrapper_t get_csv_record(old_peek_file_reader_t* pfr, string_builder_t* psb) {
 	slls_t* fields = slls_alloc();
 	record_wrapper_t rwrapper;
 	rwrapper.contents = fields;
@@ -118,7 +118,7 @@ record_wrapper_t get_csv_record(peek_file_reader_t* pfr, string_builder_t* psb) 
 
 int main() {
 	FILE* fp = stdin;
-	peek_file_reader_t* pfr = pfr_alloc(fp, 32);
+	old_peek_file_reader_t* pfr = pfr_alloc(fp, 32);
 	string_builder_t sb;
 	string_builder_t* psb = &sb;
 	sb_init(psb, 1024);

@@ -2,7 +2,7 @@
 #include <ctype.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
-#include "peek_file_reader.h"
+#include "old_peek_file_reader.h"
 
 // xxx comment about efficiency here: enough to deliver rfc-csv feature with performance tuning still tbd.
 
@@ -10,8 +10,8 @@
 // label in particular eof handling.
 
 // ----------------------------------------------------------------
-peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
-	peek_file_reader_t* pfr = mlr_malloc_or_die(sizeof(peek_file_reader_t));
+old_peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
+	old_peek_file_reader_t* pfr = mlr_malloc_or_die(sizeof(old_peek_file_reader_t));
 	pfr->fp         = fp;
 	pfr->peekbuflen = maxnpeek + 1;
 	pfr->peekbuf    = mlr_malloc_or_die(pfr->peekbuflen);
@@ -27,13 +27,13 @@ peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
 }
 
 // ----------------------------------------------------------------
-int pfr_at_eof(peek_file_reader_t* pfr) {
+int pfr_at_eof(old_peek_file_reader_t* pfr) {
 	return pfr->npeeked >= 1 && pfr->peekbuf[0] == EOF;
 }
 
 // ----------------------------------------------------------------
 // xxx inline this for perf.
-int pfr_next_is(peek_file_reader_t* pfr, char* string, int len) {
+int pfr_next_is(old_peek_file_reader_t* pfr, char* string, int len) {
 	// xxx abend on len > peekbuflen
 	while (pfr->npeeked < len) {
 		char c = getc_unlocked(pfr->fp); // maybe EOF
@@ -44,7 +44,7 @@ int pfr_next_is(peek_file_reader_t* pfr, char* string, int len) {
 }
 
 // ----------------------------------------------------------------
-char pfr_read_char(peek_file_reader_t* pfr) {
+char pfr_read_char(old_peek_file_reader_t* pfr) {
 	if (pfr->npeeked == 1 && pfr->peekbuf[0] == EOF) {
 		return EOF;
 	} else if (pfr->npeeked == 0) {
@@ -61,13 +61,13 @@ char pfr_read_char(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-void pfr_advance_by(peek_file_reader_t* pfr, int len) {
+void pfr_advance_by(old_peek_file_reader_t* pfr, int len) {
 	for (int i = 0; i < len; i++)
 		pfr_read_char(pfr);
 }
 
 // ----------------------------------------------------------------
-void pfr_free(peek_file_reader_t* pfr) {
+void pfr_free(old_peek_file_reader_t* pfr) {
 	if (pfr == NULL)
 		return;
 	free(pfr->peekbuf);
@@ -77,7 +77,7 @@ void pfr_free(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-void pfr_dump(peek_file_reader_t* pfr) {
+void pfr_dump(old_peek_file_reader_t* pfr) {
 	printf("======================== pfr at %p\n", pfr);
 	printf("  peekbuflen = %d\n", pfr->peekbuflen);
 	printf("  npeeked    = %d\n", pfr->npeeked);

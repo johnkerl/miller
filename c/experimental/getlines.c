@@ -6,7 +6,7 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
-#include "input/peek_file_reader.h"
+#include "input/old_peek_file_reader.h"
 
 #define PEEK_BUF_LEN             32
 #define STRING_BUILDER_INIT_SIZE 1024
@@ -263,7 +263,7 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 }
 
 // ================================================================
-static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, char* irs, int irs_len) {
+static char* read_line_pfr_psb(old_peek_file_reader_t* pfr, string_builder_t* psb, char* irs, int irs_len) {
 	while (TRUE) {
 		if (pfr_at_eof(pfr)) {
 			if (sb_is_empty(psb))
@@ -284,7 +284,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	char* irs = "\n";
 	int irs_len = strlen(irs);
 
-	peek_file_reader_t* pfr = pfr_alloc(fp, PEEK_BUF_LEN);
+	old_peek_file_reader_t* pfr = pfr_alloc(fp, PEEK_BUF_LEN);
 	string_builder_t  sb;
 	string_builder_t* psb = &sb;
 	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
@@ -441,4 +441,4 @@ int main(int argc, char** argv) {
 // * getc_unlocked vs. fgetc, no-brainer for this single-threaded code.
 // * string-builder is a little than fixed-length malloc, as expected
 //   -- it's adding value.
-// ! peek_file_reader is where the optimization opportunities are
+// ! old_peek_file_reader is where the optimization opportunities are

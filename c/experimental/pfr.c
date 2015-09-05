@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "input/peek_file_reader.h"
+#include "input/old_peek_file_reader.h"
 
 int main(int argc, char** argv) {
 	FILE* fp = stdin;
-	peek_file_reader_t* pfr = pfr_alloc(fp, 32);
+	old_peek_file_reader_t* pfr = pfr_alloc(fp, 32);
 
 	printf("@eof = %d\n", pfr_at_eof(pfr));
 	pfr_dump(pfr);
