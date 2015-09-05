@@ -218,7 +218,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_sof(void* pvstate) {
+static void lrec_reader_stdio_csv_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
@@ -284,7 +284,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_stdio_csv_process;
-	plrec_reader->psof_func     = &lrec_reader_stdio_sof;
+	plrec_reader->psof_func     = &lrec_reader_stdio_csv_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader;
