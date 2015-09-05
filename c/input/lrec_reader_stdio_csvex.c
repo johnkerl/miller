@@ -117,6 +117,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 	return NULL;
 }
 
+// xxx have this return NULL if and only if at EOF.
 //static record_wrapper_t lrec_reader_stdio_csvex_get_record(lrec_reader_stdio_csvex_state_t* pstate) {
 //	slls_t* pfields = slls_alloc();
 //	record_wrapper_t rwrapper;
