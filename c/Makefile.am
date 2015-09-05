@@ -21,7 +21,7 @@ lib/mlrutil.c \
 lib/mlr_globals.c \
 lib/string_builder.c \
 input/file_reader_mmap.c \
-input/peek_file_reader.c \
+input/old_peek_file_reader.c \
 experimental/getlines.c
 
 # ================================================================
@@ -63,9 +63,9 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	./test-mlrutil
-	./test-string-byte-reader
+	./test-byte-readers
 	./test-parse-trie
 	./test-lrec
 	./test-string-builder
@@ -83,10 +83,10 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-string-byte-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
-#	valgrind --leak-check=full --error-exitcode=1 ./a.out
+dev-unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
-	valgrind --leak-check=full ./test-string-byte-reader
+	valgrind --leak-check=full ./test-byte-readers
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
 	valgrind --leak-check=full ./test-string-builder

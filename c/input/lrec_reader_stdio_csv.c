@@ -7,7 +7,7 @@
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
-#include "input/peek_file_reader.h"
+#include "input/old_peek_file_reader.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
@@ -60,11 +60,10 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	int   ifs_eof_len;
 
 	int   peek_buf_len;
-	//int  allow_repeat_ifs;
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
-	peek_file_reader_t* pfr;
+	old_peek_file_reader_t* pfr;
 
 	int                 expect_header_line_next;
 	header_keeper_t*    pheader_keeper;
@@ -140,12 +139,12 @@ static record_wrapper_t lrec_reader_stdio_csv_get_record(lrec_reader_stdio_csv_s
 
 static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 	field_wrapper_t wrapper;
-	if (pfr_at_eof(pstate->pfr)) {
+	if (old_pfr_at_eof(pstate->pfr)) {
 		wrapper.contents = NULL;
 		wrapper.termind = TERMIND_EOF;
 		return wrapper;
-	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
-		pfr_advance_by(pstate->pfr, pstate->dquote_len);
+	} else if (old_pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+		old_pfr_advance_by(pstate->pfr, pstate->dquote_len);
 		return get_csv_field_dquoted(pstate);
 	} else {
 		return get_csv_field_not_dquoted(pstate);
@@ -154,50 +153,50 @@ static field_wrapper_t get_csv_field(lrec_reader_stdio_csv_state_t* pstate) {
 
 static field_wrapper_t get_csv_field_not_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
 	while (TRUE) {
-		if (pfr_at_eof(pstate->pfr)) {
+		if (old_pfr_at_eof(pstate->pfr)) {
 			return (field_wrapper_t) {
 				.contents = sb_is_empty(pstate->psb) ? NULL: sb_finish(pstate->psb),
 				.termind = TERMIND_EOF
 			};
-		} else if (pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
-			pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
-			pfr_advance_by(pstate->pfr, pstate->ifs_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->ifs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
-			pfr_advance_by(pstate->pfr, pstate->irs_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->irs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-		} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
 			fprintf(stderr, "%s: non-compliant field-internal double-quote at line %lld.\n",
 				MLR_GLOBALS.argv0, pstate->ilno);
 			exit(1);
 		} else {
-			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
+			sb_append_char(pstate->psb, old_pfr_read_char(pstate->pfr));
 		}
 	}
 }
 
 static field_wrapper_t get_csv_field_dquoted(lrec_reader_stdio_csv_state_t* pstate) {
 	while (TRUE) {
-		if (pfr_at_eof(pstate->pfr)) {
+		if (old_pfr_at_eof(pstate->pfr)) {
 			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
 			exit(1);
-		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
-			pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
-			pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
-			pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
+		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
+			old_pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
 			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-		} else if (pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
+		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
 			// "" inside a dquoted field is an escape for "
-			pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
+			old_pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
 			sb_append_string(pstate->psb, pstate->dquote);
 		} else {
-			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
+			sb_append_char(pstate->psb, old_pfr_read_char(pstate->pfr));
 		}
 	}
 }
@@ -218,7 +217,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_sof(void* pvstate) {
+static void lrec_reader_stdio_csv_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
@@ -232,11 +231,11 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
-	pfr_free(pstate->pfr);
+	old_pfr_free(pstate->pfr);
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
@@ -270,8 +269,6 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
 
-	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
-
 	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
 	pstate->pfr                       = NULL;
@@ -284,7 +281,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char irs, char ifs, int allow_repeat_
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
 	plrec_reader->pprocess_func = &lrec_reader_stdio_csv_process;
-	plrec_reader->psof_func     = &lrec_reader_stdio_sof;
+	plrec_reader->psof_func     = &lrec_reader_stdio_csv_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_csv_free;
 
 	return plrec_reader;

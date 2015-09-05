@@ -27,10 +27,10 @@ libinput_la_CPPFLAGS=	-I${srcdir}/../
 libinput_la_CFLAGS=	-std=gnu99
 
 TESTS=			$(check_PROGRAMS)
-check_PROGRAMS=		test_string_byte_reader
+check_PROGRAMS=		test_byte_readers
 
-test_string_byte_reader_LDADD=		libinput.la \
+test_byte_readers_LDADD=		libinput.la \
 					../lib/libmlr.la
-test_string_byte_reader_CPPFLAGS=	-D__TEST_STRING_BYTE_READER_MAIN__ ${AM_CPPFLAGS}
+test_byte_readers_CPPFLAGS=	-D__TEST_BYTE_READERS_MAIN__ ${AM_CPPFLAGS}
 
 AM_CPPFLAGS=	-I${srcdir}/../
