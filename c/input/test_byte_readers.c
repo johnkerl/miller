@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "lib/mlrutil.h"
 #include "lib/minunit.h"
 #include "input/byte_readers.h"
@@ -11,7 +12,7 @@ int assertions_run    = 0;
 int assertions_failed = 0;
 
 // ----------------------------------------------------------------
-static char* test_it() {
+static char* test_string_byte_reader() {
 	byte_reader_t* pbr = string_byte_reader_alloc();
 
 	int ok = pbr->popen_func(pbr, "");
@@ -55,10 +56,34 @@ static FILE* make_temp_file(char* contents) {
 
 }
 #endif
+static char* test_temp() {
+	printf("hello\n");
+	char* path = mktemp(strdup("/tmp/mlr.ut.XXXXXXXX"));
+	printf("path=%s\n", path);
+	FILE* fp = fopen(path, "w");
+	char* buf = "a=1,b=2\nc=3";
+	int len = strlen(buf);
+	int rc = fwrite(buf, 1, len, fp);
+	if (rc != len) {
+		perror("fwrite");
+		fprintf(stderr, "fwrite (%d) to \"%s\" failed.\n", len, path);
+		exit(1);
+	}
+	fclose(fp);
+	rc = unlink(path);
+	if (rc != 0) {
+		perror("unlink");
+		fprintf(stderr, "unlink of \"%s\" failed.\n", path);
+		exit(1);
+	}
+
+	return NULL;
+}
 
 // ================================================================
 static char * run_all_tests() {
-	mu_run_test(test_it);
+	mu_run_test(test_string_byte_reader);
+	mu_run_test(test_temp);
 	return 0;
 }
 
