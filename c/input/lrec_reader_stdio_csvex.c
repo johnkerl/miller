@@ -7,7 +7,7 @@
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
-#include "input/old_peek_file_reader.h"
+#include "input/peek_file_reader.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
@@ -63,7 +63,7 @@ typedef struct _lrec_reader_stdio_csvex_state_t {
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
-	old_peek_file_reader_t* pfr;
+	peek_file_reader_t* pfr;
 
 	int                 expect_header_line_next;
 	header_keeper_t*    pheader_keeper;
@@ -140,12 +140,12 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 
 //static field_wrapper_t get_csvex_field(lrec_reader_stdio_csvex_state_t* pstate) {
 //	field_wrapper_t wrapper;
-//	if (pfr_at_eof(pstate->pfr)) {
+//	if (old_pfr_at_eof(pstate->pfr)) {
 //		wrapper.contents = NULL;
 //		wrapper.termind = TERMIND_EOF;
 //		return wrapper;
-//	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
-//		pfr_advance_by(pstate->pfr, pstate->dquote_len);
+//	} else if (old_pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+//		old_pfr_advance_by(pstate->pfr, pstate->dquote_len);
 //		return get_csvex_field_dquoted(pstate);
 //	} else {
 //		return get_csvex_field_not_dquoted(pstate);
@@ -154,50 +154,50 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 
 //static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_stdio_csvex_state_t* pstate) {
 //	while (TRUE) {
-//		if (pfr_at_eof(pstate->pfr)) {
+//		if (old_pfr_at_eof(pstate->pfr)) {
 //			return (field_wrapper_t) {
 //				.contents = sb_is_empty(pstate->psb) ? NULL: sb_finish(pstate->psb),
 //				.termind = TERMIND_EOF
 //			};
-//		} else if (pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-//		} else if (pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->ifs_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->ifs_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->irs_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->irs_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
 //			fprintf(stderr, "%s: non-compliant field-internal double-quote at line %lld.\n",
 //				MLR_GLOBALS.argv0, pstate->ilno);
 //			exit(1);
 //		} else {
-//			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
+//			sb_append_char(pstate->psb, old_pfr_read_char(pstate->pfr));
 //		}
 //	}
 //}
 
 //static field_wrapper_t get_csvex_field_dquoted(lrec_reader_stdio_csvex_state_t* pstate) {
 //	while (TRUE) {
-//		if (pfr_at_eof(pstate->pfr)) {
+//		if (old_pfr_at_eof(pstate->pfr)) {
 //			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
 //			exit(1);
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
+//			old_pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
 //			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
+//		} else if (old_pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
 //			// "" inside a dquoted field is an escape for "
-//			pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
+//			old_pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
 //			sb_append_string(pstate->psb, pstate->dquote);
 //		} else {
-//			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
+//			sb_append_char(pstate->psb, old_pfr_read_char(pstate->pfr));
 //		}
 //	}
 //}
@@ -232,7 +232,7 @@ static void lrec_reader_stdio_csvex_free(void* pvstate) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
-	pfr_free(pstate->pfr);
+	old_pfr_free(pstate->pfr);
 }
 
 // ----------------------------------------------------------------

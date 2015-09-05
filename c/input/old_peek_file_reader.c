@@ -18,7 +18,7 @@ old_peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
 	memset(pfr->peekbuf, 0, pfr->peekbuflen);
 	pfr->npeeked    = 0;
 
-	// Pre-read one char into the peekbuf so that we can say pfr_at_eof
+	// Pre-read one char into the peekbuf so that we can say old_pfr_at_eof
 	// right away on the first call on an empty file.
 	// getc_unlocked() is appropriate since Miller is single-threaded.
 	pfr->peekbuf[pfr->npeeked++] = getc_unlocked(pfr->fp); // maybe EOF
@@ -27,13 +27,13 @@ old_peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
 }
 
 // ----------------------------------------------------------------
-int pfr_at_eof(old_peek_file_reader_t* pfr) {
+int old_pfr_at_eof(old_peek_file_reader_t* pfr) {
 	return pfr->npeeked >= 1 && pfr->peekbuf[0] == EOF;
 }
 
 // ----------------------------------------------------------------
 // xxx inline this for perf.
-int pfr_next_is(old_peek_file_reader_t* pfr, char* string, int len) {
+int old_pfr_next_is(old_peek_file_reader_t* pfr, char* string, int len) {
 	// xxx abend on len > peekbuflen
 	while (pfr->npeeked < len) {
 		char c = getc_unlocked(pfr->fp); // maybe EOF
@@ -44,7 +44,7 @@ int pfr_next_is(old_peek_file_reader_t* pfr, char* string, int len) {
 }
 
 // ----------------------------------------------------------------
-char pfr_read_char(old_peek_file_reader_t* pfr) {
+char old_pfr_read_char(old_peek_file_reader_t* pfr) {
 	if (pfr->npeeked == 1 && pfr->peekbuf[0] == EOF) {
 		return EOF;
 	} else if (pfr->npeeked == 0) {
@@ -61,13 +61,13 @@ char pfr_read_char(old_peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-void pfr_advance_by(old_peek_file_reader_t* pfr, int len) {
+void old_pfr_advance_by(old_peek_file_reader_t* pfr, int len) {
 	for (int i = 0; i < len; i++)
-		pfr_read_char(pfr);
+		old_pfr_read_char(pfr);
 }
 
 // ----------------------------------------------------------------
-void pfr_free(old_peek_file_reader_t* pfr) {
+void old_pfr_free(old_peek_file_reader_t* pfr) {
 	if (pfr == NULL)
 		return;
 	free(pfr->peekbuf);

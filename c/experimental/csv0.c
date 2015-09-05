@@ -25,65 +25,65 @@ static field_wrapper_t get_csv_field_not_dquoted(old_peek_file_reader_t* pfr, st
 	printf("\n");
 	printf("ENTER\n");
 	while (TRUE) {
-		if (pfr_at_eof(pfr)) {
+		if (old_pfr_at_eof(pfr)) {
 			printf("--case 1\n");
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_is_empty(psb) ? NULL: sb_finish(psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pfr, ",\xff", 2)) {
+		} else if (old_pfr_next_is(pfr, ",\xff", 2)) {
 			printf("--case 2\n");
-			pfr_advance_by(pfr, 2);
+			old_pfr_advance_by(pfr, 2);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pfr, ",", 1)) {
+		} else if (old_pfr_next_is(pfr, ",", 1)) {
 			printf("--case 3\n");
-			pfr_advance_by(pfr, 1);
+			old_pfr_advance_by(pfr, 1);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pfr, "\r\n", 2)) {
+		} else if (old_pfr_next_is(pfr, "\r\n", 2)) {
 			printf("--case 4\n");
-			pfr_advance_by(pfr, 2);
+			old_pfr_advance_by(pfr, 2);
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
 			//pfr_dump(pfr);
-			char c = pfr_read_char(pfr);
+			char c = old_pfr_read_char(pfr);
 			printf("--case 5 %c [%02x]\n", isprint(c) ? c : '?', c);
 			//pfr_dump(pfr);
 			sb_append_char(psb, c);
-			//sb_append_char(psb, pfr_read_char(pfr));
+			//sb_append_char(psb, old_pfr_read_char(pfr));
 		}
 	}
 }
 
 static field_wrapper_t get_csv_field_dquoted(old_peek_file_reader_t* pfr, string_builder_t* psb) {
-	pfr_advance_by(pfr, 1);
+	old_pfr_advance_by(pfr, 1);
 	while (TRUE) {
-		if (pfr_at_eof(pfr)) {
+		if (old_pfr_at_eof(pfr)) {
 			// xxx imbalanced-dquote error
 			fprintf(stderr, "xxx k0d3 me up b04k3n b04k3n b04ken %d\n", __LINE__);
 			exit(1);
-		} else if (pfr_next_is(pfr, "\"\xff", 2)) {
-			pfr_advance_by(pfr, 2);
+		} else if (old_pfr_next_is(pfr, "\"\xff", 2)) {
+			old_pfr_advance_by(pfr, 2);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_EOF };
-		} else if (pfr_next_is(pfr, "\",", 2)) {
-			pfr_advance_by(pfr, 2);
+		} else if (old_pfr_next_is(pfr, "\",", 2)) {
+			old_pfr_advance_by(pfr, 2);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_FS };
-		} else if (pfr_next_is(pfr, "\"\r\n", 3)) {
-			pfr_advance_by(pfr, 3);
+		} else if (old_pfr_next_is(pfr, "\"\r\n", 3)) {
+			old_pfr_advance_by(pfr, 3);
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
-			sb_append_char(psb, pfr_read_char(pfr));
+			sb_append_char(psb, old_pfr_read_char(pfr));
 		}
 	}
 }
 
 field_wrapper_t get_csv_field(old_peek_file_reader_t* pfr, string_builder_t* psb) {
 	field_wrapper_t wrapper;
-	if (pfr_at_eof(pfr)) {
+	if (old_pfr_at_eof(pfr)) {
 		wrapper.contents = NULL;
 		wrapper.termind = TERMIND_EOF;
 		return wrapper;
-	} else if (pfr_next_is(pfr, "\"", 1)) {
+	} else if (old_pfr_next_is(pfr, "\"", 1)) {
 		return get_csv_field_dquoted(pfr, psb);
 	} else {
 		return get_csv_field_not_dquoted(pfr, psb);

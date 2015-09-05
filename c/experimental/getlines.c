@@ -265,16 +265,16 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 // ================================================================
 static char* read_line_pfr_psb(old_peek_file_reader_t* pfr, string_builder_t* psb, char* irs, int irs_len) {
 	while (TRUE) {
-		if (pfr_at_eof(pfr)) {
+		if (old_pfr_at_eof(pfr)) {
 			if (sb_is_empty(psb))
 				return NULL;
 			else
 				return sb_finish(psb);
-		} else if (pfr_next_is(pfr, irs, irs_len)) {
-			pfr_advance_by(pfr, irs_len);
+		} else if (old_pfr_next_is(pfr, irs, irs_len)) {
+			old_pfr_advance_by(pfr, irs_len);
 			return sb_finish(psb);
 		} else {
-			sb_append_char(psb, pfr_read_char(pfr));
+			sb_append_char(psb, old_pfr_read_char(pfr));
 		}
 	}
 }
