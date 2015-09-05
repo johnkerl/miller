@@ -57,6 +57,7 @@ containers/header_keeper.c \
 containers/join_bucket_keeper.c \
 input/lrec_reader_in_memory.c input/lrec_readers.c \
 input/lrec_reader_stdio_csv.c \
+input/lrec_reader_stdio_csvex.c \
 input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \

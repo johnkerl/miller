@@ -296,6 +296,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
 		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
 
+		else if (streq(argv[argi], "--csvex"))    { popts->ifmt = "csvex"; ofmt = "csv"; }
+		else if (streq(argv[argi], "--icsvex"))   { popts->ifmt = "csvlite";  }
+
 		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
 		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }
 		else if (streq(argv[argi], "--odkvp"))    { ofmt = "dkvp"; }
