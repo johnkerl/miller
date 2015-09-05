@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
 #include "input/file_reader_stdio.h"
+#include "input/byte_reader.h"
 #include "input/lrec_readers.h"
-#include "lib/string_builder.h"
 #include "input/peek_file_reader.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
@@ -36,7 +37,7 @@
 //} record_wrapper_t;
 
 // ----------------------------------------------------------------
-typedef struct _lrec_reader_stdio_csvex_state_t {
+typedef struct _lrec_reader_csvex_state_t {
 	// Input line number is not the same as the record-counter in context_t,
 	// which counts records.
 	long long  ilno;
@@ -63,27 +64,28 @@ typedef struct _lrec_reader_stdio_csvex_state_t {
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
+	byte_reader_t*      pbr;
 	peek_file_reader_t* pfr;
 
 	int                 expect_header_line_next;
 	header_keeper_t*    pheader_keeper;
 	lhmslv_t*           pheader_keepers;
 
-} lrec_reader_stdio_csvex_state_t;
+} lrec_reader_csvex_state_t;
 
 // ----------------------------------------------------------------
-//static record_wrapper_t lrec_reader_stdio_csvex_get_record(lrec_reader_stdio_csvex_state_t* pstate);
+//static record_wrapper_t lrec_reader_csvex_get_record(lrec_reader_csvex_state_t* pstate);
 
-//static field_wrapper_t get_csvex_field(lrec_reader_stdio_csvex_state_t* pstate);
-//static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_stdio_csvex_state_t* pstate);
-//static field_wrapper_t get_csvex_field_dquoted(lrec_reader_stdio_csvex_state_t* pstate);
-//static lrec_t*         paste_header_and_data(lrec_reader_stdio_csvex_state_t* pstate, slls_t* pdata_fields);
+//static field_wrapper_t get_csvex_field(lrec_reader_csvex_state_t* pstate);
+//static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_csvex_state_t* pstate);
+//static field_wrapper_t get_csvex_field_dquoted(lrec_reader_csvex_state_t* pstate);
+//static lrec_t*         paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* pdata_fields);
 
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs. etc.
 
-static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, context_t* pctx) {
-//	lrec_reader_stdio_csvex_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_csvex_process(void* pvhandle, void* pvstate, context_t* pctx) {
+//	lrec_reader_csvex_state_t* pstate = pvstate;
 
 //	xxx byte-reader open ...
 //	if (pstate->pfr == NULL) {
@@ -91,7 +93,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	}
 
 //	if (pstate->expect_header_line_next) {
-//		rwrapper = lrec_reader_stdio_csvex_get_record(pstate);
+//		rwrapper = lrec_reader_csvex_get_record(pstate);
 //
 //		if (rwrapper.contents == NULL && rwrapper.at_eof)
 //			return NULL;
@@ -108,7 +110,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //		}
 //	}
 //
-//	rwrapper = lrec_reader_stdio_csvex_get_record(pstate);
+//	rwrapper = lrec_reader_csvex_get_record(pstate);
 //	if (rwrapper.contents == NULL && rwrapper.at_eof)
 //		return NULL;
 //
@@ -119,7 +121,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 
 // xxx UT all of this with string_byte_reader :)
 // xxx have this return NULL if and only if at EOF.
-//static record_wrapper_t lrec_reader_stdio_csvex_get_record(lrec_reader_stdio_csvex_state_t* pstate) {
+//static record_wrapper_t lrec_reader_csvex_get_record(lrec_reader_csvex_state_t* pstate) {
 //	slls_t* pfields = slls_alloc();
 //	record_wrapper_t rwrapper;
 //	rwrapper.contents = pfields;
@@ -195,7 +197,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	return rwrapper;
 //}
 
-//static field_wrapper_t get_csvex_field(lrec_reader_stdio_csvex_state_t* pstate) {
+//static field_wrapper_t get_csvex_field(lrec_reader_csvex_state_t* pstate) {
 //	field_wrapper_t wrapper;
 //	if (old_pfr_at_eof(pstate->pfr)) {
 //		wrapper.contents = NULL;
@@ -209,7 +211,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	}
 //}
 
-//static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_stdio_csvex_state_t* pstate) {
+//static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_csvex_state_t* pstate) {
 //	while (TRUE) {
 //		if (old_pfr_at_eof(pstate->pfr)) {
 //			return (field_wrapper_t) {
@@ -235,7 +237,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	}
 //}
 
-//static field_wrapper_t get_csvex_field_dquoted(lrec_reader_stdio_csvex_state_t* pstate) {
+//static field_wrapper_t get_csvex_field_dquoted(lrec_reader_csvex_state_t* pstate) {
 //	while (TRUE) {
 //		if (old_pfr_at_eof(pstate->pfr)) {
 //			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
@@ -259,7 +261,7 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //	}
 //}
 
-//static lrec_t* paste_header_and_data(lrec_reader_stdio_csvex_state_t* pstate, slls_t* pdata_fields) {
+//static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* pdata_fields) {
 //	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 //		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
 //			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
@@ -275,16 +277,16 @@ static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, co
 //}
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_csvex_sof(void* pvstate) {
-	lrec_reader_stdio_csvex_state_t* pstate = pvstate;
+static void lrec_reader_csvex_sof(void* pvstate) {
+	lrec_reader_csvex_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
 	pstate->pfr = NULL;
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_csvex_free(void* pvstate) {
-	lrec_reader_stdio_csvex_state_t* pstate = pvstate;
+static void lrec_reader_csvex_free(void* pvstate) {
+	lrec_reader_csvex_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
@@ -293,10 +295,10 @@ static void lrec_reader_stdio_csvex_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs) {
+lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	lrec_reader_stdio_csvex_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvex_state_t));
+	lrec_reader_csvex_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csvex_state_t));
 	pstate->ilno                      = 0LL;
 	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
 	pstate->ifs                       = ",";    // xxx multi-byte the cli irs/ifs/etc, and integrate here
@@ -329,11 +331,12 @@ lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs) {
 
 	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
+	pstate->pbr                       = pbr;
 	pstate->pfr                       = NULL;
 
 	// xxx allocate the pfr here, with byte_reader via use_mmap arg or enum arg or some such ...
 	// or have the caller pass in the byte_reader? maybe lrec_reader_alloc takes a byte_reader?
-	// xxx and rename this file from lrec_reader_stdio_csvex.c to lrec_reader_csvex.c.
+	// xxx and rename this file from lrec_reader_csvex.c to lrec_reader_csvex.c.
 
 	// xxx allocate the parse-tries here -- one for dquote only,
 	// the second for non-dquote-after-that, the third for dquoted-after-that.
@@ -345,9 +348,9 @@ lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs) {
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_stdio_csvex_process;
-	plrec_reader->psof_func     = &lrec_reader_stdio_csvex_sof;
-	plrec_reader->pfree_func    = &lrec_reader_stdio_csvex_free;
+	plrec_reader->pprocess_func = &lrec_reader_csvex_process;
+	plrec_reader->psof_func     = &lrec_reader_csvex_sof;
+	plrec_reader->pfree_func    = &lrec_reader_csvex_free;
 
 	return plrec_reader;
 }

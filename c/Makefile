@@ -55,9 +55,11 @@ containers/lrec.c \
 containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
 containers/header_keeper.c \
 containers/join_bucket_keeper.c \
+input/mmap_byte_reader.c \
+input/stdio_byte_reader.c \
 input/lrec_reader_in_memory.c input/lrec_readers.c \
 input/lrec_reader_stdio_csv.c \
-input/lrec_reader_stdio_csvex.c \
+input/lrec_reader_csvex.c \
 input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
