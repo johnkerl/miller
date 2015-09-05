@@ -27,7 +27,7 @@ NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
 FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
 
-TEST_BYTE_READERS_SRCS = lib/mlrutil.c \
+TEST_BYTE_READERS_SRCS = lib/mlrutil.c lib/mlr_test_util.c lib/mlr_globals.c \
 input/string_byte_reader.c \
 input/test_byte_readers.c
 

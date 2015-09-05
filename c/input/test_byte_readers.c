@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "lib/mlrutil.h"
 #include "lib/minunit.h"
+#include "lib/mlr_test_util.h"
 #include "input/byte_readers.h"
 
 #ifdef __TEST_BYTE_READERS_MAIN__
@@ -41,41 +42,12 @@ static char* test_string_byte_reader() {
 	return NULL;
 }
 
-#if 0
 // ----------------------------------------------------------------
-// xxx mkstemp
-// xxx tmpfile
-// xxx pop from buf
-// xxx take dirname from argv[1]?
+static char* test_stdio_byte_reader() {
+	char* contents = "abcdefg";
+	char* path = write_temp_file_or_die(contents);
 
-// ----------------------------------------------------------------
-static FILE* make_temp_file(char* contents) {
-	xxx
-
-	int fd = mkstemp("/tmp/mlr-ut-XXXXXXXX");
-
-}
-#endif
-static char* test_temp() {
-	printf("hello\n");
-	char* path = mktemp(strdup("/tmp/mlr.ut.XXXXXXXX"));
-	printf("path=%s\n", path);
-	FILE* fp = fopen(path, "w");
-	char* buf = "a=1,b=2\nc=3";
-	int len = strlen(buf);
-	int rc = fwrite(buf, 1, len, fp);
-	if (rc != len) {
-		perror("fwrite");
-		fprintf(stderr, "fwrite (%d) to \"%s\" failed.\n", len, path);
-		exit(1);
-	}
-	fclose(fp);
-	rc = unlink(path);
-	if (rc != 0) {
-		perror("unlink");
-		fprintf(stderr, "unlink of \"%s\" failed.\n", path);
-		exit(1);
-	}
+	unlink_file_or_die(path);
 
 	return NULL;
 }
@@ -83,7 +55,7 @@ static char* test_temp() {
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_string_byte_reader);
-	mu_run_test(test_temp);
+	mu_run_test(test_stdio_byte_reader);
 	return 0;
 }
 
