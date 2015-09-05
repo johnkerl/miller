@@ -11,7 +11,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char irs, char if
 
 lrec_reader_t*  lrec_reader_stdio_csv_alloc(char irs, char ifs);
 lrec_reader_t*  lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs);
-lrec_reader_t*  lrec_reader_stdio_csvex_alloc(char irs, char ifs, int allow_repeat_ifs);
+lrec_reader_t*  lrec_reader_stdio_csvex_alloc(char irs, char ifs);
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips);

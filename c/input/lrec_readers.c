@@ -21,7 +21,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char irs, char if
 		else
 			return lrec_reader_stdio_csvlite_alloc(irs, ifs, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "csvex")) {
-		return lrec_reader_stdio_csvex_alloc(irs, ifs, allow_repeat_ifs);
+		return lrec_reader_stdio_csvex_alloc(irs, ifs);
 	} else if (streq(fmtdesc, "nidx")) {
 		if (use_mmap)
 			return lrec_reader_mmap_nidx_alloc(irs, ifs, allow_repeat_ifs);

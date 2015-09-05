@@ -25,15 +25,15 @@
 #define TERMIND_FS  0x2222
 #define TERMIND_EOF 0x3333
 
-typedef struct _field_wrapper_t {
-	char* contents;
-	int   termind;
-} field_wrapper_t;
+//typedef struct _field_wrapper_t {
+//	char* contents;
+//	int   termind;
+//} field_wrapper_t;
 
-typedef struct _record_wrapper_t {
-	slls_t* contents;
-	int   at_eof;
-} record_wrapper_t;
+//typedef struct _record_wrapper_t {
+//	slls_t* contents;
+//	int   at_eof;
+//} record_wrapper_t;
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_stdio_csvex_state_t {
@@ -84,12 +84,12 @@ typedef struct _lrec_reader_stdio_csvex_state_t {
 
 static lrec_t* lrec_reader_stdio_csvex_process(void* pvhandle, void* pvstate, context_t* pctx) {
 //	lrec_reader_stdio_csvex_state_t* pstate = pvstate;
+
+//	xxx byte-reader open ...
 //	if (pstate->pfr == NULL) {
 //		pstate->pfr = pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
 //	}
-//
-//	record_wrapper_t rwrapper;
-//
+
 //	if (pstate->expect_header_line_next) {
 //		rwrapper = lrec_reader_stdio_csvex_get_record(pstate);
 //
@@ -236,7 +236,7 @@ static void lrec_reader_stdio_csvex_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csvex_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvex_state_t));
@@ -270,11 +270,16 @@ lrec_reader_t* lrec_reader_stdio_csvex_alloc(char irs, char ifs, int allow_repea
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
 
-	//pstate->allow_repeat_ifs          = allow_repeat_ifs;
-
 	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
 	pstate->pfr                       = NULL;
+
+	// xxx allocate the pfr here, with byte_reader via use_mmap arg or enum arg or some such ...
+	// or have the caller pass in the byte_reader? maybe lrec_reader_alloc takes a byte_reader?
+	// xxx and rename this file from lrec_reader_stdio_csvex.c to lrec_reader_csvex.c.
+
+	// xxx allocate the parse-tries here -- one for dquote only,
+	// the second for non-dquote-after-that, the third for dquoted-after-that.
 
 	pstate->expect_header_line_next   = TRUE;
 	pstate->pheader_keeper            = NULL;
