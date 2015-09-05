@@ -43,19 +43,49 @@ static char* test_string_byte_reader() {
 }
 
 // ----------------------------------------------------------------
-static char* test_stdio_byte_reader() {
+static char* test_stdio_byte_reader_1() {
+	char* contents = "";
+	char* path = write_temp_file_or_die(contents);
+
+	byte_reader_t* pbr = stdio_byte_reader_alloc();
+	int ok = pbr->popen_func(pbr, path);
+	mu_assert_lf(ok == TRUE);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+
+	unlink_file_or_die(path);
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_stdio_byte_reader_2() {
 	char* contents = "abcdefg";
 	char* path = write_temp_file_or_die(contents);
 
-	unlink_file_or_die(path);
+	byte_reader_t* pbr = stdio_byte_reader_alloc();
+	int ok = pbr->popen_func(pbr, path);
+	mu_assert_lf(ok == TRUE);
+	mu_assert_lf(pbr->pread_func(pbr) == 'a');
+	mu_assert_lf(pbr->pread_func(pbr) == 'b');
+	mu_assert_lf(pbr->pread_func(pbr) == 'c');
+	mu_assert_lf(pbr->pread_func(pbr) == 'd');
+	mu_assert_lf(pbr->pread_func(pbr) == 'e');
+	mu_assert_lf(pbr->pread_func(pbr) == 'f');
+	mu_assert_lf(pbr->pread_func(pbr) == 'g');
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 
+	unlink_file_or_die(path);
 	return NULL;
 }
 
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_string_byte_reader);
-	mu_run_test(test_stdio_byte_reader);
+	mu_run_test(test_stdio_byte_reader_1);
+	mu_run_test(test_stdio_byte_reader_2);
 	return 0;
 }
 
