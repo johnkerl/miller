@@ -57,7 +57,7 @@ test_lrec
 test_mlrutil
 test_parse_trie
 test_string_builder
-test_string_byte_reader
+test_byte_readers
 c/dsls/lemon_prepared
 doc/miller.1
 mlr-[0-9.]*.tar.*
