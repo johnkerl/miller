@@ -53,8 +53,8 @@ static char* test_stdio_byte_reader_1() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
@@ -76,8 +76,8 @@ static char* test_stdio_byte_reader_2() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
@@ -95,6 +95,7 @@ static char* test_stdio_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	unlink_file_or_die(path);
 
 	contents = "defg";
 	path = write_temp_file_or_die(contents);
@@ -107,8 +108,8 @@ static char* test_stdio_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
@@ -123,8 +124,8 @@ static char* test_mmap_byte_reader_1() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
@@ -146,8 +147,8 @@ static char* test_mmap_byte_reader_2() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
@@ -165,6 +166,7 @@ static char* test_mmap_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	unlink_file_or_die(path);
 
 	contents = "defg";
 	path = write_temp_file_or_die(contents);
@@ -177,8 +179,8 @@ static char* test_mmap_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-
 	unlink_file_or_die(path);
+
 	return NULL;
 }
 
