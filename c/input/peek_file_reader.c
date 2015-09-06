@@ -23,15 +23,23 @@ peek_file_reader_t* pfr_alloc(byte_reader_t* pbr, int maxnpeek) {
 }
 
 void pfr_free(peek_file_reader_t* pfr) {
-	// xxx stub
+	if (pfr == NULL)
+		return;
+	free(pfr->peekbuf);
+	free(pfr);
 }
 
-char* pfr_peek_char(peek_file_reader_t* pfr) {
-	return NULL; // xxx stub
+char pfr_peek_char(peek_file_reader_t* pfr) {
+	if (pfr->npeeked < 1) {
+		pfr->peekbuf[pfr->npeeked++] = pfr->pbr->pread_func(pfr->pbr);
+	}
+	return pfr->peekbuf[0];
 }
 
 void pfr_buffer_by(peek_file_reader_t* pfr, int len) {
-	// xxx stub
+	while (pfr->npeeked < len) {
+		pfr->peekbuf[pfr->npeeked++] = pfr->pbr->pread_func(pfr->pbr);
+	}
 }
 
 void pfr_advance_by(peek_file_reader_t* pfr, int len) {
