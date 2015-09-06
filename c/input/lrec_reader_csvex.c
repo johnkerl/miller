@@ -69,10 +69,6 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 
-//	xxx byte-reader open ...
-//	if (pstate->pfr == NULL) {
-//	}
-
 	if (pstate->expect_header_line_next) {
 		slls_t* pheader_fields = lrec_reader_csvex_get_fields(pstate);
 		if (pheader_fields == NULL)
@@ -240,14 +236,14 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 
 // ----------------------------------------------------------------
 void* lrec_reader_csvex_open(void* pvstate, char* filename) {
-	//lrec_reader_csvex_state_t* pstate = pvstate;
-	printf("OPF [%s]\n", filename);
-	return NULL; // xxx stub
+	lrec_reader_csvex_state_t* pstate = pvstate;
+	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
+	return NULL; // xxx modify the API after the functional refactor is complete
 }
 
 void lrec_reader_csvex_close(void* pvstate, void* pvhandle) {
-	//lrec_reader_csvex_state_t* pstate = pvstate;
-	// xxx stub
+	lrec_reader_csvex_state_t* pstate = pvstate;
+	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
 }
 
 // ----------------------------------------------------------------
@@ -256,7 +252,6 @@ static void lrec_reader_csvex_sof(void* pvstate) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
-	printf("SOF\n"); // xxx
 }
 
 // ----------------------------------------------------------------
