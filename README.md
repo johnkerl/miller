@@ -56,7 +56,8 @@ interleaved.
 in modern C, and it has **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
-For more information, please visit http://johnkerl.org/miller/doc
+Documentation:
 
-For notes about issue-labeling in the Github repo, please see
-https://github.com/johnkerl/miller/wiki/Issue-labeling.
+* Build information including dependencies: http://johnkerl.org/miller/doc/build.html
+* Notes about issue-labeling in the Github repo: https://github.com/johnkerl/miller/wiki/Issue-labeling
+* For all other information, please visit http://johnkerl.org/miller/doc
