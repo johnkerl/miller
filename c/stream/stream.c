@@ -57,10 +57,10 @@ int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pma
 static int do_file_chained(char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
-	void* pvhandle = plrec_reader->popen_func(filename);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, filename);
 
 	while (1) {
-		lrec_t* pinrec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
+		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pinrec == NULL)
 			break;
 		// xxx incr inside the readers
@@ -69,7 +69,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
-	plrec_reader->pclose_func(pvhandle);
+	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle);
 	return 1;
 }
 

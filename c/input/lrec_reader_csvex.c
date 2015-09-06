@@ -66,12 +66,11 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs. etc.
 
-static lrec_t* lrec_reader_csvex_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 
 //	xxx byte-reader open ...
 //	if (pstate->pfr == NULL) {
-//		pstate->pfr = pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
 //	}
 
 	if (pstate->expect_header_line_next) {
@@ -96,8 +95,8 @@ static lrec_t* lrec_reader_csvex_process(void* pvhandle, void* pvstate, context_
 }
 
 static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
-
-//	if @ eof: return null
+	if (pfr_peek_char(pstate->pfr) == EOF)
+		return NULL;
 
 //	while (TRUE) { // loop over fields in record
 
@@ -240,11 +239,24 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 }
 
 // ----------------------------------------------------------------
+void* lrec_reader_csvex_open(void* pvstate, char* filename) {
+	//lrec_reader_csvex_state_t* pstate = pvstate;
+	printf("OPF [%s]\n", filename);
+	return NULL; // xxx stub
+}
+
+void lrec_reader_csvex_close(void* pvstate, void* pvhandle) {
+	//lrec_reader_csvex_state_t* pstate = pvstate;
+	// xxx stub
+}
+
+// ----------------------------------------------------------------
+// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
 static void lrec_reader_csvex_sof(void* pvstate) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
-	pstate->pfr = NULL;
+	printf("SOF\n"); // xxx
 }
 
 // ----------------------------------------------------------------
@@ -295,7 +307,7 @@ lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
 	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
 	pstate->pbr                       = pbr;
-	pstate->pfr                       = NULL;
+	pstate->pfr                       = pfr_alloc(pstate->pbr, pstate->peek_buf_len);
 
 	// xxx allocate the parse-tries here -- one for dquote only,
 	// the second for non-dquote-after-that, the third for dquoted-after-that.
@@ -305,8 +317,8 @@ lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &file_reader_stdio_vopen;
-	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
+	plrec_reader->popen_func    = &lrec_reader_csvex_open;
+	plrec_reader->pclose_func   = &lrec_reader_csvex_close;
 	plrec_reader->pprocess_func = &lrec_reader_csvex_process;
 	plrec_reader->psof_func     = &lrec_reader_csvex_sof;
 	plrec_reader->pfree_func    = &lrec_reader_csvex_free;

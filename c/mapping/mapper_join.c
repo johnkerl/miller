@@ -259,7 +259,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 
-	void* pvhandle = plrec_reader->popen_func(pstate->popts->left_file_name);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->popts->left_file_name };
@@ -268,7 +268,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	pstate->pleft_buckets_by_join_field_values = lhmslv_alloc();
 
 	while (TRUE) {
-		lrec_t* pleft_rec = plrec_reader->pprocess_func(pvhandle, plrec_reader->pvstate, pctx);
+		lrec_t* pleft_rec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pleft_rec == NULL)
 			break;
 
@@ -286,7 +286,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		}
 	}
 
-	plrec_reader->pclose_func(pvhandle);
+	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle);
 }
 
 // ----------------------------------------------------------------

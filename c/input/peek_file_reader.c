@@ -16,9 +16,6 @@ peek_file_reader_t* pfr_alloc(byte_reader_t* pbr, int maxnpeek) {
 	memset(pfr->peekbuf, 0, pfr->peekbuflen);
 	pfr->npeeked    =  0;
 
-	// Pre-read one char (maybe EOF itself) into the peekbuf so that we can say
-	// old_pfr_at_eof right away on the first call on an empty file.
-	pfr->peekbuf[pfr->npeeked++] = pfr->pbr->pread_func(pfr->pbr);
 	return pfr;
 }
 

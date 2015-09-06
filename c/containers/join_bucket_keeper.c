@@ -70,7 +70,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
 
-	void* pvhandle = plrec_reader->popen_func(left_file_name);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	context_t* pctx = mlr_malloc_or_die(sizeof(context_t));
@@ -102,7 +102,7 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 		slls_free(pkeeper->pbucket->pleft_field_values);
 	if (pkeeper->pbucket->precords != NULL)
 		sllv_free(pkeeper->pbucket->precords);
-	pkeeper->plrec_reader->pclose_func(pkeeper->pvhandle);
+	pkeeper->plrec_reader->pclose_func(pkeeper->plrec_reader->pvstate, pkeeper->pvhandle);
 	free(pkeeper);
 }
 
@@ -159,8 +159,8 @@ static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 }
 
 static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper) {
-	pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-		pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+	pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+		pkeeper->pvhandle, pkeeper->pctx);
 	if (pkeeper->prec_peek == NULL) {
 		pkeeper->leof = TRUE;
 		return;
@@ -177,8 +177,8 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 	pkeeper->pbucket->was_paired = FALSE;
 	pkeeper->prec_peek = NULL;
 	while (TRUE) {
-		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+			pkeeper->pvhandle, pkeeper->pctx);
 		if (pkeeper->prec_peek == NULL) {
 			pkeeper->leof = TRUE;
 			break;
@@ -240,8 +240,8 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
 			pkeeper->prec_peek = NULL;
 
-			pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-				pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+			pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+				pkeeper->pvhandle, pkeeper->pctx);
 			if (pkeeper->prec_peek == NULL) {
 				pkeeper->leof = TRUE;
 				break;
@@ -279,8 +279,8 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 	}
 	// 3. Remainder of left input stream
 	while (TRUE) {
-		lrec_t* prec = pkeeper->plrec_reader->pprocess_func(pkeeper->pvhandle,
-			pkeeper->plrec_reader->pvstate, pkeeper->pctx);
+		lrec_t* prec = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+			pkeeper->pvhandle, pkeeper->pctx);
 		if (prec == NULL)
 			break;
 		sllv_add(*pprecords_left_unpaired, prec);
