@@ -100,6 +100,8 @@ tags: .always
 
 mlr: .always dsls
 	$(CC) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
+mlr.static: .always dsls
+	$(CC) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr.static
 
 dsls: .always
 	make -C dsls put_dsl_parse.o
