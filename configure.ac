@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([mlr],[2.1.1])
+AC_INIT([mlr],[2.1.3])
 AC_CONFIG_SRCDIR([c/mlrmain.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([autotools])

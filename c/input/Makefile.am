@@ -23,6 +23,7 @@ libinput_la_SOURCES=	\
 			mmap_byte_reader.c \
 			old_peek_file_reader.c \
 			old_peek_file_reader.h \
+			peek_file_reader.c \
 			peek_file_reader.h \
 			stdio_byte_reader.c \
 			string_byte_reader.c
