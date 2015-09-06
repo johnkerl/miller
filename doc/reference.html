@@ -275,7 +275,7 @@ Other options:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= v2.0.0.
+This is Miller version &gt;= v2.1.1.
 </pre>
 </div>
 <p/>
@@ -1726,12 +1726,12 @@ zee 0.504242 0.502997
 <pre>
 $ mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
 color  u_p50    u_p99    v_p50    v_p99    ur       vr
-green  0.505848 0.990764 0.500787 0.989642 1.958620 1.976174
-red    0.500564 0.989587 0.500415 0.996280 1.976944 1.990908
-yellow 0.506272 0.989401 0.502912 0.989215 1.954287 1.966974
-blue   0.506270 0.990783 0.490120 0.990957 1.957025 2.021866
-purple 0.500051 0.990108 0.505464 0.990086 1.980014 1.958767
-orange 0.488821 0.991091 0.491891 0.991451 2.027513 2.015591
+yellow 0.501019 0.989046 0.520630 0.987034 1.974069 1.895845
+red    0.485038 0.990054 0.492586 0.994444 2.041189 2.018823
+purple 0.501319 0.988893 0.504571 0.988287 1.972582 1.958668
+green  0.502015 0.990764 0.505359 0.990175 1.973574 1.959350
+blue   0.525226 0.992655 0.485170 0.993873 1.889958 2.048505
+orange 0.483548 0.993635 0.480913 0.989102 2.054884 2.056717
 </pre>
 </div>
 <p/>
@@ -1741,9 +1741,9 @@ orange 0.488821 0.991091 0.491891 0.991451 2.027513 2.015591
 <pre>
 $ mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
 shape    count
-square   41588
-triangle 33477
-circle   24935
+square   4115
+triangle 3372
+circle   2591
 </pre>
 </div>
 <p/>
@@ -1753,9 +1753,9 @@ circle   24935
 <pre>
 $ mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
 shape    color_mode
-circle   red
-square   red
 triangle red
+square   red
+circle   red
 </pre>
 </div>
 <p/>
@@ -2090,11 +2090,11 @@ Passes through the last n records, optionally by category.
 <div class="pokipanel">
 <pre>
 $ mlr --opprint tail -n 4 data/colored-shapes.dkvp
-color  shape    flag i      u                  v                  w                   x
-yellow circle   1    99997  0.5228034832314841 0.7478634261534541 0.49477944033468396 6.085638633037881
-red    triangle 0    99998  0.8566019561040149 0.5583785393850178 0.4993735796215503  6.393409471109115
-yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.5064468446479313  3.2682256831629695
-green  square   0    100000 0.0277485352321325 0.5303062901341336 0.5274344049261097  5.806843329974349
+color  shape    flag i     u                    v                   w                   x
+blue   square   1    99974 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
+blue   triangle 0    99976 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
+yellow triangle 0    99990 0.3839424618160777   0.55952913620132    0.5113763011485609  4.307973891915119
+yellow circle   1    99994 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
 </pre>
 </div>
 <p/>
@@ -2103,10 +2103,10 @@ green  square   0    100000 0.0277485352321325 0.5303062901341336 0.527434404926
 <div class="pokipanel">
 <pre>
 $ mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
-color  shape    flag i      u                  v                  w                   x
-yellow circle   1    99997  0.5228034832314841 0.7478634261534541 0.49477944033468396 6.085638633037881
-green  square   0    100000 0.0277485352321325 0.5303062901341336 0.5274344049261097  5.806843329974349
-yellow triangle 1    99999  0.5369350176939407 0.5197619334387739 0.5064468446479313  3.2682256831629695
+color  shape    flag i     u                  v                   w                   x
+yellow triangle 0    99990 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
+blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
+yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
 </pre>
 </div>
 <p/>
@@ -2189,7 +2189,7 @@ Prints distinct values for specified field names. With -c, same as count-distinc
 <div class="pokipanel">
 <pre>
 $ wc -l data/colored-shapes.dkvp
-  100000 data/colored-shapes.dkvp
+   10078 data/colored-shapes.dkvp
 </pre>
 </div>
 <p/>
@@ -2198,21 +2198,21 @@ $ wc -l data/colored-shapes.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr uniq -g color,shape data/colored-shapes.dkvp
-color=green,shape=circle
-color=red,shape=square
-color=yellow,shape=circle
-color=red,shape=circle
-color=blue,shape=circle
-color=purple,shape=triangle
-color=blue,shape=triangle
-color=green,shape=square
-color=red,shape=triangle
 color=yellow,shape=triangle
+color=red,shape=square
+color=red,shape=circle
+color=purple,shape=triangle
+color=yellow,shape=circle
 color=purple,shape=square
-color=blue,shape=square
 color=yellow,shape=square
+color=red,shape=triangle
 color=green,shape=triangle
+color=green,shape=square
+color=blue,shape=circle
+color=blue,shape=triangle
 color=purple,shape=circle
+color=blue,shape=square
+color=green,shape=circle
 color=orange,shape=triangle
 color=orange,shape=square
 color=orange,shape=circle
@@ -2225,24 +2225,24 @@ color=orange,shape=circle
 <pre>
 $ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
 color  shape    count
-blue   circle   3578
-blue   square   6016
-blue   triangle 4843
-green  circle   2832
-green  square   4678
-green  triangle 3924
-orange circle   705
-orange square   1196
-orange triangle 954
-purple circle   2861
-purple square   4808
-purple triangle 3841
-red    circle   11477
-red    square   19051
-red    triangle 15248
-yellow circle   3482
-yellow square   5839
-yellow triangle 4667
+blue   circle   384
+blue   square   589
+blue   triangle 497
+green  circle   287
+green  square   454
+green  triangle 368
+orange circle   68
+orange square   128
+orange triangle 107
+purple circle   289
+purple square   481
+purple triangle 372
+red    circle   1207
+red    square   1874
+red    triangle 1560
+yellow circle   356
+yellow square   589
+yellow triangle 468
 </pre>
 </div>
 <p/>

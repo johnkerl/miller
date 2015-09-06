@@ -22,19 +22,6 @@
 
 // ----------------------------------------------------------------
 #define STRING_BUILDER_INIT_SIZE 1024
-#define TERMIND_RS  0x1111
-#define TERMIND_FS  0x2222
-#define TERMIND_EOF 0x3333
-
-//typedef struct _field_wrapper_t {
-//	char* contents;
-//	int   termind;
-//} field_wrapper_t;
-
-//typedef struct _record_wrapper_t {
-//	slls_t* contents;
-//	int   at_eof;
-//} record_wrapper_t;
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_csvex_state_t {
