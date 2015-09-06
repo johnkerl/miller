@@ -10,7 +10,7 @@
 // label in particular eof handling.
 
 // ----------------------------------------------------------------
-old_peek_file_reader_t* pfr_alloc(FILE* fp, int maxnpeek) {
+old_peek_file_reader_t* old_pfr_alloc(FILE* fp, int maxnpeek) {
 	old_peek_file_reader_t* pfr = mlr_malloc_or_die(sizeof(old_peek_file_reader_t));
 	pfr->fp         = fp;
 	pfr->peekbuflen = maxnpeek + 1;
@@ -77,7 +77,7 @@ void old_pfr_free(old_peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
-void pfr_dump(old_peek_file_reader_t* pfr) {
+void old_pfr_dump(old_peek_file_reader_t* pfr) {
 	printf("======================== pfr at %p\n", pfr);
 	printf("  peekbuflen = %d\n", pfr->peekbuflen);
 	printf("  npeeked    = %d\n", pfr->npeeked);

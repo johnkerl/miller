@@ -284,7 +284,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	char* irs = "\n";
 	int irs_len = strlen(irs);
 
-	old_peek_file_reader_t* pfr = pfr_alloc(fp, PEEK_BUF_LEN);
+	old_peek_file_reader_t* pfr = old_pfr_alloc(fp, PEEK_BUF_LEN);
 	string_builder_t  sb;
 	string_builder_t* psb = &sb;
 	sb_init(&sb, STRING_BUILDER_INIT_SIZE);

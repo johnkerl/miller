@@ -45,10 +45,10 @@ static field_wrapper_t get_csv_field_not_dquoted(old_peek_file_reader_t* pfr, st
 			printf("EXIT\n");
 			return (field_wrapper_t) { .contents = sb_finish(psb), .termind = TERMIND_RS };
 		} else {
-			//pfr_dump(pfr);
+			//old_pfr_dump(pfr);
 			char c = old_pfr_read_char(pfr);
 			printf("--case 5 %c [%02x]\n", isprint(c) ? c : '?', c);
-			//pfr_dump(pfr);
+			//old_pfr_dump(pfr);
 			sb_append_char(psb, c);
 			//sb_append_char(psb, old_pfr_read_char(pfr));
 		}
@@ -118,7 +118,7 @@ record_wrapper_t get_csv_record(old_peek_file_reader_t* pfr, string_builder_t* p
 
 int main() {
 	FILE* fp = stdin;
-	old_peek_file_reader_t* pfr = pfr_alloc(fp, 32);
+	old_peek_file_reader_t* pfr = old_pfr_alloc(fp, 32);
 	string_builder_t sb;
 	string_builder_t* psb = &sb;
 	sb_init(psb, 1024);

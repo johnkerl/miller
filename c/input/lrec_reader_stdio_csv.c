@@ -85,7 +85,7 @@ static lrec_t*         paste_header_and_data(lrec_reader_stdio_csv_state_t* psta
 static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	if (pstate->pfr == NULL) {
-		pstate->pfr = pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
+		pstate->pfr = old_pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
 	}
 
 	record_wrapper_t rwrapper;
