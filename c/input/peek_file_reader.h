@@ -2,6 +2,8 @@
 #define PEEK_FILE_READER_H
 
 #include <stdio.h>
+#include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "input/byte_reader.h"
 
 typedef struct _peek_file_reader_t {
@@ -82,5 +84,8 @@ static inline void pfr_advance_by(peek_file_reader_t* pfr, int len) {
 		pfr->peekbuf[i-len] = pfr->peekbuf[i];
 	pfr->npeeked -= len;
 }
+
+// ----------------------------------------------------------------
+void pfr_dump(peek_file_reader_t* pfr);
 
 #endif // PEEK_FILE_READER_H

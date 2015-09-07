@@ -39,6 +39,14 @@ input/stdio_byte_reader.c \
 input/mmap_byte_reader.c \
 input/test_byte_readers.c
 
+TEST_PEEK_FILE_READER_SRCS = \
+lib/mlrutil.c \
+lib/mlr_test_util.c \
+lib/mlr_globals.c \
+input/string_byte_reader.c \
+input/peek_file_reader.c \
+input/test_peek_file_reader.c
+
 TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c containers/lhmslv.c \
@@ -141,9 +149,10 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	./test-mlrutil
 	./test-byte-readers
+	./test-peek-file-reader
 	./test-parse-trie
 	./test-lrec
 	./test-string-builder
@@ -161,10 +170,11 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-byte-readers test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-byte-readers
+	valgrind --leak-check=full ./test-Peek-file-reader
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
 	valgrind --leak-check=full ./test-string-builder
@@ -182,6 +192,9 @@ regtest-copy:
 
 test-byte-readers: .always
 	$(CCDEBUG) -D__TEST_BYTE_READERS_MAIN__ $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
+
+test-peek-file-reader: .always
+	$(CCDEBUG) -D__TEST_PEEK_FILE_READER_MAIN__ $(TEST_PEEK_FILE_READER_SRCS) -o test-peek-file-reader
 
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
