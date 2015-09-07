@@ -14,8 +14,9 @@ compiler:
   - clang
   - gcc
 
-#Probably a better way to do this TODO
+# Probably a better way to do this TODO
 before_script: cd c
 
-#No configure or make install needed
-script: make
+# No configure or make install needed
+# See c/Makefile for the reason for make -e
+script: make -e

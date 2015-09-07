@@ -163,7 +163,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 	return prec;
 }
 
-static lrec_t* lrec_reader_mmap_csvlite_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
 	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
 

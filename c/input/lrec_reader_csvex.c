@@ -3,12 +3,21 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
-#include "containers/slls.h"
-#include "containers/lhmslv.h"
 #include "input/file_reader_stdio.h"
 #include "input/byte_reader.h"
 #include "input/lrec_readers.h"
 #include "input/peek_file_reader.h"
+#include "containers/slls.h"
+#include "containers/lhmslv.h"
+#include "containers/parse_trie.h"
+
+// ================================================================
+// xxx to do:
+// * avoid the separate paster: just inline lrec_put as in the csvlite reader.
+// * profile ..............
+// * ring buffer in pfr?
+//   -> split out a separate pfr ut per se
+// ================================================================
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
@@ -23,29 +32,42 @@
 // ----------------------------------------------------------------
 #define STRING_BUILDER_INIT_SIZE 1024
 
+// xxx globally rename stridx to token/label
+#define EOF_STRIDX           0x2000
+#define IRS_STRIDX           0x2001
+#define IFS_EOF_STRIDX       0x2002
+#define IFS_STRIDX           0x2003
+#define DQUOTE_STRIDX        0x2004
+#define DQUOTE_IRS_STRIDX    0x2005
+#define DQUOTE_IFS_STRIDX    0x2006
+#define DQUOTE_EOF_STRIDX    0x2007
+#define DQUOTE_DQUOTE_STRIDX 0x2008
+
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_csvex_state_t {
 	// Input line number is not the same as the record-counter in context_t,
 	// which counts records.
 	long long  ilno;
 
+	char* eof;
 	char* irs;
+	char* ifs_eof;
 	char* ifs;
+	char* dquote;
 	char* dquote_irs;
 	char* dquote_ifs;
 	char* dquote_eof;
-	char* dquote;
 	char* dquote_dquote;
-	char* ifs_eof;
 
+	int   eof_len;
 	int   irs_len;
+	int   ifs_eof_len;
 	int   ifs_len;
+	int   dquote_len;
 	int   dquote_irs_len;
 	int   dquote_ifs_len;
 	int   dquote_eof_len;
-	int   dquote_len;
 	int   dquote_dquote_len;
-	int   ifs_eof_len;
 
 	int   peek_buf_len;
 
@@ -53,6 +75,9 @@ typedef struct _lrec_reader_csvex_state_t {
 	string_builder_t*   psb;
 	byte_reader_t*      pbr;
 	peek_file_reader_t* pfr;
+
+	parse_trie_t*       pno_dquote_parse_trie;
+	parse_trie_t*       pdquote_parse_trie;
 
 	int                 expect_header_line_next;
 	header_keeper_t*    pheader_keeper;
@@ -66,13 +91,8 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs. etc.
 
-static lrec_t* lrec_reader_csvex_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
-
-//	xxx byte-reader open ...
-//	if (pstate->pfr == NULL) {
-//		pstate->pfr = pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);
-//	}
 
 	if (pstate->expect_header_line_next) {
 		slls_t* pheader_fields = lrec_reader_csvex_get_fields(pstate);
@@ -92,138 +112,121 @@ static lrec_t* lrec_reader_csvex_process(void* pvhandle, void* pvstate, context_
 	pstate->ilno++;
 
 	slls_t* pdata_fields = lrec_reader_csvex_get_fields(pstate);
-	return paste_header_and_data(pstate, pdata_fields);
+	if (pdata_fields == NULL) // EOF
+		return NULL;
+	else
+		return paste_header_and_data(pstate, pdata_fields);
 }
 
 static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
+	int rc, stridx, matchlen, record_done, field_done;
+	peek_file_reader_t* pfr = pstate->pfr;
+	string_builder_t*   psb = pstate->psb;
 
-//	if @ eof: return null
+	if (pfr_peek_char(pfr) == EOF)
+		return NULL;
+	slls_t* pfields = slls_alloc();
 
-//	while (TRUE) { // loop over fields in record
+	// loop over fields in record
+	record_done = FALSE;
+	while (!record_done) {
+		// xxx fix me char vs. string ...
+		if (pfr_peek_char(pfr) != pstate->dquote[0]) {
 
-//		if (peek char is dquote) {
-//			advance past the dquote
+			// loop over characters in field
+			field_done = FALSE;
+			while (!field_done) {
+				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
+				rc = parse_trie_match(pstate->pno_dquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+				if (rc) {
+					switch(stridx) {
+					case EOF_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						record_done = TRUE;
+						break;
+					case IFS_EOF_STRIDX:
+						fprintf(stderr, "%s: syntax error: record-ending field separator at line %lld.\n",
+							MLR_GLOBALS.argv0, pstate->ilno);
+						exit(1);
+						break;
+					case IFS_STRIDX: // end of field
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						break;
+					case IRS_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						record_done = TRUE;
+						break;
+					case DQUOTE_STRIDX: // CSV syntax error: fields containing quotes must be fully wrapped in quotes
+						fprintf(stderr, "%s: syntax error: unwrapped double quote at line %lld.\n",
+							MLR_GLOBALS.argv0, pstate->ilno);
+						exit(1);
+						break;
+					default:
+						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
+							MLR_GLOBALS.argv0, stridx, pstate->ilno);
+						exit(1);
+						break;
+					}
+					pfr_advance_by(pfr, matchlen);
+				} else {
+					sb_append_char(psb, pfr_read_char(pfr));
+				}
+			}
 
-//			while (TRUE) { // loop over characters in field
-//				pfr peek up to maxlen
-//				rc = parse_trie_match(pstate->pdquote_parse_trie, xxx buf, ...);
-//				if (rc) {
-//					switch(stridx) {
-//					case DQUOTE_EOF:
-//						...; end of record
-//						break;
-//					case DQUOTE_IFS:
-//						...; end of field
-//						break;
-//					case DQUOTE_IRS:
-//						...; end of record
-//						break;
-//					case DQUOTE_DQUOTE:
-//						...; sb append char '"'
-//						break;
-//					default:
-//						...; sb append char of pfr->read_char
-//						break;
-//					}
-//				}
-//			}
+		} else {
+			pfr_advance_by(pfr, pstate->dquote_len);
 
-//		} else {
+			// loop over characters in field
+			field_done = FALSE;
+			while (!field_done) {
+				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
+				rc = parse_trie_match(pstate->pdquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+				if (rc) {
+					switch(stridx) {
+					case EOF_STRIDX: // end of record
+						fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n",
+							MLR_GLOBALS.argv0, pstate->ilno);
+						exit(1);
+						break;
+					case DQUOTE_EOF_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						record_done = TRUE;
+						break;
+					case DQUOTE_IFS_STRIDX: // end of field
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						break;
+					case DQUOTE_IRS_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						record_done = TRUE;
+						break;
+					case DQUOTE_DQUOTE_STRIDX: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
+						sb_append_char(psb, pstate->dquote[0]);
+						break;
+					default:
+						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
+							MLR_GLOBALS.argv0, stridx, pstate->ilno);
+						exit(1);
+						break;
+					}
+					pfr_advance_by(pfr, matchlen);
+				} else {
+					sb_append_char(psb, pfr_read_char(pfr));
+				}
+			}
 
-//			while (TRUE) { // loop over characters in field
-//				pfr peek up to maxlen
-//				rc = parse_trie_match(pstate->pno_dquote_parse_trie, xxx buf, ...);
-//				if (rc) {
-//					switch(stridx) {
-//					case EOF:
-//						...;
-//						break;
-//					case IFS:
-//						...;
-//						break;
-//					case IRS:
-//						...;
-//						break;
-//					case DQUOTE:
-//						...;
-//						break;
-//					default:
-//						...;
-//						break;
-//					}
-//				}
-//			}
+		}
+	}
 
-//		}
-//	}
-
-	return NULL; // xxx stub
+	return pfields;
 }
 
-//static field_wrapper_t get_csvex_field(lrec_reader_csvex_state_t* pstate) {
-//	field_wrapper_t wrapper;
-//	if (pfr_at_eof(pstate->pfr)) {
-//		wrapper.contents = NULL;
-//		wrapper.termind = TERMIND_EOF;
-//		return wrapper;
-//	} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
-//		pfr_advance_by(pstate->pfr, pstate->dquote_len);
-//		return get_csvex_field_dquoted(pstate);
-//	} else {
-//		return get_csvex_field_not_dquoted(pstate);
-//	}
-//}
-
-//static field_wrapper_t get_csvex_field_not_dquoted(lrec_reader_csvex_state_t* pstate) {
-//	while (TRUE) {
-//		if (pfr_at_eof(pstate->pfr)) {
-//			return (field_wrapper_t) {
-//				.contents = sb_is_empty(pstate->psb) ? NULL: sb_finish(pstate->psb),
-//				.termind = TERMIND_EOF
-//			};
-//		} else if (pfr_next_is(pstate->pfr, pstate->ifs_eof, pstate->ifs_eof_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->ifs_eof_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-//		} else if (pfr_next_is(pstate->pfr, pstate->ifs, pstate->ifs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->ifs_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->irs, pstate->irs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->irs_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote, pstate->dquote_len)) {
-//			fprintf(stderr, "%s: non-compliant field-internal double-quote at line %lld.\n",
-//				MLR_GLOBALS.argv0, pstate->ilno);
-//			exit(1);
-//		} else {
-//			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
-//		}
-//	}
-//}
-
-//static field_wrapper_t get_csvex_field_dquoted(lrec_reader_csvex_state_t* pstate) {
-//	while (TRUE) {
-//		if (pfr_at_eof(pstate->pfr)) {
-//			fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n", MLR_GLOBALS.argv0, pstate->ilno);
-//			exit(1);
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_eof, pstate->dquote_eof_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_eof_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_EOF };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_ifs, pstate->dquote_ifs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_ifs_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_FS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_irs, pstate->dquote_irs_len)) {
-//			pfr_advance_by(pstate->pfr, pstate->dquote_irs_len);
-//			return (field_wrapper_t) { .contents = sb_finish(pstate->psb), .termind = TERMIND_RS };
-//		} else if (pfr_next_is(pstate->pfr, pstate->dquote_dquote, pstate->dquote_dquote_len)) {
-//			// "" inside a dquoted field is an escape for "
-//			pfr_advance_by(pstate->pfr, pstate->dquote_dquote_len);
-//			sb_append_string(pstate->psb, pstate->dquote);
-//		} else {
-//			sb_append_char(pstate->psb, pfr_read_char(pstate->pfr));
-//		}
-//	}
-//}
-
+// ----------------------------------------------------------------
 static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* pdata_fields) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
@@ -240,11 +243,24 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 }
 
 // ----------------------------------------------------------------
+void* lrec_reader_csvex_open(void* pvstate, char* filename) {
+	lrec_reader_csvex_state_t* pstate = pvstate;
+	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
+	pfr_reset(pstate->pfr);
+	return NULL; // xxx modify the API after the functional refactor is complete
+}
+
+void lrec_reader_csvex_close(void* pvstate, void* pvhandle) {
+	lrec_reader_csvex_state_t* pstate = pvstate;
+	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
+}
+
+// ----------------------------------------------------------------
+// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
 static void lrec_reader_csvex_sof(void* pvstate) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
-	pstate->pfr = NULL;
 }
 
 // ----------------------------------------------------------------
@@ -263,50 +279,66 @@ lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
 
 	lrec_reader_csvex_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csvex_state_t));
 	pstate->ilno                      = 0LL;
+
+	pstate->eof                       = "\xff";
 	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
 	pstate->ifs                       = ",";    // xxx multi-byte the cli irs/ifs/etc, and integrate here
+	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
+	pstate->dquote                    = "\"";
 
 	pstate->dquote_irs                = mlr_paste_2_strings("\"", pstate->irs);
 	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
 	pstate->dquote_eof                = "\"\xff";
-	pstate->dquote                    = "\"";
 	pstate->dquote_dquote             = "\"\"";
-	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
 
+	// xxx maybe not retain all these variables now that that info is in the parse-tries -- ?
 	pstate->irs_len                   = strlen(pstate->irs);
+	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
 	pstate->ifs_len                   = strlen(pstate->ifs);
+	pstate->dquote_len                = strlen(pstate->dquote);
+
 	pstate->dquote_irs_len            = strlen(pstate->dquote_irs);
 	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
 	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
-	pstate->dquote_len                = strlen(pstate->dquote);
 	pstate->dquote_dquote_len         = strlen(pstate->dquote_dquote);
-	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
 
+	// xxx rid of now that this is tracked in the parse-tries -- ?
 	pstate->peek_buf_len              = pstate->irs_len;
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_len);
+	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_irs_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_ifs_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_eof_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_len);
 	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_dquote_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
 	pstate->peek_buf_len             += 2;
 
-	sb_init(&pstate->sb, STRING_BUILDER_INIT_SIZE);
 	pstate->psb                       = &pstate->sb;
+	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
 	pstate->pbr                       = pbr;
-	pstate->pfr                       = NULL;
+	pstate->pfr                       = pfr_alloc(pstate->pbr, pstate->peek_buf_len);
 
-	// xxx allocate the parse-tries here -- one for dquote only,
-	// the second for non-dquote-after-that, the third for dquoted-after-that.
+	pstate->pno_dquote_parse_trie = parse_trie_alloc();
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs_eof, IFS_EOF_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
+
+	pstate->pdquote_parse_trie = parse_trie_alloc();
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->eof,           EOF_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,    DQUOTE_IRS_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
 	pstate->expect_header_line_next   = TRUE;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &file_reader_stdio_vopen;
-	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
+	plrec_reader->popen_func    = &lrec_reader_csvex_open;
+	plrec_reader->pclose_func   = &lrec_reader_csvex_close;
 	plrec_reader->pprocess_func = &lrec_reader_csvex_process;
 	plrec_reader->psof_func     = &lrec_reader_csvex_sof;
 	plrec_reader->pfree_func    = &lrec_reader_csvex_free;

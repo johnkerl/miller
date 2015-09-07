@@ -48,9 +48,9 @@ void file_reader_mmap_close(file_reader_mmap_state_t* pstate) {
 	free(pstate);
 }
 
-void* file_reader_mmap_vopen(char* file_name) {
+void* file_reader_mmap_vopen(void* pvstate, char* file_name) {
 	return file_reader_mmap_open(file_name);
 }
-void file_reader_mmap_vclose(void* pvhandle) {
+void file_reader_mmap_vclose(void* pvstate, void* pvhandle) {
 	file_reader_mmap_close(pvhandle);
 }

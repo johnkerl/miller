@@ -51,7 +51,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 //
 // etc.
 
-static lrec_t* lrec_reader_stdio_csvlite_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 

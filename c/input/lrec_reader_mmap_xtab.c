@@ -11,7 +11,7 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 } lrec_reader_mmap_xtab_state_t;
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_mmap_xtab_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_xtab_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
 	lrec_reader_mmap_xtab_state_t* pstate = pvstate;
 

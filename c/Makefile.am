@@ -46,7 +46,7 @@ mlrg: .always dsls
 
 # Memcheck version
 mlrk: .always dsls
-	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
+	$(CCDEBUG) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
 
 # Profile version. Usage:
 # * make mlrp
@@ -54,7 +54,7 @@ mlrk: .always dsls
 # * gprof mlrp gmon.out > myfile.txt
 # Note: works on Linux; not on OSX.
 mlrp: .always dsls
-	$(CC) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
+	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
 
 # ================================================================
 # User-tests: don't use valgrind: they may not have it, and valgrind is most
@@ -152,7 +152,7 @@ termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
 
 getl: .always
-	$(CC) $(EXPERIMENTAL_READER_SRCS) -o getl
+	$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
 
 # ================================================================
 perfclean profclean:

@@ -82,7 +82,7 @@ static lrec_t*         paste_header_and_data(lrec_reader_stdio_csv_state_t* psta
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs. etc.
 
-static lrec_t* lrec_reader_stdio_csv_process(void* pvhandle, void* pvstate, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	if (pstate->pfr == NULL) {
 		pstate->pfr = old_pfr_alloc((FILE*)pvhandle, pstate->peek_buf_len);

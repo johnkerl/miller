@@ -428,8 +428,8 @@ run_command $mlr --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
 run_command $mlr --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv
 
 # ================================================================
-diff $expdir/out $outdir/out
-#diff -C5 $expdir/out $outdir/out
+#diff $expdir/out $outdir/out
+diff -C5 $expdir/out $outdir/out
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED
