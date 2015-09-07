@@ -1,5 +1,8 @@
 # ================================================================
-CCOMP=gcc
+# Travis does "export CC=gcc", "export CC=clang" so we can pick those up via
+# "make -e" in ../.travis.yml.  Note that "CC?=gcc", without make -e, results
+# in CC being expanded to cc on my OSX laptop, which is not OK.  Hence make -e.
+CC=gcc
 CFLAGS=-std=gnu99
 IFLAGS=-I.
 
@@ -19,9 +22,9 @@ LFLAGS=-lm
 # pending https://github.com/johnkerl/miller/issues/9
 INSTALLDIR=/usr/local/bin
 
-CC=$(CCOMP) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
-#CCDEBUG=$(CCOMP) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
-CCDEBUG=$(CCOMP) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
+CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
+#CCDEBUG=$(CC) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
+CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
 NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*.c output/*.c
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
@@ -100,9 +103,9 @@ tags: .always
 	ctags -R .
 
 mlr: .always dsls
-	$(CC) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
+	$(CCOPT) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
 mlr.static: .always dsls
-	$(CC) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr.static
+	$(CCOPT) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr.static
 
 dsls: .always
 	make -C dsls put_dsl_parse.o
@@ -121,7 +124,7 @@ mlrg: .always dsls
 
 # Memcheck version
 mlrk: .always dsls
-	$(CC) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
+	$(CCDEBUG) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
 
 # Profile version. Usage:
 # * make mlrp
@@ -129,7 +132,7 @@ mlrk: .always dsls
 # * gprof mlrp gmon.out > myfile.txt
 # Note: works on Linux; not on OSX.
 mlrp: .always dsls
-	$(CC) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
+	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
 
 # ================================================================
 # User-tests: don't use valgrind: they may not have it, and valgrind is most
@@ -248,7 +251,7 @@ termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
 
 getl: .always
-	$(CC) $(EXPERIMENTAL_READER_SRCS) -o getl
+	$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
 
 # ================================================================
 clean:
