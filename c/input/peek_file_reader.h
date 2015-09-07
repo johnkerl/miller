@@ -39,7 +39,7 @@ static inline void pfr_free(peek_file_reader_t* pfr) {
 // ----------------------------------------------------------------
 static inline void pfr_reset(peek_file_reader_t* pfr) {
 	memset(pfr->peekbuf, 0, pfr->peekbuflen);
-	pfr->npeeked    =  0;
+	pfr->npeeked = 0;
 }
 
 // ----------------------------------------------------------------

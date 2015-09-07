@@ -16,6 +16,7 @@
 // * avoid the separate paster: just inline lrec_put as in the csvlite reader.
 // * profile ..............
 // * ring buffer in pfr?
+//   -> split out a separate pfr ut per se
 // ================================================================
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
@@ -58,7 +59,6 @@ typedef struct _lrec_reader_csvex_state_t {
 	char* dquote_eof;
 	char* dquote_dquote;
 
-	// xxx trim these out
 	int   eof_len;
 	int   irs_len;
 	int   ifs_eof_len;
