@@ -23,6 +23,7 @@ char pfr_peek_char(peek_file_reader_t* pfr);
 char pfr_read_char(peek_file_reader_t* pfr);
 void pfr_buffer_by(peek_file_reader_t* pfr, int len);
 void pfr_advance_by(peek_file_reader_t* pfr, int len);
+void pfr_reset(peek_file_reader_t* pfr);
 
 void pfr_dump(peek_file_reader_t* pfr);
 

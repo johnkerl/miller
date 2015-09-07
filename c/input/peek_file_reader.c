@@ -23,6 +23,12 @@ void pfr_free(peek_file_reader_t* pfr) {
 }
 
 // ----------------------------------------------------------------
+void pfr_reset(peek_file_reader_t* pfr) {
+	memset(pfr->peekbuf, 0, pfr->peekbuflen);
+	pfr->npeeked    =  0;
+}
+
+// ----------------------------------------------------------------
 char pfr_peek_char(peek_file_reader_t* pfr) {
 	if (pfr->npeeked < 1) {
 		pfr->peekbuf[pfr->npeeked++] = pfr->pbr->pread_func(pfr->pbr);

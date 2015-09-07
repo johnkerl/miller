@@ -86,7 +86,6 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 
-	// xxx printf("EEE\n");
 	if (pstate->expect_header_line_next) {
 		slls_t* pheader_fields = lrec_reader_csvex_get_fields(pstate);
 		if (pheader_fields == NULL)
@@ -131,9 +130,7 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
 				rc = parse_trie_match(pstate->pno_dquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
-				// xxx printf("RC %d\n", rc);
 				if (rc) {
-					// xxx printf("MTCH stridx=%04x matchlen=%d\n", stridx,matchlen);
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
 						slls_add_with_free(pfields, sb_finish(psb));
@@ -167,10 +164,7 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 					}
 					pfr_advance_by(pfr, matchlen);
 				} else {
-					// xxx temp sb_append_char(psb, pfr_read_char(pfr));
-					char c = pfr_read_char(pfr);
-					// xxx printf("READ %02x %c\n", (unsigned)c, c);
-					sb_append_char(psb, c);
+					sb_append_char(psb, pfr_read_char(pfr));
 				}
 			}
 
@@ -190,18 +184,26 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
+						slls_add_with_free(pfields, sb_finish(psb));
+						field_done  = TRUE;
+						record_done = TRUE;
 						break;
 					case DQUOTE_DQUOTE_STRIDX: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
 						sb_append_char(psb, pstate->dquote[0]);
 						break;
 					default:
-						// xxx internal-error abend
+						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
+							MLR_GLOBALS.argv0, stridx, pstate->ilno);
+						exit(1);
 						break;
 					}
 					pfr_advance_by(pfr, matchlen);
@@ -236,6 +238,7 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 void* lrec_reader_csvex_open(void* pvstate, char* filename) {
 	lrec_reader_csvex_state_t* pstate = pvstate;
 	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
+	pfr_reset(pstate->pfr);
 	return NULL; // xxx modify the API after the functional refactor is complete
 }
 

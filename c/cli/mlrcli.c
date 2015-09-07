@@ -288,16 +288,23 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
+// ready for cutover! :)
+// just leaving it off for a while to compare performance.
+#if 0
+		else if (streq(argv[argi], "--csv"))    { popts->ifmt = "csvex"; ofmt = "csv"; }
+		else if (streq(argv[argi], "--icsv"))   { popts->ifmt = "csvex";  }
+		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csv";  }
+#else
 		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csv";  }
 		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csv";  }
 		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csv";  }
-
+#endif
 		else if (streq(argv[argi], "--csvlite"))  { popts->ifmt = ofmt = "csvlite";  }
 		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
 		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
 
 		else if (streq(argv[argi], "--csvex"))    { popts->ifmt = "csvex"; ofmt = "csv"; }
-		else if (streq(argv[argi], "--icsvex"))   { popts->ifmt = "csvlite";  }
+		else if (streq(argv[argi], "--icsvex"))   { popts->ifmt = "csvex";  }
 
 		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
 		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }
