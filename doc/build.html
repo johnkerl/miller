@@ -138,9 +138,9 @@ runtime memory-access errors.
 
 <p/>I&rsquo;ve also used <b>clang</b> on MacOS Yosemite. To use <tt>clang</tt>,
 one may edit <tt>c/Makefile</tt> as well as <tt>c/dsls/Makefile</tt> and change
-<tt>CCOMP=gcc</tt> to <tt>CCOMP=clang</tt>. (If you encounter issues I
-haven&rsquo;t, please open an issue at <a
-href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
+<tt>CC=gcc</tt> to <tt>CC=clang</tt> &mdash; or, <tt>export CC=clang</tt> ane
+<tt>make -e</tt>. (If you encounter issues I haven&rsquo;t, please open an
+issue at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
 
 <p/><boldmaroon>Required external dependencies</boldmaroon>: These are necessary to produce the <tt>mlr</tt>
 executable.
