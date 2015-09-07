@@ -20,6 +20,7 @@ peek_file_reader_t* pfr_alloc(byte_reader_t* pbr, int maxnpeek);
 void pfr_free(peek_file_reader_t* pfr);
 
 char pfr_peek_char(peek_file_reader_t* pfr);
+char pfr_read_char(peek_file_reader_t* pfr);
 void pfr_buffer_by(peek_file_reader_t* pfr, int len);
 void pfr_advance_by(peek_file_reader_t* pfr, int len);
 

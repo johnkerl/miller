@@ -54,6 +54,7 @@ containers/test_lrec.c
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
 lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 mapping/context.c \
+containers/parse_trie.c \
 containers/lrec.c \
 containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
 containers/header_keeper.c \
