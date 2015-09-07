@@ -58,6 +58,7 @@ typedef struct _lrec_reader_csvex_state_t {
 	char* dquote_eof;
 	char* dquote_dquote;
 
+	// xxx trim these out
 	int   eof_len;
 	int   irs_len;
 	int   ifs_eof_len;

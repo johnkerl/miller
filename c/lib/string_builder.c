@@ -4,9 +4,6 @@
 #include "../lib/mlrutil.h"
 #include "../lib/mlr_globals.h"
 
-// Private method:
-static void sb_enlarge(string_builder_t* psb);
-
 // ----------------------------------------------------------------
 void sb_init(string_builder_t* psb, int alloc_length) {
 	if (alloc_length < 1) {
@@ -17,13 +14,6 @@ void sb_init(string_builder_t* psb, int alloc_length) {
 	psb->used_length = 0;
 	psb->alloc_length = alloc_length;
 	psb->buffer = mlr_malloc_or_die(alloc_length); // xxx malloc ...
-}
-
-// ----------------------------------------------------------------
-void sb_append_char(string_builder_t* psb, char c) {
-	if (psb->used_length >= psb->alloc_length)
-		sb_enlarge(psb);
-	psb->buffer[psb->used_length++] = c;
 }
 
 // ----------------------------------------------------------------
@@ -49,7 +39,7 @@ char* sb_finish(string_builder_t* psb) {
 }
 
 // ----------------------------------------------------------------
-static void sb_enlarge(string_builder_t* psb) {
+void _sb_enlarge(string_builder_t* psb) {
 	int new_alloc_length = psb->alloc_length * 2;
 	char* new_buffer = mlr_malloc_or_die(new_alloc_length);
 	memcpy(new_buffer, psb->buffer, psb->used_length);
