@@ -286,3 +286,12 @@ int mlr_imax2(int a, int b) {
 	else
 		return b;
 }
+
+// ----------------------------------------------------------------
+// This is inefficient. It's quite fine for call-once, small-n use.
+
+int power_of_two_ceil(int n) {
+	while (n&(n-1))
+		n++;
+	return n;
+}
