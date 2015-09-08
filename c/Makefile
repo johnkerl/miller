@@ -78,6 +78,7 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 input/file_reader_mmap.c input/file_reader_stdio.c \
 input/old_peek_file_reader.c \
+input/peek_file_reader.c \
 containers/test_join_bucket_keeper.c
 
 EXPERIMENTAL_READER_SRCS = \

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
@@ -14,9 +15,9 @@
 // ================================================================
 // xxx to do:
 // * avoid the separate paster: just inline lrec_put as in the csvlite reader.
+// k ring buffer in pfr?
+// k inline parse_trie_match
 // * profile ..............
-// * ring buffer in pfr?
-//   -> split out a separate pfr ut per se
 // ================================================================
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
@@ -137,8 +138,17 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 			field_done = FALSE;
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
-				rc = parse_trie_match(pstate->pno_dquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+
+				rc = parse_trie_match(pstate->pno_dquote_parse_trie,
+					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+					&stridx, &matchlen);
+#ifdef DEBUG_PARSER
+				pfr_dump(pfr);
+#endif
 				if (rc) {
+#ifdef DEBUG_PARSER
+					printf("RC=%d stridx=0x%04x matchlen=%d\n", rc, stridx, matchlen);
+#endif
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
 						slls_add_with_free(pfields, sb_finish(psb));
@@ -172,7 +182,13 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 					}
 					pfr_advance_by(pfr, matchlen);
 				} else {
+#ifdef DEBUG_PARSER
+					char c = pfr_read_char(pfr);
+					printf("CHAR=%c [%02x]\n", isprint(c) ? c : ' ', (unsigned)c);
+					sb_append_char(psb, c);
+#else
 					sb_append_char(psb, pfr_read_char(pfr));
+#endif
 				}
 			}
 
@@ -183,7 +199,11 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 			field_done = FALSE;
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
-				rc = parse_trie_match(pstate->pdquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+
+				rc = parse_trie_match(pstate->pdquote_parse_trie,
+					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+					&stridx, &matchlen);
+
 				if (rc) {
 					switch(stridx) {
 					case EOF_STRIDX: // end of record

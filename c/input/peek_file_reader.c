@@ -18,7 +18,7 @@ void pfr_dump(peek_file_reader_t* pfr) {
 			if (sob <= i && i < eob)
 				occdesc = "OCC";
 		} else {
-			if (i < sob || eob <= i)
+			if (i < eob || sob <= i)
 				occdesc = "OCC";
 		}
 		printf("  %-5s %-5s %-3s i=%2d c=%c [%02x]\n",
