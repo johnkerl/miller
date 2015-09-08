@@ -57,6 +57,7 @@ test_join_bucket_keeper
 test_lrec
 test_mlrutil
 test_parse_trie
+test_peek_file_reader
 test_string_builder
 test_byte_readers
 c/dsls/lemon_prepared
