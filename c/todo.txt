@@ -1,7 +1,12 @@
 ================================================================
 BUGFIXES
 
-:D
+$ sh foo|termcvt --lf2crlf|mlr --no-mmap --csv check
+fopen: No such file or directory
+mlr: Couldn't fopen "-" for read.
+-> needs UT case!
+
+! memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
 
 ================================================================
 TOP OF LIST

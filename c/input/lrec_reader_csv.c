@@ -250,6 +250,7 @@ static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pd
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
 		lrec_put_no_free(prec, ph->value, pd->value);
+		//lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 	}
 	return prec;
 }

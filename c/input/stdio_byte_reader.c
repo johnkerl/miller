@@ -13,11 +13,15 @@ typedef struct _stdio_byte_reader_state_t {
 static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename) {
 	stdio_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(stdio_byte_reader_state_t));
 	pstate->filename = strdup(filename);
-	pstate->fp = fopen(filename, "r");
-	if (pstate->fp == NULL) {
-		perror("fopen");
-		fprintf(stderr, "%s: Couldn't fopen \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
-		exit(1);
+	if (streq(pstate->filename, "-")) {
+		pstate->fp = stdin;
+	} else {
+		pstate->fp = fopen(filename, "r");
+		if (pstate->fp == NULL) {
+			perror("fopen");
+			fprintf(stderr, "%s: Couldn't fopen \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+			exit(1);
+		}
 	}
 	pbr->pvstate = pstate;
 	return TRUE;
@@ -36,7 +40,8 @@ static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr) {
 
 static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr) {
 	stdio_byte_reader_state_t* pstate = pbr->pvstate;
-	fclose(pstate->fp);
+	if (pstate->fp != stdin)
+		fclose(pstate->fp);
 	free(pstate);
 	pbr->pvstate = NULL;
 }
