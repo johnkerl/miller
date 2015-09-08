@@ -12,14 +12,6 @@
 #include "containers/lhmslv.h"
 #include "containers/parse_trie.h"
 
-// ================================================================
-// xxx to do:
-// * avoid the separate paster: just inline lrec_put as in the csvlite reader.
-// k ring buffer in pfr?
-// k inline parse_trie_match
-// * profile ..............
-// ================================================================
-
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data
