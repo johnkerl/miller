@@ -7,6 +7,11 @@
 #include "lib/mlr_globals.h"
 #include "input/byte_reader.h"
 
+// This is a ring-buffered peekahead file/string reader.
+
+// Note: Throughout Miller as a general rule I treat struct attributes as if
+// there were private attributes. However, for performance, parse_trie_match
+// accesses this ring buffer directly.
 typedef struct _peek_file_reader_t {
 	byte_reader_t* pbr;
 	int   peekbuflen;
@@ -15,11 +20,6 @@ typedef struct _peek_file_reader_t {
 	int   sob; // start of ring-buffer
 	int   npeeked;
 } peek_file_reader_t;
-
-// xxx needing contextual comments here.
-
-// xxx to do: try using a ring buffer (power-of-two length >= buflen) instead
-// of the current slipback buffer, for performance
 
 // ----------------------------------------------------------------
 static inline peek_file_reader_t* pfr_alloc(byte_reader_t* pbr, int maxnpeek) {
@@ -67,7 +67,6 @@ static inline char pfr_read_char(peek_file_reader_t* pfr) {
 	if (pfr->npeeked < 1) {
 		return pfr->pbr->pread_func(pfr->pbr);
 	} else {
-		// xxx to do: make this a ring buffer to avoid the shifts.
 		char c = pfr->peekbuf[pfr->sob];
 		pfr->sob = (pfr->sob + 1) & pfr->peekbuflenmask;
 		pfr->npeeked--;
