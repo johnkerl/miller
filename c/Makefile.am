@@ -104,42 +104,6 @@ regtest-copy:
 # Standalone mains
 # TODO: replace the interesting content with unit tests; jettison the rest
 
-dheap:
-	$(CCDEBUG) -D__DHEAP_MAIN__ containers/dheap.c lib/mlrutil.c
-
-slls:
-	$(CCDEBUG) -D__SLLS_MAIN__ containers/slls.c lib/mlrutil.c
-
-sllv:
-	$(CCDEBUG) -D__SLLV_MAIN__ containers/sllv.c lib/mlrutil.c
-
-hmss:
-	$(CCDEBUG) -D__HMSS_MAIN__ containers/hmss.c  lib/mlrutil.c
-
-lhms2v:
-	$(CCDEBUG) -D__LHMS2V_MAIN__ containers/lhms2v.c  lib/mlrutil.c
-
-lhmslv:
-	$(CCDEBUG) -D__LHMSLV_MAIN__ containers/lhmslv.c  lib/mlrutil.c containers/slls.c
-
-lhmss:
-	$(CCDEBUG) -D__LHMSS_MAIN__ containers/lhmss.c  lib/mlrutil.c
-
-lhmsi:
-	$(CCDEBUG) -D__LHMSI_MAIN__ containers/lhmsi.c  lib/mlrutil.c
-
-lhmsv:
-	$(CCDEBUG) -D__LHMSV_MAIN__ containers/lhmsv.c  lib/mlrutil.c
-
-lrec:
-	$(CCDEBUG) -D__LREC_MAIN__ containers/lrec.c  lib/mlrutil.c
-
-top_keeper:
-	$(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
-
-pk:
-	$(CCDEBUG) -D__PERCENTILE_KEEPER_MAIN__ containers/percentile_keeper.c lib/mlrutil.c
-
 ap:
 	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c
 
