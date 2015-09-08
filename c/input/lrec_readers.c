@@ -14,14 +14,12 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char irs, char if
 		else
 			return lrec_reader_stdio_dkvp_alloc(irs, ifs, ips, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "csv")) {
-			return lrec_reader_stdio_csv_alloc(irs, ifs);
+		return lrec_reader_csv_alloc(pbr, irs, ifs);
 	} else if (streq(fmtdesc, "csvlite")) {
 		if (use_mmap)
 			return lrec_reader_mmap_csvlite_alloc(irs, ifs, allow_repeat_ifs);
 		else
 			return lrec_reader_stdio_csvlite_alloc(irs, ifs, allow_repeat_ifs);
-	} else if (streq(fmtdesc, "csvex")) {
-		return lrec_reader_csvex_alloc(pbr, irs, ifs);
 	} else if (streq(fmtdesc, "nidx")) {
 		if (use_mmap)
 			return lrec_reader_mmap_nidx_alloc(irs, ifs, allow_repeat_ifs);

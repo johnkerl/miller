@@ -51,9 +51,7 @@ TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c containers/lhmslv.c \
 input/file_reader_mmap.c      input/file_reader_stdio.c \
-input/lrec_reader_stdio_csv.c \
 input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-input/old_peek_file_reader.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
@@ -70,14 +68,12 @@ containers/join_bucket_keeper.c \
 input/mmap_byte_reader.c \
 input/stdio_byte_reader.c \
 input/lrec_reader_in_memory.c input/lrec_readers.c \
-input/lrec_reader_stdio_csv.c \
-input/lrec_reader_csvex.c \
+input/lrec_reader_csv.c \
 input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 input/file_reader_mmap.c input/file_reader_stdio.c \
-input/old_peek_file_reader.c \
 input/peek_file_reader.c \
 containers/test_join_bucket_keeper.c
 
@@ -86,7 +82,6 @@ lib/mlrutil.c \
 lib/mlr_globals.c \
 lib/string_builder.c \
 input/file_reader_mmap.c \
-input/old_peek_file_reader.c \
 experimental/getlines.c
 
 # ================================================================
