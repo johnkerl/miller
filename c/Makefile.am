@@ -1,8 +1,8 @@
-SUBDIRS=	lib cli stream input mapping output containers dsls
+SUBDIRS=	lib cli stream input mapping output containers dsls experimental tools
 
 AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-Wall -Werror -std=gnu99 -O3
-bin_PROGRAMS=	mlr
+bin_PROGRAMS=	mlr mlrg mlrk mlrp
 mlr_SOURCES=	mlrmain.c mlrvers.h
 mlr_LDADD=	\
 		cli/libcli.la \
@@ -16,19 +16,32 @@ mlr_LDADD=	\
 		dsls/libpdsl.la \
 		-lm
 
-EXPERIMENTAL_READER_SRCS = \
-lib/mlrutil.c \
-lib/mlr_globals.c \
-lib/string_builder.c \
-input/file_reader_mmap.c \
-experimental/getlines.c
+# Other executable variants
+# Debug version
+mlrg_CFLAGS=	-std=gnu99 -g
+mlrg_LDADD=	${mlr_LDADD}
+mlrg_SOURCES=	${mlr_SOURCES}
+
+# Memcheck version
+mlrk_CFLAGS=	-std=gnu99 -g -DUSE_MCHECK
+mlrk_LDADD=	${mlr_LDADD}
+mlrk_SOURCES=	${mlr_SOURCES}
+
+# Profile version. Usage:
+# * make mlrp
+# * mlrp {arguments>
+# * gprof mlrp gmon.out > myfile.txt
+# Note: works on Linux; not on OSX.
+mlrp_CFLAGS=	-std=gnu99 -g -pg
+mlrp_LDADD=	${mlr_LDADD}
+mlrp_SOURCES=	${mlr_SOURCES}
 
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
 # valgrind)
 # ----> This is the default target for anyone pulling the repo and trying to
 #       build it to be able to use it. It just needs flex and the C compiler.
-top: mlr tests
+top: mlr check
 
 # Dev-make: updates the tags file, creates the executable, and runs unit &
 # regression tests (with valgrind)
@@ -36,42 +49,12 @@ top: mlr tests
 #       It requires ctags and valgrind in addition to flex and the C compiler.
 dev: tags mlr dev-tests
 
-# ----------------------------------------------------------------
-# Other executable variants
-
-# Debug version
-mlrg: .always dsls
-	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrg
-
-# Memcheck version
-mlrk: .always dsls
-	$(CCDEBUG) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
-
-# Profile version. Usage:
-# * make mlrp
-# * mlrp {arguments>
-# * gprof mlrp gmon.out > myfile.txt
-# Note: works on Linux; not on OSX.
-mlrp: .always dsls
-	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
-
 # ================================================================
 # User-tests: don't use valgrind: they may not have it, and valgrind is most
 # useful for detecting errors at build time. They don't need it to produce an
 # executable.
 
-tests: unit-test reg-test
-
-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
-	./test-mlrutil
-	./test-byte-readers
-	./test-peek-file-reader
-	./test-parse-trie
-	./test-lrec
-	./test-string-builder
-	./test-join-bucket-keeper
-	@echo
-	@echo DONE
+tests: check reg-test
 
 reg-test:
 	./test/run
@@ -100,27 +83,6 @@ dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-t
 regtest-copy:
 	cp test/output/out test/expected
 
-# ----------------------------------------------------------------
-# Standalone mains
-# TODO: replace the interesting content with unit tests; jettison the rest
-
-ap:
-	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c
-
-evl:
-	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c -lm
-
-lrim:
-	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
-
-termcvt: tools/termcvt.c
-	$(CCDEBUG) tools/termcvt.c -o termcvt
-
-getl: .always
-	$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
-
 # ================================================================
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old
-.always:
-	@true

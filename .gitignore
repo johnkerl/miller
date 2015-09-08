@@ -1,6 +1,7 @@
 mlr
 mlrd
 mlrg
+mlrk
 mlrp
 mlr-unit-tester
 test-mlrutil
@@ -16,6 +17,7 @@ a.out
 catc
 catc0
 catm
+gmon.out
 *.o
 .*.swp
 .*.swo
@@ -53,14 +55,16 @@ libtool
 m4/
 autotools/
 stamp-h1
-c/dsls/lemon_prepared
+ap
 dheap
 doc/miller.1
+lemon_prepared
 lhms2v
 lhmsi
 lhmslv
 lhmss
 lhmsv
+lrim
 mlr-[0-9.]*.tar.*
 pk
 slls

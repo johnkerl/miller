@@ -25,11 +25,13 @@ AC_CONFIG_FILES([Makefile
 		c/cli/Makefile
 		c/containers/Makefile
 		c/dsls/Makefile
+		c/experimental/Makefile
 		c/input/Makefile
 		c/lib/Makefile
 		c/mapping/Makefile
 		c/output/Makefile
 		c/stream/Makefile
+		c/tools/Makefile
 		c/Makefile
 		doc/Makefile])
 AC_OUTPUT

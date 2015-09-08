@@ -32,5 +32,13 @@ libmapping_la_SOURCES=	\
 			mlr_val.c \
 			mlr_val.h
 libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
-libmapping_la_CPPFLAGS=	-I${srcdir}/../
-libmapping_la_CFLAGS=	-std=gnu99
+
+# TODO: replace the interesting content with unit tests; jettison the rest
+# TODO: Does not build
+#noinst_PROGRAMS=	evl
+#evl_SOURCES=		lrec_evaluators.c
+#evl_LDADD=		libmapping.la ../containers/libcontainers.la ../lib/libmlr.la
+#evl_CPPFLAGS=		-D__LREC_EVALUATORS_MAIN__ ${AM_CPPFLAGS}
+
+AM_CPPFLAGS=	-I${srcdir}/../
+AM_CFLAGS=	-std=gnu99

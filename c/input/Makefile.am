@@ -26,16 +26,23 @@ libinput_la_SOURCES=	\
 			string_byte_reader.c
 libinput_la_LIBADD=	../lib/libmlr.la
 libinput_la_CPPFLAGS=	-I${srcdir}/../
-libinput_la_CFLAGS=	-std=gnu99
 
 TESTS=			$(check_PROGRAMS)
 check_PROGRAMS=		test_byte_readers test_peek_file_reader
+# TODO: replace the interesting content with unit tests; jettison the rest
+noinst_PROGRAMS=	lrim
 
-test_byte_readers_LDADD=		libinput.la \
-					../lib/libmlr.la
+lrim_SOURCES=		lrec_reader_in_memory.c
+lrim_CPPFLAGS=		-D__LREC_READER_IN_MEMORY_MAIN__ ${AM_CPPFLAGS}
+lrim_LDADD=		../containers/libcontainers.la ../lib/libmlr.la # -lm
+
 test_byte_readers_CPPFLAGS=	-D__TEST_BYTE_READERS_MAIN__ ${AM_CPPFLAGS}
+test_byte_readers_LDADD=	libinput.la \
+				../lib/libmlr.la
 
-test_peek_file_reader_LDADD=		libinput.la
 test_peek_file_reader_CPPFLAGS=	-D__TEST_PEEK_FILE_READER_MAIN__ ${AM_CPPFLAGS}
+test_peek_file_reader_LDADD=	libinput.la
+
 
 AM_CPPFLAGS=	-I${srcdir}/../
+AM_CFLAGS=	-std=gnu99
