@@ -36,7 +36,7 @@ static void test_case(
 
 	stridx = -2;
 	matchlen = -2;
-	rc = parse_trie_match(ptrie, buf, strlen(buf), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, buf, 0, strlen(buf), 0xff, &stridx, &matchlen);
 
 	parse_trie_free(ptrie);
 
@@ -135,61 +135,61 @@ static char* test_dkvp() {
 	}
 	parse_trie_print(ptrie);
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == PS_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
 	p += matchlen;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == FS_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[FS_TOKEN]));
 	p += matchlen;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == PS_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
 	p += matchlen;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == RS_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[RS_TOKEN]));
 	p += matchlen;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == PS_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
 	p += matchlen;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
 
-	rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
 	mu_assert_lf(stridx == EOF_TOKEN);
 	mu_assert_lf(matchlen == strlen(strings[EOF_TOKEN]));
@@ -221,7 +221,7 @@ static char* show_it() {
 	parse_trie_print(ptrie);
 
 	while (TRUE) {
-		rc = parse_trie_match(ptrie, p, strlen(p), &stridx, &matchlen);
+		rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 		if (rc) {
 			printf("match token %d (%s)\n", stridx, strings[stridx]);
 			p += matchlen;

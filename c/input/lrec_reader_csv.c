@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
@@ -10,14 +11,6 @@
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
 #include "containers/parse_trie.h"
-
-// ================================================================
-// xxx to do:
-// * avoid the separate paster: just inline lrec_put as in the csvlite reader.
-// * profile ..............
-// * ring buffer in pfr?
-//   -> split out a separate pfr ut per se
-// ================================================================
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
@@ -44,7 +37,7 @@
 #define DQUOTE_DQUOTE_STRIDX 0x2008
 
 // ----------------------------------------------------------------
-typedef struct _lrec_reader_csvex_state_t {
+typedef struct _lrec_reader_csv_state_t {
 	// Input line number is not the same as the record-counter in context_t,
 	// which counts records.
 	long long  ilno;
@@ -83,19 +76,19 @@ typedef struct _lrec_reader_csvex_state_t {
 	header_keeper_t*    pheader_keeper;
 	lhmslv_t*           pheader_keepers;
 
-} lrec_reader_csvex_state_t;
+} lrec_reader_csv_state_t;
 
-static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate);
-static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* pdata_fields);
+static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
+static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields);
 
 // ----------------------------------------------------------------
 // xxx needs abend on null lhs. etc.
 
-static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_t* pctx) {
-	lrec_reader_csvex_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
+	lrec_reader_csv_state_t* pstate = pvstate;
 
 	if (pstate->expect_header_line_next) {
-		slls_t* pheader_fields = lrec_reader_csvex_get_fields(pstate);
+		slls_t* pheader_fields = lrec_reader_csv_get_fields(pstate);
 		if (pheader_fields == NULL)
 			return NULL;
 		pstate->ilno++;
@@ -111,14 +104,14 @@ static lrec_t* lrec_reader_csvex_process(void* pvstate, void* pvhandle, context_
 	}
 	pstate->ilno++;
 
-	slls_t* pdata_fields = lrec_reader_csvex_get_fields(pstate);
+	slls_t* pdata_fields = lrec_reader_csv_get_fields(pstate);
 	if (pdata_fields == NULL) // EOF
 		return NULL;
 	else
 		return paste_header_and_data(pstate, pdata_fields);
 }
 
-static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
+static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 	int rc, stridx, matchlen, record_done, field_done;
 	peek_file_reader_t* pfr = pstate->pfr;
 	string_builder_t*   psb = pstate->psb;
@@ -137,8 +130,17 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 			field_done = FALSE;
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
-				rc = parse_trie_match(pstate->pno_dquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+
+				rc = parse_trie_match(pstate->pno_dquote_parse_trie,
+					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+					&stridx, &matchlen);
+#ifdef DEBUG_PARSER
+				pfr_dump(pfr);
+#endif
 				if (rc) {
+#ifdef DEBUG_PARSER
+					printf("RC=%d stridx=0x%04x matchlen=%d\n", rc, stridx, matchlen);
+#endif
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
 						slls_add_with_free(pfields, sb_finish(psb));
@@ -172,7 +174,13 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 					}
 					pfr_advance_by(pfr, matchlen);
 				} else {
+#ifdef DEBUG_PARSER
+					char c = pfr_read_char(pfr);
+					printf("CHAR=%c [%02x]\n", isprint(c) ? c : ' ', (unsigned)c);
+					sb_append_char(psb, c);
+#else
 					sb_append_char(psb, pfr_read_char(pfr));
+#endif
 				}
 			}
 
@@ -183,7 +191,11 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 			field_done = FALSE;
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
-				rc = parse_trie_match(pstate->pdquote_parse_trie, pfr->peekbuf, pfr->npeeked, &stridx, &matchlen);
+
+				rc = parse_trie_match(pstate->pdquote_parse_trie,
+					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+					&stridx, &matchlen);
+
 				if (rc) {
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
@@ -227,7 +239,7 @@ static slls_t* lrec_reader_csvex_get_fields(lrec_reader_csvex_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* pdata_fields) {
+static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
@@ -238,34 +250,35 @@ static lrec_t* paste_header_and_data(lrec_reader_csvex_state_t* pstate, slls_t* 
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
 		lrec_put_no_free(prec, ph->value, pd->value);
+		//lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 	}
 	return prec;
 }
 
 // ----------------------------------------------------------------
-void* lrec_reader_csvex_open(void* pvstate, char* filename) {
-	lrec_reader_csvex_state_t* pstate = pvstate;
+void* lrec_reader_csv_open(void* pvstate, char* filename) {
+	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
 	pfr_reset(pstate->pfr);
 	return NULL; // xxx modify the API after the functional refactor is complete
 }
 
-void lrec_reader_csvex_close(void* pvstate, void* pvhandle) {
-	lrec_reader_csvex_state_t* pstate = pvstate;
+void lrec_reader_csv_close(void* pvstate, void* pvhandle) {
+	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
 }
 
 // ----------------------------------------------------------------
 // xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
-static void lrec_reader_csvex_sof(void* pvstate) {
-	lrec_reader_csvex_state_t* pstate = pvstate;
+static void lrec_reader_csv_sof(void* pvstate) {
+	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_csvex_free(void* pvstate) {
-	lrec_reader_csvex_state_t* pstate = pvstate;
+static void lrec_reader_csv_free(void* pvstate) {
+	lrec_reader_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
@@ -274,10 +287,10 @@ static void lrec_reader_csvex_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
+lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char irs, char ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	lrec_reader_csvex_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csvex_state_t));
+	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
 	pstate->ilno                      = 0LL;
 
 	pstate->eof                       = "\xff";
@@ -337,11 +350,11 @@ lrec_reader_t* lrec_reader_csvex_alloc(byte_reader_t* pbr, char irs, char ifs) {
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &lrec_reader_csvex_open;
-	plrec_reader->pclose_func   = &lrec_reader_csvex_close;
-	plrec_reader->pprocess_func = &lrec_reader_csvex_process;
-	plrec_reader->psof_func     = &lrec_reader_csvex_sof;
-	plrec_reader->pfree_func    = &lrec_reader_csvex_free;
+	plrec_reader->popen_func    = &lrec_reader_csv_open;
+	plrec_reader->pclose_func   = &lrec_reader_csv_close;
+	plrec_reader->pprocess_func = &lrec_reader_csv_process;
+	plrec_reader->psof_func     = &lrec_reader_csv_sof;
+	plrec_reader->pfree_func    = &lrec_reader_csv_free;
 
 	return plrec_reader;
 }
