@@ -7,6 +7,10 @@ mlr: Couldn't fopen "-" for read.
 -> needs UT case!
 
 ! memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
+-> heap-fragging?
+-> redo inline-pasting but this time correctly weight the fragging effect
+-> denormalize :( pointer-copying is fine for string/mmap-backed cases in the absence of dquotes;
+   no struping needed *at all*.
 
 ================================================================
 TOP OF LIST
