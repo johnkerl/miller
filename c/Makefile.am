@@ -36,6 +36,8 @@ mlrp_CFLAGS=	-std=gnu99 -g -pg
 mlrp_LDADD=	${mlr_LDADD}
 mlrp_SOURCES=	${mlr_SOURCES}
 
+TESTS=		test/run
+
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
 # valgrind)

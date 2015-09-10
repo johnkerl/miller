@@ -30,11 +30,12 @@ libinput_la_CPPFLAGS=	-I${srcdir}/../
 TESTS=			$(check_PROGRAMS)
 check_PROGRAMS=		test_byte_readers test_peek_file_reader
 # TODO: replace the interesting content with unit tests; jettison the rest
-noinst_PROGRAMS=	lrim
+# TODO: causes circular dependency
+#noinst_PROGRAMS=	lrim
 
-lrim_SOURCES=		lrec_reader_in_memory.c
-lrim_CPPFLAGS=		-D__LREC_READER_IN_MEMORY_MAIN__ ${AM_CPPFLAGS}
-lrim_LDADD=		../containers/libcontainers.la ../lib/libmlr.la # -lm
+#lrim_SOURCES=		lrec_reader_in_memory.c
+#lrim_CPPFLAGS=		-D__LREC_READER_IN_MEMORY_MAIN__ ${AM_CPPFLAGS}
+#lrim_LDADD=		../containers/libcontainers.la ../lib/libmlr.la # -lm
 
 test_byte_readers_CPPFLAGS=	-D__TEST_BYTE_READERS_MAIN__ ${AM_CPPFLAGS}
 test_byte_readers_LDADD=	libinput.la \
