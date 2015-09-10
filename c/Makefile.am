@@ -1,9 +1,9 @@
-SUBDIRS=	lib cli stream input mapping output containers dsls experimental tools
+SUBDIRS=	lib cli stream input mapping output containers dsls experimental tools test
 
 AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-Wall -Werror -std=gnu99 -O3
 bin_PROGRAMS=	mlr mlrg mlrk mlrp
-mlr_SOURCES=	mlrmain.c mlrvers.h
+mlr_SOURCES=	mlrmain.c
 mlr_LDADD=	\
 		cli/libcli.la \
 		containers/libcontainers.la \
@@ -35,8 +35,6 @@ mlrk_SOURCES=	${mlr_SOURCES}
 mlrp_CFLAGS=	-std=gnu99 -g -pg
 mlrp_LDADD=	${mlr_LDADD}
 mlrp_SOURCES=	${mlr_SOURCES}
-
-TESTS=		test/run
 
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests (without
