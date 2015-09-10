@@ -421,6 +421,11 @@ run_mlr --inidx --ifs space --opprint --right cat $indir/utf8-align.nidx
 run_mlr --oxtab cat $indir/utf8-align.dkvp 
 
 # ================================================================
+announce STDIN
+
+run_mlr --csv cat < $indir/rfc-csv/simple.csv
+
+# ================================================================
 announce RFC-CSV
 
 run_mlr --csv cat $indir/rfc-csv/simple.csv
