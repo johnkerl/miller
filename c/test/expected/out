@@ -2,7 +2,7 @@
 ================================================================
 STATELESS MAPPERS
 
-./test/../mlr cat ./test/input/abixy
+mlr cat c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -14,9 +14,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr cat /dev/null
+mlr cat /dev/null
 
-./test/../mlr cut -f a,x ./test/input/abixy
+mlr cut -f a,x c/test/input/abixy
 a=pan,x=0.3467901443380824
 a=eks,x=0.7586799647899636
 a=wye,x=0.20460330576630303
@@ -28,7 +28,7 @@ a=zee,x=0.5985540091064224
 a=hat,x=0.03144187646093577
 a=pan,x=0.5026260055412137
 
-./test/../mlr cut --complement -f a,x ./test/input/abixy
+mlr cut --complement -f a,x c/test/input/abixy
 b=pan,i=1,y=0.7268028627434533
 b=pan,i=2,y=0.5221511083334797
 b=wye,i=3,y=0.33831852551664776
@@ -40,7 +40,7 @@ b=wye,i=8,y=0.976181385699006
 b=wye,i=9,y=0.7495507603507059
 b=wye,i=10,y=0.9526183602969864
 
-./test/../mlr having-fields --at-least a,b ./test/input/abixy
+mlr having-fields --at-least a,b c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -52,9 +52,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr having-fields --at-least a,c ./test/input/abixy
+mlr having-fields --at-least a,c c/test/input/abixy
 
-./test/../mlr having-fields --at-least a,b,i,x,y ./test/input/abixy
+mlr having-fields --at-least a,b,i,x,y c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -66,9 +66,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr having-fields --which-are a,b,i,x ./test/input/abixy
+mlr having-fields --which-are a,b,i,x c/test/input/abixy
 
-./test/../mlr having-fields --which-are a,b,i,x,y ./test/input/abixy
+mlr having-fields --which-are a,b,i,x,y c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -80,7 +80,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr having-fields --which-are a,b,i,y,x ./test/input/abixy
+mlr having-fields --which-are a,b,i,y,x c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -92,13 +92,13 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr having-fields --which-are a,b,i,x,w ./test/input/abixy
+mlr having-fields --which-are a,b,i,x,w c/test/input/abixy
 
-./test/../mlr having-fields --which-are a,b,i,x,y,z ./test/input/abixy
+mlr having-fields --which-are a,b,i,x,y,z c/test/input/abixy
 
-./test/../mlr having-fields --at-most a,c ./test/input/abixy
+mlr having-fields --at-most a,c c/test/input/abixy
 
-./test/../mlr having-fields --at-most a,b,i,x,y ./test/input/abixy
+mlr having-fields --at-most a,b,i,x,y c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -110,7 +110,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr having-fields --at-most a,b,i,x,y,z ./test/input/abixy
+mlr having-fields --at-most a,b,i,x,y,z c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -122,7 +122,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr rename b,BEE,x,EKS ./test/input/abixy
+mlr rename b,BEE,x,EKS c/test/input/abixy
 a=pan,BEE=pan,i=1,EKS=0.3467901443380824,y=0.7268028627434533
 a=eks,BEE=pan,i=2,EKS=0.7586799647899636,y=0.5221511083334797
 a=wye,BEE=wye,i=3,EKS=0.20460330576630303,y=0.33831852551664776
@@ -134,7 +134,7 @@ a=zee,BEE=wye,i=8,EKS=0.5985540091064224,y=0.976181385699006
 a=hat,BEE=wye,i=9,EKS=0.03144187646093577,y=0.7495507603507059
 a=pan,BEE=wye,i=10,EKS=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr rename nonesuch,nonesuch,x,EKS ./test/input/abixy
+mlr rename nonesuch,nonesuch,x,EKS c/test/input/abixy
 a=pan,b=pan,i=1,EKS=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,EKS=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,EKS=0.20460330576630303,y=0.33831852551664776
@@ -146,7 +146,7 @@ a=zee,b=wye,i=8,EKS=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,EKS=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,EKS=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr regularize ./test/input/regularize.dkvp
+mlr regularize c/test/input/regularize.dkvp
 a=1,c=2,b=3
 e=4,d=5
 a=6,c=7,b=8
@@ -155,7 +155,7 @@ a=6,c=7,b=8
 ================================================================
 TRIVIAL RETAINERS
 
-./test/../mlr group-by a ./test/input/abixy
+mlr group-by a c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -167,7 +167,7 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-./test/../mlr group-by a,b ./test/input/abixy
+mlr group-by a,b c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -179,7 +179,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr group-like ./test/input/het.dkvp
+mlr group-like c/test/input/het.dkvp
 host=jupiter
 host=saturn
 host=mars
@@ -193,7 +193,7 @@ df/tmp=0.04MB,uptime=890sec
 df/tmp=8.55MB,uptime=787897777sec
 df/tmp=9.47MB,uptime=234289080sec
 
-./test/../mlr tac ./test/input/abixy
+mlr tac c/test/input/abixy
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
@@ -205,13 +205,13 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 
-./test/../mlr tac /dev/null
+mlr tac /dev/null
 
 
 ================================================================
 SORT
 
-./test/../mlr sort -f a ./test/input/abixy
+mlr sort -f a c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
@@ -223,7 +223,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 
-./test/../mlr sort -r a ./test/input/abixy
+mlr sort -r a c/test/input/abixy
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -235,7 +235,7 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 
-./test/../mlr sort -f x ./test/input/abixy
+mlr sort -f x c/test/input/abixy
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -247,7 +247,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
-./test/../mlr sort -r x ./test/input/abixy
+mlr sort -r x c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
@@ -259,7 +259,7 @@ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-./test/../mlr sort -nf x ./test/input/abixy
+mlr sort -nf x c/test/input/abixy
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -271,7 +271,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
-./test/../mlr sort -nr x ./test/input/abixy
+mlr sort -nr x c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
@@ -283,7 +283,7 @@ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-./test/../mlr sort -f a,b ./test/input/abixy
+mlr sort -f a,b c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
@@ -295,7 +295,7 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 
-./test/../mlr sort -r a,b ./test/input/abixy
+mlr sort -r a,b c/test/input/abixy
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -307,7 +307,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
-./test/../mlr sort -f x,y ./test/input/abixy
+mlr sort -f x,y c/test/input/abixy
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -319,7 +319,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
-./test/../mlr sort -r x,y ./test/input/abixy
+mlr sort -r x,y c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
@@ -331,7 +331,7 @@ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-./test/../mlr sort -nf x,y ./test/input/abixy
+mlr sort -nf x,y c/test/input/abixy
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -343,7 +343,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
-./test/../mlr sort -nr x,y ./test/input/abixy
+mlr sort -nr x,y c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
@@ -355,7 +355,7 @@ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-./test/../mlr sort -f a -nr x ./test/input/abixy
+mlr sort -f a -nr x c/test/input/abixy
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -367,7 +367,7 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 
-./test/../mlr sort -nr y -f a ./test/input/abixy
+mlr sort -nr y -f a c/test/input/abixy
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
@@ -379,7 +379,7 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
-./test/../mlr sort -f a -r b -nf x -nr y ./test/input/abixy
+mlr sort -f a -r b -nf x -nr y c/test/input/abixy
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -395,7 +395,7 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 ================================================================
 JOIN
 
-./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -411,7 +411,7 @@ o x y
 3 e y
 3 f y
 
-./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -427,26 +427,7 @@ o x y
 3 e y
 3 f y
 
-./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-l x
-4 g
-
-./test/../mlr --opprint join -u --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --ul -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -465,45 +446,7 @@ o x y
 l x
 4 g
 
-./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-./test/../mlr --opprint join -u --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-./test/../mlr --opprint join --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --ul -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -522,10 +465,67 @@ o x y
 l x
 4 g
 
+mlr --opprint join --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
 r y
 5 z
 
-./test/../mlr --opprint join -u --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+mlr --opprint join --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+r y
+5 z
+
+mlr --opprint join -u --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -547,45 +547,45 @@ r y
 l x
 4 g
 
-./test/../mlr --opprint join --np --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ul -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 l x
 4 g
 
-./test/../mlr --opprint join -u --np --ul -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ul -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 l x
 4 g
 
-./test/../mlr --opprint join --np --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 r y
 5 z
 
-./test/../mlr --opprint join -u --np --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 r y
 5 z
 
-./test/../mlr --opprint join --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 l x
 4 g
 
 r y
 5 z
 
-./test/../mlr --opprint join -u --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o c/test/input/joinb.dkvp
 r y
 5 z
 
 l x
 4 g
 
-./test/../mlr --opprint join -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join -u -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --ul -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join -u --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --ul -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -595,7 +595,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join -u --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -605,7 +605,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --ul --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -615,7 +615,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join -u --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --ul --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -625,11 +625,11 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ul -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join -u --np --ul -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ul -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 
-./test/../mlr --opprint join --np --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -639,7 +639,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join -u --np --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -649,7 +649,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join --np --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join --np --ul --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -659,7 +659,7 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join -u --np --ul --ur -f /dev/null -l l -r r -j o ./test/input/joinb.dkvp
+mlr --opprint join -u --np --ul --ur -f /dev/null -l l -r r -j o c/test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -669,11 +669,11 @@ r y
 3 y
 5 z
 
-./test/../mlr --opprint join -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join -u -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ul -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -683,7 +683,7 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join -u --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --ul -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -693,11 +693,11 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join -u --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -707,7 +707,7 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join -u --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -717,7 +717,7 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join --np --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ul -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -727,7 +727,7 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join -u --np --ul -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --np --ul -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -737,11 +737,11 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join --np --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join -u --np --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --np --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 
-./test/../mlr --opprint join --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -751,7 +751,7 @@ l x
 3 f
 4 g
 
-./test/../mlr --opprint join -u --np --ul --ur -f ./test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -u --np --ul --ur -f c/test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -765,7 +765,7 @@ l x
 ================================================================
 STATS
 
-./test/../mlr count-distinct -f a,b ./test/input/small ./test/input/abixy
+mlr count-distinct -f a,b c/test/input/small c/test/input/abixy
 a=pan,b=pan,count=2
 a=eks,b=pan,count=2
 a=wye,b=wye,count=2
@@ -777,19 +777,19 @@ a=zee,b=wye,count=2
 a=hat,b=wye,count=2
 a=pan,b=wye,count=2
 
-./test/../mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y ./test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y c/test/input/abixy
 i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode             y_mean   y_sum    y_count y_min    y_max    y_mode
 5.500000 55.000000 10      1.000000 10.000000 1      0.453629 4.536294 10      0.031442 0.758680 0.3467901443380824 0.594454 5.944542 10      0.134189 0.976181 0.7268028627434533
 
-./test/../mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y ./test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y c/test/input/abixy
 i_min    i_p10    i_p50    i_mode i_p90     i_max     x_min    x_p10    x_p50    x_mode             x_p90    x_max    y_min    y_p10    y_p50    y_mode             y_p90    y_max
 1.000000 2.000000 6.000000 1      10.000000 10.000000 0.031442 0.204603 0.527126 0.3467901443380824 0.758680 0.758680 0.134189 0.187885 0.726803 0.7268028627434533 0.976181 0.976181
 
-./test/../mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y ./test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y c/test/input/abixy
 i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 5.500000 0.957427 3.027650 0.453629 0.068157 0.215531 0.594454 0.096968 0.306639
 
-./test/../mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a ./test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a c/test/input/abixy
 a   i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
 pan 5.500000 11.000000 2       1.000000 10.000000 1      0.424708 0.849416 2       0.346790 0.502626 0.3467901443380824  0.839711 1.679421 2       0.726803 0.952618 0.7268028627434533
 eks 4.333333 13.000000 3       2.000000 7.000000  2      0.583954 1.751863 3       0.381399 0.758680 0.7586799647899636  0.281408 0.844225 3       0.134189 0.522151 0.5221511083334797
@@ -797,7 +797,7 @@ wye 4.000000 8.000000  2       3.000000 5.000000  3      0.388946 0.777892 2    
 zee 7.000000 14.000000 2       6.000000 8.000000  6      0.562840 1.125680 2       0.527126 0.598554 0.5271261600918548  0.734701 1.469403 2       0.493221 0.976181 0.49322128674835697
 hat 9.000000 9.000000  1       9.000000 9.000000  9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059
 
-./test/../mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y -g a ./test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y -g a c/test/input/abixy
 a   i_min    i_p10    i_p50     i_mode i_p90     i_max     x_min    x_p10    x_p50    x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_mode              y_p90    y_max
 pan 1.000000 1.000000 10.000000 1      10.000000 10.000000 0.346790 0.346790 0.502626 0.3467901443380824  0.502626 0.502626 0.726803 0.726803 0.952618 0.7268028627434533  0.952618 0.952618
 eks 2.000000 2.000000 4.000000  2      7.000000  7.000000  0.381399 0.381399 0.611784 0.7586799647899636  0.758680 0.758680 0.134189 0.134189 0.187885 0.5221511083334797  0.522151 0.522151
@@ -805,7 +805,7 @@ wye 3.000000 3.000000 5.000000  3      5.000000  5.000000  0.204603 0.204603 0.5
 zee 6.000000 6.000000 8.000000  6      8.000000  8.000000  0.527126 0.527126 0.598554 0.5271261600918548  0.598554 0.598554 0.493221 0.493221 0.976181 0.49322128674835697 0.976181 0.976181
 hat 9.000000 9.000000 9.000000  9      9.000000  9.000000  0.031442 0.031442 0.031442 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.7495507603507059  0.749551 0.749551
 
-./test/../mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a ./test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a c/test/input/abixy
 a   i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 pan 5.500000 4.500000 6.363961 0.424708 0.077918 0.110193 0.839711 0.112908 0.159676
 eks 4.333333 1.452966 2.516611 0.583954 0.109797 0.190174 0.281408 0.121365 0.210211
@@ -813,7 +813,7 @@ wye 4.000000 1.000000 1.414214 0.388946 0.184343 0.260700 0.600971 0.262653 0.37
 zee 7.000000 1.000000 1.414214 0.562840 0.035714 0.050507 0.734701 0.241480 0.341504
 hat 9.000000 -        -        0.031442 -        -        0.749551 -        -
 
-./test/../mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a,b ./test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a,b c/test/input/abixy
 a   b   i_mean    i_sum     i_count i_min     i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
 pan pan 1.000000  1.000000  1       1.000000  1.000000  1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824  0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533
 eks pan 2.000000  2.000000  1       2.000000  2.000000  2      0.758680 0.758680 1       0.758680 0.758680 0.7586799647899636  0.522151 0.522151 1       0.522151 0.522151 0.5221511083334797
@@ -826,7 +826,7 @@ zee wye 8.000000  8.000000  1       8.000000  8.000000  8      0.598554 0.598554
 hat wye 9.000000  9.000000  1       9.000000  9.000000  9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059
 pan wye 10.000000 10.000000 1       10.000000 10.000000 10     0.502626 0.502626 1       0.502626 0.502626 0.5026260055412137  0.952618 0.952618 1       0.952618 0.952618 0.9526183602969864
 
-./test/../mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y -g a,b ./test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,mode,p90,max -f i,x,y -g a,b c/test/input/abixy
 a   b   i_min     i_p10     i_p50     i_mode i_p90     i_max     x_min    x_p10    x_p50    x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_mode              y_p90    y_max
 pan pan 1.000000  1.000000  1.000000  1      1.000000  1.000000  0.346790 0.346790 0.346790 0.3467901443380824  0.346790 0.346790 0.726803 0.726803 0.726803 0.7268028627434533  0.726803 0.726803
 eks pan 2.000000  2.000000  2.000000  2      2.000000  2.000000  0.758680 0.758680 0.758680 0.7586799647899636  0.758680 0.758680 0.522151 0.522151 0.522151 0.5221511083334797  0.522151 0.522151
@@ -839,7 +839,7 @@ zee wye 8.000000  8.000000  8.000000  8      8.000000  8.000000  0.598554 0.5985
 hat wye 9.000000  9.000000  9.000000  9      9.000000  9.000000  0.031442 0.031442 0.031442 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.7495507603507059  0.749551 0.749551
 pan wye 10.000000 10.000000 10.000000 10     10.000000 10.000000 0.502626 0.502626 0.502626 0.5026260055412137  0.502626 0.502626 0.952618 0.952618 0.952618 0.9526183602969864  0.952618 0.952618
 
-./test/../mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a,b ./test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a,b c/test/input/abixy
 a   b   i_mean    i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 pan pan 1.000000  -        -        0.346790 -        -        0.726803 -        -
 eks pan 2.000000  -        -        0.758680 -        -        0.522151 -        -
@@ -852,11 +852,11 @@ zee wye 8.000000  -        -        0.598554 -        -        0.976181 -       
 hat wye 9.000000  -        -        0.031442 -        -        0.749551 -        -
 pan wye 10.000000 -        -        0.502626 -        -        0.952618 -        -
 
-./test/../mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 ./test/input/abixy-wide
+mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 c/test/input/abixy-wide
 x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov x2_x2_ols_m x2_x2_ols_b x2_x2_ols_n x2_x2_pca_m x2_x2_pca_b x2_x2_pca_n x2_x2_pca_quality x2_x2_r2 x2_x2_corr x2_x2_cov
 0.028351  0.487644  2000      1.332924  -0.170590 2000      0.056909        0.000791 0.028120 0.002330 0.893610    0.107060    2000        1.529534    -0.055477   2000        0.824336          0.447971 0.669306   0.045036  1.000000    0.000000    2000        1.000000    0.000000    2000        1.000000          1.000000 1.000000   0.087709
 
-./test/../mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 -g a,b ./test/input/abixy-wide
+mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 -g a,b c/test/input/abixy-wide
 a   b   x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr  x_y_cov   xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov x2_x2_ols_m x2_x2_ols_b x2_x2_ols_n x2_x2_pca_m x2_x2_pca_b x2_x2_pca_n x2_x2_pca_quality x2_x2_r2 x2_x2_corr x2_x2_cov
 cat pan 0.054420  0.481777  89        3.636062  -1.221602 89        0.177683        0.002504 0.050036  0.003777  0.950908    0.105754    89          1.715574    -0.081719   89          0.830612          0.435336 0.659800   0.041616  1.000000    0.000000    89          1.000000    0.000000    89          1.000000          1.000000 1.000000   0.066303
 pan wye -0.145486 0.584799  78        -1.340927 1.199920  78        0.254025        0.019479 -0.139568 -0.012683 0.908151    0.126628    78          1.595150    -0.045034   78          0.824114          0.438850 0.662457   0.046203  1.000000    0.000000    78          1.000000    0.000000    78          1.000000          1.000000 1.000000   0.093192
@@ -884,7 +884,7 @@ cat cat 0.016257  0.425410  79        0.432946  0.225535  79        0.044275    
 pan cat -0.188523 0.616919  89        -0.898665 0.953923  89        0.324264        0.037036 -0.192447 -0.016206 0.781770    0.176617    89          2.020454    -0.113587   89          0.762332          0.278739 0.527958   0.032984  1.000000    0.000000    89          1.000000    0.000000    89          1.000000          1.000000 1.000000   0.093193
 wye pan 0.229443  0.444446  66        1.313689  -0.098124 66        0.365811        0.046722 0.216152  0.020367  0.887659    0.145052    66          1.471906    -0.030176   66          0.827911          0.462545 0.680107   0.064496  1.000000    0.000000    66          1.000000    0.000000    66          1.000000          1.000000 1.000000   0.103497
 
-./test/../mlr --opprint step -a rsum,delta,counter -f x,y ./test/input/abixy
+mlr --opprint step -a rsum,delta,counter -f x,y c/test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0.346790  1         0.726803 0.726803  1
 eks pan 2  0.7586799647899636  0.5221511083334797  1.105470 0.411890  2         1.248954 -0.204652 2
@@ -897,7 +897,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   4.002226 -0.013230 8         
 hat wye 9  0.03144187646093577 0.7495507603507059  4.033668 -0.567112 9         4.991924 -0.226631 9
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294 0.471184  10        5.944542 0.203068  10
 
-./test/../mlr --opprint step -a rsum,delta,counter -f x,y -g a ./test/input/abixy
+mlr --opprint step -a rsum,delta,counter -f x,y -g a c/test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0.346790  1         0.726803 0.726803  1
 eks pan 2  0.7586799647899636  0.5221511083334797  0.758680 0.758680  1         0.522151 0.522151  1
@@ -910,7 +910,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1.125680 0.071428  2         
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442 0.031442  1         0.749551 0.749551  1
 pan wye 10 0.5026260055412137  0.9526183602969864  0.849416 0.155836  2         1.679421 0.225815  2
 
-./test/../mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 ./test/input/small
+mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 c/test/input/small
 bin_lo   bin_hi   x_count y_count
 0.000000 0.050000 1       0
 0.050000 0.100000 0       0
@@ -937,7 +937,7 @@ bin_lo   bin_hi   x_count y_count
 ================================================================
 DSLs
 
-./test/../mlr filter $x>.3 ./test/input/abixy
+mlr filter $x>.3 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -947,7 +947,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr filter $x>0.3 ./test/input/abixy
+mlr filter $x>0.3 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -957,7 +957,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr filter $x>0.3 && $y>0.3 ./test/input/abixy
+mlr filter $x>0.3 && $y>0.3 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
@@ -965,7 +965,7 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr filter $x>0.3 || $y>0.3 ./test/input/abixy
+mlr filter $x>0.3 || $y>0.3 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -977,15 +977,15 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-./test/../mlr filter NR>=4 && NR <= 7 ./test/input/abixy
+mlr filter NR>=4 && NR <= 7 c/test/input/abixy
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 
-./test/../mlr filter $nosuchfield>.3 ./test/input/abixy
+mlr filter $nosuchfield>.3 c/test/input/abixy
 
-./test/../mlr put $x2 = $x**2 ./test/input/abixy
+mlr put $x2 = $x**2 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x2=0.120263
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x2=0.575595
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x2=0.041863
@@ -997,7 +997,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,x2=0.358267
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x2=0.000989
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x2=0.252633
 
-./test/../mlr put $z = -0.024*$x+0.13 ./test/input/abixy
+mlr put $z = -0.024*$x+0.13 c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=0.121677
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.111792
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,z=0.125090
@@ -1009,7 +1009,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,z=0.115635
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,z=0.129245
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=0.117937
 
-./test/../mlr put $c = $a . $b ./test/input/abixy
+mlr put $c = $a . $b c/test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,c=panpan
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,c=ekspan
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,c=wyewye
@@ -1021,34 +1021,34 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,c=zeewye
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,c=hatwye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,c=panwye
 
-./test/../mlr --opprint put $nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM;$filename=FILENAME ./test/input/abixy ./test/input/abixy
-a   b   i  x                   y                   nr fnr nf filenum filename
-pan pan 1  0.3467901443380824  0.7268028627434533  1  1   7  1       ./test/input/abixy
-eks pan 2  0.7586799647899636  0.5221511083334797  2  2   7  1       ./test/input/abixy
-wye wye 3  0.20460330576630303 0.33831852551664776 3  3   7  1       ./test/input/abixy
-eks wye 4  0.38139939387114097 0.13418874328430463 4  4   7  1       ./test/input/abixy
-wye pan 5  0.5732889198020006  0.8636244699032729  5  5   7  1       ./test/input/abixy
-zee pan 6  0.5271261600918548  0.49322128674835697 6  6   7  1       ./test/input/abixy
-eks zee 7  0.6117840605678454  0.1878849191181694  7  7   7  1       ./test/input/abixy
-zee wye 8  0.5985540091064224  0.976181385699006   8  8   7  1       ./test/input/abixy
-hat wye 9  0.03144187646093577 0.7495507603507059  9  9   7  1       ./test/input/abixy
-pan wye 10 0.5026260055412137  0.9526183602969864  10 10  7  1       ./test/input/abixy
-pan pan 1  0.3467901443380824  0.7268028627434533  11 1   7  2       ./test/input/abixy
-eks pan 2  0.7586799647899636  0.5221511083334797  12 2   7  2       ./test/input/abixy
-wye wye 3  0.20460330576630303 0.33831852551664776 13 3   7  2       ./test/input/abixy
-eks wye 4  0.38139939387114097 0.13418874328430463 14 4   7  2       ./test/input/abixy
-wye pan 5  0.5732889198020006  0.8636244699032729  15 5   7  2       ./test/input/abixy
-zee pan 6  0.5271261600918548  0.49322128674835697 16 6   7  2       ./test/input/abixy
-eks zee 7  0.6117840605678454  0.1878849191181694  17 7   7  2       ./test/input/abixy
-zee wye 8  0.5985540091064224  0.976181385699006   18 8   7  2       ./test/input/abixy
-hat wye 9  0.03144187646093577 0.7495507603507059  19 9   7  2       ./test/input/abixy
-pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2       ./test/input/abixy
+mlr --opprint put $nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM c/test/input/abixy c/test/input/abixy
+a   b   i  x                   y                   nr fnr nf filenum
+pan pan 1  0.3467901443380824  0.7268028627434533  1  1   7  1
+eks pan 2  0.7586799647899636  0.5221511083334797  2  2   7  1
+wye wye 3  0.20460330576630303 0.33831852551664776 3  3   7  1
+eks wye 4  0.38139939387114097 0.13418874328430463 4  4   7  1
+wye pan 5  0.5732889198020006  0.8636244699032729  5  5   7  1
+zee pan 6  0.5271261600918548  0.49322128674835697 6  6   7  1
+eks zee 7  0.6117840605678454  0.1878849191181694  7  7   7  1
+zee wye 8  0.5985540091064224  0.976181385699006   8  8   7  1
+hat wye 9  0.03144187646093577 0.7495507603507059  9  9   7  1
+pan wye 10 0.5026260055412137  0.9526183602969864  10 10  7  1
+pan pan 1  0.3467901443380824  0.7268028627434533  11 1   7  2
+eks pan 2  0.7586799647899636  0.5221511083334797  12 2   7  2
+wye wye 3  0.20460330576630303 0.33831852551664776 13 3   7  2
+eks wye 4  0.38139939387114097 0.13418874328430463 14 4   7  2
+wye pan 5  0.5732889198020006  0.8636244699032729  15 5   7  2
+zee pan 6  0.5271261600918548  0.49322128674835697 16 6   7  2
+eks zee 7  0.6117840605678454  0.1878849191181694  17 7   7  2
+zee wye 8  0.5985540091064224  0.976181385699006   18 8   7  2
+hat wye 9  0.03144187646093577 0.7495507603507059  19 9   7  2
+pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2
 
 
 ================================================================
 OPERATOR PRECEDENCE AND ASSOCIATIVITY
 
-./test/../mlr put -v $x=$a+$b+$c /dev/null
+mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1057,7 +1057,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b-$c /dev/null
+mlr put -v $x=$a+$b-$c /dev/null
 = (operator):
     x (field_name).
     - (operator):
@@ -1066,7 +1066,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a-$b-$c /dev/null
+mlr put -v $x=$a-$b-$c /dev/null
 = (operator):
     x (field_name).
     - (operator):
@@ -1075,7 +1075,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a-$b+$c /dev/null
+mlr put -v $x=$a-$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1084,7 +1084,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a*$b*$c /dev/null
+mlr put -v $x=$a*$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -1093,7 +1093,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a*$b/$c /dev/null
+mlr put -v $x=$a*$b/$c /dev/null
 = (operator):
     x (field_name).
     / (operator):
@@ -1102,7 +1102,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a/$b/$c /dev/null
+mlr put -v $x=$a/$b/$c /dev/null
 = (operator):
     x (field_name).
     / (operator):
@@ -1111,7 +1111,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a/$b*$c /dev/null
+mlr put -v $x=$a/$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -1120,7 +1120,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b+$c /dev/null
+mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1129,7 +1129,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b*$c /dev/null
+mlr put -v $x=$a+$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1138,7 +1138,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr put -v $x=$a*$b*$c /dev/null
+mlr put -v $x=$a*$b*$c /dev/null
 = (operator):
     x (field_name).
     * (operator):
@@ -1147,7 +1147,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a*$b+$c /dev/null
+mlr put -v $x=$a*$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1156,7 +1156,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b+$c /dev/null
+mlr put -v $x=$a+$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1165,7 +1165,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b**$c /dev/null
+mlr put -v $x=$a+$b**$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1174,7 +1174,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr put -v $x=$a**$b**$c /dev/null
+mlr put -v $x=$a**$b**$c /dev/null
 = (operator):
     x (field_name).
     ** (operator):
@@ -1183,7 +1183,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr put -v $x=$a**$b+$c /dev/null
+mlr put -v $x=$a**$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1192,7 +1192,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a.$b.$c /dev/null
+mlr put -v $x=$a.$b.$c /dev/null
 = (operator):
     x (field_name).
     . (operator):
@@ -1201,7 +1201,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=-$a+$b*$c /dev/null
+mlr put -v $x=-$a+$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1211,7 +1211,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr put -v $x=-$a*$b+$c /dev/null
+mlr put -v $x=-$a*$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1221,7 +1221,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+-$b*$c /dev/null
+mlr put -v $x=$a+-$b*$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1231,7 +1231,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
                 b (field_name).
             c (field_name).
 
-./test/../mlr put -v $x=$a*-$b+$c /dev/null
+mlr put -v $x=$a*-$b+$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1241,7 +1241,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
                 b (field_name).
         c (field_name).
 
-./test/../mlr put -v $x=$a+$b*-$c /dev/null
+mlr put -v $x=$a+$b*-$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1251,7 +1251,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             - (operator):
                 c (field_name).
 
-./test/../mlr put -v $x=$a*$b+-$c /dev/null
+mlr put -v $x=$a*$b+-$c /dev/null
 = (operator):
     x (field_name).
     + (operator):
@@ -1261,7 +1261,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         - (operator):
             c (field_name).
 
-./test/../mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
+mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
 && (operator):
     && (operator):
         == (operator):
@@ -1274,7 +1274,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         c (field_name).
         1 (literal).
 
-./test/../mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
+mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
 || (operator):
     == (operator):
         a (field_name).
@@ -1287,7 +1287,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             c (field_name).
             1 (literal).
 
-./test/../mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
+mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
 || (operator):
     || (operator):
         == (operator):
@@ -1300,7 +1300,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         c (field_name).
         1 (literal).
 
-./test/../mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
+mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
 || (operator):
     && (operator):
         == (operator):
@@ -1313,7 +1313,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         c (field_name).
         1 (literal).
 
-./test/../mlr filter -v $x<$a*$b*$c /dev/null
+mlr filter -v $x<$a*$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -1322,7 +1322,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a*$b/$c /dev/null
+mlr filter -v $x<$a*$b/$c /dev/null
 < (operator):
     x (field_name).
     / (operator):
@@ -1331,7 +1331,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a/$b/$c /dev/null
+mlr filter -v $x<$a/$b/$c /dev/null
 < (operator):
     x (field_name).
     / (operator):
@@ -1340,7 +1340,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a/$b*$c /dev/null
+mlr filter -v $x<$a/$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -1349,7 +1349,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+$b+$c /dev/null
+mlr filter -v $x<$a+$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1358,7 +1358,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+$b*$c /dev/null
+mlr filter -v $x<$a+$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1367,7 +1367,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr filter -v $x<$a*$b*$c /dev/null
+mlr filter -v $x<$a*$b*$c /dev/null
 < (operator):
     x (field_name).
     * (operator):
@@ -1376,7 +1376,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a*$b+$c /dev/null
+mlr filter -v $x<$a*$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1385,7 +1385,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+$b+$c /dev/null
+mlr filter -v $x<$a+$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1394,7 +1394,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+$b**$c /dev/null
+mlr filter -v $x<$a+$b**$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1403,7 +1403,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr filter -v $x<$a**$b**$c /dev/null
+mlr filter -v $x<$a**$b**$c /dev/null
 < (operator):
     x (field_name).
     ** (operator):
@@ -1412,7 +1412,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a**$b+$c /dev/null
+mlr filter -v $x<$a**$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1421,7 +1421,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a.$b.$c /dev/null
+mlr filter -v $x<$a.$b.$c /dev/null
 < (operator):
     x (field_name).
     . (operator):
@@ -1430,7 +1430,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<-$a+$b*$c /dev/null
+mlr filter -v $x<-$a+$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1440,7 +1440,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
             c (field_name).
 
-./test/../mlr filter -v $x<-$a*$b+$c /dev/null
+mlr filter -v $x<-$a*$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1450,7 +1450,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+-$b*$c /dev/null
+mlr filter -v $x<$a+-$b*$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1460,7 +1460,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
                 b (field_name).
             c (field_name).
 
-./test/../mlr filter -v $x<$a*-$b+$c /dev/null
+mlr filter -v $x<$a*-$b+$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1470,7 +1470,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
                 b (field_name).
         c (field_name).
 
-./test/../mlr filter -v $x<$a+$b*-$c /dev/null
+mlr filter -v $x<$a+$b*-$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1480,7 +1480,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
             - (operator):
                 c (field_name).
 
-./test/../mlr filter -v $x<$a*$b+-$c /dev/null
+mlr filter -v $x<$a*$b+-$c /dev/null
 < (operator):
     x (field_name).
     + (operator):
@@ -1490,7 +1490,7 @@ OPERATOR PRECEDENCE AND ASSOCIATIVITY
         - (operator):
             c (field_name).
 
-./test/../mlr --csvlite put $gmt=sec2gmt($sec) ./test/input/sec2gmt
+mlr --csvlite put $gmt=sec2gmt($sec) c/test/input/sec2gmt
 sec,gmt
 0,1970-01-01T00:00:00Z
 1,1970-01-01T00:00:01Z
@@ -1507,7 +1507,7 @@ sec,gmt
 1500000000,2017-07-14T02:40:00Z
 2000000000,2033-05-18T03:33:20Z
 
-./test/../mlr --csvlite put $sec=gmt2sec($gmt) ./test/input/gmt2sec
+mlr --csvlite put $sec=gmt2sec($gmt) c/test/input/gmt2sec
 gmt,sec
 1970-01-01T00:00:00Z,0
 1970-01-01T00:00:01Z,1
@@ -1524,7 +1524,7 @@ gmt,sec
 2017-07-14T02:40:00Z,1500000000
 2033-05-18T03:33:20Z,2000000000
 
-./test/../mlr put $z=min($x, $y) ./test/input/minmax.dkvp
+mlr put $z=min($x, $y) c/test/input/minmax.dkvp
 x=1,y=2,z=1.000000
 x=1,y=,z=1.000000
 x=,y=,z=
@@ -1534,7 +1534,7 @@ x=3,y=,z=3.000000
 x=,y=,z=
 x=,y=2,z=2.000000
 
-./test/../mlr put $z=max($x, $y) ./test/input/minmax.dkvp
+mlr put $z=max($x, $y) c/test/input/minmax.dkvp
 x=1,y=2,z=2.000000
 x=1,y=,z=1.000000
 x=,y=,z=
@@ -1544,7 +1544,7 @@ x=3,y=,z=3.000000
 x=,y=,z=
 x=,y=2,z=2.000000
 
-./test/../mlr --opprint put $hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec ./test/input/sec2xhms
+mlr --opprint put $hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec c/test/input/sec2xhms
 sec     hms        resec   diff
 0       00:00:00   0       0.000000
 1       00:00:01   1       0.000000
@@ -1574,7 +1574,7 @@ sec     hms        resec   diff
 -864000 -240:00:00 -864000 0.000000
 -864001 -240:00:01 -864001 0.000000
 
-./test/../mlr --opprint put $hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec ./test/input/fsec2xhms
+mlr --opprint put $hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec c/test/input/fsec2xhms
 sec        hms               resec          diff
 0.25       0:00:00.250000    0.250000       0.000000
 1.25       0:00:01.250000    1.250000       0.000000
@@ -1605,7 +1605,7 @@ sec        hms               resec          diff
 -864000.25 -240:00:00.250000 -864000.250000 0.000000
 -864001.25 -240:00:01.250000 -864001.250000 0.000000
 
-./test/../mlr --opprint put $hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec ./test/input/sec2xhms
+mlr --opprint put $hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec c/test/input/sec2xhms
 sec     hms           resec   diff
 0       0s            0       0.000000
 1       1s            1       0.000000
@@ -1635,7 +1635,7 @@ sec     hms           resec   diff
 -864000 -10d00h00m00s -864000 0.000000
 -864001 -10d00h00m01s -864001 0.000000
 
-./test/../mlr --opprint put $hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec ./test/input/fsec2xhms
+mlr --opprint put $hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec c/test/input/fsec2xhms
 sec        hms                  resec          diff
 0.25       0.250000s            0.250000       0.000000
 1.25       1.250000s            1.250000       0.000000
@@ -1670,62 +1670,62 @@ sec        hms                  resec          diff
 ================================================================
 CHAINING
 
-./test/../mlr cat then cat ./test/input/short
+mlr cat then cat c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr cat then tac ./test/input/short
+mlr cat then tac c/test/input/short
 c=3
 b=2
 a=1
 
-./test/../mlr tac then cat ./test/input/short
+mlr tac then cat c/test/input/short
 c=3
 b=2
 a=1
 
-./test/../mlr tac then tac ./test/input/short
+mlr tac then tac c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr cat then cat then cat ./test/input/short
+mlr cat then cat then cat c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr cat then cat then tac ./test/input/short
+mlr cat then cat then tac c/test/input/short
 c=3
 b=2
 a=1
 
-./test/../mlr cat then tac then cat ./test/input/short
+mlr cat then tac then cat c/test/input/short
 c=3
 b=2
 a=1
 
-./test/../mlr cat then tac then tac ./test/input/short
+mlr cat then tac then tac c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr tac then cat then cat ./test/input/short
+mlr tac then cat then cat c/test/input/short
 c=3
 b=2
 a=1
 
-./test/../mlr tac then cat then tac ./test/input/short
+mlr tac then cat then tac c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr tac then tac then cat ./test/input/short
+mlr tac then tac then cat c/test/input/short
 a=1
 b=2
 c=3
 
-./test/../mlr tac then tac then tac ./test/input/short
+mlr tac then tac then tac c/test/input/short
 c=3
 b=2
 a=1
@@ -1734,41 +1734,41 @@ a=1
 ================================================================
 HET-CSV INPUT
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/a.csv
+mlr --icsvlite --odkvp cat c/test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/b.csv
+mlr --icsvlite --odkvp cat c/test/input/b.csv
 d=5,e=6,f=7
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/c.csv
+mlr --icsvlite --odkvp cat c/test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/d.csv
+mlr --icsvlite --odkvp cat c/test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/e.csv
+mlr --icsvlite --odkvp cat c/test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/f.csv
+mlr --icsvlite --odkvp cat c/test/input/f.csv
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/g.csv
+mlr --icsvlite --odkvp cat c/test/input/g.csv
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/a.csv ./test/input/a.csv
+mlr --icsvlite --odkvp cat c/test/input/a.csv c/test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/b.csv ./test/input/b.csv
+mlr --icsvlite --odkvp cat c/test/input/b.csv c/test/input/b.csv
 d=5,e=6,f=7
 d=5,e=6,f=7
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/c.csv ./test/input/c.csv
+mlr --icsvlite --odkvp cat c/test/input/c.csv c/test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
@@ -1776,65 +1776,65 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/d.csv ./test/input/d.csv
+mlr --icsvlite --odkvp cat c/test/input/d.csv c/test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/e.csv ./test/input/e.csv
+mlr --icsvlite --odkvp cat c/test/input/e.csv c/test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/f.csv ./test/input/f.csv
+mlr --icsvlite --odkvp cat c/test/input/f.csv c/test/input/f.csv
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/g.csv ./test/input/g.csv
+mlr --icsvlite --odkvp cat c/test/input/g.csv c/test/input/g.csv
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/a.csv ./test/input/b.csv
+mlr --icsvlite --odkvp cat c/test/input/a.csv c/test/input/b.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 d=5,e=6,f=7
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/b.csv ./test/input/c.csv
+mlr --icsvlite --odkvp cat c/test/input/b.csv c/test/input/c.csv
 d=5,e=6,f=7
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/c.csv ./test/input/d.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-a=7,b=8,c=9
-h=3,i=4,j=5
-m=8,n=9,o=10
-
-./test/../mlr --icsvlite --odkvp cat ./test/input/d.csv ./test/input/e.csv
-h=3,i=4,j=5
-m=8,n=9,o=10
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-./test/../mlr --icsvlite --odkvp cat ./test/input/e.csv ./test/input/f.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-./test/../mlr --icsvlite --odkvp cat ./test/input/f.csv ./test/input/g.csv
-
-./test/../mlr --icsvlite --odkvp cat ./test/input/a.csv ./test/input/b.csv ./test/input/c.csv ./test/input/d.csv ./test/input/e.csv ./test/input/f.csv ./test/input/g.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-d=5,e=6,f=7
+mlr --icsvlite --odkvp cat c/test/input/c.csv c/test/input/d.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 h=3,i=4,j=5
 m=8,n=9,o=10
+
+mlr --icsvlite --odkvp cat c/test/input/d.csv c/test/input/e.csv
+h=3,i=4,j=5
+m=8,n=9,o=10
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --icsvlite --odkvp tac ./test/input/het.csv
+mlr --icsvlite --odkvp cat c/test/input/e.csv c/test/input/f.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --icsvlite --odkvp cat c/test/input/f.csv c/test/input/g.csv
+
+mlr --icsvlite --odkvp cat c/test/input/a.csv c/test/input/b.csv c/test/input/c.csv c/test/input/d.csv c/test/input/e.csv c/test/input/f.csv c/test/input/g.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+d=5,e=6,f=7
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+h=3,i=4,j=5
+m=8,n=9,o=10
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --icsvlite --odkvp tac c/test/input/het.csv
 resource=/some/other/path,loadsec=0.97,ok=false
 record_count=150,resource=/path/to/second/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1845,41 +1845,41 @@ resource=/path/to/file,loadsec=0.45,ok=true
 ================================================================
 HET-PPRINT INPUT
 
-./test/../mlr --ipprint --odkvp cat ./test/input/a.pprint
+mlr --ipprint --odkvp cat c/test/input/a.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/b.pprint
+mlr --ipprint --odkvp cat c/test/input/b.pprint
 d=5,e=6,f=7
 
-./test/../mlr --ipprint --odkvp cat ./test/input/c.pprint
+mlr --ipprint --odkvp cat c/test/input/c.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --ipprint --odkvp cat ./test/input/d.pprint
+mlr --ipprint --odkvp cat c/test/input/d.pprint
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --ipprint --odkvp cat ./test/input/e.pprint
+mlr --ipprint --odkvp cat c/test/input/e.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/f.pprint
+mlr --ipprint --odkvp cat c/test/input/f.pprint
 
-./test/../mlr --ipprint --odkvp cat ./test/input/g.pprint
+mlr --ipprint --odkvp cat c/test/input/g.pprint
 
-./test/../mlr --ipprint --odkvp cat ./test/input/a.pprint ./test/input/a.pprint
+mlr --ipprint --odkvp cat c/test/input/a.pprint c/test/input/a.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/b.pprint ./test/input/b.pprint
+mlr --ipprint --odkvp cat c/test/input/b.pprint c/test/input/b.pprint
 d=5,e=6,f=7
 d=5,e=6,f=7
 
-./test/../mlr --ipprint --odkvp cat ./test/input/c.pprint ./test/input/c.pprint
+mlr --ipprint --odkvp cat c/test/input/c.pprint c/test/input/c.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
@@ -1887,53 +1887,53 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --ipprint --odkvp cat ./test/input/d.pprint ./test/input/d.pprint
+mlr --ipprint --odkvp cat c/test/input/d.pprint c/test/input/d.pprint
 h=3,i=4,j=5
 m=8,n=9,o=10
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --ipprint --odkvp cat ./test/input/e.pprint ./test/input/e.pprint
+mlr --ipprint --odkvp cat c/test/input/e.pprint c/test/input/e.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/f.pprint ./test/input/f.pprint
+mlr --ipprint --odkvp cat c/test/input/f.pprint c/test/input/f.pprint
 
-./test/../mlr --ipprint --odkvp cat ./test/input/g.pprint ./test/input/g.pprint
+mlr --ipprint --odkvp cat c/test/input/g.pprint c/test/input/g.pprint
 
-./test/../mlr --ipprint --odkvp cat ./test/input/a.pprint ./test/input/b.pprint
+mlr --ipprint --odkvp cat c/test/input/a.pprint c/test/input/b.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 d=5,e=6,f=7
 
-./test/../mlr --ipprint --odkvp cat ./test/input/b.pprint ./test/input/c.pprint
+mlr --ipprint --odkvp cat c/test/input/b.pprint c/test/input/c.pprint
 d=5,e=6,f=7
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-./test/../mlr --ipprint --odkvp cat ./test/input/c.pprint ./test/input/d.pprint
+mlr --ipprint --odkvp cat c/test/input/c.pprint c/test/input/d.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-./test/../mlr --ipprint --odkvp cat ./test/input/d.pprint ./test/input/e.pprint
+mlr --ipprint --odkvp cat c/test/input/d.pprint c/test/input/e.pprint
 h=3,i=4,j=5
 m=8,n=9,o=10
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/e.pprint ./test/input/f.pprint
+mlr --ipprint --odkvp cat c/test/input/e.pprint c/test/input/f.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-./test/../mlr --ipprint --odkvp cat ./test/input/f.pprint ./test/input/g.pprint
+mlr --ipprint --odkvp cat c/test/input/f.pprint c/test/input/g.pprint
 
-./test/../mlr --ipprint --odkvp cat ./test/input/a.pprint ./test/input/b.pprint ./test/input/c.pprint ./test/input/d.pprint ./test/input/e.pprint ./test/input/f.pprint ./test/input/g.pprint
+mlr --ipprint --odkvp cat c/test/input/a.pprint c/test/input/b.pprint c/test/input/c.pprint c/test/input/d.pprint c/test/input/e.pprint c/test/input/f.pprint c/test/input/g.pprint
 a=1,b=2,c=3
 a=4,b=5,c=6
 d=5,e=6,f=7
@@ -1949,21 +1949,21 @@ a=4,b=5,c=6
 ================================================================
 NULL-FIELD INPUT
 
-./test/../mlr --icsvlite --odkvp cat ./test/input/null-fields.csv
+mlr --icsvlite --odkvp cat c/test/input/null-fields.csv
 a=1,b=2,c=3,d=4,e=5
 a=6,b=,c=,d=,e=10
 a=,b=,c=,d=11,e=12
 a=13,b=14,c=,d=,e=
 a=,b=,c=,d=,e=
 
-./test/../mlr --inidx --odkvp cat ./test/input/null-fields.nidx
+mlr --inidx --odkvp cat c/test/input/null-fields.nidx
 1=a,2=b,3=c,4=d,5=e
 1=f,2=,3=,4=,5=g
 1=,2=,3=,4=h,5=i
 1=j,2=k,3=,4=,5=
 1=,2=,3=,4=,5=
 
-./test/../mlr --idkvp --oxtab cat ./test/input/missings.dkvp
+mlr --idkvp --oxtab cat c/test/input/missings.dkvp
 a 1
 b 2
 c 3
@@ -1991,38 +1991,38 @@ f 6
 ================================================================
 SPACE-PADDING
 
-./test/../mlr --mmap --idkvp --odkvp --ifs space --repifs cat ./test/input/space-pad.dkvp
+mlr --mmap --idkvp --odkvp --ifs space --repifs cat c/test/input/space-pad.dkvp
 a=1,b=2
 c=3
 
-./test/../mlr --no-mmap --idkvp --odkvp --ifs space --repifs cat ./test/input/space-pad.dkvp
+mlr --no-mmap --idkvp --odkvp --ifs space --repifs cat c/test/input/space-pad.dkvp
 a=1,b=2
 c=3
 
-./test/../mlr --mmap --inidx --odkvp --ifs space --repifs cat ./test/input/space-pad.nidx
+mlr --mmap --inidx --odkvp --ifs space --repifs cat c/test/input/space-pad.nidx
 1=a,2=b,3=c
 1=d,2=e,3=f
 
-./test/../mlr --no-mmap --inidx --odkvp --ifs space --repifs cat ./test/input/space-pad.nidx
+mlr --no-mmap --inidx --odkvp --ifs space --repifs cat c/test/input/space-pad.nidx
 1=a,2=b,3=c
 1=d,2=e,3=f
 
-./test/../mlr --mmap --icsvlite --odkvp --ifs space --repifs cat ./test/input/space-pad.pprint
+mlr --mmap --icsvlite --odkvp --ifs space --repifs cat c/test/input/space-pad.pprint
 a=1,b=2,c=3
 
-./test/../mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat ./test/input/space-pad.pprint
+mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat c/test/input/space-pad.pprint
 a=1,b=2,c=3
 
 
 ================================================================
 DOUBLE PS
 
-./test/../mlr --no-mmap --opprint cat ./test/input/double-ps.dkvp
+mlr --no-mmap --opprint cat c/test/input/double-ps.dkvp
 a   b    c
 pan wy.e 3
 pan wy=e 3
 
-./test/../mlr --mmap --opprint cat ./test/input/double-ps.dkvp
+mlr --mmap --opprint cat c/test/input/double-ps.dkvp
 a   b    c
 pan wy.e 3
 pan wy=e 3
@@ -2031,47 +2031,47 @@ pan wy=e 3
 ================================================================
 MISSING FINAL LF
 
-./test/../mlr --no-mmap --csvlite cat ./test/input/truncated.csv
+mlr --no-mmap --csvlite cat c/test/input/truncated.csv
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 
-./test/../mlr --csvlite cat ./test/input/truncated.csv
+mlr --csvlite cat c/test/input/truncated.csv
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 
-./test/../mlr --no-mmap --dkvp cat ./test/input/truncated.dkvp
+mlr --no-mmap --dkvp cat c/test/input/truncated.dkvp
 a=1,b=2
 c=3
 
-./test/../mlr --dkvp cat ./test/input/truncated.dkvp
+mlr --dkvp cat c/test/input/truncated.dkvp
 a=1,b=2
 c=3
 
-./test/../mlr --no-mmap --nidx cat ./test/input/truncated.nidx
+mlr --no-mmap --nidx cat c/test/input/truncated.nidx
 1 2 3
 4 5
 
-./test/../mlr --nidx cat ./test/input/truncated.nidx
+mlr --nidx cat c/test/input/truncated.nidx
 1 2 3
 4 5
 
-./test/../mlr --no-mmap --pprint cat ./test/input/truncated.pprint
+mlr --no-mmap --pprint cat c/test/input/truncated.pprint
 a b c
 1 2 3
 4 5 6
 7 8 9
 
-./test/../mlr --pprint cat ./test/input/truncated.pprint
+mlr --pprint cat c/test/input/truncated.pprint
 a b c
 1 2 3
 4 5 6
 7 8 9
 
-./test/../mlr --no-mmap --xtab cat ./test/input/truncated.xtab
+mlr --no-mmap --xtab cat c/test/input/truncated.xtab
 a 1
 b 2
 c 3
@@ -2079,7 +2079,7 @@ c 3
 d 4
 e 5
 
-./test/../mlr --xtab cat ./test/input/truncated.xtab
+mlr --xtab cat c/test/input/truncated.xtab
 a 1
 b 2
 c 3
@@ -2091,39 +2091,39 @@ e 5
 ================================================================
 UTF-8 alignment
 
-./test/../mlr --icsvlite --opprint cat ./test/input/utf8-1.csv
+mlr --icsvlite --opprint cat c/test/input/utf8-1.csv
 langue   nom      jour
 français françois vendredi
 
-./test/../mlr --icsvlite --opprint cat ./test/input/utf8-2.csv
+mlr --icsvlite --opprint cat c/test/input/utf8-2.csv
 français françois vendredi
 langue   nom      jour
 
-./test/../mlr --icsvlite --oxtab cat ./test/input/utf8-1.csv
+mlr --icsvlite --oxtab cat c/test/input/utf8-1.csv
 langue français
 nom    françois
 jour   vendredi
 
-./test/../mlr --icsvlite --oxtab cat ./test/input/utf8-2.csv
+mlr --icsvlite --oxtab cat c/test/input/utf8-2.csv
 français langue
 françois nom
 vendredi jour
 
-./test/../mlr --inidx --ifs space --opprint cat ./test/input/utf8-align.nidx
+mlr --inidx --ifs space --opprint cat c/test/input/utf8-align.nidx
 1        2
 191º     test
 191      test2
 francois français
 françois francais
 
-./test/../mlr --inidx --ifs space --opprint --right cat ./test/input/utf8-align.nidx
+mlr --inidx --ifs space --opprint --right cat c/test/input/utf8-align.nidx
        1        2
     191º     test
      191    test2
 francois français
 françois francais
 
-./test/../mlr --oxtab cat ./test/input/utf8-align.dkvp
+mlr --oxtab cat c/test/input/utf8-align.dkvp
 191º test
 1912 test2
 cois çais
@@ -2143,54 +2143,54 @@ coise çais
 ================================================================
 RFC-CSV
 
-./test/../mlr --csv cat ./test/input/rfc-csv/simple.csv
+mlr --csv cat c/test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
 x,y"yy,z
 
-./test/../mlr --csv cat ./test/input/rfc-csv/simple-truncated.csv
+mlr --csv cat c/test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/narrow.csv
+mlr --csv cat c/test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-./test/../mlr --csv cat ./test/input/rfc-csv/narrow-truncated.csv
+mlr --csv cat c/test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
 3
 4
 
-./test/../mlr --csv cat ./test/input/rfc-csv/quoted-comma.csv
+mlr --csv cat c/test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/quoted-comma-truncated.csv
+mlr --csv cat c/test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/quoted-crlf.csv
+mlr --csv cat c/test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/quoted-crlf-truncated.csv
+mlr --csv cat c/test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-./test/../mlr --csv cat ./test/input/rfc-csv/simple-truncated.csv ./test/input/rfc-csv/simple.csv
+mlr --csv cat c/test/input/rfc-csv/simple-truncated.csv c/test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
