@@ -1,11 +1,6 @@
 ================================================================
 BUGFIXES
 
-$ sh foo|termcvt --lf2crlf|mlr --no-mmap --csv check
-fopen: No such file or directory
-mlr: Couldn't fopen "-" for read.
--> needs UT case!
-
 ! memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
 -> heap-fragging?
 -> redo inline-pasting but this time correctly weight the fragging effect
@@ -30,8 +25,6 @@ TOP OF LIST
   o DKVP double-quote support
   i still need separate csvlite/csv on output since the former tolerates heterogeneity
 
-* dhms2sec and sec2dhms functions
-
 * header-length data mismatch et. al: file/line
 
 * make an updated dependency list, esp. in light of a2x et al.
@@ -39,12 +32,10 @@ TOP OF LIST
 
 * trie-parse to-do:
   o make a power-of-two ring buffer for pfr & trie
-  o mlr_memeq or mlr_streq, not cmp. and perhaps ring-buffer aware.
-  o find the crucial inlinables via gprof
 
-* homebrew
-
+* autoconf
 * .deb
+* homebrew
 
 ----------------------------------------------------------------
 little:
@@ -52,8 +43,6 @@ little:
 * -Wall -Wextra -Wpedantic-?? Werror=unused-but-set-variable?
 
 * --mmap into online help ...
-
-* keystroke-saver for tsvlite i/o
 
 * comma-number -- using locale?
 
