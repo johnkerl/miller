@@ -57,7 +57,6 @@ static char* test_slls() {
 
 // ----------------------------------------------------------------
 static char* test_sllv() {
-	mu_assert_lf(0 == 0);
 
 	sllv_t* pa = sllv_alloc();
 	sllv_add(pa, "a");
@@ -164,7 +163,6 @@ static char* test_hss() {
 
 // ----------------------------------------------------------------
 static char* test_lhmsi() {
-	mu_assert_lf(0 == 0);
 
 	lhmsi_t *pmap = lhmsi_alloc();
 	mu_assert_lf(pmap->num_occupied == 0);
@@ -229,7 +227,6 @@ static char* test_lhmsi() {
 
 // ----------------------------------------------------------------
 static char* test_lhmss() {
-	mu_assert_lf(0 == 0);
 
 	lhmss_t *pmap = lhmss_alloc();
 	mu_assert_lf(pmap->num_occupied == 0);
@@ -285,7 +282,6 @@ static char* test_lhmss() {
 
 // ----------------------------------------------------------------
 static char* test_lhmsv() {
-	mu_assert_lf(0 == 0);
 
 	return NULL;
 }
@@ -307,7 +303,6 @@ static char* test_lhmsv() {
 
 // ----------------------------------------------------------------
 static char* test_lhms2v() {
-	mu_assert_lf(0 == 0);
 
 	// xxx more assertions here
 	lhms2v_t *pmap = lhms2v_alloc();
@@ -373,39 +368,66 @@ static char* test_lhms2v() {
 
 // ----------------------------------------------------------------
 static char* test_lhmslv() {
-	mu_assert_lf(0 == 0);
 
+	slls_t* aw = slls_alloc(); slls_add_no_free(aw, "a"); slls_add_no_free(aw, "w");
 	slls_t* ax = slls_alloc(); slls_add_no_free(ax, "a"); slls_add_no_free(ax, "x");
 	slls_t* ay = slls_alloc(); slls_add_no_free(ay, "a"); slls_add_no_free(ay, "y");
 	slls_t* bz = slls_alloc(); slls_add_no_free(bz, "b"); slls_add_no_free(bz, "z");
 
-	// xxx more assertions here
 	lhmslv_t *pmap = lhmslv_alloc();
 	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, ax)); mu_assert_lf(lhmslv_get(pmap, ax) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_put(pmap, ax, "3");
 	mu_assert_lf(pmap->num_occupied == 1);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "3"));
+	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_put(pmap, ay, "5");
 	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "3"));
+	mu_assert_lf(lhmslv_has_key(pmap,  ay)); mu_assert_lf(streq(lhmslv_get(pmap, ay), "5"));
+	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_put(pmap, ax, "4");
 	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "4"));
+	mu_assert_lf(lhmslv_has_key(pmap,  ay)); mu_assert_lf(streq(lhmslv_get(pmap, ay), "5"));
+	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_put(pmap, bz, "7");
 	mu_assert_lf(pmap->num_occupied == 3);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "4"));
+	mu_assert_lf(lhmslv_has_key(pmap,  ay)); mu_assert_lf(streq(lhmslv_get(pmap, ay), "5"));
+	mu_assert_lf(lhmslv_has_key(pmap,  bz)); mu_assert_lf(streq(lhmslv_get(pmap, bz), "7"));
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_remove(pmap, ay);
 	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "4"));
+	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
+	mu_assert_lf(lhmslv_has_key(pmap,  bz)); mu_assert_lf(streq(lhmslv_get(pmap, bz), "7"));
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_clear(pmap);
 	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, ax)); mu_assert_lf(lhmslv_get(pmap, ax) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
+	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_free(pmap);
@@ -457,7 +479,6 @@ static char* test_percentile_keeper() {
 
 // ----------------------------------------------------------------
 static char* test_top_keeper() {
-	mu_assert_lf(0 == 0);
 	int capacity = 3;
 
 	top_keeper_t* ptop_keeper = top_keeper_alloc(capacity);
@@ -501,7 +522,6 @@ static char* test_top_keeper() {
 
 // ----------------------------------------------------------------
 static char* test_dheap() {
-	mu_assert_lf(0 == 0);
 
 	dheap_t *pdheap = dheap_alloc();
 	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
