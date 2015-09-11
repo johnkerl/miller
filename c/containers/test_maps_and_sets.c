@@ -4,6 +4,7 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
+#include "containers/hss.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
 int tests_run         = 0;
@@ -97,21 +98,52 @@ static char* test_sllv_append() {
 
 // ----------------------------------------------------------------
 static char* test_hss() {
-	mu_assert_lf(0 == 0);
+
+	hss_t *pset = hss_alloc();
+	mu_assert_lf(pset->num_occupied == 0);
+
+	hss_add(pset, "x");
+	mu_assert_lf(pset->num_occupied == 1);
+	mu_assert_lf(!hss_has(pset, "w"));
+	mu_assert_lf(hss_has(pset, "x"));
+	mu_assert_lf(!hss_has(pset, "y"));
+	mu_assert_lf(!hss_has(pset, "z"));
+	mu_assert_lf(hss_check_counts(pset));
+
+	hss_add(pset, "y");
+	mu_assert_lf(pset->num_occupied == 2);
+	mu_assert_lf(!hss_has(pset, "w"));
+	mu_assert_lf(hss_has(pset, "x"));
+	mu_assert_lf(hss_has(pset, "y"));
+	mu_assert_lf(!hss_has(pset, "z"));
+	mu_assert_lf(hss_check_counts(pset));
+
+	hss_add(pset, "x");
+	mu_assert_lf(pset->num_occupied == 2);
+	mu_assert_lf(!hss_has(pset, "w"));
+	mu_assert_lf(hss_has(pset, "x"));
+	mu_assert_lf(hss_has(pset, "y"));
+	mu_assert_lf(!hss_has(pset, "z"));
+	mu_assert_lf(hss_check_counts(pset));
+
+	hss_add(pset, "z");
+	mu_assert_lf(pset->num_occupied == 3);
+	mu_assert_lf(!hss_has(pset, "w"));
+	mu_assert_lf(hss_has(pset, "x"));
+	mu_assert_lf(hss_has(pset, "y"));
+	mu_assert_lf(hss_has(pset, "z"));
+	mu_assert_lf(hss_check_counts(pset));
+
+	hss_remove(pset, "y");
+	mu_assert_lf(pset->num_occupied == 2);
+	mu_assert_lf(!hss_has(pset, "w"));
+	mu_assert_lf(hss_has(pset, "x"));
+	mu_assert_lf(!hss_has(pset, "y"));
+	mu_assert_lf(hss_has(pset, "z"));
+	mu_assert_lf(hss_check_counts(pset));
 
 	return NULL;
 }
-
-//	hss_t *pset = hss_alloc();
-//	hss_add(pset, "x");
-//	hss_add(pset, "y");
-//	hss_add(pset, "x");
-//	hss_add(pset, "z");
-//	hss_remove(pset, "y");
-//	printf("set size = %d\n", hss_size(pset));
-//	hss_dump(pset);
-//	hss_check_counts(pset);
-//	hss_free(pset);
 
 // ----------------------------------------------------------------
 static char* test_lhms2v() {

@@ -196,7 +196,7 @@ int hss_size(hss_t* pset) {
 }
 
 // ----------------------------------------------------------------
-void hss_check_counts(hss_t* pset) {
+int hss_check_counts(hss_t* pset) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pset->array_length; index++) {
@@ -210,14 +210,15 @@ void hss_check_counts(hss_t* pset) {
 		fprintf(stderr,
 			"occupancy-count mismatch:  actual %d != cached  %d",
 				nocc, pset->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pset->num_freed) {
 		fprintf(stderr,
 			"freed-count mismatch:  actual %d != cached  %d",
 				ndel, pset->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
