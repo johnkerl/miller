@@ -81,7 +81,6 @@ int main(int argc, char **argv) {
 	char *result = all_tests();
 	printf("\n");
 	if (result != 0) {
-		//printf("%s\n", result);
 		printf("Not all unit tests passed\n");
 	}
 	else {

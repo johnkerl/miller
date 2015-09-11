@@ -145,10 +145,6 @@ dsls: .always
 mlrg: .always dsls
 	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrg
 
-# Memcheck version
-mlrk: .always dsls
-	$(CCDEBUG) -DUSE_MCHECK $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrk
-
 # Profile version. Usage:
 # * make mlrp
 # * mlrp {arguments>

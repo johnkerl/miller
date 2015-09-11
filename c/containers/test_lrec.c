@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#ifdef MLR_USE_MCHECK
-#include <mcheck.h>
-#endif // MLR_USE_MCHECK
 #include "lib/minunit.h"
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
@@ -262,14 +259,6 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
-#ifdef MLR_USE_MCHECK
-	if (mcheck(NULL) != 0) {
-		printf("Could not set up mcheck\n");
-		exit(1);
-	}
-	printf("Set up mcheck\n");
-#endif // MLR_USE_MCHECK
-
 	char *result = run_all_tests();
 	printf("\n");
 	if (result != 0) {
