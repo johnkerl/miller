@@ -47,4 +47,7 @@ void* lhmsv_get(lhmsv_t* pmap, char* key);
 int   lhmsv_has_key(lhmsv_t* pmap, char* key);
 void  lhmsv_remove(lhmsv_t* pmap, char* key);
 
+// Unit-test hook
+int lhmsv_check_counts(lhmsv_t* pmap);
+
 #endif // LHMSV_H

@@ -245,7 +245,7 @@ static void lhmsv_enlarge(lhmsv_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhmsv_check_counts(lhmsv_t* pmap) {
+int lhmsv_check_counts(lhmsv_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {
@@ -258,14 +258,15 @@ void lhmsv_check_counts(lhmsv_t* pmap) {
 		fprintf(stderr,
 			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
 			"deleted-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
