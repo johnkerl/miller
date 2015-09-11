@@ -57,13 +57,14 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 containers/test_lrec.c
 
-TEST_MAPS_AND_SETS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
+TEST_MULTIPLE_CONTAINERS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c \
 containers/hss.c \
 containers/lhmsi.c \
 containers/lhms2v.c \
 containers/lhmslv.c \
+containers/percentile_keeper.c \
 containers/top_keeper.c \
 containers/dheap.c \
 input/file_reader_mmap.c      input/file_reader_stdio.c \
@@ -214,7 +215,7 @@ test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
 test-multiple-containers: .always
-	$(CCDEBUG) -D__TEST_MAPS_AND_SETS_MAIN__ $(TEST_MAPS_AND_SETS_SRCS) -o test-multiple-containers
+	$(CCDEBUG) -D__TEST_MAPS_AND_SETS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil

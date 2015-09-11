@@ -18,4 +18,7 @@ void percentile_keeper_free(percentile_keeper_t* ppercentile_keeper);
 void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, double value);
 double percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile);
 
+// For debug/test
+void percentile_keeper_print(percentile_keeper_t* ppercentile_keeper);
+
 #endif // PERCENTILE_KEEPER_H

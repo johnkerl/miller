@@ -8,6 +8,7 @@
 #include "containers/lhmsi.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
+#include "containers/percentile_keeper.h"
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
 
@@ -346,39 +347,45 @@ static char* test_lhmsv() {
 
 // ----------------------------------------------------------------
 static char* test_percentile_keeper() {
-	mu_assert_lf(0 == 0);
+
+	percentile_keeper_t* ppercentile_keeper = percentile_keeper_alloc();
+	percentile_keeper_ingest(ppercentile_keeper, 1.0);
+	percentile_keeper_ingest(ppercentile_keeper, 2.0);
+	percentile_keeper_ingest(ppercentile_keeper, 3.0);
+	percentile_keeper_ingest(ppercentile_keeper, 4.0);
+	percentile_keeper_ingest(ppercentile_keeper, 5.0);
+	percentile_keeper_print(ppercentile_keeper);
+
+	double p, q;
+	p = 0.0;
+	q = percentile_keeper_emit(ppercentile_keeper, p);
+	printf("%4.2lf -> %7.4lf\n", p, q);
+	mu_assert_lf(q == 1.0);
+
+	p = 10.0;
+	q = percentile_keeper_emit(ppercentile_keeper, p);
+	printf("%4.2lf -> %7.4lf\n", p, q);
+	mu_assert_lf(q == 1.0);
+
+	p = 50.0;
+	q = percentile_keeper_emit(ppercentile_keeper, p);
+	printf("%4.2lf -> %7.4lf\n", p, q);
+	mu_assert_lf(q == 3.0);
+
+	p = 90.0;
+	q = percentile_keeper_emit(ppercentile_keeper, p);
+	printf("%4.2lf -> %7.4lf\n", p, q);
+	mu_assert_lf(q == 5.0);
+
+	p = 100.0;
+	q = percentile_keeper_emit(ppercentile_keeper, p);
+	printf("%4.2lf -> %7.4lf\n", p, q);
+	mu_assert_lf(q == 5.0);
+
+	percentile_keeper_free(ppercentile_keeper);
 
 	return NULL;
 }
-
-//void percentile_keeper_dump(percentile_keeper_t* ppercentile_keeper) {
-//	for (int i = 0; i < ppercentile_keeper->size; i++)
-//		printf("[%02d] %.8lf\n", i, ppercentile_keeper->data[i]);
-//}
-
-//	char buffer[1024];
-//	percentile_keeper_t* ppercentile_keeper = percentile_keeper_alloc();
-//	char* line;
-//	while ((line = fgets(buffer, sizeof(buffer), stdin)) != NULL) {
-//		int len = strlen(line);
-//		if (len >= 1) // xxx write and use a chomp()
-//			if (line[len-1] == '\n')
-//				line[len-1] = 0;
-//		double v;
-//		if (!mlr_try_double_from_string(line, &v)) {
-//			percentile_keeper_ingest(ppercentile_keeper, v);
-//		} else {
-//			printf("meh? >>%s<<\n", line);
-//		}
-//	}
-//	percentile_keeper_dump(ppercentile_keeper);
-//	printf("\n");
-//	double p;
-//	p = 0.10; printf("%.2lf: %.6lf\n", p, percentile_keeper_emit(ppercentile_keeper, p));
-//	p = 0.50; printf("%.2lf: %.6lf\n", p, percentile_keeper_emit(ppercentile_keeper, p));
-//	p = 0.90; printf("%.2lf: %.6lf\n", p, percentile_keeper_emit(ppercentile_keeper, p));
-//	printf("\n");
-//	percentile_keeper_dump(ppercentile_keeper);
 
 // ----------------------------------------------------------------
 static char* test_top_keeper() {
