@@ -110,7 +110,7 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -160,7 +160,7 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue) {
 		pmap->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -175,7 +175,7 @@ void* lhmsv_get(lhmsv_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -189,7 +189,7 @@ int  lhmsv_has_key(lhmsv_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -224,7 +224,7 @@ void lhmsv_remove(lhmsv_t* pmap, char* key) {
 		return;
 	}
 	else {
-		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -256,13 +256,13 @@ void lhmsv_check_counts(lhmsv_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
 		exit(1);
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"deleted-count mismatch:  actual %d != cached  %d",
+			"deleted-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
 		exit(1);
 	}

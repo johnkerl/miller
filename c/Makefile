@@ -62,6 +62,7 @@ containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c \
 containers/hss.c \
 containers/lhmslv.c \
+containers/lhms2v.c \
 input/file_reader_mmap.c      input/file_reader_stdio.c \
 input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \

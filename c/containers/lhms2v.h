@@ -48,4 +48,7 @@ void*  lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2);
 void   lhms2v_clear(lhms2v_t* pmap);
 int    lhms2v_size(lhms2v_t* pmap);
 
+// Unit-test hook
+int    lhms2v_check_counts(lhms2v_t* pmap);
+
 #endif // LHMS2V_H

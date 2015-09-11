@@ -118,7 +118,7 @@ static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -168,7 +168,7 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value) {
 		pmap->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -183,7 +183,7 @@ int lhmsi_get(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return -999; // xxx fix me ... extend the api to handle nullity.
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -197,7 +197,7 @@ lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -211,7 +211,7 @@ int lhmsi_has_key(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -246,7 +246,7 @@ void lhmsi_remove(lhmsi_t* pmap, char* key) {
 		return;
 	}
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -283,13 +283,13 @@ void lhmsi_check_counts(lhmsi_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
 		exit(1);
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"deleted-count mismatch:  actual %d != cached  %d",
+			"deleted-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
 		exit(1);
 	}
