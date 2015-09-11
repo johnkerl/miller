@@ -259,6 +259,7 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
+	printf("TEST_LREC ENTER\n");
 	char *result = run_all_tests();
 	printf("\n");
 	if (result != 0) {

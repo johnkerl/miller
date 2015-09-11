@@ -14,7 +14,7 @@
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
 
-#ifdef __TEST_MAPS_AND_SETS_MAIN__
+#ifdef __TEST_MULTIPLE_CONTAINERS_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -642,17 +642,18 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
+	printf("TEST_MULTIPLE_CONTAINERS ENTER\n");
 	char *result = run_all_tests();
 	printf("\n");
 	if (result != 0) {
 		printf("Not all unit tests passed\n");
 	}
 	else {
-		printf("TEST_MAPS_AND_SETS: ALL UNIT TESTS PASSED\n");
+		printf("TEST_MULTIPLE_CONTAINERS: ALL UNIT TESTS PASSED\n");
 	}
 	printf("Tests      passed: %d of %d\n", tests_run - tests_failed, tests_run);
 	printf("Assertions passed: %d of %d\n", assertions_run - assertions_failed, assertions_run);
 
 	return result != 0;
 }
-#endif // __TEST_MAPS_AND_SETS_MAIN__
+#endif // __TEST_MULTIPLE_CONTAINERS_MAIN__
