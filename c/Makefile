@@ -61,8 +61,9 @@ TEST_MAPS_AND_SETS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c \
 containers/hss.c \
-containers/lhmslv.c \
+containers/lhmsi.c \
 containers/lhms2v.c \
+containers/lhmslv.c \
 input/file_reader_mmap.c      input/file_reader_stdio.c \
 input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \

@@ -251,9 +251,28 @@ void lhmsi_remove(lhmsi_t* pmap, char* key) {
 	}
 }
 
+// ----------------------------------------------------------------
 void  lhmsi_rename(lhmsi_t* pmap, char* old_key, char* new_key) {
 	fprintf(stderr, "rename is not supported in the hashed-record impl.\n");
 	exit(1);
+}
+
+// ----------------------------------------------------------------
+static void lhmsie_clear(lhmsie_t *pentry) {
+	pentry->ideal_index = -1;
+	pentry->key         = NULL;
+	pentry->value       = -1;
+	pentry->pprev       = NULL;
+	pentry->pnext       = NULL;
+}
+
+void lhmsi_clear(lhmsi_t* pmap) {
+	for (int i = 0; i < pmap->array_length; i++) {
+		lhmsie_clear(&pmap->entries[i]);
+		pmap->states[i] = EMPTY;
+	}
+	pmap->num_occupied = 0;
+	pmap->num_freed = 0;
 }
 
 // ----------------------------------------------------------------
@@ -272,7 +291,7 @@ static void lhmsi_enlarge(lhmsi_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhmsi_check_counts(lhmsi_t* pmap) {
+int lhmsi_check_counts(lhmsi_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {
@@ -285,14 +304,15 @@ void lhmsi_check_counts(lhmsi_t* pmap) {
 		fprintf(stderr,
 			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
 			"deleted-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------

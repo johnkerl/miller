@@ -5,6 +5,7 @@
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "containers/hss.h"
+#include "containers/lhmsi.h"
 #include "containers/lhms2v.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
@@ -152,6 +153,43 @@ static char* test_hss() {
 }
 
 // ----------------------------------------------------------------
+static char* test_lhmsi() {
+	mu_assert_lf(0 == 0);
+
+	lhmsi_t *pmap = lhmsi_alloc();
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_put(pmap, "x", 3);
+	mu_assert_lf(pmap->num_occupied == 1);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_put(pmap, "y", 5);
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_put(pmap, "x", 4);
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_put(pmap, "z", 7);
+	mu_assert_lf(pmap->num_occupied == 3);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_remove(pmap, "y");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_clear(pmap);
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(lhmsi_check_counts(pmap));
+
+	lhmsi_free(pmap);
+
+	return NULL;
+}
+
+// ----------------------------------------------------------------
 static char* test_lhms2v() {
 	mu_assert_lf(0 == 0);
 
@@ -184,13 +222,6 @@ static char* test_lhms2v() {
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
 	lhms2v_free(pmap);
-
-	return NULL;
-}
-
-// ----------------------------------------------------------------
-static char* test_lhmsi() {
-	mu_assert_lf(0 == 0);
 
 	return NULL;
 }
@@ -392,8 +423,8 @@ static char * run_all_tests() {
 	mu_run_test(test_slls);
 	mu_run_test(test_sllv_append);
 	mu_run_test(test_hss);
-	mu_run_test(test_lhms2v);
 	mu_run_test(test_lhmsi);
+	mu_run_test(test_lhms2v);
 	mu_run_test(test_lhmslv);
 	mu_run_test(test_lhmss);
 	mu_run_test(test_lhmsv);
