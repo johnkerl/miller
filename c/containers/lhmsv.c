@@ -303,25 +303,3 @@ void lhmsv_dump(lhmsv_t* pmap) {
 			pe->ideal_index, key_string, pe->pvvalue);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSV_MAIN__
-int main(int argc, char** argv)
-{
-	int x3 = 3;
-	int x5 = 5;
-	int x4 = 4;
-	int x7 = 7;
-	lhmsv_t *pmap = lhmsv_alloc();
-	lhmsv_put(pmap, "x", &x3);
-	lhmsv_put(pmap, "y", &x5);
-	lhmsv_put(pmap, "x", &x4);
-	lhmsv_put(pmap, "z", &x7);
-	lhmsv_remove(pmap, "y");
-	printf("map size = %d\n", pmap->num_occupied);
-	lhmsv_dump(pmap);
-	lhmsv_check_counts(pmap);
-	lhmsv_free(pmap);
-	return 0;
-}
-#endif

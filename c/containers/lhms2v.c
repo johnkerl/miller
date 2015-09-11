@@ -345,21 +345,3 @@ void lhms2v_dump(lhms2v_t* pmap) {
 			pe->ideal_index, key1_string, key2_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMS2V_MAIN__
-int main(int argc, char** argv)
-{
-	lhms2v_t *pmap = lhms2v_alloc();
-	lhms2v_put(pmap, "a", "x", "3");
-	lhms2v_put(pmap, "a", "y", "5");
-	lhms2v_put(pmap, "a", "x", "4");
-	lhms2v_put(pmap, "b", "z", "7");
-	lhms2v_remove(pmap, "a", "y");
-	printf("map size = %d\n", lhms2v_size(pmap));
-	lhms2v_dump(pmap);
-	lhms2v_check_counts(pmap);
-	lhms2v_free(pmap);
-	return 0;
-}
-#endif

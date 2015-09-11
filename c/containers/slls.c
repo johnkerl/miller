@@ -235,19 +235,3 @@ void slls_sort(slls_t* plist) {
 
 	free(node_array);
 }
-
-// ----------------------------------------------------------------
-#ifdef __SLLS_MAIN__
-int main(int argc, char** argv)  {
-	slls_t* plist = slls_from_line(argv[1], ',', FALSE);
-	printf("len=%d\n", plist->length);
-	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
-		printf("val=%s\n", (char*)pe->value);
-	slls_sort(plist);
-	printf("\n");
-	printf("len=%d\n", plist->length);
-	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
-		printf("val=%s\n", (char*)pe->value);
-	return 0;
-}
-#endif

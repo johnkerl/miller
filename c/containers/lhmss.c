@@ -322,21 +322,3 @@ void lhmss_dump(lhmss_t* pmap) {
 			pe->ideal_index, key_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSS_MAIN__
-int main(int argc, char** argv)
-{
-	lhmss_t *pmap = lhmss_alloc();
-	lhmss_put(pmap, "x", "3");
-	lhmss_put(pmap, "y", "5");
-	lhmss_put(pmap, "x", "4");
-	lhmss_put(pmap, "z", "7");
-	lhmss_remove(pmap, "y");
-	printf("map size = %d\n", pmap->num_occupied);
-	lhmss_dump(pmap);
-	lhmss_check_counts(pmap);
-	lhmss_free(pmap);
-	return 0;
-}
-#endif

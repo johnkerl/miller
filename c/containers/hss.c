@@ -243,21 +243,3 @@ void hss_dump(hss_t* pset) {
 			get_state_name(pe->state), index, pe->ideal_index, key_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __HSS_MAIN__
-int main(int argc, char** argv)
-{
-	hss_t *pset = hss_alloc();
-	hss_add(pset, "x");
-	hss_add(pset, "y");
-	hss_add(pset, "x");
-	hss_add(pset, "z");
-	hss_remove(pset, "y");
-	printf("set size = %d\n", hss_size(pset));
-	hss_dump(pset);
-	hss_check_counts(pset);
-	hss_free(pset);
-	return 0;
-}
-#endif

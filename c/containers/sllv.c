@@ -115,32 +115,3 @@ sllv_t* sllv_append(sllv_t* pa, sllv_t* pb) {
 	pa->ptail = pb->ptail;
 	return pa;
 }
-
-// ================================================================
-#ifdef __SLLV_MAIN__
-static void print_list(sllv_t* pa, char* desc) {
-	printf("%s [%d]:\n", desc, pa->length);
-	for (sllve_t* pe = pa->phead; pe != NULL; pe = pe->pnext) {
-		printf("  %s\n", (char*)pe->pvdata);
-	}
-}
-
-int main(int argc, char** argv) {
-	sllv_t* pa = sllv_alloc();
-	sllv_add(pa, "a");
-	sllv_add(pa, "b");
-	sllv_add(pa, "c");
-
-	sllv_t* pb = sllv_alloc();
-	sllv_add(pb, "d");
-	sllv_add(pb, "e");
-
-	print_list(pa, "A");
-	print_list(pb, "B");
-
-	pa = sllv_append(pa, pb);
-	print_list(pa, "A+B");
-
-	return 0;
-}
-#endif // __SLLV_MAIN__

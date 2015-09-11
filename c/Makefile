@@ -57,6 +57,16 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 containers/test_lrec.c
 
+TEST_MAPS_AND_SETS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
+containers/lrec.c containers/header_keeper.c containers/sllv.c \
+containers/slls.c containers/lhmslv.c \
+input/file_reader_mmap.c      input/file_reader_stdio.c \
+input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
+input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+containers/test_maps_and_sets.c
+
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
 lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 mapping/context.c \
@@ -145,12 +155,13 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-maps-and-sets test-string-builder test-join-bucket-keeper
 	./test-mlrutil
 	./test-byte-readers
 	./test-peek-file-reader
 	./test-parse-trie
 	./test-lrec
+	./test-maps-and-sets
 	./test-string-builder
 	./test-join-bucket-keeper
 	@echo
@@ -166,13 +177,14 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-string-builder test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-maps-and-sets test-string-builder test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-byte-readers
 	valgrind --leak-check=full ./test-Peek-file-reader
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
+	valgrind --leak-check=full ./test-maps-and-sets
 	valgrind --leak-check=full ./test-string-builder
 	valgrind --leak-check=full ./test-join-bucket-keeper
 	@echo
@@ -195,6 +207,9 @@ test-peek-file-reader: .always
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
+test-maps-and-sets: .always
+	$(CCDEBUG) -D__TEST_MAPS_AND_SETS_MAIN__ $(TEST_MAPS_AND_SETS_SRCS) -o test-maps-and-sets
+
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
 
@@ -210,42 +225,6 @@ test-join-bucket-keeper: .always
 # ----------------------------------------------------------------
 # Standalone mains
 # TODO: replace the interesting content with unit tests; jettison the rest
-
-dheap:
-	$(CCDEBUG) -D__DHEAP_MAIN__ containers/dheap.c lib/mlrutil.c
-
-slls:
-	$(CCDEBUG) -D__SLLS_MAIN__ containers/slls.c lib/mlrutil.c
-
-sllv:
-	$(CCDEBUG) -D__SLLV_MAIN__ containers/sllv.c lib/mlrutil.c
-
-hmss:
-	$(CCDEBUG) -D__HMSS_MAIN__ containers/hmss.c  lib/mlrutil.c
-
-lhms2v:
-	$(CCDEBUG) -D__LHMS2V_MAIN__ containers/lhms2v.c  lib/mlrutil.c
-
-lhmslv:
-	$(CCDEBUG) -D__LHMSLV_MAIN__ containers/lhmslv.c  lib/mlrutil.c containers/slls.c
-
-lhmss:
-	$(CCDEBUG) -D__LHMSS_MAIN__ containers/lhmss.c  lib/mlrutil.c
-
-lhmsi:
-	$(CCDEBUG) -D__LHMSI_MAIN__ containers/lhmsi.c  lib/mlrutil.c
-
-lhmsv:
-	$(CCDEBUG) -D__LHMSV_MAIN__ containers/lhmsv.c  lib/mlrutil.c
-
-lrec:
-	$(CCDEBUG) -D__LREC_MAIN__ containers/lrec.c  lib/mlrutil.c
-
-top_keeper:
-	$(CCDEBUG) -D__TOP_KEEPER_MAIN__ containers/top_keeper.c lib/mlrutil.c
-
-pk:
-	$(CCDEBUG) -D__PERCENTILE_KEEPER_MAIN__ containers/percentile_keeper.c lib/mlrutil.c
 
 ap:
 	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c

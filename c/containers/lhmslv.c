@@ -335,33 +335,3 @@ void lhmslv_dump(lhmslv_t* pmap) {
 			pe->ideal_index, key_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSLV_MAIN__
-int main(int argc, char** argv)
-{
-	slls_t* ax = slls_alloc();
-	slls_add_no_free(ax, "a");
-	slls_add_no_free(ax, "x");
-
-	slls_t* ay = slls_alloc();
-	slls_add_no_free(ay, "a");
-	slls_add_no_free(ay, "y");
-
-	slls_t* bz = slls_alloc();
-	slls_add_no_free(bz, "b");
-	slls_add_no_free(bz, "z");
-
-	lhmslv_t *pmap = lhmslv_alloc();
-	lhmslv_put(pmap, ax, "3");
-	lhmslv_put(pmap, ay, "5");
-	lhmslv_put(pmap, ax, "4");
-	lhmslv_put(pmap, bz, "7");
-	lhmslv_remove(pmap, ay);
-	printf("map size = %d\n", lhmslv_size(pmap));
-	lhmslv_dump(pmap);
-	lhmslv_check_counts(pmap);
-	lhmslv_free(pmap);
-	return 0;
-}
-#endif

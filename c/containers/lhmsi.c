@@ -330,25 +330,3 @@ void lhmsi_dump(lhmsi_t* pmap) {
 			pe->ideal_index, key_string, pe->value);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSI_MAIN__
-int main(int argc, char** argv)
-{
-	lhmsi_t *pmap = lhmsi_alloc();
-	lhmsi_put(pmap, "x", 3);
-	lhmsi_put(pmap, "y", 5);
-	lhmsi_put(pmap, "x", 4);
-	lhmsi_put(pmap, "z", 7);
-	lhmsi_remove(pmap, "y");
-	printf("map size = %d\n", pmap->num_occupied);
-	lhmsi_dump(pmap);
-	printf("map has(\"w\") = %d\n", lhmsi_has_key(pmap, "w"));
-	printf("map has(\"x\") = %d\n", lhmsi_has_key(pmap, "x"));
-	printf("map has(\"y\") = %d\n", lhmsi_has_key(pmap, "y"));
-	printf("map has(\"z\") = %d\n", lhmsi_has_key(pmap, "z"));
-	lhmsi_check_counts(pmap);
-	lhmsi_free(pmap);
-	return 0;
-}
-#endif
