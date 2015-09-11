@@ -7,6 +7,7 @@
 #include "containers/hss.h"
 #include "containers/lhmsi.h"
 #include "containers/lhms2v.h"
+#include "containers/lhmslv.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
 int tests_run         = 0;
@@ -221,16 +222,6 @@ static char* test_lhmsi() {
 	return NULL;
 }
 
-//	lhmsi_remove(pmap, "y");
-//	printf("map size = %d\n", pmap->num_occupied);
-//	lhmsi_dump(pmap);
-//	printf("map has(\"w\") = %d\n", lhmsi_has_key(pmap, "w"));
-//	printf("map has(\"x\") = %d\n", lhmsi_has_key(pmap, "x"));
-//	printf("map has(\"y\") = %d\n", lhmsi_has_key(pmap, "y"));
-//	printf("map has(\"z\") = %d\n", lhmsi_has_key(pmap, "z"));
-//	lhmsi_check_counts(pmap);
-//	lhmsi_free(pmap);
-
 // ----------------------------------------------------------------
 static char* test_lhms2v() {
 	mu_assert_lf(0 == 0);
@@ -272,31 +263,30 @@ static char* test_lhms2v() {
 static char* test_lhmslv() {
 	mu_assert_lf(0 == 0);
 
+	slls_t* ax = slls_alloc();
+	slls_add_no_free(ax, "a");
+	slls_add_no_free(ax, "x");
+	// xxx assertions here
+
+	slls_t* ay = slls_alloc();
+	slls_add_no_free(ay, "a");
+	slls_add_no_free(ay, "y");
+
+	slls_t* bz = slls_alloc();
+	slls_add_no_free(bz, "b");
+	slls_add_no_free(bz, "z");
+
+	lhmslv_t *pmap = lhmslv_alloc();
+	lhmslv_put(pmap, ax, "3");
+	lhmslv_put(pmap, ay, "5");
+	lhmslv_put(pmap, ax, "4");
+	lhmslv_put(pmap, bz, "7");
+	lhmslv_remove(pmap, ay);
+
+	lhmslv_free(pmap);
+
 	return NULL;
 }
-
-//	slls_t* ax = slls_alloc();
-//	slls_add_no_free(ax, "a");
-//	slls_add_no_free(ax, "x");
-//
-//	slls_t* ay = slls_alloc();
-//	slls_add_no_free(ay, "a");
-//	slls_add_no_free(ay, "y");
-//
-//	slls_t* bz = slls_alloc();
-//	slls_add_no_free(bz, "b");
-//	slls_add_no_free(bz, "z");
-//
-//	lhmslv_t *pmap = lhmslv_alloc();
-//	lhmslv_put(pmap, ax, "3");
-//	lhmslv_put(pmap, ay, "5");
-//	lhmslv_put(pmap, ax, "4");
-//	lhmslv_put(pmap, bz, "7");
-//	lhmslv_remove(pmap, ay);
-//	printf("map size = %d\n", lhmslv_size(pmap));
-//	lhmslv_dump(pmap);
-//	lhmslv_check_counts(pmap);
-//	lhmslv_free(pmap);
 
 // ----------------------------------------------------------------
 static char* test_lhmss() {
