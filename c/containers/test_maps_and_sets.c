@@ -263,25 +263,38 @@ static char* test_lhms2v() {
 static char* test_lhmslv() {
 	mu_assert_lf(0 == 0);
 
-	slls_t* ax = slls_alloc();
-	slls_add_no_free(ax, "a");
-	slls_add_no_free(ax, "x");
-	// xxx assertions here
+	slls_t* ax = slls_alloc(); slls_add_no_free(ax, "a"); slls_add_no_free(ax, "x");
+	slls_t* ay = slls_alloc(); slls_add_no_free(ay, "a"); slls_add_no_free(ay, "y");
+	slls_t* bz = slls_alloc(); slls_add_no_free(bz, "b"); slls_add_no_free(bz, "z");
 
-	slls_t* ay = slls_alloc();
-	slls_add_no_free(ay, "a");
-	slls_add_no_free(ay, "y");
-
-	slls_t* bz = slls_alloc();
-	slls_add_no_free(bz, "b");
-	slls_add_no_free(bz, "z");
-
+	// xxx more assertions here
 	lhmslv_t *pmap = lhmslv_alloc();
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
 	lhmslv_put(pmap, ax, "3");
+	mu_assert_lf(pmap->num_occupied == 1);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
 	lhmslv_put(pmap, ay, "5");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
 	lhmslv_put(pmap, ax, "4");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
 	lhmslv_put(pmap, bz, "7");
+	mu_assert_lf(pmap->num_occupied == 3);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
 	lhmslv_remove(pmap, ay);
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(lhmslv_check_counts(pmap));
+
+	lhmslv_clear(pmap);
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_free(pmap);
 
