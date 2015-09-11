@@ -70,7 +70,7 @@ input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-containers/test_maps_and_sets.c
+containers/test_multiple_containers.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
 lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
@@ -160,13 +160,13 @@ mlrp: .always dsls
 
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-maps-and-sets test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
 	./test-mlrutil
 	./test-byte-readers
 	./test-peek-file-reader
 	./test-parse-trie
 	./test-lrec
-	./test-maps-and-sets
+	./test-multiple-containers
 	./test-string-builder
 	./test-join-bucket-keeper
 	@echo
@@ -182,14 +182,14 @@ dev-tests: dev-unit-test reg-test
 
 # Unfortunately --error-exitcode=1 doesn't work well since there are
 # valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-maps-and-sets test-string-builder test-join-bucket-keeper
+dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
 	#valgrind --leak-check=full --error-exitcode=1 ./a.out
 	valgrind --leak-check=full ./test-mlrutil
 	valgrind --leak-check=full ./test-byte-readers
 	valgrind --leak-check=full ./test-Peek-file-reader
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
-	valgrind --leak-check=full ./test-maps-and-sets
+	valgrind --leak-check=full ./test-multiple-containers
 	valgrind --leak-check=full ./test-string-builder
 	valgrind --leak-check=full ./test-join-bucket-keeper
 	@echo
@@ -212,8 +212,8 @@ test-peek-file-reader: .always
 test-lrec: .always
 	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
 
-test-maps-and-sets: .always
-	$(CCDEBUG) -D__TEST_MAPS_AND_SETS_MAIN__ $(TEST_MAPS_AND_SETS_SRCS) -o test-maps-and-sets
+test-multiple-containers: .always
+	$(CCDEBUG) -D__TEST_MAPS_AND_SETS_MAIN__ $(TEST_MAPS_AND_SETS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
