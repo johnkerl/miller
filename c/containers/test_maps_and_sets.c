@@ -8,6 +8,7 @@
 #include "containers/lhmsi.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
+#include "containers/dheap.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
 int tests_run         = 0;
@@ -226,6 +227,7 @@ static char* test_lhmsi() {
 static char* test_lhms2v() {
 	mu_assert_lf(0 == 0);
 
+	// xxx more assertions here
 	lhms2v_t *pmap = lhms2v_alloc();
 	mu_assert_lf(pmap->num_occupied == 0);
 	mu_assert_lf(lhms2v_check_counts(pmap));
@@ -421,32 +423,72 @@ static char* test_top_keeper() {
 static char* test_dheap() {
 	mu_assert_lf(0 == 0);
 
+	dheap_t *pdheap = dheap_alloc();
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 0);
+
+	dheap_add(pdheap, 4.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 1);
+
+	dheap_add(pdheap, 3.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 2);
+
+	dheap_add(pdheap, 2.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 3);
+
+	dheap_add(pdheap, 6.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 4);
+
+	dheap_add(pdheap, 5.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 5);
+
+	dheap_add(pdheap, 8.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 6);
+
+	dheap_add(pdheap, 7.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 7);
+
+	dheap_print(pdheap);
+
+	mu_assert_lf(dheap_remove(pdheap) == 8.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 6);
+
+	mu_assert_lf(dheap_remove(pdheap) == 7.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 5);
+
+	mu_assert_lf(dheap_remove(pdheap) == 6.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 4);
+
+	mu_assert_lf(dheap_remove(pdheap) == 5.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 3);
+
+	mu_assert_lf(dheap_remove(pdheap) == 4.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 2);
+
+	mu_assert_lf(dheap_remove(pdheap) == 3.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 1);
+
+	mu_assert_lf(dheap_remove(pdheap) == 2.25);
+	mu_assert_lf(dheap_check(pdheap, __FILE__,  __LINE__));
+	mu_assert_lf(pdheap->n == 0);
+
+	dheap_free(pdheap);
+
 	return NULL;
 }
-
-//	dheap_t *pdheap = dheap_alloc();
-//	dheap_check(pdheap, __FILE__,  __LINE__);
-//	dheap_add(pdheap, 4.1);
-//	dheap_add(pdheap, 3.1);
-//	dheap_add(pdheap, 2.1);
-//	dheap_add(pdheap, 6.1);
-//	dheap_add(pdheap, 5.1);
-//	dheap_add(pdheap, 8.1);
-//	dheap_add(pdheap, 7.1);
-//	dheap_print(pdheap);
-//	dheap_check(pdheap, __FILE__,  __LINE__);
-//
-//	printf("\n");
-//	printf("remove %lf\n", dheap_remove(pdheap));
-//	printf("remove %lf\n", dheap_remove(pdheap));
-//	printf("remove %lf\n", dheap_remove(pdheap));
-//	printf("remove %lf\n", dheap_remove(pdheap));
-//	printf("\n");
-//
-//	dheap_print(pdheap);
-//	dheap_check(pdheap, __FILE__,  __LINE__);
-//
-//	dheap_free(pdheap);
 
 // ================================================================
 static char * run_all_tests() {

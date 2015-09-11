@@ -120,20 +120,20 @@ void dheap_print(dheap_t *pdheap)
 //  4    5     6     7
 // 8 9 10 11 12 13 14 15
 
-static void dheap_check_aux(dheap_t *pdheap, int i, char *file, int line)
+static int dheap_check_aux(dheap_t *pdheap, int i, char *file, int line)
 {
 	int n = pdheap->n;
 	double *pe = pdheap->elements;
 
 	if (i >= n)
-		return;
+		return TRUE;
 	int li = dheap_left_child_index (i, pdheap->n);
 	int ri = dheap_right_child_index(i, pdheap->n);
 	if (li != -1) {
 		if (pe[i] < pe[li]) {
 			fprintf(stderr, "dheap check fail %s:%d pe[%d]=%lf < pe[%d]=%lf\n",
 				file, line, i, pe[i], li, pe[li]);
-			exit(1);
+			return FALSE;
 		}
 		dheap_check_aux(pdheap, li, file, line);
 	}
@@ -141,15 +141,16 @@ static void dheap_check_aux(dheap_t *pdheap, int i, char *file, int line)
 		if (pe[i] < pe[ri]) {
 			fprintf(stderr, "dheap check fail %s:%d pe[%d]=%lf < pe[%d]=%lf\n",
 				file, line, i, pe[i], ri, pe[ri]);
-			exit(1);
+			return FALSE;
 		}
 		dheap_check_aux(pdheap, ri, file, line);
 	}
+	return TRUE;
 }
 
-void dheap_check(dheap_t *pdheap, char *file, int line)
+int dheap_check(dheap_t *pdheap, char *file, int line)
 {
-	dheap_check_aux(pdheap, 1, file, line);
+	return dheap_check_aux(pdheap, 1, file, line);
 }
 
 // ----------------------------------------------------------------
