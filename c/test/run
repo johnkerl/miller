@@ -24,7 +24,7 @@ ourdir=`dirname $verb`
 path_to_mlr=$ourdir/../mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
-outdir=$ourdir/output
+outdir=./output
 mkdir -p $outdir
 
 rm -f $outdir/out
