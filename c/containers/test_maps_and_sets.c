@@ -9,6 +9,7 @@
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
 #include "containers/dheap.h"
+#include "containers/top_keeper.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
 int tests_run         = 0;
