@@ -9,7 +9,7 @@ test-byte-readers
 test-peek-file-reader
 test-parse-trie
 test-lrec
-test-maps-and-sets
+test-multiple-containers
 test-join-bucket-keeper
 termcvt
 a.out
