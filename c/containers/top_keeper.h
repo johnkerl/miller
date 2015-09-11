@@ -17,4 +17,7 @@ top_keeper_t* top_keeper_alloc(int capacity);
 void top_keeper_free(top_keeper_t* ptop_keeper);
 void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec);
 
+// For debug/test
+void top_keeper_print(top_keeper_t* ptop_keeper);
+
 #endif // TOP_KEEPER_H

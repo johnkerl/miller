@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include "lib/mlrutil.h"
 #include "containers/top_keeper.h"
@@ -75,4 +76,13 @@ void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
 		ptop_keeper->top_values[destidx]   = value;
 		ptop_keeper->top_precords[destidx] = prec; // xxx copy?? xxx free on shift-off?!?
 	}
+}
+
+// ----------------------------------------------------------------
+void top_keeper_print(top_keeper_t* ptop_keeper) {
+	printf("top_keeper dump:\n");
+	for (int i = 0; i < ptop_keeper->size; i++)
+		printf("[%02d] %.8lf\n", i, ptop_keeper->top_values[i]);
+	for (int i = ptop_keeper->size; i < ptop_keeper->capacity; i++)
+		printf("[%02d] ---\n", i);
 }

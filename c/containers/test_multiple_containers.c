@@ -8,8 +8,8 @@
 #include "containers/lhmsi.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
-#include "containers/dheap.h"
 #include "containers/top_keeper.h"
+#include "containers/dheap.h"
 
 #ifdef __TEST_MAPS_AND_SETS_MAIN__
 int tests_run         = 0;
@@ -383,42 +383,46 @@ static char* test_percentile_keeper() {
 // ----------------------------------------------------------------
 static char* test_top_keeper() {
 	mu_assert_lf(0 == 0);
+	int capacity = 3;
 
+	top_keeper_t* ptop_keeper = top_keeper_alloc(capacity);
+	mu_assert_lf(ptop_keeper->size == 0);
+
+	top_keeper_add(ptop_keeper, 5.0, NULL);
+	top_keeper_print(ptop_keeper);
+	mu_assert_lf(ptop_keeper->size == 1);
+	mu_assert_lf(ptop_keeper->top_values[0] == 5.0);
+
+	top_keeper_add(ptop_keeper, 6.0, NULL);
+	top_keeper_print(ptop_keeper);
+	mu_assert_lf(ptop_keeper->size == 2);
+	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
+
+	top_keeper_add(ptop_keeper, 4.0, NULL);
+	top_keeper_print(ptop_keeper);
+	mu_assert_lf(ptop_keeper->size == 3);
+	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[2] == 4.0);
+
+	top_keeper_add(ptop_keeper, 2.0, NULL);
+	top_keeper_print(ptop_keeper);
+	mu_assert_lf(ptop_keeper->size == 3);
+	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[2] == 4.0);
+
+	top_keeper_add(ptop_keeper, 7.0, NULL);
+	top_keeper_print(ptop_keeper);
+	mu_assert_lf(ptop_keeper->size == 3);
+	mu_assert_lf(ptop_keeper->top_values[0] == 7.0);
+	mu_assert_lf(ptop_keeper->top_values[1] == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[2] == 5.0);
+
+	top_keeper_free(ptop_keeper);
 	return NULL;
 }
-
-//void top_keeper_dump(top_keeper_t* ptop_keeper) {
-//	for (int i = 0; i < ptop_keeper->size; i++)
-//		printf("[%02d] %.8lf\n", i, ptop_keeper->top_values[i]);
-//	for (int i = ptop_keeper->size; i < ptop_keeper->capacity; i++)
-//		printf("[%02d] ---\n", i);
-//}
-
-//	int capacity = 5;
-//	char buffer[1024];
-//	if (argc == 2)
-//		(void)sscanf(argv[1], "%d", &capacity);
-//	top_keeper_t* ptop_keeper = top_keeper_alloc(capacity);
-//	char* line;
-//	while ((line = fgets(buffer, sizeof(buffer), stdin)) != NULL) {
-//		int len = strlen(line);
-//		if (len >= 1) // xxx write and use a chomp()
-//			if (line[len-1] == '\n')
-//				line[len-1] = 0;
-//		if (streq(line, "")) {
-//			//top_keeper_dump(ptop_keeper);
-//			printf("\n");
-//		} else {
-//			double v;
-//			if (!mlr_try_double_from_string(line, &v)) {
-//				top_keeper_add(ptop_keeper, v, NULL);
-//				top_keeper_dump(ptop_keeper);
-//				printf("\n");
-//			} else {
-//				printf("meh? >>%s<<\n", line);
-//			}
-//		}
-//	}
 
 // ----------------------------------------------------------------
 static char* test_dheap() {

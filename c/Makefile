@@ -64,6 +64,7 @@ containers/hss.c \
 containers/lhmsi.c \
 containers/lhms2v.c \
 containers/lhmslv.c \
+containers/top_keeper.c \
 containers/dheap.c \
 input/file_reader_mmap.c      input/file_reader_stdio.c \
 input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
