@@ -24,26 +24,11 @@ static char* test_slls() {
 
 	sllse_t* pe = plist->phead;
 
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "c"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "d"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "a"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "e"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "b"));
-	pe = pe->pnext;
-
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "b")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
 	slls_sort(plist);
@@ -51,26 +36,11 @@ static char* test_slls() {
 	mu_assert_lf(plist->length == 5);
 	pe = plist->phead;
 
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "a"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "b"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "c"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "d"));
-	pe = pe->pnext;
-
-	mu_assert_lf(pe != NULL);
-	mu_assert_lf(streq(pe->value, "e"));
-	pe = pe->pnext;
-
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
 	return NULL;
@@ -80,30 +50,50 @@ static char* test_slls() {
 static char* test_sllv_append() {
 	mu_assert_lf(0 == 0);
 
+	sllv_t* pa = sllv_alloc();
+	sllv_add(pa, "a");
+	sllv_add(pa, "b");
+	sllv_add(pa, "c");
+	mu_assert_lf(pa->length == 3);
+
+	sllve_t* pe = pa->phead;
+
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "c")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	sllv_t* pb = sllv_alloc();
+	sllv_add(pb, "d");
+	sllv_add(pb, "e");
+	mu_assert_lf(pb->length == 2);
+
+	pe = pb->phead;
+
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	pa = sllv_append(pa, pb);
+
+	mu_assert_lf(pa->length == 5);
+	mu_assert_lf(pb->length == 2);
+
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	pe = pb->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
 	return NULL;
 }
-
-//static void print_list(sllv_t* pa, char* desc) {
-//	printf("%s [%d]:\n", desc, pa->length);
-//	for (sllve_t* pe = pa->phead; pe != NULL; pe = pe->pnext) {
-//		printf("  %s\n", (char*)pe->pvdata);
-//	}
-//}
-
-//	sllv_t* pa = sllv_alloc();
-//	sllv_add(pa, "a");
-//	sllv_add(pa, "b");
-//	sllv_add(pa, "c");
-//
-//	sllv_t* pb = sllv_alloc();
-//	sllv_add(pb, "d");
-//	sllv_add(pb, "e");
-//
-//	print_list(pa, "A");
-//	print_list(pb, "B");
-//
-//	pa = sllv_append(pa, pb);
-//	print_list(pa, "A+B");
 
 // ----------------------------------------------------------------
 static char* test_hss() {
