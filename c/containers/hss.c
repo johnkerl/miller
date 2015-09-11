@@ -231,7 +231,7 @@ static char* get_state_name(int state) {
 	}
 }
 
-void hss_dump(hss_t* pset) {
+void hss_print(hss_t* pset) {
 	for (int index = 0; index < pset->array_length; index++) {
 		hsse_t* pe = &pset->array[index];
 

@@ -3,7 +3,7 @@
 #include "input/peek_file_reader.h"
 
 // ----------------------------------------------------------------
-void pfr_dump(peek_file_reader_t* pfr) {
+void pfr_print(peek_file_reader_t* pfr) {
 	printf("======================== pfr at %p\n", pfr);
 	printf("  peekbuflen = %d\n", pfr->peekbuflen);
 	printf("  npeeked    = %d\n", pfr->npeeked);

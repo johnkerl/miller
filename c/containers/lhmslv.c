@@ -306,7 +306,7 @@ static char* get_state_name(int state) {
 	}
 }
 
-void lhmslv_dump(lhmslv_t* pmap) {
+void lhmslv_print(lhmslv_t* pmap) {
 	for (int index = 0; index < pmap->array_length; index++) {
 		lhmslve_t* pe = &pmap->entries[index];
 

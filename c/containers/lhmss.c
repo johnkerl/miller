@@ -258,30 +258,6 @@ static void lhmss_enlarge(lhmss_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhmss_check_counts(lhmss_t* pmap) {
-	int nocc = 0;
-	int ndel = 0;
-	for (int index = 0; index < pmap->array_length; index++) {
-		if (pmap->states[index] == OCCUPIED)
-			nocc++;
-		else if (pmap->states[index] == DELETED)
-			ndel++;
-	}
-	if (nocc != pmap->num_occupied) {
-		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d.\n",
-				nocc, pmap->num_occupied);
-		exit(1);
-	}
-	if (ndel != pmap->num_freed) {
-		fprintf(stderr,
-			"freed-count mismatch:  actual %d != cached  %d.\n",
-				ndel, pmap->num_freed);
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
 static char* get_state_name(int state) {
 	switch(state) {
 	case OCCUPIED: return "occupied"; break;
@@ -291,7 +267,7 @@ static char* get_state_name(int state) {
 	}
 }
 
-void lhmss_dump(lhmss_t* pmap) {
+void lhmss_print(lhmss_t* pmap) {
 	for (int index = 0; index < pmap->array_length; index++) {
 		lhmsse_t* pe = &pmap->entries[index];
 
@@ -321,4 +297,29 @@ void lhmss_dump(lhmss_t* pmap) {
 			pe->pprev, pe, pe->pnext,
 			pe->ideal_index, key_string, value_string);
 	}
+}
+
+// ----------------------------------------------------------------
+int lhmss_check_counts(lhmss_t* pmap) {
+	int nocc = 0;
+	int ndel = 0;
+	for (int index = 0; index < pmap->array_length; index++) {
+		if (pmap->states[index] == OCCUPIED)
+			nocc++;
+		else if (pmap->states[index] == DELETED)
+			ndel++;
+	}
+	if (nocc != pmap->num_occupied) {
+		fprintf(stderr,
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
+				nocc, pmap->num_occupied);
+		return FALSE;
+	}
+	if (ndel != pmap->num_freed) {
+		fprintf(stderr,
+			"deleted-count mismatch:  actual %d != cached  %d.\n",
+				ndel, pmap->num_freed);
+		return FALSE;
+	}
+	return TRUE;
 }

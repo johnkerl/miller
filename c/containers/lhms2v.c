@@ -309,7 +309,7 @@ static char* get_state_name(int state) {
 	}
 }
 
-void lhms2v_dump(lhms2v_t* pmap) {
+void lhms2v_print(lhms2v_t* pmap) {
 	for (int index = 0; index < pmap->array_length; index++) {
 		lhms2ve_t* pe = &pmap->entries[index];
 

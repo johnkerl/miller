@@ -41,24 +41,24 @@ static char* test_non_empty() {
 
 	peek_file_reader_t* pfr = pfr_alloc(pbr, 7);
 
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == 'a');
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == 'a');
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == 'b');
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == 'b');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == 'a');
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == 'a');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == 'b');
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == 'b');
 
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == ',');
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == ',');
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == ',');
-	pfr_dump(pfr); pfr_buffer_by(pfr, 5);
-	pfr_dump(pfr); pfr_advance_by(pfr, 5);
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == '2');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == ',');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == ',');
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == ',');
+	pfr_print(pfr); pfr_buffer_by(pfr, 5);
+	pfr_print(pfr); pfr_advance_by(pfr, 5);
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == '2');
 
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == '3');
-	pfr_dump(pfr); mu_assert_lf(pfr_peek_char(pfr) == '3');
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == '3');
-	pfr_dump(pfr); pfr_buffer_by(pfr, 5);
-	pfr_dump(pfr); pfr_advance_by(pfr, 5);
-	pfr_dump(pfr); mu_assert_lf(pfr_read_char(pfr) == '\n');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == '3');
+	pfr_print(pfr); mu_assert_lf(pfr_peek_char(pfr) == '3');
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == '3');
+	pfr_print(pfr); pfr_buffer_by(pfr, 5);
+	pfr_print(pfr); pfr_advance_by(pfr, 5);
+	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == '\n');
 
 	pbr->pclose_func(pbr);
 	pfr_free(pfr);

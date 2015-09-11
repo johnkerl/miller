@@ -6,6 +6,8 @@
 #include "containers/sllv.h"
 #include "containers/hss.h"
 #include "containers/lhmsi.h"
+#include "containers/lhmss.h"
+#include "containers/lhmsv.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
 #include "containers/percentile_keeper.h"
@@ -226,6 +228,85 @@ static char* test_lhmsi() {
 }
 
 // ----------------------------------------------------------------
+static char* test_lhmss() {
+	mu_assert_lf(0 == 0);
+
+	lhmss_t *pmap = lhmss_alloc();
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(!lhmss_has_key(pmap, "x"));
+	mu_assert_lf(!lhmss_has_key(pmap, "y"));
+	mu_assert_lf(!lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_put(pmap, "x", "3");
+	mu_assert_lf(pmap->num_occupied == 1);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(lhmss_has_key(pmap, "x"));
+	mu_assert_lf(!lhmss_has_key(pmap, "y"));
+	mu_assert_lf(!lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_put(pmap, "y", "5");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(lhmss_has_key(pmap, "x"));
+	mu_assert_lf(lhmss_has_key(pmap, "y"));
+	mu_assert_lf(!lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_put(pmap, "x", "4");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(lhmss_has_key(pmap, "x"));
+	mu_assert_lf(lhmss_has_key(pmap, "y"));
+	mu_assert_lf(!lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_put(pmap, "z", "7");
+	mu_assert_lf(pmap->num_occupied == 3);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(lhmss_has_key(pmap, "x"));
+	mu_assert_lf(lhmss_has_key(pmap, "y"));
+	mu_assert_lf(lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_remove(pmap, "y");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmss_has_key(pmap, "w"));
+	mu_assert_lf(lhmss_has_key(pmap, "x"));
+	mu_assert_lf(!lhmss_has_key(pmap, "y"));
+	mu_assert_lf(lhmss_has_key(pmap, "z"));
+	mu_assert_lf(lhmss_check_counts(pmap));
+
+	lhmss_free(pmap);
+
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_lhmsv() {
+	mu_assert_lf(0 == 0);
+
+	return NULL;
+}
+
+//	int x3 = 3;
+//	int x5 = 5;
+//	int x4 = 4;
+//	int x7 = 7;
+//	lhmsv_t *pmap = lhmsv_alloc();
+//	lhmsv_put(pmap, "x", &x3);
+//	lhmsv_put(pmap, "y", &x5);
+//	lhmsv_put(pmap, "x", &x4);
+//	lhmsv_put(pmap, "z", &x7);
+//	lhmsv_remove(pmap, "y");
+//	printf("map size = %d\n", pmap->num_occupied);
+//	lhmsv_print(pmap);
+//	lhmsv_check_counts(pmap);
+//	lhmsv_free(pmap);
+
+// ----------------------------------------------------------------
 static char* test_lhms2v() {
 	mu_assert_lf(0 == 0);
 
@@ -304,46 +385,6 @@ static char* test_lhmslv() {
 
 	return NULL;
 }
-
-// ----------------------------------------------------------------
-static char* test_lhmss() {
-	mu_assert_lf(0 == 0);
-
-	return NULL;
-}
-
-//	lhmss_t *pmap = lhmss_alloc();
-//	lhmss_put(pmap, "x", "3");
-//	lhmss_put(pmap, "y", "5");
-//	lhmss_put(pmap, "x", "4");
-//	lhmss_put(pmap, "z", "7");
-//	lhmss_remove(pmap, "y");
-//	printf("map size = %d\n", pmap->num_occupied);
-//	lhmss_dump(pmap);
-//	lhmss_check_counts(pmap);
-//	lhmss_free(pmap);
-
-// ----------------------------------------------------------------
-static char* test_lhmsv() {
-	mu_assert_lf(0 == 0);
-
-	return NULL;
-}
-
-//	int x3 = 3;
-//	int x5 = 5;
-//	int x4 = 4;
-//	int x7 = 7;
-//	lhmsv_t *pmap = lhmsv_alloc();
-//	lhmsv_put(pmap, "x", &x3);
-//	lhmsv_put(pmap, "y", &x5);
-//	lhmsv_put(pmap, "x", &x4);
-//	lhmsv_put(pmap, "z", &x7);
-//	lhmsv_remove(pmap, "y");
-//	printf("map size = %d\n", pmap->num_occupied);
-//	lhmsv_dump(pmap);
-//	lhmsv_check_counts(pmap);
-//	lhmsv_free(pmap);
 
 // ----------------------------------------------------------------
 static char* test_percentile_keeper() {
@@ -508,10 +549,10 @@ static char * run_all_tests() {
 	mu_run_test(test_sllv_append);
 	mu_run_test(test_hss);
 	mu_run_test(test_lhmsi);
-	mu_run_test(test_lhms2v);
-	mu_run_test(test_lhmslv);
 	mu_run_test(test_lhmss);
 	mu_run_test(test_lhmsv);
+	mu_run_test(test_lhms2v);
+	mu_run_test(test_lhmslv);
 	mu_run_test(test_percentile_keeper);
 	mu_run_test(test_top_keeper);
 	mu_run_test(test_dheap);

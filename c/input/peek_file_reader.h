@@ -93,6 +93,6 @@ static inline void pfr_advance_by(peek_file_reader_t* pfr, int len) {
 }
 
 // ----------------------------------------------------------------
-void pfr_dump(peek_file_reader_t* pfr);
+void pfr_print(peek_file_reader_t* pfr);
 
 #endif // PEEK_FILE_READER_H

@@ -139,7 +139,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 #ifdef DEBUG_PARSER
-				pfr_dump(pfr);
+				pfr_print(pfr);
 #endif
 				if (rc) {
 #ifdef DEBUG_PARSER

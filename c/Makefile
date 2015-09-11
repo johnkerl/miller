@@ -62,6 +62,8 @@ containers/lrec.c containers/header_keeper.c containers/sllv.c \
 containers/slls.c \
 containers/hss.c \
 containers/lhmsi.c \
+containers/lhmss.c \
+containers/lhmsv.c \
 containers/lhms2v.c \
 containers/lhmslv.c \
 containers/percentile_keeper.c \
