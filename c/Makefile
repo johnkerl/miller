@@ -104,17 +104,10 @@ input/file_reader_mmap.c \
 experimental/getlines.c
 
 # ================================================================
-# User-make: creates the executable and runs unit & regression tests (without
-# valgrind)
+# User-make: creates the executable and runs unit & regression tests
 # ----> This is the default target for anyone pulling the repo and trying to
 #       build it to be able to use it. It just needs flex and the C compiler.
 top: mlr tests
-
-# Dev-make: updates the tags file, creates the executable, and runs unit &
-# regression tests (with valgrind)
-# ----> This is the target for a developer to run before a commit.
-#       It requires ctags and valgrind in addition to flex and the C compiler.
-dev: tags mlr dev-tests
 
 install: mlr tests
 	cp mlr $(INSTALLDIR)
@@ -154,10 +147,6 @@ mlrp: .always dsls
 	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
 
 # ================================================================
-# User-tests: don't use valgrind: they may not have it, and valgrind is most
-# useful for detecting errors at build time. They don't need it to produce an
-# executable.
-
 tests: unit-test reg-test
 
 unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
@@ -176,25 +165,6 @@ reg-test:
 	./test/run
 
 # ----------------------------------------------------------------
-# Use valgrind at dev time for additional reassurance.
-
-dev-tests: dev-unit-test reg-test
-
-# Unfortunately --error-exitcode=1 doesn't work well since there are
-# valgrind-detected errors in stdlibs. :(
-dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
-	#valgrind --leak-check=full --error-exitcode=1 ./a.out
-	valgrind --leak-check=full ./test-mlrutil
-	valgrind --leak-check=full ./test-byte-readers
-	valgrind --leak-check=full ./test-Peek-file-reader
-	valgrind --leak-check=full ./test-parse-trie
-	valgrind --leak-check=full ./test-lrec
-	valgrind --leak-check=full ./test-multiple-containers
-	valgrind --leak-check=full ./test-string-builder
-	valgrind --leak-check=full ./test-join-bucket-keeper
-	@echo
-	@echo DONE
-
 # Run this after unit-test expected output has changed, and is verified to be
 # OK. (Example: after adding new test cases in test/run.)
 regtest-copy:
