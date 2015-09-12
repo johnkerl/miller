@@ -265,8 +265,9 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 }
 
 // ================================================================
-#define IRS_STRIDX 11
-#define EOF_STRIDX 22
+#define IRS_STRIDX    11
+#define EOF_STRIDX    22
+#define IRSEOF_STRIDX 33
 
 static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, parse_trie_t* ptrie) {
 	int rc, stridx, matchlen;
@@ -275,17 +276,20 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, p
 		rc = parse_trie_match(ptrie, pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 			&stridx, &matchlen);
 		if (rc) {
+			pfr_advance_by(pfr, matchlen);
 			switch(stridx) {
 			case IRS_STRIDX:
 				return sb_finish(psb);
 				break;
-			case EOF_STRIDX:
+			case IRSEOF_STRIDX:
 				return sb_finish(psb);
+				break;
+			case EOF_STRIDX:
+				return NULL;
 				break;
 			}
 		} else {
-			//sb_append_char(psb, pfr_read_char(pfr));
-			printf("%02x\n", (unsigned)pfr_read_char(pfr));
+			sb_append_char(psb, pfr_read_char(pfr));
 		}
 	}
 }
@@ -299,6 +303,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_add_string(ptrie, "\n", IRS_STRIDX);
 	parse_trie_add_string(ptrie, "\xff", EOF_STRIDX);
+	parse_trie_add_string(ptrie, "\n\xff", IRSEOF_STRIDX);
 
 	string_builder_t  sb;
 	string_builder_t* psb = &sb;
