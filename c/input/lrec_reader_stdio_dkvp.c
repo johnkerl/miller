@@ -52,7 +52,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int al
 }
 
 // ----------------------------------------------------------------
-// xxx needs checking on repeated occurrences of ps between fs occurrences. don't zero-poke there.
+// xxx needs checking on repeated occurrences of ps between ifs occurrences. don't zero-poke there.
 //
 // xxx needs abend on null lhs.
 //

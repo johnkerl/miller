@@ -312,7 +312,7 @@ void lhmslv_print(lhmslv_t* pmap) {
 
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
-			slls_join(pe->key, ',');
+			slls_join(pe->key, ",");
 		const char* value_string = (pe == NULL) ? "none" :
 			pe->pvvalue == NULL ? "null" :
 			pe->pvvalue;
@@ -327,7 +327,7 @@ void lhmslv_print(lhmslv_t* pmap) {
 	for (lhmslve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
-			slls_join(pe->key, ',');
+			slls_join(pe->key, ",");
 		const char* value_string = (pe == NULL) ? "none" :
 			pe->pvvalue == NULL ? "null" :
 			pe->pvvalue;

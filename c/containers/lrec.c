@@ -428,17 +428,17 @@ lrec_t* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v
 
 void lrec_print(lrec_t* prec) {
 	FILE* output_stream = stdout;
-	char rs = '\n';
-	char fs = ',';
-	char ps = '=';
+	char ors = '\n';
+	char ofs = ',';
+	char ops = '=';
 	int nf = 0;
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		if (nf > 0)
-			fputc(fs, output_stream);
+			fputc(ofs, output_stream);
 		fputs(pe->key, output_stream);
-		fputc(ps, output_stream);
+		fputc(ops, output_stream);
 		fputs(pe->value, output_stream);
 		nf++;
 	}
-	fputc(rs, output_stream);
+	fputc(ors, output_stream);
 }

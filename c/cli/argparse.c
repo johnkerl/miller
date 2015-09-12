@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 	if (plist == NULL) {
 		printf("list  is null\n");
 	} else {
-		char* out = slls_join(plist, ',');
+		char* out = slls_join(plist, ",");
 		printf("list  is %s\n", out);
 		free(out);
 	}
