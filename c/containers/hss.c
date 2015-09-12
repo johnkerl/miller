@@ -93,7 +93,7 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 		// continue looking.
 		if (++num_tries >= pset->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -129,7 +129,7 @@ void hss_add(hss_t* pset, char* key) {
 		pset->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "hss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "hss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -158,7 +158,7 @@ int hss_has(hss_t* pset, char* key) {
 	else if (pe->state == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "hss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "hss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -177,7 +177,7 @@ void hss_remove(hss_t* pset, char* key) {
 	else if (pe->state == EMPTY) {
 	}
 	else {
-		fprintf(stderr, "hss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "hss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -186,9 +186,9 @@ void hss_remove(hss_t* pset, char* key) {
 void hss_clear(hss_t* pset) {
 	for (int i = 0; i < pset->array_length; i++) {
 		hsse_clear(&pset->array[i]);
-		pset->num_occupied = 0;
-		pset->num_freed = 0;
 	}
+	pset->num_occupied = 0;
+	pset->num_freed = 0;
 }
 
 int hss_size(hss_t* pset) {
@@ -196,7 +196,7 @@ int hss_size(hss_t* pset) {
 }
 
 // ----------------------------------------------------------------
-void hss_check_counts(hss_t* pset) {
+int hss_check_counts(hss_t* pset) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pset->array_length; index++) {
@@ -208,16 +208,17 @@ void hss_check_counts(hss_t* pset) {
 	}
 	if (nocc != pset->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pset->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pset->num_freed) {
 		fprintf(stderr,
-			"freed-count mismatch:  actual %d != cached  %d",
+			"freed-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pset->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -243,21 +244,3 @@ void hss_dump(hss_t* pset) {
 			get_state_name(pe->state), index, pe->ideal_index, key_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __HSS_MAIN__
-int main(int argc, char** argv)
-{
-	hss_t *pset = hss_alloc();
-	hss_add(pset, "x");
-	hss_add(pset, "y");
-	hss_add(pset, "x");
-	hss_add(pset, "z");
-	hss_remove(pset, "y");
-	printf("set size = %d\n", hss_size(pset));
-	hss_dump(pset);
-	hss_check_counts(pset);
-	hss_free(pset);
-	return 0;
-}
-#endif

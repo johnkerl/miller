@@ -118,7 +118,7 @@ static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -168,7 +168,7 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value) {
 		pmap->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -183,7 +183,7 @@ int lhmsi_get(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return -999; // xxx fix me ... extend the api to handle nullity.
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -197,7 +197,7 @@ lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -211,7 +211,7 @@ int lhmsi_has_key(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -246,14 +246,33 @@ void lhmsi_remove(lhmsi_t* pmap, char* key) {
 		return;
 	}
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
 
+// ----------------------------------------------------------------
 void  lhmsi_rename(lhmsi_t* pmap, char* old_key, char* new_key) {
 	fprintf(stderr, "rename is not supported in the hashed-record impl.\n");
 	exit(1);
+}
+
+// ----------------------------------------------------------------
+static void lhmsie_clear(lhmsie_t *pentry) {
+	pentry->ideal_index = -1;
+	pentry->key         = NULL;
+	pentry->value       = -1;
+	pentry->pprev       = NULL;
+	pentry->pnext       = NULL;
+}
+
+void lhmsi_clear(lhmsi_t* pmap) {
+	for (int i = 0; i < pmap->array_length; i++) {
+		lhmsie_clear(&pmap->entries[i]);
+		pmap->states[i] = EMPTY;
+	}
+	pmap->num_occupied = 0;
+	pmap->num_freed = 0;
 }
 
 // ----------------------------------------------------------------
@@ -272,7 +291,7 @@ static void lhmsi_enlarge(lhmsi_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhmsi_check_counts(lhmsi_t* pmap) {
+int lhmsi_check_counts(lhmsi_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {
@@ -283,16 +302,17 @@ void lhmsi_check_counts(lhmsi_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"deleted-count mismatch:  actual %d != cached  %d",
+			"deleted-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -330,25 +350,3 @@ void lhmsi_dump(lhmsi_t* pmap) {
 			pe->ideal_index, key_string, pe->value);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSI_MAIN__
-int main(int argc, char** argv)
-{
-	lhmsi_t *pmap = lhmsi_alloc();
-	lhmsi_put(pmap, "x", 3);
-	lhmsi_put(pmap, "y", 5);
-	lhmsi_put(pmap, "x", 4);
-	lhmsi_put(pmap, "z", 7);
-	lhmsi_remove(pmap, "y");
-	printf("map size = %d\n", pmap->num_occupied);
-	lhmsi_dump(pmap);
-	printf("map has(\"w\") = %d\n", lhmsi_has_key(pmap, "w"));
-	printf("map has(\"x\") = %d\n", lhmsi_has_key(pmap, "x"));
-	printf("map has(\"y\") = %d\n", lhmsi_has_key(pmap, "y"));
-	printf("map has(\"z\") = %d\n", lhmsi_has_key(pmap, "z"));
-	lhmsi_check_counts(pmap);
-	lhmsi_free(pmap);
-	return 0;
-}
-#endif

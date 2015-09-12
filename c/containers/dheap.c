@@ -286,34 +286,3 @@ void dheap_sort(double *array, int n)
 
 	dheap_free(pdheap);
 }
-
-// ================================================================
-#ifdef __DHEAP_MAIN__
-int main(int argc, char **argv) {
-	dheap_t *pdheap = dheap_alloc();
-	dheap_check(pdheap, __FILE__,  __LINE__);
-	dheap_add(pdheap, 4.1);
-	dheap_add(pdheap, 3.1);
-	dheap_add(pdheap, 2.1);
-	dheap_add(pdheap, 6.1);
-	dheap_add(pdheap, 5.1);
-	dheap_add(pdheap, 8.1);
-	dheap_add(pdheap, 7.1);
-	dheap_print(pdheap);
-	dheap_check(pdheap, __FILE__,  __LINE__);
-
-	printf("\n");
-	printf("remove %lf\n", dheap_remove(pdheap));
-	printf("remove %lf\n", dheap_remove(pdheap));
-	printf("remove %lf\n", dheap_remove(pdheap));
-	printf("remove %lf\n", dheap_remove(pdheap));
-	printf("\n");
-
-	dheap_print(pdheap);
-	dheap_check(pdheap, __FILE__,  __LINE__);
-
-	dheap_free(pdheap);
-
-	return 0;
-}
-#endif // __DHEAP_MAIN__

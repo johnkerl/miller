@@ -46,5 +46,9 @@ int   lhmsi_get(lhmsi_t* pmap, char* key);
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key);
 int   lhmsi_has_key(lhmsi_t* pmap, char* key);
 void  lhmsi_remove(lhmsi_t* pmap, char* key);
+void  lhmsi_clear(lhmsi_t* pmap);
+
+// Unit-test hook
+int lhmsi_check_counts(lhmsi_t* pmap);
 
 #endif // LHMSI_H

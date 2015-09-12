@@ -119,7 +119,7 @@ static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -172,7 +172,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 		return pvvalue;
 	}
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 	return NULL; // xxx not reached
@@ -188,7 +188,7 @@ void* lhms2v_get(lhms2v_t* pmap, char* key1, char* key2) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -202,7 +202,7 @@ int lhms2v_has_key(lhms2v_t* pmap, char* key1, char* key2) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -240,7 +240,7 @@ void* lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2) {
 		return NULL;
 	}
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -249,9 +249,10 @@ void* lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2) {
 void lhms2v_clear(lhms2v_t* pmap) {
 	for (int i = 0; i < pmap->array_length; i++) {
 		lhms2ve_clear(&pmap->entries[i]);
-		pmap->num_occupied = 0;
-		pmap->num_freed = 0;
+		pmap->states[i] = EMPTY;
 	}
+	pmap->num_occupied = 0;
+	pmap->num_freed = 0;
 }
 
 int lhms2v_size(lhms2v_t* pmap) {
@@ -274,7 +275,7 @@ static void lhms2v_enlarge(lhms2v_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhms2v_check_counts(lhms2v_t* pmap) {
+int lhms2v_check_counts(lhms2v_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {
@@ -285,16 +286,17 @@ void lhms2v_check_counts(lhms2v_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d\n",
 				nocc, pmap->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"deleted-count mismatch:  actual %d != cached  %d",
+			"deleted-count mismatch:  actual %d != cached  %d\n",
 				ndel, pmap->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -345,21 +347,3 @@ void lhms2v_dump(lhms2v_t* pmap) {
 			pe->ideal_index, key1_string, key2_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMS2V_MAIN__
-int main(int argc, char** argv)
-{
-	lhms2v_t *pmap = lhms2v_alloc();
-	lhms2v_put(pmap, "a", "x", "3");
-	lhms2v_put(pmap, "a", "y", "5");
-	lhms2v_put(pmap, "a", "x", "4");
-	lhms2v_put(pmap, "b", "z", "7");
-	lhms2v_remove(pmap, "a", "y");
-	printf("map size = %d\n", lhms2v_size(pmap));
-	lhms2v_dump(pmap);
-	lhms2v_check_counts(pmap);
-	lhms2v_free(pmap);
-	return 0;
-}
-#endif

@@ -37,4 +37,7 @@ void   hss_remove(hss_t* pset, char* key);
 void   hss_clear(hss_t* pset);
 int    hss_size(hss_t* pset);
 
+// Unit-test hook
+int hss_check_counts(hss_t* pset);
+
 #endif // HSS_H

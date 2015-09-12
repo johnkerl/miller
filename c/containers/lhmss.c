@@ -118,7 +118,7 @@ static int lhmss_find_index_for_key(lhmss_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -168,7 +168,7 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value) {
 		pmap->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -183,7 +183,7 @@ char* lhmss_get(lhmss_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -197,7 +197,7 @@ int lhmss_has_key(lhmss_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -232,7 +232,7 @@ void lhmss_remove(lhmss_t* pmap, char* key) {
 		return;
 	}
 	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
 }
@@ -269,13 +269,13 @@ void lhmss_check_counts(lhmss_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d.\n",
 				nocc, pmap->num_occupied);
 		exit(1);
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"freed-count mismatch:  actual %d != cached  %d",
+			"freed-count mismatch:  actual %d != cached  %d.\n",
 				ndel, pmap->num_freed);
 		exit(1);
 	}
@@ -322,21 +322,3 @@ void lhmss_dump(lhmss_t* pmap) {
 			pe->ideal_index, key_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSS_MAIN__
-int main(int argc, char** argv)
-{
-	lhmss_t *pmap = lhmss_alloc();
-	lhmss_put(pmap, "x", "3");
-	lhmss_put(pmap, "y", "5");
-	lhmss_put(pmap, "x", "4");
-	lhmss_put(pmap, "z", "7");
-	lhmss_remove(pmap, "y");
-	printf("map size = %d\n", pmap->num_occupied);
-	lhmss_dump(pmap);
-	lhmss_check_counts(pmap);
-	lhmss_free(pmap);
-	return 0;
-}
-#endif

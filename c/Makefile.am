@@ -73,6 +73,7 @@ dev-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-t
 	valgrind --leak-check=full ./test-Peek-file-reader
 	valgrind --leak-check=full ./test-parse-trie
 	valgrind --leak-check=full ./test-lrec
+	valgrind --leak-check=full ./test-maps-and-sets
 	valgrind --leak-check=full ./test-string-builder
 	valgrind --leak-check=full ./test-join-bucket-keeper
 	@echo

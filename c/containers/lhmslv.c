@@ -118,7 +118,7 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.");
+				"Coding error:  table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -170,7 +170,7 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
 		return pvvalue;
 	}
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 	return NULL; // xxx not reached
@@ -186,7 +186,7 @@ void* lhmslv_get(lhmslv_t* pmap, slls_t* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -200,7 +200,7 @@ int lhmslv_has_key(lhmslv_t* pmap, slls_t* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -237,7 +237,7 @@ void* lhmslv_remove(lhmslv_t* pmap, slls_t* key) {
 		return NULL;
 	}
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain");
+		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
 }
@@ -246,9 +246,9 @@ void* lhmslv_remove(lhmslv_t* pmap, slls_t* key) {
 void lhmslv_clear(lhmslv_t* pmap) {
 	for (int i = 0; i < pmap->array_length; i++) {
 		lhmslve_clear(&pmap->entries[i]);
-		pmap->num_occupied = 0;
-		pmap->num_freed = 0;
 	}
+	pmap->num_occupied = 0;
+	pmap->num_freed = 0;
 }
 
 int lhmslv_size(lhmslv_t* pmap) {
@@ -282,13 +282,13 @@ void lhmslv_check_counts(lhmslv_t* pmap) {
 	}
 	if (nocc != pmap->num_occupied) {
 		fprintf(stderr,
-			"occupancy-count mismatch:  actual %d != cached  %d",
+			"occupancy-count mismatch:  actual %d != cached  %d\n",
 				nocc, pmap->num_occupied);
 		exit(1);
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
-			"freed-count mismatch:  actual %d != cached  %d",
+			"freed-count mismatch:  actual %d != cached  %d\n",
 				ndel, pmap->num_freed);
 		exit(1);
 	}
@@ -335,33 +335,3 @@ void lhmslv_dump(lhmslv_t* pmap) {
 			pe->ideal_index, key_string, value_string);
 	}
 }
-
-// ----------------------------------------------------------------
-#ifdef __LHMSLV_MAIN__
-int main(int argc, char** argv)
-{
-	slls_t* ax = slls_alloc();
-	slls_add_no_free(ax, "a");
-	slls_add_no_free(ax, "x");
-
-	slls_t* ay = slls_alloc();
-	slls_add_no_free(ay, "a");
-	slls_add_no_free(ay, "y");
-
-	slls_t* bz = slls_alloc();
-	slls_add_no_free(bz, "b");
-	slls_add_no_free(bz, "z");
-
-	lhmslv_t *pmap = lhmslv_alloc();
-	lhmslv_put(pmap, ax, "3");
-	lhmslv_put(pmap, ay, "5");
-	lhmslv_put(pmap, ax, "4");
-	lhmslv_put(pmap, bz, "7");
-	lhmslv_remove(pmap, ay);
-	printf("map size = %d\n", lhmslv_size(pmap));
-	lhmslv_dump(pmap);
-	lhmslv_check_counts(pmap);
-	lhmslv_free(pmap);
-	return 0;
-}
-#endif

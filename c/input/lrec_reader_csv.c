@@ -107,8 +107,12 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 	slls_t* pdata_fields = lrec_reader_csv_get_fields(pstate);
 	if (pdata_fields == NULL) // EOF
 		return NULL;
-	else
+	else {
+		//lrec_t* prec = paste_header_and_data(pstate, pdata_fields);
+		//slls_free(pdata_fields);
+		//return prec;
 		return paste_header_and_data(pstate, pdata_fields);
+	}
 }
 
 static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
