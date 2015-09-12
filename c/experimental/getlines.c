@@ -6,7 +6,9 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
-#include "input/old_peek_file_reader.h"
+#include "input/byte_readers.h"
+#include "input/peek_file_reader.h"
+#include "containers/parse_trie.h"
 
 #define PEEK_BUF_LEN             32
 #define STRING_BUILDER_INIT_SIZE 1024
@@ -263,28 +265,41 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 }
 
 // ================================================================
-static char* read_line_pfr_psb(old_peek_file_reader_t* pfr, string_builder_t* psb, char* irs, int irs_len) {
+#define IRS_STRIDX 11
+#define EOF_STRIDX 22
+
+static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, parse_trie_t* ptrie) {
+	int rc, stridx, matchlen;
 	while (TRUE) {
-		if (old_pfr_at_eof(pfr)) {
-			if (sb_is_empty(psb))
-				return NULL;
-			else
+		pfr_buffer_by(pfr, ptrie->maxlen);
+		rc = parse_trie_match(ptrie, pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+			&stridx, &matchlen);
+		if (rc) {
+			switch(stridx) {
+			case IRS_STRIDX:
 				return sb_finish(psb);
-		} else if (old_pfr_next_is(pfr, irs, irs_len)) {
-			old_pfr_advance_by(pfr, irs_len);
-			return sb_finish(psb);
+				break;
+			case EOF_STRIDX:
+				return sb_finish(psb);
+				break;
+			}
 		} else {
-			sb_append_char(psb, old_pfr_read_char(pfr));
+			//sb_append_char(psb, pfr_read_char(pfr));
+			printf("%02x\n", (unsigned)pfr_read_char(pfr));
 		}
 	}
 }
 
 static int read_file_pfr_psb(char* filename, int do_write) {
-	FILE* fp = fopen_or_die(filename);
-	char* irs = "\n";
-	int irs_len = strlen(irs);
+	byte_reader_t* pbr = stdio_byte_reader_alloc();
+	pbr->popen_func(pbr, filename);
 
-	old_peek_file_reader_t* pfr = old_pfr_alloc(fp, PEEK_BUF_LEN);
+	peek_file_reader_t* pfr = pfr_alloc(pbr, PEEK_BUF_LEN);
+
+	parse_trie_t* ptrie = parse_trie_alloc();
+	parse_trie_add_string(ptrie, "\n", IRS_STRIDX);
+	parse_trie_add_string(ptrie, "\xff", EOF_STRIDX);
+
 	string_builder_t  sb;
 	string_builder_t* psb = &sb;
 	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
@@ -292,7 +307,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	int bc = 0;
 
 	while (TRUE) {
-		char* line = read_line_pfr_psb(pfr, psb, irs, irs_len);
+		char* line = read_line_pfr_psb(pfr, psb, ptrie);
 		if (line == NULL)
 			break;
 		if (do_write) {
@@ -302,7 +317,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 		bc += strlen(line);
 		free(line);
 	}
-	fclose(fp);
+	pbr->pclose_func(pbr);
 	return bc;
 }
 
@@ -441,4 +456,4 @@ int main(int argc, char** argv) {
 // * getc_unlocked vs. fgetc, no-brainer for this single-threaded code.
 // * string-builder is a little than fixed-length malloc, as expected
 //   -- it's adding value.
-// ! old_peek_file_reader is where the optimization opportunities are
+// ! peek_file_reader is where the optimization opportunities are

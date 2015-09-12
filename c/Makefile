@@ -100,7 +100,9 @@ EXPERIMENTAL_READER_SRCS = \
 lib/mlrutil.c \
 lib/mlr_globals.c \
 lib/string_builder.c \
+input/stdio_byte_reader.c \
 input/file_reader_mmap.c \
+containers/parse_trie.c \
 experimental/getlines.c
 
 # ================================================================
