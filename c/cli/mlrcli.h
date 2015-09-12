@@ -23,7 +23,8 @@ typedef struct _cli_opts_t {
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;
 	int   use_mmap_for_read;
-	char* ifmt;
+	char* ifile_fmt;
+	char* ofile_fmt;
 
 	char* ors;
 	char* ofs;

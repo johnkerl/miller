@@ -35,7 +35,7 @@ typedef struct _mapper_join_opts_t {
 	char     ips;
 	int      allow_repeat_ifs;
 	int      allow_repeat_ips;
-	char*    ifmt;
+	char*    ifile_fmt;
 	int      use_mmap_for_read;
 } mapper_join_opts_t;
 
@@ -237,7 +237,7 @@ static void mapper_join_free(void* pvstate) {
 
 static void merge_options(mapper_join_opts_t* popts) {
 	if (popts->input_file_format == NULL)
-		popts->input_file_format = MLR_GLOBALS.popts->ifmt;
+		popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
 	if (popts->irs               == OPTION_UNSPECIFIED)
 		popts->irs = MLR_GLOBALS.popts->irs;
 	if (popts->ifs               == OPTION_UNSPECIFIED)

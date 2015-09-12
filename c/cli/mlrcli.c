@@ -200,15 +200,40 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
 
+	// xxx integrate these with DEFAULT_XS ...
+	lhmss_t* default_orses = lhmss_alloc();
+	lhmss_put(default_orses, "dkvp",    "\n");
+	lhmss_put(default_orses, "csv",     "\r\n");
+	lhmss_put(default_orses, "csvlite", "\n");
+	lhmss_put(default_orses, "nidx",    "\n");
+	lhmss_put(default_orses, "xtab",    "\n");
+	lhmss_put(default_orses, "pprint",  "\n");
+
+	lhmss_t* default_ofses = lhmss_alloc();
+	lhmss_put(default_ofses, "dkvp",    ",");
+	lhmss_put(default_ofses, "csv",     ",");
+	lhmss_put(default_ofses, "csvlite", ",");
+	lhmss_put(default_ofses, "nidx",    " ");
+	lhmss_put(default_ofses, "xtab",    " ");
+	lhmss_put(default_ofses, "pprint",  " ");
+
+	lhmss_t* default_opses = lhmss_alloc();
+	lhmss_put(default_opses, "dkvp",    "=");
+	lhmss_put(default_opses, "csv",     "X");
+	lhmss_put(default_opses, "csvlite", "X");
+	lhmss_put(default_opses, "nidx",    "X");
+	lhmss_put(default_opses, "xtab",    "X");
+	lhmss_put(default_opses, "pprint",  "X");
+
 	popts->irs               = DEFAULT_RS[0]; // xxx temp
 	popts->ifs               = DEFAULT_FS[0];
 	popts->ips               = DEFAULT_PS[0];
 	popts->allow_repeat_ifs  = FALSE;
 	popts->allow_repeat_ips  = FALSE;
 
-	popts->ors               = DEFAULT_RS;
-	popts->ofs               = DEFAULT_FS;
-	popts->ops               = DEFAULT_PS;
+	popts->ors               = NULL;
+	popts->ofs               = NULL;
+	popts->ops               = NULL;
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
 
@@ -216,8 +241,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer      = NULL;
 	popts->filenames         = NULL;
 
-	popts->ifmt              = "dkvp";
-	char* ofmt               = "dkvp";
+	popts->ifile_fmt         = "dkvp";
+	popts->ofile_fmt          = "dkvp";
 
 	popts->use_mmap_for_read = TRUE;
 	int left_align_pprint    = TRUE;
@@ -288,8 +313,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 
 		else if (streq(argv[argi], "-p")) {
-			popts->ifmt = "nidx";
-			ofmt = "nidx";
+			popts->ifile_fmt = "nidx";
+			popts->ofile_fmt = "nidx";
 			popts->ifs = ' ';
 			popts->ofs = " ";
 			popts->allow_repeat_ifs = TRUE;
@@ -314,40 +339,40 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csv";  }
-		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csv";  }
-		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csv";  }
+		else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";  }
+		else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";  }
+		else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";  }
 
-		else if (streq(argv[argi], "--csvlite"))  { popts->ifmt = ofmt = "csvlite";  }
-		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
-		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
+		else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";  }
+		else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";  }
+		else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";  }
 
-		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
-		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }
-		else if (streq(argv[argi], "--odkvp"))    { ofmt = "dkvp"; }
+		else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp"; }
+		else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp"; }
+		else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp"; }
 
-		else if (streq(argv[argi], "--nidx"))     { popts->ifmt = ofmt = "nidx"; }
-		else if (streq(argv[argi], "--inidx"))    { popts->ifmt = "nidx"; }
-		else if (streq(argv[argi], "--onidx"))    { ofmt = "nidx"; }
+		else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx"; }
+		else if (streq(argv[argi], "--inidx"))    { popts->ifile_fmt = "nidx"; }
+		else if (streq(argv[argi], "--onidx"))    { popts->ofile_fmt = "nidx"; }
 
-		else if (streq(argv[argi], "--xtab"))     { popts->ifmt = ofmt = "xtab"; }
-		else if (streq(argv[argi], "--ixtab"))    { popts->ifmt = "xtab"; }
-		else if (streq(argv[argi], "--oxtab"))    { ofmt = "xtab"; }
+		else if (streq(argv[argi], "--xtab"))     { popts->ifile_fmt = popts->ofile_fmt = "xtab"; }
+		else if (streq(argv[argi], "--ixtab"))    { popts->ifile_fmt = "xtab"; }
+		else if (streq(argv[argi], "--oxtab"))    { popts->ofile_fmt = "xtab"; }
 
 		else if (streq(argv[argi], "--ipprint")) {
-			popts->ifmt             = "csvlite";
+			popts->ifile_fmt        = "csvlite";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
 
 		}
 		else if (streq(argv[argi], "--opprint")) {
-			ofmt = "pprint";
+			popts->ofile_fmt = "pprint";
 		}
 		else if (streq(argv[argi], "--pprint")) {
-			popts->ifmt             = "csvlite";
+			popts->ifile_fmt        = "csvlite";
 			popts->ifs              = ' ';
 			popts->allow_repeat_ifs = TRUE;
-			ofmt                    = "pprint";
+			popts->ofile_fmt        = "pprint";
 		}
 		else if (streq(argv[argi], "--right"))   {
 			left_align_pprint = FALSE;
@@ -355,7 +380,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofmt = argv[argi+1];
+			popts->ofile_fmt = argv[argi+1];
 			argi++;
 		}
 
@@ -387,12 +412,32 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	if      (streq(ofmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(ofmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
-	else if (streq(ofmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc();
-	else if (streq(ofmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
+	if (popts->ors == NULL)
+		popts->ors = lhmss_get(default_orses, popts->ofile_fmt);
+	if (popts->ofs == NULL)
+		popts->ofs = lhmss_get(default_ofses, popts->ofile_fmt);
+	if (popts->ops == NULL)
+		popts->ops = lhmss_get(default_opses, popts->ofile_fmt);
+
+	if (popts->ors == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ofs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ops == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+
+	if      (streq(popts->ofile_fmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(popts->ofile_fmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
+	else if (streq(popts->ofile_fmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs, left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}
@@ -439,7 +484,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if (argi == argc)
 		popts->use_mmap_for_read = FALSE;
 
-	popts->plrec_reader = lrec_reader_alloc(popts->ifmt, popts->use_mmap_for_read,
+	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 	if (popts->plrec_reader == NULL)
 		main_usage(argv[0], 1);
