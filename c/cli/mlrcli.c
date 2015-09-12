@@ -43,9 +43,9 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
-#define DEFAULT_RS   '\n'
-#define DEFAULT_FS   ','
-#define DEFAULT_PS   '='
+#define DEFAULT_RS   "\n"
+#define DEFAULT_FS   ","
+#define DEFAULT_PS   "="
 
 #define DEFAULT_OFMT "%lf"
 
@@ -89,8 +89,8 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
 	fprintf(o, "  --rs      --irs     --ors              Record separators, defaulting to newline\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
-	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%s\"\n", DEFAULT_FS);
+	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%s\"\n", DEFAULT_PS);
 	fprintf(o, "  Notes (as of Miller v2.0.0):\n");
 	fprintf(o, "  * RS/FS/PS are used for DKVP, NIDX, and CSVLITE formats where they must be single-character.\n");
 	fprintf(o, "  * For CSV, PPRINT, and XTAB formats, RS/FS/PS command-line options are ignored.\n");
@@ -119,6 +119,14 @@ static void main_usage(char* argv0, int exit_code) {
 	exit(exit_code);
 }
 
+static char xxx_temp_check_single_char_separator(char* sep, char* argv0) {
+	if (strlen(sep) != 1) {
+		main_usage(argv0, 1);
+	}
+	return sep[0];
+}
+
+
 static void usage_all_verbs(char* argv0) {
 	char* separator = "================================================================";
 
@@ -143,28 +151,38 @@ static void check_arg_count(char** argv, int argi, int argc, int n) {
 	}
 }
 
-static char sep_from_arg(char* arg, char* argv0) {
+static char* sep_from_arg(char* arg, char* argv0) {
+	if (streq(arg, "cr"))
+		return "\r";
+	if (streq(arg, "lf"))
+		return "\n";
+	if (streq(arg, "lflf"))
+		return "\n\n";
+	if (streq(arg, "crlf"))
+		return "\r\n";
+	if (streq(arg, "crlfcrlf"))
+		return "\r\n\r\n";
 	if (streq(arg, "tab"))
-		return '\t';
+		return "\t";
+	if (streq(arg, "tab"))
+		return "\t";
 	if (streq(arg, "space"))
-		return ' ';
+		return " ";
 	if (streq(arg, "comma"))
-		return ',';
+		return ",";
 	if (streq(arg, "newline"))
-		return '\n';
+		return "\n";
 	if (streq(arg, "pipe"))
-		return '|';
+		return "|";
 	if (streq(arg, "slash"))
-		return '/';
+		return "/";
 	if (streq(arg, "colon"))
-		return ':';
+		return ":";
 	if (streq(arg, "semicolon"))
-		return '|';
+		return "|";
 	if (streq(arg, "equals"))
-		return '=';
-	if (strlen(arg) != 1)
-		main_usage(argv0, 1);
-	return arg[0];
+		return "=";
+	return arg;
 }
 
 static mapper_setup_t* look_up_mapper_setup(char* verb) {
@@ -182,9 +200,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
 
-	popts->irs               = DEFAULT_RS;
-	popts->ifs               = DEFAULT_FS;
-	popts->ips               = DEFAULT_PS;
+	popts->irs               = DEFAULT_RS[0]; // xxx temp
+	popts->ifs               = DEFAULT_FS[0];
+	popts->ips               = DEFAULT_PS[0];
 	popts->allow_repeat_ifs  = FALSE;
 	popts->allow_repeat_ips  = FALSE;
 
@@ -231,12 +249,14 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = popts->irs = sep_from_arg(argv[argi+1], argv[0]);
+			//popts->ors = popts->irs = sep_from_arg(argv[argi+1], argv[0]); // xxx temp
+			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ors")) {
@@ -247,12 +267,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
+			// xxx temp
+			//popts->ofs = popts->ifs[0] = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ofs")) {
@@ -268,18 +291,21 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->ifmt = "nidx";
 			ofmt = "nidx";
 			popts->ifs = ' ';
-			popts->ofs = ' ';
+			popts->ofs = " ";
 			popts->allow_repeat_ifs = TRUE;
 		}
 
 		else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = popts->ips = sep_from_arg(argv[argi+1], argv[0]);
+			// xxx temp
+			// popts->ops = popts->ips[0] = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ops")) {

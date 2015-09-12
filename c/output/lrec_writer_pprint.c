@@ -16,6 +16,7 @@ typedef struct _lrec_writer_pprint_state_t {
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, int left_align);
 
 // ----------------------------------------------------------------
+// xxx use ORS here
 static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_writer_pprint_state_t* pstate = pvstate;
 

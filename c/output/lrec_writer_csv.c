@@ -13,8 +13,8 @@ static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* o
 
 typedef struct _lrec_writer_csv_state_t {
 	int   onr;
-	char *ors; // xxx char -> char*
-	char *ofs; // xxx char -> char*
+	char *ors;
+	char *ofs;
 	int   orslen;
 	int   ofslen;
 	quoted_output_func_t* pquoted_output_func;
@@ -78,13 +78,13 @@ static void lrec_writer_csv_free(void* pvstate) {
 	}
 }
 
-lrec_writer_t* lrec_writer_csv_alloc(char ors, char ofs, int oquoting) {
+lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
 	pstate->onr    = 0;
-	//pstate->ors  = ors;
-	//pstate->ofs  = ofs;
+	//pstate->ors    = ors;
+	//pstate->ofs    = ofs;
 	pstate->ors    = "\r\n"; // xxx temp
 	pstate->ofs    = ",";    // xxx temp
 	pstate->orslen = strlen(pstate->ors);

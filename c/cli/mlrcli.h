@@ -25,9 +25,9 @@ typedef struct _cli_opts_t {
 	int   use_mmap_for_read;
 	char* ifmt;
 
-	char ors;
-	char ofs;
-	char ops;
+	char* ors;
+	char* ofs;
+	char* ops;
 
 	char* ofmt;
 	int   oquoting;
