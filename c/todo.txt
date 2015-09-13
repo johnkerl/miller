@@ -13,6 +13,7 @@ TOP OF LIST
 ----------------------------------------------------------------
 MEDIUM
 incorp multi-char IXS for CSV
+-> functionally done; needs mlr -h, mlrdoc, and UT.
 
 ----------------------------------------------------------------
 MAJOR
