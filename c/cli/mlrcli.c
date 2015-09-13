@@ -274,7 +274,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			//popts->ors = popts->irs = sep_from_arg(argv[argi+1], argv[0]); // xxx temp
 			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
 			popts->irs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
@@ -292,8 +291,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			// xxx temp
-			//popts->ofs = popts->ifs[0] = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ifs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
@@ -322,8 +319,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			// xxx temp
-			// popts->ops = popts->ips[0] = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ips = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
 			argi++;
