@@ -216,7 +216,8 @@ termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
 
 getl: .always
-	$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
+	#$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
+	$(CCOPT) $(EXPERIMENTAL_READER_SRCS) -o getl
 
 # ================================================================
 clean:

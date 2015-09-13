@@ -402,43 +402,45 @@ int main(int argc, char** argv) {
 
 // ================================================================
 // $ ./getl ../data/big.csv 5|tee x
+./getl ../data/big.csv 5|tee x
 
 // $ mlr --opprint cat then sort -n t x
-// type                    t        n
-// getdelim                0.118618 55888899
-// getdelim                0.121467 55888899
-// getdelim                0.121943 55888899
-// getdelim                0.124756 55888899
-// getdelim                0.127039 55888899
-// getc_unlocked_fixed_len 0.167563 55888899
-// getc_unlocked_fixed_len 0.167803 55888899
-// getc_unlocked_fixed_len 0.168808 55888899
-// getc_unlocked_fixed_len 0.168980 55888899
-// getc_unlocked_fixed_len 0.176187 55888899
-// getc_unlocked_psb       0.238986 55888899
-// getc_unlocked_psb       0.241325 55888899
-// getc_unlocked_psb       0.246466 55888899
-// getc_unlocked_psb       0.247592 55888899
-// getc_unlocked_psb       0.248112 55888899
-// mmap_psb                0.250021 55888899
-// mmap_psb                0.254118 55888899
-// mmap_psb                0.257428 55888899
-// mmap_psb                0.261807 55888899
-// mmap_psb                0.264367 55888899
-// pfr_psb                 0.760035 55888900
-// pfr_psb                 0.765121 55888900
-// pfr_psb                 0.768731 55888900
-// pfr_psb                 0.771937 55888900
-// pfr_psb                 0.780460 55888900
-// fgetc_fixed_len         2.516459 55888899
-// fgetc_fixed_len         2.522877 55888899
-// fgetc_fixed_len         2.587373 55888899
-// fgetc_psb               2.590090 55888899
-// fgetc_psb               2.590536 55888899
-// fgetc_fixed_len         2.608356 55888899
-// fgetc_psb               2.623930 55888899
-// fgetc_fixed_len         2.624310 55888899
-// fgetc_psb               2.637269 55888899
+// type                    t        n         type                    t        n
+// getdelim                0.118618 55888899  getdelim                0.118057 55888899
+// getdelim                0.121467 55888899  getdelim                0.118727 55888899
+// getdelim                0.121943 55888899  getdelim                0.119609 55888899
+// getdelim                0.124756 55888899  getdelim                0.122506 55888899
+// getdelim                0.127039 55888899  getdelim                0.123099 55888899
+// getc_unlocked_fixed_len 0.167563 55888899  getc_unlocked_fixed_len 0.168109 55888899
+// getc_unlocked_fixed_len 0.167803 55888899  getc_unlocked_fixed_len 0.168392 55888899
+// getc_unlocked_fixed_len 0.168808 55888899  getc_unlocked_fixed_len 0.169387 55888899
+// getc_unlocked_fixed_len 0.168980 55888899  getc_unlocked_fixed_len 0.178484 55888899
+// getc_unlocked_fixed_len 0.176187 55888899  getc_unlocked_fixed_len 0.182793 55888899
+// getc_unlocked_psb       0.238986 55888899  getc_unlocked_psb       0.293240 55888899
+// getc_unlocked_psb       0.241325 55888899  getc_unlocked_psb       0.298449 55888899
+// getc_unlocked_psb       0.246466 55888899  getc_unlocked_psb       0.298508 55888899
+// getc_unlocked_psb       0.247592 55888899  getc_unlocked_psb       0.301125 55888899
+// getc_unlocked_psb       0.248112 55888899  mmap_psb                0.313239 55888899
+// mmap_psb                0.250021 55888899  mmap_psb                0.315061 55888899
+// mmap_psb                0.254118 55888899  mmap_psb                0.315517 55888899
+// mmap_psb                0.257428 55888899  mmap_psb                0.316790 55888899
+// mmap_psb                0.261807 55888899  mmap_psb                0.320654 55888899
+// mmap_psb                0.264367 55888899  getc_unlocked_psb       0.326494 55888899
+// pfr_psb                 0.760035 55888900  pfr_psb                 0.417141 55888899
+// pfr_psb                 0.765121 55888900  pfr_psb                 0.439269 55888899
+// pfr_psb                 0.768731 55888900  pfr_psb                 0.439342 55888899
+// pfr_psb                 0.771937 55888900  pfr_psb                 0.447218 55888899
+// pfr_psb                 0.780460 55888900  pfr_psb                 0.453839 55888899
+// fgetc_fixed_len         2.516459 55888899  fgetc_psb               2.476543 55888899
+// fgetc_fixed_len         2.522877 55888899  fgetc_psb               2.477130 55888899
+// fgetc_fixed_len         2.587373 55888899  fgetc_psb               2.484007 55888899
+// fgetc_psb               2.590090 55888899  fgetc_psb               2.484495 55888899
+// fgetc_psb               2.590536 55888899  fgetc_fixed_len         2.493730 55888899
+// fgetc_fixed_len         2.608356 55888899  fgetc_fixed_len         2.528333 55888899
+// fgetc_psb               2.623930 55888899  fgetc_fixed_len         2.533535 55888899
+// fgetc_fixed_len         2.624310 55888899  fgetc_fixed_len         2.555377 55888899
+// fgetc_psb               2.637269 55888899  fgetc_fixed_len         2.736391 55888899
+//                                            fgetc_psb               2.743828 55888899
 
 // $ mlr --opprint cat then stats1 -a min,max,stddev,mean -f t -g type then sort -n t_mean x
 // type                    t_min    t_max    t_stddev t_mean
@@ -449,6 +451,15 @@ int main(int argc, char** argv) {
 // pfr_psb                 0.760035 0.780460 0.007667 0.769257
 // fgetc_fixed_len         2.516459 2.624310 0.049478 2.571875
 // fgetc_psb               2.590090 2.680364 0.037489 2.624438
+
+// type                    t_min    t_max    t_stddev t_mean
+// getdelim                0.118057 0.123099 0.002271 0.120400
+// getc_unlocked_fixed_len 0.168109 0.182793 0.006768 0.173433
+// getc_unlocked_psb       0.293240 0.326494 0.013134 0.303563
+// mmap_psb                0.313239 0.320654 0.002771 0.316252
+// pfr_psb                 0.417141 0.453839 0.013830 0.439362
+// fgetc_psb               2.476543 2.743828 0.117803 2.533201
+// fgetc_fixed_len         2.493730 2.736391 0.095892 2.569473
 
 // ----------------------------------------------------------------
 // Analysis:
