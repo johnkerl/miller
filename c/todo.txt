@@ -1,11 +1,7 @@
 ================================================================
 BUGFIXES
 
-! memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
--> heap-fragging?
--> redo inline-pasting but this time correctly weight the fragging effect
--> denormalize :( pointer-copying is fine for string/mmap-backed cases in the absence of dquotes;
-   no struping needed *at all*.
+:D
 
 ================================================================
 TOP OF LIST
@@ -14,6 +10,7 @@ TOP OF LIST
 MEDIUM
 incorp multi-char IXS for CSV
 -> functionally done; needs mlr -h, mlrdoc, and UT.
+-> then close it out
 
 ----------------------------------------------------------------
 MAJOR
@@ -38,6 +35,8 @@ k oxs done functionally
 MAJOR
 csv mem-leak/read-perf:
 * current option runs faster w/o free, apparently due to heap-fragging
+  o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
+  o redo inline-pasting but this time correctly weight the fragging effect
 * for stdio, needs some thought ...
 * ... but for mmap, it's almost always not necessary to strdup at all:
   only on escaped-double-quote case.
