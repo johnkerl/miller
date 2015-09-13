@@ -6,12 +6,12 @@
 // ----------------------------------------------------------------
 // Primary entry points
 
-// fmtdesc: "dkvp", "csv", "nidx", "xtab".
-lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char irs, char ifs, int allow_repeat_ifs,
-	char ips, int allow_repeat_ips);
+// Factory method.  fmtdesc: "dkvp", "nidx", "csv", "csvlite", "nidx", "xtab".
+lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* ifs, int allow_repeat_ifs,
+	char* ips, int allow_repeat_ips);
 
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs);
-lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char irs, char ifs);
+lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs);
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips);

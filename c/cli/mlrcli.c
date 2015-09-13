@@ -119,14 +119,6 @@ static void main_usage(char* argv0, int exit_code) {
 	exit(exit_code);
 }
 
-static char xxx_temp_check_single_char_separator(char* sep, char* argv0) {
-	if (strlen(sep) != 1) {
-		main_usage(argv0, 1);
-	}
-	return sep[0];
-}
-
-
 static void usage_all_verbs(char* argv0) {
 	char* separator = "================================================================";
 
@@ -201,33 +193,33 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	memset(popts, 0, sizeof(*popts));
 
 	// xxx integrate these with DEFAULT_XS ...
-	lhmss_t* default_orses = lhmss_alloc();
-	lhmss_put(default_orses, "dkvp",    "\n");
-	lhmss_put(default_orses, "csv",     "\r\n");
-	lhmss_put(default_orses, "csvlite", "\n");
-	lhmss_put(default_orses, "nidx",    "\n");
-	lhmss_put(default_orses, "xtab",    "\n");
-	lhmss_put(default_orses, "pprint",  "\n");
+	lhmss_t* default_rses = lhmss_alloc();
+	lhmss_put(default_rses, "dkvp",    "\n");
+	lhmss_put(default_rses, "csv",     "\r\n");
+	lhmss_put(default_rses, "csvlite", "\n");
+	lhmss_put(default_rses, "nidx",    "\n");
+	lhmss_put(default_rses, "xtab",    "\n");
+	lhmss_put(default_rses, "pprint",  "\n");
 
-	lhmss_t* default_ofses = lhmss_alloc();
-	lhmss_put(default_ofses, "dkvp",    ",");
-	lhmss_put(default_ofses, "csv",     ",");
-	lhmss_put(default_ofses, "csvlite", ",");
-	lhmss_put(default_ofses, "nidx",    " ");
-	lhmss_put(default_ofses, "xtab",    " ");
-	lhmss_put(default_ofses, "pprint",  " ");
+	lhmss_t* default_fses = lhmss_alloc();
+	lhmss_put(default_fses, "dkvp",    ",");
+	lhmss_put(default_fses, "csv",     ",");
+	lhmss_put(default_fses, "csvlite", ",");
+	lhmss_put(default_fses, "nidx",    ","); // xxx update to space at version bump
+	lhmss_put(default_fses, "xtab",    " ");
+	lhmss_put(default_fses, "pprint",  " ");
 
-	lhmss_t* default_opses = lhmss_alloc();
-	lhmss_put(default_opses, "dkvp",    "=");
-	lhmss_put(default_opses, "csv",     "X");
-	lhmss_put(default_opses, "csvlite", "X");
-	lhmss_put(default_opses, "nidx",    "X");
-	lhmss_put(default_opses, "xtab",    "X");
-	lhmss_put(default_opses, "pprint",  "X");
+	lhmss_t* default_pses = lhmss_alloc();
+	lhmss_put(default_pses, "dkvp",    "=");
+	lhmss_put(default_pses, "csv",     "X");
+	lhmss_put(default_pses, "csvlite", "X");
+	lhmss_put(default_pses, "nidx",    "X");
+	lhmss_put(default_pses, "xtab",    "X");
+	lhmss_put(default_pses, "pprint",  "X");
 
-	popts->irs               = DEFAULT_RS[0]; // xxx temp
-	popts->ifs               = DEFAULT_FS[0];
-	popts->ips               = DEFAULT_PS[0];
+	popts->irs               = NULL;
+	popts->ifs               = NULL;
+	popts->ips               = NULL;
 	popts->allow_repeat_ifs  = FALSE;
 	popts->allow_repeat_ips  = FALSE;
 
@@ -275,12 +267,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
-			popts->irs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->irs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ors")) {
@@ -292,12 +284,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
-			popts->ifs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ifs = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ofs")) {
@@ -312,7 +304,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "-p")) {
 			popts->ifile_fmt = "nidx";
 			popts->ofile_fmt = "nidx";
-			popts->ifs = ' ';
+			popts->ifs = " ";
 			popts->ofs = " ";
 			popts->allow_repeat_ifs = TRUE;
 		}
@@ -320,12 +312,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
-			popts->ips = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ips = xxx_temp_check_single_char_separator(sep_from_arg(argv[argi+1], argv[0]), argv[0]);
+			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ops")) {
@@ -356,7 +348,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ipprint")) {
 			popts->ifile_fmt        = "csvlite";
-			popts->ifs              = ' ';
+			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
 
 		}
@@ -365,7 +357,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 		else if (streq(argv[argi], "--pprint")) {
 			popts->ifile_fmt        = "csvlite";
-			popts->ifs              = ' ';
+			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
 			popts->ofile_fmt        = "pprint";
 		}
@@ -407,12 +399,32 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
+	if (popts->irs == NULL)
+		popts->irs = lhmss_get(default_rses, popts->ifile_fmt);
+	if (popts->ifs == NULL)
+		popts->ifs = lhmss_get(default_fses, popts->ifile_fmt);
+	if (popts->ips == NULL)
+		popts->ips = lhmss_get(default_pses, popts->ifile_fmt);
+
 	if (popts->ors == NULL)
-		popts->ors = lhmss_get(default_orses, popts->ofile_fmt);
+		popts->ors = lhmss_get(default_rses, popts->ofile_fmt);
 	if (popts->ofs == NULL)
-		popts->ofs = lhmss_get(default_ofses, popts->ofile_fmt);
+		popts->ofs = lhmss_get(default_fses, popts->ofile_fmt);
 	if (popts->ops == NULL)
-		popts->ops = lhmss_get(default_opses, popts->ofile_fmt);
+		popts->ops = lhmss_get(default_pses, popts->ofile_fmt);
+
+	if (popts->irs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ifs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ips == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
 
 	if (popts->ors == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);

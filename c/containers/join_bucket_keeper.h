@@ -35,10 +35,10 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* left_file_name,
 	char* input_file_format,
 	int   use_mmap_for_read,
-	char  irs,
-	char  ifs,
+	char* irs,
+	char* ifs,
 	int   allow_repeat_ifs,
-	char  ips,
+	char* ips,
 	int   allow_repeat_ips,
 	slls_t* pleft_field_names);
 
