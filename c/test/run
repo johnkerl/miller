@@ -13,15 +13,24 @@
 # ================================================================
 set -e
 
+# For building with autoconf:
+# * in-directory build:
+#   pwd              is /path/to/source/tree/c/test
+#   path to mlr      is /path/to/source/tree/c/mlr
+#   path to test/run is /path/to/source/tree/c/test/run
+# * out-of-directory ("VPATH") build:
+#   pwd              is /path/to/build/tree/c/test
+#   path to mlr      is /path/to/build/tree/c/mlr
+#   path to test/run is /path/to/source/tree/c/test/run
+
 verb=$0
-# Note: this is invoked from the Makefile as "./test/run".  Without this, f you
-# invoke it as "test/run" or "sh test/run" then it will produce diff errors.
-if [ "$verb" = "test/run" ]; then
-  verb=./test/run
-fi
 ourdir=`dirname $verb`
 
-path_to_mlr=$ourdir/../mlr
+path_to_mlr=`pwd`/mlr
+if [ ! -f "$path_to_mlr" ]; then
+  path_to_mlr=$ourdir/../mlr
+fi
+
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$ourdir/output
