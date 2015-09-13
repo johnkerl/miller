@@ -7,18 +7,15 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
-MEDIUM
-incorp multi-char IXS for CSV
+MEDIUM: incorp multi-char IXS for CSV
 -> functionally done; needs mlr -h, mlrdoc, and UT.
 -> then close it out
 
 ----------------------------------------------------------------
-MAJOR
-autoconfig
+MAJOR: autoconfig
 
 ----------------------------------------------------------------
-MAJOR
-multi-char separators
+MAJOR: multi-char separators for file formats other than CSV
 k oxs done functionally
 * need backslash-handling/parsing ... at least, \r \n \t. and, into online help.
 ! ixs:
@@ -32,8 +29,7 @@ k oxs done functionally
     gross so don't do it unless multichar-getdelim doesn't pan out.
 
 ----------------------------------------------------------------
-MAJOR
-csv mem-leak/read-perf:
+MAJOR: csv mem-leak/read-perf
 * current option runs faster w/o free, apparently due to heap-fragging
   o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
   o redo inline-pasting but this time correctly weight the fragging effect
@@ -48,6 +44,7 @@ csv mem-leak/read-perf:
 
 ----------------------------------------------------------------
 MINOR
+
 ? dkvp quoting ... maybe wait until after the mmap/perf split
 
 * go back and re-apply ctype/isprint portability things to new spots
