@@ -15,21 +15,36 @@ set -e
 
 # For building with autoconf:
 # * in-directory build:
-#   pwd              is /path/to/source/tree/c/test
-#   path to mlr      is /path/to/source/tree/c/mlr
-#   path to test/run is /path/to/source/tree/c/test/run
+#   pwd              is /path/to/the/tree/c/test
+#   path to mlr      is /path/to/the/tree/c/mlr
+#   path to test/run is /path/to/the/tree/c/test/run
+#
 # * out-of-directory ("VPATH") build:
 #   pwd              is /path/to/build/tree/c/test
 #   path to mlr      is /path/to/build/tree/c/mlr
 #   path to test/run is /path/to/source/tree/c/test/run
 
-verb=$0
-ourdir=`dirname $verb`
+# For building without autoconf:
+#   pwd              is /does/not/matter
+#   path to mlr      is /path/to/the/tree/c/mlr
+#   path to test/run is /path/to/the/tree/c/test/run
 
-path_to_mlr=`pwd`/mlr
+ourdir=`dirname $0`
+srcdir=$ourdir/../..
+pwd=`pwd`
+
+# For autoconf builds, in-tree or out-of-tree:
+path_to_mlr=$pwd/..
 if [ ! -f "$path_to_mlr" ]; then
-  path_to_mlr=$ourdir/../mlr
+  # For non-autoconf builds:
+  path_to_mlr=$srcdir/c/mlr
+  echo TRY 2 IS $path_to_mlr
 fi
+if [ ! -f "$path_to_mlr" ]; then
+  echo "$0: Could not find path to mlr executable." 1>&2
+  exit 1
+fi
+echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input
 expdir=$ourdir/expected
