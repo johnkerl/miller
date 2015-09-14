@@ -34,13 +34,12 @@ srcdir=$ourdir/../..
 pwd=`pwd`
 
 # For autoconf builds, in-tree or out-of-tree:
-path_to_mlr=$pwd/..
-if [ ! -f "$path_to_mlr" ]; then
+path_to_mlr=$pwd/../mlr
+if [ ! -x "$path_to_mlr" ]; then
   # For non-autoconf builds:
   path_to_mlr=$srcdir/c/mlr
-  echo TRY 2 IS $path_to_mlr
 fi
-if [ ! -f "$path_to_mlr" ]; then
+if [ ! -x "$path_to_mlr" ]; then
   echo "$0: Could not find path to mlr executable." 1>&2
   exit 1
 fi
