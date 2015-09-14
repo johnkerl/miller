@@ -39,7 +39,7 @@ libcontainers_la_LIBADD=	\
 			../mapping/libmapping.la
 
 TESTS=			$(check_PROGRAMS)
-check_PROGRAMS=		test_join_bucket_keeper test_lrec test_maps_and_sets test_parse_trie
+check_PROGRAMS=		test_join_bucket_keeper test_lrec test_multiple_containers test_parse_trie
 
 test_join_bucket_keeper_CPPFLAGS=	-D__TEST_JOIN_BUCKET_KEEPER_MAIN__ ${AM_CPPFLAGS}
 test_join_bucket_keeper_LDADD=		../input/libinput.la \
@@ -52,8 +52,8 @@ test_lrec_LDADD=		../input/libinput.la \
 				../lib/libmlr.la \
 				libcontainers.la
 
-test_maps_and_sets_CPPFLAGS=	-D__TEST_MAPS_AND_SETS_MAIN__ ${AM_CPPFLAGS}
-test_maps_and_sets_LDADD=		../input/libinput.la \
+test_multiple_containers_CPPFLAGS=	-D__TEST_MULTIPLE_CONTAINERS_MAIN__ ${AM_CPPFLAGS}
+test_multiple_containers_LDADD=		../input/libinput.la \
 					../lib/libmlr.la \
 					libcontainers.la
 

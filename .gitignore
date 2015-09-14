@@ -60,14 +60,15 @@ autotools/
 stamp-h1
 ap
 doc/miller.1
+getl
 lemon_prepared
 lrim
 mlr-[0-9.]*.tar.*
 test_byte_readers
 test_join_bucket_keeper
 test_lrec
-test_maps_and_sets
 test_mlrutil
+test_multiple_containers
 test_parse_trie
 test_peek_file_reader
 test_string_builder

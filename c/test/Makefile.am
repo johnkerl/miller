@@ -1,5 +1,5 @@
 SUBDIRS=	input expected
-EXTRA_DIST=	run
+EXTRA_DIST=	run README.md
 
 TESTS=		run
 
