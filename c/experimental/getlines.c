@@ -402,7 +402,6 @@ int main(int argc, char** argv) {
 
 // ================================================================
 // $ ./getl ../data/big.csv 5|tee x
-./getl ../data/big.csv 5|tee x
 
 // $ mlr --opprint cat then sort -n t x
 // type                    t        n         type                    t        n
