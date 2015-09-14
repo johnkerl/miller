@@ -30,12 +30,12 @@ typedef struct _mapper_join_opts_t {
 	// These allow the joiner to have its own different format/delimiter for
 	// the left-file:
 	char*    input_file_format;
-	char     irs;
-	char     ifs;
-	char     ips;
+	char*    irs;
+	char*    ifs;
+	char*    ips;
 	int      allow_repeat_ifs;
 	int      allow_repeat_ips;
-	char*    ifmt;
+	char*    ifile_fmt;
 	int      use_mmap_for_read;
 } mapper_join_opts_t;
 
@@ -237,12 +237,12 @@ static void mapper_join_free(void* pvstate) {
 
 static void merge_options(mapper_join_opts_t* popts) {
 	if (popts->input_file_format == NULL)
-		popts->input_file_format = MLR_GLOBALS.popts->ifmt;
-	if (popts->irs               == OPTION_UNSPECIFIED)
+		popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
+	if (popts->irs               == NULL)
 		popts->irs = MLR_GLOBALS.popts->irs;
-	if (popts->ifs               == OPTION_UNSPECIFIED)
+	if (popts->ifs               == NULL)
 		popts->ifs = MLR_GLOBALS.popts->ifs;
-	if (popts->ips               == OPTION_UNSPECIFIED)
+	if (popts->ips               == NULL)
 		popts->ips = MLR_GLOBALS.popts->ips;
 	if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
 		popts->allow_repeat_ifs = MLR_GLOBALS.popts->allow_repeat_ifs;
@@ -360,9 +360,9 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->emit_right_unpairables   = FALSE;
 
 	popts->input_file_format = NULL;
-	popts->irs               = OPTION_UNSPECIFIED;
-	popts->ifs               = OPTION_UNSPECIFIED;
-	popts->ips               = OPTION_UNSPECIFIED;
+	popts->irs               = NULL;
+	popts->ifs               = NULL;
+	popts->ips               = NULL;
 	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
 	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
 	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
@@ -370,25 +370,25 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_flag(pstate,      "-f",   &popts->left_file_name);
-	ap_define_string_list_flag(pstate, "-j",   &popts->poutput_join_field_names);
-	ap_define_string_list_flag(pstate, "-l",   &popts->pleft_join_field_names);
-	ap_define_string_list_flag(pstate, "-r",   &popts->pright_join_field_names);
-	ap_define_string_flag(pstate,      "--lp", &popts->left_prefix);
-	ap_define_string_flag(pstate,      "--rp", &popts->right_prefix);
-	ap_define_false_flag(pstate,       "--np", &popts->emit_pairables);
-	ap_define_true_flag(pstate,        "--ul", &popts->emit_left_unpairables);
-	ap_define_true_flag(pstate,        "--ur", &popts->emit_right_unpairables);
-	ap_define_true_flag(pstate,        "-u",   &popts->allow_unsorted_input);
+	ap_define_string_flag(pstate,      "-f",         &popts->left_file_name);
+	ap_define_string_list_flag(pstate, "-j",         &popts->poutput_join_field_names);
+	ap_define_string_list_flag(pstate, "-l",         &popts->pleft_join_field_names);
+	ap_define_string_list_flag(pstate, "-r",         &popts->pright_join_field_names);
+	ap_define_string_flag(pstate,      "--lp",       &popts->left_prefix);
+	ap_define_string_flag(pstate,      "--rp",       &popts->right_prefix);
+	ap_define_false_flag(pstate,       "--np",       &popts->emit_pairables);
+	ap_define_true_flag(pstate,        "--ul",       &popts->emit_left_unpairables);
+	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
+	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
 
-	ap_define_string_flag(pstate, "-i",         &popts->input_file_format);
-	ap_define_char_flag(pstate,   "--irs",      &popts->irs);
-	ap_define_char_flag(pstate,   "--ifs",      &popts->ifs);
-	ap_define_char_flag(pstate,   "--ips",      &popts->ips);
-	ap_define_true_flag(pstate,   "--repifs",   &popts->allow_repeat_ifs);
-	ap_define_true_flag(pstate,   "--repips",   &popts->allow_repeat_ips);
-	ap_define_true_flag(pstate,   "--use-mmap", &popts->use_mmap_for_read);
-	ap_define_false_flag(pstate,  "--no-mmap",  &popts->use_mmap_for_read);
+	ap_define_string_flag(pstate,      "-i",         &popts->input_file_format);
+	ap_define_string_flag(pstate,      "--irs",      &popts->irs);
+	ap_define_string_flag(pstate,      "--ifs",      &popts->ifs);
+	ap_define_string_flag(pstate,      "--ips",      &popts->ips);
+	ap_define_true_flag(pstate,        "--repifs",   &popts->allow_repeat_ifs);
+	ap_define_true_flag(pstate,        "--repips",   &popts->allow_repeat_ips);
+	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
+	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_join_usage(argv[0], verb);

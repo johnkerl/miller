@@ -4,6 +4,8 @@
 #include "output/lrec_writers.h"
 
 typedef struct _lrec_writer_xtab_state_t {
+	char* ors;
+	char* ofs;
 	long long record_count;
 } lrec_writer_xtab_state_t;
 
@@ -13,7 +15,7 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
 	if (pstate->record_count > 0LL)
-		fprintf(output_stream, "\n");
+		fputs(pstate->ors, output_stream);
 	pstate->record_count++;
 
 	int max_key_width = 1;
@@ -28,8 +30,8 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 		fprintf(output_stream, "%s", pe->key);
 		int d = max_key_width - strlen_for_utf8_display(pe->key);
 		for (int i = 0; i < d; i++)
-			fputc(' ', output_stream);
-		fprintf(output_stream, " %s\n", pe->value);
+			fputs(pstate->ofs, output_stream);
+		fprintf(output_stream, "%s%s%s", pstate->ofs, pe->value, pstate->ors);
 	}
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
@@ -37,10 +39,12 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 static void lrec_writer_xtab_free(void* pvstate) {
 }
 
-lrec_writer_t* lrec_writer_xtab_alloc() {
+lrec_writer_t* lrec_writer_xtab_alloc(char* ors, char* ofs) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
+	pstate->ors          = ors;
+	pstate->ofs          = ofs;
 	pstate->record_count = 0LL;
 
 	plrec_writer->pvstate       = pstate;

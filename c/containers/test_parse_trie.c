@@ -252,6 +252,7 @@ static char* all_tests() {
 }
 
 int main(int argc, char** argv) {
+	printf("TEST_PARSE_TRIE ENTER\n");
 	char* result = all_tests();
 	printf("\n");
 	if (result != 0) {

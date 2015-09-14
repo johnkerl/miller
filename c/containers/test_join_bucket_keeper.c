@@ -427,6 +427,7 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
+	printf("TEST_JOIN_BUCKET_KEEPER ENTER\n");
 	if ((argc == 2) && streq(argv[1], "-v"))
 		tjbk_verbose = TRUE;
 

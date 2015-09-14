@@ -246,6 +246,7 @@ void* lhmslv_remove(lhmslv_t* pmap, slls_t* key) {
 void lhmslv_clear(lhmslv_t* pmap) {
 	for (int i = 0; i < pmap->array_length; i++) {
 		lhmslve_clear(&pmap->entries[i]);
+		pmap->states[i] = EMPTY;
 	}
 	pmap->num_occupied = 0;
 	pmap->num_freed = 0;
@@ -271,7 +272,7 @@ static void lhmslv_enlarge(lhmslv_t* pmap) {
 }
 
 // ----------------------------------------------------------------
-void lhmslv_check_counts(lhmslv_t* pmap) {
+int lhmslv_check_counts(lhmslv_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {
@@ -284,14 +285,15 @@ void lhmslv_check_counts(lhmslv_t* pmap) {
 		fprintf(stderr,
 			"occupancy-count mismatch:  actual %d != cached  %d\n",
 				nocc, pmap->num_occupied);
-		exit(1);
+		return FALSE;
 	}
 	if (ndel != pmap->num_freed) {
 		fprintf(stderr,
 			"freed-count mismatch:  actual %d != cached  %d\n",
 				ndel, pmap->num_freed);
-		exit(1);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -304,13 +306,13 @@ static char* get_state_name(int state) {
 	}
 }
 
-void lhmslv_dump(lhmslv_t* pmap) {
+void lhmslv_print(lhmslv_t* pmap) {
 	for (int index = 0; index < pmap->array_length; index++) {
 		lhmslve_t* pe = &pmap->entries[index];
 
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
-			slls_join(pe->key, ',');
+			slls_join(pe->key, ",");
 		const char* value_string = (pe == NULL) ? "none" :
 			pe->pvvalue == NULL ? "null" :
 			pe->pvvalue;
@@ -325,7 +327,7 @@ void lhmslv_dump(lhmslv_t* pmap) {
 	for (lhmslve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
-			slls_join(pe->key, ',');
+			slls_join(pe->key, ",");
 		const char* value_string = (pe == NULL) ? "none" :
 			pe->pvvalue == NULL ? "null" :
 			pe->pvvalue;

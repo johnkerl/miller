@@ -10,7 +10,7 @@ test-byte-readers
 test-peek-file-reader
 test-parse-trie
 test-lrec
-test-maps-and-sets
+test-multiple-containers
 test-join-bucket-keeper
 termcvt
 a.out
@@ -35,6 +35,8 @@ c/dsls/filter_dsl_parse.h
 c/dsls/filter_dsl_parse.out
 c/dsls/pdm
 c/dsls/fdm
+c/test/output
+c/output/out
 tags
 *.la
 *.lo

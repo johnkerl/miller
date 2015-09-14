@@ -1,44 +1,79 @@
 ================================================================
 BUGFIXES
 
-! memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
--> heap-fragging?
--> redo inline-pasting but this time correctly weight the fragging effect
--> denormalize :( pointer-copying is fine for string/mmap-backed cases in the absence of dquotes;
-   no struping needed *at all*.
+:D
 
 ================================================================
 TOP OF LIST
 
-* v2.1.0:
-  o perf
-  o rs/fs -> csv
-  o multichar rs/fs/ps for all formats
-  o optimize csv read perf
-  o double-quote feature -> dkvp
+----------------------------------------------------------------
+MAJOR: autoconfig
 
-  o make a profiler proggy-pair for getline vs. psb/pkr for simple cat
-  o rs/fs/ps from char to char* throughout
-  o parameterize csv rs/fs
-  o implement mmap-backed psb/pkr via vptr intf and profile that
-  o RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-  o DKVP double-quote support
-  i still need separate csvlite/csv on output since the former tolerates heterogeneity
+----------------------------------------------------------------
+MAJOR: multi-char separators for file formats other than CSV
+k oxs is functionally done
+* need backslash-handling/parsing ... at least, \r \n \t. and, into online help.
+! ixs:
+  o ips & ifs: needs *p==ixs with strneq(p, ixs); also double-null poke (sos&eos)
+  o irs for mmap: same
+  o irs for stdio: it all comes down to getdelim.
+  ! so focus on getline perf.
+  ! maybe best idea is to re-impl getdelim with multichar irs.
+    - rework csv reader to look more like csvlite (which is performant)?
+  ! temporary option is getdelim with final char of the multichar irs; strcmp backwards;
+    usually get it right; occasionally have to strcat/memcpy multiple such. this is
+    gross so don't do it unless multichar-getdelim doesn't pan out.
+
+----------------------------------------------------------------
+MAJOR: csv mem-leak/read-perf
+* current option runs faster w/o free, apparently due to heap-fragging
+  o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
+  o redo inline-pasting but this time correctly weight the fragging effect
+* for stdio, needs some thought ...
+* ... but for mmap, it's almost always not necessary to strdup at all:
+  only on escaped-double-quote case.
+* denormalize the pbr & make stdio pbr & ptr-backed (mmap,UT-string) pbr.
+* code-dup (yes, sadly!) the CSV reader into two & do strups in stdio
+  but lrec_put w/ !LREC_FREE_VALUE for ptr-backed.
+* or *maybe* pbr retent/free-flags for string/mmap w/o denorm, but only
+  if it's both elegant and fast
+! experimental/getlines.c shows that even without the heap-fragging
+  issue, pfr+psb is 3.5x slower than getdelim. again suggesting
+  multi-char-terminated getdelim might be the best line of approach.
+
+----------------------------------------------------------------
+MINOR
+
+* define dkvp, nidx, etc @ cover x 2
+
+? dkvp quoting ... wait until after the mmap/perf split. else, very undesirable
+  performance regression.
+
+* go back and re-apply ctype/isprint portability things to new spots
+
+* more dead-code mains ... lrec-eval; what else?
+
+* dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
+* configure w/o autotools? likewise manpage. etc. multiple build levels.
+
+b mlr faq page
+
+* --mmap @ mlr -h
+* ctype ff @ bld.out
+* platform os/ccomp list to mlrdoc
+
+* -h vs. usage : stdout vs. stderr
+* pprint join?
 
 * header-length data mismatch et. al: file/line
 
 * make an updated dependency list, esp. in light of a2x et al.
 * probably its own mlrdoc page ... at least, highlighted in build page
 
-* trie-parse to-do:
-  o make a power-of-two ring buffer for pfr & trie
-
-* autoconf
-* .deb
-* homebrew
-
 ----------------------------------------------------------------
 little:
+
+* RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
 
 * -Wall -Wextra -Wpedantic-?? Werror=unused-but-set-variable?
 

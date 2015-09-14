@@ -139,7 +139,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 #ifdef DEBUG_PARSER
-				pfr_dump(pfr);
+				pfr_print(pfr);
 #endif
 				if (rc) {
 #ifdef DEBUG_PARSER
@@ -291,15 +291,15 @@ static void lrec_reader_csv_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char irs, char ifs) {
+lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
 	pstate->ilno                      = 0LL;
 
 	pstate->eof                       = "\xff";
-	pstate->irs                       = "\r\n"; // xxx multi-byte the cli irs/ifs/etc, and integrate here
-	pstate->ifs                       = ",";    // xxx multi-byte the cli irs/ifs/etc, and integrate here
+	pstate->irs                       = irs;
+	pstate->ifs                       = ifs;
 	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
 	pstate->dquote                    = "\"";
 

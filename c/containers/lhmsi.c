@@ -325,7 +325,7 @@ static char* get_state_name(int state) {
 	}
 }
 
-void lhmsi_dump(lhmsi_t* pmap) {
+void lhmsi_print(lhmsi_t* pmap) {
 	for (int index = 0; index < pmap->array_length; index++) {
 		lhmsie_t* pe = &pmap->entries[index];
 

@@ -227,10 +227,10 @@ int mlr_string_pair_hash_func(char* str1, char* str2) {
 }
 
 // ----------------------------------------------------------------
-char* mlr_get_line(FILE* input_stream, char rs) {
+char* mlr_get_line(FILE* input_stream, char irs) {
 	char* line = NULL;
 	size_t linecap = 0;
-	ssize_t linelen = getdelim(&line, &linecap, rs, input_stream);
+	ssize_t linelen = getdelim(&line, &linecap, irs, input_stream);
 	if (linelen <= 0) {
 		return NULL;
 	}

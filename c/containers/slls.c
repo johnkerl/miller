@@ -118,17 +118,16 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 // ----------------------------------------------------------------
 // xxx cmt for debug. inefficient. or fix that.
 // xxx rename to slls_alloc_join
-char* slls_join(slls_t* plist, char fs) {
+char* slls_join(slls_t* plist, char* ofs) {
 	int len = 0;
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
-		len += strlen(pe->value) + 1; // include space for fs and null-terminator
+		len += strlen(pe->value) + 1; // include space for ofs and null-terminator
 	char* output = mlr_malloc_or_die(len);
-	char sep[2] = {fs, 0};
 	*output = 0;
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
 		strcat(output, pe->value);
 		if (pe->pnext != NULL) {
-			strcat(output, sep);
+			strcat(output, ofs);
 		}
 	}
 

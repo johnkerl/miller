@@ -65,3 +65,11 @@ double percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double pe
 	}
 	return ppercentile_keeper->data[compute_index(ppercentile_keeper->size, percentile)];
 }
+
+// ----------------------------------------------------------------
+void percentile_keeper_print(percentile_keeper_t* ppercentile_keeper) {
+	printf("percentile_keeper dump:\n");
+	for (int i = 0; i < ppercentile_keeper->size; i++)
+		printf("[%02d] %.8lf\n", i, ppercentile_keeper->data[i]);
+}
+

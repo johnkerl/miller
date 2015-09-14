@@ -44,10 +44,37 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
-#define DEFAULT_RS   '\n'
-#define DEFAULT_FS   ','
-#define DEFAULT_PS   '='
+static lhmss_t* pdesc_to_chars_map = NULL;
+static lhmss_t* get_desc_to_chars_map() {
+	if (pdesc_to_chars_map == NULL) {
+		pdesc_to_chars_map = lhmss_alloc();
+		lhmss_put(pdesc_to_chars_map, "cr",        "\r");
+		lhmss_put(pdesc_to_chars_map, "crcr",      "\r\r");
+		lhmss_put(pdesc_to_chars_map, "lf",        "\n");
+		lhmss_put(pdesc_to_chars_map, "lflf",      "\n\n");
+		lhmss_put(pdesc_to_chars_map, "crlf",      "\r\n");
+		lhmss_put(pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n");
+		lhmss_put(pdesc_to_chars_map, "tab",       "\t");
+		lhmss_put(pdesc_to_chars_map, "space",     " ");
+		lhmss_put(pdesc_to_chars_map, "comma",     ",");
+		lhmss_put(pdesc_to_chars_map, "newline",   "\n");
+		lhmss_put(pdesc_to_chars_map, "pipe",      "|");
+		lhmss_put(pdesc_to_chars_map, "slash",     "/");
+		lhmss_put(pdesc_to_chars_map, "colon",     ":");
+		lhmss_put(pdesc_to_chars_map, "semicolon", ";");
+		lhmss_put(pdesc_to_chars_map, "equals",    "=");
+	}
+	return pdesc_to_chars_map;
+}
+static char* sep_from_arg(char* arg, char* argv0) {
+	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
+	if (chars != NULL)
+		return chars;
+	else
+		return arg;
+}
 
+// ----------------------------------------------------------------
 #define DEFAULT_OFMT "%lf"
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
@@ -89,19 +116,27 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, defaulting to newline\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%c\"\n", DEFAULT_FS);
-	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%c\"\n", DEFAULT_PS);
-	fprintf(o, "  Notes (as of Miller v2.0.0):\n");
-	fprintf(o, "  * RS/FS/PS are used for DKVP, NIDX, and CSVLITE formats where they must be single-character.\n");
-	fprintf(o, "  * For CSV, PPRINT, and XTAB formats, RS/FS/PS command-line options are ignored.\n");
+	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. newline\n");
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
+	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
+	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
+	fprintf(o, "  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.\n");
+	fprintf(o, "  * IRS,IFS,IPS may be multi-character for CSV; they must be single-character for other formats.\n");
+	fprintf(o, "    The latter restriction will be lifted in a near-future release.\n");
+	fprintf(o, "  * ORS,OFS,OPS may be multi-character for all formats.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
-	fprintf(o, "    In particular, this means LF line-terminators on Linux/OSX.\n");
+	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
-	fprintf(o, "    In particular, this means it *only* handles CRLF line-terminators.\n");
-	fprintf(o, "  * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option\n");
-	fprintf(o, "    for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.\n");
-	fprintf(o, "Double-quoting for CSV:\n");
+	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
+	fprintf(o, "    So, you can use \"--csv --rs lf\" for Linux-native CSV files.\n");
+	fprintf(o, "  * You can use \"--fs '|'\", \"--ips :\", etc., or any of the following names for separators:\n");
+	fprintf(o, "  ");
+	lhmss_t* pmap = get_desc_to_chars_map();
+	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+		fprintf(o, " %s", pe->key);
+	}
+	fprintf(o, "\n");
+	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
 	fprintf(o, "  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them\n");
@@ -144,30 +179,6 @@ static void check_arg_count(char** argv, int argi, int argc, int n) {
 	}
 }
 
-static char sep_from_arg(char* arg, char* argv0) {
-	if (streq(arg, "tab"))
-		return '\t';
-	if (streq(arg, "space"))
-		return ' ';
-	if (streq(arg, "comma"))
-		return ',';
-	if (streq(arg, "newline"))
-		return '\n';
-	if (streq(arg, "pipe"))
-		return '|';
-	if (streq(arg, "slash"))
-		return '/';
-	if (streq(arg, "colon"))
-		return ':';
-	if (streq(arg, "semicolon"))
-		return '|';
-	if (streq(arg, "equals"))
-		return '=';
-	if (strlen(arg) != 1)
-		main_usage(argv0, 1);
-	return arg[0];
-}
-
 static mapper_setup_t* look_up_mapper_setup(char* verb) {
 	mapper_setup_t* pmapper_setup = NULL;
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
@@ -183,15 +194,40 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
 
-	popts->irs               = DEFAULT_RS;
-	popts->ifs               = DEFAULT_FS;
-	popts->ips               = DEFAULT_PS;
+	// xxx integrate these with DEFAULT_XS ...
+	lhmss_t* default_rses = lhmss_alloc();
+	lhmss_put(default_rses, "dkvp",    "\n");
+	lhmss_put(default_rses, "csv",     "\r\n");
+	lhmss_put(default_rses, "csvlite", "\n");
+	lhmss_put(default_rses, "nidx",    "\n");
+	lhmss_put(default_rses, "xtab",    "\n");
+	lhmss_put(default_rses, "pprint",  "\n");
+
+	lhmss_t* default_fses = lhmss_alloc();
+	lhmss_put(default_fses, "dkvp",    ",");
+	lhmss_put(default_fses, "csv",     ",");
+	lhmss_put(default_fses, "csvlite", ",");
+	lhmss_put(default_fses, "nidx",    ","); // xxx update to space at version bump
+	lhmss_put(default_fses, "xtab",    " ");
+	lhmss_put(default_fses, "pprint",  " ");
+
+	lhmss_t* default_pses = lhmss_alloc();
+	lhmss_put(default_pses, "dkvp",    "=");
+	lhmss_put(default_pses, "csv",     "X");
+	lhmss_put(default_pses, "csvlite", "X");
+	lhmss_put(default_pses, "nidx",    "X");
+	lhmss_put(default_pses, "xtab",    "X");
+	lhmss_put(default_pses, "pprint",  "X");
+
+	popts->irs               = NULL;
+	popts->ifs               = NULL;
+	popts->ips               = NULL;
 	popts->allow_repeat_ifs  = FALSE;
 	popts->allow_repeat_ips  = FALSE;
 
-	popts->ors               = DEFAULT_RS;
-	popts->ofs               = DEFAULT_FS;
-	popts->ops               = DEFAULT_PS;
+	popts->ors               = NULL;
+	popts->ofs               = NULL;
+	popts->ops               = NULL;
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
 
@@ -199,8 +235,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer      = NULL;
 	popts->filenames         = NULL;
 
-	popts->ifmt              = "dkvp";
-	char* ofmt               = "dkvp";
+	popts->ifile_fmt         = "dkvp";
+	popts->ofile_fmt          = "dkvp";
 
 	popts->use_mmap_for_read = TRUE;
 	int left_align_pprint    = TRUE;
@@ -232,7 +268,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = popts->irs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--irs")) {
@@ -248,7 +285,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ifs")) {
@@ -266,16 +304,17 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 
 		else if (streq(argv[argi], "-p")) {
-			popts->ifmt = "nidx";
-			ofmt = "nidx";
-			popts->ifs = ' ';
-			popts->ofs = ' ';
+			popts->ifile_fmt = "nidx";
+			popts->ofile_fmt = "nidx";
+			popts->ifs = " ";
+			popts->ofs = " ";
 			popts->allow_repeat_ifs = TRUE;
 		}
 
 		else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = popts->ips = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		}
 		else if (streq(argv[argi], "--ips")) {
@@ -289,40 +328,40 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argi++;
 		}
 
-		else if (streq(argv[argi], "--csv"))      { popts->ifmt = ofmt = "csv";  }
-		else if (streq(argv[argi], "--icsv"))     { popts->ifmt = "csv";  }
-		else if (streq(argv[argi], "--ocsv"))     { ofmt = "csv";  }
+		else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";  }
+		else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";  }
+		else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";  }
 
-		else if (streq(argv[argi], "--csvlite"))  { popts->ifmt = ofmt = "csvlite";  }
-		else if (streq(argv[argi], "--icsvlite")) { popts->ifmt = "csvlite";  }
-		else if (streq(argv[argi], "--ocsvlite")) { ofmt = "csvlite";  }
+		else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";  }
+		else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";  }
+		else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";  }
 
-		else if (streq(argv[argi], "--dkvp"))     { popts->ifmt = ofmt = "dkvp"; }
-		else if (streq(argv[argi], "--idkvp"))    { popts->ifmt = "dkvp"; }
-		else if (streq(argv[argi], "--odkvp"))    { ofmt = "dkvp"; }
+		else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp"; }
+		else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp"; }
+		else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp"; }
 
-		else if (streq(argv[argi], "--nidx"))     { popts->ifmt = ofmt = "nidx"; }
-		else if (streq(argv[argi], "--inidx"))    { popts->ifmt = "nidx"; }
-		else if (streq(argv[argi], "--onidx"))    { ofmt = "nidx"; }
+		else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx"; }
+		else if (streq(argv[argi], "--inidx"))    { popts->ifile_fmt = "nidx"; }
+		else if (streq(argv[argi], "--onidx"))    { popts->ofile_fmt = "nidx"; }
 
-		else if (streq(argv[argi], "--xtab"))     { popts->ifmt = ofmt = "xtab"; }
-		else if (streq(argv[argi], "--ixtab"))    { popts->ifmt = "xtab"; }
-		else if (streq(argv[argi], "--oxtab"))    { ofmt = "xtab"; }
+		else if (streq(argv[argi], "--xtab"))     { popts->ifile_fmt = popts->ofile_fmt = "xtab"; }
+		else if (streq(argv[argi], "--ixtab"))    { popts->ifile_fmt = "xtab"; }
+		else if (streq(argv[argi], "--oxtab"))    { popts->ofile_fmt = "xtab"; }
 
 		else if (streq(argv[argi], "--ipprint")) {
-			popts->ifmt             = "csvlite";
-			popts->ifs              = ' ';
+			popts->ifile_fmt        = "csvlite";
+			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
 
 		}
 		else if (streq(argv[argi], "--opprint")) {
-			ofmt = "pprint";
+			popts->ofile_fmt = "pprint";
 		}
 		else if (streq(argv[argi], "--pprint")) {
-			popts->ifmt             = "csvlite";
-			popts->ifs              = ' ';
+			popts->ifile_fmt        = "csvlite";
+			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
-			ofmt                    = "pprint";
+			popts->ofile_fmt        = "pprint";
 		}
 		else if (streq(argv[argi], "--right"))   {
 			left_align_pprint = FALSE;
@@ -330,7 +369,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofmt = argv[argi+1];
+			popts->ofile_fmt = argv[argi+1];
 			argi++;
 		}
 
@@ -362,12 +401,52 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			nusage(argv[0], argv[argi]);
 	}
 
-	if      (streq(ofmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(ofmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
-	else if (streq(ofmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(ofmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc();
-	else if (streq(ofmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(left_align_pprint);
+	if (popts->irs == NULL)
+		popts->irs = lhmss_get(default_rses, popts->ifile_fmt);
+	if (popts->ifs == NULL)
+		popts->ifs = lhmss_get(default_fses, popts->ifile_fmt);
+	if (popts->ips == NULL)
+		popts->ips = lhmss_get(default_pses, popts->ifile_fmt);
+
+	if (popts->ors == NULL)
+		popts->ors = lhmss_get(default_rses, popts->ofile_fmt);
+	if (popts->ofs == NULL)
+		popts->ofs = lhmss_get(default_fses, popts->ofile_fmt);
+	if (popts->ops == NULL)
+		popts->ops = lhmss_get(default_pses, popts->ofile_fmt);
+
+	if (popts->irs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ifs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ips == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+
+	if (popts->ors == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ofs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->ops == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+
+	if      (streq(popts->ofile_fmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(popts->ofile_fmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
+	else if (streq(popts->ofile_fmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs, left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}
@@ -414,7 +493,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if (argi == argc)
 		popts->use_mmap_for_read = FALSE;
 
-	popts->plrec_reader = lrec_reader_alloc(popts->ifmt, popts->use_mmap_for_read,
+	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 	if (popts->plrec_reader == NULL)
 		main_usage(argv[0], 1);

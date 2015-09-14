@@ -8,7 +8,7 @@ We think of CSV tables as rectangular: if there are 17 columns in the header the
 
 <h2>CSV and pretty-print</h2>
 
-Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get standard CSV as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. For example:
+Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
 
 <table><tr><td>
 POKI_RUN_COMMAND{{cat data/het.dkvp}}HERE

@@ -249,19 +249,22 @@ Data-format options, for input, output, or both:
   --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
 Separator options, for input, output, or both:
-  --rs      --irs     --ors              Record separators, defaulting to newline
-  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to ","
-  --ps      --ips     --ops              Pair   separators, defaulting to "="
-  Notes (as of Miller v2.0.0):
-  * RS/FS/PS are used for DKVP, NIDX, and CSVLITE formats where they must be single-character.
-  * For CSV, PPRINT, and XTAB formats, RS/FS/PS command-line options are ignored.
+  --rs      --irs     --ors              Record separators, e.g. newline
+  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
+  --ps      --ips     --ops              Pair   separators, e.g. equals sign
+  Notes (as of Miller v2.1.4):
+  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.
+  * IRS,IFS,IPS may be multi-character for CSV; they must be single-character for other formats.
+    The latter restriction will be lifted in a near-future release.
+  * ORS,OFS,OPS may be multi-character for all formats.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
-    In particular, this means LF line-terminators on Linux/OSX.
+    In particular, this means LF line-terminators by default on Linux/OSX.
   * CSV is intended to handle RFC-4180-compliant data.
-    In particular, this means it *only* handles CRLF line-terminators.
-  * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option
-    for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.
-Double-quoting for CSV:
+    In particular, this means it uses CRLF line-terminators by default.
+    So, you can use "--csv --rs lf" for Linux-native CSV files.
+  * You can use "--fs '|'", "--ips :", etc., or any of the following names for separators:
+   cr crcr lf lflf crlf crlfcrlf tab space comma newline pipe slash colon semicolon equals
+Double-quoting for CSV output:
   --quote-all                            Wrap all fields in double quotes
   --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
   --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them
@@ -275,7 +278,7 @@ Other options:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= v2.1.1.
+This is Miller version &gt;= v2.1.4.
 </pre>
 </div>
 <p/>
