@@ -112,14 +112,12 @@ changes of field names within a single data stream.
 
 <p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
 just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
-CSV, use <tt>--ifs tab --ofs ,</tt> etc.  (See also
+CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
 <a href="reference.html">Reference</a>.)
 
-<p/>The <tt>--csvlite</tt> option supports programmable single-byte field and record separators,
-e.g. you can do TSV. Meanwhile <tt>--csv</tt> supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
-https://tools.ietf.org/html/rfc4180</a>).
-For more information about the current status of CSV support in Miller, please see
-<a href="https://github.com/johnkerl/miller/releases/tag/v2.0.0">https://github.com/johnkerl/miller/releases/tag/v2.0.0</a>.
+<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
+of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
 
 <a id="Pretty-printed"/><h1>Pretty-printed</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare

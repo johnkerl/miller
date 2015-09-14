@@ -48,6 +48,7 @@ static lhmss_t* get_desc_to_chars_map() {
 	if (pdesc_to_chars_map == NULL) {
 		pdesc_to_chars_map = lhmss_alloc();
 		lhmss_put(pdesc_to_chars_map, "cr",        "\r");
+		lhmss_put(pdesc_to_chars_map, "crcr",      "\r\r");
 		lhmss_put(pdesc_to_chars_map, "lf",        "\n");
 		lhmss_put(pdesc_to_chars_map, "lflf",      "\n\n");
 		lhmss_put(pdesc_to_chars_map, "crlf",      "\r\n");
@@ -59,7 +60,7 @@ static lhmss_t* get_desc_to_chars_map() {
 		lhmss_put(pdesc_to_chars_map, "pipe",      "|");
 		lhmss_put(pdesc_to_chars_map, "slash",     "/");
 		lhmss_put(pdesc_to_chars_map, "colon",     ":");
-		lhmss_put(pdesc_to_chars_map, "semicolon", "|");
+		lhmss_put(pdesc_to_chars_map, "semicolon", ";");
 		lhmss_put(pdesc_to_chars_map, "equals",    "=");
 	}
 	return pdesc_to_chars_map;
@@ -134,7 +135,7 @@ static void main_usage(char* argv0, int exit_code) {
 		fprintf(o, " %s", pe->key);
 	}
 	fprintf(o, "\n");
-	fprintf(o, "Double-quoting for CSV:\n");
+	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
 	fprintf(o, "  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them\n");

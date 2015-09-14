@@ -83,10 +83,8 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
 	pstate->onr    = 0;
-	//pstate->ors    = ors;
-	//pstate->ofs    = ofs;
-	pstate->ors    = "\r\n"; // xxx temp
-	pstate->ofs    = ",";    // xxx temp
+	pstate->ors    = ors;
+	pstate->ofs    = ofs;
 	pstate->orslen = strlen(pstate->ors);
 	pstate->ofslen = strlen(pstate->ofs);
 

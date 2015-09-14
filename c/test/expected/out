@@ -2208,3 +2208,11 @@ a,b,c
 4,5,6
 x,y"yy,z
 
+mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./test/input/rfc-csv/modify-defaults.csv
+a|c
+
+1|3
+
+4|6
+
+
