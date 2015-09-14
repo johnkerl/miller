@@ -43,10 +43,36 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
-#define DEFAULT_RS   "\n"
-#define DEFAULT_FS   ","
-#define DEFAULT_PS   "="
+static lhmss_t* pdesc_to_chars_map = NULL;
+static lhmss_t* get_desc_to_chars_map() {
+	if (pdesc_to_chars_map == NULL) {
+		pdesc_to_chars_map = lhmss_alloc();
+		lhmss_put(pdesc_to_chars_map, "cr",        "\r");
+		lhmss_put(pdesc_to_chars_map, "lf",        "\n");
+		lhmss_put(pdesc_to_chars_map, "lflf",      "\n\n");
+		lhmss_put(pdesc_to_chars_map, "crlf",      "\r\n");
+		lhmss_put(pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n");
+		lhmss_put(pdesc_to_chars_map, "tab",       "\t");
+		lhmss_put(pdesc_to_chars_map, "space",     " ");
+		lhmss_put(pdesc_to_chars_map, "comma",     ",");
+		lhmss_put(pdesc_to_chars_map, "newline",   "\n");
+		lhmss_put(pdesc_to_chars_map, "pipe",      "|");
+		lhmss_put(pdesc_to_chars_map, "slash",     "/");
+		lhmss_put(pdesc_to_chars_map, "colon",     ":");
+		lhmss_put(pdesc_to_chars_map, "semicolon", "|");
+		lhmss_put(pdesc_to_chars_map, "equals",    "=");
+	}
+	return pdesc_to_chars_map;
+}
+static char* sep_from_arg(char* arg, char* argv0) {
+	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
+	if (chars != NULL)
+		return chars;
+	else
+		return arg;
+}
 
+// ----------------------------------------------------------------
 #define DEFAULT_OFMT "%lf"
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
@@ -88,18 +114,26 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, defaulting to newline\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, defaulting to \"%s\"\n", DEFAULT_FS);
-	fprintf(o, "  --ps      --ips     --ops              Pair   separators, defaulting to \"%s\"\n", DEFAULT_PS);
-	fprintf(o, "  Notes (as of Miller v2.0.0):\n");
-	fprintf(o, "  * RS/FS/PS are used for DKVP, NIDX, and CSVLITE formats where they must be single-character.\n");
-	fprintf(o, "  * For CSV, PPRINT, and XTAB formats, RS/FS/PS command-line options are ignored.\n");
+	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. newline\n");
+	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
+	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
+	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
+	fprintf(o, "  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.\n");
+	fprintf(o, "  * IRS,IFS,IPS may be multi-character for CSV; they must be single-character for other formats.\n");
+	fprintf(o, "    The latter restriction will be lifted in a near-future release.\n");
+	fprintf(o, "  * ORS,OFS,OPS may be multi-character for all formats.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
-	fprintf(o, "    In particular, this means LF line-terminators on Linux/OSX.\n");
+	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
-	fprintf(o, "    In particular, this means it *only* handles CRLF line-terminators.\n");
-	fprintf(o, "  * This will change in v2.1.0, at which point there will be a (default-off) LF-termination option\n");
-	fprintf(o, "    for CSV, multi-char RS/FS/PS, and double-quote support for DKVP.\n");
+	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
+	fprintf(o, "    So, you can use \"--csv --rs lf\" for Linux-native CSV files.\n");
+	fprintf(o, "  * You can use \"--fs '|'\", \"--ips :\", etc., or any of the following names for separators:\n");
+	fprintf(o, "  ");
+	lhmss_t* pmap = get_desc_to_chars_map();
+	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+		fprintf(o, " %s", pe->key);
+	}
+	fprintf(o, "\n");
 	fprintf(o, "Double-quoting for CSV:\n");
 	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
@@ -141,40 +175,6 @@ static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
 		main_usage(argv[0], 1);
 	}
-}
-
-static char* sep_from_arg(char* arg, char* argv0) {
-	if (streq(arg, "cr"))
-		return "\r";
-	if (streq(arg, "lf"))
-		return "\n";
-	if (streq(arg, "lflf"))
-		return "\n\n";
-	if (streq(arg, "crlf"))
-		return "\r\n";
-	if (streq(arg, "crlfcrlf"))
-		return "\r\n\r\n";
-	if (streq(arg, "tab"))
-		return "\t";
-	if (streq(arg, "tab"))
-		return "\t";
-	if (streq(arg, "space"))
-		return " ";
-	if (streq(arg, "comma"))
-		return ",";
-	if (streq(arg, "newline"))
-		return "\n";
-	if (streq(arg, "pipe"))
-		return "|";
-	if (streq(arg, "slash"))
-		return "/";
-	if (streq(arg, "colon"))
-		return ":";
-	if (streq(arg, "semicolon"))
-		return "|";
-	if (streq(arg, "equals"))
-		return "=";
-	return arg;
 }
 
 static mapper_setup_t* look_up_mapper_setup(char* verb) {
