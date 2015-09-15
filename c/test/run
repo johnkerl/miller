@@ -49,7 +49,7 @@ echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input
 expdir=$ourdir/expected
-outdir=$ourdir/output
+outdir=$pwd/output
 mkdir -p $outdir
 
 rm -f $outdir/out
