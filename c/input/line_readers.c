@@ -13,10 +13,10 @@ size_t mlr_getcdelim(char ** restrict ppline, size_t * restrict plinecap, int de
 	size_t linecap = INITIAL_SIZE;
 	char* pline = mlr_malloc_or_die(INITIAL_SIZE);
 	char* p = pline;
-	int len = 0;
+	int eof = FALSE;
 
 	while (TRUE) {
-		if (len >= linecap) {
+		if ((p-pline) >= linecap) {
 			linecap = linecap << 1;
 			// xxx mlr_realloc_or_die
 			pline = realloc(pline, linecap);
@@ -24,18 +24,27 @@ size_t mlr_getcdelim(char ** restrict ppline, size_t * restrict plinecap, int de
 		}
 		int c = getc_unlocked(fp);
 		if (c == EOF) {
+			if (p == pline)
+				eof = TRUE;
+			*(p++) = 0;
 			break;
 		} else if (c == delimiter) {
 			*(p++) = 0;
+			break;
 		} else {
 			*(p++) = c;
 		}
 	}
 
-	*ppline = pline;
-	*plinecap = linecap;
-	len = p - pline;
-	return len;
+	if (eof) {
+		free(pline);
+		*ppline = NULL;
+		return -1;
+	} else {
+		*ppline = pline;
+		*plinecap = linecap;
+		return p - pline;
+	}
 }
 
 size_t mlr_getsdelim(char ** restrict ppline, size_t * restrict plinecap, char* delimiter, FILE * restrict fp) {

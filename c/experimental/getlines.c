@@ -7,6 +7,7 @@
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
 #include "input/byte_readers.h"
+#include "input/line_readers.h"
 #include "input/peek_file_reader.h"
 #include "containers/parse_trie.h"
 
@@ -34,6 +35,29 @@ static int read_file_mlr_get_line(char* filename, int do_write) {
 		if (line == NULL)
 			break;
 		bc += strlen(line);
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
+		free(line);
+	}
+	fclose(fp);
+	return bc;
+}
+
+// ================================================================
+static int read_file_mlr_getcdelim(char* filename, int do_write) {
+	FILE* fp = fopen_or_die(filename);
+	char irs = '\n';
+	int bc = 0;
+	while (1) {
+		char* line = NULL;
+		size_t linecap = 0;
+		ssize_t linelen = mlr_getcdelim(&line, &linecap, irs, fp);
+		if (linelen < 0) {
+			break;
+		}
+		bc += linelen;
 		if (do_write) {
 			fputs(line, stdout);
 			fputc('\n', stdout);
@@ -347,11 +371,19 @@ int main(int argc, char** argv) {
 	int bc;
 
 	for (int i = 0; i < nreps; i++) {
+
 		s = get_systime();
 		bc = read_file_mlr_get_line(filename, do_write);
 		e = get_systime();
 		t = e - s;
 		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
+		fflush(stdout);
+
+		s = get_systime();
+		bc = read_file_mlr_getcdelim(filename, do_write);
+		e = get_systime();
+		t = e - s;
+		printf("type=mlr_getcdelim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();

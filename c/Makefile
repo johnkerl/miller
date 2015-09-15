@@ -102,6 +102,7 @@ lib/mlr_globals.c \
 lib/string_builder.c \
 input/stdio_byte_reader.c \
 input/file_reader_mmap.c \
+input/line_readers.c \
 containers/parse_trie.c \
 experimental/getlines.c
 
