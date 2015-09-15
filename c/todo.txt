@@ -10,6 +10,41 @@ TOP OF LIST
 MAJOR: autoconfig
 
 ----------------------------------------------------------------
+PLANNING NOTES
+
+multi-char IXS for other-than-CSV
+* don't use parse-trie unless someone really wants double-quotes in DKVP (i don't need it, and no one
+  else has asked for it)
+* requires either:
+  y multi-char getdelim
+    - just need to code it up and iterate on the perf work
+  n or use pfr/pbr
+    - performance improvements quite likely in the mmap/stringptr case (see CSV)
+    - performance for the stdio case will be helped by multi-char getdelim, but will still likely to be much slower
+      than getdelim. and double-buffering pbr on top of mcgetdelim is needless copying
+    - pfr/pbr probably too heavyweight to not cause a performance regression
+    - pfr/pbr aren't really important in the absence of parse-trie
+* probably keep the single-char pfuncs as-is, to be invoked in single-char
+  cases -- unless perf measurements show there's not a significant loss
+
+CSV performance/memmgt issues:
+* mmap/stringptr cases:
+  o parse-trie must be kept
+  o need to impl zero-strdup logic for sure -- this will be a significant gain
+  o replace pfr/pbr with zero-copy pointer arithmetic (the backing *is* the buffer)
+* stdio:
+  o parse-trie must be kept
+  o multi-char getdelim will probably be needed; pfr/pbr is too slow even with ring-buffer & inlining
+
+in summary: pfr/pbr have got to go
+
+multi-char getdelim
+* start with poor-man's version which calls single-char getdelim with irs[-1] & strcats in case !matchback
+  o --exit-stats option? for hash-stats too?
+* separately, code up a genuine multi-char getdelim
+  o modify the poor-man's logic but simply keep appending in-routine in the !matchback case
+
+----------------------------------------------------------------
 MAJOR: multi-char separators for file formats other than CSV
 k oxs is functionally done
 * need backslash-handling/parsing ... at least, \r \n \t. and, into online help.
@@ -45,6 +80,7 @@ MAJOR: csv mem-leak/read-perf
 MINOR
 
 * define dkvp, nidx, etc @ cover x 2
+  - web-server access logs in dkvp format -- ?
 
 ? dkvp quoting ... wait until after the mmap/perf split. else, very undesirable
   performance regression.
