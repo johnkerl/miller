@@ -34,6 +34,7 @@ AC_CONFIG_FILES([Makefile
 		c/test/Makefile
 		c/test/expected/Makefile
 		c/test/input/Makefile
+		c/test/input/rfc-csv/Makefile
 		c/tools/Makefile
 		c/Makefile
 		doc/Makefile])

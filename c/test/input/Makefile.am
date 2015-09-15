@@ -1,3 +1,4 @@
+SUBDIRS=	rfc-csv
 EXTRA_DIST=	\
 		a.csv \
 		a.pprint \
@@ -27,14 +28,6 @@ EXTRA_DIST=	\
 		null-fields.csv \
 		null-fields.nidx \
 		regularize.dkvp \
-		rfc-csv/narrow-truncated.csv \
-		rfc-csv/narrow.csv \
-		rfc-csv/quoted-comma-truncated.csv \
-		rfc-csv/quoted-comma.csv \
-		rfc-csv/quoted-crlf-truncated.csv \
-		rfc-csv/quoted-crlf.csv \
-		rfc-csv/simple-truncated.csv \
-		rfc-csv/simple.csv \
 		sec2gmt \
 		sec2xhms \
 		short \
