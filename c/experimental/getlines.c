@@ -69,6 +69,30 @@ static int read_file_mlr_getcdelim(char* filename, int do_write) {
 }
 
 // ================================================================
+static int read_file_mlr_getsdelim(char* filename, int do_write) {
+	FILE* fp = fopen_or_die(filename);
+	char* irs = "\r\n";
+	int irslen = strlen(irs);
+	int bc = 0;
+	while (1) {
+		char* line = NULL;
+		size_t linecap = 0;
+		ssize_t linelen = mlr_getsdelim(&line, &linecap, irs, irslen, fp);
+		if (linelen < 0) {
+			break;
+		}
+		bc += linelen;
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
+		free(line);
+	}
+	fclose(fp);
+	return bc;
+}
+
+// ================================================================
 static char* read_line_fgetc(FILE* fp, char* irs, int irs_len) {
 	char* line = mlr_malloc_or_die(FIXED_LINE_LEN);
 	char* p = line;
@@ -384,6 +408,13 @@ int main(int argc, char** argv) {
 		e = get_systime();
 		t = e - s;
 		printf("type=mlr_getcdelim,t=%.6lf,n=%d\n", t, bc);
+		fflush(stdout);
+
+		s = get_systime();
+		bc = read_file_mlr_getsdelim(filename, do_write);
+		e = get_systime();
+		t = e - s;
+		printf("type=mlr_getsdelim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
