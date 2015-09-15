@@ -1,5 +1,5 @@
 # not GPL, thus no COPYING file
-AUTOMAKE_OPTIONS=dist-xz foreign
+AUTOMAKE_OPTIONS=foreign
 
 EXTRA_DIST= LICENSE.txt README.md
 
