@@ -6,6 +6,8 @@ libinput_la_SOURCES=	\
 			file_reader_mmap.h \
 			file_reader_stdio.c \
 			file_reader_stdio.h \
+			line_readers.c \
+			line_readers.h \
 			lrec_reader.h \
 			lrec_reader_csv.c \
 			lrec_reader_in_memory.c \
