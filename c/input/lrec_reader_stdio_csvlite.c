@@ -60,7 +60,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		if (pstate->expect_header_line_next) {
 			// xxx cmt
 			while (TRUE) {
-				char* hline = mlr_get_line(input_stream, pstate->irs);
+				char* hline = mlr_get_cline(input_stream, pstate->irs);
 				if (hline == NULL) // EOF
 					return NULL;
 				pstate->ilno++;
@@ -87,7 +87,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			}
 		}
 
-		char* line = mlr_get_line(input_stream, pstate->irs);
+		char* line = mlr_get_cline(input_stream, pstate->irs);
 		if (line == NULL) // EOF
 			return NULL;
 

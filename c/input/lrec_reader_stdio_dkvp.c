@@ -19,6 +19,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 	char* irs;
 	char  ifs;
 	char  ips;
+	int   irslen;
 	int   allow_repeat_ifs;
 } lrec_reader_stdio_dkvp_state_t;
 
@@ -30,7 +31,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_line(input_stream, pstate->irs[0]);
+	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
 	if (line == NULL)
 		return NULL;
 	else
@@ -40,7 +41,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs(void* pvstate, void* pv
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_line_multi_delim(input_stream, pstate->irs);
+	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 	if (line == NULL)
 		return NULL;
 	else
@@ -62,12 +63,13 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char ifs, char ips, int a
 	pstate->irs              = irs;
 	pstate->ifs              = ifs;
 	pstate->ips              = ips;
+	pstate->irslen           = strlen(irs);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
-	plrec_reader->pprocess_func = (strlen(irs) == 1)
+	plrec_reader->pprocess_func = (pstate->irslen == 1)
 		? &lrec_reader_stdio_dkvp_process_single_irs
 		: &lrec_reader_stdio_dkvp_process_multi_irs;
 	plrec_reader->psof_func     = &lrec_reader_stdio_dkvp_sof;

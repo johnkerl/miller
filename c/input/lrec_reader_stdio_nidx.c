@@ -14,7 +14,7 @@ typedef struct _lrec_reader_stdio_nidx_state_t {
 static lrec_t* lrec_reader_stdio_nidx_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
-	char* line = mlr_get_line(input_stream, pstate->irs);
+	char* line = mlr_get_cline(input_stream, pstate->irs);
 	if (line == NULL)
 		return NULL;
 	else
