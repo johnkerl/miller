@@ -31,7 +31,7 @@ static int read_file_mlr_get_line(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	int bc = 0;
 	while (1) {
-		char* line = mlr_get_line(fp, '\n');
+		char* line = mlr_get_cline(fp, '\n');
 		if (line == NULL)
 			break;
 		bc += strlen(line);
@@ -51,12 +51,9 @@ static int read_file_mlr_getcdelim(char* filename, int do_write) {
 	char irs = '\n';
 	int bc = 0;
 	while (1) {
-		char* line = NULL;
-		size_t linecap = 0;
-		ssize_t linelen = mlr_getcdelim(&line, &linecap, irs, fp);
-		if (linelen < 0) {
+		char* line = mlr_get_cline2(fp, irs);
+		if (line == NULL)
 			break;
-		}
 		//bc += linelen; // available by API, but make a fair comparison
 		bc += strlen(line);
 		if (do_write) {
@@ -76,12 +73,9 @@ static int read_file_mlr_getsdelim(char* filename, int do_write) {
 	int irslen = strlen(irs);
 	int bc = 0;
 	while (1) {
-		char* line = NULL;
-		size_t linecap = 0;
-		ssize_t linelen = mlr_getsdelim(&line, &linecap, irs, irslen, fp);
-		if (linelen < 0) {
+		char* line = mlr_get_sline(fp, irs, irslen);
+		if (line == NULL)
 			break;
-		}
 		//bc += linelen; // available by API, but make a fair comparison
 		bc += strlen(line);
 		if (do_write) {

@@ -28,7 +28,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 				allow_repeat_ifs);
 		else
 			return lrec_reader_stdio_dkvp_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
+				irs,
 				xxx_temp_check_single_char_separator("ifs", ifs),
 				xxx_temp_check_single_char_separator("ips", ips),
 				allow_repeat_ifs);

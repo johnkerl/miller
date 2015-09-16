@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "input/file_reader_stdio.h"
+#include "input/line_readers.h"
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_xtab_state_t {
@@ -21,7 +22,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
-		char* line = mlr_get_line(input_stream, '\n'); // xxx parameterize
+		char* line = mlr_get_cline(input_stream, '\n'); // xxx parameterize
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;

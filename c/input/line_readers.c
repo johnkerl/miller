@@ -1,33 +1,49 @@
 #include <stdio.h>
 #include "lib/mlrutil.h"
-
-// xxx under construction
+#include "input/line_readers.h"
 
 // Use powers of two exclusively, to help avoid heap fragmentation
 #define INITIAL_SIZE 128
 
-// xxx look up what restrict do ... should i be using these more often?
-// xxx limited semantics: initial linep & linecapp are disregarded; doesn't return the delimiter in the string.
-// xxx getcdelim is just for comparison to getdelim. getsdelim is the deliverable.
-size_t mlr_getcdelim(char ** restrict ppline, size_t * restrict plinecap, int delimiter, FILE * restrict fp) {
+// xxx should i be using restrict more often?
+
+// ----------------------------------------------------------------
+char* mlr_get_cline(FILE* fp, char irs) {
+	char* line = NULL;
+	size_t linecap = 0;
+	ssize_t linelen = getdelim(&line, &linecap, irs, fp);
+	if (linelen <= 0) {
+		return NULL;
+	}
+	if (line[linelen-1] == '\n') { // chomp
+		line[linelen-1] = 0;
+		linelen--;
+	}
+
+	return line;
+}
+
+// ----------------------------------------------------------------
+// Only for direct performance comparison against getdelim()
+char* mlr_get_cline2(FILE* fp, char irs) {
 	size_t linecap = INITIAL_SIZE;
-	char* restrict pline = mlr_malloc_or_die(INITIAL_SIZE);
-	char* restrict p = pline;
+	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
+	char* restrict p = line;
 	int eof = FALSE;
 	int c;
 
 	while (TRUE) {
-		if ((p-pline) >= linecap) {
+		if ((p-line) >= linecap) {
 			linecap = linecap << 1;
-			pline = realloc(pline, linecap); // xxx mlr_realloc_or_die
-			p = pline;
+			line = realloc(line, linecap); // xxx mlr_realloc_or_die
+			p = line;
 		}
 		c = getc_unlocked(fp);
-		if (c == delimiter) {
+		if (c == irs) {
 			*p = 0;
 			break;
 		} else if (c == EOF) {
-			if (p == pline)
+			if (p == line)
 				eof = TRUE;
 			*p = 0;
 			break;
@@ -37,46 +53,42 @@ size_t mlr_getcdelim(char ** restrict ppline, size_t * restrict plinecap, int de
 	}
 
 	if (eof) {
-		free(pline);
-		*ppline = NULL;
-		return -1;
+		free(line);
+		return NULL;
 	} else {
-		*ppline = pline;
-		*plinecap = linecap;
-		return p - pline;
+		return line;
 	}
 }
 
-size_t mlr_getsdelim(char ** restrict ppline, size_t * restrict plinecap, char* delimiter, int delimlen,
-	FILE * restrict fp)
-{
+// ----------------------------------------------------------------
+char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 	size_t linecap = INITIAL_SIZE;
-	char* restrict pline = mlr_malloc_or_die(INITIAL_SIZE);
-	char* restrict p = pline;
+	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
+	char* restrict p = line;
 	int eof = FALSE;
 	int c;
-	int delimlen1 = delimlen - 1;
-	int delimlast = delimiter[delimlen1];
+	int irslenm1 = irslen - 1;
+	int irslast = irs[irslenm1];
 
 	while (TRUE) {
-		if ((p-pline) >= linecap) {
+		if ((p-line) >= linecap) {
 			linecap = linecap << 1;
-			pline = realloc(pline, linecap); // xxx mlr_realloc_or_die
-			p = pline;
+			line = realloc(line, linecap); // xxx mlr_realloc_or_die
+			p = line;
 		}
 		c = getc_unlocked(fp);
-		if (c == delimlast) {
-			// Example: delim="abc". last='c'. Already have read "ab" into pline. p-pline=2.
+		if (c == irslast) {
+			// Example: delim="abc". last='c'. Already have read "ab" into line. p-line=2.
 			// Now reading 'c'.
 			// xxx make a memeq
-			if (((p-pline) >= delimlen1) && !strncmp(p-delimlen1, delimiter, delimlen1)) {
+			if (((p-line) >= irslenm1) && !strncmp(p-irslenm1, irs, irslenm1)) {
 				*p = 0;
 				break;
 			} else {
 				*(p++) = c;
 			}
 		} else if (c == EOF) {
-			if (p == pline)
+			if (p == line)
 				eof = TRUE;
 			*p = 0;
 			break;
@@ -86,12 +98,9 @@ size_t mlr_getsdelim(char ** restrict ppline, size_t * restrict plinecap, char* 
 	}
 
 	if (eof) {
-		free(pline);
-		*ppline = NULL;
-		return -1;
+		free(line);
+		return NULL;
 	} else {
-		*ppline = pline;
-		*plinecap = linecap;
-		return p - pline;
+		return line;
 	}
 }

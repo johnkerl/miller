@@ -2,22 +2,46 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "input/file_reader_stdio.h"
+#include "input/line_readers.h"
 #include "input/lrec_readers.h"
 
+//static char xxx_temp_check_single_char_separator(char* name, char* value) {
+//	if (strlen(value) != 1) {
+//		fprintf(stderr,
+//			"%s: multi-character separators are not yet supported for all formats. Got %s=\"%s\".\n",
+//			MLR_GLOBALS.argv0, name, value);
+//		exit(1);
+//	}
+//	return value[0];
+//}
+
 typedef struct _lrec_reader_stdio_dkvp_state_t {
-	char irs;
-	char ifs;
-	char ips;
-	int  allow_repeat_ifs;
+	char* irs;
+	char  ifs;
+	char  ips;
+	int   irslen;
+	int   allow_repeat_ifs;
 } lrec_reader_stdio_dkvp_state_t;
 
+// xxx line-reader: getline or getsline
+// xxx line-parser: single-char or multi-char
+// xxx UTx2x2
+
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_dkvp_process(void* pvstate, void* pvhandle, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
+	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+	if (line == NULL)
+		return NULL;
+	else
+		return lrec_parse_stdio_dkvp(line, pstate->ifs, pstate->ips, pstate->allow_repeat_ifs);
+}
 
-	char* line = mlr_get_line(input_stream, pstate->irs);
-
+static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs(void* pvstate, void* pvhandle, context_t* pctx) {
+	FILE* input_stream = pvhandle;
+	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
+	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 	if (line == NULL)
 		return NULL;
 	else
@@ -32,19 +56,22 @@ static void lrec_reader_stdio_dkvp_sof(void* pvstate) {
 static void lrec_reader_stdio_dkvp_free(void* pvstate) {
 }
 
-lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_dkvp_state_t));
 	pstate->irs              = irs;
 	pstate->ifs              = ifs;
 	pstate->ips              = ips;
+	pstate->irslen           = strlen(irs);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = &file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_stdio_dkvp_process;
+	plrec_reader->pprocess_func = (pstate->irslen == 1)
+		? &lrec_reader_stdio_dkvp_process_single_irs
+		: &lrec_reader_stdio_dkvp_process_multi_irs;
 	plrec_reader->psof_func     = &lrec_reader_stdio_dkvp_sof;
 	plrec_reader->pfree_func    = &lrec_reader_stdio_dkvp_free;
 
@@ -52,12 +79,6 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char irs, char ifs, char ips, int al
 }
 
 // ----------------------------------------------------------------
-// xxx needs checking on repeated occurrences of ps between ifs occurrences. don't zero-poke there.
-//
-// xxx needs abend on null lhs.
-//
-// etc.
-
 // "abc=def,ghi=jkl"
 //      P     F     P
 //      S     S     S

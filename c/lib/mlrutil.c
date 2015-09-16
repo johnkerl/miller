@@ -227,22 +227,6 @@ int mlr_string_pair_hash_func(char* str1, char* str2) {
 }
 
 // ----------------------------------------------------------------
-char* mlr_get_line(FILE* input_stream, char irs) {
-	char* line = NULL;
-	size_t linecap = 0;
-	ssize_t linelen = getdelim(&line, &linecap, irs, input_stream);
-	if (linelen <= 0) {
-		return NULL;
-	}
-	if (line[linelen-1] == '\n') { // chomp
-		line[linelen-1] = 0;
-		linelen--;
-	}
-
-	return line;
-}
-
-// ----------------------------------------------------------------
 // See the GNU timegm manpage -- this is what it does.
 time_t mlr_timegm (struct tm* tm) {
 	time_t ret;
