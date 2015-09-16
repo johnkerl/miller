@@ -20,10 +20,12 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 	char  ifs;
 	char  ips;
 	int   irslen;
+	int   ifslen;
+	int   ipslen;
 	int   allow_repeat_ifs;
 } lrec_reader_stdio_dkvp_state_t;
 
-// xxx line-reader: getline or getsline
+// xxx line-reader: getcline or getsline
 // xxx line-parser: single-char or multi-char
 // xxx UTx2x2
 
@@ -39,8 +41,8 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs(void* pvstate, void* pv
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs(void* pvstate, void* pvhandle, context_t* pctx) {
-	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
+	FILE* input_stream = pvhandle;
 	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 	if (line == NULL)
 		return NULL;
