@@ -27,11 +27,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 				xxx_temp_check_single_char_separator("ips", ips),
 				allow_repeat_ifs);
 		else
-			return lrec_reader_stdio_dkvp_alloc(
-				irs,
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				xxx_temp_check_single_char_separator("ips", ips),
-				allow_repeat_ifs);
+			return lrec_reader_stdio_dkvp_alloc(irs, ifs, ips, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "csv")) {
 		return lrec_reader_csv_alloc(pbr, irs, ifs);
 	} else if (streq(fmtdesc, "csvlite")) {
