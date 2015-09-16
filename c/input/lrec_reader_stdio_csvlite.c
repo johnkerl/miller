@@ -4,6 +4,7 @@
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
 #include "input/file_reader_stdio.h"
+#include "input/line_readers.h"
 #include "input/lrec_readers.h"
 
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing

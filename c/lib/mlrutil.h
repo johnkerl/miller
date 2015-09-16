@@ -57,9 +57,6 @@ char* mlr_paste_5_strings(char* s1, char* s2, char* s3, char* s4, char* s5);
 int mlr_string_hash_func(char *str);
 int mlr_string_pair_hash_func(char* str1, char* str2);
 
-// xxx cmt mem mgt
-char* mlr_get_line(FILE* input_stream, char irs);
-
 // portable timegm replacement
 time_t mlr_timegm (struct tm *tm);
 

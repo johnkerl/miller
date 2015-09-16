@@ -1,6 +1,41 @@
 #include <stdio.h>
 #include "lib/mlrutil.h"
+#include "input/line_readers.h"
 
+// ----------------------------------------------------------------
+char* mlr_get_line(FILE* input_stream, char irs) {
+	char* line = NULL;
+	size_t linecap = 0;
+	ssize_t linelen = getdelim(&line, &linecap, irs, input_stream);
+	if (linelen <= 0) {
+		return NULL;
+	}
+	if (line[linelen-1] == '\n') { // chomp
+		line[linelen-1] = 0;
+		linelen--;
+	}
+
+	return line;
+}
+
+// ----------------------------------------------------------------
+char* mlr_get_line_multi_delim(FILE* input_stream, char* irs) {
+	char* line = NULL;
+	size_t linecap = 0;
+	// xxx move irslen into api to cache the strlen
+	ssize_t linelen = mlr_getsdelim(&line, &linecap, irs, strlen(irs), input_stream);
+	if (linelen <= 0) {
+		return NULL;
+	}
+	if (line[linelen-1] == '\n') { // chomp
+		line[linelen-1] = 0;
+		linelen--;
+	}
+
+	return line;
+}
+
+// ----------------------------------------------------------------
 // xxx under construction
 
 // Use powers of two exclusively, to help avoid heap fragmentation

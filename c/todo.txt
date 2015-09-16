@@ -13,8 +13,8 @@ MAJOR: autoconfig
 PLANNING NOTES
 
 multi-char IXS for other-than-CSV
-* don't use parse-trie unless someone really wants double-quotes in DKVP (i don't need it, and no one
-  else has asked for it)
+* don't use parse-trie for these formats unless someone really wants
+  double-quotes in DKVP (i don't need it, and no one else has asked for it)
 * requires either:
   y multi-char getdelim
     - just need to code it up and iterate on the perf work
