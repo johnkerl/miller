@@ -465,6 +465,19 @@ run_mlr --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv
 run_mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
 
 # ================================================================
+announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
+
+run_mlr --oxtab --mmap    --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --mmap    --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --mmap    --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --mmap    --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+
+run_mlr --oxtab --no-mmap --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --no-mmap --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --no-mmap --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+
+# ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
 # may vary. Nonetheless for debugging it's crucial that we echo out each

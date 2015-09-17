@@ -174,7 +174,7 @@ reg-test:
 # Run this after unit-test expected output has changed, and is verified to be
 # OK. (Example: after adding new test cases in test/run.)
 regtest-copy:
-	cp test/output/out test/expected
+	cp output/out test/expected
 
 # ----------------------------------------------------------------
 # Unit-test executables
