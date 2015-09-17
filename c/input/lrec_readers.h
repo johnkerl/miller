@@ -18,7 +18,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips);
 
 lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs);
-lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char irs, char ifs, char ips, int allow_repeat_ifs);
+lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_ips);
 
@@ -38,7 +38,16 @@ lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char
 lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips);
 
 lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs);
-lrec_t* lrec_parse_mmap_dkvp(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs);
+
+lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips,
+	int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
+	int ifslen, int ipslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle, char* irs, char ifs, char ips,
+	int irslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle, char* irs, char* ifs, char* ips,
+	int irslen, int ifslen, int ipslen, int allow_repeat_ifs);
+
 lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips);
 
 #endif // LREC_READERS_H
