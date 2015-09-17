@@ -122,7 +122,7 @@ static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs,
 static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	int output_quotes = FALSE;
 	for (char* p = string; *p; p++) {
-		if (strneq(p, ors, orslen) || strneq(p, ofs, ofslen)) {
+		if (streqn(p, ors, orslen) || streqn(p, ofs, ofslen)) {
 			output_quotes = TRUE;
 			break;
 		}
