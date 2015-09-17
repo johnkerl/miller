@@ -109,7 +109,7 @@ static char* test_lrec_dkvp_api() {
 // ----------------------------------------------------------------
 static char* test_lrec_nidx_api() {
 	char* line = strdup("a,b,c,d");
-	lrec_t* prec = lrec_parse_stdio_nidx(line, ',', FALSE);
+	lrec_t* prec = lrec_parse_stdio_nidx_single_sep(line, ',', FALSE);
 	mu_assert_lf(prec->field_count == 4);
 
 	mu_assert_lf(streq(lrec_get(prec, "1"), "a"));

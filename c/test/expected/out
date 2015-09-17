@@ -2220,7 +2220,7 @@ a|c
 ================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
-mlr --oxtab --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./test/input/multi-sep.dkvp
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -2241,7 +2241,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./test/input/multi-sep.dkvp
 x 0.641593543645736508
 a wye
 i 0
@@ -2262,7 +2262,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./test/input/multi-sep.dkvp
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -2283,7 +2283,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./test/input/multi-sep.dkvp
 x 0.641593543645736508
 a wye
 i 0
@@ -2387,4 +2387,176 @@ i 3
 x 0.676537984365847889
 a zee
 i 4
+
+
+================================================================
+MULTI-CHARACTER IRS/IFS FOR NIDX
+
+mlr --oxtab --inidx --mmap --irs lf --ifs , cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508/
+1 a=:wye/
+3 i=:0/
+
+4 x=:0.827614412562742041/
+1 a=:eks/
+3 i=:1/
+
+4 x=:0.923068348748175560/
+1 a=:zee/
+3 i=:2/
+
+4 x=:0.000047786161325772/
+1 a=:zee/
+3 i=:3/
+
+4 x=:0.676537984365847889/
+1 a=:zee/
+3 i=:4/
+
+mlr --oxtab --inidx --mmap --irs lf --ifs /, cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508
+1 a=:wye
+3 i=:0
+
+4 x=:0.827614412562742041
+1 a=:eks
+3 i=:1
+
+4 x=:0.923068348748175560
+1 a=:zee
+3 i=:2
+
+4 x=:0.000047786161325772
+1 a=:zee
+3 i=:3
+
+4 x=:0.676537984365847889
+1 a=:zee
+3 i=:4
+
+mlr --oxtab --inidx --mmap --irs crlf --ifs , cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508/
+1 a=:wye/
+3 i=:0/
+
+4 x=:0.827614412562742041/
+1 a=:eks/
+3 i=:1/
+
+4 x=:0.923068348748175560/
+1 a=:zee/
+3 i=:2/
+
+4 x=:0.000047786161325772/
+1 a=:zee/
+3 i=:3/
+
+4 x=:0.676537984365847889/
+1 a=:zee/
+3 i=:4/
+
+mlr --oxtab --inidx --mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508
+1 a=:wye
+3 i=:0
+
+4 x=:0.827614412562742041
+1 a=:eks
+3 i=:1
+
+4 x=:0.923068348748175560
+1 a=:zee
+3 i=:2
+
+4 x=:0.000047786161325772
+1 a=:zee
+3 i=:3
+
+4 x=:0.676537984365847889
+1 a=:zee
+3 i=:4
+
+mlr --oxtab --inidx --no-mmap --irs lf --ifs , cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508/
+1 a=:wye/
+3 i=:0/
+
+4 x=:0.827614412562742041/
+1 a=:eks/
+3 i=:1/
+
+4 x=:0.923068348748175560/
+1 a=:zee/
+3 i=:2/
+
+4 x=:0.000047786161325772/
+1 a=:zee/
+3 i=:3/
+
+4 x=:0.676537984365847889/
+1 a=:zee/
+3 i=:4/
+
+mlr --oxtab --inidx --no-mmap --irs lf --ifs /, cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508
+1 a=:wye
+3 i=:0
+
+4 x=:0.827614412562742041
+1 a=:eks
+3 i=:1
+
+4 x=:0.923068348748175560
+1 a=:zee
+3 i=:2
+
+4 x=:0.000047786161325772
+1 a=:zee
+3 i=:3
+
+4 x=:0.676537984365847889
+1 a=:zee
+3 i=:4
+
+mlr --oxtab --inidx --no-mmap --irs crlf --ifs , cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508/
+1 a=:wye/
+3 i=:0/
+
+4 x=:0.827614412562742041/
+1 a=:eks/
+3 i=:1/
+
+4 x=:0.923068348748175560/
+1 a=:zee/
+3 i=:2/
+
+4 x=:0.000047786161325772/
+1 a=:zee/
+3 i=:3/
+
+4 x=:0.676537984365847889/
+1 a=:zee/
+3 i=:4/
+
+mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./test/input/multi-sep.dkvp
+4 x=:0.641593543645736508
+1 a=:wye
+3 i=:0
+
+4 x=:0.827614412562742041
+1 a=:eks
+3 i=:1
+
+4 x=:0.923068348748175560
+1 a=:zee
+3 i=:2
+
+4 x=:0.000047786161325772
+1 a=:zee
+3 i=:3
+
+4 x=:0.676537984365847889
+1 a=:zee
+3 i=:4
 
