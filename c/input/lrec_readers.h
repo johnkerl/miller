@@ -13,19 +13,23 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs);
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
+//lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips);
 
 lrec_reader_t* lrec_reader_mmap_csv_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
-lrec_reader_t* lrec_reader_mmap_nidx_alloc(char irs, char ifs, int allow_repeat_ifs);
+lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_ips);
 
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords);
 
 // ----------------------------------------------------------------
 // These entry points are made public for unit test
+
+//lrec_t* lrec_parse_stdio_nidx_single_sep(char* line, char ifs, int allow_repeat_ifs);
+//lrec_t* lrec_parse_stdio_nidx_multi_sep(char* line, char* ifs, int ifslen, int allow_repeat_ifs);
 lrec_t* lrec_parse_stdio_nidx(char* line, char ifs, int allow_repeat_ifs);
 
 lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int allow_repeat_ifs);
@@ -35,18 +39,26 @@ slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs);
 slls_t* split_csvlite_header_line(char* line, char ifs, int allow_repeat_ifs);
 lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
 	int allow_repeat_ifs);
+
 lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips);
 
-lrec_t* lrec_parse_mmap_nidx(file_reader_mmap_state_t* phandle, char irs, char ifs, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *phandle,
+	char irs, char ifs, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phandle,
+	char irs, char* ifs, int ifslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phandle,
+	char* irs, char ifs, int irslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phandle,
+	char* irs, char* ifs, int irslen, int ifslen, int allow_repeat_ifs);
 
-lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips,
-	int allow_repeat_ifs);
-lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ifs);
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle, char* irs, char ifs, char ips,
-	int irslen, int allow_repeat_ifs);
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle, char* irs, char* ifs, char* ips,
-	int irslen, int ifslen, int ipslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
+	char irs, char ifs, char ips, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle,
+	char irs, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
+	char* irs, char ifs, char ips, int irslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
+	char* irs, char* ifs, char* ips, int irslen, int ifslen, int ipslen, int allow_repeat_ifs);
 
 lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips);
 

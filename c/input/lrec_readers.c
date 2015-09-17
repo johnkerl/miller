@@ -39,10 +39,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 				allow_repeat_ifs);
 	} else if (streq(fmtdesc, "nidx")) {
 		if (use_mmap)
-			return lrec_reader_mmap_nidx_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				allow_repeat_ifs);
+			return lrec_reader_mmap_nidx_alloc(irs, ifs, allow_repeat_ifs);
 		else
 			return lrec_reader_stdio_nidx_alloc(
 				xxx_temp_check_single_char_separator("irs", irs),

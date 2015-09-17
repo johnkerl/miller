@@ -22,7 +22,9 @@ static inline int mlr_canonical_mod(int a, int n) {
 // ----------------------------------------------------------------
 // strcmp computes signs; we don't need that -- only equality or inequality.
 static inline int streq(char* restrict a, char* restrict b) {
-	 //return !strcmp(a, b);
+#if 0 // performance comparison
+	return !strcmp(a, b);
+#else
 	while (*a && *b) {
 		if (*a != *b)
 			return FALSE;
@@ -32,9 +34,13 @@ static inline int streq(char* restrict a, char* restrict b) {
 	if (*a || *b)
 		return FALSE;
 	return TRUE;
+#endif
 }
+
 static inline int streqn(char* restrict a, char* restrict b, int n) {
-	//return !strncmp(a, b, n);
+#if 0 // performance comparison
+	return !strncmp(a, b, n);
+#else
 	while (*a && *b) {
 		if (n-- <= 0) {
 			return TRUE;
@@ -49,6 +55,7 @@ static inline int streqn(char* restrict a, char* restrict b, int n) {
 		return (n <= 0) ? TRUE : FALSE;
 	}
 	return TRUE;
+#endif
 }
 
 // ----------------------------------------------------------------

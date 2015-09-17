@@ -190,7 +190,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	int saw_ps = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
-		if (!strncmp(p, irs, irslen)) {
+		if (streqn(p, irs, irslen)) {
 			*p = 0;
 			phandle->sol = p + irslen;
 			break;
@@ -262,7 +262,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	int idx = 0;
 	char* p = line;
 	if (allow_repeat_ifs) {
-		while (!strncmp(p, ifs, ifslen))
+		while (streqn(p, ifs, ifslen))
 			p += ifslen;
 	}
 	char* key   = p;
@@ -275,7 +275,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 			*p = 0;
 			phandle->sol = p+1;
 			break;
-		} else if (!strncmp(p, ifs, ifslen)) {
+		} else if (streqn(p, ifs, ifslen)) {
 			saw_ps = FALSE;
 			*p = 0;
 
@@ -297,12 +297,12 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
-				while (!strncmp(p, ifs, ifslen))
+				while (streqn(p, ifs, ifslen))
 					p += ifslen;
 			}
 			key = p;
 			value = p;
-		} else if (!strncmp(p, ips, ipslen) && !saw_ps) {
+		} else if (streqn(p, ips, ipslen) && !saw_ps) {
 			*p = 0;
 			p += ipslen;
 			value = p;
@@ -343,7 +343,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	int idx = 0;
 	char* p = line;
 	if (allow_repeat_ifs) {
-		while (!strncmp(p, ifs, ifslen))
+		while (streqn(p, ifs, ifslen))
 			p += ifslen;
 	}
 	char* key   = p;
@@ -352,11 +352,11 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	int saw_ps = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
-		if (!strncmp(p, irs, irslen)) {
+		if (streqn(p, irs, irslen)) {
 			*p = 0;
 			phandle->sol = p + irslen;
 			break;
-		} else if (!strncmp(p, ifs, ifslen)) {
+		} else if (streqn(p, ifs, ifslen)) {
 			saw_ps = FALSE;
 			*p = 0;
 
@@ -378,12 +378,12 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
-				while (!strncmp(p, ifs, ifslen))
+				while (streqn(p, ifs, ifslen))
 					p += ifslen;
 			}
 			key = p;
 			value = p;
-		} else if (!strncmp(p, ips, ipslen) && !saw_ps) {
+		} else if (streqn(p, ips, ipslen) && !saw_ps) {
 			*p = 0;
 			p += ipslen;
 			value = p;

@@ -27,6 +27,7 @@ multi-char IXS for other-than-CSV
 * probably keep the single-char pfuncs as-is, to be invoked in single-char
   cases -- unless perf measurements show there's not a significant loss
 * valgrind & UT cline/sline
+* UTx4xN the format-parsers
 
 CSV performance/memmgt issues:
 * mmap/stringptr cases:
