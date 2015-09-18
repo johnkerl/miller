@@ -21,45 +21,25 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 
 	if (streq(fmtdesc, "dkvp")) {
 		if (use_mmap)
-			return lrec_reader_mmap_dkvp_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				xxx_temp_check_single_char_separator("ips", ips),
-				allow_repeat_ifs);
+			return lrec_reader_mmap_dkvp_alloc(irs, ifs, ips, allow_repeat_ifs);
 		else
-			return lrec_reader_stdio_dkvp_alloc(
-				irs,
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				xxx_temp_check_single_char_separator("ips", ips),
-				allow_repeat_ifs);
+			return lrec_reader_stdio_dkvp_alloc(irs, ifs, ips, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "csv")) {
 		return lrec_reader_csv_alloc(pbr, irs, ifs);
 	} else if (streq(fmtdesc, "csvlite")) {
 		if (use_mmap)
-			return lrec_reader_mmap_csvlite_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				allow_repeat_ifs);
+			return lrec_reader_mmap_csvlite_alloc(irs, ifs, allow_repeat_ifs);
 		else
-			return lrec_reader_stdio_csvlite_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				allow_repeat_ifs);
+			return lrec_reader_stdio_csvlite_alloc(irs, ifs, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "nidx")) {
 		if (use_mmap)
-			return lrec_reader_mmap_nidx_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				allow_repeat_ifs);
+			return lrec_reader_mmap_nidx_alloc(irs, ifs, allow_repeat_ifs);
 		else
-			return lrec_reader_stdio_nidx_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
-				xxx_temp_check_single_char_separator("ifs", ifs),
-				allow_repeat_ifs);
+			return lrec_reader_stdio_nidx_alloc(irs, ifs, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "xtab")) {
 		if (use_mmap)
 			return lrec_reader_mmap_xtab_alloc(
-				xxx_temp_check_single_char_separator("irs", irs),
+				//xxx_temp_check_single_char_separator("irs", irs),
 				xxx_temp_check_single_char_separator("ips", ips),
 				TRUE/*allow_repeat_ips*/);
 		else

@@ -254,14 +254,15 @@ Separator options, for input, output, or both:
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
   Notes (as of Miller v2.1.4):
   * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.
-  * IRS,IFS,IPS may be multi-character for CSV; they must be single-character for other formats.
-    The latter restriction will be lifted in a near-future release.
+  * IRS,IFS,IPS may be multi-character for all but XTAB format, where they must be single-character.
+    This restriction will be lifted in a near-future release.
   * ORS,OFS,OPS may be multi-character for all formats.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
+    You can use "--csv --rs cflf" for CRLF-terminated DKVP files, and so on.
   * CSV is intended to handle RFC-4180-compliant data.
     In particular, this means it uses CRLF line-terminators by default.
-    So, you can use "--csv --rs lf" for Linux-native CSV files.
+    You can use "--csv --rs lf" for Linux-native CSV files.
   * You can use "--fs '|'", "--ips :", etc., or any of the following names for separators:
    cr crcr lf lflf crlf crlfcrlf tab space comma newline pipe slash colon semicolon equals
 Double-quoting for CSV output:

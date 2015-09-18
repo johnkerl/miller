@@ -13,6 +13,8 @@ MAJOR: autoconfig
 PLANNING NOTES
 
 multi-char IXS for other-than-CSV
+! default space as fs for nidx & announce clearly !
+! I&O UTs for multi-sep pprint
 * don't use parse-trie for these formats unless someone really wants
   double-quotes in DKVP (i don't need it, and no one else has asked for it)
 * requires either:
@@ -27,6 +29,7 @@ multi-char IXS for other-than-CSV
 * probably keep the single-char pfuncs as-is, to be invoked in single-char
   cases -- unless perf measurements show there's not a significant loss
 * valgrind & UT cline/sline
+* UTx4xN the format-parsers
 
 CSV performance/memmgt issues:
 * mmap/stringptr cases:

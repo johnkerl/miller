@@ -121,14 +121,15 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
 	fprintf(o, "  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.\n");
-	fprintf(o, "  * IRS,IFS,IPS may be multi-character for CSV; they must be single-character for other formats.\n");
-	fprintf(o, "    The latter restriction will be lifted in a near-future release.\n");
+	fprintf(o, "  * IRS,IFS,IPS may be multi-character for all but XTAB format, where they must be single-character.\n");
+	fprintf(o, "    This restriction will be lifted in a near-future release.\n");
 	fprintf(o, "  * ORS,OFS,OPS may be multi-character for all formats.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
+	fprintf(o, "    You can use \"--csv --rs cflf\" for CRLF-terminated DKVP files, and so on.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
 	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
-	fprintf(o, "    So, you can use \"--csv --rs lf\" for Linux-native CSV files.\n");
+	fprintf(o, "    You can use \"--csv --rs lf\" for Linux-native CSV files.\n");
 	fprintf(o, "  * You can use \"--fs '|'\", \"--ips :\", etc., or any of the following names for separators:\n");
 	fprintf(o, "  ");
 	lhmss_t* pmap = get_desc_to_chars_map();

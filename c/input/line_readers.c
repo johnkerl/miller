@@ -61,6 +61,8 @@ char* mlr_get_cline2(FILE* fp, char irs) {
 }
 
 // ----------------------------------------------------------------
+// 0 1 2 3
+// a b c 0
 char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 	size_t linecap = INITIAL_SIZE;
 	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
@@ -77,21 +79,22 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 			p = line;
 		}
 		c = getc_unlocked(fp);
-		if (c == irslast) {
+		if (c == EOF) {
+			if (p == line)
+				eof = TRUE;
+			*p = 0;
+			break;
+		} else if (c == irslast) {
 			// Example: delim="abc". last='c'. Already have read "ab" into line. p-line=2.
 			// Now reading 'c'.
-			// xxx make a memeq
+			// xxx make a memneq
 			if (((p-line) >= irslenm1) && !strncmp(p-irslenm1, irs, irslenm1)) {
+				p -= irslenm1;
 				*p = 0;
 				break;
 			} else {
 				*(p++) = c;
 			}
-		} else if (c == EOF) {
-			if (p == line)
-				eof = TRUE;
-			*p = 0;
-			break;
 		} else {
 			*(p++) = c;
 		}

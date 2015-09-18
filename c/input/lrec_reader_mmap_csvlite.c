@@ -9,9 +9,11 @@
 typedef struct _lrec_reader_mmap_csvlite_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
-	char irs;
-	char ifs;
-	int  allow_repeat_ifs;
+	char* irs;
+	char* ifs;
+	int   irslen;
+	int   ifslen;
+	int   allow_repeat_ifs;
 
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
@@ -41,11 +43,11 @@ typedef struct _lrec_reader_mmap_csvlite_state_t {
 //
 // etc.
 
-static slls_t* lrec_reader_mmap_csvlite_get_header(file_reader_mmap_state_t* phandle,
+static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate)
 {
-	char irs = pstate->irs;
-	char ifs = pstate->ifs;
+	char irs = pstate->irs[0];
+	char ifs = pstate->ifs[0];
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
 	slls_t* pheader_names = slls_alloc();
@@ -88,14 +90,64 @@ static slls_t* lrec_reader_mmap_csvlite_get_header(file_reader_mmap_state_t* pha
 	return pheader_names;
 }
 
-static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* phandle,
+static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate)
+{
+	char* irs    = pstate->irs;
+	char* ifs    = pstate->ifs;
+	int   irslen = pstate->irslen;
+	int   ifslen = pstate->ifslen;
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
+
+	slls_t* pheader_names = slls_alloc();
+
+	while ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
+		phandle->sol += irslen;
+		pstate->ilno++;
+	}
+
+	char* p = phandle->sol;
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* header_name = p;
+
+	for ( ; p < phandle->eof && *p; ) {
+		if (streqn(p, irs, irslen)) {
+			*p = 0;
+			phandle->sol = p + irslen;
+			pstate->ilno++;
+			break;
+		} else if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+
+			slls_add_no_free(pheader_names, header_name);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			header_name = p;
+		} else {
+			p++;
+		}
+	}
+	slls_add_no_free(pheader_names, header_name);
+
+	return pheader_names;
+}
+
+// ----------------------------------------------------------------
+static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
-	char irs = pstate->irs;
-	char ifs = pstate->ifs;
+	char irs = pstate->irs[0];
+	char ifs = pstate->ifs[0];
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
 	lrec_t* prec = lrec_unbacked_alloc();
@@ -163,14 +215,92 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record(file_reader_mmap_state_t* pha
 	return prec;
 }
 
-static lrec_t* lrec_reader_mmap_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
+static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+{
+	if (phandle->sol >= phandle->eof)
+		return NULL;
+
+	char* irs = pstate->irs;
+	char* ifs = pstate->ifs;
+	int   irslen = pstate->irslen;
+	int   ifslen = pstate->ifslen;
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
+
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* key   = NULL;
+	char* value = p;
+	for ( ; p < phandle->eof && *p; ) {
+		if (streqn(p, irs, irslen)) {
+			if (p == line) {
+				*pend_of_stanza = TRUE;
+				return NULL;
+			}
+			*p = 0;
+			phandle->sol = p + irslen;
+			break;
+		} else if (streqn(p, ifs, ifslen)) {
+			if (pe == NULL) {
+				// xxx to do: get file-name/line-number context in here.
+				// xxx to do: print what the lengths are.
+				fprintf(stderr, "Header-data length mismatch!\n");
+				exit(1);
+			}
+
+			*p = 0;
+			key = pe->value;
+			lrec_put_no_free(prec, key, value);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			value = p;
+			pe = pe->pnext;
+		} else {
+			p++;
+		}
+	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
+	if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "Header-data length mismatch!\n");
+			exit(1);
+		}
+	}
+
+	return prec;
+}
+
+// ----------------------------------------------------------------
+static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
 	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 
-			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header(phandle, pstate);
+			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header_single_seps(phandle, pstate);
 			if (pheader_fields == NULL) // EOF
 				return NULL;
 
@@ -186,7 +316,43 @@ static lrec_t* lrec_reader_mmap_csvlite_process(void* pvstate, void* pvhandle, c
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csvlite_get_record(phandle, pstate, pstate->pheader_keeper, &end_of_stanza);
+		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate,
+			pstate->pheader_keeper, &end_of_stanza);
+		if (end_of_stanza) {
+			pstate->expect_header_line_next = TRUE;
+		} else if (prec == NULL) { // EOF
+			return NULL;
+		} else {
+			return prec;
+		}
+	}
+}
+
+static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* pvhandle, context_t* pctx) {
+	file_reader_mmap_state_t* phandle = pvhandle;
+	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
+
+	while (TRUE) {
+		if (pstate->expect_header_line_next) {
+
+			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header_multi_seps(phandle, pstate);
+			if (pheader_fields == NULL) // EOF
+				return NULL;
+
+			pstate->expect_header_line_next = FALSE;
+
+			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
+			if (pstate->pheader_keeper == NULL) {
+				pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
+				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
+			} else { // Re-use the header-keeper in the header cache
+				slls_free(pheader_fields);
+			}
+		}
+
+		int end_of_stanza = FALSE;
+		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_multi_seps(phandle, pstate, pstate->pheader_keeper,
+			&end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
@@ -208,24 +374,30 @@ static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
 // xxx restore free func for header_keepers ... ?
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csvlite_state_t));
 	pstate->ifnr                     = 0LL;
 	pstate->irs                      = irs;
 	pstate->ifs                      = ifs;
+	pstate->irslen                   = strlen(irs);
+	pstate->ifslen                   = strlen(ifs);
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
 	pstate->expect_header_line_next  = TRUE;
 	pstate->pheader_keeper           = NULL;
 	pstate->pheader_keepers          = lhmslv_alloc();
 
+	// xxx get rid of func-ptr ampersands throughout the tree
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = &file_reader_mmap_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_mmap_csvlite_process;
-	plrec_reader->pprocess_func = &lrec_reader_mmap_csvlite_process;
-	plrec_reader->psof_func     = &lrec_reader_mmap_csvlite_sof;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+
+	plrec_reader->pprocess_func = (pstate->irslen == 1 && pstate->ifslen == 1)
+		? lrec_reader_mmap_csvlite_process_single_seps
+		: lrec_reader_mmap_csvlite_process_multi_seps;
+
+	plrec_reader->psof_func     = lrec_reader_mmap_csvlite_sof;
 	plrec_reader->pfree_func    = NULL;
 
 	return plrec_reader;

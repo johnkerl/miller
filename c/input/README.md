@@ -23,3 +23,23 @@ experimented with; it was messy and error-prone. The approach used here is to
 keep a hash map from header-schema to `header_keeper` object. The current
 `pheader_keeper` is a pointer into one of those.  Then when the reader is
 freed, all its header-keepers are freed.
+
+There is some code duplication involving single-character and multi-character
+IRS, IFS, and IPS. While single-character is a special case of multi-character,
+keeping separate implementations for single-character and multi-character
+versions is worthwhile for performance. The difference is betweeen `*p == ifs`
+and `streqn(p, ifs, ifslen)`: even with function inlining, the latter is more
+expensive than the former in the single-character case.
+
+Example timing info for a million-line file is as follows:
+
+```
+TIME IN SECONDS 0.945 -- mlr --irs lf   --ifs ,  --ips =  check ../data/big.dkvp2
+TIME IN SECONDS 1.139 -- mlr --irs crlf --ifs ,  --ips =  check ../data/big.dkvp2
+TIME IN SECONDS 1.291 -- mlr --irs lf   --ifs /, --ips =: check ../data/big.dkvp2
+TIME IN SECONDS 1.443 -- mlr --irs crlf --ifs /, --ips =: check ../data/big.dkvp2
+```
+
+i.e. (even when averaged over multiple runs) performance improvements of 20-30%
+are obtained by special-casing single-character-separator code: this is worth
+doing.

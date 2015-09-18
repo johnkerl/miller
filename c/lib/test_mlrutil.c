@@ -30,6 +30,70 @@ static char * test_canonical_mod() {
 }
 
 // ----------------------------------------------------------------
+static char * test_streq() {
+	char* x;
+	char* y;
+
+	x = "";   y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "";   y = "1";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "";   y = "12"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	x = "";   y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "a";  y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "ab"; y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	x = "1";  y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "1";  y = "1";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "1";  y = "12"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	x = "12"; y = "";   mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "12"; y = "1";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "12"; y = "12"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	x = "";   y = "a";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "a";  y = "a";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "ab"; y = "a";  mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	x = "";   y = "ab"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "a";  y = "ab"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+	x = "ab"; y = "ab"; mu_assert_lf(streq(x, y) == !strcmp(x, y));
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char * test_streqn() {
+	char* x;
+	char* y;
+
+	x = "";    y = "";    mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "";    y = "1";   mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "";    y = "12";  mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "";    y = "123"; mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+
+	x = "";    y = "";    mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "a";   y = "";    mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "ab";  y = "";    mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "abc"; y = "";    mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+
+	x = "a";   y = "a";   mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "a";   y = "aa";  mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "a";   y = "ab";  mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "a";   y = "abd"; mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+
+	x = "ab";  y = "a";   mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "ab";  y = "ab";  mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "ab";  y = "abd"; mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+
+	x = "abc"; y = "a";   mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "abc"; y = "ab";  mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "abc"; y = "abc"; mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+	x = "abc"; y = "abd"; mu_assert_lf(streqn(x, y, 2) == !strncmp(x, y, 2));
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
 static char * test_scanners() {
 	mu_assert("error: mlr_alloc_string_from_double", streq(mlr_alloc_string_from_double(4.25, "%.4f"), "4.2500"));
 	mu_assert("error: mlr_alloc_string_from_ull", streq(mlr_alloc_string_from_ull(12345LL), "12345"));
@@ -52,6 +116,8 @@ static char * test_paste() {
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_canonical_mod);
+	mu_run_test(test_streq);
+	mu_run_test(test_streqn);
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
 	return 0;
