@@ -14,6 +14,7 @@ PLANNING NOTES
 
 multi-char IXS for other-than-CSV
 ! default space as fs for nidx & announce clearly !
+! I&O UTs for multi-sep pprint
 * don't use parse-trie for these formats unless someone really wants
   double-quotes in DKVP (i don't need it, and no one else has asked for it)
 * requires either:

@@ -20,9 +20,11 @@
 typedef struct _lrec_reader_stdio_csvlite_state_t {
 	long long  ifnr; // xxx cmt w/r/t pctx
 	long long  ilno; // xxx cmt w/r/t pctx
-	char irs;
-	char ifs;
-	int  allow_repeat_ifs;
+	char* irs;
+	char* ifs;
+	int   irslen;
+	int   ifslen;
+	int   allow_repeat_ifs;
 
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
@@ -60,12 +62,18 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		if (pstate->expect_header_line_next) {
 			// xxx cmt
 			while (TRUE) {
-				char* hline = mlr_get_cline(input_stream, pstate->irs);
+				// xxx uniformize api, then funcptrs ...
+				char* hline = (pstate->irslen == 1)
+					? mlr_get_cline(input_stream, pstate->irs[0])
+					: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 				if (hline == NULL) // EOF
 					return NULL;
 				pstate->ilno++;
 
-				slls_t* pheader_fields = split_csvlite_header_line(hline, pstate->ifs, pstate->allow_repeat_ifs);
+				slls_t* pheader_fields = (pstate->ifslen == 1)
+					// xxx uniformize api, then funcptrs ...
+					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
+					: split_csvlite_header_line_multi_ifs(hline, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 				if (pheader_fields->length == 0) {
 					pstate->expect_header_line_next = TRUE;
 					if (pstate->pheader_keeper != NULL) {
@@ -87,7 +95,9 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			}
 		}
 
-		char* line = mlr_get_cline(input_stream, pstate->irs);
+		char* line = (pstate->irslen == 1)
+			? mlr_get_cline(input_stream, pstate->irs[0])
+			: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 		if (line == NULL) // EOF
 			return NULL;
 
@@ -101,8 +111,11 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			}
 		} else {
 			pstate->ifnr++;
-			return lrec_parse_stdio_csvlite_data_line(pstate->pheader_keeper, line, pstate->ifs,
-				pstate->allow_repeat_ifs);
+			return (pstate->ifslen == 1)
+				?  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, line,
+						pstate->ifs[0], pstate->allow_repeat_ifs)
+				:  lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, line,
+						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 		}
 	}
 }
@@ -125,13 +138,15 @@ static void lrec_reader_stdio_csvlite_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvlite_state_t));
 	pstate->ifnr                      = 0LL;
 	pstate->irs                       = irs;
 	pstate->ifs                       = ifs;
+	pstate->irslen                    = strlen(irs);
+	pstate->ifslen                    = strlen(ifs);
 	pstate->allow_repeat_ifs          = allow_repeat_ifs;
 	pstate->expect_header_line_next   = TRUE;
 	pstate->pheader_keeper            = NULL;
@@ -148,7 +163,7 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char irs, char ifs, int allow_rep
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char* data_line, char ifs,
+lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* data_line, char ifs,
 	int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
@@ -203,9 +218,63 @@ lrec_t* lrec_parse_stdio_csvlite_data_line(header_keeper_t* pheader_keeper, char
 	return prec;
 }
 
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* data_line,
+	char* ifs, int ifslen, int allow_repeat_ifs)
+{
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* key   = NULL;
+	char* value = p;
+
+	// xxx needs pe-non-null (hdr-empty) check:
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	for ( ; *p; ) {
+		if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+
+			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
+				fprintf(stderr, "Header-data length mismatch!\n");
+				exit(1);
+			}
+			key = pe->value;
+			lrec_put_no_free(prec, key, value);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			value = p;
+			pe = pe->pnext;
+		} else {
+			p++;
+		}
+	}
+	if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
+	}
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "Header-data length mismatch!\n");
+			exit(1);
+		}
+	}
+
+	return prec;
+}
+
 // ----------------------------------------------------------------
-// xxx cmt mem-mgt
-slls_t* split_csvlite_header_line(char* line, char ifs, int allow_repeat_ifs) {
+slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_repeat_ifs) {
 	slls_t* plist = slls_alloc();
 	if (*line == 0) // empty string splits to empty list
 		return plist;
@@ -224,6 +293,34 @@ slls_t* split_csvlite_header_line(char* line, char ifs, int allow_repeat_ifs) {
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
+			}
+			slls_add_no_free(plist, start);
+			start = p;
+		}
+	}
+	slls_add_no_free(plist, start);
+
+	return plist;
+}
+
+slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, int allow_repeat_ifs) {
+	slls_t* plist = slls_alloc();
+	if (*line == 0) // empty string splits to empty list
+		return plist;
+
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* start = p;
+	for ( ; *p; p++) {
+		if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
 			}
 			slls_add_no_free(plist, start);
 			start = p;

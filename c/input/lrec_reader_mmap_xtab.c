@@ -18,19 +18,19 @@ static lrec_t* lrec_reader_mmap_xtab_process(void* pvstate, void* pvhandle, cont
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_xtab(phandle, pstate->irs, pstate->ips, pstate->allow_repeat_ips);
+		return lrec_parse_mmap_xtab(phandle, pstate->ips, pstate->allow_repeat_ips);
 }
 
 static void lrec_reader_mmap_xtab_sof(void* pvstate) {
 }
 
-lrec_reader_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_ips) {
+lrec_reader_t* lrec_reader_mmap_xtab_alloc(char ips, int allow_repeat_ips) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_xtab_state_t));
+	//pstate->irs                 = irs;
 	//pstate->ips              = ips;
 	//pstate->allow_repeat_ips = allow_repeat_ips;
-	pstate->irs                 = irs;
 	pstate->ips                 = ' ';
 	pstate->allow_repeat_ips    = TRUE;
 
@@ -45,8 +45,9 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char irs, char ips, int allow_repeat_
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char irs, char ips, int allow_repeat_ips) {
+lrec_t* lrec_parse_mmap_xtab(file_reader_mmap_state_t* phandle, char ips, int allow_repeat_ips) {
 
+	char irs = '\n'; // xxx temp
 	while (phandle->sol < phandle->eof && *phandle->sol == irs)
 		phandle->sol++;
 
