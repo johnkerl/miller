@@ -133,7 +133,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
 	fprintf(o, "    You can use \"--csv --rs lf\" for Linux-native CSV files.\n");
 	fprintf(o, "  * You can use \"--fs '|'\", \"--ips :\", etc., or any of the following names for separators:\n");
-	fprintf(o, "  ");
+	fprintf(o, "   ");
 	lhmss_t* pmap = get_desc_to_chars_map();
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		fprintf(o, " %s", pe->key);

@@ -249,14 +249,14 @@ Data-format options, for input, output, or both:
   --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
 Separator options, for input, output, or both:
-  --rs      --irs     --ors              Record separators, e.g. newline
+  --rs      --irs     --ors              Record separators, e.g. "lf"
   --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
   Notes (as of Miller v2.1.4):
   * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.
-  * IRS,IFS,IPS may be multi-character for all but XTAB format, where they must be single-character.
-    This restriction will be lifted in a near-future release.
-  * ORS,OFS,OPS may be multi-character for all formats.
+  * IPS/OPS are only used for DKVP and XTAB formats.
+  * IRS/ORS are ignored for XTAB format. Nominally these are newlines; two or more consecutive newlines
+    separate records for XTAB format.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
     You can use "--csv --rs cflf" for CRLF-terminated DKVP files, and so on.
@@ -264,7 +264,7 @@ Separator options, for input, output, or both:
     In particular, this means it uses CRLF line-terminators by default.
     You can use "--csv --rs lf" for Linux-native CSV files.
   * You can use "--fs '|'", "--ips :", etc., or any of the following names for separators:
-   cr crcr lf lflf crlf crlfcrlf tab space comma newline pipe slash colon semicolon equals
+   cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
 Double-quoting for CSV output:
   --quote-all                            Wrap all fields in double quotes
   --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
