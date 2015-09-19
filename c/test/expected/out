@@ -1956,7 +1956,7 @@ a=,b=,c=,d=11,e=12
 a=13,b=14,c=,d=,e=
 a=,b=,c=,d=,e=
 
-mlr --inidx --odkvp cat ./test/input/null-fields.nidx
+mlr --inidx --ifs comma --odkvp cat ./test/input/null-fields.nidx
 1=a,2=b,3=c,4=d,5=e
 1=f,2=,3=,4=,5=g
 1=,2=,3=,4=h,5=i
@@ -2731,4 +2731,17 @@ i 3
 x 0.676537984365847889
 a zee
 i 4
+
+
+================================================================
+MULTI-CHARACTER IFS FOR XTAB
+
+mlr --xtab --ifs crlf --ofs Z cut -x -f b test/input/truncated.xtab-crlf
+a 1Zc 3ZZd 4Ze 5Z
+mlr --xtab --ips . --ops @ cut -x -f b test/input/dots.xtab
+a@1
+c@345
+
+defg@6
+hi@@@78
 

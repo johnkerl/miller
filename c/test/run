@@ -504,6 +504,12 @@ run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs ,  cut -o -f x/,a/,i/ $ind
 run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csvl
 
 # ================================================================
+announce MULTI-CHARACTER IFS FOR XTAB
+
+run_mlr --xtab --ifs crlf --ofs Z cut -x -f b test/input/truncated.xtab-crlf
+run_mlr --xtab --ips . --ops @ cut -x -f b test/input/dots.xtab
+
+# ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
 # may vary. Nonetheless for debugging it's crucial that we echo out each

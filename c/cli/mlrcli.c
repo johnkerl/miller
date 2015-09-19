@@ -51,6 +51,7 @@ static lhmss_t* get_desc_to_chars_map() {
 		pdesc_to_chars_map = lhmss_alloc();
 		lhmss_put(pdesc_to_chars_map, "cr",        "\r");
 		lhmss_put(pdesc_to_chars_map, "crcr",      "\r\r");
+		lhmss_put(pdesc_to_chars_map, "newline",   "\n");
 		lhmss_put(pdesc_to_chars_map, "lf",        "\n");
 		lhmss_put(pdesc_to_chars_map, "lflf",      "\n\n");
 		lhmss_put(pdesc_to_chars_map, "crlf",      "\r\n");
@@ -117,14 +118,14 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. newline\n");
+	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. \"lf\"\n");
 	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
 	fprintf(o, "  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.\n");
-	fprintf(o, "  * IRS,IFS,IPS may be multi-character for all but XTAB format, where they must be single-character.\n");
-	fprintf(o, "    This restriction will be lifted in a near-future release.\n");
-	fprintf(o, "  * ORS,OFS,OPS may be multi-character for all formats.\n");
+	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats.\n");
+	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally these are newlines; two or more consecutive newlines\n");
+	fprintf(o, "    separate records for XTAB format.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
 	fprintf(o, "    You can use \"--csv --rs cflf\" for CRLF-terminated DKVP files, and so on.\n");
