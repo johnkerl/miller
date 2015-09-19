@@ -240,8 +240,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->irs               = NULL;
 	popts->ifs               = NULL;
 	popts->ips               = NULL;
-	popts->allow_repeat_ifs  = -1;
-	popts->allow_repeat_ips  = -1;
+	popts->allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
+	popts->allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
 
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
@@ -426,9 +426,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if (popts->ips == NULL)
 		popts->ips = lhmss_get(default_pses, popts->ifile_fmt);
 
-	if (popts->allow_repeat_ifs == -1)
+	if (popts->allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
 		popts->allow_repeat_ifs = lhmsi_get(default_repeat_ifses, popts->ifile_fmt);
-	if (popts->allow_repeat_ips == -1)
+	if (popts->allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
 		popts->allow_repeat_ips = lhmsi_get(default_repeat_ipses, popts->ifile_fmt);
 
 	if (popts->ors == NULL)
@@ -451,11 +451,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		exit(1);
 	}
 
-	if (popts->allow_repeat_ifs == -1) {
+	if (popts->allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
-	if (popts->allow_repeat_ips == -1) {
+	if (popts->allow_repeat_ips == NEITHER_TRUE_NOR_FALSE) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}

@@ -8,6 +8,7 @@
 
 #define TRUE  1
 #define FALSE 0
+#define NEITHER_TRUE_NOR_FALSE -1
 
 // ----------------------------------------------------------------
 //int mlr_canonical_mod(int a, int n);
