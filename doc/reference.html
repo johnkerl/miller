@@ -253,10 +253,11 @@ Separator options, for input, output, or both:
   --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
   Notes (as of Miller v2.1.4):
-  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.
   * IPS/OPS are only used for DKVP and XTAB formats.
   * IRS/ORS are ignored for XTAB format. Nominally these are newlines; two or more consecutive newlines
     separate records for XTAB format.
+  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
+    This is because they are used with repetition for alignment; multi-character separators would make alignment impossible.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
     You can use "--csv --rs cflf" for CRLF-terminated DKVP files, and so on.

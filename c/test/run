@@ -506,8 +506,16 @@ run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $ind
 # ================================================================
 announce MULTI-CHARACTER IFS FOR XTAB
 
-run_mlr --xtab --ifs crlf --ofs Z cut -x -f b test/input/truncated.xtab-crlf
-run_mlr --xtab --ips . --ops @ cut -x -f b test/input/dots.xtab
+run_mlr --mmap    --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
+run_mlr --no-mmap --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
+run_mlr --mmap    --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
+run_mlr --no-mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
+
+# ================================================================
+announce MULTI-CHARACTER IRS FOR PPRINT
+
+run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
+run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any

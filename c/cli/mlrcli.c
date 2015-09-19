@@ -122,10 +122,11 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
-	fprintf(o, "  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.\n");
 	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats.\n");
 	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally these are newlines; two or more consecutive newlines\n");
 	fprintf(o, "    separate records for XTAB format.\n");
+	fprintf(o, "  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.\n");
+	fprintf(o, "    This is because they are used with repetition for alignment; multi-character separators would make alignment impossible.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
 	fprintf(o, "    You can use \"--csv --rs cflf\" for CRLF-terminated DKVP files, and so on.\n");
@@ -479,12 +480,23 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argv[0], popts->ops);
 		return NULL;
 	}
-	if      (streq(popts->ofile_fmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(popts->ofile_fmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
-	else if (streq(popts->ofile_fmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
-	else if (streq(popts->ofile_fmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(popts->ofile_fmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops);
-	else if (streq(popts->ofile_fmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs, left_align_pprint);
+	if (streq(popts->ofile_fmt, "pprint") && strlen(popts->ofs) != 1) {
+		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
+			argv[0], popts->ofs);
+		return NULL;
+	}
+	if      (streq(popts->ofile_fmt, "dkvp"))
+		popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
+	else if (streq(popts->ofile_fmt, "csv"))
+		popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
+	else if (streq(popts->ofile_fmt, "csvlite"))
+		popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "nidx"))
+		popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "xtab"))
+		popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops);
+	else if (streq(popts->ofile_fmt, "pprint"))
+		popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
 	}

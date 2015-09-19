@@ -12,10 +12,10 @@ typedef struct _lrec_writer_pprint_state_t {
 	int        left_align;
 	long long  num_blocks_written;
 	char*      ors;
-	char*      ofs;
+	char       ofs;
 } lrec_writer_pprint_state_t;
 
-static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char* ofs, int left_align);
+static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align);
 
 // ----------------------------------------------------------------
 static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
@@ -50,7 +50,7 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 }
 
 // ----------------------------------------------------------------
-static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char* ofs, int left_align) {
+static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align) {
 	if (precords->length == 0)
 		return;
 	lrec_t* prec1 = precords->phead->pvdata;
@@ -78,7 +78,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 			j = 0;
 			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 				if (j > 0) {
-					fputc(' ', output_stream);
+					fputc(ofs, output_stream);
 				}
 				if (left_align) {
 					if (pe->pnext == NULL) {
@@ -88,12 +88,12 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 						fprintf(output_stream, "%s", pe->key);
 						int d = max_widths[j] - strlen_for_utf8_display(pe->key);
 						for (int i = 0; i < d; i++)
-							fputc(' ', output_stream);
+							fputc(ofs, output_stream);
 					}
 				} else {
 					int d = max_widths[j] - strlen_for_utf8_display(pe->key);
 					for (int i = 0; i < d; i++)
-						fputc(' ', output_stream);
+						fputc(ofs, output_stream);
 					fprintf(output_stream, "%s", pe->key);
 				}
 			}
@@ -103,7 +103,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 		j = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 			if (j > 0) {
-				fputc(' ', output_stream);
+				fputc(ofs, output_stream);
 			}
 			char* value = pe->value;
 			if (*value == 0) // empty string
@@ -115,12 +115,12 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 					fprintf(output_stream, "%s", value);
 					int d = max_widths[j] - strlen_for_utf8_display(value);
 					for (int i = 0; i < d; i++)
-						fputc(' ', output_stream);
+						fputc(ofs, output_stream);
 				}
 			} else {
 				int d = max_widths[j] - strlen_for_utf8_display(value);
 				for (int i = 0; i < d; i++)
-					fputc(' ', output_stream);
+					fputc(ofs, output_stream);
 				fprintf(output_stream, "%s", value);
 			}
 		}
@@ -145,7 +145,7 @@ static void lrec_writer_pprint_free(void* pvstate) {
 	}
 }
 
-lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char* ofs, int left_align) {
+lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
