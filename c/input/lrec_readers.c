@@ -33,9 +33,9 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 			return NULL;
 		}
 		if (use_mmap)
-			return lrec_reader_mmap_xtab_alloc(ips[0], allow_repeat_ips);
+			return lrec_reader_mmap_xtab_alloc(ifs, ips[0], allow_repeat_ips);
 		else
-			return lrec_reader_stdio_xtab_alloc(ips[0], allow_repeat_ips);
+			return lrec_reader_stdio_xtab_alloc(ifs, ips[0], allow_repeat_ips);
 	} else {
 		return NULL;
 	}

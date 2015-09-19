@@ -18,7 +18,6 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
-	char ifs = '\n'; // xxx temp
 
 	if (pstate->at_eof)
 		return NULL;
@@ -26,7 +25,9 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
-		char* line = mlr_get_cline(input_stream, ifs); // xxx parameterize
+		char* line = (pstate->ifslen == 1)
+			? mlr_get_cline(input_stream, pstate->ifs[0])
+			: mlr_get_sline(input_stream, pstate->ifs, pstate->ifslen);
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;
@@ -54,11 +55,13 @@ static void lrec_reader_stdio_xtab_sof(void* pvstate) {
 static void lrec_reader_stdio_xtab_free(void* pvstate) {
 }
 
-lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips) {
+lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char ips, int allow_repeat_ips) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
+	pstate->ifs              = ifs;
 	pstate->ips              = ips;
+	pstate->ifslen           = strlen(ifs);
 	pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->at_eof           = FALSE;
 
