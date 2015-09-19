@@ -5,16 +5,20 @@
 #include "input/line_readers.h"
 #include "input/lrec_readers.h"
 
+// xxx cmt/docxref re no irs for xtab, & two or more ifses separates records.
 typedef struct _lrec_reader_stdio_xtab_state_t {
-	char ips; // xxx make me real
-	int allow_repeat_ips;
-	int at_eof;
+	char* ifs;
+	char  ips;
+	int   ifslen;
+	int   allow_repeat_ips;
+	int   at_eof;
 } lrec_reader_stdio_xtab_state_t;
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
+	char ifs = '\n'; // xxx temp
 
 	if (pstate->at_eof)
 		return NULL;
@@ -22,7 +26,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
-		char* line = mlr_get_cline(input_stream, '\n'); // xxx parameterize
+		char* line = mlr_get_cline(input_stream, ifs); // xxx parameterize
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;
@@ -33,7 +37,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			}
 		} else if (*line == '\0') {
 			free(line);
-			if (pxtab_lines->length > 0) { // xxx make an is_empty_modulo_whitespace()
+			if (pxtab_lines->length > 0) {
 				return lrec_parse_stdio_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
 			}
 		} else {
@@ -54,10 +58,8 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char ips, int allow_repeat_ips) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
-	//pstate->ips              = ips;
-	//pstate->allow_repeat_ips = allow_repeat_ips;
-	pstate->ips              = ' ';
-	pstate->allow_repeat_ips = TRUE;
+	pstate->ips              = ips;
+	pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->at_eof           = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;

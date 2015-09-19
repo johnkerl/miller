@@ -37,6 +37,7 @@ static inline int streq(char* restrict a, char* restrict b) {
 #endif
 }
 
+// strncmp computes signs; we don't need that -- only equality or inequality.
 static inline int streqn(char* restrict a, char* restrict b, int n) {
 #if 0 // performance comparison
 	return !strncmp(a, b, n);

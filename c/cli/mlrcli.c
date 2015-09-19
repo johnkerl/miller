@@ -6,6 +6,8 @@
 #include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 #include "containers/slls.h"
+#include "containers/lhmss.h"
+#include "containers/lhmsi.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "mapping/lrec_evaluators.h"
@@ -200,15 +202,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmss_put(default_rses, "csv",     "\r\n");
 	lhmss_put(default_rses, "csvlite", "\n");
 	lhmss_put(default_rses, "nidx",    "\n");
-	lhmss_put(default_rses, "xtab",    "\n");
+	lhmss_put(default_rses, "xtab",    "X");
 	lhmss_put(default_rses, "pprint",  "\n");
 
 	lhmss_t* default_fses = lhmss_alloc();
 	lhmss_put(default_fses, "dkvp",    ",");
 	lhmss_put(default_fses, "csv",     ",");
 	lhmss_put(default_fses, "csvlite", ",");
-	lhmss_put(default_fses, "nidx",    ","); // xxx update to space at version bump
-	lhmss_put(default_fses, "xtab",    " ");
+	lhmss_put(default_fses, "nidx",    " ");
+	lhmss_put(default_fses, "xtab",    "\n");
 	lhmss_put(default_fses, "pprint",  " ");
 
 	lhmss_t* default_pses = lhmss_alloc();
@@ -216,14 +218,30 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmss_put(default_pses, "csv",     "X");
 	lhmss_put(default_pses, "csvlite", "X");
 	lhmss_put(default_pses, "nidx",    "X");
-	lhmss_put(default_pses, "xtab",    "X");
+	lhmss_put(default_pses, "xtab",    " ");
 	lhmss_put(default_pses, "pprint",  "X");
+
+	lhmsi_t* default_repeat_ifses = lhmsi_alloc();
+	lhmsi_put(default_repeat_ifses, "dkvp",    FALSE);
+	lhmsi_put(default_repeat_ifses, "csv",     FALSE);
+	lhmsi_put(default_repeat_ifses, "csvlite", FALSE);
+	lhmsi_put(default_repeat_ifses, "nidx",    FALSE);
+	lhmsi_put(default_repeat_ifses, "xtab",    FALSE);
+	lhmsi_put(default_repeat_ifses, "pprint",  TRUE);
+
+	lhmsi_t* default_repeat_ipses = lhmsi_alloc();
+	lhmsi_put(default_repeat_ipses, "dkvp",    FALSE);
+	lhmsi_put(default_repeat_ipses, "csv",     FALSE);
+	lhmsi_put(default_repeat_ipses, "csvlite", FALSE);
+	lhmsi_put(default_repeat_ipses, "nidx",    FALSE);
+	lhmsi_put(default_repeat_ipses, "xtab",    TRUE);
+	lhmsi_put(default_repeat_ipses, "pprint",  FALSE);
 
 	popts->irs               = NULL;
 	popts->ifs               = NULL;
 	popts->ips               = NULL;
-	popts->allow_repeat_ifs  = FALSE;
-	popts->allow_repeat_ips  = FALSE;
+	popts->allow_repeat_ifs  = -1;
+	popts->allow_repeat_ips  = -1;
 
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
@@ -408,6 +426,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if (popts->ips == NULL)
 		popts->ips = lhmss_get(default_pses, popts->ifile_fmt);
 
+	if (popts->allow_repeat_ifs == -1)
+		popts->allow_repeat_ifs = lhmsi_get(default_repeat_ifses, popts->ifile_fmt);
+	if (popts->allow_repeat_ips == -1)
+		popts->allow_repeat_ips = lhmsi_get(default_repeat_ipses, popts->ifile_fmt);
+
 	if (popts->ors == NULL)
 		popts->ors = lhmss_get(default_rses, popts->ofile_fmt);
 	if (popts->ofs == NULL)
@@ -428,6 +451,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		exit(1);
 	}
 
+	if (popts->allow_repeat_ifs == -1) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->allow_repeat_ips == -1) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+
 	if (popts->ors == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
@@ -441,11 +473,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		exit(1);
 	}
 
+	if (streq(popts->ofile_fmt, "xtab") && strlen(popts->ops) != 1) {
+		fprintf(stderr, "%s: OPS for XTAB format must be single-character; got \"%s\".\n",
+			argv[0], popts->ops);
+		return NULL;
+	}
 	if      (streq(popts->ofile_fmt, "dkvp"))    popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(popts->ofile_fmt, "csv"))     popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
 	else if (streq(popts->ofile_fmt, "csvlite")) popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
 	else if (streq(popts->ofile_fmt, "nidx"))    popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(popts->ofile_fmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc(popts->ors, popts->ofs);
+	else if (streq(popts->ofile_fmt, "xtab"))    popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops);
 	else if (streq(popts->ofile_fmt, "pprint"))  popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs, left_align_pprint);
 	else {
 		main_usage(argv[0], 1);
