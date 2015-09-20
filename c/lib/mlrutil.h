@@ -98,4 +98,8 @@ int strlen_for_utf8_display(char* str);
 int mlr_imax2(int a, int b);
 int power_of_two_ceil(int n);
 
+// The caller should free the return value. Maps two-character sequences such as
+// "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
+char* mlr_unbackslash(char* input);
+
 #endif // MLRUTIL_H
