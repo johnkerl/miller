@@ -9,6 +9,16 @@ TOP OF LIST
 ----------------------------------------------------------------
 MAJOR: autoconfig
 
+! lemon in-dir -- why is this a problem?
+
+* separate mlrdoc build notes for build-a-release (autoreconf, xmllint, etc.)
+  vs. install-a-release (./configure)
+
+* makefile.orig w/ notes (simpler to debug in the non-happy case, faster compiles)
+  along w/ mlrdoc note
+
+* pull request from wiz
+
 ----------------------------------------------------------------
 PLANNING NOTES
 
