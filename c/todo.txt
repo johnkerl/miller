@@ -13,8 +13,8 @@ MAJOR: autoconfig
 PLANNING NOTES
 
 multi-char IXS for other-than-CSV
-! default space as fs for nidx & announce clearly !
-! I&O UTs for multi-sep pprint
+! default space as fs for nidx & announce clearly ! & into online help
+! "\r\n" etc specs !
 * don't use parse-trie for these formats unless someone really wants
   double-quotes in DKVP (i don't need it, and no one else has asked for it)
 * requires either:
@@ -42,27 +42,6 @@ CSV performance/memmgt issues:
 
 in summary: pfr/pbr have got to go
 
-multi-char getdelim
-* start with poor-man's version which calls single-char getdelim with irs[-1] & strcats in case !matchback
-  o --exit-stats option? for hash-stats too?
-* separately, code up a genuine multi-char getdelim
-  o modify the poor-man's logic but simply keep appending in-routine in the !matchback case
-
-----------------------------------------------------------------
-MAJOR: multi-char separators for file formats other than CSV
-k oxs is functionally done
-* need backslash-handling/parsing ... at least, \r \n \t. and, into online help.
-! ixs:
-  o ips & ifs: needs *p==ixs with strneq(p, ixs); also double-null poke (sos&eos)
-  o irs for mmap: same
-  o irs for stdio: it all comes down to getdelim.
-  ! so focus on getline perf.
-  ! maybe best idea is to re-impl getdelim with multichar irs.
-    - rework csv reader to look more like csvlite (which is performant)?
-  ! temporary option is getdelim with final char of the multichar irs; strcmp backwards;
-    usually get it right; occasionally have to strcat/memcpy multiple such. this is
-    gross so don't do it unless multichar-getdelim doesn't pan out.
-
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
 * current option runs faster w/o free, apparently due to heap-fragging
@@ -85,9 +64,6 @@ MINOR
 
 * define dkvp, nidx, etc @ cover x 2
   - web-server access logs in dkvp format -- ?
-
-? dkvp quoting ... wait until after the mmap/perf split. else, very undesirable
-  performance regression.
 
 * go back and re-apply ctype/isprint portability things to new spots
 
