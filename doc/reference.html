@@ -250,11 +250,10 @@ Data-format options, for input, output, or both:
   --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
 Separator options, for input, output, or both:
-  --rs      --irs     --ors              Record separators, e.g. 'lf' or '
-'
+  --rs      --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
   --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
-  Notes (as of Miller v2.1.4):
+  Notes:
   * IPS/OPS are only used for DKVP and XTAB formats.
   * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; records are separated by
     two or more consecutive IFS/OFS -- i.e. a blank line.
