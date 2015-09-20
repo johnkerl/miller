@@ -34,6 +34,7 @@ MAJOR: multi-char separators
 
 ! default space as fs for nidx & announce clearly ! & into online help
 ! "\r\n" etc specs !
+! tabulate defaults in mlr -h
 * valgrind & UT cline/sline
 * UTx4xN the format-parsers
 

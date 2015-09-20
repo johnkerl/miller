@@ -518,6 +518,13 @@ run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dot
 run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
 
 # ================================================================
+announce MULTI-CHARACTER IXS SPECIFIERS
+
+run_mlr --oxtab --idkvp --mmap    --irs '\n'   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs '\n'   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs '\r\n' --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+
+# ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
 # may vary. Nonetheless for debugging it's crucial that we echo out each

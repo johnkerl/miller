@@ -70,10 +70,10 @@ static lhmss_t* get_desc_to_chars_map() {
 }
 static char* sep_from_arg(char* arg, char* argv0) {
 	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
-	if (chars != NULL)
+	if (chars != NULL) // E.g. crlf
 		return chars;
-	else
-		return arg;
+	else // E.g. '\r\n'
+		return mlr_unbackslash(arg);
 }
 
 // ----------------------------------------------------------------
@@ -101,6 +101,7 @@ static void main_usage(char* argv0, int exit_code) {
 		fprintf(o, "%s", mapper_lookup_table[i]->verb);
 	}
 	fprintf(o, "\n");
+	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
@@ -123,18 +124,22 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes (as of Miller v2.1.4):\n");
 	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats.\n");
-	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally these are newlines; two or more consecutive newlines\n");
-	fprintf(o, "    separate records for XTAB format.\n");
+	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; records are separated by\n");
+	fprintf(o, "    two or more consecutive IFS/OFS -- i.e. a blank line.\n");
 	fprintf(o, "  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.\n");
-	fprintf(o, "    This is because they are used with repetition for alignment; multi-character separators would make alignment impossible.\n");
+	fprintf(o, "    This is because they are used with repetition for alignment; multi-character separators\n");
+	fprintf(o, "    would make alignment impossible.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
-	fprintf(o, "    You can use \"--csv --rs cflf\" for CRLF-terminated DKVP files, and so on.\n");
+	fprintf(o, "    You can use \"--csv --rs crlf\" for CRLF-terminated DKVP files, and so on.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
 	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
 	fprintf(o, "    You can use \"--csv --rs lf\" for Linux-native CSV files.\n");
-	fprintf(o, "  * You can use \"--fs '|'\", \"--ips :\", etc., or any of the following names for separators:\n");
-	fprintf(o, "   ");
+	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
+	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g. \"--fs '|' --ips :\"\n");
+	fprintf(o, "    - C-style escape sequences, e.g. \"--rs '\\r\\n' --fs '\\t'\".\n");
+	fprintf(o, "    - To avoid backslashing, you can use any the following names:\n");
+	fprintf(o, "     ");
 	lhmss_t* pmap = get_desc_to_chars_map();
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		fprintf(o, " %s", pe->key);
@@ -143,7 +148,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
-	fprintf(o, "  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them\n");
+	fprintf(o, "  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them (default)\n");
 	fprintf(o, "  --quote-numeric                        Wrap fields in double quotes only if they have numbers in them\n");
 	fprintf(o, "Numerical formatting:\n");
 	fprintf(o, "  --ofmt {format}                        E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
@@ -204,7 +209,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmss_put(default_rses, "csv",     "\r\n");
 	lhmss_put(default_rses, "csvlite", "\n");
 	lhmss_put(default_rses, "nidx",    "\n");
-	lhmss_put(default_rses, "xtab",    "X");
+	lhmss_put(default_rses, "xtab",    "(N/A)");
 	lhmss_put(default_rses, "pprint",  "\n");
 
 	lhmss_t* default_fses = lhmss_alloc();
@@ -217,11 +222,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	lhmss_t* default_pses = lhmss_alloc();
 	lhmss_put(default_pses, "dkvp",    "=");
-	lhmss_put(default_pses, "csv",     "X");
-	lhmss_put(default_pses, "csvlite", "X");
-	lhmss_put(default_pses, "nidx",    "X");
+	lhmss_put(default_pses, "csv",     "(N/A)");
+	lhmss_put(default_pses, "csvlite", "(N/A)");
+	lhmss_put(default_pses, "nidx",    "(N/A)");
 	lhmss_put(default_pses, "xtab",    " ");
-	lhmss_put(default_pses, "pprint",  "X");
+	lhmss_put(default_pses, "pprint",  "(N/A)");
 
 	lhmsi_t* default_repeat_ifses = lhmsi_alloc();
 	lhmsi_put(default_repeat_ifses, "dkvp",    FALSE);
