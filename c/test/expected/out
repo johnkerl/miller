@@ -2788,8 +2788,7 @@ pan@10@0.5026260055412137@@0.9526183602969864
 ================================================================
 MULTI-CHARACTER IXS SPECIFIERS
 
-mlr --oxtab --idkvp --mmap --irs 
- --ifs , --ips = cut -o -f x,a,i test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i test/input/multi-sep.dkvp
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -2810,8 +2809,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs 
- --ifs /, --ips =: cut -o -f x,a,i test/input/multi-sep.dkvp
+mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i test/input/multi-sep.dkvp
 x 0.641593543645736508
 a wye
 i 0
@@ -2831,26 +2829,4 @@ i 3
 x 0.676537984365847889
 a zee
 i 4
-
-mlr --oxtab --idkvp --mmap --irs 
- --ifs , --ips = cut -o -f x,a,i test/input/multi-sep.dkvp
-x :0.641593543645736508/
-a :wye/
-i :0/
-
-x :0.827614412562742041/
-a :eks/
-i :1/
-
-x :0.923068348748175560/
-a :zee/
-i :2/
-
-x :0.000047786161325772/
-a :zee/
-i :3/
-
-x :0.676537984365847889/
-a :zee/
-i :4/
 

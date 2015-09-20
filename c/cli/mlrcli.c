@@ -119,7 +119,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. \"lf\"\n");
+	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. 'lf' or '\r\n'\n");
 	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes (as of Miller v2.1.4):\n");

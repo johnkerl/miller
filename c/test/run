@@ -520,9 +520,8 @@ run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dot
 # ================================================================
 announce MULTI-CHARACTER IXS SPECIFIERS
 
-run_mlr --oxtab --idkvp --mmap    --irs '\n'   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap    --irs '\n'   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap    --irs '\r\n' --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
