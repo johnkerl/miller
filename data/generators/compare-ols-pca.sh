@@ -26,6 +26,6 @@ do
     #echo
     #echo p $p
     #a.out $p|mlr --oxtab stats2 -a linreg-ols,linreg-pca -f x,y
-    echo "p=$p,$(a.out $p | mlr stats2 -a linreg-ols,r2,linreg-pca -f x,y)"
+    echo "p=$p,`a.out $p | mlr stats2 -a linreg-ols,r2,linreg-pca -f x,y`"
   done
 done
