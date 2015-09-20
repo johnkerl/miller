@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 experiments=$(mlr cut -f experiment < tn.out|sort -u|sed 's/experiment=//')
 for experiment in $experiments; do
