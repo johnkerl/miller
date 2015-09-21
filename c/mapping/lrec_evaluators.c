@@ -1141,6 +1141,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
 #ifdef __LREC_EVALUATORS_MAIN__
 int main(int argc, char** argv) {
 	mtrand_init_default();
+	mlr_global_init(argv[0], "%lf", NULL);
 
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
@@ -1151,7 +1152,7 @@ int main(int argc, char** argv) {
 	lrec_evaluator_t* pfilename = lrec_evaluator_alloc_from_FILENAME();
 	lrec_evaluator_t* pfilenum  = lrec_evaluator_alloc_from_FILENUM();
 
-	lrec_t* prec = lrec_alloc();
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	mv_t val = pnr->pevaluator_func(prec, pctx, pnr->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
@@ -1171,8 +1172,8 @@ int main(int argc, char** argv) {
 	lrec_evaluator_t* ptolower = lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 
-	prec = lrec_alloc();
-	lrec_put(prec, "s", "abc");
+	prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, "s", "abc");
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
 	val = ps->pevaluator_func(prec, pctx, ps->pvstate);
@@ -1211,8 +1212,8 @@ int main(int argc, char** argv) {
 
 	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode);
 
-	prec = lrec_alloc();
-	lrec_put(prec, "x", "4.5");
+	prec = lrec_unbacked_alloc();
+	lrec_put_no_free(prec, "x", "4.5");
 
     printf("lrec   x        = %s\n", lrec_get(prec, "x"));
     printf("newval 2        = %s\n", mt_describe_val(p2->pevaluator_func(prec,     pctx,  p2->pvstate)));

@@ -30,6 +30,14 @@ NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*
 PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
 FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
 
+TEST_ARGPARSE_SRCS = \
+lib/mlrutil.c \
+lib/mlr_globals.c \
+containers/slls.c \
+containers/sllv.c \
+cli/argparse.c \
+cli/test_argparse.c
+
 TEST_BYTE_READERS_SRCS = \
 lib/mlrutil.c \
 lib/mlr_test_util.c \
@@ -155,8 +163,9 @@ mlrp: .always dsls
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
 	./test-mlrutil
+	./test-argparse
 	./test-byte-readers
 	./test-peek-file-reader
 	./test-parse-trie
@@ -178,6 +187,9 @@ regtest-copy:
 
 # ----------------------------------------------------------------
 # Unit-test executables
+
+test-argparse: .always
+	$(CCDEBUG) -D__TEST_ARGPARSE_MAIN__ $(TEST_ARGPARSE_SRCS) -o test-argparse
 
 test-byte-readers: .always
 	$(CCDEBUG) -D__TEST_BYTE_READERS_MAIN__ $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
@@ -211,7 +223,7 @@ ap:
 	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c
 
 evl:
-	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c -lm
+	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c lib/mlrmath.c lib/mlr_globals.c -lm
 
 lrim:
 	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
