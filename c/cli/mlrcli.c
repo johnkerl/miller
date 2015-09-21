@@ -246,14 +246,14 @@ static void main_usage(char* argv0, int exit_code) {
 		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
 	}
 	fprintf(o, "Double-quoting for CSV output:\n");
-	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
-	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
-	fprintf(o, "  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them (default)\n");
-	fprintf(o, "  --quote-numeric                        Wrap fields in double quotes only if they have numbers in them\n");
+	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
+	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
+	fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS in them (default)\n");
+	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers in them\n");
 	fprintf(o, "Numerical formatting:\n");
-	fprintf(o, "  --ofmt {format}                        E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
-	fprintf(o, "                                         Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
-	fprintf(o, "                                         See also the fmtnum function within mlr put (mlr --help-all-functions).\n");
+	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
+	fprintf(o, "                     Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
+	fprintf(o, "                     See also the fmtnum function within mlr put (mlr --help-all-functions).\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
