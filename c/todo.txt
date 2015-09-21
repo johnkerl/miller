@@ -25,7 +25,15 @@ MAJOR: autoconfig
 * makefile.orig w/ notes (simpler to debug in the non-happy case, faster compiles)
   along w/ mlrdoc note
 
-* pull request from wiz
+* merge pull request from wiz
+
+~ port more deader-mains over to UT ...
+
+* include lemon-generated .c/.h or not
+
+* figure out a2x/xml/...
+
+! Makefile.orig x 2 w/ notes in-tree & @ mlrdoc
 
 ----------------------------------------------------------------
 MAJOR: multi-char separators
