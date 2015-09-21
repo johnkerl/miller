@@ -10,6 +10,8 @@ EXTRA_DIST=	\
 		c.pprint \
 		d.csv \
 		d.pprint \
+		dots.pprint \
+		dots.xtab \
 		double-ps.dkvp \
 		e.csv \
 		e.pprint \
@@ -25,9 +27,12 @@ EXTRA_DIST=	\
 		joinb.dkvp \
 		minmax.dkvp \
 		missings.dkvp \
+		multi-sep.csvl \
+		multi-sep.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
 		regularize.dkvp \
+		rfc-csv \
 		sec2gmt \
 		sec2xhms \
 		short \
@@ -40,6 +45,7 @@ EXTRA_DIST=	\
 		truncated.nidx \
 		truncated.pprint \
 		truncated.xtab \
+		truncated.xtab-crlf \
 		utf8-1.csv \
 		utf8-2.csv \
 		utf8-align.dkvp \
