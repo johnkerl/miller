@@ -45,28 +45,28 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
-static lhmss_t* pdesc_to_chars_map = NULL;
+static lhmss_t* singleton_pdesc_to_chars_map = NULL;
 static lhmss_t* get_desc_to_chars_map() {
-	if (pdesc_to_chars_map == NULL) {
-		pdesc_to_chars_map = lhmss_alloc();
-		lhmss_put(pdesc_to_chars_map, "cr",        "\r");
-		lhmss_put(pdesc_to_chars_map, "crcr",      "\r\r");
-		lhmss_put(pdesc_to_chars_map, "newline",   "\n");
-		lhmss_put(pdesc_to_chars_map, "lf",        "\n");
-		lhmss_put(pdesc_to_chars_map, "lflf",      "\n\n");
-		lhmss_put(pdesc_to_chars_map, "crlf",      "\r\n");
-		lhmss_put(pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n");
-		lhmss_put(pdesc_to_chars_map, "tab",       "\t");
-		lhmss_put(pdesc_to_chars_map, "space",     " ");
-		lhmss_put(pdesc_to_chars_map, "comma",     ",");
-		lhmss_put(pdesc_to_chars_map, "newline",   "\n");
-		lhmss_put(pdesc_to_chars_map, "pipe",      "|");
-		lhmss_put(pdesc_to_chars_map, "slash",     "/");
-		lhmss_put(pdesc_to_chars_map, "colon",     ":");
-		lhmss_put(pdesc_to_chars_map, "semicolon", ";");
-		lhmss_put(pdesc_to_chars_map, "equals",    "=");
+	if (singleton_pdesc_to_chars_map == NULL) {
+		singleton_pdesc_to_chars_map = lhmss_alloc();
+		lhmss_put(singleton_pdesc_to_chars_map, "cr",        "\r");
+		lhmss_put(singleton_pdesc_to_chars_map, "crcr",      "\r\r");
+		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "lf",        "\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "lflf",      "\n\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "crlf",      "\r\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "tab",       "\t");
+		lhmss_put(singleton_pdesc_to_chars_map, "space",     " ");
+		lhmss_put(singleton_pdesc_to_chars_map, "comma",     ",");
+		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n");
+		lhmss_put(singleton_pdesc_to_chars_map, "pipe",      "|");
+		lhmss_put(singleton_pdesc_to_chars_map, "slash",     "/");
+		lhmss_put(singleton_pdesc_to_chars_map, "colon",     ":");
+		lhmss_put(singleton_pdesc_to_chars_map, "semicolon", ";");
+		lhmss_put(singleton_pdesc_to_chars_map, "equals",    "=");
 	}
-	return pdesc_to_chars_map;
+	return singleton_pdesc_to_chars_map;
 }
 static char* sep_from_arg(char* arg, char* argv0) {
 	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
@@ -74,6 +74,94 @@ static char* sep_from_arg(char* arg, char* argv0) {
 		return chars;
 	else // E.g. '\r\n'
 		return mlr_unbackslash(arg);
+}
+
+// ----------------------------------------------------------------
+static lhmss_t* singleton_default_rses = NULL;
+static lhmss_t* singleton_default_fses = NULL;
+static lhmss_t* singleton_default_pses = NULL;
+static lhmsi_t* singleton_default_repeat_ifses = NULL;
+static lhmsi_t* singleton_default_repeat_ipses = NULL;
+
+static lhmss_t* get_default_rses() {
+	if (singleton_default_rses == NULL) {
+		singleton_default_rses = lhmss_alloc();
+		lhmss_put(singleton_default_rses, "dkvp",    "\n");
+		lhmss_put(singleton_default_rses, "csv",     "\r\n");
+		lhmss_put(singleton_default_rses, "csvlite", "\n");
+		lhmss_put(singleton_default_rses, "nidx",    "\n");
+		lhmss_put(singleton_default_rses, "xtab",    "(N/A)");
+		lhmss_put(singleton_default_rses, "pprint",  "\n");
+	}
+	return singleton_default_rses;
+}
+
+static lhmss_t* get_default_fses() {
+	if (singleton_default_fses == NULL) {
+		singleton_default_fses = lhmss_alloc();
+		lhmss_put(singleton_default_fses, "dkvp",    ",");
+		lhmss_put(singleton_default_fses, "csv",     ",");
+		lhmss_put(singleton_default_fses, "csvlite", ",");
+		lhmss_put(singleton_default_fses, "nidx",    " ");
+		lhmss_put(singleton_default_fses, "xtab",    "\n");
+		lhmss_put(singleton_default_fses, "pprint",  " ");
+	}
+	return singleton_default_fses;
+}
+
+static lhmss_t* get_default_pses() {
+	if (singleton_default_pses == NULL) {
+		singleton_default_pses = lhmss_alloc();
+		lhmss_put(singleton_default_pses, "dkvp",    "=");
+		lhmss_put(singleton_default_pses, "csv",     "(N/A)");
+		lhmss_put(singleton_default_pses, "csvlite", "(N/A)");
+		lhmss_put(singleton_default_pses, "nidx",    "(N/A)");
+		lhmss_put(singleton_default_pses, "xtab",    " ");
+		lhmss_put(singleton_default_pses, "pprint",  "(N/A)");
+	}
+	return singleton_default_pses;
+}
+
+static lhmsi_t* get_default_repeat_ifses() {
+	if (singleton_default_repeat_ifses == NULL) {
+		singleton_default_repeat_ifses = lhmsi_alloc();
+		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "csv",     FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "csvlite", FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "nidx",    FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "xtab",    FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "pprint",  TRUE);
+	}
+	return singleton_default_repeat_ifses;
+}
+
+static lhmsi_t* get_default_repeat_ipses() {
+	if (singleton_default_repeat_ipses == NULL) {
+		singleton_default_repeat_ipses = lhmsi_alloc();
+		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "csv",     FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "csvlite", FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "nidx",    FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "xtab",    TRUE);
+		lhmsi_put(singleton_default_repeat_ipses, "pprint",  FALSE);
+	}
+	return singleton_default_repeat_ipses;
+}
+
+// For displaying the default separators in on-line help
+static char* rebackslash(char* sep) {
+	if (streq(sep, "\r"))
+		return "\\r";
+	else if (streq(sep, "\n"))
+		return "\\n";
+	else if (streq(sep, "\r\n"))
+		return "\\r\\n";
+	else if (streq(sep, "\t"))
+		return "\\t";
+	else if (streq(sep, " "))
+		return "space";
+	else
+		return sep;
 }
 
 // ----------------------------------------------------------------
@@ -123,28 +211,40 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
 	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
 	fprintf(o, "  Notes:\n");
-	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats.\n");
-	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; records are separated by\n");
+	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.\n");
+	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by\n");
 	fprintf(o, "    two or more consecutive IFS/OFS -- i.e. a blank line.\n");
 	fprintf(o, "  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.\n");
 	fprintf(o, "    This is because they are used with repetition for alignment; multi-character separators\n");
 	fprintf(o, "    would make alignment impossible.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
-	fprintf(o, "    You can use \"--csv --rs crlf\" for CRLF-terminated DKVP files, and so on.\n");
+	fprintf(o, "    You can use \"--dkvp --rs crlf\" for CRLF-terminated DKVP files, and so on.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
 	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
 	fprintf(o, "    You can use \"--csv --rs lf\" for Linux-native CSV files.\n");
 	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
 	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g. \"--fs '|' --ips :\"\n");
 	fprintf(o, "    - C-style escape sequences, e.g. \"--rs '\\r\\n' --fs '\\t'\".\n");
-	fprintf(o, "    - To avoid backslashing, you can use any the following names:\n");
+	fprintf(o, "    - To avoid backslashing, you can use any of the following names:\n");
 	fprintf(o, "     ");
 	lhmss_t* pmap = get_desc_to_chars_map();
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		fprintf(o, " %s", pe->key);
 	}
 	fprintf(o, "\n");
+	fprintf(o, "  * Default separators by format:\n");
+	fprintf(o, "      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS");
+	lhmss_t* default_rses = get_default_rses();
+	lhmss_t* default_fses = get_default_fses();
+	lhmss_t* default_pses = get_default_pses();
+	for (lhmsse_t* pe = default_rses->phead; pe != NULL; pe = pe->pnext) {
+		char* filefmt = pe->key;
+		char* rs = pe->value;
+		char* fs = lhmss_get(default_fses, filefmt);
+		char* ps = lhmss_get(default_pses, filefmt);
+		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
+	}
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all                            Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
@@ -202,47 +302,6 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
-
-	// xxx integrate these with DEFAULT_XS ...
-	lhmss_t* default_rses = lhmss_alloc();
-	lhmss_put(default_rses, "dkvp",    "\n");
-	lhmss_put(default_rses, "csv",     "\r\n");
-	lhmss_put(default_rses, "csvlite", "\n");
-	lhmss_put(default_rses, "nidx",    "\n");
-	lhmss_put(default_rses, "xtab",    "(N/A)");
-	lhmss_put(default_rses, "pprint",  "\n");
-
-	lhmss_t* default_fses = lhmss_alloc();
-	lhmss_put(default_fses, "dkvp",    ",");
-	lhmss_put(default_fses, "csv",     ",");
-	lhmss_put(default_fses, "csvlite", ",");
-	lhmss_put(default_fses, "nidx",    " ");
-	lhmss_put(default_fses, "xtab",    "\n");
-	lhmss_put(default_fses, "pprint",  " ");
-
-	lhmss_t* default_pses = lhmss_alloc();
-	lhmss_put(default_pses, "dkvp",    "=");
-	lhmss_put(default_pses, "csv",     "(N/A)");
-	lhmss_put(default_pses, "csvlite", "(N/A)");
-	lhmss_put(default_pses, "nidx",    "(N/A)");
-	lhmss_put(default_pses, "xtab",    " ");
-	lhmss_put(default_pses, "pprint",  "(N/A)");
-
-	lhmsi_t* default_repeat_ifses = lhmsi_alloc();
-	lhmsi_put(default_repeat_ifses, "dkvp",    FALSE);
-	lhmsi_put(default_repeat_ifses, "csv",     FALSE);
-	lhmsi_put(default_repeat_ifses, "csvlite", FALSE);
-	lhmsi_put(default_repeat_ifses, "nidx",    FALSE);
-	lhmsi_put(default_repeat_ifses, "xtab",    FALSE);
-	lhmsi_put(default_repeat_ifses, "pprint",  TRUE);
-
-	lhmsi_t* default_repeat_ipses = lhmsi_alloc();
-	lhmsi_put(default_repeat_ipses, "dkvp",    FALSE);
-	lhmsi_put(default_repeat_ipses, "csv",     FALSE);
-	lhmsi_put(default_repeat_ipses, "csvlite", FALSE);
-	lhmsi_put(default_repeat_ipses, "nidx",    FALSE);
-	lhmsi_put(default_repeat_ipses, "xtab",    TRUE);
-	lhmsi_put(default_repeat_ipses, "pprint",  FALSE);
 
 	popts->irs               = NULL;
 	popts->ifs               = NULL;
@@ -425,6 +484,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else
 			nusage(argv[0], argv[argi]);
 	}
+
+	lhmss_t* default_rses = get_default_rses();
+	lhmss_t* default_fses = get_default_fses();
+	lhmss_t* default_pses = get_default_pses();
+	lhmsi_t* default_repeat_ifses = get_default_repeat_ifses();
+	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
 
 	if (popts->irs == NULL)
 		popts->irs = lhmss_get(default_rses, popts->ifile_fmt);
