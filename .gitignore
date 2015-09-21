@@ -3,6 +3,7 @@ mlrd
 mlrg
 mlrp
 mlr-unit-tester
+test-argparse
 test-mlrutil
 test-string-builder
 test-byte-readers
