@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <sys/time.h>
 #include "lib/mlrutil.h"
 
@@ -278,4 +279,103 @@ int power_of_two_ceil(int n) {
 	while (n&(n-1))
 		n++;
 	return n;
+}
+
+// ----------------------------------------------------------------
+static int is_backslash_octal(char* input, int* pcode) {
+	if (strlen(input) < 4)
+		return FALSE;
+	if (input[0] != '\\')
+		return FALSE;
+	if (input[1] < '0' || input[1] > '7')
+		return FALSE;
+	if (input[2] < '0' || input[2] > '7')
+		return FALSE;
+	if (input[3] < '0' || input[3] > '7')
+		return FALSE;
+	*pcode = (input[1] - '0') * 64
+		+ (input[2] - '0') * 8
+		+ (input[3] - '0');
+	return TRUE;
+}
+
+static int is_backslash_hex(char* input, int* pcode) {
+	if (strlen(input) < 4)
+		return FALSE;
+	if (input[0] != '\\')
+		return FALSE;
+	if (input[1] != 'x')
+		return FALSE;
+	if (!isxdigit(input[2]))
+		return FALSE;
+	if (!isxdigit(input[3]))
+		return FALSE;
+
+	char buf[3];
+	buf[0] = input[2];
+	buf[1] = input[3];
+	buf[2] = 0;
+	if (sscanf(buf, "%x", pcode) != 1) {
+		fprintf(stderr, "Miller: internal coding error detected in file %s at line %d.\n",
+			__FILE__, __LINE__);
+		exit(1);
+	}
+	return TRUE;
+}
+
+char* mlr_unbackslash(char* input) {
+	char* output = strdup(input);
+	char* pi = input;
+	char* po = output;
+	int code = 0;
+	while (*pi) {
+		// https://en.wikipedia.org/wiki/Escape_sequences_in_C
+		if (streqn(pi, "\\a", 2)) {
+			pi += 2;
+			*(po++) = '\a';
+		} else if (streqn(pi, "\\b", 2)) {
+			pi += 2;
+			*(po++) = '\b';
+		} else if (streqn(pi, "\\f", 2)) {
+			pi += 2;
+			*(po++) = '\f';
+		} else if (streqn(pi, "\\n", 2)) {
+			pi += 2;
+			*(po++) = '\n';
+		} else if (streqn(pi, "\\r", 2)) {
+			pi += 2;
+			*(po++) = '\r';
+		} else if (streqn(pi, "\\t", 2)) {
+			pi += 2;
+			*(po++) = '\t';
+		} else if (streqn(pi, "\\v", 2)) {
+			pi += 2;
+			*(po++) = '\v';
+		} else if (streqn(pi, "\\\\", 2)) {
+			pi += 2;
+			*(po++) = '\\';
+		} else if (streqn(pi, "\\'", 2)) {
+			pi += 2;
+			*(po++) = '\'';
+		} else if (streqn(pi, "\\\"", 2)) {
+			pi += 2;
+			*(po++) = '"';
+		} else if (streqn(pi, "\\?", 2)) {
+			pi += 2;
+			*(po++) = '?';
+		} else if (is_backslash_octal(pi, &code)) {
+			pi += 4;
+			*(po++) = code;
+		} else if (is_backslash_hex(pi, &code)) {
+			pi += 4;
+			*(po++) = code;
+		} else {
+			*po = *pi;
+			pi++;
+			po++;
+		}
+	}
+	*po = 0;
+
+	return output; // xxx temp
 }

@@ -400,8 +400,8 @@ run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint \
 announce NULL-FIELD INPUT
 
 run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
-run_mlr --inidx    --odkvp cat $indir/null-fields.nidx
-run_mlr --idkvp    --oxtab cat $indir/missings.dkvp
+run_mlr --inidx --ifs comma --odkvp cat $indir/null-fields.nidx
+run_mlr --idkvp --oxtab cat $indir/missings.dkvp
 
 # ================================================================
 announce SPACE-PADDING
@@ -502,6 +502,26 @@ run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs ,  cut -o -f x/,a/,i/ $ind
 run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csvl
 run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csvl
 run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csvl
+
+# ================================================================
+announce MULTI-CHARACTER IFS FOR XTAB
+
+run_mlr --mmap    --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
+run_mlr --no-mmap --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
+run_mlr --mmap    --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
+run_mlr --no-mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
+
+# ================================================================
+announce MULTI-CHARACTER IRS FOR PPRINT
+
+run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
+run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
+
+# ================================================================
+announce MULTI-CHARACTER IXS SPECIFIERS
+
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any

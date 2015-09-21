@@ -7,67 +7,41 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
-MAJOR: autoconfig
+MAJOR: release planning
+
+* 2.2.0 with autoconfig and multi-char IXS
+* note default IFS for NIDX is now space (not worth a major version-bump)
+
+* save CSV read-perf for 2.2.1
 
 ----------------------------------------------------------------
-PLANNING NOTES
+MAJOR: autoconfig
 
-multi-char IXS for other-than-CSV
-! default space as fs for nidx & announce clearly !
-! I&O UTs for multi-sep pprint
-* don't use parse-trie for these formats unless someone really wants
-  double-quotes in DKVP (i don't need it, and no one else has asked for it)
-* requires either:
-  y multi-char getdelim
-    - just need to code it up and iterate on the perf work
-  n or use pfr/pbr
-    - performance improvements quite likely in the mmap/stringptr case (see CSV)
-    - performance for the stdio case will be helped by multi-char getdelim, but will still likely to be much slower
-      than getdelim. and double-buffering pbr on top of mcgetdelim is needless copying
-    - pfr/pbr probably too heavyweight to not cause a performance regression
-    - pfr/pbr aren't really important in the absence of parse-trie
-* probably keep the single-char pfuncs as-is, to be invoked in single-char
-  cases -- unless perf measurements show there's not a significant loss
+! lemon in-dir -- why is this a problem?
+
+* separate mlrdoc build notes for build-a-release (autoreconf, xmllint, etc.)
+  vs. install-a-release (./configure)
+
+* separate dependency lists (long & short)
+
+* makefile.orig w/ notes (simpler to debug in the non-happy case, faster compiles)
+  along w/ mlrdoc note
+
+* pull request from wiz
+
+----------------------------------------------------------------
+MAJOR: multi-char separators
+
 * valgrind & UT cline/sline
 * UTx4xN the format-parsers
 
-CSV performance/memmgt issues:
-* mmap/stringptr cases:
-  o parse-trie must be kept
-  o need to impl zero-strdup logic for sure -- this will be a significant gain
-  o replace pfr/pbr with zero-copy pointer arithmetic (the backing *is* the buffer)
-* stdio:
-  o parse-trie must be kept
-  o multi-char getdelim will probably be needed; pfr/pbr is too slow even with ring-buffer & inlining
-
-in summary: pfr/pbr have got to go
-
-multi-char getdelim
-* start with poor-man's version which calls single-char getdelim with irs[-1] & strcats in case !matchback
-  o --exit-stats option? for hash-stats too?
-* separately, code up a genuine multi-char getdelim
-  o modify the poor-man's logic but simply keep appending in-routine in the !matchback case
-
-----------------------------------------------------------------
-MAJOR: multi-char separators for file formats other than CSV
-k oxs is functionally done
-* need backslash-handling/parsing ... at least, \r \n \t. and, into online help.
-! ixs:
-  o ips & ifs: needs *p==ixs with strneq(p, ixs); also double-null poke (sos&eos)
-  o irs for mmap: same
-  o irs for stdio: it all comes down to getdelim.
-  ! so focus on getline perf.
-  ! maybe best idea is to re-impl getdelim with multichar irs.
-    - rework csv reader to look more like csvlite (which is performant)?
-  ! temporary option is getdelim with final char of the multichar irs; strcmp backwards;
-    usually get it right; occasionally have to strcat/memcpy multiple such. this is
-    gross so don't do it unless multichar-getdelim doesn't pan out.
-
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
+
 * current option runs faster w/o free, apparently due to heap-fragging
   o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
   o redo inline-pasting but this time correctly weight the fragging effect
+  o power-of-two
 * for stdio, needs some thought ...
 * ... but for mmap, it's almost always not necessary to strdup at all:
   only on escaped-double-quote case.
@@ -85,9 +59,6 @@ MINOR
 
 * define dkvp, nidx, etc @ cover x 2
   - web-server access logs in dkvp format -- ?
-
-? dkvp quoting ... wait until after the mmap/perf split. else, very undesirable
-  performance regression.
 
 * go back and re-apply ctype/isprint portability things to new spots
 
@@ -121,8 +92,6 @@ little:
 
 * comma-number -- using locale?
 
-* top-level make: c dir at top of PATH
-
 * poki cover -> readme
 
 * steppers (and stats1/2 -- what else -- ?): include help-string in
@@ -144,42 +113,13 @@ xperf:
 * post rust/go cmps
 
 ================================================================
-FILE FORMATS
-
-! CSV with no records output: somehow emit just the header. likewise consume same on input ...
-  ... & be able to cat header-only input to header-only output.
-
-* #1 HN-release-announcement ask is RFC-CSV -- which insists on CRLF
-* Also should support CRLF for DKVP
-* Also have been wanting to support multi-char I/O RS/FS/PS for some time now
-* Note nidx, pprint, xtab are plain-text; CSV is structured including CRLF even
-  on systems for which that is unnatural; DKVP I think of as plaintext but could
-  be extended to have double-quote support just like CSV, and certainly could
-  have CRLF support.
-
-           rs            fs              ps
-         +---------------------------------------------
-  nidx   | LF/CRLF       fixed@sp*       N/A
-  pprint | LF/CRLF       fixed@sp*       N/A
-  xtab   | LFLF/CRLFCRLF fixed@LF/CRLF   fixed@sp*
-  csv    | fixed@CRLF    fixed@comma     N/A
-  dkvp   | LF/CRLF       varies[,;|etc]  varies[=:etc]
-         +---------------------------------------------
-
-So, to do:
-* impl multichar RF/FS/PS across the board -- including RS CRLF DKVP in particular
-* let CSVLITE handle simple quotes at least (no embedded comma, LF, double-double quote)
-* let DKVP handle full-up CSV-style double quotes. maybe make a DKVPLITE with simple-quote feature.
-
-================================================================
 NEATEN
 
 !! xxx's in the code
 
-! copyright headers ...
+? copyright headers ...
 
 * source hygiene: top-of-header comments, readme re memory management, etc.
-* mmap cleanup, especially csv
 
 ================================================================
 COOKBOOK
@@ -235,7 +175,6 @@ UT/REG
 * het-xtab out
 * modulus operator
 * strlen
-* xtab i/o
 * make should-fail machinery & use it for null-key dkvp cases.
 * all mathlib funcs
 * int/float/string

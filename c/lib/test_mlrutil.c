@@ -113,6 +113,18 @@ static char * test_paste() {
 	return 0;
 }
 
+// ----------------------------------------------------------------
+static char * test_unbackslash() {
+	mu_assert_lf(streq(mlr_unbackslash(""), ""));
+	mu_assert_lf(streq(mlr_unbackslash("hello"), "hello"));
+	mu_assert_lf(streq(mlr_unbackslash("\\r\\n"), "\r\n"));
+	mu_assert_lf(streq(mlr_unbackslash("\\t\\\\"), "\t\\"));
+	mu_assert_lf(streq(mlr_unbackslash("[\\132]"), "[Z]"));
+	mu_assert_lf(streq(mlr_unbackslash("[\\x59]"), "[Y]"));
+
+	return 0;
+}
+
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_canonical_mod);
@@ -120,6 +132,7 @@ static char * all_tests() {
 	mu_run_test(test_streqn);
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
+	mu_run_test(test_unbackslash);
 	return 0;
 }
 

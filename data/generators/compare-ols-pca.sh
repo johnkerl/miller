@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 for p in \
   -0.975 -0.950 -0.925 -0.900 \
@@ -26,6 +26,6 @@ do
     #echo
     #echo p $p
     #a.out $p|mlr --oxtab stats2 -a linreg-ols,linreg-pca -f x,y
-    echo "p=$p,$(a.out $p | mlr stats2 -a linreg-ols,r2,linreg-pca -f x,y)"
+    echo "p=$p,`a.out $p | mlr stats2 -a linreg-ols,r2,linreg-pca -f x,y`"
   done
 done

@@ -8,6 +8,7 @@
 
 #define TRUE  1
 #define FALSE 0
+#define NEITHER_TRUE_NOR_FALSE -1
 
 // ----------------------------------------------------------------
 //int mlr_canonical_mod(int a, int n);
@@ -37,6 +38,7 @@ static inline int streq(char* restrict a, char* restrict b) {
 #endif
 }
 
+// strncmp computes signs; we don't need that -- only equality or inequality.
 static inline int streqn(char* restrict a, char* restrict b, int n) {
 #if 0 // performance comparison
 	return !strncmp(a, b, n);
@@ -95,5 +97,9 @@ int strlen_for_utf8_display(char* str);
 
 int mlr_imax2(int a, int b);
 int power_of_two_ceil(int n);
+
+// The caller should free the return value. Maps two-character sequences such as
+// "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
+char* mlr_unbackslash(char* input);
 
 #endif // MLRUTIL_H

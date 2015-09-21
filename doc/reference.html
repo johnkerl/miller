@@ -229,6 +229,7 @@ Verbs:
    cat check count-distinct cut filter group-by group-like having-fields head
    histogram join label put regularize rename reorder sort stats1 stats2 step tac tail top
    uniq
+Example: mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 
@@ -249,26 +250,39 @@ Data-format options, for input, output, or both:
   --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
 Separator options, for input, output, or both:
-  --rs      --irs     --ors              Record separators, e.g. newline
+  --rs      --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
   --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
-  Notes (as of Miller v2.1.4):
-  * IRS,IFS,IPS,ORS,OFS,OPS are specifiable for all file formats.
-  * IRS,IFS,IPS may be multi-character for all but XTAB format, where they must be single-character.
-    This restriction will be lifted in a near-future release.
-  * ORS,OFS,OPS may be multi-character for all formats.
+  Notes:
+  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.
+  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by
+    two or more consecutive IFS/OFS -- i.e. a blank line.
+  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
+    This is because they are used with repetition for alignment; multi-character separators
+    would make alignment impossible.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
-    You can use "--csv --rs cflf" for CRLF-terminated DKVP files, and so on.
+    You can use "--dkvp --rs crlf" for CRLF-terminated DKVP files, and so on.
   * CSV is intended to handle RFC-4180-compliant data.
     In particular, this means it uses CRLF line-terminators by default.
     You can use "--csv --rs lf" for Linux-native CSV files.
-  * You can use "--fs '|'", "--ips :", etc., or any of the following names for separators:
-   cr crcr lf lflf crlf crlfcrlf tab space comma newline pipe slash colon semicolon equals
+  * You can specify separators in any of the following ways, shown by example:
+    - Type them out, quoting as necessary for shell escapes, e.g. "--fs '|' --ips :"
+    - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
+    - To avoid backslashing, you can use any of the following names:
+      cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
+  * Default separators by format:
+      File format  RS       FS       PS
+      dkvp         \n       ,        =
+      csv          \r\n     ,        (N/A)
+      csvlite      \n       ,        (N/A)
+      nidx         \n       space    (N/A)
+      xtab         (N/A)    \n       space
+      pprint       \n       space    (N/A)
 Double-quoting for CSV output:
   --quote-all                            Wrap all fields in double quotes
   --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
-  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them
+  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them (default)
   --quote-numeric                        Wrap fields in double quotes only if they have numbers in them
 Numerical formatting:
   --ofmt {format}                        E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
@@ -279,7 +293,7 @@ Other options:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= v2.1.4.
+This is Miller version &gt;= v2.2.0.
 </pre>
 </div>
 <p/>
