@@ -9,10 +9,8 @@ TOP OF LIST
 ----------------------------------------------------------------
 MAJOR: release planning
 
-* 2.2.0 with autoconfig and multi-char IXS
-* note default IFS for NIDX is now space (not worth a major version-bump)
-
-* save CSV read-perf for 2.2.1
+* 2.2.1 with autoconfig
+* 2.2.2 with CSV read-perf
 
 ----------------------------------------------------------------
 MAJOR: autoconfig

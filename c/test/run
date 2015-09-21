@@ -514,8 +514,8 @@ run_mlr --no-mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
 # ================================================================
 announce MULTI-CHARACTER IRS FOR PPRINT
 
-run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
-run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b test/input/dots.pprint
+run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
+run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
 
 # ================================================================
 announce MULTI-CHARACTER IXS SPECIFIERS
