@@ -32,7 +32,6 @@ MAJOR: autoconfig
 ----------------------------------------------------------------
 MAJOR: multi-char separators
 
-! tabulate defaults in mlr -h
 * valgrind & UT cline/sline
 * UTx4xN the format-parsers
 

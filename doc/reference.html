@@ -254,23 +254,31 @@ Separator options, for input, output, or both:
   --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
   --ps      --ips     --ops              Pair   separators, e.g. equals sign
   Notes:
-  * IPS/OPS are only used for DKVP and XTAB formats.
-  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; records are separated by
+  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.
+  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by
     two or more consecutive IFS/OFS -- i.e. a blank line.
   * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
     This is because they are used with repetition for alignment; multi-character separators
     would make alignment impossible.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
-    You can use "--csv --rs crlf" for CRLF-terminated DKVP files, and so on.
+    You can use "--dkvp --rs crlf" for CRLF-terminated DKVP files, and so on.
   * CSV is intended to handle RFC-4180-compliant data.
     In particular, this means it uses CRLF line-terminators by default.
     You can use "--csv --rs lf" for Linux-native CSV files.
   * You can specify separators in any of the following ways, shown by example:
     - Type them out, quoting as necessary for shell escapes, e.g. "--fs '|' --ips :"
     - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
-    - To avoid backslashing, you can use any the following names:
+    - To avoid backslashing, you can use any of the following names:
       cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
+  * Default separators by format:
+      File format  RS       FS       PS
+      dkvp         \n       ,        =
+      csv          \r\n     ,        (N/A)
+      csvlite      \n       ,        (N/A)
+      nidx         \n       space    (N/A)
+      xtab         (N/A)    \n       space
+      pprint       \n       space    (N/A)
 Double-quoting for CSV output:
   --quote-all                            Wrap all fields in double quotes
   --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
