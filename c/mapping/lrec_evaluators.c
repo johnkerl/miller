@@ -1138,15 +1138,23 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
 }
 
 // ================================================================
-#ifdef __LREC_EVALUATORS_MAIN__
-int main(int argc, char** argv) {
-	mtrand_init_default();
-	mlr_global_init(argv[0], "%lf", NULL);
+#ifdef __TEST_LREC_EVALUATORS_MAIN__
 
+#include "lib/minunit.h"
+
+// ----------------------------------------------------------------
+int tests_run         = 0;
+int tests_failed      = 0;
+int assertions_run    = 0;
+int assertions_failed = 0;
+
+// ----------------------------------------------------------------
+static char * test1() {
+	printf("\n");
+	printf("-- TEST_LREC_EVALUATORS test1 ENTER\n");
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
-	// ----------------------------------------------------------------
 	lrec_evaluator_t* pnr       = lrec_evaluator_alloc_from_NR();
 	lrec_evaluator_t* pfnr      = lrec_evaluator_alloc_from_FNR();
 	lrec_evaluator_t* pfilename = lrec_evaluator_alloc_from_FILENAME();
@@ -1156,15 +1164,34 @@ int main(int argc, char** argv) {
 
 	mv_t val = pnr->pevaluator_func(prec, pctx, pnr->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_INT);
+	mu_assert_lf(val.u.intv == 888);
+
 	val = pfnr->pevaluator_func(prec, pctx, pfnr->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_INT);
+	mu_assert_lf(val.u.intv == 999);
+
 	val = pfilename->pevaluator_func(prec, pctx, pfilename->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "filename-goes-here"));
+
 	val = pfilenum->pevaluator_func(prec, pctx, pfilenum->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_INT);
+	mu_assert_lf(val.u.intv == 123);
 
-	// ----------------------------------------------------------------
-	// $s + "def"
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char * test2() {
+	printf("\n");
+	printf("-- TEST_LREC_EVALUATORS test2 ENTER\n");
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t* pctx = &ctx;
 
 	lrec_evaluator_t* ps       = lrec_evaluator_alloc_from_field_name("s");
 	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_literal("def");
@@ -1172,34 +1199,54 @@ int main(int argc, char** argv) {
 	lrec_evaluator_t* ptolower = lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 
-	prec = lrec_unbacked_alloc();
+	lrec_t* prec = lrec_unbacked_alloc();
 	lrec_put_no_free(prec, "s", "abc");
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
-	val = ps->pevaluator_func(prec, pctx, ps->pvstate);
+	mv_t val = ps->pevaluator_func(prec, pctx, ps->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "abc"));
 
 	val = pdef->pevaluator_func(prec, pctx, pdef->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "def"));
 
 	val = pdot->pevaluator_func(prec, pctx, pdot->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptolower->pevaluator_func(prec, pctx, ptolower->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptoupper->pevaluator_func(prec, pctx, ptoupper->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	mu_assert_lf(val.type == MT_STRING);
+	mu_assert_lf(val.u.strv != NULL);
+	mu_assert_lf(streq(val.u.strv, "ABCDEF"));
 
-	// ----------------------------------------------------------------
-	// 2.0 * log($x) + rand()
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char * test3() {
+	printf("\n");
+	printf("-- TEST_LREC_EVALUATORS test3 ENTER\n");
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t* pctx = &ctx;
 
 	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_literal("2.0");
 	lrec_evaluator_t* px     = lrec_evaluator_alloc_from_field_name("x");
 	lrec_evaluator_t* plogx  = lrec_evaluator_alloc_from_f_f_func(f_f_log10_func, px);
 	lrec_evaluator_t* p2logx = lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func, p2, plogx);
-	lrec_evaluator_t* prand  = lrec_evaluator_alloc_from_f_z_func(f_z_urand_func);
-	lrec_evaluator_t* psum   = lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func, p2logx, prand);
 	lrec_evaluator_t* px2    = lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func, px, px);
 	lrec_evaluator_t* p4     = lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func, p2, p2);
 
@@ -1212,21 +1259,37 @@ int main(int argc, char** argv) {
 
 	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode);
 
-	prec = lrec_unbacked_alloc();
+	lrec_t* prec = lrec_unbacked_alloc();
 	lrec_put_no_free(prec, "x", "4.5");
 
-    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mt_describe_val(p2->pevaluator_func(prec,     pctx,  p2->pvstate)));
-    printf("newval 4        = %s\n", mt_describe_val(p4->pevaluator_func(prec,     pctx,  p4->pvstate)));
-    printf("newval x        = %s\n", mt_describe_val(px->pevaluator_func(prec,     pctx,  px->pvstate)));
-    printf("newval x^2      = %s\n", mt_describe_val(px2->pevaluator_func(prec,    pctx,  px2->pvstate)));
-    printf("newval log(x)   = %s\n", mt_describe_val(plogx->pevaluator_func(prec,  pctx,  plogx->pvstate)));
-    printf("newval 2*log(x) = %s\n", mt_describe_val(p2logx->pevaluator_func(prec, pctx,  p2logx->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
+	mv_t valp2     = p2->pevaluator_func(prec,     pctx, p2->pvstate);
+	mv_t valp4     = p4->pevaluator_func(prec,     pctx, p4->pvstate);
+	mv_t valpx     = px->pevaluator_func(prec,     pctx, px->pvstate);
+	mv_t valpx2    = px2->pevaluator_func(prec,    pctx, px2->pvstate);
+	mv_t valplogx  = plogx->pevaluator_func(prec,  pctx, plogx->pvstate);
+	mv_t valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
-	printf("newval sum      = %s\n",  mt_describe_val(psum->pevaluator_func(prec, pctx, psum->pvstate)));
+    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
+    printf("newval 2        = %s\n", mt_describe_val(valp2));
+    printf("newval 4        = %s\n", mt_describe_val(valp4));
+    printf("newval x        = %s\n", mt_describe_val(valpx));
+    printf("newval x^2      = %s\n", mt_describe_val(valpx2));
+    printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
+    printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
+
+	mu_assert_lf(valp2.type     == MT_DOUBLE);
+	mu_assert_lf(valp4.type     == MT_DOUBLE);
+	mu_assert_lf(valpx.type     == MT_DOUBLE);
+	mu_assert_lf(valpx2.type    == MT_DOUBLE);
+	mu_assert_lf(valplogx.type  == MT_DOUBLE);
+	mu_assert_lf(valp2logx.type == MT_DOUBLE);
+
+	mu_assert_lf(valp2.u.dblv     == 2.0);
+	mu_assert_lf(valp4.u.dblv     == 4.0);
+	mu_assert_lf(valpx.u.dblv     == 4.5);
+	mu_assert_lf(valpx2.u.dblv    == 20.25);
+	mu_assert_lf(fabs(valplogx.u.dblv  - 0.653213) < 1e-5);
+	mu_assert_lf(fabs(valp2logx.u.dblv - 1.306425) < 1e-5);
 
 	mlr_dsl_ast_node_print(p2logxnode);
 	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
@@ -1234,22 +1297,58 @@ int main(int argc, char** argv) {
 
 	lrec_rename(prec, "x", "y");
 
-    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mt_describe_val(p2->pevaluator_func(prec,     pctx,  p2->pvstate)));
-    printf("newval 4        = %s\n", mt_describe_val(p4->pevaluator_func(prec,     pctx,  p4->pvstate)));
-    printf("newval x        = %s\n", mt_describe_val(px->pevaluator_func(prec,     pctx,  px->pvstate)));
-    printf("newval x^2      = %s\n", mt_describe_val(px2->pevaluator_func(prec,    pctx,  px2->pvstate)));
-    printf("newval log(x)   = %s\n", mt_describe_val(plogx->pevaluator_func(prec,  pctx,  plogx->pvstate)));
-    printf("newval 2*log(x) = %s\n", mt_describe_val(p2logx->pevaluator_func(prec, pctx,  p2logx->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
-    printf("newval urand    = %s\n", mt_describe_val(prand->pevaluator_func(prec,  pctx,  prand->pvstate)));
-    printf("newval sum      = %s\n", mt_describe_val(psum->pevaluator_func(prec,   pctx,  psum->pvstate)));
+	valp2     = p2->pevaluator_func(prec,     pctx, p2->pvstate);
+	valp4     = p4->pevaluator_func(prec,     pctx, p4->pvstate);
+	valpx     = px->pevaluator_func(prec,     pctx, px->pvstate);
+	valpx2    = px2->pevaluator_func(prec,    pctx, px2->pvstate);
+	valplogx  = plogx->pevaluator_func(prec,  pctx, plogx->pvstate);
+	valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
-	mlr_dsl_ast_node_print(p2logxnode);
-	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
-	printf("\n");
+    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
+    printf("newval 2        = %s\n", mt_describe_val(valp2));
+    printf("newval 4        = %s\n", mt_describe_val(valp4));
+    printf("newval x        = %s\n", mt_describe_val(valpx));
+    printf("newval x^2      = %s\n", mt_describe_val(valpx2));
+    printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
+    printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
+
+	mu_assert_lf(valp2.type     == MT_DOUBLE);
+	mu_assert_lf(valp4.type     == MT_DOUBLE);
+	mu_assert_lf(valpx.type     == MT_NULL);
+	mu_assert_lf(valpx2.type    == MT_NULL);
+	mu_assert_lf(valplogx.type  == MT_NULL);
+	mu_assert_lf(valp2logx.type == MT_NULL);
+
+	mu_assert_lf(valp2.u.dblv     == 2.0);
+	mu_assert_lf(valp4.u.dblv     == 4.0);
 
 	return 0;
 }
-#endif // __LREC_EVALUATORS_MAIN__
+
+// ================================================================
+static char * all_tests() {
+	mu_run_test(test1);
+	mu_run_test(test2);
+	mu_run_test(test3);
+	return 0;
+}
+
+int main(int argc, char **argv) {
+	mlr_global_init(argv[0], "%lf", NULL);
+
+	printf("TEST_LREC_EVALUATORS ENTER\n");
+	char *result = all_tests();
+	printf("\n");
+	if (result != 0) {
+		printf("Not all unit tests passed\n");
+	}
+	else {
+		printf("TEST_LREC_EVALUATORS: ALL UNIT TESTS PASSED\n");
+	}
+	printf("Tests      passed: %d of %d\n", tests_run - tests_failed, tests_run);
+	printf("Assertions passed: %d of %d\n", assertions_run - assertions_failed, assertions_run);
+
+	return result != 0;
+}
+
+#endif // __TEST_LREC_EVALUATORS_MAIN__

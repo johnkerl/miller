@@ -17,7 +17,6 @@ MAJOR: autoconfig
 
 * port more deader-mains over to UT ...
   o files:
-    ./cli/argparse.c
     ./input/lrec_reader_in_memory.c
     ./mapping/lrec_evaluators.c
     ./dsls/filter_dsl_wrapper.c

@@ -86,6 +86,18 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 containers/test_multiple_containers.c
 
+TEST_LREC_EVALUATORS_SRCS = \
+lib/mlr_globals.c \
+lib/mlrutil.c \
+lib/mtrand.c \
+lib/mlrmath.c \
+containers/mlr_dsl_ast.c \
+containers/sllv.c \
+containers/slls.c \
+containers/lrec.c \
+mapping/mlr_val.c \
+mapping/lrec_evaluators.c
+
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
 lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 mapping/context.c \
@@ -163,7 +175,7 @@ mlrp: .always dsls
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-join-bucket-keeper
+unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-lrec-evaluators test-join-bucket-keeper
 	./test-mlrutil
 	./test-argparse
 	./test-byte-readers
@@ -172,6 +184,7 @@ unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader te
 	./test-lrec
 	./test-multiple-containers
 	./test-string-builder
+	./test-lrec-evaluators
 	./test-join-bucket-keeper
 	@echo
 	@echo DONE
@@ -212,18 +225,15 @@ test-string-builder: .always
 test-parse-trie: .always
 	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c containers/test_parse_trie.c -o test-parse-trie
 
+test-lrec-evaluators: .always
+	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators
+
 test-join-bucket-keeper: .always
 	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
 
 # ----------------------------------------------------------------
 # Standalone mains
 # TODO: replace the interesting content with unit tests; jettison the rest
-
-ap:
-	$(CCDEBUG) -D__AP_MAIN__ cli/argparse.c containers/sllv.c containers/slls.c lib/mlrutil.c
-
-evl:
-	$(CCDEBUG) -D__LREC_EVALUATORS_MAIN__ mapping/lrec_evaluators.c mapping/mlr_val.c containers/mlr_dsl_ast.c containers/sllv.c containers/slls.c lib/mlrutil.c lib/mtrand.c containers/lrec.c lib/mlrmath.c lib/mlr_globals.c -lm
 
 lrim:
 	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
