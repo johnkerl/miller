@@ -150,12 +150,12 @@ mlr.static: .always dsls
 	$(CCOPT) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr.static
 
 dsls: .always
-	make -C dsls put_dsl_parse.o
-	make -C dsls put_dsl_lexer.o
-	make -C dsls put_dsl_wrapper.o
-	make -C dsls filter_dsl_parse.o
-	make -C dsls filter_dsl_lexer.o
-	make -C dsls filter_dsl_wrapper.o
+	make -C dsls -f Makefile.no-autoconfig put_dsl_parse.o
+	make -C dsls -f Makefile.no-autoconfig put_dsl_lexer.o
+	make -C dsls -f Makefile.no-autoconfig put_dsl_wrapper.o
+	make -C dsls -f Makefile.no-autoconfig filter_dsl_parse.o
+	make -C dsls -f Makefile.no-autoconfig filter_dsl_lexer.o
+	make -C dsls -f Makefile.no-autoconfig filter_dsl_wrapper.o
 
 # ----------------------------------------------------------------
 # Other executable variants
@@ -248,7 +248,7 @@ getl: .always
 # ================================================================
 clean:
 	@rm -vf mlr mlrd mlrg mlrp tester
-	@make -C dsls clean
+	@make -C dsls -f Makefile.no-autoconfig clean
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old
 .always:

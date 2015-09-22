@@ -7,15 +7,15 @@ devall: c install doc
 # path to be picked up by the mlr-execs in the docs dir. better would be to
 # export PATH here with ./c at its head.
 c: .always
-	make -C c top
+	make -C c -f Makefile.no-autoconfig top
 doc: .always
 	cd doc && poki
 install: .always
-	make -C c install
+	make -C c -f Makefile.no-autoconfig install
 	install -d -m 0755 $(DESTDIR)/$(MANDIR)
 	install -m 0644 doc/miller.1 $(DESTDIR)/$(MANDIR)
 clean: .always
-	make -C c clean
+	make -C c -f Makefile.no-autoconfig clean
 .PHONY: manpage
 # OSX:
 # * brew install asciidoc
