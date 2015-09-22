@@ -22,27 +22,28 @@ MAJOR: autoconfig
     ./dsls/filter_dsl_wrapper.c
     ./dsls/put_dsl_wrapper.c
 
-w merge the pull request from wiz
+! travis use autoconf
 
+LEVELS:
+* figure out a2x/xml/...
+* manpage
+* poki
+* ... what else ...
+
+DOC:
 * separate mlrdoc build notes for build-a-release (autoreconf, xmllint, etc.)
   vs. install-a-release (./configure)
-
 * separate dependency lists (long & short)
-
 * makefile.orig w/ notes (simpler to debug in the non-happy case, faster compiles)
   along w/ mlrdoc note
-
-* include lemon-generated .c/.h or not
-
-* figure out a2x/xml/...
-
-! Makefile.orig x 2 w/ notes in-tree & @ mlrdoc
-
 * notes-to-self re new files: incl. test-files in c/test/Makefile.am
+! Makefile.orig x 2 w/ notes in-tree & @ mlrdoc
+* mlrvers.h <-> config.h; also ci a stub config.h for noac build
 
+TO-DO:
+* include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
 
-* mlrvers.h <-> config.h; also ci a stub config.h for noac build
 
 ----------------------------------------------------------------
 MAJOR: multi-char separators

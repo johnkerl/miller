@@ -66,6 +66,7 @@ getl
 lemon_prepared
 lrim
 mlr-[0-9.]*.tar.*
+test_argparse
 test_byte_readers
 test_join_bucket_keeper
 test_lrec
