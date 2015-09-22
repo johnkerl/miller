@@ -42,6 +42,8 @@ w merge the pull request from wiz
 
 * lemon in-dir -- cf wiz note
 
+* mlrvers.h <-> config.h; also ci a stub config.h for noac build
+
 ----------------------------------------------------------------
 MAJOR: multi-char separators
 
