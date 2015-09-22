@@ -14,7 +14,9 @@
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
 
-#ifndef NO_AUTOCONFIG
+#ifdef NO_AUTOCONFIG
+#include "mlrvers.h"
+#else
 #include "config.h"
 #endif // NO_AUTOCONFIG
 
