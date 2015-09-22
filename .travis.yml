@@ -1,15 +1,15 @@
 language: c
 
-#Use newer travis container-based infrastructure
+# Use newer travis container-based infrastructure
 sudo: false
 
-#Install flex dependency
+# Install flex dependency
 addons:
   apt:
     packages:
       - flex
 
-#Build using gcc and clang since it is supported
+# Build using gcc and clang since it is supported
 compiler:
   - clang
   - gcc
@@ -19,4 +19,4 @@ before_script: cd c
 
 # No configure or make install needed
 # See c/Makefile for the reason for make -e
-script: make -e
+script: make -f Makefile.no-autoconfig -e
