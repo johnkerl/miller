@@ -18,9 +18,10 @@ MAJOR: autoconfig
 * port more deader-mains over to UT ...
   o files:
     ./input/lrec_reader_in_memory.c
-    ./mapping/lrec_evaluators.c
     ./dsls/filter_dsl_wrapper.c
     ./dsls/put_dsl_wrapper.c
+  o Makefile.am updates:
+    ./mapping/lrec_evaluators.c
 
 ! travis use autoconf
 

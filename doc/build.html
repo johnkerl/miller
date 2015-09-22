@@ -93,6 +93,31 @@ Miller commands were run with pretty-print-tabular output format.
     <p/>
     
 <!-- BODY COPIED FROM content-for-build.html BY poki -->
+<p/>Miller very recently has <boldmaroon>autoconf build support</boldmaroon>, with status tracked on
+<a href="https://github.com/johnkerl/miller/issues/9">https://github.com/johnkerl/miller/issues/9</a>.
+
+<p>More details will be provided here soon, but meanwhile:
+
+<ul>
+
+<li/> With <tt>autoconf</tt>, <tt>automake</tt>, and <tt>libtool</tt>
+dependencies, it should be possible for you to build from master with
+<tt>autoreconf -fiv &amp;&amp; ./configure &amp;&amp; make</tt> in the Miller
+base directory. Run <tt>make check</tt> to run unit and regression tests.
+
+<li/> It is my intention that you should be able to build from a release
+tarball with <tt>./configure &amp;&amp; make</tt> in the Miller base directory,
+with no dependency on autotools. Again, run <tt>make check</tt> to run unit and
+regression tests.
+
+<li/> If you prefer, you can cd into the <tt>c</tt> subdirectory of the Miller
+source tree and run <tt>make -f Makefile.no-autoconfig</tt>. This is a simple
+makefile (also <tt>c/dsls/Makefile.no-autoconfig</tt>) which you can hand-edit,
+if this is your preference: less automatic but more transparent. This builds
+the <tt>c/mlr</tt> executable as well as running unit and regression tests.
+
+</ul>
+
 <p/><boldmaroon>To build</boldmaroon>: just run <tt>make</tt> in the <tt>c/</tt> subdirectory of <a
 href="https://github.com/johnkerl/miller">the repo</a>. This builds the <tt>mlr</tt> executable as well as running
 all unit and regression tests.
