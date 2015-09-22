@@ -11,6 +11,7 @@ test-peek-file-reader
 test-parse-trie
 test-lrec
 test-multiple-containers
+test-lrec-evaluators
 test-join-bucket-keeper
 termcvt
 a.out
