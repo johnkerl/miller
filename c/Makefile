@@ -226,7 +226,7 @@ test-parse-trie: .always
 	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c containers/test_parse_trie.c -o test-parse-trie
 
 test-lrec-evaluators: .always
-	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators
+	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
 
 test-join-bucket-keeper: .always
 	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
