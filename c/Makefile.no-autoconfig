@@ -5,7 +5,7 @@
 CC=gcc
 CFLAGS=-std=gnu99
 # ../config.h
-IFLAGS=-I. -I..
+IFLAGS=-DNO_AUTOCONFIG -I. -I..
 
 WFLAGS=-Wall -Werror
 # Worth exploring ... but needs handling for unused parameters in functions which comply with interfaces.

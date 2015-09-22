@@ -14,7 +14,9 @@
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
 
+#ifndef NO_AUTOCONFIG
 #include "config.h"
+#endif // NO_AUTOCONFIG
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
@@ -260,7 +262,11 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.\n");
+#ifdef NO_AUTOCONFIG
+	fprintf(o, "This is Miller version >= %s.\n", MLR_VERSION);
+#else
 	fprintf(o, "This is Miller version >= %s.\n", PACKAGE_VERSION);
+#endif // NO_AUTOCONFIG
 
 	exit(exit_code);
 }
