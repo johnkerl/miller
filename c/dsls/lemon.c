@@ -11,6 +11,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #ifndef __WIN32__
 #   if defined(_WIN32) || defined(WIN32)
@@ -2274,7 +2275,7 @@ static void parseonetoken(struct pstate *psp)
 ** macros.  This routine looks for "%ifdef" and "%ifndef" and "%endif" and
 ** comments them out.  Text in between is also commented out as appropriate.
 */
-static preprocess_input(char *z){
+static int preprocess_input(char *z){
 	int i, j, k, n;
 	int exclude = 0;
 	int start;
@@ -2755,7 +2756,6 @@ PRIVATE char *pathsearch(char *argv0, char *name, int modemask)
 	char *pathlist;
 	char *path,*cp;
 	char c;
-	extern int access();
 
 #ifdef __WIN32__
 	cp = strrchr(argv0,'\\');

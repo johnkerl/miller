@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "mlrvers.h"
 #include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 #include "containers/slls.h"
@@ -14,6 +13,8 @@
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
+
+#include "config.h"
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
@@ -259,7 +260,7 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.\n");
-	fprintf(o, "This is Miller version >= %s.\n", MLR_VERSION);
+	fprintf(o, "This is Miller version >= %s.\n", PACKAGE_VERSION);
 
 	exit(exit_code);
 }
