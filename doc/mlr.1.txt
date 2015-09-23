@@ -1,0 +1,121 @@
+xxx draft grist for next-rev manpage
+
+MLR(1)                                                            MLR(1)
+
+NAME
+       mlr - like sed, awk, cut, join, and sort for name-indexed data such as CSV
+
+SYNOPSIS
+       Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
+       Verbs:
+          cat check count-distinct cut filter group-by group-like having-fields head
+          histogram join label put regularize rename reorder sort stats1 stats2 step tac tail top
+          uniq
+       Example: mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv
+       Please use "mlr {verb name} --help" for verb-specific help.
+       Please use "mlr --help-all-verbs" for help on all verbs.
+
+DESCRIPTION
+       With Miller you get to use named fields without needing to count
+       positional indices. This is something the Unix toolkit always could
+       have done, and arguably always should have done. It operates on
+       key-value-pair data while the familiar Unix tools operate on
+       integer-indexed fields: if the natural data structure for the latter is
+       the array, then Miller's natural data structure is the
+       insertion-ordered hash map. This encompasses a variety of data formats,
+       including but not limited to the familiar CSV. (Miller can handle
+       positionally-indexed data as a special case.)
+
+       xxx compare/contrast awk manpage ...
+
+       Functions for filter and put:
+          abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
+          expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
+          tanh urand + - - * / % ** == != > >= < <= && || ! strlen sub tolower toupper .
+          boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec sec2hms sec2dhms hms2sec
+          dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
+       Please use "mlr --help-function {function name}" for function-specific help.
+       Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
+
+EXAMPLES
+       mlr --csv cut -f hostname,uptime mydata.csv
+       mlr --csv sort -f hostname,uptime mydata.csv
+       mlr --csv put '$z = $x + 2.7*$y' mydata.csv
+       mlr --csv filter '$status != "down"' mydata.csv
+
+       xxx more varied examples ...
+
+OPTIONS
+   DATA FORMAT
+       Data-format options, for input, output, or both:
+         --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g "a=1,b=2" (default)
+         --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)
+         --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)
+         --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)
+         --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
+         -p is a keystroke-saver for --nidx --fs space --repifs
+
+   SEPARATOR
+       --rs      --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
+       --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
+       --ps      --ips     --ops              Pair   separators, e.g. equals sign
+       Notes:
+       * IPS/OPS are only used for DKVP and XTAB formats, since only in these
+         formats do key-value pairs appear juxtaposed.
+       * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by
+         two or more consecutive IFS/OFS -- i.e. a blank line.
+       * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
+         This is because they are used with repetition for alignment; multi-character separators
+         would make alignment impossible.
+       * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
+         In particular, this means LF line-terminators by default on Linux/OSX.
+         You can use "--dkvp --rs crlf" for CRLF-terminated DKVP files, and so on.
+       * CSV is intended to handle RFC-4180-compliant data.
+         In particular, this means it uses CRLF line-terminators by default.
+         You can use "--csv --rs lf" for Linux-native CSV files.
+       * You can specify separators in any of the following ways, shown by example:
+         - Type them out, quoting as necessary for shell escapes, e.g. "--fs '|' --ips :"
+         - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
+         - To avoid backslashing, you can use any of the following names:
+           cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
+       * Default separators by format:
+           File format  RS       FS       PS
+           dkvp         \n       ,        =
+           csv          \r\n     ,        (N/A)
+           csvlite      \n       ,        (N/A)
+           nidx         \n       space    (N/A)
+           xtab         (N/A)    \n       space
+           pprint       \n       space    (N/A)
+
+   DOUBLE-QUOTING FOR CSV OUTPUT
+       --quote-all        Wrap all fields in double quotes
+       --quote-none       Do not wrap any fields in double quotes, even if they have OFS or ORS in them
+       --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS in them (default)
+       --quote-numeric    Wrap fields in double quotes only if they have numbers in them
+
+   NUMERICAL FORMATTING
+       --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
+                          Applies to verbs which compute new values, e.g. put, stats1, stats2.
+                          See also the fmtnum function within mlr put (mlr --help-all-functions).
+
+   OTHER OPTIONS
+       --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
+
+   THEN-CHAINING
+     Output of one verb may be chained as input to another using "then", e.g.
+       mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+
+   VERBS
+
+BUGS
+
+AUTHOR
+       Miller is written by John Kerl <kerl.john.r@gmail.com>.
+
+       This manual page has been composed from Miller's help output by Eric
+       MSP Veith <eveith@veith-m.de>.
+SEE ALSO
+       sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and
+       MIME Type for Comma-Separated Values (CSV) Files, the Miller website
+       http://johnkerl.org/miller/doc
+
