@@ -107,6 +107,8 @@ OPTIONS
 
    VERBS
 
+     xxx loop over them and invoke them with mlr $verb -h
+
 BUGS
 
 AUTHOR
