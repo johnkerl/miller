@@ -26,6 +26,11 @@ MAJOR: autoconfig
 * manpage:
   - http://www.linuxhowtos.org/System/creatingman.htm
   - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
+* solve the duplication problem, and minimize dependencies:
+  - ideally mlr --manpage all in C
+  - as a second choice, maybe generate most content in C with a post=processor
+    in some widely portable language (e.g. perl is gross but is everywhere) to
+    add in the groff markups
 
 * instdir:
   kerl@kerl-mbp[s0j0d1][mlr-2.2.0]$ find ~/foom -type f
