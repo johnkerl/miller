@@ -4,8 +4,7 @@
 # in CC being expanded to cc on my OSX laptop, which is not OK.  Hence make -e.
 CC=gcc
 CFLAGS=-std=gnu99
-# ../config.h
-IFLAGS=-DNO_AUTOCONFIG -I. -I..
+IFLAGS=-I. -I..
 
 WFLAGS=-Wall -Werror
 # Worth exploring ... but needs handling for unused parameters in functions which comply with interfaces.

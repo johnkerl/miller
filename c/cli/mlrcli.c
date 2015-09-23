@@ -14,11 +14,11 @@
 #include "cli/mlrcli.h"
 #include "cli/argparse.h"
 
-#ifdef NO_AUTOCONFIG
-#include "mlrvers.h"
-#else
+#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif // NO_AUTOCONFIG
+#else
+#include "mlrvers.h"
+#endif
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
