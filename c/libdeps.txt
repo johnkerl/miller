@@ -12,26 +12,26 @@ cli        lib
 cli        mapping
 cli        output
 
-input      containers
-input      lib
-
-output     cli
-output     containers
-output     lib
-
-containers input      FOR JOIN
-containers lib
-
-dsls       containers
-dsls       lib
-
-lib        cli        FIX <--  (mlr_globals/mapper_join)
-
 mapping    cli
 mapping    containers
 mapping    dsls
 mapping    input
 mapping    lib
+
+dsls       containers
+dsls       lib
+
+input      containers
+input      lib
+
+output     cli        FIX <--  QUOTING                   #defines
+output     containers
+output     lib
+
+containers input      FIX <-- for join -- move join_bucket_keeper to mapping?
+containers lib
+
+lib        cli        FIX <--  (mlr_globals/mapper_join)
 
 ================================================================
 
@@ -143,10 +143,10 @@ containers/top_keeper.c               #include "containers/top_keeper.h"
 containers/top_keeper.c               #include "lib/mlrutil.h"
 containers/top_keeper.h               #include "containers/lrec.h"
 dsls/filter_dsl_wrapper.c             #include "containers/mlr_dsl_ast.h"
-dsls/filter_dsl_wrapper.c             #include "lib/mlrutil.h"
 dsls/filter_dsl_wrapper.c             #include "filter_dsl_lexer.h"
 dsls/filter_dsl_wrapper.c             #include "filter_dsl_parse.h"
 dsls/filter_dsl_wrapper.c             #include "filter_dsl_wrapper.h"
+dsls/filter_dsl_wrapper.c             #include "lib/mlrutil.h"
 dsls/filter_dsl_wrapper.h             #include "containers/mlr_dsl_ast.h"
 dsls/put_dsl_wrapper.c                #include "containers/mlr_dsl_ast.h"
 dsls/put_dsl_wrapper.c                #include "containers/sllv.h"
