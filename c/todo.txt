@@ -30,17 +30,9 @@ MAJOR: autoconfig
   - ideally mlr --manpage all in C
   - as a second choice, maybe generate most content in C with a post=processor
     in some widely portable language (e.g. perl is gross but is everywhere) to
-    add in the groff markups
-
-* instdir:
-  kerl@kerl-mbp[s0j0d1][mlr-2.2.0]$ find ~/foom -type f
-  /Users/kerl/foom/bin/mlr
-  /Users/kerl/foom/bin/mlrg
-  /Users/kerl/foom/bin/mlrp
-  /Users/kerl/foom/share/man/man1/miller.1
-  -> get rid of mlrg & mlrp!
-
-! travis use autoconf
+    add in the groff markups.
+  - or something template-driven vaguely like poki??
+  - whatever it is is needs to be as automated as possible
 
 LEVELS:
 * figure out a2x/xml/...

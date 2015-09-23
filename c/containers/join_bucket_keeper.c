@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
-#include "mapping/context.h"
+#include "lib/context.h"
 #include "containers/mixutil.h"
 #include "containers/join_bucket_keeper.h"
 #include "input/lrec_readers.h"

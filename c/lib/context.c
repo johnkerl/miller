@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "context.h"
+#include "lib/context.h"
 
 void context_init(context_t* pctx, char* first_file_name) {
 	pctx->nr       = 0;

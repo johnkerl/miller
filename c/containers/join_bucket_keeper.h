@@ -5,11 +5,11 @@
 #ifndef JOIN_BUCKET_KEEPER_H
 #define JOIN_BUCKET_KEEPER_H
 
+#include "lib/context.h"
 #include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "input/lrec_reader.h"
-#include "mapping/context.h"
 
 typedef struct _join_bucket_t {
 	slls_t* pleft_field_values;

@@ -1,9 +1,9 @@
 #ifndef MAPPER_H
 #define MAPPER_H
 
+#include "lib/context.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "mapping/context.h"
 
 // xxx cmt conventions:
 // * mem-mgt: pass same lrec or allow new & free old

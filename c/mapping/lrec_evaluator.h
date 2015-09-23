@@ -1,9 +1,9 @@
 #ifndef LREC_EVALUATOR_H
 #define LREC_EVALUATOR_H
 
+#include "lib/context.h"
 #include "containers/lrec.h"
 #include "mapping/mlr_val.h"
-#include "mapping/context.h"
 
 typedef mv_t lrec_evaluator_func_t(lrec_t* prec, context_t* pctx, void* pvstate);
 

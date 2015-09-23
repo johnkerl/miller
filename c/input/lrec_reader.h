@@ -2,8 +2,8 @@
 #define LREC_READER_H
 
 #include <stdio.h>
+#include "lib/context.h"
 #include "containers/lrec.h"
-#include "mapping/context.h"
 #include "input/file_reader_mmap.h"
 
 // The void* pvhandle is either FILE* for stdio readers or file_reader_mmap_state_t* for mmap readers.
