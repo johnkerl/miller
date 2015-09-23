@@ -23,6 +23,18 @@ MAJOR: autoconfig
   o Makefile.am updates:
     ./mapping/lrec_evaluators.c
 
+* manpage:
+  - http://www.linuxhowtos.org/System/creatingman.htm
+  - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
+
+* instdir:
+  kerl@kerl-mbp[s0j0d1][mlr-2.2.0]$ find ~/foom -type f
+  /Users/kerl/foom/bin/mlr
+  /Users/kerl/foom/bin/mlrg
+  /Users/kerl/foom/bin/mlrp
+  /Users/kerl/foom/share/man/man1/miller.1
+  -> get rid of mlrg & mlrp!
+
 ! travis use autoconf
 
 LEVELS:

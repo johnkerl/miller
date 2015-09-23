@@ -1,20 +1,21 @@
 SUBDIRS=	lib cli stream input mapping output containers dsls experimental tools . test
 
-AM_CPPFLAGS=	-I${srcdir}
-AM_CFLAGS=	-Wall -Werror -std=gnu99 -O3
-bin_PROGRAMS=	mlr mlrg mlrp
-mlr_SOURCES=	mlrmain.c
-mlr_LDADD=	\
-		cli/libcli.la \
-		containers/libcontainers.la \
-		stream/libstream.la \
-		input/libinput.la \
-		mapping/libmapping.la \
-		output/liboutput.la \
-		lib/libmlr.la \
-		dsls/libfdsl.la \
-		dsls/libpdsl.la \
-		-lm
+AM_CPPFLAGS=		-I${srcdir}
+AM_CFLAGS=		-Wall -Werror -std=gnu99 -O3
+bin_PROGRAMS=		mlr
+noinst_PROGRAMS=	mlrg mlrp
+mlr_SOURCES=		mlrmain.c
+mlr_LDADD=		\
+			cli/libcli.la \
+			containers/libcontainers.la \
+			stream/libstream.la \
+			input/libinput.la \
+			mapping/libmapping.la \
+			output/liboutput.la \
+			lib/libmlr.la \
+			dsls/libfdsl.la \
+			dsls/libpdsl.la \
+			-lm
 
 # Other executable variants
 # Debug version
