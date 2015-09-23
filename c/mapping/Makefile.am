@@ -1,7 +1,5 @@
 noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
-			context.c \
-			context.h \
 			lrec_evaluator.h \
 			lrec_evaluators.c \
 			lrec_evaluators.h \

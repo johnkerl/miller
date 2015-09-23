@@ -8,6 +8,8 @@ libmlr_la_SOURCES=	minunit.h \
 			mlrstat.h \
 			mlrutil.c \
 			mlrutil.h \
+			context.c \
+			context.h \
 			mtrand.c \
 			mtrand.h \
 			string_builder.c \
