@@ -1,7 +1,8 @@
 ================================================================
 BUGFIXES
 
-:D
+* circular subpackage dependencies involving join
+* at least, move out test_argparse to unbreak that
 
 ================================================================
 TOP OF LIST
