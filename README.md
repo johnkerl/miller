@@ -1,9 +1,7 @@
 **Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.** 
 
 [![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
-(See also
-https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
-for any open and active issues.)
+(See also [here] (https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.)
 
 With Miller, you get to use named fields without needing to count positional
 indices.
