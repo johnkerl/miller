@@ -11,6 +11,7 @@ addons:
       - autoconf
       - libtool
       - asciidoc
+      - libxml2-utils
 
 # Build using gcc and clang since it is supported
 compiler:
