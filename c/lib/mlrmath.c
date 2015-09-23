@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "mlrmath.h"
-#include "mlr_globals.h"
+#include "lib/mlrmath.h"
+#include "lib/mlr_globals.h"
 
 #define JACOBI_TOLERANCE 1e-12
 #define JACOBI_MAXITER   20

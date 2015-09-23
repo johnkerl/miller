@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "string_builder.h"
-#include "../lib/mlrutil.h"
-#include "../lib/mlr_globals.h"
+#include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 
 // ----------------------------------------------------------------
 void sb_init(string_builder_t* psb, int alloc_length) {
