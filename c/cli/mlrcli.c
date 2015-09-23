@@ -265,9 +265,9 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.\n");
 #ifdef HAVE_CONFIG_H
-	fprintf(o, "This is Miller version >= %s.\n", MLR_VERSION);
-#else
 	fprintf(o, "This is Miller version >= %s.\n", PACKAGE_VERSION);
+#else
+	fprintf(o, "This is Miller version >= %s.\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
 
 	exit(exit_code);
