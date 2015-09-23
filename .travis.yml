@@ -8,6 +8,8 @@ addons:
   apt:
     packages:
       - flex
+      - autoconf
+      - libtool
 
 # Build using gcc and clang since it is supported
 compiler:
@@ -15,8 +17,8 @@ compiler:
   - gcc
 
 # Probably a better way to do this TODO
-before_script: cd c
+before_script: autoreconf -fiv
 
 # No configure or make install needed
 # See c/Makefile for the reason for make -e
-script: make -f Makefile.no-autoconfig -e
+script: ./configure && make
