@@ -1,0 +1,826 @@
+'\" t
+.\"     Title: miller
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 09/14/2015
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MILLER" "1" "09/14/2015" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+miller \- sed, awk, cut, join, and sort for name\-indexed data such as CSV
+.SH "SYNOPSIS"
+.sp
+.SH "DESCRIPTION"
+.sp
+With Miller you get to use named fields without needing to count positional indices\&. This is something the Unix toolkit always could have done, and arguably always should have done\&. It operates on key\-value\-pair data while the familiar Unix tools operate on integer\-indexed fields: if the natural data structure for the latter is the array, then Miller\(cqs natural data structure is the insertion\-ordered hash map\&. This encompasses a variety of data formats, including but not limited to the familiar CSV\&. (Miller can handle positionally\-indexed data as a special case\&.)
+.SH "EXAMPLES"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+% mlr \-\-csv cut \-f hostname,uptime mydata\&.csv
+% mlr \-\-csv sort \-f hostname,uptime mydata\&.csv
+% mlr \-\-csv put \*(Aq$z = $x + 2\&.7*$y\*(Aq mydata\&.csv
+% mlr \-\-csv filter \*(Aq$status != "down"\*(Aq mydata\&.csv
+.fi
+.if n \{\
+.RE
+.\}
+.SH "OPTIONS"
+.sp
+In the following option flags, the version with "i" designates the input stream, "o" the output stream, and the version without prefix sets the option for both input and output stream\&. For example: \-\-irs sets the input record separator, \-\-ors the output record separator, and \-\-rs sets both the input and output separator to the given value\&.
+.SS "SEPARATOR"
+.PP
+\-\-rs, \-\-irs, \-\-ors
+.RS 4
+Record separators, defaulting to newline
+.RE
+.PP
+\-\-fs, \-\-ifs, \-\-ofs, \-\-repifs
+.RS 4
+Field separators, defaulting to ","
+.RE
+.PP
+\-\-ps, \-\-ips, \-\-ops
+.RS 4
+Pair separators, defaulting to "="
+.RE
+.SS "DATA\-FORMAT"
+.PP
+\-\-dkvp, \-\-idkvp, \-\-odkvp
+.RS 4
+Delimited key\-value pairs, e\&.g "a=1,b=2" (default)
+.RE
+.PP
+\-\-nidx, \-\-inidx, \-\-onidx
+.RS 4
+Implicitly\-integer\-indexed fields (Unix\-toolkit style)
+.RE
+.PP
+\-\-csv, \-\-icsv, \-\-ocsv
+.RS 4
+Comma\-separated value (or tab\-separated with \-\-fs tab, etc\&.)
+.RE
+.PP
+\-\-pprint, \-\-ipprint, \-\-opprint, \-\-right
+.RS 4
+Pretty\-printed tabular (produces no output until all input is in)
+.RE
+.PP
+\-\-pprint, \-\-ipprint, \-\-opprint, \-\-right
+.RS 4
+Pretty\-printed tabular (produces no output until all input is in)
+.RE
+.sp
+\-p is a keystroke\-saver for \-\-nidx \-\-fs space \-\-repifs
+.SS "NUMERICAL FORMAT"
+.PP
+.RS 4
+Sets the numerical format given a printf\-style format string\&.
+.RE
+.SS "OTHER"
+.PP
+.RS 4
+Seeds the random number generator used for put/filter
+urand()
+with a number n of the form 12345678 or 0xcafefeed\&.
+.RE
+.SS "VERBS"
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBcat\fR
+.RS 4
+.sp
+Usage: mlr cat
+.sp
+Passes input records directly to output\&. Most useful for format conversion\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBcheck\fR
+.RS 4
+.sp
+Usage: mlr check
+.sp
+Consumes records without printing any output\&. Useful for doing a well\-formatted check on input data\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBcount-distinct\fR
+.RS 4
+.sp
+Usage: mlr count\-distinct [options]
+.sp
+Prints number of records having distinct values for specified field names\&. Same as uniq \-c\&.
+.PP
+\-f {a,b,c}
+.RS 4
+Field names for distinct count\&.
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBcut\fR
+.RS 4
+.sp
+Usage: mlr cut [options]
+.sp
+Passes through input records with specified fields included/excluded\&.
+.PP
+\-f {a,b,c}
+.RS 4
+Field names to include for cut\&.
+.RE
+.PP
+\-o
+.RS 4
+Retain fields in the order specified here in the argument list\&. Default is to retain them in the order found in the input data\&.
+.RE
+.PP
+\-x|\-\-complement
+.RS 4
+Exclude, rather that include, field names specified by \-f\&.
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBfilter\fR
+.RS 4
+.sp
+prints the AST (abstract syntax tree) for the expression, which gives full transparency on the precedence and associativity rules of Miller\(cqs grammar\&. Please use a dollar sign for field names and double\-quotes for string literals\&. Miller built\-in variables are NF, NR, FNR, FILENUM, FILENAME, PI, E\&.
+.sp
+Examples:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr filter \*(Aqlog10($count) > 4\&.0\*(Aq
+mlr filter \*(AqFNR == 2          (second record in each file)\*(Aq
+mlr filter \*(Aqurand() < 0\&.001\*(Aq  (subsampling)
+mlr filter \*(Aq$color != "blue" && $value > 4\&.2\*(Aq
+mlr filter \*(Aq($x<\&.5 && $y<\&.5) || ($x>\&.5 && $y>\&.5)\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Please see http://johnkerl\&.org/miller/doc/reference\&.html for more information including function list\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBgroup-by\fR
+.RS 4
+.sp
+Usage: mlr group\-by {comma\-separated field names}
+.sp
+Outputs records in batches having identical values at specified field names\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBgroup-like\fR
+.RS 4
+.sp
+Usage: mlr group\-like
+.sp
+Outputs records in batches having identical field names\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBhaving-fields\fR
+.RS 4
+.sp
+Usage: mlr having\-fields [options]
+.sp
+Conditionally passes through records depending on each record\(cqs field names\&.
+.sp
+Options:
+.sp
+\-\-at\-least {a,b,c} \-\-which\-are {a,b,c} \-\-at\-most {a,b,c}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBhead\fR
+.RS 4
+.sp
+Usage: mlr head [options]
+.sp
+Passes through the first n records, optionally by category\&.
+.sp
+Options:
+.PP
+.RS 4
+Head count to print; default 10
+.RE
+.PP
+\-g {a,b,c}
+.RS 4
+Optional group\-by\-field names for head counts
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBhistogram\fR
+.RS 4
+.sp
+Usage: mlr histogram [options]
+.sp
+Just a histogram\&. Input values < lo or > hi are not counted\&.
+.sp
+Options:
+.PP
+\-f {a,b,c}
+.RS 4
+Value\-field names for histogram counts
+.RE
+.PP
+.RS 4
+Histogram low value
+.RE
+.PP
+.RS 4
+Histogram high value
+.RE
+.PP
+.RS 4
+Number of histogram bins
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBjoin\fR
+.RS 4
+.sp
+Usage: mlr join [options]
+.sp
+Joins records from specified left file name with records from all file names at the end of the Miller argument list\&. Functionality is essentially the same as the system "join" command, but for record streams\&.
+.sp
+Options:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\-f {left file name}
+\-j {a,b,c}   Comma\-separated join\-field names for output
+\-l {a,b,c}   Comma\-separated join\-field names for left input file; defaults to \-j values if omitted\&.
+\-r {a,b,c}   Comma\-separated join\-field names for right input file(s); defaults to \-j values if omitted\&.
+\-\-lp {text}  Additional prefix for non\-join output field names from the left file
+\-\-rp {text}  Additional prefix for non\-join output field names from the right file(s)
+\-\-np         Do not emit paired records
+\-\-ul         Emit unpaired records from the left file
+\-\-ur         Emit unpaired records from the right file(s)
+\-u           Enable unsorted input\&. In this case, the entire left file will be loaded into memory\&.
+             Without \-u, records must be sorted lexically by their join\-field names, else not all
+             records will be paired\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+File\-format options default to those for the right file names on the Miller argument list, but may be overridden for the left file as follows\&. Please see the main "mlr \-\-help" for more information on syntax for these arguments\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\-i {one of csv,dkvp,nidx,pprint,xtab}
+\-\-irs {record\-separator character}
+\-\-ifs {field\-separator character}
+\-\-ips {pair\-separator character}
+\-\-repifs
+\-\-repips
+\-\-use\-mmap
+\-\-no\-mmap
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Please see http://johnkerl\&.org/miller/doc/reference\&.html for more information including examples\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBlabel\fR
+.RS 4
+.sp
+Usage: mlr label {new1,new2,new3,\&...}
+.sp
+Given n comma\-separated names, renames the first n fields of each record to have the respective name\&. (Fields past the nth are left with their original names\&.) Particularly useful with \-\-inidx, to give useful names to otherwise integer\-indexed fields\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBput\fR
+.RS 4
+.sp
+Adds/updates specified field(s)\&.
+.sp
+With \-v, first prints the AST (abstract syntax tree) for the expression, which gives full transparency on the precedence and associativity rules of Miller\(cqs grammar\&. Please use a dollar sign for field names and double\-quotes for string literals\&. Miller built\-in variables are NF, NR, FNR, FILENUM, FILENAME, PI, E\&. Multiple assignments may be separated with a semicolon\&.
+.sp
+Examples:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr put \*(Aq$y = log10($x); $z = sqrt($y)\*(Aq
+mlr put \*(Aq$filename = FILENAME\*(Aq
+mlr put \*(Aq$colored_shape = $color \&. "_" \&. $shape\*(Aq
+mlr put \*(Aq$y = cos($theta); $z = atan2($y, $x)\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Please see http://johnkerl\&.org/miller/doc/reference\&.html for more information including function list\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBregularize\fR
+.RS 4
+.sp
+Usage: mlr regularize
+.sp
+For records seen earlier in the data stream with same field names in a different order, outputs them with field names in the previously encountered order\&.
+.sp
+Example:
+.sp
+input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8 output as a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBrename\fR
+.RS 4
+.sp
+Usage: mlr rename {old1,new1,old2,new2,\&...}
+.sp
+Renames specified fields\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBreorder\fR
+.RS 4
+.sp
+Usage: mlr reorder [options]
+.sp
+Options:
+.PP
+\-f {a,b,c}
+.RS 4
+Field names to reorder\&.
+.RE
+.PP
+\-e
+.RS 4
+Put specified field names at record end: default is to put at record start\&.
+.RE
+.sp
+Examples:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr reorder    \-f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3"\&.
+mlr reorder \-e \-f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2"\&.
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBsort\fR
+.RS 4
+.sp
+Sorts records primarily by the first specified field, secondarily by the second field, and so on\&.
+.sp
+Flags:
+.PP
+\-f {comma\-separated field names}
+.RS 4
+Lexical ascending
+.RE
+.PP
+\-n {comma\-separated field names}
+.RS 4
+Numerical ascending; nulls sort last
+.RE
+.PP
+\-nf {comma\-separated field names}
+.RS 4
+Numerical ascending; nulls sort last
+.RE
+.PP
+\-r {comma\-separated field names}
+.RS 4
+Lexical descending
+.RE
+.PP
+\-nr {comma\-separated field names}
+.RS 4
+Numerical descending; nulls sort first
+.RE
+.sp
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr sort \-f a,b \-nr x,y,z
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+which is the same as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr sort \-f a \-f b \-nr x \-nr y \-nr z
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBstats1\fR
+.RS 4
+.sp
+Usage: mlr stats1 [options]
+.PP
+\-a {sum,count,\&...}
+.RS 4
+Names of accumulators:
+p10,
+p25\&.2,
+p50,
+p98,
+p100, etc\&. and/or one or more of:
+count,
+mode,
+sum,
+mean,
+stddev,
+var,
+meaneb,
+min,
+max\&.
+.RE
+.PP
+\-f {a,b,c}
+.RS 4
+Value\-field names on which to compute statistics
+.RE
+.PP
+\-g {d,e,f}
+.RS 4
+Optional group\-by\-field names
+.RE
+.sp
+Examples:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr stats1 \-a min,p10,p50,p90,max \-f value \-g size,shape
+mlr stats1 \-a count,mode \-f size
+mlr stats1 \-a count,mode \-f size \-g shape
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Notes:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+p50 is a synonym for median\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+min and max output the same results as p0 and p100, respectively, but use less memory\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+count and mode allow text input; the rest require numeric input\&. In particular, 1 and 1\&.0 are distinct text for count and mode\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+When there are mode ties, the first\-encountered datum wins\&.
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBstats2\fR
+.RS 4
+.sp
+Usage: mlr stats2 [options]
+.PP
+\-a {linreg\-ols,corr,\&...}
+.RS 4
+Names of accumulators: one or more of
+linreg\-pca,
+linreg\-ols,
+r2,
+corr,
+cov,
+covx\&.
+r2
+is a quality metric for
+linreg\-ols;
+linrec\-pca
+outputs its own quality metric\&.
+.RE
+.PP
+\-f {a,b,c,d}
+.RS 4
+Value\-field name\-pairs on which to compute statistics\&. There must be an even number of names\&.
+.RE
+.PP
+\-g {e,f,g}
+.RS 4
+Optional group\-by\-field names\&.
+.RE
+.PP
+\-v
+.RS 4
+Print additional output for
+linreg\-pca\&.
+.RE
+.sp
+Examples:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+mlr stats2 \-a linreg\-pca \-f x,y
+mlr stats2 \-a linreg\-ols,r2 \-f x,y \-g size,shape
+mlr stats2 \-a corr \-f x,y
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBstep\fR
+.RS 4
+.sp
+Usage: mlr step [options]
+.sp
+Computes values dependent on the previous record, optionally grouped by category\&.
+.PP
+\-a {delta,rsum,\&...}
+.RS 4
+Names of steppers: one or more of delta rsum counter
+.RE
+.PP
+\-f {a,b,c}
+.RS 4
+Value\-field names on which to compute statistics
+.RE
+.PP
+\-g {d,e,f}
+.RS 4
+Group\-by\-field names
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBtac\fR
+.RS 4
+.sp
+Usage: mlr tac
+.sp
+Prints records in reverse order from the order in which they were encountered\&.
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBtail\fR
+.RS 4
+.sp
+Usage: mlr tail [options]
+.sp
+Passes through the last n records, optionally by category\&.
+.PP
+.RS 4
+Tail count to print; default 10
+.RE
+.PP
+\-g {a,b,c}
+.RS 4
+Optional group\-by\-field names for tail counts
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBtop\fR
+.RS 4
+.sp
+Usage: mlr top [options]
+.sp
+Prints the n records with smallest/largest values at specified fields, optionally by category\&.
+.PP
+\-f {a,b,c}
+.RS 4
+Value\-field names for top counts
+.RE
+.PP
+\-g {d,e,f}
+.RS 4
+Optional group\-by\-field names for top counts
+.RE
+.PP
+.RS 4
+How many records to print per category; default 1
+.RE
+.PP
+\-a
+.RS 4
+Print all fields for top\-value records; default is to print only value and group\-by fields\&.
+.RE
+.PP
+\-\-min
+.RS 4
+Print top smallest values; default is top largest values
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBuniq\fR
+.RS 4
+.sp
+Usage: mlr uniq [options]
+.sp
+Prints distinct values for specified field names\&. With \-c, same as count\-distinct\&.
+.PP
+\-g {d,e,f}
+.RS 4
+Group\-by\-field names for uniq counts
+.RE
+.PP
+\-c
+.RS 4
+Show repeat counts in addition to unique values
+.RE
+.RE
+.SH "AUTHOR"
+.sp
+miller is written by John Kerl <kerl\&.john\&.r@gmail\&.com>\&.
+.sp
+This manual page has been composed from miller\(cqs help output by Eric MSP Veith <eveith@veith\-m\&.de>\&.
+.SH "SEE ALSO"
+.sp
+sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for Comma\-Separated Values (CSV) Files, the miller website http://johnkerl\&.org/miller/doc
