@@ -44,6 +44,7 @@ LEVELS:
 TO-DO:
 * include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
+* gprof link with -lc on FreeBSD -- ?
 
 ----------------------------------------------------------------
 MAJOR: scroll-stalls in mlrdoc!! really bad on the droid.
