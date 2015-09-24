@@ -21,6 +21,4 @@ compiler:
 # Probably a better way to do this TODO
 before_script: autoreconf -fiv
 
-# No configure or make install needed
-# See c/Makefile for the reason for make -e
-script: ./configure && make && make check
+script: ./configure && make && make check && make CC=$CC -C c -f Makefile.no-autoconfig
