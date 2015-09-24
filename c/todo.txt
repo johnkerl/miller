@@ -24,6 +24,11 @@ MAJOR: autoconfig
     ./dsls/filter_dsl_wrapper.c
     ./dsls/put_dsl_wrapper.c
 
+* test:
+  o test/ -> reg_test/
+  o utmains/ -> unit_test/
+  o do Makefile.am in the latter, etc.
+
 * manpage:
   - http://www.linuxhowtos.org/System/creatingman.htm
   - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
@@ -40,6 +45,7 @@ LEVELS:
 * manpage
 * poki
 * ... what else ...
+* write those up in the docs, including required packages
 
 TO-DO:
 * include lemon-generated .c/.h or not
