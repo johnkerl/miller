@@ -16,6 +16,8 @@ MAJOR: release planning
 ----------------------------------------------------------------
 MAJOR: autoconfig
 
+! build page doesn't belong in developer info -- this is user info
+
 * doc link for homebrew support ...
 
 * port more deader-mains over to UT ...
@@ -28,6 +30,10 @@ MAJOR: autoconfig
   o test/ -> reg_test/
   o utmains/ -> unit_test/
   o do Makefile.am in the latter, etc.
+
+* remove -Werror and -O3 from c/Makefile.am; make sure -O2 -g is
+  the default; emphasize @mlrdoc
+* mlrg_CFLAGS and mlrp_CFLAGS need ${AM_CFLAGS} at the end or they will just be ignored
 
 * manpage:
   - http://www.linuxhowtos.org/System/creatingman.htm

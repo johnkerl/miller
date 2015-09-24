@@ -113,7 +113,8 @@ TEST_LREC_EVALUATORS_SRCS = \
   containers/slls.c \
   containers/lrec.c \
   mapping/mlr_val.c \
-  mapping/lrec_evaluators.c
+  mapping/lrec_evaluators.c \
+  utmains/test_lrec_evaluators.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
   lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/context.c \
