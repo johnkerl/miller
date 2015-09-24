@@ -1,8 +1,7 @@
 ================================================================
 BUGFIXES
 
-* circular subpackage dependencies involving join
-* at least, move out test_argparse to unbreak that
+:D
 
 ================================================================
 TOP OF LIST
@@ -12,6 +11,9 @@ MAJOR: release planning
 
 * 2.2.1 with autoconfig
 * 2.2.2 with CSV read-perf
+
+----------------------------------------------------------------
+MINOR: allow multi-char ips for xtab -- then ignore repifs. likewise w/ ops
 
 ----------------------------------------------------------------
 MAJOR: autoconfig
@@ -93,8 +95,6 @@ MINOR
   - web-server access logs in dkvp format -- ?
 
 * go back and re-apply ctype/isprint portability things to new spots
-
-* more dead-code mains ... lrec-eval; what else?
 
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
 * configure w/o autotools? likewise manpage. etc. multiple build levels.
