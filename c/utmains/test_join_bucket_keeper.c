@@ -8,7 +8,6 @@
 #include "containers/join_bucket_keeper.h"
 #include "containers/mixutil.h"
 
-#ifdef __TEST_JOIN_BUCKET_KEEPER_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -444,4 +443,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-#endif // __TEST_JOIN_BUCKET_KEEPER_MAIN__

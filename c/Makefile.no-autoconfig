@@ -33,10 +33,10 @@ FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_ds
 TEST_ARGPARSE_SRCS = \
 lib/mlrutil.c \
 lib/mlr_globals.c \
+cli/argparse.c \
 containers/slls.c \
 containers/sllv.c \
-cli/argparse.c \
-cli/test_argparse.c
+utmains/test_argparse.c
 
 TEST_BYTE_READERS_SRCS = \
 lib/mlrutil.c \
@@ -45,7 +45,7 @@ lib/mlr_globals.c \
 input/string_byte_reader.c \
 input/stdio_byte_reader.c \
 input/mmap_byte_reader.c \
-input/test_byte_readers.c
+utmains/test_byte_readers.c
 
 TEST_PEEK_FILE_READER_SRCS = \
 lib/mlrutil.c \
@@ -53,7 +53,7 @@ lib/mlr_test_util.c \
 lib/mlr_globals.c \
 input/string_byte_reader.c \
 input/peek_file_reader.c \
-input/test_peek_file_reader.c
+utmains/test_peek_file_reader.c
 
 TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
@@ -64,7 +64,7 @@ input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-containers/test_lrec.c
+utmains/test_lrec.c
 
 TEST_MULTIPLE_CONTAINERS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
 containers/lrec.c containers/header_keeper.c containers/sllv.c \
@@ -84,7 +84,7 @@ input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
 input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
 input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-containers/test_multiple_containers.c
+utmains/test_multiple_containers.c
 
 TEST_LREC_EVALUATORS_SRCS = \
 lib/mlr_globals.c \
@@ -116,7 +116,7 @@ input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
 input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
 input/file_reader_mmap.c input/file_reader_stdio.c \
 input/peek_file_reader.c \
-containers/test_join_bucket_keeper.c
+utmains/test_join_bucket_keeper.c
 
 EXPERIMENTAL_READER_SRCS = \
 lib/mlrutil.c \
@@ -216,13 +216,13 @@ test-multiple-containers: .always
 	$(CCDEBUG) -D__TEST_MULTIPLE_CONTAINERS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c lib/test_mlrutil.c -o test-mlrutil
+	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c utmains/test_mlrutil.c -o test-mlrutil
 
 test-string-builder: .always
-	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/test_string_builder.c -o test-string-builder
+	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c utmains/test_string_builder.c -o test-string-builder
 
 test-parse-trie: .always
-	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c containers/test_parse_trie.c -o test-parse-trie
+	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c utmains/test_parse_trie.c -o test-parse-trie
 
 test-lrec-evaluators: .always
 	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm

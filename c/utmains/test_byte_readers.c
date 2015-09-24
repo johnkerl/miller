@@ -6,7 +6,6 @@
 #include "lib/mlr_test_util.h"
 #include "input/byte_readers.h"
 
-#ifdef __TEST_BYTE_READERS_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -211,4 +210,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-#endif // __TEST_BYTE_READERS_MAIN__

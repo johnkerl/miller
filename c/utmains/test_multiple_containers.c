@@ -14,7 +14,6 @@
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
 
-#ifdef __TEST_MULTIPLE_CONTAINERS_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -656,4 +655,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-#endif // __TEST_MULTIPLE_CONTAINERS_MAIN__

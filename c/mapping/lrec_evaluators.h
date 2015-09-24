@@ -9,4 +9,6 @@ void lrec_evaluator_list_functions(FILE* output_stream);
 // Pass function_name == NULL to get usage for all functions:
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name);
 
+int test_lrec_evaluators_main(int argc, char **argv);
+
 #endif // LREC_FEVALUATORS_H

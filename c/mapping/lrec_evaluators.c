@@ -1138,8 +1138,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode) {
 }
 
 // ================================================================
-#ifdef __TEST_LREC_EVALUATORS_MAIN__
-
 #include "lib/minunit.h"
 
 // ----------------------------------------------------------------
@@ -1333,7 +1331,7 @@ static char * all_tests() {
 	return 0;
 }
 
-int main(int argc, char **argv) {
+int test_lrec_evaluators_main(int argc, char **argv) {
 	mlr_global_init(argv[0], "%lf", NULL);
 
 	printf("TEST_LREC_EVALUATORS ENTER\n");
@@ -1350,5 +1348,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-
-#endif // __TEST_LREC_EVALUATORS_MAIN__

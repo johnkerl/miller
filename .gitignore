@@ -12,6 +12,7 @@ test-parse-trie
 test-lrec
 test-multiple-containers
 test-lrec-evaluators
+test_lrec_evaluators
 test-join-bucket-keeper
 termcvt
 a.out

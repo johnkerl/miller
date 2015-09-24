@@ -7,7 +7,6 @@
 #include "input/byte_readers.h"
 #include "input/peek_file_reader.h"
 
-#ifdef __TEST_PEEK_FILE_READER_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -88,4 +87,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-#endif // __TEST_PEEK_FILE_READER_MAIN__

@@ -4,7 +4,6 @@
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
 
-#ifdef __TEST_STRING_BUILDER_MAIN__
 int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
@@ -92,4 +91,3 @@ int main(int argc, char **argv) {
 
 	return result != 0;
 }
-#endif // __TEST_STRING_BUILDER_MAIN__
