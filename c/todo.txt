@@ -16,6 +16,8 @@ MAJOR: release planning
 ----------------------------------------------------------------
 MAJOR: autoconfig
 
+* doc link for homebrew support ...
+
 * port more deader-mains over to UT ...
   o files:
     ./input/lrec_reader_in_memory.c
