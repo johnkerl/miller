@@ -18,7 +18,7 @@ LFLAGS=-lm
 # You can do make -e INSTALLDIR=/path/to/somewhere/else/bin
 INSTALLDIR=/usr/local/bin
 
-CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O0
+CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 #CCDEBUG=$(CC) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
