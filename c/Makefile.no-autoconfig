@@ -15,123 +15,140 @@ WFLAGS=-Wall -Werror
 
 LFLAGS=-lm
 
-# You can do
-#
-#   make -e INSTALLDIR=/usr/local/bin
-#
-# pending https://github.com/johnkerl/miller/issues/9
+# You can do make -e INSTALLDIR=/path/to/somewhere/else/bin
 INSTALLDIR=/usr/local/bin
 
 CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 #CCDEBUG=$(CC) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
-NON_DSL_SRCS = *.c cli/*.c lib/*.c containers/*.c stream/*.c input/*.c mapping/*.c output/*.c
-PDSL_OBJS = ./dsls/put_dsl_parse.o    ./dsls/put_dsl_lexer.o    ./dsls/put_dsl_wrapper.o
-FDSL_OBJS = ./dsls/filter_dsl_parse.o ./dsls/filter_dsl_lexer.o ./dsls/filter_dsl_wrapper.o
+# ----------------------------------------------------------------
+# Miller source except put/filter DSLs
+NON_DSL_SRCS = \
+  *.c \
+  cli/*.c \
+  lib/*.c \
+  containers/*.c \
+  stream/*.c \
+  input/*.c \
+  mapping/*.c \
+  output/*.c
 
+# put/filter DSLs
+PDSL_OBJS = \
+  ./dsls/put_dsl_parse.o \
+  ./dsls/put_dsl_lexer.o \
+  ./dsls/put_dsl_wrapper.o
+FDSL_OBJS = \
+  ./dsls/filter_dsl_parse.o \
+  ./dsls/filter_dsl_lexer.o \
+  ./dsls/filter_dsl_wrapper.o
+
+# Unit-test code
 TEST_ARGPARSE_SRCS = \
-lib/mlrutil.c \
-lib/mlr_globals.c \
-cli/argparse.c \
-containers/slls.c \
-containers/sllv.c \
-utmains/test_argparse.c
+  lib/mlrutil.c \
+  lib/mlr_globals.c \
+  cli/argparse.c \
+  containers/slls.c \
+  containers/sllv.c \
+  utmains/test_argparse.c
 
 TEST_BYTE_READERS_SRCS = \
-lib/mlrutil.c \
-lib/mlr_test_util.c \
-lib/mlr_globals.c \
-input/string_byte_reader.c \
-input/stdio_byte_reader.c \
-input/mmap_byte_reader.c \
-utmains/test_byte_readers.c
+  lib/mlrutil.c \
+  lib/mlr_test_util.c \
+  lib/mlr_globals.c \
+  input/string_byte_reader.c \
+  input/stdio_byte_reader.c \
+  input/mmap_byte_reader.c \
+  utmains/test_byte_readers.c
 
 TEST_PEEK_FILE_READER_SRCS = \
-lib/mlrutil.c \
-lib/mlr_test_util.c \
-lib/mlr_globals.c \
-input/string_byte_reader.c \
-input/peek_file_reader.c \
-utmains/test_peek_file_reader.c
+  lib/mlrutil.c \
+  lib/mlr_test_util.c \
+  lib/mlr_globals.c \
+  input/string_byte_reader.c \
+  input/peek_file_reader.c \
+  utmains/test_peek_file_reader.c
 
-TEST_LREC_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-containers/lrec.c containers/header_keeper.c containers/sllv.c \
-containers/slls.c containers/lhmslv.c \
-input/line_readers.c \
-input/file_reader_mmap.c      input/file_reader_stdio.c \
-input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-utmains/test_lrec.c
+TEST_LREC_SRCS = \
+  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
+  containers/lrec.c containers/header_keeper.c containers/sllv.c \
+  containers/slls.c containers/lhmslv.c \
+  input/line_readers.c \
+  input/file_reader_mmap.c      input/file_reader_stdio.c \
+  input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+  utmains/test_lrec.c
 
-TEST_MULTIPLE_CONTAINERS_SRCS = lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-containers/lrec.c containers/header_keeper.c containers/sllv.c \
-containers/slls.c \
-containers/hss.c \
-containers/lhmsi.c \
-containers/lhmss.c \
-containers/lhmsv.c \
-containers/lhms2v.c \
-containers/lhmslv.c \
-containers/percentile_keeper.c \
-containers/top_keeper.c \
-containers/dheap.c \
-input/line_readers.c \
-input/file_reader_mmap.c      input/file_reader_stdio.c \
-input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-utmains/test_multiple_containers.c
+TEST_MULTIPLE_CONTAINERS_SRCS = \
+  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
+  containers/lrec.c containers/header_keeper.c containers/sllv.c \
+  containers/slls.c \
+  containers/hss.c \
+  containers/lhmsi.c \
+  containers/lhmss.c \
+  containers/lhmsv.c \
+  containers/lhms2v.c \
+  containers/lhmslv.c \
+  containers/percentile_keeper.c \
+  containers/top_keeper.c \
+  containers/dheap.c \
+  input/line_readers.c \
+  input/file_reader_mmap.c      input/file_reader_stdio.c \
+  input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+  utmains/test_multiple_containers.c
 
 TEST_LREC_EVALUATORS_SRCS = \
-lib/mlr_globals.c \
-lib/mlrutil.c \
-lib/mtrand.c \
-lib/mlrmath.c \
-containers/mlr_dsl_ast.c \
-containers/sllv.c \
-containers/slls.c \
-containers/lrec.c \
-mapping/mlr_val.c \
-mapping/lrec_evaluators.c
+  lib/mlr_globals.c \
+  lib/mlrutil.c \
+  lib/mtrand.c \
+  lib/mlrmath.c \
+  containers/mlr_dsl_ast.c \
+  containers/sllv.c \
+  containers/slls.c \
+  containers/lrec.c \
+  mapping/mlr_val.c \
+  mapping/lrec_evaluators.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
-lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/context.c \
-containers/parse_trie.c \
-containers/lrec.c \
-containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
-containers/header_keeper.c \
-containers/join_bucket_keeper.c \
-input/mmap_byte_reader.c \
-input/stdio_byte_reader.c \
-input/line_readers.c \
-input/lrec_reader_in_memory.c input/lrec_readers.c \
-input/lrec_reader_csv.c \
-input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
-input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-input/file_reader_mmap.c input/file_reader_stdio.c \
-input/peek_file_reader.c \
-utmains/test_join_bucket_keeper.c
+  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/context.c \
+  containers/parse_trie.c \
+  containers/lrec.c \
+  containers/sllv.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
+  containers/header_keeper.c \
+  containers/join_bucket_keeper.c \
+  input/mmap_byte_reader.c \
+  input/stdio_byte_reader.c \
+  input/line_readers.c \
+  input/lrec_reader_in_memory.c input/lrec_readers.c \
+  input/lrec_reader_csv.c \
+  input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+  input/file_reader_mmap.c input/file_reader_stdio.c \
+  input/peek_file_reader.c \
+  utmains/test_join_bucket_keeper.c
 
 EXPERIMENTAL_READER_SRCS = \
-lib/mlrutil.c \
-lib/mlr_globals.c \
-lib/string_builder.c \
-input/stdio_byte_reader.c \
-input/file_reader_mmap.c \
-input/line_readers.c \
-containers/parse_trie.c \
-experimental/getlines.c
+  lib/mlrutil.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  input/stdio_byte_reader.c \
+  input/file_reader_mmap.c \
+  input/line_readers.c \
+  containers/parse_trie.c \
+  experimental/getlines.c
 
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests
-# ----> This is the default target for anyone pulling the repo and trying to
-#       build it to be able to use it. It just needs flex and the C compiler.
+# This is the default target for anyone pulling the repo and trying to
+# build it to be able to use it. It just needs flex and the C compiler.
 top: mlr tests
 
 install: mlr tests
@@ -232,7 +249,6 @@ test-join-bucket-keeper: .always
 
 # ----------------------------------------------------------------
 # Standalone mains
-# TODO: replace the interesting content with unit tests; jettison the rest
 
 lrim:
 	$(CCDEBUG) -D__LREC_READER_IN_MEMORY_MAIN__ input/lrec_reader_in_memory.c containers/sllv.c containers/lrec.c containers/slls.c lib/mlrutil.c lib/mlr_globals.c -lm
@@ -248,7 +264,9 @@ getl: .always
 clean:
 	@rm -vf mlr mlrd mlrg mlrp tester
 	@make -C dsls -f Makefile.no-autoconfig clean
+
 perfclean profclean:
 	@rm -vf gmon.out perf.data perf.data.old
+
 .always:
 	@true

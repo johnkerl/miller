@@ -1,95 +1,132 @@
-<p/>Miller very recently has <boldmaroon>autoconf build support</boldmaroon>, with status tracked on
-<a href="https://github.com/johnkerl/miller/issues/9">https://github.com/johnkerl/miller/issues/9</a>.
+POKI_PUT_TOC_HERE
 
-<p>More details will be provided here soon, but meanwhile:
+<h1>Prebuilt executables</h1>
 
-<ul>
-
-<li/> With <tt>autoconf</tt>, <tt>automake</tt>, and <tt>libtool</tt>
-dependencies, it should be possible for you to build from master with
-<tt>autoreconf -fiv &amp;&amp; ./configure &amp;&amp; make</tt> in the Miller
-base directory. Run <tt>make check</tt> to run unit and regression tests.
-
-<li/> It is my intention that you should be able to build from a release
-tarball with <tt>./configure &amp;&amp; make</tt> in the Miller base directory,
-with no dependency on autotools. Again, run <tt>make check</tt> to run unit and
-regression tests.
-
-<li/> If you prefer, you can cd into the <tt>c</tt> subdirectory of the Miller
-source tree and run <tt>make -f Makefile.no-autoconfig</tt>. This is a simple
-makefile (also <tt>c/dsls/Makefile.no-autoconfig</tt>) which you can hand-edit,
-if this is your preference: less automatic but more transparent. This builds
-the <tt>c/mlr</tt> executable as well as running unit and regression tests.
-
-</ul>
-
-<p/><boldmaroon>To build</boldmaroon>: just run <tt>make</tt> in the <tt>c/</tt> subdirectory of <a
-href="https://github.com/johnkerl/miller">the repo</a>. This builds the <tt>mlr</tt> executable as well as running
-all unit and regression tests.
-
-<p/>This default make target is also appropriate to run before a commit. (This
-is self-service manual CI.  <a
-href="https://github.com/johnkerl/miller/issues/15">https://github.com/johnkerl/miller/issues/15</a>
-will automate this.)
-
-<p/>To install, run <tt>make install</tt> after editing the <tt>install</tt>
-target in the makefile to configure the destination. (See <a
-href="https://github.com/johnkerl/miller/issues/9">https://github.com/johnkerl/miller/issues/9</a>
-which will allow for a <tt>configure --install-dir=...</tt> option.)
-
-<p/>If you are doing development of Miller, you can optionally run <tt>make
-dev</tt> in the <tt>c/</tt> subdirectory. This runs all the same regression
-tests, but with the addition of two niceties: it also updates the <tt>tags</tt>
-file (requires <tt>ctags</tt>), and runs the unit tests with <tt>valgrind</tt>
-which can help illuminate memory issues.
-
-<p/><boldmaroon>Prebuilt executables</boldmaroon>: Please see <a
-href="https://github.com/johnkerl/miller/releases">
+Please see <a href="https://github.com/johnkerl/miller/releases">
 https://github.com/johnkerl/miller/releases</a> where there are builds for OSX
 Yosemite, Linux i686 (statically linked), and Linux x86-64 (dynamically
 linked).
 
-<p/><boldmaroon>C compiler</boldmaroon>: I normally use <b>gcc</b>:
+<h1>Building from source</h1>
 
-POKI_CARDIFY(gcc -std=gnu99 -Wall -Werror -O3 ...)HERE
+<h2>From release tarball using autoconfig</h2>
 
-(see the <a
-href="https://github.com/johnkerl/miller/blob/master/c/Makefile">makefile</a>
-for details) and I&rsquo;ve done so successfully on Ubuntu 12.04 LTS, SELinux,
-and Darwin (MacOS Yosemite). I also use <a
-href="http://valgrind.org/">valgrind</a> for detection of memory leaks and
-runtime memory-access errors.
+<p/>Miller allows you the option of using GNU autoconfigure to build portably.
 
-<p/>I&rsquo;ve also used <b>clang</b> on MacOS Yosemite. To use <tt>clang</tt>,
-one may edit <tt>c/Makefile</tt> as well as <tt>c/dsls/Makefile</tt> and change
-<tt>CC=gcc</tt> to <tt>CC=clang</tt> &mdash; or, <tt>export CC=clang</tt> ane
-<tt>make -e</tt>. (If you encounter issues I haven&rsquo;t, please open an
-issue at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.)
+<ul>
+<li/> Install the packages <tt>automake</tt>, <tt>autoconf</tt>,
+  <tt>libtool</tt>, and <tt>flex</tt> using your system&rsquo;s package manager
+  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.).
+<li/> Obtain <tt>mlr-i.j.k.tar.gz</tt> from <a
+  href="https://github.com/johnkerl/miller/tags">https://github.com/johnkerl/miller/tags</a>,
+  replacing <tt>i.j.k</tt> with the desired release, e.g. <tt>2.2.1</tt>.
+<li/> <tt>tar zxvf mlr-i.j.k.tar.gz</tt>
+<li/> <tt>cd mlr-i.j.k</tt>
+<li> Various configuration options of your choice, e.g.
+  <ul>
+  <li/> <tt>./configure</tt>
+  <li/> <tt>./configure --prefix=/usr/local</tt>
+  <li/> <tt>./configure --prefix=$HOME/pkgs</tt>
+  <li/> <tt>./configure CC=clang</tt>
+  <li/> etc.
+  </ul>
+<li/> <tt>make</tt> creates the <tt>c/mlr</tt> executable
+<li/> <tt>make check</tt>
+<li/> <tt>make install</tt> copies the <tt>c/mlr</tt> executable to your prefix&rsquo;s <tt>bin</tt> subdirectory.
+</ul>
 
-<p/><boldmaroon>Required external dependencies</boldmaroon>: These are necessary to produce the <tt>mlr</tt>
+<h2>From git clone using autoconfig</h2>
+
+<ul>
+<li/> Install the <tt>flex</tt> package using your system&rsquo;s package
+  manager (<tt>apt-get</tt>, <tt>yum install</tt>, etc.).
+<li/> <tt>git clone https://github.com/johnkerl/miller</tt>
+<li/> <tt>cd miller</tt>
+<li/> <tt>autoreconf -fiv</tt>
+<li/> Then continue from <tt>./configure</tt> as above.
+</ul>
+
+<h2>Creating a release tarball</h2>
+
+<ul>
+<li/> Proceed from git-clone as above.
+<li/> Then edit the package version at the top of <tt>configure.ac</tt> as well as <tt>c/mlrvers.h</tt>.
+<li/> Then <tt>make distcheck</tt>.
+</ul>
+
+<h2>Without using autoconfig</h2>
+
+<p/> GNU autoconfig is familiar to many users, and indeed plenty of folks won&rsquo;t bother to use an open-source
+software package which doesn&rsquo;t have autoconfig support. And this is for good reason: GNU autoconfig allows
+us to build software on a wide diversity of platforms. For this reason I&rsquo;m happy that Miller supports
+autoconfig.
+
+<p/>But, many others (myself included!) find autoconfig confusing: if it works
+without errors, great, but if not, the <tt>./configure &amp;&amp; make</tt>
+output can be exceedingly difficult to decipher. And this also can be a
+turn-off for using open-source software: if you can&rsquo;t figure out the
+build errors, you may just keep walking. For this reason I&rsquo;m happy that
+Miller allows you to build without autoconfig. (Of course, if you have any
+build errors, feel free to contact me at
+<a href="mailto:kerl.john.r+miller@gmail.com">kerl.john.r+miller@gmail.com</a>,
+&mdash; or, better, open an issue with &ldquo;New Issue&rdquo; at
+<a href="https://github.com/johnkerl/miller/issues">
+https://github.com/johnkerl/miller/issues</a>.)
+
+<p/>Steps:
+<ul>
+<li/> Obtain a release tarball or git clone.
+<li/> <tt>cd</tt> into the <tt>c</tt> subdirectory.
+<li/> Edit the <tt>INSTALLDIR</tt> in <tt>Makefile.no-autoconfig</tt>.
+<li/> To change the C compiler, edit the <tt>CC=</tt> lines in
+  <tt>Makefile.no-autoconfig</tt> and <tt>dsls/Makefile.no-autoconfig</tt>.
+<li/> <tt>make -f Makefile.no-autoconfig</tt> creates the <tt>mlr</tt>
+  executable and runs unit/regression tests (i.e. the equivalent of both
+  <tt>make</tt> and <tt>make check</tt> using autoconfig).
+<li/> <tt>make install</tt> copies the <tt>mlr</tt> executable to your install directory.
+</ul>
+
+<p/>The <tt>Makefile.no-autoconfig</tt> is simple: little more than <tt>gcc
+*.c</tt>.  Customzing is less automatic than autoconfig, but more transparent.
+I expect this makefile to work with few modifications on a large fraction of
+modern Linux/BSD-like systems: I&rsquo;m aware of successful use with
+<tt>gcc</tt> and <tt>clang</tt>, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS
+Yosemite), and FreeBSD.
+
+<h1>In case of problems</h1>
+
+<p/> If you have any build errors, feel free to contact me at <a
+href="mailto:kerl.john.r+miller@gmail.com">kerl.john.r+miller@gmail.com</a>,
+&mdash; or, better, open an issue with &ldquo;New Issue&rdquo; at
+<a href="https://github.com/johnkerl/miller/issues">
+https://github.com/johnkerl/miller/issues</a>.
+
+<h1>Dependencies</h1>
+
+<h2>Required external dependencies</h2>
+
+<p/> These are necessary to produce the <tt>mlr</tt>
 executable.
 <ul>
-<li/> <tt>gcc</tt> (or presumably other compilers; please open an issue or send me a pull request if you have information for me
-about other 21st-century compilers)
+<li/> <tt>gcc</tt>, <tt>clang</tt>, etc. (or presumably other compilers; please
+open an issue or send me a pull request if you have information for me about
+other 21st-century compilers)
 <li/> The standard C library
 <li/> <tt>flex</tt>
 </ul>
 
-<p/><boldmaroon>Optional external dependencies</boldmaroon>:
-<ul>
-<li/>
-  This documentation pageset is built using <b>Poki</b>:
-  <a href="http://johnkerl.org/poki/doc">docs here</a>,
-  <a href="https://github.com/johnkerl/poki">source code here</a>.
-  You&rsquo;ll need this if you modify documents, or if you modify the code in a way that affects the documents
-  (there are auto-run snippets inserted into the doc).
-  The best way to discover this is to run <tt>make devall</tt> in the Miller base directory (which builds the code,
-  then updates the docs), then run <tt>git diff</tt> to see if docs were affected by the code mod.
-  (If so, commit and push them.)
-<li/> The optional <tt>make dev</tt> target in the <tt>c/</tt> subdirectory uses <b>ctags</b> and <b>valgrind</b>.
-</ul>
+<h2>Optional external dependencies</h2>
 
-<p/><boldmaroon>Internal dependencies</boldmaroon>:
+This documentation pageset is built using <boldmaroon>Poki</boldmaroon>:
+<a href="http://johnkerl.org/poki/doc">docs here</a>,
+<a href="https://github.com/johnkerl/poki">source code here</a>.
+You&rsquo;ll need this if you modify documents, or if you modify the code in a way that affects the documents
+(there are auto-run snippets inserted into the doc).
+The best way to discover this is to run <tt>make install</tt> as above, then run <tt>poki</tt> in Miller&rsquo;s
+<tt>doc</tt> subdirectory, then run <tt>git diff</tt> to see if docs were affected
+by the code mod.  (If so, commit and push them.)
+
+<h2>Internal dependencies</h2>
 These are included within the <a href="https://github.com/johnkerl/miller">Miller source tree</a> and do not
 need to be separately installed (and in fact any separate installation will not be picked up in the Miller build):
 <ul>
@@ -104,11 +141,7 @@ https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h</a>.
 copyright</a>.
 </ul>
 
-<p/><boldmaroon>Testing</boldmaroon>: Miller uses MinUnit unit-test for key
-classes including <tt>lrec_t</tt>.  The remaining coverage (which aims to be
-exhaustive, although this is a work in progress) is regression coverage of
-Miller using all data-transform options and all I/O-format pairs.
+<h1>License</h1>
 
-<p/><boldmaroon>License</boldmaroon>: Two-clause BSD license
-<a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
+<p/>Two-clause BSD license <a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
 https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.

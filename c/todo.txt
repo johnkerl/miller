@@ -21,8 +21,6 @@ MAJOR: autoconfig
     ./input/lrec_reader_in_memory.c
     ./dsls/filter_dsl_wrapper.c
     ./dsls/put_dsl_wrapper.c
-  o Makefile.am updates:
-    ./mapping/lrec_evaluators.c
 
 * manpage:
   - http://www.linuxhowtos.org/System/creatingman.htm
@@ -41,20 +39,12 @@ LEVELS:
 * poki
 * ... what else ...
 
-DOC:
-* separate mlrdoc build notes for build-a-release (autoreconf, xmllint, etc.)
-  vs. install-a-release (./configure)
-* separate dependency lists (long & short)
-* makefile.orig w/ notes (simpler to debug in the non-happy case, faster compiles)
-  along w/ mlrdoc note
-* notes-to-self re new files: incl. test-files in c/test/Makefile.am
-! Makefile.orig x 2 w/ notes in-tree & @ mlrdoc
-* mlrvers.h <-> config.h; also ci a stub config.h for noac build
-
 TO-DO:
 * include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
 
+----------------------------------------------------------------
+MAJOR: scroll-stalls in mlrdoc!! really bad on the droid.
 
 ----------------------------------------------------------------
 MAJOR: multi-char separators

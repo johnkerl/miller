@@ -280,20 +280,20 @@ Separator options, for input, output, or both:
       xtab         (N/A)    \n       space
       pprint       \n       space    (N/A)
 Double-quoting for CSV output:
-  --quote-all                            Wrap all fields in double quotes
-  --quote-none                           Do not wrap any fields in double quotes, even if they have OFS or ORS in them
-  --quote-minimal                        Wrap fields in double quotes only if they have OFS or ORS in them (default)
-  --quote-numeric                        Wrap fields in double quotes only if they have numbers in them
+  --quote-all        Wrap all fields in double quotes
+  --quote-none       Do not wrap any fields in double quotes, even if they have OFS or ORS in them
+  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS in them (default)
+  --quote-numeric    Wrap fields in double quotes only if they have numbers in them
 Numerical formatting:
-  --ofmt {format}                        E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
-                                         Applies to verbs which compute new values, e.g. put, stats1, stats2.
-                                         See also the fmtnum function within mlr put (mlr --help-all-functions).
+  --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
+                     Applies to verbs which compute new values, e.g. put, stats1, stats2.
+                     See also the fmtnum function within mlr put (mlr --help-all-functions).
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= v2.2.0.
+This is Miller version &gt;= 2.2.1.
 </pre>
 </div>
 <p/>
