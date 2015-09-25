@@ -207,13 +207,13 @@ unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader te
 	@echo DONE
 
 reg-test:
-	./test/run
+	./reg_test/run
 
 # ----------------------------------------------------------------
 # Run this after unit-test expected output has changed, and is verified to be
 # OK. (Example: after adding new test cases in test/run.)
 regtest-copy:
-	cp output/out test/expected
+	cp output/out reg_test/expected
 
 # ----------------------------------------------------------------
 # Unit-test executables

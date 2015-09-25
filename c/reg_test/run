@@ -15,19 +15,19 @@ set -e
 
 # For building with autoconf:
 # * in-directory build:
-#   pwd              is /path/to/the/tree/c/test
-#   path to mlr      is /path/to/the/tree/c/mlr
-#   path to test/run is /path/to/the/tree/c/test/run
+#   pwd                  is /path/to/the/tree/c/reg_test
+#   path to mlr          is /path/to/the/tree/c/mlr
+#   path to reg_test/run is /path/to/the/tree/c/reg_test/run
 #
 # * out-of-directory ("VPATH") build:
-#   pwd              is /path/to/build/tree/c/test
-#   path to mlr      is /path/to/build/tree/c/mlr
-#   path to test/run is /path/to/source/tree/c/test/run
+#   pwd                  is /path/to/build/tree/c/reg_test
+#   path to mlr          is /path/to/build/tree/c/mlr
+#   path to reg_test/run is /path/to/source/tree/c/reg_test/run
 
 # For building without autoconf:
-#   pwd              is /does/not/matter
-#   path to mlr      is /path/to/the/tree/c/mlr
-#   path to test/run is /path/to/the/tree/c/test/run
+#   pwd                  is /does/not/matter
+#   path to mlr          is /path/to/the/tree/c/mlr
+#   path to reg_test/run is /path/to/the/tree/c/reg_test/run
 
 ourdir=`dirname $0`
 srcdir=$ourdir/../..
