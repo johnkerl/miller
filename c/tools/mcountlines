@@ -8,7 +8,7 @@ wc -l \
   mapping/*.[ch] \
   output/*.[ch] \
   stream/*.[ch] \
-  utmains/*.[ch] \
+  unit_test/*.[ch] \
   dsls/*.[ly] \
   dsls/*wrapper*.[ch] \
   | sort -n
@@ -22,7 +22,7 @@ wc -c \
   mapping/*.[ch] \
   output/*.[ch] \
   stream/*.[ch] \
-  utmains/*.[ch] \
+  unit_test/*.[ch] \
   dsls/*.[ly] \
   dsls/*wrapper*.[ch] \
   | sort -n | tail -n 5
