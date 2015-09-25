@@ -212,7 +212,7 @@ static char* test_lrec_xtab_api() {
 	slls_add_with_free(pxtab_lines, line_3);
 	slls_add_with_free(pxtab_lines, line_4);
 
-	lrec_t* prec = lrec_parse_stdio_xtab(pxtab_lines, ' ', TRUE);
+	lrec_t* prec = lrec_parse_stdio_xtab_single_ips(pxtab_lines, ' ', TRUE);
 	mu_assert_lf(prec->field_count == 4);
 
 	mu_assert_lf(streq(lrec_get(prec, "w"), "2"));

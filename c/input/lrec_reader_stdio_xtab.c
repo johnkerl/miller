@@ -8,8 +8,9 @@
 // xxx cmt/docxref re no irs for xtab, & two or more ifses separates records.
 typedef struct _lrec_reader_stdio_xtab_state_t {
 	char* ifs;
-	char  ips;
+	char* ips;
 	int   ifslen;
+	int   ipslen;
 	int   allow_repeat_ips;
 	int   at_eof;
 } lrec_reader_stdio_xtab_state_t;
@@ -34,12 +35,16 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			if (pxtab_lines->length == 0) {
 				return NULL;
 			} else {
-				return lrec_parse_stdio_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
+				return (pstate->ipslen == 1)
+					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
+					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
 			}
 		} else if (*line == '\0') {
 			free(line);
 			if (pxtab_lines->length > 0) {
-				return lrec_parse_stdio_xtab(pxtab_lines, pstate->ips, pstate->allow_repeat_ips);
+				return (pstate->ipslen == 1)
+					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
+					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
 			}
 		} else {
 			slls_add_with_free(pxtab_lines, line);
@@ -55,13 +60,14 @@ static void lrec_reader_stdio_xtab_sof(void* pvstate) {
 static void lrec_reader_stdio_xtab_free(void* pvstate) {
 }
 
-lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char ips, int allow_repeat_ips) {
+lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
 	pstate->ifs              = ifs;
 	pstate->ips              = ips;
 	pstate->ifslen           = strlen(ifs);
+	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ips = allow_repeat_ips;
 	pstate->at_eof           = FALSE;
 
@@ -76,7 +82,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char ips, int allow_repea
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
+lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allow_repeat_ips) {
 	lrec_t* prec = lrec_xtab_alloc(pxtab_lines);
 
 	for (sllse_t* pe = pxtab_lines->phead; pe != NULL; pe = pe->pnext) {
@@ -92,6 +98,30 @@ lrec_t* lrec_parse_stdio_xtab(slls_t* pxtab_lines, char ips, int allow_repeat_ip
 			while (*p != 0 && *p == ips) {
 				*p = 0;
 				p++;
+			}
+			lrec_put_no_free(prec, key, p);
+		}
+	}
+
+	return prec;
+}
+
+lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips) {
+	lrec_t* prec = lrec_xtab_alloc(pxtab_lines);
+
+	for (sllse_t* pe = pxtab_lines->phead; pe != NULL; pe = pe->pnext) {
+		char* line = pe->value;
+		char* p = line;
+		char* key = p;
+
+		while (*p != 0 && !streqn(p, ips, ipslen))
+			p++; // Advance by only 1 in case of subsequent match
+		if (*p == 0) {
+			lrec_put_no_free(prec, key, "");
+		} else {
+			while (*p != 0 && !streqn(p, ips, ipslen)) {
+				*p = 0;
+				p += ipslen;
 			}
 			lrec_put_no_free(prec, key, p);
 		}

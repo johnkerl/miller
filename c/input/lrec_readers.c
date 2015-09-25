@@ -27,15 +27,10 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 		else
 			return lrec_reader_stdio_nidx_alloc(irs, ifs, allow_repeat_ifs);
 	} else if (streq(fmtdesc, "xtab")) {
-		if (strlen(ips) != 1) {
-			fprintf(stderr, "%s: IPS for XTAB format must be single-character; got \"%s\".\n",
-				MLR_GLOBALS.argv0, ips);
-			return NULL;
-		}
 		if (use_mmap)
-			return lrec_reader_mmap_xtab_alloc(ifs, ips[0], allow_repeat_ips);
+			return lrec_reader_mmap_xtab_alloc(ifs, ips, allow_repeat_ips);
 		else
-			return lrec_reader_stdio_xtab_alloc(ifs, ips[0], allow_repeat_ips);
+			return lrec_reader_stdio_xtab_alloc(ifs, ips, allow_repeat_ips);
 	} else {
 		return NULL;
 	}

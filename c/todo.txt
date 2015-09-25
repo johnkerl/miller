@@ -13,7 +13,10 @@ MAJOR: release planning
 * 2.2.2 with CSV read-perf
 
 ----------------------------------------------------------------
-MINOR: allow multi-char ips for xtab -- then ignore repifs. likewise w/ ops
+MINOR: allow multi-char ips for xtab -- then ignore repifs.
+
+----------------------------------------------------------------
+MINOR: 80-char clean all on-line help, error messages, etc.
 
 ----------------------------------------------------------------
 MAJOR: autoconfig
