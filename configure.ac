@@ -31,10 +31,11 @@ AC_CONFIG_FILES([Makefile
 		c/mapping/Makefile
 		c/output/Makefile
 		c/stream/Makefile
-		c/test/Makefile
-		c/test/expected/Makefile
-		c/test/input/Makefile
-		c/test/input/rfc-csv/Makefile
+		c/unit_test/Makefile
+		c/reg_test/Makefile
+		c/reg_test/expected/Makefile
+		c/reg_test/input/Makefile
+		c/reg_test/input/rfc-csv/Makefile
 		c/tools/Makefile
 		c/Makefile
 		doc/Makefile])
