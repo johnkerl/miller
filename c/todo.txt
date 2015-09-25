@@ -20,8 +20,6 @@ MAJOR: autoconfig
 
 ! build page doesn't belong in developer info -- this is user info
 
-* doc link for homebrew support ...
-
 * port more deader-mains over to UT ...
   o files:
     ./input/lrec_reader_in_memory.c

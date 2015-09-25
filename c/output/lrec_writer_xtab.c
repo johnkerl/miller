@@ -6,11 +6,26 @@
 typedef struct _lrec_writer_xtab_state_t {
 	char* ofs;
 	char* ops;
+	int   opslen;
 	long long record_count;
 } lrec_writer_xtab_state_t;
 
 // ----------------------------------------------------------------
-static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+// If OPS is single-character then we can do alignment of the form
+//
+//   ab  123
+//   def 45
+//
+// On the other hand, if it's multi-character, we won't be able to align
+// neatly in all cases. Yet we do allow multi-character OPS, just without
+// repetition: if someone wants to use OPS ": " and format data as
+//
+//   ab: 123
+//   def: 45
+//
+// then they can do that.
+
+static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
@@ -36,6 +51,22 @@ static void lrec_writer_xtab_process(FILE* output_stream, lrec_t* prec, void* pv
 	lrec_free(prec); // xxx cmt mem-mgmt
 }
 
+static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec, void* pvstate) {
+	if (prec == NULL)
+		return;
+	lrec_writer_xtab_state_t* pstate = pvstate;
+	if (pstate->record_count > 0LL)
+		fputs(pstate->ofs, output_stream);
+	pstate->record_count++;
+
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		// "%-*s" fprintf format isn't correct for non-ASCII UTF-8
+		fprintf(output_stream, "%s%s%s%s", pe->key, pstate->ops, pe->value, pstate->ofs);
+	}
+	lrec_free(prec); // xxx cmt mem-mgmt
+}
+
+// ----------------------------------------------------------------
 static void lrec_writer_xtab_free(void* pvstate) {
 }
 
@@ -45,10 +76,13 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
 	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
 	pstate->ofs          = ofs;
 	pstate->ops          = ops;
+	pstate->opslen       = strlen(ops);
 	pstate->record_count = 0LL;
 
 	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = &lrec_writer_xtab_process;
+	plrec_writer->pprocess_func = (pstate->opslen == 1)
+		? lrec_writer_xtab_process_aligned
+		: lrec_writer_xtab_process_unaligned;
 	plrec_writer->pfree_func    = &lrec_writer_xtab_free;
 
 	return plrec_writer;

@@ -219,9 +219,9 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.\n");
 	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by\n");
 	fprintf(o, "    two or more consecutive IFS/OFS -- i.e. a blank line.\n");
-	fprintf(o, "  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.\n");
-	fprintf(o, "    This is because they are used with repetition for alignment; multi-character separators\n");
-	fprintf(o, "    would make alignment impossible.\n");
+	fprintf(o, "  * OFS must be single-character for PPRINT format. THis is because it is used with repetition\n");
+	fprintf(o, "    for alignment; multi-character separators would make alignment impossible.\n");
+	fprintf(o, "  * OPS may be multi-character for XTAB format, in which case alignment is disabled.\n");
 	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
 	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
 	fprintf(o, "    You can use \"--dkvp --rs crlf\" for CRLF-terminated DKVP files, and so on.\n");
@@ -554,11 +554,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		exit(1);
 	}
 
-	if (streq(popts->ofile_fmt, "xtab") && strlen(popts->ops) != 1) {
-		fprintf(stderr, "%s: OPS for XTAB format must be single-character; got \"%s\".\n",
-			argv[0], popts->ops);
-		return NULL;
-	}
 	if (streq(popts->ofile_fmt, "pprint") && strlen(popts->ofs) != 1) {
 		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
 			argv[0], popts->ofs);
