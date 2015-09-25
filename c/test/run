@@ -511,6 +511,7 @@ run_mlr --no-mmap --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-cr
 run_mlr --mmap    --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
 run_mlr --no-mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
 run_mlr --no-mmap --xtab --ips . --ops := cut -x -f b $indir/dots.xtab
+run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dkvp
 
 # ================================================================
 announce MULTI-CHARACTER IRS FOR PPRINT

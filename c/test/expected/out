@@ -2761,6 +2761,11 @@ c:=345
 defg:=6
 hi:=78
 
+mlr --xtab --ips :  --ops @@@@ put $sum=int($a+$b) ./test/input/multi-ips.dkvp
+a@@@@1
+b@@@@2
+sum@@@@3
+
 
 ================================================================
 MULTI-CHARACTER IRS FOR PPRINT
