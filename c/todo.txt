@@ -7,68 +7,53 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
-MAJOR: release planning
-
-* 2.2.1 with autoconfig
-* 2.2.2 with CSV read-perf
-
-----------------------------------------------------------------
-MINOR: allow multi-char ips for xtab -- then ignore repifs.
-
-----------------------------------------------------------------
-MINOR: 80-char clean all on-line help, error messages, etc.
-
-----------------------------------------------------------------
-MAJOR: autoconfig
-
-! build page doesn't belong in developer info -- this is user info
-
-* port more deader-mains over to UT ...
-  o files:
-    ./input/lrec_reader_in_memory.c
-    ./dsls/filter_dsl_wrapper.c
-    ./dsls/put_dsl_wrapper.c
+MINOR:
 
 * test:
   o test/ -> reg_test/
   o utmains/ -> unit_test/
   o do Makefile.am in the latter, etc.
 
-* remove -Werror and -O3 from c/Makefile.am; make sure -O2 -g is
-  the default; emphasize @mlrdoc
+* remove -Werror and -O3 from c/Makefile.am; make sure -O2 -g is the default; emphasize @mlrdoc
+
 * mlrg_CFLAGS and mlrp_CFLAGS need ${AM_CFLAGS} at the end or they will just be ignored
 
-* manpage:
+* valgrind & UT cline/sline
+
+* UTx4xN the format-parsers
+
+* 80-char clean all on-line help, error messages, etc.
+
+* define dkvp, nidx, etc @ cover x 2
+  - web-server access logs in dkvp format -- ?
+
+* go back and re-apply ctype/isprint portability things to new spots
+
+* scroll-stalls in mlrdoc!! really bad on the droid.
+
+* build page doesn't belong in developer info -- this is user info
+
+* port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
+
+----------------------------------------------------------------
+MAJOR: manpage
+
+* xroff links:
   - http://www.linuxhowtos.org/System/creatingman.htm
   - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
 * solve the duplication problem, and minimize dependencies:
-  - ideally mlr --manpage all in C
-  - as a second choice, maybe generate most content in C with a post=processor
-    in some widely portable language (e.g. perl is gross but is everywhere) to
-    add in the groff markups.
-  - or something template-driven vaguely like poki??
+  ? mlr --manpage all in C?
+  ? maybe generate most content in C with a post=processor in some widely
+    portable language (e.g. perl is gross but is everywhere) to add in the
+    groff markups.
+  ? maybe something template-driven vaguely like poki??
   - whatever it is is needs to be as automated as possible
 
 LEVELS:
 * figure out a2x/xml/...
-* manpage
 * poki
 * ... what else ...
 * write those up in the docs, including required packages
-
-TO-DO:
-* include lemon-generated .c/.h or not
-* lemon in-dir -- cf wiz note
-* gprof link with -lc on FreeBSD -- ?
-
-----------------------------------------------------------------
-MAJOR: scroll-stalls in mlrdoc!! really bad on the droid.
-
-----------------------------------------------------------------
-MAJOR: multi-char separators
-
-* valgrind & UT cline/sline
-* UTx4xN the format-parsers
 
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
@@ -90,32 +75,22 @@ MAJOR: csv mem-leak/read-perf
   multi-char-terminated getdelim might be the best line of approach.
 
 ----------------------------------------------------------------
-MINOR
-
-* define dkvp, nidx, etc @ cover x 2
-  - web-server access logs in dkvp format -- ?
-
-* go back and re-apply ctype/isprint portability things to new spots
+MINOR:
 
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
-* configure w/o autotools? likewise manpage. etc. multiple build levels.
 
 b mlr faq page
 
 * --mmap @ mlr -h
 * ctype ff @ bld.out
-* platform os/ccomp list to mlrdoc
 
 * -h vs. usage : stdout vs. stderr
 * pprint join?
 
 * header-length data mismatch et. al: file/line
 
-* make an updated dependency list, esp. in light of a2x et al.
-* probably its own mlrdoc page ... at least, highlighted in build page
-
 ----------------------------------------------------------------
-little:
+MINOR:
 
 * RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
 
@@ -129,6 +104,11 @@ little:
 
 * steppers (and stats1/2 -- what else -- ?): include help-string in
   lookup table, and iterate over that in the online help function
+
+TO-DO:
+* include lemon-generated .c/.h or not
+* lemon in-dir -- cf wiz note
+* gprof link with -lc on FreeBSD -- ?
 
 ================================================================
 HN FEEDBACKS 2015-08-15 (https://news.ycombinator.com/item?id=10066742)
