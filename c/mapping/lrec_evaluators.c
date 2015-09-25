@@ -1331,6 +1331,8 @@ static char * all_tests() {
 	return 0;
 }
 
+// test_lrec_evaluators has the MinUnit inside lrec_evaluators, as it tests
+// many private methods. (The other option is to make them all public.)
 int test_lrec_evaluators_main(int argc, char **argv) {
 	mlr_global_init(argv[0], "%lf", NULL);
 
