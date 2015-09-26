@@ -257,9 +257,9 @@ Separator options, for input, output, or both:
   * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.
   * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by
     two or more consecutive IFS/OFS -- i.e. a blank line.
-  * OFS must be single-character for PPRINT format. THis is because it is used with repetition
-    for alignment; multi-character separators would make alignment impossible.
-  * OPS may be multi-character for XTAB format, in which case alignment is disabled.
+  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
+    This is because they are used with repetition for alignment; multi-character separators
+    would make alignment impossible.
   * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
     In particular, this means LF line-terminators by default on Linux/OSX.
     You can use "--dkvp --rs crlf" for CRLF-terminated DKVP files, and so on.
@@ -293,7 +293,7 @@ Other options:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= v2.2.1.
+This is Miller version &gt;= 2.2.1.
 </pre>
 </div>
 <p/>
