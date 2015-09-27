@@ -1,7 +1,7 @@
 SUBDIRS=		lib cli stream input mapping output containers dsls experimental tools . unit_test reg_test
 
 AM_CPPFLAGS=		-I${srcdir}
-AM_CFLAGS=		-Wall -Werror -std=gnu99 -O3
+AM_CFLAGS=		-Wall -std=gnu99
 bin_PROGRAMS=		mlr
 noinst_PROGRAMS=	mlrg \
 			mlrp

@@ -121,7 +121,7 @@ linked).
 <tt>brew update &amp;&amp; brew install miller</tt>.
 
 <p/> You may already have <tt>mlr</tt> available in your platform&rsquo;s
-package manager on NetBSD, Arch Linux, or perhaps other distributions.
+package manager on NetBSD, Debian Linux, Arch Linux, or perhaps other distributions.
 
 <a id="Building_from_source"/><h1>Building from source</h1>
 
@@ -144,6 +144,7 @@ package manager on NetBSD, Arch Linux, or perhaps other distributions.
   <li/> <tt>./configure --prefix=$HOME/pkgs</tt>
   <li/> <tt>./configure CC=clang</tt>
   <li/> <tt>./configure --disable-shared</tt> (to make a statically linked executable)
+  <li/> <tt>./configure 'CFLAGS=-Wall -std=gnu99 -O3'</tt>
   <li/> etc.
   </ul>
 <li/> <tt>make</tt> creates the <tt>c/mlr</tt> executable

@@ -12,7 +12,7 @@ check_PROGRAMS = 	test_mlrutil \
 			test_join_bucket_keeper
 
 AM_CPPFLAGS=		-I${srcdir}/..
-AM_CFLAGS=		-Wall -Werror -std=gnu99 -O3
+AM_CFLAGS=		-Wall -std=gnu99
 
 all_ldadd=		\
 			../cli/libcli.la \
