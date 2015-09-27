@@ -9,8 +9,6 @@ TOP OF LIST
 ----------------------------------------------------------------
 MINOR:
 
-* remove -Werror and -O3 from c/Makefile.am; make sure -O2 -g is the default; emphasize @mlrdoc
-
 * valgrind & UT cline/sline
 
 * UTx4xN the format-parsers
