@@ -26,6 +26,8 @@ MINOR:
 
 * port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
 
+* -h vs. usage : stdout vs. stderr
+
 ----------------------------------------------------------------
 MAJOR: manpage
 
@@ -75,7 +77,6 @@ b mlr faq page
 * --mmap @ mlr -h
 * ctype ff @ bld.out
 
-* -h vs. usage : stdout vs. stderr
 * pprint join?
 
 * header-length data mismatch et. al: file/line
@@ -84,10 +85,6 @@ b mlr faq page
 MINOR:
 
 * RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-
-* -Wall -Wextra -Wpedantic-?? Werror=unused-but-set-variable?
-
-* --mmap into online help ...
 
 * comma-number -- using locale?
 
