@@ -51,7 +51,7 @@ static step_t* step_delta_alloc(char* input_field_name) {
 
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = NULL;
-	pstep->pdprocess_func = &step_delta_dprocess;
+	pstep->pdprocess_func = step_delta_dprocess;
 	return pstep;
 }
 // xxx step_delta_free et al.
@@ -83,7 +83,7 @@ static step_t* step_ratio_alloc(char* input_field_name) {
 
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = NULL;
-	pstep->pdprocess_func = &step_ratio_dprocess;
+	pstep->pdprocess_func = step_ratio_dprocess;
 	return pstep;
 }
 
@@ -106,7 +106,7 @@ static step_t* step_rsum_alloc(char* input_field_name) {
 
 	pstep->pvstate        = (void*)pstate;
 	pstep->psprocess_func = NULL;
-	pstep->pdprocess_func = &step_rsum_dprocess;
+	pstep->pdprocess_func = step_rsum_dprocess;
 	return pstep;
 }
 
@@ -128,7 +128,7 @@ static step_t* step_counter_alloc(char* input_field_name) {
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
 
 	pstep->pvstate        = (void*)pstate;
-	pstep->psprocess_func = &step_counter_sprocess;
+	pstep->psprocess_func = step_counter_sprocess;
 	pstep->pdprocess_func = NULL;
 	return pstep;
 }

@@ -76,8 +76,8 @@ static stats2_t* stats2_linreg_ols_alloc(int do_verbose) {
 	pstate->sumxy = 0.0;
 
 	pstats2->pvstate = (void*)pstate;
-	pstats2->pingest_func = &stats2_linreg_ols_ingest;
-	pstats2->pemit_func = &stats2_linreg_ols_emit;
+	pstats2->pingest_func = stats2_linreg_ols_ingest;
+	pstats2->pemit_func   = stats2_linreg_ols_emit;
 	return pstats2;
 }
 
@@ -134,8 +134,8 @@ static stats2_t* stats2_r2_alloc(int do_verbose) {
 	pstate->sumy2     = 0.0;
 
 	pstats2->pvstate      = (void*)pstate;
-	pstats2->pingest_func = &stats2_r2_ingest;
-	pstats2->pemit_func   = &stats2_r2_emit;
+	pstats2->pingest_func = stats2_r2_ingest;
+	pstats2->pemit_func   = stats2_r2_emit;
 
 	return pstats2;
 }
@@ -269,8 +269,8 @@ static stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose) {
 	pstate->do_verbose = do_verbose;
 
 	pstats2->pvstate      = (void*)pstate;
-	pstats2->pingest_func = &stats2_corr_cov_ingest;
-	pstats2->pemit_func   = &stats2_corr_cov_emit;
+	pstats2->pingest_func = stats2_corr_cov_ingest;
+	pstats2->pemit_func   = stats2_corr_cov_emit;
 
 	return pstats2;
 }

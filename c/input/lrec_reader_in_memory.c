@@ -42,11 +42,11 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 	pstate->precords = precords;
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &lrec_reader_in_memory_vopen;
-	plrec_reader->pclose_func   = &lrec_reader_in_memory_vclose;
-	plrec_reader->pprocess_func = &lrec_reader_in_memory_process;
-	plrec_reader->psof_func     = &lrec_reader_in_memory_sof;
-	plrec_reader->pfree_func    = &lrec_reader_in_memory_free;
+	plrec_reader->popen_func    = lrec_reader_in_memory_vopen;
+	plrec_reader->pclose_func   = lrec_reader_in_memory_vclose;
+	plrec_reader->pprocess_func = lrec_reader_in_memory_process;
+	plrec_reader->psof_func     = lrec_reader_in_memory_sof;
+	plrec_reader->pfree_func    = lrec_reader_in_memory_free;
 
 	return plrec_reader;
 }

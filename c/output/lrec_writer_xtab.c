@@ -83,7 +83,7 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
 	plrec_writer->pprocess_func = (pstate->opslen == 1)
 		? lrec_writer_xtab_process_aligned
 		: lrec_writer_xtab_process_unaligned;
-	plrec_writer->pfree_func    = &lrec_writer_xtab_free;
+	plrec_writer->pfree_func    = lrec_writer_xtab_free;
 
 	return plrec_writer;
 }

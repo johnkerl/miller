@@ -157,8 +157,8 @@ lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
 	pstate->num_blocks_written = 0LL;
 
 	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = &lrec_writer_pprint_process;
-	plrec_writer->pfree_func    = &lrec_writer_pprint_free;
+	plrec_writer->pprocess_func = lrec_writer_pprint_process;
+	plrec_writer->pfree_func    = lrec_writer_pprint_free;
 
 	return plrec_writer;
 }

@@ -67,8 +67,8 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = &file_reader_mmap_vclose;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 
 	if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
@@ -80,7 +80,7 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 			: lrec_reader_mmap_nidx_process_multi_irs_multi_ifs;
 	}
 
-	plrec_reader->psof_func     = &lrec_reader_mmap_nidx_sof;
+	plrec_reader->psof_func     = lrec_reader_mmap_nidx_sof;
 	plrec_reader->pfree_func    = NULL;
 
 	return plrec_reader;

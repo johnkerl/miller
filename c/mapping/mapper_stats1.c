@@ -53,9 +53,9 @@ static acc_t* acc_count_alloc() {
 	pstate->count       = 0LL;
 
 	pacc->pvstate       = (void*)pstate;
-	pacc->psingest_func = &acc_count_singest;
+	pacc->psingest_func = acc_count_singest;
 	pacc->pdingest_func = NULL;
-	pacc->pemit_func    = &acc_count_emit;
+	pacc->pemit_func    = acc_count_emit;
 	return pacc;
 }
 
@@ -94,9 +94,9 @@ static acc_t* acc_mode_alloc() {
 	pstate->pcounts_for_value = lhmsi_alloc();
 
 	pacc->pvstate       = (void*)pstate;
-	pacc->psingest_func = &acc_mode_singest;
+	pacc->psingest_func = acc_mode_singest;
 	pacc->pdingest_func = NULL;
-	pacc->pemit_func    = &acc_mode_emit;
+	pacc->pemit_func    = acc_mode_emit;
 	return pacc;
 }
 
@@ -121,8 +121,8 @@ static acc_t* acc_sum_alloc() {
 
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_sum_dingest;
-	pacc->pemit_func    = &acc_sum_emit;
+	pacc->pdingest_func = acc_sum_dingest;
+	pacc->pemit_func    = acc_sum_emit;
 	return pacc;
 }
 
@@ -151,8 +151,8 @@ static acc_t* acc_mean_alloc() {
 
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_mean_dingest;
-	pacc->pemit_func    = &acc_mean_emit;
+	pacc->pdingest_func = acc_mean_dingest;
+	pacc->pemit_func    = acc_mean_emit;
 	return pacc;
 }
 
@@ -196,8 +196,8 @@ static acc_t* acc_stddev_var_meaneb_alloc(int do_which) {
 
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_stddev_var_meaneb_dingest;
-	pacc->pemit_func    = &acc_stddev_var_meaneb_emit;
+	pacc->pdingest_func = acc_stddev_var_meaneb_dingest;
+	pacc->pemit_func    = acc_stddev_var_meaneb_emit;
 	return pacc;
 }
 static acc_t* acc_stddev_alloc() {
@@ -243,8 +243,8 @@ static acc_t* acc_min_alloc() {
 
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_min_dingest;
-	pacc->pemit_func    = &acc_min_emit;
+	pacc->pdingest_func = acc_min_dingest;
+	pacc->pemit_func    = acc_min_emit;
 	return pacc;
 }
 
@@ -281,8 +281,8 @@ static acc_t* acc_max_alloc() {
 
 	pacc->pvstate       = (void*)pstate;
 	pacc->psingest_func = NULL;
-	pacc->pdingest_func = &acc_max_dingest;
-	pacc->pemit_func    = &acc_max_emit;
+	pacc->pdingest_func = acc_max_dingest;
+	pacc->pemit_func    = acc_max_emit;
 	return pacc;
 }
 
@@ -311,8 +311,8 @@ static acc_t* acc_percentile_alloc() {
 
 	pacc->pvstate        = (void*)pstate;
 	pacc->psingest_func  = NULL;
-	pacc->pdingest_func  = &acc_percentile_dingest;
-	pacc->pemit_func     = &acc_percentile_emit;
+	pacc->pdingest_func  = acc_percentile_dingest;
+	pacc->pemit_func     = acc_percentile_emit;
 	return pacc;
 }
 
@@ -595,7 +595,6 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 }
 
 // ----------------------------------------------------------------
-// xxx argify the stdout/stderr in ALL usages
 static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Options:\n");

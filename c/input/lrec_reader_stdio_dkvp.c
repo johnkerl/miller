@@ -82,8 +82,8 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &file_reader_stdio_vopen;
-	plrec_reader->pclose_func   = &file_reader_stdio_vclose;
+	plrec_reader->popen_func    = file_reader_stdio_vopen;
+	plrec_reader->pclose_func   = file_reader_stdio_vclose;
 	if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? &lrec_reader_stdio_dkvp_process_single_irs_single_others
@@ -93,8 +93,8 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 			? &lrec_reader_stdio_dkvp_process_multi_irs_single_others
 			: &lrec_reader_stdio_dkvp_process_multi_irs_multi_others;
 	}
-	plrec_reader->psof_func     = &lrec_reader_stdio_dkvp_sof;
-	plrec_reader->pfree_func    = &lrec_reader_stdio_dkvp_free;
+	plrec_reader->psof_func     = lrec_reader_stdio_dkvp_sof;
+	plrec_reader->pfree_func    = lrec_reader_stdio_dkvp_free;
 
 	return plrec_reader;
 }

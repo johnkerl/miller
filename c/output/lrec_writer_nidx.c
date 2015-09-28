@@ -37,8 +37,8 @@ lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
 	pstate->ofs = ofs;
 
 	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = &lrec_writer_nidx_process;
-	plrec_writer->pfree_func    = &lrec_writer_nidx_free;
+	plrec_writer->pprocess_func = lrec_writer_nidx_process;
+	plrec_writer->pfree_func    = lrec_writer_nidx_free;
 
 	return plrec_writer;
 }

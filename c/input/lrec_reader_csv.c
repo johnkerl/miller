@@ -354,11 +354,11 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = &lrec_reader_csv_open;
-	plrec_reader->pclose_func   = &lrec_reader_csv_close;
-	plrec_reader->pprocess_func = &lrec_reader_csv_process;
-	plrec_reader->psof_func     = &lrec_reader_csv_sof;
-	plrec_reader->pfree_func    = &lrec_reader_csv_free;
+	plrec_reader->popen_func    = lrec_reader_csv_open;
+	plrec_reader->pclose_func   = lrec_reader_csv_close;
+	plrec_reader->pprocess_func = lrec_reader_csv_process;
+	plrec_reader->psof_func     = lrec_reader_csv_sof;
+	plrec_reader->pfree_func    = lrec_reader_csv_free;
 
 	return plrec_reader;
 }
