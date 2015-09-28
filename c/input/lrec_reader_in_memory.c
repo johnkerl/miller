@@ -50,27 +50,3 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 
 	return plrec_reader;
 }
-
-// ================================================================
-#ifdef __LREC_READER_IN_MEMORY_MAIN__
-
-int main(int argc, char** argv) {
-	sllv_t* precords = sllv_alloc();
-	sllv_add(precords, lrec_literal_2("a","1", "b","10"));
-	sllv_add(precords, lrec_literal_2("a","1", "b","11"));
-	sllv_add(precords, lrec_literal_2("a","2", "b","12"));
-	sllv_add(precords, lrec_literal_2("a","2", "b","13"));
-	sllv_add(precords, lrec_literal_2("a","3", "b","14"));
-	sllv_add(precords, lrec_literal_2("a","3", "b","15"));
-	lrec_reader_t* preader = lrec_reader_in_memory_alloc(precords);
-	printf("#=%d\n", precords->length);
-	while (TRUE) {
-		lrec_t* precord = preader->pprocess_func(NULL, preader->pvstate, NULL);
-		if (precord == NULL)
-			break;
-		lrec_print(precord);
-	}
-
-	return 0;
-}
-#endif // __LREC_READER_IN_MEMORY_MAIN__

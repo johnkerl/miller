@@ -11,8 +11,6 @@ MINOR:
 
 * UTx4xN the format-parsers
 
-* -h vs. usage (main + subcommand): stdout vs. stderr
-
 * Subsubcommands for step/stats1/stats2 should have online help.
 
 * port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
