@@ -61,7 +61,7 @@ m4/
 autotools/
 stamp-h1
 ap
-doc/miller.1
+doc/mlr.1
 getl
 lemon_prepared
 lrim
