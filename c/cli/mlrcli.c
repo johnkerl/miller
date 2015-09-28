@@ -174,27 +174,47 @@ static char* rebackslash(char* sep) {
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
+//::cat[3/6]check[5/12]count-distinct[14/27]cut[3/31]filter[6/38]group-by[8/47]group-like[10/58]having-fields[13/72]head[4/77]>
+//::histogram[9/2]join[4/7]label[5/13]put[3/17]regularize[10/28]rename[6/35]reorder[7/43]sort[4/48]stats1[6/55]stats2[6/62]step[4/67]tac[3/71]tail[4/76]>
+//::top[3/2]uniq[4/7]
+
+//   cat check count-distinct cut filter group-by group-like having-fields head>
+//   histogram join label put regularize rename reorder sort stats1 stats2 step tac tail>
+//   top uniq
+//00000000011111111112222222222333333333344444444445555555555666666666677777777778
+//12345678901234567890123456789012345678901234567890123456789012345678901234567890
+//*         *         *         *         *         *         *         *         *
+
 // ----------------------------------------------------------------
 // xxx cmt stdout/err & 0/1
 static void main_usage(char* argv0, int exit_code) {
 	FILE* o = exit_code == 0 ? stdout : stderr;
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
 	fprintf(o, "Verbs:\n");
-	int linelen = 0;
+	char* leader = "  ";
+	char* separator = " ";
+	int leaderlen = strlen(leader);
+	int separatorlen = strlen(separator);
+	int linelen = leaderlen;
+	int j = 0;
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
-		linelen += 1 + strlen(mapper_lookup_table[i]->verb);
-		if (linelen > 80) {
+		char* verb = mapper_lookup_table[i]->verb;
+		int verblen = strlen(verb);
+		linelen += separatorlen + verblen;
+		if (linelen >= 80) {
 			fprintf(o, "\n");
-			linelen = 0;
+			linelen = leaderlen + separatorlen + verblen;
+			j = 0;
 		}
-		if ((i > 0) && (linelen > 0))
-			fprintf(o, " ");
-		else
-			fprintf(o, "   ");
-		fprintf(o, "%s", mapper_lookup_table[i]->verb);
+		if (j == 0)
+			fprintf(o, "%s", leader);
+		fprintf(o, "%s%s", separator, verb);
+		j++;
 	}
 	fprintf(o, "\n");
 	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
+	fprintf(o, "Please use \"%s -h\" or \"%s --help\" to show this message.\n", argv0, argv0);
+	fprintf(o, "Please use \"%s --version\" to show the software version.\n", argv0);
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
@@ -205,31 +225,41 @@ static void main_usage(char* argv0, int exit_code) {
 	fprintf(o, "\n");
 
 	fprintf(o, "Data-format options, for input, output, or both:\n");
-	fprintf(o, "  --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g \"a=1,b=2\" (default)\n");
-	fprintf(o, "  --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)\n");
-	fprintf(o, "  --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)\n");
-	fprintf(o, "  --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)\n");
-	fprintf(o, "  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
+	fprintf(o, "  --dkvp   --idkvp   --odkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
+	fprintf(o, "                                        (default)\n");
+	fprintf(o, "  --nidx   --inidx   --onidx            Implicitly-integer-indexed fields\n");
+	fprintf(o, "                                        (Unix-toolkit style)\n");
+	fprintf(o, "  --csv    --icsv    --ocsv             Comma-separated value (or tab-separated\n");
+	fprintf(o, "                                        with --fs tab, etc.)\n");
+	fprintf(o, "  --pprint --ipprint --opprint --right  Pretty-printed tabular (produces no\n");
+	fprintf(o, "                                        output until all input is in)\n");
+	fprintf(o, "  --xtab   --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
-	fprintf(o, "  --rs      --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
-	fprintf(o, "  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma\n");
-	fprintf(o, "  --ps      --ips     --ops              Pair   separators, e.g. equals sign\n");
+	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
+	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
+	fprintf(o, "  --ps     --ips     --ops              Pair separators, e.g. equals sign\n");
 	fprintf(o, "  Notes:\n");
-	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.\n");
-	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by\n");
-	fprintf(o, "    two or more consecutive IFS/OFS -- i.e. a blank line.\n");
-	fprintf(o, "  * OFS must be single-character for PPRINT format. THis is because it is used with repetition\n");
-	fprintf(o, "    for alignment; multi-character separators would make alignment impossible.\n");
-	fprintf(o, "  * OPS may be multi-character for XTAB format, in which case alignment is disabled.\n");
-	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.\n");
-	fprintf(o, "    In particular, this means LF line-terminators by default on Linux/OSX.\n");
-	fprintf(o, "    You can use \"--dkvp --rs crlf\" for CRLF-terminated DKVP files, and so on.\n");
-	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data.\n");
-	fprintf(o, "    In particular, this means it uses CRLF line-terminators by default.\n");
-	fprintf(o, "    You can use \"--csv --rs lf\" for Linux-native CSV files.\n");
+	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats\n");
+	fprintf(o, "    do key-value pairs appear juxtaposed.\n");
+	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;\n");
+	fprintf(o, "    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.\n");
+	fprintf(o, "    a blank line.\n");
+	fprintf(o, "  * OFS must be single-character for PPRINT format. This is because it is used\n");
+	fprintf(o, "    with repetition for alignment; multi-character separators would make\n");
+	fprintf(o, "    alignment impossible.\n");
+	fprintf(o, "  * OPS may be multi-character for XTAB format, in which case alignment is\n");
+	fprintf(o, "    disabled.\n");
+	fprintf(o, "  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle\n");
+	fprintf(o, "    platform-native text data. In particular, this means LF line-terminators\n");
+	fprintf(o, "    by default on Linux/OSX. You can use \"--dkvp --rs crlf\" for\n");
+	fprintf(o, "    CRLF-terminated DKVP files, and so on.\n");
+	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data. In particular, this means\n");
+	fprintf(o, "    it uses CRLF line-terminators by default. You can use \"--csv --rs lf\" for\n");
+	fprintf(o, "    Linux-native CSV files.\n");
 	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
-	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g. \"--fs '|' --ips :\"\n");
+	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g.\n");
+	fprintf(o, "      \"--fs '|' --ips :\"\n");
 	fprintf(o, "    - C-style escape sequences, e.g. \"--rs '\\r\\n' --fs '\\t'\".\n");
 	fprintf(o, "    - To avoid backslashing, you can use any of the following names:\n");
 	fprintf(o, "     ");
@@ -252,22 +282,27 @@ static void main_usage(char* argv0, int exit_code) {
 	}
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
-	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have OFS or ORS in them\n");
-	fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS in them (default)\n");
-	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers in them\n");
+	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");
+	fprintf(o, "                     OFS or ORS in them\n");
+	fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n");
+	fprintf(o, "                     in them (default)\n");
+	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers\n");
+	fprintf(o, "                     in them\n");
 	fprintf(o, "Numerical formatting:\n");
-	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for double-precision.\n");
-	fprintf(o, "                     Applies to verbs which compute new values, e.g. put, stats1, stats2.\n");
-	fprintf(o, "                     See also the fmtnum function within mlr put (mlr --help-all-functions).\n");
+	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
+	fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
+	fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
+	fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
-	fprintf(o, "Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.\n");
+	fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n");
+	fprintf(o, "http://github.com/johnkerl/miller.");
 #ifdef HAVE_CONFIG_H
-	fprintf(o, "This is Miller version >= %s.\n", PACKAGE_VERSION);
+	fprintf(o, " This is Miller version >= %s.\n", PACKAGE_VERSION);
 #else
-	fprintf(o, "This is Miller version >= %s.\n", MLR_VERSION);
+	fprintf(o, " This is Miller version >= %s.\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
 
 	exit(exit_code);
@@ -342,7 +377,14 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		if (argv[argi][0] != '-')
 			break;
 
-		else if (streq(argv[argi], "-h"))
+		else if (streq(argv[argi], "--version")) {
+#ifdef HAVE_CONFIG_H
+			printf("Miller version >= %s.\n", PACKAGE_VERSION);
+#else
+			printf("Miller version >= %s.\n", MLR_VERSION);
+#endif // HAVE_CONFIG_H
+			exit(0);
+		} else if (streq(argv[argi], "-h"))
 			main_usage(argv[0], 0);
 		else if (streq(argv[argi], "--help"))
 			main_usage(argv[0], 0);

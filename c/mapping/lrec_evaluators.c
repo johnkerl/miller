@@ -930,26 +930,34 @@ static char* function_class_to_desc(int function_class) {
 	}
 }
 
-void lrec_evaluator_list_functions(FILE* output_stream) {
-	fprintf(output_stream, "Functions for filter and put:\n");
+void lrec_evaluator_list_functions(FILE* o) {
+	char* leader = "  ";
+	char* separator = " ";
+	int leaderlen = strlen(leader);
+	int separatorlen = strlen(separator);
+	int linelen = leaderlen;
+	int j = 0;
+	fprintf(o, "Functions for filter and put:\n");
 
-	int linelen = 0;
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
-		if (plookup->function_name == NULL)
+		char* fname = plookup->function_name;
+		if (fname == NULL)
 			break;
-		linelen += 1 + strlen(FUNCTION_LOOKUP_TABLE[i].function_name);
-		if (linelen > 80) {
-			fprintf(output_stream, "\n");
+		int fnamelen = strlen(fname);
+		linelen += separatorlen + fnamelen;
+		if (linelen >= 80) {
+			fprintf(o, "\n");
 			linelen = 0;
+			linelen = leaderlen + separatorlen + fnamelen;
+			j = 0;
 		}
-		if ((i > 0) && (linelen > 0))
-			fprintf(output_stream, " ");
-		else
-			fprintf(output_stream, "   ");
-		fprintf(output_stream, "%s", FUNCTION_LOOKUP_TABLE[i].function_name);
+		if (j == 0)
+			fprintf(o, "%s", leader);
+		fprintf(o, "%s%s", separator, fname);
+		j++;
 	}
-	fprintf(output_stream, "\n");
+	fprintf(o, "\n");
 }
 
 // Pass function_name == NULL to get usage for all functions.

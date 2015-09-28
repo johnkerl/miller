@@ -35,6 +35,8 @@ MINOR:
 
 * xxx's in the code!!!!!!!!!!!!!
 
+* make mlr vs. bake mlr -- ?
+
 ----------------------------------------------------------------
 MAJOR: manpage
 
