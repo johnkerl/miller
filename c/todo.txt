@@ -15,8 +15,7 @@ MINOR:
 
 * Subsubcommands for step/stats1/stats2 should have online help.
 
-* Replace the two or three remaining manual-test ifdef-mains with unit-test
-  code. (All the rest have already been done.)
+* port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
 
 * valgrind & UT cline/sline
 
@@ -28,8 +27,6 @@ MINOR:
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
 * build page doesn't belong in developer info -- this is user info
-
-* port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
 
 * xxx's in the code!!!!!!!!!!!!!
 

@@ -174,20 +174,8 @@ static char* rebackslash(char* sep) {
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
-//::cat[3/6]check[5/12]count-distinct[14/27]cut[3/31]filter[6/38]group-by[8/47]group-like[10/58]having-fields[13/72]head[4/77]>
-//::histogram[9/2]join[4/7]label[5/13]put[3/17]regularize[10/28]rename[6/35]reorder[7/43]sort[4/48]stats1[6/55]stats2[6/62]step[4/67]tac[3/71]tail[4/76]>
-//::top[3/2]uniq[4/7]
-
-//   cat check count-distinct cut filter group-by group-like having-fields head>
-//   histogram join label put regularize rename reorder sort stats1 stats2 step tac tail>
-//   top uniq
-//00000000011111111112222222222333333333344444444445555555555666666666677777777778
-//12345678901234567890123456789012345678901234567890123456789012345678901234567890
-//*         *         *         *         *         *         *         *         *
-
 // ----------------------------------------------------------------
-// xxx cmt stdout/err & 0/1
-static void main_usage(FILE* o, char* argv0, int exit_code) {
+static void main_usage(FILE* o, char* argv0) {
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
 	fprintf(o, "Verbs:\n");
 	char* leader = "  ";
@@ -303,8 +291,6 @@ static void main_usage(FILE* o, char* argv0, int exit_code) {
 #else
 	fprintf(o, " This is Miller version >= %s.\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
-
-	exit(exit_code);
 }
 
 static void usage_all_verbs(char* argv0) {
@@ -322,12 +308,14 @@ static void usage_all_verbs(char* argv0) {
 static void usage_unrecognized_verb(char* argv0, char* arg) {
 	fprintf(stderr, "%s: option \"%s\" not recognized.\n", argv0, arg);
 	fprintf(stderr, "\n");
-	main_usage(stderr, argv0, 1);
+	main_usage(stderr, argv0);
+	exit(1);
 }
 
 static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
-		main_usage(stderr, argv[0], 1);
+		main_usage(stderr, argv[0]);
+		exit(1);
 	}
 }
 
@@ -383,13 +371,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			printf("Miller version >= %s.\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
 			exit(0);
-		} else if (streq(argv[argi], "-h"))
-			main_usage(stdout, argv[0], 0);
-		else if (streq(argv[argi], "--help"))
-			main_usage(stdout, argv[0], 0);
-		else if (streq(argv[argi], "--help-all-verbs"))
+		} else if (streq(argv[argi], "-h")) {
+			main_usage(stdout, argv[0]);
+			exit(0);
+		} else if (streq(argv[argi], "--help")) {
+			main_usage(stdout, argv[0]);
+			exit(0);
+		} else if (streq(argv[argi], "--help-all-verbs")) {
 			usage_all_verbs(argv[0]);
-		else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
+		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
 		}
@@ -526,7 +516,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
 				have_rand_seed = TRUE;
 			} else {
-				main_usage(stderr, argv[0], 1);
+				main_usage(stderr, argv[0]);
+				exit(1);
 			}
 			argi++;
 		}
@@ -613,11 +604,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	else if (streq(popts->ofile_fmt, "pprint"))
 		popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], left_align_pprint);
 	else {
-		main_usage(stderr, argv[0], 1);
+		main_usage(stderr, argv[0]);
+		exit(1);
 	}
 
 	if ((argc - argi) < 1) {
-		main_usage(stderr, argv[0], 1);
+		main_usage(stderr, argv[0]);
+		exit(1);
 	}
 
 	popts->pmapper_list = sllv_alloc();
@@ -660,8 +653,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
-	if (popts->plrec_reader == NULL)
-		main_usage(stderr, argv[0], 1);
+	if (popts->plrec_reader == NULL) {
+		main_usage(stderr, argv[0]);
+		exit(1);
+	}
 
 	if (have_rand_seed) {
 		mtrand_init(rand_seed);
