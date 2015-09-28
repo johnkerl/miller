@@ -13,7 +13,7 @@ MINOR:
 
 * Subsubcommands for step/stats1/stats2 should have online help.
 
-* port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
+* port more deader-mains over to UT: filter_dsl_wrapper.c put_dsl_wrapper.c
 
 * valgrind & UT cline/sline
 
