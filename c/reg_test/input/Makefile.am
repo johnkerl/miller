@@ -27,6 +27,7 @@ EXTRA_DIST=	\
 		joinb.dkvp \
 		minmax.dkvp \
 		missings.dkvp \
+		multi-ips.dkvp \
 		multi-sep.csvl \
 		multi-sep.dkvp \
 		null-fields.csv \

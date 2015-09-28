@@ -23,7 +23,7 @@ mlr_LDADD=		\
 # Other executable variants
 
 # Debug version:
-mlrg_CFLAGS=	-g #{AM_CFLAGS}
+mlrg_CFLAGS=	-g ${AM_CFLAGS}
 mlrg_LDADD=	${mlr_LDADD}
 mlrg_SOURCES=	${mlr_SOURCES}
 
@@ -31,9 +31,9 @@ mlrg_SOURCES=	${mlr_SOURCES}
 # * make mlrp
 # * mlrp {arguments>
 # * gprof mlrp gmon.out > myfile.txt
-# Note: works on Linux; not on OSX. On NetBSD it sounds like it'll need an
+# Note: works on Linux; not on OSX. On FreeBSD it sounds like it'll need an
 # extra -lc on the link line.
-mlrp_CFLAGS=	-g -pg #{AM_CFLAGS}
+mlrp_CFLAGS=	-g -pg ${AM_CFLAGS}
 mlrp_LDADD=	${mlr_LDADD}
 mlrp_SOURCES=	${mlr_SOURCES}
 
