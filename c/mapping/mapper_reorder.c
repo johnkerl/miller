@@ -52,15 +52,15 @@ static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) 
 }
 
 // ----------------------------------------------------------------
-static void mapper_reorder_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}   Field names to reorder.\n");
-	fprintf(stdout, "-e           Put specified field names at record end: default is to put\n");
-	fprintf(stdout, "             them at record start.\n");
-	fprintf(stdout, "Examples:\n");
-	fprintf(stdout, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
+static void mapper_reorder_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}   Field names to reorder.\n");
+	fprintf(o, "-e           Put specified field names at record end: default is to put\n");
+	fprintf(o, "             them at record start.\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
 		argv0, verb);
-	fprintf(stdout, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
+	fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
 		argv0, verb);
 }
 
@@ -76,12 +76,12 @@ static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate, "-e", &put_at_end);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_reorder_usage(argv[0], verb);
+		mapper_reorder_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pfield_name_list == NULL) {
-		mapper_reorder_usage(argv[0], verb);
+		mapper_reorder_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

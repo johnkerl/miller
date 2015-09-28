@@ -77,11 +77,11 @@ static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long 
 }
 
 // ----------------------------------------------------------------
-static void mapper_tail_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-n {count}    Tail count to print; default 10\n");
-	fprintf(stdout, "-g {a,b,c}    Optional group-by-field names for tail counts\n");
-	fprintf(stdout, "Passes through the last n records, optionally by category.\n");
+static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-n {count}    Tail count to print; default 10\n");
+	fprintf(o, "-g {a,b,c}    Optional group-by-field names for tail counts\n");
+	fprintf(o, "Passes through the last n records, optionally by category.\n");
 }
 
 static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
@@ -95,7 +95,7 @@ static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_tail_usage(argv[0], verb);
+		mapper_tail_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

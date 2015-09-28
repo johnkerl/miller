@@ -53,13 +53,13 @@ static mapper_t* mapper_regularize_alloc() {
 }
 
 // ----------------------------------------------------------------
-static void mapper_regularize_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
-	fprintf(stdout, "For records seen earlier in the data stream with same field names in\n");
-	fprintf(stdout, "a different order, outputs them with field names in the previously\n");
-	fprintf(stdout, "encountered order.\n");
-	fprintf(stdout, "Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8\n");
-	fprintf(stdout, "output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8\n");
+static void mapper_regularize_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "For records seen earlier in the data stream with same field names in\n");
+	fprintf(o, "a different order, outputs them with field names in the previously\n");
+	fprintf(o, "encountered order.\n");
+	fprintf(o, "Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8\n");
+	fprintf(o, "output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8\n");
 }
 
 static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) {

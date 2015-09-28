@@ -1,6 +1,7 @@
 #ifndef MAPPER_H
 #define MAPPER_H
 
+#include <stdio.h>
 #include "lib/context.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -26,7 +27,7 @@ typedef struct _mapper_t {
 // ----------------------------------------------------------------
 // Control plane:
 
-typedef void mapper_usage_func_t(char* argv0, char* verb);
+typedef void mapper_usage_func_t(FILE* o, char* argv0, char* verb);
 typedef      mapper_t* mapper_parse_cli_func_t(int* pargi, int argc, char** argv);
 
 typedef struct _mapper_setup_t {

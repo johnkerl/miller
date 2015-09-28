@@ -92,12 +92,12 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 }
 
 // ----------------------------------------------------------------
-static void mapper_having_fields_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "--at-least  {a,b,c}\n");
-	fprintf(stdout, "--which-are {a,b,c}\n");
-	fprintf(stdout, "--at-most   {a,b,c}\n");
-	fprintf(stdout, "Conditionally passes through records depending on each record's field names.\n");
+static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "--at-least  {a,b,c}\n");
+	fprintf(o, "--which-are {a,b,c}\n");
+	fprintf(o, "--at-most   {a,b,c}\n");
+	fprintf(o, "Conditionally passes through records depending on each record's field names.\n");
 }
 
 // ----------------------------------------------------------------
@@ -116,7 +116,7 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 		} else if (streq(argv[argi], "--at-most")) {
 			criterion = HAVING_FIELDS_AT_MOST;
 		} else {
-			mapper_having_fields_usage(argv[0], verb);
+			mapper_having_fields_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 
@@ -130,11 +130,11 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 	}
 
 	if (pfield_names == NULL) {
-		mapper_having_fields_usage(argv[0], verb);
+		mapper_having_fields_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 	if (criterion == FALSE) {
-		mapper_having_fields_usage(argv[0], verb);
+		mapper_having_fields_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

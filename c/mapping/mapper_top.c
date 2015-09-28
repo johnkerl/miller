@@ -169,16 +169,16 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 }
 
 // ----------------------------------------------------------------
-static void mapper_top_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}    Value-field names for top counts\n");
-	fprintf(stdout, "-g {d,e,f}    Optional group-by-field names for top counts\n");
-	fprintf(stdout, "-n {count}    How many records to print per category; default 1\n");
-	fprintf(stdout, "-a            Print all fields for top-value records; default is\n");
-	fprintf(stdout, "              to print only value and group-by fields.\n");
-	fprintf(stdout, "--min         Print top smallest values; default is top largest values\n");
-	fprintf(stdout, "Prints the n records with smallest/largest values at specified fields,\n");
-	fprintf(stdout, "optionally by category.\n");
+static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}    Value-field names for top counts\n");
+	fprintf(o, "-g {d,e,f}    Optional group-by-field names for top counts\n");
+	fprintf(o, "-n {count}    How many records to print per category; default 1\n");
+	fprintf(o, "-a            Print all fields for top-value records; default is\n");
+	fprintf(o, "              to print only value and group-by fields.\n");
+	fprintf(o, "--min         Print top smallest values; default is top largest values\n");
+	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
+	fprintf(o, "optionally by category.\n");
 }
 
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
@@ -199,12 +199,12 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_false_flag(pstate,       "--min", &do_max);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_top_usage(argv[0], verb);
+		mapper_top_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pvalue_field_names == NULL) {
-		mapper_top_usage(argv[0], verb);
+		mapper_top_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

@@ -313,7 +313,7 @@ static void usage_all_verbs(char* argv0) {
 
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
 		fprintf(stdout, "%s\n", separator);
-		mapper_lookup_table[i]->pusage_func(argv0, mapper_lookup_table[i]->verb);
+		mapper_lookup_table[i]->pusage_func(stdout, argv0, mapper_lookup_table[i]->verb);
 		fprintf(stdout, "\n");
 	}
 	fprintf(stdout, "%s\n", separator);
@@ -635,7 +635,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		if ((argc - argi) >= 2) {
 			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
-				pmapper_setup->pusage_func(argv[0], verb);
+				pmapper_setup->pusage_func(stdout, argv[0], verb);
 				exit(0);
 			}
 		}

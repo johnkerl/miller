@@ -596,28 +596,28 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 
 // ----------------------------------------------------------------
 // xxx argify the stdout/stderr in ALL usages
-static void mapper_stats1_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "Options:\n");
-	fprintf(stdout, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
-	fprintf(stdout, "one or more of:\n");
-	fprintf(stdout, "                   ");
+static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Options:\n");
+	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
+	fprintf(o, "one or more of:\n");
+	fprintf(o, "                   ");
 	for (int i = 0; i < acc_lookup_table_length; i++) {
-		fprintf(stdout, " %s", acc_lookup_table[i].name);
+		fprintf(o, " %s", acc_lookup_table[i].name);
 	}
-	fprintf(stdout, "\n");
-	fprintf(stdout, "-f {a,b,c}          Value-field names on which to compute statistics\n");
-	fprintf(stdout, "-g {d,e,f}          Optional group-by-field names\n");
-	fprintf(stdout, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -a count,mode -f size\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
-	fprintf(stdout, "Notes:\n");
-	fprintf(stdout, "* p50 is a synonym for median.\n");
-	fprintf(stdout, "* min and max output the same results as p0 and p100, respectively, but use\n");
-	fprintf(stdout, "  less memory.\n");
-	fprintf(stdout, "* count and mode allow text input; the rest require numeric input.\n");
-	fprintf(stdout, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
-	fprintf(stdout, "* When there are mode ties, the first-encountered datum wins.\n");
+	fprintf(o, "\n");
+	fprintf(o, "-f {a,b,c}          Value-field names on which to compute statistics\n");
+	fprintf(o, "-g {d,e,f}          Optional group-by-field names\n");
+	fprintf(o, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a count,mode -f size\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
+	fprintf(o, "Notes:\n");
+	fprintf(o, "* p50 is a synonym for median.\n");
+	fprintf(o, "* min and max output the same results as p0 and p100, respectively, but use\n");
+	fprintf(o, "  less memory.\n");
+	fprintf(o, "* count and mode allow text input; the rest require numeric input.\n");
+	fprintf(o, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
+	fprintf(o, "* When there are mode ties, the first-encountered datum wins.\n");
 }
 
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
@@ -633,12 +633,12 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_stats1_usage(argv[0], verb);
+		mapper_stats1_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
-		mapper_stats1_usage(argv[0], verb);
+		mapper_stats1_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

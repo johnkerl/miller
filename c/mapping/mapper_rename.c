@@ -46,20 +46,20 @@ static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new) {
 }
 
 // ----------------------------------------------------------------
-static void mapper_rename_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s {old1,new1,old2,new2,...}\n", argv0, verb);
-	fprintf(stdout, "Renames specified fields.\n");
+static void mapper_rename_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s {old1,new1,old2,new2,...}\n", argv0, verb);
+	fprintf(o, "Renames specified fields.\n");
 }
 
 static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 2) {
-		mapper_rename_usage(argv[0], argv[*pargi]);
+		mapper_rename_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 
 	slls_t* pnames = slls_from_line(argv[*pargi+1], ',', FALSE);
 	if ((pnames->length % 2) != 0) {
-		mapper_rename_usage(argv[0], argv[*pargi]);
+		mapper_rename_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	lhmss_t* pold_to_new = lhmss_alloc();

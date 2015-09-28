@@ -45,14 +45,14 @@ static mapper_t* mapper_tac_alloc() {
 }
 
 // ----------------------------------------------------------------
-static void mapper_tac_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
-	fprintf(stdout, "Prints records in reverse order from the order in which they were encountered.\n");
+static void mapper_tac_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n");
 }
 
 static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {
-		mapper_tac_usage(argv[0], argv[*pargi]);
+		mapper_tac_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	mapper_t* pmapper = mapper_tac_alloc();

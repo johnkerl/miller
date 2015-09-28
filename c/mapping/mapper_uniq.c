@@ -90,12 +90,12 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 }
 
 // ----------------------------------------------------------------
-static void mapper_uniq_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-g {d,e,f}    Group-by-field names for uniq counts\n");
-	fprintf(stdout, "-c            Show repeat counts in addition to unique values\n");
-	fprintf(stdout, "Prints distinct values for specified field names. With -c, same as\n");
-	fprintf(stdout, "count-distinct.\n");
+static void mapper_uniq_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-g {d,e,f}    Group-by-field names for uniq counts\n");
+	fprintf(o, "-c            Show repeat counts in addition to unique values\n");
+	fprintf(o, "Prints distinct values for specified field names. With -c, same as\n");
+	fprintf(o, "count-distinct.\n");
 }
 
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
@@ -109,12 +109,12 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "-c", &show_counts);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_uniq_usage(argv[0], verb);
+		mapper_uniq_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pgroup_by_field_names == NULL) {
-		mapper_uniq_usage(argv[0], verb);
+		mapper_uniq_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
@@ -128,11 +128,11 @@ mapper_setup_t mapper_uniq_setup = {
 };
 
 // ----------------------------------------------------------------
-static void mapper_count_distinct_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}   Field names for distinct count.\n");
-	fprintf(stdout, "Prints number of records having distinct values for specified field names.\n");
-	fprintf(stdout, "Same as uniq -c.\n");
+static void mapper_count_distinct_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}   Field names for distinct count.\n");
+	fprintf(o, "Prints number of records having distinct values for specified field names.\n");
+	fprintf(o, "Same as uniq -c.\n");
 }
 
 // ----------------------------------------------------------------
@@ -145,12 +145,12 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 	ap_define_string_list_flag(pstate, "-f", &pfield_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_count_distinct_usage(argv[0], verb);
+		mapper_count_distinct_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pfield_names == NULL) {
-		mapper_count_distinct_usage(argv[0], verb);
+		mapper_count_distinct_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

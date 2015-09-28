@@ -21,15 +21,15 @@ static mapper_t* mapper_check_alloc() {
 }
 
 // ----------------------------------------------------------------
-static void mapper_check_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
-	fprintf(stdout, "Consumes records without printing any output.\n");
-	fprintf(stdout, "Useful for doing a well-formatted check on input data.\n");
+static void mapper_check_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Consumes records without printing any output.\n");
+	fprintf(o, "Useful for doing a well-formatted check on input data.\n");
 }
 
 static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {
-		mapper_check_usage(argv[0], argv[*pargi]);
+		mapper_check_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	mapper_t* pmapper = mapper_check_alloc();

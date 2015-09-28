@@ -77,13 +77,13 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_arg_order, in
 }
 
 // ----------------------------------------------------------------
-static void mapper_cut_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}       Field names to include for cut.\n");
-	fprintf(stdout, "-o               Retain fields in the order specified here in the argument list.\n");
-	fprintf(stdout, "                 Default is to retain them in the order found in the input data.\n");
-	fprintf(stdout, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
-	fprintf(stdout, "Passes through input records with specified fields included/excluded.\n");
+static void mapper_cut_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}       Field names to include for cut.\n");
+	fprintf(o, "-o               Retain fields in the order specified here in the argument list.\n");
+	fprintf(o, "                 Default is to retain them in the order found in the input data.\n");
+	fprintf(o, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
+	fprintf(o, "Passes through input records with specified fields included/excluded.\n");
 }
 
 // ----------------------------------------------------------------
@@ -101,12 +101,12 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate, "--complement", &do_complement);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_cut_usage(argv[0], verb);
+		mapper_cut_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pfield_name_list == NULL) {
-		mapper_cut_usage(argv[0], verb);
+		mapper_cut_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

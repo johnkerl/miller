@@ -131,13 +131,13 @@ static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, in
 }
 
 // ----------------------------------------------------------------
-static void mapper_histogram_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-f {a,b,c}    Value-field names for histogram counts\n");
-	fprintf(stdout, "--lo {lo}     Histogram low value\n");
-	fprintf(stdout, "--hi {hi}     Histogram high value\n");
-	fprintf(stdout, "--nbins {n}   Number of histogram bins\n");
-	fprintf(stdout, "Just a histogram. Input values < lo or > hi are not counted.\n");
+static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}    Value-field names for histogram counts\n");
+	fprintf(o, "--lo {lo}     Histogram low value\n");
+	fprintf(o, "--hi {hi}     Histogram high value\n");
+	fprintf(o, "--nbins {n}   Number of histogram bins\n");
+	fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
@@ -155,17 +155,17 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_int_flag(pstate, "--nbins", &nbins);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_histogram_usage(argv[0], verb);
+		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pvalue_field_names == NULL) {
-		mapper_histogram_usage(argv[0], verb);
+		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if ((lo == hi) || (nbins == 0)) {
-		mapper_histogram_usage(argv[0], verb);
+		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

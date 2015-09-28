@@ -492,23 +492,23 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 }
 
 // ----------------------------------------------------------------
-static void mapper_stats2_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of\n");
-	fprintf(stdout, "             ");
+static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of\n");
+	fprintf(o, "             ");
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
-		fprintf(stdout, " %s", stats2_lookup_table[i].name);
+		fprintf(o, " %s", stats2_lookup_table[i].name);
 	}
-	fprintf(stdout, "\n");
-	fprintf(stdout, "              r2 is a quality metric for linreg-ols; linrec-pca outputs its\n");
-	fprintf(stdout, "              own quality metric.\n");
-	fprintf(stdout, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
-	fprintf(stdout, "              There must be an even number of names.\n");
-	fprintf(stdout, "-g {e,f,g}    Optional group-by-field names.\n");
-	fprintf(stdout, "-v            Print additional output for linreg-pca.\n");
-	fprintf(stdout, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
-	fprintf(stdout, "Example: %s %s -a corr -f x,y\n", argv0, verb);
+	fprintf(o, "\n");
+	fprintf(o, "              r2 is a quality metric for linreg-ols; linrec-pca outputs its\n");
+	fprintf(o, "              own quality metric.\n");
+	fprintf(o, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
+	fprintf(o, "              There must be an even number of names.\n");
+	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");
+	fprintf(o, "-v            Print additional output for linreg-pca.\n");
+	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
 }
 
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
@@ -526,16 +526,16 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "-v", &do_verbose);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_stats2_usage(argv[0], verb);
+		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
-		mapper_stats2_usage(argv[0], verb);
+		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 	if ((pvalue_field_names->length % 2) != 0) {
-		mapper_stats2_usage(argv[0], verb);
+		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

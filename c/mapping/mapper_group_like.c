@@ -65,13 +65,13 @@ static mapper_t* mapper_group_like_alloc() {
 }
 
 // ----------------------------------------------------------------
-static void mapper_group_like_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s\n", argv0, verb);
-	fprintf(stdout, "Outputs records in batches having identical field names.\n");
+static void mapper_group_like_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Outputs records in batches having identical field names.\n");
 }
 static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 1) {
-		mapper_group_like_usage(argv[0], argv[*pargi]);
+		mapper_group_like_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	mapper_t* pmapper = mapper_group_like_alloc();

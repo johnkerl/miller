@@ -230,14 +230,14 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 }
 
 // ----------------------------------------------------------------
-static void mapper_group_by_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
-	fprintf(stdout, "Outputs records in batches having identical values at specified field names.\n");
+static void mapper_group_by_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
+	fprintf(o, "Outputs records in batches having identical values at specified field names.\n");
 }
 
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 2) {
-		mapper_group_by_usage(argv[0], argv[*pargi]);
+		mapper_group_by_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 
@@ -258,25 +258,25 @@ mapper_setup_t mapper_group_by_setup = {
 };
 
 // ----------------------------------------------------------------
-static void mapper_sort_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s {flags}\n", argv0, verb);
-	fprintf(stdout, "Flags:\n");
-	fprintf(stdout, "  -f  {comma-separated field names}  Lexical ascending\n");
-	fprintf(stdout, "  -n  {comma-separated field names}  Numerical ascending; nulls sort last\n");
-	fprintf(stdout, "  -nf {comma-separated field names}  Numerical ascending; nulls sort last\n");
-	fprintf(stdout, "  -r  {comma-separated field names}  Lexical descending\n");
-	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
-	fprintf(stdout, "Sorts records primarily by the first specified field, secondarily by the second\n");
-	fprintf(stdout, "field, and so on.\n");
-	fprintf(stdout, "Example:\n");
-	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
-	fprintf(stdout, "which is the same as:\n");
-	fprintf(stdout, "  %s %s -f a -f b -nr x -nr y -nr z\n", argv0, verb);
+static void mapper_sort_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s {flags}\n", argv0, verb);
+	fprintf(o, "Flags:\n");
+	fprintf(o, "  -f  {comma-separated field names}  Lexical ascending\n");
+	fprintf(o, "  -n  {comma-separated field names}  Numerical ascending; nulls sort last\n");
+	fprintf(o, "  -nf {comma-separated field names}  Numerical ascending; nulls sort last\n");
+	fprintf(o, "  -r  {comma-separated field names}  Lexical descending\n");
+	fprintf(o, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
+	fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n");
+	fprintf(o, "field, and so on.\n");
+	fprintf(o, "Example:\n");
+	fprintf(o, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
+	fprintf(o, "which is the same as:\n");
+	fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", argv0, verb);
 }
 
 static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	if ((argc - *pargi) < 3) {
-		mapper_sort_usage(argv[0], argv[*pargi]);
+		mapper_sort_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	char* verb = argv[*pargi];
@@ -286,7 +286,7 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 
 	while ((argc - *pargi) >= 1 && argv[*pargi][0] == '-') {
 		if ((argc - *pargi) < 2)
-			mapper_sort_usage(argv[0], verb);
+			mapper_sort_usage(stderr, argv[0], verb);
 		char* flag  = argv[*pargi];
 		char* value = argv[*pargi+1];
 		*pargi += 2;
@@ -297,7 +297,7 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 		} else if (streq(flag, "-r")) {
 		} else if (streq(flag, "-nr")) {
 		} else {
-			mapper_sort_usage(argv[0], verb);
+			mapper_sort_usage(stderr, argv[0], verb);
 		}
 		slls_t* pnames_for_flag = slls_from_line(value, ',', FALSE);
 		// E.g. with "-nr a,b,c", replicate the "-nr" flag three times.
@@ -309,7 +309,7 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	if (pnames->length < 1)
-		mapper_sort_usage(argv[0], verb);
+		mapper_sort_usage(stderr, argv[0], verb);
 
 	// Convert the list such as ["-nf","-nf","-r","-r","-r"] into an array of
 	// bit-flags, one per sort-key field.

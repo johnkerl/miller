@@ -88,21 +88,21 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 }
 
 // ----------------------------------------------------------------
-static void mapper_put_usage(char* argv0, char* verb) {
-	fprintf(stdout, "Usage: %s %s [-v] {expression}\n", argv0, verb);
-	fprintf(stdout, "Adds/updates specified field(s).\n");
-	fprintf(stdout, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
-	fprintf(stdout, "gives full transparency on the precedence and associativity rules of Miller's\n");
-	fprintf(stdout, "grammar. Please use a dollar sign for field names and double-quotes for string\n");
-	fprintf(stdout, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
-	fprintf(stdout, "Multiple assignments may be separated with a semicolon.\n");
-	fprintf(stdout, "Examples:\n");
-	fprintf(stdout, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
-	fprintf(stdout, "  %s %s '$filename = FILENAME'\n", argv0, verb);
-	fprintf(stdout, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
-	fprintf(stdout, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
-	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
-	fprintf(stdout, "including function list.\n");
+static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [-v] {expression}\n", argv0, verb);
+	fprintf(o, "Adds/updates specified field(s).\n");
+	fprintf(o, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
+	fprintf(o, "gives full transparency on the precedence and associativity rules of Miller's\n");
+	fprintf(o, "grammar. Please use a dollar sign for field names and double-quotes for string\n");
+	fprintf(o, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
+	fprintf(o, "Multiple assignments may be separated with a semicolon.\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
+	fprintf(o, "  %s %s '$filename = FILENAME'\n", argv0, verb);
+	fprintf(o, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
+	fprintf(o, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
+	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(o, "including function list.\n");
 }
 
 // ----------------------------------------------------------------
@@ -115,12 +115,12 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate, "-v", &print_asts);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_put_usage(argv[0], verb);
+		mapper_put_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if ((argc - *pargi) < 1) {
-		mapper_put_usage(argv[0], verb);
+		mapper_put_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 	mlr_dsl_expression = argv[(*pargi)++];
@@ -128,7 +128,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	// Linked list of mlr_dsl_ast_node_t*.
 	sllv_t* pasts = put_dsl_parse(mlr_dsl_expression);
 	if (pasts == NULL) {
-		mapper_put_usage(argv[0], verb);
+		mapper_put_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 	if (print_asts) {
