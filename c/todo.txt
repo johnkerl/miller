@@ -9,8 +9,6 @@ TOP OF LIST
 ----------------------------------------------------------------
 MINOR:
 
-* 80-char clean all on-line help, error messages, etc.
-
 * UTx4xN the format-parsers
 
 * -h vs. usage (main + subcommand): stdout vs. stderr

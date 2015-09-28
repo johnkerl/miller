@@ -187,8 +187,7 @@ static char* rebackslash(char* sep) {
 
 // ----------------------------------------------------------------
 // xxx cmt stdout/err & 0/1
-static void main_usage(char* argv0, int exit_code) {
-	FILE* o = exit_code == 0 ? stdout : stderr;
+static void main_usage(FILE* o, char* argv0, int exit_code) {
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
 	fprintf(o, "Verbs:\n");
 	char* leader = "  ";
@@ -320,15 +319,15 @@ static void usage_all_verbs(char* argv0) {
 	exit(0);
 }
 
-static void nusage(char* argv0, char* arg) {
-	fprintf(stdout, "%s: option \"%s\" not recognized.\n", argv0, arg);
-	fprintf(stdout, "\n");
-	main_usage(argv0, 1);
+static void usage_unrecognized_verb(char* argv0, char* arg) {
+	fprintf(stderr, "%s: option \"%s\" not recognized.\n", argv0, arg);
+	fprintf(stderr, "\n");
+	main_usage(stderr, argv0, 1);
 }
 
 static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
-		main_usage(argv[0], 1);
+		main_usage(stderr, argv[0], 1);
 	}
 }
 
@@ -385,9 +384,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 #endif // HAVE_CONFIG_H
 			exit(0);
 		} else if (streq(argv[argi], "-h"))
-			main_usage(argv[0], 0);
+			main_usage(stdout, argv[0], 0);
 		else if (streq(argv[argi], "--help"))
-			main_usage(argv[0], 0);
+			main_usage(stdout, argv[0], 0);
 		else if (streq(argv[argi], "--help-all-verbs"))
 			usage_all_verbs(argv[0]);
 		else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
@@ -527,13 +526,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
 				have_rand_seed = TRUE;
 			} else {
-				main_usage(argv[0], 1);
+				main_usage(stderr, argv[0], 1);
 			}
 			argi++;
 		}
 
 		else
-			nusage(argv[0], argv[argi]);
+			usage_unrecognized_verb(argv[0], argv[argi]);
 	}
 
 	lhmss_t* default_rses = get_default_rses();
@@ -614,11 +613,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	else if (streq(popts->ofile_fmt, "pprint"))
 		popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], left_align_pprint);
 	else {
-		main_usage(argv[0], 1);
+		main_usage(stderr, argv[0], 1);
 	}
 
 	if ((argc - argi) < 1) {
-		main_usage(argv[0], 1);
+		main_usage(stderr, argv[0], 1);
 	}
 
 	popts->pmapper_list = sllv_alloc();
@@ -662,7 +661,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
 	if (popts->plrec_reader == NULL)
-		main_usage(argv[0], 1);
+		main_usage(stderr, argv[0], 1);
 
 	if (have_rand_seed) {
 		mtrand_init(rand_seed);
