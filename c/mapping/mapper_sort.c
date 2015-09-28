@@ -266,7 +266,8 @@ static void mapper_sort_usage(char* argv0, char* verb) {
 	fprintf(stdout, "  -nf {comma-separated field names}  Numerical ascending; nulls sort last\n");
 	fprintf(stdout, "  -r  {comma-separated field names}  Lexical descending\n");
 	fprintf(stdout, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
-	fprintf(stdout, "Sorts records primarily by the first specified field, secondarily by the second field, and so on.\n");
+	fprintf(stdout, "Sorts records primarily by the first specified field, secondarily by the second\n");
+	fprintf(stdout, "field, and so on.\n");
 	fprintf(stdout, "Example:\n");
 	fprintf(stdout, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
 	fprintf(stdout, "which is the same as:\n");

@@ -315,23 +315,31 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 // ----------------------------------------------------------------
 static void mapper_join_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(stdout, "Joins records from specified left file name with records from all file names at the end of the Miller argument list.\n");
-	fprintf(stdout, "Functionality is essentially the same as the system \"join\" command, but for record streams.\n");
+	fprintf(stdout, "Joins records from specified left file name with records from all file names\n");
+	fprintf(stdout, "at the end of the Miller argument list.\n");
+	fprintf(stdout, "Functionality is essentially the same as the system \"join\" command, but for\n");
+	fprintf(stdout, "record streams.\n");
 	fprintf(stdout, "Options:\n");
 	fprintf(stdout, "  -f {left file name}\n");
 	fprintf(stdout, "  -j {a,b,c}   Comma-separated join-field names for output\n");
-	fprintf(stdout, "  -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.\n");
-	fprintf(stdout, "  -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.\n");
-	fprintf(stdout, "  --lp {text}  Additional prefix for non-join output field names from the left file\n");
-	fprintf(stdout, "  --rp {text}  Additional prefix for non-join output field names from the right file(s)\n");
+	fprintf(stdout, "  -l {a,b,c}   Comma-separated join-field names for left input file;\n");
+	fprintf(stdout, "               defaults to -j values if omitted.\n");
+	fprintf(stdout, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n");
+	fprintf(stdout, "               defaults to -j values if omitted.\n");
+	fprintf(stdout, "  --lp {text}  Additional prefix for non-join output field names from\n");
+	fprintf(stdout, "               the left file\n");
+	fprintf(stdout, "  --rp {text}  Additional prefix for non-join output field names from\n");
+	fprintf(stdout, "               the right file(s)\n");
 	fprintf(stdout, "  --np         Do not emit paired records\n");
 	fprintf(stdout, "  --ul         Emit unpaired records from the left file\n");
 	fprintf(stdout, "  --ur         Emit unpaired records from the right file(s)\n");
-	fprintf(stdout, "  -u           Enable unsorted input. In this case, the entire left file will be loaded into memory.\n");
-	fprintf(stdout, "               Without -u, records must be sorted lexically by their join-field names, else not all\n");
-	fprintf(stdout, "               records will be paired.\n");
-	fprintf(stdout, "File-format options default to those for the right file names on the Miller argument list, but may be overridden\n");
-	fprintf(stdout, "for the left file as follows. Please see the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
+	fprintf(stdout, "  -u           Enable unsorted input. In this case, the entire left file will\n");
+	fprintf(stdout, "               be loaded into memory. Without -u, records must be sorted\n");
+	fprintf(stdout, "               lexically by their join-field names, else not all records will\n");
+	fprintf(stdout, "               be paired.\n");
+	fprintf(stdout, "File-format options default to those for the right file names on the Miller\n");
+	fprintf(stdout, "argument list, but may be overridden for the left file as follows. Please see\n");
+	fprintf(stdout, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
 
 	fprintf(stdout, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n");
 	fprintf(stdout, "  --irs {record-separator character}\n");
@@ -342,7 +350,8 @@ static void mapper_join_usage(char* argv0, char* verb) {
 	fprintf(stdout, "  --use-mmap\n");
 	fprintf(stdout, "  --no-mmap\n");
 
-	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information including examples.\n");
+	fprintf(stdout, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(stdout, "including examples.\n");
 }
 
 // ----------------------------------------------------------------

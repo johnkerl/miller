@@ -599,7 +599,8 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "Options:\n");
-	fprintf(stdout, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of\n");
+	fprintf(stdout, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
+	fprintf(stdout, "one or more of:\n");
 	fprintf(stdout, "                   ");
 	for (int i = 0; i < acc_lookup_table_length; i++) {
 		fprintf(stdout, " %s", acc_lookup_table[i].name);
@@ -612,9 +613,10 @@ static void mapper_stats1_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
 	fprintf(stdout, "Notes:\n");
 	fprintf(stdout, "* p50 is a synonym for median.\n");
-	fprintf(stdout, "* min and max output the same results as p0 and p100, respectively, but use less memory.\n");
-	fprintf(stdout, "* count and mode allow text input; the rest require numeric input. In particular, 1 and 1.0\n");
-	fprintf(stdout, "  are distinct text for count and mode.\n");
+	fprintf(stdout, "* min and max output the same results as p0 and p100, respectively, but use\n");
+	fprintf(stdout, "  less memory.\n");
+	fprintf(stdout, "* count and mode allow text input; the rest require numeric input.\n");
+	fprintf(stdout, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
 	fprintf(stdout, "* When there are mode ties, the first-encountered datum wins.\n");
 }
 

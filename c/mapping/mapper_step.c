@@ -288,7 +288,8 @@ static void mapper_step_usage(char* argv0, char* verb) {
 	fprintf(stdout, "\n");
 	fprintf(stdout, "-f {a,b,c}            Value-field names on which to compute statistics\n");
 	fprintf(stdout, "-g {d,e,f}            Group-by-field names\n");
-	fprintf(stdout, "Computes values dependent on the previous record, optionally grouped by category.\n");
+	fprintf(stdout, "Computes values dependent on the previous record, optionally grouped\n");
+	fprintf(stdout, "by category.\n");
 }
 
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {

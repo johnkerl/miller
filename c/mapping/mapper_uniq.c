@@ -94,7 +94,8 @@ static void mapper_uniq_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-g {d,e,f}    Group-by-field names for uniq counts\n");
 	fprintf(stdout, "-c            Show repeat counts in addition to unique values\n");
-	fprintf(stdout, "Prints distinct values for specified field names. With -c, same as count-distinct.\n");
+	fprintf(stdout, "Prints distinct values for specified field names. With -c, same as\n");
+	fprintf(stdout, "count-distinct.\n");
 }
 
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
@@ -130,7 +131,8 @@ mapper_setup_t mapper_uniq_setup = {
 static void mapper_count_distinct_usage(char* argv0, char* verb) {
 	fprintf(stdout, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(stdout, "-f {a,b,c}   Field names for distinct count.\n");
-	fprintf(stdout, "Prints number of records having distinct values for specified field names. Same as uniq -c.\n");
+	fprintf(stdout, "Prints number of records having distinct values for specified field names.\n");
+	fprintf(stdout, "Same as uniq -c.\n");
 }
 
 // ----------------------------------------------------------------

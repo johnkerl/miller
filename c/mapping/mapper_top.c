@@ -177,7 +177,8 @@ static void mapper_top_usage(char* argv0, char* verb) {
 	fprintf(stdout, "-a            Print all fields for top-value records; default is\n");
 	fprintf(stdout, "              to print only value and group-by fields.\n");
 	fprintf(stdout, "--min         Print top smallest values; default is top largest values\n");
-	fprintf(stdout, "Prints the n records with smallest/largest values at specified fields, optionally by category.\n");
+	fprintf(stdout, "Prints the n records with smallest/largest values at specified fields,\n");
+	fprintf(stdout, "optionally by category.\n");
 }
 
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
