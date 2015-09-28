@@ -21,4 +21,4 @@ compiler:
 # Probably a better way to do this TODO
 before_script: autoreconf -fiv
 
-script: ./configure && make && make check && make CC=$CC -C c -f Makefile.no-autoconfig
+script: ./configure && make && make check && make distcheck && make CC=$CC -C c -f Makefile.no-autoconfig
