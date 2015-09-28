@@ -9,11 +9,18 @@ TOP OF LIST
 ----------------------------------------------------------------
 MINOR:
 
-* valgrind & UT cline/sline
+* 80-char clean all on-line help, error messages, etc.
 
 * UTx4xN the format-parsers
 
-* 80-char clean all on-line help, error messages, etc.
+* -h vs. usage (main + subcommand): stdout vs. stderr
+
+* Subsubcommands for step/stats1/stats2 should have online help.
+
+* Replace the two or three remaining manual-test ifdef-mains with unit-test
+  code. (All the rest have already been done.)
+
+* valgrind & UT cline/sline
 
 * define dkvp, nidx, etc @ cover x 2
   - web-server access logs in dkvp format -- ?
@@ -26,7 +33,7 @@ MINOR:
 
 * port more deader-mains over to UT: lrec_reader_in_memory.c filter_dsl_wrapper.c put_dsl_wrapper.c
 
-* -h vs. usage : stdout vs. stderr
+* xxx's in the code!!!!!!!!!!!!!
 
 ----------------------------------------------------------------
 MAJOR: manpage
