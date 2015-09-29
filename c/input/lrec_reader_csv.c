@@ -180,7 +180,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 				} else {
 #ifdef DEBUG_PARSER
 					char c = pfr_read_char(pfr);
-					printf("CHAR=%c [%02x]\n", isprint(c) ? c : ' ', (unsigned)c);
+					printf("CHAR=%c [%02x]\n", isprint((unsigned char)c) ? c : ' ', (unsigned)c);
 					sb_append_char(psb, c);
 #else
 					sb_append_char(psb, pfr_read_char(pfr));
