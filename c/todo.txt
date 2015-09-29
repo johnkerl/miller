@@ -13,9 +13,6 @@ MINOR:
 
 * xxx's in the code!!!!!!!!!!!!!
 
-* step -z? --initval?
-* step -a count w/ no -f
-
 * valgrind & UT cline/sline
 
 * define dkvp, nidx, etc @ cover x 2
