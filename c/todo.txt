@@ -12,8 +12,8 @@ MINOR:
 * UTx4xN the format-parsers
 
 * Subsubcommands for step/stats1/stats2 should have online help.
-
-* port more deader-mains over to UT: filter_dsl_wrapper.c put_dsl_wrapper.c
+  -> step -z? --initval?
+  -> step -a count w/ no -f
 
 * valgrind & UT cline/sline
 

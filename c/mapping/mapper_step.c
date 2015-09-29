@@ -137,12 +137,13 @@ static step_t* step_counter_alloc(char* input_field_name) {
 typedef struct _step_lookup_t {
 	char* name;
 	step_alloc_func_t* pnew_func;
+	char* desc;
 } step_lookup_t;
 static step_lookup_t step_lookup_table[] = {
-	{"delta",   step_delta_alloc},
-	{"ratio",   step_ratio_alloc},
-	{"rsum",    step_rsum_alloc},
-	{"counter", step_counter_alloc},
+	{"delta",   step_delta_alloc,   "Compute differences in field(s) between successive records"},
+	{"ratio",   step_ratio_alloc,   "Compute ratios in field(s) between successive records"},
+	{"rsum",    step_rsum_alloc,    "Compute running sums of field(s) between successive records"},
+	{"counter", step_counter_alloc, "Count instances of field(s) between successive records"},
 };
 static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lookup_table[0]);
 
@@ -280,14 +281,12 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_
 // ----------------------------------------------------------------
 static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-a {delta,rsum,...}   Names of steppers: one or more of\n");
-	fprintf(o, "                     ");
+	fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n");
 	for (int i = 0; i < step_lookup_table_length; i++) {
-		fprintf(o, " %s", step_lookup_table[i].name);
+		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
 	}
-	fprintf(o, "\n");
 	fprintf(o, "-f {a,b,c}            Value-field names on which to compute statistics\n");
-	fprintf(o, "-g {d,e,f}            Group-by-field names\n");
+	fprintf(o, "-g {d,e,f}            Optional group-by-field names\n");
 	fprintf(o, "Computes values dependent on the previous record, optionally grouped\n");
 	fprintf(o, "by category.\n");
 }

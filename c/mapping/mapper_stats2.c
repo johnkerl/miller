@@ -291,16 +291,19 @@ static stats2_t* stats2_linreg_pca_alloc(int do_verbose) {
 typedef struct _stats2_lookup_t {
 	char* name;
 	stats2_alloc_func_t* pnew_func;
+	char* desc;
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
-	{"linreg-pca", stats2_linreg_pca_alloc},
-	{"linreg-ols", stats2_linreg_ols_alloc},
-	{"r2",         stats2_r2_alloc},
-	{"corr",       stats2_corr_alloc},
-	{"cov",        stats2_cov_alloc},
-	{"covx",       stats2_covx_alloc},
+	{"linreg-pca", stats2_linreg_pca_alloc, "Linear regression using principal component analysis"},
+	{"linreg-ols", stats2_linreg_ols_alloc, "Linear regression using ordinary least squares"},
+	{"r2",         stats2_r2_alloc,         "Quality metric for linreg-ols (linreg-pca emits its own)"},
+	{"corr",       stats2_corr_alloc,       "Sample correlation"},
+	{"cov",        stats2_cov_alloc,        "Sample covariance"},
+	{"covx",       stats2_covx_alloc,       "Sample-covariance matrix"},
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
+	//fprintf(o, "              r2 is a quality metric for linreg-ols; linrec-pca outputs its\n");
+	//fprintf(o, "              own quality metric.\n");
 
 static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
 	for (int i = 0; i < stats2_lookup_table_length; i++)
@@ -494,14 +497,10 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 // ----------------------------------------------------------------
 static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of\n");
-	fprintf(o, "             ");
+	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of:\n");
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
-		fprintf(o, " %s", stats2_lookup_table[i].name);
+		fprintf(o, "  %-12s %s\n", stats2_lookup_table[i].name, stats2_lookup_table[i].desc);
 	}
-	fprintf(o, "\n");
-	fprintf(o, "              r2 is a quality metric for linreg-ols; linrec-pca outputs its\n");
-	fprintf(o, "              own quality metric.\n");
 	fprintf(o, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
 	fprintf(o, "              There must be an even number of names.\n");
 	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");

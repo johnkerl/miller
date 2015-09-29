@@ -321,17 +321,18 @@ static acc_t* acc_percentile_alloc() {
 typedef struct _acc_lookup_t {
 	char* name;
 	acc_alloc_func_t* pnew_func;
+	char* desc;
 } acc_lookup_t;
 static acc_lookup_t acc_lookup_table[] = {
-	{"count",  acc_count_alloc},
-	{"mode",   acc_mode_alloc},
-	{"sum",    acc_sum_alloc},
-	{"mean",   acc_mean_alloc},
-	{"stddev", acc_stddev_alloc},
-	{"var",    acc_var_alloc},
-	{"meaneb", acc_meaneb_alloc},
-	{"min",    acc_min_alloc},
-	{"max",    acc_max_alloc},
+	{"count",  acc_count_alloc,  "Count instances of fields"},
+	{"mode",   acc_mode_alloc,   "Find most-frequently-occurring values for fields; first-found wins tie"},
+	{"sum",    acc_sum_alloc,    "Compute sums of specified fields"},
+	{"mean",   acc_mean_alloc,   "Compute averages (sample means) of specified fields"},
+	{"stddev", acc_stddev_alloc, "Compute sample standard deviation of specified fields"},
+	{"var",    acc_var_alloc,    "Compute sample variance of specified fields"},
+	{"meaneb", acc_meaneb_alloc, "Estimate error bars for averages (assuming no sample autocorrelation)"},
+	{"min",    acc_min_alloc,    "Compute minimum values of specified fields"},
+	{"max",    acc_max_alloc,    "Compute maximum values of specified fieldsx"},
 };
 static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
 
@@ -599,12 +600,10 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Options:\n");
 	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
-	fprintf(o, "one or more of:\n");
-	fprintf(o, "                   ");
+	fprintf(o, "                    one or more of:\n");
 	for (int i = 0; i < acc_lookup_table_length; i++) {
-		fprintf(o, " %s", acc_lookup_table[i].name);
+		fprintf(o, "  %-7s %s\n", acc_lookup_table[i].name, acc_lookup_table[i].desc);
 	}
-	fprintf(o, "\n");
 	fprintf(o, "-f {a,b,c}          Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f}          Optional group-by-field names\n");
 	fprintf(o, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
