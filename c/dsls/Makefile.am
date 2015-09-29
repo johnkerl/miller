@@ -17,6 +17,8 @@ EXTRA_DIST=		\
 			put_dsl_lexer.l \
 			put_dsl_parse.y
 
+# The fdm and pdm mains are handy for isolated inspection when doing
+# development/debugging on Miller DSLs.
 fdm_SOURCES=		filter_dsl_parse.c filter_dsl_parse.h filter_dsl_lexer.c filter_dsl_lexer.h filter_dsl_wrapper.c filter_dsl_wrapper.h
 fdm_LDADD=		../containers/libcontainers.la ../lib/libmlr.la libfdsl.la -lm
 fdm_CFLAGS=		-D __FILTER_DSL_MAIN__ ${AM_CFLAGS}
@@ -51,8 +53,8 @@ filter_dsl_wrapper.c: filter_dsl_lexer.h
 filter_dsl_parse.h: filter_dsl_parse.c
 filter_dsl_parse.c: filter_dsl_parse.y lempar.c lemon
 	./lemon filter_dsl_parse.y
-# lemon does not re-generate the file if it exists and is the same
-# this causes problems with the dependency above
+# Lemon does not re-generate the file if it exists and is the same this causes
+# problems with the dependency above.
 	touch filter_dsl_parse.h
 	mv filter_dsl_parse.c filter_dsl_parse.c.tmp
 	sed \

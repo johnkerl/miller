@@ -63,6 +63,8 @@ mlr_dsl_ast_node_holder_t* filter_dsl_parse(char* string) {
 
 // ----------------------------------------------------------------
 #ifdef __FILTER_DSL_MAIN__
+// This is handy for isolated inspection when doing development/debugging on
+// Miller DSLs.
 static int main_single(char* string) {
 	mlr_dsl_ast_node_holder_t* past = filter_dsl_parse(string);
 	if (past == NULL) {

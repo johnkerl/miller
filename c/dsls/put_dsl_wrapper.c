@@ -65,6 +65,8 @@ sllv_t* put_dsl_parse(char* string) {
 
 // ----------------------------------------------------------------
 #ifdef __PUT_DSL_MAIN__
+// This is handy for isolated inspection when doing development/debugging on
+// Miller DSLs.
 static int main_single(char* string) {
 	sllv_t* pasts = put_dsl_parse(string);
 	if (pasts == NULL || pasts->length == 0) {
