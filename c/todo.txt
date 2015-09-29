@@ -11,9 +11,8 @@ MINOR:
 
 * UTx4xN the format-parsers
 
-* Subsubcommands for step/stats1/stats2 should have online help.
-  -> step -z? --initval?
-  -> step -a count w/ no -f
+* step -z? --initval?
+* step -a count w/ no -f
 
 * valgrind & UT cline/sline
 
