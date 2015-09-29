@@ -32,7 +32,7 @@ typedef struct _step_delta_state_t {
 } step_delta_state_t;
 static void step_delta_dprocess(void* pvstate, double dblv, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
-	double delta = dblv;
+	double delta = 0.0;
 	if (pstate->have_prev) {
 		delta = dblv - pstate->prev;
 	} else {

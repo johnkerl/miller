@@ -11,6 +11,8 @@ MINOR:
 
 * UTx4xN the format-parsers
 
+* xxx's in the code!!!!!!!!!!!!!
+
 * step -z? --initval?
 * step -a count w/ no -f
 
@@ -19,13 +21,9 @@ MINOR:
 * define dkvp, nidx, etc @ cover x 2
   - web-server access logs in dkvp format -- ?
 
-* go back and re-apply ctype/isprint portability things to new spots
-
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
 * build page doesn't belong in developer info -- this is user info
-
-* xxx's in the code!!!!!!!!!!!!!
 
 * make mlr vs. bake mlr -- ?
 
