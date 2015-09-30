@@ -32,8 +32,7 @@ void percentile_keeper_free(percentile_keeper_t* ppercentile_keeper) {
 void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, double value) {
 	if (ppercentile_keeper->size >= ppercentile_keeper->capacity) {
 		ppercentile_keeper->capacity = (int)(ppercentile_keeper->capacity * GROWTH_FACTOR);
-		// xxx make realloc_or_die
-		ppercentile_keeper->data = (double*)realloc(ppercentile_keeper->data,
+		ppercentile_keeper->data = (double*)mlr_realloc_or_die(ppercentile_keeper->data,
 			ppercentile_keeper->capacity*sizeof(double));
 	}
 	ppercentile_keeper->data[ppercentile_keeper->size++] = value;

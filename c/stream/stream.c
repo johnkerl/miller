@@ -89,7 +89,9 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 }
 
 // ----------------------------------------------------------------
-// Map a single input record (maybe null at end of input stream) to zero or more output records.
+// Map a single input record (maybe null at end of input stream) to zero or
+// more output records.
+//
 // Return: list of lrec_t*. Input: lrec_t* and list of mapper_t*.
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head) {

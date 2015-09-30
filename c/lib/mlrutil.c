@@ -72,10 +72,17 @@ void* mlr_malloc_or_die(size_t size) {
 		fprintf(stderr, "malloc(%lu) failed.\n", (unsigned long)size);
 		exit(1);
 	}
-
-	//memset(p, 0, size); // xxx temp memset
-
 	return p;
+}
+
+// ----------------------------------------------------------------
+void* mlr_realloc_or_die(void *optr, size_t size) {
+	void* nptr = realloc(optr, size);
+	if (nptr == NULL) {
+		fprintf(stderr, "realloc(%lu) failed.\n", (unsigned long)size);
+		exit(1);
+	}
+	return nptr;
 }
 
 // ----------------------------------------------------------------

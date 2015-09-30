@@ -67,6 +67,7 @@ int mlr_bsearch_double_for_insert(double* array, int size, double value);
 double get_systime();
 
 void* mlr_malloc_or_die(size_t size);
+void* mlr_realloc_or_die(void *ptr, size_t size);
 
 // xxx cmt mem mgt
 char* mlr_alloc_string_from_double(double value, char* fmt);

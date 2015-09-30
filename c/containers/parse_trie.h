@@ -2,8 +2,13 @@
 #define PARSE_TRIE_H
 
 // ----------------------------------------------------------------
-// xxx cmt for data parse, not DSL parse.
-// xxx cmt why not flex/lemon: want streaming, not ingest-all.
+// This is for parsing of Miller RFC-CSV data, not for parsing of DSL
+// expressions for the put and filter verbs. This is used instead of flex or
+// lemon since such parsers, by design, must read to end of input to complete
+// parsing. Here, by contrast, we want to split the input stream by delimiters,
+// identifying one record at a time. This is so that data may be processed in a
+// streaming manner rather than an ingest-all manner.
+
 struct _parse_trie_node_t;
 typedef struct _parse_trie_node_t {
 	struct _parse_trie_node_t* pnexts[256];
@@ -32,16 +37,20 @@ void parse_trie_add_string(parse_trie_t* ptrie, char* string, int stridx);
 // * stridx is 1 since longest match is "aa"
 // * matchlen is 2 since "aa" has length 2
 
-// xxx cmt longest-prefix match
+// This does a longest-prefix match: input data "\"\nabcdefg" is matched
+// against "\"\n" rather than against "\"".
 
-// xxx cmt assumption that enough has been peeked -- there is no check here.
-// (recall that this is called on every single byte of each data file, e.g.
-// for a 1GB data file we'll be in this function a billion times ... it needs
-// to be tight.)
+// We assume that enough data has been peeked into the ring buffer for the
+// parse-trie's maxlen.  There is no check here. This function is called on
+// every single character of RFC-CSV input data so the error-checking would be
+// inefficient here, as well as misplaced.
 
-// xxx cmt re sob/mask semantics (ring buffer)
+// The start of buffer (sob), buflen, and mask attributes are nominally
+// presented from a ring_buffer object.
 
-static inline int parse_trie_match(parse_trie_t* ptrie, char* buf, int sob, int buflen, int mask, int* pstridx, int* pmatchlen) {
+static inline int parse_trie_match(parse_trie_t* ptrie, char* buf, int sob, int buflen, int mask,
+	int* pstridx, int* pmatchlen)
+{
 	parse_trie_node_t* pnode = ptrie->proot;
 	parse_trie_node_t* pnext;
 	parse_trie_node_t* pterm = NULL;

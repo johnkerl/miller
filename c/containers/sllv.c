@@ -103,8 +103,8 @@ void* sllv_pop(sllv_t* plist) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt mem-mgt
-// xxx cmt this can create circular lists if called repeatedly
+// xxx memory leak of pb -- defer to caller? needs code-doc.
+// This could be used to create circular lists if called inadvisedly.
 sllv_t* sllv_append(sllv_t* pa, sllv_t* pb) {
 	if (pa == NULL || pa->length == 0)
 		return pb;

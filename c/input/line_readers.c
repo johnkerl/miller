@@ -35,7 +35,7 @@ char* mlr_get_cline2(FILE* fp, char irs) {
 	while (TRUE) {
 		if ((p-line) >= linecap) {
 			linecap = linecap << 1;
-			line = realloc(line, linecap); // xxx mlr_realloc_or_die
+			line = mlr_realloc_or_die(line, linecap);
 			p = line;
 		}
 		c = getc_unlocked(fp);
@@ -75,7 +75,7 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 	while (TRUE) {
 		if ((p-line) >= linecap) {
 			linecap = linecap << 1;
-			line = realloc(line, linecap); // xxx mlr_realloc_or_die
+			line = mlr_realloc_or_die(line, linecap);
 			p = line;
 		}
 		c = getc_unlocked(fp);

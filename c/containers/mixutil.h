@@ -18,18 +18,15 @@ void lrec_print_list_with_prefix(sllv_t* plist, char* prefix);
 //   slls_t* prec_values = mlr_selected_values_from_record(prec, pkeys);
 //   return slls_compare_lexically(plist, prec_values);
 // but without the unnecessary copy.
-// xxx context here ...
 int slls_lrec_compare_lexically(
 	slls_t* plist,
 	lrec_t* prec,
 	slls_t* pkeys);
-
 int lrec_slls_compare_lexically(
 	lrec_t* prec,
 	slls_t* pkeys,
 	slls_t* plist);
 
-// xxx cmt for output writers
 int lrec_keys_equal_list(
 	lrec_t* prec,
 	slls_t* plist);

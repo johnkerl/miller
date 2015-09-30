@@ -180,7 +180,7 @@ void dheap_add(dheap_t *pdheap, double v)
 			exit(1);
 		}
 		pdheap->alloc_size *= 2;
-		pdheap->elements = (double *)realloc(pdheap->elements,
+		pdheap->elements = (double *)mlr_realloc_or_die(pdheap->elements,
 			pdheap->alloc_size*sizeof(double));
 	}
 
