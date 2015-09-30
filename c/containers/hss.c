@@ -74,9 +74,8 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pset->array_length);
 	int num_tries = 0;
-	int done = 0;
 
-	while (!done) {
+	while (TRUE) {
 		hsse_t* pe = &pset->array[index];
 		if (pe->state == OCCUPIED) {
 			char* ekey = pe->key;
@@ -93,7 +92,7 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 		// continue looking.
 		if (++num_tries >= pset->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.\n");
+				"Miller: coding error: table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -101,7 +100,9 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 		if (++index >= pset->array_length)
 			index = 0;
 	}
-	return -1; // xxx not reached
+	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+		__FILE__, __LINE__);
+	exit(1);
 }
 
 // ----------------------------------------------------------------

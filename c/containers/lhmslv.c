@@ -99,9 +99,8 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key) {
 	int hash = slls_hash_func(key);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
 	int num_tries = 0;
-	int done = 0;
 
-	while (!done) {
+	while (TRUE) {
 		lhmslve_t* pe = &pmap->entries[index];
 		if (pmap->states[index] == OCCUPIED) {
 			slls_t* ekey = pe->key;
@@ -126,7 +125,9 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	return -1; // xxx not reached
+	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+		__FILE__, __LINE__);
+	exit(1);
 }
 
 // ----------------------------------------------------------------
@@ -173,7 +174,11 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
 		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
 		exit(1);
 	}
-	return NULL; // xxx not reached
+	// This one is to appease a compiler warning about control reaching the end
+	// of a non-void function
+	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+		__FILE__, __LINE__);
+	exit(1);
 }
 
 // ----------------------------------------------------------------

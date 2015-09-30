@@ -10,7 +10,6 @@
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
 
-// xxx move to another header file ...
 #define QUOTE_ALL     0xb1
 #define QUOTE_NONE    0xb2
 #define QUOTE_MINIMAL 0xb3

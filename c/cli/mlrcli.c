@@ -502,13 +502,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		else if (streq(argv[argi], "--quote-minimal")) { popts->oquoting = QUOTE_MINIMAL; }
 		else if (streq(argv[argi], "--quote-numeric")) { popts->oquoting = QUOTE_NUMERIC; }
 
-		// xxx put into online help.
 		else if (streq(argv[argi], "--mmap")) {
 			popts->use_mmap_for_read = TRUE;
 		}
 		else if (streq(argv[argi], "--no-mmap")) {
 			popts->use_mmap_for_read = FALSE;
 		}
+
 		else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
@@ -639,7 +639,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 		sllv_add(popts->pmapper_list, pmapper);
 
-		// xxx cmt
 		if (argi >= argc || !streq(argv[argi], "then"))
 			break;
 		argi++;

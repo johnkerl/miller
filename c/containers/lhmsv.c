@@ -91,9 +91,8 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
 	int num_tries = 0;
-	int done = 0;
 
-	while (!done) {
+	while (TRUE) {
 		lhmsve_t* pe = &pmap->entries[index];
 		if (pmap->states[index] == OCCUPIED) {
 			char* ekey = pe->key;
@@ -118,7 +117,9 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	return -1; // xxx not reached
+	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+		__FILE__, __LINE__);
+	exit(1);
 }
 
 // ----------------------------------------------------------------
