@@ -23,7 +23,6 @@ lrec_t* lrec_unbacked_alloc() {
 	return prec;
 }
 
-// xxx cmt what this doesn't do with the line.
 lrec_t* lrec_dkvp_alloc(char* line) {
 	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
 	memset(prec, 0, sizeof(lrec_t));
@@ -32,7 +31,6 @@ lrec_t* lrec_dkvp_alloc(char* line) {
 	return prec;
 }
 
-// xxx cmt what this doesn't do with the line.
 lrec_t* lrec_nidx_alloc(char* line) {
 	lrec_t* prec = mlr_malloc_or_die(sizeof(lrec_t));
 	memset(prec, 0, sizeof(lrec_t));

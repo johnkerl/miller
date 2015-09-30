@@ -115,10 +115,15 @@ void lrec_print(lrec_t* prec);
 void lrec_dump(lrec_t* prec);
 void lrec_dump_titled(char* msg, lrec_t* prec);
 
-// xxx cmt
+// NIDX data are keyed by one-up field index which is not explicitly contained
+// in the file, e.g. line "a b c" splits to an lrec with "{"1" => "a", "2" =>
+// "b", "3" => "c"}. This function creates the keys, avoiding redundant memory
+// allocation for most-used keys such as "1", "2", ... up to 100 or so. In case
+// of large idx, free_flags & LREC_FREE_ENTRY_KEY will indicate that the key
+// was dynamically allocated.
 char* make_nidx_key(int idx, char* pfree_flags);
 
-// for unit-test
+// For unit-test.
 lrec_t* lrec_literal_1(char* k1, char* v1);
 lrec_t* lrec_literal_2(char* k1, char* v1, char* k2, char* v2);
 lrec_t* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3);
