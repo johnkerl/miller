@@ -56,19 +56,22 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 					past->text, mlr_dsl_ast_node_describe_type(past->type));
 			return NULL;
 		} else if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
-			fprintf(stderr, "xxx write this error message please.\n");
-			return NULL;
+			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+				__FILE__, __LINE__);
+			exit(1);
 		}
 
 		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvdata;
 		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvdata;
 
 		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
-			fprintf(stderr, "xxx write this error message please.\n");
-			return NULL;
+			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+				__FILE__, __LINE__);
+			exit(1);
 		} else if (pleft->pchildren != NULL) {
-			fprintf(stderr, "xxx write this error message please.\n");
-			return NULL;
+			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+				__FILE__, __LINE__);
+			exit(1);
 		}
 
 		char* output_field_name = pleft->text;

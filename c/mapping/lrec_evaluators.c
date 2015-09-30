@@ -1091,14 +1091,16 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return lrec_evaluator_alloc_from_context_variable(pnode->text);
 		} else {
-			fprintf(stderr, "xxx write this error message please.\n");
-			return NULL;
+			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+				__FILE__, __LINE__);
+			exit(1);
 		}
 	} else { // operator/function
 		if ((pnode->type != MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME)
 		&& (pnode->type != MLR_DSL_AST_NODE_TYPE_OPERATOR)) {
-			fprintf(stderr, "yyy write this error message please: %04x.\n", pnode->type);
-			return NULL;
+			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+				__FILE__, __LINE__);
+			exit(1);
 		}
 		char* func_name = pnode->text;
 
@@ -1128,12 +1130,12 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 		} else {
-			fprintf(stderr, "Internal coding error:  arity for function name \"%s\" misdetected.\n",
+			fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
 				func_name);
 			exit(1);
 		}
 		if (pevaluator == NULL) {
-			fprintf(stderr, "Unrecognized function name \"%s\".\n", func_name);
+			fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", func_name);
 			exit(1);
 		}
 		return pevaluator;
