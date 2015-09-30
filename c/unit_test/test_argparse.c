@@ -88,7 +88,7 @@ static char * test2() {
 		"-i", "555",
 		"-d", "4.25",
 		"-s", "hello",
-		"-S", strdup("a,b,c,d,e"),
+		"-S", mlr_strdup_or_die("a,b,c,d,e"),
 		"do", "re", "mi",
 		NULL
 	};
@@ -105,7 +105,7 @@ static char * test2() {
 	mu_assert_lf(string != NULL);
 	mu_assert_lf(streq(string, "hello"));
 	mu_assert_lf(plist != NULL);
-	mu_assert_lf(slls_equals(plist, slls_from_line(strdup("a,b,c,d,e"), ',', FALSE)));
+	mu_assert_lf(slls_equals(plist, slls_from_line(mlr_strdup_or_die("a,b,c,d,e"), ',', FALSE)));
 	mu_assert_lf(argi == 13);
 
 	ap_free(pstate);

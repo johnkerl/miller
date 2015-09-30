@@ -5,7 +5,7 @@
 #ifndef SLLS_H
 #define SLLS_H
 
-#include <stdio.h>  // xxx move dumper to a debug_utils.h?
+#include <stdio.h>
 
 #define SLLS_FREE_ENTRY_VALUE 0x20
 
@@ -22,7 +22,7 @@ typedef struct _slls_t {
 } slls_t;
 
 slls_t* slls_alloc();
-slls_t* slls_copy(slls_t* pold); // xxx note not a deep copy!!! xxx make and use an slls.
+slls_t* slls_copy(slls_t* pold);
 void    slls_free(slls_t* plist);
 slls_t* slls_single_with_free(char* value);
 slls_t* slls_single_no_free(char* value);

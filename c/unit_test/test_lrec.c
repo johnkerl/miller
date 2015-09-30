@@ -69,7 +69,7 @@ static char* test_lrec_unbacked_api() {
 
 // ----------------------------------------------------------------
 static char* test_lrec_dkvp_api() {
-	char* line = strdup("w=2,x=3,y=4,z=5");
+	char* line = mlr_strdup_or_die("w=2,x=3,y=4,z=5");
 	lrec_t* prec = lrec_parse_stdio_dkvp_single_sep(line, ',', '=', FALSE);
 	mu_assert_lf(prec->field_count == 4);
 
@@ -107,7 +107,7 @@ static char* test_lrec_dkvp_api() {
 
 // ----------------------------------------------------------------
 static char* test_lrec_nidx_api() {
-	char* line = strdup("a,b,c,d");
+	char* line = mlr_strdup_or_die("a,b,c,d");
 	lrec_t* prec = lrec_parse_stdio_nidx_single_sep(line, ',', FALSE);
 	mu_assert_lf(prec->field_count == 4);
 
@@ -145,14 +145,14 @@ static char* test_lrec_nidx_api() {
 
 // ----------------------------------------------------------------
 static char* test_lrec_csv_api() {
-	char* hdr_line = strdup("w,x,y,z");
+	char* hdr_line = mlr_strdup_or_die("w,x,y,z");
 	slls_t* hdr_fields = split_csvlite_header_line_single_ifs(hdr_line, ',', FALSE);
 	header_keeper_t* pheader_keeper = header_keeper_alloc(hdr_line, hdr_fields);
 
-	char* data_line_1 = strdup("2,3,4,5");
+	char* data_line_1 = mlr_strdup_or_die("2,3,4,5");
 	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, data_line_1, ',', FALSE);
 
-	char* data_line_2 = strdup("6,7,8,9");
+	char* data_line_2 = mlr_strdup_or_die("6,7,8,9");
 	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, data_line_2, ',', FALSE);
 
 	mu_assert_lf(prec_1->field_count == 4);
@@ -202,10 +202,10 @@ static char* test_lrec_csv_api() {
 
 // ----------------------------------------------------------------
 static char* test_lrec_xtab_api() {
-	char* line_1 = strdup("w 2");
-	char* line_2 = strdup("x    3");
-	char* line_3 = strdup("y 4");
-	char* line_4 = strdup("z  5");
+	char* line_1 = mlr_strdup_or_die("w 2");
+	char* line_2 = mlr_strdup_or_die("x    3");
+	char* line_3 = mlr_strdup_or_die("y 4");
+	char* line_4 = mlr_strdup_or_die("z  5");
 	slls_t* pxtab_lines = slls_alloc();
 	slls_add_with_free(pxtab_lines, line_1);
 	slls_add_with_free(pxtab_lines, line_2);

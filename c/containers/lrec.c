@@ -101,12 +101,12 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 		if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
-		pe->value = strdup(value);
+		pe->value = mlr_strdup_or_die(value);
 		pe->free_flags |= LREC_FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
-		pe->key         = strdup(key);
-		pe->value       = strdup(value);
+		pe->key         = mlr_strdup_or_die(key);
+		pe->value       = mlr_strdup_or_die(value);
 		pe->free_flags  = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
 
 		if (prec->phead == NULL) {
@@ -356,7 +356,7 @@ char* make_nidx_key(int idx, char* pfree_flags) {
 		char buf[32];
 		sprintf(buf, "%d", idx);
 		*pfree_flags = LREC_FREE_ENTRY_KEY;
-		return strdup(buf);
+		return mlr_strdup_or_die(buf);
 	}
 }
 

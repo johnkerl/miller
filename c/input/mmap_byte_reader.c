@@ -20,7 +20,7 @@ typedef struct _mmap_byte_reader_state_t {
 // ----------------------------------------------------------------
 static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename) {
 	mmap_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(mmap_byte_reader_state_t));
-	pstate->filename = strdup(filename);
+	pstate->filename = mlr_strdup_or_die(filename);
 	pstate->fd = open(filename, O_RDONLY);
 	if (pstate->fd < 0) {
 		perror("open");

@@ -66,8 +66,16 @@ int mlr_bsearch_double_for_insert(double* array, int size, double value);
 // seconds since the epoch
 double get_systime();
 
-void* mlr_malloc_or_die(size_t size);
-void* mlr_realloc_or_die(void *ptr, size_t size);
+void*  mlr_malloc_or_die(size_t size);
+void*  mlr_realloc_or_die(void *ptr, size_t size);
+static inline char * mlr_strdup_or_die(const char *s1) {
+	char* s2 = strdup(s1);
+	if (s2 == NULL) {
+		fprintf(stderr, "malloc/strdup failed\n");
+		exit(1);
+	}
+	return s2;
+}
 
 // xxx cmt mem mgt
 char* mlr_alloc_string_from_double(double value, char* fmt);

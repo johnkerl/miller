@@ -6,7 +6,7 @@
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type) {
 	mlr_dsl_ast_node_t* pnode = (mlr_dsl_ast_node_t*)mlr_malloc_or_die(
 		sizeof(mlr_dsl_ast_node_t));
-	pnode->text = strdup(text);
+	pnode->text = mlr_strdup_or_die(text);
 	pnode->type = type;
 	pnode->pchildren = NULL;
 	return pnode;
@@ -62,7 +62,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 	mlr_dsl_ast_node_t* pa, char* name)
 {
 	free(pa->text);
-	pa->text = strdup(name);
+	pa->text = mlr_strdup_or_die(name);
 	return pa;
 }
 

@@ -16,7 +16,7 @@ slls_t* slls_alloc() {
 slls_t* slls_copy(slls_t* pold) {
 	slls_t* pnew = slls_alloc();
 	for (sllse_t* pe = pold->phead; pe != NULL; pe = pe->pnext)
-		slls_add_with_free(pnew, strdup(pe->value));
+		slls_add_with_free(pnew, mlr_strdup_or_die(pe->value));
 	return pnew;
 }
 

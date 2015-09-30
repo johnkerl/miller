@@ -38,13 +38,13 @@ char* mt_format_val(mv_t* pval) {
 	char* string = NULL;
 	switch(pval->type) {
 	case MT_NULL:
-		return strdup("");
+		return mlr_strdup_or_die("");
 		break;
 	case MT_ERROR:
-		return strdup("(error)");
+		return mlr_strdup_or_die("(error)");
 		break;
 	case MT_BOOL:
-		return strdup(pval->u.boolv ? "true" : "false");
+		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
 		break;
 	case MT_DOUBLE:
 		// xxx what is worst-case here ...
@@ -59,10 +59,10 @@ char* mt_format_val(mv_t* pval) {
 		return string;
 		break;
 	case MT_STRING:
-		return strdup(pval->u.strv);
+		return mlr_strdup_or_die(pval->u.strv);
 		break;
 	default:
-		return strdup("???");
+		return mlr_strdup_or_die("???");
 		break;
 	}
 }
@@ -199,7 +199,7 @@ mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // ----------------------------------------------------------------
 // xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
 mv_t s_s_tolower_func(mv_t* pval1) {
-	char* string = strdup(pval1->u.strv);
+	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = tolower((unsigned char)*c);
 	// xxx encapsulate this:
@@ -212,7 +212,7 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 
 // xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
 mv_t s_s_toupper_func(mv_t* pval1) {
-	char* string = strdup(pval1->u.strv);
+	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = toupper((unsigned char)*c);
 	// xxx encapsulate this:
@@ -596,7 +596,7 @@ mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(
 // ----------------------------------------------------------------
 static mv_t string_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t string_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
-static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"true":"false")}; }
+static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"true":"false")}; }
 static mv_t string_s_d(mv_t* pa) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, MLR_GLOBALS.ofmt)};
 }
@@ -617,7 +617,7 @@ mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t hexfmt_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t hexfmt_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
-static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"0x1":"0x0")}; }
+static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; }
 static mv_t hexfmt_s_d(mv_t* pa) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.dblv)};
 }
@@ -638,7 +638,7 @@ mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
-static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_STRING, .u.strv = strdup(pa->u.boolv?"0x1":"0x0")}; }
+static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; }
 static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, pfmt->u.strv)};
 }

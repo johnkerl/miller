@@ -5,16 +5,6 @@
 #include <sys/time.h>
 #include "lib/mlrutil.h"
 
-//// ----------------------------------------------------------------
-// inlined in mrlutil.h
-//int mlr_canonical_mod(int a, int n) {
-//	int r = a % n;
-//	if (r >= 0)
-//		return r;
-//	else
-//		return r+n;
-//}
-
 // ----------------------------------------------------------------
 // xxx cmt top insert ...
 int mlr_bsearch_double_for_insert(double* array, int size, double value) {
@@ -236,13 +226,13 @@ int mlr_string_pair_hash_func(char* str1, char* str2) {
 
 // ----------------------------------------------------------------
 // See the GNU timegm manpage -- this is what it does.
-time_t mlr_timegm (struct tm* tm) {
+time_t mlr_timegm(struct tm* tm) {
 	time_t ret;
 	char* tz;
 
 	tz = getenv("TZ");
 	if (tz) {
-		tz = strdup(tz);
+		tz = mlr_strdup_or_die(tz);
 	}
 	setenv("TZ", "GMT0", 1);
 	tzset();
@@ -331,7 +321,7 @@ static int is_backslash_hex(char* input, int* pcode) {
 }
 
 char* mlr_unbackslash(char* input) {
-	char* output = strdup(input);
+	char* output = mlr_strdup_or_die(input);
 	char* pi = input;
 	char* po = output;
 	int code = 0;

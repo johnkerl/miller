@@ -171,7 +171,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 //   at the time the mapper is constructed. Use a function pointer.
 static inline char* compose_keys(char* prefix, char* key) {
 	if (prefix == NULL)
-		return strdup(key);
+		return mlr_strdup_or_die(key);
 	else
 		return mlr_paste_2_strings(prefix, key);
 }
@@ -190,7 +190,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
 			char* v = lrec_get(pleft_rec, pg->value);
 			if (v != NULL) {
-				lrec_put(pout_rec, pi->value, strdup(v), LREC_FREE_ENTRY_VALUE);
+				lrec_put(pout_rec, pi->value, mlr_strdup_or_die(v), LREC_FREE_ENTRY_VALUE);
 			}
 		}
 
@@ -198,7 +198,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
 			if (!hss_has(pstate->pleft_field_name_set, pl->key)) {
 				lrec_put(pout_rec, compose_keys(pstate->popts->left_prefix, pl->key),
-					strdup(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+					mlr_strdup_or_die(pl->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			}
 		}
 
@@ -206,7 +206,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
 			if (!hss_has(pstate->pright_field_name_set, pr->key)) {
 				lrec_put(pout_rec, compose_keys(pstate->popts->right_prefix, pr->key),
-					strdup(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+					mlr_strdup_or_die(pr->value), LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			}
 		}
 

@@ -21,13 +21,13 @@ int assertions_failed = 0;
 
 // ----------------------------------------------------------------
 static char* test_slls() {
-	slls_t* plist = slls_from_line(strdup(""), ',', FALSE);
+	slls_t* plist = slls_from_line(mlr_strdup_or_die(""), ',', FALSE);
 	mu_assert_lf(plist->length == 0);
 
-	plist = slls_from_line(strdup("a"), ',', FALSE);
+	plist = slls_from_line(mlr_strdup_or_die("a"), ',', FALSE);
 	mu_assert_lf(plist->length == 1);
 
-	plist = slls_from_line(strdup("c,d,a,e,b"), ',', FALSE);
+	plist = slls_from_line(mlr_strdup_or_die("c,d,a,e,b"), ',', FALSE);
 	mu_assert_lf(plist->length == 5);
 
 	sllse_t* pe = plist->phead;

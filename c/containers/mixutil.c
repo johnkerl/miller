@@ -16,7 +16,7 @@ slls_t* mlr_reference_keys_from_record(lrec_t* prec) {
 slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-		slls_add_with_free(plist, strdup(pe->key));
+		slls_add_with_free(plist, mlr_strdup_or_die(pe->key));
 	}
 	return plist;
 }

@@ -1,6 +1,8 @@
 // ================================================================
-// Array-only (open addressing) string-to-string linked hash map with linear probing
-// for collisions.
+// Array-only (open addressing) string-to-string linked hash map with linear
+// probing for collisions.
+//
+// Keys and values are strduped.
 //
 // John Kerl 2012-08-13
 //
@@ -144,15 +146,14 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value) {
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (streq(pe->key, key)) {
-			pe->value = strdup(value);
+			pe->value = mlr_strdup_or_die(value);
 		}
 	}
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
-		// xxx comment all malloced.
-		pe->key = strdup(key);
-		pe->value = strdup(value);
+		pe->key = mlr_strdup_or_die(key);
+		pe->value = mlr_strdup_or_die(value);
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {

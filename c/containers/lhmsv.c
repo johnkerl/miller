@@ -2,6 +2,9 @@
 // Array-only (open addressing) string-to-void linked hash map with linear
 // probing for collisions.
 //
+// Keys are strduped; memory management of the void* values is left to the
+// caller.
+//
 // John Kerl 2012-08-13
 //
 // Notes:
@@ -142,8 +145,7 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue) {
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
-		// xxx comment all malloced.
-		pe->key = strdup(key);
+		pe->key = mlr_strdup_or_die(key);
 		pe->pvvalue = pvvalue;
 		pmap->states[index] = OCCUPIED;
 

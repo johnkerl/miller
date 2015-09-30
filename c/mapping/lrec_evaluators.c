@@ -622,14 +622,14 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 		if (mlr_try_double_from_string(string, &dblv)) {
 			return (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
 		} else {
-			return (mv_t) {.type = MT_STRING, .u.strv = strdup(string)};
+			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 		}
 	}
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_field_name(char* field_name) {
 	lrec_evaluator_field_name_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_field_name_state_t));
-	pstate->field_name = strdup(field_name);
+	pstate->field_name = mlr_strdup_or_die(field_name);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
@@ -650,7 +650,7 @@ mv_t lrec_evaluator_double_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	// xxx cmt strdup semantics :(
-	return (mv_t) {.type = MT_STRING, .u.strv = strdup(pstate->literal.u.strv)};
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pstate->literal.u.strv)};
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
@@ -662,7 +662,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
-		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = strdup(string)};
+		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 		pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
 	}
 	pevaluator->pvstate = pstate;
@@ -705,7 +705,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_STRING, .u.strv = strdup(pctx->filename)};
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pctx->filename)};
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {

@@ -3,10 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 #include "lib/mlr_globals.h"
+#include "lib/mlrutil.h"
 
 // ----------------------------------------------------------------
 char* write_temp_file_or_die(char* contents) {
-	char* path = mktemp(strdup("/tmp/mlr.ut.XXXXXXXX"));
+	char* path = mktemp(mlr_strdup_or_die("/tmp/mlr.ut.XXXXXXXX"));
 	FILE* fp = fopen(path, "w");
 	int len = strlen(contents);
 	int rc = fwrite(contents, 1, len, fp);
