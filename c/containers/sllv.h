@@ -25,7 +25,8 @@ void    sllv_add_all(sllv_t* pthis, sllv_t* pthat);
 
 void*   sllv_pop(sllv_t* plist);
 
-// xxx cmt mem-mgt
+// This could be used to create circular lists if called inadvisedly.
+// The top-level sllv_t for the second argument is freed.
 sllv_t* sllv_append(sllv_t* pa, sllv_t* pb);
 
 #endif // SLLV_H

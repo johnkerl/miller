@@ -127,10 +127,10 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 	// loop over fields in record
 	record_done = FALSE;
 	while (!record_done) {
-		// xxx fix me char vs. string ...
+		// Assumption is dquote is "\""
 		if (pfr_peek_char(pfr) != pstate->dquote[0]) {
 
-			// loop over characters in field
+			// Loop over characters in field
 			field_done = FALSE;
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);

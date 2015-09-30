@@ -7,8 +7,8 @@
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_mmap_csvlite_state_t {
-	long long  ifnr; // xxx cmt w/r/t pctx
-	long long  ilno; // xxx cmt w/r/t pctx
+	long long  ifnr;
+	long long  ilno; // Line-level, not record-level as in context_t
 	char* irs;
 	char* ifs;
 	int   irslen;

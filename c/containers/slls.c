@@ -53,7 +53,6 @@ slls_t* slls_single_no_free(char* value) {
 }
 
 // ----------------------------------------------------------------
-// xxx move to API
 static inline void slls_add(slls_t* plist, char* value, char free_flag) {
 	sllse_t* pnode = mlr_malloc_or_die(sizeof(sllse_t));
 	pnode->value = value;
@@ -116,8 +115,7 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt for debug. inefficient. or fix that.
-// xxx rename to slls_alloc_join
+// This is inefficient and intended only for debug use.
 char* slls_join(slls_t* plist, char* ofs) {
 	int len = 0;
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)

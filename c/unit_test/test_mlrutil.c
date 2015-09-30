@@ -100,9 +100,6 @@ static char * test_scanners() {
 	return 0;
 }
 
-// xxx make UT-able intermediate
-//double mlr_double_from_string_or_die(char* string);
-
 // ----------------------------------------------------------------
 static char * test_paste() {
 	mu_assert("error: paste 2", streq(mlr_paste_2_strings("ab", "cd"), "abcd"));

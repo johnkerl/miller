@@ -103,7 +103,6 @@ void* sllv_pop(sllv_t* plist) {
 }
 
 // ----------------------------------------------------------------
-// xxx memory leak of pb -- defer to caller? needs code-doc.
 // This could be used to create circular lists if called inadvisedly.
 sllv_t* sllv_append(sllv_t* pa, sllv_t* pb) {
 	if (pa == NULL || pa->length == 0)
@@ -113,5 +112,6 @@ sllv_t* sllv_append(sllv_t* pa, sllv_t* pb) {
 	pa->length += pb->length;
 	pa->ptail->pnext = pb->phead;
 	pa->ptail = pb->ptail;
+	free(pb);
 	return pa;
 }

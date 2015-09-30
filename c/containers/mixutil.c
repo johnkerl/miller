@@ -1,4 +1,5 @@
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/mixutil.h"
 
 // ----------------------------------------------------------------
@@ -30,10 +31,11 @@ slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_na
 		char* selected_field_name = pe->value;
 		char* value = lrec_get(prec, selected_field_name);
 		if (value == NULL) {
-			// xxx have stashed argv0 for error message.
-			// xxx better to have filename + linenumber somehow.
-			//fprintf(stderr, "Couldn't find field named \"%s\"\n", selected_field_name);
-			//exit(1);
+			// xxx better to have filename + linenumber somehow. maybe don't exit but
+			// return error to caller which can exit with context.
+			fprintf(stderr, "%s: Couldn't find field named \"%s\"\n",
+				MLR_GLOBALS.argv0, selected_field_name);
+			exit(1);
 		} else {
 			slls_add_no_free(pvalue_list, value);
 		}

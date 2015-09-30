@@ -79,7 +79,7 @@ lhmslv_t* lhmslv_alloc() {
 	return pmap;
 }
 
-// xxx cmt re memmgt
+// void-star payloads should first be freed by the caller.
 void lhmslv_free(lhmslv_t* pmap) {
 	if (pmap == NULL)
 		return;

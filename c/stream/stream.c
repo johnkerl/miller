@@ -25,16 +25,16 @@ int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pma
 {
 	FILE* output_stream = stdout;
 
-	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL }; // xxx make a method
+	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
 	int ok = 1;
 	if (*filenames == NULL) {
-		ctx.filenum++; // xxx make a method
+		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
 		ok = do_file_chained("-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
 	} else {
 		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
-			ctx.filenum++; // xxx make a method
+			ctx.filenum++;
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
@@ -63,8 +63,7 @@ static int do_file_chained(char* filename, context_t* pctx,
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pinrec == NULL)
 			break;
-		// xxx incr inside the readers
-		pctx->nr++; // xxx make a method
+		pctx->nr++;
 		pctx->fnr++;
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
@@ -107,6 +106,7 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvdata;
 			sllv_t* nextrecsi = chain_map(poutrec, pctx, pmapper_list_head->pnext);
+			// sllv_append frees its second argument
 			nextrecs = sllv_append(nextrecs, nextrecsi);
 		}
 		sllv_free(outrecs);

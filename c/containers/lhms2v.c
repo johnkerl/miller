@@ -58,7 +58,7 @@ static void lhms2v_init(lhms2v_t *pmap, int length) {
 	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
-	pmap->entries      = (lhms2ve_t*)mlr_malloc_or_die(sizeof(lhms2ve_t) * length);
+	pmap->entries = (lhms2ve_t*)mlr_malloc_or_die(sizeof(lhms2ve_t) * length);
 	// Don't do lhms2ve_clear() of all entries at init time, since this has a
 	// drastic effect on the time needed to construct an empty map (and miller
 	// constructs an awful lot of those). The attributes there are don't-cares
@@ -80,7 +80,7 @@ lhms2v_t* lhms2v_alloc() {
 	return pmap;
 }
 
-// xxx cmt re memmgt
+// void-star payloads should first be freed by the caller.
 void lhms2v_free(lhms2v_t* pmap) {
 	if (pmap == NULL)
 		return;
