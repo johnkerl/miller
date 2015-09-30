@@ -12,8 +12,6 @@ typedef struct _lrec_writer_csvlite_state_t {
 } lrec_writer_csvlite_state_t;
 
 // ----------------------------------------------------------------
-// xxx cmt mem-mgmt
-
 static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
