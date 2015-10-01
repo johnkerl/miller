@@ -83,7 +83,8 @@ lhmslv_t* lhmslv_alloc() {
 void lhmslv_free(lhmslv_t* pmap) {
 	if (pmap == NULL)
 		return;
-	// xxx free each key
+	for (lhmslve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
+		free(pe->key);
 	free(pmap->entries);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
@@ -151,7 +152,6 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(slls_hash_func(key), pmap->array_length);
-		// xxx comment memmgt.
 		pe->key = key;
 		pe->pvvalue = pvvalue;
 		pmap->states[index] = OCCUPIED;

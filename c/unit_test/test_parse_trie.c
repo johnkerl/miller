@@ -113,10 +113,10 @@ static char* test_long_short() {
 static char* test_dkvp() {
 	char* test_name = "dkvp";
 	char* strings[] = { "=" , ",", "\r\n", "\xff" };
-	const int PS_TOKEN  = 0;
-	const int FS_TOKEN  = 1;
-	const int RS_TOKEN  = 2;
-	const int EOF_TOKEN = 3;
+	const int PS_STRIDX  = 0;
+	const int FS_STRIDX  = 1;
+	const int RS_STRIDX  = 2;
+	const int EOF_STRIDX = 3;
 	int num_strings = sizeof(strings) / sizeof(strings[0]);
 	char* buf =
 		"abc=123,def=456\r\n"
@@ -140,8 +140,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == PS_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	mu_assert_lf(stridx == PS_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[PS_STRIDX]));
 	p += matchlen;
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
@@ -150,8 +150,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == FS_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[FS_TOKEN]));
+	mu_assert_lf(stridx == FS_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[FS_STRIDX]));
 	p += matchlen;
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
@@ -160,8 +160,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == PS_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	mu_assert_lf(stridx == PS_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[PS_STRIDX]));
 	p += matchlen;
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
@@ -170,8 +170,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == RS_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[RS_TOKEN]));
+	mu_assert_lf(stridx == RS_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[RS_STRIDX]));
 	p += matchlen;
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
@@ -180,8 +180,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == PS_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[PS_TOKEN]));
+	mu_assert_lf(stridx == PS_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[PS_STRIDX]));
 	p += matchlen;
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen); mu_assert_lf(rc == FALSE); p++;
@@ -190,8 +190,8 @@ static char* test_dkvp() {
 
 	rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 	mu_assert_lf(rc == TRUE);
-	mu_assert_lf(stridx == EOF_TOKEN);
-	mu_assert_lf(matchlen == strlen(strings[EOF_TOKEN]));
+	mu_assert_lf(stridx == EOF_STRIDX);
+	mu_assert_lf(matchlen == strlen(strings[EOF_STRIDX]));
 	p += matchlen;
 
 	return 0;
@@ -201,7 +201,7 @@ static char* test_dkvp() {
 static char* show_it() {
 	char* test_name = "show_it";
 	char* strings[] = { "=" , ",", "\r\n", "\xff" };
-	const int EOF_TOKEN = 3;
+	const int EOF_STRIDX = 3;
 	int num_strings = sizeof(strings) / sizeof(strings[0]);
 	char* buf =
 		"abc=123,def=456\r\n"
@@ -224,7 +224,7 @@ static char* show_it() {
 		if (rc) {
 			printf("match token %d (%s)\n", stridx, strings[stridx]);
 			p += matchlen;
-			if (stridx == EOF_TOKEN) {
+			if (stridx == EOF_STRIDX) {
 				break;
 			}
 		} else {

@@ -167,7 +167,6 @@ void slls_reverse(slls_t* plist) {
 }
 
 // ----------------------------------------------------------------
-// xxx fix this so ["ab","c"] doesn't hash to the same as ["a","bc"].
 int slls_hash_func(slls_t *plist) {
 	unsigned long hash = 5381;
 	int c;
@@ -176,6 +175,8 @@ int slls_hash_func(slls_t *plist) {
 		char* str = pe->value;
 		while ((c = *str++) != 0)
 			hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+		// So that ["ab","c"] doesn't hash to the same as ["a","bc"]:
+		hash = ((hash << 5) + hash) + ',';
 	}
 
 	return (int)hash;

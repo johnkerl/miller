@@ -156,7 +156,6 @@ put_dsl_expitem(A) ::= PUT_DSL_NUMBER(B). {
 put_dsl_expitem(A) ::= PUT_DSL_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
-	// xxx make/call method
 	int len = strlen(input);
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);

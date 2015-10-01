@@ -20,7 +20,7 @@
 typedef struct _lhmsie_t {
 	int   ideal_index;
 	char* key;
-	int   value; // xxx make ull
+	long long value;
 	struct _lhmsie_t *pprev;
 	struct _lhmsie_t *pnext;
 } lhmsie_t;
@@ -42,7 +42,7 @@ lhmsi_t* lhmsi_alloc();
 lhmsi_t* lhmsi_copy(lhmsi_t* pmap);
 void  lhmsi_free(lhmsi_t* pmap);
 void  lhmsi_put(lhmsi_t* pmap, char* key, int value);
-int   lhmsi_get(lhmsi_t* pmap, char* key);
+long long lhmsi_get(lhmsi_t* pmap, char* key);
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key);
 int   lhmsi_has_key(lhmsi_t* pmap, char* key);
 void  lhmsi_remove(lhmsi_t* pmap, char* key);

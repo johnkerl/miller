@@ -153,7 +153,6 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_pair_hash_func(key1, key2), pmap->array_length);
-		// xxx comment memmgt.
 		pe->key1 = mlr_strdup_or_die(key1);
 		pe->key2 = mlr_strdup_or_die(key2);
 		pe->pvvalue = pvvalue;

@@ -176,7 +176,7 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value) {
 }
 
 // ----------------------------------------------------------------
-int lhmsi_get(lhmsi_t* pmap, char* key) {
+long long lhmsi_get(lhmsi_t* pmap, char* key) {
 	int index = lhmsi_find_index_for_key(pmap, key);
 	lhmsie_t* pe = &pmap->entries[index];
 
@@ -336,7 +336,7 @@ void lhmsi_print(lhmsi_t* pmap) {
 			pe->key;
 
 		printf(
-		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | value: %8d |\n",
+		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | value: %8lld |\n",
 			get_state_name(pmap->states[index]), index, pe->ideal_index, key_string, pe->value);
 	}
 	printf("+\n");
@@ -347,7 +347,7 @@ void lhmsi_print(lhmsi_t* pmap) {
 			pe->key == NULL ? "null" :
 			pe->key;
 		printf(
-		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | value: %8d |\n",
+		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | value: %8lld |\n",
 			pe->pprev, pe, pe->pnext,
 			pe->ideal_index, key_string, pe->value);
 	}

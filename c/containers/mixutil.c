@@ -25,6 +25,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 // ----------------------------------------------------------------
 // xxx freeing contract.
 // xxx behavior on missing. doc, or make a second boolean flag.
+
 slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
 	slls_t* pvalue_list = slls_alloc();
 	for (sllse_t* pe = pselected_field_names->phead; pe != NULL; pe = pe->pnext) {
