@@ -63,8 +63,8 @@ void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sum
 	*pb = b;
 }
 
-// xxx gah ... need a 2nd pass through the data to get the error-bars.
-// xxx make a 2nd filter to compute the error-bars given the data & the m & the b?
+// We would need a second pass through the data to compute the error-bars given
+// the data and the m and the b.
 //
 //	# Young 1962, pp. 122-124.  Compute sample variance of linear
 //	# approximations, then variances of m and b.

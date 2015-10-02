@@ -13,7 +13,7 @@
 #include "cli/argparse.h"
 
 // ================================================================
-typedef void  step_dprocess_func_t(void* pvstate, double dblv, lrec_t* prec);
+typedef void  step_dprocess_func_t(void* pvstate, double fltv, lrec_t* prec);
 typedef void  step_sprocess_func_t(void* pvstate, char*  strv, lrec_t* prec);
 
 typedef struct _step_t {
@@ -30,17 +30,17 @@ typedef struct _step_delta_state_t {
 	int    have_prev;
 	char*  output_field_name;
 } step_delta_state_t;
-static void step_delta_dprocess(void* pvstate, double dblv, lrec_t* prec) {
+static void step_delta_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
 	double delta = 0.0;
 	if (pstate->have_prev) {
-		delta = dblv - pstate->prev;
+		delta = fltv - pstate->prev;
 	} else {
 		pstate->have_prev = TRUE;
 	}
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(delta, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
-	pstate->prev = dblv;
+	pstate->prev = fltv;
 }
 static step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
@@ -62,17 +62,17 @@ typedef struct _step_ratio_state_t {
 	int    have_prev;
 	char*  output_field_name;
 } step_ratio_state_t;
-static void step_ratio_dprocess(void* pvstate, double dblv, lrec_t* prec) {
+static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 	step_ratio_state_t* pstate = pvstate;
 	double ratio = 1.0;
 	if (pstate->have_prev) {
-		ratio = dblv / pstate->prev;
+		ratio = fltv / pstate->prev;
 	} else {
 		pstate->have_prev = TRUE;
 	}
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
-	pstate->prev = dblv;
+	pstate->prev = fltv;
 }
 static step_t* step_ratio_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
@@ -92,9 +92,9 @@ typedef struct _step_rsum_state_t {
 	double rsum;
 	char*  output_field_name;
 } step_rsum_state_t;
-static void step_rsum_dprocess(void* pvstate, double dblv, lrec_t* prec) {
+static void step_rsum_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
-	pstate->rsum += dblv;
+	pstate->rsum += fltv;
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
 		LREC_FREE_ENTRY_VALUE);
 }

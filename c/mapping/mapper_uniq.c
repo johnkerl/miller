@@ -68,7 +68,6 @@ static void mapper_uniq_free(void* pvstate) {
 	// xxx free the void-star payload
 	lhmslv_free(pstate->pcounts_by_group);
 
-	// xxx temp
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;
 }

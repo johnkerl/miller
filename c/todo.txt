@@ -11,6 +11,8 @@ MINOR:
 
 * UTx4xN the format-parsers
 
+* publics to top of file, with private protos above
+
 * xxx's in the code!!!!!!!!!!!!!
 
 * valgrind & UT cline/sline

@@ -5,7 +5,6 @@
 #include "input/line_readers.h"
 #include "input/lrec_readers.h"
 
-// xxx cmt/docxref re no irs for xtab, & two or more ifses separates records.
 typedef struct _lrec_reader_stdio_xtab_state_t {
 	char* ifs;
 	char* ips;

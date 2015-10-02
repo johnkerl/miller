@@ -26,7 +26,7 @@ static char * test1() {
 	int     intv1  = -6;
 	int     intv2  = -7;
 	int     intv3  = -8;
-	double  dblv   = -9.5;
+	double  fltv   = -9.5;
 	char*   string = NULL;
 	slls_t* plist  = NULL;
 	ap_state_t* pstate = ap_alloc();
@@ -36,7 +36,7 @@ static char * test1() {
 	ap_define_int_value_flag(pstate,   "-100", 100, &intv1);
 	ap_define_int_value_flag(pstate,   "-200", 200, &intv2);
 	ap_define_int_flag(pstate,         "-i",   &intv3);
-	ap_define_double_flag(pstate,      "-d",   &dblv);
+	ap_define_double_flag(pstate,      "-d",   &fltv);
 	ap_define_string_flag(pstate,      "-s",   &string);
 	ap_define_string_list_flag(pstate, "-S",   &plist);
 
@@ -50,7 +50,7 @@ static char * test1() {
 	mu_assert_lf(intv1 == -6);
 	mu_assert_lf(intv2 == -7);
 	mu_assert_lf(intv3 == -8);
-	mu_assert_lf(dblv == -9.5);
+	mu_assert_lf(fltv == -9.5);
 	mu_assert_lf(string == NULL);
 	mu_assert_lf(plist == NULL);
 	mu_assert_lf(argi == 1);
@@ -65,7 +65,7 @@ static char * test2() {
 	int     intv1  = -6;
 	int     intv2  = -7;
 	int     intv3  = -8;
-	double  dblv   = -9.5;
+	double  fltv   = -9.5;
 	char*   string = NULL;
 	slls_t* plist  = NULL;
 	ap_state_t* pstate = ap_alloc();
@@ -75,7 +75,7 @@ static char * test2() {
 	ap_define_int_value_flag(pstate,   "-100", 100, &intv1);
 	ap_define_int_value_flag(pstate,   "-200", 200, &intv2);
 	ap_define_int_flag(pstate,         "-i",   &intv3);
-	ap_define_double_flag(pstate,      "-d",   &dblv);
+	ap_define_double_flag(pstate,      "-d",   &fltv);
 	ap_define_string_flag(pstate,      "-s",   &string);
 	ap_define_string_list_flag(pstate, "-S",   &plist);
 
@@ -101,7 +101,7 @@ static char * test2() {
 	mu_assert_lf(intv1 == 100);
 	mu_assert_lf(intv2 == 200);
 	mu_assert_lf(intv3 == 555);
-	mu_assert_lf(dblv == 4.25);
+	mu_assert_lf(fltv == 4.25);
 	mu_assert_lf(string != NULL);
 	mu_assert_lf(streq(string, "hello"));
 	mu_assert_lf(plist != NULL);

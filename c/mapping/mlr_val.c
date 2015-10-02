@@ -49,7 +49,7 @@ char* mt_format_val(mv_t* pval) {
 	case MT_DOUBLE:
 		// xxx what is worst-case here ...
 		string = mlr_malloc_or_die(32);
-		sprintf(string, MLR_GLOBALS.ofmt, pval->u.dblv);
+		sprintf(string, MLR_GLOBALS.ofmt, pval->u.fltv);
 		return string;
 		break;
 	case MT_INT:
@@ -99,22 +99,24 @@ void mt_get_double_strict(mv_t* pval) {
 	if (pval->type == MT_DOUBLE)
 		return;
 	if (pval->type == MT_STRING) {
-		double dblv;
-		if (!mlr_try_double_from_string(pval->u.strv, &dblv)) {
+		double fltv;
+		if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0;
 		} else {
 			pval->type = MT_DOUBLE;
-			pval->u.dblv = dblv;
+			pval->u.fltv = fltv;
 		}
 	} else if (pval->type == MT_INT) {
 		pval ->type = MT_DOUBLE;
-		pval->u.dblv = (double)pval->u.intv;
+		pval->u.fltv = (double)pval->u.intv;
 	} else if (pval->type == MT_BOOL) {
 		pval->type = MT_ERROR;
 		pval->u.intv = 0;
+	} else {
+		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	}
-	// xxx else panic
 }
 
 // ----------------------------------------------------------------
@@ -127,25 +129,27 @@ void mt_get_double_nullable(mv_t* pval) {
 	if (pval->type == MT_DOUBLE)
 		return;
 	if (pval->type == MT_STRING) {
-		double dblv;
+		double fltv;
 		if (*pval->u.strv == '\0') {
 			pval->type = MT_NULL;
 			pval->u.intv = 0;
-		} else if (!mlr_try_double_from_string(pval->u.strv, &dblv)) {
+		} else if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0;
 		} else {
 			pval->type = MT_DOUBLE;
-			pval->u.dblv = dblv;
+			pval->u.fltv = fltv;
 		}
 	} else if (pval->type == MT_INT) {
 		pval ->type = MT_DOUBLE;
-		pval->u.dblv = (double)pval->u.intv;
+		pval->u.fltv = (double)pval->u.intv;
 	} else if (pval->type == MT_BOOL) {
 		pval->type = MT_ERROR;
 		pval->u.intv = 0;
+	} else {
+		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	}
-	// xxx else panic
 }
 
 // ----------------------------------------------------------------
@@ -157,7 +161,6 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	strcpy(&string3[0], pval1->u.strv);
 	strcpy(&string3[len1], pval2->u.strv);
 
-	// xxx encapsulate this:
 	free(pval1->u.strv);
 	free(pval2->u.strv);
 	pval1->u.strv = NULL;
@@ -202,7 +205,6 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = tolower((unsigned char)*c);
-	// xxx encapsulate this:
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;
 
@@ -215,7 +217,6 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = toupper((unsigned char)*c);
-	// xxx encapsulate this:
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;
 
@@ -230,7 +231,7 @@ mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	NULL_OUT(*pval1);
 	if (pval1->type != MT_DOUBLE)
 		return MV_ERROR;
-	time_t clock = (time_t) pval1->u.dblv;
+	time_t clock = (time_t) pval1->u.fltv;
 	struct tm tm;
 	struct tm *ptm = gmtime_r(&clock, &tm);
 	// xxx use retval which is size_t
@@ -330,12 +331,12 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 }
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
-	double v = fabs(pval1->u.dblv);
+	double v = fabs(pval1->u.fltv);
 	long long h, m, s;
 	char* fmt = "%lld:%02lld:%09.6lf";
 	long long u = (long long)trunc(v);
 	double f = v - u;
-	if (pval1->u.dblv < 0.0) {
+	if (pval1->u.fltv < 0.0) {
 		fmt = "-%02lld:%02lld:%09.6lf";
 	}
 	split_ull_to_hms(u, &h, &m, &s);
@@ -377,8 +378,8 @@ mv_t s_i_sec2dhms_func(mv_t* pval1) {
 }
 
 mv_t s_f_fsec2dhms_func(mv_t* pval1) {
-	double v = fabs(pval1->u.dblv);
-	long long sign = pval1->u.dblv < 0.0 ? -1LL : 1LL;
+	double v = fabs(pval1->u.fltv);
+	long long sign = pval1->u.fltv < 0.0 ? -1LL : 1LL;
 	long long d, h, m, s;
 	long long u = (long long)trunc(v);
 	double f = v - u;
@@ -462,7 +463,7 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
+	return (mv_t) {.type = MT_DOUBLE, .u.fltv = sec * sign};
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
@@ -509,7 +510,7 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = sec * sign};
+	return (mv_t) {.type = MT_DOUBLE, .u.fltv = sec * sign};
 }
 
 // ----------------------------------------------------------------
@@ -522,7 +523,7 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t int_i_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.boolv ? 1 : 0}; }
-static mv_t int_i_d(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long long)round(pa->u.dblv)}; }
+static mv_t int_i_d(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long long)round(pa->u.fltv)}; }
 static mv_t int_i_i(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.intv}; }
 static mv_t int_i_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_INT };
@@ -548,14 +549,14 @@ mv_t i_x_int_func(mv_t* pval1) { return (int_dispositions[pval1->type])(pval1); 
 // xxx i'm using double & long long but saying double & int. this is confusing & needs fixing.
 static mv_t float_f_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t float_f_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
-static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.boolv ? 1.0 : 0.0}; }
-static mv_t float_f_d(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.dblv}; }
-static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.dblv = pa->u.intv}; }
+static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.boolv ? 1.0 : 0.0}; }
+static mv_t float_f_d(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.fltv}; }
+static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.intv}; }
 static mv_t float_f_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_DOUBLE };
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
-	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.dblv))
+	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.fltv))
 		retval.type = MT_ERROR;
 	return retval;
 }
@@ -575,7 +576,7 @@ mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval
 static mv_t boolean_b_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t boolean_b_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t boolean_b_b(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = pa->u.boolv}; }
-static mv_t boolean_b_d(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.dblv == 0.0) ? FALSE : TRUE}; }
+static mv_t boolean_b_d(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.fltv == 0.0) ? FALSE : TRUE}; }
 static mv_t boolean_b_i(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.intv == 0LL) ? FALSE : TRUE}; }
 static mv_t boolean_b_s(mv_t* pa) { return (mv_t) {.type = MT_BOOL,
 		.u.boolv = (streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE
@@ -598,7 +599,7 @@ static mv_t string_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0
 static mv_t string_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"true":"false")}; }
 static mv_t string_s_d(mv_t* pa) {
-	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, MLR_GLOBALS.ofmt)};
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)};
 }
 static mv_t string_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_ll(pa->u.intv)}; }
 static mv_t string_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = pa->u.strv}; }
@@ -619,7 +620,7 @@ static mv_t hexfmt_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0
 static mv_t hexfmt_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; }
 static mv_t hexfmt_s_d(mv_t* pa) {
-	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.dblv)};
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)};
 }
 static mv_t hexfmt_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll(pa->u.intv)}; }
 static mv_t hexfmt_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = pa->u.strv}; }
@@ -640,7 +641,7 @@ static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_NULL, 
 static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; }
 static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
-	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.dblv, pfmt->u.strv)};
+	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv)};
 }
 static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv)};
@@ -659,8 +660,6 @@ static mv_binary_func_t* fmtnum_dispositions[MT_MAX] = {
 mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2) { return (fmtnum_dispositions[pval1->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
-// xxx cmt us!!!!
-
 static mv_t op_n_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_NULL, .u.intv = 0}; }
 static mv_t op_e_xx(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 
@@ -671,26 +670,26 @@ static  mv_t ge_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bo
 static  mv_t lt_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <  pb->u.intv}; }
 static  mv_t le_b_ii(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <= pb->u.intv}; }
 
-static  mv_t eq_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv == pb->u.dblv}; }
-static  mv_t ne_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv != pb->u.dblv}; }
-static  mv_t gt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv >  pb->u.dblv}; }
-static  mv_t ge_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv >= pb->u.dblv}; }
-static  mv_t lt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv <  pb->u.dblv}; }
-static  mv_t le_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv <= pb->u.dblv}; }
+static  mv_t eq_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv == pb->u.fltv}; }
+static  mv_t ne_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv != pb->u.fltv}; }
+static  mv_t gt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv >  pb->u.fltv}; }
+static  mv_t ge_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv >= pb->u.fltv}; }
+static  mv_t lt_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv <  pb->u.fltv}; }
+static  mv_t le_b_ff(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv <= pb->u.fltv}; }
 
-static  mv_t eq_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv == pb->u.intv}; }
-static  mv_t ne_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv != pb->u.intv}; }
-static  mv_t gt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv >  pb->u.intv}; }
-static  mv_t ge_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv >= pb->u.intv}; }
-static  mv_t lt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv <  pb->u.intv}; }
-static  mv_t le_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.dblv <= pb->u.intv}; }
+static  mv_t eq_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv == pb->u.intv}; }
+static  mv_t ne_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv != pb->u.intv}; }
+static  mv_t gt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv >  pb->u.intv}; }
+static  mv_t ge_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv >= pb->u.intv}; }
+static  mv_t lt_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv <  pb->u.intv}; }
+static  mv_t le_b_fi(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.fltv <= pb->u.intv}; }
 
-static  mv_t eq_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv == pb->u.dblv}; }
-static  mv_t ne_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv != pb->u.dblv}; }
-static  mv_t gt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv >  pb->u.dblv}; }
-static  mv_t ge_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv >= pb->u.dblv}; }
-static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <  pb->u.dblv}; }
-static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <= pb->u.dblv}; }
+static  mv_t eq_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv == pb->u.fltv}; }
+static  mv_t ne_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv != pb->u.fltv}; }
+static  mv_t gt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv >  pb->u.fltv}; }
+static  mv_t ge_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv >= pb->u.fltv}; }
+static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <  pb->u.fltv}; }
+static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <= pb->u.fltv}; }
 
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
 	char* a = mt_format_val(pa);

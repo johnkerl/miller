@@ -247,7 +247,7 @@ mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 		;
 	} else if (val1.type == MT_INT) {
 		val1.type = MT_DOUBLE;
-		val1.u.dblv = (double)val1.u.intv;
+		val1.u.fltv = (double)val1.u.intv;
 	} else {
 		return MV_ERROR;
 	}
@@ -281,7 +281,7 @@ mv_t lrec_evaluator_s_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 		;
 	} else if (val1.type == MT_DOUBLE) {
 		val1.type = MT_INT;
-		val1.u.intv = (long long)val1.u.dblv;
+		val1.u.intv = (long long)val1.u.fltv;
 	} else {
 		return MV_ERROR;
 	}
@@ -618,9 +618,9 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	if (string == NULL) {
 		return (mv_t) {.type = MT_NULL, .u.intv = 0};
 	} else {
-		double dblv;
-		if (mlr_try_double_from_string(string, &dblv)) {
-			return (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
+		double fltv;
+		if (mlr_try_double_from_string(string, &fltv)) {
+			return (mv_t) {.type = MT_DOUBLE, .u.fltv = fltv};
 		} else {
 			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 		}
@@ -657,9 +657,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
-	double dblv;
-	if (mlr_try_double_from_string(string, &dblv)) {
-		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.dblv = dblv};
+	double fltv;
+	if (mlr_try_double_from_string(string, &fltv)) {
+		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.fltv = fltv};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
 		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
@@ -728,7 +728,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_PI_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = M_PI};
+	return (mv_t) {.type = MT_DOUBLE, .u.fltv = M_PI};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -739,7 +739,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_E_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_DOUBLE, .u.dblv = M_E};
+	return (mv_t) {.type = MT_DOUBLE, .u.fltv = M_E};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_E() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1292,12 +1292,12 @@ static char * test3() {
 	mu_assert_lf(valplogx.type  == MT_DOUBLE);
 	mu_assert_lf(valp2logx.type == MT_DOUBLE);
 
-	mu_assert_lf(valp2.u.dblv     == 2.0);
-	mu_assert_lf(valp4.u.dblv     == 4.0);
-	mu_assert_lf(valpx.u.dblv     == 4.5);
-	mu_assert_lf(valpx2.u.dblv    == 20.25);
-	mu_assert_lf(fabs(valplogx.u.dblv  - 0.653213) < 1e-5);
-	mu_assert_lf(fabs(valp2logx.u.dblv - 1.306425) < 1e-5);
+	mu_assert_lf(valp2.u.fltv     == 2.0);
+	mu_assert_lf(valp4.u.fltv     == 4.0);
+	mu_assert_lf(valpx.u.fltv     == 4.5);
+	mu_assert_lf(valpx2.u.fltv    == 20.25);
+	mu_assert_lf(fabs(valplogx.u.fltv  - 0.653213) < 1e-5);
+	mu_assert_lf(fabs(valp2logx.u.fltv - 1.306425) < 1e-5);
 
 	mlr_dsl_ast_node_print(p2logxnode);
 	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
@@ -1327,8 +1327,8 @@ static char * test3() {
 	mu_assert_lf(valplogx.type  == MT_NULL);
 	mu_assert_lf(valp2logx.type == MT_NULL);
 
-	mu_assert_lf(valp2.u.dblv     == 2.0);
-	mu_assert_lf(valp4.u.dblv     == 4.0);
+	mu_assert_lf(valp2.u.fltv     == 2.0);
+	mu_assert_lf(valp4.u.fltv     == 4.0);
 
 	return 0;
 }

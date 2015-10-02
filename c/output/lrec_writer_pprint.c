@@ -32,7 +32,7 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 	}
 
 	if (drain) {
-		if (pstate->num_blocks_written > 0LL) // xxx cmt
+		if (pstate->num_blocks_written > 0LL) // separate blocks with empty line
 			fputs(pstate->ors, output_stream);
 		print_and_free_record_list(pstate->precords, output_stream, pstate->ors, pstate->ofs, pstate->left_align);
 		if (pstate->pprev_keys != NULL) {

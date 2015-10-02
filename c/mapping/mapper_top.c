@@ -120,9 +120,8 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
 					if (i < ptop_keeper_for_group->size) {
-						// xxx temp fmt
-						double dblv = ptop_keeper_for_group->top_values[i] * pstate->sign;
-						char* strv = mlr_alloc_string_from_double(dblv, MLR_GLOBALS.ofmt);
+						double fltv = ptop_keeper_for_group->top_values[i] * pstate->sign;
+						char* strv = mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt);
 						lrec_put(poutrec, key, strv, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 						free(strv);
 					} else {

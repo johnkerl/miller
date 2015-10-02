@@ -109,7 +109,6 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			return NULL;
 		pstate->ilno++;
 
-		// xxx empty-line check ... make a lib func is_empty_modulo_whitespace().
 		if (!*line) {
 			if (pstate->pheader_keeper != NULL) {
 				pstate->pheader_keeper = NULL;

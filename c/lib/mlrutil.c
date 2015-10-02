@@ -374,5 +374,5 @@ char* mlr_unbackslash(char* input) {
 	}
 	*po = 0;
 
-	return output; // xxx temp
+	return output;
 }
