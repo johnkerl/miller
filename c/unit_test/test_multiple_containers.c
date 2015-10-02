@@ -81,20 +81,16 @@ static char* test_sllv() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
+	// sllv_append frees the control structure for its second argument so do no
+	// assertions there
 	pa = sllv_append(pa, pb);
 
 	mu_assert_lf(pa->length == 5);
-	mu_assert_lf(pb->length == 2);
 
 	pe = pa->phead;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "b")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "c")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
-	mu_assert_lf(pe == NULL);
-
-	pe = pb->phead;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
