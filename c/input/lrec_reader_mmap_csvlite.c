@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -62,6 +63,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 		while (*p == ifs)
 			p++;
 	}
+	char* osol = p;
 	char* header_name = p;
 
 	for ( ; p < phandle->eof && *p; ) {
@@ -85,7 +87,13 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 			p++;
 		}
 	}
-	slls_add_no_free(pheader_names, header_name);
+	if (allow_repeat_ifs && *header_name == 0) {
+		// OK
+	} else if (p == osol) {
+		// OK
+	} else {
+		slls_add_no_free(pheader_names, header_name);
+	}
 
 	return pheader_names;
 }
@@ -111,6 +119,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 		while (streqn(p, ifs, ifslen))
 			p += ifslen;
 	}
+	char* osol = p;
 	char* header_name = p;
 
 	for ( ; p < phandle->eof && *p; ) {
@@ -134,7 +143,13 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 			p++;
 		}
 	}
-	slls_add_no_free(pheader_names, header_name);
+	if (allow_repeat_ifs && *header_name == 0) {
+		// OK
+	} else if (p == osol) {
+		// OK
+	} else {
+		slls_add_no_free(pheader_names, header_name);
+	}
 
 	return pheader_names;
 }
@@ -170,6 +185,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			}
 			*p = 0;
 			phandle->sol = p+1;
+			pstate->ilno++;
 			break;
 		} else if (*p == ifs) {
 			if (pe == NULL) {
@@ -196,13 +212,12 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	}
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
-	if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
 
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
@@ -247,6 +262,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			}
 			*p = 0;
 			phandle->sol = p + irslen;
+			pstate->ilno++;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			if (pe == NULL) {
@@ -273,13 +289,12 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	}
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
-	if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
 
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
@@ -304,7 +319,13 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			if (pheader_fields == NULL) // EOF
 				return NULL;
 
-			pstate->expect_header_line_next = FALSE;
+			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
+				if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
+						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+					exit(1);
+				}
+			}
 
 			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 			if (pstate->pheader_keeper == NULL) {
@@ -313,6 +334,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			} else { // Re-use the header-keeper in the header cache
 				slls_free(pheader_fields);
 			}
+			pstate->expect_header_line_next = FALSE;
 		}
 
 		int end_of_stanza = FALSE;
@@ -339,7 +361,13 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 			if (pheader_fields == NULL) // EOF
 				return NULL;
 
-			pstate->expect_header_line_next = FALSE;
+			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
+				if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
+						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+					exit(1);
+				}
+			}
 
 			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 			if (pstate->pheader_keeper == NULL) {
@@ -348,6 +376,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 			} else { // Re-use the header-keeper in the header cache
 				slls_free(pheader_fields);
 			}
+			pstate->expect_header_line_next = FALSE;
 		}
 
 		int end_of_stanza = FALSE;

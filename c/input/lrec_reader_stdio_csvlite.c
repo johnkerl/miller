@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -62,7 +63,6 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		if (pstate->expect_header_line_next) {
 			// xxx cmt
 			while (TRUE) {
-				// xxx uniformize api, then funcptrs ...
 				char* hline = (pstate->irslen == 1)
 					? mlr_get_cline(input_stream, pstate->irs[0])
 					: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
@@ -71,7 +71,6 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 				pstate->ilno++;
 
 				slls_t* pheader_fields = (pstate->ifslen == 1)
-					// xxx uniformize api, then funcptrs ...
 					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
 					: split_csvlite_header_line_multi_ifs(hline, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 				if (pheader_fields->length == 0) {
@@ -80,6 +79,14 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 						pstate->pheader_keeper = NULL;
 					}
 				} else {
+					for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
+						if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+							fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
+								MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+							exit(1);
+						}
+					}
+
 					pstate->expect_header_line_next = FALSE;
 
 					pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
@@ -100,6 +107,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 		if (line == NULL) // EOF
 			return NULL;
+		pstate->ilno++;
 
 		// xxx empty-line check ... make a lib func is_empty_modulo_whitespace().
 		if (!*line) {
@@ -200,12 +208,11 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 			p++;
 		}
 	}
-	if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
@@ -255,12 +262,11 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 			p++;
 		}
 	}
-	if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
-		exit(1);
-	}
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "Header-data length mismatch!\n");
+		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
@@ -289,7 +295,6 @@ slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_rep
 		if (*p == ifs) {
 			*p = 0;
 			p++;
-			// xxx hoist loop invariant at the cost of some code duplication
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
@@ -298,7 +303,11 @@ slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_rep
 			start = p;
 		}
 	}
-	slls_add_no_free(plist, start);
+	if (allow_repeat_ifs && *start == 0) {
+		; // OK
+	} else {
+		slls_add_no_free(plist, start);
+	}
 
 	return plist;
 }
@@ -326,7 +335,11 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 			start = p;
 		}
 	}
-	slls_add_no_free(plist, start);
+	if (allow_repeat_ifs && *start == 0) {
+		; // OK
+	} else {
+		slls_add_no_free(plist, start);
+	}
 
 	return plist;
 }

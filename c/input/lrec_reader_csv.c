@@ -25,7 +25,7 @@
 // ----------------------------------------------------------------
 #define STRING_BUILDER_INIT_SIZE 1024
 
-// xxx globally rename stridx to token/label
+// AKA "token"
 #define EOF_STRIDX           0x2000
 #define IRS_STRIDX           0x2001
 #define IFS_EOF_STRIDX       0x2002
@@ -92,7 +92,14 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 		if (pheader_fields == NULL)
 			return NULL;
 		pstate->ilno++;
-		pstate->expect_header_line_next = FALSE;
+
+		for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
+			if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+				fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
+					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+				exit(1);
+			}
+		}
 
 		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 		if (pstate->pheader_keeper == NULL) {
@@ -101,10 +108,11 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 		} else { // Re-use the header-keeper in the header cache
 			slls_free(pheader_fields);
 		}
-	}
-	pstate->ilno++;
 
+		pstate->expect_header_line_next = FALSE;
+	}
 	slls_t* pdata_fields = lrec_reader_csv_get_fields(pstate);
+	pstate->ilno++;
 	if (pdata_fields == NULL) // EOF
 		return NULL;
 	else {

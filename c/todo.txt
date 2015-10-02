@@ -9,6 +9,8 @@ TOP OF LIST
 ----------------------------------------------------------------
 MINOR:
 
+! restore empty-file csvlite tests & fix the logic
+
 * UTx4xN the format-parsers
 
 * xxx's in the code!!!!!!!!!!!!!
