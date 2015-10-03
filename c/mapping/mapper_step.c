@@ -24,6 +24,19 @@ typedef struct _step_t {
 
 typedef step_t* step_alloc_func_t(char* input_field_name);
 
+static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_step_free(void* pvstate);
+static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
+static void      mapper_step_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_step_setup = {
+	.verb = "step",
+	.pusage_func = mapper_step_usage,
+	.pparse_func = mapper_step_parse_cli
+};
+
 // ----------------------------------------------------------------
 typedef struct _step_delta_state_t {
 	double prev;
@@ -315,10 +328,3 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_step_alloc(pstepper_names, pvalue_field_names, pgroup_by_field_names);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_step_setup = {
-	.verb = "step",
-	.pusage_func = mapper_step_usage,
-	.pparse_func = mapper_step_parse_cli
-};
