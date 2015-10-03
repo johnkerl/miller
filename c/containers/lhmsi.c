@@ -183,7 +183,7 @@ long long lhmsi_get(lhmsi_t* pmap, char* key) {
 	if (pmap->states[index] == OCCUPIED)
 		return pe->value;
 	else if (pmap->states[index] == EMPTY)
-		return -999; // xxx fix me ... extend the api to handle nullity.
+		return -999; // caller must do lhmsi_has_key to check validity
 	else {
 		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
 		exit(1);

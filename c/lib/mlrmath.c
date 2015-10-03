@@ -105,7 +105,6 @@ void mlr_get_real_symmetric_eigensystem(
 	}
 }
 
-// xxx cmt mem-mgmt
 static void matmul2(
 	double C[2][2], // Output
 	double A[2][2], // Input

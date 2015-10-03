@@ -46,8 +46,6 @@ static void mapper_group_like_free(void* pvstate) {
 	mapper_group_like_state_t* pstate = (mapper_group_like_state_t*)pvstate;
 
 	// xxx check for full recursive free
-	// xxx in lhmslv & more general outermost readme, articulate the philosophy that containers
-	// will free contents except for void-stars.
 	lhmslv_free(pstate->precords_by_key_field_names);
 }
 

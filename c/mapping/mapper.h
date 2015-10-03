@@ -6,16 +6,14 @@
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 
-// xxx cmt conventions:
-// * mem-mgt: pass same lrec or allow new & free old
-// * null-terminated streams for then-chaining
-// * drain state at EOS
+// See ../README.md for memory-management conventions.
 
 // ----------------------------------------------------------------
 // Data plane:
 
 // Returns linked list of records (lrec_t*).
 typedef sllv_t* mapper_process_func_t(lrec_t* pinrec, context_t* pctx, void* pvstate);
+
 typedef void    mapper_free_func_t(void* pvstate);
 
 typedef struct _mapper_t {

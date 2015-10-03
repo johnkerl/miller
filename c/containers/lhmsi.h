@@ -42,7 +42,7 @@ lhmsi_t* lhmsi_alloc();
 lhmsi_t* lhmsi_copy(lhmsi_t* pmap);
 void  lhmsi_free(lhmsi_t* pmap);
 void  lhmsi_put(lhmsi_t* pmap, char* key, int value);
-long long lhmsi_get(lhmsi_t* pmap, char* key);
+long long lhmsi_get(lhmsi_t* pmap, char* key); // caller must do lhmsi_has_key to check validity
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key);
 int   lhmsi_has_key(lhmsi_t* pmap, char* key);
 void  lhmsi_remove(lhmsi_t* pmap, char* key);

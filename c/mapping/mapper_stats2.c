@@ -482,7 +482,7 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 
 	mapper_stats2_state_t* pstate   = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
 	pstate->paccumulator_names      = paccumulator_names;
-	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // xxx validate length is even
+	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
 	pstate->pgroup_by_field_names   = pgroup_by_field_names;
 	pstate->groups                  = lhmslv_alloc();
 	pstate->do_verbose              = do_verbose;

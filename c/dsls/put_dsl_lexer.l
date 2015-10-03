@@ -56,7 +56,6 @@
 	return PUT_DSL_FCN_NAME;
 }
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+ {
-	// xxx string literals later ...
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
 	return PUT_DSL_NUMBER;
 }

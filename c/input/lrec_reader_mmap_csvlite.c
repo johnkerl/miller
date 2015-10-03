@@ -415,7 +415,6 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 	pstate->pheader_keeper           = NULL;
 	pstate->pheader_keepers          = lhmslv_alloc();
 
-	// xxx get rid of func-ptr ampersands throughout the tree
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;

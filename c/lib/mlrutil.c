@@ -6,7 +6,6 @@
 #include "lib/mlrutil.h"
 
 // ----------------------------------------------------------------
-// xxx cmt top insert ...
 int mlr_bsearch_double_for_insert(double* array, int size, double value) {
 	int lo = 0;
 	int hi = size-1;

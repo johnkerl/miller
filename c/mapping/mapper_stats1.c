@@ -169,7 +169,7 @@ static void acc_stddev_var_meaneb_dingest(void* pvstate, double val) {
 	pstate->sumx  += val;
 	pstate->sumx2 += val*val;
 }
-// xxx recast all of these in terms of providable outputs
+
 static void acc_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* acc_name, lrec_t* poutrec) {
 	acc_stddev_var_meaneb_state_t* pstate = pvstate;
 	char* key = mlr_paste_3_strings(value_field_name, "_", acc_name);

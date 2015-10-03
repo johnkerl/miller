@@ -90,7 +90,7 @@ double mlr_double_from_string_or_die(char* string);
 int    mlr_try_double_from_string(char* string, double* pval);
 int    mlr_try_int_from_string(char* string, long long* pval);
 
-// xxx cmt infrequently used; also cmt mem mgt
+// Inefficient and intended for call-rarely use. The caller should free the return values.
 char* mlr_paste_2_strings(char* s1, char* s2);
 char* mlr_paste_3_strings(char* s1, char* s2, char* s3);
 char* mlr_paste_4_strings(char* s1, char* s2, char* s3, char* s4);
