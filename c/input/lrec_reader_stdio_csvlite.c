@@ -51,10 +51,6 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 //            3,4,5,6               3,4,5
 
 // ----------------------------------------------------------------
-// xxx needs abend on null lhs.
-//
-// etc.
-
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;

@@ -82,8 +82,6 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
 static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields);
 
 // ----------------------------------------------------------------
-// xxx needs abend on null lhs. etc.
-
 static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 
@@ -94,7 +92,7 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 		pstate->ilno++;
 
 		for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
-			if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+			if (*pe->value == 0) {
 				fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
