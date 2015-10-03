@@ -76,7 +76,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 					}
 				} else {
 					for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
-						if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+						if (*pe->value == 0) {
 							fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 								MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 							exit(1);
@@ -235,13 +235,12 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 	char* key   = NULL;
 	char* value = p;
 
-	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for ( ; *p; ) {
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 
-			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
+			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.argv0, filename, ilno);
 				exit(1);
