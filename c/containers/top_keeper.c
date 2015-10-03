@@ -6,7 +6,6 @@
 // ----------------------------------------------------------------
 top_keeper_t* top_keeper_alloc(int capacity) {
 	top_keeper_t* ptop_keeper = mlr_malloc_or_die(sizeof(top_keeper_t));
-	// xxx mk func for neg-cap check; use here & elsewhere
 	ptop_keeper->top_values   = mlr_malloc_or_die(capacity*sizeof(double));
 	ptop_keeper->top_precords = mlr_malloc_or_die(capacity*sizeof(lrec_t*));
 	ptop_keeper->size         = 0;

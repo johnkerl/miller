@@ -40,7 +40,6 @@ static void mapper_put_free(void* pvstate) {
 	free(pstate->pevaluators);
 }
 
-// xxx comment me ...
 static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->num_evaluators = pasts->length;

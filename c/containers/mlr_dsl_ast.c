@@ -13,7 +13,6 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type) {
 }
 
 // ----------------------------------------------------------------
-// xxx rename to ..._terminal to make it clear that children aren't copied.
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother) {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(pother->text, pother->type);
 	return pnode;

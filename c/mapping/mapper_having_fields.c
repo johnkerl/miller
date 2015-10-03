@@ -50,12 +50,12 @@ static sllv_t* mapper_having_fields_which_are_process(lrec_t* pinrec, context_t*
 // ----------------------------------------------------------------
 static sllv_t* mapper_having_fields_at_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL)
-		return sllv_single(NULL); // xxx cmt all of these, in all mappers
+		return sllv_single(NULL);
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		if (!hss_has(pstate->pfield_name_set, pe->key)) {
 			lrec_free(pinrec);
-			return NULL; // xxx cmt all of these, in all mappers
+			return NULL;
 		}
 	}
 	return sllv_single(pinrec);

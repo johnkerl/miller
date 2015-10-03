@@ -82,7 +82,6 @@ int mt_get_boolean_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-// xxx check for semantics comparable to mt_get_boolean_strict
 void mt_get_double_strict(mv_t* pval) {
 	if (pval->type == MT_NULL)
 		return;
@@ -112,7 +111,6 @@ void mt_get_double_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-// xxx merge with mt_get_double_string w/ a nullable parameter
 void mt_get_double_nullable(mv_t* pval) {
 	if (pval->type == MT_NULL)
 		return;
@@ -192,7 +190,6 @@ mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
 mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
@@ -204,7 +201,6 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 	return rv;
 }
 
-// xxx cmt mem-mgt & contract. similar to lrec-mapper contract.
 mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)

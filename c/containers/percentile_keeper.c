@@ -53,10 +53,10 @@ static int compute_index(int n, double p) {
 		index = 0;
 	else if (index >= n)
 		index = n-1;
-	// xxx need to try harder on round-up/round-down cases?
 	return index;
 }
 
+// See also https://github.com/johnkerl/miller/issues/14 which requests an interpolation option.
 double percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile) {
 	if (!ppercentile_keeper->sorted) {
 		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(double), double_comparator);
