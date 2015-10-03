@@ -52,6 +52,16 @@
 // ================================================================
 
 // ----------------------------------------------------------------
+static void mapper_sort_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
+
+mapper_setup_t mapper_sort_setup = {
+	.verb = "sort",
+	.pusage_func = mapper_sort_usage,
+	.pparse_func = mapper_sort_parse_cli
+};
+
+// ----------------------------------------------------------------
 #define SORT_NUMERIC    0x80
 #define SORT_DESCENDING 0x40
 
@@ -330,10 +340,3 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_sort_alloc(pnames, opt_array, TRUE);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_sort_setup = {
-	.verb = "sort",
-	.pusage_func = mapper_sort_usage,
-	.pparse_func = mapper_sort_parse_cli
-};
