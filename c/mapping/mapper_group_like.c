@@ -13,6 +13,19 @@ typedef struct _mapper_group_like_state_t {
 	lhmslv_t* precords_by_key_field_names;
 } mapper_group_like_state_t;
 
+static sllv_t*   mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_group_like_free(void* pvstate);
+static mapper_t* mapper_group_like_alloc();
+static void      mapper_group_like_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_group_like_setup = {
+	.verb = "group-like",
+	.pusage_func = mapper_group_like_usage,
+	.pparse_func = mapper_group_like_parse_cli,
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_group_like_state_t* pstate = pvstate;
@@ -76,10 +89,3 @@ static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) 
 	*pargi += 1;
 	return pmapper;
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_group_like_setup = {
-	.verb = "group-like",
-	.pusage_func = mapper_group_like_usage,
-	.pparse_func = mapper_group_like_parse_cli,
-};

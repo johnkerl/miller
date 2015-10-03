@@ -11,7 +11,6 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-// ================================================================
 typedef struct _mapper_histogram_state_t {
 	slls_t* value_field_names;
 	double lo;
@@ -21,10 +20,24 @@ typedef struct _mapper_histogram_state_t {
 	lhmsv_t* pcounts_by_field;
 } mapper_histogram_state_t;
 
-// ----------------------------------------------------------------
-static void mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
-static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate);
+static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
+static sllv_t*   mapper_histogram_emit(mapper_histogram_state_t* pstate);
+static sllv_t*   mapper_histogram_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
+static sllv_t*   mapper_histogram_emit(mapper_histogram_state_t* pstate);
+static void      mapper_histogram_free(void* pvstate);
+static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi);
+static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
 
+// ----------------------------------------------------------------
+mapper_setup_t mapper_histogram_setup = {
+	.verb = "histogram",
+	.pusage_func = mapper_histogram_usage,
+	.pparse_func = mapper_histogram_parse_cli,
+};
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_histogram_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_histogram_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
@@ -171,10 +184,3 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_histogram_alloc(pvalue_field_names, lo, nbins, hi);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_histogram_setup = {
-	.verb = "histogram",
-	.pusage_func = mapper_histogram_usage,
-	.pparse_func = mapper_histogram_parse_cli,
-};

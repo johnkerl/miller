@@ -7,6 +7,19 @@ typedef struct _mapper_rename_state_t {
 	lhmss_t* pold_to_new;
 } mapper_rename_state_t;
 
+static sllv_t*   mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_rename_free(void* pvstate);
+static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new);
+static void      mapper_rename_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_rename_setup = {
+	.verb = "rename",
+	.pusage_func = mapper_rename_usage,
+	.pparse_func = mapper_rename_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
@@ -70,10 +83,3 @@ static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 2;
 	return mapper_rename_alloc(pold_to_new);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_rename_setup = {
-	.verb = "rename",
-	.pusage_func = mapper_rename_usage,
-	.pparse_func = mapper_rename_parse_cli
-};

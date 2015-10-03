@@ -10,12 +10,24 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-// ================================================================
 typedef struct _mapper_head_state_t {
 	slls_t* pgroup_by_field_names;
 	unsigned long long head_count;
 	lhmslv_t* precord_lists_by_group;
 } mapper_head_state_t;
+
+static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_head_free(void* pvstate);
+static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count);
+static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_head_setup = {
+	.verb = "head",
+	.pusage_func = mapper_head_usage,
+	.pparse_func = mapper_head_parse_cli,
+};
 
 // ----------------------------------------------------------------
 // xxx if empty key then make a way to communicate back to the reader that it
@@ -94,10 +106,3 @@ static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_head_alloc(pgroup_by_field_names, head_count);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_head_setup = {
-	.verb = "head",
-	.pusage_func = mapper_head_usage,
-	.pparse_func = mapper_head_parse_cli,
-};

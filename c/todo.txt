@@ -26,6 +26,8 @@ MINOR:
 
 * make mlr vs. bake mlr -- ?
 
+* running-mean feature .......
+
 ----------------------------------------------------------------
 MAJOR: manpage
 

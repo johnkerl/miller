@@ -8,6 +8,19 @@ typedef struct _mapper_regularize_state_t {
 	lhmslv_t* psorted_to_original;
 } mapper_regularize_state_t;
 
+static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_regularize_free(void* pvstate);
+static mapper_t* mapper_regularize_alloc();
+static void      mapper_regularize_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_regularize_setup = {
+	.verb = "regularize",
+	.pusage_func = mapper_regularize_usage,
+	.pparse_func = mapper_regularize_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
@@ -66,10 +79,3 @@ static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) 
     *pargi += 1;
 	return mapper_regularize_alloc();
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_regularize_setup = {
-	.verb = "regularize",
-	.pusage_func = mapper_regularize_usage,
-	.pparse_func = mapper_regularize_parse_cli
-};

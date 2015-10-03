@@ -13,6 +13,19 @@ typedef struct _mapper_put_state_t {
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
+static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_put_free(void* pvstate);
+static mapper_t* mapper_put_alloc(sllv_t* pasts);
+static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_put_setup = {
+	.verb = "put",
+	.pusage_func = mapper_put_usage,
+	.pparse_func = mapper_put_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
@@ -141,10 +154,3 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_put_alloc(pasts);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_put_setup = {
-	.verb = "put",
-	.pusage_func = mapper_put_usage,
-	.pparse_func = mapper_put_parse_cli
-};

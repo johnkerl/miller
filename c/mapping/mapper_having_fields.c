@@ -11,6 +11,21 @@ typedef struct _mapper_having_fields_state_t {
 	int     criterion;
 } mapper_having_fields_state_t;
 
+static sllv_t*   mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_having_fields_which_are_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_having_fields_at_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_having_fields_free(void* pvstate);
+static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion);
+static void      mapper_having_fields_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_having_fields_setup = {
+	.verb = "having-fields",
+	.pusage_func = mapper_having_fields_usage,
+	.pparse_func = mapper_having_fields_parse_cli,
+};
+
 // ----------------------------------------------------------------
 // record = a,b,c,d,e
 // at least b,c
@@ -141,10 +156,3 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 	*pargi = argi;
 	return mapper_having_fields_alloc(pfield_names, criterion);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_having_fields_setup = {
-	.verb = "having-fields",
-	.pusage_func = mapper_having_fields_usage,
-	.pparse_func = mapper_having_fields_parse_cli,
-};

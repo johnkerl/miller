@@ -7,6 +7,19 @@ typedef struct _mapper_tac_state_t {
 	sllv_t* records;
 } mapper_tac_state_t;
 
+static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_tac_free(void* pvstate);
+static mapper_t* mapper_tac_alloc();
+static void      mapper_tac_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_tac_setup = {
+	.verb = "tac",
+	.pusage_func = mapper_tac_usage,
+	.pparse_func = mapper_tac_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tac_state_t* pstate = pvstate;
@@ -59,10 +72,3 @@ static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 1;
 	return pmapper;
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_tac_setup = {
-	.verb = "tac",
-	.pusage_func = mapper_tac_usage,
-	.pparse_func = mapper_tac_parse_cli
-};

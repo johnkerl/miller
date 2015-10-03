@@ -10,12 +10,26 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-// ================================================================
 typedef struct _mapper_uniq_state_t {
 	slls_t* pgroup_by_field_names;
 	int show_counts;
 	lhmslv_t* pcounts_by_group;
 } mapper_uniq_state_t;
+
+static sllv_t*   mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_uniq_free(void* pvstate);
+static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts);
+static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv);
+static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_count_distinct_setup = {
+	.verb = "count-distinct",
+	.pusage_func = mapper_count_distinct_usage,
+	.pparse_func = mapper_count_distinct_parse_cli,
+};
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
@@ -155,10 +169,3 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 
 	return mapper_uniq_alloc(pfield_names, TRUE);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_count_distinct_setup = {
-	.verb = "count-distinct",
-	.pusage_func = mapper_count_distinct_usage,
-	.pparse_func = mapper_count_distinct_parse_cli,
-};

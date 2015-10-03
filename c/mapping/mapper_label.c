@@ -7,6 +7,19 @@ typedef struct _mapper_label_state_t {
 	slls_t* pnames;
 } mapper_label_state_t;
 
+static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_label_free(void* pvstate);
+static mapper_t* mapper_label_alloc(slls_t* pnames);
+static void      mapper_label_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_label_setup = {
+	.verb = "label",
+	.pusage_func = mapper_label_usage,
+	.pparse_func = mapper_label_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
@@ -69,10 +82,3 @@ static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 2;
 	return mapper_label_alloc(pnames);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_label_setup = {
-	.verb = "label",
-	.pusage_func = mapper_label_usage,
-	.pparse_func = mapper_label_parse_cli
-};

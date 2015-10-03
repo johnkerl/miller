@@ -10,6 +10,19 @@ typedef struct _mapper_reorder_state_t {
 	int     put_at_end;
 } mapper_reorder_state_t;
 
+static sllv_t*   mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_reorder_free(void* pvstate);
+static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end);
+static void      mapper_reorder_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_reorder_setup = {
+	.verb = "reorder",
+	.pusage_func = mapper_reorder_usage,
+	.pparse_func = mapper_reorder_parse_cli,
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
@@ -87,10 +100,3 @@ static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_reorder_alloc(pfield_name_list, put_at_end);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_reorder_setup = {
-	.verb = "reorder",
-	.pusage_func = mapper_reorder_usage,
-	.pparse_func = mapper_reorder_parse_cli,
-};

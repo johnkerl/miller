@@ -10,6 +10,19 @@ typedef struct _mapper_filter_state_t {
 	lrec_evaluator_t* pevaluator;
 } mapper_filter_state_t;
 
+static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_filter_free(void* pvstate);
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past);
+static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_filter_setup = {
+	.verb = "filter",
+	.pusage_func = mapper_filter_usage,
+	.pparse_func = mapper_filter_parse_cli,
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
@@ -104,10 +117,3 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_filter_alloc(past->proot);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_filter_setup = {
-	.verb = "filter",
-	.pusage_func = mapper_filter_usage,
-	.pparse_func = mapper_filter_parse_cli,
-};

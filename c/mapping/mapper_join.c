@@ -12,8 +12,6 @@
 // Join options, if unspecified, default to respective main options.
 #define OPTION_UNSPECIFIED ((char)0xff)
 
-// ----------------------------------------------------------------
-
 typedef struct _mapper_join_opts_t {
 	char*    left_prefix;
 	char*    right_prefix;

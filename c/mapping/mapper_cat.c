@@ -2,6 +2,19 @@
 #include "lib/mlrutil.h"
 #include "containers/sllv.h"
 
+static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_cat_free(void* pvstate);
+static mapper_t* mapper_cat_alloc();
+static void      mapper_cat_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_cat_setup = {
+	.verb = "cat",
+	.pusage_func = mapper_cat_usage,
+	.pparse_func = mapper_cat_parse_cli
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL)
@@ -37,10 +50,3 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 1;
 	return pmapper;
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_cat_setup = {
-	.verb = "cat",
-	.pusage_func = mapper_cat_usage,
-	.pparse_func = mapper_cat_parse_cli
-};

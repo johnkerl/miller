@@ -13,6 +13,19 @@ typedef struct _mapper_cut_state_t {
 	int     do_complement;
 } mapper_cut_state_t;
 
+static sllv_t*   mapper_cut_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_cut_free(void* pvstate);
+static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list, int do_arg_order, int do_complement);
+static void      mapper_cut_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_cut_setup = {
+	.verb = "cut",
+	.pusage_func = mapper_cut_usage,
+	.pparse_func = mapper_cut_parse_cli,
+};
+
 // ----------------------------------------------------------------
 static sllv_t* mapper_cut_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
@@ -112,10 +125,3 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_cut_alloc(pfield_name_list, do_arg_order, do_complement);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_cut_setup = {
-	.verb = "cut",
-	.pusage_func = mapper_cut_usage,
-	.pparse_func = mapper_cut_parse_cli,
-};

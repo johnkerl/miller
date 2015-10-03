@@ -11,12 +11,24 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-// ================================================================
 typedef struct _mapper_tail_state_t {
 	slls_t* pgroup_by_field_names;
 	unsigned long long tail_count;
 	lhmslv_t* precord_lists_by_group;
 } mapper_tail_state_t;
+
+static sllv_t*   mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_tail_free(void* pvstate);
+static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count);
+static void      mapper_tail_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_tail_setup = {
+	.verb = "tail",
+	.pusage_func = mapper_tail_usage,
+	.pparse_func = mapper_tail_parse_cli
+};
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
@@ -101,10 +113,3 @@ static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_tail_alloc(pgroup_by_field_names, tail_count);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_tail_setup = {
-	.verb = "tail",
-	.pusage_func = mapper_tail_usage,
-	.pparse_func = mapper_tail_parse_cli
-};
