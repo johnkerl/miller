@@ -57,7 +57,6 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
-			// xxx cmt
 			while (TRUE) {
 				char* hline = (pstate->irslen == 1)
 					? mlr_get_cline(input_stream, pstate->irs[0])

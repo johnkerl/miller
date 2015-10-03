@@ -52,17 +52,7 @@ typedef struct _lrec_reader_csv_state_t {
 	char* dquote_eof;
 	char* dquote_dquote;
 
-	int   eof_len;
-	int   irs_len;
-	int   ifs_eof_len;
-	int   ifs_len;
-	int   dquote_len;
-	int   dquote_irs_len;
-	int   dquote_ifs_len;
-	int   dquote_eof_len;
-	int   dquote_dquote_len;
-
-	int   peek_buf_len;
+	int   dquotelen;
 
 	string_builder_t    sb;
 	string_builder_t*   psb;
@@ -195,7 +185,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 			}
 
 		} else {
-			pfr_advance_by(pfr, pstate->dquote_len);
+			pfr_advance_by(pfr, pstate->dquotelen);
 
 			// loop over characters in field
 			field_done = FALSE;
@@ -251,6 +241,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 // ----------------------------------------------------------------
 static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
+		// xxx get the pctx->filename in there as well
 		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
 		exit(1);
@@ -294,6 +285,9 @@ static void lrec_reader_csv_free(void* pvstate) {
 		header_keeper_free(pheader_keeper);
 	}
 	pfr_free(pstate->pfr);
+	parse_trie_free(pstate->pno_dquote_parse_trie);
+	parse_trie_free(pstate->pdquote_parse_trie);
+	// write & use sb_free after the refactor
 }
 
 // ----------------------------------------------------------------
@@ -301,45 +295,20 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
-	pstate->ilno                      = 0LL;
+	pstate->ilno          = 0LL;
 
-	pstate->eof                       = "\xff";
-	pstate->irs                       = irs;
-	pstate->ifs                       = ifs;
-	pstate->ifs_eof                   = mlr_paste_2_strings(pstate->ifs, "\xff");
-	pstate->dquote                    = "\"";
+	pstate->eof           = "\xff";
+	pstate->irs           = irs;
+	pstate->ifs           = ifs;
+	pstate->ifs_eof       = mlr_paste_2_strings(pstate->ifs, "\xff");
+	pstate->dquote        = "\"";
 
-	pstate->dquote_irs                = mlr_paste_2_strings("\"", pstate->irs);
-	pstate->dquote_ifs                = mlr_paste_2_strings("\"", pstate->ifs);
-	pstate->dquote_eof                = "\"\xff";
-	pstate->dquote_dquote             = "\"\"";
+	pstate->dquote_irs    = mlr_paste_2_strings("\"", pstate->irs);
+	pstate->dquote_ifs    = mlr_paste_2_strings("\"", pstate->ifs);
+	pstate->dquote_eof    = "\"\xff";
+	pstate->dquote_dquote = "\"\"";
 
-	// xxx maybe not retain all these variables now that that info is in the parse-tries -- ?
-	pstate->irs_len                   = strlen(pstate->irs);
-	pstate->ifs_eof_len               = strlen(pstate->ifs_eof);
-	pstate->ifs_len                   = strlen(pstate->ifs);
-	pstate->dquote_len                = strlen(pstate->dquote);
-
-	pstate->dquote_irs_len            = strlen(pstate->dquote_irs);
-	pstate->dquote_ifs_len            = strlen(pstate->dquote_ifs);
-	pstate->dquote_eof_len            = strlen(pstate->dquote_eof);
-	pstate->dquote_dquote_len         = strlen(pstate->dquote_dquote);
-
-	// xxx rid of now that this is tracked in the parse-tries -- ?
-	pstate->peek_buf_len              = pstate->irs_len;
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_eof_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->ifs_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_irs_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_ifs_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_eof_len);
-	pstate->peek_buf_len              = mlr_imax2(pstate->peek_buf_len, pstate->dquote_dquote_len);
-	pstate->peek_buf_len             += 2;
-
-	pstate->psb                       = &pstate->sb;
-	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
-	pstate->pbr                       = pbr;
-	pstate->pfr                       = pfr_alloc(pstate->pbr, pstate->peek_buf_len);
+	pstate->dquotelen     = strlen(pstate->dquote);
 
 	pstate->pno_dquote_parse_trie = parse_trie_alloc();
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
@@ -354,6 +323,12 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
+
+	pstate->psb = &pstate->sb;
+	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
+	pstate->pbr = pbr;
+	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
+		pstate->pdquote_parse_trie->maxlen));
 
 	pstate->expect_header_line_next   = TRUE;
 	pstate->pheader_keeper            = NULL;
