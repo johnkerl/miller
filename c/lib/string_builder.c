@@ -13,7 +13,7 @@ void sb_init(string_builder_t* psb, int alloc_length) {
 	}
 	psb->used_length = 0;
 	psb->alloc_length = alloc_length;
-	psb->buffer = mlr_malloc_or_die(alloc_length); // xxx malloc ...
+	psb->buffer = mlr_malloc_or_die(alloc_length);
 }
 
 // ----------------------------------------------------------------

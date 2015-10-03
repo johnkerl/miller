@@ -69,7 +69,7 @@ typedef struct _lrec_reader_csv_state_t {
 } lrec_reader_csv_state_t;
 
 static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
-static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields);
+static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -107,7 +107,7 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 		//lrec_t* prec = paste_header_and_data(pstate, pdata_fields);
 		//slls_free(pdata_fields);
 		//return prec;
-		return paste_header_and_data(pstate, pdata_fields);
+		return paste_header_and_data(pstate, pdata_fields, pctx);
 	}
 }
 
@@ -239,19 +239,22 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields) {
+static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
-		// xxx get the pctx->filename in there as well
-		fprintf(stderr, "%s: Header/data length mismatch: %d != %d at line %lld.\n",
-			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length, pstate->ilno);
+		fprintf(stderr, "%s: Header/data length mismatch (%d != %d) at file \"%s\" line %lld.\n",
+			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
+			pctx->filename, pstate->ilno);
 		exit(1);
 	}
 	lrec_t* prec = lrec_unbacked_alloc();
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
+		// Need to deal with heap-fragmentation among other things ...
+		// https://github.com/johnkerl/miller/issues/66
+		//
+		// lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 		lrec_put_no_free(prec, ph->value, pd->value);
-		//lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 	}
 	return prec;
 }

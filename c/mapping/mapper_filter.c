@@ -41,7 +41,6 @@ static void mapper_filter_free(void* pvstate) {
 		//hss_free(pstate->pevaluator);
 }
 
-// xxx comment me ...
 static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 

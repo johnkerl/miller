@@ -1,14 +1,14 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "containers/lhmsi.h"
+#include "containers/hss.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
 typedef struct _mapper_having_fields_state_t {
-	slls_t*  pfield_names;
-	lhmsi_t* pfield_name_set; // xxx make this a true set now that i wrote one :/ ;)
-	int      criterion;
+	slls_t* pfield_names;
+	hss_t*  pfield_name_set;
+	int     criterion;
 } mapper_having_fields_state_t;
 
 // ----------------------------------------------------------------
@@ -20,7 +20,7 @@ static sllv_t* mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* 
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 	int num_found = 0;
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (lhmsi_has_key(pstate->pfield_name_set, pe->key)) {
+		if (hss_has(pstate->pfield_name_set, pe->key)) {
 			num_found++;
 			if (num_found == pstate->pfield_name_set->num_occupied)
 				return sllv_single(pinrec);
@@ -39,7 +39,7 @@ static sllv_t* mapper_having_fields_which_are_process(lrec_t* pinrec, context_t*
 		return NULL;
 	}
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (!lhmsi_has_key(pstate->pfield_name_set, pe->key)) {
+		if (!hss_has(pstate->pfield_name_set, pe->key)) {
 			lrec_free(pinrec);
 			return NULL;
 		}
@@ -53,7 +53,7 @@ static sllv_t* mapper_having_fields_at_most_process(lrec_t* pinrec, context_t* p
 		return sllv_single(NULL); // xxx cmt all of these, in all mappers
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (!lhmsi_has_key(pstate->pfield_name_set, pe->key)) {
+		if (!hss_has(pstate->pfield_name_set, pe->key)) {
 			lrec_free(pinrec);
 			return NULL; // xxx cmt all of these, in all mappers
 		}
@@ -66,7 +66,7 @@ static void mapper_having_fields_free(void* pvstate) {
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 	if (pstate->pfield_names != NULL)
 		slls_free(pstate->pfield_names);
-	lhmsi_free(pstate->pfield_name_set);
+	hss_free(pstate->pfield_name_set);
 }
 
 static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion) {
@@ -74,9 +74,9 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 
 	mapper_having_fields_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_having_fields_state_t));
 	pstate->pfield_names    = pfield_names;
-	pstate->pfield_name_set = lhmsi_alloc();
+	pstate->pfield_name_set = hss_alloc();
 	for (sllse_t* pe = pfield_names->phead; pe != NULL; pe = pe->pnext)
-		lhmsi_put(pstate->pfield_name_set, pe->value, 0);
+		hss_add(pstate->pfield_name_set, pe->value);
 	pstate->criterion = criterion;
 
 	pmapper->pvstate = (void*)pstate;
