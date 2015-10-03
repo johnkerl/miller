@@ -116,11 +116,8 @@ void hss_add(hss_t* pset, char* key) {
 	hsse_t* pe = &pset->array[index];
 
 	if (pe->state == OCCUPIED) {
-		// Existing key found in chain
-		if (streq(pe->key, key)) {
-			return;
-		}
-		// xxx this looks wrong
+		// Existing key found in chain. Chaining already handled by hss_find_index_for_key.
+		return;
 	}
 	else if (pe->state == EMPTY) {
 		// End of chain.

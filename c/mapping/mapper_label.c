@@ -8,9 +8,6 @@ typedef struct _mapper_label_state_t {
 } mapper_label_state_t;
 
 // ----------------------------------------------------------------
-// xxx comment why (--inidx)
-// xxx comment what happens after end-of-list (or before)
-
 static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
@@ -55,6 +52,10 @@ static void mapper_label_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "have the respective name. (Fields past the nth are left with their original\n");
 	fprintf(o, "names.) Particularly useful with --inidx, to give useful names to otherwise\n");
 	fprintf(o, "integer-indexed fields.\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  \"echo 'a b c d' | %s --inidx --odkvp cat\"       gives \"1=a,2=b,3=c,4=d\"\n", argv0);
+	fprintf(o, "  \"echo 'a b c d' | %s --inidx --odkvp %s s,t\" gives \"s=a,t=b,3=c,4=d\"\n", argv0, verb);
+
 }
 
 static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv) {

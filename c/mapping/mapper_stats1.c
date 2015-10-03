@@ -63,12 +63,12 @@ static acc_t* acc_count_alloc() {
 typedef struct _acc_mode_state_t {
 	lhmsi_t* pcounts_for_value;
 } acc_mode_state_t;
-// mode on strings? what about "1.0" and "1" and "1.0000" ??
+// mode on strings: "1" and "1.0" and "1.0000" are distinct text.
 static void acc_mode_singest(void* pvstate, char* val) {
 	acc_mode_state_t* pstate = pvstate;
 	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
 	if (pe == NULL) {
-		// xxx at the moment, lhmsi does a strdup so we needn't.
+		// lhmsi does a strdup so we needn't.
 		lhmsi_put(pstate->pcounts_for_value, val, 1);
 	} else {
 		pe->value++;

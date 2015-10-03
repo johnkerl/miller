@@ -3,8 +3,9 @@
 #include "containers/mixutil.h"
 
 // ----------------------------------------------------------------
-// xxx freeing contract
-// xxx return an lrec?
+// Makes a list with values pointing to the lrec's keys. slls_free() will
+// respect that and not corrupt the lrec. However, the slls values will be
+// invalid after the lrec is freed.
 
 slls_t* mlr_reference_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
@@ -23,8 +24,9 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 }
 
 // ----------------------------------------------------------------
-// xxx freeing contract.
-// xxx behavior on missing. doc, or make a second boolean flag.
+// Makes a list with values pointing into the lrec's values. slls_free() will
+// respect that and not corrupt the lrec. However, the slls values will be
+// invalid after the lrec is freed.
 
 slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
 	slls_t* pvalue_list = slls_alloc();
