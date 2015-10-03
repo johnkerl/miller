@@ -111,7 +111,7 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	NULL_OR_ERROR_OUT(val1);
 	mt_get_double_nullable(&val1);
 	NULL_OUT(val1);
-	if (val1.type != MT_DOUBLE)
+	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1);
@@ -142,14 +142,14 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	NULL_OR_ERROR_OUT(val1);
 	mt_get_double_nullable(&val1);
 	NULL_OUT(val1);
-	if (val1.type != MT_DOUBLE)
+	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	mt_get_double_nullable(&val2);
 	NULL_OUT(val2);
-	if (val2.type != MT_DOUBLE)
+	if (val2.type != MT_FLOAT)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1, &val2);
@@ -178,13 +178,13 @@ mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvst
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	ERROR_OUT(val1);
 	mt_get_double_nullable(&val1);
-	if (val1.type != MT_DOUBLE && val1.type != MT_NULL)
+	if (val1.type != MT_FLOAT && val1.type != MT_NULL)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	ERROR_OUT(val2);
 	mt_get_double_nullable(&val2);
-	if (val2.type != MT_DOUBLE && val2.type != MT_NULL)
+	if (val2.type != MT_FLOAT && val2.type != MT_NULL)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1, &val2);
@@ -243,10 +243,10 @@ mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type == MT_DOUBLE) {
+	if (val1.type == MT_FLOAT) {
 		;
 	} else if (val1.type == MT_INT) {
-		val1.type = MT_DOUBLE;
+		val1.type = MT_FLOAT;
 		val1.u.fltv = (double)val1.u.intv;
 	} else {
 		return MV_ERROR;
@@ -279,7 +279,7 @@ mv_t lrec_evaluator_s_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type == MT_INT) {
 		;
-	} else if (val1.type == MT_DOUBLE) {
+	} else if (val1.type == MT_FLOAT) {
 		val1.type = MT_INT;
 		val1.u.intv = (long long)val1.u.fltv;
 	} else {
@@ -620,7 +620,7 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	} else {
 		double fltv;
 		if (mlr_try_double_from_string(string, &fltv)) {
-			return (mv_t) {.type = MT_DOUBLE, .u.fltv = fltv};
+			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
 		} else {
 			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 		}
@@ -659,7 +659,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string) {
 
 	double fltv;
 	if (mlr_try_double_from_string(string, &fltv)) {
-		pstate->literal = (mv_t) {.type = MT_DOUBLE, .u.fltv = fltv};
+		pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
 		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
 	} else {
 		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
@@ -728,7 +728,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_PI_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_DOUBLE, .u.fltv = M_PI};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = M_PI};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -739,7 +739,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_E_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_DOUBLE, .u.fltv = M_E};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = M_E};
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_E() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1285,12 +1285,12 @@ static char * test3() {
     printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
     printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
 
-	mu_assert_lf(valp2.type     == MT_DOUBLE);
-	mu_assert_lf(valp4.type     == MT_DOUBLE);
-	mu_assert_lf(valpx.type     == MT_DOUBLE);
-	mu_assert_lf(valpx2.type    == MT_DOUBLE);
-	mu_assert_lf(valplogx.type  == MT_DOUBLE);
-	mu_assert_lf(valp2logx.type == MT_DOUBLE);
+	mu_assert_lf(valp2.type     == MT_FLOAT);
+	mu_assert_lf(valp4.type     == MT_FLOAT);
+	mu_assert_lf(valpx.type     == MT_FLOAT);
+	mu_assert_lf(valpx2.type    == MT_FLOAT);
+	mu_assert_lf(valplogx.type  == MT_FLOAT);
+	mu_assert_lf(valp2logx.type == MT_FLOAT);
 
 	mu_assert_lf(valp2.u.fltv     == 2.0);
 	mu_assert_lf(valp4.u.fltv     == 4.0);
@@ -1320,8 +1320,8 @@ static char * test3() {
     printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
     printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
 
-	mu_assert_lf(valp2.type     == MT_DOUBLE);
-	mu_assert_lf(valp4.type     == MT_DOUBLE);
+	mu_assert_lf(valp2.type     == MT_FLOAT);
+	mu_assert_lf(valp4.type     == MT_FLOAT);
 	mu_assert_lf(valpx.type     == MT_NULL);
 	mu_assert_lf(valpx2.type    == MT_NULL);
 	mu_assert_lf(valplogx.type  == MT_NULL);

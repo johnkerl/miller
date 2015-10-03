@@ -25,7 +25,7 @@ char* mt_describe_type(int type) {
 	case MT_NULL:   return "T_NULL";   break;
 	case MT_ERROR:  return "T_ERROR";  break;
 	case MT_BOOL:   return "T_BOOL";   break;
-	case MT_DOUBLE: return "T_DOUBLE"; break;
+	case MT_FLOAT:  return "T_FLOAT";  break;
 	case MT_INT:    return "T_INT";    break;
 	case MT_STRING: return "T_STRING"; break;
 	default:        return "???";      break;
@@ -46,7 +46,7 @@ char* mt_format_val(mv_t* pval) {
 	case MT_BOOL:
 		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
 		break;
-	case MT_DOUBLE:
+	case MT_FLOAT:
 		// xxx what is worst-case here ...
 		string = mlr_malloc_or_die(32);
 		sprintf(string, MLR_GLOBALS.ofmt, pval->u.fltv);
@@ -96,7 +96,7 @@ void mt_get_double_strict(mv_t* pval) {
 		return;
 	if (pval->type == MT_ERROR)
 		return;
-	if (pval->type == MT_DOUBLE)
+	if (pval->type == MT_FLOAT)
 		return;
 	if (pval->type == MT_STRING) {
 		double fltv;
@@ -104,11 +104,11 @@ void mt_get_double_strict(mv_t* pval) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0;
 		} else {
-			pval->type = MT_DOUBLE;
+			pval->type = MT_FLOAT;
 			pval->u.fltv = fltv;
 		}
 	} else if (pval->type == MT_INT) {
-		pval ->type = MT_DOUBLE;
+		pval ->type = MT_FLOAT;
 		pval->u.fltv = (double)pval->u.intv;
 	} else if (pval->type == MT_BOOL) {
 		pval->type = MT_ERROR;
@@ -126,7 +126,7 @@ void mt_get_double_nullable(mv_t* pval) {
 		return;
 	if (pval->type == MT_ERROR)
 		return;
-	if (pval->type == MT_DOUBLE)
+	if (pval->type == MT_FLOAT)
 		return;
 	if (pval->type == MT_STRING) {
 		double fltv;
@@ -137,11 +137,11 @@ void mt_get_double_nullable(mv_t* pval) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0;
 		} else {
-			pval->type = MT_DOUBLE;
+			pval->type = MT_FLOAT;
 			pval->u.fltv = fltv;
 		}
 	} else if (pval->type == MT_INT) {
-		pval ->type = MT_DOUBLE;
+		pval ->type = MT_FLOAT;
 		pval->u.fltv = (double)pval->u.intv;
 	} else if (pval->type == MT_BOOL) {
 		pval->type = MT_ERROR;
@@ -229,7 +229,7 @@ mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	ERROR_OUT(*pval1);
 	mt_get_double_nullable(pval1);
 	NULL_OUT(*pval1);
-	if (pval1->type != MT_DOUBLE)
+	if (pval1->type != MT_FLOAT)
 		return MV_ERROR;
 	time_t clock = (time_t) pval1->u.fltv;
 	struct tm tm;
@@ -463,7 +463,7 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.fltv = sec * sign};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = sec * sign};
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
@@ -510,7 +510,7 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_DOUBLE, .u.fltv = sec * sign};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = sec * sign};
 }
 
 // ----------------------------------------------------------------
@@ -523,7 +523,7 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t int_i_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.boolv ? 1 : 0}; }
-static mv_t int_i_d(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long long)round(pa->u.fltv)}; }
+static mv_t int_i_f(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = (long long)round(pa->u.fltv)}; }
 static mv_t int_i_i(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.intv}; }
 static mv_t int_i_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_INT };
@@ -538,7 +538,7 @@ static mv_unary_func_t* int_dispositions[MT_MAX] = {
     /*NULL*/   int_i_n,
     /*ERROR*/  int_i_e,
     /*BOOL*/   int_i_b,
-    /*DOUBLE*/ int_i_d,
+    /*FLOAT*/  int_i_f,
     /*INT*/    int_i_i,
     /*STRING*/ int_i_s,
 };
@@ -546,14 +546,13 @@ static mv_unary_func_t* int_dispositions[MT_MAX] = {
 mv_t i_x_int_func(mv_t* pval1) { return (int_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-// xxx i'm using double & long long but saying double & int. this is confusing & needs fixing.
-static mv_t float_f_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
-static mv_t float_f_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
-static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.boolv ? 1.0 : 0.0}; }
-static mv_t float_f_d(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.fltv}; }
-static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_DOUBLE, .u.fltv = pa->u.intv}; }
+static mv_t float_f_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
+static mv_t float_f_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
+static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .u.fltv = pa->u.boolv ? 1.0 : 0.0}; }
+static mv_t float_f_f(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .u.fltv = pa->u.fltv}; }
+static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .u.fltv = pa->u.intv}; }
 static mv_t float_f_s(mv_t* pa) {
-	mv_t retval = (mv_t) {.type = MT_DOUBLE };
+	mv_t retval = (mv_t) {.type = MT_FLOAT };
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
 	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.fltv))
@@ -565,7 +564,7 @@ static mv_unary_func_t* float_dispositions[MT_MAX] = {
     /*NULL*/   float_f_n,
     /*ERROR*/  float_f_e,
     /*BOOL*/   float_f_b,
-    /*DOUBLE*/ float_f_d,
+    /*FLOAT*/  float_f_f,
     /*INT*/    float_f_i,
     /*STRING*/ float_f_s,
 };
@@ -576,7 +575,7 @@ mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval
 static mv_t boolean_b_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t boolean_b_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t boolean_b_b(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = pa->u.boolv}; }
-static mv_t boolean_b_d(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.fltv == 0.0) ? FALSE : TRUE}; }
+static mv_t boolean_b_f(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.fltv == 0.0) ? FALSE : TRUE}; }
 static mv_t boolean_b_i(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = (pa->u.intv == 0LL) ? FALSE : TRUE}; }
 static mv_t boolean_b_s(mv_t* pa) { return (mv_t) {.type = MT_BOOL,
 		.u.boolv = (streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE
@@ -587,7 +586,7 @@ static mv_unary_func_t* boolean_dispositions[MT_MAX] = {
     /*NULL*/   boolean_b_n,
     /*ERROR*/  boolean_b_e,
     /*BOOL*/   boolean_b_b,
-    /*DOUBLE*/ boolean_b_d,
+    /*FLOAT*/  boolean_b_f,
     /*INT*/    boolean_b_i,
     /*STRING*/ boolean_b_s,
 };
@@ -598,7 +597,7 @@ mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(
 static mv_t string_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t string_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"true":"false")}; }
-static mv_t string_s_d(mv_t* pa) {
+static mv_t string_s_f(mv_t* pa) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)};
 }
 static mv_t string_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_string_from_ll(pa->u.intv)}; }
@@ -608,7 +607,7 @@ static mv_unary_func_t* string_dispositions[MT_MAX] = {
     /*NULL*/   string_s_n,
     /*ERROR*/  string_s_e,
     /*BOOL*/   string_s_b,
-    /*DOUBLE*/ string_s_d,
+    /*FLOAT*/  string_s_f,
     /*INT*/    string_s_i,
     /*STRING*/ string_s_s,
 };
@@ -619,7 +618,7 @@ mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pv
 static mv_t hexfmt_s_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,   .u.intv = 0}; }
 static mv_t hexfmt_s_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR,  .u.intv = 0}; }
 static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; }
-static mv_t hexfmt_s_d(mv_t* pa) {
+static mv_t hexfmt_s_f(mv_t* pa) {
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)};
 }
 static mv_t hexfmt_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .u.strv = mlr_alloc_hexfmt_from_ll(pa->u.intv)}; }
@@ -629,7 +628,7 @@ static mv_unary_func_t* hexfmt_dispositions[MT_MAX] = {
     /*NULL*/   hexfmt_s_n,
     /*ERROR*/  hexfmt_s_e,
     /*BOOL*/   hexfmt_s_b,
-    /*DOUBLE*/ hexfmt_s_d,
+    /*FLOAT*/  hexfmt_s_f,
     /*INT*/    hexfmt_s_i,
     /*STRING*/ hexfmt_s_s,
 };
@@ -652,7 +651,7 @@ static mv_binary_func_t* fmtnum_dispositions[MT_MAX] = {
     /*NULL*/   fmtnum_s_ns,
     /*ERROR*/  fmtnum_s_es,
     /*BOOL*/   fmtnum_s_bs,
-    /*DOUBLE*/ fmtnum_s_ds,
+    /*FLOAT*/  fmtnum_s_ds,
     /*INT*/    fmtnum_s_is,
     /*STRING*/ fmtnum_s_ss,
 };
@@ -773,61 +772,61 @@ static mv_t lt_b_ss(mv_t*pa, mv_t*pb) {return (mv_t){.type=MT_BOOL, .u.boolv=str
 static mv_t le_b_ss(mv_t*pa, mv_t*pb) {return (mv_t){.type=MT_BOOL, .u.boolv=strcmp(pa->u.strv, pb->u.strv) <= 0};}
 
 static mv_binary_func_t* eq_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, eq_b_ff, eq_b_fi, eq_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, eq_b_ff, eq_b_fi, eq_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, eq_b_if, eq_b_ii, eq_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, eq_b_sx, eq_b_sx, eq_b_ss},
 };
 
 static mv_binary_func_t* ne_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, ne_b_ff, ne_b_fi, ne_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, ne_b_ff, ne_b_fi, ne_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, ne_b_if, ne_b_ii, ne_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, ne_b_sx, ne_b_sx, ne_b_ss},
 };
 
 static mv_binary_func_t* gt_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, gt_b_ff, gt_b_fi, gt_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, gt_b_ff, gt_b_fi, gt_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, gt_b_if, gt_b_ii, gt_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, gt_b_sx, gt_b_sx, gt_b_ss},
 };
 
 static mv_binary_func_t* ge_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, ge_b_ff, ge_b_fi, ge_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, ge_b_ff, ge_b_fi, ge_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, ge_b_if, ge_b_ii, ge_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, ge_b_sx, ge_b_sx, ge_b_ss},
 };
 
 static mv_binary_func_t* lt_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, lt_b_ff, lt_b_fi, lt_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, lt_b_ff, lt_b_fi, lt_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, lt_b_if, lt_b_ii, lt_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, lt_b_sx, lt_b_sx, lt_b_ss},
 };
 
 static mv_binary_func_t* le_dispositions[MT_MAX][MT_MAX] = {
-    //         NULL      ERROR    BOOL     DOUBLE   INT      STRING
+    //         NULL      ERROR    BOOL     FLOAT   INT      STRING
     /*NULL*/   {op_n_xx, op_e_xx, op_e_xx, op_n_xx, op_n_xx, op_n_xx},
     /*ERROR*/  {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
     /*BOOL*/   {op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx, op_e_xx},
-    /*DOUBLE*/ {op_n_xx, op_e_xx, op_e_xx, le_b_ff, le_b_fi, le_b_xs},
+    /*FLOAT*/  {op_n_xx, op_e_xx, op_e_xx, le_b_ff, le_b_fi, le_b_xs},
     /*INT*/    {op_n_xx, op_e_xx, op_e_xx, le_b_if, le_b_ii, le_b_xs},
     /*STRING*/ {op_n_xx, op_e_xx, op_e_xx, le_b_sx, le_b_sx, le_b_ss},
 };
