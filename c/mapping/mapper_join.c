@@ -9,6 +9,17 @@
 #include "input/lrec_readers.h"
 #include "cli/argparse.h"
 
+// ----------------------------------------------------------------
+static void mapper_join_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
+
+mapper_setup_t mapper_join_setup = {
+	.verb = "join",
+	.pusage_func = mapper_join_usage,
+	.pparse_func = mapper_join_parse_cli,
+};
+
+// ----------------------------------------------------------------
 // Join options, if unspecified, default to respective main options.
 #define OPTION_UNSPECIFIED ((char)0xff)
 
@@ -435,10 +446,3 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_join_alloc(popts);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_join_setup = {
-	.verb = "join",
-	.pusage_func = mapper_join_usage,
-	.pparse_func = mapper_join_parse_cli,
-};
