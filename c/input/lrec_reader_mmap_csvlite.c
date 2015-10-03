@@ -318,7 +318,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 				return NULL;
 
 			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
-				if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+				if (*pe->value == 0) {
 					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 					exit(1);
@@ -360,7 +360,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 				return NULL;
 
 			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
-				if (*pe->value == 0) { // xxx to do: get file-name/line-number context in here.
+				if (*pe->value == 0) {
 					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 					exit(1);
