@@ -227,47 +227,60 @@ $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
    cat check count-distinct cut filter group-by group-like having-fields head
-   histogram join label put regularize rename reorder sort stats1 stats2 step tac tail top
-   uniq
+   histogram join label put regularize rename reorder sort stats1 stats2 step
+   tac tail top uniq
 Example: mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv
+Please use "mlr -h" or "mlr --help" to show this message.
+Please use "mlr --version" to show the software version.
 Please use "mlr {verb name} --help" for verb-specific help.
 Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh sqrt tan
-   tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub tolower toupper .
-   boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec sec2hms sec2dhms hms2sec
-   dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
+   expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh
+   sqrt tan tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub
+   tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
+   gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec
+   dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
 Data-format options, for input, output, or both:
-  --dkvp    --idkvp   --odkvp            Delimited key-value pairs, e.g "a=1,b=2" (default)
-  --nidx    --inidx   --onidx            Implicitly-integer-indexed fields (Unix-toolkit style)
-  --csv     --icsv    --ocsv             Comma-separated value (or tab-separated with --fs tab, etc.)
-  --pprint  --ipprint --opprint --right  Pretty-printed tabular (produces no output until all input is in)
-  --xtab    --ixtab   --oxtab            Pretty-printed vertical-tabular
+  --dkvp   --idkvp   --odkvp            Delimited key-value pairs, e.g "a=1,b=2"
+                                        (default)
+  --nidx   --inidx   --onidx            Implicitly-integer-indexed fields
+                                        (Unix-toolkit style)
+  --csv    --icsv    --ocsv             Comma-separated value (or tab-separated
+                                        with --fs tab, etc.)
+  --pprint --ipprint --opprint --right  Pretty-printed tabular (produces no
+                                        output until all input is in)
+  --xtab   --ixtab   --oxtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
 Separator options, for input, output, or both:
-  --rs      --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
-  --fs      --ifs     --ofs    --repifs  Field  separators, e.g. comma
-  --ps      --ips     --ops              Pair   separators, e.g. equals sign
+  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
+  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
+  --ps     --ips     --ops              Pair separators, e.g. equals sign
   Notes:
-  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats do key-value pairs appear juxtaposed.
-  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines; XTAB records are separated by
-    two or more consecutive IFS/OFS -- i.e. a blank line.
-  * OPS must be single-character for XTAB format, and OFS must be single-character for PPRINT format.
-    This is because they are used with repetition for alignment; multi-character separators
-    would make alignment impossible.
-  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle platform-native text data.
-    In particular, this means LF line-terminators by default on Linux/OSX.
-    You can use "--dkvp --rs crlf" for CRLF-terminated DKVP files, and so on.
-  * CSV is intended to handle RFC-4180-compliant data.
-    In particular, this means it uses CRLF line-terminators by default.
-    You can use "--csv --rs lf" for Linux-native CSV files.
+  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+    do key-value pairs appear juxtaposed.
+  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+    a blank line.
+  * OFS must be single-character for PPRINT format. This is because it is used
+    with repetition for alignment; multi-character separators would make
+    alignment impossible.
+  * OPS may be multi-character for XTAB format, in which case alignment is
+    disabled.
+  * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle
+    platform-native text data. In particular, this means LF line-terminators
+    by default on Linux/OSX. You can use "--dkvp --rs crlf" for
+    CRLF-terminated DKVP files, and so on.
+  * CSV is intended to handle RFC-4180-compliant data. In particular, this means
+    it uses CRLF line-terminators by default. You can use "--csv --rs lf" for
+    Linux-native CSV files.
   * You can specify separators in any of the following ways, shown by example:
-    - Type them out, quoting as necessary for shell escapes, e.g. "--fs '|' --ips :"
+    - Type them out, quoting as necessary for shell escapes, e.g.
+      "--fs '|' --ips :"
     - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
     - To avoid backslashing, you can use any of the following names:
       cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
@@ -281,19 +294,23 @@ Separator options, for input, output, or both:
       pprint       \n       space    (N/A)
 Double-quoting for CSV output:
   --quote-all        Wrap all fields in double quotes
-  --quote-none       Do not wrap any fields in double quotes, even if they have OFS or ORS in them
-  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS in them (default)
-  --quote-numeric    Wrap fields in double quotes only if they have numbers in them
+  --quote-none       Do not wrap any fields in double quotes, even if they have
+                     OFS or ORS in them
+  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+                     in them (default)
+  --quote-numeric    Wrap fields in double quotes only if they have numbers
+                     in them
 Numerical formatting:
-  --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for double-precision.
-                     Applies to verbs which compute new values, e.g. put, stats1, stats2.
-                     See also the fmtnum function within mlr put (mlr --help-all-functions).
+  --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for
+                     double-precision. Applies to verbs which compute new
+                     values, e.g. put, stats1, stats2. See also the fmtnum
+                     function within mlr put (mlr --help-all-functions).
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-Please see http://johnkerl.org/miller/doc and/or http://github.com/johnkerl/miller for more information.
-This is Miller version &gt;= 2.2.1.
+For more information please see http://johnkerl.org/miller/doc and/or
+http://github.com/johnkerl/miller. This is Miller version &gt;= 2.2.1.
 </pre>
 </div>
 <p/>
@@ -309,7 +326,8 @@ Flags:
   -nf {comma-separated field names}  Numerical ascending; nulls sort last
   -r  {comma-separated field names}  Lexical descending
   -nr {comma-separated field names}  Numerical descending; nulls sort first
-Sorts records primarily by the first specified field, secondarily by the second field, and so on.
+Sorts records primarily by the first specified field, secondarily by the second
+field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
@@ -616,7 +634,8 @@ Useful for doing a well-formatted check on input data.
 $ mlr count-distinct --help
 Usage: mlr count-distinct [options]
 -f {a,b,c}   Field names for distinct count.
-Prints number of records having distinct values for specified field names. Same as uniq -c.
+Prints number of records having distinct values for specified field names.
+Same as uniq -c.
 </pre>
 </div>
 <p/>
@@ -730,16 +749,17 @@ $ mlr filter --help
 Usage: mlr filter [-v] {expression}
 Prints records for which {expression} evaluates to true.
 With -v, first prints the AST (abstract syntax tree) for the expression, which
-gives full transparency on the precedence and associativity rules of Miller's grammar.
-Please use a dollar sign for field names and double-quotes for string literals.
-Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
+gives full transparency on the precedence and associativity rules of Miller's.
+grammar. Please use a dollar sign for field names and double-quotes for string
+literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
   mlr filter 'FNR == 2          (second record in each file)'
   mlr filter 'urand() &lt; 0.001'  (subsampling)
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
-Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
+Please see http://johnkerl.org/miller/doc/reference.html for more information
+including function list.
 </pre>
 </div>
 <p/>
@@ -1085,23 +1105,31 @@ bin_lo   bin_hi   x_count x2_count x3_count
 <pre>
 $ mlr join --help
 Usage: mlr join [options]
-Joins records from specified left file name with records from all file names at the end of the Miller argument list.
-Functionality is essentially the same as the system "join" command, but for record streams.
+Joins records from specified left file name with records from all file names
+at the end of the Miller argument list.
+Functionality is essentially the same as the system "join" command, but for
+record streams.
 Options:
   -f {left file name}
   -j {a,b,c}   Comma-separated join-field names for output
-  -l {a,b,c}   Comma-separated join-field names for left input file; defaults to -j values if omitted.
-  -r {a,b,c}   Comma-separated join-field names for right input file(s); defaults to -j values if omitted.
-  --lp {text}  Additional prefix for non-join output field names from the left file
-  --rp {text}  Additional prefix for non-join output field names from the right file(s)
+  -l {a,b,c}   Comma-separated join-field names for left input file;
+               defaults to -j values if omitted.
+  -r {a,b,c}   Comma-separated join-field names for right input file(s);
+               defaults to -j values if omitted.
+  --lp {text}  Additional prefix for non-join output field names from
+               the left file
+  --rp {text}  Additional prefix for non-join output field names from
+               the right file(s)
   --np         Do not emit paired records
   --ul         Emit unpaired records from the left file
   --ur         Emit unpaired records from the right file(s)
-  -u           Enable unsorted input. In this case, the entire left file will be loaded into memory.
-               Without -u, records must be sorted lexically by their join-field names, else not all
-               records will be paired.
-File-format options default to those for the right file names on the Miller argument list, but may be overridden
-for the left file as follows. Please see the main "mlr --help" for more information on syntax for these arguments.
+  -u           Enable unsorted input. In this case, the entire left file will
+               be loaded into memory. Without -u, records must be sorted
+               lexically by their join-field names, else not all records will
+               be paired.
+File-format options default to those for the right file names on the Miller
+argument list, but may be overridden for the left file as follows. Please see
+the main "mlr --help" for more information on syntax for these arguments.
   -i {one of csv,dkvp,nidx,pprint,xtab}
   --irs {record-separator character}
   --ifs {field-separator character}
@@ -1110,7 +1138,8 @@ for the left file as follows. Please see the main "mlr --help" for more informat
   --repips
   --use-mmap
   --no-mmap
-Please see http://johnkerl.org/miller/doc/reference.html for more information including examples.
+Please see http://johnkerl.org/miller/doc/reference.html for more information
+including examples.
 </pre>
 </div>
 <p/>
@@ -1296,6 +1325,9 @@ Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
 names.) Particularly useful with --inidx, to give useful names to otherwise
 integer-indexed fields.
+Examples:
+  "echo 'a b c d' | mlr --inidx --odkvp cat"       gives "1=a,2=b,3=c,4=d"
+  "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
 </pre>
 </div>
 <p/>
@@ -1333,16 +1365,17 @@ $ mlr put --help
 Usage: mlr put [-v] {expression}
 Adds/updates specified field(s).
 With -v, first prints the AST (abstract syntax tree) for the expression, which
-gives full transparency on the precedence and associativity rules of Miller's grammar.
-Please use a dollar sign for field names and double-quotes for string literals.
-Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
+gives full transparency on the precedence and associativity rules of Miller's
+grammar. Please use a dollar sign for field names and double-quotes for string
+literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Multiple assignments may be separated with a semicolon.
 Examples:
   mlr put '$y = log10($x); $z = sqrt($y)'
   mlr put '$filename = FILENAME'
   mlr put '$colored_shape = $color . "_" . $shape'
   mlr put '$y = cos($theta); $z = atan2($y, $x)'
-Please see http://johnkerl.org/miller/doc/reference.html for more information including function list.
+Please see http://johnkerl.org/miller/doc/reference.html for more information
+including function list.
 </pre>
 </div>
 <p/>
@@ -1422,8 +1455,9 @@ mlr --opprint put '
 <pre>
 $ mlr regularize --help
 Usage: mlr regularize
-For records seen earlier in the data stream with same field names in a different order,
-outputs them with field names in the previously encountered order.
+For records seen earlier in the data stream with same field names in
+a different order, outputs them with field names in the previously
+encountered order.
 Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
 output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
 </pre>
@@ -1524,9 +1558,11 @@ See also <a href="#label"><tt>label</tt></a>.
 $ mlr reorder --help
 Usage: mlr reorder [options]
 -f {a,b,c}   Field names to reorder.
--e           Put specified field names at record end: default is to put at record start.
-Example: mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
-Example: mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+-e           Put specified field names at record end: default is to put
+             them at record start.
+Examples:
+mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
+mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
 </pre>
 </div>
 <p/>
@@ -1593,7 +1629,8 @@ Flags:
   -nf {comma-separated field names}  Numerical ascending; nulls sort last
   -r  {comma-separated field names}  Lexical descending
   -nr {comma-separated field names}  Numerical descending; nulls sort first
-Sorts records primarily by the first specified field, secondarily by the second field, and so on.
+Sorts records primarily by the first specified field, secondarily by the second
+field, and so on.
 Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
@@ -1679,8 +1716,17 @@ upsec              color  count
 $ mlr stats1 --help
 Usage: mlr stats1 [options]
 Options:
--a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or one or more of
-                    count mode sum mean stddev var meaneb min max
+-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
+                    one or more of:
+  count   Count instances of fields
+  mode    Find most-frequently-occurring values for fields; first-found wins tie
+  sum     Compute sums of specified fields
+  mean    Compute averages (sample means) of specified fields
+  stddev  Compute sample standard deviation of specified fields
+  var     Compute sample variance of specified fields
+  meaneb  Estimate error bars for averages (assuming no sample autocorrelation)
+  min     Compute minimum values of specified fields
+  max     Compute maximum values of specified fieldsx
 -f {a,b,c}          Value-field names on which to compute statistics
 -g {d,e,f}          Optional group-by-field names
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
@@ -1688,9 +1734,10 @@ Example: mlr stats1 -a count,mode -f size
 Example: mlr stats1 -a count,mode -f size -g shape
 Notes:
 * p50 is a synonym for median.
-* min and max output the same results as p0 and p100, respectively, but use less memory.
-* count and mode allow text input; the rest require numeric input. In particular, 1 and 1.0
-  are distinct text for count and mode.
+* min and max output the same results as p0 and p100, respectively, but use
+  less memory.
+* count and mode allow text input; the rest require numeric input.
+  In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
 </pre>
 </div>
@@ -1787,13 +1834,17 @@ circle   red
 <pre>
 $ mlr stats2 --help
 Usage: mlr stats2 [options]
--a {linreg-ols,corr,...}  Names of accumulators: one or more of
-                          linreg-pca linreg-ols r2 corr cov covx
-                          r2 is a quality metric for linreg-ols; linrec-pca outputs its own quality metric.
--f {a,b,c,d}              Value-field name-pairs on which to compute statistics.
-                          There must be an even number of names.
--g {e,f,g}                Optional group-by-field names.
--v                        Print additional output for linreg-pca.
+-a {linreg-ols,corr,...}  Names of accumulators: one or more of:
+  linreg-pca   Linear regression using principal component analysis
+  linreg-ols   Linear regression using ordinary least squares
+  r2           Quality metric for linreg-ols (linreg-pca emits its own)
+  corr         Sample correlation
+  cov          Sample covariance
+  covx         Sample-covariance matrix
+-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.
+              There must be an even number of names.
+-g {e,f,g}    Optional group-by-field names.
+-v            Print additional output for linreg-pca.
 Example: mlr stats2 -a linreg-pca -f x,y
 Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
 Example: mlr stats2 -a corr -f x,y
@@ -1939,11 +1990,15 @@ donesec                 25.108529
 <pre>
 $ mlr step --help
 Usage: mlr step [options]
--a {delta,rsum,...}   Names of steppers: one or more of
-                      delta ratio rsum counter
+-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
+  delta    Compute differences in field(s) between successive records
+  ratio    Compute ratios in field(s) between successive records
+  rsum     Compute running sums of field(s) between successive records
+  counter  Count instances of field(s) between successive records
 -f {a,b,c}            Value-field names on which to compute statistics
--g {d,e,f}            Group-by-field names
-Computes values dependent on the previous record, optionally grouped by category.
+-g {d,e,f}            Optional group-by-field names
+Computes values dependent on the previous record, optionally grouped
+by category.
 </pre>
 </div>
 <p/>
@@ -1959,7 +2014,7 @@ which are functions of fields from previous records. Rsum is short for <i>runnin
 <pre>
 $ mlr --opprint step -a delta,rsum,counter -f x data/medium | head -15
 a   b   i     x                      y                      x_delta   x_rsum      x_counter
-pan pan 1     0.3467901443380824     0.7268028627434533     0.346790  0.346790    1
+pan pan 1     0.3467901443380824     0.7268028627434533     0.000000  0.346790    1
 eks pan 2     0.7586799647899636     0.5221511083334797     0.411890  1.105470    2
 wye wye 3     0.20460330576630303    0.33831852551664776    -0.554077 1.310073    3
 eks wye 4     0.38139939387114097    0.13418874328430463    0.176796  1.691473    4
@@ -1982,15 +2037,15 @@ eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  6.709213  
 <pre>
 $ mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15
 a   b   i     x                      y                      x_delta   x_rsum      x_counter
-pan pan 1     0.3467901443380824     0.7268028627434533     0.346790  0.346790    1
-eks pan 2     0.7586799647899636     0.5221511083334797     0.758680  0.758680    1
-wye wye 3     0.20460330576630303    0.33831852551664776    0.204603  0.204603    1
+pan pan 1     0.3467901443380824     0.7268028627434533     0.000000  0.346790    1
+eks pan 2     0.7586799647899636     0.5221511083334797     0.000000  0.758680    1
+wye wye 3     0.20460330576630303    0.33831852551664776    0.000000  0.204603    1
 eks wye 4     0.38139939387114097    0.13418874328430463    -0.377281 1.140079    2
 wye pan 5     0.5732889198020006     0.8636244699032729     0.368686  0.777892    2
-zee pan 6     0.5271261600918548     0.49322128674835697    0.527126  0.527126    1
+zee pan 6     0.5271261600918548     0.49322128674835697    0.000000  0.527126    1
 eks zee 7     0.6117840605678454     0.1878849191181694     0.230385  1.751863    3
 zee wye 8     0.5985540091064224     0.976181385699006      0.071428  1.125680    2
-hat wye 9     0.03144187646093577    0.7495507603507059     0.031442  0.031442    1
+hat wye 9     0.03144187646093577    0.7495507603507059     0.000000  0.031442    1
 pan wye 10    0.5026260055412137     0.9526183602969864     0.155836  0.849416    2
 pan pan 11    0.7930488423451967     0.6505816637259333     0.290423  1.642465    3
 zee pan 12    0.3676141320555616     0.23614420670296965    -0.230940 1.493294    3
@@ -2144,7 +2199,8 @@ Usage: mlr top [options]
 -a            Print all fields for top-value records; default is
               to print only value and group-by fields.
 --min         Print top smallest values; default is top largest values
-Prints the n records with smallest/largest values at specified fields, optionally by category.
+Prints the n records with smallest/largest values at specified fields,
+optionally by category.
 </pre>
 </div>
 <p/>
@@ -2197,7 +2253,8 @@ $ mlr uniq --help
 Usage: mlr uniq [options]
 -g {d,e,f}    Group-by-field names for uniq counts
 -c            Show repeat counts in addition to unique values
-Prints distinct values for specified field names. With -c, same as count-distinct.
+Prints distinct values for specified field names. With -c, same as
+count-distinct.
 </pre>
 </div>
 <p/>
