@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h> // for tolower(), toupper()
-#include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
+#include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "mapping/lrec_evaluators.h"
@@ -1091,15 +1091,15 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return lrec_evaluator_alloc_from_context_variable(pnode->text);
 		} else {
-			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-				__FILE__, __LINE__);
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		}
 	} else { // operator/function
 		if ((pnode->type != MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME)
 		&& (pnode->type != MLR_DSL_AST_NODE_TYPE_OPERATOR)) {
-			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-				__FILE__, __LINE__);
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		}
 		char* func_name = pnode->text;

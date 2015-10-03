@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmslv.h"
 
@@ -126,8 +127,8 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-		__FILE__, __LINE__);
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
 
@@ -176,8 +177,8 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
 	}
 	// This one is to appease a compiler warning about control reaching the end
 	// of a non-void function
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-		__FILE__, __LINE__);
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
 
@@ -191,7 +192,8 @@ void* lhmslv_get(lhmslv_t* pmap, slls_t* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n",
+			MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }

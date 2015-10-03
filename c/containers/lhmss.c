@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmss.h"
 
@@ -127,8 +128,8 @@ static int lhmss_find_index_for_key(lhmss_t* pmap, char* key) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-		__FILE__, __LINE__);
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
 

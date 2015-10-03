@@ -191,7 +191,7 @@ double invqnorm(double x) {
 		if (err < INVQNORM_TOL)
 			break;
 		if (niter > INVQNORM_MAXITER) {
-			fprintf(stderr, "%s: coding error: max iterations %d exceeded in invqnorm.\n",
+			fprintf(stderr, "%s: internal coding error: max iterations %d exceeded in invqnorm.\n",
 				MLR_GLOBALS.argv0, INVQNORM_MAXITER);
 			exit(1);
 		}

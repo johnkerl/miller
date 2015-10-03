@@ -23,8 +23,6 @@ typedef struct _lrec_writer_csv_state_t {
 } lrec_writer_csv_state_t;
 
 // ----------------------------------------------------------------
-// xxx cmt mem-mgmt
-
 static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
@@ -67,7 +65,8 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	fputs(ors, output_stream);
 	pstate->onr++;
 
-	lrec_free(prec); // xxx cmt mem-mgmt
+	// See ../README.md for memory-management conventions
+	lrec_free(prec);
 }
 
 static void lrec_writer_csv_free(void* pvstate) {

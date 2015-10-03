@@ -127,7 +127,7 @@ static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+	fprintf(stderr, "Miller: internal coding error detected in file %s at line %d.\n",
 		__FILE__, __LINE__);
 	exit(1);
 }
@@ -178,7 +178,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 	}
 	// This one is to appease a compiler warning about control reaching the end
 	// of a non-void function
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+	fprintf(stderr, "Miller: internal coding error detected in file %s at line %d.\n",
 		__FILE__, __LINE__);
 	exit(1);
 }

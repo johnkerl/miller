@@ -1,3 +1,4 @@
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -52,12 +53,12 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 
 		if ((past->type != MLR_DSL_AST_NODE_TYPE_OPERATOR) || !streq(past->text, "=")) {
 			fprintf(stderr,
-				"Expected assignment-rooted AST; got operator \"%s\" with node type %s.\n",
-					past->text, mlr_dsl_ast_node_describe_type(past->type));
+				"%s: expected assignment-rooted AST; got operator \"%s\" with node type %s.\n",
+					MLR_GLOBALS.argv0, past->text, mlr_dsl_ast_node_describe_type(past->type));
 			return NULL;
 		} else if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
-			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-				__FILE__, __LINE__);
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		}
 
@@ -65,12 +66,12 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvdata;
 
 		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
-			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-				__FILE__, __LINE__);
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		} else if (pleft->pchildren != NULL) {
-			fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-				__FILE__, __LINE__);
+			fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		}
 

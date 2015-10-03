@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmsv.h"
 
@@ -112,7 +113,8 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.\n");
+				"%s: internal coding error: table full even after enlargement.\n",
+				MLR_GLOBALS.argv0);
 			exit(1);
 		}
 
@@ -120,8 +122,8 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
-		__FILE__, __LINE__);
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
 

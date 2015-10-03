@@ -150,7 +150,7 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 			pdef->pval = pplist;
 		} else {
 			ok = FALSE;
-			fprintf(stderr, "argparse.c: coding error: flag-def type %x not recognized.\n", pdef->type);
+			fprintf(stderr, "argparse.c: internal coding error: flag-def type %x not recognized.\n", pdef->type);
 			fprintf(stderr, "\n");
 			break;
 		}

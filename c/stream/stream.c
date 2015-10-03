@@ -19,11 +19,16 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 	FILE* output_stream);
 
 // ----------------------------------------------------------------
-// xxx assert pmapper_list non-empty ...
 int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
 	lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
+
+	if (pmapper_list->length < 1) { // Should not have been allowed by the CLI parser.
+		fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
 	int ok = 1;
@@ -98,7 +103,7 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 	sllv_t* outrecs = pmapper->pprocess_func(pinrec, pctx, pmapper->pvstate);
 	if (pmapper_list_head->pnext == NULL) {
 		return outrecs;
-	} else if (outrecs == NULL) { // xxx cmt
+	} else if (outrecs == NULL) { // end of input stream
 		return NULL;
 	} else {
 		sllv_t* nextrecs = sllv_alloc();

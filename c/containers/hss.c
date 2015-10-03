@@ -92,7 +92,7 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 		// continue looking.
 		if (++num_tries >= pset->array_length) {
 			fprintf(stderr,
-				"Miller: coding error: table full even after enlargement.\n");
+				"Miller: internal coding error: table full even after enlargement.\n");
 			exit(1);
 		}
 
@@ -100,7 +100,7 @@ static int hss_find_index_for_key(hss_t* pset, char* key) {
 		if (++index >= pset->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "Miller: coding error detected in file %s at line %d.\n",
+	fprintf(stderr, "Miller: internal coding error detected in file %s at line %d.\n",
 		__FILE__, __LINE__);
 	exit(1);
 }
