@@ -150,10 +150,10 @@ static char* test_lrec_csv_api() {
 	header_keeper_t* pheader_keeper = header_keeper_alloc(hdr_line, hdr_fields);
 
 	char* data_line_1 = mlr_strdup_or_die("2,3,4,5");
-	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, data_line_1, ',', FALSE);
+	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999, data_line_1, ',', FALSE);
 
 	char* data_line_2 = mlr_strdup_or_die("6,7,8,9");
-	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, data_line_2, ',', FALSE);
+	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999, data_line_2, ',', FALSE);
 
 	mu_assert_lf(prec_1->field_count == 4);
 	mu_assert_lf(prec_2->field_count == 4);

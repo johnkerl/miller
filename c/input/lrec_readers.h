@@ -37,10 +37,10 @@ slls_t* split_csv_header_line(char* line, char ifs, int allow_repeat_ifs);
 
 slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_repeat_ifs);
 slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, int allow_repeat_ifs);
-lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* data_line,
-	char ifs, int allow_repeat_ifs);
-lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* data_line,
-	char* ifs, int ifslen, int allow_repeat_ifs);
+lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char ifs, int allow_repeat_ifs);
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs);
 
 lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allow_repeat_ips);
 lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips);

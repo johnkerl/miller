@@ -119,9 +119,9 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		} else {
 			pstate->ifnr++;
 			return (pstate->ifslen == 1)
-				?  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, line,
+				?  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs[0], pstate->allow_repeat_ifs)
-				:  lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, line,
+				:  lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 		}
 	}
@@ -170,8 +170,8 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* data_line, char ifs,
-	int allow_repeat_ifs)
+lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char ifs, int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* p = data_line;
@@ -183,14 +183,14 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 	char* key   = NULL;
 	char* value = p;
 
-	// xxx needs pe-non-null (hdr-empty) check:
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 
-			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
-				fprintf(stderr, "Header-data length mismatch!\n");
+			if (pe == NULL) {
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, filename, ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -210,13 +210,15 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, filename, ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
 		if (pe->pnext != NULL) {
-			fprintf(stderr, "Header-data length mismatch!\n");
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, filename, ilno);
 			exit(1);
 		}
 	}
@@ -224,8 +226,8 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 	return prec;
 }
 
-lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* data_line,
-	char* ifs, int ifslen, int allow_repeat_ifs)
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* p = data_line;
@@ -244,7 +246,8 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 			*p = 0;
 
 			if (pe == NULL) { // xxx to do: get file-name/line-number context in here
-				fprintf(stderr, "Header-data length mismatch!\n");
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, filename, ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -264,13 +267,15 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, filename, ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
 		if (pe->pnext != NULL) {
-			fprintf(stderr, "Header-data length mismatch!\n");
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, filename, ilno);
 			exit(1);
 		}
 	}

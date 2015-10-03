@@ -40,10 +40,6 @@ typedef struct _lrec_reader_mmap_csvlite_state_t {
 //            3,4,5,6               3,4,5
 
 // ----------------------------------------------------------------
-// xxx needs abend on null lhs.
-//
-// etc.
-
 static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate)
 {
@@ -156,7 +152,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csvlite_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -189,9 +185,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			break;
 		} else if (*p == ifs) {
 			if (pe == NULL) {
-				// xxx to do: get file-name/line-number context in here.
-				// xxx to do: print what the lengths are.
-				fprintf(stderr, "Header-data length mismatch!\n");
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
 
@@ -216,13 +211,15 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
 		if (pe->pnext != NULL) {
-			fprintf(stderr, "Header-data length mismatch!\n");
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 			exit(1);
 		}
 	}
@@ -231,7 +228,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 }
 
 static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csvlite_state_t* pstate, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -266,9 +263,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			if (pe == NULL) {
-				// xxx to do: get file-name/line-number context in here.
-				// xxx to do: print what the lengths are.
-				fprintf(stderr, "Header-data length mismatch!\n");
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
 
@@ -293,13 +289,15 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
-		fprintf(stderr, "Header-data length mismatch!\n");
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put_no_free(prec, key, value);
 		if (pe->pnext != NULL) {
-			fprintf(stderr, "Header-data length mismatch!\n");
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 			exit(1);
 		}
 	}
@@ -338,7 +336,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate,
+		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate, pctx,
 			pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
@@ -380,8 +378,8 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_multi_seps(phandle, pstate, pstate->pheader_keeper,
-			&end_of_stanza);
+		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_multi_seps(phandle, pstate, pctx,
+			pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
