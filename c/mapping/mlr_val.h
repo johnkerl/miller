@@ -57,7 +57,7 @@ extern mv_t MV_ERROR;
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);
-char* mt_format_val(mv_t* pval); // xxx cmt mem-mgt
+char* mt_format_val(mv_t* pval); // For debug only; the caller should free the return value
 char* mt_describe_val(mv_t val);
 // xxx explain why one is void & the other isn't
 int  mt_get_boolean_strict(mv_t* pval);

@@ -32,10 +32,8 @@ char* mt_describe_type(int type) {
 	}
 }
 
-// xxx cmt mem-mgt
-// xxx put "alloc" in the name
+// For debug only; the caller should free the return value
 char* mt_format_val(mv_t* pval) {
-	char* string = NULL;
 	switch(pval->type) {
 	case MT_NULL:
 		return mlr_strdup_or_die("");
@@ -47,16 +45,10 @@ char* mt_format_val(mv_t* pval) {
 		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
 		break;
 	case MT_FLOAT:
-		// xxx what is worst-case here ...
-		string = mlr_malloc_or_die(32);
-		sprintf(string, MLR_GLOBALS.ofmt, pval->u.fltv);
-		return string;
+		return mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
 		break;
 	case MT_INT:
-		// log10(2**64) is < 20 so this is plenty.
-		string = mlr_malloc_or_die(32);
-		sprintf(string, "%lld", pval->u.intv);
-		return string;
+		return mlr_alloc_string_from_ll(pval->u.intv);
 		break;
 	case MT_STRING:
 		return mlr_strdup_or_die(pval->u.strv);

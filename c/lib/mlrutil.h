@@ -77,7 +77,7 @@ static inline char * mlr_strdup_or_die(const char *s1) {
 	return s2;
 }
 
-// xxx cmt mem mgt
+// The caller should free the return values from each of these.
 char* mlr_alloc_string_from_double(double value, char* fmt);
 char* mlr_alloc_string_from_ull(unsigned long long value);
 char* mlr_alloc_string_from_ll(long long value);

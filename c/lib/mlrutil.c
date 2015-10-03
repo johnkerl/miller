@@ -76,8 +76,8 @@ void* mlr_realloc_or_die(void *optr, size_t size) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt mem mgt
-// xxx use stack buf & avoid double calls to the formatter
+// The caller should free the return value from each of these.
+
 char* mlr_alloc_string_from_double(double value, char* fmt) {
 	int n = snprintf(NULL, 0, fmt, value);
 	char* string = mlr_malloc_or_die(n+1);
