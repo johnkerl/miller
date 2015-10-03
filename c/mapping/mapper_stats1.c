@@ -34,6 +34,14 @@ typedef struct _acc_t {
 typedef acc_t* acc_alloc_func_t();
 
 // ----------------------------------------------------------------
+typedef struct _mapper_stats1_state_t {
+	slls_t* paccumulator_names;
+	slls_t* pvalue_field_names;
+	slls_t* pgroup_by_field_names;
+	lhmslv_t* groups;
+} mapper_stats1_state_t;
+
+// ----------------------------------------------------------------
 typedef struct _acc_count_state_t {
 	unsigned long long count;
 } acc_count_state_t;
@@ -58,6 +66,24 @@ static acc_t* acc_count_alloc() {
 	pacc->pemit_func    = acc_count_emit;
 	return pacc;
 }
+
+// ----------------------------------------------------------------
+static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+static void mapper_stats1_free(void* pvstate);
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
+static void mapper_stats1_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_stats1_setup = {
+	.verb        = "stats1",
+	.pusage_func = mapper_stats1_usage,
+	.pparse_func = mapper_stats1_parse_cli
+};
 
 // ----------------------------------------------------------------
 typedef struct _acc_mode_state_t {
@@ -342,15 +368,6 @@ static acc_t* make_acc(char* acc_name) {
 			return acc_lookup_table[i].pnew_func();
 	return NULL;
 }
-
-// ================================================================
-typedef struct _mapper_stats1_state_t {
-	slls_t* paccumulator_names;
-	slls_t* pvalue_field_names;
-	slls_t* pgroup_by_field_names;
-
-	lhmslv_t* groups;
-} mapper_stats1_state_t;
 
 // ================================================================
 // Given: accumulate count,sum on values x,y group by a,b.
@@ -642,10 +659,3 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_stats1_setup = {
-	.verb        = "stats1",
-	.pusage_func = mapper_stats1_usage,
-	.pparse_func = mapper_stats1_parse_cli
-};

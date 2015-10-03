@@ -30,7 +30,34 @@ typedef struct _stats2_t {
 	stats2_emit_func_t*   pemit_func;
 } stats2_t;
 
+typedef struct _mapper_stats2_state_t {
+	slls_t* paccumulator_names;
+	slls_t* pvalue_field_name_pairs;
+	slls_t* pgroup_by_field_names;
+
+	lhmslv_t* groups;
+	int     do_verbose;
+} mapper_stats2_state_t;
+
 typedef stats2_t* stats2_alloc_func_t(int do_verbose);
+
+static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
+static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
+static void      mapper_stats2_free(void* pvstate);
+static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
+	slls_t* pgroup_by_field_names, int do_verbose);
+static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_stats2_setup = {
+	.verb = "stats2",
+	.pusage_func = mapper_stats2_usage,
+	.pparse_func = mapper_stats2_parse_cli
+};
 
 // ----------------------------------------------------------------
 typedef struct _stats2_linreg_ols_state_t {
@@ -302,8 +329,6 @@ static stats2_lookup_t stats2_lookup_table[] = {
 	{"covx",       stats2_covx_alloc,       "Sample-covariance matrix"},
 };
 static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
-	//fprintf(o, "              r2 is a quality metric for linreg-ols; linrec-pca outputs its\n");
-	//fprintf(o, "              own quality metric.\n");
 
 static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
 	for (int i = 0; i < stats2_lookup_table_length; i++)
@@ -311,16 +336,6 @@ static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
 			return stats2_lookup_table[i].pnew_func(do_verbose);
 	return NULL;
 }
-
-// ================================================================
-typedef struct _mapper_stats2_state_t {
-	slls_t* paccumulator_names;
-	slls_t* pvalue_field_name_pairs;
-	slls_t* pgroup_by_field_names;
-
-	lhmslv_t* groups;
-	int     do_verbose;
-} mapper_stats2_state_t;
 
 // ================================================================
 // Given: accumulate corr,cov on values x,y group by a,b.
@@ -355,9 +370,6 @@ typedef struct _mapper_stats2_state_t {
 // ================================================================
 
 // ----------------------------------------------------------------
-static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
-static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate);
-
 static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
@@ -540,10 +552,3 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 
 	return mapper_stats2_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names, do_verbose);
 }
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_stats2_setup = {
-	.verb = "stats2",
-	.pusage_func = mapper_stats2_usage,
-	.pparse_func = mapper_stats2_parse_cli
-};
