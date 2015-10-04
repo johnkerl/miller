@@ -33,7 +33,6 @@ typedef struct _acc_t {
 
 typedef acc_t* acc_alloc_func_t();
 
-// ----------------------------------------------------------------
 typedef struct _mapper_stats1_state_t {
 	slls_t* paccumulator_names;
 	slls_t* pvalue_field_names;
@@ -41,10 +40,138 @@ typedef struct _mapper_stats1_state_t {
 	lhmslv_t* groups;
 } mapper_stats1_state_t;
 
-// ----------------------------------------------------------------
 typedef struct _acc_count_state_t {
 	unsigned long long count;
 } acc_count_state_t;
+
+// ----------------------------------------------------------------
+static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
+static void mapper_stats1_free(void* pvstate);
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
+static void mapper_stats1_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
+
+static acc_t* acc_count_alloc();
+static acc_t* acc_mode_alloc();
+static acc_t* acc_sum_alloc();
+static acc_t* acc_mean_alloc();
+static acc_t* acc_stddev_var_meaneb_alloc(int do_which);
+static acc_t* acc_stddev_alloc();
+static acc_t* acc_var_alloc();
+static acc_t* acc_meaneb_alloc();
+static acc_t* acc_min_alloc();
+static acc_t* acc_max_alloc();
+static acc_t* acc_percentile_alloc();
+
+static acc_t* make_acc(char* acc_name);
+
+// ----------------------------------------------------------------
+// Lookups for all but percentiles, which are a special case.
+typedef struct _acc_lookup_t {
+	char* name;
+	acc_alloc_func_t* pnew_func;
+	char* desc;
+} acc_lookup_t;
+static acc_lookup_t acc_lookup_table[] = {
+	{"count",  acc_count_alloc,  "Count instances of fields"},
+	{"mode",   acc_mode_alloc,   "Find most-frequently-occurring values for fields; first-found wins tie"},
+	{"sum",    acc_sum_alloc,    "Compute sums of specified fields"},
+	{"mean",   acc_mean_alloc,   "Compute averages (sample means) of specified fields"},
+	{"stddev", acc_stddev_alloc, "Compute sample standard deviation of specified fields"},
+	{"var",    acc_var_alloc,    "Compute sample variance of specified fields"},
+	{"meaneb", acc_meaneb_alloc, "Estimate error bars for averages (assuming no sample autocorrelation)"},
+	{"min",    acc_min_alloc,    "Compute minimum values of specified fields"},
+	{"max",    acc_max_alloc,    "Compute maximum values of specified fieldsx"},
+};
+static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
+
+// ----------------------------------------------------------------
+mapper_setup_t mapper_stats1_setup = {
+	.verb        = "stats1",
+	.pusage_func = mapper_stats1_usage,
+	.pparse_func = mapper_stats1_parse_cli
+};
+
+// ----------------------------------------------------------------
+static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Options:\n");
+	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
+	fprintf(o, "                    one or more of:\n");
+	for (int i = 0; i < acc_lookup_table_length; i++) {
+		fprintf(o, "  %-7s %s\n", acc_lookup_table[i].name, acc_lookup_table[i].desc);
+	}
+	fprintf(o, "-f {a,b,c}          Value-field names on which to compute statistics\n");
+	fprintf(o, "-g {d,e,f}          Optional group-by-field names\n");
+	fprintf(o, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a count,mode -f size\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
+	fprintf(o, "Notes:\n");
+	fprintf(o, "* p50 is a synonym for median.\n");
+	fprintf(o, "* min and max output the same results as p0 and p100, respectively, but use\n");
+	fprintf(o, "  less memory.\n");
+	fprintf(o, "* count and mode allow text input; the rest require numeric input.\n");
+	fprintf(o, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
+	fprintf(o, "* When there are mode ties, the first-encountered datum wins.\n");
+}
+
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* paccumulator_names    = NULL;
+	slls_t* pvalue_field_names    = NULL;
+	slls_t* pgroup_by_field_names = slls_alloc();
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
+	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
+	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_stats1_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
+		mapper_stats1_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_stats1_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
+
+	pstate->paccumulator_names    = paccumulator_names;
+	pstate->pvalue_field_names    = pvalue_field_names;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->groups                = lhmslv_alloc();
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_stats1_process;
+	pmapper->pfree_func    = mapper_stats1_free;
+
+	return pmapper;
+}
+
+static void mapper_stats1_free(void* pvstate) {
+	mapper_stats1_state_t* pstate = pvstate;
+	slls_free(pstate->paccumulator_names);
+	slls_free(pstate->pvalue_field_names);
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the level-2's 1st
+	lhmslv_free(pstate->groups);
+}
+
+// ----------------------------------------------------------------
 static void acc_count_singest(void* pvstate, char* val) {
 	acc_count_state_t* pstate = pvstate;
 	pstate->count++;
@@ -66,24 +193,6 @@ static acc_t* acc_count_alloc() {
 	pacc->pemit_func    = acc_count_emit;
 	return pacc;
 }
-
-// ----------------------------------------------------------------
-static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
-static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
-static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
-static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
-static void mapper_stats1_free(void* pvstate);
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
-static void mapper_stats1_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
-
-// ----------------------------------------------------------------
-mapper_setup_t mapper_stats1_setup = {
-	.verb        = "stats1",
-	.pusage_func = mapper_stats1_usage,
-	.pparse_func = mapper_stats1_parse_cli
-};
 
 // ----------------------------------------------------------------
 typedef struct _acc_mode_state_t {
@@ -342,26 +451,6 @@ static acc_t* acc_percentile_alloc() {
 	return pacc;
 }
 
-// ----------------------------------------------------------------
-// Lookups for all but percentiles, which are a special case.
-typedef struct _acc_lookup_t {
-	char* name;
-	acc_alloc_func_t* pnew_func;
-	char* desc;
-} acc_lookup_t;
-static acc_lookup_t acc_lookup_table[] = {
-	{"count",  acc_count_alloc,  "Count instances of fields"},
-	{"mode",   acc_mode_alloc,   "Find most-frequently-occurring values for fields; first-found wins tie"},
-	{"sum",    acc_sum_alloc,    "Compute sums of specified fields"},
-	{"mean",   acc_mean_alloc,   "Compute averages (sample means) of specified fields"},
-	{"stddev", acc_stddev_alloc, "Compute sample standard deviation of specified fields"},
-	{"var",    acc_var_alloc,    "Compute sample variance of specified fields"},
-	{"meaneb", acc_meaneb_alloc, "Estimate error bars for averages (assuming no sample autocorrelation)"},
-	{"min",    acc_min_alloc,    "Compute minimum values of specified fields"},
-	{"max",    acc_max_alloc,    "Compute maximum values of specified fieldsx"},
-};
-static int acc_lookup_table_length = sizeof(acc_lookup_table) / sizeof(acc_lookup_table[0]);
-
 static acc_t* make_acc(char* acc_name) {
 	for (int i = 0; i < acc_lookup_table_length; i++)
 		if (streq(acc_name, acc_lookup_table[i].name))
@@ -412,8 +501,6 @@ static acc_t* make_acc(char* acc_name) {
 //   },
 // }
 // ================================================================
-
-// ----------------------------------------------------------------
 static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate);
 static void make_accs(
@@ -583,79 +670,4 @@ static sllv_t* mapper_stats1_emit(mapper_stats1_state_t* pstate) {
 	}
 	sllv_add(poutrecs, NULL);
 	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static void mapper_stats1_free(void* pvstate) {
-	mapper_stats1_state_t* pstate = pvstate;
-	slls_free(pstate->paccumulator_names);
-	slls_free(pstate->pvalue_field_names);
-	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
-}
-
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_stats1_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
-
-	pstate->paccumulator_names    = paccumulator_names;
-	pstate->pvalue_field_names    = pvalue_field_names;
-	pstate->pgroup_by_field_names = pgroup_by_field_names;
-	pstate->groups                = lhmslv_alloc();
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_stats1_process;
-	pmapper->pfree_func    = mapper_stats1_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "Options:\n");
-	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
-	fprintf(o, "                    one or more of:\n");
-	for (int i = 0; i < acc_lookup_table_length; i++) {
-		fprintf(o, "  %-7s %s\n", acc_lookup_table[i].name, acc_lookup_table[i].desc);
-	}
-	fprintf(o, "-f {a,b,c}          Value-field names on which to compute statistics\n");
-	fprintf(o, "-g {d,e,f}          Optional group-by-field names\n");
-	fprintf(o, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
-	fprintf(o, "Example: %s %s -a count,mode -f size\n", argv0, verb);
-	fprintf(o, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
-	fprintf(o, "Notes:\n");
-	fprintf(o, "* p50 is a synonym for median.\n");
-	fprintf(o, "* min and max output the same results as p0 and p100, respectively, but use\n");
-	fprintf(o, "  less memory.\n");
-	fprintf(o, "* count and mode allow text input; the rest require numeric input.\n");
-	fprintf(o, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
-	fprintf(o, "* When there are mode ties, the first-encountered datum wins.\n");
-}
-
-static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* paccumulator_names    = NULL;
-	slls_t* pvalue_field_names    = NULL;
-	slls_t* pgroup_by_field_names = slls_alloc();
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
-	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_stats1_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
-		mapper_stats1_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names);
 }
