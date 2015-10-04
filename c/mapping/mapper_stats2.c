@@ -41,6 +41,7 @@ typedef struct _mapper_stats2_state_t {
 
 typedef stats2_t* stats2_alloc_func_t(int do_verbose);
 
+// ----------------------------------------------------------------
 static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
 static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -52,12 +53,260 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
 
+static stats2_t* make_stats2(char* stats2_name, int do_verbose);
+static stats2_t* stats2_linreg_ols_alloc(int do_verbose);
+static stats2_t* stats2_r2_alloc(int do_verbose);
+static stats2_t* stats2_corr_cov_alloc(int do_which, int do_verbose);
+static stats2_t* stats2_corr_alloc(int do_verbose);
+static stats2_t* stats2_cov_alloc(int do_verbose);
+static stats2_t* stats2_covx_alloc(int do_verbose);
+static stats2_t* stats2_linreg_pca_alloc(int do_verbose);
+
+// ----------------------------------------------------------------
+typedef struct _stats2_lookup_t {
+	char* name;
+	stats2_alloc_func_t* pnew_func;
+	char* desc;
+} stats2_lookup_t;
+static stats2_lookup_t stats2_lookup_table[] = {
+	{"linreg-pca", stats2_linreg_pca_alloc, "Linear regression using principal component analysis"},
+	{"linreg-ols", stats2_linreg_ols_alloc, "Linear regression using ordinary least squares"},
+	{"r2",         stats2_r2_alloc,         "Quality metric for linreg-ols (linreg-pca emits its own)"},
+	{"corr",       stats2_corr_alloc,       "Sample correlation"},
+	{"cov",        stats2_cov_alloc,        "Sample covariance"},
+	{"covx",       stats2_covx_alloc,       "Sample-covariance matrix"},
+};
+static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
+
 // ----------------------------------------------------------------
 mapper_setup_t mapper_stats2_setup = {
 	.verb = "stats2",
 	.pusage_func = mapper_stats2_usage,
 	.pparse_func = mapper_stats2_parse_cli
 };
+
+// ----------------------------------------------------------------
+static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of:\n");
+	for (int i = 0; i < stats2_lookup_table_length; i++) {
+		fprintf(o, "  %-12s %s\n", stats2_lookup_table[i].name, stats2_lookup_table[i].desc);
+	}
+	fprintf(o, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
+	fprintf(o, "              There must be an even number of names.\n");
+	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");
+	fprintf(o, "-v            Print additional output for linreg-pca.\n");
+	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
+	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
+}
+
+static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* paccumulator_names    = NULL;
+	slls_t* pvalue_field_names    = NULL;
+	slls_t* pgroup_by_field_names = slls_alloc();
+	int     do_verbose = FALSE;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
+	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
+	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
+	ap_define_true_flag(pstate,        "-v", &do_verbose);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_stats2_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
+		mapper_stats2_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+	if ((pvalue_field_names->length % 2) != 0) {
+		mapper_stats2_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_stats2_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names, do_verbose);
+}
+
+// ================================================================
+// Given: accumulate corr,cov on values x,y group by a,b.
+// Example input:       Example output:
+//   a b x y            a b x_corr x_cov y_corr y_cov
+//   s t 1 2            s t 2       6    2      8
+//   u v 3 4            u v 1       3    1      4
+//   s t 5 6            u w 1       7    1      9
+//   u w 7 9
+//
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {                    <--- group-by field names
+//     ["x","y"] : {                  <--- value field names
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","v"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","w"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+// }
+// ================================================================
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_stats2_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		mapper_stats2_ingest(pinrec, pctx, pstate);
+		lrec_free(pinrec);
+		return NULL;
+	}
+	else {
+		return mapper_stats2_emit(pstate);
+	}
+}
+
+// ----------------------------------------------------------------
+static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
+	// ["s", "t"]
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		slls_free(pgroup_by_field_values);
+		return;
+	}
+
+	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	if (group_to_acc_field == NULL) {
+		group_to_acc_field = lhms2v_alloc();
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+	}
+
+	// for [["x","y"]]
+	for (sllse_t* pa = pstate->pvalue_field_name_pairs->phead; pa != NULL; pa = pa->pnext->pnext) {
+		char* value_field_name_1 = pa->value;
+		char* value_field_name_2 = pa->pnext->value;
+
+		lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
+		if (acc_fields_to_acc_state == NULL) {
+			acc_fields_to_acc_state = lhmsv_alloc();
+			lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
+		}
+
+		char* sval1 = lrec_get(pinrec, value_field_name_1);
+		if (sval1 == NULL)
+			continue;
+
+		char* sval2 = lrec_get(pinrec, value_field_name_2);
+		if (sval2 == NULL)
+			continue;
+
+		// for ["corr", "cov"]
+		sllse_t* pc = pstate->paccumulator_names->phead;
+		for ( ; pc != NULL; pc = pc->pnext) {
+			char* stats2_name = pc->value;
+			stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
+			if (pstats2 == NULL) {
+				pstats2 = make_stats2(stats2_name, pstate->do_verbose);
+				if (pstats2 == NULL) {
+					fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
+						stats2_name);
+					exit(1);
+				}
+				lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
+			}
+
+			double dval1 = mlr_double_from_string_or_die(sval1);
+			double dval2 = mlr_double_from_string_or_die(sval2);
+			pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
+		}
+	}
+
+	slls_free(pgroup_by_field_values);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		// Add in a=s,b=t fields:
+		slls_t* pgroup_by_field_values = pa->key;
+		sllse_t* pb = pstate->pgroup_by_field_names->phead;
+		sllse_t* pc =         pgroup_by_field_values->phead;
+		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+			lrec_put(poutrec, pb->value, pc->value, 0);
+		}
+
+		// Add in fields such as x_y_corr, etc.
+		lhms2v_t* group_to_acc_field = pa->pvvalue;
+
+		// For "x","y"
+		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+			char*    value_field_name_1 = pd->key1;
+			char*    value_field_name_2 = pd->key2;
+			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
+
+			// For "corr", "linreg"
+			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+				stats2_t* pstats2 = pe->pvvalue;
+				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
+			}
+		}
+
+		sllv_add(poutrecs, poutrec);
+	}
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
+	slls_t* pgroup_by_field_names, int do_verbose)
+{
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_stats2_state_t* pstate   = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
+	pstate->paccumulator_names      = paccumulator_names;
+	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
+	pstate->pgroup_by_field_names   = pgroup_by_field_names;
+	pstate->groups                  = lhmslv_alloc();
+	pstate->do_verbose              = do_verbose;
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_stats2_process;
+	pmapper->pfree_func    = mapper_stats2_free;
+
+	return pmapper;
+}
+
+static void mapper_stats2_free(void* pvstate) {
+	mapper_stats2_state_t* pstate = pvstate;
+	slls_free(pstate->paccumulator_names);
+	slls_free(pstate->pvalue_field_name_pairs);
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the level-2's 1st
+	lhmslv_free(pstate->groups);
+}
+
+static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
+	for (int i = 0; i < stats2_lookup_table_length; i++)
+		if (streq(stats2_name, stats2_lookup_table[i].name))
+			return stats2_lookup_table[i].pnew_func(do_verbose);
+	return NULL;
+}
 
 // ----------------------------------------------------------------
 typedef struct _stats2_linreg_ols_state_t {
@@ -312,243 +561,4 @@ static stats2_t* stats2_covx_alloc(int do_verbose) {
 }
 static stats2_t* stats2_linreg_pca_alloc(int do_verbose) {
 	return stats2_corr_cov_alloc(DO_LINREG_PCA, do_verbose);
-}
-
-// ----------------------------------------------------------------
-typedef struct _stats2_lookup_t {
-	char* name;
-	stats2_alloc_func_t* pnew_func;
-	char* desc;
-} stats2_lookup_t;
-static stats2_lookup_t stats2_lookup_table[] = {
-	{"linreg-pca", stats2_linreg_pca_alloc, "Linear regression using principal component analysis"},
-	{"linreg-ols", stats2_linreg_ols_alloc, "Linear regression using ordinary least squares"},
-	{"r2",         stats2_r2_alloc,         "Quality metric for linreg-ols (linreg-pca emits its own)"},
-	{"corr",       stats2_corr_alloc,       "Sample correlation"},
-	{"cov",        stats2_cov_alloc,        "Sample covariance"},
-	{"covx",       stats2_covx_alloc,       "Sample-covariance matrix"},
-};
-static int stats2_lookup_table_length = sizeof(stats2_lookup_table) / sizeof(stats2_lookup_table[0]);
-
-static stats2_t* make_stats2(char* stats2_name, int do_verbose) {
-	for (int i = 0; i < stats2_lookup_table_length; i++)
-		if (streq(stats2_name, stats2_lookup_table[i].name))
-			return stats2_lookup_table[i].pnew_func(do_verbose);
-	return NULL;
-}
-
-// ================================================================
-// Given: accumulate corr,cov on values x,y group by a,b.
-// Example input:       Example output:
-//   a b x y            a b x_corr x_cov y_corr y_cov
-//   s t 1 2            s t 2       6    2      8
-//   u v 3 4            u v 1       3    1      4
-//   s t 5 6            u w 1       7    1      9
-//   u w 7 9
-//
-// Multilevel hashmap structure:
-// {
-//   ["s","t"] : {                    <--- group-by field names
-//     ["x","y"] : {                  <--- value field names
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-//   ["u","v"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-//   ["u","w"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-// }
-// ================================================================
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_stats2_state_t* pstate = pvstate;
-	if (pinrec != NULL) {
-		mapper_stats2_ingest(pinrec, pctx, pstate);
-		lrec_free(pinrec);
-		return NULL;
-	}
-	else {
-		return mapper_stats2_emit(pstate);
-	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
-	// ["s", "t"]
-	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
-		slls_free(pgroup_by_field_values);
-		return;
-	}
-
-	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
-	if (group_to_acc_field == NULL) {
-		group_to_acc_field = lhms2v_alloc();
-		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
-	}
-
-	// for [["x","y"]]
-	for (sllse_t* pa = pstate->pvalue_field_name_pairs->phead; pa != NULL; pa = pa->pnext->pnext) {
-		char* value_field_name_1 = pa->value;
-		char* value_field_name_2 = pa->pnext->value;
-
-		lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
-		if (acc_fields_to_acc_state == NULL) {
-			acc_fields_to_acc_state = lhmsv_alloc();
-			lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
-		}
-
-		char* sval1 = lrec_get(pinrec, value_field_name_1);
-		if (sval1 == NULL)
-			continue;
-
-		char* sval2 = lrec_get(pinrec, value_field_name_2);
-		if (sval2 == NULL)
-			continue;
-
-		// for ["corr", "cov"]
-		sllse_t* pc = pstate->paccumulator_names->phead;
-		for ( ; pc != NULL; pc = pc->pnext) {
-			char* stats2_name = pc->value;
-			stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
-			if (pstats2 == NULL) {
-				pstats2 = make_stats2(stats2_name, pstate->do_verbose);
-				if (pstats2 == NULL) {
-					fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
-						stats2_name);
-					exit(1);
-				}
-				lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
-			}
-
-			double dval1 = mlr_double_from_string_or_die(sval1);
-			double dval2 = mlr_double_from_string_or_die(sval2);
-			pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
-		}
-	}
-
-	slls_free(pgroup_by_field_values);
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
-	sllv_t* poutrecs = sllv_alloc();
-
-	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
-		lrec_t* poutrec = lrec_unbacked_alloc();
-
-		// Add in a=s,b=t fields:
-		slls_t* pgroup_by_field_values = pa->key;
-		sllse_t* pb = pstate->pgroup_by_field_names->phead;
-		sllse_t* pc =         pgroup_by_field_values->phead;
-		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-			lrec_put(poutrec, pb->value, pc->value, 0);
-		}
-
-		// Add in fields such as x_y_corr, etc.
-		lhms2v_t* group_to_acc_field = pa->pvvalue;
-
-		// For "x","y"
-		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
-			char*    value_field_name_1 = pd->key1;
-			char*    value_field_name_2 = pd->key2;
-			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
-
-			// For "corr", "linreg"
-			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-				stats2_t* pstats2 = pe->pvvalue;
-				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
-			}
-		}
-
-		sllv_add(poutrecs, poutrec);
-	}
-	sllv_add(poutrecs, NULL);
-	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static void mapper_stats2_free(void* pvstate) {
-	mapper_stats2_state_t* pstate = pvstate;
-	slls_free(pstate->paccumulator_names);
-	slls_free(pstate->pvalue_field_name_pairs);
-	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
-}
-
-static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose)
-{
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_stats2_state_t* pstate   = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
-	pstate->paccumulator_names      = paccumulator_names;
-	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
-	pstate->pgroup_by_field_names   = pgroup_by_field_names;
-	pstate->groups                  = lhmslv_alloc();
-	pstate->do_verbose              = do_verbose;
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_stats2_process;
-	pmapper->pfree_func    = mapper_stats2_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of:\n");
-	for (int i = 0; i < stats2_lookup_table_length; i++) {
-		fprintf(o, "  %-12s %s\n", stats2_lookup_table[i].name, stats2_lookup_table[i].desc);
-	}
-	fprintf(o, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
-	fprintf(o, "              There must be an even number of names.\n");
-	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");
-	fprintf(o, "-v            Print additional output for linreg-pca.\n");
-	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
-	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
-	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
-}
-
-static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* paccumulator_names    = NULL;
-	slls_t* pvalue_field_names    = NULL;
-	slls_t* pgroup_by_field_names = slls_alloc();
-	int     do_verbose = FALSE;
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
-	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate,        "-v", &do_verbose);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_stats2_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
-		mapper_stats2_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-	if ((pvalue_field_names->length % 2) != 0) {
-		mapper_stats2_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	return mapper_stats2_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names, do_verbose);
 }
