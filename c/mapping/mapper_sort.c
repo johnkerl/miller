@@ -63,15 +63,39 @@ typedef struct _mapper_sort_state_t {
 	lhmslv_t* pbuckets_by_key_field_names;
 } mapper_sort_state_t;
 
+// Each sort key is string or number; use union to save space.
+typedef struct _typed_sort_key_t {
+	union {
+		char*  s;
+		double d;
+	} u;
+} typed_sort_key_t;
+
+typedef struct _bucket_t {
+	typed_sort_key_t* typed_sort_keys;
+	sllv_t*           precords;
+} bucket_t;
+
 // ----------------------------------------------------------------
-static void mapper_sort_usage(FILE* o, char* argv0, char* verb);
+static void      mapper_sort_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
-static void mapper_group_by_usage(FILE* o, char* argv0, char* verb);
+static void      mapper_group_by_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort);
-static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void mapper_sort_free(void* pvstate);
+static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_sort_free(void* pvstate);
 
+static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params);
+
+// qsort is non-reentrant but qsort_r isn't portable. But since Miller is
+// single-threaded, even if we've got one sort chained to another, only one is
+// active at a time. We adopt the convention that we set the sort params
+// right before the sort.
+static int* pcmp_sort_params  = NULL;
+static int  cmp_params_length = 0;
+static int pbucket_comparator(const void* pva, const void* pvb);
+
+// ----------------------------------------------------------------
 mapper_setup_t mapper_sort_setup = {
 	.verb = "sort",
 	.pusage_func = mapper_sort_usage,
@@ -211,78 +235,6 @@ static void mapper_sort_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-// Each sort key is string or number; use union to save space.
-typedef struct _typed_sort_key_t {
-	union {
-		char*  s;
-		double d;
-	} u;
-} typed_sort_key_t;
-
-typedef struct _bucket_t {
-	typed_sort_key_t* typed_sort_keys;
-	sllv_t*           precords;
-} bucket_t;
-
-// qsort is non-reentrant but qsort_r isn't portable. But since Miller is
-// single-threaded, even if we've got one sort chained to another, only one is
-// active at a time. We adopt the convention that we set the sort params
-// right before the sort.
-static int* pcmp_sort_params  = NULL;
-static int  cmp_params_length = 0;
-static int pbucket_comparator(const void* pva, const void* pvb) {
-	// We are sorting an array of bucket_t*.
-	const bucket_t** pba = (const bucket_t**)pva;
-	const bucket_t** pbb = (const bucket_t**)pvb;
-	typed_sort_key_t* akeys = (*pba)->typed_sort_keys;
-	typed_sort_key_t* bkeys = (*pbb)->typed_sort_keys;
-	for (int i = 0; i < cmp_params_length; i++) {
-		int sort_param = pcmp_sort_params[i];
-		if (sort_param & SORT_NUMERIC) {
-			double a = akeys[i].u.d;
-			double b = bkeys[i].u.d;
-			if (isnan(a)) { // null input value
-				if (!isnan(b)) {
-					return (sort_param & SORT_DESCENDING) ? -1 : 1;
-				}
-			} else if (isnan(b)) {
-					return (sort_param & SORT_DESCENDING) ? 1 : -1;
-			} else {
-				double d = a - b;
-				int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
-				if (s != 0)
-					return (sort_param & SORT_DESCENDING) ? -s : s;
-			}
-		} else {
-			int s = strcmp(akeys[i].u.s, bkeys[i].u.s);
-			if (s != 0)
-				return (sort_param & SORT_DESCENDING) ? -s : s;
-		}
-	}
-	return 0;
-}
-
-// E.g. parse the list ["red","1.0"] into the array ["red",1.0].
-static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params) {
-	typed_sort_key_t* typed_sort_keys = mlr_malloc_or_die(pkey_field_values->length * sizeof(typed_sort_key_t));
-	int i = 0;
-	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
-		if (sort_params[i] & SORT_NUMERIC) {
-			if (*pe->value == 0) { // null input value
-				typed_sort_keys[i].u.d = nan("");
-			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
-				// xxx to do: print some more context here, e.g. file name & line number
-				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
-				exit(1);
-			}
-		} else {
-			typed_sort_keys[i].u.s = pe->value;
-		}
-	}
-	return typed_sort_keys;
-}
-
-// ----------------------------------------------------------------
 static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
@@ -343,4 +295,56 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_add(poutput, NULL); // Signal end of output-record stream.
 		return poutput;
 	}
+}
+
+static int pbucket_comparator(const void* pva, const void* pvb) {
+	// We are sorting an array of bucket_t*.
+	const bucket_t** pba = (const bucket_t**)pva;
+	const bucket_t** pbb = (const bucket_t**)pvb;
+	typed_sort_key_t* akeys = (*pba)->typed_sort_keys;
+	typed_sort_key_t* bkeys = (*pbb)->typed_sort_keys;
+	for (int i = 0; i < cmp_params_length; i++) {
+		int sort_param = pcmp_sort_params[i];
+		if (sort_param & SORT_NUMERIC) {
+			double a = akeys[i].u.d;
+			double b = bkeys[i].u.d;
+			if (isnan(a)) { // null input value
+				if (!isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? -1 : 1;
+				}
+			} else if (isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? 1 : -1;
+			} else {
+				double d = a - b;
+				int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
+				if (s != 0)
+					return (sort_param & SORT_DESCENDING) ? -s : s;
+			}
+		} else {
+			int s = strcmp(akeys[i].u.s, bkeys[i].u.s);
+			if (s != 0)
+				return (sort_param & SORT_DESCENDING) ? -s : s;
+		}
+	}
+	return 0;
+}
+
+// E.g. parse the list ["red","1.0"] into the array ["red",1.0].
+static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params) {
+	typed_sort_key_t* typed_sort_keys = mlr_malloc_or_die(pkey_field_values->length * sizeof(typed_sort_key_t));
+	int i = 0;
+	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
+		if (sort_params[i] & SORT_NUMERIC) {
+			if (*pe->value == 0) { // null input value
+				typed_sort_keys[i].u.d = nan("");
+			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
+				// xxx to do: print some more context here, e.g. file name & line number
+				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
+				exit(1);
+			}
+		} else {
+			typed_sort_keys[i].u.s = pe->value;
+		}
+	}
+	return typed_sort_keys;
 }
