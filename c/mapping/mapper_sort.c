@@ -51,92 +51,9 @@
 //
 // ================================================================
 
-// ----------------------------------------------------------------
-static void mapper_sort_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
-
-mapper_setup_t mapper_sort_setup = {
-	.verb = "sort",
-	.pusage_func = mapper_sort_usage,
-	.pparse_func = mapper_sort_parse_cli
-};
-
-// ----------------------------------------------------------------
 #define SORT_NUMERIC    0x80
 #define SORT_DESCENDING 0x40
 
-// Each sort key is string or number; use union to save space.
-typedef struct _typed_sort_key_t {
-	union {
-		char*  s;
-		double d;
-	} u;
-} typed_sort_key_t;
-
-typedef struct _bucket_t {
-	typed_sort_key_t* typed_sort_keys;
-	sllv_t*           precords;
-} bucket_t;
-
-// qsort is non-reentrant but qsort_r isn't portable. But since Miller is
-// single-threaded, even if we've got one sort chained to another, only one is
-// active at a time. We adopt the convention that we set the sort params
-// right before the sort.
-static int* pcmp_sort_params  = NULL;
-static int  cmp_params_length = 0;
-static int pbucket_comparator(const void* pva, const void* pvb) {
-	// We are sorting an array of bucket_t*.
-	const bucket_t** pba = (const bucket_t**)pva;
-	const bucket_t** pbb = (const bucket_t**)pvb;
-	typed_sort_key_t* akeys = (*pba)->typed_sort_keys;
-	typed_sort_key_t* bkeys = (*pbb)->typed_sort_keys;
-	for (int i = 0; i < cmp_params_length; i++) {
-		int sort_param = pcmp_sort_params[i];
-		if (sort_param & SORT_NUMERIC) {
-			double a = akeys[i].u.d;
-			double b = bkeys[i].u.d;
-			if (isnan(a)) { // null input value
-				if (!isnan(b)) {
-					return (sort_param & SORT_DESCENDING) ? -1 : 1;
-				}
-			} else if (isnan(b)) {
-					return (sort_param & SORT_DESCENDING) ? 1 : -1;
-			} else {
-				double d = a - b;
-				int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
-				if (s != 0)
-					return (sort_param & SORT_DESCENDING) ? -s : s;
-			}
-		} else {
-			int s = strcmp(akeys[i].u.s, bkeys[i].u.s);
-			if (s != 0)
-				return (sort_param & SORT_DESCENDING) ? -s : s;
-		}
-	}
-	return 0;
-}
-
-// E.g. parse the list ["red","1.0"] into the array ["red",1.0].
-static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params) {
-	typed_sort_key_t* typed_sort_keys = mlr_malloc_or_die(pkey_field_values->length * sizeof(typed_sort_key_t));
-	int i = 0;
-	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
-		if (sort_params[i] & SORT_NUMERIC) {
-			if (*pe->value == 0) { // null input value
-				typed_sort_keys[i].u.d = nan("");
-			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
-				// xxx to do: print some more context here, e.g. file name & line number
-				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
-				exit(1);
-			}
-		} else {
-			typed_sort_keys[i].u.s = pe->value;
-		}
-	}
-	return typed_sort_keys;
-}
-
-// ----------------------------------------------------------------
 typedef struct _mapper_sort_state_t {
 	// Input parameters
 	slls_t* pkey_field_names; // Fields to sort on
@@ -147,120 +64,20 @@ typedef struct _mapper_sort_state_t {
 } mapper_sort_state_t;
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_sort_state_t* pstate = pvstate;
-	if (pinrec != NULL) {
-		// Consume another input record.
-		slls_t* pkey_field_values = mlr_selected_values_from_record(pinrec, pstate->pkey_field_names);
-		bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
-		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
-			slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
-			bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
-			pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params);
-			pbucket->precords = sllv_alloc();
-			sllv_add(pbucket->precords, pinrec);
-			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
-		} else { // Previously seen key-field-value: append record to bucket
-			sllv_add(pbucket->precords, pinrec);
-		}
-		return NULL;
-	}
-	else if (!pstate->do_sort) {
-		// Group-by
-		sllv_t* poutput = sllv_alloc();
-		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
-			bucket_t* pbucket = pe->pvvalue;
-			for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
-				sllv_add(poutput, pf->pvdata);
-			}
-		}
-		sllv_add(poutput, NULL);
-		return poutput;
-	} else {
-		// End of input stream: sort bucket labels
-		int num_buckets = pstate->pbuckets_by_key_field_names->num_occupied;
-		bucket_t** pbucket_array = mlr_malloc_or_die(num_buckets * sizeof(bucket_t*));
+static void mapper_sort_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
+static void mapper_group_by_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort);
+static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void mapper_sort_free(void* pvstate);
 
-		// Copy bucket-pointers to an array for qsort
-		int i = 0;
-		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext, i++) {
-			pbucket_array[i] = pe->pvvalue;
-		}
+mapper_setup_t mapper_sort_setup = {
+	.verb = "sort",
+	.pusage_func = mapper_sort_usage,
+	.pparse_func = mapper_sort_parse_cli
+};
 
-		pcmp_sort_params  = pstate->sort_params;
-		cmp_params_length = pstate->pkey_field_names->length;
-
-		qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
-
-		pcmp_sort_params  = NULL;
-		cmp_params_length = 0;
-
-		// Emit each bucket's record
-		sllv_t* poutput = sllv_alloc();
-		for (i = 0; i < num_buckets; i++) {
-			sllv_t* plist = pbucket_array[i]->precords;
-			for (sllve_t* pf = plist->phead; pf != NULL; pf = pf->pnext) {
-				sllv_add(poutput, pf->pvdata);
-			}
-		}
-		free(pbucket_array);
-		sllv_add(poutput, NULL); // Signal end of output-record stream.
-		return poutput;
-	}
-}
-
-// ----------------------------------------------------------------
-// xxx to do: at end of sort, free and nullify the things populated within
-// mapper_sort_process.  here, free the things allocated at setup time.
-static void mapper_sort_free(void* pvstate) {
-	mapper_sort_state_t* pstate = pvstate;
-	if (pstate->pkey_field_names != NULL)
-		slls_free(pstate->pkey_field_names);
-
-	// xxx free void-star payloads 1st
-	lhmslv_free(pstate->pbuckets_by_key_field_names);
-	free(pstate->sort_params);
-}
-
-static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_sort_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sort_state_t));
-
-	pstate->pkey_field_names            = pkey_field_names;
-	pstate->sort_params                 = sort_params;
-	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
-	pstate->do_sort                     = do_sort;
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_sort_process;
-	pmapper->pfree_func    = mapper_sort_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_group_by_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
-	fprintf(o, "Outputs records in batches having identical values at specified field names.\n");
-}
-
-static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
-	if ((argc - *pargi) < 2) {
-		mapper_group_by_usage(stderr, argv[0], argv[*pargi]);
-		return NULL;
-	}
-
-	slls_t* pnames = slls_from_line(argv[*pargi+1], ',', FALSE);
-	int* opt_array = mlr_malloc_or_die(pnames->length * sizeof(int));
-	for (int i = 0; i < pnames->length; i++)
-		opt_array[i] = 0;
-
-	*pargi += 2;
-	return mapper_sort_alloc(pnames, opt_array, FALSE);
-}
-
-// ----------------------------------------------------------------
 mapper_setup_t mapper_group_by_setup = {
 	.verb = "group-by",
 	.pusage_func = mapper_group_by_usage,
@@ -339,4 +156,191 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 	slls_free(pflags);
 
 	return mapper_sort_alloc(pnames, opt_array, TRUE);
+}
+
+// ----------------------------------------------------------------
+static void mapper_group_by_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s {comma-separated field names}\n", argv0, verb);
+	fprintf(o, "Outputs records in batches having identical values at specified field names.\n");
+}
+
+static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
+	if ((argc - *pargi) < 2) {
+		mapper_group_by_usage(stderr, argv[0], argv[*pargi]);
+		return NULL;
+	}
+
+	slls_t* pnames = slls_from_line(argv[*pargi+1], ',', FALSE);
+	int* opt_array = mlr_malloc_or_die(pnames->length * sizeof(int));
+	for (int i = 0; i < pnames->length; i++)
+		opt_array[i] = 0;
+
+	*pargi += 2;
+	return mapper_sort_alloc(pnames, opt_array, FALSE);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_sort_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sort_state_t));
+
+	pstate->pkey_field_names            = pkey_field_names;
+	pstate->sort_params                 = sort_params;
+	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
+	pstate->do_sort                     = do_sort;
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_sort_process;
+	pmapper->pfree_func    = mapper_sort_free;
+
+	return pmapper;
+}
+
+// ----------------------------------------------------------------
+// xxx to do: at end of sort, free and nullify the things populated within
+// mapper_sort_process.  here, free the things allocated at setup time.
+static void mapper_sort_free(void* pvstate) {
+	mapper_sort_state_t* pstate = pvstate;
+	if (pstate->pkey_field_names != NULL)
+		slls_free(pstate->pkey_field_names);
+
+	// xxx free void-star payloads 1st
+	lhmslv_free(pstate->pbuckets_by_key_field_names);
+	free(pstate->sort_params);
+}
+
+// ----------------------------------------------------------------
+// Each sort key is string or number; use union to save space.
+typedef struct _typed_sort_key_t {
+	union {
+		char*  s;
+		double d;
+	} u;
+} typed_sort_key_t;
+
+typedef struct _bucket_t {
+	typed_sort_key_t* typed_sort_keys;
+	sllv_t*           precords;
+} bucket_t;
+
+// qsort is non-reentrant but qsort_r isn't portable. But since Miller is
+// single-threaded, even if we've got one sort chained to another, only one is
+// active at a time. We adopt the convention that we set the sort params
+// right before the sort.
+static int* pcmp_sort_params  = NULL;
+static int  cmp_params_length = 0;
+static int pbucket_comparator(const void* pva, const void* pvb) {
+	// We are sorting an array of bucket_t*.
+	const bucket_t** pba = (const bucket_t**)pva;
+	const bucket_t** pbb = (const bucket_t**)pvb;
+	typed_sort_key_t* akeys = (*pba)->typed_sort_keys;
+	typed_sort_key_t* bkeys = (*pbb)->typed_sort_keys;
+	for (int i = 0; i < cmp_params_length; i++) {
+		int sort_param = pcmp_sort_params[i];
+		if (sort_param & SORT_NUMERIC) {
+			double a = akeys[i].u.d;
+			double b = bkeys[i].u.d;
+			if (isnan(a)) { // null input value
+				if (!isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? -1 : 1;
+				}
+			} else if (isnan(b)) {
+					return (sort_param & SORT_DESCENDING) ? 1 : -1;
+			} else {
+				double d = a - b;
+				int s = (d < 0) ? -1 : (d > 0) ? 1 : 0;
+				if (s != 0)
+					return (sort_param & SORT_DESCENDING) ? -s : s;
+			}
+		} else {
+			int s = strcmp(akeys[i].u.s, bkeys[i].u.s);
+			if (s != 0)
+				return (sort_param & SORT_DESCENDING) ? -s : s;
+		}
+	}
+	return 0;
+}
+
+// E.g. parse the list ["red","1.0"] into the array ["red",1.0].
+static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params) {
+	typed_sort_key_t* typed_sort_keys = mlr_malloc_or_die(pkey_field_values->length * sizeof(typed_sort_key_t));
+	int i = 0;
+	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
+		if (sort_params[i] & SORT_NUMERIC) {
+			if (*pe->value == 0) { // null input value
+				typed_sort_keys[i].u.d = nan("");
+			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
+				// xxx to do: print some more context here, e.g. file name & line number
+				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
+				exit(1);
+			}
+		} else {
+			typed_sort_keys[i].u.s = pe->value;
+		}
+	}
+	return typed_sort_keys;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_sort_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		// Consume another input record.
+		slls_t* pkey_field_values = mlr_selected_values_from_record(pinrec, pstate->pkey_field_names);
+		bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
+		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
+			slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
+			bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
+			pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params);
+			pbucket->precords = sllv_alloc();
+			sllv_add(pbucket->precords, pinrec);
+			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
+		} else { // Previously seen key-field-value: append record to bucket
+			sllv_add(pbucket->precords, pinrec);
+		}
+		return NULL;
+	}
+	else if (!pstate->do_sort) {
+		// Group-by
+		sllv_t* poutput = sllv_alloc();
+		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
+			bucket_t* pbucket = pe->pvvalue;
+			for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
+				sllv_add(poutput, pf->pvdata);
+			}
+		}
+		sllv_add(poutput, NULL);
+		return poutput;
+	} else {
+		// End of input stream: sort bucket labels
+		int num_buckets = pstate->pbuckets_by_key_field_names->num_occupied;
+		bucket_t** pbucket_array = mlr_malloc_or_die(num_buckets * sizeof(bucket_t*));
+
+		// Copy bucket-pointers to an array for qsort
+		int i = 0;
+		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext, i++) {
+			pbucket_array[i] = pe->pvvalue;
+		}
+
+		pcmp_sort_params  = pstate->sort_params;
+		cmp_params_length = pstate->pkey_field_names->length;
+
+		qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+
+		pcmp_sort_params  = NULL;
+		cmp_params_length = 0;
+
+		// Emit each bucket's record
+		sllv_t* poutput = sllv_alloc();
+		for (i = 0; i < num_buckets; i++) {
+			sllv_t* plist = pbucket_array[i]->precords;
+			for (sllve_t* pf = plist->phead; pf != NULL; pf = pf->pnext) {
+				sllv_add(poutput, pf->pvdata);
+			}
+		}
+		free(pbucket_array);
+		sllv_add(poutput, NULL); // Signal end of output-record stream.
+		return poutput;
+	}
 }

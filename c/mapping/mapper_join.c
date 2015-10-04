@@ -10,16 +10,6 @@
 #include "cli/argparse.h"
 
 // ----------------------------------------------------------------
-static void mapper_join_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
-
-mapper_setup_t mapper_join_setup = {
-	.verb = "join",
-	.pusage_func = mapper_join_usage,
-	.pparse_func = mapper_join_parse_cli,
-};
-
-// ----------------------------------------------------------------
 // Join options, if unspecified, default to respective main options.
 #define OPTION_UNSPECIFIED ((char)0xff)
 
@@ -62,10 +52,172 @@ typedef struct _mapper_join_state_t {
 
 } mapper_join_state_t;
 
+// ----------------------------------------------------------------
+static void mapper_join_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts);
+static void mapper_join_free(void* pvstate);
 static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
 	sllv_t* pout_recs);
+static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx, void* pvstate);
+
+mapper_setup_t mapper_join_setup = {
+	.verb = "join",
+	.pusage_func = mapper_join_usage,
+	.pparse_func = mapper_join_parse_cli,
+};
+
+// ----------------------------------------------------------------
+static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Joins records from specified left file name with records from all file names\n");
+	fprintf(o, "at the end of the Miller argument list.\n");
+	fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n");
+	fprintf(o, "record streams.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "  -f {left file name}\n");
+	fprintf(o, "  -j {a,b,c}   Comma-separated join-field names for output\n");
+	fprintf(o, "  -l {a,b,c}   Comma-separated join-field names for left input file;\n");
+	fprintf(o, "               defaults to -j values if omitted.\n");
+	fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n");
+	fprintf(o, "               defaults to -j values if omitted.\n");
+	fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n");
+	fprintf(o, "               the left file\n");
+	fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n");
+	fprintf(o, "               the right file(s)\n");
+	fprintf(o, "  --np         Do not emit paired records\n");
+	fprintf(o, "  --ul         Emit unpaired records from the left file\n");
+	fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n");
+	fprintf(o, "  -u           Enable unsorted input. In this case, the entire left file will\n");
+	fprintf(o, "               be loaded into memory. Without -u, records must be sorted\n");
+	fprintf(o, "               lexically by their join-field names, else not all records will\n");
+	fprintf(o, "               be paired.\n");
+	fprintf(o, "File-format options default to those for the right file names on the Miller\n");
+	fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n");
+	fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
+	fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n");
+	fprintf(o, "  --irs {record-separator character}\n");
+	fprintf(o, "  --ifs {field-separator character}\n");
+	fprintf(o, "  --ips {pair-separator character}\n");
+	fprintf(o, "  --repifs\n");
+	fprintf(o, "  --repips\n");
+	fprintf(o, "  --use-mmap\n");
+	fprintf(o, "  --no-mmap\n");
+	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(o, "including examples.\n");
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
+	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
+	popts->left_prefix              = NULL;
+	popts->right_prefix             = NULL;
+	popts->left_file_name           = NULL;
+	popts->poutput_join_field_names = NULL;
+	popts->pleft_join_field_names   = NULL;
+	popts->pright_join_field_names  = NULL;
+	popts->allow_unsorted_input     = FALSE;
+	popts->emit_pairables           = TRUE;
+	popts->emit_left_unpairables    = FALSE;
+	popts->emit_right_unpairables   = FALSE;
+
+	popts->input_file_format = NULL;
+	popts->irs               = NULL;
+	popts->ifs               = NULL;
+	popts->ips               = NULL;
+	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
+	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
+	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_flag(pstate,      "-f",         &popts->left_file_name);
+	ap_define_string_list_flag(pstate, "-j",         &popts->poutput_join_field_names);
+	ap_define_string_list_flag(pstate, "-l",         &popts->pleft_join_field_names);
+	ap_define_string_list_flag(pstate, "-r",         &popts->pright_join_field_names);
+	ap_define_string_flag(pstate,      "--lp",       &popts->left_prefix);
+	ap_define_string_flag(pstate,      "--rp",       &popts->right_prefix);
+	ap_define_false_flag(pstate,       "--np",       &popts->emit_pairables);
+	ap_define_true_flag(pstate,        "--ul",       &popts->emit_left_unpairables);
+	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
+	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
+
+	ap_define_string_flag(pstate,      "-i",         &popts->input_file_format);
+	ap_define_string_flag(pstate,      "--irs",      &popts->irs);
+	ap_define_string_flag(pstate,      "--ifs",      &popts->ifs);
+	ap_define_string_flag(pstate,      "--ips",      &popts->ips);
+	ap_define_true_flag(pstate,        "--repifs",   &popts->allow_repeat_ifs);
+	ap_define_true_flag(pstate,        "--repips",   &popts->allow_repeat_ips);
+	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
+	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_join_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (popts->left_file_name == NULL) {
+		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.argv0, verb);
+		mapper_join_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (!popts->emit_pairables && !popts->emit_left_unpairables && !popts->emit_right_unpairables) {
+		fprintf(stderr, "%s %s: all emit flags are unset; no output is possible.\n",
+			MLR_GLOBALS.argv0, verb);
+		mapper_join_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (popts->poutput_join_field_names == NULL) {
+		fprintf(stderr, "%s %s: need output field names\n", MLR_GLOBALS.argv0, verb);
+		mapper_join_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+	if (popts->pleft_join_field_names == NULL)
+		popts->pleft_join_field_names = slls_copy(popts->poutput_join_field_names);
+	if (popts->pright_join_field_names == NULL)
+		popts->pright_join_field_names = slls_copy(popts->pleft_join_field_names);
+
+	int llen = popts->pleft_join_field_names->length;
+	int rlen = popts->pright_join_field_names->length;
+	int olen = popts->poutput_join_field_names->length;
+	if (llen != rlen || llen != olen) {
+		fprintf(stderr,
+			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
+			MLR_GLOBALS.argv0, verb, llen, rlen, olen);
+		exit(1);
+	}
+
+	return mapper_join_alloc(popts);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
+{
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_join_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_join_state_t));
+	pstate->popts                              = popts;
+	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_join_field_names);
+	pstate->pright_field_name_set              = hss_from_slls(popts->pright_join_field_names);
+	pstate->pleft_buckets_by_join_field_values = NULL;
+	pstate->pjoin_bucket_keeper                = NULL;
+
+	pmapper->pvstate = (void*)pstate;
+	if (popts->allow_unsorted_input) {
+		pmapper->pprocess_func = mapper_join_process_unsorted;
+	} else {
+		pmapper->pprocess_func = mapper_join_process_sorted;
+	}
+	pmapper->pfree_func = mapper_join_free;
+
+	return pmapper;
+}
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
@@ -296,153 +448,4 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	}
 
 	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle);
-}
-
-// ----------------------------------------------------------------
-static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
-{
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_join_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_join_state_t));
-	pstate->popts                              = popts;
-	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_join_field_names);
-	pstate->pright_field_name_set              = hss_from_slls(popts->pright_join_field_names);
-	pstate->pleft_buckets_by_join_field_values = NULL;
-	pstate->pjoin_bucket_keeper                = NULL;
-
-	pmapper->pvstate = (void*)pstate;
-	if (popts->allow_unsorted_input) {
-		pmapper->pprocess_func = mapper_join_process_unsorted;
-	} else {
-		pmapper->pprocess_func = mapper_join_process_sorted;
-	}
-	pmapper->pfree_func = mapper_join_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "Joins records from specified left file name with records from all file names\n");
-	fprintf(o, "at the end of the Miller argument list.\n");
-	fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n");
-	fprintf(o, "record streams.\n");
-	fprintf(o, "Options:\n");
-	fprintf(o, "  -f {left file name}\n");
-	fprintf(o, "  -j {a,b,c}   Comma-separated join-field names for output\n");
-	fprintf(o, "  -l {a,b,c}   Comma-separated join-field names for left input file;\n");
-	fprintf(o, "               defaults to -j values if omitted.\n");
-	fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n");
-	fprintf(o, "               defaults to -j values if omitted.\n");
-	fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n");
-	fprintf(o, "               the left file\n");
-	fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n");
-	fprintf(o, "               the right file(s)\n");
-	fprintf(o, "  --np         Do not emit paired records\n");
-	fprintf(o, "  --ul         Emit unpaired records from the left file\n");
-	fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n");
-	fprintf(o, "  -u           Enable unsorted input. In this case, the entire left file will\n");
-	fprintf(o, "               be loaded into memory. Without -u, records must be sorted\n");
-	fprintf(o, "               lexically by their join-field names, else not all records will\n");
-	fprintf(o, "               be paired.\n");
-	fprintf(o, "File-format options default to those for the right file names on the Miller\n");
-	fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n");
-	fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
-	fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n");
-	fprintf(o, "  --irs {record-separator character}\n");
-	fprintf(o, "  --ifs {field-separator character}\n");
-	fprintf(o, "  --ips {pair-separator character}\n");
-	fprintf(o, "  --repifs\n");
-	fprintf(o, "  --repips\n");
-	fprintf(o, "  --use-mmap\n");
-	fprintf(o, "  --no-mmap\n");
-	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
-	fprintf(o, "including examples.\n");
-}
-
-// ----------------------------------------------------------------
-static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
-	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
-	popts->left_prefix              = NULL;
-	popts->right_prefix             = NULL;
-	popts->left_file_name           = NULL;
-	popts->poutput_join_field_names = NULL;
-	popts->pleft_join_field_names   = NULL;
-	popts->pright_join_field_names  = NULL;
-	popts->allow_unsorted_input     = FALSE;
-	popts->emit_pairables           = TRUE;
-	popts->emit_left_unpairables    = FALSE;
-	popts->emit_right_unpairables   = FALSE;
-
-	popts->input_file_format = NULL;
-	popts->irs               = NULL;
-	popts->ifs               = NULL;
-	popts->ips               = NULL;
-	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
-	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
-	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_flag(pstate,      "-f",         &popts->left_file_name);
-	ap_define_string_list_flag(pstate, "-j",         &popts->poutput_join_field_names);
-	ap_define_string_list_flag(pstate, "-l",         &popts->pleft_join_field_names);
-	ap_define_string_list_flag(pstate, "-r",         &popts->pright_join_field_names);
-	ap_define_string_flag(pstate,      "--lp",       &popts->left_prefix);
-	ap_define_string_flag(pstate,      "--rp",       &popts->right_prefix);
-	ap_define_false_flag(pstate,       "--np",       &popts->emit_pairables);
-	ap_define_true_flag(pstate,        "--ul",       &popts->emit_left_unpairables);
-	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
-	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
-
-	ap_define_string_flag(pstate,      "-i",         &popts->input_file_format);
-	ap_define_string_flag(pstate,      "--irs",      &popts->irs);
-	ap_define_string_flag(pstate,      "--ifs",      &popts->ifs);
-	ap_define_string_flag(pstate,      "--ips",      &popts->ips);
-	ap_define_true_flag(pstate,        "--repifs",   &popts->allow_repeat_ifs);
-	ap_define_true_flag(pstate,        "--repips",   &popts->allow_repeat_ips);
-	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
-	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_join_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (popts->left_file_name == NULL) {
-		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.argv0, verb);
-		mapper_join_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (!popts->emit_pairables && !popts->emit_left_unpairables && !popts->emit_right_unpairables) {
-		fprintf(stderr, "%s %s: all emit flags are unset; no output is possible.\n",
-			MLR_GLOBALS.argv0, verb);
-		mapper_join_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (popts->poutput_join_field_names == NULL) {
-		fprintf(stderr, "%s %s: need output field names\n", MLR_GLOBALS.argv0, verb);
-		mapper_join_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-	if (popts->pleft_join_field_names == NULL)
-		popts->pleft_join_field_names = slls_copy(popts->poutput_join_field_names);
-	if (popts->pright_join_field_names == NULL)
-		popts->pright_join_field_names = slls_copy(popts->pleft_join_field_names);
-
-	int llen = popts->pleft_join_field_names->length;
-	int rlen = popts->pright_join_field_names->length;
-	int olen = popts->poutput_join_field_names->length;
-	if (llen != rlen || llen != olen) {
-		fprintf(stderr,
-			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
-			MLR_GLOBALS.argv0, verb, llen, rlen, olen);
-		exit(1);
-	}
-
-	return mapper_join_alloc(popts);
 }
