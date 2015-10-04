@@ -220,6 +220,19 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 }
 
 // ----------------------------------------------------------------
+static void mapper_join_free(void* pvstate) {
+	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
+	if (pstate->popts->pleft_join_field_names != NULL)
+		slls_free(pstate->popts->pleft_join_field_names);
+	if (pstate->popts->pright_join_field_names != NULL)
+		slls_free(pstate->popts->pright_join_field_names);
+	if (pstate->popts->poutput_join_field_names != NULL)
+		slls_free(pstate->popts->poutput_join_field_names);
+	if (pstate->pjoin_bucket_keeper != NULL)
+		join_bucket_keeper_free(pstate->pjoin_bucket_keeper);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
@@ -373,19 +386,6 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 
 		sllv_add(pout_recs, pout_rec);
 	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_join_free(void* pvstate) {
-	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
-	if (pstate->popts->pleft_join_field_names != NULL)
-		slls_free(pstate->popts->pleft_join_field_names);
-	if (pstate->popts->pright_join_field_names != NULL)
-		slls_free(pstate->popts->pright_join_field_names);
-	if (pstate->popts->poutput_join_field_names != NULL)
-		slls_free(pstate->popts->poutput_join_field_names);
-	if (pstate->pjoin_bucket_keeper != NULL)
-		join_bucket_keeper_free(pstate->pjoin_bucket_keeper);
 }
 
 // ----------------------------------------------------------------
