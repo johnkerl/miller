@@ -23,6 +23,54 @@ typedef struct _lrec_writer_csv_state_t {
 } lrec_writer_csv_state_t;
 
 // ----------------------------------------------------------------
+static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_csv_free(void* pvstate);
+static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
+
+	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
+	pstate->onr    = 0;
+	pstate->ors    = ors;
+	pstate->ofs    = ofs;
+	pstate->orslen = strlen(pstate->ors);
+	pstate->ofslen = strlen(pstate->ofs);
+
+	switch(oquoting) {
+	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
+	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
+	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_minimal_output_func; break;
+	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_numeric_output_func; break;
+	default:
+		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
+			MLR_GLOBALS.argv0, oquoting);
+		exit(1);
+	}
+
+	pstate->num_header_lines_output = 0LL;
+	pstate->plast_header_output     = NULL;
+
+	plrec_writer->pvstate       = (void*)pstate;
+	plrec_writer->pprocess_func = lrec_writer_csv_process;
+	plrec_writer->pfree_func    = lrec_writer_csv_free;
+
+	return plrec_writer;
+}
+
+static void lrec_writer_csv_free(void* pvstate) {
+	lrec_writer_csv_state_t* pstate = pvstate;
+	if (pstate->plast_header_output != NULL) {
+		slls_free(pstate->plast_header_output);
+		pstate->plast_header_output = NULL;
+	}
+}
+
+// ----------------------------------------------------------------
 static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
@@ -69,45 +117,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	lrec_free(prec);
 }
 
-static void lrec_writer_csv_free(void* pvstate) {
-	lrec_writer_csv_state_t* pstate = pvstate;
-	if (pstate->plast_header_output != NULL) {
-		slls_free(pstate->plast_header_output);
-		pstate->plast_header_output = NULL;
-	}
-}
-
-lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
-	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
-
-	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
-	pstate->onr    = 0;
-	pstate->ors    = ors;
-	pstate->ofs    = ofs;
-	pstate->orslen = strlen(pstate->ors);
-	pstate->ofslen = strlen(pstate->ofs);
-
-	switch(oquoting) {
-	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
-	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
-	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_minimal_output_func; break;
-	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_numeric_output_func; break;
-	default:
-		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
-			MLR_GLOBALS.argv0, oquoting);
-		exit(1);
-	}
-
-	pstate->num_header_lines_output = 0LL;
-	pstate->plast_header_output     = NULL;
-
-	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_csv_process;
-	plrec_writer->pfree_func    = lrec_writer_csv_free;
-
-	return plrec_writer;
-}
-
+// ----------------------------------------------------------------
 static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	fputc('"', fp);
 	fputs(string, fp);

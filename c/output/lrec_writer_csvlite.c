@@ -11,6 +11,35 @@ typedef struct _lrec_writer_csvlite_state_t {
 	slls_t* plast_header_output;
 } lrec_writer_csvlite_state_t;
 
+static void lrec_writer_csvlite_free(void* pvstate);
+static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
+
+	lrec_writer_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csvlite_state_t));
+	pstate->onr                     = 0;
+	pstate->ors                     = ors;
+	pstate->ofs                     = ofs;
+	pstate->num_header_lines_output = 0LL;
+	pstate->plast_header_output     = NULL;
+
+	plrec_writer->pvstate       = (void*)pstate;
+	plrec_writer->pprocess_func = lrec_writer_csvlite_process;
+	plrec_writer->pfree_func    = lrec_writer_csvlite_free;
+
+	return plrec_writer;
+}
+
+static void lrec_writer_csvlite_free(void* pvstate) {
+	lrec_writer_csvlite_state_t* pstate = pvstate;
+	if (pstate->plast_header_output != NULL) {
+		slls_free(pstate->plast_header_output);
+		pstate->plast_header_output = NULL;
+	}
+}
+
 // ----------------------------------------------------------------
 static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
@@ -53,29 +82,4 @@ static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void*
 	pstate->onr++;
 
 	lrec_free(prec); // xxx cmt mem-mgmt
-}
-
-static void lrec_writer_csvlite_free(void* pvstate) {
-	lrec_writer_csvlite_state_t* pstate = pvstate;
-	if (pstate->plast_header_output != NULL) {
-		slls_free(pstate->plast_header_output);
-		pstate->plast_header_output = NULL;
-	}
-}
-
-lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs) {
-	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
-
-	lrec_writer_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csvlite_state_t));
-	pstate->onr                     = 0;
-	pstate->ors                     = ors;
-	pstate->ofs                     = ofs;
-	pstate->num_header_lines_output = 0LL;
-	pstate->plast_header_output     = NULL;
-
-	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_csvlite_process;
-	plrec_writer->pfree_func    = lrec_writer_csvlite_free;
-
-	return plrec_writer;
 }

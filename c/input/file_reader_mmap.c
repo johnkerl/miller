@@ -11,6 +11,7 @@
 
 static char empty_buf[1] = { 0 };
 
+// ----------------------------------------------------------------
 file_reader_mmap_state_t* file_reader_mmap_open(char* file_name) {
 	file_reader_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(file_reader_mmap_state_t));
 	pstate->fd = open(file_name, O_RDONLY);
@@ -40,6 +41,7 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* file_name) {
 	return pstate;
 }
 
+// ----------------------------------------------------------------
 void file_reader_mmap_close(file_reader_mmap_state_t* pstate) {
 	if (close(pstate->fd) < 0) {
 		perror("close");
@@ -48,9 +50,12 @@ void file_reader_mmap_close(file_reader_mmap_state_t* pstate) {
 	free(pstate);
 }
 
+// ----------------------------------------------------------------
 void* file_reader_mmap_vopen(void* pvstate, char* file_name) {
 	return file_reader_mmap_open(file_name);
 }
+
+// ----------------------------------------------------------------
 void file_reader_mmap_vclose(void* pvstate, void* pvhandle) {
 	file_reader_mmap_close(pvhandle);
 }

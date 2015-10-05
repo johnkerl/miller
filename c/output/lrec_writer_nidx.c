@@ -7,6 +7,27 @@ typedef struct _lrec_writer_nidx_state_t {
 	char* ofs;
 } lrec_writer_nidx_state_t;
 
+static void lrec_writer_nidx_free(void* pvstate);
+static void lrec_writer_nidx_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
+
+	lrec_writer_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_nidx_state_t));
+	pstate->ors = ors;
+	pstate->ofs = ofs;
+
+	plrec_writer->pvstate       = (void*)pstate;
+	plrec_writer->pprocess_func = lrec_writer_nidx_process;
+	plrec_writer->pfree_func    = lrec_writer_nidx_free;
+
+	return plrec_writer;
+}
+
+static void lrec_writer_nidx_free(void* pvstate) {
+}
+
 // ----------------------------------------------------------------
 static void lrec_writer_nidx_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
@@ -24,21 +45,4 @@ static void lrec_writer_nidx_process(FILE* output_stream, lrec_t* prec, void* pv
 	}
 	fputs(ors, output_stream);
 	lrec_free(prec); // xxx cmt mem-mgmt
-}
-
-static void lrec_writer_nidx_free(void* pvstate) {
-}
-
-lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
-	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
-
-	lrec_writer_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_nidx_state_t));
-	pstate->ors = ors;
-	pstate->ofs = ofs;
-
-	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_nidx_process;
-	plrec_writer->pfree_func    = lrec_writer_nidx_free;
-
-	return plrec_writer;
 }

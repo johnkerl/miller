@@ -15,7 +15,40 @@ typedef struct _lrec_writer_pprint_state_t {
 	char       ofs;
 } lrec_writer_pprint_state_t;
 
+static void lrec_writer_pprint_free(void* pvstate);
+static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate);
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align);
+
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
+
+	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
+	pstate->precords           = sllv_alloc();
+	pstate->pprev_keys         = NULL;
+	pstate->ors                = ors;
+	pstate->ofs                = ofs;
+	pstate->left_align         = left_align;
+	pstate->num_blocks_written = 0LL;
+
+	plrec_writer->pvstate       = pstate;
+	plrec_writer->pprocess_func = lrec_writer_pprint_process;
+	plrec_writer->pfree_func    = lrec_writer_pprint_free;
+
+	return plrec_writer;
+}
+
+static void lrec_writer_pprint_free(void* pvstate) {
+	lrec_writer_pprint_state_t* pstate = pvstate;
+	if (pstate->precords != NULL) {
+		sllv_free(pstate->precords);
+		pstate->precords = NULL;
+	}
+	if (pstate->pprev_keys != NULL) {
+		slls_free(pstate->pprev_keys);
+		pstate->pprev_keys = NULL;
+	}
+}
 
 // ----------------------------------------------------------------
 static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
@@ -131,34 +164,4 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 
 	free(max_widths);
 	sllv_free(precords);
-}
-
-static void lrec_writer_pprint_free(void* pvstate) {
-	lrec_writer_pprint_state_t* pstate = pvstate;
-	if (pstate->precords != NULL) {
-		sllv_free(pstate->precords);
-		pstate->precords = NULL;
-	}
-	if (pstate->pprev_keys != NULL) {
-		slls_free(pstate->pprev_keys);
-		pstate->pprev_keys = NULL;
-	}
-}
-
-lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
-	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
-
-	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
-	pstate->precords           = sllv_alloc();
-	pstate->pprev_keys         = NULL;
-	pstate->ors                = ors;
-	pstate->ofs                = ofs;
-	pstate->left_align         = left_align;
-	pstate->num_blocks_written = 0LL;
-
-	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = lrec_writer_pprint_process;
-	plrec_writer->pfree_func    = lrec_writer_pprint_free;
-
-	return plrec_writer;
 }

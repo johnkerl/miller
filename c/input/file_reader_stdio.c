@@ -9,6 +9,7 @@
 #include "lib/mlr_globals.h"
 #include "file_reader_stdio.h"
 
+// ----------------------------------------------------------------
 void* file_reader_stdio_vopen(void* pvstate, char* filename) {
 	FILE* input_stream = stdin;
 
@@ -23,6 +24,7 @@ void* file_reader_stdio_vopen(void* pvstate, char* filename) {
 	return input_stream;
 }
 
+// ----------------------------------------------------------------
 void file_reader_stdio_vclose(void* pvstate, void* pvhandle) {
 	FILE* input_stream = pvhandle;
 	if (input_stream != stdin)

@@ -68,8 +68,80 @@ typedef struct _lrec_reader_csv_state_t {
 
 } lrec_reader_csv_state_t;
 
+static void    lrec_reader_csv_free(void* pvstate);
+static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
 static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
+static void*   lrec_reader_csv_open(void* pvstate, char* filename);
+static void    lrec_reader_csv_close(void* pvstate, void* pvhandle);
+static void    lrec_reader_csv_sof(void* pvstate);
+
+// ----------------------------------------------------------------
+lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+
+	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
+	pstate->ilno          = 0LL;
+
+	pstate->eof           = "\xff";
+	pstate->irs           = irs;
+	pstate->ifs           = ifs;
+	pstate->ifs_eof       = mlr_paste_2_strings(pstate->ifs, "\xff");
+	pstate->dquote        = "\"";
+
+	pstate->dquote_irs    = mlr_paste_2_strings("\"", pstate->irs);
+	pstate->dquote_ifs    = mlr_paste_2_strings("\"", pstate->ifs);
+	pstate->dquote_eof    = "\"\xff";
+	pstate->dquote_dquote = "\"\"";
+
+	pstate->dquotelen     = strlen(pstate->dquote);
+
+	pstate->pno_dquote_parse_trie = parse_trie_alloc();
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs_eof, IFS_EOF_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
+
+	pstate->pdquote_parse_trie = parse_trie_alloc();
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->eof,           EOF_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,    DQUOTE_IRS_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
+
+	pstate->psb = &pstate->sb;
+	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
+	pstate->pbr = pbr;
+	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
+		pstate->pdquote_parse_trie->maxlen));
+
+	pstate->expect_header_line_next   = TRUE;
+	pstate->pheader_keeper            = NULL;
+	pstate->pheader_keepers           = lhmslv_alloc();
+
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = lrec_reader_csv_open;
+	plrec_reader->pclose_func   = lrec_reader_csv_close;
+	plrec_reader->pprocess_func = lrec_reader_csv_process;
+	plrec_reader->psof_func     = lrec_reader_csv_sof;
+	plrec_reader->pfree_func    = lrec_reader_csv_free;
+
+	return plrec_reader;
+}
+
+// ----------------------------------------------------------------
+static void lrec_reader_csv_free(void* pvstate) {
+	lrec_reader_csv_state_t* pstate = pvstate;
+	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
+		header_keeper_t* pheader_keeper = pe->pvvalue;
+		header_keeper_free(pheader_keeper);
+	}
+	pfr_free(pstate->pfr);
+	parse_trie_free(pstate->pno_dquote_parse_trie);
+	parse_trie_free(pstate->pdquote_parse_trie);
+	// write & use sb_free after the refactor
+}
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -260,14 +332,14 @@ static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pd
 }
 
 // ----------------------------------------------------------------
-void* lrec_reader_csv_open(void* pvstate, char* filename) {
+static void* lrec_reader_csv_open(void* pvstate, char* filename) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
 	pfr_reset(pstate->pfr);
 	return NULL; // xxx modify the API after the functional refactor is complete
 }
 
-void lrec_reader_csv_close(void* pvstate, void* pvhandle) {
+static void lrec_reader_csv_close(void* pvstate, void* pvhandle) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
 }
@@ -278,71 +350,4 @@ static void lrec_reader_csv_sof(void* pvstate) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = TRUE;
-}
-
-// ----------------------------------------------------------------
-static void lrec_reader_csv_free(void* pvstate) {
-	lrec_reader_csv_state_t* pstate = pvstate;
-	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
-		header_keeper_t* pheader_keeper = pe->pvvalue;
-		header_keeper_free(pheader_keeper);
-	}
-	pfr_free(pstate->pfr);
-	parse_trie_free(pstate->pno_dquote_parse_trie);
-	parse_trie_free(pstate->pdquote_parse_trie);
-	// write & use sb_free after the refactor
-}
-
-// ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
-	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-
-	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
-	pstate->ilno          = 0LL;
-
-	pstate->eof           = "\xff";
-	pstate->irs           = irs;
-	pstate->ifs           = ifs;
-	pstate->ifs_eof       = mlr_paste_2_strings(pstate->ifs, "\xff");
-	pstate->dquote        = "\"";
-
-	pstate->dquote_irs    = mlr_paste_2_strings("\"", pstate->irs);
-	pstate->dquote_ifs    = mlr_paste_2_strings("\"", pstate->ifs);
-	pstate->dquote_eof    = "\"\xff";
-	pstate->dquote_dquote = "\"\"";
-
-	pstate->dquotelen     = strlen(pstate->dquote);
-
-	pstate->pno_dquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs_eof, IFS_EOF_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
-
-	pstate->pdquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->eof,           EOF_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,    DQUOTE_IRS_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
-
-	pstate->psb = &pstate->sb;
-	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
-	pstate->pbr = pbr;
-	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
-		pstate->pdquote_parse_trie->maxlen));
-
-	pstate->expect_header_line_next   = TRUE;
-	pstate->pheader_keeper            = NULL;
-	pstate->pheader_keepers           = lhmslv_alloc();
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = lrec_reader_csv_open;
-	plrec_reader->pclose_func   = lrec_reader_csv_close;
-	plrec_reader->pprocess_func = lrec_reader_csv_process;
-	plrec_reader->psof_func     = lrec_reader_csv_sof;
-	plrec_reader->pfree_func    = lrec_reader_csv_free;
-
-	return plrec_reader;
 }

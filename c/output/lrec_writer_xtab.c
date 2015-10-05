@@ -3,6 +3,22 @@
 #include "lib/mlrutil.h"
 #include "output/lrec_writers.h"
 
+// ----------------------------------------------------------------
+// Note: If OPS is single-character then we can do alignment of the form
+//
+//   ab  123
+//   def 4567
+//
+// On the other hand, if it's multi-character, we won't be able to align
+// neatly in all cases. Yet we do allow multi-character OPS, just without
+// repetition: if someone wants to use OPS ": " and format data as
+//
+//   ab: 123
+//   def: 4567
+//
+// then they can do that.
+// ----------------------------------------------------------------
+
 typedef struct _lrec_writer_xtab_state_t {
 	char* ofs;
 	char* ops;
@@ -10,21 +26,33 @@ typedef struct _lrec_writer_xtab_state_t {
 	long long record_count;
 } lrec_writer_xtab_state_t;
 
-// ----------------------------------------------------------------
-// If OPS is single-character then we can do alignment of the form
-//
-//   ab  123
-//   def 45
-//
-// On the other hand, if it's multi-character, we won't be able to align
-// neatly in all cases. Yet we do allow multi-character OPS, just without
-// repetition: if someone wants to use OPS ": " and format data as
-//
-//   ab: 123
-//   def: 45
-//
-// then they can do that.
+static void lrec_writer_xtab_free(void* pvstate);
+static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec, void* pvstate);
 
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
+	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
+
+	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
+	pstate->ofs          = ofs;
+	pstate->ops          = ops;
+	pstate->opslen       = strlen(ops);
+	pstate->record_count = 0LL;
+
+	plrec_writer->pvstate       = pstate;
+	plrec_writer->pprocess_func = (pstate->opslen == 1)
+		? lrec_writer_xtab_process_aligned
+		: lrec_writer_xtab_process_unaligned;
+	plrec_writer->pfree_func    = lrec_writer_xtab_free;
+
+	return plrec_writer;
+}
+
+static void lrec_writer_xtab_free(void* pvstate) {
+}
+
+// ----------------------------------------------------------------
 static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	if (prec == NULL)
 		return;
@@ -64,26 +92,4 @@ static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec
 		fprintf(output_stream, "%s%s%s%s", pe->key, pstate->ops, pe->value, pstate->ofs);
 	}
 	lrec_free(prec); // xxx cmt mem-mgmt
-}
-
-// ----------------------------------------------------------------
-static void lrec_writer_xtab_free(void* pvstate) {
-}
-
-lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
-	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
-
-	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
-	pstate->ofs          = ofs;
-	pstate->ops          = ops;
-	pstate->opslen       = strlen(ops);
-	pstate->record_count = 0LL;
-
-	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = (pstate->opslen == 1)
-		? lrec_writer_xtab_process_aligned
-		: lrec_writer_xtab_process_unaligned;
-	plrec_writer->pfree_func    = lrec_writer_xtab_free;
-
-	return plrec_writer;
 }
