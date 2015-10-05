@@ -338,7 +338,6 @@ static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_pa
 			if (*pe->value == 0) { // null input value
 				typed_sort_keys[i].u.d = nan("");
 			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
-				// xxx to do: print some more context here, e.g. file name & line number
 				fprintf(stderr, "%s: couldn't parse \"%s\" as number in file \"%s\" record %lld.\n",
 					MLR_GLOBALS.argv0, pe->value, pctx->filename, pctx->fnr);
 				exit(1);
