@@ -11,9 +11,6 @@ MINOR:
 
 * UTx4xN the format-parsers
 
-* publics to top of file, with private protos above:
-  mlr_val etc. etc. -- entire multi-file flow
-
 * xxx's in the code!!!!!!!!!!!!!
 
 * valgrind & UT cline/sline

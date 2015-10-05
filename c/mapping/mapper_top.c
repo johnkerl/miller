@@ -60,7 +60,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
-	// xxx cmt
+	// Heterogeneous-data case -- not all sought fields were present in record
 	if (pvalue_field_values->length != pstate->pvalue_field_names->length) {
 		return;
 	}

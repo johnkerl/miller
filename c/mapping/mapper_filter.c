@@ -32,8 +32,8 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		if (val.type == MT_NULL) {
 			return NULL;
 		} else {
-			int boolv = mt_get_boolean_strict(&val);
-			if (boolv) {
+			mt_get_boolean_strict(&val);
+			if (val.u.boolv) {
 				return sllv_single(pinrec);
 			} else {
 				lrec_free(pinrec);
