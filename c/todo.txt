@@ -9,22 +9,18 @@ TOP OF LIST
 ----------------------------------------------------------------
 MINOR:
 
-* UTx4xN the format-parsers
+* double-check for off-by-one buflen in cline/sline
 
-* xxx's in the code!!!!!!!!!!!!!
-
-* valgrind & UT cline/sline
-
-* define dkvp, nidx, etc @ cover x 2
-  - web-server access logs in dkvp format -- ?
-
-* scroll-stalls in mlrdoc!! really bad on the droid.
+* define dkvp, nidx, etc @ cover x 2; /etc/group?
 
 * build page doesn't belong in developer info -- this is user info
 
 * make mlr vs. bake mlr -- ?
 
-* running-mean feature .......
+* scroll-stalls in mlrdoc!! really bad on the droid.
+
+----------------------------------------------------------------
+MAJOR: running-mean feature ....... really for all of stats1/stats2
 
 ----------------------------------------------------------------
 MAJOR: manpage
