@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "input/file_reader_stdio.h"
 #include "input/line_readers.h"
@@ -69,7 +70,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvs
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -79,7 +80,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvst
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs);
+		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -89,7 +90,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvst
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -99,7 +100,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvsta
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs);
+		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx);
 }
 
 // ----------------------------------------------------------------
@@ -111,7 +112,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvsta
 // I couldn't find a performance gain using stdlib index(3) ... *maybe* even a
 // fraction of a percent *slower*.
 
-lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int allow_repeat_ifs, context_t* pctx) {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 
 	// It would be easier to split the line on field separator (e.g. ","), then
@@ -135,8 +136,9 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-				fprintf(stderr, "Empty key disallowed.\n");
+			if (*key == 0) {
+				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
+					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
 				exit(1);
 			}
 			idx++;
@@ -172,8 +174,9 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-			fprintf(stderr, "Empty key disallowed.\n");
+		if (*key == 0) {
+			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
+				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
 			exit(1);
 		}
 		if (value <= key) {
@@ -188,7 +191,7 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 	return prec;
 }
 
-lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs) {
+lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx) {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 
 	// It would be easier to split the line on field separator (e.g. ","), then
@@ -212,8 +215,9 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-				fprintf(stderr, "Empty key disallowed.\n");
+			if (*key == 0) {
+				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
+					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
 				exit(1);
 			}
 			idx++;
@@ -249,8 +253,9 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) { // xxx to do: get file-name/line-number context in here.
-			fprintf(stderr, "Empty key disallowed.\n");
+		if (*key == 0) {
+			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
+				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
 			exit(1);
 		}
 		if (value <= key) {
