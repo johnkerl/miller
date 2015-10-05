@@ -13,42 +13,16 @@ MINOR:
 
 * define dkvp, nidx, etc @ cover x 2
 
+* cover:
+  ### mlr --csv cut -f hostname,uptime mydata.csv
+  ### mlr filter '$status != "down" && $upsec >= 10000' *.csv
+  ### mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
   ### grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+  ### mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+  ### mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+  ### mlr stats2 -a linreg-pca -f u,v -g shape data/*
 
-  mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp 
-  mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes
-  ls -l w/ step -a delta
-
-  cat check count-distinct cut filter group-by group-like having-fields head
-  histogram join label put regularize rename reorder sort stats1 stats2 step
-  tac tail top uniq
-
-  ofmt put x
-
-  *.csv
-
-  sed, awk, cut, join, and sort
-  each 1 ls -l foo.dat | mlr --nidx --repifs step -a delta -f 5
-
-  $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
-
-  group-by
-
-  having-fields
-
-  join
-
-  $ mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2
-
-  rename
-
-  tail -g
-
-  % mlr --csv cut -f hostname,uptime mydata.csv
-  % mlr --csv sort -f hostname,uptime mydata.csv
-  % mlr --csv put '$z = $x + 2.7*$y' mydata.csv
-  % mlr --csv filter '$status != "down"' mydata.csv
-
+  --> long names --group x all??
 
 * build page doesn't belong in developer info -- this is user info
 

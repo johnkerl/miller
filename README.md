@@ -10,9 +10,12 @@ For example:
 
 ```
 % mlr --csv cut -f hostname,uptime mydata.csv
-% mlr --csv sort -f hostname,uptime mydata.csv
-% mlr --csv put '$z = $x + 2.7*$y' mydata.csv
-% mlr --csv filter '$status != "down"' mydata.csv
+% mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv
+% mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
+% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+% mlr stats2 -a linreg-pca -f u,v -g shape data/*
 ```
 
 This is something the Unix toolkit always could have done, and arguably always
