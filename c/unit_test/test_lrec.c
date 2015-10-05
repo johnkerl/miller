@@ -150,10 +150,12 @@ static char* test_lrec_csv_api() {
 	header_keeper_t* pheader_keeper = header_keeper_alloc(hdr_line, hdr_fields);
 
 	char* data_line_1 = mlr_strdup_or_die("2,3,4,5");
-	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999, data_line_1, ',', FALSE);
+	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999,
+		data_line_1, ',', FALSE);
 
 	char* data_line_2 = mlr_strdup_or_die("6,7,8,9");
-	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999, data_line_2, ',', FALSE);
+	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999,
+		data_line_2, ',', FALSE);
 
 	mu_assert_lf(prec_1->field_count == 4);
 	mu_assert_lf(prec_2->field_count == 4);
@@ -196,7 +198,63 @@ static char* test_lrec_csv_api() {
 	lrec_free(prec_1);
 	lrec_free(prec_2);
 
-	// xxx need a test case for alloc1,free1,alloc2,free2 w/ same hdr.
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_lrec_csv_api_disjoint_allocs() {
+	char* hdr_line = mlr_strdup_or_die("w,x,y,z");
+	slls_t* hdr_fields = split_csvlite_header_line_single_ifs(hdr_line, ',', FALSE);
+	header_keeper_t* pheader_keeper = header_keeper_alloc(hdr_line, hdr_fields);
+
+
+	char* data_line_1 = mlr_strdup_or_die("2,3,4,5");
+	lrec_t* prec_1 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999,
+		data_line_1, ',', FALSE);
+
+	mu_assert_lf(prec_1->field_count == 4);
+
+	mu_assert_lf(streq(lrec_get(prec_1, "w"), "2"));
+	mu_assert_lf(streq(lrec_get(prec_1, "x"), "3"));
+	mu_assert_lf(streq(lrec_get(prec_1, "y"), "4"));
+	mu_assert_lf(streq(lrec_get(prec_1, "z"), "5"));
+
+	lrec_remove(prec_1, "w");
+	mu_assert_lf(prec_1->field_count == 3);
+	mu_assert_lf(lrec_get(prec_1, "w") == NULL);
+
+	lrec_rename(prec_1, "x", "u");
+	mu_assert_lf(prec_1->field_count == 3);
+	mu_assert_lf(lrec_get(prec_1, "x") == NULL);
+	mu_assert_lf(streq(lrec_get(prec_1, "u"), "3"));
+
+	lrec_free(prec_1);
+
+
+	char* data_line_2 = mlr_strdup_or_die("6,7,8,9");
+	lrec_t* prec_2 = lrec_parse_stdio_csvlite_data_line_single_ifs(pheader_keeper, "test-file", 999,
+		data_line_2, ',', FALSE);
+
+	mu_assert_lf(prec_2->field_count == 4);
+
+	mu_assert_lf(streq(lrec_get(prec_2, "w"), "6"));
+	mu_assert_lf(streq(lrec_get(prec_2, "x"), "7"));
+	mu_assert_lf(streq(lrec_get(prec_2, "y"), "8"));
+	mu_assert_lf(streq(lrec_get(prec_2, "z"), "9"));
+
+	mu_assert_lf(prec_2->field_count == 4);
+	mu_assert_lf(streq(lrec_get(prec_2, "w"), "6"));
+
+	lrec_rename(prec_2, "y", "z");
+
+	mu_assert_lf(prec_2->field_count == 3);
+	mu_assert_lf(streq(lrec_get(prec_2, "w"), "6"));
+	mu_assert_lf(streq(lrec_get(prec_2, "x"), "7"));
+	mu_assert_lf(lrec_get(prec_2, "y") == NULL);
+	mu_assert_lf(streq(lrec_get(prec_2, "z"), "8"));
+
+	lrec_free(prec_2);
+
 	return NULL;
 }
 
@@ -253,6 +311,7 @@ static char * run_all_tests() {
 	mu_run_test(test_lrec_dkvp_api);
 	mu_run_test(test_lrec_nidx_api);
 	mu_run_test(test_lrec_csv_api);
+	mu_run_test(test_lrec_csv_api_disjoint_allocs);
 	mu_run_test(test_lrec_xtab_api);
 	return 0;
 }
