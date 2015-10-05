@@ -152,7 +152,7 @@ void lrec_remove(lrec_t* prec, char* key) {
 	free(pe);
 }
 
-// xxx cmt this assumes new_key doesn't need freeing.
+// This assumes new_key doesn't need freeing.
 // Before:
 //   "x" => "3"
 //   "y" => "4"  <-- pold
