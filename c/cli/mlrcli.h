@@ -5,15 +5,11 @@
 #ifndef MLRCLI_H
 #define MLRCLI_H
 
+#include "cli/quoting.h"
 #include "containers/sllv.h"
 #include "input/lrec_reader.h"
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
-
-#define QUOTE_ALL     0xb1
-#define QUOTE_NONE    0xb2
-#define QUOTE_MINIMAL 0xb3
-#define QUOTE_NUMERIC 0xb4
 
 typedef struct _cli_opts_t {
 	char* irs;

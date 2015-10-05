@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "cli/mlrcli.h" // xxx move QUOTE_* to another header file
+#include "cli/quoting.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "containers/mixutil.h"

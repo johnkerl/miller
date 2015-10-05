@@ -3,7 +3,8 @@ libcli_la_SOURCES=	\
 			argparse.c \
 			argparse.h \
 			mlrcli.c \
-			mlrcli.h
+			mlrcli.h \
+			quoting.h
 
 # TODO: causes circular dependency
 #noinst_PROGRAMS=	ap
