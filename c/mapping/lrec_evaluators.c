@@ -680,8 +680,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name
     } else if (streq(variable_name, "FILENUM"))  { return lrec_evaluator_alloc_from_FILENUM();
     } else if (streq(variable_name, "PI"))       { return lrec_evaluator_alloc_from_PI();
     } else if (streq(variable_name, "E"))        { return lrec_evaluator_alloc_from_E();
-
-	} else  { return NULL; // xxx handle me better
+	} else  { return NULL; 
 	}
 }
 
@@ -692,7 +691,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 	} else if (streq(function_name, "systime")) {
 		return lrec_evaluator_alloc_from_f_z_func(f_z_systime_func);
 	} else  {
-		return NULL; // xxx handle me better
+		return NULL;
 	}
 }
 
@@ -963,7 +962,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "tolower"))   { return lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func,   parg1);
 	} else if (streq(fnnm, "toupper"))   { return lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func,   parg1);
 
-	} else return NULL; // xxx handle me better
+	} else return NULL;
 }
 
 // ================================================================
@@ -991,7 +990,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,    parg1, parg2);
 	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func, parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,          parg1, parg2);
-	} else  { return NULL; /* xxx handle me better */ }
+	} else  { return NULL; }
 }
 
 // ================================================================
@@ -999,7 +998,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
 {
 	if (streq(fnnm, "sub")) { return lrec_evaluator_alloc_from_s_sss_func(s_sss_sub_func,   parg1, parg2, parg3);
-	} else  { return NULL; /* xxx handle me better */ }
+	} else  { return NULL; }
 }
 
 // ================================================================
