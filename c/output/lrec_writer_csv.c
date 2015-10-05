@@ -79,7 +79,6 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 	char *ofs = pstate->ofs;
 
 	if (pstate->plast_header_output != NULL) {
-		// xxx make a fcn to compare these w/o copy: put it in mixutil.
 		if (!lrec_keys_equal_list(prec, pstate->plast_header_output)) {
 			slls_free(pstate->plast_header_output);
 			pstate->plast_header_output = NULL;

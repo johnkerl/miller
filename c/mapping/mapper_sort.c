@@ -85,7 +85,7 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_sort_free(void* pvstate);
 
-static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params);
+static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params, context_t* pctx);
 
 // qsort is non-reentrant but qsort_r isn't portable. But since Miller is
 // single-threaded, even if we've got one sort chained to another, only one is
@@ -244,7 +244,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 			slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
 			bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
-			pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params);
+			pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 			pbucket->precords = sllv_alloc();
 			sllv_add(pbucket->precords, pinrec);
 			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
@@ -330,7 +330,7 @@ static int pbucket_comparator(const void* pva, const void* pvb) {
 }
 
 // E.g. parse the list ["red","1.0"] into the array ["red",1.0].
-static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params) {
+static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params, context_t* pctx) {
 	typed_sort_key_t* typed_sort_keys = mlr_malloc_or_die(pkey_field_values->length * sizeof(typed_sort_key_t));
 	int i = 0;
 	for (sllse_t* pe = pkey_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
@@ -339,7 +339,8 @@ static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_pa
 				typed_sort_keys[i].u.d = nan("");
 			} else if (!mlr_try_double_from_string(pe->value, &typed_sort_keys[i].u.d)) {
 				// xxx to do: print some more context here, e.g. file name & line number
-				fprintf(stderr, "Couldn't parse \"%s\" as number.\n", pe->value);
+				fprintf(stderr, "%s: couldn't parse \"%s\" as number in file \"%s\" record %lld.\n",
+					MLR_GLOBALS.argv0, pe->value, pctx->filename, pctx->fnr);
 				exit(1);
 			}
 		} else {

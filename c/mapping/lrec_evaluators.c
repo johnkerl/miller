@@ -591,7 +591,9 @@ mv_t lrec_evaluator_double_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 }
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
-	// xxx cmt strdup semantics :(
+	// This is due to strdup-only semantics in mlrvals. If we implement a
+	// free-flag as in slls and lrec, we could reduce some of the needless
+	// strdups (at the cost of some code complexity).
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pstate->literal.u.strv)};
 }
 
