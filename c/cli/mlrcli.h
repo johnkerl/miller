@@ -5,7 +5,6 @@
 #ifndef MLRCLI_H
 #define MLRCLI_H
 
-#include "cli/quoting.h"
 #include "containers/sllv.h"
 #include "input/lrec_reader.h"
 #include "mapping/mapper.h"

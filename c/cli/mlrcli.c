@@ -12,6 +12,7 @@
 #include "mapping/lrec_evaluators.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
+#include "cli/quoting.h"
 #include "cli/argparse.h"
 
 #ifdef HAVE_CONFIG_H
