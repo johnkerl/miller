@@ -6,6 +6,27 @@
 #include "lib/mlrutil.h"
 #include "mapping/mlr_val.h"
 
+// ================================================================
+// NOTES:
+//
+// * This is used by mlr filter and mlr put.
+//
+// * Unlike most files in Miller which are read top-down (with sufficient
+//   static prototypes at the top of the file to keep the compiler happy),
+//   please read this one from the bottom up.
+//
+// * Comparison to lrec_evaluators.c: this file is functions from mlr_val(s) to
+//   mlr_val; in lrec_evaluators.c we have the higher-level notion of
+//   evaluating lrec objects, using mlr_val.c to do so.
+//
+// * There are two kinds of functions here: those with _x_ in their names
+//   which accept various types of mlr_val, with disposition-matrices to select
+//   functions of the appropriate type, and those with _i_/_f_/_b_/_s_ (int,
+//   float, boolean, string) which only take specific types of mlr_val.  In
+//   either case it's the job of lrec_evaluators.c to invoke functions here
+//   with mlr_vals of the correct type(s).
+// ================================================================
+
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
 

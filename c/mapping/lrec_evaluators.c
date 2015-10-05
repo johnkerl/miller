@@ -8,10 +8,29 @@
 #include "mapping/mapper.h"
 #include "mapping/lrec_evaluators.h"
 
-// xxx cmt: bottom-up file
-// xxx cmt: two kinds here: _x_ with dispos in mlrval, and _t_ with typecheck/coerce here
-
 // ================================================================
+// NOTES:
+//
+// * This is used by mlr filter and mlr put.
+//
+// * Unlike most files in Miller which are read top-down (with sufficient
+//   static prototypes at the top of the file to keep the compiler happy),
+//   please read this one from the bottom up.
+//
+// * Comparison to mlr_val.c: the latter is functions from mlr_val(s) to
+//   mlr_val; in this file we have the higher-level notion of evaluating lrec
+//   objects, using mlr_val.c to do so.
+//
+// * There are two kinds of lrec-evaluators here: those with _x_ in their names
+//   which accept various types of mlr_val, with disposition-matrices in
+//   mlr_val.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
+//   string) which either type-check or type-coerce their arguments, invoking
+//   type-specific functions in mlr_val.c.  In either case it's the job of
+//   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
+//   type(s).
+// ================================================================
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_b_state_t {
 	mv_unary_func_t*  pfunc;
 	lrec_evaluator_t* parg1;
@@ -218,7 +237,7 @@ mv_t lrec_evaluator_s_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING) // xxx conversions?
+	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1);
@@ -314,7 +333,7 @@ mv_t lrec_evaluator_f_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING) // xxx conversions?
+	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1);
@@ -342,7 +361,7 @@ mv_t lrec_evaluator_i_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING) // xxx conversions?
+	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
 	return pstate->pfunc(&val1);
@@ -426,7 +445,7 @@ mv_t lrec_evaluator_s_ss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_ss_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING) // xxx conversions?
+	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
@@ -498,7 +517,7 @@ mv_t lrec_evaluator_s_sss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_sss_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING) // xxx conversions?
+	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
