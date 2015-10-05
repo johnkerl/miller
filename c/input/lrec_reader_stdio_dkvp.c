@@ -196,8 +196,7 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 	char* p = line;
 
 	if (allow_repeat_ifs) {
-		// xxx memneq
-		while (strncmp(p, ifs, ifslen) == 0)
+		while (streqn(p, ifs, ifslen))
 			p += ifslen;
 	}
 	char* key   = p;
@@ -206,7 +205,7 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 	int saw_ps = FALSE;
 
 	for ( ; *p; ) {
-		if (strncmp(p, ifs, ifslen) == 0) {
+		if (streqn(p, ifs, ifslen)) {
 			saw_ps = FALSE;
 			*p = 0;
 
@@ -228,12 +227,12 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
-				while (strncmp(p, ifs, ifslen) == 0)
+				while (streqn(p, ifs, ifslen))
 					p += ifslen;
 			}
 			key = p;
 			value = p;
-		} else if (!strncmp(p, ips, ipslen) && !saw_ps) {
+		} else if (streqn(p, ips, ipslen) && !saw_ps) {
 			*p = 0;
 			p += ipslen;
 			value = p;

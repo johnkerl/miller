@@ -87,7 +87,7 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 		} else if (c == irslast) {
 			// Example: delim="abc". last='c'. Already have read "ab" into line. p-line=2.
 			// Now reading 'c'.
-			if (((p-line) >= irslenm1) && !strncmp(p-irslenm1, irs, irslenm1)) {
+			if (((p-line) >= irslenm1) && streqn(p-irslenm1, irs, irslenm1)) {
 				p -= irslenm1;
 				*p = 0;
 				break;
