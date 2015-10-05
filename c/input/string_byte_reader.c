@@ -8,6 +8,26 @@ typedef struct _string_byte_reader_state_t {
 	char* pend;
 } string_byte_reader_state_t;
 
+static int  string_byte_reader_open_func(struct _byte_reader_t* pbr, char* backing);
+static int  string_byte_reader_read_func(struct _byte_reader_t* pbr);
+static void string_byte_reader_close_func(struct _byte_reader_t* pbr);
+
+// ----------------------------------------------------------------
+byte_reader_t* string_byte_reader_alloc() {
+	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
+
+	pbr->pvstate     = NULL;
+	pbr->popen_func  = string_byte_reader_open_func;
+	pbr->pread_func  = string_byte_reader_read_func;
+	pbr->pclose_func = string_byte_reader_close_func;
+
+	return pbr;
+}
+
+void string_byte_reader_free(byte_reader_t* pbr) {
+	free(pbr);
+}
+
 // ----------------------------------------------------------------
 static int string_byte_reader_open_func(struct _byte_reader_t* pbr, char* backing) {
 	string_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(string_byte_reader_state_t));
@@ -29,20 +49,4 @@ static int string_byte_reader_read_func(struct _byte_reader_t* pbr) {
 
 static void string_byte_reader_close_func(struct _byte_reader_t* pbr) {
 	pbr->pvstate = NULL;
-}
-
-// ----------------------------------------------------------------
-byte_reader_t* string_byte_reader_alloc() {
-	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
-
-	pbr->pvstate     = NULL;
-	pbr->popen_func  = string_byte_reader_open_func;
-	pbr->pread_func  = string_byte_reader_read_func;
-	pbr->pclose_func = string_byte_reader_close_func;
-
-	return pbr;
-}
-
-void string_byte_reader_free(byte_reader_t* pbr) {
-	free(pbr);
 }

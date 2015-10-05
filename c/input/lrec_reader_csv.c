@@ -69,12 +69,12 @@ typedef struct _lrec_reader_csv_state_t {
 } lrec_reader_csv_state_t;
 
 static void    lrec_reader_csv_free(void* pvstate);
+static void    lrec_reader_csv_sof(void* pvstate);
 static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
 static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
 static void*   lrec_reader_csv_open(void* pvstate, char* filename);
 static void    lrec_reader_csv_close(void* pvstate, void* pvhandle);
-static void    lrec_reader_csv_sof(void* pvstate);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
@@ -141,6 +141,14 @@ static void lrec_reader_csv_free(void* pvstate) {
 	parse_trie_free(pstate->pno_dquote_parse_trie);
 	parse_trie_free(pstate->pdquote_parse_trie);
 	// write & use sb_free after the refactor
+}
+
+// ----------------------------------------------------------------
+// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
+static void lrec_reader_csv_sof(void* pvstate) {
+	lrec_reader_csv_state_t* pstate = pvstate;
+	pstate->ilno = 0LL;
+	pstate->expect_header_line_next = TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -342,12 +350,4 @@ static void* lrec_reader_csv_open(void* pvstate, char* filename) {
 static void lrec_reader_csv_close(void* pvstate, void* pvhandle) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
-}
-
-// ----------------------------------------------------------------
-// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
-static void lrec_reader_csv_sof(void* pvstate) {
-	lrec_reader_csv_state_t* pstate = pvstate;
-	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = TRUE;
 }

@@ -14,6 +14,40 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	int   at_eof;
 } lrec_reader_stdio_xtab_state_t;
 
+static void    lrec_reader_stdio_xtab_free(void* pvstate);
+static void    lrec_reader_stdio_xtab_sof(void* pvstate);
+static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx);
+
+// ----------------------------------------------------------------
+lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+
+	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
+	pstate->ifs              = ifs;
+	pstate->ips              = ips;
+	pstate->ifslen           = strlen(ifs);
+	pstate->ipslen           = strlen(ips);
+	pstate->allow_repeat_ips = allow_repeat_ips;
+	pstate->at_eof           = FALSE;
+
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = file_reader_stdio_vopen;
+	plrec_reader->pclose_func   = file_reader_stdio_vclose;
+	plrec_reader->pprocess_func = lrec_reader_stdio_xtab_process;
+	plrec_reader->psof_func     = lrec_reader_stdio_xtab_sof;
+	plrec_reader->pfree_func    = lrec_reader_stdio_xtab_free;
+
+	return plrec_reader;
+}
+
+static void lrec_reader_stdio_xtab_free(void* pvstate) {
+}
+
+static void lrec_reader_stdio_xtab_sof(void* pvstate) {
+	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
+	pstate->at_eof = FALSE;
+}
+
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
@@ -49,35 +83,6 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			slls_add_with_free(pxtab_lines, line);
 		}
 	}
-}
-
-static void lrec_reader_stdio_xtab_sof(void* pvstate) {
-	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
-	pstate->at_eof = FALSE;
-}
-
-static void lrec_reader_stdio_xtab_free(void* pvstate) {
-}
-
-lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
-	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-
-	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
-	pstate->ifs              = ifs;
-	pstate->ips              = ips;
-	pstate->ifslen           = strlen(ifs);
-	pstate->ipslen           = strlen(ips);
-	pstate->allow_repeat_ips = allow_repeat_ips;
-	pstate->at_eof           = FALSE;
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_stdio_vopen;
-	plrec_reader->pclose_func   = file_reader_stdio_vclose;
-	plrec_reader->pprocess_func = lrec_reader_stdio_xtab_process;
-	plrec_reader->psof_func     = lrec_reader_stdio_xtab_sof;
-	plrec_reader->pfree_func    = lrec_reader_stdio_xtab_free;
-
-	return plrec_reader;
 }
 
 // ----------------------------------------------------------------

@@ -12,6 +12,47 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	int   allow_repeat_ips;
 } lrec_reader_mmap_xtab_state_t;
 
+static void    lrec_reader_mmap_xtab_sof(void* pvstate);
+static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx);
+
+// ----------------------------------------------------------------
+lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+
+	lrec_reader_mmap_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_xtab_state_t));
+	pstate->ifs                 = ifs;
+	pstate->ips                 = ips;
+	pstate->ifslen              = strlen(pstate->ifs);
+	pstate->ipslen              = strlen(pstate->ips);
+	pstate->allow_repeat_ips    = allow_repeat_ips;
+
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+
+	if (pstate->ifslen == 1) {
+		plrec_reader->pprocess_func = (pstate->ipslen == 1)
+			? lrec_reader_mmap_xtab_process_single_ifs_single_ips
+			: lrec_reader_mmap_xtab_process_single_ifs_multi_ips;
+	} else {
+		plrec_reader->pprocess_func = (pstate->ipslen == 1)
+			? lrec_reader_mmap_xtab_process_multi_ifs_single_ips
+			: lrec_reader_mmap_xtab_process_multi_ifs_multi_ips;
+	}
+
+	plrec_reader->psof_func     = lrec_reader_mmap_xtab_sof;
+	plrec_reader->pfree_func    = NULL;
+
+	return plrec_reader;
+}
+
+// ----------------------------------------------------------------
+static void lrec_reader_mmap_xtab_sof(void* pvstate) {
+}
+
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
@@ -51,40 +92,6 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, 
 	else
 		return lrec_parse_mmap_xtab_multi_ifs_multi_ips(phandle, pstate->ifs, pstate->ips, pstate->ifslen,
 			pstate->ipslen, pstate->allow_repeat_ips);
-}
-
-// ----------------------------------------------------------------
-static void lrec_reader_mmap_xtab_sof(void* pvstate) {
-}
-
-lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
-	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-
-	lrec_reader_mmap_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_xtab_state_t));
-	pstate->ifs                 = ifs;
-	pstate->ips                 = ips;
-	pstate->ifslen              = strlen(pstate->ifs);
-	pstate->ipslen              = strlen(pstate->ips);
-	pstate->allow_repeat_ips    = allow_repeat_ips;
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = file_reader_mmap_vclose;
-
-	if (pstate->ifslen == 1) {
-		plrec_reader->pprocess_func = (pstate->ipslen == 1)
-			? lrec_reader_mmap_xtab_process_single_ifs_single_ips
-			: lrec_reader_mmap_xtab_process_single_ifs_multi_ips;
-	} else {
-		plrec_reader->pprocess_func = (pstate->ipslen == 1)
-			? lrec_reader_mmap_xtab_process_multi_ifs_single_ips
-			: lrec_reader_mmap_xtab_process_multi_ifs_multi_ips;
-	}
-
-	plrec_reader->psof_func     = lrec_reader_mmap_xtab_sof;
-	plrec_reader->pfree_func    = NULL;
-
-	return plrec_reader;
 }
 
 // ----------------------------------------------------------------

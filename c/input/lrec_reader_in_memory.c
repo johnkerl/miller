@@ -10,31 +10,13 @@ typedef struct _lrec_reader_in_memory_state_t {
 	sllv_t* precords;
 } lrec_reader_in_memory_state_t;
 
+static void    lrec_reader_in_memory_free(void* pvstate);
+static void    lrec_reader_in_memory_sof(void* pvstate);
+static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx);
+static void*   lrec_reader_in_memory_vopen(void* pvstate, char* filename);
+static void    lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle);
+
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx) {
-	lrec_reader_in_memory_state_t* pstate = pvstate;
-
-	if (pstate->precords->phead == NULL)
-		return NULL;
-	else
-		return sllv_pop(pstate->precords);
-}
-
-// No-op for stateless readers such as this one.
-static void lrec_reader_in_memory_sof(void* pvstate) {
-}
-
-// No-op for stateless readers such as this one.
-static void lrec_reader_in_memory_free(void* pvstate) {
-}
-
-static void* lrec_reader_in_memory_vopen(void* pvstate, char* filename) {
-	return NULL;
-}
-
-static void lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle) {
-}
-
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -49,4 +31,29 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 	plrec_reader->pfree_func    = lrec_reader_in_memory_free;
 
 	return plrec_reader;
+}
+
+// No-op for stateless readers such as this one.
+static void lrec_reader_in_memory_free(void* pvstate) {
+}
+
+// No-op for stateless readers such as this one.
+static void lrec_reader_in_memory_sof(void* pvstate) {
+}
+
+// ----------------------------------------------------------------
+static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx) {
+	lrec_reader_in_memory_state_t* pstate = pvstate;
+
+	if (pstate->precords->phead == NULL)
+		return NULL;
+	else
+		return sllv_pop(pstate->precords);
+}
+
+static void* lrec_reader_in_memory_vopen(void* pvstate, char* filename) {
+	return NULL;
+}
+
+static void lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle) {
 }

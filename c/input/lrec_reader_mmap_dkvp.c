@@ -14,6 +14,47 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   allow_repeat_ifs;
 } lrec_reader_mmap_dkvp_state_t;
 
+static void    lrec_reader_mmap_dkvp_sof(void* pvstate);
+static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
+
+// ----------------------------------------------------------------
+lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+
+	lrec_reader_mmap_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_dkvp_state_t));
+	pstate->irs              = irs;
+	pstate->ifs              = ifs;
+	pstate->ips              = ips;
+	pstate->irslen           = strlen(irs);
+	pstate->ifslen           = strlen(ifs);
+	pstate->ipslen           = strlen(ips);
+	pstate->allow_repeat_ifs = allow_repeat_ifs;
+
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+	if (pstate->irslen == 1) {
+		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
+			? lrec_reader_mmap_dkvp_process_single_irs_single_others
+			: lrec_reader_mmap_dkvp_process_single_irs_multi_others;
+	} else {
+		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
+			? lrec_reader_mmap_dkvp_process_multi_irs_single_others
+			: lrec_reader_mmap_dkvp_process_multi_irs_multi_others;
+	}
+	plrec_reader->psof_func   = lrec_reader_mmap_dkvp_sof;
+	plrec_reader->pfree_func  = NULL;
+
+	return plrec_reader;
+}
+
+// No-op for stateless readers such as this one.
+static void lrec_reader_mmap_dkvp_sof(void* pvstate) {
+}
+
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
@@ -57,42 +98,10 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstat
 			pstate->irslen, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs);
 }
 
-// No-op for stateless readers such as this one.
-static void lrec_reader_mmap_dkvp_sof(void* pvstate) {
-}
-
-lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
-	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-
-	lrec_reader_mmap_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_dkvp_state_t));
-	pstate->irs              = irs;
-	pstate->ifs              = ifs;
-	pstate->ips              = ips;
-	pstate->irslen           = strlen(irs);
-	pstate->ifslen           = strlen(ifs);
-	pstate->ipslen           = strlen(ips);
-	pstate->allow_repeat_ifs = allow_repeat_ifs;
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = file_reader_mmap_vclose;
-	if (pstate->irslen == 1) {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
-			? lrec_reader_mmap_dkvp_process_single_irs_single_others
-			: lrec_reader_mmap_dkvp_process_single_irs_multi_others;
-	} else {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
-			? lrec_reader_mmap_dkvp_process_multi_irs_single_others
-			: lrec_reader_mmap_dkvp_process_multi_irs_multi_others;
-	}
-	plrec_reader->psof_func   = lrec_reader_mmap_dkvp_sof;
-	plrec_reader->pfree_func  = NULL;
-
-	return plrec_reader;
-}
-
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle, char irs, char ifs, char ips, int allow_repeat_ifs) {
+lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
+	char irs, char ifs, char ips, int allow_repeat_ifs)
+{
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	char* line  = phandle->sol;
@@ -171,8 +180,8 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	return prec;
 }
 
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle, char* irs, char ifs, char ips,
-	int irslen, int allow_repeat_ifs)
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
+	char* irs, char ifs, char ips, int irslen, int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -333,8 +342,8 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	return prec;
 }
 
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle, char* irs, char* ifs, char* ips,
-	int irslen, int ifslen, int ipslen, int allow_repeat_ifs)
+lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
+	char* irs, char* ifs, char* ips, int irslen, int ifslen, int ipslen, int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 

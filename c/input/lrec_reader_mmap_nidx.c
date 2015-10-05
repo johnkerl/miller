@@ -11,6 +11,47 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 	int   allow_repeat_ifs;
 } lrec_reader_mmap_nidx_state_t;
 
+static void    lrec_reader_mmap_nidx_sof(void* pvstate);
+static lrec_t* lrec_reader_mmap_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_mmap_nidx_process_multi_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
+
+// ----------------------------------------------------------------
+lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
+	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+
+	lrec_reader_mmap_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_nidx_state_t));
+	pstate->irs                      = irs;
+	pstate->ifs                      = ifs;
+	pstate->irslen                   = strlen(pstate->irs);
+	pstate->ifslen                   = strlen(pstate->ifs);
+	pstate->allow_repeat_ifs         = allow_repeat_ifs;
+
+	plrec_reader->pvstate       = (void*)pstate;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+
+	if (pstate->irslen == 1) {
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
+			? lrec_reader_mmap_nidx_process_single_irs_single_ifs
+			: lrec_reader_mmap_nidx_process_single_irs_multi_ifs;
+	} else {
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
+			? lrec_reader_mmap_nidx_process_multi_irs_single_ifs
+			: lrec_reader_mmap_nidx_process_multi_irs_multi_ifs;
+	}
+
+	plrec_reader->psof_func     = lrec_reader_mmap_nidx_sof;
+	plrec_reader->pfree_func    = NULL;
+
+	return plrec_reader;
+}
+
+// No-op for stateless readers such as this one.
+static void lrec_reader_mmap_nidx_sof(void* pvstate) {
+}
+
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
@@ -50,40 +91,6 @@ static lrec_t* lrec_reader_mmap_nidx_process_multi_irs_multi_ifs(void* pvstate, 
 	else
 		return lrec_parse_mmap_nidx_multi_irs_multi_ifs(phandle, pstate->irs, pstate->ifs,
 			pstate->irslen, pstate->ifslen, pstate->allow_repeat_ifs);
-}
-
-// No-op for stateless readers such as this one.
-static void lrec_reader_mmap_nidx_sof(void* pvstate) {
-}
-
-lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
-	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-
-	lrec_reader_mmap_nidx_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_nidx_state_t));
-	pstate->irs                      = irs;
-	pstate->ifs                      = ifs;
-	pstate->irslen                   = strlen(pstate->irs);
-	pstate->ifslen                   = strlen(pstate->ifs);
-	pstate->allow_repeat_ifs         = allow_repeat_ifs;
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = file_reader_mmap_vclose;
-
-	if (pstate->irslen == 1) {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1)
-			? lrec_reader_mmap_nidx_process_single_irs_single_ifs
-			: lrec_reader_mmap_nidx_process_single_irs_multi_ifs;
-	} else {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1)
-			? lrec_reader_mmap_nidx_process_multi_irs_single_ifs
-			: lrec_reader_mmap_nidx_process_multi_irs_multi_ifs;
-	}
-
-	plrec_reader->psof_func     = lrec_reader_mmap_nidx_sof;
-	plrec_reader->pfree_func    = NULL;
-
-	return plrec_reader;
 }
 
 // ----------------------------------------------------------------

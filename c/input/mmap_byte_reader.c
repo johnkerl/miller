@@ -17,6 +17,30 @@ typedef struct _mmap_byte_reader_state_t {
 	char* eof;
 } mmap_byte_reader_state_t;
 
+static int  mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename);
+static int  mmap_byte_reader_read_func(struct _byte_reader_t* pbr);
+static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr);
+
+// ----------------------------------------------------------------
+byte_reader_t* mmap_byte_reader_alloc() {
+	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
+
+	pbr->pvstate     = NULL;
+	pbr->popen_func  = mmap_byte_reader_open_func;
+	pbr->pread_func  = mmap_byte_reader_read_func;
+	pbr->pclose_func = mmap_byte_reader_close_func;
+
+	return pbr;
+}
+
+void mmap_byte_reader_free(byte_reader_t* pbr) {
+	mmap_byte_reader_state_t* pstate = pbr->pvstate;
+	if (pstate != NULL) {
+		free(pstate->filename); // null-ok semantics
+	}
+	free(pbr);
+}
+
 // ----------------------------------------------------------------
 static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename) {
 	mmap_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(mmap_byte_reader_state_t));
@@ -70,24 +94,4 @@ static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr) {
 		fprintf(stderr, "%s: close error on file \"%s\".\n", MLR_GLOBALS.argv0, pstate->filename);
 		exit(1);
 	}
-}
-
-// ----------------------------------------------------------------
-byte_reader_t* mmap_byte_reader_alloc() {
-	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
-
-	pbr->pvstate     = NULL;
-	pbr->popen_func  = mmap_byte_reader_open_func;
-	pbr->pread_func  = mmap_byte_reader_read_func;
-	pbr->pclose_func = mmap_byte_reader_close_func;
-
-	return pbr;
-}
-
-void mmap_byte_reader_free(byte_reader_t* pbr) {
-	mmap_byte_reader_state_t* pstate = pbr->pvstate;
-	if (pstate != NULL) {
-		free(pstate->filename); // null-ok semantics
-	}
-	free(pbr);
 }

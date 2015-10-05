@@ -9,6 +9,30 @@ typedef struct _stdio_byte_reader_state_t {
 	FILE* fp;
 } stdio_byte_reader_state_t;
 
+static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename);
+static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr);
+static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr);
+
+// ----------------------------------------------------------------
+byte_reader_t* stdio_byte_reader_alloc() {
+	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
+
+	pbr->pvstate     = NULL;
+	pbr->popen_func  = stdio_byte_reader_open_func;
+	pbr->pread_func  = stdio_byte_reader_read_func;
+	pbr->pclose_func = stdio_byte_reader_close_func;
+
+	return pbr;
+}
+
+void stdio_byte_reader_free(byte_reader_t* pbr) {
+	stdio_byte_reader_state_t* pstate = pbr->pvstate;
+	if (pstate != NULL) {
+		free(pstate->filename); // null-ok semantics
+	}
+	free(pbr);
+}
+
 // ----------------------------------------------------------------
 static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename) {
 	stdio_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(stdio_byte_reader_state_t));
@@ -44,24 +68,4 @@ static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr) {
 		fclose(pstate->fp);
 	free(pstate);
 	pbr->pvstate = NULL;
-}
-
-// ----------------------------------------------------------------
-byte_reader_t* stdio_byte_reader_alloc() {
-	byte_reader_t* pbr = mlr_malloc_or_die(sizeof(byte_reader_t));
-
-	pbr->pvstate     = NULL;
-	pbr->popen_func  = stdio_byte_reader_open_func;
-	pbr->pread_func  = stdio_byte_reader_read_func;
-	pbr->pclose_func = stdio_byte_reader_close_func;
-
-	return pbr;
-}
-
-void stdio_byte_reader_free(byte_reader_t* pbr) {
-	stdio_byte_reader_state_t* pstate = pbr->pvstate;
-	if (pstate != NULL) {
-		free(pstate->filename); // null-ok semantics
-	}
-	free(pbr);
 }
