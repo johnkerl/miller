@@ -8,6 +8,9 @@
 #include "mapping/mapper.h"
 #include "mapping/lrec_evaluators.h"
 
+// xxx cmt: bottom-up file
+// xxx cmt: two kinds here: _x_ with dispos in mlrval, and _t_ with typecheck/coerce here
+
 // ================================================================
 typedef struct _lrec_evaluator_b_b_state_t {
 	mv_unary_func_t*  pfunc;
@@ -170,9 +173,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 	return pevaluator;
 }
 
-// xxx rename, and comment: this is for min/max which can return non-null when
-// one argument is null -- in comparison to other functions which return null
-// if *any* argument is null.
+// This is for min/max which can return non-null when one argument is null --
+// in comparison to other functions which return null if *any* argument is
+// null.
 mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
@@ -311,7 +314,6 @@ mv_t lrec_evaluator_f_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	// xxx decide & document whether to do the typing here or in the pfunc
 	if (val1.type != MT_STRING) // xxx conversions?
 		return MV_ERROR;
 
@@ -340,7 +342,6 @@ mv_t lrec_evaluator_i_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	// xxx decide & document whether to do the typing here or in the pfunc
 	if (val1.type != MT_STRING) // xxx conversions?
 		return MV_ERROR;
 
@@ -360,105 +361,27 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
-// xxx decide if i need all these flavors at this level. maybe not.
-
-typedef struct _lrec_evaluator_i_x_state_t {
+typedef struct _lrec_evaluator_x_x_state_t {
 	mv_unary_func_t*  pfunc;
 	lrec_evaluator_t* parg1;
-} lrec_evaluator_i_x_state_t;
+} lrec_evaluator_x_x_state_t;
 
-mv_t lrec_evaluator_i_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_i_x_state_t* pstate = pvstate;
+mv_t lrec_evaluator_x_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_x_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_i_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
-	lrec_evaluator_i_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_i_x_state_t));
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_x_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_x_state_t));
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_i_x_func;
-
-	return pevaluator;
-}
-
-typedef struct _lrec_evaluator_f_x_state_t {
-	mv_unary_func_t*  pfunc;
-	lrec_evaluator_t* parg1;
-} lrec_evaluator_f_x_state_t;
-
-mv_t lrec_evaluator_f_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_f_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-
-	return pstate->pfunc(&val1);
-}
-
-lrec_evaluator_t* lrec_evaluator_alloc_from_f_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
-	lrec_evaluator_f_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_x_state_t));
-	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-
-	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
-	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_f_x_func;
-
-	return pevaluator;
-}
-
-typedef struct _lrec_evaluator_s_x_state_t {
-	mv_unary_func_t*  pfunc;
-	lrec_evaluator_t* parg1;
-} lrec_evaluator_s_x_state_t;
-
-mv_t lrec_evaluator_s_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_s_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-
-	return pstate->pfunc(&val1);
-}
-
-lrec_evaluator_t* lrec_evaluator_alloc_from_s_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
-	lrec_evaluator_s_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_x_state_t));
-	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-
-	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
-	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_s_x_func;
-
-	return pevaluator;
-}
-
-// ----------------------------------------------------------------
-typedef struct _lrec_evaluator_b_x_state_t {
-	mv_unary_func_t*  pfunc;
-	lrec_evaluator_t* parg1;
-} lrec_evaluator_b_x_state_t;
-
-mv_t lrec_evaluator_b_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_b_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	return pstate->pfunc(&val1);
-}
-
-lrec_evaluator_t* lrec_evaluator_alloc_from_b_x_func(mv_unary_func_t* pfunc,
-	lrec_evaluator_t* parg1)
-{
-	lrec_evaluator_b_x_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_b_x_state_t));
-	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-
-	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
-	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_b_x_func;
+	pevaluator->pevaluator_func = lrec_evaluator_x_x_func;
 
 	return pevaluator;
 }
@@ -1001,7 +924,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "asinh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_asinh_func,     parg1);
 	} else if (streq(fnnm, "atan"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,      parg1);
 	} else if (streq(fnnm, "atanh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,     parg1);
-	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_b_x_func(b_x_boolean_func,   parg1);
+	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_x_x_func(b_x_boolean_func,   parg1);
 	} else if (streq(fnnm, "cbrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,      parg1);
 	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,      parg1);
 	} else if (streq(fnnm, "cos"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,       parg1);
@@ -1010,15 +933,15 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "erfc"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,      parg1);
 	} else if (streq(fnnm, "exp"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,       parg1);
 	} else if (streq(fnnm, "expm1"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,     parg1);
-	} else if (streq(fnnm, "float"))     { return lrec_evaluator_alloc_from_f_x_func(f_x_float_func,     parg1);
+	} else if (streq(fnnm, "float"))     { return lrec_evaluator_alloc_from_x_x_func(f_x_float_func,     parg1);
 	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,     parg1);
 	} else if (streq(fnnm, "gmt2sec"))   { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2sec"))   { return lrec_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2fsec"))  { return lrec_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,  parg1);
 	} else if (streq(fnnm, "dhms2sec"))  { return lrec_evaluator_alloc_from_f_s_func(i_s_dhms2sec_func,  parg1);
 	} else if (streq(fnnm, "dhms2fsec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_dhms2fsec_func, parg1);
-	} else if (streq(fnnm, "hexfmt"))    { return lrec_evaluator_alloc_from_s_x_func(s_x_hexfmt_func,    parg1);
-	} else if (streq(fnnm, "int"))       { return lrec_evaluator_alloc_from_i_x_func(i_x_int_func,       parg1);
+	} else if (streq(fnnm, "hexfmt"))    { return lrec_evaluator_alloc_from_x_x_func(s_x_hexfmt_func,    parg1);
+	} else if (streq(fnnm, "int"))       { return lrec_evaluator_alloc_from_x_x_func(i_x_int_func,       parg1);
 	} else if (streq(fnnm, "log"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,       parg1);
 	} else if (streq(fnnm, "log10"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,     parg1);
 	} else if (streq(fnnm, "log1p"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,     parg1);
@@ -1033,7 +956,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "sin"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,       parg1);
 	} else if (streq(fnnm, "sinh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,      parg1);
 	} else if (streq(fnnm, "sqrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,      parg1);
-	} else if (streq(fnnm, "string"))    { return lrec_evaluator_alloc_from_s_x_func(s_x_string_func,    parg1);
+	} else if (streq(fnnm, "string"))    { return lrec_evaluator_alloc_from_x_x_func(s_x_string_func,    parg1);
 	} else if (streq(fnnm, "strlen"))    { return lrec_evaluator_alloc_from_i_s_func(i_s_strlen_func,    parg1);
 	} else if (streq(fnnm, "tan"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_tan_func,       parg1);
 	} else if (streq(fnnm, "tanh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_tanh_func,      parg1);
