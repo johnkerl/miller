@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <regex.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "mapping/mlr_val.h"
@@ -847,8 +848,43 @@ mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type]
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE}; // xxx stub
+	char* s1 = pval1->u.strv;
+	char* s2 = pval2->u.strv;
+
+	// xxx temp -- need to regcomp once & keep it
+	regex_t reg;
+	char* sstr   = s1;
+	char* sregex = s2;
+	int cflags = REG_EXTENDED; // also support REG_ICASE somehow
+	regmatch_t pmatch[1];
+	int eflags = 0;
+	int rc;
+
+	rc = regcomp(&reg, sregex, cflags);
+	if (rc != 0) {
+		size_t nbytes = regerror(rc, &reg, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, &reg, errbuf, nbytes);
+		fprintf(stderr, "regcomp failure: %s\n", errbuf);
+		exit(1);
+	}
+
+	rc = regexec(&reg, sstr, 1, pmatch, eflags);
+	regfree(&reg);
+	if (rc == 0) {
+		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
+	} else if (rc == REG_NOMATCH) {
+		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
+	} else {
+		size_t nbytes = regerror(rc, &reg, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, &reg, errbuf, nbytes);
+		printf("regexec failure: %s\n", errbuf);
+		exit(1);
+	}
 }
 mv_t does_not_match_op_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE}; // xxx stub
+	mv_t rv = matches_op_func(pval1, pval2);
+	rv.u.boolv = !rv.u.boolv;
+	return rv;
 }
