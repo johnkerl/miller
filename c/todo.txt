@@ -17,6 +17,14 @@ MINOR:
 MAJOR: running-mean feature ....... really for all of stats1/stats2
 
 ----------------------------------------------------------------
+MAJOR: regex
+
+* mlr filter '$y =~ /abc/'
+* mlr put '$y = gsub(/a.*b/, "cde")'
+* having-fields
+* IOXS...
+
+----------------------------------------------------------------
 MAJOR: manpage
 
 * xroff links:
