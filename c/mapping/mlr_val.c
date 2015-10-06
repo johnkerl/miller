@@ -847,6 +847,7 @@ mv_t ge_op_func(mv_t* pval1, mv_t* pval2) { return (ge_dispositions[pval1->type]
 mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
+// ----------------------------------------------------------------
 mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
 	char* s1 = pval1->u.strv;
 	char* s2 = pval2->u.strv;
@@ -855,7 +856,7 @@ mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
 	regex_t reg;
 	char* sstr   = s1;
 	char* sregex = s2;
-	int cflags = REG_EXTENDED; // also support REG_ICASE somehow
+	int cflags = REG_EXTENDED | REG_NOSUB; // xxx also support REG_ICASE somehow
 	regmatch_t pmatch[1];
 	int eflags = 0;
 	int rc;
@@ -870,16 +871,18 @@ mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
 	}
 
 	rc = regexec(&reg, sstr, 1, pmatch, eflags);
-	regfree(&reg);
 	if (rc == 0) {
+		regfree(&reg);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else if (rc == REG_NOMATCH) {
+		regfree(&reg);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
 	} else {
 		size_t nbytes = regerror(rc, &reg, NULL, 0);
 		char* errbuf = malloc(nbytes);
 		(void)regerror(rc, &reg, errbuf, nbytes);
 		printf("regexec failure: %s\n", errbuf);
+		regfree(&reg);
 		exit(1);
 	}
 }
