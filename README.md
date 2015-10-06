@@ -28,7 +28,7 @@ positionally-indexed data as a special case.)
 
 Features:
 
-* I/O formats including **tabular pretty-printing**
+* I/O formats including **tabular pretty-printing** and **positionally indexed** (Unix-toolkit style)
 
 * **Conversion** between formats
 
