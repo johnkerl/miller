@@ -1065,6 +1065,9 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
+			// xxx regex special case ...
+			// * if arg2 is a string literal
+			// * then make a stateful unary func with arg1 as argument & regcomp of arg2 as part of its state
 			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
 			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
