@@ -62,6 +62,12 @@ filter_dsl_or_term(A) ::= filter_dsl_or_term(B) FILTER_DSL_AND(O) filter_dsl_and
 filter_dsl_and_term(A) ::= filter_dsl_eqne_term(B). {
 	A = B;
 }
+filter_dsl_and_term(A) ::= filter_dsl_eqne_term(B) FILTER_DSL_MATCHES(O) filter_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+filter_dsl_and_term(A) ::= filter_dsl_eqne_term(B) FILTER_DSL_DOES_NOT_MATCH(O) filter_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
 filter_dsl_and_term(A) ::= filter_dsl_eqne_term(B) FILTER_DSL_EQ(O) filter_dsl_eqne_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }

@@ -218,6 +218,8 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1);
 mv_t i_s_strlen_func(mv_t* pval1);
 
 // ----------------------------------------------------------------
+mv_t matches_op_func(mv_t* pval1, mv_t* pval2);
+mv_t does_not_match_op_func(mv_t* pval1, mv_t* pval2);
 mv_t eq_op_func(mv_t* pval1, mv_t* pval2);
 mv_t ne_op_func(mv_t* pval1, mv_t* pval2);
 mv_t gt_op_func(mv_t* pval1, mv_t* pval2);

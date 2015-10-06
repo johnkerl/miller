@@ -845,3 +845,10 @@ mv_t gt_op_func(mv_t* pval1, mv_t* pval2) { return (gt_dispositions[pval1->type]
 mv_t ge_op_func(mv_t* pval1, mv_t* pval2) { return (ge_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+
+mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
+	return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE}; // xxx stub
+}
+mv_t does_not_match_op_func(mv_t* pval1, mv_t* pval2) {
+	return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE}; // xxx stub
+}

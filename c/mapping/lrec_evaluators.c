@@ -435,14 +435,14 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_b_xx_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
-typedef struct _lrec_evaluator_s_ss_state_t {
+typedef struct _lrec_evaluator_x_ss_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
 	lrec_evaluator_t* parg2;
-} lrec_evaluator_s_ss_state_t;
+} lrec_evaluator_x_ss_state_t;
 
-mv_t lrec_evaluator_s_ss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_s_ss_state_t* pstate = pvstate;
+mv_t lrec_evaluator_x_ss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_ss_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
@@ -456,17 +456,17 @@ mv_t lrec_evaluator_s_ss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return pstate->pfunc(&val1, &val2);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_s_ss_func(mv_binary_func_t* pfunc,
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_ss_func(mv_binary_func_t* pfunc,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
 {
-	lrec_evaluator_s_ss_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_s_ss_state_t));
+	lrec_evaluator_x_ss_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_ss_state_t));
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 	pstate->parg2 = parg2;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_s_ss_func;
+	pevaluator->pevaluator_func = lrec_evaluator_x_ss_func;
 
 	return pevaluator;
 }
@@ -774,6 +774,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
 	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
 
+	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand side)."},
+	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex (right-hand side)."},
 	{ FUNC_CLASS_BOOLEAN, "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
 	{ FUNC_CLASS_BOOLEAN, "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
 	{ FUNC_CLASS_BOOLEAN, ">",       2 , "String/numeric greater-than. Mixing number and string results in string compare."},
@@ -992,13 +994,15 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 {
 	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,             parg1, parg2);
 	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,              parg1, parg2);
+	} else if (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_ss_func(matches_op_func,           parg1, parg2);
+	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_ss_func(does_not_match_op_func,    parg1, parg2);
 	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,                parg1, parg2);
 	} else if (streq(fnnm, "!="))     { return lrec_evaluator_alloc_from_b_xx_func(ne_op_func,                parg1, parg2);
 	} else if (streq(fnnm, ">"))      { return lrec_evaluator_alloc_from_b_xx_func(gt_op_func,                parg1, parg2);
 	} else if (streq(fnnm, ">="))     { return lrec_evaluator_alloc_from_b_xx_func(ge_op_func,                parg1, parg2);
 	} else if (streq(fnnm, "<"))      { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,                parg1, parg2);
 	} else if (streq(fnnm, "<="))     { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,                parg1, parg2);
-	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func,             parg1, parg2);
+	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func,             parg1, parg2);
 	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,            parg1, parg2);
 	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,           parg1, parg2);
 	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,           parg1, parg2);
@@ -1146,7 +1150,7 @@ static char * test2() {
 
 	lrec_evaluator_t* ps       = lrec_evaluator_alloc_from_field_name("s");
 	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_literal("def");
-	lrec_evaluator_t* pdot     = lrec_evaluator_alloc_from_s_ss_func(s_ss_dot_func, ps, pdef);
+	lrec_evaluator_t* pdot     = lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func, ps, pdef);
 	lrec_evaluator_t* ptolower = lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 
