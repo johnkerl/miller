@@ -756,6 +756,7 @@ Examples:
   mlr filter 'urand() &lt; 0.001'  (subsampling)
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
+  mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+")'
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list.
 </pre>
