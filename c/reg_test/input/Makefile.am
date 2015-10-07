@@ -32,6 +32,7 @@ EXTRA_DIST=	\
 		multi-sep.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
+		regex.dkvp \
 		regularize.dkvp \
 		rfc-csv \
 		sec2gmt \
