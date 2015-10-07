@@ -1,3 +1,4 @@
+#include <regex.h>
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -8,16 +9,16 @@
 typedef struct _mapper_having_fields_state_t {
 	slls_t* pfield_names;
 	hss_t*  pfield_name_set;
-	int     criterion;
+	regex_t regex;
 } mapper_having_fields_state_t;
 
+static void      mapper_having_fields_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv);
 static sllv_t*   mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_having_fields_which_are_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_having_fields_at_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_having_fields_free(void* pvstate);
 static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion);
-static void      mapper_having_fields_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_having_fields_setup = {
@@ -25,6 +26,57 @@ mapper_setup_t mapper_having_fields_setup = {
 	.pusage_func = mapper_having_fields_usage,
 	.pparse_func = mapper_having_fields_parse_cli,
 };
+
+// ----------------------------------------------------------------
+static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "--at-least  {a,b,c}\n");
+	fprintf(o, "--which-are {a,b,c}\n");
+	fprintf(o, "--at-most   {a,b,c}\n");
+	fprintf(o, "Conditionally passes through records depending on each record's field names.\n");
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* pfield_names  = NULL;
+	int     criterion     = FALSE;
+
+	char* verb = argv[(*pargi)++];
+
+	int argi = *pargi;
+	while (argi < argc && argv[argi][0] == '-') {
+		if (streq(argv[argi], "--at-least")) {
+			criterion = HAVING_FIELDS_AT_LEAST;
+		} else if (streq(argv[argi], "--which-are")) {
+			criterion = HAVING_FIELDS_WHICH_ARE;
+		} else if (streq(argv[argi], "--at-most")) {
+			criterion = HAVING_FIELDS_AT_MOST;
+		} else {
+			mapper_having_fields_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+
+		if (argc - argi < 2) {
+			return NULL;
+		}
+		if (pfield_names != NULL)
+			slls_free(pfield_names);
+		pfield_names = slls_from_line(argv[argi+1], ',', FALSE);
+		argi += 2;
+	}
+
+	if (pfield_names == NULL) {
+		mapper_having_fields_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+	if (criterion == FALSE) {
+		mapper_having_fields_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	*pargi = argi;
+	return mapper_having_fields_alloc(pfield_names, criterion);
+}
 
 // ----------------------------------------------------------------
 // record = a,b,c,d,e
@@ -92,7 +144,6 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 	pstate->pfield_name_set = hss_alloc();
 	for (sllse_t* pe = pfield_names->phead; pe != NULL; pe = pe->pnext)
 		hss_add(pstate->pfield_name_set, pe->value);
-	pstate->criterion = criterion;
 
 	pmapper->pvstate = (void*)pstate;
 	if (criterion == HAVING_FIELDS_AT_LEAST)
@@ -104,55 +155,4 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, int criterion)
 	pmapper->pfree_func = mapper_having_fields_free;
 
 	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "--at-least  {a,b,c}\n");
-	fprintf(o, "--which-are {a,b,c}\n");
-	fprintf(o, "--at-most   {a,b,c}\n");
-	fprintf(o, "Conditionally passes through records depending on each record's field names.\n");
-}
-
-// ----------------------------------------------------------------
-static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pfield_names  = NULL;
-	int     criterion     = FALSE;
-
-	char* verb = argv[(*pargi)++];
-
-	int argi = *pargi;
-	while (argi < argc && argv[argi][0] == '-') {
-		if (streq(argv[argi], "--at-least")) {
-			criterion = HAVING_FIELDS_AT_LEAST;
-		} else if (streq(argv[argi], "--which-are")) {
-			criterion = HAVING_FIELDS_WHICH_ARE;
-		} else if (streq(argv[argi], "--at-most")) {
-			criterion = HAVING_FIELDS_AT_MOST;
-		} else {
-			mapper_having_fields_usage(stderr, argv[0], verb);
-			return NULL;
-		}
-
-		if (argc - argi < 2) {
-			return NULL;
-		}
-		if (pfield_names != NULL)
-			slls_free(pfield_names);
-		pfield_names = slls_from_line(argv[argi+1], ',', FALSE);
-		argi += 2;
-	}
-
-	if (pfield_names == NULL) {
-		mapper_having_fields_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-	if (criterion == FALSE) {
-		mapper_having_fields_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	*pargi = argi;
-	return mapper_having_fields_alloc(pfield_names, criterion);
 }
