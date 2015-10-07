@@ -236,7 +236,7 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh
-   sqrt tan tanh urand + - - * / % ** == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub
+   sqrt tan tanh urand + - - * / % ** =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub
    tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
    gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec
    dhms2fsec
@@ -2368,6 +2368,8 @@ urand      (math:       #args=0): Floating-point numbers on the unit interval. I
 /          (math:       #args=2): Division.
 %          (math:       #args=2): Remainder; never negative-valued.
 **         (math:       #args=2): Exponentiation; same as pow.
+=~         (boolean:    #args=2): String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+!=~        (boolean:    #args=2): String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 ==         (boolean:    #args=2): String/numeric equality. Mixing number and string results in string compare.
 !=         (boolean:    #args=2): String/numeric inequality. Mixing number and string results in string compare.
 &gt;          (boolean:    #args=2): String/numeric greater-than. Mixing number and string results in string compare.
