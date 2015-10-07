@@ -29,15 +29,11 @@ MAJOR: running-mean feature ....... really for all of stats1/stats2
 ----------------------------------------------------------------
 MAJOR: regex
 
-* mlr filter '$y =~ "abc"'
-* mlr put '$y = gsub(/a.*b/, "cde")'
-* having-fields
-* IOXS ... or not ...
-
--> major work here is on stateful mlrval functions and ast-node label-as-literal.
-   this to avoid record-by-record regcomp which is prohibitively expensive.
-
--> case-insensitivity ...
+k mlr filter '$y =~ "abc"'
+? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
+* mlr put '$y = gsub($x, "a.*b", "cde")'
+  mlr put '$y = gsub($x, "a(.*)b", "cde$1ghi")'
+* having-fields w/ -r ...
 
 ----------------------------------------------------------------
 MAJOR: manpage
@@ -169,16 +165,12 @@ NIDX/DKVP/...:
 
 ================================================================
 FUNCTIONS
-? match   (b_ss)  (w/ regexes!!)
-? gsub    (s_sss) (w/ regexes!!)
 ? index   (i_ss) -- not very useful unless there are functions which take an index as an argument ...
 ? bit ops (i_ii) & | ^ << >>
 ? log2, exp2
 
 ================================================================
 UT/REG
-* general coverage
-  - include -D__XXX_MAIN__ content
 * cat/X/cat for all X
 * tac/X/cat for all X
 * cat/X/tac for all X
