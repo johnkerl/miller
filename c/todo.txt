@@ -21,6 +21,7 @@ MINOR:
   - mlr put '$y=string($x);$z=$y.$y'
     vs.
     mlr put '$z=string($x).string($x)'
+  -> maybe handle this with temp map from field name to mlr_val in mapper_put_process?!?
 
 ----------------------------------------------------------------
 MAJOR: running-mean feature ....... really for all of stats1/stats2
@@ -31,10 +32,12 @@ MAJOR: regex
 * mlr filter '$y =~ "abc"'
 * mlr put '$y = gsub(/a.*b/, "cde")'
 * having-fields
-* IOXS...
+* IOXS ... or not ...
 
 -> major work here is on stateful mlrval functions and ast-node label-as-literal.
    this to avoid record-by-record regcomp which is prohibitively expensive.
+
+-> case-insensitivity ...
 
 ----------------------------------------------------------------
 MAJOR: manpage

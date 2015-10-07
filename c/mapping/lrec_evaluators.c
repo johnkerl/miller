@@ -472,6 +472,48 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_ss_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_x_sr_state_t {
+	mv_binary_right_regex_func_t* pfunc;
+	lrec_evaluator_t*             parg1;
+	regex_t                       regex;
+} lrec_evaluator_x_sr_state_t;
+
+mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_sr_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type != MT_STRING)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &pstate->regex);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_right_regex_func_t* pfunc,
+	lrec_evaluator_t* parg1, char* regex_string)
+{
+	lrec_evaluator_x_sr_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_sr_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	int cflags = REG_EXTENDED | REG_NOSUB; // xxx also support optional REG_ICASE somehow
+	int rc = regcomp(&pstate->regex, regex_string, cflags);
+	if (rc != 0) {
+		size_t nbytes = regerror(rc, &pstate->regex, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, &pstate->regex, errbuf, nbytes);
+		fprintf(stderr, "%s: could not compile regex \"%s\" : %s\n",
+			MLR_GLOBALS.argv0, regex_string, errbuf);
+		exit(1);
+	}
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_x_sr_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_s_xs_state_t {
 	mv_binary_func_t*  pfunc;
 	lrec_evaluator_t* parg1;
@@ -992,29 +1034,37 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
 {
-	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,             parg1, parg2);
-	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,              parg1, parg2);
-	} else if (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_ss_func(matches_op_func,           parg1, parg2);
-	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_ss_func(does_not_match_op_func,    parg1, parg2);
-	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,                parg1, parg2);
-	} else if (streq(fnnm, "!="))     { return lrec_evaluator_alloc_from_b_xx_func(ne_op_func,                parg1, parg2);
-	} else if (streq(fnnm, ">"))      { return lrec_evaluator_alloc_from_b_xx_func(gt_op_func,                parg1, parg2);
-	} else if (streq(fnnm, ">="))     { return lrec_evaluator_alloc_from_b_xx_func(ge_op_func,                parg1, parg2);
-	} else if (streq(fnnm, "<"))      { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,                parg1, parg2);
-	} else if (streq(fnnm, "<="))     { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,                parg1, parg2);
-	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func,             parg1, parg2);
-	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,            parg1, parg2);
-	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,           parg1, parg2);
-	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,           parg1, parg2);
-	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func,          parg1, parg2);
-	} else if (streq(fnnm, "**"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,             parg1, parg2);
-	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,             parg1, parg2);
-	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,             parg1, parg2);
-	} else if (streq(fnnm, "atan2"))  { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,           parg1, parg2);
-	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,    parg1, parg2);
-	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,    parg1, parg2);
-	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func, parg1, parg2);
-	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,          parg1, parg2);
+	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,                  parg1, parg2);
+	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,                   parg1, parg2);
+	} else if (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_ss_func(matches_no_precomp_func,        parg1, parg2);
+	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_ss_func(does_not_match_no_precomp_func, parg1, parg2);
+	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, "!="))     { return lrec_evaluator_alloc_from_b_xx_func(ne_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, ">"))      { return lrec_evaluator_alloc_from_b_xx_func(gt_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, ">="))     { return lrec_evaluator_alloc_from_b_xx_func(ge_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, "<"))      { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, "<="))     { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,                     parg1, parg2);
+	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func,                  parg1, parg2);
+	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_plus_func,                 parg1, parg2);
+	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,                parg1, parg2);
+	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,                parg1, parg2);
+	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func,               parg1, parg2);
+	} else if (streq(fnnm, "**"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
+	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
+	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,                  parg1, parg2);
+	} else if (streq(fnnm, "atan2"))  { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,                parg1, parg2);
+	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,         parg1, parg2);
+	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,         parg1, parg2);
+	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func,      parg1, parg2);
+	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,               parg1, parg2);
+	} else  { return NULL; }
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
+	lrec_evaluator_t* parg1, char* regex_string)
+{
+	if        (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_sr_func(matches_precomp_func,        parg1, regex_string);
+	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_sr_func(does_not_match_precomp_func, parg1, regex_string);
 	} else  { return NULL; }
 }
 
@@ -1065,16 +1115,31 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
-			// xxx regex special case ...
-			// * if arg2 is a string literal
-			// * then make a stateful unary func with arg1 as argument & regcomp of arg2 as part of its state
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
-			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
-			pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
+
+			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && parg2_node->type == MLR_DSL_AST_NODE_TYPE_LITERAL) {
+				// filter-regex special case:
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text);
+			} else {
+				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
+				// the regexes will be compiled record-by-record rather than once at alloc time, which will
+				// be slower.
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+				lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
+			}
+
 		} else if (user_provided_arity == 3) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
 			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
+
+			// xxx put-regex special case ...
+			// * if function name is sub/gsub
+			// * sub(name, old, new)
+			// * then make a stateful unary func with arg1 & arg3 as arguments & regcomp of arg2 as part of its state
+			// * side note: $1/$2/etc. feature ...
+
 			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
 			lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, function_lookup_table);
 			lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, function_lookup_table);

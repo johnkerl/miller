@@ -847,11 +847,11 @@ mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type]
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
-mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
+// arg2 evaluates to string via compound expression; regexes compiled on each call.
+mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	char* s1 = pval1->u.strv;
 	char* s2 = pval2->u.strv;
 
-	// xxx temp -- need to regcomp once & keep it
 	regex_t reg;
 	char* sstr   = s1;
 	char* sregex = s2;
@@ -885,8 +885,34 @@ mv_t matches_op_func(mv_t* pval1, mv_t* pval2) {
 		exit(1);
 	}
 }
-mv_t does_not_match_op_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = matches_op_func(pval1, pval2);
+mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = matches_no_precomp_func(pval1, pval2);
+	rv.u.boolv = !rv.u.boolv;
+	return rv;
+}
+
+// ----------------------------------------------------------------
+// arg2 is a string, compiled to regex only once at alloc time
+mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex) {
+	regmatch_t pmatch[1];
+	int eflags = 0;
+	int rc;
+
+	rc = regexec(pregex, pval1->u.strv, 1, pmatch, eflags);
+	if (rc == 0) {
+		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
+	} else if (rc == REG_NOMATCH) {
+		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
+	} else {
+		size_t nbytes = regerror(rc, pregex, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, pregex, errbuf, nbytes);
+		printf("regexec failure: %s\n", errbuf);
+		exit(1);
+	}
+}
+mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex) {
+	mv_t rv = matches_precomp_func(pval1, pregex);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }
