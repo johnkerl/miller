@@ -35,7 +35,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				pctx, pstate->pevaluators[i]->pvstate);
 			char* string = mt_format_val(&val);
 			lrec_put(pinrec, pstate->output_field_names[i], string, LREC_FREE_ENTRY_VALUE);
-			free(string);
 		}
 		return sllv_single(pinrec);
 	}

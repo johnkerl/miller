@@ -1,7 +1,31 @@
 ================================================================
 BUGFIXES
 
-:D
+----------------------------------------------------------------
+$ echo 'x=123' | mlr put -v '$x=string($x)' then filter -v '$x =~ "^1.*$"'
+= (operator):
+    x (field_name).
+    string (function_name):
+        x (field_name).
+=~ (operator):
+    x (field_name).
+    ^1.*$ (literal).
+Expression does not evaluate to boolean: got T_ERROR.
+mlr(71864,0x7fff75c6c000) malloc: *** error for object 0x106034d15: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
+
+kerl@kerl-mbp[s134j0d1][c]$ echo 'x=abc' | mlr put -v '$x=string($x)' then filter -v '$x =~ "^1.*$"'
+= (operator):
+    x (field_name).
+    string (function_name):
+        x (field_name).
+=~ (operator):
+    x (field_name).
+    ^1.*$ (literal).
+[OK]
+
+----------------------------------------------------------------
+echo 'x=1@x=2'|mlr --irs @ --oxtab cat
 
 ================================================================
 TOP OF LIST
@@ -10,6 +34,9 @@ TOP OF LIST
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline
+
+* put/filter topdowns
+* off-by-one error on fnr dkvp errmsg?
 
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
@@ -23,6 +50,9 @@ MAJOR: regex
 * mlr put '$y = gsub(/a.*b/, "cde")'
 * having-fields
 * IOXS...
+
+-> major work here is on stateful mlrval functions and ast-node label-as-literal.
+   this to avoid record-by-record regcomp which is prohibitively expensive.
 
 ----------------------------------------------------------------
 MAJOR: manpage

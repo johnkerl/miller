@@ -97,7 +97,6 @@ void mt_get_boolean_strict(mv_t* pval) {
 	if (pval->type != MT_BOOL) {
 		char* desc = mt_describe_type(pval->type);
 		fprintf(stderr, "Expression does not evaluate to boolean: got %s.\n", desc);
-		free(desc);
 		exit(1);
 	}
 }

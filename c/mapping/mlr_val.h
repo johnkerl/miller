@@ -18,7 +18,7 @@
 #define MT_NULL   0 // E.g. field name not present in input record -- not a problem.
 #define MT_ERROR  1 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_BOOL   2
-#define MT_FLOAT 3
+#define MT_FLOAT  3
 #define MT_INT    4
 #define MT_STRING 5
 #define MT_MAX    6

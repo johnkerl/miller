@@ -13,6 +13,16 @@
 #include "stream/stream.h"
 
 int main(int argc, char** argv) {
+
+//	OSX lldb has issues with single-quoted args:
+//	if (argc == 2 && streq(argv[1], "--lldb-workaround")) {
+//		char* nargv[] = { "mlr-dbg", "put", "$x=$x*2", "../data/small", NULL };
+//		argv = nargv;
+//		argc = 0;
+//		while (argv[argc] != NULL)
+//			argc++;
+//	}
+
 	mlr_global_init(argv[0], NULL, NULL);
 	cli_opts_t* popts = parse_command_line(argc, argv);
 	mlr_global_init(argv[0], popts->ofmt, popts);
