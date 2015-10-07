@@ -816,8 +816,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
 	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
 
-	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand side) [under construction]."},
-	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex (right-hand side) [under construction]."},
+	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand side), e.g. '$name =~ \"^a.*b$\"'."},
+	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ \"^a.*b$\"'."},
 	{ FUNC_CLASS_BOOLEAN, "==",      2 , "String/numeric equality. Mixing number and string results in string compare."},
 	{ FUNC_CLASS_BOOLEAN, "!=",      2 , "String/numeric inequality. Mixing number and string results in string compare."},
 	{ FUNC_CLASS_BOOLEAN, ">",       2 , "String/numeric greater-than. Mixing number and string results in string compare."},

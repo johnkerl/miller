@@ -1490,6 +1490,46 @@ mlr filter -v $x<$a*$b+-$c /dev/null
         - (operator):
             c (field_name).
 
+mlr filter -v $x =~ "bcd" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    bcd (literal).
+x=abcd,y=ghi
+x=abcde,y=ghi
+
+mlr filter -v $x =~ "^bcd" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^bcd (literal).
+
+mlr filter -v $x =~ "^abc" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^abc (literal).
+x=abc,y=def
+x=abcd,y=ghi
+x=abcde,y=ghi
+
+mlr filter -v $x =~ "^abc$" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^abc$ (literal).
+x=abc,y=def
+
+mlr filter -v $x =~ "^a.*d$" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^a.*d$ (literal).
+x=abcd,y=ghi
+
+mlr filter -v $x =~ "^a.*"."d$" ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    . (operator):
+        ^a.* (literal).
+        d$ (literal).
+x=abcd,y=ghi
+
 mlr --csvlite put $gmt=sec2gmt($sec) ./reg_test/input/sec2gmt
 sec,gmt
 0,1970-01-01T00:00:00Z
