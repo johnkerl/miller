@@ -15,7 +15,7 @@ char* mlr_get_cline(FILE* fp, char irs) {
 	if (linelen <= 0) {
 		return NULL;
 	}
-	if (line[linelen-1] == '\n') { // chomp
+	if (line[linelen-1] == irs) { // chomp
 		line[linelen-1] = 0;
 		linelen--;
 	}
