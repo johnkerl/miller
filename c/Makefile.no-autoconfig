@@ -234,7 +234,7 @@ test-multiple-containers: .always
 	$(CCDEBUG) -D__TEST_MULTIPLE_CONTAINERS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlrutil.c unit_test/test_mlrutil.c -o test-mlrutil
+	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlr_globals.c lib/mlrutil.c unit_test/test_mlrutil.c -o test-mlrutil
 
 test-string-builder: .always
 	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c unit_test/test_string_builder.c -o test-string-builder

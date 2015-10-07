@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <regex.h>
 
 #define TRUE  1
 #define FALSE 0
@@ -110,5 +111,12 @@ int power_of_two_ceil(int n);
 // The caller should free the return value. Maps two-character sequences such as
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
 char* mlr_unbackslash(char* input);
+
+// Succeeds or aborts the process. cflag REG_EXTENDED is already included.
+void regcomp_or_die(regex_t* pregex, char* regex_string, int cflags);
+// Returns TRUE for match, FALSE for no match, and aborts the process if
+// regexec returns anything else.
+int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
+	size_t nmatch, regmatch_t pmatch[restrict], int eflags);
 
 #endif // MLRUTIL_H

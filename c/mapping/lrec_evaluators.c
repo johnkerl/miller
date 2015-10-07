@@ -495,16 +495,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_right_regex_func
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 
-	int cflags = REG_EXTENDED | REG_NOSUB; // xxx also support optional REG_ICASE somehow
-	int rc = regcomp(&pstate->regex, regex_string, cflags);
-	if (rc != 0) {
-		size_t nbytes = regerror(rc, &pstate->regex, NULL, 0);
-		char* errbuf = malloc(nbytes);
-		(void)regerror(rc, &pstate->regex, errbuf, nbytes);
-		fprintf(stderr, "%s: could not compile regex \"%s\" : %s\n",
-			MLR_GLOBALS.argv0, regex_string, errbuf);
-		exit(1);
-	}
+	int cflags = 0;
+	regcomp_or_die(&pstate->regex, regex_string, cflags);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;

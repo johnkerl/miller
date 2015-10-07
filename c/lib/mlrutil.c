@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <sys/time.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 
 // ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value) {
@@ -374,4 +375,38 @@ char* mlr_unbackslash(char* input) {
 	*po = 0;
 
 	return output;
+}
+
+// ----------------------------------------------------------------
+// Succeeds or aborts the process. cflag REG_EXTENDED is already included.
+void regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
+	cflags |= REG_EXTENDED;
+	int rc = regcomp(pregex, regex_string, cflags);
+	if (rc != 0) {
+		size_t nbytes = regerror(rc, pregex, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, pregex, errbuf, nbytes);
+		fprintf(stderr, "%s: could not compile regex \"%s\" : %s\n",
+			MLR_GLOBALS.argv0, regex_string, errbuf);
+		exit(1);
+	}
+}
+
+// Returns TRUE for match, FALSE for no match, and aborts the process if
+// regexec returns anything else.
+int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
+	size_t nmatch, regmatch_t pmatch[restrict], int eflags)
+{
+	int rc = regexec(pregex, match_string, nmatch, pmatch, eflags);
+	if (rc == 0) {
+		return TRUE;
+	} else if (rc == REG_NOMATCH) {
+		return FALSE;
+	} else {
+		size_t nbytes = regerror(rc, pregex, NULL, 0);
+		char* errbuf = malloc(nbytes);
+		(void)regerror(rc, pregex, errbuf, nbytes);
+		printf("regexec failure: %s\n", errbuf);
+		exit(1);
+	}
 }

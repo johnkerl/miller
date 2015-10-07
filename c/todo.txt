@@ -11,7 +11,8 @@ MINOR:
 
 * double-check for off-by-one buflen in cline/sline
 
-* put/filter topdowns
+* put/filter topdowns; double-check all topdowns
+
 * off-by-one error on fnr dkvp errmsg?
 
 * scroll-stalls in mlrdoc!! really bad on the droid.
@@ -23,8 +24,7 @@ MINOR:
     mlr put '$z=string($x).string($x)'
   -> maybe handle this with temp map from field name to mlr_val in mapper_put_process?!?
 
-----------------------------------------------------------------
-MAJOR: running-mean feature ....... really for all of stats1/stats2
+* hash-chain ifdef instrumentation
 
 ----------------------------------------------------------------
 MAJOR: regex
@@ -34,6 +34,12 @@ k mlr filter '$y =~ "abc"'
 * mlr put '$y = gsub($x, "a.*b", "cde")'
   mlr put '$y = gsub($x, "a(.*)b", "cde$1ghi")'
 * having-fields w/ -r ...
+
+* -i flag throughout ... put, filter, having-fields.
+* libify regcomp (sub/nosub) & regexec
+
+----------------------------------------------------------------
+MAJOR: running-mean feature ....... really for all of stats1/stats2
 
 ----------------------------------------------------------------
 MAJOR: manpage

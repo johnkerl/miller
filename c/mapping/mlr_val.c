@@ -855,36 +855,20 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	regex_t reg;
 	char* sstr   = s1;
 	char* sregex = s2;
-	int cflags = REG_EXTENDED | REG_NOSUB; // xxx also support REG_ICASE somehow
 	regmatch_t pmatch[1];
 	int eflags = 0;
-	int rc;
 
-	rc = regcomp(&reg, sregex, cflags);
-	if (rc != 0) {
-		size_t nbytes = regerror(rc, &reg, NULL, 0);
-		char* errbuf = malloc(nbytes);
-		(void)regerror(rc, &reg, errbuf, nbytes);
-		fprintf(stderr, "regcomp failure: %s\n", errbuf);
-		exit(1);
-	}
+	regcomp_or_die(&reg, sregex, REG_NOSUB); // xxx also support REG_ICASE somehow
 
-	rc = regexec(&reg, sstr, 1, pmatch, eflags);
-	if (rc == 0) {
+	if (regmatch_or_die(&reg, sstr, 1, pmatch, eflags)) {
 		regfree(&reg);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
-	} else if (rc == REG_NOMATCH) {
+	} else {
 		regfree(&reg);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
-	} else {
-		size_t nbytes = regerror(rc, &reg, NULL, 0);
-		char* errbuf = malloc(nbytes);
-		(void)regerror(rc, &reg, errbuf, nbytes);
-		printf("regexec failure: %s\n", errbuf);
-		regfree(&reg);
-		exit(1);
 	}
 }
+
 mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = matches_no_precomp_func(pval1, pval2);
 	rv.u.boolv = !rv.u.boolv;
@@ -896,21 +880,14 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex) {
 	regmatch_t pmatch[1];
 	int eflags = 0;
-	int rc;
 
-	rc = regexec(pregex, pval1->u.strv, 1, pmatch, eflags);
-	if (rc == 0) {
+	if (regmatch_or_die(pregex, pval1->u.strv, 1, pmatch, eflags)) {
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
-	} else if (rc == REG_NOMATCH) {
-		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
 	} else {
-		size_t nbytes = regerror(rc, pregex, NULL, 0);
-		char* errbuf = malloc(nbytes);
-		(void)regerror(rc, pregex, errbuf, nbytes);
-		printf("regexec failure: %s\n", errbuf);
-		exit(1);
+		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
 	}
 }
+
 mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex) {
 	mv_t rv = matches_precomp_func(pval1, pregex);
 	rv.u.boolv = !rv.u.boolv;
