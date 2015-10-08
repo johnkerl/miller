@@ -956,10 +956,14 @@ record_count resource
 <pre>
 $ mlr having-fields --help
 Usage: mlr having-fields [options]
---at-least  {a,b,c}
---which-are {a,b,c}
---at-most   {a,b,c}
 Conditionally passes through records depending on each record's field names.
+Options:
+--at-least            {a,b,c}
+--which-are           {a,b,c}
+--at-most             {a,b,c}
+--all-fields-matching {regular expression}
+--any-fields-matching {regular expression}
+--no-fields-matching  {regular expression}
 </pre>
 </div>
 <p/>

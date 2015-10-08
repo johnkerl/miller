@@ -75,21 +75,22 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 				slls_free(pfield_names);
 			pfield_names = slls_from_line(argv[argi+1], ',', FALSE);
 			regex_string = NULL;
-		} else if (streq(argv[argi], "--at-most")) {
+
+		} else if (streq(argv[argi], "--all-fields-matching")) {
 			criterion = HAVING_ALL_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);
 				pfield_names = NULL;
 			}
 			regex_string = argv[argi+1];
-		} else if (streq(argv[argi], "--at-most")) {
+		} else if (streq(argv[argi], "--any-fields-matching")) {
 			criterion = HAVING_ANY_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);
 				pfield_names = NULL;
 			}
 			regex_string = argv[argi+1];
-		} else if (streq(argv[argi], "--at-most")) {
+		} else if (streq(argv[argi], "--no-fields-matching")) {
 			criterion = HAVING_NO_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);
