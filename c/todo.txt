@@ -7,6 +7,26 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
+MAJOR: regex
+
+k mlr filter '$y =~ "abc"'
+? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
+* mlr put '$y = gsub($x, "a.*b", "cde")'
+  mlr put '$y = gsub($x, "a(.*)b", "cde$1ghi")'
+* having-fields w/ -r ...
+
+* -i flag throughout ... put, filter, having-fields.
+* libify regcomp (sub/nosub) & regexec
+* mld note re regex lib
+
+* /regex/ and /regex/i ?
+
+* capture-group cases:
+  - sub($name, "a.*bc.*defg", "hij")
+  - sub($name, "a.*b(c.*d)e(f)g", "hij")
+  - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
+
+----------------------------------------------------------------
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline
@@ -25,18 +45,6 @@ MINOR:
   -> maybe handle this with temp map from field name to mlr_val in mapper_put_process?!?
 
 * hash-chain ifdef instrumentation
-
-----------------------------------------------------------------
-MAJOR: regex
-
-k mlr filter '$y =~ "abc"'
-? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
-* mlr put '$y = gsub($x, "a.*b", "cde")'
-  mlr put '$y = gsub($x, "a(.*)b", "cde$1ghi")'
-* having-fields w/ -r ...
-
-* -i flag throughout ... put, filter, having-fields.
-* libify regcomp (sub/nosub) & regexec
 
 ----------------------------------------------------------------
 MAJOR: running-mean feature ....... really for all of stats1/stats2
