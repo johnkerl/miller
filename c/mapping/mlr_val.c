@@ -192,7 +192,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 		int  len3 = strlen(&pval1->u.strv[len1 + olen2]);
 		int  len4 = len1 + nlen2 + len3;
 
-		char* string4 = mlr_malloc_or_die(len4);
+		char* string4 = mlr_malloc_or_die(len4 + 1);
 		strncpy(&string4[0],    pval1->u.strv, len1);
 		strncpy(&string4[len1], pval3->u.strv, nlen2);
 		strncpy(&string4[len1+nlen2], &pval1->u.strv[len1+olen2], len3);
@@ -230,20 +230,20 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
 	if (!matched) {
 		return *pval1;
 	} else {
-
 		int so = pmatch[0].rm_so;
 		int eo = pmatch[0].rm_eo;
 
-		int len1 = so;
+		int  len1 = so;
 		int olen2 = eo - so;
 		int nlen2 = strlen(pval3->u.strv);
 		int  len3 = strlen(&pval1->u.strv[len1 + olen2]);
 		int  len4 = len1 + nlen2 + len3;
 
-		char* string4 = mlr_malloc_or_die(len4);
+		char* string4 = mlr_malloc_or_die(len4 + 1);
 		strncpy(&string4[0],    pval1->u.strv, len1);
 		strncpy(&string4[len1], pval3->u.strv, nlen2);
 		strncpy(&string4[len1+nlen2], &pval1->u.strv[len1+olen2], len3);
+		string4[len4] = 0;
 
 		free(pval1->u.strv);
 		free(pval3->u.strv);
