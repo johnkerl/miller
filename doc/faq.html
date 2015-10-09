@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
-<!-- PAGE GENERATED FROM template.html and content-for-internationalization.html BY poki. -->
+<!-- PAGE GENERATED FROM template.html and content-for-faq.html BY poki. -->
 <!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
@@ -10,7 +10,7 @@
   <meta name="keywords"
 	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> Internationalization </title>
+  <title> FAQ </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -69,8 +69,8 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
-<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="internationalization.html"><b>Internationalization</b></a>
+<br/>&bull;&nbsp;<a href="faq.html"><b>FAQ</b></a>
+<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
 <br/>&bull;&nbsp;<a href="performance.html">Performance</a>
 <br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
@@ -88,17 +88,67 @@ Miller commands were run with pretty-print-tabular output format.
   <!-- page body -->
   <td>
     <div style="overflow-y:scroll;height:1500px">
-    <center> <titleinbody> Internationalization </titleinbody> </center>
+    <center> <titleinbody> FAQ </titleinbody> </center>
     <p/>
     
-<!-- BODY COPIED FROM content-for-internationalization.html BY poki -->
-<p/>In its current form, Miller handles ASCII data by design. This means it
-also handles UTF-8, albeit mostly by accident. (I have no plans to support
-UTF-16 or ISO-8859-1.) Tabular output formats (pprint and xtab) are handled correctly.
-Please file an issue at <a
-href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
-if you encounter bugs related to internationalization (or anything else for
-that matter).
+<!-- BODY COPIED FROM content-for-faq.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#No_output_at_all">No output at all</a><br/>
+&bull;&nbsp;<a href="#Fields_not_selected">Fields not selected</a><br/>
+&bull;&nbsp;<a href="#Error-output_in_certain_string_cases">Error-output in certain string cases</a><br/>
+&bull;&nbsp;<a href="#How_do_I_parse_log-file_output?">How do I parse log-file output?</a><br/>
+</div>
+<p/>
+
+<a id="No_output_at_all"/><h1>No output at all</h1>
+
+<p/>Check the line-terminators of the data, e.g. with the command-line
+<tt>file</tt> program. Example: for CSV, Miller&rsquo;s default line terminator
+is CR/LF (carriage return followed by linefeed, following
+<a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>). Yet if your CSV has
+*nix-standard LF line endings, Miller will keep reading the file looking for a
+CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <tt>mlr --csv --rs
+lf ...</tt>.
+
+<a id="Fields_not_selected"/><h1>Fields not selected</h1>
+
+<p/>Check the field-separators of the data, e.g. with the command-line
+<tt>head</tt> program. Example: for CSV, Miller&rsquo;s default record
+separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
+then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
+<tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
+case: <tt>mlr --fs tab ...</tt>.
+
+<a id="Error-output_in_certain_string_cases"/><h1>Error-output in certain string cases</h1>
+
+<p/> <tt>mlr put '$y = string($x); $z=$y.$y'</tt> gives <tt>(error)</tt> on
+numeric data such as <tt>x=123</tt> while <tt>mlr put
+'$z=string($x).string($x)'</tt> does not. This is because in the former case
+<tt>y</tt> is computed and stored as a string, then re-parsed as an integer,
+for which string-concatenation is an invalid operator.
+
+<a id="How_do_I_parse_log-file_output?"/><h1>How do I parse log-file output?</h1>
+
+<p/>Suppose you have log-file lines such as
+
+<p/>
+<div class="pokipanel">
+<pre>
+2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {&amp; punctuation} hits=1 status=0 time=2.378
+</pre>
+</div>
+<p/>
+
+I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a min,p10,p50,p90,max -f time -g status
+</pre>
+</div>
+<p/>
     </div>
   </td>
 

@@ -13,13 +13,22 @@ k mlr filter '$y =~ "abc"'
 ? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
 * mlr put '$y = gsub($x, "a.*b", "cde")'
   mlr put '$y = gsub($x, "a(.*)b", "cde$1ghi")'
-* having-fields w/ -r ...
+  mlr put -i ... ?
+~ having-fields:
+  - needs reg-test cases
+  - needs -i
 
 * -i flag throughout ... put, filter, having-fields.
-* libify regcomp (sub/nosub) & regexec
+k libify regcomp (sub/nosub) & regexec
 * mld note re regex lib
 
-* /regex/ and /regex/i ?
+* /regex/ and /regex/i instead of verb -i's?
+
+UT
+kerl@kerl-mbp[s0j0d1][c]$ echo 'x=abc'|mlr put '$y=sub($x,"b","X")'
+x=abc,y=xxx-stub-func
+kerl@kerl-mbp[s0j0d1][c]$ echo 'x=abc'|mlr put '$y=sub($x,"b"."","X")'
+x=abc,y=aXc
 
 * capture-group cases:
   - sub($name, "a.*bc.*defg", "hij")
@@ -43,11 +52,15 @@ MINOR:
     vs.
     mlr put '$z=string($x).string($x)'
   -> maybe handle this with temp map from field name to mlr_val in mapper_put_process?!?
+  - app-log stuff
 
 * hash-chain ifdef instrumentation
 
 ----------------------------------------------------------------
 MAJOR: running-mean feature ....... really for all of stats1/stats2
+
+----------------------------------------------------------------
+MAJOR: reservoir-sampling with group-by
 
 ----------------------------------------------------------------
 MAJOR: manpage
