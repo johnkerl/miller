@@ -68,8 +68,9 @@ void mt_get_double_nullable(mv_t* pval);
 typedef mv_t mv_zary_func_t();
 typedef mv_t mv_unary_func_t(mv_t* pval1);
 typedef mv_t mv_binary_func_t(mv_t* pval1, mv_t* pval2);
-typedef mv_t mv_binary_right_regex_func_t(mv_t* pval1, regex_t* pregex);
+typedef mv_t mv_binary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex);
 typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, mv_t* pval3);
 
 // ----------------------------------------------------------------
 static inline mv_t b_b_not_func(mv_t* pval1) {
@@ -202,7 +203,8 @@ mv_t s_s_toupper_func(mv_t* pval1);
 
 mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2);
 
-mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3);
 
 // ----------------------------------------------------------------
 mv_t s_f_sec2gmt_func(mv_t* pval1);

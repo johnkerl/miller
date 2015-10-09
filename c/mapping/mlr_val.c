@@ -181,7 +181,7 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 }
 
 // ----------------------------------------------------------------
-mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	char* substr = strstr(pval1->u.strv, pval2->u.strv);
 	if (substr == NULL) {
 		return *pval1;
@@ -202,6 +202,52 @@ mv_t s_sss_sub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 		free(pval3->u.strv);
 		pval1->u.strv = NULL;
 		pval2->u.strv = NULL;
+		pval3->u.strv = NULL;
+
+		mv_t rv = {.type = MT_STRING, .u.strv = string4};
+		return rv;
+	}
+}
+
+// ----------------------------------------------------------------
+// Example:
+// * pval1->u.strv = "hello"
+// * regex = "ll"
+// * pval3->u.strv = "yyy"
+//
+// *  len1 = 2 = length of "he"
+// * olen2 = 2 = length of "ll"
+// * nlen2 = 3 = length of "yyy"
+// *  len3 = 1 = length of "o"
+// *  len4 = 6 = 2+3+1
+
+mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
+	const size_t nmatch = 10; // xxx temp
+	regmatch_t pmatch[nmatch];
+	int eflags = 0;
+
+	int matched = regmatch_or_die(pregex, pval1->u.strv, nmatch, pmatch, eflags);
+	if (!matched) {
+		return *pval1;
+	} else {
+
+		int so = pmatch[0].rm_so;
+		int eo = pmatch[0].rm_eo;
+
+		int len1 = so;
+		int olen2 = eo - so;
+		int nlen2 = strlen(pval3->u.strv);
+		int  len3 = strlen(&pval1->u.strv[len1 + olen2]);
+		int  len4 = len1 + nlen2 + len3;
+
+		char* string4 = mlr_malloc_or_die(len4);
+		strncpy(&string4[0],    pval1->u.strv, len1);
+		strncpy(&string4[len1], pval3->u.strv, nlen2);
+		strncpy(&string4[len1+nlen2], &pval1->u.strv[len1+olen2], len3);
+
+		free(pval1->u.strv);
+		free(pval3->u.strv);
+		pval1->u.strv = NULL;
 		pval3->u.strv = NULL;
 
 		mv_t rv = {.type = MT_STRING, .u.strv = string4};
