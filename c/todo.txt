@@ -10,14 +10,10 @@ TOP OF LIST
 FLIGHT:
 
 * +/- of then-chaining
-* POSIX.2 REs
 * whack pdm/fdm w/ cmts
 
 ----------------------------------------------------------------
 MAJOR: regex
-
-k mlr filter '$y =~ "abc"'
-k mlr filter '$y =~ "abc"i'
 
 * gsub
 
@@ -26,15 +22,10 @@ k mlr filter '$y =~ "abc"i'
 * having-fields:
   o needs reg-test cases
   o use dquote syntax
+  o on-line help w/ & w/o dquotes
 
 * "...\"..." in UT cases
 * "b"."" UT cases w/ why-cmts
-
-UT
-kerl@kerl-mbp[s0j0d1][c]$ echo 'x=abc'|mlr put '$y=sub($x,"b","X")'
-x=abc,y=xxx-stub-func
-kerl@kerl-mbp[s0j0d1][c]$ echo 'x=abc'|mlr put '$y=sub($x,"b"."","X")'
-x=abc,y=aXc
 
 * capture-group cases:
   - sub($name, "a.*bc.*defg", "hij")

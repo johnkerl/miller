@@ -1,4 +1,5 @@
 #include <regex.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -133,7 +134,25 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_st
 		pstate->pfield_names    = NULL;
 		pstate->pfield_name_set = hss_alloc();
 
-		regcomp_or_die(&pstate->regex, regex_string, REG_NOSUB);
+		// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
+		// Strip off the leading " and trailing " or "i.
+		int cflags = REG_NOSUB;
+		if (string_starts_with(regex_string, "\"")) {
+			int len = strlen(regex_string);
+			if (string_ends_with(regex_string, "\"")) {
+				regex_string[len-1] = 0;
+			} else if (string_ends_with(regex_string, "\"i")) {
+				regex_string[len-2] = 0;
+				cflags |= REG_ICASE;
+			} else {
+				fprintf(stderr, "%s: imbalanced double-quote in regex [%s].\n",
+					MLR_GLOBALS.argv0, regex_string);
+				exit(1);
+			}
+			regex_string++;
+		}
+
+		regcomp_or_die(&pstate->regex, regex_string, cflags);
 		if (criterion == HAVING_ALL_FIELDS_MATCHING)
 			pmapper->pprocess_func = mapper_having_all_fields_matching_process;
 		else if (criterion == HAVING_ANY_FIELDS_MATCHING)

@@ -262,6 +262,24 @@ int strlen_for_utf8_display(char* str) {
 }
 
 // ----------------------------------------------------------------
+// These are for low-volume, call-at-startup applications. If they get used
+// record-by-record they should be replaced with pointer-walking logic which
+// avoids the unnecessary expense of calling strlen.
+
+int string_starts_with(char* string, char* prefix) {
+	int prefixlen = strlen(prefix);
+	return !strncmp(string, prefix, prefixlen);
+}
+
+int string_ends_with(char* string, char* suffix) {
+	int stringlen = strlen(string);
+	int suffixlen = strlen(suffix);
+	if (stringlen < suffixlen)
+		return FALSE;
+	return !strcmp(&string[stringlen-suffixlen], suffix);
+}
+
+// ----------------------------------------------------------------
 int mlr_imax2(int a, int b) {
 	if (a >= b)
 		return a;

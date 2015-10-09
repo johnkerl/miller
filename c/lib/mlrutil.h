@@ -104,6 +104,8 @@ int mlr_string_pair_hash_func(char* str1, char* str2);
 time_t mlr_timegm (struct tm *tm);
 
 int strlen_for_utf8_display(char* str);
+int string_starts_with(char* string, char* prefix);
+int string_ends_with(char* string, char* suffix);
 
 int mlr_imax2(int a, int b);
 int power_of_two_ceil(int n);

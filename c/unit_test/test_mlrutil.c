@@ -93,6 +93,24 @@ static char * test_streqn() {
 }
 
 // ----------------------------------------------------------------
+static char * test_starts_or_ends_with() {
+
+	mu_assert_lf(string_starts_with("abcde", ""));
+	mu_assert_lf(string_starts_with("abcde", "a"));
+	mu_assert_lf(string_starts_with("abcde", "abcd"));
+	mu_assert_lf(string_starts_with("abcde", "abcde"));
+	mu_assert_lf(!string_starts_with("abcde", "abcdef"));
+
+	mu_assert_lf(string_ends_with("abcde", ""));
+	mu_assert_lf(string_ends_with("abcde", "e"));
+	mu_assert_lf(string_ends_with("abcde", "de"));
+	mu_assert_lf(string_ends_with("abcde", "abcde"));
+	mu_assert_lf(!string_ends_with("abcde", "0abcde"));
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
 static char * test_scanners() {
 	mu_assert("error: mlr_alloc_string_from_double", streq(mlr_alloc_string_from_double(4.25, "%.4f"), "4.2500"));
 	mu_assert("error: mlr_alloc_string_from_ull", streq(mlr_alloc_string_from_ull(12345LL), "12345"));
@@ -126,6 +144,7 @@ static char * all_tests() {
 	mu_run_test(test_canonical_mod);
 	mu_run_test(test_streq);
 	mu_run_test(test_streqn);
+	mu_run_test(test_starts_or_ends_with);
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
 	mu_run_test(test_unbackslash);
