@@ -16,6 +16,7 @@ FLIGHT:
 MAJOR: regex
 
 * gsub
+
 * capture-groups with \1 etc.
   - sub($name, "a.*bc.*defg", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
@@ -59,11 +60,11 @@ MAJOR: manpage
   - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
 * solve the duplication problem, and minimize dependencies:
   ? mlr --manpage all in C?
-  ? maybe generate most content in C with a post=processor in some widely
+  ? maybe generate most content in C with a post-processor in some widely
     portable language (e.g. perl is gross but is everywhere) to add in the
     groff markups.
   ? maybe something template-driven vaguely like poki??
-  - whatever it is is needs to be as automated as possible
+  - whatever it is it needs to be as automated as possible
 
 LEVELS:
 * figure out a2x/xml/...

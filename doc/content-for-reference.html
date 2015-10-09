@@ -92,14 +92,28 @@ Miller. For example:
 
 POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime)HERE
 
-POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)HERE
-
 <p/>
-For better performance (avoiding redundant string-parsing and string-formatting
-when you pipe Miller commands together) you can, if you like, instead simply
-chain commands together using the <tt>then</tt> keyword:
+You can, if you like, instead simply chain commands together using the
+<tt>then</tt> keyword:
 
 POKI_CARDIFY(mlr cut --complement -f os_version then sort -f hostname,uptime *.dat)HERE
+
+Here&rsquo;s a performance comparison:
+
+POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)HERE
+
+There are two reasons to use then-chaining: one is for performance, although I
+don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
+redundant string-parsing and string-formatting at each pipeline step: instead
+input records are parsed once, they are fed through each pipeline stage in
+memory, and then output records are formatted once. On the other hand, Miller
+is single-threaded, while modern systems are usually multi-processor, and when
+streaming-data programs operate through pipes, each one can use a CPU.  Rest
+assured you get the same results either way.
+
+<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
+have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
+pipeline stage.
 
 <!-- ================================================================ -->
 <h1>I/O options</h1>
