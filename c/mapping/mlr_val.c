@@ -193,7 +193,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // ----------------------------------------------------------------
 // Example:
 // * pval1->u.strv = "hello"
-// * regex = "ll"
+// * regex = "l+"
 // * pval3->u.strv = "yyy"
 //
 // *  len1 = 2 = length of "he"

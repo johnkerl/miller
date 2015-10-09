@@ -16,13 +16,15 @@ FLIGHT:
 MAJOR: regex
 
 k mlr filter '$y =~ "abc"'
-? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
+? ? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
+  ? mlr filter    '$y =~ /abc/i' ?? (case-insensitivity)
 * mlr put '$y = gsub($x, "a.*b", "cde")'
   mlr put '$y = gsub($x, "a(.*)b", "cde\1ghi")'
   mlr put -i ... ?
 ~ having-fields:
   - needs reg-test cases
   - needs -i
+  - use slashy syntax?
 
 * -i flag throughout ... put, filter, having-fields.
 k libify regcomp (sub/nosub) & regexec
