@@ -115,7 +115,9 @@ int power_of_two_ceil(int n);
 char* mlr_unbackslash(char* input);
 
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.
-void regcomp_or_die(regex_t* pregex, char* regex_string, int cflags);
+// Returns its first argument (after compilation).
+regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags);
+
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,

@@ -397,7 +397,7 @@ char* mlr_unbackslash(char* input) {
 
 // ----------------------------------------------------------------
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.
-void regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
+regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 	cflags |= REG_EXTENDED;
 	int rc = regcomp(pregex, regex_string, cflags);
 	if (rc != 0) {
@@ -408,6 +408,7 @@ void regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 			MLR_GLOBALS.argv0, regex_string, errbuf);
 		exit(1);
 	}
+	return pregex;
 }
 
 // Returns TRUE for match, FALSE for no match, and aborts the process if

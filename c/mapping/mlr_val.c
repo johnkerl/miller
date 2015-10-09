@@ -183,9 +183,7 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 // ----------------------------------------------------------------
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	regex_t regex;
-	int cflags = 0;
-	regcomp_or_die(&regex, pval2->u.strv, cflags);
-	mv_t rv = sub_precomp_func(pval1, &regex, pval3);
+	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), pval3);
 	regfree(&regex);
 	return rv;
 }
@@ -879,19 +877,19 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	char* s1 = pval1->u.strv;
 	char* s2 = pval2->u.strv;
 
-	regex_t reg;
+	regex_t regex;
 	char* sstr   = s1;
 	char* sregex = s2;
 	regmatch_t pmatch[1];
 	int eflags = 0;
 
-	regcomp_or_die(&reg, sregex, REG_NOSUB);
+	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	if (regmatch_or_die(&reg, sstr, 1, pmatch, eflags)) {
-		regfree(&reg);
+	if (regmatch_or_die(&regex, sstr, 1, pmatch, eflags)) {
+		regfree(&regex);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else {
-		regfree(&reg);
+		regfree(&regex);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
 	}
 }
