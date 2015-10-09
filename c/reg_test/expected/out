@@ -1530,6 +1530,53 @@ mlr filter -v $x =~ "^a.*"."d$" ./reg_test/input/regex.dkvp
         d$ (literal).
 x=abcd,y=ghi
 
+mlr filter -v $x =~ "bcd"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    bcd (regexi).
+x=abcd,y=ghi
+x=ABCD,y=GHI
+x=abcde,y=ghi
+x=ABCDE,y=GHI
+
+mlr filter -v $x =~ "^bcd"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^bcd (regexi).
+
+mlr filter -v $x =~ "^abc"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^abc (regexi).
+x=abc,y=def
+x=ABC,y=DEF
+x=abcd,y=ghi
+x=ABCD,y=GHI
+x=abcde,y=ghi
+x=ABCDE,y=GHI
+
+mlr filter -v $x =~ "^abc$"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^abc$ (regexi).
+x=abc,y=def
+x=ABC,y=DEF
+
+mlr filter -v $x =~ "^a.*d$"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    ^a.*d$ (regexi).
+x=abcd,y=ghi
+x=ABCD,y=GHI
+
+mlr filter -v $x =~ "^a.*"."d$"i ./reg_test/input/regex.dkvp
+=~ (operator):
+    x (field_name).
+    . (operator):
+        ^a.* (literal).
+        d$ (regexi).
+x=abcd,y=ghi
+
 mlr --csvlite put $gmt=sec2gmt($sec) ./reg_test/input/sec2gmt
 sec,gmt
 0,1970-01-01T00:00:00Z
