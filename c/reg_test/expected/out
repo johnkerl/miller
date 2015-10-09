@@ -1712,7 +1712,7 @@ SUB/GSUB
 
 mlr --opprint put $y = sub($x, "e.*l", "y123y") ./reg_test/input/sub.dat
 x     y
-hello hy123yo
+hello hy123yoà
 world world
 
 
