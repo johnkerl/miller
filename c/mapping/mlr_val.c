@@ -182,31 +182,12 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 
 // ----------------------------------------------------------------
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
-	char* substr = strstr(pval1->u.strv, pval2->u.strv);
-	if (substr == NULL) {
-		return *pval1;
-	} else {
-		int  len1 = substr - pval1->u.strv;
-		int olen2 = strlen(pval2->u.strv);
-		int nlen2 = strlen(pval3->u.strv);
-		int  len3 = strlen(&pval1->u.strv[len1 + olen2]);
-		int  len4 = len1 + nlen2 + len3;
-
-		char* string4 = mlr_malloc_or_die(len4 + 1);
-		strncpy(&string4[0],    pval1->u.strv, len1);
-		strncpy(&string4[len1], pval3->u.strv, nlen2);
-		strncpy(&string4[len1+nlen2], &pval1->u.strv[len1+olen2], len3);
-
-		free(pval1->u.strv);
-		free(pval2->u.strv);
-		free(pval3->u.strv);
-		pval1->u.strv = NULL;
-		pval2->u.strv = NULL;
-		pval3->u.strv = NULL;
-
-		mv_t rv = {.type = MT_STRING, .u.strv = string4};
-		return rv;
-	}
+	regex_t regex;
+	int cflags = 0;
+	regcomp_or_die(&regex, pval2->u.strv, cflags);
+	mv_t rv = sub_precomp_func(pval1, &regex, pval3);
+	regfree(&regex);
+	return rv;
 }
 
 // ----------------------------------------------------------------
