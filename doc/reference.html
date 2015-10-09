@@ -565,8 +565,38 @@ filter '$url =~ "http.*com"'</tt>
 
 </ul>
 
-The <tt>i</tt> after the double-quoted regular-expression string is used to
+<p/>The <tt>i</tt> after the double-quoted regular-expression string is used to
 signify case-insensitive match.
+
+<p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
+literal (the normal case), it is precompiled at process start and reused
+thereafter, which is efficient. If the regular expression is a more complex
+expression, including string concatenation using <tt>.</tt>, or a column name
+(in which case you can take regular expressions from input data!), then regexes
+are compiled on each record which works but is less efficient. As well, in this
+case there is no way to specify case-insensitive matching.
+
+<p/>Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bill,regex=^b[ou]ll$
+name=bull,regex=^b[ou]ll$
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter '$name =~ $regex' data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bull,regex=^b[ou]ll$
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Data_transformations"/><h1>Data transformations</h1>
