@@ -42,9 +42,14 @@ static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--at-least            {a,b,c}\n");
 	fprintf(o, "--which-are           {a,b,c}\n");
 	fprintf(o, "--at-most             {a,b,c}\n");
-	fprintf(o, "--all-fields-matching {regular expression}\n");
-	fprintf(o, "--any-fields-matching {regular expression}\n");
-	fprintf(o, "--no-fields-matching  {regular expression}\n");
+	fprintf(o, "--all-matching {regular expression}\n");
+	fprintf(o, "--any-matching {regular expression}\n");
+	fprintf(o, "--no-matching  {regular expression}\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  %s %s --which-are amount,status,owner\n", argv0, verb);
+	fprintf(o, "  %s %s --any-matching 'sda[0-9]'\n", argv0, verb);
+	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"'\n", argv0, verb);
+	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i (this is case-insensitive)'\n", argv0, verb);
 }
 
 // ----------------------------------------------------------------
@@ -77,21 +82,21 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 			pfield_names = slls_from_line(argv[argi+1], ',', FALSE);
 			regex_string = NULL;
 
-		} else if (streq(argv[argi], "--all-fields-matching")) {
+		} else if (streq(argv[argi], "--all-matching")) {
 			criterion = HAVING_ALL_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);
 				pfield_names = NULL;
 			}
 			regex_string = argv[argi+1];
-		} else if (streq(argv[argi], "--any-fields-matching")) {
+		} else if (streq(argv[argi], "--any-matching")) {
 			criterion = HAVING_ANY_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);
 				pfield_names = NULL;
 			}
 			regex_string = argv[argi+1];
-		} else if (streq(argv[argi], "--no-fields-matching")) {
+		} else if (streq(argv[argi], "--no-matching")) {
 			criterion = HAVING_NO_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);

@@ -561,7 +561,7 @@ filter '$url =~ "http.*com"'</tt>
 '$url = sub($url, "http.*com", "")'</tt>
 
 <li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
---any-fields-matching "^sda[0-9]"</tt>
+--any-matching "^sda[0-9]"</tt>
 
 </ul>
 
@@ -984,9 +984,14 @@ Options:
 --at-least            {a,b,c}
 --which-are           {a,b,c}
 --at-most             {a,b,c}
---all-fields-matching {regular expression}
---any-fields-matching {regular expression}
---no-fields-matching  {regular expression}
+--all-matching {regular expression}
+--any-matching {regular expression}
+--no-matching  {regular expression}
+Examples:
+  mlr having-fields --which-are amount,status,owner
+  mlr having-fields --any-matching 'sda[0-9]'
+  mlr having-fields --any-matching '"sda[0-9]"'
+  mlr having-fields --any-matching '"sda[0-9]"i (this is case-insensitive)'
 </pre>
 </div>
 <p/>
