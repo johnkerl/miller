@@ -42,16 +42,14 @@ typedef struct _mapper_stats2_state_t {
 typedef stats2_t* stats2_alloc_func_t(int do_verbose);
 
 // ----------------------------------------------------------------
-static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
-static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
-static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
-static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
-static void      mapper_stats2_free(void* pvstate);
-static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose);
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
+	slls_t* pgroup_by_field_names, int do_verbose);
+static void      mapper_stats2_free(void* pvstate);
+static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
 
 static stats2_t* make_stats2(char* stats2_name, int do_verbose);
 static stats2_t* stats2_linreg_ols_alloc(int do_verbose);

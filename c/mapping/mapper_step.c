@@ -54,11 +54,11 @@ typedef struct _mapper_step_state_t {
 // }
 
 // ----------------------------------------------------------------
-static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_step_free(void* pvstate);
-static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
 static void      mapper_step_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names);
+static void      mapper_step_free(void* pvstate);
+static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static step_t* step_delta_alloc(char* input_field_name);
 static step_t* step_ratio_alloc(char* input_field_name);

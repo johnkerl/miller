@@ -27,14 +27,6 @@ MINOR:
 
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
-* faq:
-  - no output vs. crlf. likewise fieldpicks not working (fs)
-  - mlr put '$y=string($x);$z=$y.$y'
-    vs.
-    mlr put '$z=string($x).string($x)'
-  -> maybe handle this with temp map from field name to mlr_val in mapper_put_process?!?
-  - app-log stuff
-
 * hash-chain ifdef instrumentation
 
 ----------------------------------------------------------------

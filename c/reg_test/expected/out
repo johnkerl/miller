@@ -1557,6 +1557,12 @@ mlr filter -v $x =~ "^a.*"."d$" ./reg_test/input/regex.dkvp
         d$ (literal).
 x=abcd,y=ghi
 
+mlr filter -v $y =~ "\".." ./reg_test/input/regex.dkvp
+=~ (operator):
+    y (field_name).
+    \".. (literal).
+x=ABCDE,y="GHI"
+
 mlr filter -v $x =~ "bcd"i ./reg_test/input/regex.dkvp
 =~ (operator):
     x (field_name).
@@ -1565,6 +1571,7 @@ x=abcd,y=ghi
 x=ABCD,y=GHI
 x=abcde,y=ghi
 x=ABCDE,y=GHI
+x=ABCDE,y="GHI"
 
 mlr filter -v $x =~ "^bcd"i ./reg_test/input/regex.dkvp
 =~ (operator):
@@ -1581,6 +1588,7 @@ x=abcd,y=ghi
 x=ABCD,y=GHI
 x=abcde,y=ghi
 x=ABCDE,y=GHI
+x=ABCDE,y="GHI"
 
 mlr filter -v $x =~ "^abc$"i ./reg_test/input/regex.dkvp
 =~ (operator):
@@ -1784,17 +1792,24 @@ sec        hms                  resec          diff
 ================================================================
 SUB/GSUB
 
-mlr --opprint put $y = sub($x, "e.*l",  "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*l",    "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
 HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "e.*l"i, "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*l"i,   "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
 HELLO Hy123yO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*"."l", "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+HELLO HELLO
 world world
 WORLD WORLD
 
