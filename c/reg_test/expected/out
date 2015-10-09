@@ -1772,6 +1772,22 @@ a=1
 
 
 ================================================================
+NUMBER FORMATTING
+
+mlr --opprint stats1 -a sum -f x ./reg_test/input/ofmt.dat
+x_sum
+6.000000
+
+mlr --ofmt %.3lf --opprint stats1 -a sum -f x ./reg_test/input/ofmt.dat
+x_sum
+6.000
+
+mlr --opprint --ofmt %.3lf stats1 -a sum -f x ./reg_test/input/ofmt.dat
+x_sum
+6.000
+
+
+================================================================
 HET-CSV INPUT
 
 mlr --icsvlite --odkvp cat ./reg_test/input/a.csv

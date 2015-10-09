@@ -494,7 +494,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofile_fmt = argv[argi+1];
+			popts->ofmt = argv[argi+1];
 			argi++;
 		}
 

@@ -344,6 +344,13 @@ run_mlr tac then tac then cat $indir/short
 run_mlr tac then tac then tac $indir/short
 
 # ----------------------------------------------------------------
+announce NUMBER FORMATTING
+
+run_mlr                --opprint stats1 -a sum -f x $indir/ofmt.dat
+run_mlr --ofmt '%.3lf' --opprint stats1 -a sum -f x $indir/ofmt.dat
+run_mlr --opprint --ofmt '%.3lf' stats1 -a sum -f x $indir/ofmt.dat
+
+# ----------------------------------------------------------------
 announce HET-CSV INPUT
 
 run_mlr --icsvlite --odkvp cat $indir/a.csv
