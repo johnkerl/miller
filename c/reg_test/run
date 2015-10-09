@@ -342,8 +342,9 @@ run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$rese
 
 announce SUB/GSUB
 
-run_mlr --opprint put '$y = sub($x, "e.*l",  "y123y")' $indir/sub.dat
-run_mlr --opprint put '$y = sub($x, "e.*l"i, "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l",    "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l"i,   "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*"."l", "y123y")' $indir/sub.dat
 
 # ----------------------------------------------------------------
 announce CHAINING
