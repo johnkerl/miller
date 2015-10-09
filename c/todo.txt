@@ -16,9 +16,6 @@ MAJOR: regex
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
-* "...\"..." in UT cases
-* "b"."" UT cases w/ why-cmts
-
 ----------------------------------------------------------------
 MINOR:
 
