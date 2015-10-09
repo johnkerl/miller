@@ -32,6 +32,7 @@ EXTRA_DIST=	\
 		multi-sep.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
+		ofmt.dat \
 		regex.dkvp \
 		regularize.dkvp \
 		rfc-csv \
@@ -42,6 +43,7 @@ EXTRA_DIST=	\
 		space-pad.dkvp \
 		space-pad.nidx \
 		space-pad.pprint \
+		sub.dat \
 		truncated.csv \
 		truncated.dkvp \
 		truncated.nidx \
