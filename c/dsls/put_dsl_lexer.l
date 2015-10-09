@@ -65,6 +65,11 @@
 	return PUT_DSL_STRING;
 }
 
+\"([^\\\"]|\\.)*\"\i {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_REGEXI);
+	return PUT_DSL_REGEXI;
+}
+
 "\." {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return PUT_DSL_DOT;

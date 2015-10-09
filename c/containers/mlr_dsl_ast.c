@@ -90,6 +90,7 @@ void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode) {
 char* mlr_dsl_ast_node_describe_type(int type) {
 	switch(type) {
 	case MLR_DSL_AST_NODE_TYPE_LITERAL:          return "literal";          break;
+	case MLR_DSL_AST_NODE_TYPE_REGEXI:           return "regexi";           break;
 	case MLR_DSL_AST_NODE_TYPE_FIELD_NAME:       return "field_name";       break;
 	case MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME:    return "function_name";    break;
 	case MLR_DSL_AST_NODE_TYPE_OPERATOR:         return "operator";         break;

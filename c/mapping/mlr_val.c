@@ -203,7 +203,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len4 = 6 = 2+3+1
 
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
-	const size_t nmatch = 10; // xxx temp
+	const size_t nmatch = 10; // xxx temp: parameterize after adding capture-group support
 	regmatch_t pmatch[nmatch];
 	int eflags = 0;
 

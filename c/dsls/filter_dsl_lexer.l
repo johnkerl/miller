@@ -137,6 +137,11 @@
 	return FILTER_DSL_STRING;
 }
 
+\"([^\\\"]|\\.)*\"\i {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_REGEXI);
+	return FILTER_DSL_REGEXI;
+}
+
 "(" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
 	return FILTER_DSL_LPAREN;

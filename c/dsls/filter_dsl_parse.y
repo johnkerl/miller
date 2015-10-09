@@ -155,7 +155,8 @@ filter_dsl_exp_term(A) ::= FILTER_DSL_FIELD_NAME(B). {
 filter_dsl_exp_term(A) ::= FILTER_DSL_NUMBER(B). {
 	A = B;
 }
-// xxx commment me more
+
+// Strip off the leading/trailing double quotes which are included by the lexer
 filter_dsl_exp_term(A) ::= FILTER_DSL_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
@@ -163,6 +164,16 @@ filter_dsl_exp_term(A) ::= FILTER_DSL_STRING(B). {
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
+
+// Strip off the leading '"' and trailing '"i' which are included by the lexer
+filter_dsl_exp_term(A) ::= FILTER_DSL_REGEXI(B). {
+	char* input = B->text;
+	char* stripped = &input[1];
+	int len = strlen(input);
+	stripped[len-3] = 0;
+	A = mlr_dsl_ast_node_alloc(stripped, B->type);
+}
+
 filter_dsl_exp_term(A) ::= FILTER_DSL_CONTEXT_VARIABLE(B). {
 	A = B;
 }

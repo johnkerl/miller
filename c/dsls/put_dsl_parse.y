@@ -153,6 +153,7 @@ put_dsl_expitem(A) ::= PUT_DSL_FIELD_NAME(B). {
 put_dsl_expitem(A) ::= PUT_DSL_NUMBER(B). {
 	A = B;
 }
+
 put_dsl_expitem(A) ::= PUT_DSL_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
@@ -160,6 +161,14 @@ put_dsl_expitem(A) ::= PUT_DSL_STRING(B). {
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
+put_dsl_expitem(A) ::= PUT_DSL_REGEXI(B). {
+	char* input = B->text;
+	char* stripped = &input[1];
+	int len = strlen(input);
+	stripped[len-3] = 0;
+	A = mlr_dsl_ast_node_alloc(stripped, B->type);
+}
+
 put_dsl_expitem(A) ::= PUT_DSL_CONTEXT_VARIABLE(B). {
 	A = B;
 }
