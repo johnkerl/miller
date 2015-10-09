@@ -1708,6 +1708,15 @@ sec        hms                  resec          diff
 
 
 ================================================================
+SUB/GSUB
+
+mlr --opprint put $y = sub($x, "e.*l", "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+world world
+
+
+================================================================
 CHAINING
 
 mlr cat then cat ./reg_test/input/short
