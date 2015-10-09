@@ -110,7 +110,7 @@ is CR/LF (carriage return followed by linefeed, following
 <a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>). Yet if your CSV has
 *nix-standard LF line endings, Miller will keep reading the file looking for a
 CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <tt>mlr --csv --rs
-lf ...</tt>.
+lf {remaining arguments ...}</tt>.
 
 <a id="Fields_not_selected"/><h1>Fields not selected</h1>
 
@@ -119,7 +119,7 @@ lf ...</tt>.
 separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
 then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
 <tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
-case: <tt>mlr --fs tab ...</tt>.
+case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
 
 <a id="Error-output_in_certain_string_cases"/><h1>Error-output in certain string cases</h1>
 
@@ -153,8 +153,9 @@ grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a 
 
 <a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
 
-<p/>Then-chaining found in Miller is intended to function the same as Unix pipes. You
-can print your data one pipeline step at a time, to see what intermediate
+<p/>Then-chaining found in Miller is intended to function the same as Unix
+pipes. You can print your data one pipeline step at a time, to see what
+intermediate
 output at one step becomes the input to the next step.
 
 <p/>First, review the input data:
@@ -204,9 +205,9 @@ paid    debit        1
 <p/>
 
 Now if you include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
-<tt>Payment_Type</tt> and <tt>count</tt> will be its input.
+<tt>Payment_Type</tt>, and <tt>count</tt> will be its input.
 
-<p/>Note, by the way, that you will get the same results using pipes:
+<p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
 <p/>
 <div class="pokipanel">
 <pre>

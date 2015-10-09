@@ -8,7 +8,7 @@ is CR/LF (carriage return followed by linefeed, following
 <a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>). Yet if your CSV has
 *nix-standard LF line endings, Miller will keep reading the file looking for a
 CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <tt>mlr --csv --rs
-lf ...</tt>.
+lf {remaining arguments ...}</tt>.
 
 <h1>Fields not selected</h1>
 
@@ -17,7 +17,7 @@ lf ...</tt>.
 separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
 then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
 <tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
-case: <tt>mlr --fs tab ...</tt>.
+case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
 
 <h1>Error-output in certain string cases</h1>
 
@@ -35,28 +35,29 @@ POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [somet
 
 I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
 
-POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a min,p10,p50,p90,max -f time -g status)HERE
+POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
 
 <h1>How do I examine then-chaining?</h1>
 
-<p/>Then-chaining in Miller is intended to function the same as Unix pipes. You
-can print your data one pipeline step at a time, to see what intermediate
+<p/>Then-chaining found in Miller is intended to function the same as Unix
+pipes. You can print your data one pipeline step at a time, to see what
+intermediate
 output at one step becomes the input to the next step.
 
-<p/>First look at the input data:
+<p/>First, review the input data:
 
-POKI_RUN_COMMAND{{cat data/then-example.txt}}HERE
+POKI_RUN_COMMAND{{cat data/then-example.csv}}HERE
 
-Then run the first step of your command, omitting anything from the first <tt>then</tt> onward:
+Next, run the first step of your command, omitting anything from the first <tt>then</tt> onward:
 
-POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type data/then-example.txt}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type data/then-example.csv}}HERE
 
-Then run it with the next <tt>then</tt> step included:
+After that, run it with the next <tt>then</tt> step included:
 
-POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.txt}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv}}HERE
 
-Now if you go on to include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
+Now if you include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
 <tt>Payment_Type</tt>, and <tt>count</tt> will be its input.
 
 <p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
-POKI_RUN_COMMAND{{mlr --csv --rs lf count-distinct -f Status,Payment_Type data/then-example.txt | mlr --icsv --rs lf --opprint sort -nr count}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --rs lf --opprint sort -nr count}}HERE
