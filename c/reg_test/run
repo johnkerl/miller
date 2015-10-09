@@ -321,6 +321,7 @@ run_mlr filter -v '$x =~ "^abc"'      $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^abc$"'     $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*d$"'    $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*"."d$"' $indir/regex.dkvp
+run_mlr filter -v '$y =~ "\".."'      $indir/regex.dkvp
 
 run_mlr filter -v '$x =~ "bcd"i'       $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^bcd"i'      $indir/regex.dkvp
