@@ -98,6 +98,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Fields_not_selected">Fields not selected</a><br/>
 &bull;&nbsp;<a href="#Error-output_in_certain_string_cases">Error-output in certain string cases</a><br/>
 &bull;&nbsp;<a href="#How_do_I_parse_log-file_output?">How do I parse log-file output?</a><br/>
+&bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
 </div>
 <p/>
 
@@ -146,6 +147,75 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 <div class="pokipanel">
 <pre>
 grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a min,p10,p50,p90,max -f time -g status
+</pre>
+</div>
+<p/>
+
+<a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
+
+<p/>Then-chaining in Miller is intended to function the same as Unix pipes. You
+can print your data one pipeline step at a time, to see what intermediate
+output at one step becomes the input to the next step.
+
+<p/>First look at the input data:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/then-example.txt
+Status,Payment_Type,Amount
+paid,cash,10.00
+pending,debit,20.00
+paid,cash,50.00
+pending,credit,40.00
+paid,debit,30.00
+</pre>
+</div>
+<p/>
+
+Then run the first step of your command, omitting anything from the first <tt>then</tt> onward:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type data/then-example.txt
+Status  Payment_Type count
+paid    cash         2
+pending debit        1
+pending credit       1
+paid    debit        1
+</pre>
+</div>
+<p/>
+
+Then run it with the next <tt>then</tt> step included:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.txt
+Status  Payment_Type count
+paid    cash         2
+pending debit        1
+pending credit       1
+paid    debit        1
+</pre>
+</div>
+<p/>
+
+Now if you go on to include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
+<tt>Payment_Type</tt>, and <tt>count</tt> will be its input.
+
+<p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf count-distinct -f Status,Payment_Type data/then-example.txt | mlr --icsv --rs lf --opprint sort -nr count
+Status  Payment_Type count
+paid    cash         2
+pending debit        1
+pending credit       1
+paid    debit        1
 </pre>
 </div>
 <p/>

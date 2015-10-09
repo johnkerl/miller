@@ -36,3 +36,27 @@ POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [somet
 I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
 
 POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a min,p10,p50,p90,max -f time -g status)HERE
+
+<h1>How do I examine then-chaining?</h1>
+
+<p/>Then-chaining in Miller is intended to function the same as Unix pipes. You
+can print your data one pipeline step at a time, to see what intermediate
+output at one step becomes the input to the next step.
+
+<p/>First look at the input data:
+
+POKI_RUN_COMMAND{{cat data/then-example.txt}}HERE
+
+Then run the first step of your command, omitting anything from the first <tt>then</tt> onward:
+
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type data/then-example.txt}}HERE
+
+Then run it with the next <tt>then</tt> step included:
+
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.txt}}HERE
+
+Now if you go on to include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
+<tt>Payment_Type</tt>, and <tt>count</tt> will be its input.
+
+<p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
+POKI_RUN_COMMAND{{mlr --csv --rs lf count-distinct -f Status,Payment_Type data/then-example.txt | mlr --icsv --rs lf --opprint sort -nr count}}HERE
