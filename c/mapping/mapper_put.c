@@ -146,6 +146,9 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_put_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+
+	// For just dev-testing the parser, you can do
+	//   mlr put -v 'expression goes here' /dev/null
 	if (print_asts) {
 		for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext)
 			mlr_dsl_ast_node_print(pe->pvdata);

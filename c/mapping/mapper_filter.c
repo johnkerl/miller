@@ -112,6 +112,9 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_filter_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+
+	// For just dev-testing the parser, you can do
+	//   mlr filter -v 'expression goes here' /dev/null
 	if (print_asts) {
 		mlr_dsl_ast_node_print(past->proot);
 	}

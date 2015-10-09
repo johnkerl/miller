@@ -1,7 +1,7 @@
 AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-std=gnu99
 
-noinst_PROGRAMS=	lemon pdm fdm
+noinst_PROGRAMS=	lemon
 lemon_SOURCES=		lemon.c
 
 noinst_LTLIBRARIES=	libfdsl.la libpdsl.la
@@ -16,15 +16,6 @@ EXTRA_DIST=		\
 			lempar.c \
 			put_dsl_lexer.l \
 			put_dsl_parse.y
-
-# The fdm and pdm mains are handy for isolated inspection when doing
-# development/debugging on Miller DSLs.
-fdm_SOURCES=		filter_dsl_parse.c filter_dsl_parse.h filter_dsl_lexer.c filter_dsl_lexer.h filter_dsl_wrapper.c filter_dsl_wrapper.h
-fdm_LDADD=		../containers/libcontainers.la ../lib/libmlr.la libfdsl.la -lm
-fdm_CFLAGS=		-D __FILTER_DSL_MAIN__ ${AM_CFLAGS}
-pdm_SOURCES=		put_dsl_parse.c put_dsl_parse.h put_dsl_lexer.c put_dsl_lexer.h put_dsl_wrapper.c put_dsl_wrapper.h
-pdm_LDADD=		../containers/libcontainers.la ../lib/libmlr.la libpdsl.la -lm
-pdm_CFLAGS=		-D __PUT_DSL_MAIN__ ${AM_CFLAGS}
 
 put_dsl_wrapper.c: put_dsl_lexer.h
 put_dsl_parse.h: put_dsl_parse.c

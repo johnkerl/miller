@@ -60,34 +60,3 @@ mlr_dsl_ast_node_holder_t* filter_dsl_parse(char* string) {
 
 	return past;
 }
-
-// ----------------------------------------------------------------
-#ifdef __FILTER_DSL_MAIN__
-// This is handy for isolated inspection when doing development/debugging on
-// Miller DSLs.
-static int main_single(char* string) {
-	mlr_dsl_ast_node_holder_t* past = filter_dsl_parse(string);
-	if (past == NULL) {
-		printf("filter_dsl main syntax error!\n");
-		return 1;
-	} else {
-		mlr_dsl_ast_node_print(past->proot);
-		printf("filter_dsl main parse OK\n");
-		return 0;
-	}
-}
-
-int main(int argc, char** argv) {
-	int shellrc = 0;
-	if (argc == 1) {
-		printf("> ");
-		shellrc |= main_single(NULL);
-	} else {
-		for (int argi = 1; argi < argc; argi++) {
-			shellrc |= main_single(argv[argi]);
-		}
-	}
-
-	return shellrc;
-}
-#endif // __FILTER_DSL_MAIN__

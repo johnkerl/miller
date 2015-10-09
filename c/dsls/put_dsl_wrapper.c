@@ -64,39 +64,5 @@ sllv_t* put_dsl_parse(char* string) {
 }
 
 // ----------------------------------------------------------------
-#ifdef __PUT_DSL_MAIN__
-// This is handy for isolated inspection when doing development/debugging on
-// Miller DSLs.
-static int main_single(char* string) {
-	sllv_t* pasts = put_dsl_parse(string);
-	if (pasts == NULL || pasts->length == 0) {
-		printf("put_dsl main syntax error!\n");
-		return 1;
-	} else {
-		printf("#AST = %d\n", pasts->length);
-		for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_print(pe->pvdata);
-		}
-		printf("put_dsl main parse OK\n");
-		return 0;
-	}
-}
-
-int main(int argc, char** argv) {
-	int shellrc = 0;
-	if (argc == 1) {
-		printf("> ");
-		shellrc |= main_single(NULL);
-	} else {
-		for (int argi = 1; argi < argc; argi++) {
-			shellrc |= main_single(argv[argi]);
-		}
-	}
-
-	return shellrc;
-}
-#endif // __PUT_DSL_MAIN__
-
-// ----------------------------------------------------------------
 void yytestcase(int ignored) {
 }
