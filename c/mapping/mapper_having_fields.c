@@ -39,17 +39,17 @@ static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Conditionally passes through records depending on each record's field names.\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "--at-least            {a,b,c}\n");
-	fprintf(o, "--which-are           {a,b,c}\n");
-	fprintf(o, "--at-most             {a,b,c}\n");
-	fprintf(o, "--all-matching {regular expression}\n");
-	fprintf(o, "--any-matching {regular expression}\n");
-	fprintf(o, "--no-matching  {regular expression}\n");
+	fprintf(o, "  --at-least      {comma-separated names}\n");
+	fprintf(o, "  --which-are     {comma-separated names}\n");
+	fprintf(o, "  --at-most       {comma-separated names}\n");
+	fprintf(o, "  --all-matching  {regular expression}\n");
+	fprintf(o, "  --any-matching  {regular expression}\n");
+	fprintf(o, "  --none-matching {regular expression}\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s --which-are amount,status,owner\n", argv0, verb);
 	fprintf(o, "  %s %s --any-matching 'sda[0-9]'\n", argv0, verb);
 	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"'\n", argv0, verb);
-	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i (this is case-insensitive)'\n", argv0, verb);
+	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i' (this is case-insensitive)\n", argv0, verb);
 }
 
 // ----------------------------------------------------------------
@@ -96,7 +96,7 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 				pfield_names = NULL;
 			}
 			regex_string = argv[argi+1];
-		} else if (streq(argv[argi], "--no-matching")) {
+		} else if (streq(argv[argi], "--none-matching")) {
 			criterion = HAVING_NO_FIELDS_MATCHING;
 			if (pfield_names != NULL) {
 				slls_free(pfield_names);

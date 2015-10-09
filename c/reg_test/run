@@ -101,6 +101,13 @@ run_mlr having-fields --at-most   a,c         $indir/abixy
 run_mlr having-fields --at-most   a,b,i,x,y   $indir/abixy
 run_mlr having-fields --at-most   a,b,i,x,y,z $indir/abixy
 
+run_mlr having-fields --all-matching  '"^[a-z][a-z][a-z]$"'  $indir/having-fields-regex.dkvp
+run_mlr having-fields --any-matching  '"^[a-z][a-z][a-z]$"'  $indir/having-fields-regex.dkvp
+run_mlr having-fields --none-matching '"^[a-z][a-z][a-z]$"'  $indir/having-fields-regex.dkvp
+run_mlr having-fields --all-matching  '"^[a-z][a-z][a-z]$"i' $indir/having-fields-regex.dkvp
+run_mlr having-fields --any-matching  '"^[a-z][a-z][a-z]$"i' $indir/having-fields-regex.dkvp
+run_mlr having-fields --none-matching '"^[a-z][a-z][a-z]$"i' $indir/having-fields-regex.dkvp
+
 run_mlr rename b,BEE,x,EKS $indir/abixy
 run_mlr rename nonesuch,nonesuch,x,EKS $indir/abixy
 

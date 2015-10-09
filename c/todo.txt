@@ -16,21 +16,13 @@ FLIGHT:
 MAJOR: regex
 
 * gsub
-
 * capture-groups with \1 etc.
-
-* having-fields:
-  o needs reg-test cases
-  o use dquote syntax
-  o on-line help w/ & w/o dquotes
-
-* "...\"..." in UT cases
-* "b"."" UT cases w/ why-cmts
-
-* capture-group cases:
   - sub($name, "a.*bc.*defg", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
+
+* "...\"..." in UT cases
+* "b"."" UT cases w/ why-cmts
 
 ----------------------------------------------------------------
 MINOR:

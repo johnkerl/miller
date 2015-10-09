@@ -122,6 +122,33 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
+mlr having-fields --all-matching "^[a-z][a-z][a-z]$" ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+
+mlr having-fields --any-matching "^[a-z][a-z][a-z]$" ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+abcd=3,ghi=13
+abcde=5,ghi=15
+
+mlr having-fields --none-matching "^[a-z][a-z][a-z]$" ./reg_test/input/having-fields-regex.dkvp
+ABC=2,DEF=12
+ABCD=4,GHI=14
+ABCDE=6,GHI=16
+
+mlr having-fields --all-matching "^[a-z][a-z][a-z]$"i ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+ABC=2,DEF=12
+
+mlr having-fields --any-matching "^[a-z][a-z][a-z]$"i ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+ABC=2,DEF=12
+abcd=3,ghi=13
+ABCD=4,GHI=14
+abcde=5,ghi=15
+ABCDE=6,GHI=16
+
+mlr having-fields --none-matching "^[a-z][a-z][a-z]$"i ./reg_test/input/having-fields-regex.dkvp
+
 mlr rename b,BEE,x,EKS ./reg_test/input/abixy
 a=pan,BEE=pan,i=1,EKS=0.3467901443380824,y=0.7268028627434533
 a=eks,BEE=pan,i=2,EKS=0.7586799647899636,y=0.5221511083334797

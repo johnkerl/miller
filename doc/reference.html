@@ -981,17 +981,17 @@ $ mlr having-fields --help
 Usage: mlr having-fields [options]
 Conditionally passes through records depending on each record's field names.
 Options:
---at-least            {a,b,c}
---which-are           {a,b,c}
---at-most             {a,b,c}
---all-matching {regular expression}
---any-matching {regular expression}
---no-matching  {regular expression}
+  --at-least      {comma-separated names}
+  --which-are     {comma-separated names}
+  --at-most       {comma-separated names}
+  --all-matching  {regular expression}
+  --any-matching  {regular expression}
+  --none-matching {regular expression}
 Examples:
   mlr having-fields --which-are amount,status,owner
   mlr having-fields --any-matching 'sda[0-9]'
   mlr having-fields --any-matching '"sda[0-9]"'
-  mlr having-fields --any-matching '"sda[0-9]"i (this is case-insensitive)'
+  mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
 </pre>
 </div>
 <p/>
