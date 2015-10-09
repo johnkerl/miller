@@ -489,13 +489,13 @@ mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_t* pfunc,
-	lrec_evaluator_t* parg1, char* regex_string)
+	lrec_evaluator_t* parg1, char* regex_string, int ignore_case)
 {
 	lrec_evaluator_x_sr_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_sr_state_t));
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 
-	int cflags = 0;
+	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -608,14 +608,14 @@ mv_t lrec_evaluator_x_srs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
-	lrec_evaluator_t* parg1, char* regex_string, lrec_evaluator_t* parg3)
+	lrec_evaluator_t* parg1, char* regex_string, int ignore_case, lrec_evaluator_t* parg3)
 {
 	lrec_evaluator_x_srs_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_srs_state_t));
 	pstate->pfunc = pfunc;
 
 	pstate->parg1 = parg1;
 
-	int cflags = 0;
+	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
 
 	pstate->parg3 = parg3;
@@ -1097,10 +1097,12 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
-	lrec_evaluator_t* parg1, char* regex_string)
+	lrec_evaluator_t* parg1, char* regex_string, int ignore_case)
 {
-	if        (streq(fnnm, "=~"))  { return lrec_evaluator_alloc_from_x_sr_func(matches_precomp_func,        parg1, regex_string);
-	} else if (streq(fnnm, "!=~")) { return lrec_evaluator_alloc_from_x_sr_func(does_not_match_precomp_func, parg1, regex_string);
+	if        (streq(fnnm, "=~"))  {
+		return lrec_evaluator_alloc_from_x_sr_func(matches_precomp_func,        parg1, regex_string, ignore_case);
+	} else if (streq(fnnm, "!=~")) {
+		return lrec_evaluator_alloc_from_x_sr_func(does_not_match_precomp_func, parg1, regex_string, ignore_case);
 	} else  { return NULL; }
 }
 
@@ -1113,10 +1115,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
-	lrec_evaluator_t* parg1, char* regex_string, lrec_evaluator_t* parg3)
+	lrec_evaluator_t* parg1, char* regex_string, int ignore_case, lrec_evaluator_t* parg3)
 {
-	if        (streq(fnnm, "sub"))  { return lrec_evaluator_alloc_from_x_srs_func(sub_precomp_func,  parg1, regex_string, parg3);
-	//} else if (streq(fnnm, "gsub")) { return lrec_evaluator_alloc_from_x_srs_func(gsub_precomp_func, parg1, regex_string, parg3);
+	if (streq(fnnm, "sub"))  {
+		return lrec_evaluator_alloc_from_x_srs_func(sub_precomp_func,  parg1, regex_string, ignore_case, parg3);
+	// xxx gsub ...
 	} else  { return NULL; }
 }
 
@@ -1163,12 +1166,12 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
 			int type2 = parg2_node->type;
 
-			if ((streq(func_name, "=~") || streq(func_name, "!=~")) &&
-				(type2 == MLR_DSL_AST_NODE_TYPE_LITERAL || type2 == MLR_DSL_AST_NODE_TYPE_REGEXI))
-			{
-				// filter-regex special case:
+			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
 				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
-				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text);
+				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text, FALSE);
+			} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_REGEXI) {
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text, TRUE);
 			} else {
 				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
 				// the regexes will be compiled record-by-record rather than once at alloc time, which will
@@ -1184,13 +1187,17 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
 			int type2 = parg2_node->type;
 
-			if ((streq(func_name, "sub") || streq(func_name, "gsub")) &&
-				(type2 == MLR_DSL_AST_NODE_TYPE_LITERAL || type2 == MLR_DSL_AST_NODE_TYPE_REGEXI))
-			{
+			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
 				// sub/gsub-regex special case:
 				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
 				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, function_lookup_table);
-				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text, parg3);
+				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text, FALSE, parg3);
+
+			} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_REGEXI) {
+				// sub/gsub-regex special case:
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, function_lookup_table);
+				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text, TRUE, parg3);
 
 			} else {
 				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however

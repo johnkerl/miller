@@ -11,6 +11,7 @@ FLIGHT:
 
 * +/- of then-chaining
 * POSIX.2 REs
+* whack pdm/fdm w/ cmts
 
 ----------------------------------------------------------------
 MAJOR: regex

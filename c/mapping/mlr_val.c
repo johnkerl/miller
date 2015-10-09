@@ -885,7 +885,7 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	regmatch_t pmatch[1];
 	int eflags = 0;
 
-	regcomp_or_die(&reg, sregex, REG_NOSUB); // xxx also support REG_ICASE somehow
+	regcomp_or_die(&reg, sregex, REG_NOSUB);
 
 	if (regmatch_or_die(&reg, sstr, 1, pmatch, eflags)) {
 		regfree(&reg);

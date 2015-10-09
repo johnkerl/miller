@@ -1710,10 +1710,19 @@ sec        hms                  resec          diff
 ================================================================
 SUB/GSUB
 
-mlr --opprint put $y = sub($x, "e.*l", "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*l",  "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
+HELLO HELLO
 world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*l"i, "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+HELLO Hy123yO
+world world
+WORLD WORLD
 
 
 ================================================================
