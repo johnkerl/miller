@@ -146,7 +146,7 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 <p/>
 <div class="pokipanel">
 <pre>
-grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs stats1 -a min,p10,p50,p90,max -f time -g status
+grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
 </pre>
 </div>
 <p/>

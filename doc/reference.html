@@ -101,6 +101,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#check">check</a><br/>
@@ -547,6 +548,27 @@ x=0xffff,y=0xff,z=0xfeff01
 <p/>
 
 <!-- ================================================================ -->
+<a id="Regular_expressions"/><h2>Regular expressions</h2>
+
+<p/>Miller lets you use regular expressions (of type POSIX.2) in three contexts:
+
+<ul>
+
+<li/> In <tt>mlr filter</tt> with <tt>=~</tt> or <tt>!=~</tt>, e.g. <tt>mlr
+filter '$url =~ "http.*com"'</tt>
+
+<li/> In <tt>mlr put</tt> with <tt>sub</tt> or <tt>gsub</tt>, e.g. <tt>mlr put
+'$url = sub($url, "http.*com", "")'</tt>
+
+<li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
+--any-fields-matching "^sda[0-9]"</tt>
+
+</ul>
+
+The <tt>i</tt> after the double-quoted regular-expression string is used to
+signify case-insensitive match.
+
+<!-- ================================================================ -->
 <a id="Data_transformations"/><h1>Data transformations</h1>
 
 <!-- ================================================================ -->
@@ -757,7 +779,7 @@ Examples:
   mlr filter 'urand() &lt; 0.001'  (subsampling)
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
-  mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+")'
+  mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list.
 </pre>
@@ -1378,6 +1400,7 @@ Examples:
   mlr put '$filename = FILENAME'
   mlr put '$colored_shape = $color . "_" . $shape'
   mlr put '$y = cos($theta); $z = atan2($y, $x)'
+  mlr put '$name = sub($name, "http.*com"i, "")'
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list.
 </pre>

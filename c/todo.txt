@@ -17,21 +17,18 @@ FLIGHT:
 MAJOR: regex
 
 k mlr filter '$y =~ "abc"'
-? ? mlr filter -i '$y =~ "abc"' ?? (case-insensitivity)
-  ? mlr filter    '$y =~ /abc/i' ?? (case-insensitivity)
-* mlr put '$y = gsub($x, "a.*b", "cde")'
-  mlr put '$y = gsub($x, "a(.*)b", "cde\1ghi")'
-  mlr put -i ... ?
-~ having-fields:
-  - needs reg-test cases
-  - needs -i
-  - use slashy syntax?
+k mlr filter '$y =~ "abc"i'
 
-* -i flag throughout ... put, filter, having-fields.
-k libify regcomp (sub/nosub) & regexec
-* mld note re regex lib
+* gsub
 
-* /regex/ and /regex/i instead of verb -i's?
+* capture-groups with \1 etc.
+
+* having-fields:
+  o needs reg-test cases
+  o use dquote syntax
+
+* "...\"..." in UT cases
+* "b"."" UT cases w/ why-cmts
 
 UT
 kerl@kerl-mbp[s0j0d1][c]$ echo 'x=abc'|mlr put '$y=sub($x,"b","X")'
