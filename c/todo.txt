@@ -7,6 +7,13 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
+release notes:
+* regexes
+* iterative stats1/2
+* check minor incompatibilities
+* what else ...
+
+----------------------------------------------------------------
 MAJOR: regex
 
 * gsub
@@ -19,9 +26,9 @@ MAJOR: regex
 * cmt no_precomp in the code ..
 
 ----------------------------------------------------------------
-MAJOR: running-mean feature ....... really for all of stats1/stats2
+MAJOR: iterative stats1/2
 
-* save field names at alloc time ...
+* cmt src
 
 ----------------------------------------------------------------
 MINOR:
