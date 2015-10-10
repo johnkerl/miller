@@ -19,6 +19,11 @@ MAJOR: regex
 * cmt no_precomp in the code ..
 
 ----------------------------------------------------------------
+MAJOR: running-mean feature ....... really for all of stats1/stats2
+
+* save field names at alloc time ...
+
+----------------------------------------------------------------
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline
@@ -30,9 +35,6 @@ MINOR:
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
 * hash-chain ifdef instrumentation
-
-----------------------------------------------------------------
-MAJOR: running-mean feature ....... really for all of stats1/stats2
 
 ----------------------------------------------------------------
 MAJOR: reservoir-sampling with group-by
