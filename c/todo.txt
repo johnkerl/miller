@@ -25,6 +25,9 @@ MAJOR: regex
 
 * cmt no_precomp in the code ..
 
+* allow "..." and "..."i in sub-from-complex; libify having-fields logic;
+  update mld re case-insensitive; optimize starts-with/ends-with
+
 ----------------------------------------------------------------
 MAJOR: iterative stats1/2
 
