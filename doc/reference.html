@@ -1920,13 +1920,13 @@ Usage: mlr stats2 [options]
   corr         Sample correlation
   cov          Sample covariance
   covx         Sample-covariance matrix
--f {a,b,c,d}  Value-field name-pairs on which to compute statistics.
-              There must be an even number of names.
--g {e,f,g}    Optional group-by-field names.
--v            Print additional output for linreg-pca.
--s            Print iterative stats. Useful in tail -f contexts (in which
-              case please avoid pprint-format output since end of input
-              stream will never be seen).
+-f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
+               There must be an even number of names.
+-g {e,f,g}     Optional group-by-field names.
+-v             Print additional output for linreg-pca.
+-s             Print iterative stats. Useful in tail -f contexts (in which
+               case please avoid pprint-format output since end of input
+               stream will never be seen).
 Example: mlr stats2 -a linreg-pca -f x,y
 Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
 Example: mlr stats2 -a corr -f x,y

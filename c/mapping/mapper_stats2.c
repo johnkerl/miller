@@ -93,13 +93,13 @@ static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	for (int i = 0; i < stats2_lookup_table_length; i++) {
 		fprintf(o, "  %-12s %s\n", stats2_lookup_table[i].name, stats2_lookup_table[i].desc);
 	}
-	fprintf(o, "-f {a,b,c,d}  Value-field name-pairs on which to compute statistics.\n");
-	fprintf(o, "              There must be an even number of names.\n");
-	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");
-	fprintf(o, "-v            Print additional output for linreg-pca.\n");
-	fprintf(o, "-s            Print iterative stats. Useful in tail -f contexts (in which\n");
-	fprintf(o, "              case please avoid pprint-format output since end of input\n");
-	fprintf(o, "              stream will never be seen).\n");
+	fprintf(o, "-f {a,b,c,d}   Value-field name-pairs on which to compute statistics.\n");
+	fprintf(o, "               There must be an even number of names.\n");
+	fprintf(o, "-g {e,f,g}     Optional group-by-field names.\n");
+	fprintf(o, "-v             Print additional output for linreg-pca.\n");
+	fprintf(o, "-s             Print iterative stats. Useful in tail -f contexts (in which\n");
+	fprintf(o, "               case please avoid pprint-format output since end of input\n");
+	fprintf(o, "               stream will never be seen).\n");
 	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
