@@ -49,8 +49,10 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats);
 static void      mapper_stats2_free(void* pvstate);
 static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
-static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
+static lrec_t*   mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static sllv_t*   mapper_stats2_emit_all(mapper_stats2_state_t* pstate);
+static void      mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* pinrec,
+	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state);
 
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
@@ -95,6 +97,9 @@ static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "              There must be an even number of names.\n");
 	fprintf(o, "-g {e,f,g}    Optional group-by-field names.\n");
 	fprintf(o, "-v            Print additional output for linreg-pca.\n");
+	fprintf(o, "-s                  Print iterative stats. Useful in tail -f contexts (in which\n");
+	fprintf(o, "                    case please avoid pprint-format output since end of input\n");
+	fprintf(o, "                    stream will never be seen).\n");
 	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
@@ -114,6 +119,7 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,        "-v", &do_verbose);
+	ap_define_true_flag(pstate,        "-s", &do_iterative_stats);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats2_usage(stderr, argv[0], verb);
@@ -165,26 +171,32 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 // }
 // ================================================================
 
-// ----------------------------------------------------------------
+// In the iterative case, add to the current record its current group's stats fields.
+// In the non-iteratiive case, produce output only at end of input stream.
 static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		mapper_stats2_ingest(pinrec, pctx, pstate);
-		lrec_free(pinrec);
+		lrec_t* poutrec = mapper_stats2_ingest(pinrec, pctx, pstate);
+		if (poutrec == NULL) {
+			lrec_free(pinrec);
+			return NULL;
+		} else {
+			return sllv_single(poutrec);
+		}
+	} else if (!pstate->do_iterative_stats) {
+		return mapper_stats2_emit_all(pstate);
+	} else {
 		return NULL;
-	}
-	else {
-		return mapper_stats2_emit(pstate);
 	}
 }
 
 // ----------------------------------------------------------------
-static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
+static lrec_t* mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
 	// ["s", "t"]
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
 		slls_free(pgroup_by_field_values);
-		return;
+		return pstate->do_iterative_stats ? pinrec : NULL;
 	}
 
 	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
@@ -231,13 +243,18 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 			double dval2 = mlr_double_from_string_or_die(sval2);
 			pstats2->pingest_func(pstats2->pvstate, dval1, dval2);
 		}
+		if (pstate->do_iterative_stats) {
+			mapper_stats2_emit(pstate, pinrec, value_field_name_1, value_field_name_2,
+				acc_fields_to_acc_state);
+		}
 	}
 
 	slls_free(pgroup_by_field_values);
+	return pstate->do_iterative_stats ? pinrec : NULL;
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
+static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
 	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
@@ -260,6 +277,9 @@ static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
 			char*    value_field_name_2 = pd->key2;
 			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
 
+			mapper_stats2_emit(pstate, poutrec, value_field_name_1, value_field_name_2,
+				acc_fields_to_acc_state);
+
 			// For "corr", "linreg"
 			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 				stats2_t* pstats2 = pe->pvvalue;
@@ -271,6 +291,16 @@ static sllv_t* mapper_stats2_emit(mapper_stats2_state_t* pstate) {
 	}
 	sllv_add(poutrecs, NULL);
 	return poutrecs;
+}
+
+static void mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* poutrec,
+	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state)
+{
+	// For "corr", "linreg"
+	for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+		stats2_t* pstats2 = pe->pvvalue;
+		pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
+	}
 }
 
 // ----------------------------------------------------------------
@@ -285,6 +315,7 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->pgroup_by_field_names   = pgroup_by_field_names;
 	pstate->groups                  = lhmslv_alloc();
 	pstate->do_verbose              = do_verbose;
+	pstate->do_iterative_stats      = do_iterative_stats;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats2_process;

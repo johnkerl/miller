@@ -4,6 +4,7 @@ EXTRA_DIST=	\
 		a.pprint \
 		abixy \
 		abixy-wide \
+		abixy-wide-short \
 		b.csv \
 		b.pprint \
 		c.csv \

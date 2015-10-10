@@ -44,14 +44,14 @@ typedef struct _mapper_stats1_state_t {
 // ----------------------------------------------------------------
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int do_iterative_stats);
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names,
+	slls_t* pgroup_by_field_names, int do_iterative_stats);
 static void      mapper_stats1_free(void* pvstate);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static lrec_t*   mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
-static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec, char* value_field_name, char* stats1_name,
-	lhmsv_t* acc_field_to_acc_state);
+static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
+	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state);
 
 static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name);
@@ -133,7 +133,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
 	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate, "-s", &do_iterative_stats);
+	ap_define_true_flag(pstate,        "-s", &do_iterative_stats);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats1_usage(stderr, argv[0], verb);
@@ -145,7 +145,8 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names, do_iterative_stats);
+	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names,
+		do_iterative_stats);
 }
 
 // ----------------------------------------------------------------
@@ -404,7 +405,6 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
 	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state)
 {
-
 	// Add in fields such as x_sum=#, y_count=#, etc.:
 	for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
 		char* stats1_name = pe->value;
