@@ -39,7 +39,7 @@ typedef struct _mapper_stats2_state_t {
 	int     do_verbose;
 } mapper_stats2_state_t;
 
-typedef stats2_t* stats2_alloc_func_t(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
+typedef stats2_t* stats2_alloc_func_t(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 
 // ----------------------------------------------------------------
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
@@ -52,13 +52,13 @@ static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_st
 static sllv_t*   mapper_stats2_emit(mapper_stats2_state_t* pstate);
 
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
-static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
-static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_which, int do_verbose);
-static stats2_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
-static stats2_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
-static stats2_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
-static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose);
+static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose);
+static stats2_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 
 // ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
@@ -340,7 +340,7 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 	val = mlr_alloc_string_from_ll(pstate->count);
 	lrec_put(poutrec, pstate->n_output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
+static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_linreg_ols_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_linreg_ols_state_t));
 	pstate->count = 0LL;
@@ -399,7 +399,7 @@ static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* pout
 		lrec_put(poutrec, pstate->r2_output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
+static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_r2_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_r2_state_t));
 	pstate->count     = 0LL;
@@ -552,7 +552,7 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		}
 	}
 }
-static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_which, int do_verbose) {
+static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
 	pstate->count      = 0LL;
@@ -592,15 +592,15 @@ static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_fie
 
 	return pstats2;
 }
-static stats2_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
-	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, acc_name, DO_CORR, do_verbose);
+static stats2_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
+	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_name, DO_CORR, do_verbose);
 }
-static stats2_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
-	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, acc_name, DO_COV, do_verbose);
+static stats2_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
+	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_name, DO_COV, do_verbose);
 }
-static stats2_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
-	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, acc_name, DO_COVX, do_verbose);
+static stats2_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
+	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_name, DO_COVX, do_verbose);
 }
-static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* acc_name, int do_verbose) {
-	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, acc_name, DO_LINREG_PCA, do_verbose);
+static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
+	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_name, DO_LINREG_PCA, do_verbose);
 }
