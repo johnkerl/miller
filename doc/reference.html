@@ -1803,11 +1803,11 @@ Options:
   meaneb  Estimate error bars for averages (assuming no sample autocorrelation)
   min     Compute minimum values of specified fields
   max     Compute maximum values of specified fields
--f {a,b,c}          Value-field names on which to compute statistics
--g {d,e,f}          Optional group-by-field names
--s                  Print iterative stats. Useful in tail -f contexts (in which
-                    case please avoid pprint-format output since end of input
-                    stream will never be seen).
+-f {a,b,c}  Value-field names on which to compute statistics
+-g {d,e,f}  Optional group-by-field names
+-s          Print iterative stats. Useful in tail -f contexts (in which
+            case please avoid pprint-format output since end of input
+            stream will never be seen).
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
 Example: mlr stats1 -a count,mode -f size
 Example: mlr stats1 -a count,mode -f size -g shape
@@ -1924,9 +1924,9 @@ Usage: mlr stats2 [options]
               There must be an even number of names.
 -g {e,f,g}    Optional group-by-field names.
 -v            Print additional output for linreg-pca.
--s                  Print iterative stats. Useful in tail -f contexts (in which
-                    case please avoid pprint-format output since end of input
-                    stream will never be seen).
+-s            Print iterative stats. Useful in tail -f contexts (in which
+              case please avoid pprint-format output since end of input
+              stream will never be seen).
 Example: mlr stats2 -a linreg-pca -f x,y
 Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
 Example: mlr stats2 -a corr -f x,y
