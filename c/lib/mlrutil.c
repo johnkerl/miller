@@ -271,9 +271,11 @@ int string_starts_with(char* string, char* prefix) {
 	return !strncmp(string, prefix, prefixlen);
 }
 
-int string_ends_with(char* string, char* suffix) {
+int string_ends_with(char* string, char* suffix, int* pstringlen) {
 	int stringlen = strlen(string);
 	int suffixlen = strlen(suffix);
+	if (pstringlen != NULL)
+		*pstringlen = stringlen;
 	if (stringlen < suffixlen)
 		return FALSE;
 	return !strcmp(&string[stringlen-suffixlen], suffix);

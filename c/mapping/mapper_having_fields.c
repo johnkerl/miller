@@ -143,10 +143,10 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_st
 		// Strip off the leading " and trailing " or "i.
 		int cflags = REG_NOSUB;
 		if (string_starts_with(regex_string, "\"")) {
-			int len = strlen(regex_string);
-			if (string_ends_with(regex_string, "\"")) {
+			int len = 0;
+			if (string_ends_with(regex_string, "\"", &len)) {
 				regex_string[len-1] = 0;
-			} else if (string_ends_with(regex_string, "\"i")) {
+			} else if (string_ends_with(regex_string, "\"i", &len)) {
 				regex_string[len-2] = 0;
 				cflags |= REG_ICASE;
 			} else {

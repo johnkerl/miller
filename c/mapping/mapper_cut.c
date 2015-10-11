@@ -127,6 +127,7 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
 		pstate->regexes = mlr_malloc_or_die(pstate->nregex * sizeof(regex_t));
 		int i = 0;
 		for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext, i++) {
+			// xxx libify "..." and "..."i syntax from having-fields
 			regcomp_or_die(&pstate->regexes[i], pe->value, REG_NOSUB);
 		}
 		pmapper->pprocess_func     = mapper_cut_process_with_regexes;

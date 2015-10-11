@@ -101,11 +101,14 @@ static char * test_starts_or_ends_with() {
 	mu_assert_lf(string_starts_with("abcde", "abcde"));
 	mu_assert_lf(!string_starts_with("abcde", "abcdef"));
 
-	mu_assert_lf(string_ends_with("abcde", ""));
-	mu_assert_lf(string_ends_with("abcde", "e"));
-	mu_assert_lf(string_ends_with("abcde", "de"));
-	mu_assert_lf(string_ends_with("abcde", "abcde"));
-	mu_assert_lf(!string_ends_with("abcde", "0abcde"));
+	mu_assert_lf(string_ends_with("abcde", "", NULL));
+	mu_assert_lf(string_ends_with("abcde", "e", NULL));
+	mu_assert_lf(string_ends_with("abcde", "de", NULL));
+	mu_assert_lf(string_ends_with("abcde", "abcde", NULL));
+	mu_assert_lf(!string_ends_with("abcde", "0abcde", NULL));
+	int len = -1;
+	mu_assert_lf(!string_ends_with("abcde", "0abcde", &len));
+	mu_assert_lf(len == 5);
 
 	return 0;
 }
