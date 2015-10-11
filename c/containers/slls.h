@@ -18,7 +18,7 @@ typedef struct _sllse_t {
 typedef struct _slls_t {
 	sllse_t *phead;
 	sllse_t *ptail;
-	int length;
+	int      length;
 } slls_t;
 
 slls_t* slls_alloc();
