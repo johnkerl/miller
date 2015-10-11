@@ -18,15 +18,22 @@ MAJOR: regex
 
 * gsub
 
-* capture-groups with \1 etc.
+* capture-groups in sub/gsub with \1 etc.
   - sub($name, "a.*bc.*defg", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
-* cmt no_precomp in the code ..
+* regex field names in cut: mlr cut -r -x -f '.*in.*,.*out.*'
+* regex field names in put: mlr put '$*bytes = $*_in_bytes + $*_out_bytes'
+* regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
+? regex field names in group-by?
+? regex field names in join?
+? regex field names in uniq?
 
-* allow "..." and "..."i in sub-from-complex; libify having-fields logic;
-  update mld re case-insensitive; optimize starts-with/ends-with
+* cmt no_precomp funcs in the code ..
+
+* libify having-fields logic; optimize starts-with/ends-with;
+  maybe modify end-with to hand back strlen as ref arg
 
 ----------------------------------------------------------------
 MINOR:
@@ -40,6 +47,7 @@ MINOR:
 * scroll-stalls in mlrdoc!! really bad on the droid.
 
 * hash-chain ifdef instrumentation
+  -> maybe find a better hash function out there
 
 ----------------------------------------------------------------
 MAJOR: reservoir-sampling with group-by
