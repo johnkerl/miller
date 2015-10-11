@@ -29,11 +29,6 @@ MAJOR: regex
   update mld re case-insensitive; optimize starts-with/ends-with
 
 ----------------------------------------------------------------
-MAJOR: iterative stats1/2
-
-* cmt src
-
-----------------------------------------------------------------
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline

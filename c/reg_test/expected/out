@@ -816,18 +816,246 @@ mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y ./reg_test/input/abixy
 i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 5.500000 0.957427 3.027650 0.453629 0.068157 0.215531 0.594454 0.096968 0.306639
 
-mlr --opprint stats1 -s -a mean,sum,count,min,max,mode -f i,x,y ./reg_test/input/abixy
-a   b   i  x                   y                   i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode             y_mean   y_sum    y_count y_min    y_max    y_mode
-pan pan 1  0.3467901443380824  0.7268028627434533  1.000000 1.000000  1       1.000000 1.000000  1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824 0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797  1.500000 3.000000  2       1.000000 2.000000  1      0.552735 1.105470 2       0.346790 0.758680 0.3467901443380824 0.624477 1.248954 2       0.522151 0.726803 0.7268028627434533
-wye wye 3  0.20460330576630303 0.33831852551664776 2.000000 6.000000  3       1.000000 3.000000  1      0.436691 1.310073 3       0.204603 0.758680 0.3467901443380824 0.529091 1.587272 3       0.338319 0.726803 0.7268028627434533
-eks wye 4  0.38139939387114097 0.13418874328430463 2.500000 10.000000 4       1.000000 4.000000  1      0.422868 1.691473 4       0.204603 0.758680 0.3467901443380824 0.430365 1.721461 4       0.134189 0.726803 0.7268028627434533
-wye pan 5  0.5732889198020006  0.8636244699032729  3.000000 15.000000 5       1.000000 5.000000  1      0.452952 2.264762 5       0.204603 0.758680 0.3467901443380824 0.517017 2.585086 5       0.134189 0.863624 0.7268028627434533
-zee pan 6  0.5271261600918548  0.49322128674835697 3.500000 21.000000 6       1.000000 6.000000  1      0.465315 2.791888 6       0.204603 0.758680 0.3467901443380824 0.513051 3.078307 6       0.134189 0.863624 0.7268028627434533
-eks zee 7  0.6117840605678454  0.1878849191181694  4.000000 28.000000 7       1.000000 7.000000  1      0.486239 3.403672 7       0.204603 0.758680 0.3467901443380824 0.466599 3.266192 7       0.134189 0.863624 0.7268028627434533
-zee wye 8  0.5985540091064224  0.976181385699006   4.500000 36.000000 8       1.000000 8.000000  1      0.500278 4.002226 8       0.204603 0.758680 0.3467901443380824 0.530297 4.242373 8       0.134189 0.976181 0.7268028627434533
-hat wye 9  0.03144187646093577 0.7495507603507059  5.000000 45.000000 9       1.000000 9.000000  1      0.448185 4.033668 9       0.031442 0.758680 0.3467901443380824 0.554658 4.991924 9       0.134189 0.976181 0.7268028627434533
-pan wye 10 0.5026260055412137  0.9526183602969864  5.500000 55.000000 10      1.000000 10.000000 1      0.453629 4.536294 10      0.031442 0.758680 0.3467901443380824 0.594454 5.944542 10      0.134189 0.976181 0.7268028627434533
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,mode -f i,x,y ./reg_test/input/abixy
+a       pan
+b       pan
+i       1
+x       0.3467901443380824
+y       0.7268028627434533
+i_mean  1.000000
+i_sum   1.000000
+i_count 1
+i_min   1.000000
+i_max   1.000000
+i_mode  1
+x_mean  0.346790
+x_sum   0.346790
+x_count 1
+x_min   0.346790
+x_max   0.346790
+x_mode  0.3467901443380824
+y_mean  0.726803
+y_sum   0.726803
+y_count 1
+y_min   0.726803
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       eks
+b       pan
+i       2
+x       0.7586799647899636
+y       0.5221511083334797
+i_mean  1.500000
+i_sum   3.000000
+i_count 2
+i_min   1.000000
+i_max   2.000000
+i_mode  1
+x_mean  0.552735
+x_sum   1.105470
+x_count 2
+x_min   0.346790
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.624477
+y_sum   1.248954
+y_count 2
+y_min   0.522151
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       wye
+b       wye
+i       3
+x       0.20460330576630303
+y       0.33831852551664776
+i_mean  2.000000
+i_sum   6.000000
+i_count 3
+i_min   1.000000
+i_max   3.000000
+i_mode  1
+x_mean  0.436691
+x_sum   1.310073
+x_count 3
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.529091
+y_sum   1.587272
+y_count 3
+y_min   0.338319
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       eks
+b       wye
+i       4
+x       0.38139939387114097
+y       0.13418874328430463
+i_mean  2.500000
+i_sum   10.000000
+i_count 4
+i_min   1.000000
+i_max   4.000000
+i_mode  1
+x_mean  0.422868
+x_sum   1.691473
+x_count 4
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.430365
+y_sum   1.721461
+y_count 4
+y_min   0.134189
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       wye
+b       pan
+i       5
+x       0.5732889198020006
+y       0.8636244699032729
+i_mean  3.000000
+i_sum   15.000000
+i_count 5
+i_min   1.000000
+i_max   5.000000
+i_mode  1
+x_mean  0.452952
+x_sum   2.264762
+x_count 5
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.517017
+y_sum   2.585086
+y_count 5
+y_min   0.134189
+y_max   0.863624
+y_mode  0.7268028627434533
+
+a       zee
+b       pan
+i       6
+x       0.5271261600918548
+y       0.49322128674835697
+i_mean  3.500000
+i_sum   21.000000
+i_count 6
+i_min   1.000000
+i_max   6.000000
+i_mode  1
+x_mean  0.465315
+x_sum   2.791888
+x_count 6
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.513051
+y_sum   3.078307
+y_count 6
+y_min   0.134189
+y_max   0.863624
+y_mode  0.7268028627434533
+
+a       eks
+b       zee
+i       7
+x       0.6117840605678454
+y       0.1878849191181694
+i_mean  4.000000
+i_sum   28.000000
+i_count 7
+i_min   1.000000
+i_max   7.000000
+i_mode  1
+x_mean  0.486239
+x_sum   3.403672
+x_count 7
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.466599
+y_sum   3.266192
+y_count 7
+y_min   0.134189
+y_max   0.863624
+y_mode  0.7268028627434533
+
+a       zee
+b       wye
+i       8
+x       0.5985540091064224
+y       0.976181385699006
+i_mean  4.500000
+i_sum   36.000000
+i_count 8
+i_min   1.000000
+i_max   8.000000
+i_mode  1
+x_mean  0.500278
+x_sum   4.002226
+x_count 8
+x_min   0.204603
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.530297
+y_sum   4.242373
+y_count 8
+y_min   0.134189
+y_max   0.976181
+y_mode  0.7268028627434533
+
+a       hat
+b       wye
+i       9
+x       0.03144187646093577
+y       0.7495507603507059
+i_mean  5.000000
+i_sum   45.000000
+i_count 9
+i_min   1.000000
+i_max   9.000000
+i_mode  1
+x_mean  0.448185
+x_sum   4.033668
+x_count 9
+x_min   0.031442
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.554658
+y_sum   4.991924
+y_count 9
+y_min   0.134189
+y_max   0.976181
+y_mode  0.7268028627434533
+
+a       pan
+b       wye
+i       10
+x       0.5026260055412137
+y       0.9526183602969864
+i_mean  5.500000
+i_sum   55.000000
+i_count 10
+i_min   1.000000
+i_max   10.000000
+i_mode  1
+x_mean  0.453629
+x_sum   4.536294
+x_count 10
+x_min   0.031442
+x_max   0.758680
+x_mode  0.3467901443380824
+y_mean  0.594454
+y_sum   5.944542
+y_count 10
+y_min   0.134189
+y_max   0.976181
+y_mode  0.7268028627434533
 
 mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a ./reg_test/input/abixy
 a   i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
@@ -853,18 +1081,246 @@ wye 4.000000 1.000000 1.414214 0.388946 0.184343 0.260700 0.600971 0.262653 0.37
 zee 7.000000 1.000000 1.414214 0.562840 0.035714 0.050507 0.734701 0.241480 0.341504
 hat 9.000000 -        -        0.031442 -        -        0.749551 -        -
 
-mlr --opprint stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a ./reg_test/input/abixy
-a   b   i  x                   y                   i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
-pan pan 1  0.3467901443380824  0.7268028627434533  1.000000 1.000000  1       1.000000 1.000000  1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824  0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797  2.000000 2.000000  1       2.000000 2.000000  2      0.758680 0.758680 1       0.758680 0.758680 0.7586799647899636  0.522151 0.522151 1       0.522151 0.522151 0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776 3.000000 3.000000  1       3.000000 3.000000  3      0.204603 0.204603 1       0.204603 0.204603 0.20460330576630303 0.338319 0.338319 1       0.338319 0.338319 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463 3.000000 6.000000  2       2.000000 4.000000  2      0.570040 1.140079 2       0.381399 0.758680 0.7586799647899636  0.328170 0.656340 2       0.134189 0.522151 0.5221511083334797
-wye pan 5  0.5732889198020006  0.8636244699032729  4.000000 8.000000  2       3.000000 5.000000  3      0.388946 0.777892 2       0.204603 0.573289 0.20460330576630303 0.600971 1.201943 2       0.338319 0.863624 0.33831852551664776
-zee pan 6  0.5271261600918548  0.49322128674835697 6.000000 6.000000  1       6.000000 6.000000  6      0.527126 0.527126 1       0.527126 0.527126 0.5271261600918548  0.493221 0.493221 1       0.493221 0.493221 0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694  4.333333 13.000000 3       2.000000 7.000000  2      0.583954 1.751863 3       0.381399 0.758680 0.7586799647899636  0.281408 0.844225 3       0.134189 0.522151 0.5221511083334797
-zee wye 8  0.5985540091064224  0.976181385699006   7.000000 14.000000 2       6.000000 8.000000  6      0.562840 1.125680 2       0.527126 0.598554 0.5271261600918548  0.734701 1.469403 2       0.493221 0.976181 0.49322128674835697
-hat wye 9  0.03144187646093577 0.7495507603507059  9.000000 9.000000  1       9.000000 9.000000  9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864  5.500000 11.000000 2       1.000000 10.000000 1      0.424708 0.849416 2       0.346790 0.502626 0.3467901443380824  0.839711 1.679421 2       0.726803 0.952618 0.7268028627434533
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a ./reg_test/input/abixy
+a       pan
+b       pan
+i       1
+x       0.3467901443380824
+y       0.7268028627434533
+i_mean  1.000000
+i_sum   1.000000
+i_count 1
+i_min   1.000000
+i_max   1.000000
+i_mode  1
+x_mean  0.346790
+x_sum   0.346790
+x_count 1
+x_min   0.346790
+x_max   0.346790
+x_mode  0.3467901443380824
+y_mean  0.726803
+y_sum   0.726803
+y_count 1
+y_min   0.726803
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       eks
+b       pan
+i       2
+x       0.7586799647899636
+y       0.5221511083334797
+i_mean  2.000000
+i_sum   2.000000
+i_count 1
+i_min   2.000000
+i_max   2.000000
+i_mode  2
+x_mean  0.758680
+x_sum   0.758680
+x_count 1
+x_min   0.758680
+x_max   0.758680
+x_mode  0.7586799647899636
+y_mean  0.522151
+y_sum   0.522151
+y_count 1
+y_min   0.522151
+y_max   0.522151
+y_mode  0.5221511083334797
+
+a       wye
+b       wye
+i       3
+x       0.20460330576630303
+y       0.33831852551664776
+i_mean  3.000000
+i_sum   3.000000
+i_count 1
+i_min   3.000000
+i_max   3.000000
+i_mode  3
+x_mean  0.204603
+x_sum   0.204603
+x_count 1
+x_min   0.204603
+x_max   0.204603
+x_mode  0.20460330576630303
+y_mean  0.338319
+y_sum   0.338319
+y_count 1
+y_min   0.338319
+y_max   0.338319
+y_mode  0.33831852551664776
+
+a       eks
+b       wye
+i       4
+x       0.38139939387114097
+y       0.13418874328430463
+i_mean  3.000000
+i_sum   6.000000
+i_count 2
+i_min   2.000000
+i_max   4.000000
+i_mode  2
+x_mean  0.570040
+x_sum   1.140079
+x_count 2
+x_min   0.381399
+x_max   0.758680
+x_mode  0.7586799647899636
+y_mean  0.328170
+y_sum   0.656340
+y_count 2
+y_min   0.134189
+y_max   0.522151
+y_mode  0.5221511083334797
+
+a       wye
+b       pan
+i       5
+x       0.5732889198020006
+y       0.8636244699032729
+i_mean  4.000000
+i_sum   8.000000
+i_count 2
+i_min   3.000000
+i_max   5.000000
+i_mode  3
+x_mean  0.388946
+x_sum   0.777892
+x_count 2
+x_min   0.204603
+x_max   0.573289
+x_mode  0.20460330576630303
+y_mean  0.600971
+y_sum   1.201943
+y_count 2
+y_min   0.338319
+y_max   0.863624
+y_mode  0.33831852551664776
+
+a       zee
+b       pan
+i       6
+x       0.5271261600918548
+y       0.49322128674835697
+i_mean  6.000000
+i_sum   6.000000
+i_count 1
+i_min   6.000000
+i_max   6.000000
+i_mode  6
+x_mean  0.527126
+x_sum   0.527126
+x_count 1
+x_min   0.527126
+x_max   0.527126
+x_mode  0.5271261600918548
+y_mean  0.493221
+y_sum   0.493221
+y_count 1
+y_min   0.493221
+y_max   0.493221
+y_mode  0.49322128674835697
+
+a       eks
+b       zee
+i       7
+x       0.6117840605678454
+y       0.1878849191181694
+i_mean  4.333333
+i_sum   13.000000
+i_count 3
+i_min   2.000000
+i_max   7.000000
+i_mode  2
+x_mean  0.583954
+x_sum   1.751863
+x_count 3
+x_min   0.381399
+x_max   0.758680
+x_mode  0.7586799647899636
+y_mean  0.281408
+y_sum   0.844225
+y_count 3
+y_min   0.134189
+y_max   0.522151
+y_mode  0.5221511083334797
+
+a       zee
+b       wye
+i       8
+x       0.5985540091064224
+y       0.976181385699006
+i_mean  7.000000
+i_sum   14.000000
+i_count 2
+i_min   6.000000
+i_max   8.000000
+i_mode  6
+x_mean  0.562840
+x_sum   1.125680
+x_count 2
+x_min   0.527126
+x_max   0.598554
+x_mode  0.5271261600918548
+y_mean  0.734701
+y_sum   1.469403
+y_count 2
+y_min   0.493221
+y_max   0.976181
+y_mode  0.49322128674835697
+
+a       hat
+b       wye
+i       9
+x       0.03144187646093577
+y       0.7495507603507059
+i_mean  9.000000
+i_sum   9.000000
+i_count 1
+i_min   9.000000
+i_max   9.000000
+i_mode  9
+x_mean  0.031442
+x_sum   0.031442
+x_count 1
+x_min   0.031442
+x_max   0.031442
+x_mode  0.03144187646093577
+y_mean  0.749551
+y_sum   0.749551
+y_count 1
+y_min   0.749551
+y_max   0.749551
+y_mode  0.7495507603507059
+
+a       pan
+b       wye
+i       10
+x       0.5026260055412137
+y       0.9526183602969864
+i_mean  5.500000
+i_sum   11.000000
+i_count 2
+i_min   1.000000
+i_max   10.000000
+i_mode  1
+x_mean  0.424708
+x_sum   0.849416
+x_count 2
+x_min   0.346790
+x_max   0.502626
+x_mode  0.3467901443380824
+y_mean  0.839711
+y_sum   1.679421
+y_count 2
+y_min   0.726803
+y_max   0.952618
+y_mode  0.7268028627434533
 
 mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y -g a,b ./reg_test/input/abixy
 a   b   i_mean    i_sum     i_count i_min     i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
@@ -905,18 +1361,246 @@ zee wye 8.000000  -        -        0.598554 -        -        0.976181 -       
 hat wye 9.000000  -        -        0.031442 -        -        0.749551 -        -
 pan wye 10.000000 -        -        0.502626 -        -        0.952618 -        -
 
-mlr --opprint stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a,b ./reg_test/input/abixy
-a   b   i  x                   y                   i_mean    i_sum     i_count i_min     i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode              y_mean   y_sum    y_count y_min    y_max    y_mode
-pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000  1       1.000000  1.000000  1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824  0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797  2.000000  2.000000  1       2.000000  2.000000  2      0.758680 0.758680 1       0.758680 0.758680 0.7586799647899636  0.522151 0.522151 1       0.522151 0.522151 0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776 3.000000  3.000000  1       3.000000  3.000000  3      0.204603 0.204603 1       0.204603 0.204603 0.20460330576630303 0.338319 0.338319 1       0.338319 0.338319 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463 4.000000  4.000000  1       4.000000  4.000000  4      0.381399 0.381399 1       0.381399 0.381399 0.38139939387114097 0.134189 0.134189 1       0.134189 0.134189 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729  5.000000  5.000000  1       5.000000  5.000000  5      0.573289 0.573289 1       0.573289 0.573289 0.5732889198020006  0.863624 0.863624 1       0.863624 0.863624 0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697 6.000000  6.000000  1       6.000000  6.000000  6      0.527126 0.527126 1       0.527126 0.527126 0.5271261600918548  0.493221 0.493221 1       0.493221 0.493221 0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694  7.000000  7.000000  1       7.000000  7.000000  7      0.611784 0.611784 1       0.611784 0.611784 0.6117840605678454  0.187885 0.187885 1       0.187885 0.187885 0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006   8.000000  8.000000  1       8.000000  8.000000  8      0.598554 0.598554 1       0.598554 0.598554 0.5985540091064224  0.976181 0.976181 1       0.976181 0.976181 0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059  9.000000  9.000000  1       9.000000  9.000000  9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864  10.000000 10.000000 1       10.000000 10.000000 10     0.502626 0.502626 1       0.502626 0.502626 0.5026260055412137  0.952618 0.952618 1       0.952618 0.952618 0.9526183602969864
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a,b ./reg_test/input/abixy
+a       pan
+b       pan
+i       1
+x       0.3467901443380824
+y       0.7268028627434533
+i_mean  1.000000
+i_sum   1.000000
+i_count 1
+i_min   1.000000
+i_max   1.000000
+i_mode  1
+x_mean  0.346790
+x_sum   0.346790
+x_count 1
+x_min   0.346790
+x_max   0.346790
+x_mode  0.3467901443380824
+y_mean  0.726803
+y_sum   0.726803
+y_count 1
+y_min   0.726803
+y_max   0.726803
+y_mode  0.7268028627434533
+
+a       eks
+b       pan
+i       2
+x       0.7586799647899636
+y       0.5221511083334797
+i_mean  2.000000
+i_sum   2.000000
+i_count 1
+i_min   2.000000
+i_max   2.000000
+i_mode  2
+x_mean  0.758680
+x_sum   0.758680
+x_count 1
+x_min   0.758680
+x_max   0.758680
+x_mode  0.7586799647899636
+y_mean  0.522151
+y_sum   0.522151
+y_count 1
+y_min   0.522151
+y_max   0.522151
+y_mode  0.5221511083334797
+
+a       wye
+b       wye
+i       3
+x       0.20460330576630303
+y       0.33831852551664776
+i_mean  3.000000
+i_sum   3.000000
+i_count 1
+i_min   3.000000
+i_max   3.000000
+i_mode  3
+x_mean  0.204603
+x_sum   0.204603
+x_count 1
+x_min   0.204603
+x_max   0.204603
+x_mode  0.20460330576630303
+y_mean  0.338319
+y_sum   0.338319
+y_count 1
+y_min   0.338319
+y_max   0.338319
+y_mode  0.33831852551664776
+
+a       eks
+b       wye
+i       4
+x       0.38139939387114097
+y       0.13418874328430463
+i_mean  4.000000
+i_sum   4.000000
+i_count 1
+i_min   4.000000
+i_max   4.000000
+i_mode  4
+x_mean  0.381399
+x_sum   0.381399
+x_count 1
+x_min   0.381399
+x_max   0.381399
+x_mode  0.38139939387114097
+y_mean  0.134189
+y_sum   0.134189
+y_count 1
+y_min   0.134189
+y_max   0.134189
+y_mode  0.13418874328430463
+
+a       wye
+b       pan
+i       5
+x       0.5732889198020006
+y       0.8636244699032729
+i_mean  5.000000
+i_sum   5.000000
+i_count 1
+i_min   5.000000
+i_max   5.000000
+i_mode  5
+x_mean  0.573289
+x_sum   0.573289
+x_count 1
+x_min   0.573289
+x_max   0.573289
+x_mode  0.5732889198020006
+y_mean  0.863624
+y_sum   0.863624
+y_count 1
+y_min   0.863624
+y_max   0.863624
+y_mode  0.8636244699032729
+
+a       zee
+b       pan
+i       6
+x       0.5271261600918548
+y       0.49322128674835697
+i_mean  6.000000
+i_sum   6.000000
+i_count 1
+i_min   6.000000
+i_max   6.000000
+i_mode  6
+x_mean  0.527126
+x_sum   0.527126
+x_count 1
+x_min   0.527126
+x_max   0.527126
+x_mode  0.5271261600918548
+y_mean  0.493221
+y_sum   0.493221
+y_count 1
+y_min   0.493221
+y_max   0.493221
+y_mode  0.49322128674835697
+
+a       eks
+b       zee
+i       7
+x       0.6117840605678454
+y       0.1878849191181694
+i_mean  7.000000
+i_sum   7.000000
+i_count 1
+i_min   7.000000
+i_max   7.000000
+i_mode  7
+x_mean  0.611784
+x_sum   0.611784
+x_count 1
+x_min   0.611784
+x_max   0.611784
+x_mode  0.6117840605678454
+y_mean  0.187885
+y_sum   0.187885
+y_count 1
+y_min   0.187885
+y_max   0.187885
+y_mode  0.1878849191181694
+
+a       zee
+b       wye
+i       8
+x       0.5985540091064224
+y       0.976181385699006
+i_mean  8.000000
+i_sum   8.000000
+i_count 1
+i_min   8.000000
+i_max   8.000000
+i_mode  8
+x_mean  0.598554
+x_sum   0.598554
+x_count 1
+x_min   0.598554
+x_max   0.598554
+x_mode  0.5985540091064224
+y_mean  0.976181
+y_sum   0.976181
+y_count 1
+y_min   0.976181
+y_max   0.976181
+y_mode  0.976181385699006
+
+a       hat
+b       wye
+i       9
+x       0.03144187646093577
+y       0.7495507603507059
+i_mean  9.000000
+i_sum   9.000000
+i_count 1
+i_min   9.000000
+i_max   9.000000
+i_mode  9
+x_mean  0.031442
+x_sum   0.031442
+x_count 1
+x_min   0.031442
+x_max   0.031442
+x_mode  0.03144187646093577
+y_mean  0.749551
+y_sum   0.749551
+y_count 1
+y_min   0.749551
+y_max   0.749551
+y_mode  0.7495507603507059
+
+a       pan
+b       wye
+i       10
+x       0.5026260055412137
+y       0.9526183602969864
+i_mean  10.000000
+i_sum   10.000000
+i_count 1
+i_min   10.000000
+i_max   10.000000
+i_mode  10
+x_mean  0.502626
+x_sum   0.502626
+x_count 1
+x_min   0.502626
+x_max   0.502626
+x_mode  0.5026260055412137
+y_mean  0.952618
+y_sum   0.952618
+y_count 1
+y_min   0.952618
+y_max   0.952618
+y_mode  0.9526183602969864
 
 mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 ./reg_test/input/abixy-wide
 x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov x2_x2_ols_m x2_x2_ols_b x2_x2_ols_n x2_x2_pca_m x2_x2_pca_b x2_x2_pca_n x2_x2_pca_quality x2_x2_r2 x2_x2_corr x2_x2_cov
@@ -959,8 +1643,8 @@ y                 0.08295224980036853
 x2                0.2618767027540883
 xy                0.0424498931448654
 y2                0.006881075746942741
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -969,8 +1653,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -979,8 +1663,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -1740,8 +2424,8 @@ y                 0.08295224980036853
 x2                0.2618767027540883
 xy                0.0424498931448654
 y2                0.006881075746942741
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -1750,8 +2434,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -1760,8 +2444,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -1779,8 +2463,8 @@ y                 0.511678736087022
 x2                0.27310453504361476
 xy                0.2674002600279053
 y2                0.26181512896361225
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -1789,8 +2473,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       -inf
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -1799,8 +2483,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -1818,8 +2502,8 @@ y                 0.07989551500795256
 x2                0.6642904816271734
 xy                0.06511805427712146
 y2                0.006383293318385972
-x_y_ols_m         nan
-x_y_ols_b         -inf
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -1828,8 +2512,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -1838,8 +2522,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -1857,8 +2541,8 @@ y                 0.5730530513123552
 x2                0.20148728933843124
 xy                0.25722824606077416
 y2                0.32838979961840076
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -1867,8 +2551,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -1877,8 +2561,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -1896,8 +2580,8 @@ y                 0.6850437256584863
 x2                0.08682203814174191
 xy                0.20185210430817294
 y2                0.46928490606405937
-x_y_ols_m         nan
-x_y_ols_b         inf
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -1906,8 +2590,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -1916,8 +2600,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2013,8 +2697,8 @@ y                 0.25924335982487057
 x2                0.38008113864387366
 xy                0.15982540019531707
 y2                0.06720711961328732
-x_y_ols_m         nan
-x_y_ols_b         -inf
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2023,8 +2707,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2033,8 +2717,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2052,8 +2736,8 @@ y                 0.6036735617015514
 x2                0.11415535350088835
 xy                0.203962486439877
 y2                0.3644217690974368
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2062,8 +2746,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2072,8 +2756,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2091,8 +2775,8 @@ y                 0.4999709279216641
 x2                0.14704532525301522
 xy                0.19172129908885902
 y2                0.24997092876684981
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2101,8 +2785,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2111,8 +2795,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2130,8 +2814,8 @@ y                 0.7861954915044592
 x2                0.0006489756124874967
 xy                0.020028329952999087
 y2                0.6181033508619382
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2140,8 +2824,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2150,8 +2834,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2169,8 +2853,8 @@ y                 0.15467178563525052
 x2                0.4013787221612979
 xy                0.0979914699195631
 y2                0.02392336127159689
-x_y_ols_m         nan
-x_y_ols_b         inf
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2179,8 +2863,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       -inf
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2189,8 +2873,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2208,8 +2892,8 @@ y                 0.8502678133887914
 x2                0.1290394998233774
 xy                0.30543378552048117
 y2                0.7229553544849566
-x_y_ols_m         nan
-x_y_ols_b         inf
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2218,8 +2902,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2228,8 +2912,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2247,8 +2931,8 @@ y                 0.933608851612059
 x2                0.2959411617959433
 xy                0.5078876445760125
 y2                0.8716254878083876
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2257,8 +2941,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       inf
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2267,8 +2951,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2286,8 +2970,8 @@ y                 0.09048353045392021
 x2                0.21988365029436224
 xy                0.04242931364019586
 y2                0.008187269283405506
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2296,8 +2980,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       inf
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2306,8 +2990,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2403,8 +3087,8 @@ y                 0.896307226056897
 x2                0.4584120925122874
 xy                0.6068549942886431
 y2                0.8033666434818095
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2413,8 +3097,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       -inf
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2423,8 +3107,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       
@@ -2442,8 +3126,8 @@ y                 0.44117766146315884
 x2                0.23671856805373653
 xy                0.2146493990021416
 y2                0.1946377289741016
-x_y_ols_m         nan
-x_y_ols_b         nan
+x_y_ols_m         
+x_y_ols_b         
 x_y_ols_n         1
 x_y_pca_m         
 x_y_pca_b         
@@ -2452,8 +3136,8 @@ x_y_pca_quality
 x_y_r2            
 x_y_corr          
 x_y_cov           
-xy_y2_ols_m       nan
-xy_y2_ols_b       nan
+xy_y2_ols_m       
+xy_y2_ols_b       
 xy_y2_ols_n       1
 xy_y2_pca_m       
 xy_y2_pca_b       
@@ -2462,8 +3146,8 @@ xy_y2_pca_quality
 xy_y2_r2          
 xy_y2_corr        
 xy_y2_cov         
-x2_x2_ols_m       nan
-x2_x2_ols_b       nan
+x2_x2_ols_m       
+x2_x2_ols_b       
 x2_x2_ols_n       1
 x2_x2_pca_m       
 x2_x2_pca_b       

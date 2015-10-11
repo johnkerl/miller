@@ -361,18 +361,22 @@ static void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 }
 static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
-	double m, b;
 
-	mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
+	if (pstate->count < 2) {
+		lrec_put(poutrec, pstate->m_output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->b_output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double m, b;
+		mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
+		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
+		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 
-	char* val = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
-	lrec_put(poutrec, pstate->m_output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->m_output_field_name, mval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->b_output_field_name, bval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
 
-	val = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
-	lrec_put(poutrec, pstate->b_output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-
-	val = mlr_alloc_string_from_ll(pstate->count);
-	lrec_put(poutrec, pstate->n_output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	char* nval = mlr_alloc_string_from_ll(pstate->count);
+	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
