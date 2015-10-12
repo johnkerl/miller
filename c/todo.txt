@@ -17,6 +17,9 @@ release notes:
 ! brew version?!?
 
 ----------------------------------------------------------------
+MINOR: --list-all-verbs / -l
+
+----------------------------------------------------------------
 MAJOR: regex
 
 * capture-groups in sub/gsub with \1 etc.
@@ -42,6 +45,7 @@ MINOR:
 * double-check for off-by-one buflen in cline/sline
 
 * put/filter topdowns; double-check all topdowns
+* mlrcli topdown
 
 * off-by-one error on fnr dkvp errmsg?
 

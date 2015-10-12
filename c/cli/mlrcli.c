@@ -176,15 +176,14 @@ static char* rebackslash(char* sep) {
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
 // ----------------------------------------------------------------
-static void main_usage(FILE* o, char* argv0) {
-	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
-	fprintf(o, "Verbs:\n");
+static void list_all_verbs(FILE* o) {
 	char* leader = "  ";
 	char* separator = " ";
 	int leaderlen = strlen(leader);
 	int separatorlen = strlen(separator);
 	int linelen = leaderlen;
 	int j = 0;
+	fprintf(o, "Verbs:\n");
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
 		char* verb = mapper_lookup_table[i]->verb;
 		int verblen = strlen(verb);
@@ -200,10 +199,17 @@ static void main_usage(FILE* o, char* argv0) {
 		j++;
 	}
 	fprintf(o, "\n");
+}
+
+static void main_usage(FILE* o, char* argv0) {
+	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
+	list_all_verbs(o);
+
 	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
 	fprintf(o, "Please use \"%s -h\" or \"%s --help\" to show this message.\n", argv0, argv0);
 	fprintf(o, "Please use \"%s --version\" to show the software version.\n", argv0);
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
+	fprintf(o, "Please use \"%s --list-all-verbs\" to list only verb names.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
 
 	fprintf(o, "\n");
@@ -380,6 +386,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			exit(0);
 		} else if (streq(argv[argi], "--help-all-verbs")) {
 			usage_all_verbs(argv[0]);
+		} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
+			list_all_verbs(stdout);
+			exit(0);
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
