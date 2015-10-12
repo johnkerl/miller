@@ -40,6 +40,70 @@ b=wye,i=8,y=0.976181385699006
 b=wye,i=9,y=0.7495507603507059
 b=wye,i=10,y=0.9526183602969864
 
+mlr cut -r -f c,e ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+
+abcd=3
+
+abcde=5
+
+
+mlr cut -r -f "C","E" ./reg_test/input/having-fields-regex.dkvp
+
+ABC=2,DEF=12
+
+ABCD=4
+
+ABCDE=6
+
+mlr cut -r -f "c"i,"e" ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+ABC=2
+abcd=3
+ABCD=4
+abcde=5
+ABCDE=6
+
+mlr cut -r -f "C"i,"E" ./reg_test/input/having-fields-regex.dkvp
+abc=1
+ABC=2,DEF=12
+abcd=3
+ABCD=4
+abcde=5
+ABCDE=6
+
+mlr cut -r -x -f c,e ./reg_test/input/having-fields-regex.dkvp
+
+ABC=2,DEF=12
+ghi=13
+ABCD=4,GHI=14
+ghi=15
+ABCDE=6,GHI=16
+
+mlr cut -r -x -f "C","E" ./reg_test/input/having-fields-regex.dkvp
+abc=1,def=11
+
+abcd=3,ghi=13
+GHI=14
+abcde=5,ghi=15
+GHI=16
+
+mlr cut -r -x -f "C","E"i ./reg_test/input/having-fields-regex.dkvp
+abc=1
+
+abcd=3,ghi=13
+GHI=14
+ghi=15
+GHI=16
+
+mlr cut -r -x -f "c","e"i ./reg_test/input/having-fields-regex.dkvp
+
+ABC=2
+ghi=13
+ABCD=4,GHI=14
+ghi=15
+GHI=16
+
 mlr having-fields --at-least a,b ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
