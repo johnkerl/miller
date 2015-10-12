@@ -4162,6 +4162,51 @@ HELLO HELLO
 world world
 WORLD WORLD
 
+mlr --opprint put $y =  sub($x, "a",  "aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabcdefg
+ababbabbba aababbabbba
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "a",  "aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabcdefg
+ababbabbba aabaabbaabbbaa
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "A",  "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    abcdefg
+ababbabbba ababbabbba
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "a"i, "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    Aabcdefg
+ababbabbba AabAabbAabbbAa
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "A"i, "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    Aabcdefg
+ababbabbba AabAabbAabbbAa
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
 
 ================================================================
 CHAINING

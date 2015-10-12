@@ -239,9 +239,9 @@ Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh
    sqrt tan tanh urand + - - * / % ** =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub
-   tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
-   gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec
-   dhms2fsec
+   gsub tolower toupper . boolean float int string hexfmt fmtnum systime
+   sec2gmt gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
+   hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -2476,7 +2476,8 @@ urand      (math:       #args=0): Floating-point numbers on the unit interval. I
 ||         (boolean:    #args=2): Logical OR.
 !          (boolean:    #args=1): Logical negation.
 strlen     (string:     #args=1): String length.
-sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")'. Regexes not supported.
+sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")' (replace once).
+gsub       (string:     #args=3): Example: '$name=gsub($name, "old", "new")' (replace all).
 tolower    (string:     #args=1): Convert string to lowercase.
 toupper    (string:     #args=1): Convert string to uppercase.
 .          (string:     #args=2): String concatenation.
