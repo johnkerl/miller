@@ -363,6 +363,12 @@ run_mlr --opprint put '$y = sub($x, "e.*l",    "y123y")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*l"i,   "y123y")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*"."l", "y123y")' $indir/sub.dat
 
+run_mlr --opprint put '$y =  sub($x, "a",  "aa")' $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a",  "aa")' $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A",  "Aa")' $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a"i, "Aa")' $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A"i, "Aa")' $indir/gsub.dat
+
 # ----------------------------------------------------------------
 announce CHAINING
 

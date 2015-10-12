@@ -22,6 +22,7 @@ EXTRA_DIST=	\
 		g.csv \
 		g.pprint \
 		gmt2sec \
+		gsub.dat \
 		having-fields-regex.dkvp \
 		het.csv \
 		het.dkvp \

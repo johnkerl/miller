@@ -201,7 +201,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len4 = 6 = 2+3+1
 
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
-	const size_t nmatch = 10; // xxx temp: parameterize after adding capture-group support
+	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
 	regmatch_t pmatch[nmatch];
 	int eflags = 0;
 
@@ -231,6 +231,62 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
 
 		mv_t rv = {.type = MT_STRING, .u.strv = string4};
 		return rv;
+	}
+}
+
+// ----------------------------------------------------------------
+// Example:
+// * pval1->u.strv = "hello"
+// * regex = "l+"
+// * pval3->u.strv = "yyy"
+//
+// *  len1 = 2 = length of "he"
+// * olen2 = 2 = length of "ll"
+// * nlen2 = 3 = length of "yyy"
+// *  len3 = 1 = length of "o"
+// *  len4 = 6 = 2+3+1
+
+mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	regex_t regex;
+	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), pval3);
+	regfree(&regex);
+	return rv;
+}
+
+mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
+	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
+	regmatch_t pmatch[nmatch];
+	int eflags = 0;
+
+	int   match_start = 0;
+	char* current_input = pval1->u.strv;
+
+	while (TRUE) {
+		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, pmatch, eflags);
+		if (!matched) {
+			free(pval3->u.strv);
+			return (mv_t) {.type = MT_STRING, .u.strv = current_input};
+		}
+
+		int so = pmatch[0].rm_so;
+		int eo = pmatch[0].rm_eo;
+
+		int  len1 = match_start + so;
+		int olen2 = eo - so;
+		int nlen2 = strlen(pval3->u.strv);
+		int  len3 = strlen(&current_input[len1 + olen2]);
+		int  len4 = len1 + nlen2 + len3;
+
+		char* current_output = mlr_malloc_or_die(len4 + 1);
+		strncpy(&current_output[0],    current_input, len1);
+		strncpy(&current_output[len1], pval3->u.strv, nlen2);
+		strncpy(&current_output[len1+nlen2], &current_input[len1+olen2], len3);
+		current_output[len4] = 0;
+
+		free(current_input);
+		current_input = current_output;
+
+		match_start = len1 + nlen2;
 	}
 }
 

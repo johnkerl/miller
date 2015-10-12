@@ -25,17 +25,17 @@ MAJOR: regex
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
-* update mlrdoc re regex field names in cut: mlr cut -r -x -f '.*in.*,.*out.*'
-* regex field names in put: mlr put '$*bytes = $*_in_bytes + $*_out_bytes'
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
+  -> requires capture groups 1st
+* regex field names in put: something like mlr put '$\1bytes = $(.*)_in_bytes + $(.*)_out_bytes' ...
+  -> requires capture groups 1st
+  -> requires something thinking on how to pair up the 1st (.*) with the 2nd (.*)
+
+* optimize starts-with/ends-with
+
 ? regex field names in group-by?
 ? regex field names in join?
 ? regex field names in uniq?
-
-* cmt no_precomp funcs in the code ..
-
-* libify having-fields logic; optimize starts-with/ends-with;
-  maybe modify end-with to hand back strlen as ref arg
 
 ----------------------------------------------------------------
 MINOR:

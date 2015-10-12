@@ -205,6 +205,8 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2);
 
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3);
+mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3);
 
 // ----------------------------------------------------------------
 mv_t s_f_sec2gmt_func(mv_t* pval1);

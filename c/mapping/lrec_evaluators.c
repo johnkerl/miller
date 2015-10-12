@@ -865,7 +865,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
 
 	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
-	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'. Regexes not supported."},
+	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")' (replace once)."},
+	{ FUNC_CLASS_STRING, "gsub",     3 , "Example: '$name=gsub($name, \"old\", \"new\")' (replace all)."},
 	{ FUNC_CLASS_STRING, "tolower",  1 , "Convert string to lowercase."},
 	{ FUNC_CLASS_STRING, "toupper",  1 , "Convert string to uppercase."},
 	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
@@ -1110,7 +1111,10 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_regex_arg2_func_name(char* fn
 lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
 {
-	if (streq(fnnm, "sub")) { return lrec_evaluator_alloc_from_s_sss_func(sub_no_precomp_func, parg1, parg2, parg3);
+	if (streq(fnnm, "sub")) {
+		return lrec_evaluator_alloc_from_s_sss_func(sub_no_precomp_func,  parg1, parg2, parg3);
+	} else if (streq(fnnm, "gsub")) {
+		return lrec_evaluator_alloc_from_s_sss_func(gsub_no_precomp_func, parg1, parg2, parg3);
 	} else  { return NULL; }
 }
 
@@ -1119,7 +1123,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(char* f
 {
 	if (streq(fnnm, "sub"))  {
 		return lrec_evaluator_alloc_from_x_srs_func(sub_precomp_func,  parg1, regex_string, ignore_case, parg3);
-	// xxx gsub ...
+	} else if (streq(fnnm, "gsub"))  {
+		return lrec_evaluator_alloc_from_x_srs_func(gsub_precomp_func, parg1, regex_string, ignore_case, parg3);
 	} else  { return NULL; }
 }
 
