@@ -13,11 +13,11 @@ typedef struct _mapper_group_like_state_t {
 	lhmslv_t* precords_by_key_field_names;
 } mapper_group_like_state_t;
 
-static sllv_t*   mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_group_like_free(void* pvstate);
-static mapper_t* mapper_group_like_alloc();
 static void      mapper_group_like_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_group_like_alloc();
+static void      mapper_group_like_free(void* pvstate);
+static sllv_t*   mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_group_like_setup = {
@@ -55,13 +55,22 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 }
 
 // ----------------------------------------------------------------
-static void mapper_group_like_free(void* pvstate) {
-	mapper_group_like_state_t* pstate = (mapper_group_like_state_t*)pvstate;
-
-	// xxx check for full recursive free
-	lhmslv_free(pstate->precords_by_key_field_names);
+static void mapper_group_like_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Outputs records in batches having identical field names.\n");
 }
 
+static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
+	if ((argc - *pargi) < 1) {
+		mapper_group_like_usage(stderr, argv[0], argv[*pargi]);
+		return NULL;
+	}
+	mapper_t* pmapper = mapper_group_like_alloc();
+	*pargi += 1;
+	return pmapper;
+}
+
+// ----------------------------------------------------------------
 static mapper_t* mapper_group_like_alloc() {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -75,17 +84,9 @@ static mapper_t* mapper_group_like_alloc() {
 	return pmapper;
 }
 
-// ----------------------------------------------------------------
-static void mapper_group_like_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s\n", argv0, verb);
-	fprintf(o, "Outputs records in batches having identical field names.\n");
-}
-static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv) {
-	if ((argc - *pargi) < 1) {
-		mapper_group_like_usage(stderr, argv[0], argv[*pargi]);
-		return NULL;
-	}
-	mapper_t* pmapper = mapper_group_like_alloc();
-	*pargi += 1;
-	return pmapper;
+static void mapper_group_like_free(void* pvstate) {
+	mapper_group_like_state_t* pstate = (mapper_group_like_state_t*)pvstate;
+
+	// xxx check for full recursive free
+	lhmslv_free(pstate->precords_by_key_field_names);
 }
