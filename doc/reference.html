@@ -577,6 +577,8 @@ filter '$url =~ "http.*com"'</tt>
 <li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
 --any-matching '^sda[0-9]'</tt>
 
+<li/> In <tt>mlr cut</tt>, e.g. <tt>mlr cut -r -f '^status$,^sda[0-9]'</tt>
+
 </ul>
 
 <p/>The <tt>i</tt> after the double-quoted regular-expression string is used to
@@ -746,11 +748,21 @@ a=eks,b=zee,count=357
 <pre>
 $ mlr cut --help
 Usage: mlr cut [options]
+Passes through input records with specified fields included/excluded.
 -f {a,b,c}       Field names to include for cut.
 -o               Retain fields in the order specified here in the argument list.
                  Default is to retain them in the order found in the input data.
 -x|--complement  Exclude, rather that include, field names specified by -f.
-Passes through input records with specified fields included/excluded.
+-r               Treat field names as regular expressions. "ab", "a.*b" will
+                 match any field name containing the substring "ab" or matching
+                 "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
+                 be used. The -o flag is ignored when -r is present.
+Examples:
+  mlr cut -f hostname,status
+  mlr cut -x -f hostname,status
+  mlr cut -r -f '^status$,sda[0-9]'
+  mlr cut -r -f '^status$,"sda[0-9]"'
+  mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
 </pre>
 </div>
 <p/>

@@ -13,6 +13,8 @@ release notes:
 * check minor incompatibilities
 * what else ...
 
+! brew version?!?
+
 ----------------------------------------------------------------
 MAJOR: regex
 
@@ -23,7 +25,7 @@ MAJOR: regex
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
-* regex field names in cut: mlr cut -r -x -f '.*in.*,.*out.*'
+* update mlrdoc re regex field names in cut: mlr cut -r -x -f '.*in.*,.*out.*'
 * regex field names in put: mlr put '$*bytes = $*_in_bytes + $*_out_bytes'
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
 ? regex field names in group-by?
