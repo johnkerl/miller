@@ -8,6 +8,7 @@ TOP OF LIST
 
 ----------------------------------------------------------------
 release notes:
+* gsub
 * regexes
 * iterative stats1/2
 * check minor incompatibilities
@@ -17,8 +18,6 @@ release notes:
 
 ----------------------------------------------------------------
 MAJOR: regex
-
-* gsub
 
 * capture-groups in sub/gsub with \1 etc.
   - sub($name, "a.*bc.*defg", "hij")
