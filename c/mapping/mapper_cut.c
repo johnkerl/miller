@@ -31,6 +31,55 @@ mapper_setup_t mapper_cut_setup = {
 };
 
 // ----------------------------------------------------------------
+static void mapper_cut_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Passes through input records with specified fields included/excluded.\n");
+	fprintf(o, "-f {a,b,c}       Field names to include for cut.\n");
+	fprintf(o, "-o               Retain fields in the order specified here in the argument list.\n");
+	fprintf(o, "                 Default is to retain them in the order found in the input data.\n");
+	fprintf(o, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
+	fprintf(o, "-r               Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
+	fprintf(o, "                 match any field name containing the substring \"ab\" or matching\n");
+	fprintf(o, "                 \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");
+	fprintf(o, "                 be used. The -o flag is ignored when -r is present.\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  %s %s -f hostname,status\n", argv0, verb);
+	fprintf(o, "  %s %s -x -f hostname,status\n", argv0, verb);
+	fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", argv0, verb);
+	fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", argv0, verb);
+	fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", argv0, verb);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
+	slls_t* pfield_name_list  = NULL;
+	int     do_arg_order  = FALSE;
+	int     do_complement = FALSE;
+	int     do_regexes    = FALSE;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-f", &pfield_name_list);
+	ap_define_true_flag(pstate, "-o",           &do_arg_order);
+	ap_define_true_flag(pstate, "-x",           &do_complement);
+	ap_define_true_flag(pstate, "--complement", &do_complement);
+	ap_define_true_flag(pstate, "-r",           &do_regexes);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_cut_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (pfield_name_list == NULL) {
+		mapper_cut_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_cut_alloc(pfield_name_list, do_arg_order, do_complement, do_regexes);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
@@ -140,47 +189,4 @@ static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
 	pmapper->pfree_func    = mapper_cut_free;
 
 	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_cut_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "Passes through input records with specified fields included/excluded.\n");
-	fprintf(o, "-f {a,b,c}       Field names to include for cut.\n");
-	fprintf(o, "-o               Retain fields in the order specified here in the argument list.\n");
-	fprintf(o, "                 Default is to retain them in the order found in the input data.\n");
-	fprintf(o, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
-	fprintf(o, "-r               Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
-	fprintf(o, "                 match any field name containing the substring \"ab\" or matching\n");
-	fprintf(o, "                 \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");
-	fprintf(o, "                 be used. The -o flag is ignored when -r is present.\n");
-}
-
-// ----------------------------------------------------------------
-static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pfield_name_list  = NULL;
-	int     do_arg_order  = FALSE;
-	int     do_complement = FALSE;
-	int     do_regexes    = FALSE;
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-f", &pfield_name_list);
-	ap_define_true_flag(pstate, "-o",           &do_arg_order);
-	ap_define_true_flag(pstate, "-x",           &do_complement);
-	ap_define_true_flag(pstate, "--complement", &do_complement);
-	ap_define_true_flag(pstate, "-r",           &do_regexes);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_cut_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (pfield_name_list == NULL) {
-		mapper_cut_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	return mapper_cut_alloc(pfield_name_list, do_arg_order, do_complement, do_regexes);
 }
