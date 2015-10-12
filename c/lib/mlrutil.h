@@ -119,6 +119,11 @@ char* mlr_unbackslash(char* input);
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.
 // Returns its first argument (after compilation).
 regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags);
+// Always uses cflags with REG_EXTENDED.
+// If the regex_string is of the form a.*b, compiles it using cflags without REG_ICASE.
+// If the regex_string is of the form "a.*b", compiles a.*b using cflags without REG_ICASE.
+// If the regex_string is of the form "a.*b"i, compiles a.*b using cflags with REG_ICASE.
+regex_t* regcomp_or_die_quoted(regex_t* pregex, char* regex_string, int cflags);
 
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.

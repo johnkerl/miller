@@ -413,6 +413,33 @@ regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 	return pregex;
 }
 
+// Always uses cflags with REG_EXTENDED.
+// If the regex_string is of the form a.*b, compiles it using cflags without REG_ICASE.
+// If the regex_string is of the form "a.*b", compiles a.*b using cflags without REG_ICASE.
+// If the regex_string is of the form "a.*b"i, compiles a.*b using cflags with REG_ICASE.
+regex_t* regcomp_or_die_quoted(regex_t* pregex, char* orig_regex_string, int cflags) {
+	cflags |= REG_EXTENDED;
+	if (string_starts_with(orig_regex_string, "\"")) {
+		char* regex_string = mlr_strdup_or_die(orig_regex_string);
+		int len = 0;
+		if (string_ends_with(regex_string, "\"", &len)) {
+			regex_string[len-1] = 0;
+		} else if (string_ends_with(regex_string, "\"i", &len)) {
+			regex_string[len-2] = 0;
+			cflags |= REG_ICASE;
+		} else {
+			fprintf(stderr, "%s: imbalanced double-quote in regex [%s].\n",
+				MLR_GLOBALS.argv0, regex_string);
+			exit(1);
+		}
+		regcomp_or_die(pregex, regex_string+1, cflags);
+		free(regex_string);
+	} else {
+		regcomp_or_die(pregex, orig_regex_string, cflags);
+	}
+	return pregex;
+}
+
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
