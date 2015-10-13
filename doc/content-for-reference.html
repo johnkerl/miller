@@ -563,6 +563,23 @@ POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
+<h2>sample</h2>
+
+POKI_RUN_COMMAND{{mlr sample --help}}HERE
+
+<p/>This is reservoir-sampling: select <i>k</i> items from <i>n</i> with
+uniform probability and no repeats in the sample. (If <i>n</i> is less than
+<i>k</i>, then of course only <i>n</i> samples are produced.) With <tt>-g
+{field names}</tt>, produce a <i>k</i>-sample for each distinct value of the
+specified field names.
+
+POKI_INCLUDE_ESCAPED(data/sample-example.txt)HERE
+
+<p/>Note that no output is produced until all inputs are in. Another way to do
+sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
+0.001'</tt> where you tune the 0.001 to meet your needs.
+
+<!-- ================================================================ -->
 <h2>sort</h2>
 
 POKI_RUN_COMMAND{{mlr sort --help}}HERE
