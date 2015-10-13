@@ -18,6 +18,7 @@ libmapping_la_SOURCES=	\
 			mapper_regularize.c \
 			mapper_rename.c \
 			mapper_reorder.c \
+			mapper_sample.c \
 			mapper_sort.c \
 			mapper_stats1.c \
 			mapper_stats2.c \
