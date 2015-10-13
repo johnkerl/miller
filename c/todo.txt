@@ -17,7 +17,7 @@ release notes:
 ! brew version?!?
 
 ----------------------------------------------------------------
-MINOR: --list-all-verbs / -l
+MINOR: sampler UTs (w/ spec rand seed)
 
 ----------------------------------------------------------------
 MAJOR: regex
