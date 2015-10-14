@@ -233,7 +233,7 @@ static sllv_t* mapper_having_all_fields_matching_process(lrec_t* pinrec, context
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (!regmatch_or_die(&pstate->regex, pe->key, 0, NULL, 0)) {
+		if (!regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
 			return NULL;
 		}
 	}
@@ -246,7 +246,7 @@ static sllv_t* mapper_having_any_fields_matching_process(lrec_t* pinrec, context
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL, 0)) {
+		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
 			return sllv_single(pinrec);
 		}
 	}
@@ -259,7 +259,7 @@ static sllv_t* mapper_having_no_fields_matching_process(lrec_t* pinrec, context_
 	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
 
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL, 0)) {
+		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
 			return NULL;
 		}
 	}

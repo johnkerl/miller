@@ -443,9 +443,9 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* orig_regex_string, int cfl
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
-	size_t nmatch, regmatch_t pmatch[restrict], int eflags)
+	size_t nmatch, regmatch_t pmatch[restrict])
 {
-	int rc = regexec(pregex, match_string, nmatch, pmatch, eflags);
+	int rc = regexec(pregex, match_string, nmatch, pmatch, 0);
 	if (rc == 0) {
 		return TRUE;
 	} else if (rc == REG_NOMATCH) {

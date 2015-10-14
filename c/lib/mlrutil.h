@@ -128,6 +128,6 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* regex_string, int cflags);
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
-	size_t nmatch, regmatch_t pmatch[restrict], int eflags);
+	size_t nmatch, regmatch_t pmatch[restrict]);
 
 #endif // MLRUTIL_H

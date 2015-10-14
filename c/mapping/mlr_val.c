@@ -205,9 +205,8 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
 	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t pmatch[nmatch];
-	int eflags = 0;
 
-	int matched = regmatch_or_die(pregex, pval1->u.strv, nmatch, pmatch, eflags);
+	int matched = regmatch_or_die(pregex, pval1->u.strv, nmatch, pmatch);
 	if (!matched) {
 		return *pval1;
 	} else if (pmatch[1].rm_so == -1) { // No capture groups: only a replacement string
@@ -243,9 +242,7 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 		// x=<<AYEBEEcDEEefGEE>>
 
 		sb_append_chars(psb, pval1->u.strv, 0, pmatch[0].rm_so-1);
-
 		char* p = pval3->u.strv;
-
 		while (*p) {
 			if (p[0] == '\\' && isdigit(p[1])) {
 				int idx = p[1] - '0';
@@ -256,8 +253,12 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 				p++;
 			}
 		}
-
 		sb_append_chars(psb, pval1->u.strv, pmatch[0].rm_eo, strlen(pval1->u.strv));
+
+		free(pval1->u.strv);
+		free(pval3->u.strv);
+		pval1->u.strv = NULL;
+		pval3->u.strv = NULL;
 
 		return (mv_t) {.type = MT_STRING, .u.strv = sb_finish(psb)};
 	}
@@ -287,13 +288,12 @@ mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
 	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
 	regmatch_t pmatch[nmatch];
-	int eflags = 0;
 
 	int   match_start = 0;
 	char* current_input = pval1->u.strv;
 
 	while (TRUE) {
-		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, pmatch, eflags);
+		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, pmatch);
 		if (!matched) {
 			free(pval3->u.strv);
 			return (mv_t) {.type = MT_STRING, .u.strv = current_input};
@@ -968,11 +968,10 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	char* sstr   = s1;
 	char* sregex = s2;
 	regmatch_t pmatch[1];
-	int eflags = 0;
 
 	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	if (regmatch_or_die(&regex, sstr, 1, pmatch, eflags)) {
+	if (regmatch_or_die(&regex, sstr, 1, pmatch)) {
 		regfree(&regex);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else {
@@ -991,9 +990,8 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
 	regmatch_t pmatch[1];
-	int eflags = 0;
 
-	if (regmatch_or_die(pregex, pval1->u.strv, 1, pmatch, eflags)) {
+	if (regmatch_or_die(pregex, pval1->u.strv, 1, pmatch)) {
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else {
 		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};

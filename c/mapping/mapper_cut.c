@@ -126,7 +126,7 @@ static sllv_t* mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, 
 		for (lrece_t* pe = pinrec->phead; pe != NULL; /* next in loop */) {
 			int matches_any = FALSE;
 			for (int i = 0; i < pstate->nregex; i++) {
-				if (regmatch_or_die(&pstate->regexes[i], pe->key, 0, NULL, 0)) {
+				if (regmatch_or_die(&pstate->regexes[i], pe->key, 0, NULL)) {
 					matches_any = TRUE;
 					break;
 				}
