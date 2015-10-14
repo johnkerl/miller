@@ -203,65 +203,17 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len4 = 6 = 2+3+1
 
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
-	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
-	regmatch_t pmatch[nmatch];
 
-	int matched = regmatch_or_die(pregex, pval1->u.strv, nmatch, pmatch);
-	if (!matched) {
-		return *pval1;
-	} else if (pmatch[1].rm_so == -1) { // No capture groups: only a replacement string
-		int so = pmatch[0].rm_so;
-		int eo = pmatch[0].rm_eo;
+	char* input = pval1->u.strv;
+	char* output = regex_sub(input, pregex, psb, pval3->u.strv);
 
-		int  len1 = so;
-		int olen2 = eo - so;
-		int nlen2 = strlen(pval3->u.strv);
-		int  len3 = strlen(&pval1->u.strv[len1 + olen2]);
-		int  len4 = len1 + nlen2 + len3;
+	if (input != output)
+		free(input);
+	free(pval3->u.strv);
+	pval1->u.strv = NULL;
+	pval3->u.strv = NULL;
 
-		char* string4 = mlr_malloc_or_die(len4 + 1);
-		strncpy(&string4[0],    pval1->u.strv, len1);
-		strncpy(&string4[len1], pval3->u.strv, nlen2);
-		strncpy(&string4[len1+nlen2], &pval1->u.strv[len1+olen2], len3);
-		string4[len4] = 0;
-
-		free(pval1->u.strv);
-		free(pval3->u.strv);
-		pval1->u.strv = NULL;
-		pval3->u.strv = NULL;
-
-		mv_t rv = {.type = MT_STRING, .u.strv = string4};
-		return rv;
-	} else {
-		// sed:
-		// $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/'
-		// <<AYEBEEcDEEefGEE>>
-
-		// mlr:
-		// echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")'
-		// x=<<AYEBEEcDEEefGEE>>
-
-		sb_append_chars(psb, pval1->u.strv, 0, pmatch[0].rm_so-1);
-		char* p = pval3->u.strv;
-		while (*p) {
-			if (p[0] == '\\' && isdigit(p[1])) {
-				int idx = p[1] - '0';
-				sb_append_chars(psb, pval1->u.strv, pmatch[idx].rm_so, pmatch[idx].rm_eo-1);
-				p += 2;
-			} else {
-				sb_append_char(psb, *p);
-				p++;
-			}
-		}
-		sb_append_chars(psb, pval1->u.strv, pmatch[0].rm_eo, strlen(pval1->u.strv));
-
-		free(pval1->u.strv);
-		free(pval3->u.strv);
-		pval1->u.strv = NULL;
-		pval3->u.strv = NULL;
-
-		return (mv_t) {.type = MT_STRING, .u.strv = sb_finish(psb)};
-	}
+	return (mv_t) {.type = MT_STRING, .u.strv = output};
 }
 
 // ----------------------------------------------------------------
