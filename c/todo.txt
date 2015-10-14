@@ -27,6 +27,10 @@ MAJOR: regex
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
+! finish gsub with capture groups
+! check so==-1 @ idx fetch
+! UTs x all x thorough
+
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
   -> requires capture groups 1st
 * regex field names in put: something like mlr put '$\1bytes = $(.*)_in_bytes + $(.*)_out_bytes' ...

@@ -501,7 +501,12 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 		while (*p) {
 			if (p[0] == '\\' && isdigit(p[1])) {
 				int idx = p[1] - '0';
-				sb_append_chars(psb, input, matches[idx].rm_so, matches[idx].rm_eo-1);
+				regmatch_t* pmatch = &matches[idx];
+				if (pmatch->rm_so == -1) {
+					sb_append_chars(psb, p, 0, 1);
+				} else {
+					sb_append_chars(psb, input, matches[idx].rm_so, matches[idx].rm_eo-1);
+				}
 				p += 2;
 			} else {
 				sb_append_char(psb, *p);
