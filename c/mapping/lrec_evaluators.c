@@ -29,7 +29,6 @@
 //   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
 //   type(s).
 // ================================================================
-#define STRING_BUILDER_ALLOC_LENGTH 32
 
 // ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_b_state_t {
@@ -499,8 +498,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_
 
 	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
-	pstate->psb = mlr_malloc_or_die(sizeof(string_builder_t));
-	sb_init(pstate->psb, STRING_BUILDER_ALLOC_LENGTH);
+	pstate->psb = sb_alloc(MV_SB_ALLOC_LENGTH);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
@@ -622,8 +620,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_fun
 
 	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
-	pstate->psb = mlr_malloc_or_die(sizeof(string_builder_t));
-	sb_init(pstate->psb, STRING_BUILDER_ALLOC_LENGTH);
+	pstate->psb = sb_alloc(MV_SB_ALLOC_LENGTH);
 
 	pstate->parg3 = parg3;
 

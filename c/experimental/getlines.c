@@ -194,13 +194,9 @@ static char* read_line_getc_unlocked_psb(FILE* fp, string_builder_t* psb, char* 
 
 static int read_file_getc_unlocked_psb(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
+	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	char* irs = "\n";
-
 	int bc = 0;
-
-	string_builder_t  sb;
-	string_builder_t* psb = &sb;
-	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
 
 	while (TRUE) {
 		char* line = read_line_getc_unlocked_psb(fp, psb, irs);
@@ -213,6 +209,7 @@ static int read_file_getc_unlocked_psb(char* filename, int do_write) {
 		bc += strlen(line);
 		free(line);
 	}
+	sb_free(psb);
 	fclose(fp);
 	return bc;
 }
@@ -236,12 +233,8 @@ static char* read_line_fgetc_psb(FILE* fp, string_builder_t* psb, char* irs) {
 
 static int read_file_fgetc_psb(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
+	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	char* irs = "\n";
-
-	string_builder_t  sb;
-	string_builder_t* psb = &sb;
-	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
-
 	int bc = 0;
 
 	while (TRUE) {
@@ -255,6 +248,7 @@ static int read_file_fgetc_psb(char* filename, int do_write) {
 		bc += strlen(line);
 		free(line);
 	}
+	sb_free(psb);
 	fclose(fp);
 	return bc;
 }
@@ -281,12 +275,8 @@ static char* read_line_mmap_psb(file_reader_mmap_state_t* ph, string_builder_t* 
 
 static int read_file_mmap_psb(char* filename, int do_write) {
 	file_reader_mmap_state_t* ph = file_reader_mmap_open(filename);
+	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	char* irs = "\n";
-
-	string_builder_t  sb;
-	string_builder_t* psb = &sb;
-	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
-
 	int bc = 0;
 
 	while (TRUE) {
@@ -299,6 +289,7 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 		}
 		bc += strlen(line);
 	}
+	sb_free(psb);
 	file_reader_mmap_close(ph);
 	return bc;
 }
@@ -335,6 +326,7 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, p
 
 static int read_file_pfr_psb(char* filename, int do_write) {
 	byte_reader_t* pbr = stdio_byte_reader_alloc();
+	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	pbr->popen_func(pbr, filename);
 
 	peek_file_reader_t* pfr = pfr_alloc(pbr, PEEK_BUF_LEN);
@@ -343,10 +335,6 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	parse_trie_add_string(ptrie, "\n", IRS_STRIDX);
 	parse_trie_add_string(ptrie, "\xff", EOF_STRIDX);
 	parse_trie_add_string(ptrie, "\n\xff", IRSEOF_STRIDX);
-
-	string_builder_t  sb;
-	string_builder_t* psb = &sb;
-	sb_init(&sb, STRING_BUILDER_INIT_SIZE);
 
 	int bc = 0;
 
@@ -361,6 +349,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 		bc += strlen(line);
 		free(line);
 	}
+	sb_free(psb);
 	pbr->pclose_func(pbr);
 	return bc;
 }

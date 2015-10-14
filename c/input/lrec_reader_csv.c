@@ -54,7 +54,6 @@ typedef struct _lrec_reader_csv_state_t {
 
 	int   dquotelen;
 
-	string_builder_t    sb;
 	string_builder_t*   psb;
 	byte_reader_t*      pbr;
 	peek_file_reader_t* pfr;
@@ -110,8 +109,7 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
-	pstate->psb = &pstate->sb;
-	sb_init(pstate->psb, STRING_BUILDER_INIT_SIZE);
+	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	pstate->pbr = pbr;
 	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
 		pstate->pdquote_parse_trie->maxlen));
@@ -140,7 +138,7 @@ static void lrec_reader_csv_free(void* pvstate) {
 	pfr_free(pstate->pfr);
 	parse_trie_free(pstate->pno_dquote_parse_trie);
 	parse_trie_free(pstate->pdquote_parse_trie);
-	// write & use sb_free after the refactor
+	sb_free(pstate->psb);
 }
 
 // ----------------------------------------------------------------

@@ -5,6 +5,21 @@
 #include "lib/mlr_globals.h"
 
 // ----------------------------------------------------------------
+string_builder_t* sb_alloc(int alloc_length) {
+	string_builder_t* psb = mlr_malloc_or_die(sizeof(string_builder_t));
+	sb_init(psb, alloc_length);
+	return psb;
+}
+
+// ----------------------------------------------------------------
+void  sb_free(string_builder_t* psb) {
+	if (psb == NULL)
+		return;
+	free(psb->buffer);
+	free(psb);
+}
+
+// ----------------------------------------------------------------
 void sb_init(string_builder_t* psb, int alloc_length) {
 	if (alloc_length < 1) {
 		fprintf(stderr, "%s: string_builder alloc_length must be >= 1; got %d.\n",

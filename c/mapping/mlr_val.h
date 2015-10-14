@@ -25,6 +25,8 @@
 #define MT_STRING 5
 #define MT_MAX    6
 
+#define MV_SB_ALLOC_LENGTH 32
+
 typedef struct _mlr_val_t {
 	union {
 		int        boolv;

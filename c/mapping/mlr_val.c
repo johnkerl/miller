@@ -183,10 +183,9 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 // ----------------------------------------------------------------
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	regex_t regex;
-	string_builder_t sb;
-	sb_init(&sb, 32);
-	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), &sb, pval3);
-	free(sb_finish(&sb));
+	string_builder_t *psb = sb_alloc(MV_SB_ALLOC_LENGTH);
+	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), psb, pval3);
+	sb_free(psb);
 	regfree(&regex);
 	return rv;
 }
@@ -204,14 +203,14 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len4 = 6 = 2+3+1
 
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
-	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
+	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t pmatch[nmatch];
 	int eflags = 0;
 
 	int matched = regmatch_or_die(pregex, pval1->u.strv, nmatch, pmatch, eflags);
 	if (!matched) {
 		return *pval1;
-	} else {
+	} else if (pmatch[1].rm_so == -1) { // No capture groups: only a replacement string
 		int so = pmatch[0].rm_so;
 		int eo = pmatch[0].rm_eo;
 
@@ -234,6 +233,8 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 
 		mv_t rv = {.type = MT_STRING, .u.strv = string4};
 		return rv;
+	} else {
+		return *pval1; // xxx temp stub
 	}
 }
 
@@ -251,10 +252,9 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 
 mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	regex_t regex;
-	string_builder_t sb;
-	sb_init(&sb, 32);
-	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), &sb, pval3);
-	free(sb_finish(&sb));
+	string_builder_t *psb = sb_alloc(MV_SB_ALLOC_LENGTH);
+	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), psb, pval3);
+	sb_free(psb);
 	regfree(&regex);
 	return rv;
 }

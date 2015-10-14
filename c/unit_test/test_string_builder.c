@@ -11,8 +11,7 @@ int assertions_failed = 0;
 
 // ----------------------------------------------------------------
 static char * test_simple() {
-	string_builder_t sb;
-	string_builder_t* psb = &sb;
+	string_builder_t* psb = sb_alloc(1);
 
 	sb_init(psb, 1);
 	mu_assert("error: case 0", streq("", sb_finish(psb)));

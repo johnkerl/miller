@@ -7,6 +7,8 @@ typedef struct _string_builder_t {
 	char* buffer;
 } string_builder_t;
 
+string_builder_t* sb_alloc(int alloc_length);
+void  sb_free(string_builder_t* psb);
 void  sb_init(string_builder_t* psb, int alloc_length);
 void _sb_enlarge(string_builder_t* psb); // private method
 
