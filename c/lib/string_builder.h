@@ -17,6 +17,12 @@ static inline void sb_append_char(string_builder_t* psb, char c) {
 		_sb_enlarge(psb);
 	psb->buffer[psb->used_length++] = c;
 }
+static inline void sb_append_chars(string_builder_t* psb, char* s, int so, int eo) {
+	char* p = s+so;
+	char* e = s+eo;
+	while (p <= e)
+		sb_append_char(psb, *(p++));
+}
 
 void  sb_append_string(string_builder_t* psb, char* s);
 int   sb_is_empty(string_builder_t* psb);

@@ -234,7 +234,32 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 		mv_t rv = {.type = MT_STRING, .u.strv = string4};
 		return rv;
 	} else {
-		return *pval1; // xxx temp stub
+		// sed:
+		// $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/'
+		// <<AYEBEEcDEEefGEE>>
+
+		// mlr:
+		// echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")'
+		// x=<<AYEBEEcDEEefGEE>>
+
+		sb_append_chars(psb, pval1->u.strv, 0, pmatch[0].rm_so-1);
+
+		char* p = pval3->u.strv;
+
+		while (*p) {
+			if (p[0] == '\\' && isdigit(p[1])) {
+				int idx = p[1] - '0';
+				sb_append_chars(psb, pval1->u.strv, pmatch[idx].rm_so, pmatch[idx].rm_eo-1);
+				p += 2;
+			} else {
+				sb_append_char(psb, *p);
+				p++;
+			}
+		}
+
+		sb_append_chars(psb, pval1->u.strv, pmatch[0].rm_eo, strlen(pval1->u.strv));
+
+		return (mv_t) {.type = MT_STRING, .u.strv = sb_finish(psb)};
 	}
 }
 
