@@ -55,7 +55,7 @@ MINOR:
   -> maybe find a better hash function out there
 
 ----------------------------------------------------------------
-MAJOR: reservoir-sampling with group-by
+MAJOR: logistic regression
 
 ----------------------------------------------------------------
 MAJOR: manpage
