@@ -486,6 +486,7 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 		strncpy(&output[len1+nlen2], &input[len1+olen2], len3);
 		output[len4] = 0;
 
+		free(input);
 		return output;
 	} else {
 		// sed:

@@ -206,12 +206,9 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 	char* input = pval1->u.strv;
 	char* output = regex_sub(input, pregex, psb, pval3->u.strv);
 
-	if (input != output)
-		free(input);
 	free(pval3->u.strv);
 	pval1->u.strv = NULL;
 	pval3->u.strv = NULL;
-
 	return (mv_t) {.type = MT_STRING, .u.strv = output};
 }
 
@@ -241,6 +238,8 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	char* output = regex_gsub(input, pregex, psb, pval3->u.strv);
 
 	free(pval3->u.strv);
+	pval1->u.strv = NULL;
+	pval3->u.strv = NULL;
 	return (mv_t) {.type = MT_STRING, .u.strv = output};
 }
 

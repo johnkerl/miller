@@ -30,6 +30,8 @@ MAJOR: regex
 ! finish gsub with capture groups
 ! check so==-1 @ idx fetch
 ! UTs x all x thorough
+! free-the-input flag. or, don't free inside regex_[g]sub
+! captured-all flag for gsub so caller can abend
 
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
   -> requires capture groups 1st
