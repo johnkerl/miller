@@ -458,3 +458,58 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 		exit(1);
 	}
 }
+
+// If there is a match, input is freed and return value is dynamically
+// allocated.  If not, input is returned.  So in either case, the caller should
+// free the return value, and it is assumed that the input has been dynamically
+// allocated.
+char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement) {
+	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatch];
+
+	int matched = regmatch_or_die(pregex, input, nmatch, matches);
+	if (!matched) {
+		return input;
+	} else if (matches[1].rm_so == -1) { // No capture groups: only a replacement string
+		int so = matches[0].rm_so;
+		int eo = matches[0].rm_eo;
+
+		int  len1 = so;
+		int olen2 = eo - so;
+		int nlen2 = strlen(replacement);
+		int  len3 = strlen(&input[len1 + olen2]);
+		int  len4 = len1 + nlen2 + len3;
+
+		char* output = mlr_malloc_or_die(len4 + 1);
+		strncpy(&output[0],    input, len1);
+		strncpy(&output[len1], replacement, nlen2);
+		strncpy(&output[len1+nlen2], &input[len1+olen2], len3);
+		output[len4] = 0;
+
+		return output;
+	} else {
+		// sed:
+		// $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/'
+		// <<AYEBEEcDEEefGEE>>
+
+		// mlr:
+		// echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")'
+		// x=<<AYEBEEcDEEefGEE>>
+
+		sb_append_chars(psb, input, 0, matches[0].rm_so-1);
+		char* p = replacement;
+		while (*p) {
+			if (p[0] == '\\' && isdigit(p[1])) {
+				int idx = p[1] - '0';
+				sb_append_chars(psb, input, matches[idx].rm_so, matches[idx].rm_eo-1);
+				p += 2;
+			} else {
+				sb_append_char(psb, *p);
+				p++;
+			}
+		}
+		sb_append_chars(psb, input, matches[0].rm_eo, strlen(input));
+
+		return sb_finish(psb);
+	}
+}

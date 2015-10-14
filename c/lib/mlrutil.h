@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <regex.h>
+#include "string_builder.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -129,5 +130,11 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* regex_string, int cflags);
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 	size_t nmatch, regmatch_t pmatch[restrict]);
+
+// If there is a match, input is freed and return value is dynamically
+// allocated.  If not, input is returned.  So in either case, the caller should
+// free the return value, and it is assumed that the input has been dynamically
+// allocated.
+char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
 
 #endif // MLRUTIL_H

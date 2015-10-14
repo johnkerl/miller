@@ -48,6 +48,7 @@ FDSL_OBJS = \
 TEST_ARGPARSE_SRCS = \
   lib/mlrutil.c \
   lib/mlr_globals.c \
+  lib/string_builder.c \
   cli/argparse.c \
   containers/slls.c \
   containers/sllv.c \
@@ -57,6 +58,7 @@ TEST_BYTE_READERS_SRCS = \
   lib/mlrutil.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
+  lib/string_builder.c \
   input/string_byte_reader.c \
   input/stdio_byte_reader.c \
   input/mmap_byte_reader.c \
@@ -66,6 +68,7 @@ TEST_PEEK_FILE_READER_SRCS = \
   lib/mlrutil.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
+  lib/string_builder.c \
   input/string_byte_reader.c \
   input/peek_file_reader.c \
   unit_test/test_peek_file_reader.c
@@ -235,13 +238,13 @@ test-multiple-containers: .always
 	$(CCDEBUG) -D__TEST_MULTIPLE_CONTAINERS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlr_globals.c lib/mlrutil.c unit_test/test_mlrutil.c -o test-mlrutil
+	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlr_globals.c lib/mlrutil.c lib/string_builder.c unit_test/test_mlrutil.c -o test-mlrutil
 
 test-string-builder: .always
 	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c unit_test/test_string_builder.c -o test-string-builder
 
 test-parse-trie: .always
-	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c containers/parse_trie.c unit_test/test_parse_trie.c -o test-parse-trie
+	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c containers/parse_trie.c unit_test/test_parse_trie.c -o test-parse-trie
 
 test-lrec-evaluators: .always
 	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
