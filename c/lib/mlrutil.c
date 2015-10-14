@@ -513,3 +513,38 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 		return sb_finish(psb);
 	}
 }
+
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement) {
+	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
+	regmatch_t pmatch[nmatch];
+
+	int   match_start = 0;
+	char* current_input = input;
+
+	while (TRUE) {
+		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, pmatch);
+		if (!matched) {
+			return current_input;
+		}
+
+		int so = pmatch[0].rm_so;
+		int eo = pmatch[0].rm_eo;
+
+		int  len1 = match_start + so;
+		int olen2 = eo - so;
+		int nlen2 = strlen(replacement);
+		int  len3 = strlen(&current_input[len1 + olen2]);
+		int  len4 = len1 + nlen2 + len3;
+
+		char* current_output = mlr_malloc_or_die(len4 + 1);
+		strncpy(&current_output[0],    current_input, len1);
+		strncpy(&current_output[len1], replacement, nlen2);
+		strncpy(&current_output[len1+nlen2], &current_input[len1+olen2], len3);
+		current_output[len4] = 0;
+
+		free(current_input);
+		current_input = current_output;
+
+		match_start = len1 + nlen2;
+	}
+}

@@ -135,6 +135,7 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 // allocated.  If not, input is returned.  So in either case, the caller should
 // free the return value, and it is assumed that the input has been dynamically
 // allocated.
-char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
+char*  regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
 
 #endif // MLRUTIL_H
