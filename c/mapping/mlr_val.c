@@ -919,11 +919,10 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	regex_t regex;
 	char* sstr   = s1;
 	char* sregex = s2;
-	regmatch_t pmatch[1];
 
 	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	if (regmatch_or_die(&regex, sstr, 1, pmatch)) {
+	if (regmatch_or_die(&regex, sstr, 0, NULL)) {
 		regfree(&regex);
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else {
@@ -941,9 +940,7 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
-	regmatch_t pmatch[1];
-
-	if (regmatch_or_die(pregex, pval1->u.strv, 1, pmatch)) {
+	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) {
 		return (mv_t) {.type = MT_BOOL, .u.boolv = TRUE};
 	} else {
 		return (mv_t) {.type = MT_BOOL, .u.boolv = FALSE};
