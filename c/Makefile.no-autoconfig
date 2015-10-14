@@ -108,6 +108,7 @@ TEST_LREC_EVALUATORS_SRCS = \
   lib/mlrutil.c \
   lib/mtrand.c \
   lib/mlrmath.c \
+  lib/string_builder.c \
   containers/mlr_dsl_ast.c \
   containers/sllv.c \
   containers/slls.c \

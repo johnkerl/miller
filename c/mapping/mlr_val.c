@@ -183,7 +183,10 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 // ----------------------------------------------------------------
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	regex_t regex;
-	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), pval3);
+	string_builder_t sb;
+	sb_init(&sb, 32);
+	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), &sb, pval3);
+	free(sb_finish(&sb));
 	regfree(&regex);
 	return rv;
 }
@@ -200,7 +203,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len3 = 1 = length of "o"
 // *  len4 = 6 = 2+3+1
 
-mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
+mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
 	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
 	regmatch_t pmatch[nmatch];
 	int eflags = 0;
@@ -248,12 +251,15 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
 
 mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	regex_t regex;
-	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), pval3);
+	string_builder_t sb;
+	sb_init(&sb, 32);
+	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), &sb, pval3);
+	free(sb_finish(&sb));
 	regfree(&regex);
 	return rv;
 }
 
-mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
+mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
 	const size_t nmatch = 1; // xxx temp: parameterize after adding capture-group support
 	regmatch_t pmatch[nmatch];
 	int eflags = 0;
@@ -958,7 +964,7 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
-mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex) {
+mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
 	regmatch_t pmatch[1];
 	int eflags = 0;
 
@@ -969,8 +975,8 @@ mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex) {
 	}
 }
 
-mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex) {
-	mv_t rv = matches_precomp_func(pval1, pregex);
+mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
+	mv_t rv = matches_precomp_func(pval1, pregex, psb);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }

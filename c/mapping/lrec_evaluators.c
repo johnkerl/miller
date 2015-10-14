@@ -29,6 +29,7 @@
 //   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
 //   type(s).
 // ================================================================
+#define STRING_BUILDER_ALLOC_LENGTH 32
 
 // ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_b_state_t {
@@ -476,6 +477,7 @@ typedef struct _lrec_evaluator_x_sr_state_t {
 	mv_binary_arg2_regex_func_t* pfunc;
 	lrec_evaluator_t*             parg1;
 	regex_t                       regex;
+	string_builder_t*             psb;
 } lrec_evaluator_x_sr_state_t;
 
 mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
@@ -485,7 +487,7 @@ mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &pstate->regex);
+	return pstate->pfunc(&val1, &pstate->regex, pstate->psb);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_t* pfunc,
@@ -497,6 +499,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_
 
 	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
+	pstate->psb = mlr_malloc_or_die(sizeof(string_builder_t));
+	sb_init(pstate->psb, STRING_BUILDER_ALLOC_LENGTH);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
@@ -589,6 +593,7 @@ typedef struct _lrec_evaluator_x_srs_state_t {
 	lrec_evaluator_t*             parg1;
 	regex_t                       regex;
 	lrec_evaluator_t*             parg3;
+	string_builder_t*             psb;
 } lrec_evaluator_x_srs_state_t;
 
 mv_t lrec_evaluator_x_srs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
@@ -604,7 +609,7 @@ mv_t lrec_evaluator_x_srs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	if (val3.type != MT_STRING)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &pstate->regex, &val3);
+	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, &val3);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
@@ -617,6 +622,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_fun
 
 	int cflags = ignore_case ? REG_ICASE : 0;
 	regcomp_or_die(&pstate->regex, regex_string, cflags);
+	pstate->psb = mlr_malloc_or_die(sizeof(string_builder_t));
+	sb_init(pstate->psb, STRING_BUILDER_ALLOC_LENGTH);
 
 	pstate->parg3 = parg3;
 
