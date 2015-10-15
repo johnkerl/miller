@@ -527,7 +527,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 					*pall_captured = FALSE;
 					sb_append_chars(psb, p, 0, 1);
 				} else {
-					sb_append_chars(psb, current_input, matches[idx].rm_so, matches[idx].rm_eo-1);
+					sb_append_chars(psb, &current_input[match_start], matches[idx].rm_so, matches[idx].rm_eo-1);
 				}
 				p += 2;
 			} else {
@@ -539,26 +539,9 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		int replen = psb->used_length - len1;
 		sb_append_chars(psb, current_input, match_start + matches[0].rm_eo, strlen(current_input));
 
-
 		free(current_input);
 		current_input = sb_finish(psb);
 
 		match_start += matches[0].rm_so + replen;
 	}
 }
-
-//		sb_append_chars(psb, current_input, 0, matches[0].rm_so - 1);
-//		sb_append_string(psb, replacement);
-//		sb_append_chars(psb, current_input, 0, matches[0].rm_so - 1);
-
-//		int  len1 = match_start + so;
-//		int olen2 = eo - so;
-//		int nlen2 = strlen(replacement);
-//		int  len3 = strlen(&current_input[len1 + olen2]);
-//		int  len4 = len1 + nlen2 + len3;
-
-//		char* current_output = mlr_malloc_or_die(len4 + 1);
-//		strncpy(&current_output[0],    current_input, len1);
-//		strncpy(&current_output[len1], replacement, nlen2);
-//		strncpy(&current_output[len1+nlen2], &current_input[len1+olen2], len3);
-//		current_output[len4] = 0;
