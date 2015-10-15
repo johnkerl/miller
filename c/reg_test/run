@@ -359,15 +359,28 @@ run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$rese
 
 announce SUB/GSUB
 
-run_mlr --opprint put '$y = sub($x, "e.*l",    "y123y")' $indir/sub.dat
-run_mlr --opprint put '$y = sub($x, "e.*l"i,   "y123y")' $indir/sub.dat
-run_mlr --opprint put '$y = sub($x, "e.*"."l", "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l",        "y123y")'      $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l"i,       "y123y")'      $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*"."l",     "y123y")'      $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "([hg])e.*l.",   "y\1y123\2y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "([hg])e.*l(.)", "y\1y123.y")'  $indir/sub.dat
 
-run_mlr --opprint put '$y =  sub($x, "a",  "aa")' $indir/gsub.dat
-run_mlr --opprint put '$y = gsub($x, "a",  "aa")' $indir/gsub.dat
-run_mlr --opprint put '$y = gsub($x, "A",  "Aa")' $indir/gsub.dat
-run_mlr --opprint put '$y = gsub($x, "a"i, "Aa")' $indir/gsub.dat
-run_mlr --opprint put '$y = gsub($x, "A"i, "Aa")' $indir/gsub.dat
+run_mlr --opprint put '$y = sub($x,  "a",    "aa")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a",    "aa")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A",    "Aa")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a"i,   "Aa")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A"i,   "Aa")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a(.)", "aa\1\1\1")' $indir/gsub.dat
+
+# $ echo 'x=<abcabc_abcabc>'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
+# x=<abcabc_abcabc>,y=<[aXc][aXc]_[aXc][aXc]>
+
+# $ echo 'x=<abcabc_abcab>'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
+# x=<abcabc_abcab>,y=<[aXc][aXc]_[aXc][aX>]
+
+# $ echo 'x=<abcabc_abcab'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
+# x=<abcabc_abcab,y=<[aXc][aXc]_[aXc]ab
 
 # ----------------------------------------------------------------
 announce CHAINING

@@ -17,9 +17,6 @@ release notes:
 ! brew version bump?!?
 
 ----------------------------------------------------------------
-MINOR: sampler UTs (w/ spec rand seed)
-
-----------------------------------------------------------------
 MAJOR: regex
 
 * capture-groups in sub/gsub with \1 etc.
@@ -46,6 +43,9 @@ MAJOR: regex
 ? regex field names in group-by?
 ? regex field names in join?
 ? regex field names in uniq?
+
+----------------------------------------------------------------
+MINOR: sampler UTs (w/ spec rand seed)
 
 ----------------------------------------------------------------
 MINOR:
