@@ -19,18 +19,10 @@ release notes:
 ----------------------------------------------------------------
 MAJOR: regex
 
-* capture-groups in sub/gsub with \1 etc.
-  - sub($name, "a.*bc.*defg", "hij")
-  - sub($name, "a.*b(c.*d)e(f)g", "hij")
-  - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
-
 * mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
+* more examples in mld regex section
 
-! finish gsub with capture groups
-! UTs x all x thorough
-! free-the-input flag. or, don't free inside regex_[g]sub
-! captured-all flag for gsub so caller can abend
-  -> check perl/ruby/etc for prior expected behavior ...
+? free-the-input flag. or, don't free inside regex_[g]sub
 
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
   -> requires capture groups 1st
