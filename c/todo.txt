@@ -38,6 +38,8 @@ MAJOR: regex
 
 ----------------------------------------------------------------
 MINOR: sampler UTs (w/ spec rand seed)
+MINOR: bus-insurance dev page
+MINOR: faqent on polyglottal dkvp/etc production
 
 ----------------------------------------------------------------
 MINOR:
