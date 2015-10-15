@@ -14,7 +14,7 @@ release notes:
 * check minor incompatibilities
 * what else ...
 
-! brew version?!?
+! brew version bump?!?
 
 ----------------------------------------------------------------
 MINOR: sampler UTs (w/ spec rand seed)
@@ -27,11 +27,13 @@ MAJOR: regex
   - sub($name, "a.*b(c.*d)e(f)g", "hij")
   - sub($name, "a.*b(c.*d)e(f)g", "h\1i\2j")
 
+* mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
+
 ! finish gsub with capture groups
-! check so==-1 @ idx fetch
 ! UTs x all x thorough
 ! free-the-input flag. or, don't free inside regex_[g]sub
 ! captured-all flag for gsub so caller can abend
+  -> check perl/ruby/etc for prior expected behavior ...
 
 * regex field names in rename: mlr rename '(.*)in(.*),\1foo\2'
   -> requires capture groups 1st

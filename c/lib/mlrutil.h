@@ -134,8 +134,9 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 // If there is a match, input is freed and return value is dynamically
 // allocated.  If not, input is returned.  So in either case, the caller should
 // free the return value, and it is assumed that the input has been dynamically
-// allocated.
-char*  regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement);
+// allocated. The by-reference all-captured flag is true on return if all \1,
+// etc.  were satisfiable by parenthesized capture groups.
+char*  regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pall_captured);
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pall_captured);
 
 #endif // MLRUTIL_H
