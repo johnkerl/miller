@@ -220,16 +220,18 @@ static void main_usage(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 
 	fprintf(o, "Data-format options, for input, output, or both:\n");
-	fprintf(o, "  --dkvp   --idkvp   --odkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
+	fprintf(o, "  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
 	fprintf(o, "                                        (default)\n");
-	fprintf(o, "  --nidx   --inidx   --onidx            Implicitly-integer-indexed fields\n");
+	fprintf(o, "  --inidx   --onidx   --nidx            Implicitly-integer-indexed fields\n");
 	fprintf(o, "                                        (Unix-toolkit style)\n");
-	fprintf(o, "  --csv    --icsv    --ocsv             Comma-separated value (or tab-separated\n");
+	fprintf(o, "  --icsv    --ocsv    --csv             Comma-separated value (or tab-separated\n");
 	fprintf(o, "                                        with --fs tab, etc.)\n");
-	fprintf(o, "  --pprint --ipprint --opprint --right  Pretty-printed tabular (produces no\n");
+	fprintf(o, "  --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                        output until all input is in)\n");
-	fprintf(o, "  --xtab   --ixtab   --oxtab            Pretty-printed vertical-tabular\n");
+	fprintf(o, "  --ixtab   --oxtab   --xtab            Pretty-printed vertical-tabular\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
+	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
+	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
 	fprintf(o, "Separator options, for input, output, or both:\n");
 	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
 	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
