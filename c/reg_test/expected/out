@@ -4141,28 +4141,49 @@ sec        hms                  resec          diff
 ================================================================
 SUB/GSUB
 
-mlr --opprint put $y = sub($x, "e.*l",    "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*l",        "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
 HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "e.*l"i,   "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*l"i,       "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
 HELLO Hy123yO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "e.*"."l", "y123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "e.*"."l",     "y123y") ./reg_test/input/sub.dat
 x     y
 hello hy123yo
 HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y =  sub($x, "a",  "aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123\2y") ./reg_test/input/sub.dat
+x     y
+hello yhy123oy
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "([hg])e.*l.",   "y\1y123\2y") ./reg_test/input/sub.dat
+x     y
+hello yhy123\2y
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123.y") ./reg_test/input/sub.dat
+x     y
+hello yhy123.y
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x,  "a",    "aa") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    aabcdefg
@@ -4171,7 +4192,7 @@ LMNOP      LMNOP
 ABCDEFG    ABCDEFG
 ABABBABBBA ABABBABBBA
 
-mlr --opprint put $y = gsub($x, "a",  "aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = gsub($x, "a",    "aa") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    aabcdefg
@@ -4180,7 +4201,7 @@ LMNOP      LMNOP
 ABCDEFG    ABCDEFG
 ABABBABBBA ABABBABBBA
 
-mlr --opprint put $y = gsub($x, "A",  "Aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = gsub($x, "A",    "Aa") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    abcdefg
@@ -4189,7 +4210,7 @@ LMNOP      LMNOP
 ABCDEFG    AaBCDEFG
 ABABBABBBA AaBAaBBAaBBBAa
 
-mlr --opprint put $y = gsub($x, "a"i, "Aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = gsub($x, "a"i,   "Aa") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    Aabcdefg
@@ -4198,7 +4219,7 @@ LMNOP      LMNOP
 ABCDEFG    AaBCDEFG
 ABABBABBBA AaBAaBBAaBBBAa
 
-mlr --opprint put $y = gsub($x, "A"i, "Aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = gsub($x, "A"i,   "Aa") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    Aabcdefg
@@ -4206,6 +4227,15 @@ ababbabbba AabAabbAabbbAa
 LMNOP      LMNOP
 ABCDEFG    AaBCDEFG
 ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "a(.)", "aa\1\1\1") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabbbcdefg
+ababbabbba aabbbaabbbbaabbbbba
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
 
 
 ================================================================
