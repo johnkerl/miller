@@ -463,6 +463,11 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 // allocated.  If not, input is returned.  So in either case, the caller should
 // free the return value, and it is assumed that the input has been dynamically
 // allocated.
+//
+// Capture-group example:
+// sed: $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/' gives <<AYEBEEcDEEefGEE>>
+// mlr: echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")' x=<<AYEBEEcDEEefGEE>>
+
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pall_captured) {
 	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatch];
@@ -472,14 +477,6 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 	if (!matched) {
 		return input;
 	} else {
-		// sed:
-		// $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/'
-		// <<AYEBEEcDEEefGEE>>
-
-		// mlr:
-		// echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")'
-		// x=<<AYEBEEcDEEefGEE>>
-
 		sb_append_chars(psb, input, 0, matches[0].rm_so-1);
 		char* p = replacement;
 		while (*p) {
@@ -506,36 +503,62 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pall_captured) {
 	const size_t nmatch = 10;
-	regmatch_t pmatch[nmatch];
+	regmatch_t matches[nmatch];
 	*pall_captured = TRUE;
 
 	int   match_start = 0;
 	char* current_input = input;
 
 	while (TRUE) {
-		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, pmatch);
+		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, matches);
 		if (!matched) {
 			return current_input;
 		}
 
-		int so = pmatch[0].rm_so;
-		int eo = pmatch[0].rm_eo;
+		sb_append_chars(psb, current_input, 0, match_start + matches[0].rm_so-1);
 
-		int  len1 = match_start + so;
-		int olen2 = eo - so;
-		int nlen2 = strlen(replacement);
-		int  len3 = strlen(&current_input[len1 + olen2]);
-		int  len4 = len1 + nlen2 + len3;
+		char* p = replacement;
+		int len1 = psb->used_length;
+		while (*p) {
+			if (p[0] == '\\' && isdigit(p[1])) {
+				int idx = p[1] - '0';
+				regmatch_t* pmatch = &matches[idx];
+				if (pmatch->rm_so == -1) {
+					*pall_captured = FALSE;
+					sb_append_chars(psb, p, 0, 1);
+				} else {
+					sb_append_chars(psb, current_input, matches[idx].rm_so, matches[idx].rm_eo-1);
+				}
+				p += 2;
+			} else {
+				sb_append_char(psb, *p);
+				p++;
+			}
+		}
 
-		char* current_output = mlr_malloc_or_die(len4 + 1);
-		strncpy(&current_output[0],    current_input, len1);
-		strncpy(&current_output[len1], replacement, nlen2);
-		strncpy(&current_output[len1+nlen2], &current_input[len1+olen2], len3);
-		current_output[len4] = 0;
+		int replen = psb->used_length - len1;
+		sb_append_chars(psb, current_input, match_start + matches[0].rm_eo, strlen(current_input));
+
 
 		free(current_input);
-		current_input = current_output;
+		current_input = sb_finish(psb);
 
-		match_start = len1 + nlen2;
+		match_start += matches[0].rm_so + replen;
 	}
 }
+
+//		sb_append_chars(psb, current_input, 0, matches[0].rm_so - 1);
+//		sb_append_string(psb, replacement);
+//		sb_append_chars(psb, current_input, 0, matches[0].rm_so - 1);
+
+//		int  len1 = match_start + so;
+//		int olen2 = eo - so;
+//		int nlen2 = strlen(replacement);
+//		int  len3 = strlen(&current_input[len1 + olen2]);
+//		int  len4 = len1 + nlen2 + len3;
+
+//		char* current_output = mlr_malloc_or_die(len4 + 1);
+//		strncpy(&current_output[0],    current_input, len1);
+//		strncpy(&current_output[len1], replacement, nlen2);
+//		strncpy(&current_output[len1+nlen2], &current_input[len1+olen2], len3);
+//		current_output[len4] = 0;
