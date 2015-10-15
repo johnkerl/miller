@@ -248,16 +248,18 @@ Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
 Data-format options, for input, output, or both:
-  --dkvp   --idkvp   --odkvp            Delimited key-value pairs, e.g "a=1,b=2"
+  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g "a=1,b=2"
                                         (default)
-  --nidx   --inidx   --onidx            Implicitly-integer-indexed fields
+  --inidx   --onidx   --nidx            Implicitly-integer-indexed fields
                                         (Unix-toolkit style)
-  --csv    --icsv    --ocsv             Comma-separated value (or tab-separated
+  --icsv    --ocsv    --csv             Comma-separated value (or tab-separated
                                         with --fs tab, etc.)
-  --pprint --ipprint --opprint --right  Pretty-printed tabular (produces no
+  --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no
                                         output until all input is in)
-  --xtab   --ixtab   --oxtab            Pretty-printed vertical-tabular
+  --ixtab   --oxtab   --xtab            Pretty-printed vertical-tabular
   -p is a keystroke-saver for --nidx --fs space --repifs
+  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
+  DKVP-formatted input and pretty-printed output.
 Separator options, for input, output, or both:
   --rs     --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
   --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
