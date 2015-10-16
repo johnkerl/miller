@@ -1569,8 +1569,24 @@ same order: <tt>mlr regularize</tt> helps clean that up.
 <div class="pokipanel">
 <pre>
 $ mlr rename --help
-Usage: mlr rename {old1,new1,old2,new2,...}
+Usage: mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
+Options:
+-r         Treat old field  names as regular expressions. "ab", "a.*b"
+           will match any field name containing the substring "ab" or
+           matching "a.*b", respectively; anchors of the form "^ab$",
+           "^a.*b$" may be used. New field names may be plain strings,
+           or may contain capture groups of the form "\1" through
+           "\9". Wrapping the regex in double quotes is optional, but
+           is required if you wish to follow it with 'i' to indicate
+           case-insensitivity.
+-g         Do global replacement within each field name rather than
+           first-match replacement.
+Examples:
+mlr rename 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
+mlr rename '"Date_[0-9]+",Date' Same
+mlr rename 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
+mlr rename '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 </pre>
 </div>
 <p/>
