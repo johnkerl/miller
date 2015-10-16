@@ -1391,7 +1391,7 @@ static char * test3() {
 	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
 	printf("\n");
 
-	lrec_rename(prec, "x", "y");
+	lrec_rename(prec, "x", "y", FALSE);
 
 	valp2     = p2->pevaluator_func(prec,     pctx, p2->pvstate);
 	valp4     = p4->pevaluator_func(prec,     pctx, p4->pvstate);

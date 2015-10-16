@@ -29,7 +29,7 @@ static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 		for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
 			char* old_name = pe->key;
 			char* new_name = pn->value;
-			lrec_rename(pinrec, old_name, new_name);
+			lrec_rename(pinrec, old_name, new_name, FALSE);
 		}
 		return sllv_single(pinrec);
 	}

@@ -152,7 +152,6 @@ void lrec_remove(lrec_t* prec, char* key) {
 	free(pe);
 }
 
-// This assumes new_key doesn't need freeing.
 // Before:
 //   "x" => "3"
 //   "y" => "4"  <-- pold
@@ -164,7 +163,7 @@ void lrec_remove(lrec_t* prec, char* key) {
 //   "x" => "3"
 //   "z" => "4"
 //
-void lrec_rename(lrec_t* prec, char* old_key, char* new_key) {
+void lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freeing) {
 
 	lrece_t* pold = lrec_find_entry(prec, old_key);
 	if (pold != NULL) {
@@ -174,9 +173,12 @@ void lrec_rename(lrec_t* prec, char* old_key, char* new_key) {
 			if (pold->free_flags & LREC_FREE_ENTRY_KEY) {
 				free(pold->key);
 				pold->key = new_key;
-				pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
+				if (!new_needs_freeing)
+					pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
 			} else {
 				pold->key = new_key;
+				if (new_needs_freeing)
+					pold->free_flags |=  LREC_FREE_ENTRY_KEY;
 			}
 
 		} else { // E.g. rename "x" to "y" when "y" is already present
@@ -188,6 +190,10 @@ void lrec_rename(lrec_t* prec, char* old_key, char* new_key) {
 				pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
 			}
 			pold->key = new_key;
+			if (new_needs_freeing)
+				pold->free_flags |=  LREC_FREE_ENTRY_KEY;
+			else
+				pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
 			lrec_unlink(prec, pnew);
 			free(pnew);
 		}

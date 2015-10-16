@@ -459,22 +459,20 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 	}
 }
 
-// If there is a match, input is freed and return value is dynamically
-// allocated.  If not, input is returned.  So in either case, the caller should
-// free the return value, and it is assumed that the input has been dynamically
-// allocated.
+// If there is a match, the return value is dynamically allocated.  If not, the
+// input is returned.
 //
 // Capture-group example:
 // sed: $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/' gives <<AYEBEEcDEEefGEE>>
 // mlr: echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")' x=<<AYEBEEcDEEefGEE>>
 
-char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pall_captured) {
+char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int *pall_captured) {
 	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatch];
 	*pall_captured = TRUE;
 
-	int matched = regmatch_or_die(pregex, input, nmatch, matches);
-	if (!matched) {
+	*pmatched = regmatch_or_die(pregex, input, nmatch, matches);
+	if (!*pmatched) {
 		return input;
 	} else {
 		sb_append_chars(psb, input, 0, matches[0].rm_so-1);
@@ -501,9 +499,10 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 	}
 }
 
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pall_captured) {
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pmatched, int* pall_captured) {
 	const size_t nmatch = 10;
 	regmatch_t matches[nmatch];
+	*pmatched = FALSE;
 	*pall_captured = TRUE;
 
 	int   match_start = 0;
@@ -514,6 +513,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		if (!matched) {
 			return current_input;
 		}
+		*pmatched = TRUE;
 
 		sb_append_chars(psb, current_input, 0, match_start + matches[0].rm_so-1);
 
@@ -539,7 +539,6 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		int replen = psb->used_length - len1;
 		sb_append_chars(psb, current_input, match_start + matches[0].rm_eo, strlen(current_input));
 
-		free(current_input);
 		current_input = sb_finish(psb);
 
 		match_start += matches[0].rm_so + replen;

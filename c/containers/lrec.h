@@ -104,7 +104,7 @@ void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);
 void  lrec_remove(lrec_t* prec, char* key);
-void  lrec_rename(lrec_t* prec, char* old_key, char* new_key);
+void  lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freeing);
 void  lrec_move_to_head(lrec_t* prec, char* key);
 void  lrec_move_to_tail(lrec_t* prec, char* key);
 

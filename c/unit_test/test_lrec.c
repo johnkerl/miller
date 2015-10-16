@@ -36,7 +36,7 @@ static char* test_lrec_unbacked_api() {
 
 	// Non-replacing-rename case
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "y", "z");
+	lrec_rename(prec, "y", "z", FALSE);
 	//lrec_dump_titled("After rename", prec);
 	mu_assert_lf(prec->field_count == 1);
 	mu_assert_lf(lrec_get(prec, "x") == NULL);
@@ -54,7 +54,7 @@ static char* test_lrec_unbacked_api() {
 	mu_assert_lf(prec->field_count == 3);
 
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "y", "z");
+	lrec_rename(prec, "y", "z", FALSE);
 	//lrec_dump_titled("After rename", prec);
 
 	mu_assert_lf(prec->field_count == 2);
@@ -86,7 +86,7 @@ static char* test_lrec_dkvp_api() {
 
 	// Non-replacing-rename case
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "x", "u");
+	lrec_rename(prec, "x", "u", FALSE);
 	//lrec_dump_titled("After rename", prec);
 	mu_assert_lf(prec->field_count == 3);
 	mu_assert_lf(lrec_get(prec, "x") == NULL);
@@ -94,7 +94,7 @@ static char* test_lrec_dkvp_api() {
 
 	// Replacing-rename case
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "y", "z");
+	lrec_rename(prec, "y", "z", FALSE);
 	//lrec_dump_titled("After rename", prec);
 
 	mu_assert_lf(prec->field_count == 2);
@@ -124,7 +124,7 @@ static char* test_lrec_nidx_api() {
 
 	// Non-replacing-rename case
 	lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "2", "u");
+	lrec_rename(prec, "2", "u", FALSE);
 	lrec_dump_titled("After rename", prec);
 	mu_assert_lf(prec->field_count == 3);
 	mu_assert_lf(lrec_get(prec, "2") == NULL);
@@ -132,7 +132,7 @@ static char* test_lrec_nidx_api() {
 
 	// Replacing-rename case
 	lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "3", "4");
+	lrec_rename(prec, "3", "4", FALSE);
 	lrec_dump_titled("After rename", prec);
 
 	mu_assert_lf(prec->field_count == 2);
@@ -180,7 +180,7 @@ static char* test_lrec_csv_api() {
 
 	// Non-replacing-rename case
 	//lrec_dump_titled("Before rename", prec_1);
-	lrec_rename(prec_1, "x", "u");
+	lrec_rename(prec_1, "x", "u", FALSE);
 	//lrec_dump_titled("After rename", prec_1);
 	mu_assert_lf(prec_1->field_count == 3);
 	mu_assert_lf(lrec_get(prec_1, "x") == NULL);
@@ -188,7 +188,7 @@ static char* test_lrec_csv_api() {
 
 	// Replacing-rename case
 	//lrec_dump_titled("Before rename", prec_2);
-	lrec_rename(prec_2, "y", "z");
+	lrec_rename(prec_2, "y", "z", FALSE);
 	//lrec_dump_titled("After rename", prec_2);
 
 	mu_assert_lf(prec_2->field_count == 3);
@@ -225,7 +225,7 @@ static char* test_lrec_csv_api_disjoint_allocs() {
 	mu_assert_lf(prec_1->field_count == 3);
 	mu_assert_lf(lrec_get(prec_1, "w") == NULL);
 
-	lrec_rename(prec_1, "x", "u");
+	lrec_rename(prec_1, "x", "u", FALSE);
 	mu_assert_lf(prec_1->field_count == 3);
 	mu_assert_lf(lrec_get(prec_1, "x") == NULL);
 	mu_assert_lf(streq(lrec_get(prec_1, "u"), "3"));
@@ -247,7 +247,7 @@ static char* test_lrec_csv_api_disjoint_allocs() {
 	mu_assert_lf(prec_2->field_count == 4);
 	mu_assert_lf(streq(lrec_get(prec_2, "w"), "6"));
 
-	lrec_rename(prec_2, "y", "z");
+	lrec_rename(prec_2, "y", "z", FALSE);
 
 	mu_assert_lf(prec_2->field_count == 3);
 	mu_assert_lf(streq(lrec_get(prec_2, "w"), "6"));
@@ -286,7 +286,7 @@ static char* test_lrec_xtab_api() {
 
 	// Non-replacing-rename case
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "x", "u");
+	lrec_rename(prec, "x", "u", FALSE);
 	//lrec_dump_titled("After rename", prec);
 	mu_assert_lf(prec->field_count == 3);
 	mu_assert_lf(lrec_get(prec, "x") == NULL);
@@ -294,7 +294,7 @@ static char* test_lrec_xtab_api() {
 
 	// Replacing-rename case
 	//lrec_dump_titled("Before rename", prec);
-	lrec_rename(prec, "y", "z");
+	lrec_rename(prec, "y", "z", FALSE);
 	//lrec_dump_titled("After rename", prec);
 
 	mu_assert_lf(prec->field_count == 2);

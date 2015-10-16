@@ -203,13 +203,14 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 // *  len4 = 6 = 2+3+1
 
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
+	int matched      = FALSE;
 	int all_captured = FALSE;
-	char* input = pval1->u.strv;
-	char* output = regex_sub(input, pregex, psb, pval3->u.strv, &all_captured);
+	char* input      = pval1->u.strv;
+	char* output     = regex_sub(input, pregex, psb, pval3->u.strv, &matched, &all_captured);
 
+	if (matched)
+		free(pval1->u.strv);
 	free(pval3->u.strv);
-	pval1->u.strv = NULL;
-	pval3->u.strv = NULL;
 	return (mv_t) {.type = MT_STRING, .u.strv = output};
 }
 
@@ -235,10 +236,13 @@ mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 }
 
 mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3) {
+	int matched      = FALSE;
 	int all_captured = FALSE;
-	char* input = pval1->u.strv;
-	char* output = regex_gsub(input, pregex, psb, pval3->u.strv, &all_captured);
+	char* input      = pval1->u.strv;
+	char* output     = regex_gsub(input, pregex, psb, pval3->u.strv, &matched, &all_captured);
 
+	if (matched)
+		free(pval1->u.strv);
 	free(pval3->u.strv);
 	pval1->u.strv = NULL;
 	pval3->u.strv = NULL;
