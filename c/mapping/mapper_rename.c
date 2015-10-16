@@ -164,8 +164,8 @@ static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void
 				int all_captured = FALSE;
 				char* old_name = pf->key;
 				char* new_name = pstate->do_gsub
-					?  regex_sub(old_name, pregex, pstate->psb, replacement, &matched, &all_captured)
-					: regex_gsub(old_name, pregex, pstate->psb, replacement, &matched, &all_captured);
+					? regex_gsub(old_name, pregex, pstate->psb, replacement, &matched, &all_captured)
+					:  regex_sub(old_name, pregex, pstate->psb, replacement, &matched, &all_captured);
 
 				if (matched)
 					lrec_rename(pinrec, old_name, new_name, TRUE);
