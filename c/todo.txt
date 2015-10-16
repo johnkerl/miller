@@ -17,6 +17,13 @@ release notes:
 ! brew version bump?!?
 
 ----------------------------------------------------------------
+MAJOR: logistic regression
+MAJOR: multivariate OLS?
+MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
+  in-language handling in case not field/line formatted.
+MINOR: faqent on polyglottal dkvp/etc production
+
+----------------------------------------------------------------
 MAJOR: regex
 
 * mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
@@ -29,29 +36,6 @@ MAJOR: regex
 ? regex field names in group-by?
 ? regex field names in join?
 ? regex field names in uniq?
-
-----------------------------------------------------------------
-MINOR: sampler UTs (w/ spec rand seed)
-MINOR: bus-insurance dev page
-MINOR: faqent on polyglottal dkvp/etc production
-
-----------------------------------------------------------------
-MINOR:
-
-* double-check for off-by-one buflen in cline/sline
-
-* put/filter topdowns; double-check all topdowns
-* mlrcli topdown
-
-* off-by-one error on fnr dkvp errmsg?
-
-* scroll-stalls in mlrdoc!! really bad on the droid.
-
-* hash-chain ifdef instrumentation
-  -> maybe find a better hash function out there
-
-----------------------------------------------------------------
-MAJOR: logistic regression
 
 ----------------------------------------------------------------
 MAJOR: manpage
@@ -91,6 +75,25 @@ MAJOR: csv mem-leak/read-perf
 ! experimental/getlines.c shows that even without the heap-fragging
   issue, pfr+psb is 3.5x slower than getdelim. again suggesting
   multi-char-terminated getdelim might be the best line of approach.
+
+----------------------------------------------------------------
+MINOR: sampler UTs (w/ spec rand seed)
+MINOR: bus-insurance dev page
+
+----------------------------------------------------------------
+MINOR:
+
+* double-check for off-by-one buflen in cline/sline
+
+* put/filter topdowns; double-check all topdowns
+* mlrcli topdown
+
+* off-by-one error on fnr dkvp errmsg?
+
+* scroll-stalls in mlrdoc!! really bad on the droid.
+
+* hash-chain ifdef instrumentation
+  -> maybe find a better hash function out there
 
 ----------------------------------------------------------------
 MINOR:
