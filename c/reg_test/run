@@ -98,7 +98,7 @@ run_mlr cut -r -x -f '"C","E"'   $indir/having-fields-regex.dkvp
 run_mlr cut -r -x -f '"C","E"i'  $indir/having-fields-regex.dkvp
 run_mlr cut -r -x -f '"c","e"i'  $indir/having-fields-regex.dkvp
 
-run_mlr --csvlite cut -r -f '^Name$,^Date_[0-9].*$' reg_test/input/date*.csv
+run_mlr --csvlite cut -r -f '^Name$,^Date_[0-9].*$' $indir/date1.csv $indir/date2.csv
 
 run_mlr having-fields --at-least  a,b         $indir/abixy
 run_mlr having-fields --at-least  a,c         $indir/abixy
