@@ -17,6 +17,7 @@ release notes:
 ! brew version bump?!?
 
 ----------------------------------------------------------------
+MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
 MAJOR: logistic regression
 MAJOR: multivariate OLS?
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
