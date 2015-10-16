@@ -11,6 +11,8 @@ EXTRA_DIST=	\
 		c.pprint \
 		d.csv \
 		d.pprint \
+		date1.csv \
+		date2.csv \
 		dots.pprint \
 		dots.xtab \
 		double-ps.dkvp \

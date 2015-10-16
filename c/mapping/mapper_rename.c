@@ -1,11 +1,15 @@
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "containers/lhmss.h"
 #include "containers/sllv.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define RENAME_SB_ALLOC_LENGTH 16
+
 typedef struct _mapper_rename_state_t {
 	lhmss_t* pold_to_new;
+	string_builder_t* psb;
 } mapper_rename_state_t;
 
 static sllv_t*   mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -67,13 +71,16 @@ static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new, int do_regexes) {
 	mapper_rename_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_rename_state_t));
 	pstate->pold_to_new = pold_to_new;
 
-	pmapper->pvstate = (void*)pstate;
-	if (do_regexes)
+	if (do_regexes) {
 		pmapper->pprocess_func = mapper_rename_regex_process;
-	else
+		pstate->psb = sb_alloc(RENAME_SB_ALLOC_LENGTH);
+	} else {
 		pmapper->pprocess_func = mapper_rename_process;
+		pstate->psb = NULL;
+	}
 	pmapper->pfree_func = mapper_rename_free;
 
+	pmapper->pvstate = (void*)pstate;
 	return pmapper;
 }
 
@@ -103,15 +110,31 @@ static sllv_t* mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvst
 
 static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
+#if 0
+		// xxx temp
+
 		mapper_rename_state_t* pstate = (mapper_rename_state_t*)pvstate;
-		for (lhmsse_t* pe = pstate->pold_to_new->phead; pe != NULL; pe = pe->pnext) {
-			char* old_name = pe->key;
-			char* new_name = pe->value;
+
+		// xxx need --gsub flag ...
+
+		// xxx need regex/replacement pairs in an sllv -- ?
+
+		// xxx which order for the for-for ...
+		for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+			for (lhmsse_t* pe = pstate->pold_to_new->phead; pe != NULL; pe = pe->pnext) {
+				int all_captured = FALSE;
+				char* old_name = mlr_strdup_or_die(pe->key); // xxx make and use a free-the-input-flag ...
+				char* new_name = regex_sub(old_name, pregex, psb, char* replacement, &all_captured) {
+
 			char* value = lrec_get(pinrec, old_name);
 			if (value != NULL) {
 				lrec_rename(pinrec, old_name, new_name);
 			}
+
+			}
 		}
+
+#endif
 		return sllv_single(pinrec);
 	}
 	else {
