@@ -204,3 +204,144 @@ double invqnorm(double x) {
 	}
 	return y;
 }
+
+// ================================================================
+// Logisitic regression
+//
+// Real-valued x_0 .. x_{N-1}
+// 0/1-valued  y_0 .. y_{N-1}
+// Model p(x_i == 1)  as
+//   p(x, m, b) = 1 / (1 + exp(-m*x-b)
+// which is the same as
+//   log(p/(1-p)) = m*x + b
+// then
+//   p(x, m, b) = 1 / (1 + exp(-m*x-b)
+//              = exp(m*x+b) / (1 + exp(m*x+b)
+// and
+//   1-p        = exp(-m*x-b) / (1 + exp(-m*x-b)
+//              = 1 / (1 + exp(m*x+b)
+// Note for reference just below that
+//   dp/dm      = -1 / [1 + exp(-m*x-b)]**2 * (-x) * exp(-m*x-b)
+//              = [x exp(-m*x-b)) ] / [1 + exp(-m*x-b)]**2
+//              = x * p * (1-p)
+// and
+//   dp/db      = -1 / [1 + exp(-m*x-b)]**2 * (-1) * exp(-m*x-b)
+//              = [exp(-m*x-b)) ] / [1 + exp(-m*x-b)]**2
+//              = p * (1-p)
+// Write p_i for p(x_i, m, b)
+//
+// Maximum-likelihood equation:
+//   L(m, b)    = prod_{i=0}^{N-1} [ p_i**y_i * (1-p_i)**(1-y_i) ]
+//
+// Log-likelihood equation:
+//   ell(m, b)  = sum{i=0}^{N-1} [ y_i log(p_i) + (1-y_i) log(1-p_i) ]
+//              = sum{i=0}^{N-1} [ log(1-p_i) + y_i log(p_i/(1-p_i)) ]
+//              = sum{i=0}^{N-1} [ log(1-p_i) + y_i*(m*x_i+b) ]
+// Differentiate with respect to parameters:
+//
+//   d ell/dm   = sum{i=0}^{N-1} [ -1/(1-p_i) dp_i/dm + x_i*y_i ]
+//              = sum{i=0}^{N-1} [ -1/(1-p_i) x_i*p_i*(1-p_i) + x_i*y_i ]
+//              = sum{i=0}^{N-1} [ x_i(y_i-p_i) ]
+//
+//   d ell/db   = sum{i=0}^{N-1} [ -1/(1-p_i) dp_i/db + y_i ]
+//              = sum{i=0}^{N-1} [ -1/(1-p_i) p_i*(1-p_i) + y_i ]
+//              = sum{i=0}^{N-1} [ y_i - p_i ]
+//
+//
+//   d2ell/dm2  = sum{i=0}^{N-1} [ -x_i dp_i/dm ]
+//              = sum{i=0}^{N-1} [ -x_i**2 * p_i * (1-p_i) ]
+//
+//   d2ell/dmdb = sum{i=0}^{N-1} [ -x_i dp_i/db ]
+//              = sum{i=0}^{N-1} [ -x_i * p_i * (1-p_i) ]
+//
+//   d2ell/dbdm = sum{i=0}^{N-1} [ -dp_i/dm ]
+//              = sum{i=0}^{N-1} [ -x_i * p_i * (1-p_i) ]
+//
+//   d2ell/db2  = sum{i=0}^{N-1} [ -dp_i/db ]
+//              = sum{i=0}^{N-1} [ -p_i * (1-p_i) ]
+//
+// Newton-Raphson to minimize ell(m, b):
+// * Pick m0, b0
+// * [m_{j+1], b_{j+1}] = H^{-1} grad ell(m_j, b_j)
+// * grad ell =
+//   [ d ell/dm ]
+//   [ d ell/db ]
+// * H = Hessian of ell = Jacobian of grad ell =
+//   [ d2ell/dm2  d2ell/dmdb ]
+//   [ d2ell/dmdb d2ell/db2  ]
+
+//# Logistic-regression p(x,m,b):
+//def lrp(x, m, b):
+//	return 1.0 / (1.0 + math.exp(-m*x-b))
+//# Logistic-regression 1-p, avoiding near-to-1 loss of significance:
+//def lrq(x, m, b):
+//	return 1.0 / (1.0 + math.exp(m*x+b))
+//
+//# Auxiliary function with m0, b0, tol, maxits details:
+//def logistic_regression_aux(xs, ys, m0, b0, tol, maxits):
+//	N = len(xs)
+//	its = 0
+//	done = False
+//
+//	while not done:
+//		# Compute derivatives
+//		dldm    = 0.0
+//		dldb    = 0.0
+//		d2ldm2  = 0.0
+//		d2ldmdb = 0.0
+//		d2ldb2  = 0.0
+//		for i in xrange(0, N):
+//			xi = xs[i]
+//			yi = ys[i]
+//			pi = lrp(xi, m0, b0)
+//			qi = lrq(xi, m0, b0)
+//			dldm += xi*(yi - pi)
+//			dldb += yi - pi
+//			piqi = pi * qi;
+//			xipiqi = xi*piqi
+//			xi2piqi = xi*xipiqi
+//			d2ldm2  -= xi2piqi
+//			d2ldmdb -= xipiqi
+//			d2ldb2  -= piqi
+//
+//		# Form the Hessian
+//		ha = d2ldm2
+//		hb = d2ldmdb
+//		hc = d2ldmdb
+//		hd = d2ldb2
+//
+//		# Invert the Hessian
+//		D = ha*hd - hb*hc
+//		Hinva =  hd/D
+//		Hinvb = -hb/D
+//		Hinvc = -hc/D
+//		Hinvd =  ha/D
+//
+//		# Compute H^-1 times grad ell
+//		Hinvgradm = Hinva*dldm + Hinvb*dldb
+//		Hinvgradb = Hinvc*dldm + Hinvd*dldb
+//
+//		# Update [m,b]
+//		m = m0 - Hinvgradm
+//		b = b0 - Hinvgradb
+//
+//		# Check for convergence
+//		err = math.sqrt(Hinvgradm**2 + Hinvgradb**2)
+//		if err < tol:
+//			done = True
+//		its += 1
+//		if its > maxits:
+//			raise "logistic_regression_aux: Newton-Raphson convergence failed after %d iterations" % (maxits)
+//
+//		m0 = m
+//		b0 = b
+//
+//	return [m, b]
+//
+//# Main entry point for logistic regression
+//def logistic_regression(xs, ys):
+//	m0     = -0.001
+//	b0     =  0.002
+//	tol    = 1e-9
+//	maxits = 50
+//	return logistic_regression_aux(xs, ys, m0, b0, tol, maxits)

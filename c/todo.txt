@@ -19,6 +19,8 @@ release notes:
 ----------------------------------------------------------------
 MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
 MAJOR: logistic regression
+  - resize_vector_t @ stats1
+  - port over the python impl :)
 MAJOR: multivariate OLS?
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
   in-language handling in case not field/line formatted.
