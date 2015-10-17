@@ -11,10 +11,12 @@ release notes:
 * gsub
 * regexes
 * iterative stats1/2
+* reservoir sampling
 * check minor incompatibilities
 * what else ...
 
 ! brew version bump?!?
+! tweet
 
 ----------------------------------------------------------------
 MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
