@@ -1585,10 +1585,10 @@ Options:
 -g         Do global replacement within each field name rather than
            first-match replacement.
 Examples:
-mlr rename 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
-mlr rename '"Date_[0-9]+",Date' Same
-mlr rename 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
-mlr rename '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
+mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
+mlr rename -r '"Date_[0-9]+",Date' Same
+mlr rename -r 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
+mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 </pre>
 </div>
 <p/>
