@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "lib/mlrutil.h"
 #include "lib/mlrmath.h"
 #include "lib/mlr_globals.h"
 
@@ -270,78 +271,90 @@ double invqnorm(double x) {
 //   [ d2ell/dm2  d2ell/dmdb ]
 //   [ d2ell/dmdb d2ell/db2  ]
 
-//# Logistic-regression p(x,m,b):
-//def lrp(x, m, b):
-//	return 1.0 / (1.0 + math.exp(-m*x-b))
-//# Logistic-regression 1-p, avoiding near-to-1 loss of significance:
-//def lrq(x, m, b):
-//	return 1.0 / (1.0 + math.exp(m*x+b))
-//
-//# Auxiliary function with m0, b0, tol, maxits details:
-//def logistic_regression_aux(xs, ys, m0, b0, tol, maxits):
-//	N = len(xs)
-//	its = 0
-//	done = False
-//
-//	while not done:
-//		# Compute derivatives
-//		dldm    = 0.0
-//		dldb    = 0.0
-//		d2ldm2  = 0.0
-//		d2ldmdb = 0.0
-//		d2ldb2  = 0.0
-//		for i in xrange(0, N):
-//			xi = xs[i]
-//			yi = ys[i]
-//			pi = lrp(xi, m0, b0)
-//			qi = lrq(xi, m0, b0)
-//			dldm += xi*(yi - pi)
-//			dldb += yi - pi
-//			piqi = pi * qi;
-//			xipiqi = xi*piqi
-//			xi2piqi = xi*xipiqi
-//			d2ldm2  -= xi2piqi
-//			d2ldmdb -= xipiqi
-//			d2ldb2  -= piqi
-//
-//		# Form the Hessian
-//		ha = d2ldm2
-//		hb = d2ldmdb
-//		hc = d2ldmdb
-//		hd = d2ldb2
-//
-//		# Invert the Hessian
-//		D = ha*hd - hb*hc
-//		Hinva =  hd/D
-//		Hinvb = -hb/D
-//		Hinvc = -hc/D
-//		Hinvd =  ha/D
-//
-//		# Compute H^-1 times grad ell
-//		Hinvgradm = Hinva*dldm + Hinvb*dldb
-//		Hinvgradb = Hinvc*dldm + Hinvd*dldb
-//
-//		# Update [m,b]
-//		m = m0 - Hinvgradm
-//		b = b0 - Hinvgradb
-//
-//		# Check for convergence
-//		err = math.sqrt(Hinvgradm**2 + Hinvgradb**2)
-//		if err < tol:
-//			done = True
-//		its += 1
-//		if its > maxits:
-//			raise "logistic_regression_aux: Newton-Raphson convergence failed after %d iterations" % (maxits)
-//
-//		m0 = m
-//		b0 = b
-//
-//	return [m, b]
-//
-//# Main entry point for logistic regression
-//def logistic_regression(xs, ys):
-//	m0     = -0.001
-//	b0     =  0.002
-//	tol    = 1e-9
-//	maxits = 50
-//	return logistic_regression_aux(xs, ys, m0, b0, tol, maxits)
+// p(x,m,b) for logistic regression:
+static double lrp(double x, double m, double b) {
+	return 1.0 / (1.0 + exp(-m*x-b));
+}
+
+// 1 - p(x,m,b) for logistic regression:
+static double lrq(double x, double m, double b) {
+	return 1.0 / (1.0 + exp(m*x+b));
+}
+
+// Supporting routine for mlr_logistic_regression():
+static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* pm, double* pb,
+	double m0, double b0, double tol, int maxits)
+{
+	int its = 0;
+	int done = FALSE;
+	double m = m0;
+	double b = b0;
+
+	while (!done) {
+		// Compute derivatives
+		double dldm    = 0.0;
+		double dldb    = 0.0;
+		double d2ldm2  = 0.0;
+		double d2ldmdb = 0.0;
+		double d2ldb2  = 0.0;
+		for (int i = 0; i < n; i++) {
+			double xi = xs[i];
+			double yi = ys[i];
+			double pi = lrp(xi, m0, b0);
+			double qi = lrq(xi, m0, b0);
+			dldm += xi*(yi - pi);
+			dldb += yi - pi;
+			double piqi = pi * qi;
+			double xipiqi = xi*piqi;
+			double xi2piqi = xi*xipiqi;
+			d2ldm2  -= xi2piqi;
+			d2ldmdb -= xipiqi;
+			d2ldb2  -= piqi;
+		}
+
+		// Form the Hessian
+		double ha = d2ldm2;
+		double hb = d2ldmdb;
+		double hc = d2ldmdb;
+		double hd = d2ldb2;
+
+		// Invert the Hessian
+		double D = ha*hd - hb*hc;
+		double Hinva =  hd/D;
+		double Hinvb = -hb/D;
+		double Hinvc = -hc/D;
+		double Hinvd =  ha/D;
+
+		// Compute H^-1 times grad ell
+		double Hinvgradm = Hinva*dldm + Hinvb*dldb;
+		double Hinvgradb = Hinvc*dldm + Hinvd*dldb;
+
+		// Update [m,b]
+		m = m0 - Hinvgradm;
+		b = b0 - Hinvgradb;
+
+		// Check for convergence
+		double err = sqrt(Hinvgradm*Hinvgradm + Hinvgradb*Hinvgradb);
+		if (err < tol)
+			done = TRUE;
+		if (++its > maxits) {
+			fprintf(stderr,
+				"mlr_logistic_regression: Newton-Raphson convergence failed after %d iterations. m=%e, b=%e.\n",
+					its, m, b);
+		}
+
+		m0 = m;
+		b0 = b;
+	}
+
+	*pm = m;
+	*pb = b;
+}
+
+void mlr_logistic_regression(double* xs, double* ys, int n, double* pm, double* pb) {
+	double m0     = -0.001;
+	double b0     =  0.002;
+	double tol    = 1e-9;
+	int    maxits = 50;
+	mlr_logistic_regression_aux(xs, ys, n, pm, pb, m0, b0, tol, maxits);
+}
