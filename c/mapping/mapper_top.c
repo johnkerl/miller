@@ -121,7 +121,6 @@ static sllv_t* mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	if (pinrec != NULL) {
 		mapper_top_ingest(pinrec, pstate);
-		lrec_free(pinrec);
 		return NULL;
 	} else {
 		return mapper_top_emit(pstate, pctx);
@@ -136,9 +135,11 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 
 	// Heterogeneous-data case -- not all sought fields were present in record
 	if (pvalue_field_values->length != pstate->pvalue_field_names->length) {
+		lrec_free(pinrec);
 		return;
 	}
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		lrec_free(pinrec);
 		return;
 	}
 
@@ -162,6 +163,8 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 			lhmsv_put(group_to_acc_field, value_field_name, ptop_keeper_for_group);
 		}
 
+		// The top-keeper object will free the record if it isn't retained, or
+		// keep it if it is.
 		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign, pinrec);
 	}
 }
