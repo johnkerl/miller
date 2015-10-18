@@ -73,7 +73,7 @@ void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
 			ptop_keeper->top_precords[i+1] = ptop_keeper->top_precords[i];
 		}
 		ptop_keeper->top_values[destidx]   = value;
-		lrec_free(ptop_keeper->top_precords[destidx] = prec);
+		lrec_free(ptop_keeper->top_precords[destidx]);
 		ptop_keeper->top_precords[destidx] = prec;
 	}
 }
