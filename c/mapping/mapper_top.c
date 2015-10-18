@@ -42,6 +42,80 @@ mapper_setup_t mapper_top_setup = {
 };
 
 // ----------------------------------------------------------------
+static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-f {a,b,c}    Value-field names for top counts\n");
+	fprintf(o, "-g {d,e,f}    Optional group-by-field names for top counts\n");
+	fprintf(o, "-n {count}    How many records to print per category; default 1\n");
+	fprintf(o, "-a            Print all fields for top-value records; default is\n");
+	fprintf(o, "              to print only value and group-by fields.\n");
+	fprintf(o, "--min         Print top smallest values; default is top largest values\n");
+	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
+	fprintf(o, "optionally by category.\n");
+}
+
+static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
+	int     top_count             = 1;
+	slls_t* pvalue_field_names    = NULL;
+	slls_t* pgroup_by_field_names = slls_alloc();
+	int     show_full_records     = FALSE;
+	int     do_max                = TRUE;
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_int_flag(pstate,         "-n",    &top_count);
+	ap_define_string_list_flag(pstate, "-f",    &pvalue_field_names);
+	ap_define_string_list_flag(pstate, "-g",    &pgroup_by_field_names);
+	ap_define_true_flag(pstate,        "-a",    &show_full_records);
+	ap_define_true_flag(pstate,        "--max", &do_max);
+	ap_define_false_flag(pstate,       "--min", &do_max);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_top_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	if (pvalue_field_names == NULL) {
+		mapper_top_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_top_alloc(pvalue_field_names, pgroup_by_field_names,
+		top_count, do_max, show_full_records);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
+	int top_count, int do_max, int show_full_records)
+{
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_top_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_top_state_t));
+
+	pstate->pvalue_field_names    = slls_copy(pvalue_field_names);
+	pstate->pgroup_by_field_names = slls_copy(pgroup_by_field_names);
+	pstate->show_full_records     = show_full_records;
+	pstate->top_count             = top_count;
+	pstate->sign                  = do_max ? 1.0 : -1.0;
+	pstate->groups                = lhmslv_alloc();
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_top_process;
+	pmapper->pfree_func    = mapper_top_free;
+
+	return pmapper;
+}
+
+static void mapper_top_free(void* pvstate) {
+	mapper_top_state_t* pstate = pvstate;
+	slls_free(pstate->pvalue_field_names);
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the level-2's 1st
+	lhmslv_free(pstate->groups);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_top_state_t* pstate = pvstate;
 
@@ -149,78 +223,4 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 
 	sllv_add(poutrecs, NULL);
 	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static void mapper_top_free(void* pvstate) {
-	mapper_top_state_t* pstate = pvstate;
-	slls_free(pstate->pvalue_field_names);
-	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
-}
-
-static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int top_count, int do_max, int show_full_records)
-{
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_top_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_top_state_t));
-
-	pstate->pvalue_field_names    = slls_copy(pvalue_field_names);
-	pstate->pgroup_by_field_names = slls_copy(pgroup_by_field_names);
-	pstate->show_full_records     = show_full_records;
-	pstate->top_count             = top_count;
-	pstate->sign                  = do_max ? 1.0 : -1.0;
-	pstate->groups                = lhmslv_alloc();
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_top_process;
-	pmapper->pfree_func    = mapper_top_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-f {a,b,c}    Value-field names for top counts\n");
-	fprintf(o, "-g {d,e,f}    Optional group-by-field names for top counts\n");
-	fprintf(o, "-n {count}    How many records to print per category; default 1\n");
-	fprintf(o, "-a            Print all fields for top-value records; default is\n");
-	fprintf(o, "              to print only value and group-by fields.\n");
-	fprintf(o, "--min         Print top smallest values; default is top largest values\n");
-	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
-	fprintf(o, "optionally by category.\n");
-}
-
-static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
-	int     top_count             = 1;
-	slls_t* pvalue_field_names    = NULL;
-	slls_t* pgroup_by_field_names = slls_alloc();
-	int     show_full_records     = FALSE;
-	int     do_max                = TRUE;
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_int_flag(pstate,         "-n",    &top_count);
-	ap_define_string_list_flag(pstate, "-f",    &pvalue_field_names);
-	ap_define_string_list_flag(pstate, "-g",    &pgroup_by_field_names);
-	ap_define_true_flag(pstate,        "-a",    &show_full_records);
-	ap_define_true_flag(pstate,        "--max", &do_max);
-	ap_define_false_flag(pstate,       "--min", &do_max);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_top_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	if (pvalue_field_names == NULL) {
-		mapper_top_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	return mapper_top_alloc(pvalue_field_names, pgroup_by_field_names,
-		top_count, do_max, show_full_records);
 }
