@@ -6,36 +6,23 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-----------------------------------------------------------------
-release notes:
-* gsub
-* regexes
-* iterative stats1/2
-* reservoir sampling
-* check minor incompatibilities
-* what else ...
-
-! brew version bump?!?
-! tweet
-
-----------------------------------------------------------------
+MINOR: brew version bump?!?
 MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
-MAJOR: logistic regression
+MAJOR: stats2 logistic regression
   - resize_vector_t @ stats1
   - port over the python impl :)
-MAJOR: multivariate OLS?
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
   in-language handling in case not field/line formatted.
 MINOR: faqent on polyglottal dkvp/etc production
+MAJOR: statsn covar, ols, logistic
+  - port material from my stats_m/sackmat_m for much of that
 
 ----------------------------------------------------------------
 MAJOR: regex
 
 * mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
-
 * regex field names in put: something like mlr put '$\1bytes = $(.*)_in_bytes + $(.*)_out_bytes' ...
   -> requires something thinking on how to pair up the 1st (.*) with the 2nd (.*)
-
 * optimize starts-with/ends-with
 
 ? regex field names in group-by?
@@ -104,8 +91,6 @@ MINOR:
 MINOR:
 
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
-
-b mlr faq page
 
 * --mmap @ mlr -h
 * ctype ff @ bld.out
