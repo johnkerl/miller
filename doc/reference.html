@@ -314,7 +314,7 @@ Other options:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 For more information please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller. This is Miller version &gt;= v2.3.0.
+http://github.com/johnkerl/miller. This is Miller version &gt;= v2.3.1.
 </pre>
 </div>
 <p/>
@@ -829,8 +829,9 @@ b=2,c=3,a=1
 <div class="pokipanel">
 <pre>
 $ mlr filter --help
-Usage: mlr filter [-v] {expression}
+Usage: mlr filter [-v] [-x] {expression}
 Prints records for which {expression} evaluates to true.
+With -x, prints records for which {expression} evaluates to false.
 With -v, first prints the AST (abstract syntax tree) for the expression, which
 gives full transparency on the precedence and associativity rules of Miller's.
 grammar. Please use a dollar sign for field names and double-quotes for string
