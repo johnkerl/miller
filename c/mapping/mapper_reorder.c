@@ -24,47 +24,6 @@ mapper_setup_t mapper_reorder_setup = {
 };
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
-	if (pinrec != NULL) {
-		if (!pstate->put_at_end) {
-			// OK since the field-name list was reversed at construction time.
-			for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext)
-				lrec_move_to_head(pinrec, pe->value);
-		} else {
-			for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext)
-				lrec_move_to_tail(pinrec, pe->value);
-		}
-		return sllv_single(pinrec);
-	} else {
-		return sllv_single(NULL);
-	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_reorder_free(void* pvstate) {
-	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
-	if (pstate->pfield_name_list != NULL)
-		slls_free(pstate->pfield_name_list);
-}
-
-static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_reorder_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_reorder_state_t));
-	pstate->pfield_name_list = pfield_name_list;
-	pstate->put_at_end = put_at_end;
-	if (!put_at_end)
-		slls_reverse(pstate->pfield_name_list);
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_reorder_process;
-	pmapper->pfree_func    = mapper_reorder_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
 static void mapper_reorder_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "-f {a,b,c}   Field names to reorder.\n");
@@ -99,4 +58,45 @@ static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_reorder_alloc(pfield_name_list, put_at_end);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_reorder_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_reorder_state_t));
+	pstate->pfield_name_list = pfield_name_list;
+	pstate->put_at_end = put_at_end;
+	if (!put_at_end)
+		slls_reverse(pstate->pfield_name_list);
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pprocess_func = mapper_reorder_process;
+	pmapper->pfree_func    = mapper_reorder_free;
+
+	return pmapper;
+}
+
+static void mapper_reorder_free(void* pvstate) {
+	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
+	if (pstate->pfield_name_list != NULL)
+		slls_free(pstate->pfield_name_list);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
+	if (pinrec != NULL) {
+		if (!pstate->put_at_end) {
+			// OK since the field-name list was reversed at construction time.
+			for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext)
+				lrec_move_to_head(pinrec, pe->value);
+		} else {
+			for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext)
+				lrec_move_to_tail(pinrec, pe->value);
+		}
+		return sllv_single(pinrec);
+	} else {
+		return sllv_single(NULL);
+	}
 }
