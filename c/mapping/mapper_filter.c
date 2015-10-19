@@ -24,51 +24,6 @@ mapper_setup_t mapper_filter_setup = {
 };
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_filter_state_t* pstate = pvstate;
-	if (pinrec != NULL) {
-		mv_t val = pstate->pevaluator->pevaluator_func(pinrec,
-			pctx, pstate->pevaluator->pvstate);
-		if (val.type == MT_NULL) {
-			return NULL;
-		} else {
-			mt_get_boolean_strict(&val);
-			if (val.u.boolv) {
-				return sllv_single(pinrec);
-			} else {
-				lrec_free(pinrec);
-				return NULL;
-			}
-		}
-	}
-	else {
-		return sllv_single(NULL);
-	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_filter_free(void* pvstate) {
-	//mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
-	//xxx lrec_evaluator needs a pfree_func
-	//if (pstate->pevaluator != NULL)
-		//hss_free(pstate->pevaluator);
-}
-
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
-	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
-
-	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past);
-
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_filter_process;
-	pmapper->pfree_func    = mapper_filter_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [-v] {expression}\n", argv0, verb);
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
@@ -120,4 +75,49 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_filter_alloc(past->proot);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past) {
+	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
+
+	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past);
+
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pprocess_func = mapper_filter_process;
+	pmapper->pfree_func    = mapper_filter_free;
+
+	return pmapper;
+}
+
+static void mapper_filter_free(void* pvstate) {
+	//mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
+	//xxx lrec_evaluator needs a pfree_func
+	//if (pstate->pevaluator != NULL)
+		//hss_free(pstate->pevaluator);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_filter_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		mv_t val = pstate->pevaluator->pevaluator_func(pinrec,
+			pctx, pstate->pevaluator->pvstate);
+		if (val.type == MT_NULL) {
+			return NULL;
+		} else {
+			mt_get_boolean_strict(&val);
+			if (val.u.boolv) {
+				return sllv_single(pinrec);
+			} else {
+				lrec_free(pinrec);
+				return NULL;
+			}
+		}
+	}
+	else {
+		return sllv_single(NULL);
+	}
 }

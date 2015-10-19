@@ -80,6 +80,51 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
+static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
+	int do_arg_order, int do_complement, int do_regexes)
+{
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
+	if (!do_regexes) {
+		pstate->pfield_name_list   = pfield_name_list;
+		slls_reverse(pstate->pfield_name_list);
+		pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
+		pstate->nregex             = 0;
+		pmapper->pprocess_func     = mapper_cut_process_no_regexes;
+	} else {
+		pstate->pfield_name_list   = NULL;
+		pstate->pfield_name_set    = NULL;
+		pstate->nregex = pfield_name_list->length;
+		pstate->regexes = mlr_malloc_or_die(pstate->nregex * sizeof(regex_t));
+		int i = 0;
+		for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext, i++) {
+			// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
+			// Strip off the leading " and trailing " or "i.
+			regcomp_or_die_quoted(&pstate->regexes[i], pe->value, REG_NOSUB);
+		}
+		pmapper->pprocess_func     = mapper_cut_process_with_regexes;
+	}
+	pstate->do_arg_order   = do_arg_order;
+	pstate->do_complement  = do_complement;
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pfree_func    = mapper_cut_free;
+
+	return pmapper;
+}
+
+static void mapper_cut_free(void* pvstate) {
+	mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
+	if (pstate->pfield_name_list != NULL)
+		slls_free(pstate->pfield_name_list);
+	if (pstate->pfield_name_set != NULL)
+		hss_free(pstate->pfield_name_set);
+	for (int i = 0; i < pstate->nregex; i++)
+		regfree(&pstate->regexes[i]);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
@@ -144,49 +189,4 @@ static sllv_t* mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, 
 	else {
 		return sllv_single(NULL);
 	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_cut_free(void* pvstate) {
-	mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
-	if (pstate->pfield_name_list != NULL)
-		slls_free(pstate->pfield_name_list);
-	if (pstate->pfield_name_set != NULL)
-		hss_free(pstate->pfield_name_set);
-	for (int i = 0; i < pstate->nregex; i++)
-		regfree(&pstate->regexes[i]);
-}
-
-static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
-	int do_arg_order, int do_complement, int do_regexes)
-{
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
-	if (!do_regexes) {
-		pstate->pfield_name_list   = pfield_name_list;
-		slls_reverse(pstate->pfield_name_list);
-		pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
-		pstate->nregex             = 0;
-		pmapper->pprocess_func     = mapper_cut_process_no_regexes;
-	} else {
-		pstate->pfield_name_list   = NULL;
-		pstate->pfield_name_set    = NULL;
-		pstate->nregex = pfield_name_list->length;
-		pstate->regexes = mlr_malloc_or_die(pstate->nregex * sizeof(regex_t));
-		int i = 0;
-		for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext, i++) {
-			// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
-			// Strip off the leading " and trailing " or "i.
-			regcomp_or_die_quoted(&pstate->regexes[i], pe->value, REG_NOSUB);
-		}
-		pmapper->pprocess_func     = mapper_cut_process_with_regexes;
-	}
-	pstate->do_arg_order   = do_arg_order;
-	pstate->do_complement  = do_complement;
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pfree_func    = mapper_cut_free;
-
-	return pmapper;
 }

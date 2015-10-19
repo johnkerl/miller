@@ -22,6 +22,40 @@ mapper_setup_t mapper_regularize_setup = {
 };
 
 // ----------------------------------------------------------------
+static void mapper_regularize_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "For records seen earlier in the data stream with same field names in\n");
+	fprintf(o, "a different order, outputs them with field names in the previously\n");
+	fprintf(o, "encountered order.\n");
+	fprintf(o, "Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8\n");
+	fprintf(o, "output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8\n");
+}
+
+static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) {
+    *pargi += 1;
+	return mapper_regularize_alloc();
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_regularize_alloc() {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_regularize_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_regularize_state_t));
+	pstate->psorted_to_original = lhmslv_alloc();
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pprocess_func = mapper_regularize_process;
+	pmapper->pfree_func    = mapper_regularize_free;
+
+	return pmapper;
+}
+
+static void mapper_regularize_free(void* pvstate) {
+	mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
+	lhmslv_free(pstate->psorted_to_original);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
@@ -44,38 +78,4 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 	else {
 		return sllv_single(NULL);
 	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_regularize_free(void* pvstate) {
-	mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
-	lhmslv_free(pstate->psorted_to_original);
-}
-
-static mapper_t* mapper_regularize_alloc() {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_regularize_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_regularize_state_t));
-	pstate->psorted_to_original = lhmslv_alloc();
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_regularize_process;
-	pmapper->pfree_func    = mapper_regularize_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_regularize_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s\n", argv0, verb);
-	fprintf(o, "For records seen earlier in the data stream with same field names in\n");
-	fprintf(o, "a different order, outputs them with field names in the previously\n");
-	fprintf(o, "encountered order.\n");
-	fprintf(o, "Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8\n");
-	fprintf(o, "output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8\n");
-}
-
-static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) {
-    *pargi += 1;
-	return mapper_regularize_alloc();
 }

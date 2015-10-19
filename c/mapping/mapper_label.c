@@ -21,44 +21,6 @@ mapper_setup_t mapper_label_setup = {
 };
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec != NULL) {
-		mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
-		lrece_t* pe = pinrec->phead;
-		sllse_t* pn = pstate->pnames->phead;
-		for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
-			char* old_name = pe->key;
-			char* new_name = pn->value;
-			lrec_rename(pinrec, old_name, new_name, FALSE);
-		}
-		return sllv_single(pinrec);
-	}
-	else {
-		return sllv_single(NULL);
-	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_label_free(void* pvstate) {
-	mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
-	if (pstate->pnames != NULL)
-		slls_free(pstate->pnames);
-}
-
-static mapper_t* mapper_label_alloc(slls_t* pnames) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_label_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_label_state_t));
-	pstate->pnames = pnames;
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_label_process;
-	pmapper->pfree_func    = mapper_label_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
 static void mapper_label_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s {new1,new2,new3,...}\n", argv0, verb);
 	fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n");
@@ -81,4 +43,42 @@ static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv) {
 
 	*pargi += 2;
 	return mapper_label_alloc(pnames);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_label_alloc(slls_t* pnames) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_label_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_label_state_t));
+	pstate->pnames = pnames;
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pprocess_func = mapper_label_process;
+	pmapper->pfree_func    = mapper_label_free;
+
+	return pmapper;
+}
+
+static void mapper_label_free(void* pvstate) {
+	mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
+	if (pstate->pnames != NULL)
+		slls_free(pstate->pnames);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec != NULL) {
+		mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
+		lrece_t* pe = pinrec->phead;
+		sllse_t* pn = pstate->pnames->phead;
+		for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
+			char* old_name = pe->key;
+			char* new_name = pn->value;
+			lrec_rename(pinrec, old_name, new_name, FALSE);
+		}
+		return sllv_single(pinrec);
+	}
+	else {
+		return sllv_single(NULL);
+	}
 }

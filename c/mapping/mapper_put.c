@@ -27,81 +27,6 @@ mapper_setup_t mapper_put_setup = {
 };
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec != NULL) {
-		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
-		for (int i = 0; i < pstate->num_evaluators; i++) {
-			mv_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
-				pctx, pstate->pevaluators[i]->pvstate);
-			char* string = mt_format_val(&val);
-			lrec_put(pinrec, pstate->output_field_names[i], string, LREC_FREE_ENTRY_VALUE);
-		}
-		return sllv_single(pinrec);
-	}
-	else {
-		return sllv_single(NULL);
-	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_put_free(void* pvstate) {
-	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
-	free(pstate->output_field_names);
-	// xxx recursively free them.
-	free(pstate->pevaluators);
-}
-
-static mapper_t* mapper_put_alloc(sllv_t* pasts) {
-	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
-	pstate->num_evaluators = pasts->length;
-	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
-	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
-
-	int i = 0;
-	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* past = pe->pvdata;
-
-		if ((past->type != MLR_DSL_AST_NODE_TYPE_OPERATOR) || !streq(past->text, "=")) {
-			fprintf(stderr,
-				"%s: expected assignment-rooted AST; got operator \"%s\" with node type %s.\n",
-					MLR_GLOBALS.argv0, past->text, mlr_dsl_ast_node_describe_type(past->type));
-			return NULL;
-		} else if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		}
-
-		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvdata;
-		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvdata;
-
-		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		} else if (pleft->pchildren != NULL) {
-			fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		}
-
-		char* output_field_name = pleft->text;
-		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright);
-
-		pstate->pevaluators[i] = pevaluator;
-		pstate->output_field_names[i] = output_field_name;
-	}
-
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_put_process;
-	pmapper->pfree_func    = mapper_put_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [-v] {expression}\n", argv0, verb);
 	fprintf(o, "Adds/updates specified field(s).\n");
@@ -155,4 +80,79 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_put_alloc(pasts);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_put_alloc(sllv_t* pasts) {
+	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
+	pstate->num_evaluators = pasts->length;
+	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
+	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
+
+	int i = 0;
+	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* past = pe->pvdata;
+
+		if ((past->type != MLR_DSL_AST_NODE_TYPE_OPERATOR) || !streq(past->text, "=")) {
+			fprintf(stderr,
+				"%s: expected assignment-rooted AST; got operator \"%s\" with node type %s.\n",
+					MLR_GLOBALS.argv0, past->text, mlr_dsl_ast_node_describe_type(past->type));
+			return NULL;
+		} else if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+
+		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvdata;
+		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvdata;
+
+		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		} else if (pleft->pchildren != NULL) {
+			fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+
+		char* output_field_name = pleft->text;
+		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright);
+
+		pstate->pevaluators[i] = pevaluator;
+		pstate->output_field_names[i] = output_field_name;
+	}
+
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	pmapper->pvstate       = (void*)pstate;
+	pmapper->pprocess_func = mapper_put_process;
+	pmapper->pfree_func    = mapper_put_free;
+
+	return pmapper;
+}
+
+static void mapper_put_free(void* pvstate) {
+	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
+	free(pstate->output_field_names);
+	// xxx recursively free them.
+	free(pstate->pevaluators);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec != NULL) {
+		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
+		for (int i = 0; i < pstate->num_evaluators; i++) {
+			mv_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
+				pctx, pstate->pevaluators[i]->pvstate);
+			char* string = mt_format_val(&val);
+			lrec_put(pinrec, pstate->output_field_names[i], string, LREC_FREE_ENTRY_VALUE);
+		}
+		return sllv_single(pinrec);
+	}
+	else {
+		return sllv_single(NULL);
+	}
 }
