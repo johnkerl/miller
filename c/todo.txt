@@ -10,6 +10,8 @@ TOP OF LIST
 ! topdowns !
 
 MINOR: logifit & linfit functions: $y = f($x,m,b)
+MINOR: note re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
+  note count-distinct w/ int() func
 MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
 MINOR: brew version bump?!?
 MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
@@ -22,6 +24,7 @@ MINOR: faqent on polyglottal dkvp/etc production
 MAJOR: statsn covar, ols, logistic
   - port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above
+MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
 
 ----------------------------------------------------------------
 MAJOR: regex
