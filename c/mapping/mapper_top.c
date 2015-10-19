@@ -44,12 +44,13 @@ mapper_setup_t mapper_top_setup = {
 // ----------------------------------------------------------------
 static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-f {a,b,c}    Value-field names for top counts\n");
-	fprintf(o, "-g {d,e,f}    Optional group-by-field names for top counts\n");
-	fprintf(o, "-n {count}    How many records to print per category; default 1\n");
+	fprintf(o, "-f {a,b,c}    Value-field names for top counts.\n");
+	fprintf(o, "-g {d,e,f}    Optional group-by-field names for top counts.\n");
+	fprintf(o, "-n {count}    How many records to print per category; default 1.\n");
 	fprintf(o, "-a            Print all fields for top-value records; default is\n");
-	fprintf(o, "              to print only value and group-by fields.\n");
-	fprintf(o, "--min         Print top smallest values; default is top largest values\n");
+	fprintf(o, "              to print only value and group-by fields. Requires a single\n");
+	fprintf(o, "              value-field name only.\n");
+	fprintf(o, "--min         Print top smallest values; default is top largest values.\n");
 	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
 	fprintf(o, "optionally by category.\n");
 }
@@ -75,8 +76,11 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_top_usage(stderr, argv[0], verb);
 		return NULL;
 	}
-
 	if (pvalue_field_names == NULL) {
+		mapper_top_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+	if (pvalue_field_names->length > 1 && show_full_records) {
 		mapper_top_usage(stderr, argv[0], verb);
 		return NULL;
 	}
@@ -153,8 +157,8 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	sllse_t* pb =         pvalue_field_values->phead;
 	// for "x", "y" and "1", "2"
 	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
-		char* value_field_name = pa->value;
-		char* value_field_sval = pb->value;
+		char*  value_field_name = pa->value;
+		char*  value_field_sval = pb->value;
 		double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 
 		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
@@ -165,7 +169,8 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 
 		// The top-keeper object will free the record if it isn't retained, or
 		// keep it if it is.
-		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign, pinrec);
+		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign,
+			pstate->show_full_records ? pinrec : NULL);
 	}
 }
 
@@ -175,9 +180,12 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 
 	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
 
+		// Above we required that there was only one value field in the
+		// show-full-records case. That's for two reasons: (1) here, we print
+		// each record at most once, which would need a change in the format
+		// presented as output; (2) there would be double-frees in our
+		// ingester.
 		if (pstate->show_full_records) {
-			// Doing it this way (entire record) there can only be one value column.
-			// xxx assert on that, or at the very least note how confusing it is.
 			lhmsv_t* group_to_acc_field = pa->pvvalue;
 			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				top_keeper_t* ptop_keeper_for_group = pd->pvvalue;

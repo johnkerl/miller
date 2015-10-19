@@ -2385,12 +2385,13 @@ yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.499698785395
 <pre>
 $ mlr top --help
 Usage: mlr top [options]
--f {a,b,c}    Value-field names for top counts
--g {d,e,f}    Optional group-by-field names for top counts
--n {count}    How many records to print per category; default 1
+-f {a,b,c}    Value-field names for top counts.
+-g {d,e,f}    Optional group-by-field names for top counts.
+-n {count}    How many records to print per category; default 1.
 -a            Print all fields for top-value records; default is
-              to print only value and group-by fields.
---min         Print top smallest values; default is top largest values
+              to print only value and group-by fields. Requires a single
+              value-field name only.
+--min         Print top smallest values; default is top largest values.
 Prints the n records with smallest/largest values at specified fields,
 optionally by category.
 </pre>

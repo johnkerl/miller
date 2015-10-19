@@ -55,6 +55,7 @@ void top_keeper_free(top_keeper_t* ptop_keeper) {
 // [8  ]   [8  ]                            [8 #]   [8 #]
 // [9  ]   [9  ]                            [9 #]   [9 #]
 
+// Our caller, mapper_top, feeds us records. We keep them or free them.
 void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
 	int destidx = mlr_bsearch_double_for_insert(ptop_keeper->top_values, ptop_keeper->size, value);
 	if (ptop_keeper->size < ptop_keeper->capacity) {
@@ -66,14 +67,16 @@ void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
 		ptop_keeper->top_precords[destidx] = prec;
 		ptop_keeper->size++;
 	} else {
-		if (destidx >= ptop_keeper->capacity)
+		if (destidx >= ptop_keeper->capacity) {
+			lrec_free(prec);
 			return;
+		}
+		lrec_free(ptop_keeper->top_precords[ptop_keeper->size-1]);
 		for (int i = ptop_keeper->size-2; i >= destidx; i--) {
 			ptop_keeper->top_values[i+1]   = ptop_keeper->top_values[i];
 			ptop_keeper->top_precords[i+1] = ptop_keeper->top_precords[i];
 		}
 		ptop_keeper->top_values[destidx]   = value;
-		lrec_free(ptop_keeper->top_precords[destidx]);
 		ptop_keeper->top_precords[destidx] = prec;
 	}
 }
