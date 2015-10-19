@@ -31,6 +31,57 @@ mapper_setup_t mapper_tail_setup = {
 };
 
 // ----------------------------------------------------------------
+static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "-n {count}    Tail count to print; default 10\n");
+	fprintf(o, "-g {a,b,c}    Optional group-by-field names for tail counts\n");
+	fprintf(o, "Passes through the last n records, optionally by category.\n");
+}
+
+static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
+	int     tail_count            = 10;
+	slls_t* pgroup_by_field_names = slls_alloc();
+
+	char* verb = argv[(*pargi)++];
+
+	ap_state_t* pstate = ap_alloc();
+	ap_define_int_flag(pstate, "-n", &tail_count);
+	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
+
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_tail_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_tail_alloc(pgroup_by_field_names, tail_count);
+}
+
+// ----------------------------------------------------------------
+static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_tail_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_tail_state_t));
+
+	pstate->pgroup_by_field_names  = pgroup_by_field_names;
+	pstate->tail_count             = tail_count;
+	pstate->precord_lists_by_group = lhmslv_alloc();
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_tail_process;
+	pmapper->pfree_func    = mapper_tail_free;
+
+	return pmapper;
+}
+
+static void mapper_tail_free(void* pvstate) {
+	mapper_tail_state_t* pstate = pvstate;
+	if (pstate->pgroup_by_field_names != NULL)
+		slls_free(pstate->pgroup_by_field_names);
+	// xxx free the void-star payloads 1st
+	lhmslv_free(pstate->precord_lists_by_group);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
@@ -60,56 +111,4 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_add(poutrecs, NULL);
 		return poutrecs;
 	}
-}
-
-// ----------------------------------------------------------------
-static void mapper_tail_free(void* pvstate) {
-	mapper_tail_state_t* pstate = pvstate;
-	if (pstate->pgroup_by_field_names != NULL)
-		slls_free(pstate->pgroup_by_field_names);
-
-	// xxx free the void-star payloads 1st
-	lhmslv_free(pstate->precord_lists_by_group);
-}
-
-static mapper_t* mapper_tail_alloc(slls_t* pgroup_by_field_names, unsigned long long tail_count) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_tail_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_tail_state_t));
-
-	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->tail_count             = tail_count;
-	pstate->precord_lists_by_group = lhmslv_alloc();
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_tail_process;
-	pmapper->pfree_func    = mapper_tail_free;
-
-	return pmapper;
-}
-
-// ----------------------------------------------------------------
-static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-n {count}    Tail count to print; default 10\n");
-	fprintf(o, "-g {a,b,c}    Optional group-by-field names for tail counts\n");
-	fprintf(o, "Passes through the last n records, optionally by category.\n");
-}
-
-static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
-	int     tail_count            = 10;
-	slls_t* pgroup_by_field_names = slls_alloc();
-
-	char* verb = argv[(*pargi)++];
-
-	ap_state_t* pstate = ap_alloc();
-	ap_define_int_flag(pstate, "-n", &tail_count);
-	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_tail_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-
-	return mapper_tail_alloc(pgroup_by_field_names, tail_count);
 }

@@ -139,6 +139,36 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 		do_verbose, do_iterative_stats);
 }
 
+// ----------------------------------------------------------------
+static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
+	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats)
+{
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_stats2_state_t* pstate   = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
+	pstate->paccumulator_names      = paccumulator_names;
+	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
+	pstate->pgroup_by_field_names   = pgroup_by_field_names;
+	pstate->groups                  = lhmslv_alloc();
+	pstate->do_verbose              = do_verbose;
+	pstate->do_iterative_stats      = do_iterative_stats;
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_stats2_process;
+	pmapper->pfree_func    = mapper_stats2_free;
+
+	return pmapper;
+}
+
+static void mapper_stats2_free(void* pvstate) {
+	mapper_stats2_state_t* pstate = pvstate;
+	slls_free(pstate->paccumulator_names);
+	slls_free(pstate->pvalue_field_name_pairs);
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the level-2's 1st
+	lhmslv_free(pstate->groups);
+}
+
 // ================================================================
 // Given: accumulate corr,cov on values x,y group by a,b.
 // Example input:       Example output:
@@ -301,36 +331,6 @@ static void mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* poutrec,
 		stats2_t* pstats2 = pe->pvvalue;
 		pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 	}
-}
-
-// ----------------------------------------------------------------
-static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats)
-{
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_stats2_state_t* pstate   = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
-	pstate->paccumulator_names      = paccumulator_names;
-	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
-	pstate->pgroup_by_field_names   = pgroup_by_field_names;
-	pstate->groups                  = lhmslv_alloc();
-	pstate->do_verbose              = do_verbose;
-	pstate->do_iterative_stats      = do_iterative_stats;
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_stats2_process;
-	pmapper->pfree_func    = mapper_stats2_free;
-
-	return pmapper;
-}
-
-static void mapper_stats2_free(void* pvstate) {
-	mapper_stats2_state_t* pstate = pvstate;
-	slls_free(pstate->paccumulator_names);
-	slls_free(pstate->pvalue_field_name_pairs);
-	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
 }
 
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {

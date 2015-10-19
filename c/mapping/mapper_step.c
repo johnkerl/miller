@@ -126,6 +126,33 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
+static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
+	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+
+	mapper_step_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_step_state_t));
+
+	pstate->pstepper_names        = pstepper_names;
+	pstate->pvalue_field_names    = pvalue_field_names;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->groups                = lhmslv_alloc();
+
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_step_process;
+	pmapper->pfree_func    = mapper_step_free;
+
+	return pmapper;
+}
+
+static void mapper_step_free(void* pvstate) {
+	mapper_step_state_t* pstate = pvstate;
+	slls_free(pstate->pstepper_names);
+	slls_free(pstate->pvalue_field_names);
+	slls_free(pstate->pgroup_by_field_names);
+	// xxx free the level-2's 1st
+	lhmslv_free(pstate->groups);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_step_state_t* pstate = pvstate;
 	if (pinrec == NULL)
@@ -196,33 +223,6 @@ static step_t* make_step(char* step_name, char* input_field_name) {
 		if (streq(step_name, step_lookup_table[i].name))
 			return step_lookup_table[i].pnew_func(input_field_name);
 	return NULL;
-}
-
-// ----------------------------------------------------------------
-static void mapper_step_free(void* pvstate) {
-	mapper_step_state_t* pstate = pvstate;
-	slls_free(pstate->pstepper_names);
-	slls_free(pstate->pvalue_field_names);
-	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
-}
-
-static mapper_t* mapper_step_alloc(slls_t* pstepper_names, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names) {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-
-	mapper_step_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_step_state_t));
-
-	pstate->pstepper_names        = pstepper_names;
-	pstate->pvalue_field_names    = pvalue_field_names;
-	pstate->pgroup_by_field_names = pgroup_by_field_names;
-	pstate->groups                = lhmslv_alloc();
-
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_step_process;
-	pmapper->pfree_func    = mapper_step_free;
-
-	return pmapper;
 }
 
 // ----------------------------------------------------------------
