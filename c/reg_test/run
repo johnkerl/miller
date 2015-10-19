@@ -280,7 +280,12 @@ run_mlr filter '$x>0.3'   $indir/abixy
 run_mlr filter '$x>0.3 && $y>0.3'   $indir/abixy
 run_mlr filter '$x>0.3 || $y>0.3'   $indir/abixy
 run_mlr filter 'NR>=4 && NR <= 7'   $indir/abixy
-# xxx more ...
+
+run_mlr filter -x '$x>.3'    $indir/abixy
+run_mlr filter -x '$x>0.3'   $indir/abixy
+run_mlr filter -x '$x>0.3 && $y>0.3'   $indir/abixy
+run_mlr filter -x '$x>0.3 || $y>0.3'   $indir/abixy
+run_mlr filter -x 'NR>=4 && NR <= 7'   $indir/abixy
 
 run_mlr filter '$nosuchfield>.3'    $indir/abixy
 
