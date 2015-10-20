@@ -6,28 +6,32 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-MINOR: logifit & linfit functions: $y = f($x,m,b)
 MAJOR: stats2 logistic regression
   - resize_vector_t @ stats1
   - port over the python impl :)
-MINOR: note re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
-  note count-distinct w/ int() func
-MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
+
+MINOR: logifit & linfit functions: $y = f($x,m,b)
+
+MINOR: mlrcli topdown
+MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
 MINOR: brew version bump?!?
-MINOR: examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
+
+MINOR: faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
+  note count-distinct w/ int() func
+MINOR: faqent on two-pass lin/logi reg
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
   in-language handling in case not field/line formatted. see h.p. mail.
 MINOR: faqent on polyglottal dkvp/etc production
-MAJOR: statsn covar, ols, logistic
-  - port material from my stats_m/sackmat_m for much of that
+MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
+MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above
-MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
-MINOR: mlrcli topdown
+MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+
 MINOR: --mmap @ mlr -h
 MINOR: ctype ff @ bld.out
-MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
 MINOR: sampler UTs (w/ spec rand seed)
 MINOR: bus-insurance dev page
+MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
 
 ----------------------------------------------------------------
 MAJOR: regex
