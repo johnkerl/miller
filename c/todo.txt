@@ -6,10 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-MAJOR: stats2 logistic regression
-  - resize_vector_t @ stats1
-  - port over the python impl :)
-
 MINOR: logifit & linfit functions: $y = f($x,m,b)
 
 MINOR: mlrcli topdown
