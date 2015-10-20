@@ -1,13 +1,10 @@
 ================================================================
 BUGFIXES
 
-$ mlr top -a -n 10 -f x ../data/big.dkvp
-Segmentation fault: 11
+:D
 
 ================================================================
 TOP OF LIST
-
-! topdowns !
 
 MINOR: logifit & linfit functions: $y = f($x,m,b)
 MINOR: note re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
@@ -25,6 +22,12 @@ MAJOR: statsn covar, ols, logistic
   - port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
+MINOR: mlrcli topdown
+MINOR: --mmap @ mlr -h
+MINOR: ctype ff @ bld.out
+MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+MINOR: sampler UTs (w/ spec rand seed)
+MINOR: bus-insurance dev page
 
 ----------------------------------------------------------------
 MAJOR: regex
@@ -78,49 +81,16 @@ MAJOR: csv mem-leak/read-perf
   multi-char-terminated getdelim might be the best line of approach.
 
 ----------------------------------------------------------------
-MINOR: sampler UTs (w/ spec rand seed)
-MINOR: bus-insurance dev page
-
-----------------------------------------------------------------
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline
-
-* put/filter topdowns; double-check all topdowns
-* mlrcli topdown
-
 * off-by-one error on fnr dkvp errmsg?
-
 * scroll-stalls in mlrdoc!! really bad on the droid.
-
-* hash-chain ifdef instrumentation
-  -> maybe find a better hash function out there
-
-----------------------------------------------------------------
-MINOR:
-
+* hash-chain ifdef instrumentation -> maybe find a better hash function out there
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
-
-* --mmap @ mlr -h
-* ctype ff @ bld.out
-
 * pprint join?
-
-* header-length data mismatch et. al: file/line
-
-----------------------------------------------------------------
-MINOR:
-
-* RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-
 * comma-number -- using locale?
-
 * poki cover -> readme
-
-* steppers (and stats1/2 -- what else -- ?): include help-string in
-  lookup table, and iterate over that in the online help function
-
-TO-DO:
 * include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
 * gprof link with -lc on FreeBSD -- ?
@@ -144,9 +114,6 @@ xperf:
 NEATEN
 
 !! xxx's in the code
-
-? copyright headers ...
-
 * source hygiene: top-of-header comments, readme re memory management, etc.
 
 ================================================================
@@ -164,6 +131,8 @@ MEM MGMT:
 * free last rec in streamer?
 * look strdups at other lhm*
 * look at any other strdups
+* note that this free-at-end is highly pedantic *except* it allows me to check valgrind 100% leak-free
+  to be sure i don't miss the ones that *do* matter in the record-loops
 
 ================================================================
 NIDX/DKVP/...:
