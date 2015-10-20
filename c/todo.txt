@@ -28,6 +28,7 @@ MINOR: ctype ff @ bld.out
 MINOR: sampler UTs (w/ spec rand seed)
 MINOR: bus-insurance dev page
 MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
+MAJOR: hold-and-fit regressors? requires entire lrec stream held in memory.
 
 ----------------------------------------------------------------
 MAJOR: regex

@@ -200,6 +200,14 @@ static inline mv_t f_ff_roundm_func(mv_t* pval1, mv_t* pval2) {
 	return rv;
 }
 
+static inline mv_t f_fff_logifit_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	double x = pval1->u.fltv;
+	double m = pval2->u.fltv;
+	double b = pval3->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = 1.0 / (1.0 + exp(-m*x-b))};
+	return rv;
+}
+
 // ----------------------------------------------------------------
 mv_t s_s_tolower_func(mv_t* pval1);
 mv_t s_s_toupper_func(mv_t* pval1);

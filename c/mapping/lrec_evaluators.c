@@ -228,6 +228,56 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_nullable_func(mv_binary_func_t*
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_f_fff_state_t {
+	mv_ternary_func_t* pfunc;
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+	lrec_evaluator_t* parg3;
+} lrec_evaluator_f_fff_state_t;
+
+mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_f_fff_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	mt_get_double_nullable(&val1);
+	NULL_OUT(val1);
+	if (val1.type != MT_FLOAT)
+		return MV_ERROR;
+
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	mt_get_double_nullable(&val2);
+	NULL_OUT(val2);
+	if (val2.type != MT_FLOAT)
+		return MV_ERROR;
+
+	mv_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
+	NULL_OR_ERROR_OUT(val3);
+	mt_get_double_nullable(&val3);
+	NULL_OUT(val3);
+	if (val3.type != MT_FLOAT)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2, &val3);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_f_fff_func(mv_ternary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
+{
+	lrec_evaluator_f_fff_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_fff_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+	pstate->parg3 = parg3;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_f_fff_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_s_s_state_t {
 	mv_unary_func_t*  pfunc;
 	lrec_evaluator_t* parg1;
@@ -835,6 +885,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "log",      1 , "Natural (base-e) logarithm."},
 	{ FUNC_CLASS_MATH, "log10",    1 , "Base-10 logarithm."},
 	{ FUNC_CLASS_MATH, "log1p",    1 , "log(1-x)."},
+	{ FUNC_CLASS_MATH, "logifit",  3 , "Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b)."},
 	{ FUNC_CLASS_MATH, "max",      2 , "max of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "min",      2 , "min of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
@@ -1119,6 +1170,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 		return lrec_evaluator_alloc_from_s_sss_func(sub_no_precomp_func,  parg1, parg2, parg3);
 	} else if (streq(fnnm, "gsub")) {
 		return lrec_evaluator_alloc_from_s_sss_func(gsub_no_precomp_func, parg1, parg2, parg3);
+	} else if (streq(fnnm, "logifit")) {
+		return lrec_evaluator_alloc_from_f_fff_func(f_fff_logifit_func,   parg1, parg2, parg3);
 	} else  { return NULL; }
 }
 
