@@ -1,12 +1,13 @@
 ================================================================
 BUGFIXES
 
-:D
+* mlr_logistic_regression: Newton-Raphson convergence failed after 101 iterations. m=nan, b=nan.
+  happens when data are too *good*.
 
 ================================================================
 TOP OF LIST
 
-MINOR: logifit & linfit functions: $y = f($x,m,b)
+MAJOR: hold-and-fit regressors? requires entire lrec stream held in memory in group-by buckets.
 
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
@@ -28,7 +29,6 @@ MINOR: ctype ff @ bld.out
 MINOR: sampler UTs (w/ spec rand seed)
 MINOR: bus-insurance dev page
 MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
-MAJOR: hold-and-fit regressors? requires entire lrec stream held in memory.
 
 ----------------------------------------------------------------
 MAJOR: regex
