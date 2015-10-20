@@ -48,7 +48,7 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	slls_t* pgroup_by_field_names, int do_iterative_stats);
 static void      mapper_stats1_free(void* pvstate);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static lrec_t*   mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
 	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state);
@@ -230,12 +230,13 @@ char* fake_acc_name_for_setups = "__setup_done__";
 static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		lrec_t* poutrec = mapper_stats1_ingest(pinrec, pstate);
-		if (poutrec == NULL) {
+		mapper_stats1_ingest(pinrec, pstate);
+		if (pstate->do_iterative_stats) {
+			// The input record will be modified in this case, with new fields appended
+			return sllv_single(pinrec);
+		} else {
 			lrec_free(pinrec);
 			return NULL;
-		} else {
-			return sllv_single(poutrec);
 		}
 	} else if (!pstate->do_iterative_stats) {
 		return mapper_stats1_emit_all(pstate);
@@ -252,7 +253,7 @@ static stats1_t* make_acc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
+static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
 	// E.g. ["s", "t"]
 	// To do: make value_field_values into a hashmap. Then accept partial
 	// population on that, but retain full-population requirement on group-by.
@@ -261,9 +262,9 @@ static lrec_t* mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstat
 	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 	if (pvalue_field_values->length != pstate->pvalue_field_names->length)
-		return pstate->do_iterative_stats ? pinrec : NULL;
+		return;
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length)
-		return pstate->do_iterative_stats ? pinrec : NULL;
+		return;
 
 	lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
 	if (group_to_acc_field == NULL) {
@@ -321,7 +322,6 @@ static lrec_t* mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstat
 			}
 		}
 	}
-	return pstate->do_iterative_stats ? pinrec : NULL;
 }
 
 // ----------------------------------------------------------------

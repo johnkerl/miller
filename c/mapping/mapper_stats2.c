@@ -50,7 +50,7 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats);
 static void      mapper_stats2_free(void* pvstate);
 static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static lrec_t*   mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
+static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t*   mapper_stats2_emit_all(mapper_stats2_state_t* pstate);
 static void      mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* pinrec,
 	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state);
@@ -185,20 +185,20 @@ static void mapper_stats2_free(void* pvstate) {
 // {
 //   ["s","t"] : {                    <--- group-by field names
 //     ["x","y"] : {                  <--- value field names
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
 //     }
 //   },
 //   ["u","v"] : {
 //     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
 //     }
 //   },
 //   ["u","w"] : {
 //     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
 //     }
 //   },
 // }
@@ -209,12 +209,13 @@ static void mapper_stats2_free(void* pvstate) {
 static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		lrec_t* poutrec = mapper_stats2_ingest(pinrec, pctx, pstate);
-		if (poutrec == NULL) {
+		mapper_stats2_ingest(pinrec, pctx, pstate);
+		if (pstate->do_iterative_stats) {
+			// The input record will be modified in this case, with new fields appended
+			return sllv_single(pinrec);
+		} else {
 			lrec_free(pinrec);
 			return NULL;
-		} else {
-			return sllv_single(poutrec);
 		}
 	} else if (!pstate->do_iterative_stats) {
 		return mapper_stats2_emit_all(pstate);
@@ -224,12 +225,12 @@ static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvst
 }
 
 // ----------------------------------------------------------------
-static lrec_t* mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
+static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
 	// ["s", "t"]
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
 		slls_free(pgroup_by_field_values);
-		return pstate->do_iterative_stats ? pinrec : NULL;
+		return;
 	}
 
 	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
@@ -283,7 +284,6 @@ static lrec_t* mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stat
 	}
 
 	slls_free(pgroup_by_field_values);
-	return pstate->do_iterative_stats ? pinrec : NULL;
 }
 
 // ----------------------------------------------------------------

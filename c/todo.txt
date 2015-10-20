@@ -23,6 +23,7 @@ MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
 MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above
 MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+MINOR: expand sort null-handling to include field not present in given record (sort to end)
 
 MINOR: --mmap @ mlr -h
 MINOR: ctype ff @ bld.out
