@@ -30,6 +30,7 @@ EXTRA_DIST=	\
 		het.dkvp \
 		joina.dkvp \
 		joinb.dkvp \
+		logi.dkvp \
 		minmax.dkvp \
 		missings.dkvp \
 		multi-ips.dkvp \

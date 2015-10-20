@@ -12,6 +12,7 @@
 #include "containers/lhms2v.h"
 #include "containers/lhmsv.h"
 #include "containers/mixutil.h"
+#include "containers/dvector.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
@@ -54,14 +55,15 @@ static sllv_t*   mapper_stats2_emit_all(mapper_stats2_state_t* pstate);
 static void      mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* pinrec,
 	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state);
 
-static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose);
-static stats2_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
-static stats2_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* make_stats2            (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_r2_alloc        (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_logireg_alloc   (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_corr_cov_alloc  (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose);
+static stats2_t* stats2_corr_alloc      (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_cov_alloc       (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
+static stats2_t* stats2_covx_alloc      (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 
 // ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
@@ -73,6 +75,7 @@ static stats2_lookup_t stats2_lookup_table[] = {
 	{"linreg-pca", stats2_linreg_pca_alloc, "Linear regression using principal component analysis"},
 	{"linreg-ols", stats2_linreg_ols_alloc, "Linear regression using ordinary least squares"},
 	{"r2",         stats2_r2_alloc,         "Quality metric for linreg-ols (linreg-pca emits its own)"},
+	{"logireg",    stats2_logireg_alloc,    "Logistic regression"},
 	{"corr",       stats2_corr_alloc,       "Sample correlation"},
 	{"cov",        stats2_cov_alloc,        "Sample covariance"},
 	{"covx",       stats2_covx_alloc,       "Sample-covariance matrix"},
@@ -393,6 +396,54 @@ static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_f
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = stats2_linreg_ols_ingest;
 	pstats2->pemit_func   = stats2_linreg_ols_emit;
+	return pstats2;
+}
+
+// ----------------------------------------------------------------
+#define LOGIREG_DVECTOR_INITIAL_SIZE 1024
+typedef struct _stats2_logireg_state_t {
+	dvector_t* pxs;
+	dvector_t* pys;
+	char*  m_output_field_name;
+	char*  b_output_field_name;
+	char*  n_output_field_name;
+} stats2_logireg_state_t;
+static void stats2_logireg_ingest(void* pvstate, double x, double y) {
+	stats2_logireg_state_t* pstate = pvstate;
+	dvector_append(pstate->pxs, x);
+	dvector_append(pstate->pys, y);
+}
+static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+	stats2_logireg_state_t* pstate = pvstate;
+
+	if (pstate->pxs->size < 4) {
+		lrec_put(poutrec, pstate->m_output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->b_output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double m, b;
+		mlr_logistic_regression(pstate->pxs->data, pstate->pys->data, pstate->pxs->size, &m, &b);
+		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
+		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
+
+		lrec_put(poutrec, pstate->m_output_field_name, mval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->b_output_field_name, bval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
+
+	char* nval = mlr_alloc_string_from_ll(pstate->pxs->size);
+	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+}
+static stats2_t* stats2_logireg_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
+	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
+	stats2_logireg_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_logireg_state_t));
+	pstate->pxs = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE);
+	pstate->pys = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE);
+	pstate->m_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_m");
+	pstate->b_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_b");
+	pstate->n_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_n");
+
+	pstats2->pvstate = (void*)pstate;
+	pstats2->pingest_func = stats2_logireg_ingest;
+	pstats2->pemit_func   = stats2_logireg_emit;
 	return pstats2;
 }
 

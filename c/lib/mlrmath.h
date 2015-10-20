@@ -12,4 +12,6 @@ double qnorm(double x);
 
 double invqnorm(double x);
 
+void mlr_logistic_regression(double* xs, double* ys, int n, double* pm, double* pb);
+
 #endif // MLRMATH_H

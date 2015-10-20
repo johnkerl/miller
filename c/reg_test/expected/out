@@ -3445,6 +3445,15 @@ x2_x2_r2          1.000000
 x2_x2_corr        1.000000
 x2_x2_cov         0.018440
 
+mlr --opprint stats2 -a logireg -f x,y ./reg_test/input/logi.dkvp
+x_y_logistic_m x_y_logistic_b x_y_logistic_n
+0.168447       0.168447       22
+
+mlr --opprint stats2 -a logireg -f x,y -g g ./reg_test/input/logi.dkvp
+g    x_y_logistic_m x_y_logistic_b x_y_logistic_n
+red  0.170434       -0.061982      11
+blue 0.170434       0.402849       11
+
 mlr --opprint step -a rsum,delta,counter -f x,y ./reg_test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0.000000  1         0.726803 0.000000  1

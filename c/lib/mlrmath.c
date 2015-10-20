@@ -297,6 +297,8 @@ static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* p
 		double d2ldm2  = 0.0;
 		double d2ldmdb = 0.0;
 		double d2ldb2  = 0.0;
+		double ell0    = 0.0;
+
 		for (int i = 0; i < n; i++) {
 			double xi = xs[i];
 			double yi = ys[i];
@@ -310,7 +312,9 @@ static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* p
 			d2ldm2  -= xi2piqi;
 			d2ldmdb -= xipiqi;
 			d2ldb2  -= piqi;
+			ell0 += log(qi) + yi * (m0 * xi + b0);
 		}
+
 
 		// Form the Hessian
 		double ha = d2ldm2;
@@ -333,14 +337,24 @@ static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* p
 		m = m0 - Hinvgradm;
 		b = b0 - Hinvgradb;
 
+		double ell = 0.0;
+		for (int i = 0; i < n; i++) {
+			double xi = xs[i];
+			double yi = ys[i];
+			double qi = lrq(xi, m, b);
+			ell += log(qi) + yi * (m0 * xi + b0);
+		}
+
 		// Check for convergence
-		double err = sqrt(Hinvgradm*Hinvgradm + Hinvgradb*Hinvgradb);
+		double err = fabs(ell - ell0);
+
 		if (err < tol)
 			done = TRUE;
 		if (++its > maxits) {
 			fprintf(stderr,
 				"mlr_logistic_regression: Newton-Raphson convergence failed after %d iterations. m=%e, b=%e.\n",
 					its, m, b);
+			exit(1);
 		}
 
 		m0 = m;
@@ -355,6 +369,6 @@ void mlr_logistic_regression(double* xs, double* ys, int n, double* pm, double* 
 	double m0     = -0.001;
 	double b0     =  0.002;
 	double tol    = 1e-9;
-	int    maxits = 50;
+	int    maxits = 100;
 	mlr_logistic_regression_aux(xs, ys, n, pm, pb, m0, b0, tol, maxits);
 }

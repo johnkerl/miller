@@ -2,6 +2,8 @@ noinst_LTLIBRARIES=	libcontainers.la
 libcontainers_la_SOURCES=	\
 			dheap.c \
 			dheap.h \
+			dvector.c \
+			dvector.h \
 			header_keeper.c \
 			header_keeper.h \
 			hss.c \
