@@ -110,7 +110,8 @@ static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "               stream will never be seen).\n");
 	fprintf(o, "--fit          Rather than printing regression parameters, applies them to\n");
 	fprintf(o, "               the input data to compute new fit fields. All input records are\n");
-	fprintf(o, "               held in memory until end of input stream.\n");
+	fprintf(o, "               held in memory until end of input stream. Has effect only for\n");
+	fprintf(o, "               linreg-ols, linreg-pca, and logireg.\n");
 	fprintf(o, "Only one of -s or --fit may be used.\n");
 	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
@@ -724,10 +725,10 @@ static void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
 static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 	if (pstate->do_which == DO_COVX) {
-		char* key00 = mlr_paste_4_strings(name1, "_", name1, "_covx");
-		char* key01 = mlr_paste_4_strings(name1, "_", name2, "_covx");
-		char* key10 = mlr_paste_4_strings(name2, "_", name1, "_covx");
-		char* key11 = mlr_paste_4_strings(name2, "_", name2, "_covx");
+		char* key00 = pstate->covx_00_output_field_name;
+		char* key01 = pstate->covx_01_output_field_name;
+		char* key10 = pstate->covx_10_output_field_name;
+		char* key11 = pstate->covx_11_output_field_name;
 		if (pstate->count < 2LL) {
 			lrec_put(poutrec, key00, "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, key01, "", LREC_FREE_ENTRY_KEY);
@@ -746,17 +747,18 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 			lrec_put(poutrec, key10, val10, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 			lrec_put(poutrec, key11, val11, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 		}
+
 	} else if (pstate->do_which == DO_LINREG_PCA) {
-		char* keym   = mlr_paste_4_strings(name1, "_", name2, "_pca_m");
-		char* keyb   = mlr_paste_4_strings(name1, "_", name2, "_pca_b");
-		char* keyn   = mlr_paste_4_strings(name1, "_", name2, "_pca_n");
-		char* keyq   = mlr_paste_4_strings(name1, "_", name2, "_pca_quality");
-		char* keyl1  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival1");
-		char* keyl2  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival2");
-		char* keyv11 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec11");
-		char* keyv12 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec12");
-		char* keyv21 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec21");
-		char* keyv22 = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec22");
+		char* keym   = pstate->pca_m_output_field_name;
+		char* keyb   = pstate->pca_b_output_field_name;
+		char* keyn   = pstate->pca_n_output_field_name;
+		char* keyq   = pstate->pca_q_output_field_name;
+		char* keyl1  = pstate->pca_l1_output_field_name;
+		char* keyl2  = pstate->pca_l2_output_field_name;
+		char* keyv11 = pstate->pca_v11_output_field_name;
+		char* keyv12 = pstate->pca_v12_output_field_name;
+		char* keyv21 = pstate->pca_v21_output_field_name;
+		char* keyv22 = pstate->pca_v22_output_field_name;
 		if (pstate->count < 2LL) {
 			lrec_put(poutrec, keym,   "", LREC_FREE_ENTRY_KEY);
 			lrec_put(poutrec, keyb,   "", LREC_FREE_ENTRY_KEY);
@@ -817,9 +819,6 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 
 static void linreg_pca_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
-
-	// xxx use precomps
-	//char* keyfit = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
 
 	if (!pstate->fit_ready) {
 		double Q[2][2];

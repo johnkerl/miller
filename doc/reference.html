@@ -239,10 +239,10 @@ Please use "mlr --help-all-verbs" for help on all verbs.
 
 Functions for filter and put:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
-   expm1 floor invqnorm log log10 log1p max min pow qnorm round roundm sin sinh
-   sqrt tan tanh urand + - - * / % ** =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub
-   gsub tolower toupper . boolean float int string hexfmt fmtnum systime
-   sec2gmt gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
+   expm1 floor invqnorm log log10 log1p logifit max min pow qnorm round roundm
+   sin sinh sqrt tan tanh urand + - - * / % ** =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || !
+   strlen sub gsub tolower toupper . boolean float int string hexfmt fmtnum
+   systime sec2gmt gmt2sec sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
    hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
@@ -2039,6 +2039,11 @@ Usage: mlr stats2 [options]
 -s             Print iterative stats. Useful in tail -f contexts (in which
                case please avoid pprint-format output since end of input
                stream will never be seen).
+--fit          Rather than printing regression parameters, applies them to
+               the input data to compute new fit fields. All input records are
+               held in memory until end of input stream. Has effect only for
+               linreg-ols, linreg-pca, and logireg.
+Only one of -s or --fit may be used.
 Example: mlr stats2 -a linreg-pca -f x,y
 Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
 Example: mlr stats2 -a corr -f x,y
@@ -2546,6 +2551,7 @@ invqnorm   (math:       #args=1): Inverse of normal cumulative distribution func
 log        (math:       #args=1): Natural (base-e) logarithm.
 log10      (math:       #args=1): Base-10 logarithm.
 log1p      (math:       #args=1): log(1-x).
+logifit    (math:       #args=3): Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
 max        (math:       #args=2): max of two numbers; null loses
 min        (math:       #args=2): min of two numbers; null loses
 pow        (math:       #args=2): Exponentiation; same as **.

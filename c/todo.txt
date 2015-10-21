@@ -8,6 +8,8 @@ BUGFIXES
 TOP OF LIST
 
 MAJOR: hold-and-fit regressors? requires entire lrec stream held in memory in group-by buckets.
+  -> 'then put' for residuals
+  -> note that this avoids two-pass & the saving of fit parameters
 
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
