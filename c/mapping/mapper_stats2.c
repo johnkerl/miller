@@ -23,12 +23,14 @@
 
 // ----------------------------------------------------------------
 typedef void stats2_ingest_func_t(void* pvstate, double x, double y);
-typedef void stats2_emit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
+typedef void   stats2_emit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
+typedef void    stats2_fit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
 
 typedef struct _stats2_t {
 	void* pvstate;
 	stats2_ingest_func_t* pingest_func;
 	stats2_emit_func_t*   pemit_func;
+	stats2_emit_func_t*   pfit_func;
 } stats2_t;
 
 typedef struct _mapper_stats2_state_t {
@@ -373,45 +375,68 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
 	for (lhmslve_t* pa = pstate->acc_groups->phead; pa != NULL; pa = pa->pnext) {
-		slls_t* pkey = pa->key;
-		sllv_t* precords = lhmslv_get(pstate->record_groups, pkey);
+		slls_t* pgroup_by_field_values = pa->key;
+		sllv_t* precords = lhmslv_get(pstate->record_groups, pgroup_by_field_values);
 
 		while (precords->phead) {
-			sllv_add(poutrecs, sllv_pop(precords));
-		}
+			lrec_t* prec = sllv_pop(precords);
 
-//		// Add in a=s,b=t fields:
-//		slls_t* pgroup_by_field_values = pa->key;
-//		sllse_t* pb = pstate->pgroup_by_field_names->phead;
-//		sllse_t* pc =         pgroup_by_field_values->phead;
-//		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-//			lrec_put(poutrec, pb->value, pc->value, 0);
-//		}
+			lhms2v_t* group_to_acc_field = pa->pvvalue;
 
-//		// Add in fields such as x_y_corr, etc.
-//		lhms2v_t* group_to_acc_field = pa->pvvalue;
+			// For "x","y"
+			for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+				char*    value_field_name_1 = pd->key1;
+				char*    value_field_name_2 = pd->key2;
+				lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
 
-//		// For "x","y"
-//		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
-//			char*    value_field_name_1 = pd->key1;
-//			char*    value_field_name_2 = pd->key2;
-//			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
-//
-//			mapper_stats2_emit(pstate, poutrec, value_field_name_1, value_field_name_2,
+//			mapper_stats2_emit(pstate, prec, value_field_name_1, value_field_name_2,
 //				acc_fields_to_acc_state);
-//
-//			// For "corr", "linreg"
-//			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
-//				stats2_t* pstats2 = pe->pvvalue;
-//				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
-//			}
-//		}
 
-//		sllv_add(poutrecs, poutrec);
+				// For "linreg-ols", "logireg"
+				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+					stats2_t* pstats2 = pe->pvvalue;
+					pstats2->pfit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, prec);
+				}
+			}
+
+			sllv_add(poutrecs, prec);
+		}
 	}
 	sllv_add(poutrecs, NULL);
 	return poutrecs;
 }
+
+// ================================================================
+// Given: accumulate corr,cov on values x,y group by a,b.
+// Example input:       Example output:
+//   a b x y            a b x_corr x_cov y_corr y_cov
+//   s t 1 2            s t 2       6    2      8
+//   u v 3 4            u v 1       3    1      4
+//   s t 5 6            u w 1       7    1      9
+//   u w 7 9
+//
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {                    <--- group-by field names
+//     ["x","y"] : {                  <--- value field names
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
+//     }
+//   },
+//   ["u","v"] : {
+//     ["x","y"] : {
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
+//     }
+//   },
+//   ["u","w"] : {
+//     ["x","y"] : {
+//       "corr" : stats2_corr_t object,
+//       "cov"  : stats2_cov_t  object
+//     }
+//   },
+// }
+// ================================================================
 
 // ----------------------------------------------------------------
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
@@ -431,6 +456,7 @@ typedef struct _stats2_linreg_ols_state_t {
 	char*  m_output_field_name;
 	char*  b_output_field_name;
 	char*  n_output_field_name;
+	char*  fit_output_field_name;
 } stats2_linreg_ols_state_t;
 static void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
@@ -440,6 +466,7 @@ static void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	pstate->sumx2 += x*x;
 	pstate->sumxy += x*y;
 }
+
 static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 
@@ -459,6 +486,22 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 	char* nval = mlr_alloc_string_from_ll(pstate->count);
 	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
+
+static void stats2_linreg_ols_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+	stats2_linreg_ols_state_t* pstate = pvstate;
+
+	if (pstate->count < 2) {
+		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double m, b;
+		mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
+		double foo = 999.0;
+		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
+
+		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
+}
+
 static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_linreg_ols_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_linreg_ols_state_t));
@@ -467,13 +510,15 @@ static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_f
 	pstate->sumy  = 0.0;
 	pstate->sumx2 = 0.0;
 	pstate->sumxy = 0.0;
-	pstate->m_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_m");
-	pstate->b_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_b");
-	pstate->n_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_n");
+	pstate->m_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_m");
+	pstate->b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_b");
+	pstate->n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_n");
+	pstate->fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_fit");
 
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = stats2_linreg_ols_ingest;
 	pstats2->pemit_func   = stats2_linreg_ols_emit;
+	pstats2->pfit_func    = stats2_linreg_ols_fit;
 	return pstats2;
 }
 
@@ -485,16 +530,18 @@ typedef struct _stats2_logireg_state_t {
 	char*  m_output_field_name;
 	char*  b_output_field_name;
 	char*  n_output_field_name;
+	char*  fit_output_field_name;
 } stats2_logireg_state_t;
 static void stats2_logireg_ingest(void* pvstate, double x, double y) {
 	stats2_logireg_state_t* pstate = pvstate;
 	dvector_append(pstate->pxs, x);
 	dvector_append(pstate->pys, y);
 }
+
 static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_logireg_state_t* pstate = pvstate;
 
-	if (pstate->pxs->size < 4) {
+	if (pstate->pxs->size < 2) {
 		lrec_put(poutrec, pstate->m_output_field_name, "", LREC_FREE_ENTRY_KEY);
 		lrec_put(poutrec, pstate->b_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
@@ -510,18 +557,35 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 	char* nval = mlr_alloc_string_from_ll(pstate->pxs->size);
 	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
+
+static void stats2_logireg_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+	stats2_logireg_state_t* pstate = pvstate;
+
+	if (pstate->pxs->size < 2) {
+		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double m, b;
+		mlr_logistic_regression(pstate->pxs->data, pstate->pys->data, pstate->pxs->size, &m, &b);
+		double foo = 888.0;
+		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
+}
+
 static stats2_t* stats2_logireg_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_logireg_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_logireg_state_t));
 	pstate->pxs = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE);
 	pstate->pys = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE);
-	pstate->m_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_m");
-	pstate->b_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_b");
-	pstate->n_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_n");
+	pstate->m_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_m");
+	pstate->b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_b");
+	pstate->n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_n");
+	pstate->fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_fit");
 
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = stats2_logireg_ingest;
 	pstats2->pemit_func   = stats2_logireg_emit;
+	pstats2->pfit_func    = stats2_logireg_fit;
 	return pstats2;
 }
 
@@ -580,6 +644,7 @@ static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_nam
 	pstats2->pvstate      = (void*)pstate;
 	pstats2->pingest_func = stats2_r2_ingest;
 	pstats2->pemit_func   = stats2_r2_emit;
+	pstats2->pfit_func    = NULL;
 
 	return pstats2;
 }
@@ -611,6 +676,7 @@ typedef struct _stats2_corr_cov_state_t {
 	char* pca_v12_output_field_name;
 	char* pca_v21_output_field_name;
 	char* pca_v22_output_field_name;
+	char* pca_fit_output_field_name;
 
 	char*  corr_output_field_name;
 	char*   cov_output_field_name;
@@ -749,13 +815,15 @@ static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_fie
 	pstate->pca_v12_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec12");
 	pstate->pca_v21_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec21");
 	pstate->pca_v22_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec22");
+	pstate->pca_fit_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
+
 	pstate->corr_output_field_name    = mlr_paste_4_strings(name1, "_", name2, "_corr");
 	pstate->cov_output_field_name     = mlr_paste_4_strings(name1, "_", name2, "_cov");
-
 
 	pstats2->pvstate      = (void*)pstate;
 	pstats2->pingest_func = stats2_corr_cov_ingest;
 	pstats2->pemit_func   = stats2_corr_cov_emit;
+	pstats2->pfit_func    = NULL;
 
 	return pstats2;
 }
