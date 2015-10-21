@@ -28,7 +28,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
 
-slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
+slls_t* mlr_selected_values_from_record_or_die(lrec_t* prec, slls_t* pselected_field_names) {
 	slls_t* pvalue_list = slls_alloc();
 	for (sllse_t* pe = pselected_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* selected_field_name = pe->value;
@@ -39,6 +39,21 @@ slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_na
 			fprintf(stderr, "%s: Couldn't find field named \"%s\"\n",
 				MLR_GLOBALS.argv0, selected_field_name);
 			exit(1);
+		} else {
+			slls_add_no_free(pvalue_list, value);
+		}
+	}
+	return pvalue_list;
+}
+
+slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
+	slls_t* pvalue_list = slls_alloc();
+	for (sllse_t* pe = pselected_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* selected_field_name = pe->value;
+		char* value = lrec_get(prec, selected_field_name);
+		if (value == NULL) {
+			slls_free(pvalue_list);
+			return NULL;
 		} else {
 			slls_add_no_free(pvalue_list, value);
 		}

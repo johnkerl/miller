@@ -165,6 +165,9 @@ run_mlr sort -f a -nr x $indir/abixy
 run_mlr sort -nr y -f a $indir/abixy
 run_mlr sort -f a -r b -nf x -nr y $indir/abixy
 
+run_mlr sort -f x $indir/sort-het.dkvp
+run_mlr sort -r x $indir/sort-het.dkvp
+
 # ----------------------------------------------------------------
 announce TOP
 

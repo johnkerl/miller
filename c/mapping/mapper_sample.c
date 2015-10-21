@@ -103,7 +103,8 @@ static void mapper_sample_free(void* pvstate) {
 static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_sample_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+		slls_t* pgroup_by_field_values = mlr_selected_values_from_record_or_die(pinrec,
+			pstate->pgroup_by_field_names);
 		sample_bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_group, pgroup_by_field_values);
 		if (pbucket == NULL) {
 			pbucket = sample_bucket_alloc(pstate->sample_count);

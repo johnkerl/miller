@@ -46,6 +46,7 @@ EXTRA_DIST=	\
 		sec2xhms \
 		short \
 		small \
+		sort-het.dkvp \
 		space-pad.dkvp \
 		space-pad.nidx \
 		space-pad.pprint \

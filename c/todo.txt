@@ -7,25 +7,29 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-MAJOR: hold-and-fit regressors? requires entire lrec stream held in memory in group-by buckets.
-  -> 'then put' for residuals
-  -> note that this avoids two-pass & the saving of fit parameters
+MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
+  mlr rename -r '.*([0-9]+).*,Data_for_\1' *.dat
+  mlr put '$y = sub($x, "xxx", "yyy")'
+
+MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
+  -> nidx logic x all readers
+MINOR: expand sort null-handling to include field not present in given record (sort to end)
+  -> mlr_selected_values_from_record split api into two (fatal/not) and/or modify all of several grouping-mappers
 
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
 MINOR: brew version bump?!?
 
+MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
 MINOR: faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
   note count-distinct w/ int() func
 MINOR: faqent on two-pass lin/logi reg
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
   in-language handling in case not field/line formatted. see h.p. mail.
 MINOR: faqent on polyglottal dkvp/etc production
-MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
+
 MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above
-MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-MINOR: expand sort null-handling to include field not present in given record (sort to end)
 
 MINOR: --mmap @ mlr -h
 MINOR: ctype ff @ bld.out
@@ -37,13 +41,7 @@ MINOR: even absent manpage autogen from C, at least manually update mlr.1 to mat
 MAJOR: regex
 
 * mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
-* regex field names in put: something like mlr put '$\1bytes = $(.*)_in_bytes + $(.*)_out_bytes' ...
-  -> requires something thinking on how to pair up the 1st (.*) with the 2nd (.*)
 * optimize starts-with/ends-with
-
-? regex field names in group-by?
-? regex field names in join?
-? regex field names in uniq?
 
 ----------------------------------------------------------------
 MAJOR: manpage

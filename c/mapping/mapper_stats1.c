@@ -259,8 +259,8 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 	// population on that, but retain full-population requirement on group-by.
 	// E.g. if accumulating stats of x,y on a,b then skip record with x,y,a but
 	// process record with x,a,b.
-	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
-	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+	slls_t* pvalue_field_values    = mlr_selected_values_from_record_or_die(pinrec, pstate->pvalue_field_names);
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record_or_die(pinrec, pstate->pgroup_by_field_names);
 	if (pvalue_field_values->length != pstate->pvalue_field_names->length)
 		return;
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length)

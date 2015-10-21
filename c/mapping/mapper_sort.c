@@ -61,6 +61,7 @@ typedef struct _mapper_sort_state_t {
 	int do_sort;              // If false, just do group-by
 	// Sort state: buckets of like records.
 	lhmslv_t* pbuckets_by_key_field_names;
+	sllv_t*   precords_missing_sort_keys;
 } mapper_sort_state_t;
 
 // Each sort key is string or number; use union to save space.
@@ -212,6 +213,7 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 	pstate->pkey_field_names            = pkey_field_names;
 	pstate->sort_params                 = sort_params;
 	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
+	pstate->precords_missing_sort_keys  = sllv_alloc();
 	pstate->do_sort                     = do_sort;
 
 	pmapper->pvstate       = pstate;
@@ -240,27 +242,33 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	if (pinrec != NULL) {
 		// Consume another input record.
 		slls_t* pkey_field_values = mlr_selected_values_from_record(pinrec, pstate->pkey_field_names);
-		bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
-		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
-			slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
-			bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
-			pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
-			pbucket->precords = sllv_alloc();
-			sllv_add(pbucket->precords, pinrec);
-			lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
-		} else { // Previously seen key-field-value: append record to bucket
-			sllv_add(pbucket->precords, pinrec);
+		if (pkey_field_values == NULL) {
+			sllv_add(pstate->precords_missing_sort_keys, pinrec);
+		} else {
+			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
+			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
+				slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
+				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
+				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
+				pbucket->precords = sllv_alloc();
+				sllv_add(pbucket->precords, pinrec);
+				lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
+			} else { // Previously seen key-field-value: append record to bucket
+				sllv_add(pbucket->precords, pinrec);
+			}
 		}
 		return NULL;
-	}
-	else if (!pstate->do_sort) {
-		// Group-by
+	} else if (!pstate->do_sort) {
+		// End of input stream: do output for group-by
 		sllv_t* poutput = sllv_alloc();
 		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 			bucket_t* pbucket = pe->pvvalue;
-			for (sllve_t* pf = pbucket->precords->phead; pf != NULL; pf = pf->pnext) {
-				sllv_add(poutput, pf->pvdata);
+			while (pbucket->precords->phead) {
+				sllv_add(poutput, sllv_pop(pbucket->precords));
 			}
+		}
+		while (pstate->precords_missing_sort_keys->phead) {
+			sllv_add(poutput, sllv_pop(pstate->precords_missing_sort_keys));
 		}
 		sllv_add(poutput, NULL);
 		return poutput;
@@ -287,9 +295,12 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_t* poutput = sllv_alloc();
 		for (i = 0; i < num_buckets; i++) {
 			sllv_t* plist = pbucket_array[i]->precords;
-			for (sllve_t* pf = plist->phead; pf != NULL; pf = pf->pnext) {
-				sllv_add(poutput, pf->pvdata);
+			while (plist->phead) {
+				sllv_add(poutput, sllv_pop(plist));
 			}
+		}
+		while (pstate->precords_missing_sort_keys->phead) {
+			sllv_add(poutput, sllv_pop(pstate->precords_missing_sort_keys));
 		}
 		free(pbucket_array);
 		sllv_add(poutput, NULL); // Signal end of output-record stream.

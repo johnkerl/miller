@@ -1894,6 +1894,32 @@ upsec              color  count
 </div>
 <p/>
 
+<p/>Any records not having all specified sort keys will appear at the end of the output, in the order they
+were encountered, regardless of sort order.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort -n  x data/sort-het.dkvp
+x=1
+x=2
+x=4
+a=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort -nr x data/sort-het.dkvp
+x=4
+x=2
+x=1
+a=3
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 <a id="stats1"/><h2>stats1</h2>
 
