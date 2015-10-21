@@ -13,8 +13,6 @@ MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
 
 MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
   -> nidx logic x all readers
-MINOR: expand sort null-handling to include field not present in given record (sort to end)
-  -> mlr_selected_values_from_record split api into two (fatal/not) and/or modify all of several grouping-mappers
 
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
