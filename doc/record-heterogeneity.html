@@ -300,10 +300,13 @@ vary, and moreover the sorted-on field name(s) don&rsquo;t need to be in the sam
 <div class="pokipanel">
 <pre>
 $ cat data/sort-het.dkvp
-x=2
-a=3
-x=4
-x=1
+count=500,color=green
+count=600
+status=ok,count=250,hours=0.22
+status=ok,count=200,hours=3.4
+count=300,color=blue
+count=100,color=green
+count=450
 </pre>
 </div>
 <p/>
@@ -312,10 +315,13 @@ x=1
 <div class="pokipanel">
 <pre>
 $ mlr sort -n count data/sort-het.dkvp
-x=2
-a=3
-x=4
-x=1
+count=100,color=green
+status=ok,count=200,hours=3.4
+status=ok,count=250,hours=0.22
+count=300,color=blue
+count=450
+count=500,color=green
+count=600
 </pre>
 </div>
 <p/>
