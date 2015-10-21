@@ -232,7 +232,7 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	if (pinrec != NULL) {
 		mapper_stats1_ingest(pinrec, pstate);
 		if (pstate->do_iterative_stats) {
-			// The input record will be modified in this case, with new fields appended
+			// The input record is modified in this case, with new fields appended
 			return sllv_single(pinrec);
 		} else {
 			lrec_free(pinrec);

@@ -36,9 +36,11 @@ typedef struct _mapper_stats2_state_t {
 	slls_t* pvalue_field_name_pairs;
 	slls_t* pgroup_by_field_names;
 
-	lhmslv_t* groups;
+	lhmslv_t* acc_groups;
+	lhmslv_t* record_groups;
 	int     do_verbose;
 	int     do_iterative_stats;
+	int     do_hold_and_fit;
 } mapper_stats2_state_t;
 
 typedef stats2_t* stats2_alloc_func_t(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
@@ -47,13 +49,14 @@ typedef stats2_t* stats2_alloc_func_t(char* value_field_name_1, char* value_fiel
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats);
+	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats, int do_hold_and_fit);
 static void      mapper_stats2_free(void* pvstate);
 static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t*   mapper_stats2_emit_all(mapper_stats2_state_t* pstate);
 static void      mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* pinrec,
 	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state);
+static sllv_t*   mapper_stats2_fit_all(mapper_stats2_state_t* pstate);
 
 static stats2_t* make_stats2            (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
 static stats2_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
@@ -103,6 +106,10 @@ static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-s             Print iterative stats. Useful in tail -f contexts (in which\n");
 	fprintf(o, "               case please avoid pprint-format output since end of input\n");
 	fprintf(o, "               stream will never be seen).\n");
+	fprintf(o, "--fit          Rather than printing regression parameters, applies them to\n");
+	fprintf(o, "               the input data to compute new fit fields. All input records are\n");
+	fprintf(o, "               held in memory until end of input stream.\n");
+	fprintf(o, "Only one of -s or --fit may be used.\n");
 	fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
@@ -114,6 +121,7 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pgroup_by_field_names = slls_alloc();
 	int     do_verbose            = FALSE;
 	int     do_iterative_stats    = FALSE;
+	int     do_hold_and_fit       = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -123,12 +131,17 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,        "-v", &do_verbose);
 	ap_define_true_flag(pstate,        "-s", &do_iterative_stats);
+	ap_define_true_flag(pstate,        "--fit", &do_hold_and_fit);
+	// xxx abend here or elsewhere if hold & fit requested for non-supporting accumulator
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;
 	}
-
+	if (do_iterative_stats && do_hold_and_fit) {
+		mapper_stats2_usage(stderr, argv[0], verb);
+		return NULL;
+	}
 	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
 		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;
@@ -139,12 +152,12 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_stats2_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names,
-		do_verbose, do_iterative_stats);
+		do_verbose, do_iterative_stats, do_hold_and_fit);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats)
+	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats, int do_hold_and_fit)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -152,9 +165,11 @@ static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 	pstate->paccumulator_names      = paccumulator_names;
 	pstate->pvalue_field_name_pairs = pvalue_field_name_pairs; // caller validates length is even
 	pstate->pgroup_by_field_names   = pgroup_by_field_names;
-	pstate->groups                  = lhmslv_alloc();
+	pstate->acc_groups              = lhmslv_alloc();
+	pstate->record_groups           = lhmslv_alloc();
 	pstate->do_verbose              = do_verbose;
 	pstate->do_iterative_stats      = do_iterative_stats;
+	pstate->do_hold_and_fit         = do_hold_and_fit;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats2_process;
@@ -169,7 +184,8 @@ static void mapper_stats2_free(void* pvstate) {
 	slls_free(pstate->pvalue_field_name_pairs);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
-	lhmslv_free(pstate->groups);
+	lhmslv_free(pstate->acc_groups);
+	lhmslv_free(pstate->record_groups);
 }
 
 // ================================================================
@@ -211,14 +227,21 @@ static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	if (pinrec != NULL) {
 		mapper_stats2_ingest(pinrec, pctx, pstate);
 		if (pstate->do_iterative_stats) {
-			// The input record will be modified in this case, with new fields appended
+			// The input record is modified in this case, with new fields appended
 			return sllv_single(pinrec);
+		} else if (pstate->do_hold_and_fit) {
+			// The input record is held by the ingestor
+			return NULL;
 		} else {
 			lrec_free(pinrec);
 			return NULL;
 		}
 	} else if (!pstate->do_iterative_stats) {
-		return mapper_stats2_emit_all(pstate);
+		if (!pstate->do_hold_and_fit) {
+			return mapper_stats2_emit_all(pstate);
+		} else {
+			return mapper_stats2_fit_all(pstate);
+		}
 	} else {
 		return NULL;
 	}
@@ -233,10 +256,19 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		return;
 	}
 
-	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->acc_groups, pgroup_by_field_values);
 	if (group_to_acc_field == NULL) {
 		group_to_acc_field = lhms2v_alloc();
-		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+		lhmslv_put(pstate->acc_groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+	}
+
+	if (pstate->do_hold_and_fit) { // Retain the input record in memory, for fitting and delivery at end of stream
+		sllv_t* group_to_records = lhmslv_get(pstate->record_groups, pgroup_by_field_values);
+		if (group_to_records == NULL) {
+			group_to_records = sllv_alloc();
+			lhmslv_put(pstate->record_groups, slls_copy(pgroup_by_field_values), group_to_records);
+		}
+		sllv_add(group_to_records, pinrec);
 	}
 
 	// for [["x","y"]]
@@ -290,7 +322,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
-	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+	for (lhmslve_t* pa = pstate->acc_groups->phead; pa != NULL; pa = pa->pnext) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		// Add in a=s,b=t fields:
@@ -336,6 +368,52 @@ static void mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* poutrec,
 	}
 }
 
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	for (lhmslve_t* pa = pstate->acc_groups->phead; pa != NULL; pa = pa->pnext) {
+		slls_t* pkey = pa->key;
+		sllv_t* precords = lhmslv_get(pstate->record_groups, pkey);
+
+		while (precords->phead) {
+			sllv_add(poutrecs, sllv_pop(precords));
+		}
+
+//		// Add in a=s,b=t fields:
+//		slls_t* pgroup_by_field_values = pa->key;
+//		sllse_t* pb = pstate->pgroup_by_field_names->phead;
+//		sllse_t* pc =         pgroup_by_field_values->phead;
+//		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+//			lrec_put(poutrec, pb->value, pc->value, 0);
+//		}
+
+//		// Add in fields such as x_y_corr, etc.
+//		lhms2v_t* group_to_acc_field = pa->pvvalue;
+
+//		// For "x","y"
+//		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+//			char*    value_field_name_1 = pd->key1;
+//			char*    value_field_name_2 = pd->key2;
+//			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
+//
+//			mapper_stats2_emit(pstate, poutrec, value_field_name_1, value_field_name_2,
+//				acc_fields_to_acc_state);
+//
+//			// For "corr", "linreg"
+//			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+//				stats2_t* pstats2 = pe->pvvalue;
+//				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
+//			}
+//		}
+
+//		sllv_add(poutrecs, poutrec);
+	}
+	sllv_add(poutrecs, NULL);
+	return poutrecs;
+}
+
+// ----------------------------------------------------------------
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	for (int i = 0; i < stats2_lookup_table_length; i++)
 		if (streq(stats2_name, stats2_lookup_table[i].name))
