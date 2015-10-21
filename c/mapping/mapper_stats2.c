@@ -455,7 +455,12 @@ typedef struct _stats2_linreg_ols_state_t {
 	char*  m_output_field_name;
 	char*  b_output_field_name;
 	char*  n_output_field_name;
+
 	char*  fit_output_field_name;
+	int    fit_ready;
+	double m;
+	double b;
+
 } stats2_linreg_ols_state_t;
 static void stats2_linreg_ols_ingest(void* pvstate, double x, double y) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
@@ -489,14 +494,17 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 static void stats2_linreg_ols_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 
+	if (!pstate->fit_ready) {
+		mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy,
+			&pstate->m, &pstate->b);
+		pstate->fit_ready = TRUE;
+	}
+
 	if (pstate->count < 2) {
 		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		double m, b;
-		mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
 		double foo = 999.0;
 		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
-
 		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
@@ -513,6 +521,9 @@ static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_f
 	pstate->b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_b");
 	pstate->n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_n");
 	pstate->fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_fit");
+	pstate->fit_ready = FALSE;
+	pstate->m         = -999.0;
+	pstate->b         = -999.0;
 
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = stats2_linreg_ols_ingest;
@@ -530,6 +541,9 @@ typedef struct _stats2_logireg_state_t {
 	char*  b_output_field_name;
 	char*  n_output_field_name;
 	char*  fit_output_field_name;
+	int    fit_ready;
+	double m;
+	double b;
 } stats2_logireg_state_t;
 static void stats2_logireg_ingest(void* pvstate, double x, double y) {
 	stats2_logireg_state_t* pstate = pvstate;
@@ -560,11 +574,14 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 static void stats2_logireg_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_logireg_state_t* pstate = pvstate;
 
+	if (!pstate->fit_ready) {
+		mlr_logistic_regression(pstate->pxs->data, pstate->pys->data, pstate->pxs->size, &pstate->m, &pstate->b);
+		pstate->fit_ready = TRUE;
+	}
+
 	if (pstate->pxs->size < 2) {
 		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		double m, b;
-		mlr_logistic_regression(pstate->pxs->data, pstate->pys->data, pstate->pxs->size, &m, &b);
 		double foo = 888.0;
 		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
@@ -580,6 +597,9 @@ static stats2_t* stats2_logireg_alloc(char* value_field_name_1, char* value_fiel
 	pstate->b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_b");
 	pstate->n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_n");
 	pstate->fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_fit");
+	pstate->fit_ready = FALSE;
+	pstate->m         = -999.0;
+	pstate->b         = -999.0;
 
 	pstats2->pvstate = (void*)pstate;
 	pstats2->pingest_func = stats2_logireg_ingest;
@@ -676,6 +696,10 @@ typedef struct _stats2_corr_cov_state_t {
 	char* pca_v21_output_field_name;
 	char* pca_v22_output_field_name;
 	char* pca_fit_output_field_name;
+	int   fit_ready;
+	double m;
+	double b;
+	double q;
 
 	char*  corr_output_field_name;
 	char*   cov_output_field_name;
@@ -787,10 +811,11 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 
 static void linreg_pca_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
+
+	// xxx use precomps
 	char* keyfit = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
-	if (pstate->count < 2LL) {
-		lrec_put(poutrec, keyfit, "", LREC_FREE_ENTRY_KEY);
-	} else {
+
+	if (!pstate->fit_ready) {
 		double Q[2][2];
 		mlr_get_cov_matrix(pstate->count,
 			pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy, Q);
@@ -801,10 +826,15 @@ static void linreg_pca_fit(void* pvstate, char* name1, char* name2, lrec_t* pout
 
 		double x_mean = pstate->sumx / pstate->count;
 		double y_mean = pstate->sumy / pstate->count;
-		double m, b, q;
-		mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
-		double foo = 777.0;
+		mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &pstate->m, &pstate->b, &pstate->q);
 
+		pstate->fit_ready = TRUE;
+	}
+	if (pstate->count < 2LL) {
+		lrec_put(poutrec, keyfit, "", LREC_FREE_ENTRY_KEY);
+	} else {
+
+		double foo = 777.0;
 		char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
 		lrec_put(poutrec, keyfit, mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt), free_flags);
 	}
@@ -841,6 +871,9 @@ static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_fie
 	pstate->pca_v21_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec21");
 	pstate->pca_v22_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec22");
 	pstate->pca_fit_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
+	pstate->fit_ready = FALSE;
+	pstate->m         = -999.0;
+	pstate->b         = -999.0;
 
 	pstate->corr_output_field_name    = mlr_paste_4_strings(name1, "_", name2, "_corr");
 	pstate->cov_output_field_name     = mlr_paste_4_strings(name1, "_", name2, "_cov");
