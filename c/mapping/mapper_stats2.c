@@ -24,13 +24,13 @@
 // ----------------------------------------------------------------
 typedef void stats2_ingest_func_t(void* pvstate, double x, double y);
 typedef void   stats2_emit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
-typedef void    stats2_fit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
+typedef void    stats2_fit_func_t(void* pvstate, double x, double y, lrec_t* poutrec);
 
 typedef struct _stats2_t {
 	void* pvstate;
 	stats2_ingest_func_t* pingest_func;
 	stats2_emit_func_t*   pemit_func;
-	stats2_emit_func_t*   pfit_func;
+	stats2_fit_func_t*    pfit_func;
 } stats2_t;
 
 typedef struct _mapper_stats2_state_t {
@@ -393,7 +393,13 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 					stats2_t* pstats2 = pe->pvvalue;
 					if (pstats2->pfit_func != NULL) {
-						pstats2->pfit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, prec);
+						char* sx = lrec_get(prec, value_field_name_1);
+						char* sy = lrec_get(prec, value_field_name_2);
+						if (sx != NULL && sy != NULL) {
+							double x = mlr_double_from_string_or_die(sx);
+							double y = mlr_double_from_string_or_die(sy);
+							pstats2->pfit_func(pstats2->pvstate, x, y, prec);
+						}
 					}
 				}
 			}
@@ -491,7 +497,7 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 
-static void stats2_linreg_ols_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	stats2_linreg_ols_state_t* pstate = pvstate;
 
 	if (!pstate->fit_ready) {
@@ -503,9 +509,9 @@ static void stats2_linreg_ols_fit(void* pvstate, char* name1, char* name2, lrec_
 	if (pstate->count < 2) {
 		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		double foo = 999.0;
-		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		double yfit = pstate->m * x + pstate->b;
+		char* sfit = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, pstate->fit_output_field_name, sfit, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
 
@@ -571,7 +577,7 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 	lrec_put(poutrec, pstate->n_output_field_name, nval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 
-static void stats2_logireg_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	stats2_logireg_state_t* pstate = pvstate;
 
 	if (!pstate->fit_ready) {
@@ -582,8 +588,8 @@ static void stats2_logireg_fit(void* pvstate, char* name1, char* name2, lrec_t* 
 	if (pstate->pxs->size < 2) {
 		lrec_put(poutrec, pstate->fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		double foo = 888.0;
-		char* fitval = mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt);
+		double yfit = 1.0 / (1.0 + exp(-pstate->m*x - pstate->b));
+		char* fitval = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, pstate->fit_output_field_name, fitval, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
@@ -809,11 +815,11 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 	}
 }
 
-static void linreg_pca_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+static void linreg_pca_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	stats2_corr_cov_state_t* pstate = pvstate;
 
 	// xxx use precomps
-	char* keyfit = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
+	//char* keyfit = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
 
 	if (!pstate->fit_ready) {
 		double Q[2][2];
@@ -831,12 +837,12 @@ static void linreg_pca_fit(void* pvstate, char* name1, char* name2, lrec_t* pout
 		pstate->fit_ready = TRUE;
 	}
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, keyfit, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->pca_fit_output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-
-		double foo = 777.0;
+		double yfit = pstate->m * x + pstate->b;
 		char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
-		lrec_put(poutrec, keyfit, mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt), free_flags);
+		lrec_put(poutrec, pstate->pca_fit_output_field_name, mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt),
+			free_flags);
 	}
 }
 
