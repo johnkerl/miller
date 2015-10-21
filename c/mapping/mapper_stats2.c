@@ -389,13 +389,12 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 				char*    value_field_name_2 = pd->key2;
 				lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
 
-//			mapper_stats2_emit(pstate, prec, value_field_name_1, value_field_name_2,
-//				acc_fields_to_acc_state);
-
 				// For "linreg-ols", "logireg"
 				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 					stats2_t* pstats2 = pe->pvvalue;
-					pstats2->pfit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, prec);
+					if (pstats2->pfit_func != NULL) {
+						pstats2->pfit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, prec);
+					}
 				}
 			}
 
@@ -785,6 +784,32 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		}
 	}
 }
+
+static void linreg_pca_fit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
+	stats2_corr_cov_state_t* pstate = pvstate;
+	char* keyfit = mlr_paste_4_strings(name1, "_", name2, "_pca_fit");
+	if (pstate->count < 2LL) {
+		lrec_put(poutrec, keyfit, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double Q[2][2];
+		mlr_get_cov_matrix(pstate->count,
+			pstate->sumx, pstate->sumx2, pstate->sumy, pstate->sumy2, pstate->sumxy, Q);
+
+		double l1, l2;       // Eigenvalues
+		double v1[2], v2[2]; // Eigenvectors
+		mlr_get_real_symmetric_eigensystem(Q, &l1, &l2, v1, v2);
+
+		double x_mean = pstate->sumx / pstate->count;
+		double y_mean = pstate->sumy / pstate->count;
+		double m, b, q;
+		mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
+		double foo = 777.0;
+
+		char free_flags = LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE;
+		lrec_put(poutrec, keyfit, mlr_alloc_string_from_double(foo, MLR_GLOBALS.ofmt), free_flags);
+	}
+}
+
 static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
@@ -823,7 +848,10 @@ static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_fie
 	pstats2->pvstate      = (void*)pstate;
 	pstats2->pingest_func = stats2_corr_cov_ingest;
 	pstats2->pemit_func   = stats2_corr_cov_emit;
-	pstats2->pfit_func    = NULL;
+	if (do_which == DO_LINREG_PCA)
+		pstats2->pfit_func = linreg_pca_fit;
+	else
+		pstats2->pfit_func = NULL;
 
 	return pstats2;
 }
