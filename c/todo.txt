@@ -8,11 +8,20 @@ BUGFIXES
 TOP OF LIST
 
 MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
-  mlr rename -r '.*([0-9]+).*,Data_for_\1' *.dat
-  mlr put '$y = sub($x, "xxx", "yyy")'
+* mlr rename -r '.*([0-9]+).*,Data_for_\1' *.dat
+* mlr put '$y = sub($x, "^.*([0-9]+)_([0-9])+.*$", "\1:\2")'
+
+MINOR: more missings-bucket a la recent sort mod
+* update sort -h; all the -h's
+* head,sample,tail,top,uniq:discard
+* join: discard
+* stats1,stats2,stap: discard
+* UT x all
+
+MINOR: popall and/or xfer method; use @ sort; replace append @ streamer & where else?
 
 MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-  -> nidx logic x all readers
+* nidx logic x all readers
 
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
