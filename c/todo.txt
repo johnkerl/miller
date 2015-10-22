@@ -12,8 +12,7 @@ MINOR: mld examples of rename (key-sed) & put/sub (value-sed) @ cover x 2
 * mlr put '$y = sub($x, "^.*([0-9]+)_([0-9])+.*$", "\1:\2")'
 
 MINOR: more missings-bucket a la recent sort mod
-* update sort -h; all the -h's
-* head,sample,tail,top,uniq:discard
+* head,tail,top; sample,uniq:discard
 * join: discard
 * stats1,stats2,stap: discard
 * UT x all

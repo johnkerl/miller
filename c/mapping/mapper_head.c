@@ -86,19 +86,23 @@ static void mapper_head_free(void* pvstate) {
 static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_head_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record_or_die(pinrec, pstate->pgroup_by_field_names);
-		unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);
-		if (pcount_for_group == NULL) {
-			pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
-			*pcount_for_group = 0LL;
-			lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group);
-		}
-		(*pcount_for_group)++;
-		if (*pcount_for_group <= pstate->head_count) {
-			return sllv_single(pinrec);
-		} else {
-			lrec_free(pinrec);
+		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+		if (pgroup_by_field_values == NULL) {
 			return NULL;
+		} else {
+			unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);
+			if (pcount_for_group == NULL) {
+				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
+				*pcount_for_group = 0LL;
+				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group);
+			}
+			(*pcount_for_group)++;
+			if (*pcount_for_group <= pstate->head_count) {
+				return sllv_single(pinrec);
+			} else {
+				lrec_free(pinrec);
+				return NULL;
+			}
 		}
 	}
 	else {

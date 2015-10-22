@@ -415,6 +415,149 @@ mlr tac /dev/null
 
 
 ================================================================
+HEAD/TAIL/ETC.
+
+mlr head -n 2 ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+
+mlr head -n 2 -g a ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr head -n 2 -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr tail -n 2 ./reg_test/input/abixy-het
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr tail -n 2 -g a ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+
+mlr tail -n 2 -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr top -f x,y -n 2 ./reg_test/input/abixy-het
+top_idx=1,x_top=0.758680,y_top=0.952618
+top_idx=2,x_top=0.611784,y_top=0.749551
+
+mlr top -f x,y -n 2 -g a ./reg_test/input/abixy-het
+a=pan,top_idx=1,x_top=0.502626,y_top=0.952618
+a=pan,top_idx=2,x_top=0.346790,y_top=0.726803
+a=eks,top_idx=1,x_top=0.758680,y_top=0.522151
+a=eks,top_idx=2,x_top=0.611784,y_top=0.187885
+a=zee,top_idx=1,x_top=0.527126,y_top=0.493221
+a=zee,top_idx=2,x_top=,y_top=
+
+mlr top -f x,y -n 2 -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan,top_idx=1,x_top=0.346790,y_top=0.726803
+a=pan,b=pan,top_idx=2,x_top=,y_top=
+a=eks,b=pan,top_idx=1,x_top=0.758680,y_top=0.522151
+a=eks,b=pan,top_idx=2,x_top=,y_top=
+a=zee,b=pan,top_idx=1,x_top=0.527126,y_top=0.493221
+a=zee,b=pan,top_idx=2,x_top=,y_top=
+a=eks,b=zee,top_idx=1,x_top=0.611784,y_top=0.187885
+a=eks,b=zee,top_idx=2,x_top=,y_top=
+a=pan,b=wye,top_idx=1,x_top=0.502626,y_top=0.952618
+a=pan,b=wye,top_idx=2,x_top=,y_top=
+
+mlr --seed 12345 sample -k 2 ./reg_test/input/abixy-het
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+
+mlr --seed 12345 sample -k 2 -g a ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+
+mlr --seed 12345 sample -k 2 -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr uniq -g a ./reg_test/input/abixy-het
+a=pan
+a=eks
+a=wye
+a=zee
+
+mlr uniq -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=pan,b=wye
+
+mlr uniq -c -g a ./reg_test/input/abixy-het
+a=pan,count=2
+a=eks,count=3
+a=wye,count=1
+a=zee,count=2
+
+mlr uniq -c -g a,b ./reg_test/input/abixy-het
+a=pan,b=pan,count=1
+a=eks,b=pan,count=1
+a=wye,b=pan,count=1
+a=zee,b=pan,count=1
+a=eks,b=zee,count=1
+a=zee,b=wye,count=1
+a=pan,b=wye,count=1
+
+mlr count-distinct -f a ./reg_test/input/small ./reg_test/input/abixy
+a=pan,count=4
+a=eks,count=6
+a=wye,count=4
+a=zee,count=4
+a=hat,count=2
+
+mlr count-distinct -f a,b ./reg_test/input/small ./reg_test/input/abixy
+a=pan,b=pan,count=2
+a=eks,b=pan,count=2
+a=wye,b=wye,count=2
+a=eks,b=wye,count=2
+a=wye,b=pan,count=2
+a=zee,b=pan,count=2
+a=eks,b=zee,count=2
+a=zee,b=wye,count=2
+a=hat,b=wye,count=2
+a=pan,b=wye,count=2
+
+
+================================================================
 SORT
 
 mlr sort -f a ./reg_test/input/abixy
@@ -1052,18 +1195,6 @@ l x
 
 ================================================================
 STATS
-
-mlr count-distinct -f a,b ./reg_test/input/small ./reg_test/input/abixy
-a=pan,b=pan,count=2
-a=eks,b=pan,count=2
-a=wye,b=wye,count=2
-a=eks,b=wye,count=2
-a=wye,b=pan,count=2
-a=zee,b=pan,count=2
-a=eks,b=zee,count=2
-a=zee,b=wye,count=2
-a=hat,b=wye,count=2
-a=pan,b=wye,count=2
 
 mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y ./reg_test/input/abixy
 i_mean   i_sum     i_count i_min    i_max     i_mode x_mean   x_sum    x_count x_min    x_max    x_mode             y_mean   y_sum    y_count y_min    y_max    y_mode

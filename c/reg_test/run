@@ -1,15 +1,5 @@
 #!/bin/sh
 
-# NEEDING COVERAGE:
-# group-like
-# head
-# sort
-# tail
-# top
-# uniq
-
-# I/O
-
 # ================================================================
 set -e
 
@@ -145,6 +135,34 @@ run_mlr tac $indir/abixy
 run_mlr tac /dev/null
 
 # ----------------------------------------------------------------
+announce HEAD/TAIL/ETC.
+
+run_mlr head -n 2        $indir/abixy-het
+run_mlr head -n 2 -g a   $indir/abixy-het
+run_mlr head -n 2 -g a,b $indir/abixy-het
+
+run_mlr tail -n 2        $indir/abixy-het
+run_mlr tail -n 2 -g a   $indir/abixy-het
+run_mlr tail -n 2 -g a,b $indir/abixy-het
+
+run_mlr top -f x,y -n 2        $indir/abixy-het
+run_mlr top -f x,y -n 2 -g a   $indir/abixy-het
+run_mlr top -f x,y -n 2 -g a,b $indir/abixy-het
+
+run_mlr --seed 12345 sample -k 2        $indir/abixy-het
+run_mlr --seed 12345 sample -k 2 -g a   $indir/abixy-het
+run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het
+
+run_mlr uniq    -g a   $indir/abixy-het
+run_mlr uniq    -g a,b $indir/abixy-het
+
+run_mlr uniq -c -g a   $indir/abixy-het
+run_mlr uniq -c -g a,b $indir/abixy-het
+
+run_mlr count-distinct -f a   $indir/small $indir/abixy
+run_mlr count-distinct -f a,b $indir/small $indir/abixy
+
+# ----------------------------------------------------------------
 announce SORT
 
 run_mlr sort -f a   $indir/abixy
@@ -248,7 +266,6 @@ run_mlr --opprint join -u --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o /de
 
 # ----------------------------------------------------------------
 announce STATS
-run_mlr count-distinct -f a,b $indir/small $indir/abixy
 
 run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
 run_mlr --opprint stats1    -a min,p10,p50,mode,p90,max    -f i,x,y $indir/abixy
