@@ -3,6 +3,7 @@ EXTRA_DIST=	\
 		a.csv \
 		a.pprint \
 		abixy \
+		abixy-het \
 		abixy-wide \
 		abixy-wide-short \
 		b.csv \
