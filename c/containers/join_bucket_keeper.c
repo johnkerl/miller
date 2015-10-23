@@ -171,29 +171,32 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper) {
 // xxx preconditions:
 // * prec_peek != NULL
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
-	pkeeper->pbucket->pleft_field_values = mlr_selected_values_from_record_or_die(pkeeper->prec_peek,
+	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 		pkeeper->pleft_field_names);
-	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-	pkeeper->pbucket->was_paired = FALSE;
-	pkeeper->prec_peek = NULL;
-	while (TRUE) {
-		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
-			pkeeper->pvhandle, pkeeper->pctx);
-		if (pkeeper->prec_peek == NULL) {
-			pkeeper->leof = TRUE;
-			break;
-		}
-
-		int cmp = slls_lrec_compare_lexically(
-			pkeeper->pbucket->pleft_field_values,
-			pkeeper->prec_peek,
-			pkeeper->pleft_field_names);
-
-		if (cmp != 0) {
-			break;
-		}
+	if (pleft_field_values != NULL) {
+		pkeeper->pbucket->pleft_field_values = pleft_field_values;
 		sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+		pkeeper->pbucket->was_paired = FALSE;
 		pkeeper->prec_peek = NULL;
+		while (TRUE) {
+			pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+				pkeeper->pvhandle, pkeeper->pctx);
+			if (pkeeper->prec_peek == NULL) {
+				pkeeper->leof = TRUE;
+				break;
+			}
+
+			int cmp = slls_lrec_compare_lexically(
+				pkeeper->pbucket->pleft_field_values,
+				pkeeper->prec_peek,
+				pkeeper->pleft_field_names);
+
+			if (cmp != 0) {
+				break;
+			}
+			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+			pkeeper->prec_peek = NULL;
+		}
 	}
 }
 

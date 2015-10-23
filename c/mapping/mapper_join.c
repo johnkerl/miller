@@ -441,18 +441,20 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		if (pleft_rec == NULL)
 			break;
 
-		slls_t* pleft_field_values = mlr_selected_values_from_record_or_die(pleft_rec,
+		slls_t* pleft_field_values = mlr_selected_values_from_record(pleft_rec,
 			pstate->popts->pleft_join_field_names);
-		join_bucket_t* pbucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pleft_field_values);
-		if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
-			slls_t* pkey_field_values_copy = slls_copy(pleft_field_values);
-			join_bucket_t* pbucket = mlr_malloc_or_die(sizeof(join_bucket_t));
-			pbucket->precords = sllv_alloc();
-			pbucket->was_paired = FALSE;
-			sllv_add(pbucket->precords, pleft_rec);
-			lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket);
-		} else { // Previously seen key-field-value: append record to bucket
-			sllv_add(pbucket->precords, pleft_rec);
+		if (pleft_field_values != NULL) {
+			join_bucket_t* pbucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pleft_field_values);
+			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
+				slls_t* pkey_field_values_copy = slls_copy(pleft_field_values);
+				join_bucket_t* pbucket = mlr_malloc_or_die(sizeof(join_bucket_t));
+				pbucket->precords = sllv_alloc();
+				pbucket->was_paired = FALSE;
+				sllv_add(pbucket->precords, pleft_rec);
+				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket);
+			} else { // Previously seen key-field-value: append record to bucket
+				sllv_add(pbucket->precords, pleft_rec);
+			}
 		}
 	}
 

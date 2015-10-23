@@ -4,6 +4,12 @@ BUGFIXES
 ! mlr --opprint join -j a -f x then sort -f a reg_test/input/abixy
   -> looks truncated
 
+! mlr --opprint join -j a -f ./reg_test/input/sort-het.dkvp ./reg_test/input/join-het.dkvp
+  mlr: internal coding error: failed transition from prefill state.
+
+! mlr --opprint join --np --ul --ur -j a -f ./reg_test/input/sort-het.dkvp ./reg_test/input/abixy-het
+  mlr: internal coding error: failed transition from prefill state.
+
 * mlr_logistic_regression: Newton-Raphson convergence failed after 101 iterations. m=nan, b=nan.
   happens when data are too *good*.
 
