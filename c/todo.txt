@@ -1,13 +1,11 @@
 ================================================================
 BUGFIXES
 
-! mlr --opprint join -j a -f x then sort -f a reg_test/input/abixy
-  -> looks truncated
+! $ cat a
+  x=2
+  a=3
 
-! mlr --opprint join -j a -f ./reg_test/input/sort-het.dkvp ./reg_test/input/join-het.dkvp
-  mlr: internal coding error: failed transition from prefill state.
-
-! mlr --opprint join --np --ul --ur -j a -f ./reg_test/input/sort-het.dkvp ./reg_test/input/abixy-het
+  $ mlr join -j a -f a a
   mlr: internal coding error: failed transition from prefill state.
 
 * mlr_logistic_regression: Newton-Raphson convergence failed after 101 iterations. m=nan, b=nan.
@@ -32,6 +30,7 @@ MINOR: faqent on two-pass lin/logi reg
 MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
   in-language handling in case not field/line formatted. see h.p. mail.
 MINOR: faqent on polyglottal dkvp/etc production
+MINOR: faqent re join without -u -- it's a weird default & i'm imitating un*x join
 
 MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above

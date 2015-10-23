@@ -348,6 +348,10 @@ static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* p
 		// Check for convergence
 		double err = fabs(ell - ell0);
 
+#if 0
+		printf("its=%d,m=%e,b=%e,ell=%e\n", its, m0, b0, ell);
+#endif
+
 		if (err < tol)
 			done = TRUE;
 		if (++its > maxits) {
