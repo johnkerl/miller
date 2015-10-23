@@ -264,11 +264,10 @@ run_mlr --opprint join -u --np      --ur -f $indir/joina.dkvp -l l -r r -j o /de
 run_mlr --opprint join    --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
 run_mlr --opprint join -u --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o /dev/null
 
-#todo:
-#run_mlr --opprint join -j a -f $indir/join-het.dkvp $indir/abixy-het
-#run_mlr --opprint join -j a -f $indir/abixy-het     $indir/join-het.dkvp
-#run_mlr --opprint join --np --ul --ur -j a -f $indir/sort-het.dkvp $indir/abixy-het
-#run_mlr --opprint join --np --ul --ur -j a -f $indir/abixy-het     $indir/sort-het.dkvp
+run_mlr --odkvp join -u -j a -f $indir/join-het.dkvp $indir/abixy-het
+run_mlr --odkvp join -u -j a -f $indir/abixy-het     $indir/join-het.dkvp
+run_mlr --odkvp join -u --np --ul --ur -j a -f $indir/join-het.dkvp $indir/abixy-het
+run_mlr --odkvp join -u --np --ul --ur -j a -f $indir/abixy-het     $indir/join-het.dkvp
 
 # ----------------------------------------------------------------
 announce STATS
