@@ -52,11 +52,12 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	int   allow_repeat_ifs,
 	char* ips,
 	int   allow_repeat_ips,
+	int   use_implicit_csv_header,
 	slls_t* pleft_field_names
 ) {
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(input_file_format, use_mmap_for_read,
-		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips);
+		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips, use_implicit_csv_header);
 
 	return join_bucket_keeper_alloc_from_reader(plrec_reader, left_file_name, pleft_field_names);
 }

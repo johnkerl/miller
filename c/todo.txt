@@ -31,6 +31,10 @@ MINOR: faqent on xml/json/etc: generally no to recursive data structures; punctu
   in-language handling in case not field/line formatted. see h.p. mail.
 MINOR: faqent on polyglottal dkvp/etc production
 MINOR: faqent re join without -u -- it's a weird default & i'm imitating un*x join
+MINOR: faqent re cat xyz | mlr ... vs. mlr ... xyz:
+  o easier to up-arrow/control-P & tack on a then-statement
+  o lose no function except FILENAME/FNR
+  o lose ~10% perf due to no mmap
 
 MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 MAJOR: uni/multivariate logistic for ternary & above

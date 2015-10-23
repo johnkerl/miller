@@ -34,6 +34,7 @@ typedef struct _mapper_join_opts_t {
 	char*    ips;
 	int      allow_repeat_ifs;
 	int      allow_repeat_ips;
+	int      use_implicit_csv_header;
 	char*    ifile_fmt;
 	int      use_mmap_for_read;
 } mapper_join_opts_t;
@@ -130,6 +131,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->ips               = NULL;
 	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
 	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
+	popts->use_implicit_csv_header = OPTION_UNSPECIFIED;
 	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
 
 	char* verb = argv[(*pargi)++];
@@ -152,6 +154,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_flag(pstate,      "--ips",      &popts->ips);
 	ap_define_true_flag(pstate,        "--repifs",   &popts->allow_repeat_ifs);
 	ap_define_true_flag(pstate,        "--repips",   &popts->allow_repeat_ips);
+	ap_define_true_flag(pstate,        "--implicit-csv-header", &popts->use_implicit_csv_header);
 	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
 	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
 
@@ -250,6 +253,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 			popts->allow_repeat_ifs,
 			popts->ips,
 			popts->allow_repeat_ips,
+			popts->use_implicit_csv_header,
 			popts->pleft_join_field_names);
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
@@ -417,6 +421,8 @@ static void merge_options(mapper_join_opts_t* popts) {
 		popts->allow_repeat_ifs = MLR_GLOBALS.popts->allow_repeat_ifs;
 	if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
 		popts->allow_repeat_ips = MLR_GLOBALS.popts->allow_repeat_ips;
+	if (popts->use_implicit_csv_header == OPTION_UNSPECIFIED)
+		popts->use_implicit_csv_header = MLR_GLOBALS.popts->use_implicit_csv_header;
 	if (popts->use_mmap_for_read == OPTION_UNSPECIFIED)
 		popts->use_mmap_for_read = MLR_GLOBALS.popts->use_mmap_for_read;
 }
@@ -426,7 +432,8 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	merge_options(popts);
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
+		popts->use_implicit_csv_header);
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);

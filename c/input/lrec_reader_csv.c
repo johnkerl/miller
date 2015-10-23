@@ -62,6 +62,7 @@ typedef struct _lrec_reader_csv_state_t {
 	parse_trie_t*       pdquote_parse_trie;
 
 	int                 expect_header_line_next;
+	int                 use_implicit_header;
 	header_keeper_t*    pheader_keeper;
 	lhmslv_t*           pheader_keepers;
 
@@ -71,12 +72,13 @@ static void    lrec_reader_csv_free(void* pvstate);
 static void    lrec_reader_csv_sof(void* pvstate);
 static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
+static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
 static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
 static void*   lrec_reader_csv_open(void* pvstate, char* filename);
 static void    lrec_reader_csv_close(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
+lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
@@ -115,6 +117,7 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs) {
 		pstate->pdquote_parse_trie->maxlen));
 
 	pstate->expect_header_line_next   = TRUE;
+	pstate->use_implicit_header       = use_implicit_header;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
 
@@ -185,7 +188,9 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 		//lrec_t* prec = paste_header_and_data(pstate, pdata_fields);
 		//slls_free(pdata_fields);
 		//return prec;
-		return paste_header_and_data(pstate, pdata_fields, pctx);
+		return pstate->use_implicit_header
+			? paste_indices_and_data(pstate, pdata_fields, pctx)
+			: paste_header_and_data(pstate, pdata_fields, pctx);
 	}
 }
 
@@ -314,6 +319,23 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 	}
 
 	return pfields;
+}
+
+// ----------------------------------------------------------------
+static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
+	int idx = 0;
+	lrec_t* prec = lrec_unbacked_alloc();
+	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
+		// Need to deal with heap-fragmentation among other things ...
+		// https://github.com/johnkerl/miller/issues/66
+		//
+		// lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
+		char free_flags = 0;
+		idx++;
+		char* key = make_nidx_key(idx, &free_flags);
+		lrec_put(prec, key, pd->value, free_flags);
+	}
+	return prec;
 }
 
 // ----------------------------------------------------------------

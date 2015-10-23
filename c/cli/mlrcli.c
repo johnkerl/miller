@@ -277,6 +277,8 @@ static void main_usage(FILE* o, char* argv0) {
 		char* ps = lhmss_get(default_pses, filefmt);
 		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
 	}
+	fprintf(o, "Relevant to CSV only:\n");
+	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from file line 1.\n");
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");
@@ -349,6 +351,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ips               = NULL;
 	popts->allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
 	popts->allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
+	popts->use_implicit_csv_header = FALSE;
 
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
@@ -438,6 +441,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 		else if (streq(argv[argi], "--repifs")) {
 			popts->allow_repeat_ifs = TRUE;
+		}
+		else if (streq(argv[argi], "--implicit-csv-header")) {
+			popts->use_implicit_csv_header = TRUE;
 		}
 
 		else if (streq(argv[argi], "-p")) {
@@ -664,7 +670,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->use_mmap_for_read = FALSE;
 
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips);
+		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
+		popts->use_implicit_csv_header);
 	if (popts->plrec_reader == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);

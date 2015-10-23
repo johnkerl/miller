@@ -40,6 +40,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	int   allow_repeat_ifs,
 	char* ips,
 	int   allow_repeat_ips,
+	int   use_implicit_csv_header,
 	slls_t* pleft_field_names);
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
