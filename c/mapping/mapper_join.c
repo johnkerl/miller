@@ -268,9 +268,11 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		return pout_recs;
 	}
 
-	slls_t* pright_field_values = mlr_selected_values_from_record_or_die(pright_rec,
+	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
 		pstate->popts->pright_join_field_names);
-	join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
+	if (pright_field_values != NULL) {
+		join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
+	}
 
 	if (pstate->popts->emit_left_unpairables) {
 		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length >= 0) {
@@ -319,22 +321,26 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 	}
 
-	slls_t* pright_field_values = mlr_selected_values_from_record_or_die(pright_rec,
+	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
 		pstate->popts->pright_join_field_names);
-	join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
-	if (pleft_bucket == NULL) {
-		if (pstate->popts->emit_right_unpairables) {
-			return sllv_single(pright_rec);
+	if (pright_field_values != NULL) {
+		join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
+		if (pleft_bucket == NULL) {
+			if (pstate->popts->emit_right_unpairables) {
+				return sllv_single(pright_rec);
+			} else {
+				return NULL;
+			}
+		} else if (pstate->popts->emit_pairables) {
+			sllv_t* pout_recs = sllv_alloc();
+			pleft_bucket->was_paired = TRUE;
+			mapper_join_form_pairs(pleft_bucket->precords, pright_rec, pstate, pout_recs);
+			return pout_recs;
 		} else {
+			pleft_bucket->was_paired = TRUE;
 			return NULL;
 		}
-	} else if (pstate->popts->emit_pairables) {
-		sllv_t* pout_recs = sllv_alloc();
-		pleft_bucket->was_paired = TRUE;
-		mapper_join_form_pairs(pleft_bucket->precords, pright_rec, pstate, pout_recs);
-		return pout_recs;
 	} else {
-		pleft_bucket->was_paired = TRUE;
 		return NULL;
 	}
 }

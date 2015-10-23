@@ -1994,6 +1994,19 @@ y_min   0.952618
 y_max   0.952618
 y_mode  0.9526183602969864
 
+mlr --oxtab stats1 -a mean -f x ./reg_test/input/abixy-het
+x_mean 0.440334
+
+mlr --oxtab stats1 -a mean -f x -g a ./reg_test/input/abixy-het
+a      pan
+x_mean 0.424708
+
+a      eks
+x_mean 0.583954
+
+a      zee
+x_mean 0.562840
+
 mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 ./reg_test/input/abixy-wide
 x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov x2_x2_ols_m x2_x2_ols_b x2_x2_ols_n x2_x2_pca_m x2_x2_pca_b x2_x2_pca_n x2_x2_pca_quality x2_x2_r2 x2_x2_corr x2_x2_cov
 0.028351  0.487644  2000      1.332924  -0.170590 2000      0.056909        0.000791 0.028120 0.002330 0.893610    0.107060    2000        1.529534    -0.055477   2000        0.824336          0.447971 0.669306   0.045036  1.000000    0.000000    2000        1.000000    0.000000    2000        1.000000          1.000000 1.000000   0.087709
@@ -3643,6 +3656,21 @@ g    x_y_logistic_m x_y_logistic_b x_y_logistic_n
 red  0.170434       -0.061982      11
 blue 0.170434       0.402849       11
 
+mlr --oxtab stats2 -a cov -f x,y ./reg_test/input/abixy-het
+x_y_cov -0.011481
+
+mlr --oxtab stats2 -a cov -f x,y -g a ./reg_test/input/abixy-het
+a       pan
+x_y_cov 0.017595
+
+a       eks
+x_y_cov 0.034641
+
+a wye
+
+a       zee
+x_y_cov 
+
 mlr --opprint step -a rsum,delta,counter -f x,y ./reg_test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0.000000  1         0.726803 0.000000  1
@@ -3668,6 +3696,24 @@ eks zee 7  0.6117840605678454  0.1878849191181694  1.751863 0.230385  3         
 zee wye 8  0.5985540091064224  0.976181385699006   1.125680 0.071428  2         1.469403 0.482960  2
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442 0.000000  1         0.749551 0.000000  1
 pan wye 10 0.5026260055412137  0.9526183602969864  0.849416 0.155836  2         1.679421 0.225815  2
+
+mlr --odkvp step -a rsum,delta,counter -f x,y ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delta=0.000000,x_counter=1,y_rsum=0.726803,y_delta=0.000000,y_counter=1
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=1.105470,x_delta=0.411890,x_counter=2,y_rsum=1.248954,y_delta=-0.204652,y_counter=2
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_rsum=1.310073,x_delta=-0.554077,x_counter=3,y_rsum=1.587272,y_delta=-0.183833,y_counter=3
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.691473,x_delta=0.176796,x_counter=4,y_rsum=1.721461,y_delta=-0.204130,y_counter=4
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=2.218599,x_delta=0.145727,x_counter=5,y_rsum=2.214683,y_delta=0.359033,y_counter=5
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=2.830383,x_delta=0.084658,x_counter=6,y_rsum=2.402567,y_delta=-0.305336,y_counter=6
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=2.861825,x_delta=-0.580342,x_counter=7,y_rsum=3.152118,y_delta=0.561666,y_counter=7
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.364451,x_delta=0.471184,x_counter=8,y_rsum=4.104737,y_delta=0.203068,y_counter=8
+
+mlr --odkvp step -a rsum,delta,counter -f x,y -g a ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delta=0.000000,x_counter=1,y_rsum=0.726803,y_delta=0.000000,y_counter=1
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=0.758680,x_delta=0.000000,x_counter=1,y_rsum=0.522151,y_delta=0.000000,y_counter=1
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.140079,x_delta=-0.377281,x_counter=2,y_rsum=0.656340,y_delta=-0.387962,y_counter=2
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=0.527126,x_delta=0.000000,x_counter=1,y_rsum=0.493221,y_delta=0.000000,y_counter=1
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=1.751863,x_delta=0.230385,x_counter=3,y_rsum=0.844225,y_delta=0.053696,y_counter=3
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_delta=0.155836,x_counter=2,y_rsum=1.679421,y_delta=0.225815,y_counter=2
 
 mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 ./reg_test/input/small
 bin_lo   bin_hi   x_count y_count
