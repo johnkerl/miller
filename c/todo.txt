@@ -1,6 +1,9 @@
 ================================================================
 BUGFIXES
 
+! mlr --opprint join -j a -f x then sort -f a reg_test/input/abixy
+  -> looks truncated
+
 * mlr_logistic_regression: Newton-Raphson convergence failed after 101 iterations. m=nan, b=nan.
   happens when data are too *good*.
 

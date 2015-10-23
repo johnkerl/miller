@@ -282,6 +282,9 @@ run_mlr --opprint stats1    -a min,p10,p50,mode,p90,max    -f i,x,y -g a,b $indi
 run_mlr --opprint stats1    -a mean,meaneb,stddev          -f i,x,y -g a,b $indir/abixy
 run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a,b $indir/abixy
 
+run_mlr --oxtab   stats1 -a mean -f x      $indir/abixy-het
+run_mlr --oxtab   stats1 -a mean -f x -g a $indir/abixy-het
+
 run_mlr --opprint stats2       -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2        $indir/abixy-wide
 run_mlr --opprint stats2       -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2 -g a,b $indir/abixy-wide
 run_mlr --oxtab   stats2 -s    -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2,x2,x2        $indir/abixy-wide-short
@@ -292,8 +295,14 @@ run_mlr --opprint stats2 --fit -a linreg-ols,linreg-pca             -f x,y,xy,y2
 run_mlr --opprint stats2    -a logireg -f x,y      $indir/logi.dkvp
 run_mlr --opprint stats2    -a logireg -f x,y -g g $indir/logi.dkvp
 
+run_mlr --oxtab   stats2 -a cov -f x,y      $indir/abixy-het
+run_mlr --oxtab   stats2 -a cov -f x,y -g a $indir/abixy-het
+
 run_mlr --opprint step -a rsum,delta,counter -f x,y $indir/abixy
 run_mlr --opprint step -a rsum,delta,counter -f x,y -g a $indir/abixy
+
+run_mlr --odkvp   step -a rsum,delta,counter -f x,y      $indir/abixy-het
+run_mlr --odkvp   step -a rsum,delta,counter -f x,y -g a $indir/abixy-het
 
 run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
 

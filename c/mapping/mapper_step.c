@@ -159,10 +159,12 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		return sllv_single(NULL);
 
 	// ["s", "t"]
-	slls_t* pvalue_field_values    = mlr_selected_values_from_record_or_die(pinrec, pstate->pvalue_field_names);
-	slls_t* pgroup_by_field_values = mlr_selected_values_from_record_or_die(pinrec, pstate->pgroup_by_field_names);
+	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
-	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+	if (pvalue_field_values == NULL || pgroup_by_field_values == NULL) {
+		slls_free(pvalue_field_values);
+		slls_free(pgroup_by_field_values);
 		lrec_free(pinrec);
 		return NULL;
 	}

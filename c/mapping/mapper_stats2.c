@@ -253,9 +253,8 @@ static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvst
 // ----------------------------------------------------------------
 static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate) {
 	// ["s", "t"]
-	slls_t* pgroup_by_field_values = mlr_selected_values_from_record_or_die(pinrec, pstate->pgroup_by_field_names);
-	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
-		slls_free(pgroup_by_field_values);
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+	if (pgroup_by_field_values == NULL) {
 		return;
 	}
 
