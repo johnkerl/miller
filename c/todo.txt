@@ -16,9 +16,6 @@ TOP OF LIST
 
 MINOR: popall and/or xfer method; use @ sort; replace append @ streamer & where else?
 
-MINOR: RFC "there may be a header" -- ?!? use nidx-style integer-numbered columns?? --no-header?
-* nidx logic x all readers
-
 MINOR: mlrcli topdown
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
 MINOR: brew version bump?!?
