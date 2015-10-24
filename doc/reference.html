@@ -296,6 +296,10 @@ Separator options, for input, output, or both:
       nidx         \n       space    (N/A)
       xtab         (N/A)    \n       space
       pprint       \n       space    (N/A)
+Relevant to CSV/CSV-lite input only:
+  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
+                     of input files. Tip: combine with "label" to recreate
+                     missing headers.
 Double-quoting for CSV output:
   --quote-all        Wrap all fields in double quotes
   --quote-none       Do not wrap any fields in double quotes, even if they have
@@ -1447,6 +1451,44 @@ _networkd             *        24  24  Network Services              /var/networ
 _installassistant     *        25  25  Install Assistant             /var/empty         /usr/bin/false
 _lp                   *        26  26  Printing Services             /var/spool/cups    /usr/bin/false
 _postfix              *        27  27  Postfix Mail Server           /var/spool/postfix /usr/bin/false
+</pre>
+</div>
+<p/>
+
+<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add them using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/headerless.csv
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv
+name,age,status
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv
+name  age status
+John  23  present
+Fred  34  present
+Alice 56  missing
+Carol 45  present
 </pre>
 </div>
 <p/>

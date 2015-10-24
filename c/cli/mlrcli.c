@@ -277,8 +277,10 @@ static void main_usage(FILE* o, char* argv0) {
 		char* ps = lhmss_get(default_pses, filefmt);
 		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
 	}
-	fprintf(o, "Relevant to CSV only:\n");
-	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from file line 1.\n");
+	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
+	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
+	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
+	fprintf(o, "                     missing headers.\n");
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");

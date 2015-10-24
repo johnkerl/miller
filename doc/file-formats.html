@@ -118,6 +118,13 @@ CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
 https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
 of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
 
+<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
+line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
+read CSV data which lacks a header line, applying column labels <tt>1</tt>,
+<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
+<tt>label</tt> to replace those numerical column names with labels of your
+choosing.
+
 <a id="Pretty-printed"/><h1>Pretty-printed</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 

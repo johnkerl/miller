@@ -35,6 +35,7 @@ typedef struct _lrec_reader_mmap_csvlite_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
+	int   use_implicit_header;
 
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
@@ -57,9 +58,15 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza);
 
+static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza);
+
+static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza);
+
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csvlite_state_t));
@@ -69,7 +76,8 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 	pstate->irslen                   = strlen(irs);
 	pstate->ifslen                   = strlen(ifs);
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
-	pstate->expect_header_line_next  = TRUE;
+	pstate->use_implicit_header      = use_implicit_header;
+	pstate->expect_header_line_next  = use_implicit_header ? FALSE : TRUE;
 	pstate->pheader_keeper           = NULL;
 	pstate->pheader_keepers          = lhmslv_alloc();
 
@@ -92,7 +100,7 @@ static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
 	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = TRUE;
+	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
 }
 
 // xxx restore free func for header_keepers ... ?
@@ -128,8 +136,11 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate, pctx,
-			pstate->pheader_keeper, &end_of_stanza);
+		lrec_t* prec = pstate->use_implicit_header
+			?  lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(phandle, pstate, pctx,
+				pstate->pheader_keeper, &end_of_stanza)
+			:  lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate, pctx,
+				pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
@@ -170,8 +181,11 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 		}
 
 		int end_of_stanza = FALSE;
-		lrec_t* prec = lrec_reader_mmap_csvlite_get_record_multi_seps(phandle, pstate, pctx,
-			pstate->pheader_keeper, &end_of_stanza);
+		lrec_t* prec = pstate->use_implicit_header
+			? lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(phandle, pstate, pctx,
+				pstate->pheader_keeper, &end_of_stanza)
+			: lrec_reader_mmap_csvlite_get_record_multi_seps(phandle, pstate, pctx,
+				pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
@@ -327,14 +341,14 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			pstate->ilno++;
 			break;
 		} else if (*p == ifs) {
+			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
-
-			*p = 0;
 			key = pe->value;
+			pe = pe->pnext;
 			lrec_put_no_free(prec, key, value);
 
 			p++;
@@ -343,7 +357,6 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 					p++;
 			}
 			value = p;
-			pe = pe->pnext;
 		} else {
 			p++;
 		}
@@ -405,14 +418,14 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			pstate->ilno++;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
+			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
-
-			*p = 0;
 			key = pe->value;
+			pe = pe->pnext;
 			lrec_put_no_free(prec, key, value);
 
 			p += ifslen;
@@ -421,7 +434,6 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 					p += ifslen;
 			}
 			value = p;
-			pe = pe->pnext;
 		} else {
 			p++;
 		}
@@ -443,6 +455,130 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 			exit(1);
 		}
+	}
+
+	return prec;
+}
+
+// ----------------------------------------------------------------
+static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+{
+	if (phandle->sol >= phandle->eof)
+		return NULL;
+
+	char irs = pstate->irs[0];
+	char ifs = pstate->ifs[0];
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
+
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char* value = p;
+	char  free_flags;
+	int idx = 0;
+	for ( ; p < phandle->eof && *p; ) {
+		if (*p == irs) {
+			if (p == line) {
+				*pend_of_stanza = TRUE;
+				return NULL;
+			}
+			*p = 0;
+			phandle->sol = p+1;
+			pstate->ilno++;
+			break;
+		} else if (*p == ifs) {
+			*p = 0;
+			key = make_nidx_key(++idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
+
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = make_nidx_key(++idx, &free_flags);
+		lrec_put(prec, key, value, free_flags);
+	}
+
+	return prec;
+}
+
+static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+{
+	if (phandle->sol >= phandle->eof)
+		return NULL;
+
+	char* irs = pstate->irs;
+	char* ifs = pstate->ifs;
+	int   irslen = pstate->irslen;
+	int   ifslen = pstate->ifslen;
+	int allow_repeat_ifs = pstate->allow_repeat_ifs;
+
+	lrec_t* prec = lrec_unbacked_alloc();
+
+	char* line  = phandle->sol;
+
+	char* p = line;
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* key   = NULL;
+	char* value = p;
+	char  free_flags;
+	int idx = 0;
+	for ( ; p < phandle->eof && *p; ) {
+		if (streqn(p, irs, irslen)) {
+			if (p == line) {
+				*pend_of_stanza = TRUE;
+				return NULL;
+			}
+			*p = 0;
+			phandle->sol = p + irslen;
+			pstate->ilno++;
+			break;
+		} else if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+			key = make_nidx_key(++idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (p >= phandle->eof)
+		phandle->sol = p+1;
+
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = make_nidx_key(++idx, &free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;

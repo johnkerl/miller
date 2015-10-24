@@ -4796,6 +4796,112 @@ x_sum
 
 
 ================================================================
+IMPLICIT-HEADER-CSV INPUT
+
+mlr --irs crlf --no-mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1    3  4                     5
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --irs crlf --no-mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1   3 4                    5
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+mlr --irs crlf --mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1    3  4                     5
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --irs crlf --mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1   3 4                    5
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+mlr --icsv --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --implicit-csv-header --icsv --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1    3  4                     5
+a/   i/ x/                    y/
+wye/ 0/ 0.641593543645736508/ 0.262688053894177098
+eks/ 1/ 0.827614412562742041/ 0.715431942006308552
+zee/ 2/ 0.923068348748175560/ 0.009737410587136359
+zee/ 3/ 0.000047786161325772/ 0.803142013402256216
+zee/ 4/ 0.676537984365847889/ 0.573903236805416328
+
+mlr --icsv --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv
+1   3 4                    5
+a   i x                    y/
+wye 0 0.641593543645736508 0.262688053894177098
+eks 1 0.827614412562742041 0.715431942006308552
+zee 2 0.923068348748175560 0.009737410587136359
+zee 3 0.000047786161325772 0.803142013402256216
+zee 4 0.676537984365847889 0.573903236805416328
+
+
+================================================================
 HET-CSV INPUT
 
 mlr --icsvlite --odkvp cat ./reg_test/input/a.csv
@@ -5628,7 +5734,7 @@ mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/inp
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -5649,7 +5755,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv
 x 0.641593543645736508
 a wye
 i 0
@@ -5670,7 +5776,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -5691,7 +5797,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv
 x 0.641593543645736508
 a wye
 i 0
@@ -5712,7 +5818,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --no-mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -5733,7 +5839,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --no-mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv
 x 0.641593543645736508
 a wye
 i 0
@@ -5754,7 +5860,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -5775,7 +5881,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csvl
+mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv
 x 0.641593543645736508
 a wye
 i 0

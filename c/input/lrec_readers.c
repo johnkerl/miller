@@ -18,9 +18,9 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 		return lrec_reader_csv_alloc(pbr, irs, ifs, use_implicit_csv_header);
 	} else if (streq(fmtdesc, "csvlite")) {
 		if (use_mmap)
-			return lrec_reader_mmap_csvlite_alloc(irs, ifs, allow_repeat_ifs);
+			return lrec_reader_mmap_csvlite_alloc(irs, ifs, allow_repeat_ifs, use_implicit_csv_header);
 		else
-			return lrec_reader_stdio_csvlite_alloc(irs, ifs, allow_repeat_ifs);
+			return lrec_reader_stdio_csvlite_alloc(irs, ifs, allow_repeat_ifs, use_implicit_csv_header);
 	} else if (streq(fmtdesc, "nidx")) {
 		if (use_mmap)
 			return lrec_reader_mmap_nidx_alloc(irs, ifs, allow_repeat_ifs);

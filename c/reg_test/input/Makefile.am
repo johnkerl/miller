@@ -36,7 +36,7 @@ EXTRA_DIST=	\
 		minmax.dkvp \
 		missings.dkvp \
 		multi-ips.dkvp \
-		multi-sep.csvl \
+		multi-sep.csv \
 		multi-sep.dkvp \
 		null-fields.csv \
 		null-fields.nidx \

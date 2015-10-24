@@ -116,7 +116,7 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, i
 	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
 		pstate->pdquote_parse_trie->maxlen));
 
-	pstate->expect_header_line_next   = TRUE;
+	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
 	pstate->use_implicit_header       = use_implicit_header;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
@@ -149,7 +149,7 @@ static void lrec_reader_csv_free(void* pvstate) {
 static void lrec_reader_csv_sof(void* pvstate) {
 	lrec_reader_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = TRUE;
+	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -328,8 +328,6 @@ static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* p
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
 		// Need to deal with heap-fragmentation among other things ...
 		// https://github.com/johnkerl/miller/issues/66
-		//
-		// lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 		char free_flags = 0;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);

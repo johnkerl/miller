@@ -44,6 +44,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
+	int   use_implicit_header;
 
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
@@ -55,7 +56,7 @@ static void    lrec_reader_stdio_sof(void* pvstate);
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvlite_state_t));
@@ -65,7 +66,8 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	pstate->irslen                    = strlen(irs);
 	pstate->ifslen                    = strlen(ifs);
 	pstate->allow_repeat_ifs          = allow_repeat_ifs;
-	pstate->expect_header_line_next   = TRUE;
+	pstate->use_implicit_header       = use_implicit_header;
+	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
 
@@ -93,7 +95,7 @@ static void lrec_reader_stdio_sof(void* pvstate) {
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = TRUE;
+	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -159,126 +161,23 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 			}
 		} else {
 			pstate->ifnr++;
-			return (pstate->ifslen == 1)
-				?  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
+			if (pstate->ifslen == 1) {
+				return pstate->use_implicit_header
+					? lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(
+						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs[0], pstate->allow_repeat_ifs)
-				:  lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
+					:  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
+						pstate->ifs[0], pstate->allow_repeat_ifs);
+			} else {
+				return pstate->use_implicit_header
+					? lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(
+						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
+						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs)
+					: lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
-	char* data_line, char ifs, int allow_repeat_ifs)
-{
-	lrec_t* prec = lrec_csvlite_alloc(data_line);
-	char* p = data_line;
-
-	if (allow_repeat_ifs) {
-		while (*p == ifs)
-			p++;
-	}
-	char* key   = NULL;
-	char* value = p;
-
-	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for ( ; *p; ) {
-		if (*p == ifs) {
-			*p = 0;
-
-			if (pe == NULL) {
-				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, filename, ilno);
-				exit(1);
 			}
-			key = pe->value;
-			lrec_put_no_free(prec, key, value);
-
-			p++;
-			if (allow_repeat_ifs) {
-				while (*p == ifs)
-					p++;
-			}
-			value = p;
-			pe = pe->pnext;
-		} else {
-			p++;
 		}
 	}
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else if (pe == NULL) {
-		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, filename, ilno);
-		exit(1);
-	} else {
-		key = pe->value;
-		lrec_put_no_free(prec, key, value);
-		if (pe->pnext != NULL) {
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, filename, ilno);
-			exit(1);
-		}
-	}
-
-	return prec;
-}
-
-lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
-	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
-{
-	lrec_t* prec = lrec_csvlite_alloc(data_line);
-	char* p = data_line;
-
-	if (allow_repeat_ifs) {
-		while (streqn(p, ifs, ifslen))
-			p += ifslen;
-	}
-	char* key   = NULL;
-	char* value = p;
-
-	sllse_t* pe = pheader_keeper->pkeys->phead;
-	for ( ; *p; ) {
-		if (streqn(p, ifs, ifslen)) {
-			*p = 0;
-
-			if (pe == NULL) {
-				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, filename, ilno);
-				exit(1);
-			}
-			key = pe->value;
-			lrec_put_no_free(prec, key, value);
-
-			p += ifslen;
-			if (allow_repeat_ifs) {
-				while (streqn(p, ifs, ifslen))
-					p += ifslen;
-			}
-			value = p;
-			pe = pe->pnext;
-		} else {
-			p++;
-		}
-	}
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else if (pe == NULL) {
-		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, filename, ilno);
-		exit(1);
-	} else {
-		key = pe->value;
-		lrec_put_no_free(prec, key, value);
-		if (pe->pnext != NULL) {
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, filename, ilno);
-			exit(1);
-		}
-	}
-
-	return prec;
 }
 
 // ----------------------------------------------------------------
@@ -344,4 +243,200 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 	}
 
 	return plist;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char ifs, int allow_repeat_ifs)
+{
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char* value = p;
+
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	for ( ; *p; ) {
+		if (*p == ifs) {
+			*p = 0;
+			if (pe == NULL) {
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, filename, ilno);
+				exit(1);
+			}
+			key = pe->value;
+			pe = pe->pnext;
+			lrec_put_no_free(prec, key, value);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, filename, ilno);
+		exit(1);
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, filename, ilno);
+			exit(1);
+		}
+	}
+
+	return prec;
+}
+
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
+{
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* key   = NULL;
+	char* value = p;
+
+	sllse_t* pe = pheader_keeper->pkeys->phead;
+	for ( ; *p; ) {
+		if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+			if (pe == NULL) {
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.argv0, filename, ilno);
+				exit(1);
+			}
+			key = pe->value;
+			pe = pe->pnext;
+			lrec_put_no_free(prec, key, value);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else if (pe == NULL) {
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, filename, ilno);
+		exit(1);
+	} else {
+		key = pe->value;
+		lrec_put_no_free(prec, key, value);
+		if (pe->pnext != NULL) {
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.argv0, filename, ilno);
+			exit(1);
+		}
+	}
+
+	return prec;
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char ifs, int allow_repeat_ifs)
+{
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (*p == ifs)
+			p++;
+	}
+	char* key   = NULL;
+	char free_flags;
+	char* value = p;
+
+	int idx = 0;
+	for ( ; *p; ) {
+		if (*p == ifs) {
+			*p = 0;
+
+			key = make_nidx_key(++idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p++;
+			if (allow_repeat_ifs) {
+				while (*p == ifs)
+					p++;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = make_nidx_key(++idx, &free_flags);
+		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, free_flags);
+	}
+
+	return prec;
+}
+
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keeper_t* pheader_keeper, char* filename, long long ilno,
+	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
+{
+	lrec_t* prec = lrec_csvlite_alloc(data_line);
+	char* p = data_line;
+
+	if (allow_repeat_ifs) {
+		while (streqn(p, ifs, ifslen))
+			p += ifslen;
+	}
+	char* key   = NULL;
+	char* value = p;
+	char free_flags;
+
+	int idx = 0;
+	for ( ; *p; ) {
+		if (streqn(p, ifs, ifslen)) {
+			*p = 0;
+			key = make_nidx_key(++idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+
+			p += ifslen;
+			if (allow_repeat_ifs) {
+				while (streqn(p, ifs, ifslen))
+					p += ifslen;
+			}
+			value = p;
+		} else {
+			p++;
+		}
+	}
+	if (allow_repeat_ifs && *value == 0) {
+		; // OK
+	} else {
+		key = make_nidx_key(++idx, &free_flags);
+		lrec_put(prec, key, value, free_flags);
+	}
+
+	return prec;
 }
