@@ -14,10 +14,18 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
+  mlr bar -c '*' -l 10 -h 20 -w 80 -f x,y
+    -c: default '*'
+    -l: default 0
+    -h: default 100?
+    -w: default 80?
+  keep an array mapping to **'s for length up to 100; populate on alloc.
+  note in help, best w/ --opprint or --oxtab
+
 MINOR: popall and/or xfer method; use @ sort; replace append @ streamer & where else?
 
 MINOR: mlrcli topdown
-MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
 MINOR: brew version bump?!?
 
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
