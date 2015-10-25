@@ -226,7 +226,7 @@ static void mapper_stats1_free(void* pvstate) {
 char* fake_acc_name_for_setups = "__setup_done__";
 
 // In the iterative case, add to the current record its current group's stats fields.
-// In the non-iteratiive case, produce output only at end of input stream.
+// In the non-iterative case, produce output only at the end of the input stream.
 static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {

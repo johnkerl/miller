@@ -224,7 +224,7 @@ static void mapper_stats2_free(void* pvstate) {
 // ================================================================
 
 // In the iterative case, add to the current record its current group's stats fields.
-// In the non-iteratiive case, produce output only at end of input stream.
+// In the non-iterative case, produce output only at the end of the input stream.
 static sllv_t* mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats2_state_t* pstate = pvstate;
 	if (pinrec != NULL) {

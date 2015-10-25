@@ -14,6 +14,11 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+! stats1/stats2/step/join/? on partial value-field matches
+  - slls_t -> char** & length; nullptrs @ missings
+  - make a wrapper class w/ a copy method; a free-flag; len & occlen
+  - intended application is value-field logic but also apply it to group-by & CLI parsers
+
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
   mlr bar -c '*' -l 10 -h 20 -w 80 -f x,y
     -c: default '*'
@@ -49,6 +54,8 @@ MINOR: ctype ff @ bld.out
 MINOR: sampler UTs (w/ spec rand seed)
 MINOR: bus-insurance dev page
 MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
+
+MAJOR: multiple -a/-f in stats1/2? (still only one -g ...)
 
 ----------------------------------------------------------------
 MAJOR: regex

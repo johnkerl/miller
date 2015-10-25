@@ -175,7 +175,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 		pkeeper->pleft_field_names);
 	if (pleft_field_values != NULL) {
-		pkeeper->pbucket->pleft_field_values = pleft_field_values;
+		pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
 		sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
 		pkeeper->pbucket->was_paired = FALSE;
 		pkeeper->prec_peek = NULL;
