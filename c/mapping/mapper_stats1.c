@@ -7,6 +7,7 @@
 #include "lib/mlrstat.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
+#include "containers/string_array.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/lhmsi.h"
@@ -34,17 +35,19 @@ typedef struct _stats1_t {
 typedef stats1_t* stats1_alloc_func_t(char* value_field_name, char* stats1_name);
 
 typedef struct _mapper_stats1_state_t {
-	slls_t* paccumulator_names;
-	slls_t* pvalue_field_names;
-	slls_t* pgroup_by_field_names;
-	lhmslv_t* groups;
-	int     do_iterative_stats;
+	slls_t*         paccumulator_names;
+	string_array_t* pvalue_field_names;     // parameter
+	string_array_t* pvalue_field_values;    // scratch space used per-record
+	slls_t*         pgroup_by_field_names;  // parameter
+	slls_t*         pgroup_by_field_values; // scratch space used per-record
+	lhmslv_t*       groups;
+	int             do_iterative_stats;
 } mapper_stats1_state_t;
 
 // ----------------------------------------------------------------
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names,
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats);
 static void      mapper_stats1_free(void* pvstate);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -122,18 +125,18 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* paccumulator_names    = NULL;
-	slls_t* pvalue_field_names    = NULL;
-	slls_t* pgroup_by_field_names = slls_alloc();
-	int do_iterative_stats = FALSE;
+	slls_t*         paccumulator_names    = NULL;
+	string_array_t* pvalue_field_names    = NULL;
+	slls_t*         pgroup_by_field_names = slls_alloc();
+	int             do_iterative_stats    = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-a", &paccumulator_names);
-	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate,        "-s", &do_iterative_stats);
+	ap_define_string_list_flag(pstate,  "-a", &paccumulator_names);
+	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
+	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
+	ap_define_true_flag(pstate,         "-s", &do_iterative_stats);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats1_usage(stderr, argv[0], verb);
@@ -150,22 +153,24 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_field_names,
+static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	mapper_stats1_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
+	mapper_stats1_state_t* pstate  = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
 
-	pstate->paccumulator_names    = paccumulator_names;
-	pstate->pvalue_field_names    = pvalue_field_names;
-	pstate->pgroup_by_field_names = pgroup_by_field_names;
-	pstate->groups                = lhmslv_alloc();
-	pstate->do_iterative_stats    = do_iterative_stats;
+	pstate->paccumulator_names     = paccumulator_names;
+	pstate->pvalue_field_names     = pvalue_field_names;
+	pstate->pgroup_by_field_names  = pgroup_by_field_names;
+	pstate->pvalue_field_values    = string_array_alloc(pvalue_field_names->length);
+	pstate->groups                 = lhmslv_alloc();
+	pstate->do_iterative_stats     = do_iterative_stats;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
 	pmapper->pfree_func    = mapper_stats1_free;
+
 
 	return pmapper;
 }
@@ -173,7 +178,8 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, slls_t* pvalue_
 static void mapper_stats1_free(void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	slls_free(pstate->paccumulator_names);
-	slls_free(pstate->pvalue_field_names);
+	string_array_free(pstate->pvalue_field_names);
+	string_array_free(pstate->pvalue_field_values);
 	slls_free(pstate->pgroup_by_field_names);
 	// xxx free the level-2's 1st
 	lhmslv_free(pstate->groups);
@@ -259,11 +265,10 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 	// population on that, but retain full-population requirement on group-by.
 	// E.g. if accumulating stats of x,y on a,b then skip record with x,y,a but
 	// process record with x,a,b.
-	slls_t* pvalue_field_values    = mlr_selected_values_from_record(pinrec, pstate->pvalue_field_names);
+	mlr_reference_values_from_record(pinrec, pstate->pvalue_field_names, pstate->pvalue_field_values);
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 
-	if (pvalue_field_values == NULL || pgroup_by_field_values == NULL) {
-		slls_free(pvalue_field_values);
+	if (pgroup_by_field_values == NULL) {
 		slls_free(pgroup_by_field_values);
 		return;
 	}
@@ -274,12 +279,14 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 	}
 
-	sllse_t* pa = pstate->pvalue_field_names->phead;
-	sllse_t* pb =         pvalue_field_values->phead;
 	// for x=1 and y=2
-	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
-		char* value_field_name = pa->value;
-		char* value_field_sval = pb->value;
+	int n = pstate->pvalue_field_names->length;
+	for (int i = 0; i < n; i++) {
+		char* value_field_name = pstate->pvalue_field_names->strings[i];
+		char* value_field_sval = pstate->pvalue_field_values->strings[i];
+		if (value_field_sval == NULL)
+			continue;
+
 		int   have_dval = FALSE;
 		double value_field_dval = -999.0;
 
@@ -324,6 +331,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			}
 		}
 	}
+	slls_free(pgroup_by_field_values);
 }
 
 // ----------------------------------------------------------------
