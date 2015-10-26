@@ -89,6 +89,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
   containers/lrec.c containers/header_keeper.c containers/sllv.c \
   containers/slls.c \
+  containers/string_array.c \
   containers/hss.c \
   containers/lhmsi.c \
   containers/lhmss.c \

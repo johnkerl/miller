@@ -4,6 +4,7 @@
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
+#include "containers/string_array.h"
 #include "containers/hss.h"
 #include "containers/lhmsi.h"
 #include "containers/lhmss.h"
@@ -94,6 +95,28 @@ static char* test_sllv() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
+
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_string_array() {
+	string_array_t* parray = string_array_from_line(mlr_strdup_or_die(""), ',');
+	mu_assert_lf(parray->length == 0);
+	string_array_free(parray);
+
+	parray = string_array_from_line(mlr_strdup_or_die("a"), ',');
+	mu_assert_lf(parray->length == 1);
+	mu_assert_lf(streq(parray->strings[0], "a"));
+
+	parray = string_array_from_line(mlr_strdup_or_die("c,d,a,e,b"), ',');
+	mu_assert_lf(parray->length == 5);
+
+	mu_assert_lf(streq(parray->strings[0], "c"));
+	mu_assert_lf(streq(parray->strings[1], "d"));
+	mu_assert_lf(streq(parray->strings[2], "a"));
+	mu_assert_lf(streq(parray->strings[3], "e"));
+	mu_assert_lf(streq(parray->strings[4], "b"));
 
 	return NULL;
 }
@@ -624,6 +647,7 @@ static char* test_dheap() {
 static char * run_all_tests() {
 	mu_run_test(test_slls);
 	mu_run_test(test_sllv);
+	mu_run_test(test_string_array);
 	mu_run_test(test_hss);
 	mu_run_test(test_lhmsi);
 	mu_run_test(test_lhmss);

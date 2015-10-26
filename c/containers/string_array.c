@@ -22,3 +22,30 @@ void string_array_free(string_array_t* parray) {
 	free(parray->strings);
 	free(parray);
 }
+
+string_array_t* string_array_from_line(char* line, char ifs) {
+	if (*line == 0) // empty string splits to empty array
+		return string_array_alloc(0);
+
+	int num_commas = 0;
+
+	for (char* p = line; *p; p++)
+		if (*p == ifs)
+			num_commas++;
+
+	string_array_t* parray = string_array_alloc(num_commas + 1);
+
+	char* start = line;
+	int i = 0;
+	for (char* p = line; *p; p++) {
+		if (*p == ifs) {
+			*p = 0;
+			p++;
+			parray->strings[i++] = start;
+			start = p;
+		}
+	}
+	parray->strings[i++] = start;
+
+	return parray;
+}
