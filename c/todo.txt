@@ -15,10 +15,7 @@ BUGFIXES
 TOP OF LIST
 
 ! stats1/stats2/step/join/? on partial value-field matches
-  - slls_t -> char** & length; nullptrs @ missings
-  - make a wrapper class w/ a copy method; a free-flag; len & occlen
-  - intended application is value-field logic but also apply it to group-by & CLI parsers
-  ! revisit a=wye stats1 UT case
+  ! revisit a=wye stats1 UT case: mlr --oxtab stats1 -a mean -f x -g a reg_test/input/abixy-het
 
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
   mlr bar -c '*' -l 10 -h 20 -w 80 -f x,y
