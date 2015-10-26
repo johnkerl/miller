@@ -7,6 +7,7 @@
 #include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/hss.h"
+#include "containers/string_array.h"
 
 // Makes a list with values pointing to the lrec's keys. slls_free() will
 // respect that and not corrupt the lrec. However, the slls values will be
@@ -20,6 +21,8 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
 slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
+void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
+	string_array_t* pvalues);
 
 // Copies data; no referencing concerns.
 hss_t*  hss_from_slls(slls_t* plist);

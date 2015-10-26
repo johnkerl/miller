@@ -1,3 +1,4 @@
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "containers/mixutil.h"
@@ -41,6 +42,30 @@ slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_na
 		}
 	}
 	return pvalue_list;
+}
+
+// Makes an array with values pointing into the lrec's values.
+// string_array_free() will respect that and not corrupt the lrec. However,
+// the array's values will be invalid after the lrec is freed.
+
+void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
+	string_array_t* pvalues)
+{
+	if (pselected_field_names->length != pvalues->length) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	pvalues->strings_need_freeing = FALSE;
+	for (int i = 0; i < pselected_field_names->length; i++) {
+		char* selected_field_name = pselected_field_names->strings[i];
+		if (selected_field_name == NULL) {
+			pvalues->strings[i] = NULL;
+		} else {
+			pvalues->strings[i] = lrec_get(prec, selected_field_name);
+		}
+
+	}
 }
 
 // ----------------------------------------------------------------

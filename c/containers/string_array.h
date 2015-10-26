@@ -4,7 +4,6 @@
 // Container class for keeping an array of strings, some of which may be null.
 typedef struct _string_array_t {
 	int length;
-	int nocc;
 	int strings_need_freeing;
 	char** strings;
 } string_array_t;
