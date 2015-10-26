@@ -39,7 +39,6 @@ typedef struct _mapper_stats1_state_t {
 	string_array_t* pvalue_field_names;     // parameter
 	string_array_t* pvalue_field_values;    // scratch space used per-record
 	slls_t*         pgroup_by_field_names;  // parameter
-	slls_t*         pgroup_by_field_values; // scratch space used per-record
 	lhmslv_t*       groups;
 	int             do_iterative_stats;
 } mapper_stats1_state_t;

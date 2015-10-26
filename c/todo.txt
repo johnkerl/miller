@@ -18,6 +18,7 @@ TOP OF LIST
   - slls_t -> char** & length; nullptrs @ missings
   - make a wrapper class w/ a copy method; a free-flag; len & occlen
   - intended application is value-field logic but also apply it to group-by & CLI parsers
+  ! revisit a=wye stats1 UT case
 
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
   mlr bar -c '*' -l 10 -h 20 -w 80 -f x,y
