@@ -29,16 +29,18 @@ static char * test1() {
 	double  fltv   = -9.5;
 	char*   string = NULL;
 	slls_t* plist  = NULL;
+	string_array_t* parray  = NULL;
 	ap_state_t* pstate = ap_alloc();
 
-	ap_define_true_flag(pstate,        "-t",   &bflag1);
-	ap_define_false_flag(pstate,       "-f",   &bflag2);
-	ap_define_int_value_flag(pstate,   "-100", 100, &intv1);
-	ap_define_int_value_flag(pstate,   "-200", 200, &intv2);
-	ap_define_int_flag(pstate,         "-i",   &intv3);
-	ap_define_double_flag(pstate,      "-d",   &fltv);
-	ap_define_string_flag(pstate,      "-s",   &string);
-	ap_define_string_list_flag(pstate, "-S",   &plist);
+	ap_define_true_flag(pstate,         "-t",   &bflag1);
+	ap_define_false_flag(pstate,        "-f",   &bflag2);
+	ap_define_int_value_flag(pstate,    "-100", 100, &intv1);
+	ap_define_int_value_flag(pstate,    "-200", 200, &intv2);
+	ap_define_int_flag(pstate,          "-i",   &intv3);
+	ap_define_double_flag(pstate,       "-d",   &fltv);
+	ap_define_string_flag(pstate,       "-s",   &string);
+	ap_define_string_list_flag(pstate,  "-S",   &plist);
+	ap_define_string_array_flag(pstate, "-A",   &parray);
 
 	char* argv[] = { "test-verb", NULL };
 	int argc = compute_argc(argv);
@@ -53,6 +55,7 @@ static char * test1() {
 	mu_assert_lf(fltv == -9.5);
 	mu_assert_lf(string == NULL);
 	mu_assert_lf(plist == NULL);
+	mu_assert_lf(parray == NULL);
 	mu_assert_lf(argi == 1);
 
 	ap_free(pstate);
@@ -68,6 +71,7 @@ static char * test2() {
 	double  fltv   = -9.5;
 	char*   string = NULL;
 	slls_t* plist  = NULL;
+	string_array_t* parray  = NULL;
 	ap_state_t* pstate = ap_alloc();
 
 	ap_define_true_flag(pstate,        "-t",   &bflag1);
@@ -78,6 +82,7 @@ static char * test2() {
 	ap_define_double_flag(pstate,      "-d",   &fltv);
 	ap_define_string_flag(pstate,      "-s",   &string);
 	ap_define_string_list_flag(pstate, "-S",   &plist);
+	ap_define_string_array_flag(pstate, "-A",   &parray);
 
 	char* argv[] = {
 		"test-verb",
@@ -89,6 +94,7 @@ static char * test2() {
 		"-d", "4.25",
 		"-s", "hello",
 		"-S", mlr_strdup_or_die("a,b,c,d,e"),
+		"-A", mlr_strdup_or_die("x,y,z"),
 		"do", "re", "mi",
 		NULL
 	};
@@ -106,6 +112,11 @@ static char * test2() {
 	mu_assert_lf(streq(string, "hello"));
 	mu_assert_lf(plist != NULL);
 	mu_assert_lf(slls_equals(plist, slls_from_line(mlr_strdup_or_die("a,b,c,d,e"), ',', FALSE)));
+	mu_assert_lf(parray != NULL);
+	mu_assert_lf(parray->length == 3);
+	mu_assert_lf(streq(parray->strings[0], "x"));
+	mu_assert_lf(streq(parray->strings[1], "y"));
+	mu_assert_lf(streq(parray->strings[2], "z"));
 	mu_assert_lf(argi == 13);
 
 	ap_free(pstate);

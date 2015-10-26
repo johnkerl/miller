@@ -151,7 +151,7 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 				slls_free(*pplist);
 			*pplist = slls_from_line(argv[argi+1], ',', FALSE);
 			pdef->pval = pplist;
-		} else if (pdef->type == AP_STRING_LIST_FLAG) {
+		} else if (pdef->type == AP_STRING_ARRAY_FLAG) {
 			string_array_t** pparray = pdef->pval;
 			if (*pparray != NULL)
 				string_array_free(*pparray);
