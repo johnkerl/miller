@@ -3728,17 +3728,23 @@ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delt
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=1.105470,x_delta=0.411890,x_counter=2,y_rsum=1.248954,y_delta=-0.204652,y_counter=2
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_rsum=1.310073,x_delta=-0.554077,x_counter=3,y_rsum=1.587272,y_delta=-0.183833,y_counter=3
 a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.691473,x_delta=0.176796,x_counter=4,y_rsum=1.721461,y_delta=-0.204130,y_counter=4
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=2.218599,x_delta=0.145727,x_counter=5,y_rsum=2.214683,y_delta=0.359033,y_counter=5
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=2.830383,x_delta=0.084658,x_counter=6,y_rsum=2.402567,y_delta=-0.305336,y_counter=6
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=2.861825,x_delta=-0.580342,x_counter=7,y_rsum=3.152118,y_delta=0.561666,y_counter=7
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.364451,x_delta=0.471184,x_counter=8,y_rsum=4.104737,y_delta=0.203068,y_counter=8
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,y_rsum=2.585086,y_delta=0.729436,y_counter=5
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=2.218599,x_delta=0.145727,x_counter=5,y_rsum=3.078307,y_delta=-0.370403,y_counter=6
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=2.830383,x_delta=0.084658,x_counter=6,y_rsum=3.266192,y_delta=-0.305336,y_counter=7
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=3.428937,x_delta=-0.013230,x_counter=7
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=3.460379,x_delta=-0.567112,x_counter=8,y_rsum=4.015743,y_delta=0.561666,y_counter=8
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.963005,x_delta=0.471184,x_counter=9,y_rsum=4.968361,y_delta=0.203068,y_counter=9
 
 mlr --odkvp step -a rsum,delta,counter -f x,y -g a ./reg_test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delta=0.000000,x_counter=1,y_rsum=0.726803,y_delta=0.000000,y_counter=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=0.758680,x_delta=0.000000,x_counter=1,y_rsum=0.522151,y_delta=0.000000,y_counter=1
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.140079,x_delta=-0.377281,x_counter=2,y_rsum=0.656340,y_delta=-0.387962,y_counter=2
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,y_rsum=0.863624,y_delta=0.000000,y_counter=1
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=0.527126,x_delta=0.000000,x_counter=1,y_rsum=0.493221,y_delta=0.000000,y_counter=1
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=1.751863,x_delta=0.230385,x_counter=3,y_rsum=0.844225,y_delta=0.053696,y_counter=3
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=1.125680,x_delta=0.071428,x_counter=2
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_delta=0.155836,x_counter=2,y_rsum=1.679421,y_delta=0.225815,y_counter=2
 
 mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 ./reg_test/input/small
