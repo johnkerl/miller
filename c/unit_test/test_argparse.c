@@ -117,7 +117,7 @@ static char * test2() {
 	mu_assert_lf(streq(parray->strings[0], "x"));
 	mu_assert_lf(streq(parray->strings[1], "y"));
 	mu_assert_lf(streq(parray->strings[2], "z"));
-	mu_assert_lf(argi == 13);
+	mu_assert_lf(argi == 15);
 
 	ap_free(pstate);
 	return 0;
