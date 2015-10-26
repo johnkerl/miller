@@ -3,11 +3,12 @@
 #include "cli/argparse.h"
 
 // ================================================================
-#define AP_INT_VALUE_FLAG   0xf6
-#define AP_INT_FLAG         0xe7
-#define AP_DOUBLE_FLAG      0xc9
-#define AP_STRING_FLAG      0xba
-#define AP_STRING_LIST_FLAG 0xab
+#define AP_INT_VALUE_FLAG    0xf6
+#define AP_INT_FLAG          0xe7
+#define AP_DOUBLE_FLAG       0xc9
+#define AP_STRING_FLAG       0xba
+#define AP_STRING_LIST_FLAG  0xab
+#define AP_STRING_ARRAY_FLAG 0x9c
 
 typedef struct _ap_flag_def_t {
 	char* flag_name;
@@ -91,6 +92,10 @@ void ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pp
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_LIST_FLAG, 0, pplist, 2));
 }
 
+void ap_define_string_array_flag(ap_state_t* pstate, char* flag_name, string_array_t** pparray) {
+	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_ARRAY_FLAG, 0, pparray, 2));
+}
+
 // ----------------------------------------------------------------
 int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) {
 
@@ -142,12 +147,16 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 			pdef->pval = pstring;
 		} else if (pdef->type == AP_STRING_LIST_FLAG) {
 			slls_t** pplist = pdef->pval;
-
 			if (*pplist != NULL)
 				slls_free(*pplist);
 			*pplist = slls_from_line(argv[argi+1], ',', FALSE);
-
 			pdef->pval = pplist;
+		} else if (pdef->type == AP_STRING_LIST_FLAG) {
+			string_array_t** pparray = pdef->pval;
+			if (*pparray != NULL)
+				string_array_free(*pparray);
+			*pparray = string_array_from_line(argv[argi+1], ',');
+			pdef->pval = pparray;
 		} else {
 			ok = FALSE;
 			fprintf(stderr, "argparse.c: internal coding error: flag-def type %x not recognized.\n", pdef->type);

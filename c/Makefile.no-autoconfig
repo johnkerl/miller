@@ -52,6 +52,7 @@ TEST_ARGPARSE_SRCS = \
   cli/argparse.c \
   containers/slls.c \
   containers/sllv.c \
+  containers/string_array.c \
   unit_test/test_argparse.c
 
 TEST_BYTE_READERS_SRCS = \
@@ -106,6 +107,25 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
   input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
   unit_test/test_multiple_containers.c
+
+TEST_MLRUTIL_SRCS = \
+	lib/mlr_globals.c \
+	lib/mlrutil.c \
+	lib/string_builder.c \
+	unit_test/test_mlrutil.c
+
+TEST_STRING_BUILDER_SRCS = \
+	lib/mlrutil.c \
+	lib/mlr_globals.c \
+	lib/string_builder.c \
+	unit_test/test_string_builder.c
+
+TEST_PARSE_TRIE_SRCS = \
+	lib/mlrutil.c \
+	lib/mlr_globals.c \
+	lib/string_builder.c \
+	containers/parse_trie.c \
+	unit_test/test_parse_trie.c
 
 TEST_LREC_EVALUATORS_SRCS = \
   lib/mlr_globals.c \
@@ -239,13 +259,13 @@ test-multiple-containers: .always
 	$(CCDEBUG) -D__TEST_MULTIPLE_CONTAINERS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers
 
 test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ lib/mlr_globals.c lib/mlrutil.c lib/string_builder.c unit_test/test_mlrutil.c -o test-mlrutil
+	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ $(TEST_MLRUTIL_SRCS) -o test-mlrutil
 
 test-string-builder: .always
-	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c unit_test/test_string_builder.c -o test-string-builder
+	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ $(TEST_STRING_BUILDER_SRCS) -o test-string-builder
 
 test-parse-trie: .always
-	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c containers/parse_trie.c unit_test/test_parse_trie.c -o test-parse-trie
+	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ $(TEST_PARSE_TRIE_SRCS) -o test-parse-trie
 
 test-lrec-evaluators: .always
 	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm

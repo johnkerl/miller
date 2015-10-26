@@ -108,15 +108,16 @@ static char* test_string_array() {
 	parray = string_array_from_line(mlr_strdup_or_die("a"), ',');
 	mu_assert_lf(parray->length == 1);
 	mu_assert_lf(streq(parray->strings[0], "a"));
+	string_array_free(parray);
 
 	parray = string_array_from_line(mlr_strdup_or_die("c,d,a,e,b"), ',');
 	mu_assert_lf(parray->length == 5);
-
 	mu_assert_lf(streq(parray->strings[0], "c"));
 	mu_assert_lf(streq(parray->strings[1], "d"));
 	mu_assert_lf(streq(parray->strings[2], "a"));
 	mu_assert_lf(streq(parray->strings[3], "e"));
 	mu_assert_lf(streq(parray->strings[4], "b"));
+	string_array_free(parray);
 
 	return NULL;
 }
