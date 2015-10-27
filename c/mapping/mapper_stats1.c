@@ -283,11 +283,6 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 	for (int i = 0; i < n; i++) {
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-		if (value_field_sval == NULL)
-			continue;
-
-		int   have_dval = FALSE;
-		double value_field_dval = -999.0;
 
 		lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
 		if (acc_field_to_acc_state == NULL) {
@@ -301,6 +296,12 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			make_accs(value_field_name, pstate->paccumulator_names, acc_field_to_acc_state);
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
 		}
+
+		if (value_field_sval == NULL)
+			continue;
+
+		int   have_dval = FALSE;
+		double value_field_dval = -999.0;
 
 		// There isn't a one-to-one mapping between user-specified stats1_names
 		// and internal stats1_t's. Here in the ingestor we feed each datum into
@@ -517,7 +518,7 @@ static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_
 static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_sum_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_sum_state_t));
-	pstate->sum         = 0LL;
+	pstate->sum         = 0.0;
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
@@ -540,9 +541,15 @@ static void stats1_mean_dingest(void* pvstate, double val) {
 }
 static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_mean_state_t* pstate = pvstate;
-	double quot = pstate->sum / pstate->count;
-	char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
-	lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	if (pstate->count == 0LL) {
+		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double quot = pstate->sum / pstate->count;
+		char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
+		// xxx to do: the output field names should be freed by our free
+		// method, & the flags shouldn't include LREC_FREE_ENTRY_KEY.
+		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
 }
 static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
