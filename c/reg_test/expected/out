@@ -3676,12 +3676,12 @@ hat wye 13 0.35922068401384877  0.8502678133887914  0.1290394998233774    0.3054
 
 mlr --opprint stats2 -a logireg -f x,y ./reg_test/input/logi.dkvp
 x_y_logistic_m x_y_logistic_b x_y_logistic_n
-0.168447       0.168447       22
+0.145457       0.145449       22
 
 mlr --opprint stats2 -a logireg -f x,y -g g ./reg_test/input/logi.dkvp
 g    x_y_logistic_m x_y_logistic_b x_y_logistic_n
-red  0.170434       -0.061982      11
-blue 0.170434       0.402849       11
+red  0.145458       -0.036371      11
+blue 0.145457       0.327269       11
 
 mlr --oxtab stats2 -a cov -f x,y ./reg_test/input/abixy-het
 x_y_cov -0.011481

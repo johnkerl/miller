@@ -346,7 +346,8 @@ static void mlr_logistic_regression_aux(double* xs, double* ys, int n, double* p
 		}
 
 		// Check for convergence
-		double err = fabs(ell - ell0);
+		double dell = fmax(ell, ell0);
+		double err = (dell == 0.0) ? 0.0 : fabs(ell - ell0) / dell;
 
 #if 0
 		printf("its=%d,m=%e,b=%e,dm=%e,db=%e,ell=%e\n", its, m0, b0, -Hinvgradm, -Hinvgradb, ell);
