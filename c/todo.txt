@@ -8,9 +8,6 @@ BUGFIXES
   $ mlr join -j a -f a a
   mlr: internal coding error: failed transition from prefill state.
 
-* mlr_logistic_regression: Newton-Raphson convergence failed after 101 iterations. m=nan, b=nan.
-  happens when data are too *good*.
-
 ================================================================
 TOP OF LIST
 
