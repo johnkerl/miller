@@ -82,11 +82,12 @@ static char* test_sllv() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	// sllv_append frees the control structure for its second argument so do no
-	// assertions there
-	pa = sllv_append(pa, pb);
+	sllv_transfer(pa, pb);
 
 	mu_assert_lf(pa->length == 5);
+	mu_assert_lf(pb->length == 0);
+	mu_assert_lf(pb->phead == NULL);
+	mu_assert_lf(pb->ptail == NULL);
 
 	pe = pa->phead;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;

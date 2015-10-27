@@ -51,6 +51,31 @@ void sllv_add(sllv_t* plist, void* pvdata) {
 }
 
 // ----------------------------------------------------------------
+void* sllv_pop(sllv_t* plist) {
+	// Zero entries in list
+	if (plist->phead == NULL)
+		return NULL;
+
+	void* pval = plist->phead->pvdata;
+	// One entry in list
+	if (plist->phead->pnext == NULL) {
+		free(plist->phead);
+		plist->phead  = NULL;
+		plist->ptail  = NULL;
+		plist->length = 0;
+	}
+	// Two or more entries in list
+	else {
+		sllve_t* pnext = plist->phead->pnext;
+		free(plist->phead);
+		plist->phead = pnext;
+		plist->length--;
+	}
+
+	return pval;
+}
+
+// ----------------------------------------------------------------
 void sllv_reverse(sllv_t* plist) {
 	if (plist->phead == NULL)
 		return;
@@ -86,43 +111,4 @@ void sllv_transfer(sllv_t* pthis, sllv_t* pthat) {
 	pthat->phead  = NULL;
 	pthat->ptail  = NULL;
 	pthat->length = 0;
-}
-
-// ----------------------------------------------------------------
-void* sllv_pop(sllv_t* plist) {
-	// Zero entries in list
-	if (plist->phead == NULL)
-		return NULL;
-
-	void* pval = plist->phead->pvdata;
-	// One entry in list
-	if (plist->phead->pnext == NULL) {
-		free(plist->phead);
-		plist->phead  = NULL;
-		plist->ptail  = NULL;
-		plist->length = 0;
-	}
-	// Two or more entries in list
-	else {
-		sllve_t* pnext = plist->phead->pnext;
-		free(plist->phead);
-		plist->phead = pnext;
-		plist->length--;
-	}
-
-	return pval;
-}
-
-// ----------------------------------------------------------------
-// This could be used to create circular lists if called inadvisedly.
-sllv_t* sllv_append(sllv_t* pa, sllv_t* pb) {
-	if (pa == NULL || pa->length == 0)
-		return pb;
-	if (pb == NULL || pb->length == 0)
-		return pa;
-	pa->length += pb->length;
-	pa->ptail->pnext = pb->phead;
-	pa->ptail = pb->ptail;
-	free(pb);
-	return pa;
 }
