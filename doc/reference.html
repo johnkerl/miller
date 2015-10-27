@@ -103,6 +103,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#bar">bar</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#check">check</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
@@ -227,9 +228,9 @@ mlr sort -f hostname,uptime *.dat
 $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
 Verbs:
-   cat check count-distinct cut filter group-by group-like having-fields head
-   histogram join label put regularize rename reorder sample sort stats1 stats2
-   step tac tail top uniq
+   bar cat check count-distinct cut filter group-by group-like having-fields
+   head histogram join label put regularize rename reorder sample sort stats1
+   stats2 step tac tail top uniq
 Example: mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv
 Please use "mlr -h" or "mlr --help" to show this message.
 Please use "mlr --version" to show the software version.
@@ -628,6 +629,58 @@ name=bull,regex=^b[ou]ll$
 
 <!-- ================================================================ -->
 <a id="Data_transformations"/><h1>Data transformations</h1>
+
+<!-- ================================================================ -->
+<a id="bar"/><h2>bar</h2>
+
+<p/> Cheesy bar-charting.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr bar -h
+Usage: mlr bar [options]
+Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.
+These align best with --opprint or --oxtab output format.
+Options:
+-f {a,b,c}       Field names to convert to bars.
+-c {character}   Fill character: default '*'.
+-x {character}   Out-of-bounds character: default '#'.
+-b {character}   Blank character: default ' '.
+-l {lo}          Lower-limit value for min-width bar: default '0.000000'.
+-u {hi}          Upper-limit value for max-width bar: default '100.000000'.
+-w {n}           Bar-field width: default '40'.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint bar -l 0 -u 1 -f x,y data/small
+a   b   i x                                        y
+pan pan 1 *************                            *****************************
+eks pan 2 ******************************           ********************
+wye wye 3 ********                                 *************
+eks wye 4 ***************                          *****
+wye pan 5 **********************                   **********************************
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="cat"/><h2>cat</h2>

@@ -266,6 +266,17 @@ POKI_RUN_COMMAND{{mlr filter '$name =~ $regex' data/regex-in-data.dat}}HERE
 <h1>Data transformations</h1>
 
 <!-- ================================================================ -->
+<h2>bar</h2>
+
+<p/> Cheesy bar-charting.
+
+POKI_RUN_COMMAND{{mlr bar -h}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint bar -l 0 -u 1 -f x,y data/small}}HERE
+
+<!-- ================================================================ -->
 <h2>cat</h2>
 
 <p/> Most useful for format conversions (see
