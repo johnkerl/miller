@@ -14,6 +14,13 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+* make a 2.3.2
+  - filter -x
+  - logireg w/ caveat
+  - stats2 hold-and-fit
+  - improved heterogeneity for sort,stats1,stats2,step,head,tail,top,sample,uniq,count-distinct
+  - implicit-csv-header feature
+
 ! join on partial value-field matches
 
 MINOR: star-put fcn (for cheesy bar-charts) w/ min/max
