@@ -20,16 +20,11 @@ sllv_t* sllv_alloc();
 void    sllv_free(sllv_t* plist);
 sllv_t* sllv_single(void* pvdata);
 void    sllv_add(sllv_t* plist, void* pvdata);
+void*   sllv_pop(sllv_t* plist);
 void    sllv_reverse(sllv_t* plist);
 // Move all records from pthat to end of pthis. Upon return, pthat is the empty
 // list.
 void    sllv_transfer(sllv_t* pthis, sllv_t* pthat);
-
-void*   sllv_pop(sllv_t* plist);
-
-// This could be used to create circular lists if called inadvisedly.
-// The top-level sllv_t for the second argument is freed.
-sllv_t* sllv_append(sllv_t* pa, sllv_t* pb);
 
 #endif // SLLV_H
 
