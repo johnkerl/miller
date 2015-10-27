@@ -315,6 +315,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 					join_bucket_t* pbucket = pe->pvvalue;
 					if (!pbucket->was_paired) {
 						sllv_transfer(poutrecs, pbucket->precords);
+						sllv_free(pbucket->precords);
 					}
 				}
 			}

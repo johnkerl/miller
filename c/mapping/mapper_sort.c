@@ -267,6 +267,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 			bucket_t* pbucket = pe->pvvalue;
 			sllv_transfer(poutput, pbucket->precords);
+			sllv_free(pbucket->precords);
 		}
 		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
 		sllv_add(poutput, NULL);
@@ -295,6 +296,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		for (i = 0; i < num_buckets; i++) {
 			sllv_t* plist = pbucket_array[i]->precords;
 			sllv_transfer(poutput, plist);
+			sllv_free(plist);
 		}
 		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
 		free(pbucket_array);

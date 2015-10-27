@@ -97,6 +97,8 @@ static char* test_sllv() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
+	sllv_free(pb);
+
 	return NULL;
 }
 
