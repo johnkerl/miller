@@ -265,7 +265,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	if (pright_rec == NULL) { // End of input record stream
 		join_bucket_keeper_emit(pkeeper, NULL, &pleft_records, &pbucket_left_unpaired);
 		if (pstate->popts->emit_left_unpairables) {
-			sllv_add_all(pout_recs, pbucket_left_unpaired);
+			sllv_transfer(pout_recs, pbucket_left_unpaired);
 		}
 		sllv_free(pbucket_left_unpaired);
 		sllv_add(pout_recs, NULL);
@@ -280,7 +280,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	if (pstate->popts->emit_left_unpairables) {
 		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length >= 0) {
-			sllv_add_all(pout_recs, pbucket_left_unpaired);
+			sllv_transfer(pout_recs, pbucket_left_unpaired);
 			sllv_free(pbucket_left_unpaired);
 		}
 	}
@@ -314,7 +314,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 				for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
 					join_bucket_t* pbucket = pe->pvvalue;
 					if (!pbucket->was_paired) {
-						sllv_add_all(poutrecs, pbucket->precords);
+						sllv_transfer(poutrecs, pbucket->precords);
 					}
 				}
 			}

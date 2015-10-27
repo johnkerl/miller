@@ -14,6 +14,13 @@ TOP OF LIST
 ! join on partial value-field matches
 
 MINOR: popall and/or xfer method; use @ sort; replace append @ streamer & where else?
+  - rid of sllv_append
+  - decide where to put the free of pthat (caller or callee)
+  - rid of while-pop loops
+  - sllv_xfer UT
+x bar --lo/--hi : imitate histogram
+x bar bg char default to '.'
+x bar fg char default to 'o'
 
 MINOR: mlrcli topdown
 MINOR: brew version bump?!?

@@ -71,10 +71,19 @@ void sllv_reverse(sllv_t* plist) {
 	plist->ptail = pnewtail;
 }
 
-void sllv_add_all(sllv_t* pthis, sllv_t* pthat) {
-	for (sllve_t* pe = pthat->phead; pe != NULL; pe = pe->pnext) {
-		sllv_add(pthis, pe->pvdata);
+void sllv_transfer(sllv_t* pthis, sllv_t* pthat) {
+	if (pthis->phead == NULL) {
+		pthis->phead  = pthat->phead;
+		pthis->ptail  = pthat->ptail;
+		pthis->length = pthat->length;
+	} else if (pthat->phead != NULL) {
+		pthis->ptail->pnext = pthat->phead;
+		pthis->ptail = pthat->ptail;
+		pthis->length += pthat->length;
 	}
+	pthat->phead  = NULL;
+	pthat->ptail  = NULL;
+	pthat->length = 0;
 }
 
 // ----------------------------------------------------------------

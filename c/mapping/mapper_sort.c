@@ -266,13 +266,9 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_t* poutput = sllv_alloc();
 		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 			bucket_t* pbucket = pe->pvvalue;
-			while (pbucket->precords->phead) {
-				sllv_add(poutput, sllv_pop(pbucket->precords));
-			}
+			sllv_transfer(poutput, pbucket->precords);
 		}
-		while (pstate->precords_missing_sort_keys->phead) {
-			sllv_add(poutput, sllv_pop(pstate->precords_missing_sort_keys));
-		}
+		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
 		sllv_add(poutput, NULL);
 		return poutput;
 	} else {
@@ -298,13 +294,9 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		sllv_t* poutput = sllv_alloc();
 		for (i = 0; i < num_buckets; i++) {
 			sllv_t* plist = pbucket_array[i]->precords;
-			while (plist->phead) {
-				sllv_add(poutput, sllv_pop(plist));
-			}
+			sllv_transfer(poutput, plist);
 		}
-		while (pstate->precords_missing_sort_keys->phead) {
-			sllv_add(poutput, sllv_pop(pstate->precords_missing_sort_keys));
-		}
+		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
 		free(pbucket_array);
 		sllv_add(poutput, NULL); // Signal end of output-record stream.
 		return poutput;
