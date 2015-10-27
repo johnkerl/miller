@@ -2028,7 +2028,8 @@ x_mean 0.424708
 a      eks
 x_mean 0.583954
 
-a wye
+a      wye
+x_mean 
 
 a      zee
 x_mean 0.562840
@@ -3692,7 +3693,8 @@ x_y_cov 0.017595
 a       eks
 x_y_cov 0.034641
 
-a wye
+a       wye
+x_y_cov 
 
 a       zee
 x_y_cov 

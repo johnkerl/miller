@@ -286,12 +286,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		}
 
 		char* sval1 = lrec_get(pinrec, value_field_name_1);
-		if (sval1 == NULL)
-			continue;
-
 		char* sval2 = lrec_get(pinrec, value_field_name_2);
-		if (sval2 == NULL)
-			continue;
 
 		// for ["corr", "cov"]
 		sllse_t* pc = pstate->paccumulator_names->phead;
@@ -307,6 +302,8 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 				}
 				lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
 			}
+			if (sval1 == NULL || sval2 == NULL)
+				continue;
 
 			double dval1 = mlr_double_from_string_or_die(sval1);
 			double dval2 = mlr_double_from_string_or_die(sval2);
