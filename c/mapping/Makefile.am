@@ -4,6 +4,7 @@ libmapping_la_SOURCES=	\
 			lrec_evaluators.c \
 			lrec_evaluators.h \
 			mapper.h \
+			mapper_bar.c \
 			mapper_cat.c \
 			mapper_check.c \
 			mapper_cut.c \

@@ -12,6 +12,7 @@
 #define HAVING_ANY_FIELDS_MATCHING 0x8e
 #define HAVING_NO_FIELDS_MATCHING  0x9f
 
+extern mapper_setup_t mapper_bar_setup;
 extern mapper_setup_t mapper_cat_setup;
 extern mapper_setup_t mapper_check_setup;
 extern mapper_setup_t mapper_count_distinct_setup;
