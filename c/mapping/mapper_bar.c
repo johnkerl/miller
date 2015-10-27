@@ -25,7 +25,7 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
 
 #define DEFAULT_FILL_CHAR  '*'
 #define DEFAULT_OOB_CHAR   '#'
-#define DEFAULT_BLANK_CHAR ' '
+#define DEFAULT_BLANK_CHAR '.'
 #define DEFAULT_LO         0.0
 #define DEFAULT_HI         100.0
 #define DEFAULT_WIDTH      40
@@ -43,13 +43,13 @@ static void mapper_bar_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.\n");
 	fprintf(o, "These align best with --opprint or --oxtab output format.\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "-f {a,b,c}       Field names to convert to bars.\n");
-	fprintf(o, "-c {character}   Fill character: default '%c'.\n", DEFAULT_FILL_CHAR);
-	fprintf(o, "-x {character}   Out-of-bounds character: default '%c'.\n", DEFAULT_OOB_CHAR);
-	fprintf(o, "-b {character}   Blank character: default '%c'.\n", DEFAULT_BLANK_CHAR);
-	fprintf(o, "-l {lo}          Lower-limit value for min-width bar: default '%lf'.\n", DEFAULT_LO);
-	fprintf(o, "-u {hi}          Upper-limit value for max-width bar: default '%lf'.\n", DEFAULT_HI);
-	fprintf(o, "-w {n}           Bar-field width: default '%d'.\n", DEFAULT_WIDTH);
+	fprintf(o, "-f   {a,b,c}      Field names to convert to bars.\n");
+	fprintf(o, "-c   {character}  Fill character: default '%c'.\n", DEFAULT_FILL_CHAR);
+	fprintf(o, "-x   {character}  Out-of-bounds character: default '%c'.\n", DEFAULT_OOB_CHAR);
+	fprintf(o, "-b   {character}  Blank character: default '%c'.\n", DEFAULT_BLANK_CHAR);
+	fprintf(o, "--lo {lo}         Lower-limit value for min-width bar: default '%lf'.\n", DEFAULT_LO);
+	fprintf(o, "--hi {hi}         Upper-limit value for max-width bar: default '%lf'.\n", DEFAULT_HI);
+	fprintf(o, "-w   {n}          Bar-field width: default '%d'.\n", DEFAULT_WIDTH);
 }
 
 // ----------------------------------------------------------------
@@ -65,13 +65,13 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_array_flag(pstate, "-f", &pfield_names);
-	ap_define_string_flag(pstate,       "-c", &fill_string);
-	ap_define_string_flag(pstate,       "-x", &oob_string);
-	ap_define_string_flag(pstate,       "-b", &blank_string);
-	ap_define_double_flag(pstate,       "-l", &lo);
-	ap_define_double_flag(pstate,       "-u", &hi);
-	ap_define_int_flag(pstate,          "-w", &width);
+	ap_define_string_array_flag(pstate, "-f",   &pfield_names);
+	ap_define_string_flag(pstate,       "-c",   &fill_string);
+	ap_define_string_flag(pstate,       "-x",   &oob_string);
+	ap_define_string_flag(pstate,       "-b",   &blank_string);
+	ap_define_double_flag(pstate,       "--lo", &lo);
+	ap_define_double_flag(pstate,       "--hi", &hi);
+	ap_define_int_flag(pstate,          "-w",   &width);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_bar_usage(stderr, argv[0], verb);
