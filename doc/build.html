@@ -154,9 +154,10 @@ package manager on NetBSD, Debian Linux, Arch Linux, or perhaps other distributi
 <a id="From_git_clone_using_autoconfig"/><h2>From git clone using autoconfig</h2>
 
 <ul>
-<li/> Install the packages <tt>automake</tt>, <tt>autoconf</tt>,
-  <tt>libtool</tt>, and <tt>flex</tt> using your system&rsquo;s package manager
-  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.).
+<li/> Install the following packages using your system&rsquo;s package manager
+(<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
+<tt>automake autoconf libtool flex</tt>
+
 <li/> <tt>git clone https://github.com/johnkerl/miller</tt>
 <li/> <tt>cd miller</tt>
 <li/> <tt>autoreconf -fiv</tt>
