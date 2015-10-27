@@ -72,6 +72,8 @@ void sllv_reverse(sllv_t* plist) {
 }
 
 void sllv_transfer(sllv_t* pthis, sllv_t* pthat) {
+	if (pthat == NULL)
+		return;
 	if (pthis->phead == NULL) {
 		pthis->phead  = pthat->phead;
 		pthis->ptail  = pthat->ptail;

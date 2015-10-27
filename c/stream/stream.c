@@ -111,8 +111,8 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvdata;
 			sllv_t* nextrecsi = chain_map(poutrec, pctx, pmapper_list_head->pnext);
-			// sllv_append frees its second argument
-			nextrecs = sllv_append(nextrecs, nextrecsi);
+			sllv_transfer(nextrecs, nextrecsi);
+			sllv_free(nextrecsi);
 		}
 		sllv_free(outrecs);
 
