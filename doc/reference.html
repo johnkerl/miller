@@ -1455,12 +1455,24 @@ _postfix              *        27  27  Postfix Mail Server           /var/spool/
 </div>
 <p/>
 
-<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add them using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
+<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
 
 <p/>
 <div class="pokipanel">
 <pre>
 $ cat data/headerless.csv
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv
+1,2,3
 John,23,present
 Fred,34,present
 Alice,56,missing
