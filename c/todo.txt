@@ -13,10 +13,6 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
-x bar --lo/--hi : imitate histogram
-x bar bg char default to '.'
-x bar fg char default to 'o'
-
 MINOR: mlrcli topdown
 MINOR: brew version bump?!?
 
