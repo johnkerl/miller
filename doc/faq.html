@@ -140,18 +140,23 @@ masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 
 # Try (unsuccessfully) to extract a few fields:
+$ mlr --csv cut -f KEY,PL,RO colours.csv
+(no output)
+
+# Use LF record separator (--rs lf) since the file doesn't have CR/LF line
+# endings -- but still unsuccessfully:
 $ mlr --csv --rs lf cut -f KEY,PL,RO colours.csv
 (only blank lines appear)
 
 # Use XTAB output format to get a sharper picture of where records/fields
 # are being split:
-$ mlr --csv --irs lf --oxtab cat colours.csv
+$ mlr --icsv --irs lf --oxtab cat colours.csv
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 
-# Use XTAB again with different field separator:
-$ mlr --csv --irs lf --ifs semicolon --oxtab cat colours.csv
+# Use XTAB again with different field separator (--fs semicolon):
+$ mlr --icsv --irs lf --ifs semicolon --oxtab cat colours.csv
 KEY masterdata_colourcode_1
 DE  Weiß
 EN  White
