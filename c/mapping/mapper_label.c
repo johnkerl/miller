@@ -25,8 +25,8 @@ static void mapper_label_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s {new1,new2,new3,...}\n", argv0, verb);
 	fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n");
 	fprintf(o, "have the respective name. (Fields past the nth are left with their original\n");
-	fprintf(o, "names.) Particularly useful with --inidx, to give useful names to otherwise\n");
-	fprintf(o, "integer-indexed fields.\n");
+	fprintf(o, "names.) Particularly useful with --inidx or --implicit-csv-header, to give\n");
+	fprintf(o, "useful names to otherwise integer-indexed fields.\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  \"echo 'a b c d' | %s --inidx --odkvp cat\"       gives \"1=a,2=b,3=c,4=d\"\n", argv0);
 	fprintf(o, "  \"echo 'a b c d' | %s --inidx --odkvp %s s,t\" gives \"s=a,t=b,3=c,4=d\"\n", argv0, verb);

@@ -643,13 +643,13 @@ Usage: mlr bar [options]
 Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.
 These align best with --opprint or --oxtab output format.
 Options:
--f {a,b,c}       Field names to convert to bars.
--c {character}   Fill character: default '*'.
--x {character}   Out-of-bounds character: default '#'.
--b {character}   Blank character: default ' '.
--l {lo}          Lower-limit value for min-width bar: default '0.000000'.
--u {hi}          Upper-limit value for max-width bar: default '100.000000'.
--w {n}           Bar-field width: default '40'.
+-f   {a,b,c}      Field names to convert to bars.
+-c   {character}  Fill character: default '*'.
+-x   {character}  Out-of-bounds character: default '#'.
+-b   {character}  Blank character: default '.'.
+--lo {lo}         Lower-limit value for min-width bar: default '0.000000'.
+--hi {hi}         Upper-limit value for max-width bar: default '100.000000'.
+-w   {n}          Bar-field width: default '40'.
 </pre>
 </div>
 <p/>
@@ -671,13 +671,13 @@ wye pan 5 0.5732889198020006  0.8636244699032729
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint bar -l 0 -u 1 -f x,y data/small
+$ mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
 a   b   i x                                        y
-pan pan 1 *************                            *****************************
-eks pan 2 ******************************           ********************
-wye wye 3 ********                                 *************
-eks wye 4 ***************                          *****
-wye pan 5 **********************                   **********************************
+pan pan 1 *************........................... *****************************...........
+eks pan 2 ******************************.......... ********************....................
+wye wye 3 ********................................ *************...........................
+eks wye 4 ***************......................... *****...................................
+wye pan 5 **********************.................. **********************************......
 </pre>
 </div>
 <p/>
@@ -685,13 +685,13 @@ wye pan 5 **********************                   *****************************
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint bar -l 0.4 -u 0.6 -f x,y data/small
+$ mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
 a   b   i x                                        y
-pan pan 1 #                                        ***************************************#
-eks pan 2 ***************************************# ************************
-wye wye 3 #                                        #
-eks wye 4 #                                        #
-wye pan 5 **********************************       ***************************************#
+pan pan 1 #....................................... ***************************************#
+eks pan 2 ***************************************# ************************................
+wye wye 3 #....................................... #.......................................
+eks wye 4 #....................................... #.......................................
+wye pan 5 **********************************...... ***************************************#
 </pre>
 </div>
 <p/>
@@ -1490,8 +1490,8 @@ $ mlr label --help
 Usage: mlr label {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
-names.) Particularly useful with --inidx, to give useful names to otherwise
-integer-indexed fields.
+names.) Particularly useful with --inidx or --implicit-csv-header, to give
+useful names to otherwise integer-indexed fields.
 Examples:
   "echo 'a b c d' | mlr --inidx --odkvp cat"       gives "1=a,2=b,3=c,4=d"
   "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
