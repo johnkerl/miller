@@ -114,6 +114,8 @@ is CR/LF (carriage return followed by linefeed, following
 CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <b>mlr --csv --rs
 lf {remaining arguments ...}</b>.
 
+<p/>Also try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
+
 <a id="Fields_not_selected"/><h1>Fields not selected</h1>
 
 <p/>Check the field-separators of the data, e.g. with the command-line
@@ -122,6 +124,8 @@ separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
 then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
 <tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
 case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
+
+<p/>Also try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
 
 <a id="Diagnosing_delimiter_specifications"/><h1>Diagnosing delimiter specifications</h1>
 
@@ -155,6 +159,10 @@ KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Val
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 
+# Using XTAB output format makes it clearer that KEY;DE;...;RO;TR is being
+# treated as a single field name in the CSV header, and likewise each
+# subsequent line is being treated as a single field value. This is because
+# the default field separator is a comma but we have semicolons here.
 # Use XTAB again with different field separator (--fs semicolon):
 $ mlr --icsv --irs lf --ifs semicolon --oxtab cat colours.csv
 KEY masterdata_colourcode_1
