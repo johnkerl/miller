@@ -96,6 +96,7 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#No_output_at_all">No output at all</a><br/>
 &bull;&nbsp;<a href="#Fields_not_selected">Fields not selected</a><br/>
+&bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
 &bull;&nbsp;<a href="#Error-output_in_certain_string_cases">Error-output in certain string cases</a><br/>
 &bull;&nbsp;<a href="#How_do_I_parse_log-file_output?">How do I parse log-file output?</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
@@ -110,8 +111,8 @@ Miller commands were run with pretty-print-tabular output format.
 is CR/LF (carriage return followed by linefeed, following
 <a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>). Yet if your CSV has
 *nix-standard LF line endings, Miller will keep reading the file looking for a
-CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <tt>mlr --csv --rs
-lf {remaining arguments ...}</tt>.
+CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <b>mlr --csv --rs
+lf {remaining arguments ...}</b>.
 
 <a id="Fields_not_selected"/><h1>Fields not selected</h1>
 
@@ -121,6 +122,68 @@ separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
 then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
 <tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
 case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
+
+<a id="Diagnosing_delimiter_specifications"/><h1>Diagnosing delimiter specifications</h1>
+
+<p/>
+<div class="pokipanel">
+<pre>
+# Use the `file` command to see if there are CR/LF terminators (in this case,
+# there are not):
+$ file colours.csv
+colours.csv: UTF-8 Unicode text
+
+# Look at the file to find names of fields
+$ cat colours.csv
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
+masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+
+# Try (unsuccessfully) to extract a few fields:
+$ mlr --csv --rs lf cut -f KEY,PL,RO colours.csv
+(only blank lines appear)
+
+# Use XTAB output format to get a sharper picture of where records/fields
+# are being split:
+$ mlr --csv --irs lf --oxtab cat colours.csv
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+
+# Use XTAB again with different field separator:
+$ mlr --csv --irs lf --ifs semicolon --oxtab cat colours.csv
+KEY masterdata_colourcode_1
+DE  Weiß
+EN  White
+ES  Blanco
+FI  Valkoinen
+FR  Blanc
+IT  Bianco
+NL  Wit
+PL  Biały
+RO  Alb
+TR  Beyaz
+
+KEY masterdata_colourcode_2
+DE  Schwarz
+EN  Black
+ES  Negro
+FI  Musta
+FR  Noir
+IT  Nero
+NL  Zwart
+PL  Czarny
+RO  Negru
+TR  Siyah
+
+# Using the new field-separator, retry the cut:
+$ mlr --csv --rs lf --fs semicolon cut -f KEY,PL,RO colours.csv
+KEY;PL;RO
+masterdata_colourcode_1;Biały;Alb
+masterdata_colourcode_2;Czarny;Negru
+</pre>
+</div>
+<p/>
 
 <a id="Error-output_in_certain_string_cases"/><h1>Error-output in certain string cases</h1>
 
