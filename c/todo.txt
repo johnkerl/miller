@@ -13,7 +13,6 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
-MINOR: mlrcli topdown
 MINOR: brew version bump?!?
 
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
