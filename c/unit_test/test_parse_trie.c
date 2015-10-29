@@ -12,6 +12,14 @@ int assertions_failed = 0;
 
 static char* sep = "================================================================";
 
+
+static void print_with_unprintables(char* s) {
+	for (char* p = s; *p; p++) {
+		char c = *p;
+		printf("%c[%02x]", isprint((unsigned char)c) ? c : '?', ((unsigned)c) & 0xff);
+	}
+}
+
 // ----------------------------------------------------------------
 static void test_case(
 	char*  test_name,
@@ -28,7 +36,9 @@ static void test_case(
 	printf("%s %s\n", sep, test_name);
 	parse_trie_print(ptrie);
 	for (stridx = 0; stridx < num_strings; stridx++) {
-		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
+		printf("Adding string[%d] = [", stridx);
+		print_with_unprintables(strings[stridx]);
+		printf("]\n");
 		parse_trie_add_string(ptrie, strings[stridx], stridx);
 		parse_trie_print(ptrie);
 	}
@@ -129,7 +139,9 @@ static char* test_dkvp() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	for (stridx = 0; stridx < num_strings; stridx++) {
-		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
+		printf("Adding string[%d] = [", stridx);
+		print_with_unprintables(strings[stridx]);
+		printf("]\n");
 		parse_trie_add_string(ptrie, strings[stridx], stridx);
 	}
 	parse_trie_print(ptrie);
@@ -214,7 +226,9 @@ static char* show_it() {
 	parse_trie_t* ptrie = parse_trie_alloc();
 	parse_trie_print(ptrie);
 	for (stridx = 0; stridx < num_strings; stridx++) {
-		printf("Adding string[%d] = [%s]\n", stridx, strings[stridx]);
+		printf("Adding string[%d] = [", stridx);
+		print_with_unprintables(strings[stridx]);
+		printf("]\n");
 		parse_trie_add_string(ptrie, strings[stridx], stridx);
 	}
 	parse_trie_print(ptrie);
@@ -222,14 +236,17 @@ static char* show_it() {
 	while (TRUE) {
 		rc = parse_trie_match(ptrie, p, 0, strlen(p), 0xff, &stridx, &matchlen);
 		if (rc) {
-			printf("match token %d (%s)\n", stridx, strings[stridx]);
+			printf("match token %d (", stridx);
+			print_with_unprintables(strings[stridx]);
+			printf(")\n");
+
 			p += matchlen;
 			if (stridx == EOF_STRIDX) {
 				break;
 			}
 		} else {
 			char c = *p;
-			printf("c %c[%02x]\n", isprint((unsigned char)c) ? c : '?', (unsigned)c);
+			printf("c %c[%02x]\n", isprint((unsigned char)c) ? c : '?', ((unsigned)c)&0xff);
 			p++;
 		}
 	}
