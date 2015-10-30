@@ -209,6 +209,11 @@ static inline mv_t f_fff_logifit_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	return rv;
 }
 
+mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+
 // ----------------------------------------------------------------
 mv_t s_s_tolower_func(mv_t* pval1);
 mv_t s_s_toupper_func(mv_t* pval1);

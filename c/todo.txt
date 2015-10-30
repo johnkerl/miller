@@ -14,6 +14,7 @@ TOP OF LIST
 ! join on partial value-field matches
 
 MINOR: brew version bump?!?
+VERY MINOR: modular int arithmetic
 
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
 MINOR: faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).

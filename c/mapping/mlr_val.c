@@ -184,7 +184,7 @@ void mt_get_int_nullable(mv_t* pval) {
 		break;
 	case MT_FLOAT:
 		pval ->type = MT_INT;
-		pval->u.fltv = (long long)pval->u.intv;
+		pval->u.intv = (long long)pval->u.fltv;
 		break;
 	case MT_BOOL:
 		pval->type = MT_ERROR;
@@ -294,6 +294,96 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	pval1->u.strv = NULL;
 	pval3->u.strv = NULL;
 	return (mv_t) {.type = MT_STRING, .u.strv = output};
+}
+
+// ----------------------------------------------------------------
+mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	long long m = pval3->u.intv;
+	if (m <= 0LL)
+		return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+	long long a = pval1->u.intv % m;
+	if (a < 0LL)
+		a += m; // crazy C-language mod operator
+	long long b = pval2->u.intv % m;
+	if (b < 0LL)
+		b += m;
+	long long c = (a + b) % m;
+	mv_t rv = {.type = MT_INT, .u.intv = c};
+	return rv;
+}
+
+mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	long long m = pval3->u.intv;
+	if (m <= 0LL)
+		return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+	long long a = pval1->u.intv % m;
+	if (a < 0LL)
+		a += m; // crazy C-language mod operator
+	long long b = pval2->u.intv % m;
+	if (b < 0LL)
+		b += m;
+	long long c = (a - b) % m;
+	if (c < 0LL)
+		c += m;
+	mv_t rv = {.type = MT_INT, .u.intv = c};
+	return rv;
+}
+
+mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	long long m = pval3->u.intv;
+	if (m <= 0LL)
+		return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+	long long a = pval1->u.intv % m;
+	if (a < 0LL)
+		a += m; // crazy C-language mod operator
+	long long b = pval2->u.intv % m;
+	if (b < 0LL)
+		b += m;
+	long long c = (a * b) % m;
+	mv_t rv = {.type = MT_INT, .u.intv = c};
+	return rv;
+}
+
+mv_t i_iii_moddiv_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	mv_t rv = {.type = MT_NULL, .u.intv = 0LL}; // xxx stub
+	return rv;
+}
+
+mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	long long m = pval3->u.intv;
+	if (m <= 0LL)
+		return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+	long long a = pval1->u.intv % m;
+	if (a < 0LL)
+		a += m; // crazy C-language mod operator
+
+	long long e = pval2->u.intv;
+
+	long long c = 1LL;
+	if (e == 1LL) {
+		c = a;
+	} else if (e == 0LL) {
+		c = 1LL;
+	} else if (e > 0) {
+		long long ap = a;
+		c = 1LL;
+		unsigned long long u = (unsigned long long)e;
+
+		// repeated-squaring algorithm
+		while (u != 0) {
+			if ((u & 1LL) == 1LL) {
+				c = (c * ap) % m;
+			}
+			u >>= 1;
+			ap = (ap * ap) % m;
+		}
+	} else {
+		mv_t rv = {.type = MT_ERROR, .u.intv = 0LL};
+		return rv;
+	}
+
+	mv_t rv = {.type = MT_INT, .u.intv = c};
+	return rv;
 }
 
 // ----------------------------------------------------------------

@@ -936,6 +936,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "log10",    1 , "Base-10 logarithm."},
 	{ FUNC_CLASS_MATH, "log1p",    1 , "log(1-x)."},
 	{ FUNC_CLASS_MATH, "logifit",  3 , "Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b)."},
+	{ FUNC_CLASS_MATH, "madd",     3 , "a + b mod m (integers)"},
+	{ FUNC_CLASS_MATH, "msub",     3 , "a - b mod m (integers)"},
+	{ FUNC_CLASS_MATH, "mmul",     3 , "a * b mod m (integers)"},
+	{ FUNC_CLASS_MATH, "mexp",     3 , "a ** b mod m (integers)"},
 	{ FUNC_CLASS_MATH, "max",      2 , "max of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "min",      2 , "min of two numbers; null loses"},
 	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
@@ -1222,6 +1226,14 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 		return lrec_evaluator_alloc_from_s_sss_func(gsub_no_precomp_func, parg1, parg2, parg3);
 	} else if (streq(fnnm, "logifit")) {
 		return lrec_evaluator_alloc_from_f_fff_func(f_fff_logifit_func,   parg1, parg2, parg3);
+	} else if (streq(fnnm, "madd")) {
+		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modadd_func,    parg1, parg2, parg3);
+	} else if (streq(fnnm, "msub")) {
+		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modsub_func,    parg1, parg2, parg3);
+	} else if (streq(fnnm, "mmul")) {
+		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modmul_func,    parg1, parg2, parg3);
+	} else if (streq(fnnm, "mexp")) {
+		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modexp_func,    parg1, parg2, parg3);
 	} else  { return NULL; }
 }
 
