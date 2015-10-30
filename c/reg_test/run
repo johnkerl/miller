@@ -369,6 +369,8 @@ run_mlr put -v '$x=$a*-$b+$c'  /dev/null
 run_mlr put -v '$x=$a+$b*-$c'  /dev/null
 run_mlr put -v '$x=$a*$b+-$c'  /dev/null
 
+run_mlr --opprint put '$y=madd($x,10,37)' then put '$z=msub($x,10,37)' $indir/modarith.dat
+run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/modarith.dat
 
 run_mlr filter -v '$a==1 && $b == 1 && $c == 1'   /dev/null
 run_mlr filter -v '$a==1 || $b == 1 && $c == 1'   /dev/null
