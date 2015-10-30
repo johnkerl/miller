@@ -66,6 +66,7 @@ char* mt_describe_val(mv_t val);
 void mt_get_boolean_strict(mv_t* pval);
 void mt_get_double_strict(mv_t* pval);
 void mt_get_double_nullable(mv_t* pval);
+void mt_get_int_nullable(mv_t* pval);
 
 // ----------------------------------------------------------------
 typedef mv_t mv_zary_func_t();

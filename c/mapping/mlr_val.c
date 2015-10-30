@@ -103,62 +103,109 @@ void mt_get_boolean_strict(mv_t* pval) {
 
 // ----------------------------------------------------------------
 void mt_get_double_strict(mv_t* pval) {
-	if (pval->type == MT_NULL)
-		return;
-	if (pval->type == MT_ERROR)
-		return;
-	if (pval->type == MT_FLOAT)
-		return;
-	if (pval->type == MT_STRING) {
-		double fltv;
+	double fltv = 0.0;
+	switch (pval->type) {
+	case MT_NULL:
+		break;
+	case MT_ERROR:
+		break;
+	case MT_FLOAT:
+		break;
+	case MT_STRING:
 		if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
-			pval->u.intv = 0;
+			pval->u.intv = 0LL;
 		} else {
 			pval->type = MT_FLOAT;
 			pval->u.fltv = fltv;
 		}
-	} else if (pval->type == MT_INT) {
+		break;
+	case MT_INT:
 		pval ->type = MT_FLOAT;
 		pval->u.fltv = (double)pval->u.intv;
-	} else if (pval->type == MT_BOOL) {
+		break;
+	case MT_BOOL:
 		pval->type = MT_ERROR;
-		pval->u.intv = 0;
-	} else {
+		pval->u.intv = 0LL;
+		break;
+	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		break;
 	}
 }
 
 // ----------------------------------------------------------------
 void mt_get_double_nullable(mv_t* pval) {
-	if (pval->type == MT_NULL)
-		return;
-	if (pval->type == MT_ERROR)
-		return;
-	if (pval->type == MT_FLOAT)
-		return;
-	if (pval->type == MT_STRING) {
-		double fltv;
+	double fltv = 0.0;
+	switch (pval->type) {
+	case MT_NULL:
+		break;
+	case MT_ERROR:
+		break;
+	case MT_FLOAT:
+		break;
+	case MT_INT:
+		pval ->type = MT_FLOAT;
+		pval->u.fltv = (double)pval->u.intv;
+		break;
+	case MT_BOOL:
+		pval->type = MT_ERROR;
+		pval->u.intv = 0;
+		break;
+	case MT_STRING:
 		if (*pval->u.strv == '\0') {
 			pval->type = MT_NULL;
-			pval->u.intv = 0;
+			pval->u.intv = 0LL;
 		} else if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
-			pval->u.intv = 0;
+			pval->u.intv = 0LL;
 		} else {
 			pval->type = MT_FLOAT;
 			pval->u.fltv = fltv;
 		}
-	} else if (pval->type == MT_INT) {
-		pval ->type = MT_FLOAT;
-		pval->u.fltv = (double)pval->u.intv;
-	} else if (pval->type == MT_BOOL) {
-		pval->type = MT_ERROR;
-		pval->u.intv = 0;
-	} else {
+		break;
+	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		break;
+	}
+}
+
+// ----------------------------------------------------------------
+void mt_get_int_nullable(mv_t* pval) {
+	long long intv = 0LL;
+	switch (pval->type) {
+	case MT_NULL:
+		break;
+	case MT_ERROR:
+		break;
+	case MT_INT:
+		break;
+	case MT_FLOAT:
+		pval ->type = MT_INT;
+		pval->u.fltv = (long long)pval->u.intv;
+		break;
+	case MT_BOOL:
+		pval->type = MT_ERROR;
+		pval->u.intv = 0;
+		break;
+	case MT_STRING:
+		if (*pval->u.strv == '\0') {
+			pval->type = MT_NULL;
+			pval->u.intv = 0LL;
+		} else if (!mlr_try_int_from_string(pval->u.strv, &intv)) {
+			pval->type = MT_ERROR;
+			pval->u.intv = 0LL;
+		} else {
+			pval->type = MT_INT;
+			pval->u.intv = intv;
+		}
+		break;
+	default:
+		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		break;
 	}
 }
 
