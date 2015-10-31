@@ -13,8 +13,9 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
+MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
+
 MINOR: brew version bump?!?
-VERY MINOR: modular int arithmetic
 
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
 MINOR: faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
@@ -26,15 +27,16 @@ MINOR: faqent on polyglottal dkvp/etc production
 MINOR: faqent re join without -u -- it's a weird default & i'm imitating un*x join
 MINOR: faqent re cat xyz | mlr ... vs. mlr ... xyz:
   o easier to up-arrow/control-P & tack on a then-statement
-  o lose no function except FILENAME/FNR
+  o lose no functionality except FILENAME/FNR
   o lose ~10% perf due to no mmap
+MINOR: faqent re R/mysql/etc inouts
 
 MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
-MAJOR: uni/multivariate logistic for ternary & above
+
+MAJOR: uni/multivariate logistic for ternary & above?
 
 MINOR: --mmap @ mlr -h
 MINOR: bus-insurance dev page
-MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
 
 ----------------------------------------------------------------
 MAJOR: regex
