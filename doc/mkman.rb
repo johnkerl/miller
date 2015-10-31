@@ -29,13 +29,38 @@ positionally-indexed data as a special case.)"""
 % mlr --csv cut -f hostname,uptime mydata.csv
 % mlr --csv filter '$status != \"down\" && $upsec >= 10000' *.csv
 % mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
-% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+% mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group /etc/group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\1:\2\")' data/*
+% mlr put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 """
   )
+
+  print make_section('OPTIONS', [
+"""In the following option flags, the version with \"i\" designates the input
+stream, \"o\" the output stream, and the version without prefix sets the option
+for both input and output stream. For example: --irs sets the input record
+separator, --ors the output record separator, and --rs sets both the input and
+output separator to the given value."""
+  ])
+
+  print make_subsection('SEPARATOR', [
+"""asdfasdfadf"""
+  ])
+
+  print make_code_block(`mlr -h`)
+
+  # xxx do better than backtick -- trap $?
+  verbs = `mlr --list-all-verbs-raw`
+  print make_subsection('VERBS', [
+"""asdfasdfadf"""
+  ])
+  verbs = verbs.strip.split("\n")
+  for verb in verbs
+    print make_subsubsection(verb, [])
+    print make_code_block(`mlr #{verb} -h`)
+  end
 
   print make_section('AUTHOR', [
     "Miller is written by John Kerl <kerl.john.r@gmail.com>.",
@@ -47,7 +72,7 @@ positionally-indexed data as a special case.)"""
   ])
 end
 
-# ----------------------------------------------------------------
+# ================================================================
 def make_top()
   # xxx format the data
   ".TH \"MILLER\" \"1\" \"09/14/2015\" \"\\ \\&\" \"\\ \\&\"\n"
@@ -55,6 +80,28 @@ end
 
 # ----------------------------------------------------------------
 def make_section(title, paragraphs)
+  retval = ".SH \"#{title}\"\n"
+  paragraphs.each do |paragraph|
+    retval += ".sp\n"
+    retval += groff_encode(paragraph) + "\n"
+  end
+  retval
+end
+
+# ----------------------------------------------------------------
+# xxx temp
+def make_subsection(title, paragraphs)
+  retval = ".SH \"#{title}\"\n"
+  paragraphs.each do |paragraph|
+    retval += ".sp\n"
+    retval += groff_encode(paragraph) + "\n"
+  end
+  retval
+end
+
+# ----------------------------------------------------------------
+# xxx temp
+def make_subsubsection(title, paragraphs)
   retval = ".SH \"#{title}\"\n"
   paragraphs.each do |paragraph|
     retval += ".sp\n"

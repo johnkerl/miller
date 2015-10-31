@@ -12,7 +12,7 @@ For example:
 % mlr --csv cut -f hostname,uptime mydata.csv
 % mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv
 % mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
-% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+% mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group /etc/group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
 % mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*

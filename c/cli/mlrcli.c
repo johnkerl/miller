@@ -203,6 +203,12 @@ static void list_all_verbs(FILE* o) {
 	fprintf(o, "\n");
 }
 
+static void list_all_verbs_raw(FILE* o) {
+	for (int i = 0; i < mapper_lookup_table_length; i++) {
+		fprintf(o, "%s\n", mapper_lookup_table[i]->verb);
+	}
+}
+
 static void main_usage(FILE* o, char* argv0) {
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
 	list_all_verbs(o);
@@ -397,6 +403,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			usage_all_verbs(argv[0]);
 		} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
 			list_all_verbs(stdout);
+			exit(0);
+		} else if (streq(argv[argi], "--list-all-verbs-raw")) {
+			list_all_verbs_raw(stdout);
 			exit(0);
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
