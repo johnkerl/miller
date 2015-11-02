@@ -178,6 +178,19 @@ static char* rebackslash(char* sep) {
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
 // ----------------------------------------------------------------
+// The main_usage() function is split out into subroutines in support of the
+// manpage autogenerator.
+
+static void main_usage_synopsis(FILE* o, char* argv0) {
+	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {zero or more file names}\n", argv0);
+}
+
+static void list_all_verbs_raw(FILE* o) {
+	for (int i = 0; i < mapper_lookup_table_length; i++) {
+		fprintf(o, "%s\n", mapper_lookup_table[i]->verb);
+	}
+}
+
 static void list_all_verbs(FILE* o) {
 	char* leader = "  ";
 	char* separator = " ";
@@ -203,29 +216,21 @@ static void list_all_verbs(FILE* o) {
 	fprintf(o, "\n");
 }
 
-static void list_all_verbs_raw(FILE* o) {
-	for (int i = 0; i < mapper_lookup_table_length; i++) {
-		fprintf(o, "%s\n", mapper_lookup_table[i]->verb);
-	}
-}
-
-static void main_usage(FILE* o, char* argv0) {
-	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {file names}\n", argv0);
-	list_all_verbs(o);
-
-	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
+static void main_usage_help_options(FILE* o, char* argv0) {
 	fprintf(o, "Please use \"%s -h\" or \"%s --help\" to show this message.\n", argv0, argv0);
 	fprintf(o, "Please use \"%s --version\" to show the software version.\n", argv0);
 	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --list-all-verbs\" to list only verb names.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
+}
 
-	fprintf(o, "\n");
+static void main_usage_functions(FILE* o, char* argv0) {
 	lrec_evaluator_list_functions(o);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
-	fprintf(o, "\n");
+}
 
+static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "Data-format options, for input, output, or both:\n");
 	fprintf(o, "  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
 	fprintf(o, "                                        (default)\n");
@@ -239,6 +244,9 @@ static void main_usage(FILE* o, char* argv0) {
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
+}
+
+static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "Separator options, for input, output, or both:\n");
 	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
 	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
@@ -284,10 +292,16 @@ static void main_usage(FILE* o, char* argv0) {
 		char* ps = lhmss_get(default_pses, filefmt);
 		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
 	}
+}
+
+static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
+}
+
+static void main_usage_double_quoting(FILE* o, char* argv0) {
 	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");
@@ -296,15 +310,27 @@ static void main_usage(FILE* o, char* argv0) {
 	fprintf(o, "                     in them (default)\n");
 	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers\n");
 	fprintf(o, "                     in them\n");
+}
+
+static void main_usage_numerical_formatting(FILE* o, char* argv0) {
 	fprintf(o, "Numerical formatting:\n");
 	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
 	fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
 	fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
 	fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
+}
+
+static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
+}
+
+static void main_usage_then_chaining(FILE* o, char* argv0) {
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
+}
+
+static void main_usage_see_also(FILE* o, char* argv0) {
 	fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n");
 	fprintf(o, "http://github.com/johnkerl/miller.");
 #ifdef HAVE_CONFIG_H
@@ -314,6 +340,26 @@ static void main_usage(FILE* o, char* argv0) {
 #endif // HAVE_CONFIG_H
 }
 
+// ----------------------------------------------------------------
+static void main_usage(FILE* o, char* argv0) {
+	main_usage_synopsis(o, argv0);
+	list_all_verbs(o);
+	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
+	main_usage_help_options(o, argv0);
+	fprintf(o, "\n");
+	main_usage_functions(o, argv0);
+	fprintf(o, "\n");
+	main_usage_data_format_options(o, argv0);
+	main_usage_separator_options(o, argv0);
+	main_usage_csv_options(o, argv0);
+	main_usage_double_quoting(o, argv0);
+	main_usage_numerical_formatting(o, argv0);
+	main_usage_other_options(o, argv0);
+	main_usage_then_chaining(o, argv0);
+	main_usage_see_also(o, argv0);
+}
+
+// ----------------------------------------------------------------
 static void usage_all_verbs(char* argv0) {
 	char* separator = "================================================================";
 

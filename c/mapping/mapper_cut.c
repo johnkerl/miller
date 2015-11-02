@@ -37,7 +37,7 @@ static void mapper_cut_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-f {a,b,c}       Field names to include for cut.\n");
 	fprintf(o, "-o               Retain fields in the order specified here in the argument list.\n");
 	fprintf(o, "                 Default is to retain them in the order found in the input data.\n");
-	fprintf(o, "-x|--complement  Exclude, rather that include, field names specified by -f.\n");
+	fprintf(o, "-x|--complement  Exclude, rather than include, field names specified by -f.\n");
 	fprintf(o, "-r               Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
 	fprintf(o, "                 match any field name containing the substring \"ab\" or matching\n");
 	fprintf(o, "                 \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");

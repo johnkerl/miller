@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# xxx note about why: mindeps
+
 # ----------------------------------------------------------------
 def main
 
@@ -8,6 +10,10 @@ def main
 
   print make_section('NAME', [
     "Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV."
+  ])
+
+  print make_section('SYNOPSIS', [
+"mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}"
   ])
 
   print make_section('DESCRIPTION', [
@@ -45,16 +51,12 @@ separator, --ors the output record separator, and --rs sets both the input and
 output separator to the given value."""
   ])
 
-  print make_subsection('SEPARATOR', [
-"""asdfasdfadf"""
-  ])
-
   print make_code_block(`mlr -h`)
 
   # xxx do better than backtick -- trap $?
   verbs = `mlr --list-all-verbs-raw`
   print make_subsection('VERBS', [
-"""asdfasdfadf"""
+    ""
   ])
   verbs = verbs.strip.split("\n")
   for verb in verbs
@@ -91,7 +93,7 @@ end
 # ----------------------------------------------------------------
 # xxx temp
 def make_subsection(title, paragraphs)
-  retval = ".SH \"#{title}\"\n"
+  retval = ".SS \"#{title}\"\n"
   paragraphs.each do |paragraph|
     retval += ".sp\n"
     retval += groff_encode(paragraph) + "\n"
@@ -102,7 +104,8 @@ end
 # ----------------------------------------------------------------
 # xxx temp
 def make_subsubsection(title, paragraphs)
-  retval = ".SH \"#{title}\"\n"
+  retval  = ".sp\n";
+  retval += "\\fB#{title}\\fR\n"
   paragraphs.each do |paragraph|
     retval += ".sp\n"
     retval += groff_encode(paragraph) + "\n"
@@ -113,10 +116,10 @@ end
 # ----------------------------------------------------------------
 def make_code_block(block)
   retval  = ".if n \\{\\\n"
-  retval += ".RS 4\n"
+  retval += ".RS 0\n"
   retval += ".\\}\n"
   retval += ".nf\n"
-  retval += block
+  retval += block.gsub('\\', '\e')
   retval += ".fi\n"
   retval += ".if n \\{\\\n"
   retval += ".RE\n"
@@ -124,203 +127,13 @@ end
 
 # ----------------------------------------------------------------
 def groff_encode(line)
-  line = line.gsub(/'/, '\(cq')
-  line = line.gsub(/"/, '\(dq')
+  #line = line.gsub(/'/, '\(cq')
+  #line = line.gsub(/"/, '\(dq')
   line = line.gsub(/\./, '\&')
-  line = line.gsub(/-/, '\-')
+  #line = line.gsub(/-/, '\-')
+  line = line.gsub(/\\/, '\e')
   line
 end
 
 # ================================================================
 main
-
-# ================================================================
-
-# .TH "MILLER" "1" "09/14/2015" "\ \&" "\ \&"
-# .\" -----------------------------------------------------------------
-# .\" * Define some portability stuff
-# .\" -----------------------------------------------------------------
-# .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# .\" http://bugs.debian.org/507673
-# .\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
-# .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# .ie \n(.g .ds Aq \(aq
-# .el       .ds Aq '
-# .\" -----------------------------------------------------------------
-# .\" * set default formatting
-# .\" -----------------------------------------------------------------
-# .\" disable hyphenation
-# .nh
-# .\" disable justification (adjust text to left margin only)
-# .ad l
-
-# .\" -----------------------------------------------------------------
-# .\" * MAIN CONTENT STARTS HERE *
-# .\" -----------------------------------------------------------------
-# .SH "NAME"
-# miller \- sed, awk, cut, join, and sort for name\-indexed data such as CSV
-
-# .\" ----------------------------------------------------------------
-# .SH "SYNOPSIS"
-# .sp
-
-# .\" ----------------------------------------------------------------
-# .SH "DESCRIPTION"
-# .sp
-# Description text with backslash ampersand period\&. Also \-\- backslash dash.
-# Also \(cq for single quote.
-# Also \(dq for double quote.
-# Also \*(Aq for single quote.
-
-# .\" ----------------------------------------------------------------
-# .SH "EXAMPLES"
-# .sp
-# .if n \{\
-# .RS 4
-# .\}
-# .nf
-# Here is a code block
-# Here is a code block
-# Here is a code block
-# .fi
-# .if n \{\
-# .RE
-# .\}
-
-# .\" ----------------------------------------------------------------
-# .SH "OPTIONS"
-# .sp
-# In the following option flags, the version with "i" designates the input stream, "o" the output stream, and the version without prefix sets the option for both input and output stream\&. For example: \-\-irs sets the input record separator, \-\-ors the output record separator, and \-\-rs sets both the input and output separator to the given value\&.
-# .SS "SEPARATOR"
-# .PP
-# \-\-rs, \-\-irs, \-\-ors
-# .RS 4
-# Record separators, defaulting to newline
-# .RE
-# .PP
-# \-\-fs, \-\-ifs, \-\-ofs, \-\-repifs
-# .RS 4
-# Field separators, defaulting to ","
-# .RE
-# .PP
-# \-\-ps, \-\-ips, \-\-ops
-# .RS 4
-# Pair separators, defaulting to "="
-# .RE
-# .SS "DATA\-FORMAT"
-# .PP
-# \-\-dkvp, \-\-idkvp, \-\-odkvp
-# .RS 4
-# Delimited key\-value pairs, e\&.g "a=1,b=2" (default)
-# .RE
-# .PP
-# \-\-nidx, \-\-inidx, \-\-onidx
-# .RS 4
-# Implicitly\-integer\-indexed fields (Unix\-toolkit style)
-# .RE
-# .PP
-# \-\-csv, \-\-icsv, \-\-ocsv
-# .RS 4
-# Comma\-separated value (or tab\-separated with \-\-fs tab, etc\&.)
-# .RE
-# .PP
-# \-\-pprint, \-\-ipprint, \-\-opprint, \-\-right
-# .RS 4
-# Pretty\-printed tabular (produces no output until all input is in)
-# .RE
-# .PP
-# \-\-pprint, \-\-ipprint, \-\-opprint, \-\-right
-# .RS 4
-# Pretty\-printed tabular (produces no output until all input is in)
-# .RE
-# .sp
-# \-p is a keystroke\-saver for \-\-nidx \-\-fs space \-\-repifs
-# .SS "NUMERICAL FORMAT"
-# .PP
-# .RS 4
-# Sets the numerical format given a printf\-style format string\&.
-# .RE
-# .SS "OTHER"
-# .PP
-# .RS 4
-# Seeds the random number generator used for put/filter
-# urand()
-# with a number n of the form 12345678 or 0xcafefeed\&.
-# .RE
-# .SS "VERBS"
-# .sp
-# .it 1 an-trap
-# .nr an-no-space-flag 1
-# .nr an-break-flag 1
-# .br
-# .ps +1
-# \fBcut\fR
-# .RS 4
-# .sp
-# Usage: mlr cut [options]
-# .sp
-# Passes through input records with specified fields included/excluded\&.
-# .PP
-# \-f {a,b,c}
-# .RS 4
-# Field names to include for cut\&.
-# .RE
-# .PP
-# \-o
-# .RS 4
-# Retain fields in the order specified here in the argument list\&. Default is to retain them in the order found in the input data\&.
-# .RE
-# .PP
-# \-x|\-\-complement
-# .RS 4
-# Exclude, rather that include, field names specified by \-f\&.
-# .RE
-# .RE
-# .sp
-# .it 1 an-trap
-# .nr an-no-space-flag 1
-# .nr an-break-flag 1
-# .br
-# .ps +1
-# \fBfilter\fR
-# .RS 4
-# .sp
-# prints the AST (abstract syntax tree) for the expression, which gives full transparency on the precedence and associativity rules of Miller\(cqs grammar\&. Please use a dollar sign for field names and double\-quotes for string literals\&. Miller built\-in variables are NF, NR, FNR, FILENUM, FILENAME, PI, E\&.
-# .sp
-# Examples:
-# .sp
-# .if n \{\
-# .RS 4
-# .\}
-# .nf
-# mlr filter \*(Aqlog10($count) > 4\&.0\*(Aq
-# mlr filter \*(AqFNR == 2          (second record in each file)\*(Aq
-# mlr filter \*(Aqurand() < 0\&.001\*(Aq  (subsampling)
-# mlr filter \*(Aq$color != "blue" && $value > 4\&.2\*(Aq
-# mlr filter \*(Aq($x<\&.5 && $y<\&.5) || ($x>\&.5 && $y>\&.5)\*(Aq
-# .fi
-# .if n \{\
-# .RE
-# .\}
-# .sp
-# Please see http://johnkerl\&.org/miller/doc/reference\&.html for more information including function list\&.
-# .RE
-# .sp
-# .it 1 an-trap
-# .nr an-no-space-flag 1
-# .nr an-break-flag 1
-# .br
-# .ps +1
-# .\" ----------------------------------------------------------------
-# .RE
-# .RE
-
-# .\" ----------------------------------------------------------------
-# .SH "AUTHOR"
-# .sp
-# miller is written by John Kerl <kerl\&.john\&.r@gmail\&.com>\&.
-# .sp
-# This manual page has been composed from miller\(cqs help output by Eric MSP Veith <eveith@veith\-m\&.de>\&.
-# .SH "SEE ALSO"
-# .sp
-# sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for Comma\-Separated Values (CSV) Files, the miller website http://johnkerl\&.org/miller/doc
