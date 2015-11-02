@@ -13,8 +13,6 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
-MINOR: even absent manpage autogen from C, at least manually update mlr.1 to match current output
-
 MINOR: brew version bump?!?
 
 MINOR: faqent re R/mysql/etc inouts
@@ -46,6 +44,9 @@ MAJOR: regex
 
 ----------------------------------------------------------------
 MAJOR: manpage
+
+! portabilities in mlr.1
+! makefile/readme/etc
 
 * xroff links:
   - http://www.linuxhowtos.org/System/creatingman.htm

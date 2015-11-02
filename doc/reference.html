@@ -226,7 +226,7 @@ mlr sort -f hostname,uptime *.dat
 <div class="pokipanel">
 <pre>
 $ mlr --help
-Usage: mlr [I/O options] {verb} [verb-dependent options ...] {file names}
+Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
 Verbs:
    bar cat check count-distinct cut filter group-by group-like having-fields
    head histogram join label put regularize rename reorder sample sort stats1
@@ -831,7 +831,7 @@ Passes through input records with specified fields included/excluded.
 -f {a,b,c}       Field names to include for cut.
 -o               Retain fields in the order specified here in the argument list.
                  Default is to retain them in the order found in the input data.
--x|--complement  Exclude, rather that include, field names specified by -f.
+-x|--complement  Exclude, rather than include, field names specified by -f.
 -r               Treat field names as regular expressions. "ab", "a.*b" will
                  match any field name containing the substring "ab" or matching
                  "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may

@@ -466,28 +466,40 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		// the manpage-autogenerator
 		} else if (streq(argv[argi], "--usage-synopsis")) {
 			main_usage_synopsis(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-list-all-verbs")) {
 			list_all_verbs(stdout);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-help-options")) {
 			main_usage_help_options(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-functions")) {
 			main_usage_functions(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-data-format-options")) {
 			main_usage_data_format_options(stdout, argv[0]);
-		} else if (streq(argv[argi], "--usage-separatorroptions")) {
+			exit(0);
+		} else if (streq(argv[argi], "--usage-separator-options")) {
 			main_usage_separator_options(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-csv-options")) {
 			main_usage_csv_options(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-double-quoting")) {
 			main_usage_double_quoting(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-numerical-formatting")) {
 			main_usage_numerical_formatting(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-other-options")) {
 			main_usage_other_options(stdout, argv[0]);
+			exit(0);
 		} else if (streq(argv[argi], "--usage-then-chaining")) {
 			main_usage_then_chaining(stdout, argv[0]);
-		} else if (streq(argv[argi], "--usage-seel-also")) {
+			exit(0);
+		} else if (streq(argv[argi], "--usage-see-also")) {
 			main_usage_see_also(stdout, argv[0]);
+			exit(0);
 
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);

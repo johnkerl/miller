@@ -7,5 +7,8 @@ man1_MANS=	mlr.1
 # a2x: ERROR: "xmllint" --nonet --noout --valid "/path/to/pub_http_internet/miller/doc/mlr.1.xml" returned non-zero exit status 4
 
 MAINTAINERCLEANFILES=	mlr.1
+# To do:
+# * ruby mkman.rb > mlr.1
+# * Needs explicit package dependency on Ruby
 mlr.1: mlr.1.txt
 	cp mlr.1.premade mlr.1

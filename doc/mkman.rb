@@ -1,11 +1,19 @@
 #!/usr/bin/env ruby
 
-# xxx note about why: mindeps
+# ================================================================
+# This is a manpage autogenerator for Miller. There are various tools out there
+# for creating xroff-formatted manpages, but I wanted something with minimal
+# external dependencies which would also automatically generate most of its
+# output from the mlr executable itself.  It turns out it's easy enough to get
+# this in just a few lines of Ruby.
+#
+# Note for dev-viewing of the output:
+# ./mkman.rb | groff -man -Tascii | less
+# ================================================================
 
 # ----------------------------------------------------------------
 def main
 
-  # xxx emit autogen stuff: $0, hostname, date ...
   print make_top
 
   print make_section('NAME', [
@@ -13,17 +21,16 @@ def main
   ])
 
   print make_section('SYNOPSIS', [
-"mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}"
+`mlr --usage-synopsis`
   ])
 
   print make_section('DESCRIPTION', [
-"""This is something the Unix toolkit always could have done, and arguably always
-should have done.  It operates on key-value-pair data while the familiar
-Unix tools operate on integer-indexed fields: if the natural data structure for
-the latter is the array, then Miller's natural data structure is the
-insertion-ordered hash map.  This encompasses a variety of data formats,
-including but not limited to the familiar CSV.  (Miller can handle
-positionally-indexed data as a special case.)"""
+"""Miller operates on key-value-pair data while the familiar Unix tools operate
+on integer-indexed fields: if the natural data structure for the latter is the
+array, then Miller's natural data structure is the insertion-ordered hash map.
+This encompasses a variety of data formats, including but not limited to the
+familiar CSV.  (Miller can handle positionally-indexed data as a special
+case.)"""
   ])
 
   print make_section('EXAMPLES', [
@@ -51,16 +58,43 @@ separator, --ors the output record separator, and --rs sets both the input and
 output separator to the given value."""
   ])
 
-  print make_code_block(`mlr -h`)
+	print make_subsection('VERB LIST', [])
+	print make_code_block(`mlr --usage-list-all-verbs`)
 
-  # xxx do better than backtick -- trap $?
+	print make_subsection('HELP OPTIONS', [])
+	print make_code_block(`mlr --usage-help-options`)
+
+	print make_subsection('FUNCTION LIST', [])
+	print make_code_block(`mlr --usage-functions`)
+
+	print make_subsection('I/O FORMATTING', [])
+	print make_code_block(`mlr --usage-data-format-options`)
+
+	print make_subsection('SEPARATORS', [])
+	print make_code_block(`mlr --usage-separator-options`)
+
+	print make_subsection('CSV-SPECIFIC OPTIONS', [])
+	print make_code_block(`mlr --usage-csv-options`)
+
+	print make_subsection('DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT', [])
+	print make_code_block(`mlr --usage-double-quoting`)
+
+	print make_subsection('NUMERICAL FORMATTING', [])
+	print make_code_block(`mlr --usage-numerical-formatting`)
+
+	print make_subsection('OTHER OPTIONS', [])
+	print make_code_block(`mlr --usage-other-options`)
+
+	print make_subsection('THEN-CHAINING', [])
+	print make_code_block(`mlr --usage-then-chaining`)
+
   verbs = `mlr --list-all-verbs-raw`
-  print make_subsection('VERBS', [
+  print make_section('VERBS', [
     ""
   ])
   verbs = verbs.strip.split("\n")
   for verb in verbs
-    print make_subsubsection(verb, [])
+    print make_subsection(verb, [])
     print make_code_block(`mlr #{verb} -h`)
   end
 
@@ -76,8 +110,38 @@ end
 
 # ================================================================
 def make_top()
-  # xxx format the data
-  ".TH \"MILLER\" \"1\" \"09/14/2015\" \"\\ \\&\" \"\\ \\&\"\n"
+  t = Time::new
+  stamp = t.gmtime.strftime("%Y-%m-%d")
+
+  # Portability definitions thanks to some asciidoc output
+
+"""'\\\" t
+.\\\"     Title: mlr
+.\\\"    Author: [see the \"AUTHOR\" section]
+.\\\" Generator: #{$0}
+.\\\"      Date: #{stamp}
+.\\\"    Manual: \\ \\&
+.\\\"    Source: \\ \\&
+.\\\"  Language: English
+.\\\"
+.TH \"MILLER\" \"1\" \"#{stamp}\" \"\\ \\&\" \"\\ \\&\"
+.\\\" -----------------------------------------------------------------
+.\\\" * Portability definitions
+.\\\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\\\" http://bugs.debian.org/507673
+.\\\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\\\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \\n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\\\" -----------------------------------------------------------------
+.\\\" * set default formatting
+.\\\" -----------------------------------------------------------------
+.\\\" disable hyphenation
+.nh
+.\\\" disable justification (adjust text to left margin only)
+.ad l
+.\\\" -----------------------------------------------------------------
+"""
 end
 
 # ----------------------------------------------------------------
@@ -91,7 +155,6 @@ def make_section(title, paragraphs)
 end
 
 # ----------------------------------------------------------------
-# xxx temp
 def make_subsection(title, paragraphs)
   retval = ".SS \"#{title}\"\n"
   paragraphs.each do |paragraph|
@@ -102,7 +165,6 @@ def make_subsection(title, paragraphs)
 end
 
 # ----------------------------------------------------------------
-# xxx temp
 def make_subsubsection(title, paragraphs)
   retval  = ".sp\n";
   retval += "\\fB#{title}\\fR\n"
