@@ -429,10 +429,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	int argi = 1;
 	for (; argi < argc; argi++) {
-		if (argv[argi][0] != '-')
+		if (argv[argi][0] != '-') {
 			break;
 
-		else if (streq(argv[argi], "--version")) {
+		} else if (streq(argv[argi], "--version")) {
 #ifdef HAVE_CONFIG_H
 			printf("Miller version >= %s.\n", PACKAGE_VERSION);
 #else
@@ -456,137 +456,143 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
-		}
 
-		else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
+		} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 			check_arg_count(argv, argi, argc, 2);
 			lrec_evaluator_function_usage(stdout, argv[argi+1]);
 			exit(0);
-		}
 
-		else if (streq(argv[argi], "--rs")) {
+		// main-usage subsections, individually accessible for the benefit of
+		// the manpage-autogenerator
+		} else if (streq(argv[argi], "--usage-synopsis")) {
+			main_usage_synopsis(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-list-all-verbs")) {
+			list_all_verbs(stdout);
+		} else if (streq(argv[argi], "--usage-help-options")) {
+			main_usage_help_options(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-functions")) {
+			main_usage_functions(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-data-format-options")) {
+			main_usage_data_format_options(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-separatorroptions")) {
+			main_usage_separator_options(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-csv-options")) {
+			main_usage_csv_options(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-double-quoting")) {
+			main_usage_double_quoting(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-numerical-formatting")) {
+			main_usage_numerical_formatting(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-other-options")) {
+			main_usage_other_options(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-then-chaining")) {
+			main_usage_then_chaining(stdout, argv[0]);
+		} else if (streq(argv[argi], "--usage-seel-also")) {
+			main_usage_see_also(stdout, argv[0]);
+
+		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
 			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--irs")) {
+		} else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--ors")) {
+		} else if (streq(argv[argi], "--ors")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
 
-		else if (streq(argv[argi], "--fs")) {
+		} else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--ifs")) {
+		} else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--ofs")) {
+		} else if (streq(argv[argi], "--ofs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--repifs")) {
+		} else if (streq(argv[argi], "--repifs")) {
 			popts->allow_repeat_ifs = TRUE;
-		}
-		else if (streq(argv[argi], "--implicit-csv-header")) {
+		} else if (streq(argv[argi], "--implicit-csv-header")) {
 			popts->use_implicit_csv_header = TRUE;
-		}
 
-		else if (streq(argv[argi], "-p")) {
+		} else if (streq(argv[argi], "-p")) {
 			popts->ifile_fmt = "nidx";
 			popts->ofile_fmt = "nidx";
 			popts->ifs = " ";
 			popts->ofs = " ";
 			popts->allow_repeat_ifs = TRUE;
-		}
 
-		else if (streq(argv[argi], "--ps")) {
+		} else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
 			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--ips")) {
+		} else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
-		else if (streq(argv[argi], "--ops")) {
+		} else if (streq(argv[argi], "--ops")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
-		}
 
-		else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";  }
-		else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";  }
-		else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";  }
+		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
+		} else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";
+		} else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";
 
-		else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";  }
-		else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";  }
-		else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";  }
+		} else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";
+		} else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";
+		} else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";
 
-		else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp"; }
-		else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp"; }
-		else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp"; }
+		} else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp";
+		} else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp";
+		} else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp";
 
-		else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx"; }
-		else if (streq(argv[argi], "--inidx"))    { popts->ifile_fmt = "nidx"; }
-		else if (streq(argv[argi], "--onidx"))    { popts->ofile_fmt = "nidx"; }
+		} else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx";
+		} else if (streq(argv[argi], "--inidx"))    { popts->ifile_fmt = "nidx";
+		} else if (streq(argv[argi], "--onidx"))    { popts->ofile_fmt = "nidx";
 
-		else if (streq(argv[argi], "--xtab"))     { popts->ifile_fmt = popts->ofile_fmt = "xtab"; }
-		else if (streq(argv[argi], "--ixtab"))    { popts->ifile_fmt = "xtab"; }
-		else if (streq(argv[argi], "--oxtab"))    { popts->ofile_fmt = "xtab"; }
+		} else if (streq(argv[argi], "--xtab"))     { popts->ifile_fmt = popts->ofile_fmt = "xtab";
+		} else if (streq(argv[argi], "--ixtab"))    { popts->ifile_fmt = "xtab";
+		} else if (streq(argv[argi], "--oxtab"))    { popts->ofile_fmt = "xtab";
 
-		else if (streq(argv[argi], "--ipprint")) {
+		} else if (streq(argv[argi], "--ipprint")) {
 			popts->ifile_fmt        = "csvlite";
 			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
 
-		}
-		else if (streq(argv[argi], "--opprint")) {
+		} else if (streq(argv[argi], "--opprint")) {
 			popts->ofile_fmt = "pprint";
-		}
-		else if (streq(argv[argi], "--pprint")) {
+		} else if (streq(argv[argi], "--pprint")) {
 			popts->ifile_fmt        = "csvlite";
 			popts->ifs              = " ";
 			popts->allow_repeat_ifs = TRUE;
 			popts->ofile_fmt        = "pprint";
-		}
-		else if (streq(argv[argi], "--right"))   {
+		} else if (streq(argv[argi], "--right"))   {
 			left_align_pprint = FALSE;
-		}
 
-		else if (streq(argv[argi], "--ofmt")) {
+		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofmt = argv[argi+1];
 			argi++;
-		}
 
-		else if (streq(argv[argi], "--quote-all"))     { popts->oquoting = QUOTE_ALL;     }
-		else if (streq(argv[argi], "--quote-none"))    { popts->oquoting = QUOTE_NONE;    }
-		else if (streq(argv[argi], "--quote-minimal")) { popts->oquoting = QUOTE_MINIMAL; }
-		else if (streq(argv[argi], "--quote-numeric")) { popts->oquoting = QUOTE_NUMERIC; }
+		} else if (streq(argv[argi], "--quote-all"))     { popts->oquoting = QUOTE_ALL;
+		} else if (streq(argv[argi], "--quote-none"))    { popts->oquoting = QUOTE_NONE;
+		} else if (streq(argv[argi], "--quote-minimal")) { popts->oquoting = QUOTE_MINIMAL;
+		} else if (streq(argv[argi], "--quote-numeric")) { popts->oquoting = QUOTE_NUMERIC;
 
-		else if (streq(argv[argi], "--mmap")) {
+		} else if (streq(argv[argi], "--mmap")) {
 			popts->use_mmap_for_read = TRUE;
-		}
-		else if (streq(argv[argi], "--no-mmap")) {
+		} else if (streq(argv[argi], "--no-mmap")) {
 			popts->use_mmap_for_read = FALSE;
-		}
 
-		else if (streq(argv[argi], "--seed")) {
+		} else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
 				have_rand_seed = TRUE;
@@ -597,10 +603,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 				exit(1);
 			}
 			argi++;
-		}
 
-		else
+		} else {
 			usage_unrecognized_verb(argv[0], argv[argi]);
+		}
 	}
 
 	lhmss_t* default_rses = get_default_rses();
