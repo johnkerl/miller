@@ -393,8 +393,6 @@ static void main_usage(FILE* o, char* argv0) {
 	main_usage_examples(o, argv0, "  ");
 	fprintf(o, "\n");
 
-	fprintf(o, "\n");
-
 	fprintf(o, "Data-format examples:\n");
 	main_usage_data_format_examples(o, argv0);
 	fprintf(o, "\n");
