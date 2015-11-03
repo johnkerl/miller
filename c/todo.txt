@@ -13,6 +13,8 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
+! cut a release w/ manpage
+
 ! R @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
 ! emph mlr has light stats but for heavyweight analysis use R et al.
@@ -45,12 +47,6 @@ MAJOR: uni/multivariate logistic for ternary & above?
 
 MINOR: --mmap @ mlr -h
 MINOR: bus-insurance dev page
-
-----------------------------------------------------------------
-MAJOR: regex
-
-* mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
-* optimize starts-with/ends-with
 
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
