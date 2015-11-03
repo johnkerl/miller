@@ -94,16 +94,16 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-file-formats.html BY poki -->
 <div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull;&nbsp;<a href="#Examples.">Examples.</a><br/>
-&bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
-&bull;&nbsp;<a href="#Pretty-printed">Pretty-printed</a><br/>
+&bull;&nbsp;<a href="#Examples">Examples</a><br/>
 &bull;&nbsp;<a href="#Key-value_pairs">Key-value pairs</a><br/>
 &bull;&nbsp;<a href="#Index-numbered_(toolkit_style)">Index-numbered (toolkit style)</a><br/>
+&bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
+&bull;&nbsp;<a href="#Pretty-printed">Pretty-printed</a><br/>
 &bull;&nbsp;<a href="#Vertical_tabular">Vertical tabular</a><br/>
 </div>
 <p/>
 
-<a id="Examples."/><h1>Examples.</h1>
+<a id="Examples"/><h1>Examples</h1>
 
 <p/>
 <div class="pokipanel">
@@ -147,74 +147,6 @@ $ mlr --usage-data-format-examples
 </pre>
 </div>
 <p/>
-
-<a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
-When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
-key names are found on the first record and values are taken from subsequent
-records.  This includes the case of CSV-formatted files.  See
-<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
-changes of field names within a single data stream.
-
-<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
-CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
-<a href="reference.html">Reference</a>.)
-
-<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
-https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
-of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
-
-<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
-line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
-read CSV data which lacks a header line, applying column labels <tt>1</tt>,
-<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
-<tt>label</tt> to replace those numerical column names with labels of your
-choosing.
-
-<a id="Pretty-printed"/><h1>Pretty-printed</h1>
-Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --ocsv cat data/small
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-</pre>
-</div>
-<p/>
-</td>
-<td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint cat data/small
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-Note that while Miller is a line-at-a-time processor and retains input lines in
-memory only where necessary (e.g. for sort), pretty-print output requires it to
-accumulate all input lines (so that it can compute maximum column widths)
-before producing any output. This has two consequences: (a) pretty-print output
-won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
-an end-of-file marker which never arrives; (b) pretty-print output for large
-files is constrained by available machine memory.
-
-<p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
-handles changes of field names within a single data stream.
 
 <a id="Key-value_pairs"/><h1>Key-value pairs</h1>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
@@ -371,6 +303,74 @@ light
 </div>
 <p/>
 </td> </tr></table>
+
+<a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
+When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
+key names are found on the first record and values are taken from subsequent
+records.  This includes the case of CSV-formatted files.  See
+<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
+changes of field names within a single data stream.
+
+<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
+CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
+<a href="reference.html">Reference</a>.)
+
+<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
+of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
+
+<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
+line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
+read CSV data which lacks a header line, applying column labels <tt>1</tt>,
+<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
+<tt>label</tt> to replace those numerical column names with labels of your
+choosing.
+
+<a id="Pretty-printed"/><h1>Pretty-printed</h1>
+Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ocsv cat data/small
+a,b,i,x,y
+pan,pan,1,0.3467901443380824,0.7268028627434533
+eks,pan,2,0.7586799647899636,0.5221511083334797
+wye,wye,3,0.20460330576630303,0.33831852551664776
+eks,wye,4,0.38139939387114097,0.13418874328430463
+wye,pan,5,0.5732889198020006,0.8636244699032729
+</pre>
+</div>
+<p/>
+</td>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+Note that while Miller is a line-at-a-time processor and retains input lines in
+memory only where necessary (e.g. for sort), pretty-print output requires it to
+accumulate all input lines (so that it can compute maximum column widths)
+before producing any output. This has two consequences: (a) pretty-print output
+won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
+an end-of-file marker which never arrives; (b) pretty-print output for large
+files is constrained by available machine memory.
+
+<p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
+handles changes of field names within a single data stream.
 
 <a id="Vertical_tabular"/><h1>Vertical tabular</h1>
 

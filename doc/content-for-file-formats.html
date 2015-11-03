@@ -4,50 +4,6 @@ POKI_PUT_TOC_HERE
 
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 
-<h1>CSV/TSV/etc.</h1>
-When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
-key names are found on the first record and values are taken from subsequent
-records.  This includes the case of CSV-formatted files.  See
-POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
-changes of field names within a single data stream.
-
-<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
-CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
-POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
-
-<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
-https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
-of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
-
-<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
-line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
-read CSV data which lacks a header line, applying column labels <tt>1</tt>,
-<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
-<tt>label</tt> to replace those numerical column names with labels of your
-choosing.
-
-<h1>Pretty-printed</h1>
-Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
-
-<table><tr><td>
-POKI_RUN_COMMAND{{mlr --ocsv cat data/small}}HERE
-</td>
-<td>
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
-</td></tr></table>
-
-Note that while Miller is a line-at-a-time processor and retains input lines in
-memory only where necessary (e.g. for sort), pretty-print output requires it to
-accumulate all input lines (so that it can compute maximum column widths)
-before producing any output. This has two consequences: (a) pretty-print output
-won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
-an end-of-file marker which never arrives; (b) pretty-print output for large
-files is constrained by available machine memory.
-
-<p/> See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller
-handles changes of field names within a single data stream.
-
 <h1>Key-value pairs</h1>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
 
@@ -110,6 +66,50 @@ POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
 </td> <td>
 POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
 </td> </tr></table>
+
+<h1>CSV/TSV/etc.</h1>
+When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
+key names are found on the first record and values are taken from subsequent
+records.  This includes the case of CSV-formatted files.  See
+POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
+changes of field names within a single data stream.
+
+<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
+CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
+POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
+
+<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
+of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
+
+<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
+line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
+read CSV data which lacks a header line, applying column labels <tt>1</tt>,
+<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
+<tt>label</tt> to replace those numerical column names with labels of your
+choosing.
+
+<h1>Pretty-printed</h1>
+Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --ocsv cat data/small}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td></tr></table>
+
+Note that while Miller is a line-at-a-time processor and retains input lines in
+memory only where necessary (e.g. for sort), pretty-print output requires it to
+accumulate all input lines (so that it can compute maximum column widths)
+before producing any output. This has two consequences: (a) pretty-print output
+won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
+an end-of-file marker which never arrives; (b) pretty-print output for large
+files is constrained by available machine memory.
+
+<p/> See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller
+handles changes of field names within a single data stream.
 
 <h1>Vertical tabular</h1>
 
