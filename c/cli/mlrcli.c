@@ -186,7 +186,7 @@ static void main_usage_synopsis(FILE* o, char* argv0) {
 }
 
 static void main_usage_examples(FILE* o, char* argv0, char* leader) {
-	fprintf(o, "%s%s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", leader, argv0);
+	fprintf(o, "%s%s --csv --rs lf --fs tab cut -f hostname,uptime file1.tsv file2.tsv\n", leader, argv0);
 	fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0);
 	fprintf(o, "%s%s --csv filter '$status != \"down\" && $upsec >= 10000' *.csv\n", leader, argv0);
 	fprintf(o, "%s%s --nidx put '$sum = $7 + 2.1*$8' *.dat\n", leader, argv0);

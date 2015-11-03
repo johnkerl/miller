@@ -229,7 +229,7 @@ $ mlr --help
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
 
 Command-line-syntax examples:
-  mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv
+  mlr --csv --rs lf --fs tab cut -f hostname,uptime file1.tsv file2.tsv
   mlr --csv cut -f hostname,uptime mydata.csv
   mlr --csv filter '$status != "down" &amp;&amp; $upsec &gt;= 10000' *.csv
   mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
