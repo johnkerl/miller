@@ -16,7 +16,6 @@ TOP OF LIST
 ! R @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
 ! emph mlr has light stats but for heavyweight analysis use R et al.
-! don't double usage titles between mlr -h & man mlr
 MINOR: brew version bump?!?
 
 MINOR: skewness & kurtosis -> stats1
@@ -52,29 +51,6 @@ MAJOR: regex
 
 * mlr --regex-help; xrefs from put/filter/et al. -h's; into mld??
 * optimize starts-with/ends-with
-
-----------------------------------------------------------------
-MAJOR: manpage
-
-! portabilities in mlr.1
-! makefile/readme/etc
-
-* xroff links:
-  - http://www.linuxhowtos.org/System/creatingman.htm
-  - https://www.gnu.org/software/groff/manual/html_node/Man-usage.html
-* solve the duplication problem, and minimize dependencies:
-  ? mlr --manpage all in C?
-  ? maybe generate most content in C with a post-processor in some widely
-    portable language (e.g. perl is gross but is everywhere) to add in the
-    groff markups.
-  ? maybe something template-driven vaguely like poki??
-  - whatever it is it needs to be as automated as possible
-
-LEVELS:
-* figure out a2x/xml/...
-* poki
-* ... what else ...
-* write those up in the docs, including required packages
 
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
