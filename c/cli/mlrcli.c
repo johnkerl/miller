@@ -95,11 +95,11 @@ static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
 		lhmss_put(singleton_default_rses, "dkvp",    "\n");
+		lhmss_put(singleton_default_rses, "nidx",    "\n");
 		lhmss_put(singleton_default_rses, "csv",     "\r\n");
 		lhmss_put(singleton_default_rses, "csvlite", "\n");
-		lhmss_put(singleton_default_rses, "nidx",    "\n");
-		lhmss_put(singleton_default_rses, "xtab",    "(N/A)");
 		lhmss_put(singleton_default_rses, "pprint",  "\n");
+		lhmss_put(singleton_default_rses, "xtab",    "(N/A)");
 	}
 	return singleton_default_rses;
 }
@@ -108,11 +108,11 @@ static lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
 		lhmss_put(singleton_default_fses, "dkvp",    ",");
+		lhmss_put(singleton_default_fses, "nidx",    " ");
 		lhmss_put(singleton_default_fses, "csv",     ",");
 		lhmss_put(singleton_default_fses, "csvlite", ",");
-		lhmss_put(singleton_default_fses, "nidx",    " ");
-		lhmss_put(singleton_default_fses, "xtab",    "\n");
 		lhmss_put(singleton_default_fses, "pprint",  " ");
+		lhmss_put(singleton_default_fses, "xtab",    "\n");
 	}
 	return singleton_default_fses;
 }
@@ -121,11 +121,11 @@ static lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
 		lhmss_put(singleton_default_pses, "dkvp",    "=");
+		lhmss_put(singleton_default_pses, "nidx",    "(N/A)");
 		lhmss_put(singleton_default_pses, "csv",     "(N/A)");
 		lhmss_put(singleton_default_pses, "csvlite", "(N/A)");
-		lhmss_put(singleton_default_pses, "nidx",    "(N/A)");
-		lhmss_put(singleton_default_pses, "xtab",    " ");
 		lhmss_put(singleton_default_pses, "pprint",  "(N/A)");
+		lhmss_put(singleton_default_pses, "xtab",    " ");
 	}
 	return singleton_default_pses;
 }
@@ -185,20 +185,30 @@ static void main_usage_synopsis(FILE* o, char* argv0) {
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {zero or more file names}\n", argv0);
 }
 
+static void main_usage_examples(FILE* o, char* argv0, char* leader) {
+	fprintf(o, "%s%s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", leader, argv0);
+	fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0);
+	fprintf(o, "%s%s --csv filter '$status != \"down\" && $upsec >= 10000' *.csv\n", leader, argv0);
+	fprintf(o, "%s%s --nidx put '$sum = $7 + 2.1*$8' *.dat\n", leader, argv0);
+	fprintf(o, "%sgrep -v '^#' /etc/group | %s --ifs : --nidx --opprint label group,pass,gid,member then sort -f group\n", leader, argv0);
+	fprintf(o, "%s%s join -j account_id -f accounts.dat then group-by account_name balances.dat\n", leader, argv0);
+	fprintf(o, "%s%s put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*\n", leader, argv0);
+	fprintf(o, "%s%s stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*\n", leader, argv0);
+	fprintf(o, "%s%s stats2 -a linreg-pca -f u,v -g shape data/*\n", leader, argv0);
+}
+
 static void list_all_verbs_raw(FILE* o) {
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
 		fprintf(o, "%s\n", mapper_lookup_table[i]->verb);
 	}
 }
 
-static void list_all_verbs(FILE* o) {
-	char* leader = "  ";
+static void list_all_verbs(FILE* o, char* leader) {
 	char* separator = " ";
 	int leaderlen = strlen(leader);
 	int separatorlen = strlen(separator);
 	int linelen = leaderlen;
 	int j = 0;
-	fprintf(o, "Verbs:\n");
 	for (int i = 0; i < mapper_lookup_table_length; i++) {
 		char* verb = mapper_lookup_table[i]->verb;
 		int verblen = strlen(verb);
@@ -217,21 +227,60 @@ static void list_all_verbs(FILE* o) {
 }
 
 static void main_usage_help_options(FILE* o, char* argv0) {
-	fprintf(o, "Please use \"%s -h\" or \"%s --help\" to show this message.\n", argv0, argv0);
-	fprintf(o, "Please use \"%s --version\" to show the software version.\n", argv0);
-	fprintf(o, "Please use \"%s {verb name} --help\" for verb-specific help.\n", argv0);
-	fprintf(o, "Please use \"%s --list-all-verbs\" to list only verb names.\n", argv0);
-	fprintf(o, "Please use \"%s --help-all-verbs\" for help on all verbs.\n", argv0);
+	fprintf(o, "  -h or --help Show this message.\n");
+	fprintf(o, "  --version              Show the software version.\n");
+	fprintf(o, "  {verb name} --help     Show verb-specific help.\n");
+	fprintf(o, "  --list-all-verbs or -l List only verb names.\n");
+	fprintf(o, "  --help-all-verbs       Show help on all verbs.\n");
 }
 
-static void main_usage_functions(FILE* o, char* argv0) {
-	lrec_evaluator_list_functions(o);
+static void main_usage_functions(FILE* o, char* argv0, char* leader) {
+	lrec_evaluator_list_functions(o, leader);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
 }
 
+static void main_usage_data_format_examples(FILE* o, char* argv0) {
+	fprintf(o,
+		"  DKVP: delimited key-value pairs (Miller default format)\n"
+		"  +---------------------+\n"
+		"  | apple=1,bat=2,cog=3 |  Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | dish=7,egg=8        |  Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
+		"  +---------------------+\n"
+		"  \n"
+		"  NIDX: implicitly numerically indexed (Unix-toolkit style)\n"
+		"  +---------------------+\n"
+		"  | the quick brown     | Record 1: \"1\" => \"the\", \"2\" => \"quick\", \"3\" => \"brown\"\n"
+		"  | fox jumped          | Record 2: \"1\" => \"fox\", \"2\" => \"jumped\"\n"
+		"  +---------------------+\n"
+		"  \n"
+		"  CSV/CSV-lite: comma-separated values with separate header line\n"
+		"  +---------------------+\n"
+		"  | apple,bat,cog       |\n"
+		"  | 1,2,3               | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | 4,5,6               | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
+		"  +---------------------+\n"
+		"  \n"
+		"  PPRINT: pretty-printed tabular\n"
+		"  +---------------------+\n"
+		"  | apple bat cog       |\n"
+		"  | 1     2   3         | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | 4     5   6         | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
+		"  +---------------------+\n"
+		"  \n"
+		"  XTAB: pretty-printed transposed tabular\n"
+		"  +---------------------+\n"
+		"  | apple 1             | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | bat   2             |\n"
+		"  | cog   3             |\n"
+		"  |                     |\n"
+		"  | dish 7              | Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
+		"  | egg  8              |\n"
+		"  +---------------------+\n");
+
+}
+
 static void main_usage_data_format_options(FILE* o, char* argv0) {
-	fprintf(o, "Data-format options, for input, output, or both:\n");
 	fprintf(o, "  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
 	fprintf(o, "                                        (default)\n");
 	fprintf(o, "  --inidx   --onidx   --nidx            Implicitly-integer-indexed fields\n");
@@ -247,7 +296,6 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 }
 
 static void main_usage_separator_options(FILE* o, char* argv0) {
-	fprintf(o, "Separator options, for input, output, or both:\n");
 	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
 	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
 	fprintf(o, "  --ps     --ips     --ops              Pair separators, e.g. equals sign\n");
@@ -295,14 +343,12 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 }
 
 static void main_usage_csv_options(FILE* o, char* argv0) {
-	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
 }
 
 static void main_usage_double_quoting(FILE* o, char* argv0) {
-	fprintf(o, "Double-quoting for CSV output:\n");
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
 	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");
 	fprintf(o, "                     OFS or ORS in them\n");
@@ -313,7 +359,6 @@ static void main_usage_double_quoting(FILE* o, char* argv0) {
 }
 
 static void main_usage_numerical_formatting(FILE* o, char* argv0) {
-	fprintf(o, "Numerical formatting:\n");
 	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
 	fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
 	fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
@@ -321,7 +366,6 @@ static void main_usage_numerical_formatting(FILE* o, char* argv0) {
 }
 
 static void main_usage_other_options(FILE* o, char* argv0) {
-	fprintf(o, "Other options:\n");
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
 }
 
@@ -343,19 +387,58 @@ static void main_usage_see_also(FILE* o, char* argv0) {
 // ----------------------------------------------------------------
 static void main_usage(FILE* o, char* argv0) {
 	main_usage_synopsis(o, argv0);
-	list_all_verbs(o);
-	fprintf(o, "Example: %s --csv --rs lf --fs tab cut -f hostname,uptime file1.csv file2.csv\n", argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Command-line-syntax examples:\n");
+	main_usage_examples(o, argv0, "  ");
+	fprintf(o, "\n");
+
+	fprintf(o, "\n");
+
+	fprintf(o, "Data-format examples:\n");
+	main_usage_data_format_examples(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Help options:\n");
 	main_usage_help_options(o, argv0);
 	fprintf(o, "\n");
-	main_usage_functions(o, argv0);
+
+	fprintf(o, "Verbs:\n");
+	list_all_verbs(o, "  ");
 	fprintf(o, "\n");
+
+	fprintf(o, "Functions for the filter and put verbs:\n");
+	main_usage_functions(o, argv0, "  ");
+	fprintf(o, "\n");
+
+	fprintf(o, "Data-format options, for input, output, or both:\n");
 	main_usage_data_format_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Separator options, for input, output, or both:\n");
 	main_usage_separator_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
 	main_usage_csv_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Double-quoting for CSV output:\n");
 	main_usage_double_quoting(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Numerical formatting:\n");
 	main_usage_numerical_formatting(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Other options:\n");
 	main_usage_other_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Then-chaining:\n");
 	main_usage_then_chaining(o, argv0);
+	fprintf(o, "\n");
+
 	main_usage_see_also(o, argv0);
 }
 
@@ -448,7 +531,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--help-all-verbs")) {
 			usage_all_verbs(argv[0]);
 		} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
-			list_all_verbs(stdout);
+			list_all_verbs(stdout, "");
 			exit(0);
 		} else if (streq(argv[argi], "--list-all-verbs-raw")) {
 			list_all_verbs_raw(stdout);
@@ -467,14 +550,20 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--usage-synopsis")) {
 			main_usage_synopsis(stdout, argv[0]);
 			exit(0);
+		} else if (streq(argv[argi], "--usage-examples")) {
+			main_usage_examples(stdout, argv[0], "");
+			exit(0);
 		} else if (streq(argv[argi], "--usage-list-all-verbs")) {
-			list_all_verbs(stdout);
+			list_all_verbs(stdout, "");
 			exit(0);
 		} else if (streq(argv[argi], "--usage-help-options")) {
 			main_usage_help_options(stdout, argv[0]);
 			exit(0);
 		} else if (streq(argv[argi], "--usage-functions")) {
-			main_usage_functions(stdout, argv[0]);
+			main_usage_functions(stdout, argv[0], "");
+			exit(0);
+		} else if (streq(argv[argi], "--usage-data-format-examples")) {
+			main_usage_data_format_examples(stdout, argv[0]);
 			exit(0);
 		} else if (streq(argv[argi], "--usage-data-format-options")) {
 			main_usage_data_format_options(stdout, argv[0]);

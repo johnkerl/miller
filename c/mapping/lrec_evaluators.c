@@ -1063,14 +1063,12 @@ static char* function_class_to_desc(int function_class) {
 	}
 }
 
-void lrec_evaluator_list_functions(FILE* o) {
-	char* leader = "  ";
+void lrec_evaluator_list_functions(FILE* o, char* leader) {
 	char* separator = " ";
 	int leaderlen = strlen(leader);
 	int separatorlen = strlen(separator);
 	int linelen = leaderlen;
 	int j = 0;
-	fprintf(o, "Functions for filter and put:\n");
 
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];

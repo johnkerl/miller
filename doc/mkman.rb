@@ -37,18 +37,11 @@ case.)"""
     ""
   ])
 
-  print make_code_block(
-"""
-% mlr --csv cut -f hostname,uptime mydata.csv
-% mlr --csv filter '$status != \"down\" && $upsec >= 10000' *.csv
-% mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
-% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*
-% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-% mlr stats2 -a linreg-pca -f u,v -g shape data/*
-"""
-  )
+	print make_subsection('COMMAND-LINE SYNTAX', [])
+  print make_code_block(`mlr --usage-examples`)
+
+	print make_subsection('DATA FORMATS', [])
+	print make_code_block(`mlr --usage-data-format-examples`)
 
   print make_section('OPTIONS', [
 """In the following option flags, the version with \"i\" designates the input
@@ -58,11 +51,11 @@ separator, --ors the output record separator, and --rs sets both the input and
 output separator to the given value."""
   ])
 
-	print make_subsection('VERB LIST', [])
-	print make_code_block(`mlr --usage-list-all-verbs`)
-
 	print make_subsection('HELP OPTIONS', [])
 	print make_code_block(`mlr --usage-help-options`)
+
+	print make_subsection('VERB LIST', [])
+	print make_code_block(`mlr --usage-list-all-verbs`)
 
 	print make_subsection('FUNCTION LIST', [])
 	print make_code_block(`mlr --usage-functions`)
