@@ -23,7 +23,8 @@ MINOR: brew version bump?!?
 
 MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
 
-MINOR: distrib mapred paradigm in general
+>> some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
+MINOR: faqent distrib mapred paradigm in general: use distributed mean as example
 MINOR: faqent re R/mysql/etc inouts
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
 MINOR: faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
