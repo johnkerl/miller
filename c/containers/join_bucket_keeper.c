@@ -7,7 +7,7 @@
 #include "containers/join_bucket_keeper.h"
 #include "input/lrec_readers.h"
 
-// xxx overview here ...
+// xxx overview here ... move to the .h, or (better) there put xref to here.
 
 // +-----------+-----------+-----------+-----------+-----------+-----------+
 // |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |

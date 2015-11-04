@@ -188,9 +188,9 @@ static char* test_right_empty() {
 }
 
 // ----------------------------------------------------------------
-static char* test1() {
+static char* test_unpaired_before_left_start() {
 	printf("----------------------------------------------------------------\n");
-	printf("test1 enter\n");
+	printf("test_unpaired_before_left_start enter\n");
 
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
@@ -210,15 +210,15 @@ static char* test1() {
 	mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
 	printf("\n");
 
-	printf("test1 exit\n");
+	printf("test_unpaired_before_left_start exit\n");
 	printf("\n");
 	return 0;
 }
 
 // ----------------------------------------------------------------
-static char* test2() {
+static char* test_unpaired_after_left_end() {
 	printf("----------------------------------------------------------------\n");
-	printf("test2 enter\n");
+	printf("test_unpaired_after_left_end enter\n");
 
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
@@ -238,15 +238,15 @@ static char* test2() {
 	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
 	printf("\n");
 
-	printf("test2 exit\n");
+	printf("test_unpaired_after_left_end exit\n");
 	printf("\n");
 	return 0;
 }
 
 // ----------------------------------------------------------------
-static char* test3() {
+static char* test_middle_pairings() {
 	printf("----------------------------------------------------------------\n");
-	printf("test3 enter\n");
+	printf("test_middle_pairings enter\n");
 
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
@@ -278,15 +278,15 @@ static char* test3() {
 	mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", "(eof)"));
 	printf("\n");
 
-	printf("test3 exit\n");
+	printf("test_middle_pairings exit\n");
 	printf("\n");
 	return 0;
 }
 
 // ----------------------------------------------------------------
-static char* test4() {
+static char* test_middle() {
 	printf("----------------------------------------------------------------\n");
-	printf("test4 enter\n");
+	printf("test_middle enter\n");
 
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
@@ -318,7 +318,7 @@ static char* test4() {
 	mu_assert_lf(list_has_length(precords_left_unpaired, 1, "unpaired", "(eof)"));
 	printf("\n");
 
-	printf("test4 exit\n");
+	printf("test_middle exit\n");
 	printf("\n");
 	return 0;
 }
@@ -431,11 +431,11 @@ static char* test_walk_through_all() {
 
 // ----------------------------------------------------------------
 // xxx give all of these more descriptive names.
-static char* testhet6() {
+static char* test_het_match() {
 	printf("----------------------------------------------------------------\n");
-	printf("testhet6 enter\n");
+	printf("test_het_match enter\n");
 #if 1
-	printf("testhet6 stub!!\n");
+	printf("test_het_match stub!!\n");
 #else
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
@@ -455,7 +455,7 @@ static char* testhet6() {
 	mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
 	printf("\n");
 #endif
-	printf("testhet6 exit\n");
+	printf("test_het_match exit\n");
 	printf("\n");
 	return 0;
 }
@@ -465,12 +465,12 @@ static char * run_all_tests() {
 	mu_run_test(test_left_empty_right_empty);
 	mu_run_test(test_left_empty);
 	mu_run_test(test_right_empty);
-	mu_run_test(test1);
-	mu_run_test(test2);
-	mu_run_test(test3);
-	mu_run_test(test4);
+	mu_run_test(test_unpaired_before_left_start);
+	mu_run_test(test_unpaired_after_left_end);
+	mu_run_test(test_middle_pairings);
+	mu_run_test(test_middle);
 	mu_run_test(test_walk_through_all);
-	mu_run_test(testhet6);
+	mu_run_test(test_het_match);
 	return 0;
 }
 
