@@ -425,6 +425,11 @@ void lrec_print(lrec_t* prec) {
 	char ors = '\n';
 	char ofs = ',';
 	char ops = '=';
+	if (prec == NULL) {
+		fputs("NULL", output_stream);
+		fputc(ors, output_stream);
+		return;
+	}
 	int nf = 0;
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		if (nf > 0)

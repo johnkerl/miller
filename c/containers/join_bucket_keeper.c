@@ -35,7 +35,8 @@
 
 // Private methods
 static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper);
-static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper);
+static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
+	sllv_t** pprecords_left_unpaired);
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired);
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper);
@@ -115,9 +116,11 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 	*pprecords_left_unpaired = NULL;
 	int cmp = 0;
 
+	//printf("[istate] %d\n", pkeeper->state);
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
-		join_bucket_keeper_initial_fill(pkeeper);
+		join_bucket_keeper_initial_fill(pkeeper, pprecords_left_unpaired);
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
+		//printf("[nstate] %d\n", pkeeper->state);
 	}
 
 	if (pright_field_values != NULL) { // Not right EOF
@@ -159,9 +162,13 @@ static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 	}
 }
 
-static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper) {
+// XXX for het case need to keep peeking, skipping when left field values aren't all had
+static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
+	sllv_t** pprecords_left_unpaired)
+{
 	pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
 		pkeeper->pvhandle, pkeeper->pctx);
+	//printf("[recpeek] "); lrec_print(pkeeper->prec_peek); // XXX
 	if (pkeeper->prec_peek == NULL) {
 		pkeeper->leof = TRUE;
 		return;
@@ -169,7 +176,7 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper) {
 	join_bucket_keeper_fill(pkeeper);
 }
 
-// xxx preconditions:
+// Preconditions:
 // * prec_peek != NULL
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper) {
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,

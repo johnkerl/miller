@@ -25,8 +25,8 @@ typedef struct _join_bucket_keeper_t {
 	slls_t*        pleft_field_names;
 
 	join_bucket_t* pbucket;
-
 	lrec_t*        prec_peek;
+
 	int            leof;
 	int            state;
 } join_bucket_keeper_t;

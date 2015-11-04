@@ -18,6 +18,7 @@ TOP OF LIST
 ! R @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
 ! emph mlr has light stats but for heavyweight analysis use R et al.
+
 MINOR: brew version bump?!?
 
 MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
