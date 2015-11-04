@@ -23,6 +23,7 @@ MINOR: brew version bump?!?
 MINOR: skewness & kurtosis -> stats1
 
 MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
+MINOR: distrib mapred paradigm in general
 
 MINOR: faqent re R/mysql/etc inouts
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
