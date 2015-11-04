@@ -8,6 +8,10 @@ double mlr_get_var(unsigned long long n, double sum, double sum2);
 
 double mlr_get_cov(unsigned long long n, double sumx, double sumy, double sumxy);
 
+double mlr_get_skewness(unsigned long long n, double sumx, double sumx2, double sumx3);
+
+double mlr_get_kurtosis(unsigned long long n, double sumx, double sumx2, double sumx3, double sumx4);
+
 void mlr_get_cov_matrix(unsigned long long n,
 	double sumx, double sumx2, double sumy, double sumy2, double sumxy, double Q[2][2]);
 

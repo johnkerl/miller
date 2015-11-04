@@ -81,11 +81,66 @@ void mlr_get_linear_regression_ols(unsigned long long n, double sumx, double sum
 // ----------------------------------------------------------------
 double mlr_get_var(unsigned long long n, double sum, double sum2) {
 	double mean = sum / n;
-	double numerator = sum2 - 2.0*mean*sum + n*mean*mean;
+	double numerator = sum2 - mean*(2.0*sum - n*mean);
 	if (numerator < 0.0) // round-off error
 		numerator = 0.0;
 	double denominator = n - 1LL;
 	return numerator / denominator;
+}
+
+// ----------------------------------------------------------------
+// Unbiased estimator:
+//    (1/n)   sum{(xi-mean)**3}
+//  -----------------------------
+// [(1/(n-1)) sum{(xi-mean)**2}]**1.5
+
+// mean = sumx / n; n mean = sumx
+
+// sum{(xi-mean)^3}
+//   = sum{xi^3 - 3 mean xi^2 + 3 mean^2 xi - mean^3}
+//   = sum{xi^3} - 3 mean sum{xi^2} + 3 mean^2 sum{xi} - n mean^3
+//   = sumx3 - 3 mean sumx2 + 3 mean^2 sumx - n mean^3
+//   = sumx3 - 3 mean sumx2 + 3n mean^3 - n mean^3
+//   = sumx3 - 3 mean sumx2 + 2n mean^3
+//   = sumx3 - mean*(3 sumx2 + 2n mean^2)
+
+// sum{(xi-mean)^2}
+//   = sum{xi^2 - 2 mean xi + mean^2}
+//   = sum{xi^2} - 2 mean sum{xi} + n mean^2
+//   = sumx2 - 2 mean sumx + n mean^2
+//   = sumx2 - 2 n mean^2 + n mean^2
+//   = sumx2 - n mean^2
+
+double mlr_get_skewness(unsigned long long n, double sumx, double sumx2, double sumx3) {
+	double mean = sumx / n;
+	double numerator = sumx3 - mean*(3*sumx2 - 2*n*mean*mean);
+	numerator = numerator / n;
+	double denominator = (sumx2 - n*mean*mean) / (n-1);
+	denominator = pow(denominator, 1.5);
+	return numerator / denominator;
+}
+
+// Unbiased:
+//  (1/n) sum{(x-mean)**4}
+//  ----------------------- - 3
+// [(1/n) sum{(x-mean)**2}]**2
+
+// sum{(xi-mean)^4}
+//   = sum{xi^4 - 4 mean xi^3 + 6 mean^2 xi^2 - 4 mean^3 xi + mean^4}
+//   = sum{xi^4} - 4 mean sum{xi^3} + 6 mean^2 sum{xi^2} - 4 mean^3 sum{xi} + n mean^4
+//   = sum{xi^4} - 4 mean sum{xi^3} + 6 mean^2 sum{xi^2} - 4 n mean^4 + n mean^4
+//   = sum{xi^4} - 4 mean sum{xi^3} + 6 mean^2 sum{xi^2} - 3 n mean^4
+//   = sum{xi^4} - mean*(4 sum{xi^3} - 6 mean sum{xi^2} + 3 n mean^3)
+//   = sumx4 - mean*(4 sumx3 - 6 mean sumx2 + 3 n mean^3)
+//   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
+
+double mlr_get_kurtosis(unsigned long long n, double sumx, double sumx2, double sumx3, double sumx4) {
+	double mean = sumx / n;
+	double numerator = sumx4 - mean*(4*sumx3 - mean*(6*sumx2 - 3*n*mean*mean));
+	numerator = numerator / n;
+	double denominator = (sumx2 - n*mean*mean) / n;
+	denominator = denominator * denominator;
+	return numerator / denominator - 3.0;
 }
 
 // ----------------------------------------------------------------

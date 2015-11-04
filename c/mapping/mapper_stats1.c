@@ -63,6 +63,8 @@ static stats1_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* st
 static stats1_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_var_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name);
+static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name);
+static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name);
 static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name);
@@ -78,15 +80,17 @@ typedef struct _acc_lookup_t {
 	char* desc;
 } stats1_lookup_t;
 static stats1_lookup_t stats1_lookup_table[] = {
-	{"count",  stats1_count_alloc,  "Count instances of fields"},
-	{"mode",   stats1_mode_alloc,   "Find most-frequently-occurring values for fields; first-found wins tie"},
-	{"sum",    stats1_sum_alloc,    "Compute sums of specified fields"},
-	{"mean",   stats1_mean_alloc,   "Compute averages (sample means) of specified fields"},
-	{"stddev", stats1_stddev_alloc, "Compute sample standard deviation of specified fields"},
-	{"var",    stats1_var_alloc,    "Compute sample variance of specified fields"},
-	{"meaneb", stats1_meaneb_alloc, "Estimate error bars for averages (assuming no sample autocorrelation)"},
-	{"min",    stats1_min_alloc,    "Compute minimum values of specified fields"},
-	{"max",    stats1_max_alloc,    "Compute maximum values of specified fields"},
+	{"count",    stats1_count_alloc,    "Count instances of fields"},
+	{"mode",     stats1_mode_alloc,     "Find most-frequently-occurring values for fields; first-found wins tie"},
+	{"sum",      stats1_sum_alloc,      "Compute sums of specified fields"},
+	{"mean",     stats1_mean_alloc,     "Compute averages (sample means) of specified fields"},
+	{"stddev",   stats1_stddev_alloc,   "Compute sample standard deviation of specified fields"},
+	{"var",      stats1_var_alloc,      "Compute sample variance of specified fields"},
+	{"meaneb",   stats1_meaneb_alloc,   "Estimate error bars for averages (assuming no sample autocorrelation)"},
+	{"skewness", stats1_skewness_alloc, "Compute sample skewness of specified fields"},
+	{"kurtosis", stats1_kurtosis_alloc, "Compute sample kurtosis of specified fields"},
+	{"min",      stats1_min_alloc,      "Compute minimum values of specified fields"},
+	{"max",      stats1_max_alloc,      "Compute maximum values of specified fields"},
 };
 static int stats1_lookup_table_length = sizeof(stats1_lookup_table) / sizeof(stats1_lookup_table[0]);
 
@@ -432,7 +436,7 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_count_state_t {
+typedef struct _stats1_count_state_t {
 	unsigned long long count;
 	char* output_field_name;
 } stats1_count_state_t;
@@ -460,7 +464,7 @@ static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_mode_state_t {
+typedef struct _stats1_mode_state_t {
 	lhmsi_t* pcounts_for_value;
 	char* output_field_name;
 } stats1_mode_state_t;
@@ -502,7 +506,7 @@ static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_sum_state_t {
+typedef struct _stats1_sum_state_t {
 	double sum;
 	char* output_field_name;
 } stats1_sum_state_t;
@@ -529,7 +533,7 @@ static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_mean_state_t {
+typedef struct _stats1_mean_state_t {
 	double sum;
 	unsigned long long count;
 	char* output_field_name;
@@ -566,7 +570,7 @@ static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_stddev_var_meaneb_state_t {
+typedef struct _stats1_stddev_var_meaneb_state_t {
 	unsigned long long count;
 	double sumx;
 	double sumx2;
@@ -621,7 +625,95 @@ static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name) 
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_min_state_t {
+typedef struct _stats1_skewness_state_t {
+	unsigned long long count;
+	double sumx;
+	double sumx2;
+	double sumx3;
+	char* output_field_name;
+} stats1_skewness_state_t;
+static void stats1_skewness_dingest(void* pvstate, double val) {
+	stats1_skewness_state_t* pstate = pvstate;
+	pstate->count++;
+	pstate->sumx  += val;
+	pstate->sumx2 += val*val;
+	pstate->sumx3 += val*val*val;
+}
+
+static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+	stats1_skewness_state_t* pstate = pvstate;
+	if (pstate->count < 2LL) {
+		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double output = mlr_get_skewness(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3);
+		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
+}
+
+static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name) {
+	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
+	stats1_skewness_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_skewness_state_t));
+	pstate->count       = 0LL;
+	pstate->sumx        = 0.0;
+	pstate->sumx2       = 0.0;
+	pstate->sumx3       = 0.0;
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+
+	pstats1->pvstate       = (void*)pstate;
+	pstats1->psingest_func = NULL;
+	pstats1->pdingest_func = stats1_skewness_dingest;
+	pstats1->pemit_func    = stats1_skewness_emit;
+	return pstats1;
+}
+
+// ----------------------------------------------------------------
+typedef struct _stats1_kurtosis_state_t {
+	unsigned long long count;
+	double sumx;
+	double sumx2;
+	double sumx3;
+	double sumx4;
+	char* output_field_name;
+} stats1_kurtosis_state_t;
+static void stats1_kurtosis_dingest(void* pvstate, double val) {
+	stats1_kurtosis_state_t* pstate = pvstate;
+	pstate->count++;
+	pstate->sumx  += val;
+	pstate->sumx2 += val*val;
+	pstate->sumx3 += val*val*val;
+	pstate->sumx4 += val*val*val*val;
+}
+
+static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+	stats1_kurtosis_state_t* pstate = pvstate;
+	if (pstate->count < 2LL) {
+		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		double output = mlr_get_kurtosis(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3, pstate->sumx4);
+		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	}
+}
+
+static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name) {
+	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
+	stats1_kurtosis_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_kurtosis_state_t));
+	pstate->count       = 0LL;
+	pstate->sumx        = 0.0;
+	pstate->sumx2       = 0.0;
+	pstate->sumx3       = 0.0;
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+
+	pstats1->pvstate       = (void*)pstate;
+	pstats1->psingest_func = NULL;
+	pstats1->pdingest_func = stats1_kurtosis_dingest;
+	pstats1->pemit_func    = stats1_kurtosis_emit;
+	return pstats1;
+}
+
+// ----------------------------------------------------------------
+typedef struct _stats1_min_state_t {
 	int have_min;
 	double min;
 	char* output_field_name;
@@ -660,7 +752,7 @@ static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_max_state_t {
+typedef struct _stats1_max_state_t {
 	int have_max;
 	double max;
 	char* output_field_name;
@@ -699,7 +791,7 @@ static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name) {
 }
 
 // ----------------------------------------------------------------
-typedef struct _acc_percentile_state_t {
+typedef struct _stats1_percentile_state_t {
 	percentile_keeper_t* ppercentile_keeper;
 } stats1_percentile_state_t;
 static void stats1_percentile_dingest(void* pvstate, double val) {
