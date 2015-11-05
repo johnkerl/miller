@@ -50,13 +50,38 @@
 // * the left records with L=c and L=d are unpaired.
 //
 // ----------------------------------------------------------------
-// Now for the sorted (doubly-streaming) case. Here we require that
-// the left and right files be already sorted (lexically ascending) by
-
-
-
-// xxx overview here ... move to the .h, or (better) there put xref to here.
-
+// Now for the sorted (doubly-streaming) case. Here we require that the left
+// and right files be already sorted (lexically ascending) by the join fields.
+// Then the example inputs look like this:
+//
+//   +-----+-----+
+//   |  L  |  R  |
+//   + --- + --- +
+//   |  a  |  a  |
+//   |  a  |  b  |
+//   |  a  |  f  |
+//   |  b  |     |
+//   |  c  |     |
+//   |  c  |     |
+//   |  d  |     |
+//   +-----+-----+
+//
+// The right file is still read one record at a time. It's the job of this
+// join_bucket_keeper class to keep track of the left-file buckets, one bucket
+// at a time.  This includes all records with same values for the join
+// field(s), e.g. the three L=a records, as well as a "peek" record which is
+// either the next record with a different join value (e.g. the L=b record), or
+// an end-of-file indicator.
+//
+// If a right-file record has join field matching the current left-file bucket,
+// then it's paired with all records in that bucket. Otherwise the
+// join_bucket_keeper needs to either stay with the current bucket or advance
+// to the next one, depending whether the current right-file record's
+// join-field values compare lexically with the the left-file bucket's
+// join-field values.
+//
+// Examples:
+//
 // +-----------+-----------+-----------+-----------+-----------+-----------+
 // |  L    R   |   L   R   |   L   R   |   L   R   |   L   R   |   L   R   |
 // + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  + ---  ---  +
@@ -68,7 +93,7 @@
 // |   g       |   g       |   g       |   g       |   g       |           |
 // |   g       |   g       |       h   |           |           |           |
 // +-----------+-----------+-----------+-----------+-----------+-----------+
-
+//
 // ================================================================
 
 // ----------------------------------------------------------------
