@@ -7,6 +7,54 @@
 #include "containers/join_bucket_keeper.h"
 #include "input/lrec_readers.h"
 
+// ================================================================
+// JOIN_BUCKET_KEEPER
+//
+// This data structure supports Miller's sorted (double-streaming) join.  It is
+// perhaps best explained by first comparing with the unsorted (half-streaming)
+// case.
+//
+// In both cases, we have left and right join keys. Suppose the left file has
+// data with field name "L" to be joined with right-file(s) data with field
+// name "R". For the unsorted case (see mapper_join.c) the entire left file is
+// first loaded into buckets of record-lists, one for each distinct value of L.
+// E.g. given the following:
+//
+//   +-----+-----+
+//   |  L  |  R  |
+//   + --- + --- +
+//   |  a  |  a  |
+//   |  c  |  b  |
+//   |  a  |  f  |
+//   |  b  |     |
+//   |  c  |     |
+//   |  d  |     |
+//   |  a  |     |
+//   +-----+-----+
+//
+// the left file will be bucketed as
+//
+//   +-----+     +-----+     +-----+     +-----+
+//   |  L  |     |  L  |     |  L  |     |  L  |
+//   + --- +     + --- +     + --- +     + --- +
+//   |  a  |     |  c  |     |  b  |     |  d  |
+//   |  a  |     |  c  |     +-----+     +-----+
+//   |  a  |     + --- +
+//   + --- +
+//
+// Then the right file will be processed one record at a time (hence
+// "half-streaming"). The pairings are easy:
+// * the right record with R=a is paired with the L=a bucket,
+// * the right record with R=b is paired with the L=b bucket,
+// * the right record with R=f is unpaired, and
+// * the left records with L=c and L=d are unpaired.
+//
+// ----------------------------------------------------------------
+// Now for the sorted (doubly-streaming) case. Here we require that
+// the left and right files be already sorted (lexically ascending) by
+
+
+
 // xxx overview here ... move to the .h, or (better) there put xref to here.
 
 // +-----------+-----------+-----------+-----------+-----------+-----------+
@@ -21,6 +69,9 @@
 // |   g       |   g       |       h   |           |           |           |
 // +-----------+-----------+-----------+-----------+-----------+-----------+
 
+// ================================================================
+
+// ----------------------------------------------------------------
 #define LEFT_STATE_0_PREFILL     0
 #define LEFT_STATE_1_FULL        1
 #define LEFT_STATE_2_LAST_BUCKET 2

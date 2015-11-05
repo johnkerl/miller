@@ -1,5 +1,6 @@
 // ================================================================
-// Data structures for mlr join
+// Data structures for mlr join, sorted case. Please see descriptive
+// comments at the top of join_bucket_keeper.h.
 // ================================================================
 
 #ifndef JOIN_BUCKET_KEEPER_H
