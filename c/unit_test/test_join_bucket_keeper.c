@@ -45,6 +45,7 @@ static sllv_t* make_records_het() {
 	sllv_add(precords, lrec_literal_2("x","3", "b","16"));
 	sllv_add(precords, lrec_literal_2("l","5", "b","17"));
 	sllv_add(precords, lrec_literal_2("l","5", "b","18"));
+
 	return precords;
 }
 
@@ -442,12 +443,12 @@ static char* test_het_unpaired_before_left_start() {
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
 	// xxx pick up from here
-	// mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 1, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 8, "unpaired", "(eof)"));
 	printf("\n");
 	printf("test_het_unpaired_before_left_start exit\n");
 	printf("\n");
@@ -468,12 +469,13 @@ static char* test_het_unpaired_after_left_end() {
 	slls_t* pright_field_values = slls_single_no_free("6");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	//mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 3, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 0, "unpaired", "(eof)"));
+	// xxx in progress
+	//mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
 	printf("\n");
 	printf("test_het_unpaired_after_left_end exit\n");
 	printf("\n");
