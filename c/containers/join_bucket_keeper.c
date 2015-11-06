@@ -32,7 +32,7 @@
 //   |  a  |     |
 //   +-----+-----+
 //
-// the left file will be bucketed as
+// the left file is bucketed as
 //
 //   +-----+     +-----+     +-----+     +-----+
 //   |  L  |     |  L  |     |  L  |     |  L  |
@@ -42,7 +42,7 @@
 //   |  a  |     + --- +
 //   + --- +
 //
-// Then the right file will be processed one record at a time (hence
+// Then the right file is processed one record at a time (hence
 // "half-streaming"). The pairings are easy:
 // * the right record with R=a is paired with the L=a bucket,
 // * the right record with R=b is paired with the L=b bucket,
@@ -93,6 +93,24 @@
 // |   g       |   g       |   g       |   g       |   g       |           |
 // |   g       |   g       |       h   |           |           |           |
 // +-----------+-----------+-----------+-----------+-----------+-----------+
+//
+// In all these examples, the join_bucket_keeper goes through these steps:
+// * bucket is empty, peek rec has L=e
+// * bucket is L=e records, peek rec has L=g
+// * bucket is L=g records, peek rec is null (due to EOF)
+// * bucket is empty, peek rec is null (due to EOF)
+//
+// Example 1:
+// * left-bucket is empty and left-peek has L=e
+// * right record has R=a; join_bucket_keeper does not advance
+// * right record has R=b; join_bucket_keeper does not advance
+// * right end of file; all left records are unpaired.
+//
+// Example 2:
+// * left-bucket is empty and left-peek has L=e
+// * right record has R=a; join_bucket_keeper does not advance
+// * right record has R=f; left records with L=e are unpaired.
+// * etc.
 //
 // ================================================================
 
@@ -224,6 +242,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
 }
 
+// ----------------------------------------------------------------
 static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 	if (pkeeper->pbucket->pleft_field_values == NULL) {
 		if (pkeeper->leof)
@@ -312,7 +331,11 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 		sllv_free(pkeeper->pbucket->precords);
 	} else {
 		// xxx if non-null then transfer else alloc & transfer ...
-		*pprecords_left_unpaired = pkeeper->pbucket->precords;
+		if (*pprecords_left_unpaired == NULL) {
+			*pprecords_left_unpaired = pkeeper->pbucket->precords;
+		} else {
+			sllv_transfer(*pprecords_left_unpaired, pkeeper->pbucket->precords);
+		}
 	}
 
 	pkeeper->pbucket->precords = sllv_alloc();
@@ -365,10 +388,13 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 {
 	// 1. Any records already in pkeeper->pbucket->precords (current bucket)
 	if (pkeeper->pbucket->was_paired) {
-		// xxx if non-null ...
-		*pprecords_left_unpaired = sllv_alloc();
+		if (*pprecords_left_unpaired == NULL)
+			*pprecords_left_unpaired = sllv_alloc();
 	} else {
-		*pprecords_left_unpaired = pkeeper->pbucket->precords;
+		if (*pprecords_left_unpaired == NULL)
+			*pprecords_left_unpaired = pkeeper->pbucket->precords;
+		else
+			sllv_transfer(*pprecords_left_unpaired, pkeeper->pbucket->precords);
 	}
 	// 2. Peek-record, if any
 	if (pkeeper->prec_peek != NULL) {
@@ -387,6 +413,7 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 	pkeeper->pbucket->precords = NULL;
 }
 
+// ----------------------------------------------------------------
 void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper) {
 	printf("pbucket at %p:\n", pkeeper);
 	printf("  pvhandle = %p\n", pkeeper->pvhandle);

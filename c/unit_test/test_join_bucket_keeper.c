@@ -36,15 +36,15 @@ static sllv_t* make_records_113335() {
 // ----------------------------------------------------------------
 static sllv_t* make_records_het() {
 	sllv_t* precords = sllv_alloc();
-	sllv_add(precords, lrec_literal_2("x","1", "b","10"));
-	sllv_add(precords, lrec_literal_2("l","1", "b","11"));
-	sllv_add(precords, lrec_literal_2("l","1", "b","12"));
-	sllv_add(precords, lrec_literal_2("x","3", "b","13"));
-	sllv_add(precords, lrec_literal_2("l","3", "b","14"));
-	sllv_add(precords, lrec_literal_2("l","3", "b","15"));
-	sllv_add(precords, lrec_literal_2("x","3", "b","16"));
-	sllv_add(precords, lrec_literal_2("l","5", "b","17"));
-	sllv_add(precords, lrec_literal_2("l","5", "b","18"));
+	sllv_add(precords, lrec_literal_2("x","100", "b","10"));
+	sllv_add(precords, lrec_literal_2("l","1",   "b","11"));
+	sllv_add(precords, lrec_literal_2("l","1",   "b","12"));
+	sllv_add(precords, lrec_literal_2("x","200", "b","13"));
+	sllv_add(precords, lrec_literal_2("l","3",   "b","14"));
+	sllv_add(precords, lrec_literal_2("l","3",   "b","15"));
+	sllv_add(precords, lrec_literal_2("x","300", "b","16"));
+	sllv_add(precords, lrec_literal_2("l","5",   "b","17"));
+	sllv_add(precords, lrec_literal_2("l","5",   "b","18"));
 
 	return precords;
 }
@@ -469,13 +469,12 @@ static char* test_het_unpaired_after_left_end() {
 	slls_t* pright_field_values = slls_single_no_free("6");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_has_length(precords_left_unpaired, 3, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	// xxx in progress
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
 	printf("\n");
 	printf("test_het_unpaired_after_left_end exit\n");
 	printf("\n");
