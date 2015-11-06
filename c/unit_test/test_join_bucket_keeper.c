@@ -481,6 +481,60 @@ static char* test_het_unpaired_after_left_end() {
 	return 0;
 }
 
+// ----------------------------------------------------------------
+static char* test_het_initial_pairing() {
+	printf("----------------------------------------------------------------\n");
+	printf("test_het_initial_pairing enter\n");
+	slls_t* pleft_field_names;
+	lrec_reader_t* preader;
+	set_up(make_records_het(), &pleft_field_names, &preader);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
+
+	// xxx fix me next
+	slls_t* pright_field_values = slls_single_no_free("1");
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	//mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	//mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	//mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	//mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
+	printf("\n");
+	printf("test_het_initial_pairing exit\n");
+	printf("\n");
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static char* test_het_middle_pairing() {
+	printf("----------------------------------------------------------------\n");
+	printf("test_het_middle_pairing enter\n");
+	slls_t* pleft_field_names;
+	lrec_reader_t* preader;
+	set_up(make_records_het(), &pleft_field_names, &preader);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	sllv_t* precords_paired;
+	sllv_t* precords_left_unpaired;
+
+	// xxx fix me next
+	slls_t* pright_field_values = slls_single_no_free("3");
+	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
+	//mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
+	//mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
+	printf("\n");
+
+	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
+	//mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	//mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
+	printf("\n");
+	printf("test_het_middle_pairing exit\n");
+	printf("\n");
+	return 0;
+}
+
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_left_empty_right_empty);
@@ -493,6 +547,8 @@ static char * run_all_tests() {
 	mu_run_test(test_walk_through_all);
 	mu_run_test(test_het_unpaired_before_left_start);
 	mu_run_test(test_het_unpaired_after_left_end);
+	mu_run_test(test_het_initial_pairing);
+	mu_run_test(test_het_middle_pairing);
 	return 0;
 }
 
