@@ -14,6 +14,7 @@ TOP OF LIST
 ! join on partial value-field matches
 
 ! cut a release w/ manpage
+! formats @ mlrdoc -- note default iidx for ps-less dkvp fields. also @ mlr -h?
 
 ! R @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
