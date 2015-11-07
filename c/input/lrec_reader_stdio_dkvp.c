@@ -136,13 +136,8 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -174,12 +169,7 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
@@ -215,13 +205,8 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -253,12 +238,7 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}

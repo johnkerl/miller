@@ -125,13 +125,8 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -164,12 +159,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
@@ -208,13 +198,8 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -247,12 +232,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
@@ -291,13 +271,8 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -330,12 +305,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
@@ -374,13 +344,8 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 			saw_ps = FALSE;
 			*p = 0;
 
-			if (*key == 0) {
-				fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-				exit(1);
-			}
 			idx++;
-			if (value <= key) {
+			if (*key == 0 || value <= key) {
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
@@ -413,12 +378,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	if (allow_repeat_ifs && *key == 0 && *value == 0) {
 		; // OK
 	} else {
-		if (*key == 0) {
-			fprintf(stderr, "%s: empty key at file \"%s\" record %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pctx->fnr);
-			exit(1);
-		}
-		if (value <= key) {
+		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
 			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
