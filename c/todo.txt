@@ -27,6 +27,9 @@ MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING u
 ! recmatch -- inefficient but worthwhile.
 
 >> some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
+MINOR: mlr cat -n (put NR)
+MINOR: shorthand sec2gmt verb?
+MINOR: csv/csvlite compare/contrast @ mld formats
 MINOR: faqent distrib mapred paradigm in general: use distributed mean as example
 MINOR: faqent re R/mysql/etc inouts
 MINOR: hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
@@ -53,6 +56,8 @@ MAJOR: uni/multivariate logistic for ternary & above?
 
 MINOR: --mmap @ mlr -h
 MINOR: bus-insurance dev page
+
+? wiki quickselect ?
 
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
