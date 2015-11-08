@@ -20,6 +20,7 @@ libmapping_la_SOURCES=	\
 			mapper_rename.c \
 			mapper_reorder.c \
 			mapper_sample.c \
+			mapper_sec2gmt.c \
 			mapper_sort.c \
 			mapper_stats1.c \
 			mapper_stats2.c \

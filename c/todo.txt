@@ -19,6 +19,8 @@ TOP OF LIST
 ! R @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
 ! emph mlr has light stats but for heavyweight analysis use R et al.
+* mlrutil libfunc for sec2gmt
+* UT cases for sec2gmt
 
 MINOR: brew version bump?!?
 

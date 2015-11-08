@@ -422,6 +422,7 @@ mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	// xxx use retval which is size_t
 	// xxx error-check all of this ...
 	char* string = mlr_malloc_or_die(32);
+	// xxx make mlrutil func
 	(void)strftime(string, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
 
 	mv_t rv = {.type = MT_STRING, .u.strv = string};

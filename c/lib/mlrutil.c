@@ -140,6 +140,15 @@ int mlr_try_double_from_string(char* string, double* pval) {
 	return 1;
 }
 
+long long mlr_int_from_string_or_die(char* string) {
+	long long i;
+	if (!mlr_try_int_from_string(string, &i)) {
+		fprintf(stderr, "Couldn't parse \"%s\" as number.\n", string);
+		exit(1);
+	}
+	return i;
+}
+
 // E.g. "300" is a number; "300ms" is not.
 int mlr_try_int_from_string(char* string, long long* pval) {
 	int num_bytes_scanned;
