@@ -285,8 +285,8 @@ Help options:
 
 Verbs:
    bar cat check count-distinct cut filter group-by group-like having-fields
-   head histogram join label put regularize rename reorder sample sort stats1
-   stats2 step tac tail top uniq
+   head histogram join label put regularize rename reorder sample sec2gmt sort
+   stats1 stats2 step tac tail top uniq
 
 Functions for the filter and put verbs:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
@@ -2121,6 +2121,8 @@ Options:
   stddev  Compute sample standard deviation of specified fields
   var     Compute sample variance of specified fields
   meaneb  Estimate error bars for averages (assuming no sample autocorrelation)
+  skewness Compute sample skewness of specified fields
+  kurtosis Compute sample kurtosis of specified fields
   min     Compute minimum values of specified fields
   max     Compute maximum values of specified fields
 -f {a,b,c}  Value-field names on which to compute statistics
