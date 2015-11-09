@@ -20,9 +20,16 @@ TOP OF LIST
 ! be very clear streaming vs. dataframe -- each has things the other can't do
 ! emph mlr has light stats but for heavyweight analysis use R et al.
 
-* mlrutil libfunc for sec2gmt
-* UT cases for sec2gmt
-* mld ref section for sec2gmt
+* verb sec2gmt:
+  - mlrutil libfunc for code dedup
+  - UT cases for sec2gmt
+  - mld ref section for sec2gmt
+  - all of the above for a gmt2sec verb?
+
+* verb cat -n (put NR w/ reorder-to-front)
+
+* out-of-place bar -- preserving count as separate column?
+* fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
 MINOR: brew version bump?!?
 
@@ -31,8 +38,6 @@ MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING u
 ! recmatch -- inefficient but worthwhile.
 
 >> some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
-MINOR: mlr cat -n (put NR)
-MINOR: shorthand sec2gmt verb?
 MINOR: csv/csvlite compare/contrast @ mld formats
 MINOR: faqent distrib mapred paradigm in general: use distributed mean as example
 MINOR: faqent re R/mysql/etc inouts
