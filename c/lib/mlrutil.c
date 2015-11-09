@@ -93,9 +93,9 @@ char* mlr_alloc_string_from_ull(unsigned long  long value) {
 }
 
 char* mlr_alloc_string_from_ll(long  long value) {
-	int n = snprintf(NULL, 0, "%lli", value);
+	int n = snprintf(NULL, 0, "%lld", value);
 	char* string = mlr_malloc_or_die(n+1);
-	sprintf(string, "%lli", value);
+	sprintf(string, "%lld", value);
 	return string;
 }
 
@@ -151,8 +151,15 @@ long long mlr_int_from_string_or_die(char* string) {
 
 // E.g. "300" is a number; "300ms" is not.
 int mlr_try_int_from_string(char* string, long long* pval) {
-	int num_bytes_scanned;
-	int rc = sscanf(string, "%lli%n", pval, &num_bytes_scanned);
+	int num_bytes_scanned, rc;
+	// sscanf with %li / %lli doesn't scan correctly when the high bit is set
+	// on hex input; it just returns max signed. So we need to special-case hex
+	// input.
+	if (string[0] == '0' && (string[1] == 'x' || string[1] == 'X')) {
+		rc = sscanf(string, "%llx%n", pval, &num_bytes_scanned);
+	} else {
+		rc = sscanf(string, "%lli%n", pval, &num_bytes_scanned);
+	}
 	if (rc != 1)
 		return 0;
 	if (string[num_bytes_scanned] != 0) // scanned to end of string?

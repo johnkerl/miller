@@ -18,6 +18,7 @@ extern mapper_setup_t mapper_check_setup;
 extern mapper_setup_t mapper_count_distinct_setup;
 extern mapper_setup_t mapper_cut_setup;
 extern mapper_setup_t mapper_filter_setup;
+extern mapper_setup_t mapper_grep_setup;
 extern mapper_setup_t mapper_group_by_setup;
 extern mapper_setup_t mapper_group_like_setup;
 extern mapper_setup_t mapper_having_fields_setup;

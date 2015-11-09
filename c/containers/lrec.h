@@ -101,6 +101,8 @@ lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 
 void  lrec_put_no_free(lrec_t* prec, char* key, char* value);
 void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
+// xxx comment
+void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);
 void  lrec_remove(lrec_t* prec, char* key);
@@ -113,6 +115,8 @@ void  lrec_free(lrec_t* prec);
 void lrec_print(lrec_t* prec);
 void lrec_dump(lrec_t* prec);
 void lrec_dump_titled(char* msg, lrec_t* prec);
+// The caller should free the return value
+char* lrec_sprint(lrec_t* prec, char* ors, char* ofs, char* ops);
 
 // NIDX data are keyed by one-up field index which is not explicitly contained
 // in the file, e.g. line "a b c" splits to an lrec with "{"1" => "a", "2" =>

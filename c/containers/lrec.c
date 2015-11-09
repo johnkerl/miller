@@ -3,7 +3,10 @@
 #include <string.h>
 
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "containers/lrec.h"
+
+#define SB_ALLOC_LENGTH 256
 
 static lrece_t* lrec_find_entry(lrec_t* prec, char* key);
 static void lrec_unlink(lrec_t* prec, lrece_t* pe);
@@ -119,6 +122,36 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 			pe->pnext   = NULL;
 			prec->ptail->pnext = pe;
 			prec->ptail = pe;
+		}
+		prec->field_count++;
+	}
+}
+
+void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
+	lrece_t* pe = lrec_find_entry(prec, key);
+
+	if (pe != NULL) {
+		if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
+			free(pe->value);
+		}
+		pe->value = mlr_strdup_or_die(value);
+		pe->free_flags |= LREC_FREE_ENTRY_VALUE;
+	} else {
+		pe = mlr_malloc_or_die(sizeof(lrece_t));
+		pe->key         = mlr_strdup_or_die(key);
+		pe->value       = mlr_strdup_or_die(value);
+		pe->free_flags  = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
+
+		if (prec->phead == NULL) {
+			pe->pprev   = NULL;
+			pe->pnext   = NULL;
+			prec->phead = pe;
+			prec->ptail = pe;
+		} else {
+			pe->pnext   = prec->phead;
+			pe->pprev   = NULL;
+			prec->phead->pprev = pe;
+			prec->phead = pe;
 		}
 		prec->field_count++;
 	}
@@ -440,4 +473,25 @@ void lrec_print(lrec_t* prec) {
 		nf++;
 	}
 	fputc(ors, output_stream);
+}
+
+char* lrec_sprint(lrec_t* prec, char* ors, char* ofs, char* ops) {
+	string_builder_t* psb = sb_alloc(SB_ALLOC_LENGTH);
+	if (prec == NULL) {
+		sb_append_string(psb, "NULL");
+	} else {
+		int nf = 0;
+		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+			if (nf > 0)
+				sb_append_string(psb, ofs);
+			sb_append_string(psb, pe->key);
+			sb_append_string(psb, ops);
+			sb_append_string(psb, pe->value);
+			nf++;
+		}
+		sb_append_string(psb, ors);
+	}
+	char* rv = sb_finish(psb);
+	sb_free(psb);
+	return rv;
 }
