@@ -13,7 +13,7 @@ typedef struct _mapper_filter_state_t {
 
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_filter_free(void* pvstate);
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int do_exclude);
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int allow_type_inference, int do_exclude);
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
 
@@ -49,11 +49,13 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
 	int   print_asts = FALSE;
+	int   allow_type_inference = TRUE;
 	int   do_exclude = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate, "-v", &print_asts);
-	ap_define_true_flag(pstate, "-x", &do_exclude);
+	ap_define_true_flag(pstate,  "-v", &print_asts);
+	ap_define_false_flag(pstate, "-s", &allow_type_inference);
+	ap_define_true_flag(pstate,  "-x", &do_exclude);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_filter_usage(stderr, argv[0], verb);
@@ -78,14 +80,14 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_node_print(past->proot);
 	}
 
-	return mapper_filter_alloc(past->proot, do_exclude);
+	return mapper_filter_alloc(past->proot, allow_type_inference, do_exclude);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int do_exclude) {
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int allow_type_inference, int do_exclude) {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 
-	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past);
+	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, allow_type_inference);
 	pstate->do_exclude = do_exclude;
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));

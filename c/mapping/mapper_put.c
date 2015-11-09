@@ -15,7 +15,7 @@ typedef struct _mapper_put_state_t {
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_put_free(void* pvstate);
-static mapper_t* mapper_put_alloc(sllv_t* pasts);
+static mapper_t* mapper_put_alloc(sllv_t* pasts, int allow_type_inference);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 
@@ -49,10 +49,12 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
+	int   allow_type_inference = TRUE;
 	int   print_asts = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate, "-v", &print_asts);
+	ap_define_false_flag(pstate, "-s", &allow_type_inference);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -79,11 +81,11 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvdata);
 	}
 
-	return mapper_put_alloc(pasts);
+	return mapper_put_alloc(pasts, allow_type_inference);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(sllv_t* pasts) {
+static mapper_t* mapper_put_alloc(sllv_t* pasts, int allow_type_inference) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
@@ -118,7 +120,7 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts) {
 		}
 
 		char* output_field_name = pleft->text;
-		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright);
+		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, allow_type_inference);
 
 		pstate->pevaluators[i] = pevaluator;
 		pstate->output_field_names[i] = output_field_name;

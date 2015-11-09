@@ -103,6 +103,11 @@
 	return FILTER_DSL_NUMBER;
 }
 
+0x[0-9a-fA-F]+ {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
+	return FILTER_DSL_NUMBER;
+}
+
 "NF" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return FILTER_DSL_CONTEXT_VARIABLE;
