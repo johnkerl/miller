@@ -28,12 +28,13 @@ TOP OF LIST
 
 * verb cat -n (put NR w/ reorder-to-front)
 
+MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
+-> try mlr_try_int_from_string w/ 0x8000_0000_0000_0000 .. 0xffff_ffff_ffff_ffff
+
 * out-of-place bar -- preserving count as separate column?
 * fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
 MINOR: brew version bump?!?
-
-MINOR: filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
 
 ! recmatch -- inefficient but worthwhile.
 
