@@ -19,6 +19,8 @@ TOP OF LIST
 
 ! formats @ mlrdoc -- note default iidx for ps-less dkvp fields. also @ mlr -h?
 
+! split mlrdoc into master & releases -- ?
+
 * R:
 ! xref @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
@@ -36,12 +38,7 @@ TOP OF LIST
   - mlr cat -h output
 
 * grep verb:
-  o -x, -i, -v; -w?
-  o format as dkvp line & regex-match it
-  o tell them they can mlr --odkvp ... | grep ... | mlr --idkvp ... if they want full grep.
-    really mlr grep is only a keystroke-saving poor-man's option.
-  o lrec_sprint(lrec_t* prec, char* ors, char* ofs, char* ops) w/ string_builder_t
-  o regex section @ mld
+  - UT
 
 * filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
   - UTs for mlr_try_int_from_string w/ 0x8000_0000_0000_0000 .. 0xffff_ffff_ffff_ffff

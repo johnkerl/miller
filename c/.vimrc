@@ -1,3 +1,3 @@
-map \r :w<C-m>:!make install<C-m>
-map \f :w<C-m>:!make<C-m>
-map \v :w<C-m>:!make mlr<C-m>
+map \r :w<C-m>:!bake install<C-m>
+map \f :w<C-m>:!bake<C-m>
+map \v :w<C-m>:!bake mlr<C-m>

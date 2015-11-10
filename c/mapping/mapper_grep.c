@@ -65,9 +65,13 @@ static void mapper_grep_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "By contrast, \"%s %s\" allows you to pattern-match the entire record. It does\n", argv0, verb);
 	fprintf(o, "this by formatting each record in memory as DKVP, using command-line-specified\n");
 	fprintf(o, "ORS/OFS/OPS, and matching the resulting line against the pattern specified\n");
-	fprintf(o, "here. Not all the options to system grep are supported, and this command\n");
-	fprintf(o, "is intended to be merely a keystroke-saver. To get all the features\n");
-	fprintf(o, "of system grep, you can do \"%s --odkvp ... | grep ... | %s --idkvp ...\"\n", argv0, argv0);
+	fprintf(o, "here. In particular, the pattern is not applied to the input stream: if you\n");
+	fprintf(o, "have CSV with header line \"x,y,z\" and data line \"1,2,3\" then the pattern will\n");
+	fprintf(o, "be matched, not against either of these lines, but against the DKVP line\n");
+	fprintf(o, "\"x=1,y=2,z=3\".  Furthermore, not all the options to system grep are supported,\n");
+	fprintf(o, "and this command is intended to be merely a keystroke-saver. To get all the\n");
+	fprintf(o, "features of system grep, you can do\n");
+	fprintf(o, "  \"%s --odkvp ... | grep ... | %s --idkvp ...\"\n", argv0, argv0);
 }
 
 // ----------------------------------------------------------------
