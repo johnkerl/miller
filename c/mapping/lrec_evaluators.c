@@ -739,7 +739,7 @@ typedef struct _lrec_evaluator_field_name_state_t {
 mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
-	if (string == NULL) {
+	if (string == NULL || *string == 0) {
 		return (mv_t) {.type = MT_NULL, .u.intv = 0};
 	} else {
 		double fltv;
