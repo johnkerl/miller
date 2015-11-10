@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-03
+.\"      Date: 2015-11-10
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-03" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-10" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -127,9 +127,9 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- bar cat check count-distinct cut filter group-by group-like having-fields head
- histogram join label put regularize rename reorder sample sort stats1 stats2
- step tac tail top uniq
+ bar cat check count-distinct cut filter grep group-by group-like having-fields
+ head histogram join label put regularize rename reorder sample sec2gmt sort
+ stats1 stats2 step tac tail top uniq
 .fi
 .if n \{\
 .RE
@@ -296,8 +296,11 @@ Options:
 .RS 0
 .\}
 .nf
-Usage: mlr cat
+Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
+Options:
+-n        Prepend field "n" to each record with record-counter starting at 1
+-N {name} Prepend field {name} to each record with record-counter starting at 1
 .fi
 .if n \{\
 .RE
@@ -369,6 +372,26 @@ Examples:
   mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list.
+.fi
+.if n \{\
+.RE
+.SS "grep"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr grep [options] {pattern}
+Passes through records which match {pattern}.
+Options:
+-i    Use case-insensitive search.
+-v    Invert: pass through records which do not match the pattern.
+Note that "mlr filter" is more powerful, but requires you to know field names.
+By contrast, "mlr grep" allows you to pattern-match the entire record. It does
+this by formatting each record in memory as DKVP, using command-line-specified
+ORS/OFS/OPS, and matching the resulting line against the pattern specified
+here. Not all the options to system grep are supported, and this command
+is intended to be merely a keystroke-saver. To get all the features
+of system grep, you can do "mlr --odkvp ... | grep ... | mlr --idkvp ..."
 .fi
 .if n \{\
 .RE
@@ -590,6 +613,21 @@ Reservoir sampling, optionally by category.
 .fi
 .if n \{\
 .RE
+.SS "sec2gmt"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sec2gmt {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp. This is nothing more than a keystroke-saver for
+the sec2gmt function:
+  mlr sec2gmt time1,time2
+is the same as
+  mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+.fi
+.if n \{\
+.RE
 .SS "sort"
 .if n \{\
 .RS 0
@@ -629,6 +667,8 @@ Options:
   stddev  Compute sample standard deviation of specified fields
   var     Compute sample variance of specified fields
   meaneb  Estimate error bars for averages (assuming no sample autocorrelation)
+  skewness Compute sample skewness of specified fields
+  kurtosis Compute sample kurtosis of specified fields
   min     Compute minimum values of specified fields
   max     Compute maximum values of specified fields
 -f {a,b,c}  Value-field names on which to compute statistics

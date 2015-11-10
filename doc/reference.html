@@ -109,6 +109,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#grep">grep</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-by">group-by</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-like">group-like</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#having-fields">having-fields</a><br/>
@@ -284,9 +285,9 @@ Help options:
   --help-all-verbs       Show help on all verbs.
 
 Verbs:
-   bar cat check count-distinct cut filter group-by group-like having-fields
-   head histogram join label put regularize rename reorder sample sec2gmt sort
-   stats1 stats2 step tac tail top uniq
+   bar cat check count-distinct cut filter grep group-by group-like
+   having-fields head histogram join label put regularize rename reorder sample
+   sec2gmt sort stats1 stats2 step tac tail top uniq
 
 Functions for the filter and put verbs:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
@@ -761,6 +762,19 @@ wye pan 5 **********************************...... *****************************
 <a href="file-formats.html">File formats</a>), and concatenating multiple
 same-schema CSV files to have the same header:
 
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat -h
+Usage: mlr cat [options]
+Passes input records directly to output. Most useful for format conversion.
+Options:
+-n        Prepend field "n" to each record with record-counter starting at 1
+-N {name} Prepend field {name} to each record with record-counter starting at 1
+</pre>
+</div>
+<p/>
+
 <table><tr><td>
 <p/>
 <div class="pokipanel">
@@ -1050,6 +1064,29 @@ mlr --opprint filter '
   ||
   ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' \
   then stats2 -a corr -f x,y data/medium
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="grep"/><h2>grep</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr grep -h
+Usage: mlr grep [options] {pattern}
+Passes through records which match {pattern}.
+Options:
+-i    Use case-insensitive search.
+-v    Invert: pass through records which do not match the pattern.
+Note that "mlr filter" is more powerful, but requires you to know field names.
+By contrast, "mlr grep" allows you to pattern-match the entire record. It does
+this by formatting each record in memory as DKVP, using command-line-specified
+ORS/OFS/OPS, and matching the resulting line against the pattern specified
+here. Not all the options to system grep are supported, and this command
+is intended to be merely a keystroke-saver. To get all the features
+of system grep, you can do "mlr --odkvp ... | grep ... | mlr --idkvp ..."
 </pre>
 </div>
 <p/>

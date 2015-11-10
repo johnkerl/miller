@@ -1,6 +1,7 @@
 #include <regex.h>
 #include "cli/argparse.h"
 #include "mapping/mappers.h"
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/sllv.h"
 
@@ -55,10 +56,18 @@ static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv) {
 	return pmapper;
 }
 static void mapper_grep_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s\n", argv0, verb);
-	fprintf(o, "[under construction]\n");
-	fprintf(o, "[note limitations; most useful for when you don't know the field name(s) for filter]\n");
-	fprintf(o, "[note mlr --odkvp ... | grep ... | grep mlr --idkvp]\n");
+	fprintf(o, "Usage: %s %s [options] {pattern}\n", argv0, verb);
+	fprintf(o, "Passes through records which match {pattern}.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "-i    Use case-insensitive search.\n");
+	fprintf(o, "-v    Invert: pass through records which do not match the pattern.\n");
+	fprintf(o, "Note that \"%s filter\" is more powerful, but requires you to know field names.\n", argv0);
+	fprintf(o, "By contrast, \"%s %s\" allows you to pattern-match the entire record. It does\n", argv0, verb);
+	fprintf(o, "this by formatting each record in memory as DKVP, using command-line-specified\n");
+	fprintf(o, "ORS/OFS/OPS, and matching the resulting line against the pattern specified\n");
+	fprintf(o, "here. Not all the options to system grep are supported, and this command\n");
+	fprintf(o, "is intended to be merely a keystroke-saver. To get all the features\n");
+	fprintf(o, "of system grep, you can do \"%s --odkvp ... | grep ... | %s --idkvp ...\"\n", argv0, argv0);
 }
 
 // ----------------------------------------------------------------
@@ -89,18 +98,16 @@ static sllv_t* mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 	mapper_grep_state_t* pstate = (mapper_grep_state_t*)pvstate;
 
-	// xxx temp -- should be from CLI
-	char* ors = "\n";
-	char* ofs = ",";
-	char* ops = "=";
-
-	char* line = lrec_sprint(pinrec, ors, ofs, ops);
+	char* line = lrec_sprint(pinrec,
+		MLR_GLOBALS.popts->ors,
+		MLR_GLOBALS.popts->ofs,
+		MLR_GLOBALS.popts->ops);
 
 	int matches = regmatch_or_die(&pstate->regex, line, 0, NULL);
 	sllv_t* poutrecs = NULL;
 	if (matches ^ pstate->exclude) {
 		poutrecs = sllv_single(pinrec);
-}
+	}
 	free(line);
 	return poutrecs;
 }

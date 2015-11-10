@@ -8,6 +8,8 @@ typedef struct _mapper_cat_state_t {
 	unsigned long long counter;
 } mapper_cat_state_t;
 
+#define DEFAULT_COUNTER_FIELD_NAME "n"
+
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_cat_free(void* pvstate);
@@ -24,7 +26,7 @@ mapper_setup_t mapper_cat_setup = {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
-	char* default_counter_field_name = "n";
+	char* default_counter_field_name = DEFAULT_COUNTER_FIELD_NAME;
 	char* counter_field_name = NULL;
 	int   do_counters = FALSE;
 
@@ -54,8 +56,12 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
 	return pmapper;
 }
 static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "-n        Prepend field \"%s\" to each record with record-counter starting at 1\n",
+		DEFAULT_COUNTER_FIELD_NAME);
+	fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
 }
 
 // ----------------------------------------------------------------
