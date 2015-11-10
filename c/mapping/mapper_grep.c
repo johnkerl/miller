@@ -56,17 +56,17 @@ static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv) {
 	return pmapper;
 }
 static void mapper_grep_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options] {pattern}\n", argv0, verb);
-	fprintf(o, "Passes through records which match {pattern}.\n");
+	fprintf(o, "Usage: %s %s [options] {regular expression}\n", argv0, verb);
+	fprintf(o, "Passes through records which match {regex}.\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-i    Use case-insensitive search.\n");
-	fprintf(o, "-v    Invert: pass through records which do not match the pattern.\n");
+	fprintf(o, "-v    Invert: pass through records which do not match the regex.\n");
 	fprintf(o, "Note that \"%s filter\" is more powerful, but requires you to know field names.\n", argv0);
-	fprintf(o, "By contrast, \"%s %s\" allows you to pattern-match the entire record. It does\n", argv0, verb);
+	fprintf(o, "By contrast, \"%s %s\" allows you to regex-match the entire record. It does\n", argv0, verb);
 	fprintf(o, "this by formatting each record in memory as DKVP, using command-line-specified\n");
-	fprintf(o, "ORS/OFS/OPS, and matching the resulting line against the pattern specified\n");
-	fprintf(o, "here. In particular, the pattern is not applied to the input stream: if you\n");
-	fprintf(o, "have CSV with header line \"x,y,z\" and data line \"1,2,3\" then the pattern will\n");
+	fprintf(o, "ORS/OFS/OPS, and matching the resulting line against the regex specified\n");
+	fprintf(o, "here. In particular, the regex is not applied to the input stream: if you\n");
+	fprintf(o, "have CSV with header line \"x,y,z\" and data line \"1,2,3\" then the regex will\n");
 	fprintf(o, "be matched, not against either of these lines, but against the DKVP line\n");
 	fprintf(o, "\"x=1,y=2,z=3\".  Furthermore, not all the options to system grep are supported,\n");
 	fprintf(o, "and this command is intended to be merely a keystroke-saver. To get all the\n");
