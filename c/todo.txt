@@ -21,6 +21,11 @@ TOP OF LIST
 
 ! split mlrdoc into master & releases -- ?
 
+* new UT:
+  o sec2gmt
+  o cat -n/-N
+  o grep
+
 * R:
 ! xref @ covers x 2
 ! be very clear streaming vs. dataframe -- each has things the other can't do
@@ -32,13 +37,7 @@ TOP OF LIST
   - mld ref section for sec2gmt
   - all of the above for a gmt2sec verb?
   ? expose strftime/strptime formats in here as well as the DSL functions?
-
-* verb cat -n (put NR w/ reorder-to-front)
-  - needs an lrec_prepend
-  - mlr cat -h output
-
-* grep verb:
-  - UT
+  - gmt2sec verb?
 
 * filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
   - UTs for mlr_try_int_from_string w/ 0x8000_0000_0000_0000 .. 0xffff_ffff_ffff_ffff
@@ -49,8 +48,6 @@ TOP OF LIST
 * verb bar:
   - out-of-place bar -- preserving count as separate column?
   - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
-
-! recmatch -- inefficient but worthwhile.
 
 * faqents:
   ! some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
