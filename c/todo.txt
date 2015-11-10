@@ -25,6 +25,9 @@ TOP OF LIST
   o sec2gmt
   o cat -n/-N
   o grep
+! grep to mld regex section
+! mlr grep -h {pattern} -> {regex}
+! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
 
 * R:
 ! xref @ covers x 2
