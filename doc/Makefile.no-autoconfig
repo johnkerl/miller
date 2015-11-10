@@ -1,0 +1,9 @@
+all: html man
+
+html:
+	poki
+man:
+	mkman.rb > mlr.1.premade
+install: man
+	cp mlr.1.premade /usr/local/share/man/man1/mlr.1 
+
