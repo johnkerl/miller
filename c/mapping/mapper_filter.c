@@ -41,7 +41,8 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
 	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
-	fprintf(o, "including function list.\n");
+	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);
+	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
 }
 
 // ----------------------------------------------------------------

@@ -1,7 +1,7 @@
 '\" t
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: mkman.rb
+.\" Generator: ./mkman.rb
 .\"      Date: 2015-11-10
 .\"    Manual: \ \&
 .\"    Source: \ \&
@@ -371,7 +371,8 @@ Examples:
   mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
   mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
 Please see http://johnkerl.org/miller/doc/reference.html for more information
-including function list.
+including function list. Or "mlr -f". Please also also "mlr grep" which is
+useful when you don't yet know which field name(s) you're looking for.
 .fi
 .if n \{\
 .RE

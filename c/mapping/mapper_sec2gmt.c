@@ -79,16 +79,20 @@ static sllv_t* mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvs
 		if (sval == NULL)
 			continue;
 
-		double dval = mlr_double_from_string_or_die(sval);
+		if (*sval == 0) {
+			lrec_put_no_free(pinrec, name, "");
+		} else {
+			double dval = mlr_double_from_string_or_die(sval);
 
-		// xxx make mlrutil func
-		time_t clock = (time_t) dval;
-		struct tm tm;
-		struct tm *ptm = gmtime_r(&clock, &tm);
-		char* stamp = mlr_malloc_or_die(32);
-		(void)strftime(stamp, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
+			// xxx make mlrutil func
+			time_t clock = (time_t) dval;
+			struct tm tm;
+			struct tm *ptm = gmtime_r(&clock, &tm);
+			char* stamp = mlr_malloc_or_die(32);
+			(void)strftime(stamp, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
 
-		lrec_put_no_free(pinrec, name, stamp);
+			lrec_put(pinrec, name, stamp, LREC_FREE_ENTRY_VALUE);
+		}
 	}
 	return sllv_single(pinrec);
 }

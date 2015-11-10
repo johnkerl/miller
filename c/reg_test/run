@@ -76,6 +76,9 @@ announce STATELESS MAPPERS
 run_mlr cat $indir/abixy
 run_mlr cat /dev/null
 
+run_mlr cat -n $indir/abixy
+run_mlr cat -N counter $indir/abixy
+
 run_mlr cut -f a,x $indir/abixy
 run_mlr cut --complement -f a,x $indir/abixy
 
@@ -164,6 +167,9 @@ run_mlr uniq -c -g a,b $indir/abixy-het
 
 run_mlr count-distinct -f a   $indir/small $indir/abixy
 run_mlr count-distinct -f a,b $indir/small $indir/abixy
+
+run_mlr grep    pan $indir/abixy-het
+run_mlr grep -v pan $indir/abixy-het
 
 # ----------------------------------------------------------------
 announce SORT
