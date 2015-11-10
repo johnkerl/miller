@@ -425,6 +425,8 @@ run_mlr filter -v '$x =~ "^a.*"."d$"i' $indir/regex.dkvp
 run_mlr --csvlite put '$gmt=sec2gmt($sec)' $indir/sec2gmt
 run_mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 
+run_mlr --csvlite sec2gmt sec $indir/sec2gmt
+
 run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 

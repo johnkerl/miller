@@ -122,6 +122,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sample">sample</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmt">sec2gmt</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats1">stats1</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats2">stats2</a><br/>
@@ -2026,6 +2027,24 @@ yellow square   1    158   0.41527900739142165 0.7118027080775757   0.4200799665
 <p/>Note that no output is produced until all inputs are in. Another way to do
 sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
 0.001'</tt> where you tune the 0.001 to meet your needs.
+
+<!-- ================================================================ -->
+<a id="sec2gmt"/><h2>sec2gmt</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sec2gmt -h
+Usage: mlr sec2gmt {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp. This is nothing more than a keystroke-saver for
+the sec2gmt function:
+  mlr sec2gmt time1,time2
+is the same as
+  mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="sort"/><h2>sort</h2>
