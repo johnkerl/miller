@@ -18,7 +18,7 @@ TOP OF LIST
   - cut a release w/ manpage
 
 ! mlrdoc/formats -- note default iidx for ps-less dkvp fields. also @ mlr -h?
-
+* bake-not-make: $HOME/man & mkman.rb etc.
 * verb sec2gmt:
   - mlrutil libfunc for code dedup
   - gmt2sec?
@@ -29,6 +29,8 @@ TOP OF LIST
   - now is a good time to look at bitops
   - time to think about trying int scan before double?? 52 bits vs. 64 for ints ...
     for leading 0x, always int-scan; what about decimal inputs > 2**52?
+
+* xtab right-flush key, value, or both
 
 * verb bar:
   - out-of-place bar -- preserving count as separate column?
