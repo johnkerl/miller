@@ -95,11 +95,11 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Examples">Examples</a><br/>
-&bull;&nbsp;<a href="#Key-value_pairs">Key-value pairs</a><br/>
-&bull;&nbsp;<a href="#Index-numbered_(toolkit_style)">Index-numbered (toolkit style)</a><br/>
+&bull;&nbsp;<a href="#DKVP:_Key-value_pairs">DKVP: Key-value pairs</a><br/>
+&bull;&nbsp;<a href="#NIDX:_Index-numbered_(toolkit_style)">NIDX: Index-numbered (toolkit style)</a><br/>
 &bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
-&bull;&nbsp;<a href="#Pretty-printed">Pretty-printed</a><br/>
-&bull;&nbsp;<a href="#Vertical_tabular">Vertical tabular</a><br/>
+&bull;&nbsp;<a href="#PPRINT:_Pretty-printed_tabular">PPRINT: Pretty-printed tabular</a><br/>
+&bull;&nbsp;<a href="#XTAB:_Vertical_tabular">XTAB: Vertical tabular</a><br/>
 </div>
 <p/>
 
@@ -112,7 +112,7 @@ $ mlr --usage-data-format-examples
   DKVP: delimited key-value pairs (Miller default format)
   +---------------------+
   | apple=1,bat=2,cog=3 |  Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | dish=7,egg=8        |  Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
+  | dish=7,egg=8,flint  |  Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
   +---------------------+
 
   NIDX: implicitly numerically indexed (Unix-toolkit style)
@@ -148,7 +148,7 @@ $ mlr --usage-data-format-examples
 </div>
 <p/>
 
-<a id="Key-value_pairs"/><h1>Key-value pairs</h1>
+<a id="DKVP:_Key-value_pairs"/><h1>DKVP: Key-value pairs</h1>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
 
 <p/>
@@ -195,10 +195,16 @@ logger.log("type=3,user=$USER,date=$date\n");
 </div>
 <p/>
 
-<p/> As discussed in <a href="record-heterogeneity.html">Record-heterogeneity</a>, Miller handles
-changes of field names within the same data stream. But using DKVP format this is particularly
-natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
-of lines such as
+<p/>Fields lacking an IPS will have positional index (starting at 1) used as
+the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
+as <tt>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</tt> and
+<tt>dish,egg,flint</tt> is parsed as <tt>"1" =&gt; "dish", "2" =&gt; "egg", "3"
+=&gt; "flint"</tt>.
+
+<p/> As discussed in <a href="record-heterogeneity.html">Record-heterogeneity</a>,
+Miller handles changes of field names within the same data stream. But using
+DKVP format this is particularly natural. One of my favorite use-cases for
+Miller is in application/server logs, where I log all sorts of lines such as
 
 <p/>
 <div class="pokipanel">
@@ -216,7 +222,7 @@ to analyze my logs.
 <p/>See <a href="reference.html">Reference</a> regarding how to specify separators other than
 the default equals-sign and comma.
 
-<a id="Index-numbered_(toolkit_style)"/><h1>Index-numbered (toolkit style)</h1>
+<a id="NIDX:_Index-numbered_(toolkit_style)"/><h1>NIDX: Index-numbered (toolkit style)</h1>
 
 With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
 assigns integer field names starting with 1. This recapitulates Unix-toolkit
@@ -327,7 +333,7 @@ read CSV data which lacks a header line, applying column labels <tt>1</tt>,
 <tt>label</tt> to replace those numerical column names with labels of your
 choosing.
 
-<a id="Pretty-printed"/><h1>Pretty-printed</h1>
+<a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 
 <table><tr><td>
@@ -372,7 +378,7 @@ files is constrained by available machine memory.
 <p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
 handles changes of field names within a single data stream.
 
-<a id="Vertical_tabular"/><h1>Vertical tabular</h1>
+<a id="XTAB:_Vertical_tabular"/><h1>XTAB: Vertical tabular</h1>
 
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
 data which causes line-wraps on the screen (but see also <a

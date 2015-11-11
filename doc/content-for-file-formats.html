@@ -4,7 +4,7 @@ POKI_PUT_TOC_HERE
 
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 
-<h1>Key-value pairs</h1>
+<h1>DKVP: Key-value pairs</h1>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
 
 POKI_RUN_COMMAND{{mlr cat data/small}}HERE
@@ -16,10 +16,16 @@ or <tt>print</tt> statements in various languages, e.g.
 POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
 POKI_CARDIFY(logger.log("type=3,user=$USER,date=$date\n");)HERE
 
-<p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, Miller handles
-changes of field names within the same data stream. But using DKVP format this is particularly
-natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts
-of lines such as
+<p/>Fields lacking an IPS will have positional index (starting at 1) used as
+the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
+as <tt>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</tt> and
+<tt>dish,egg,flint</tt> is parsed as <tt>"1" =&gt; "dish", "2" =&gt; "egg", "3"
+=&gt; "flint"</tt>.
+
+<p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE,
+Miller handles changes of field names within the same data stream. But using
+DKVP format this is particularly natural. One of my favorite use-cases for
+Miller is in application/server logs, where I log all sorts of lines such as
 
 <p/>
 <div class="pokipanel">
@@ -37,7 +43,7 @@ to analyze my logs.
 <p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
 the default equals-sign and comma.
 
-<h1>Index-numbered (toolkit style)</h1>
+<h1>NIDX: Index-numbered (toolkit style)</h1>
 
 With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
 assigns integer field names starting with 1. This recapitulates Unix-toolkit
@@ -90,7 +96,7 @@ read CSV data which lacks a header line, applying column labels <tt>1</tt>,
 <tt>label</tt> to replace those numerical column names with labels of your
 choosing.
 
-<h1>Pretty-printed</h1>
+<h1>PPRINT: Pretty-printed tabular</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 
 <table><tr><td>
@@ -111,7 +117,7 @@ files is constrained by available machine memory.
 <p/> See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller
 handles changes of field names within a single data stream.
 
-<h1>Vertical tabular</h1>
+<h1>XTAB: Vertical tabular</h1>
 
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
 data which causes line-wraps on the screen (but see also <a

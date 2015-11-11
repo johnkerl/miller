@@ -247,7 +247,7 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 		"  DKVP: delimited key-value pairs (Miller default format)\n"
 		"  +---------------------+\n"
 		"  | apple=1,bat=2,cog=3 |  Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-		"  | dish=7,egg=8        |  Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
+		"  | dish=7,egg=8,flint  |  Record 2: \"dish\" => \"7\", \"egg\" => \"8\", \"3\" => \"flint\"\n"
 		"  +---------------------+\n"
 		"  \n"
 		"  NIDX: implicitly numerically indexed (Unix-toolkit style)\n"
