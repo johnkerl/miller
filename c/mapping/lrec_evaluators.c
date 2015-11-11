@@ -742,8 +742,11 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	if (string == NULL || *string == 0) {
 		return (mv_t) {.type = MT_NULL, .u.intv = 0};
 	} else {
+		long long intv;
 		double fltv;
-		if (mlr_try_double_from_string(string, &fltv)) {
+		if (mlr_try_int_from_string(string, &intv)) {
+			return (mv_t) {.type = MT_INT, .u.intv = intv};
+		} else if (mlr_try_double_from_string(string, &fltv)) {
 			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
 		} else {
 			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
@@ -779,10 +782,11 @@ typedef struct _lrec_evaluator_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_literal_state_t;
 
-mv_t lrec_evaluator_double_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
+
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	// This is due to strdup-only semantics in mlrvals. If we implement a
@@ -795,16 +799,28 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int allow_type
 	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
-	double fltv;
-	if (allow_type_inference && mlr_try_double_from_string(string, &fltv)) {
-		pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
-		pevaluator->pevaluator_func = lrec_evaluator_double_literal_func;
-	} else {
+	if (string == NULL || *string == 0) {
+		pstate->literal = (mv_t) {.type = MT_NULL, .u.intv = 0LL};
+		pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+	} else if (!allow_type_inference) {
 		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 		pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
+	} else {
+		long long intv;
+		double fltv;
+		if (mlr_try_int_from_string(string, &intv)) {
+			pstate->literal = (mv_t) {.type = MT_INT, .u.intv = intv};
+			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+		} else if (mlr_try_double_from_string(string, &fltv)) {
+			pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+		} else {
+			pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+			pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
+		}
 	}
-	pevaluator->pvstate = pstate;
 
+	pevaluator->pvstate = pstate;
 	return pevaluator;
 }
 

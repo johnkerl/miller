@@ -17,7 +17,6 @@ TOP OF LIST
   - brew version bump?!?
   - cut a release w/ manpage
 
-! mlrdoc/formats -- note default iidx for ps-less dkvp fields. also @ mlr -h?
 * verb sec2gmt:
   - mlrutil libfunc for code dedup
   - gmt2sec?
@@ -28,21 +27,61 @@ TOP OF LIST
   - now is a good time to look at bitops
   - time to think about trying int scan before double?? 52 bits vs. 64 for ints ...
     for leading 0x, always int-scan; what about decimal inputs > 2**52?
+  - try double -> try int everywhere. look for others.
+  - int-int math -> int result
 
-* verb bar:
-  - out-of-place bar -- preserving count as separate column?
-  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
+    $ cat y
+    x=0,a=0x1,b=1
+    x=0,a=0x7ffffffffffffffe,b=9223372036854775806
+    x=0,a=0x7fffffffffffffff,b=9223372036854775807
+    x=0,a=0x8000000000000000,b=-9223372036854775808
+    x=0,a=0xffffffffffffffff,b=-1
 
-! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
+    $ mlr --oxtab put '$c=$a;$d=$b' y
+    x 0
+    a 0x1
+    b 1
+    c 1
+    d 1
 
-----------------------------------------------------------------
+    x 0
+    a 0x7ffffffffffffffe
+    b 9223372036854775806
+    c 9223372036854775806
+    d 9223372036854775806
 
-! split mlrdoc into master & releases -- ?
+    x 0
+    a 0x7fffffffffffffff
+    b 9223372036854775807
+    c 9223372036854775807
+    d 9223372036854775807
 
-* R doc:
-! xref @ covers x 2
-! be very clear streaming vs. dataframe -- each has things the other can't do
-! emph mlr has light stats but for heavyweight analysis use R et al.
+    x 0
+    a 0x8000000000000000
+    b -9223372036854775808
+    c -9223372036854775808
+    d -9223372036854775808
+
+    x 0
+    a 0xffffffffffffffff
+    b -1
+    c -1
+    d -1
+
+  * verb bar:
+    - out-of-place bar -- preserving count as separate column?
+    - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
+
+  ! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
+
+  ----------------------------------------------------------------
+
+  ! split mlrdoc into master & releases -- ?
+
+  * R doc:
+  ! xref @ covers x 2
+  ! be very clear streaming vs. dataframe -- each has things the other can't do
+  ! emph mlr has light stats but for heavyweight analysis use R et al.
 
 * --mmap @ mlr -h
 * bus-insurance dev page
