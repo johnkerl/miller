@@ -25,6 +25,8 @@ typedef struct _cli_opts_t {
 	char* ofs;
 	char* ops;
 
+	int   right_justify_xtab_value;
+
 	char* ofmt;
 	int   oquoting;
 

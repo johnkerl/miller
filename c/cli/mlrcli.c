@@ -494,6 +494,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
 	popts->ops               = NULL;
+	popts->right_justify_xtab_value = FALSE;
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
 
@@ -643,6 +644,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
+		} else if (streq(argv[argi], "--xvright")) {
+			popts->right_justify_xtab_value = TRUE;
+
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
 		} else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";
 		} else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";
@@ -784,7 +788,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	else if (streq(popts->ofile_fmt, "nidx"))
 		popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
 	else if (streq(popts->ofile_fmt, "xtab"))
-		popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops);
+		popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops, popts->right_justify_xtab_value);
 	else if (streq(popts->ofile_fmt, "pprint"))
 		popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], left_align_pprint);
 	else {

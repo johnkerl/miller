@@ -24,6 +24,7 @@ typedef struct _lrec_writer_xtab_state_t {
 	char* ops;
 	int   opslen;
 	long long record_count;
+	int   right_justify_value;
 } lrec_writer_xtab_state_t;
 
 static void lrec_writer_xtab_free(void* pvstate);
@@ -31,7 +32,7 @@ static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, 
 static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec, void* pvstate);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
+lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops, int right_justify_value) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_xtab_state_t));
@@ -39,6 +40,7 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops) {
 	pstate->ops          = ops;
 	pstate->opslen       = strlen(ops);
 	pstate->record_count = 0LL;
+	pstate->right_justify_value = right_justify_value;
 
 	plrec_writer->pvstate       = pstate;
 	plrec_writer->pprocess_func = (pstate->opslen == 1)
@@ -62,10 +64,14 @@ static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, 
 	pstate->record_count++;
 
 	int max_key_width = 1;
+	int max_value_width = 1;
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		int key_width = strlen_for_utf8_display(pe->key);
+		int value_width = strlen_for_utf8_display(pe->value);
 		if (key_width > max_key_width)
 			max_key_width = key_width;
+		if (value_width > max_value_width)
+			max_value_width = value_width;
 	}
 
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
@@ -74,6 +80,12 @@ static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, 
 		int d = max_key_width - strlen_for_utf8_display(pe->key);
 		for (int i = 0; i < d; i++)
 			fputs(pstate->ops, output_stream);
+
+		if (pstate->right_justify_value) {
+			int d = max_value_width - strlen_for_utf8_display(pe->value);
+			for (int i = 0; i < d; i++)
+				fputs(pstate->ops, output_stream);
+		}
 		fprintf(output_stream, "%s%s%s", pstate->ops, pe->value, pstate->ofs);
 	}
 	lrec_free(prec); // xxx cmt mem-mgmt
