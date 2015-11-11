@@ -22,71 +22,23 @@ TOP OF LIST
   - gmt2sec?
   ? expose strftime/strptime formats in here as well as the DSL functions?
 
-* filter/put option for no auto-convert: all inputs should stay MT_STRING until converted.
-  - UTs for mlr_try_int_from_string w/ 0x8000_0000_0000_0000 .. 0xffff_ffff_ffff_ffff
-  - now is a good time to look at bitops
-  - time to think about trying int scan before double?? 52 bits vs. 64 for ints ...
-    for leading 0x, always int-scan; what about decimal inputs > 2**52?
-  - try double -> try int everywhere. look for others.
-  - int-int math -> int result
+* now is a good time to look at bitops
+* int-int math -> int result: disposition matrices ...
 
-    $ cat y
-    a=0x1,b=1
-    a=0x7ffffffffffffffe,b=9223372036854775806
-    a=0x7fffffffffffffff,b=9223372036854775807
-    a=0x8000000000000000,b=-9223372036854775808
-    a=0xffffffffffffffff,b=-1
+* verb bar:
+  - out-of-place bar -- preserving count as separate column?
+  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
-    $ mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' y
-      a 0x1
-      b 1
-      c 1
-      d 1
-      e 0x1
-      f 0x1
+! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
 
-      a 0x7ffffffffffffffe
-      b 9223372036854775806
-      c 9223372036854775806
-      d 9223372036854775806
-      e 0x7ffffffffffffffe
-      f 0x7ffffffffffffffe
+----------------------------------------------------------------
 
-      a 0x7fffffffffffffff
-      b 9223372036854775807
-      c 9223372036854775807
-      d 9223372036854775807
-      e 0x7fffffffffffffff
-      f 0x7fffffffffffffff
+! split mlrdoc into master & releases -- ?
 
-      a 0x8000000000000000
-      b -9223372036854775808
-      c -9223372036854775808
-      d -9223372036854775808
-      e 0x8000000000000000
-      f 0x8000000000000000
-
-      a 0xffffffffffffffff
-      b -1
-      c -1
-      d -1
-      e 0xffffffffffffffff
-      f 0xffffffffffffffff
-
-  * verb bar:
-    - out-of-place bar -- preserving count as separate column?
-    - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
-
-  ! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
-
-  ----------------------------------------------------------------
-
-  ! split mlrdoc into master & releases -- ?
-
-  * R doc:
-  ! xref @ covers x 2
-  ! be very clear streaming vs. dataframe -- each has things the other can't do
-  ! emph mlr has light stats but for heavyweight analysis use R et al.
+* R doc:
+! xref @ covers x 2
+! be very clear streaming vs. dataframe -- each has things the other can't do
+! emph mlr has light stats but for heavyweight analysis use R et al.
 
 * --mmap @ mlr -h
 * bus-insurance dev page
