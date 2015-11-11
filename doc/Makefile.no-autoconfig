@@ -1,9 +1,11 @@
 all: html man
 
-html:
+html: .always
 	poki
-man:
+man: .always
 	mkman.rb > mlr.1.premade
 install: man
 	cp mlr.1.premade /usr/local/share/man/man1/mlr.1 
 
+.always:
+	@true

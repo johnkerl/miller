@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-10
+.\"      Date: 2015-11-11
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-10" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-11" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -162,7 +162,9 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
                                         with --fs tab, etc.)
   --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no
                                         output until all input is in)
-  --ixtab   --oxtab   --xtab            Pretty-printed vertical-tabular
+  --ixtab   --oxtab   --xtab --xvright  Pretty-printed vertical-tabular
+  The --right option right-justifies all fields for PPRINT output format.
+  The --xvright option right-justifies values for XTAB format.
   -p is a keystroke-saver for --nidx --fs space --repifs
   Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
   DKVP-formatted input and pretty-printed output.

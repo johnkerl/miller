@@ -291,7 +291,9 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                                        with --fs tab, etc.)\n");
 	fprintf(o, "  --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                        output until all input is in)\n");
-	fprintf(o, "  --ixtab   --oxtab   --xtab            Pretty-printed vertical-tabular\n");
+	fprintf(o, "  --ixtab   --oxtab   --xtab --xvright  Pretty-printed vertical-tabular\n");
+	fprintf(o, "  The --right option right-justifies all fields for PPRINT output format.\n");
+	fprintf(o, "  The --xvright option right-justifies values for XTAB format.\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
