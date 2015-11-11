@@ -17,8 +17,6 @@ TOP OF LIST
   - brew version bump?!?
   - cut a release w/ manpage
 
-* --xvright @ main cli; UT
-
 ! mlrdoc/formats -- note default iidx for ps-less dkvp fields. also @ mlr -h?
 * verb sec2gmt:
   - mlrutil libfunc for code dedup
