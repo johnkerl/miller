@@ -31,42 +31,47 @@ TOP OF LIST
   - int-int math -> int result
 
     $ cat y
-    x=0,a=0x1,b=1
-    x=0,a=0x7ffffffffffffffe,b=9223372036854775806
-    x=0,a=0x7fffffffffffffff,b=9223372036854775807
-    x=0,a=0x8000000000000000,b=-9223372036854775808
-    x=0,a=0xffffffffffffffff,b=-1
+    a=0x1,b=1
+    a=0x7ffffffffffffffe,b=9223372036854775806
+    a=0x7fffffffffffffff,b=9223372036854775807
+    a=0x8000000000000000,b=-9223372036854775808
+    a=0xffffffffffffffff,b=-1
 
-    $ mlr --oxtab put '$c=$a;$d=$b' y
-    x 0
-    a 0x1
-    b 1
-    c 1
-    d 1
+    $ mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' y
+      a 0x1
+      b 1
+      c 1
+      d 1
+      e 0x1
+      f 0x1
 
-    x 0
-    a 0x7ffffffffffffffe
-    b 9223372036854775806
-    c 9223372036854775806
-    d 9223372036854775806
+      a 0x7ffffffffffffffe
+      b 9223372036854775806
+      c 9223372036854775806
+      d 9223372036854775806
+      e 0x7ffffffffffffffe
+      f 0x7ffffffffffffffe
 
-    x 0
-    a 0x7fffffffffffffff
-    b 9223372036854775807
-    c 9223372036854775807
-    d 9223372036854775807
+      a 0x7fffffffffffffff
+      b 9223372036854775807
+      c 9223372036854775807
+      d 9223372036854775807
+      e 0x7fffffffffffffff
+      f 0x7fffffffffffffff
 
-    x 0
-    a 0x8000000000000000
-    b -9223372036854775808
-    c -9223372036854775808
-    d -9223372036854775808
+      a 0x8000000000000000
+      b -9223372036854775808
+      c -9223372036854775808
+      d -9223372036854775808
+      e 0x8000000000000000
+      f 0x8000000000000000
 
-    x 0
-    a 0xffffffffffffffff
-    b -1
-    c -1
-    d -1
+      a 0xffffffffffffffff
+      b -1
+      c -1
+      d -1
+      e 0xffffffffffffffff
+      f 0xffffffffffffffff
 
   * verb bar:
     - out-of-place bar -- preserving count as separate column?
@@ -99,6 +104,7 @@ TOP OF LIST
     in-language handling in case not field/line formatted. see h.p. mail.
   - faqent on polyglottal dkvp/etc production
   - faqent re join without -u -- it's a weird default & i'm imitating un*x join
+  - same w/ cut -o
   - faqent re cat xyz | mlr ... vs. mlr ... xyz:
     o easier to up-arrow/control-P & tack on a then-statement
     o lose no functionality except FILENAME/FNR

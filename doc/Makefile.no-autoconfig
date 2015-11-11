@@ -5,7 +5,9 @@ html: .always
 man: .always
 	mkman.rb > mlr.1.premade
 install: man
-	cp mlr.1.premade /usr/local/share/man/man1/mlr.1 
+	cp mlr.1.premade /usr/local/share/man/man1/mlr.1
+installhome: man
+	cp mlr.1.premade $(HOME)/man/man1/mlr.1
 
 .always:
 	@true
