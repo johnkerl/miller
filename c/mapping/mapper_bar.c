@@ -69,8 +69,8 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_flag(pstate,       "-c",   &fill_string);
 	ap_define_string_flag(pstate,       "-x",   &oob_string);
 	ap_define_string_flag(pstate,       "-b",   &blank_string);
-	ap_define_double_flag(pstate,       "--lo", &lo);
-	ap_define_double_flag(pstate,       "--hi", &hi);
+	ap_define_float_flag(pstate,       "--lo", &lo);
+	ap_define_float_flag(pstate,       "--hi", &hi);
 	ap_define_int_flag(pstate,          "-w",   &width);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {

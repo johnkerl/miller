@@ -90,7 +90,7 @@ char* mlr_alloc_hexfmt_from_ll(long long value);
 
 double mlr_double_from_string_or_die(char* string);
 long long mlr_int_from_string_or_die(char* string);
-int    mlr_try_double_from_string(char* string, double* pval);
+int    mlr_try_float_from_string(char* string, double* pval);
 int    mlr_try_int_from_string(char* string, long long* pval);
 
 // Inefficient and intended for call-rarely use. The caller should free the return values.

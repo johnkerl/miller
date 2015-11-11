@@ -64,8 +64,8 @@ char* mt_describe_type(int type);
 char* mt_format_val(mv_t* pval); // For debug only; the caller should free the return value
 char* mt_describe_val(mv_t val);
 void mt_get_boolean_strict(mv_t* pval);
-void mt_get_double_strict(mv_t* pval);
-void mt_get_double_nullable(mv_t* pval);
+void mt_get_float_strict(mv_t* pval);
+void mt_get_float_nullable(mv_t* pval);
 void mt_get_int_nullable(mv_t* pval);
 
 // ----------------------------------------------------------------

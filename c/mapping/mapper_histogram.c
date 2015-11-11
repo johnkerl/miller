@@ -57,8 +57,8 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_double_flag(pstate, "--lo", &lo);
-	ap_define_double_flag(pstate, "--hi", &hi);
+	ap_define_float_flag(pstate, "--lo", &lo);
+	ap_define_float_flag(pstate, "--hi", &hi);
 	ap_define_int_flag(pstate, "--nbins", &nbins);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {

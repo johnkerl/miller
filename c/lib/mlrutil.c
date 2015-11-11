@@ -122,7 +122,7 @@ char* mlr_alloc_hexfmt_from_ll(long  long value) {
 
 double mlr_double_from_string_or_die(char* string) {
 	double d;
-	if (!mlr_try_double_from_string(string, &d)) {
+	if (!mlr_try_float_from_string(string, &d)) {
 		fprintf(stderr, "Couldn't parse \"%s\" as number.\n", string);
 		exit(1);
 	}
@@ -130,7 +130,7 @@ double mlr_double_from_string_or_die(char* string) {
 }
 
 // E.g. "300" is a number; "300ms" is not.
-int mlr_try_double_from_string(char* string, double* pval) {
+int mlr_try_float_from_string(char* string, double* pval) {
 	int num_bytes_scanned;
 	int rc = sscanf(string, "%lf%n", pval, &num_bytes_scanned);
 	if (rc != 1)

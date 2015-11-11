@@ -146,7 +146,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 
 static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
 	double temp;
-	if (mlr_try_double_from_string(string, &temp)) {
+	if (mlr_try_float_from_string(string, &temp)) {
 		fputc('"', fp);
 		fputs(string, fp);
 		fputc('"', fp);

@@ -102,7 +102,7 @@ void mt_get_boolean_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_double_strict(mv_t* pval) {
+void mt_get_float_strict(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -112,7 +112,7 @@ void mt_get_double_strict(mv_t* pval) {
 	case MT_FLOAT:
 		break;
 	case MT_STRING:
-		if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
+		if (!mlr_try_float_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0LL;
 		} else {
@@ -136,7 +136,7 @@ void mt_get_double_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_double_nullable(mv_t* pval) {
+void mt_get_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -157,7 +157,7 @@ void mt_get_double_nullable(mv_t* pval) {
 		if (*pval->u.strv == '\0') {
 			pval->type = MT_NULL;
 			pval->u.intv = 0LL;
-		} else if (!mlr_try_double_from_string(pval->u.strv, &fltv)) {
+		} else if (!mlr_try_float_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0LL;
 		} else {
@@ -412,7 +412,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 // ----------------------------------------------------------------
 mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	ERROR_OUT(*pval1);
-	mt_get_double_nullable(pval1);
+	mt_get_float_nullable(pval1);
 	NULL_OUT(*pval1);
 	if (pval1->type != MT_FLOAT)
 		return MV_ERROR;
@@ -741,7 +741,7 @@ static mv_t float_f_s(mv_t* pa) {
 	mv_t retval = (mv_t) {.type = MT_FLOAT };
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
-	if (!mlr_try_double_from_string(pa->u.strv, &retval.u.fltv))
+	if (!mlr_try_float_from_string(pa->u.strv, &retval.u.fltv))
 		retval.type = MT_ERROR;
 	return retval;
 }

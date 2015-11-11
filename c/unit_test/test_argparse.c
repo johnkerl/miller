@@ -37,7 +37,7 @@ static char * test1() {
 	ap_define_int_value_flag(pstate,    "-100", 100, &intv1);
 	ap_define_int_value_flag(pstate,    "-200", 200, &intv2);
 	ap_define_int_flag(pstate,          "-i",   &intv3);
-	ap_define_double_flag(pstate,       "-d",   &fltv);
+	ap_define_float_flag(pstate,       "-d",   &fltv);
 	ap_define_string_flag(pstate,       "-s",   &string);
 	ap_define_string_list_flag(pstate,  "-S",   &plist);
 	ap_define_string_array_flag(pstate, "-A",   &parray);
@@ -79,7 +79,7 @@ static char * test2() {
 	ap_define_int_value_flag(pstate,   "-100", 100, &intv1);
 	ap_define_int_value_flag(pstate,   "-200", 200, &intv2);
 	ap_define_int_flag(pstate,         "-i",   &intv3);
-	ap_define_double_flag(pstate,      "-d",   &fltv);
+	ap_define_float_flag(pstate,      "-d",   &fltv);
 	ap_define_string_flag(pstate,      "-s",   &string);
 	ap_define_string_list_flag(pstate, "-S",   &plist);
 	ap_define_string_array_flag(pstate, "-A",   &parray);

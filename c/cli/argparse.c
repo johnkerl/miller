@@ -80,7 +80,7 @@ void ap_define_int_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_FLAG, 0, pintval, 2));
 }
 
-void ap_define_double_flag(ap_state_t* pstate, char* flag_name, double* pdoubleval) {
+void ap_define_float_flag(ap_state_t* pstate, char* flag_name, double* pdoubleval) {
 	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_DOUBLE_FLAG, 0, pdoubleval, 2));
 }
 
@@ -136,7 +136,7 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 			}
 
 		} else if (pdef->type == AP_DOUBLE_FLAG) {
-			if (!mlr_try_double_from_string(argv[argi+1], (double *)pdef->pval)) {
+			if (!mlr_try_float_from_string(argv[argi+1], (double *)pdef->pval)) {
 				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as double.\n",
 					argv[0], verb, argv[argi+1], argv[argi]);
 				fprintf(stderr, "\n");

@@ -131,7 +131,7 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_double_nullable(&val1);
+	mt_get_float_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
@@ -162,14 +162,14 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_double_nullable(&val1);
+	mt_get_float_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mt_get_double_nullable(&val2);
+	mt_get_float_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_FLOAT)
 		return MV_ERROR;
@@ -199,13 +199,13 @@ mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvst
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	ERROR_OUT(val1);
-	mt_get_double_nullable(&val1);
+	mt_get_float_nullable(&val1);
 	if (val1.type != MT_FLOAT && val1.type != MT_NULL)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	ERROR_OUT(val2);
-	mt_get_double_nullable(&val2);
+	mt_get_float_nullable(&val2);
 	if (val2.type != MT_FLOAT && val2.type != MT_NULL)
 		return MV_ERROR;
 
@@ -239,21 +239,21 @@ mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_fff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_double_nullable(&val1);
+	mt_get_float_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mt_get_double_nullable(&val2);
+	mt_get_float_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_FLOAT)
 		return MV_ERROR;
 
 	mv_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
-	mt_get_double_nullable(&val3);
+	mt_get_float_nullable(&val3);
 	NULL_OUT(val3);
 	if (val3.type != MT_FLOAT)
 		return MV_ERROR;
@@ -746,7 +746,7 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 		double fltv;
 		if (mlr_try_int_from_string(string, &intv)) {
 			return (mv_t) {.type = MT_INT, .u.intv = intv};
-		} else if (mlr_try_double_from_string(string, &fltv)) {
+		} else if (mlr_try_float_from_string(string, &fltv)) {
 			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
 		} else {
 			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
@@ -811,7 +811,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int allow_type
 		if (mlr_try_int_from_string(string, &intv)) {
 			pstate->literal = (mv_t) {.type = MT_INT, .u.intv = intv};
 			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
-		} else if (mlr_try_double_from_string(string, &fltv)) {
+		} else if (mlr_try_float_from_string(string, &fltv)) {
 			pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
 			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
 		} else {

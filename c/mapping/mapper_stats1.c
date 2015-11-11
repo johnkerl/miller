@@ -344,7 +344,7 @@ static int is_percentile_acc_name(char* stats1_name) {
 	// sscanf(stats1_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
 	if (stats1_name[0] != 'p')
 		return FALSE;
-	if (!mlr_try_double_from_string(&stats1_name[1], &percentile))
+	if (!mlr_try_float_from_string(&stats1_name[1], &percentile))
 		return FALSE;
 	if (percentile < 0.0 || percentile > 100.0) {
 		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
