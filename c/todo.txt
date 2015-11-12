@@ -33,6 +33,7 @@ TOP OF LIST
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o int-range urand
   o sgn function needs UT cases
+  o urandint -> w/urand @ mlr -h, mld, etc.
 
 * verb bar:
   - out-of-place bar -- preserving count as separate column?
