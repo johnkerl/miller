@@ -214,6 +214,17 @@ static inline mv_t f_fff_logifit_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	return rv;
 }
 
+static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
+	long long lo = pval1->u.intv;
+	long long hi = pval2->u.intv + 1;
+	if (hi <= lo) {
+		return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+	} else {
+		long long u  = lo + (hi - lo) * get_mtrand_double();
+		return (mv_t) {.type = MT_INT, .u.intv = u};
+	}
+}
+
 mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);

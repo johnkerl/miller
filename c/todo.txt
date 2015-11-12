@@ -25,14 +25,14 @@ TOP OF LIST
 * full-int64 I/O & math:
   o now is a good time to look at bitops. first get the precedence right.
   o int-int math -> int result: disposition matrices & fi_fifi infra.
-  o make int-to-int-enabled: abs ceil floor round roundm max min 
+  o make int-to-int-enabled: abs ceil floor round roundm max min sgn
   ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
     + - u- * % //
     note that // should be floor division for floats, too.
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o int-range urand
-  o sgn function
+  o sgn function needs UT cases
 
 * verb bar:
   - out-of-place bar -- preserving count as separate column?

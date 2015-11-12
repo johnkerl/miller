@@ -278,6 +278,47 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_fff_func(mv_ternary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_i_ii_state_t {
+	mv_binary_func_t* pfunc;
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+} lrec_evaluator_i_ii_state_t;
+
+mv_t lrec_evaluator_i_ii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_i_ii_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	mt_get_int_nullable(&val1);
+	NULL_OUT(val1);
+	if (val1.type != MT_INT)
+		return MV_ERROR;
+
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	mt_get_int_nullable(&val2);
+	NULL_OUT(val2);
+	if (val2.type != MT_INT)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_i_ii_func(mv_binary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
+	lrec_evaluator_i_ii_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_i_ii_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_i_ii_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_i_iii_state_t {
 	mv_ternary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -981,6 +1022,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "tan",      1 , "Trigonometric tangent."},
 	{ FUNC_CLASS_MATH, "tanh",     1 , "Hyperbolic tangent."},
 	{ FUNC_CLASS_MATH, "urand",    0 , "Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'." },
+	{ FUNC_CLASS_MATH, "urandint", 2 , "Integer uniformly distributed between inclusive integer endpoints." },
 
 	{ FUNC_CLASS_MATH, "+",       2 , "Addition."},
 	{ FUNC_CLASS_MATH, "-",       1 , "Unary minus."},
@@ -1233,6 +1275,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,         parg1, parg2);
 	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func,      parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,               parg1, parg2);
+	} else if (streq(fnnm, "urandint")) { return lrec_evaluator_alloc_from_i_ii_func(i_ii_urandint_func,           parg1, parg2);
 	} else  { return NULL; }
 }
 
