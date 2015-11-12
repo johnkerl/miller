@@ -986,6 +986,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "-",       2 , "Subtraction."},
 	{ FUNC_CLASS_MATH, "*",       2 , "Multiplication."},
 	{ FUNC_CLASS_MATH, "/",       2 , "Division."},
+	{ FUNC_CLASS_MATH, "//",      2 , "Interger division."},
 	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
 	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
 
@@ -1221,6 +1222,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_minus_func,                parg1, parg2);
 	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_times_func,                parg1, parg2);
 	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_divide_func,               parg1, parg2);
+	} else if (streq(fnnm, "//"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_int_divide_func,           parg1, parg2);
 	} else if (streq(fnnm, "**"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
 	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
 	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,                  parg1, parg2);

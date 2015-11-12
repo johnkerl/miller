@@ -155,6 +155,10 @@ static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = pval1->u.fltv / pval2->u.fltv};
 	return rv;
 }
+static inline mv_t f_ff_int_divide_func(mv_t* pval1, mv_t* pval2) { // xxx stub
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(pval1->u.fltv / pval2->u.fltv)};
+	return rv;
+}
 static inline mv_t f_ff_max_func(mv_t* pval1, mv_t* pval2) {
 	if (pval1->type == MT_NULL) {
 		return *pval2;

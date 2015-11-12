@@ -116,6 +116,9 @@ filter_dsl_pmdot_term(A) ::= filter_dsl_pmdot_term(B) FILTER_DSL_TIMES(O) filter
 filter_dsl_pmdot_term(A) ::= filter_dsl_pmdot_term(B) FILTER_DSL_DIVIDE(O) filter_dsl_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
+filter_dsl_pmdot_term(A) ::= filter_dsl_pmdot_term(B) FILTER_DSL_INT_DIVIDE(O) filter_dsl_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
 filter_dsl_pmdot_term(A) ::= filter_dsl_pmdot_term(B) FILTER_DSL_MOD(O) filter_dsl_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }

@@ -48,12 +48,12 @@
 // Period parameters
 #define N 624
 #define M 397
-#define MATRIX_A   0x9908b0df   // constant vector a
+#define MATRIX_A   0x9908b0df // constant vector a
 #define UPPER_MASK 0x80000000 // most significant w-r bits
 #define LOWER_MASK 0x7fffffff // least significant r bits
 
-static unsigned mt[N];     // the array for the state vector
-static int mti=N+1;             // mti==N+1 means mt[N] is not initialized
+static unsigned mt[N];        // the array for the state vector
+static int mti=N+1;           // mti==N+1 means mt[N] is not initialized
 
 // ----------------------------------------------------------------
 void mtrand_init_default()
