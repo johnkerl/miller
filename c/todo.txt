@@ -28,12 +28,11 @@ TOP OF LIST
   o make int-to-int-enabled: abs ceil floor round roundm max min 
   ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
-    + - u- * %
-  o what to do about / ?????? i want 3/2 to be 1.5. create a new // operator??
-    check other languages ... note that // should be floor division for floats, too.
-    http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html
+    + - u- * % //
+    note that // should be floor division for floats, too.
+    http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o int-range urand
-  o sign (or sgn ...) function
+  o sgn function
 
 * verb bar:
   - out-of-place bar -- preserving count as separate column?

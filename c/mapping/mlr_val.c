@@ -758,6 +758,15 @@ static mv_unary_func_t* float_dispositions[MT_MAX] = {
 mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+mv_t f_f_sgn_func(mv_t* pval1) {
+	if (pval1->u.fltv > 0.0)
+		return (mv_t) {.type = MT_FLOAT, .u.fltv =  1.0};
+	if (pval1->u.fltv < 0.0)
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = -1.0};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = 0.0};
+}
+
+// ----------------------------------------------------------------
 static mv_t boolean_b_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t boolean_b_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t boolean_b_b(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .u.boolv = pa->u.boolv}; }

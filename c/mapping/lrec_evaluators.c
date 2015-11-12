@@ -974,6 +974,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "qnorm",    1 , "Normal cumulative distribution function."},
 	{ FUNC_CLASS_MATH, "round",    1 , "Round to nearest integer."},
 	{ FUNC_CLASS_MATH, "roundm",   2 , "Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m"},
+	{ FUNC_CLASS_MATH, "sgn",      1 , "+1 for positive input, 0 for zero input, -1 for negative input."},
 	{ FUNC_CLASS_MATH, "sin",      1 , "Trigonometric sine."},
 	{ FUNC_CLASS_MATH, "sinh",     1 , "Hyperbolic sine."},
 	{ FUNC_CLASS_MATH, "sqrt",     1 , "Square root."},
@@ -1190,6 +1191,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
 	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,  parg1);
 	} else if (streq(fnnm, "fsec2dhms")) { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func, parg1);
+	} else if (streq(fnnm, "sgn"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sgn_func,       parg1);
 	} else if (streq(fnnm, "sin"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,       parg1);
 	} else if (streq(fnnm, "sinh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,      parg1);
 	} else if (streq(fnnm, "sqrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,      parg1);

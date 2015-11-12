@@ -137,6 +137,7 @@ mv_t b_x_boolean_func(mv_t* pval1);
 mv_t s_x_string_func(mv_t* pval1);
 mv_t s_x_hexfmt_func(mv_t* pval1);
 mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2);
+mv_t f_f_sgn_func(mv_t* pval1);
 
 // ----------------------------------------------------------------
 static inline mv_t f_ff_plus_func(mv_t* pval1, mv_t* pval2) {
