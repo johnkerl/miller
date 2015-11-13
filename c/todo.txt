@@ -15,10 +15,25 @@ TOP OF LIST
 
 * full-int64 I/O & math:
   o int-int math -> int result: disposition matrices & n_nn infra.
-  o make int-to-int-enabled without remorse: abs ceil floor round roundm max min sgn
+  o make int-to-int-enabled without remorse:
+    k abs
+    ? ceil
+    ? floor
+    ? round
+    ? roundm
+    ? max
+    ? min
+    ? sgn
+
   ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
-    + - u- * % //
+    ? +
+    ? -
+    ? u-
+    ? *
+    ? %
+    ? //
+
     note that // should be floor division for floats, too. mldent.
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o now is a good time to look at bitops. first get the precedence right.

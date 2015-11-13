@@ -770,6 +770,72 @@ static mv_unary_func_t* abs_dispositions[MT_MAX] = {
 mv_t n_n_abs_func(mv_t* pval1) { return (abs_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t ceil_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t ceil_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = ceil(pa->u.fltv)};
+}
+static mv_t ceil_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = pa->u.intv};
+}
+
+static mv_unary_func_t* ceil_dispositions[MT_MAX] = {
+    /*NULL*/   ceil_e_x,
+    /*ERROR*/  ceil_e_x,
+    /*BOOL*/   ceil_e_x,
+    /*FLOAT*/  ceil_n_f,
+    /*INT*/    ceil_n_i,
+    /*STRING*/ ceil_e_x,
+};
+
+mv_t n_n_ceil_func(mv_t* pval1) { return (ceil_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+static mv_t floor_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t floor_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = floor(pa->u.fltv)};
+}
+static mv_t floor_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = pa->u.intv};
+}
+
+static mv_unary_func_t* floor_dispositions[MT_MAX] = {
+    /*NULL*/   floor_e_x,
+    /*ERROR*/  floor_e_x,
+    /*BOOL*/   floor_e_x,
+    /*FLOAT*/  floor_n_f,
+    /*INT*/    floor_n_i,
+    /*STRING*/ floor_e_x,
+};
+
+mv_t n_n_floor_func(mv_t* pval1) { return (floor_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+static mv_t round_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t round_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = round(pa->u.fltv)};
+}
+static mv_t round_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = pa->u.intv};
+}
+
+static mv_unary_func_t* round_dispositions[MT_MAX] = {
+    /*NULL*/   round_e_x,
+    /*ERROR*/  round_e_x,
+    /*BOOL*/   round_e_x,
+    /*FLOAT*/  round_n_f,
+    /*INT*/    round_n_i,
+    /*STRING*/ round_e_x,
+};
+
+mv_t n_n_round_func(mv_t* pval1) { return (round_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t int_i_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.boolv ? 1 : 0}; }

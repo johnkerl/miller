@@ -1251,7 +1251,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "atanh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,     parg1);
 	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_x_x_func(b_x_boolean_func,   parg1);
 	} else if (streq(fnnm, "cbrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,      parg1);
-	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_ceil_func,      parg1);
+	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_n_n_func(n_n_ceil_func,      parg1);
 	} else if (streq(fnnm, "cos"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,       parg1);
 	} else if (streq(fnnm, "cosh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,      parg1);
 	} else if (streq(fnnm, "erf"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,       parg1);
@@ -1259,7 +1259,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "exp"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,       parg1);
 	} else if (streq(fnnm, "expm1"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,     parg1);
 	} else if (streq(fnnm, "float"))     { return lrec_evaluator_alloc_from_x_x_func(f_x_float_func,     parg1);
-	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_floor_func,     parg1);
+	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_n_n_func(n_n_floor_func,     parg1);
 	} else if (streq(fnnm, "gmt2sec"))   { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2sec"))   { return lrec_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2fsec"))  { return lrec_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,  parg1);
@@ -1272,7 +1272,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "log1p"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,     parg1);
 	} else if (streq(fnnm, "qnorm"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,     parg1);
 	} else if (streq(fnnm, "invqnorm"))  { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
-	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_round_func,     parg1);
+	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_n_n_func(n_n_round_func,     parg1);
 	} else if (streq(fnnm, "sec2gmt"))   { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func,   parg1);
 	} else if (streq(fnnm, "sec2hms"))   { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,   parg1);
 	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
