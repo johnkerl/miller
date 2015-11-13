@@ -134,6 +134,8 @@ mv_t n_n_floor_func(mv_t* pval1);
 mv_t n_n_round_func(mv_t* pval1);
 mv_t n_n_sgn_func(mv_t* pval1);
 
+mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2);
+
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);
@@ -198,13 +200,6 @@ static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
 
 static inline mv_t f_ff_atan2_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = atan2(pval1->u.fltv, pval2->u.fltv)};
-	return rv;
-}
-
-static inline mv_t f_ff_roundm_func(mv_t* pval1, mv_t* pval2) {
-	double x = pval1->u.fltv;
-	double m = pval2->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = round(x / m) * m};
 	return rv;
 }
 

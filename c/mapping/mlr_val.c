@@ -836,6 +836,47 @@ static mv_unary_func_t* round_dispositions[MT_MAX] = {
 mv_t n_n_round_func(mv_t* pval1) { return (round_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t roundm_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t roundm_f_ff(mv_t* pa, mv_t* pb) {
+	double x = pa->u.fltv;
+	double m = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = round(x / m) * m};
+	return rv;
+}
+static mv_t roundm_f_fi(mv_t* pa, mv_t* pb) {
+	double x = pa->u.fltv;
+	double m = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = round(x / m) * m};
+	return rv;
+}
+static mv_t roundm_f_if(mv_t* pa, mv_t* pb) {
+	double x = (double)pa->u.intv;
+	double m = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = round(x / m) * m};
+	return rv;
+}
+static mv_t roundm_i_ii(mv_t* pa, mv_t* pb) {
+	long long x = pa->u.intv;
+	long long m = pb->u.fltv;
+	mv_t rv = {.type = MT_INT, .u.intv = (x / m) * m};
+	return rv;
+}
+
+static mv_binary_func_t* roundm_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL          ERROR        BOOL         FLOAT        INT          STRING
+	/*NULL*/   {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*ERROR*/  {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*BOOL*/   {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*FLOAT*/  {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_f_ff, roundm_f_fi, roundm_e_xx},
+	/*INT*/    {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_f_if, roundm_i_ii, roundm_e_xx},
+	/*STRING*/ {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+};
+
+mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2) { return (roundm_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
 static mv_t sgn_e_x(mv_t* pa) {
 	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
 }

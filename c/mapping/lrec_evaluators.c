@@ -1318,7 +1318,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "atan2"))  { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,                parg1, parg2);
 	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,         parg1, parg2);
 	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,         parg1, parg2);
-	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_roundm_func,      parg1, parg2);
+	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_n_nn_func(n_nn_roundm_func,               parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,               parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return lrec_evaluator_alloc_from_i_ii_func(i_ii_urandint_func,           parg1, parg2);
 	} else  { return NULL; }

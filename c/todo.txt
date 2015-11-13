@@ -16,14 +16,17 @@ TOP OF LIST
 * full-int64 I/O & math:
   o int-int math -> int result: disposition matrices & n_nn infra.
   o make int-to-int-enabled without remorse:
+    unary:
     k abs
-    ? ceil
-    ? floor
-    ? round
+    k ceil
+    k floor
+    k round
     ? roundm
+    k sgn
+
+    binary:
     ? max
     ? min
-    ? sgn
 
   ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
