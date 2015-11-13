@@ -25,7 +25,8 @@
 //   which accept various types of mlr_val, with disposition-matrices in
 //   mlr_val.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
 //   string) which either type-check or type-coerce their arguments, invoking
-//   type-specific functions in mlr_val.c.  In either case it's the job of
+//   type-specific functions in mlr_val.c.  Those with _n_ take int or float
+//   and also use disposition matrices.  In all cases it's the job of
 //   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
 //   type(s).
 // ================================================================
@@ -130,9 +131,8 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
-	NULL_OR_ERROR_OUT(val1);
 	mt_get_float_nullable(&val1);
-	NULL_OUT(val1);
+	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
 
@@ -161,11 +161,8 @@ mv_t lrec_evaluator_n_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_n_n_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
-	NULL_OR_ERROR_OUT(val1);
 	mt_get_number_nullable(&val1);
-	NULL_OUT(val1);
-	if (val1.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
 }
@@ -192,18 +189,12 @@ typedef struct _lrec_evaluator_f_ff_state_t {
 mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
 	mt_get_float_nullable(&val1);
-	NULL_OUT(val1);
-	if (val1.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
 	mt_get_float_nullable(&val2);
-	NULL_OUT(val2);
-	if (val2.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
 }
@@ -229,16 +220,12 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	ERROR_OUT(val1);
 	mt_get_float_nullable(&val1);
-	if (val1.type != MT_FLOAT && val1.type != MT_NULL)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	ERROR_OUT(val2);
 	mt_get_float_nullable(&val2);
-	if (val2.type != MT_FLOAT && val2.type != MT_NULL)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
 }
@@ -270,19 +257,11 @@ mv_t lrec_evaluator_n_nn_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 
-	NULL_OR_ERROR_OUT(val1);
-	// xxx need int_or_float_nullable
 	mt_get_float_nullable(&val1);
-	NULL_OUT(val1);
-	if (val1.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val1);
 
-	NULL_OR_ERROR_OUT(val2);
-	// xxx need int_or_float_nullable
 	mt_get_float_nullable(&val2);
-	NULL_OUT(val2);
-	if (val2.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
 }
@@ -313,25 +292,16 @@ typedef struct _lrec_evaluator_f_fff_state_t {
 mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_fff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
 	mt_get_float_nullable(&val1);
-	NULL_OUT(val1);
-	if (val1.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
 	mt_get_float_nullable(&val2);
-	NULL_OUT(val2);
-	if (val2.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val2);
 
 	mv_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
-	NULL_OR_ERROR_OUT(val3);
 	mt_get_float_nullable(&val3);
-	NULL_OUT(val3);
-	if (val3.type != MT_FLOAT)
-		return MV_ERROR;
+	NULL_OR_ERROR_OUT(val3);
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
@@ -1272,7 +1242,7 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1)  {
 	if        (streq(fnnm, "!"))         { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,       parg1);
 	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,      parg1);
-	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_abs_func,       parg1);
+	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_n_n_func(n_n_abs_func,       parg1);
 	} else if (streq(fnnm, "acos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,      parg1);
 	} else if (streq(fnnm, "acosh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,     parg1);
 	} else if (streq(fnnm, "asin"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_asin_func,      parg1);

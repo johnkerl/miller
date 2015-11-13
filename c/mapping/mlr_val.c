@@ -21,12 +21,15 @@
 //   evaluating lrec objects, using mlr_val.c to do so.
 //
 // * There are two kinds of functions here: those with _x_ in their names
-//   which accept various types of mlr_val, with disposition-matrices to select
-//   functions of the appropriate type, and those with _i_/_f_/_b_/_s_ (int,
-//   float, boolean, string) which only take specific types of mlr_val.  In
-//   either case it's the job of lrec_evaluators.c to invoke functions here
-//   with mlr_vals of the correct type(s).
+//   which accept various types of mlr_val, with disposition-matrices in
+//   mlr_val.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
+//   string) which either type-check or type-coerce their arguments, invoking
+//   type-specific functions in mlr_val.c.  Those with _n_ take int or float
+//   and also use disposition matrices.  In all cases it's the job of
+//   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
+//   type(s).
 // ================================================================
+
 
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
@@ -743,6 +746,28 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 	mv_t rv = {.type = MT_INT, .u.intv = strlen(pval1->u.strv)};
 	return rv;
 }
+
+// ----------------------------------------------------------------
+static mv_t abs_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t abs_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = fabs(pa->u.fltv)};
+}
+static mv_t abs_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = pa->u.intv < 0LL ? -pa->u.intv : pa->u.intv};
+}
+
+static mv_unary_func_t* abs_dispositions[MT_MAX] = {
+    /*NULL*/   abs_e_x,
+    /*ERROR*/  abs_e_x,
+    /*BOOL*/   abs_e_x,
+    /*FLOAT*/  abs_n_f,
+    /*INT*/    abs_n_i,
+    /*STRING*/ abs_e_x,
+};
+
+mv_t n_n_abs_func(mv_t* pval1) { return (abs_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
 static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }

@@ -103,7 +103,6 @@ static inline mv_t f_z_systime_func() {
 }
 
 // ----------------------------------------------------------------
-static inline mv_t f_f_abs_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=fabs(pval1->u.fltv)};     return rv;}
 static inline mv_t f_f_acos_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=acos(pval1->u.fltv)};     return rv;}
 static inline mv_t f_f_acosh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=acosh(pval1->u.fltv)};    return rv;}
 static inline mv_t f_f_asin_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=asin(pval1->u.fltv)};     return rv;}
@@ -131,6 +130,8 @@ static inline mv_t f_f_sqrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.flt
 static inline mv_t f_f_tan_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tan(pval1->u.fltv)};      return rv;}
 static inline mv_t f_f_tanh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tanh(pval1->u.fltv)};     return rv;}
 static inline mv_t f_f_uneg_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=-pval1->u.fltv};          return rv;}
+
+mv_t n_n_abs_func(mv_t* pval1);
 
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
