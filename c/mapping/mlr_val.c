@@ -748,6 +748,266 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+static mv_t plus_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t plus_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a + b};
+	return rv;
+}
+static mv_t plus_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a + b};
+	return rv;
+}
+static mv_t plus_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a + b};
+	return rv;
+}
+static mv_t plus_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	mv_t rv = {.type = MT_INT, .u.intv = a + b};
+	return rv;
+}
+
+static mv_binary_func_t* plus_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL        ERROR      BOOL       FLOAT      INT        STRING
+	/*NULL*/   {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
+	/*ERROR*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
+	/*BOOL*/   {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
+	/*FLOAT*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
+	/*INT*/    {plus_e_xx, plus_e_xx, plus_e_xx, plus_f_if, plus_i_ii, plus_e_xx},
+	/*STRING*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
+};
+
+mv_t n_nn_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t minus_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t minus_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b};
+	return rv;
+}
+static mv_t minus_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b};
+	return rv;
+}
+static mv_t minus_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b};
+	return rv;
+}
+static mv_t minus_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	mv_t rv = {.type = MT_INT, .u.intv = a - b};
+	return rv;
+}
+
+static mv_binary_func_t* minus_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL         ERROR       BOOL        FLOAT       INT         STRING
+	/*NULL*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+	/*ERROR*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+	/*BOOL*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+	/*FLOAT*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_f_ff, minus_f_fi, minus_e_xx},
+	/*INT*/    {minus_e_xx, minus_e_xx, minus_e_xx, minus_f_if, minus_i_ii, minus_e_xx},
+	/*STRING*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+};
+
+mv_t n_nn_minus_func(mv_t* pval1, mv_t* pval2) { return (minus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t times_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t times_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a * b};
+	return rv;
+}
+static mv_t times_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a * b};
+	return rv;
+}
+static mv_t times_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a * b};
+	return rv;
+}
+static mv_t times_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	mv_t rv = {.type = MT_INT, .u.intv = a * b};
+	return rv;
+}
+
+static mv_binary_func_t* times_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL         ERROR       BOOL        FLOAT       INT         STRING
+	/*NULL*/   {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
+	/*ERROR*/  {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
+	/*BOOL*/   {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
+	/*FLOAT*/  {times_e_xx, times_e_xx, times_e_xx, times_f_ff, times_f_fi, times_e_xx},
+	/*INT*/    {times_e_xx, times_e_xx, times_e_xx, times_f_if, times_i_ii, times_e_xx},
+	/*STRING*/ {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
+};
+
+mv_t n_nn_times_func(mv_t* pval1, mv_t* pval2) { return (times_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t divide_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t divide_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
+	return rv;
+}
+static mv_t divide_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
+	return rv;
+}
+static mv_t divide_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
+	return rv;
+}
+static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
+	return rv;
+}
+
+static mv_binary_func_t* divide_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL          ERROR        BOOL         FLOAT        INT          STRING
+	/*NULL*/   {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
+	/*ERROR*/  {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
+	/*BOOL*/   {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
+	/*FLOAT*/  {divide_e_xx, divide_e_xx, divide_e_xx, divide_f_ff, divide_f_fi, divide_e_xx},
+	/*INT*/    {divide_e_xx, divide_e_xx, divide_e_xx, divide_f_if, divide_i_ii, divide_e_xx},
+	/*STRING*/ {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
+};
+
+mv_t n_nn_divide_func(mv_t* pval1, mv_t* pval2) { return (divide_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t int_divide_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t int_divide_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t int_divide_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t int_divide_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t int_divide_i_ii(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+
+static mv_binary_func_t* int_divide_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL              ERROR            BOOL             FLOAT            INT              STRING
+	/*NULL*/   {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx},
+	/*ERROR*/  {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx},
+	/*BOOL*/   {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx},
+	/*FLOAT*/  {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_f_ff, int_divide_f_fi, int_divide_e_xx},
+	/*INT*/    {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_f_if, int_divide_i_ii, int_divide_e_xx},
+	/*STRING*/ {int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx, int_divide_e_xx},
+};
+
+mv_t n_nn_int_divide_func(mv_t* pval1, mv_t* pval2) {
+	return (int_divide_dispositions[pval1->type][pval2->type])(pval1,pval2);
+}
+
+// ----------------------------------------------------------------
+static mv_t mod_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t mod_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t mod_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	return rv;
+}
+static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	long long u = a % b;
+	if (a >= 0LL) {
+		if (b < 0LL) {
+			u += b;
+		}
+	} else {
+		if (b >= 0LL) {
+			u += b;
+		}
+	}
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = u};
+	return rv;
+}
+
+static mv_binary_func_t* mod_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL       ERROR     BOOL      FLOAT     INT       STRING
+	/*NULL*/   {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
+	/*ERROR*/  {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
+	/*BOOL*/   {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
+	/*FLOAT*/  {mod_e_xx, mod_e_xx, mod_e_xx, mod_f_ff, mod_f_fi, mod_e_xx},
+	/*INT*/    {mod_e_xx, mod_e_xx, mod_e_xx, mod_f_if, mod_i_ii, mod_e_xx},
+	/*STRING*/ {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
+};
+
+mv_t n_nn_mod_func(mv_t* pval1, mv_t* pval2) {
+	return (mod_dispositions[pval1->type][pval2->type])(pval1,pval2);
+}
+
+// ----------------------------------------------------------------
 static mv_t abs_e_x(mv_t* pa) {
 	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
 }

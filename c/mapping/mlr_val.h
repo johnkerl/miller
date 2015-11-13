@@ -132,15 +132,13 @@ static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
 	return rv;
 }
-static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
-	long long i1 = (long long)pval1->u.fltv;
-	long long i2 = (long long)pval2->u.fltv;
-	long long i3 = i1 % i2;
-	if (i3 < 0)
-		i3 += i2; // C mod is insane
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = (double)i3};
-	return rv;
-}
+
+mv_t n_nn_plus_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_minus_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_times_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_divide_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_int_divide_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_mod_func(mv_t* pval1, mv_t* pval2);
 
 mv_t n_n_abs_func(mv_t* pval1);
 mv_t n_n_ceil_func(mv_t* pval1);
@@ -160,27 +158,6 @@ mv_t s_x_hexfmt_func(mv_t* pval1);
 mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2);
 
 // ----------------------------------------------------------------
-static inline mv_t f_ff_plus_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pval1->u.fltv + pval2->u.fltv};
-	return rv;
-}
-static inline mv_t f_ff_minus_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pval1->u.fltv - pval2->u.fltv};
-	return rv;
-}
-static inline mv_t f_ff_times_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pval1->u.fltv * pval2->u.fltv};
-	return rv;
-}
-static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pval1->u.fltv / pval2->u.fltv};
-	return rv;
-}
-static inline mv_t f_ff_int_divide_func(mv_t* pval1, mv_t* pval2) { // xxx stub
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(pval1->u.fltv / pval2->u.fltv)};
-	return rv;
-}
-
 static inline mv_t f_ff_atan2_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = atan2(pval1->u.fltv, pval2->u.fltv)};
 	return rv;
