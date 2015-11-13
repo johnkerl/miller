@@ -859,7 +859,7 @@ static mv_t roundm_f_if(mv_t* pa, mv_t* pb) {
 }
 static mv_t roundm_i_ii(mv_t* pa, mv_t* pb) {
 	long long x = pa->u.intv;
-	long long m = pb->u.fltv;
+	long long m = pb->u.intv;
 	mv_t rv = {.type = MT_INT, .u.intv = (x / m) * m};
 	return rv;
 }
