@@ -836,6 +836,36 @@ static mv_unary_func_t* round_dispositions[MT_MAX] = {
 mv_t n_n_round_func(mv_t* pval1) { return (round_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t sgn_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t sgn_n_f(mv_t* pa) {
+	if (pa->u.fltv > 0.0)
+		return (mv_t) {.type = MT_FLOAT, .u.fltv =  1.0};
+	if (pa->u.fltv < 0.0)
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = -1.0};
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = 0.0};
+}
+static mv_t sgn_n_i(mv_t* pa) {
+	if (pa->u.intv > 0LL)
+		return (mv_t) {.type = MT_INT, .u.intv =  1LL};
+	if (pa->u.intv < 0LL)
+		return (mv_t) {.type = MT_INT, .u.intv = -1LL};
+	return (mv_t) {.type = MT_INT, .u.intv = 0LL};
+}
+
+static mv_unary_func_t* sgn_dispositions[MT_MAX] = {
+    /*NULL*/   sgn_e_x,
+    /*ERROR*/  sgn_e_x,
+    /*BOOL*/   sgn_e_x,
+    /*FLOAT*/  sgn_n_f,
+    /*INT*/    sgn_n_i,
+    /*STRING*/ sgn_e_x,
+};
+
+mv_t n_n_sgn_func(mv_t* pval1) { return (sgn_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 static mv_t int_i_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
 static mv_t int_i_e(mv_t* pa) { return (mv_t) {.type = MT_ERROR, .u.intv = 0}; }
 static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .u.intv = pa->u.boolv ? 1 : 0}; }
@@ -886,15 +916,6 @@ static mv_unary_func_t* float_dispositions[MT_MAX] = {
 };
 
 mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval1); }
-
-// ----------------------------------------------------------------
-mv_t f_f_sgn_func(mv_t* pval1) {
-	if (pval1->u.fltv > 0.0)
-		return (mv_t) {.type = MT_FLOAT, .u.fltv =  1.0};
-	if (pval1->u.fltv < 0.0)
-		return (mv_t) {.type = MT_FLOAT, .u.fltv = -1.0};
-	return (mv_t) {.type = MT_FLOAT, .u.fltv = 0.0};
-}
 
 // ----------------------------------------------------------------
 static mv_t boolean_b_n(mv_t* pa) { return (mv_t) {.type = MT_NULL,  .u.intv = 0}; }
