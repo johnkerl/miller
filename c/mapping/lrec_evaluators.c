@@ -221,11 +221,11 @@ mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvst
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	mt_get_float_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	mt_get_float_nullable(&val2);
-	NULL_OR_ERROR_OUT(val2);
+	ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
 }
