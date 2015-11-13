@@ -14,48 +14,19 @@ TOP OF LIST
 ! join on partial value-field matches
 
 * full-int64 I/O & math:
-  o int-int math -> int result: disposition matrices & n_nn infra.
   o make int-to-int-enabled without remorse:
-    unary:
-    k abs
-    k ceil
-    k floor
-    k round
-    k sgn
-
-    binary:
-    k roundm
-    k max
-    k min
-
+    unary: abs ceil floor round sgn 
+    binary: roundm max min
   ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
-    k +
-    k -
-    k u-
-    k *
-    ? %
-    ? //
-
+    binary: + - u- * % //
     note that // should be floor division for floats, too. mldent.
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
-
-  o expanded UTs x all
-
-    incl.:
-      mlr --pprint --right put '$c=$a/$b;$d=$a//$b;$e=$a%$b' <<EOF
-      a   b
-      34  10
-      34  -10
-      -34 10
-      -34 -10
-      EOF
+  o expanded UTs x all of the above. lncl. ./tmod
+  o sgn function needs UT cases
+  o urandint -> w/urand @ mlr -h, mld, etc.
 
   o now is a good time to look at bitops. first get the precedence right.
-
-  o sgn function needs UT cases
-
-  o urandint -> w/urand @ mlr -h, mld, etc.
 
 * packaging:
   - brew version bump?!?
