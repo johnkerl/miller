@@ -128,12 +128,28 @@ static inline mv_t f_f_tan_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.flt
 static inline mv_t f_f_tanh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tanh(pval1->u.fltv)};     return rv;}
 static inline mv_t f_f_uneg_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=-pval1->u.fltv};          return rv;}
 
+static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
+	return rv;
+}
+static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
+	long long i1 = (long long)pval1->u.fltv;
+	long long i2 = (long long)pval2->u.fltv;
+	long long i3 = i1 % i2;
+	if (i3 < 0)
+		i3 += i2; // C mod is insane
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = (double)i3};
+	return rv;
+}
+
 mv_t n_n_abs_func(mv_t* pval1);
 mv_t n_n_ceil_func(mv_t* pval1);
 mv_t n_n_floor_func(mv_t* pval1);
 mv_t n_n_round_func(mv_t* pval1);
 mv_t n_n_sgn_func(mv_t* pval1);
 
+mv_t n_nn_min_func(mv_t* pval1, mv_t* pval2);
+mv_t n_nn_max_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2);
 
 mv_t i_x_int_func(mv_t* pval1);
@@ -162,39 +178,6 @@ static inline mv_t f_ff_divide_func(mv_t* pval1, mv_t* pval2) {
 }
 static inline mv_t f_ff_int_divide_func(mv_t* pval1, mv_t* pval2) { // xxx stub
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(pval1->u.fltv / pval2->u.fltv)};
-	return rv;
-}
-static inline mv_t f_ff_max_func(mv_t* pval1, mv_t* pval2) {
-	if (pval1->type == MT_NULL) {
-		return *pval2;
-	} else if (pval2->type == MT_NULL) {
-		return *pval1;
-	} else {
-		mv_t rv = {.type = MT_FLOAT, .u.fltv = fmax(pval1->u.fltv, pval2->u.fltv)};
-		return rv;
-	}
-}
-static inline mv_t f_ff_min_func(mv_t* pval1, mv_t* pval2) {
-	if (pval1->type == MT_NULL) {
-		return *pval2;
-	} else if (pval2->type == MT_NULL) {
-		return *pval1;
-	} else {
-		mv_t rv = {.type = MT_FLOAT, .u.fltv = fmin(pval1->u.fltv, pval2->u.fltv)};
-		return rv;
-	}
-}
-static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
-	return rv;
-}
-static inline mv_t f_ff_mod_func(mv_t* pval1, mv_t* pval2) {
-	long long i1 = (long long)pval1->u.fltv;
-	long long i2 = (long long)pval2->u.fltv;
-	long long i3 = i1 % i2;
-	if (i3 < 0)
-		i3 += i2; // C mod is insane
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = (double)i3};
 	return rv;
 }
 

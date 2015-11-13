@@ -214,37 +214,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 	return pevaluator;
 }
 
-// This is for min/max which can return non-null when one argument is null --
-// in comparison to other functions which return null if *any* argument is
-// null.
-mv_t lrec_evaluator_f_ff_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_f_ff_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_float_nullable(&val1);
-	ERROR_OUT(val1);
-
-	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	mt_get_float_nullable(&val2);
-	ERROR_OUT(val2);
-
-	return pstate->pfunc(&val1, &val2);
-}
-
-lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_nullable_func(mv_binary_func_t* pfunc,
-	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
-{
-	lrec_evaluator_f_ff_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_ff_state_t));
-	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
-
-	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
-	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_f_ff_nullable_func;
-
-	return pevaluator;
-}
-
 // ----------------------------------------------------------------
 typedef struct _lrec_evaluator_n_nn_state_t {
 	mv_binary_func_t* pfunc;
@@ -277,6 +246,38 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_func(mv_binary_func_t* pfunc,
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
 	pevaluator->pevaluator_func = lrec_evaluator_n_nn_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+// This is for min/max which can return non-null when one argument is null --
+// in comparison to other functions which return null if *any* argument is
+// null.
+mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_f_ff_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	mt_get_float_nullable(&val1);
+	ERROR_OUT(val1);
+
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	mt_get_float_nullable(&val2);
+	ERROR_OUT(val2);
+
+	return pstate->pfunc(&val1, &val2);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_nullable_func(mv_binary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
+	lrec_evaluator_f_ff_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_ff_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_n_nn_nullable_func;
 
 	return pevaluator;
 }
@@ -1316,8 +1317,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
 	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_f_ff_func(f_ff_mod_func,                  parg1, parg2);
 	} else if (streq(fnnm, "atan2"))  { return lrec_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,                parg1, parg2);
-	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_max_func,         parg1, parg2);
-	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_f_ff_nullable_func(f_ff_min_func,         parg1, parg2);
+	} else if (streq(fnnm, "max"))    { return lrec_evaluator_alloc_from_n_nn_nullable_func(n_nn_max_func,         parg1, parg2);
+	} else if (streq(fnnm, "min"))    { return lrec_evaluator_alloc_from_n_nn_nullable_func(n_nn_min_func,         parg1, parg2);
 	} else if (streq(fnnm, "roundm")) { return lrec_evaluator_alloc_from_n_nn_func(n_nn_roundm_func,               parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return lrec_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,               parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return lrec_evaluator_alloc_from_i_ii_func(i_ii_urandint_func,           parg1, parg2);

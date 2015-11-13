@@ -877,6 +877,146 @@ static mv_binary_func_t* roundm_dispositions[MT_MAX][MT_MAX] = {
 mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2) { return (roundm_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
+static mv_t min_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+
+static mv_t min_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmin(a, b)};
+	return rv;
+}
+
+static mv_t min_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmin(a, b)};
+	return rv;
+}
+
+static mv_t min_f_fz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = pa->u.fltv};
+	return rv;
+}
+
+static mv_t min_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmin(a, b)};
+	return rv;
+}
+
+static mv_t min_f_zf(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = pb->u.fltv};
+	return rv;
+}
+
+static mv_t min_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	mv_t rv = {.type = MT_INT, .u.intv = a < b ? a : b};
+	return rv;
+}
+
+static mv_t min_i_iz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_INT, .u.intv = pa->u.intv};
+	return rv;
+}
+
+static mv_t min_i_zi(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_INT, .u.intv = pb->u.intv};
+	return rv;
+}
+
+static mv_t min_z_zz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_NULL, .u.intv = 0LL};
+	return rv;
+}
+
+static mv_binary_func_t* min_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL       ERROR     BOOL      FLOAT     INT       STRING
+	/*NULL*/   {min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
+	/*ERROR*/  {min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx},
+	/*BOOL*/   {min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx},
+	/*FLOAT*/  {min_f_fz, min_e_xx, min_e_xx, min_f_ff, min_f_fi, min_e_xx},
+	/*INT*/    {min_i_iz, min_e_xx, min_e_xx, min_f_if, min_i_ii, min_e_xx},
+	/*STRING*/ {min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx, min_e_xx},
+};
+
+mv_t n_nn_min_func(mv_t* pval1, mv_t* pval2) { return (min_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t max_e_xx(mv_t* pa, mv_t* pb) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+
+static mv_t max_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmax(a, b)};
+	return rv;
+}
+
+static mv_t max_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmax(a, b)};
+	return rv;
+}
+
+static mv_t max_f_fz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = pa->u.fltv};
+	return rv;
+}
+
+static mv_t max_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = fmax(a, b)};
+	return rv;
+}
+
+static mv_t max_f_zf(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = pb->u.fltv};
+	return rv;
+}
+
+static mv_t max_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	mv_t rv = {.type = MT_INT, .u.intv = a > b ? a : b};
+	return rv;
+}
+
+static mv_t max_i_iz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_INT, .u.intv = pa->u.intv};
+	return rv;
+}
+
+static mv_t max_i_zi(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_INT, .u.intv = pb->u.intv};
+	return rv;
+}
+
+static mv_t max_z_zz(mv_t* pa, mv_t* pb) {
+	mv_t rv = {.type = MT_NULL, .u.intv = 0LL};
+	return rv;
+}
+
+static mv_binary_func_t* max_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL       ERROR     BOOL      FLOAT     INT       STRING
+	/*NULL*/   {max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
+	/*ERROR*/  {max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx},
+	/*BOOL*/   {max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx},
+	/*FLOAT*/  {max_f_fz, max_e_xx, max_e_xx, max_f_ff, max_f_fi, max_e_xx},
+	/*INT*/    {max_i_iz, max_e_xx, max_e_xx, max_f_if, max_i_ii, max_e_xx},
+	/*STRING*/ {max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx, max_e_xx},
+};
+
+mv_t n_nn_max_func(mv_t* pval1, mv_t* pval2) { return (max_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
 static mv_t sgn_e_x(mv_t* pa) {
 	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
 }
