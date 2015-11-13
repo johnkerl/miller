@@ -67,6 +67,7 @@ void mt_get_boolean_strict(mv_t* pval);
 void mt_get_float_strict(mv_t* pval);
 void mt_get_float_nullable(mv_t* pval);
 void mt_get_int_nullable(mv_t* pval);
+void mt_get_number_nullable(mv_t* pval); // int or float
 
 // ----------------------------------------------------------------
 typedef mv_t mv_zary_func_t();

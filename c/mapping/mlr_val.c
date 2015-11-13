@@ -210,6 +210,45 @@ void mt_get_int_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+void mt_get_number_nullable(mv_t* pval) {
+	double fltv = 0.0;
+	long long intv = 0LL;
+	switch (pval->type) {
+	case MT_NULL:
+		break;
+	case MT_ERROR:
+		break;
+	case MT_INT:
+		break;
+	case MT_FLOAT:
+		break;
+	case MT_BOOL:
+		pval->type = MT_ERROR;
+		pval->u.intv = 0;
+		break;
+	case MT_STRING:
+		if (*pval->u.strv == '\0') {
+			pval->type = MT_NULL;
+			pval->u.intv = 0LL;
+		} else if (mlr_try_int_from_string(pval->u.strv, &intv)) {
+			pval->type = MT_INT;
+			pval->u.intv = intv;
+		} else if (mlr_try_float_from_string(pval->u.strv, &fltv)) {
+			pval->type = MT_FLOAT;
+			pval->u.intv = fltv;
+		} else {
+			pval->type = MT_ERROR;
+			pval->u.intv = 0LL;
+		}
+		break;
+	default:
+		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		break;
+	}
+}
+
+// ----------------------------------------------------------------
 mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	int len1 = strlen(pval1->u.strv);
 	int len2 = strlen(pval1->u.strv);
