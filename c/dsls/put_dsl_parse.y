@@ -57,32 +57,62 @@ put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_bool_
 	sllv_add(pasts, A);
 }
 
+
 // ----------------------------------------------------------------
-put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) FILTER_DSL_OR(O) put_dsl_or_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
-}
 put_dsl_bool_expr(A) ::= put_dsl_or_term(B). {
 	A = B;
 }
-
-// ----------------------------------------------------------------
-put_dsl_or_term(A) ::= put_dsl_or_term(B) FILTER_DSL_AND(O) put_dsl_and_term(C). {
+put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) PUT_DSL_OR(O) put_dsl_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
+
 put_dsl_or_term(A) ::= put_dsl_and_term(B). {
 	A = B;
 }
+put_dsl_or_term(A) ::= put_dsl_or_term(B) PUT_DSL_AND(O) put_dsl_and_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
 
-// ----------------------------------------------------------------
-put_dsl_and_term(A) ::= put_dsl_eqne_term(B) FILTER_DSL_EQ(O) put_dsl_eqne_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
-}
-put_dsl_and_term(A) ::= put_dsl_eqne_term(B) FILTER_DSL_NE(O) put_dsl_eqne_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
-}
-put_dsl_and_term(A) ::= put_dsl_eqne_term(B). {
+
+put_dsl_and_term(A) ::= put_dsl_bit_or_term(B). {
 	A = B;
 }
+put_dsl_and_term(A) ::= put_dsl_and_term(B) PUT_DSL_BIT_OR(O) put_dsl_bit_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+
+put_dsl_bit_or_term(A) ::= put_dsl_bit_xor_term(B). {
+	A = B;
+}
+put_dsl_bit_or_term(A) ::= put_dsl_bit_or_term(B) PUT_DSL_BIT_XOR(O) put_dsl_bit_xor_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+put_dsl_bit_xor_term(A) ::= put_dsl_bit_and_term(B). {
+	A = B;
+}
+put_dsl_bit_xor_term(A) ::= put_dsl_bit_xor_term(B) PUT_DSL_BIT_AND(O) put_dsl_bit_and_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+// ----------------------------------------------------------------
+put_dsl_bit_and_term(A) ::= put_dsl_eqne_term(B). {
+	A = B;
+}
+put_dsl_bit_and_term(A) ::= put_dsl_eqne_term(B) PUT_DSL_MATCHES(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_bit_and_term(A) ::= put_dsl_eqne_term(B) PUT_DSL_DOES_NOT_MATCH(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_bit_and_term(A) ::= put_dsl_eqne_term(B) PUT_DSL_EQ(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+put_dsl_bit_and_term(A) ::= put_dsl_eqne_term(B) PUT_DSL_NE(O) put_dsl_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
 
 // ----------------------------------------------------------------
 put_dsl_eqne_term(A) ::= put_dsl_expr(B). {

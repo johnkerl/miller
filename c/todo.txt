@@ -28,6 +28,22 @@ TOP OF LIST
 
   o now is a good time to look at bitops. first get the precedence right.
 
+* mlr doc precedence:
+  Operators                    Associativity
+  ---------                    -------------
+  ||                           left to right 
+  &&                           left to right
+  |                            left to right
+  ^                            left to right
+  &                            left to right
+  == !=                        left to right
+  < <= > >=                    left to right
+  << >>                        left to right
+  binary+ binary-              left to right
+  binary* / %                  left to right
+  ! ~ ++ -- unary+ unary- &    right to left
+  ()                           left to right
+
 * packaging:
   - brew version bump?!?
   - cut a release w/ manpage

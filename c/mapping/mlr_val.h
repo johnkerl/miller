@@ -186,6 +186,16 @@ static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
 	return (mv_t) {.type = MT_INT, .u.intv = u};
 }
 
+static inline mv_t i_ii_bitwise_or_func(mv_t* pval1, mv_t* pval2) {
+	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv | pval2->u.intv};
+}
+static inline mv_t i_ii_bitwise_xor_func(mv_t* pval1, mv_t* pval2) {
+	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv ^ pval2->u.intv};
+}
+static inline mv_t i_ii_bitwise_and_func(mv_t* pval1, mv_t* pval2) {
+	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv & pval2->u.intv};
+}
+
 mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
