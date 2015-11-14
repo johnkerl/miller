@@ -166,7 +166,7 @@ filter_dsl_muldiv_term(A) ::= FILTER_DSL_NOT(O) filter_dsl_unary_term(C). {
 filter_dsl_unary_term(A) ::= filter_dsl_exp_term(B). {
 	A = B;
 }
-filter_dsl_unary_term(A) ::= filter_dsl_unary_term(B) FILTER_DSL_POW(O) filter_dsl_exp_term(C). {
+filter_dsl_unary_term(A) ::= filter_dsl_exp_term(B) FILTER_DSL_POW(O) filter_dsl_unary_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 

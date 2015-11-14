@@ -4562,10 +4562,10 @@ mlr filter -v $x<$a**$b**$c /dev/null
 < (operator):
     x (field_name).
     ** (operator):
+        a (field_name).
         ** (operator):
-            a (field_name).
             b (field_name).
-        c (field_name).
+            c (field_name).
 
 mlr filter -v $x<$a**$b+$c /dev/null
 < (operator):
