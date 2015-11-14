@@ -30,10 +30,13 @@ TOP OF LIST
   o UT for ~ in both grammars
   o urandint -> w/urand @ mlr -h, mld, etc.
   o OR -> LOGICAL_OR etc.
+  o BIT_ -> BITWISE_
   o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
     ... or change the precedence :)
   o *.y production renames (slip by one on the left)
   o *.l reorg/neaten
+  o precedence b04k: mlr put -v '$z=(~$x)' vs.  mlr put -v '$z=~$x'
+  o bitops re intermediate float, both from literal & from field name
 
 * mlr doc precedence:
   Operators                    Associativity
