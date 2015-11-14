@@ -26,6 +26,7 @@ TOP OF LIST
   o sgn function needs UT cases
   o bitops UTs x put/filter
   o >>, <<, ~
+  o MATCHES etc. into put grammar
   o urandint -> w/urand @ mlr -h, mld, etc.
   o OR -> LOGICAL_OR etc.
   o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
@@ -49,6 +50,7 @@ NEW
   binary+ binary- .            left to right
   binary* / %                  left to right
   ! ~ ++ -- unary+ unary- &    right to left
+  **                           right to left
   ()                           left to right
 
 -> put in dot & other mlr operators
