@@ -11,26 +11,14 @@
 %option extra-type="struct _mlr_dsl_ast_node_t **"
 
 %%
+
 "||" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_OR;
+	return FILTER_DSL_LOGICAL_OR;
 }
 "&&" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_AND;
-}
-
-"|" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_OR;
-}
-"^" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_XOR;
-}
-"&" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_AND;
+	return FILTER_DSL_LOGICAL_AND;
 }
 
 "=~" {
@@ -68,6 +56,21 @@
 	return FILTER_DSL_LE;
 }
 
+"|" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_BIT_OR;
+}
+
+"^" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_BIT_XOR;
+}
+
+"&" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_BIT_AND;
+}
+
 "+" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return FILTER_DSL_PLUS;
@@ -98,14 +101,18 @@
 	return FILTER_DSL_MOD;
 }
 
-"**" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_POW;
-}
-
 "!" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return FILTER_DSL_NOT;
+}
+"~" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_BIT_NOT;
+}
+
+"**" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_POW;
 }
 
 \$[a-zA-Z_0-9]+ {
@@ -119,10 +126,19 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
 	return FILTER_DSL_NUMBER;
 }
-
 0x[0-9a-fA-F]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
 	return FILTER_DSL_NUMBER;
+}
+
+\"([^\\\"]|\\.)*\" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
+	return FILTER_DSL_STRING;
+}
+
+\"([^\\\"]|\\.)*\"\i {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_REGEXI);
+	return FILTER_DSL_REGEXI;
 }
 
 "NF" {
@@ -154,16 +170,6 @@
 	return FILTER_DSL_CONTEXT_VARIABLE;
 }
 
-\"([^\\\"]|\\.)*\" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
-	return FILTER_DSL_STRING;
-}
-
-\"([^\\\"]|\\.)*\"\i {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_REGEXI);
-	return FILTER_DSL_REGEXI;
-}
-
 "(" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
 	return FILTER_DSL_LPAREN;
@@ -188,5 +194,4 @@
 . {
 	return -1;
 }
-
 %%

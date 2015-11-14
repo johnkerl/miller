@@ -61,7 +61,7 @@ put_dsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) put_dsl_bool_
 put_dsl_bool_expr(A) ::= put_dsl_or_term(B). {
 	A = B;
 }
-put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) PUT_DSL_OR(O) put_dsl_or_term(C). {
+put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) PUT_DSL_LOGICAL_OR(O) put_dsl_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -69,7 +69,7 @@ put_dsl_bool_expr(A) ::= put_dsl_bool_expr(B) PUT_DSL_OR(O) put_dsl_or_term(C). 
 put_dsl_or_term(A) ::= put_dsl_and_term(B). {
 	A = B;
 }
-put_dsl_or_term(A) ::= put_dsl_or_term(B) PUT_DSL_AND(O) put_dsl_and_term(C). {
+put_dsl_or_term(A) ::= put_dsl_or_term(B) PUT_DSL_LOGICAL_AND(O) put_dsl_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -173,6 +173,9 @@ put_dsl_muldiv_term(A) ::= PUT_DSL_MINUS(O) put_dsl_unary_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 put_dsl_muldiv_term(A) ::= PUT_DSL_NOT(O) put_dsl_unary_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+}
+put_dsl_muldiv_term(A) ::= PUT_DSL_BIT_NOT(O) put_dsl_unary_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 

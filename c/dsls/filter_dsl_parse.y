@@ -47,7 +47,7 @@ filter_dsl_body(A) ::= filter_dsl_bool_expr(B). {
 filter_dsl_bool_expr(A) ::= filter_dsl_or_term(B). {
 	A = B;
 }
-filter_dsl_bool_expr(A) ::= filter_dsl_bool_expr(B) FILTER_DSL_OR(O) filter_dsl_or_term(C). {
+filter_dsl_bool_expr(A) ::= filter_dsl_bool_expr(B) FILTER_DSL_LOGICAL_OR(O) filter_dsl_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -55,7 +55,7 @@ filter_dsl_bool_expr(A) ::= filter_dsl_bool_expr(B) FILTER_DSL_OR(O) filter_dsl_
 filter_dsl_or_term(A) ::= filter_dsl_and_term(B). {
 	A = B;
 }
-filter_dsl_or_term(A) ::= filter_dsl_or_term(B) FILTER_DSL_AND(O) filter_dsl_and_term(C). {
+filter_dsl_or_term(A) ::= filter_dsl_or_term(B) FILTER_DSL_LOGICAL_AND(O) filter_dsl_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -159,6 +159,9 @@ filter_dsl_muldiv_term(A) ::= FILTER_DSL_MINUS(O) filter_dsl_unary_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 filter_dsl_muldiv_term(A) ::= FILTER_DSL_NOT(O) filter_dsl_unary_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+}
+filter_dsl_muldiv_term(A) ::= FILTER_DSL_BIT_NOT(O) filter_dsl_unary_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 

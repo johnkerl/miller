@@ -27,26 +27,11 @@ TOP OF LIST
   o bitops UTs x put/filter
   o >>, <<, ~
   o urandint -> w/urand @ mlr -h, mld, etc.
+  o OR -> LOGICAL_OR etc.
   o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
     ... or change the precedence :)
-
-OLD
-* mlr doc precedence:
-  Operators                    Associativity
-  ---------                    -------------
-  =                            N/A for Miller (no $a=$b=$c)
-  ||                           left to right 
-  &&                           left to right
-  |                            left to right
-  ^                            left to right
-  &                            left to right
-  == !=                        left to right
-  < <= > >=                    left to right
-  << >>                        left to right
-  binary+ binary- .            left to right
-  binary* / %                  left to right
-  ! ~ ++ -- unary+ unary- &    right to left
-  ()                           left to right
+  o *.y production renames (slip by one on the left)
+  o *.l reorg/neaten
 
 NEW
 * mlr doc precedence:
@@ -55,7 +40,7 @@ NEW
   =                            N/A for Miller (no $a=$b=$c)
   ||                           left to right 
   &&                           left to right
-  == !=                        left to right
+  == != =~ !=~                 left to right
   < <= > >=                    left to right
   |                            left to right
   ^                            left to right
@@ -67,7 +52,8 @@ NEW
   ()                           left to right
 
 -> put in dot & other mlr operators
--> stack the bitwise precedences
+-> check all precedence stackings
+-> put in ** precedence & associativity
 
 * packaging:
   - brew version bump?!?
