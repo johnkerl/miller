@@ -25,8 +25,9 @@ TOP OF LIST
   o expanded UTs x all of the above. lncl. ./tmod
   o sgn function needs UT cases
   o bitops UTs x put/filter
-  o >>, <<, ~
-  o MATCHES etc. into put grammar
+  o >>, <<
+  o UT for matches etc. in put grammar
+  o UT for ~ in both grammars
   o urandint -> w/urand @ mlr -h, mld, etc.
   o OR -> LOGICAL_OR etc.
   o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
@@ -34,7 +35,6 @@ TOP OF LIST
   o *.y production renames (slip by one on the left)
   o *.l reorg/neaten
 
-NEW
 * mlr doc precedence:
   Operators                    Associativity
   ---------                    -------------
@@ -48,14 +48,12 @@ NEW
   &                            left to right
   << >>                        left to right
   binary+ binary- .            left to right
-  binary* / %                  left to right
+  binary* / // %               left to right
   ! ~ ++ -- unary+ unary- &    right to left
   **                           right to left
   ()                           left to right
 
--> put in dot & other mlr operators
--> check all precedence stackings
--> put in ** precedence & associativity
+  -> check all precedence stackings in the grammars
 
 * packaging:
   - brew version bump?!?
