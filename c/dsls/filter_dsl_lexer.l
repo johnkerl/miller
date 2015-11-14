@@ -57,17 +57,17 @@
 
 "|" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_OR;
+	return FILTER_DSL_BITWISE_OR;
 }
 
 "^" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_XOR;
+	return FILTER_DSL_BITWISE_XOR;
 }
 
 "&" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return FILTER_DSL_BIT_AND;
+	return FILTER_DSL_BITWISE_AND;
 }
 
 "+" {

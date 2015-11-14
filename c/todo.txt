@@ -13,13 +13,15 @@ TOP OF LIST
 
 ! join on partial value-field matches
 
+* mlr per-release docs: linkto from releases page
+
 * full-int64 I/O & math:
-  o make int-to-int-enabled without remorse:
+  k make int-to-int-enabled:
     unary: abs ceil floor round sgn 
     binary: roundm max min
-  ! make int-to-int enabled ... but beware, we are introducing overflow for bignums
-    where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
     binary: + - u- * % //
+  o make int-to-int enabled ... but beware, we are introducing overflow for bignums
+    where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
     note that // should be floor division for floats, too. mldent.
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o expanded UTs x all of the above. lncl. ./tmod
@@ -35,8 +37,31 @@ TOP OF LIST
     ... or change the precedence :)
   o *.y production renames (slip by one on the left)
   o *.l reorg/neaten
+  o make a ^^ ?
+  * dsls bake deps
   o precedence b04k: mlr put -v '$z=(~$x)' vs.  mlr put -v '$z=~$x'
-  o bitops re intermediate float, both from literal & from field name
+
+  o fix:
+    $ mlr filter -v '$y==-$x' /dev/null
+    == (operator):
+        y (field_name).
+        - (operator):
+            x (field_name).
+
+    $ mlr filter -v '$y==~$x' /dev/null
+    == (operator):
+        y (field_name).
+        ~ (operator):
+            x (field_name).
+
+    $ mlr put -v '$y=-$x' /dev/null
+    = (operator):
+        y (field_name).
+        - (operator):
+            x (field_name).
+
+    $ mlr put -v '$y=~$x' /dev/null
+    Syntax error!
 
 * mlr doc precedence:
   Operators                    Associativity

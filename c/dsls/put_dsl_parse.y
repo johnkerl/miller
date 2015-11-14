@@ -111,7 +111,7 @@ put_dsl_eqne_term(A) ::= put_dsl_eqne_term(B) PUT_DSL_LE(O) put_dsl_cmp_term(C).
 put_dsl_cmp_term(A) ::= put_dsl_bit_or_term(B). {
 	A = B;
 }
-put_dsl_cmp_term(A) ::= put_dsl_cmp_term(B) PUT_DSL_BIT_OR(O) put_dsl_bit_or_term(C). {
+put_dsl_cmp_term(A) ::= put_dsl_cmp_term(B) PUT_DSL_BITWISE_OR(O) put_dsl_bit_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -119,7 +119,7 @@ put_dsl_cmp_term(A) ::= put_dsl_cmp_term(B) PUT_DSL_BIT_OR(O) put_dsl_bit_or_ter
 put_dsl_bit_or_term(A) ::= put_dsl_bit_xor_term(B). {
 	A = B;
 }
-put_dsl_bit_or_term(A) ::= put_dsl_bit_or_term(B) PUT_DSL_BIT_XOR(O) put_dsl_bit_xor_term(C). {
+put_dsl_bit_or_term(A) ::= put_dsl_bit_or_term(B) PUT_DSL_BITWISE_XOR(O) put_dsl_bit_xor_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -127,7 +127,7 @@ put_dsl_bit_or_term(A) ::= put_dsl_bit_or_term(B) PUT_DSL_BIT_XOR(O) put_dsl_bit
 put_dsl_bit_xor_term(A) ::= put_dsl_bit_and_term(B). {
 	A = B;
 }
-put_dsl_bit_xor_term(A) ::= put_dsl_bit_xor_term(B) PUT_DSL_BIT_AND(O) put_dsl_bit_and_term(C). {
+put_dsl_bit_xor_term(A) ::= put_dsl_bit_xor_term(B) PUT_DSL_BITWISE_AND(O) put_dsl_bit_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
