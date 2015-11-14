@@ -24,13 +24,17 @@ TOP OF LIST
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o expanded UTs x all of the above. lncl. ./tmod
   o sgn function needs UT cases
+  o bitops UTs x put/filter
+  o >>, <<, ~
   o urandint -> w/urand @ mlr -h, mld, etc.
+  o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
+    ... or change the precedence :)
 
-  o now is a good time to look at bitops. first get the precedence right.
-
+OLD
 * mlr doc precedence:
   Operators                    Associativity
   ---------                    -------------
+  =                            N/A for Miller (no $a=$b=$c)
   ||                           left to right 
   &&                           left to right
   |                            left to right
@@ -39,10 +43,31 @@ TOP OF LIST
   == !=                        left to right
   < <= > >=                    left to right
   << >>                        left to right
-  binary+ binary-              left to right
+  binary+ binary- .            left to right
   binary* / %                  left to right
   ! ~ ++ -- unary+ unary- &    right to left
   ()                           left to right
+
+NEW
+* mlr doc precedence:
+  Operators                    Associativity
+  ---------                    -------------
+  =                            N/A for Miller (no $a=$b=$c)
+  ||                           left to right 
+  &&                           left to right
+  == !=                        left to right
+  < <= > >=                    left to right
+  |                            left to right
+  ^                            left to right
+  &                            left to right
+  << >>                        left to right
+  binary+ binary- .            left to right
+  binary* / %                  left to right
+  ! ~ ++ -- unary+ unary- &    right to left
+  ()                           left to right
+
+-> put in dot & other mlr operators
+-> stack the bitwise precedences
 
 * packaging:
   - brew version bump?!?
