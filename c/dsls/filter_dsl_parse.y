@@ -43,7 +43,6 @@ filter_dsl_body(A) ::= filter_dsl_bool_expr(B). {
 	past->proot = A;
 }
 
-// ----------------------------------------------------------------
 filter_dsl_bool_expr(A) ::= filter_dsl_or_term(B). {
 	A = B;
 }
