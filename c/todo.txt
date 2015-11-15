@@ -26,11 +26,7 @@ TOP OF LIST
   ! try to get a grip on jb issues 1st
 
 * full-int64 I/O & math:
-  o Beware, int-to-int math introduces overflow for big nums
-    where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
-    Note that // should be floor division for floats, too. mldent.
-    http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
-  o expanded UTs x all of the above. lncl. ./tmod
+  o expanded UTs x all of + - ~ * / // % abs ceil floor max min round roundm sgn. incl. ./tmod
   o UT for ~ ^^ | ^ & << >> in both grammars; UT for matches etc. in put grammar; sgn
   o visually check all precedence stackings (horiz/vert) in the grammars
   o urandint -> w/urand @ mlr -h, mld, etc.
@@ -50,10 +46,9 @@ TOP OF LIST
   - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
 ! need mlr --regex-help re //, "...", "..."i, "\(..\)" vs. "(..)", etc.
+  and/or new section @ mld ref.
 
 ----------------------------------------------------------------
-
-! split mlrdoc into master & releases -- ?
 
 * R doc:
 ! xref @ covers x 2
@@ -85,7 +80,6 @@ TOP OF LIST
 
 ----------------------------------------------------------------
 MINOR: bootstrap sampling in hold-and-emit mode??
-
 
 MINOR: hold-and-emit fraction?
 

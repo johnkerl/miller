@@ -2955,7 +2955,10 @@ For most math functions, integers are cast to float on input, and produce float
 output.  <li/> The following, however, produce integer output if all inputs are
 integers: <tt>+</tt> <tt>-</tt> <tt>~</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt>
 <tt>%</tt> <tt>abs</tt> <tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt>
-<tt>round</tt> <tt>roundm</tt> <tt>sgn</tt>.
+<tt>round</tt> <tt>roundm</tt> <tt>sgn</tt>. Note that integer overflow is
+possible for large numbers when inputs look like integers. Explicit use of
+<tt>float()</tt> (e.g. replacing <tt>$c = $a * $b</tt> with <tt>$c = float($a)
+* float($b)</tt>) guards against this.
 
 <li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
 multi-argument functions which return null if any of their inputs are null: for
