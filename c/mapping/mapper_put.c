@@ -15,7 +15,7 @@ typedef struct _mapper_put_state_t {
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_put_free(void* pvstate);
-static mapper_t* mapper_put_alloc(sllv_t* pasts, int allow_type_inference);
+static mapper_t* mapper_put_alloc(sllv_t* pasts, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 
@@ -28,11 +28,16 @@ mapper_setup_t mapper_put_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [-v] {expression}\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [-v] [-s|-f] {expression}\n", argv0, verb);
 	fprintf(o, "Adds/updates specified field(s).\n");
-	fprintf(o, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
-	fprintf(o, "gives full transparency on the precedence and associativity rules of Miller's\n");
-	fprintf(o, "grammar. Please use a dollar sign for field names and double-quotes for string\n");
+	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
+	fprintf(o, "    grammar.\n");
+	fprintf(o, "-s: Keeps field values, or literals in the expression, as strings with no type \n");
+	fprintf(o, "    inference to int or float.\n");
+	fprintf(o, "-f: Keeps field values, or literals in the expression, as strings or floats\n");
+	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(o, "Multiple assignments may be separated with a semicolon.\n");
 	fprintf(o, "Examples:\n");
@@ -49,12 +54,13 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
-	int   allow_type_inference = TRUE;
+	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_asts = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate, "-v", &print_asts);
-	ap_define_false_flag(pstate, "-s", &allow_type_inference);
+	ap_define_int_value_flag(pstate, "-s", TYPE_INFER_STRING_ONLY,  &type_inferencing);
+	ap_define_int_value_flag(pstate, "-f", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -81,11 +87,11 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvdata);
 	}
 
-	return mapper_put_alloc(pasts, allow_type_inference);
+	return mapper_put_alloc(pasts, type_inferencing);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(sllv_t* pasts, int allow_type_inference) {
+static mapper_t* mapper_put_alloc(sllv_t* pasts, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
@@ -120,7 +126,7 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts, int allow_type_inference) {
 		}
 
 		char* output_field_name = pleft->text;
-		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, allow_type_inference);
+		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
 
 		pstate->pevaluators[i] = pevaluator;
 		pstate->output_field_names[i] = output_field_name;

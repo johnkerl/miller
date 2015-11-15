@@ -823,7 +823,32 @@ typedef struct _lrec_evaluator_field_name_state_t {
 	char* field_name;
 } lrec_evaluator_field_name_state_t;
 
-mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_field_name_state_t* pstate = pvstate;
+	char* string = lrec_get(prec, pstate->field_name);
+	if (string == NULL) {
+		return (mv_t) {.type = MT_NULL, .u.intv = 0};
+	} else {
+		return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+	}
+}
+
+mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_field_name_state_t* pstate = pvstate;
+	char* string = lrec_get(prec, pstate->field_name);
+	if (string == NULL || *string == 0) {
+		return (mv_t) {.type = MT_NULL, .u.intv = 0};
+	} else {
+		double fltv;
+		if (mlr_try_float_from_string(string, &fltv)) {
+			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+		} else {
+			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+		}
+	}
+}
+
+mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL || *string == 0) {
@@ -841,25 +866,29 @@ mv_t lrec_evaluator_field_name_func(lrec_t* prec, context_t* pctx, void* pvstate
 	}
 }
 
-mv_t lrec_evaluator_field_name_func_no_infer(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_field_name_state_t* pstate = pvstate;
-	char* string = lrec_get(prec, pstate->field_name);
-	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.intv = 0};
-	} else {
-		return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
-	}
-}
-
-lrec_evaluator_t* lrec_evaluator_alloc_from_field_name(char* field_name, int allow_type_inference) {
+lrec_evaluator_t* lrec_evaluator_alloc_from_field_name(char* field_name, int type_inferencing) {
 	lrec_evaluator_field_name_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_field_name_state_t));
 	pstate->field_name = mlr_strdup_or_die(field_name);
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = allow_type_inference
-		? lrec_evaluator_field_name_func
-		: lrec_evaluator_field_name_func_no_infer;
+	pevaluator->pevaluator_func = NULL;
+	switch (type_inferencing) {
+	case TYPE_INFER_STRING_ONLY:
+		pevaluator->pevaluator_func = lrec_evaluator_field_name_func_string_only;
+		break;
+	case TYPE_INFER_STRING_FLOAT:
+		pevaluator->pevaluator_func = lrec_evaluator_field_name_func_string_float;
+		break;
+	case TYPE_INFER_STRING_FLOAT_INT:
+		pevaluator->pevaluator_func = lrec_evaluator_field_name_func_string_float_int;
+		break;
+	default:
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+		break;
+	}
 
 	return pevaluator;
 }
@@ -882,28 +911,52 @@ mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pstate->literal.u.strv)};
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int allow_type_inference) {
+lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_inferencing) {
 	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
 	if (string == NULL || *string == 0) {
 		pstate->literal = (mv_t) {.type = MT_NULL, .u.intv = 0LL};
 		pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
-	} else if (!allow_type_inference) {
-		pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
-		pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
 	} else {
 		long long intv;
 		double fltv;
-		if (mlr_try_int_from_string(string, &intv)) {
-			pstate->literal = (mv_t) {.type = MT_INT, .u.intv = intv};
-			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
-		} else if (mlr_try_float_from_string(string, &fltv)) {
-			pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
-			pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
-		} else {
+
+		pevaluator->pevaluator_func = NULL;
+		switch (type_inferencing) {
+		case TYPE_INFER_STRING_ONLY:
 			pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 			pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
+			break;
+
+		case TYPE_INFER_STRING_FLOAT:
+			if (mlr_try_float_from_string(string, &fltv)) {
+				pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+				pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+			} else {
+				pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+				pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
+			}
+			break;
+
+		case TYPE_INFER_STRING_FLOAT_INT:
+			if (mlr_try_int_from_string(string, &intv)) {
+				pstate->literal = (mv_t) {.type = MT_INT, .u.intv = intv};
+				pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+			} else if (mlr_try_float_from_string(string, &fltv)) {
+				pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+				pevaluator->pevaluator_func = lrec_evaluator_non_string_literal_func;
+			} else {
+				pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+				pevaluator->pevaluator_func = lrec_evaluator_string_literal_func;
+			}
+			break;
+
+		default:
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+			break;
 		}
 	}
 
@@ -1384,15 +1437,15 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(char* f
 
 // ================================================================
 static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
-	int allow_type_inference, function_lookup_t* function_lookup_table)
+	int type_inferencing, function_lookup_t* function_lookup_table)
 {
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
-			return lrec_evaluator_alloc_from_field_name(pnode->text, allow_type_inference);
+			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_LITERAL) {
-			return lrec_evaluator_alloc_from_literal(pnode->text, allow_type_inference);
+			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_REGEXI) {
-			return lrec_evaluator_alloc_from_literal(pnode->text, allow_type_inference);
+			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return lrec_evaluator_alloc_from_context_variable(pnode->text);
 		} else {
@@ -1418,7 +1471,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			pevaluator = lrec_evaluator_alloc_from_zary_func_name(func_name);
 		} else if (user_provided_arity == 1) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
-			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
+			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_unary_func_name(func_name, parg1);
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
@@ -1426,17 +1479,18 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			int type2 = parg2_node->type;
 
 			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
 				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text, FALSE);
 			} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_REGEXI) {
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
-				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text, TRUE);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
+					TYPE_INFER_STRING_FLOAT_INT);
 			} else {
 				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
 				// the regexes will be compiled record-by-record rather than once at alloc time, which will
 				// be slower.
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
-				lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, allow_type_inference, function_lookup_table);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
+				lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing, function_lookup_table);
 				pevaluator = lrec_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
 			}
 
@@ -1448,23 +1502,24 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 
 			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
 				// sub/gsub-regex special case:
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
-				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, allow_type_inference, function_lookup_table);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
+				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing, function_lookup_table);
 				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text, FALSE, parg3);
 
 			} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_REGEXI) {
 				// sub/gsub-regex special case:
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
-				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, allow_type_inference, function_lookup_table);
-				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text, TRUE, parg3);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
+				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing, function_lookup_table);
+				pevaluator = lrec_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
+					TYPE_INFER_STRING_FLOAT_INT, parg3);
 
 			} else {
 				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
 				// the regexes will be compiled record-by-record rather than once at alloc time, which will
 				// be slower.
-				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, allow_type_inference, function_lookup_table);
-				lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, allow_type_inference, function_lookup_table);
-				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, allow_type_inference, function_lookup_table);
+				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
+				lrec_evaluator_t* parg2 = lrec_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing, function_lookup_table);
+				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing, function_lookup_table);
 				pevaluator = lrec_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 			}
 		} else {
@@ -1480,8 +1535,8 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	}
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int allow_type_inference) {
-	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, allow_type_inference, FUNCTION_LOOKUP_TABLE);
+lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, type_inferencing, FUNCTION_LOOKUP_TABLE);
 	return pevaluator;
 }
 
@@ -1539,8 +1594,8 @@ static char * test2() {
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
-	lrec_evaluator_t* ps       = lrec_evaluator_alloc_from_field_name("s", TRUE);
-	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_literal("def", TRUE);
+	lrec_evaluator_t* ps       = lrec_evaluator_alloc_from_field_name("s", TYPE_INFER_STRING_FLOAT_INT);
+	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_literal("def", TYPE_INFER_STRING_FLOAT_INT);
 	lrec_evaluator_t* pdot     = lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func, ps, pdef);
 	lrec_evaluator_t* ptolower = lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
@@ -1589,8 +1644,8 @@ static char * test3() {
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
-	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_literal("2.0", TRUE);
-	lrec_evaluator_t* px     = lrec_evaluator_alloc_from_field_name("x", TRUE);
+	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_literal("2.0", TYPE_INFER_STRING_FLOAT_INT);
+	lrec_evaluator_t* px     = lrec_evaluator_alloc_from_field_name("x", TYPE_INFER_STRING_FLOAT_INT);
 	lrec_evaluator_t* plogx  = lrec_evaluator_alloc_from_f_f_func(f_f_log10_func, px);
 	lrec_evaluator_t* p2logx = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, p2, plogx);
 	lrec_evaluator_t* px2    = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, px, px);
@@ -1603,7 +1658,7 @@ static char * test3() {
 	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MLR_DSL_AST_NODE_TYPE_OPERATOR,
 		p2node, plogxnode);
 
-	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode, TRUE);
+	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode, TYPE_INFER_STRING_FLOAT_INT);
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lrec_put_no_free(prec, "x", "4.5");
@@ -1623,6 +1678,7 @@ static char * test3() {
     printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
     printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
 
+	printf("XXX %s\n", mt_describe_type(valp2.type));
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);
 	mu_assert_lf(valpx.type     == MT_FLOAT);

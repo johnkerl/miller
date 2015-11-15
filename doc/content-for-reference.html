@@ -831,7 +831,9 @@ integers: <tt>+</tt> <tt>-</tt> <tt>~</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt>
 <tt>round</tt> <tt>roundm</tt> <tt>sgn</tt>. Note that integer overflow is
 possible for large numbers when inputs look like integers. Explicit use of
 <tt>float()</tt> (e.g. replacing <tt>$c = $a * $b</tt> with <tt>$c = float($a)
-* float($b)</tt>) guards against this.
+* float($b)</tt>) guards against this &mdash; or, more simply, use
+<tt>mlr filter -f</tt> and <tt>mlr put -f</tt> which forces all numeric input,
+whether from expression literals or field values, to float.
 
 <li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
 multi-argument functions which return null if any of their inputs are null: for

@@ -358,12 +358,17 @@ Examples:
 .RS 0
 .\}
 .nf
-Usage: mlr filter [-v] [-x] {expression}
+Usage: mlr filter [-v] [-x] [-s|-f] {expression}
 Prints records for which {expression} evaluates to true.
-With -x, prints records for which {expression} evaluates to false.
-With -v, first prints the AST (abstract syntax tree) for the expression, which
-gives full transparency on the precedence and associativity rules of Miller's.
-grammar. Please use a dollar sign for field names and double-quotes for string
+-x: Prints records for which {expression} evaluates to false.
+-v: First prints the AST (abstract syntax tree) for the expression, which gives
+    full transparency on the precedence and associativity rules of Miller's
+    grammar.
+-s: Keeps field values, or literals in the expression, as strings with no type 
+    inference to int or float.
+-f: Keeps field values, or literals in the expression, as strings or floats
+    with no inference to int.
+Please use a dollar sign for field names and double-quotes for string
 literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Examples:
   mlr filter 'log10($count) > 4.0'
@@ -535,11 +540,16 @@ Examples:
 .RS 0
 .\}
 .nf
-Usage: mlr put [-v] {expression}
+Usage: mlr put [-v] [-s|-f] {expression}
 Adds/updates specified field(s).
-With -v, first prints the AST (abstract syntax tree) for the expression, which
-gives full transparency on the precedence and associativity rules of Miller's
-grammar. Please use a dollar sign for field names and double-quotes for string
+-v: First prints the AST (abstract syntax tree) for the expression, which gives
+    full transparency on the precedence and associativity rules of Miller's
+    grammar.
+-s: Keeps field values, or literals in the expression, as strings with no type 
+    inference to int or float.
+-f: Keeps field values, or literals in the expression, as strings or floats
+    with no inference to int.
+Please use a dollar sign for field names and double-quotes for string
 literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
 Multiple assignments may be separated with a semicolon.
 Examples:

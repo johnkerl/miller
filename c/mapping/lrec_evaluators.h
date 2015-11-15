@@ -4,7 +4,11 @@
 #include "containers/mlr_dsl_ast.h"
 #include "mapping/lrec_evaluator.h"
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* proot, int allow_type_inference);
+#define TYPE_INFER_STRING_FLOAT_INT 0xce08
+#define TYPE_INFER_STRING_FLOAT     0xce09
+#define TYPE_INFER_STRING_ONLY      0xce0a
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* proot, int type_inferencing);
 void lrec_evaluator_list_functions(FILE* output_stream, char* leader);
 // Pass function_name == NULL to get usage for all functions:
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name);

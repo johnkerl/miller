@@ -13,7 +13,7 @@ typedef struct _mapper_filter_state_t {
 
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_filter_free(void* pvstate);
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int allow_type_inference, int do_exclude);
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude);
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
 
@@ -26,12 +26,17 @@ mapper_setup_t mapper_filter_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [-v] [-x] {expression}\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [-v] [-x] [-s|-f] {expression}\n", argv0, verb);
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
-	fprintf(o, "With -x, prints records for which {expression} evaluates to false.\n");
-	fprintf(o, "With -v, first prints the AST (abstract syntax tree) for the expression, which\n");
-	fprintf(o, "gives full transparency on the precedence and associativity rules of Miller's.\n");
-	fprintf(o, "grammar. Please use a dollar sign for field names and double-quotes for string\n");
+	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
+	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
+	fprintf(o, "    grammar.\n");
+	fprintf(o, "-s: Keeps field values, or literals in the expression, as strings with no type \n");
+	fprintf(o, "    inference to int or float.\n");
+	fprintf(o, "-f: Keeps field values, or literals in the expression, as strings or floats\n");
+	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
@@ -50,13 +55,14 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
 	int   print_asts = FALSE;
-	int   allow_type_inference = TRUE;
+	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   do_exclude = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate,  "-v", &print_asts);
-	ap_define_false_flag(pstate, "-s", &allow_type_inference);
-	ap_define_true_flag(pstate,  "-x", &do_exclude);
+	ap_define_true_flag(pstate,      "-v", &print_asts);
+	ap_define_int_value_flag(pstate, "-s", TYPE_INFER_STRING_ONLY,  &type_inferencing);
+	ap_define_int_value_flag(pstate, "-f", TYPE_INFER_STRING_FLOAT, &type_inferencing);
+	ap_define_true_flag(pstate,      "-x", &do_exclude);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_filter_usage(stderr, argv[0], verb);
@@ -81,14 +87,14 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_node_print(past->proot);
 	}
 
-	return mapper_filter_alloc(past->proot, allow_type_inference, do_exclude);
+	return mapper_filter_alloc(past->proot, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int allow_type_inference, int do_exclude) {
+static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude) {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 
-	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, allow_type_inference);
+	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 	pstate->do_exclude = do_exclude;
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
