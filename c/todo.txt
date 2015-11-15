@@ -19,45 +19,26 @@ TOP OF LIST
   o allows 'x = 10' in DKVP
   o allows right-justified keys in XTAB
 
+! int ops are backward incompatible (ish) so make this miller 3.
+  o cut a release w/ manpage etc.
+  o highlight precedence & semantics docs
+  ! fix join first
+  ! try to get a grip on jb issues 1st
+
 * full-int64 I/O & math:
   o Beware, int-to-int math introduces overflow for big nums
     where it wasn't before: doc needs to be clear re '$z=float($x)+float($y)' :^/
     Note that // should be floor division for floats, too. mldent.
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o expanded UTs x all of the above. lncl. ./tmod
-  o sgn function needs UT cases
-  o UT for ~ ^^ | ^ & << >> in both grammars; UT for matches etc. in put grammar
+  o UT for ~ ^^ | ^ & << >> in both grammars; UT for matches etc. in put grammar; sgn
+  o visually check all precedence stackings (horiz/vert) in the grammars
   o urandint -> w/urand @ mlr -h, mld, etc.
-  o faqent '$y=~$x' vs. '$y= ~$x'
-  o u+, u- -> n_n_ type
-  o mlr filter '-$y==-$x' error @ cli parse due to leading -
-  * dsls bake deps
-  o precedence b04k: mlr put -v '$z=(~$x)' vs.  mlr put -v '$z=~$x'
-  o unary +
-
-* mlr doc precedence:
-  Operators                    Associativity
-  ---------                    -------------
-  =                            N/A for Miller (no $a=$b=$c)
-  ||                           left to right 
-  &&                           left to right
-  == != =~ !=~                 left to right
-  < <= > >=                    left to right
-  |                            left to right
-  ^                            left to right
-  &                            left to right
-  << >>                        left to right
-  binary+ binary- .            left to right
-  binary* / // %               left to right
-  ! ~ ++ -- unary+ unary- &    right to left
-  **                           right to left
-  ()                           left to right
-
-  -> check all precedence stackings in the grammars
+  o faqent '$y=~$x' vs. '$y= ~$x'; mlr filter '-$y==-$x' error @ cli parse due to leading -
+  o dsls bake deps
 
 * packaging:
   - brew version bump?!?
-  - cut a release w/ manpage
 
 * verb sec2gmt:
   - mlrutil libfunc for code dedup

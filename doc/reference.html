@@ -132,6 +132,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
 &bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
+&bull;&nbsp;<a href="#Operator_precedence">Operator precedence</a><br/>
+&bull;&nbsp;<a href="#Operator_and_function_semantics">Operator and function semantics</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data">Null data</a><br/>
 </div>
@@ -1716,17 +1718,17 @@ expressions even though they don&rsquo;t appear in file data. In particular,
 <div class="pokipanel">
 <pre>
 $ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'
-i j         k
-0 1.000000  1.000000
-1 2.000000  3.000000
-2 3.000000  5.000000
-3 4.000000  7.000000
-4 5.000000  9.000000
-5 6.000000  11.000000
-6 7.000000  13.000000
-7 8.000000  15.000000
-8 9.000000  17.000000
-9 10.000000 19.000000
+i j  k
+0 1  1
+1 2  3
+2 3  5
+3 4  7
+4 5  9
+5 6  11
+6 7  13
+7 8  15
+8 9  17
+9 10 19
 </pre>
 </div>
 <p/>
@@ -2860,7 +2862,7 @@ urandint   (math:       #args=2): Integer uniformly distributed between inclusiv
 -          (math:       #args=1): Unary minus.
 *          (math:       #args=2): Multiplication.
 /          (math:       #args=2): Division.
-//         (math:       #args=2): Interger division.
+//         (math:       #args=2): Integer division.
 %          (math:       #args=2): Remainder; never negative-valued.
 **         (math:       #args=2): Exponentiation; same as pow.
 |          (math:       #args=2): Bitwise OR.
@@ -2913,6 +2915,75 @@ along with the mathematical constants PI and E.
 <p/>
 
 <!-- ================================================================ -->
+<a id="Operator_precedence"/><h1>Operator precedence</h1>
+
+<p/>Operators are listed in order of decreasing precedence, highest first.
+
+<p/>
+<div class="pokipanel">
+<pre>
+Operators                    Associativity
+---------                    -------------
+()                           left to right
+**                           right to left
+! ~ ++ -- unary+ unary- &amp;    right to left
+binary* / // %               left to right
+binary+ binary- .            left to right
+&lt;&lt; &gt;&gt;                        left to right
+&amp;                            left to right
+^                            left to right
+|                            left to right
+&lt; &lt;= &gt; &gt;=                    left to right
+== != =~ !=~                 left to right
+&amp;&amp;                           left to right
+||                           left to right
+=                            N/A for Miller (these is no $a=$b=$c)
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Operator_and_function_semantics"/><h1>Operator and function semantics</h1>
+
+<ul>
+
+<li/> Functions are in general pass-throughs straight to the system-standard C
+library.
+
+<li/> Numbers in Miller are double-precision float or 64-bit signed integers.
+For most math functions, integers are cast to float on input, and produce float
+output.  <li/> The following, however, produce integer output if all inputs are
+integers: <tt>+</tt> <tt>-</tt> <tt>~</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt>
+<tt>%</tt> <tt>abs</tt> <tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt>
+<tt>round</tt> <tt>roundm</tt> <tt>sgn</tt>.
+
+<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
+multi-argument functions which return null if any of their inputs are null: for
+<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
+is returned.
+
+<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
+<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
+<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
+C.
+
+<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
+
+<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
+<tt>!=~</tt> are similar to those in Ruby and Perl.
+
+<li/> Division and remainder are
+<a href="http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html">
+pythonic</a>:
+  <ul>
+  <li/> Quotient of integers is floating-point: <tt>7/2</tt> is <tt>3.5</tt>.
+  <li/> Integer division is done with <tt>//</tt>: <tt>7/2</tt> is <tt>3</tt>.
+    This rounds toward the negative.
+  <li/> Remainders are non-negative.
+  </ul>
+</ul>
+
+<!-- ================================================================ -->
 <a id="Data_types"/><h1>Data types</h1>
 
 <p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
@@ -2933,23 +3004,35 @@ otherwise type-specific) operations.
 </ul>
 
 <p/>For <tt>mlr put</tt> and <tt>mlr filter</tt>:
+
 <ul>
-<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision), <b>int</b> (64-bit signed), and <b>boolean</b>.
-<li/> On input, string values representable as numbers (e.g. "3" or "3.1") are treated as float. If a record
-  has <tt>x=1,y=2</tt> then <tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and
-  <tt>mlr put '$z=$x.$y'</tt> gives an error.  To coerce back to string for
-  processing, use the <tt>string</tt> function:
-  <tt>mlr put '$z=string($x).string($y)'</tt> will produce <tt>x=1,y=2,z=12</tt>.
+
+<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty
+string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision),
+<b>int</b> (64-bit signed), and <b>boolean</b>.
+
+<li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
+treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
+<tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and <tt>mlr put
+'$z=$x.$y'</tt> gives an error.  To coerce back to string for processing, use
+the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt> will
+produce <tt>x=1,y=2,z=12</tt>.
+
 <li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
-  <tt>"false"</tt>) are <i>not</i> automatically treated as boolean.
-  (This is because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto string-to-boolean
-  on a column consisting of words would result in some strings mixed with some booleans.)
-  Use the <tt>boolean</tt> function to coerce: e.g. giving the record <tt>x=1,y=2,w=false</tt> to
-  <tt>mlr put '$z=($x&lt;$y) || boolean($w)'</tt>.
-<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>: for example, <tt>log10</tt>
-  takes float input and produces float output, <tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt>
-  maps int to string.
-<li/> All math functions described in <tt>mlr --help-all-functions</tt> take integer as well as float input.
+<tt>"false"</tt>) are <i>not</i> automatically treated as boolean.  (This is
+because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto
+string-to-boolean on a column consisting of words would result in some strings
+mixed with some booleans.) Use the <tt>boolean</tt> function to coerce: e.g.
+giving the record <tt>x=1,y=2,w=false</tt> to <tt>mlr put '$z=($x&lt;$y) ||
+boolean($w)'</tt>.
+
+<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>:
+for example, <tt>log10</tt> takes float input and produces float output,
+<tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt> maps int to string.
+
+<li/> All math functions described in <tt>mlr --help-all-functions</tt> take
+integer as well as float input.
+
 </ul>
 
 <!-- ================================================================ -->
@@ -3009,7 +3092,7 @@ a b
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
-x=2,y=3,a=5.000000
+x=2,y=3,a=5
 </pre>
 </div>
 <p/>

@@ -1076,7 +1076,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "-",       1 , "Unary minus."},
 	{ FUNC_CLASS_MATH, "*",       2 , "Multiplication."},
 	{ FUNC_CLASS_MATH, "/",       2 , "Division."},
-	{ FUNC_CLASS_MATH, "//",      2 , "Interger division."},
+	{ FUNC_CLASS_MATH, "//",      2 , "Integer division."},
 	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
 	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
 	{ FUNC_CLASS_MATH, "|",       2 , "Bitwise OR."},
@@ -1319,11 +1319,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "<"))      { return lrec_evaluator_alloc_from_b_xx_func(lt_op_func,                     parg1, parg2);
 	} else if (streq(fnnm, "<="))     { return lrec_evaluator_alloc_from_b_xx_func(le_op_func,                     parg1, parg2);
 	} else if (streq(fnnm, "."))      { return lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func,                  parg1, parg2);
-	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_f_ff_func(n_nn_plus_func,                 parg1, parg2);
-	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_f_ff_func(n_nn_minus_func,                parg1, parg2);
-	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_f_ff_func(n_nn_times_func,                parg1, parg2);
-	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_f_ff_func(n_nn_divide_func,               parg1, parg2);
-	} else if (streq(fnnm, "//"))     { return lrec_evaluator_alloc_from_f_ff_func(n_nn_int_divide_func,           parg1, parg2);
+	} else if (streq(fnnm, "+"))      { return lrec_evaluator_alloc_from_n_nn_func(n_nn_plus_func,                 parg1, parg2);
+	} else if (streq(fnnm, "-"))      { return lrec_evaluator_alloc_from_n_nn_func(n_nn_minus_func,                parg1, parg2);
+	} else if (streq(fnnm, "*"))      { return lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func,                parg1, parg2);
+	} else if (streq(fnnm, "/"))      { return lrec_evaluator_alloc_from_n_nn_func(n_nn_divide_func,               parg1, parg2);
+	} else if (streq(fnnm, "//"))     { return lrec_evaluator_alloc_from_n_nn_func(n_nn_int_divide_func,           parg1, parg2);
 	} else if (streq(fnnm, "%"))      { return lrec_evaluator_alloc_from_n_nn_func(n_nn_mod_func,                  parg1, parg2);
 	} else if (streq(fnnm, "**"))     { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
 	} else if (streq(fnnm, "pow"))    { return lrec_evaluator_alloc_from_f_ff_func(f_ff_pow_func,                  parg1, parg2);
@@ -1592,9 +1592,9 @@ static char * test3() {
 	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_literal("2.0", TRUE);
 	lrec_evaluator_t* px     = lrec_evaluator_alloc_from_field_name("x", TRUE);
 	lrec_evaluator_t* plogx  = lrec_evaluator_alloc_from_f_f_func(f_f_log10_func, px);
-	lrec_evaluator_t* p2logx = lrec_evaluator_alloc_from_f_ff_func(n_nn_times_func, p2, plogx);
-	lrec_evaluator_t* px2    = lrec_evaluator_alloc_from_f_ff_func(n_nn_times_func, px, px);
-	lrec_evaluator_t* p4     = lrec_evaluator_alloc_from_f_ff_func(n_nn_times_func, p2, p2);
+	lrec_evaluator_t* p2logx = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, p2, plogx);
+	lrec_evaluator_t* px2    = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, px, px);
+	lrec_evaluator_t* p4     = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, p2, p2);
 
 	mlr_dsl_ast_node_t* pxnode     = mlr_dsl_ast_node_alloc("x",  MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
 	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
