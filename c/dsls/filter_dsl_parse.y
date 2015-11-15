@@ -118,10 +118,21 @@ fdsl_bitwise_xor_term(A) ::= fdsl_bitwise_xor_term(B) FILTER_DSL_BITWISE_XOR(O) 
 }
 
 // ----------------------------------------------------------------
-fdsl_bitwise_and_term(A) ::= fdsl_addsubdot_term(B). {
+fdsl_bitwise_and_term(A) ::= fdsl_bitwise_shift_term(B). {
 	A = B;
 }
-fdsl_bitwise_and_term(A) ::= fdsl_bitwise_and_term(B) FILTER_DSL_BITWISE_AND(O) fdsl_addsubdot_term(C). {
+fdsl_bitwise_and_term(A) ::= fdsl_bitwise_and_term(B) FILTER_DSL_BITWISE_AND(O) fdsl_bitwise_shift_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+// ----------------------------------------------------------------
+fdsl_bitwise_shift_term(A) ::= fdsl_addsubdot_term(B). {
+	A = B;
+}
+fdsl_bitwise_shift_term(A) ::= fdsl_bitwise_shift_term(B) FILTER_DSL_BITWISE_LSH(O) fdsl_addsubdot_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+fdsl_bitwise_shift_term(A) ::= fdsl_bitwise_shift_term(B) FILTER_DSL_BITWISE_RSH(O) fdsl_addsubdot_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 

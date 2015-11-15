@@ -1083,6 +1083,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "^",       2 , "Bitwise XOR."},
 	{ FUNC_CLASS_MATH, "&",       2 , "Bitwise AND."},
 	{ FUNC_CLASS_MATH, "~",       1 , "Bitwise NOT."},
+	{ FUNC_CLASS_MATH, "<<",      2 , "Bitwise left-shift."},
+	{ FUNC_CLASS_MATH, ">>",      2 , "Bitwise right-shift."},
 
 	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand side), e.g. '$name =~ \"^a.*b$\"'."},
 	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ \"^a.*b$\"'."},
@@ -1334,6 +1336,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "|"))      { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_or_func,           parg1, parg2);
 	} else if (streq(fnnm, "^"))      { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_xor_func,          parg1, parg2);
 	} else if (streq(fnnm, "&"))      { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_and_func,          parg1, parg2);
+	} else if (streq(fnnm, "<<"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_lsh_func,          parg1, parg2);
+	} else if (streq(fnnm, ">>"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_rsh_func,          parg1, parg2);
 	} else  { return NULL; }
 }
 

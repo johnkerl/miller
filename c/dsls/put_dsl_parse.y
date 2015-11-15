@@ -132,10 +132,21 @@ pdsl_bitwise_xor_term(A) ::= pdsl_bitwise_xor_term(B) PUT_DSL_BITWISE_XOR(O) pds
 }
 
 // ----------------------------------------------------------------
-pdsl_bitwise_and_term(A) ::= pdsl_addsubdot_term(B). {
+pdsl_bitwise_and_term(A) ::= pdsl_bitwise_shift_term(B). {
 	A = B;
 }
-pdsl_bitwise_and_term(A) ::= pdsl_bitwise_and_term(B) PUT_DSL_BITWISE_AND(O) pdsl_addsubdot_term(C). {
+pdsl_bitwise_and_term(A) ::= pdsl_bitwise_and_term(B) PUT_DSL_BITWISE_AND(O) pdsl_bitwise_shift_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+// ----------------------------------------------------------------
+pdsl_bitwise_shift_term(A) ::= pdsl_addsubdot_term(B). {
+	A = B;
+}
+pdsl_bitwise_shift_term(A) ::= pdsl_bitwise_shift_term(B) PUT_DSL_BITWISE_LSH(O) pdsl_addsubdot_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+pdsl_bitwise_shift_term(A) ::= pdsl_bitwise_shift_term(B) PUT_DSL_BITWISE_RSH(O) pdsl_addsubdot_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 

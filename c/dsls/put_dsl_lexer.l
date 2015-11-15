@@ -83,6 +83,15 @@
 	return PUT_DSL_BITWISE_AND;
 }
 
+"<<" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_BITWISE_LSH;
+}
+">>" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_BITWISE_RSH;
+}
+
 "+" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return PUT_DSL_PLUS;
