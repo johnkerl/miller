@@ -370,7 +370,8 @@ static void main_usage_numerical_formatting(FILE* o, char* argv0) {
 }
 
 static void main_usage_other_options(FILE* o, char* argv0) {
-	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().\n");
+	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n");
+	fprintf(o, "                     urand()/urandint().\n");
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {
