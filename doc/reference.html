@@ -293,10 +293,10 @@ Verbs:
 Functions for the filter and put verbs:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p logifit madd msub mmul mexp max min pow
-   qnorm round roundm sin sinh sqrt tan tanh urand + - - * / % ** =~ !=~ == !=
-   &gt; &gt;= &lt; &lt;= &amp;&amp; || ! strlen sub gsub tolower toupper . boolean float int string
-   hexfmt fmtnum systime sec2gmt gmt2sec sec2hms sec2dhms hms2sec dhms2sec
-   fsec2hms fsec2dhms hms2fsec dhms2fsec
+   qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / //
+   % ** | ^ &amp; ~ =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub tolower
+   toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
+   sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -2846,19 +2846,27 @@ pow        (math:       #args=2): Exponentiation; same as **.
 qnorm      (math:       #args=1): Normal cumulative distribution function.
 round      (math:       #args=1): Round to nearest integer.
 roundm     (math:       #args=2): Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m
+sgn        (math:       #args=1): +1 for positive input, 0 for zero input, -1 for negative input.
 sin        (math:       #args=1): Trigonometric sine.
 sinh       (math:       #args=1): Hyperbolic sine.
 sqrt       (math:       #args=1): Square root.
 tan        (math:       #args=1): Trigonometric tangent.
 tanh       (math:       #args=1): Hyperbolic tangent.
 urand      (math:       #args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
+urandint   (math:       #args=2): Integer uniformly distributed between inclusive integer endpoints.
 +          (math:       #args=2): Addition.
--          (math:       #args=1): Unary minus.
++          (math:       #args=1): Unary plus.
 -          (math:       #args=2): Subtraction.
+-          (math:       #args=1): Unary minus.
 *          (math:       #args=2): Multiplication.
 /          (math:       #args=2): Division.
+//         (math:       #args=2): Interger division.
 %          (math:       #args=2): Remainder; never negative-valued.
 **         (math:       #args=2): Exponentiation; same as pow.
+|          (math:       #args=2): Bitwise OR.
+^          (math:       #args=2): Bitwise XOR.
+&amp;          (math:       #args=2): Bitwise AND.
+~          (math:       #args=1): Bitwise NOT.
 =~         (boolean:    #args=2): String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
 !=~        (boolean:    #args=2): String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 ==         (boolean:    #args=2): String/numeric equality. Mixing number and string results in string compare.
@@ -2869,6 +2877,7 @@ urand      (math:       #args=0): Floating-point numbers on the unit interval. I
 &lt;=         (boolean:    #args=2): String/numeric less-than-or-equals. Mixing number and string results in string compare.
 &amp;&amp;         (boolean:    #args=2): Logical AND.
 ||         (boolean:    #args=2): Logical OR.
+^^         (boolean:    #args=2): Logical XOR.
 !          (boolean:    #args=1): Logical negation.
 strlen     (string:     #args=1): String length.
 sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")' (replace once).
