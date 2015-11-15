@@ -294,7 +294,7 @@ Functions for the filter and put verbs:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p logifit madd msub mmul mexp max min pow
    qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / //
-   % ** | ^ &amp; ~ =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub tolower
+   % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub tolower
    toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
    sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
@@ -2867,6 +2867,8 @@ urandint   (math:       #args=2): Integer uniformly distributed between inclusiv
 ^          (math:       #args=2): Bitwise XOR.
 &amp;          (math:       #args=2): Bitwise AND.
 ~          (math:       #args=1): Bitwise NOT.
+&lt;&lt;         (math:       #args=2): Bitwise left-shift.
+&gt;&gt;         (math:       #args=2): Bitwise right-shift.
 =~         (boolean:    #args=2): String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
 !=~        (boolean:    #args=2): String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 ==         (boolean:    #args=2): String/numeric equality. Mixing number and string results in string compare.
