@@ -130,8 +130,6 @@ static inline mv_t f_f_sinh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.flt
 static inline mv_t f_f_sqrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=sqrt(pval1->u.fltv)};     return rv;}
 static inline mv_t f_f_tan_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tan(pval1->u.fltv)};      return rv;}
 static inline mv_t f_f_tanh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tanh(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_upos_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=pval1->u.fltv};           return rv;}
-static inline mv_t f_f_uneg_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=-pval1->u.fltv};          return rv;}
 
 static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
@@ -144,6 +142,8 @@ mv_t n_nn_times_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_divide_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_int_divide_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_mod_func(mv_t* pval1, mv_t* pval2);
+mv_t n_n_upos_func(mv_t* pval1);
+mv_t n_n_uneg_func(mv_t* pval1);
 
 mv_t n_n_abs_func(mv_t* pval1);
 mv_t n_n_ceil_func(mv_t* pval1);

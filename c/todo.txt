@@ -26,17 +26,9 @@ TOP OF LIST
     http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html.
   o expanded UTs x all of the above. lncl. ./tmod
   o sgn function needs UT cases
-  o bitops UTs x put/filter
-  o >>, <<
-  o UT for matches etc. in put grammar
-  o UT for ~ and ^^ in both grammars
+  o UT for ~ ^^ | ^ & << >> in both grammars; UT for matches etc. in put grammar
   o urandint -> w/urand @ mlr -h, mld, etc.
   o faqent '$y=~$x' vs. '$y= ~$x'
-  o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
-    ... or change the precedence :)
-  o *.y production renames (slip by one on the left)
-  o *.l reorg/neaten
-  o make a ^^ ?
   o u+, u- -> n_n_ type
   o mlr filter '-$y==-$x' error @ cli parse due to leading -
   * dsls bake deps

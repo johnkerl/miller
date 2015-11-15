@@ -1008,6 +1008,50 @@ mv_t n_nn_mod_func(mv_t* pval1, mv_t* pval2) {
 }
 
 // ----------------------------------------------------------------
+static mv_t upos_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t upos_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = pa->u.fltv};
+}
+static mv_t upos_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = pa->u.intv};
+}
+
+static mv_unary_func_t* upos_dispositions[MT_MAX] = {
+    /*NULL*/   upos_e_x,
+    /*ERROR*/  upos_e_x,
+    /*BOOL*/   upos_e_x,
+    /*FLOAT*/  upos_n_f,
+    /*INT*/    upos_n_i,
+    /*STRING*/ upos_e_x,
+};
+
+mv_t n_n_upos_func(mv_t* pval1) { return (upos_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+static mv_t uneg_e_x(mv_t* pa) {
+	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+}
+static mv_t uneg_n_f(mv_t* pa) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = - pa->u.fltv};
+}
+static mv_t uneg_n_i(mv_t* pa) {
+	return (mv_t) {.type = MT_INT, .u.intv = - pa->u.intv };
+}
+
+static mv_unary_func_t* uneg_dispositions[MT_MAX] = {
+    /*NULL*/   uneg_e_x,
+    /*ERROR*/  uneg_e_x,
+    /*BOOL*/   uneg_e_x,
+    /*FLOAT*/  uneg_n_f,
+    /*INT*/    uneg_n_i,
+    /*STRING*/ uneg_e_x,
+};
+
+mv_t n_n_uneg_func(mv_t* pval1) { return (uneg_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 static mv_t abs_e_x(mv_t* pa) {
 	return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
 }

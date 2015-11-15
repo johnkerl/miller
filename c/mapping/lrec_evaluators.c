@@ -1250,8 +1250,8 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1)  {
 	if        (streq(fnnm, "!"))         { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,       parg1);
-	} else if (streq(fnnm, "+"))         { return lrec_evaluator_alloc_from_f_f_func(f_f_upos_func,      parg1);
-	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_f_f_func(f_f_uneg_func,      parg1);
+	} else if (streq(fnnm, "+"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_upos_func,      parg1);
+	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_uneg_func,      parg1);
 	} else if (streq(fnnm, "~"))         { return lrec_evaluator_alloc_from_n_n_func(i_i_bitwise_not_func, parg1);
 	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_n_n_func(n_n_abs_func,       parg1);
 	} else if (streq(fnnm, "acos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,      parg1);
