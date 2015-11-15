@@ -345,7 +345,7 @@ run_mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM' $indir/abixy $in
 
 announce OPERATOR PRECEDENCE AND ASSOCIATIVITY
 
-# filter -v and put -v print the AST
+# Note: filter -v and put -v print the AST. Here we're checking associativity and precedence.
 run_mlr put -v '$x=$a+$b+$c'   /dev/null
 run_mlr put -v '$x=$a+$b-$c'   /dev/null
 run_mlr put -v '$x=$a-$b-$c'   /dev/null

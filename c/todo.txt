@@ -31,22 +31,23 @@ TOP OF LIST
 
     Operators                    Associativity
     ---------                    -------------
-    ()                           left to right
-    **                           right to left
-    ! ~ ++ -- unary+ unary- &    right to left
-    binary* / // %               left to right
-    binary+ binary- .            left to right
-    << >>                        left to right
-    &                            left to right
-    ^                            left to right
-    |                            left to right
-    < <= > >=                    left to right
-    == != =~ !=~                 left to right
-    &&                           left to right
-    ||                           left to right
-    =                            N/A for Miller (these is no $a=$b=$c)
-    * packaging:
-      - brew version bump?!?
+    ()                     left to right
+    **                     right to left
+    ! ~ unary+ unary- &    right to left
+    binary* / // %         left to right
+    binary+ binary- .      left to right
+    << >>                  left to right
+    &                      left to right
+    ^                      left to right
+    |                      left to right
+    < <= > >=              left to right
+    == != =~ !=~           left to right
+    &&                     left to right
+    ||                     left to right
+    =                      N/A for Miller (these is no $a=$b=$c)
+
+* packaging:
+  - brew version bump?!?
 
 * verb sec2gmt:
   - mlrutil libfunc for code dedup
