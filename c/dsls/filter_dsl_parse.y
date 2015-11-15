@@ -44,10 +44,18 @@ filter_dsl_body(A) ::= fdsl_logical_or_term(B). {
 }
 
 // ----------------------------------------------------------------
-fdsl_logical_or_term(A) ::= fdsl_logical_and_term(B). {
+fdsl_logical_or_term(A) ::= fdsl_logical_xor_term(B). {
 	A = B;
 }
-fdsl_logical_or_term(A) ::= fdsl_logical_or_term(B) FILTER_DSL_LOGICAL_OR(O) fdsl_logical_and_term(C). {
+fdsl_logical_or_term(A) ::= fdsl_logical_or_term(B) FILTER_DSL_LOGICAL_OR(O) fdsl_logical_xor_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+// ----------------------------------------------------------------
+fdsl_logical_xor_term(A) ::= fdsl_logical_and_term(B). {
+	A = B;
+}
+fdsl_logical_xor_term(A) ::= fdsl_logical_xor_term(B) FILTER_DSL_LOGICAL_XOR(O) fdsl_logical_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 

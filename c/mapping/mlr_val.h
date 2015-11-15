@@ -91,6 +91,10 @@ static inline mv_t b_bb_and_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = {.type = MT_BOOL, .u.boolv = pval1->u.boolv && pval2->u.boolv};
 	return rv;
 }
+static inline mv_t b_bb_xor_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = {.type = MT_BOOL, .u.boolv = (int)pval1->u.boolv ^ (int)pval2->u.boolv};
+	return rv;
+}
 
 // ----------------------------------------------------------------
 static inline mv_t f_z_urand_func() {

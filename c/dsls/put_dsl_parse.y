@@ -58,10 +58,18 @@ pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_
 }
 
 // ----------------------------------------------------------------
-pdsl_logical_or_term(A) ::= pdsl_logical_and_term(B). {
+pdsl_logical_or_term(A) ::= pdsl_logical_xor_term(B). {
 	A = B;
 }
-pdsl_logical_or_term(A) ::= pdsl_logical_or_term(B) PUT_DSL_LOGICAL_OR(O) pdsl_logical_and_term(C). {
+pdsl_logical_or_term(A) ::= pdsl_logical_or_term(B) PUT_DSL_LOGICAL_OR(O) pdsl_logical_xor_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
+// ----------------------------------------------------------------
+pdsl_logical_xor_term(A) ::= pdsl_logical_and_term(B). {
+	A = B;
+}
+pdsl_logical_xor_term(A) ::= pdsl_logical_xor_term(B) PUT_DSL_LOGICAL_XOR(O) pdsl_logical_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 

@@ -16,6 +16,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return FILTER_DSL_LOGICAL_OR;
 }
+"^^" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return FILTER_DSL_LOGICAL_XOR;
+}
 "&&" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return FILTER_DSL_LOGICAL_AND;

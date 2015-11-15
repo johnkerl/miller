@@ -27,8 +27,7 @@ TOP OF LIST
   o UT for matches etc. in put grammar
   o UT for ~ in both grammars
   o urandint -> w/urand @ mlr -h, mld, etc.
-  o OR -> LOGICAL_OR etc.
-  o BIT_ -> BITWISE_
+  o faqent '$y=~$x' vs. '$y= ~$x'
   o bitops filter faqent / online help: filter '0 != $x | $y' vs. filter '0 != ($x | $y)'
     ... or change the precedence :)
   o *.y production renames (slip by one on the left)
@@ -39,28 +38,6 @@ TOP OF LIST
   * dsls bake deps
   o precedence b04k: mlr put -v '$z=(~$x)' vs.  mlr put -v '$z=~$x'
   o unary +
-
-  o fix:
-    $ mlr filter -v '$y==-$x' /dev/null
-    == (operator):
-        y (field_name).
-        - (operator):
-            x (field_name).
-
-    $ mlr filter -v '$y==~$x' /dev/null
-    == (operator):
-        y (field_name).
-        ~ (operator):
-            x (field_name).
-
-    $ mlr put -v '$y=-$x' /dev/null
-    = (operator):
-        y (field_name).
-        - (operator):
-            x (field_name).
-
-    $ mlr put -v '$y=~$x' /dev/null
-    Syntax error!
 
 * mlr doc precedence:
   Operators                    Associativity

@@ -1094,6 +1094,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_BOOLEAN, "<=",      2 , "String/numeric less-than-or-equals. Mixing number and string results in string compare."},
 	{ FUNC_CLASS_BOOLEAN, "&&",      2 , "Logical AND."},
 	{ FUNC_CLASS_BOOLEAN, "||",      2 , "Logical OR."},
+	{ FUNC_CLASS_BOOLEAN, "^^",      2 , "Logical XOR."},
 	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
 
 	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
@@ -1306,6 +1307,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 {
 	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,                  parg1, parg2);
 	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,                   parg1, parg2);
+	} else if (streq(fnnm, "^^"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_xor_func,                  parg1, parg2);
 	} else if (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_ss_func(matches_no_precomp_func,        parg1, parg2);
 	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_ss_func(does_not_match_no_precomp_func, parg1, parg2);
 	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,                     parg1, parg2);
