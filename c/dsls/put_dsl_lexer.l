@@ -111,12 +111,12 @@
 
 "!" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_NOT;
+	return PUT_DSL_LOGICAL_NOT;
 }
 
 "~" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BIT_NOT;
+	return PUT_DSL_BITWISE_NOT;
 }
 
 "**" {
