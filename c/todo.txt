@@ -29,8 +29,8 @@ TOP OF LIST
   o faqent '$y=~$x' vs. '$y= ~$x'; mlr filter '-$y==-$x' error @ cli parse due to leading -
   o dsls bake deps
 
-    Operators                    Associativity
-    ---------                    -------------
+    Operators              Associativity
+    ---------              -------------
     ()                     left to right
     **                     right to left
     ! ~ unary+ unary- &    right to left
