@@ -22,6 +22,8 @@ catc0
 catm
 gmon.out
 *.o
+.swp
+.swo
 .*.swp
 .*.swo
 c/dsls/lemon
