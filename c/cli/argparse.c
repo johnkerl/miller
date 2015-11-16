@@ -98,7 +98,12 @@ void ap_define_string_array_flag(ap_state_t* pstate, char* flag_name, string_arr
 
 // ----------------------------------------------------------------
 int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) {
+	return ap_parse_aux(pstate, verb, pargi, argc, argv, TRUE);
+}
 
+int ap_parse_aux(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv,
+	int error_on_unrecognized)
+{
 	int argi = *pargi;
 	int ok = TRUE;
 
@@ -113,7 +118,8 @@ int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv) 
 
 		ap_flag_def_t* pdef = ap_find(pstate, argv[argi]);
 		if (pdef == NULL) {
-			ok = FALSE;
+			if (error_on_unrecognized)
+				ok = FALSE;
 			break;
 		}
 

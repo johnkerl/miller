@@ -64,7 +64,10 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_int_value_flag(pstate, "-f", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 	ap_define_true_flag(pstate,      "-x", &do_exclude);
 
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+	// Pass error_on_unrecognized == FALSE to ap_parse so expressions starting
+	// with a minus sign aren't treated as errors. Example: "mlr filter '-$x ==
+	// $y'".
+	if (!ap_parse_aux(pstate, verb, pargi, argc, argv, FALSE)) {
 		mapper_filter_usage(stderr, argv[0], verb);
 		return NULL;
 	}

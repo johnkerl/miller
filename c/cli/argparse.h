@@ -25,5 +25,7 @@ void  ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** p
 void ap_define_string_array_flag(ap_state_t* pstate, char* flag_name, string_array_t** pparray);
 
 int ap_parse(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv);
+int ap_parse_aux(ap_state_t* pstate, char* verb, int* pargi, int argc, char** argv,
+	int error_on_unrecognized);
 
 #endif // ARGPARSE_H
