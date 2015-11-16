@@ -180,6 +180,34 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_n_n_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_i_i_state_t {
+	mv_unary_func_t* pfunc;
+	lrec_evaluator_t* parg1;
+} lrec_evaluator_i_i_state_t;
+
+mv_t lrec_evaluator_i_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_i_i_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+
+	mt_get_int_nullable(&val1);
+	NULL_OR_ERROR_OUT(val1);
+
+	return pstate->pfunc(&val1);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_i_i_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_i_i_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_i_i_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_i_i_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_f_ff_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
@@ -257,11 +285,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_func(mv_binary_func_t* pfunc,
 mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_float_nullable(&val1);
+	mt_get_number_nullable(&val1);
 	ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	mt_get_float_nullable(&val2);
+	mt_get_number_nullable(&val2);
 	ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -1305,7 +1333,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	if        (streq(fnnm, "!"))         { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,       parg1);
 	} else if (streq(fnnm, "+"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_upos_func,      parg1);
 	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_uneg_func,      parg1);
-	} else if (streq(fnnm, "~"))         { return lrec_evaluator_alloc_from_n_n_func(i_i_bitwise_not_func, parg1);
+	} else if (streq(fnnm, "~"))         { return lrec_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
 	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_n_n_func(n_n_abs_func,       parg1);
 	} else if (streq(fnnm, "acos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,      parg1);
 	} else if (streq(fnnm, "acosh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,     parg1);

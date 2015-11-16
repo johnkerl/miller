@@ -3838,7 +3838,1815 @@ bin_lo   bin_hi   x_count y_count
 
 
 ================================================================
-DSLs
+DSL OPERATOR ASSOCIATIVITY
+
+mlr put -v $x = 1 || 2 || 3 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        || (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 || 2 || 3 /dev/null
+|| (operator):
+    || (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
+= (operator):
+    x (field_name).
+    ^^ (operator):
+        ^^ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
+^^ (operator):
+    ^^ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 && 2 && 3 /dev/null
+= (operator):
+    x (field_name).
+    && (operator):
+        && (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 && 2 && 3 /dev/null
+&& (operator):
+    && (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  == 2  == 3 /dev/null
+= (operator):
+    x (field_name).
+    == (operator):
+        == (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  == 2  == 3 /dev/null
+== (operator):
+    == (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  != 2  != 3 /dev/null
+= (operator):
+    x (field_name).
+    != (operator):
+        != (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  != 2  != 3 /dev/null
+!= (operator):
+    != (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
+= (operator):
+    x (field_name).
+    =~ (operator):
+        =~ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  =~ 2  =~ 3 /dev/null
+=~ (operator):
+    =~ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
+= (operator):
+    x (field_name).
+    !=~ (operator):
+        !=~ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
+!=~ (operator):
+    !=~ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  == 2  != 3 /dev/null
+= (operator):
+    x (field_name).
+    != (operator):
+        == (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  == 2  != 3 /dev/null
+!= (operator):
+    == (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  != 2  == 3 /dev/null
+= (operator):
+    x (field_name).
+    == (operator):
+        != (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  != 2  == 3 /dev/null
+== (operator):
+    != (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  <  2  <  3 /dev/null
+= (operator):
+    x (field_name).
+    < (operator):
+        < (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  <  2  <  3 /dev/null
+< (operator):
+    < (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  <= 2  <= 3 /dev/null
+= (operator):
+    x (field_name).
+    <= (operator):
+        <= (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  <= 2  <= 3 /dev/null
+<= (operator):
+    <= (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  >  2  >  3 /dev/null
+= (operator):
+    x (field_name).
+    > (operator):
+        > (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  >  2  >  3 /dev/null
+> (operator):
+    > (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  >= 2  >= 3 /dev/null
+= (operator):
+    x (field_name).
+    >= (operator):
+        >= (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  >= 2  >= 3 /dev/null
+>= (operator):
+    >= (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  <  2  <= 3 /dev/null
+= (operator):
+    x (field_name).
+    <= (operator):
+        < (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  <  2  <= 3 /dev/null
+<= (operator):
+    < (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  <= 2  <  3 /dev/null
+= (operator):
+    x (field_name).
+    < (operator):
+        <= (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  <= 2  <  3 /dev/null
+< (operator):
+    <= (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 |  2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        | (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 |  2 |  3 /dev/null
+| (operator):
+    | (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ^  2 ^  3 /dev/null
+= (operator):
+    x (field_name).
+    ^ (operator):
+        ^ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ^  2 ^  3 /dev/null
+^ (operator):
+    ^ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 &  2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    & (operator):
+        & (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 &  2 &  3 /dev/null
+& (operator):
+    & (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 |  2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        1 (literal).
+        & (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 |  2 &  3 /dev/null
+| (operator):
+    1 (literal).
+    & (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 |  2 ^  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        1 (literal).
+        ^ (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 |  2 ^  3 /dev/null
+| (operator):
+    1 (literal).
+    ^ (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 ^  2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        ^ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ^  2 |  3 /dev/null
+| (operator):
+    ^ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ^  2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    ^ (operator):
+        1 (literal).
+        & (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 ^  2 &  3 /dev/null
+^ (operator):
+    1 (literal).
+    & (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 &  2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        & (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 &  2 |  3 /dev/null
+| (operator):
+    & (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 &  2 ^  3 /dev/null
+= (operator):
+    x (field_name).
+    ^ (operator):
+        & (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 &  2 ^  3 /dev/null
+^ (operator):
+    & (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  << 2  << 3 /dev/null
+= (operator):
+    x (field_name).
+    << (operator):
+        << (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  << 2  << 3 /dev/null
+<< (operator):
+    << (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  >> 2  >> 3 /dev/null
+= (operator):
+    x (field_name).
+    >> (operator):
+        >> (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  >> 2  >> 3 /dev/null
+>> (operator):
+    >> (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  << 2  >> 3 /dev/null
+= (operator):
+    x (field_name).
+    >> (operator):
+        << (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  << 2  >> 3 /dev/null
+>> (operator):
+    << (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1  >> 2  << 3 /dev/null
+= (operator):
+    x (field_name).
+    << (operator):
+        >> (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1  >> 2  << 3 /dev/null
+<< (operator):
+    >> (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 + 2 + 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 + 2 + 3 /dev/null
++ (operator):
+    + (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 - 2 - 3 /dev/null
+= (operator):
+    x (field_name).
+    - (operator):
+        - (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 - 2 - 3 /dev/null
+- (operator):
+    - (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 + 2 - 3 /dev/null
+= (operator):
+    x (field_name).
+    - (operator):
+        + (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 + 2 - 3 /dev/null
+- (operator):
+    + (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 - 2 + 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        - (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 - 2 + 3 /dev/null
++ (operator):
+    - (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 . 2 . 3 /dev/null
+= (operator):
+    x (field_name).
+    . (operator):
+        . (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 . 2 . 3 /dev/null
+. (operator):
+    . (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 * 2 * 3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 * 2 * 3 /dev/null
+* (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 / 2 / 3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        / (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 / 2 / 3 /dev/null
+/ (operator):
+    / (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 // 2 // 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        // (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 // 2 // 3 /dev/null
+// (operator):
+    // (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 % 2 % 3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        % (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 % 2 % 3 /dev/null
+% (operator):
+    % (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ** 2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 ** 2 ** 3 /dev/null
+** (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 *  2 /  3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 *  2 /  3 /dev/null
+/ (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 *  2 // 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 *  2 // 3 /dev/null
+// (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 *  2 %  3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 *  2 %  3 /dev/null
+% (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 *  2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 *  2 ** 3 /dev/null
+* (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 /  2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        / (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 /  2 *  3 /dev/null
+* (operator):
+    / (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 /  2 // 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        / (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 /  2 // 3 /dev/null
+// (operator):
+    / (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 /  2 %  3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        / (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 /  2 %  3 /dev/null
+% (operator):
+    / (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 /  2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 /  2 ** 3 /dev/null
+/ (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 // 2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        // (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 // 2 *  3 /dev/null
+* (operator):
+    // (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 // 2 /  3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        // (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 // 2 /  3 /dev/null
+/ (operator):
+    // (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 // 2 %  3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        // (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 // 2 %  3 /dev/null
+% (operator):
+    // (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 // 2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 // 2 ** 3 /dev/null
+// (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 %  2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        % (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 %  2 *  3 /dev/null
+* (operator):
+    % (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 %  2 /  3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        % (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 %  2 /  3 /dev/null
+/ (operator):
+    % (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 %  2 // 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        % (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 %  2 // 3 /dev/null
+// (operator):
+    % (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 %  2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 %  2 ** 3 /dev/null
+% (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 ** 2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ** 2 *  3 /dev/null
+* (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ** 2 /  3 /dev/null
+= (operator):
+    x (field_name).
+    / (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ** 2 /  3 /dev/null
+/ (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ** 2 // 3 /dev/null
+= (operator):
+    x (field_name).
+    // (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ** 2 // 3 /dev/null
+// (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ** 2 %  3 /dev/null
+= (operator):
+    x (field_name).
+    % (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ** 2 %  3 /dev/null
+% (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+
+================================================================
+DSL OPERATOR PRECEDENCE
+
+mlr put -v $x = 1 || 2 ^^ 3 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        1 (literal).
+        ^^ (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 || 2 ^^ 3 /dev/null
+|| (operator):
+    1 (literal).
+    ^^ (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 || 2 && 3 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        1 (literal).
+        && (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 || 2 && 3 /dev/null
+|| (operator):
+    1 (literal).
+    && (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 ^^ 2 || 3 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        ^^ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ^^ 2 || 3 /dev/null
+|| (operator):
+    ^^ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ^^ 2 && 3 /dev/null
+= (operator):
+    x (field_name).
+    ^^ (operator):
+        1 (literal).
+        && (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      1 ^^ 2 && 3 /dev/null
+^^ (operator):
+    1 (literal).
+    && (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = 1 && 2 || 3 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        && (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 && 2 || 3 /dev/null
+|| (operator):
+    && (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 && 2 ^^ 3 /dev/null
+= (operator):
+    x (field_name).
+    ^^ (operator):
+        && (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      1 && 2 ^^ 3 /dev/null
+^^ (operator):
+    && (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 == 2 <= 3 /dev/null
+= (operator):
+    x (field_name).
+    == (operator):
+        1 (literal).
+        <= (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 == 2 <= 3 /dev/null
+== (operator):
+    1 (literal).
+    <= (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 <= 2 == 3 /dev/null
+= (operator):
+    x (field_name).
+    == (operator):
+        <= (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 <= 2 == 3 /dev/null
+== (operator):
+    <= (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 <= 2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    <= (operator):
+        1 (literal).
+        | (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 <= 2 |  3 /dev/null
+<= (operator):
+    1 (literal).
+    | (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 |  2 <= 3 /dev/null
+= (operator):
+    x (field_name).
+    <= (operator):
+        | (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 |  2 <= 3 /dev/null
+<= (operator):
+    | (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 |  2 ^  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        1 (literal).
+        ^ (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 |  2 ^  3 /dev/null
+| (operator):
+    1 (literal).
+    ^ (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 ^  2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        ^ (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 ^  2 |  3 /dev/null
+| (operator):
+    ^ (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 ^  2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    ^ (operator):
+        1 (literal).
+        & (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 ^  2 &  3 /dev/null
+^ (operator):
+    1 (literal).
+    & (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 &  2 ^  3 /dev/null
+= (operator):
+    x (field_name).
+    ^ (operator):
+        & (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 &  2 ^  3 /dev/null
+^ (operator):
+    & (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 &  2 << 3 /dev/null
+= (operator):
+    x (field_name).
+    & (operator):
+        1 (literal).
+        << (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 &  2 << 3 /dev/null
+& (operator):
+    1 (literal).
+    << (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 << 2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    & (operator):
+        << (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 << 2 &  3 /dev/null
+& (operator):
+    << (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 +  2 * 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        * (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 +  2 * 3 /dev/null
++ (operator):
+    1 (literal).
+    * (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 *  2 + 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 *  2 + 3 /dev/null
++ (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 + (2 * 3) /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        * (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 + (2 * 3) /dev/null
++ (operator):
+    1 (literal).
+    * (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 * (2 + 3) /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        1 (literal).
+        + (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 * (2 + 3) /dev/null
+* (operator):
+    1 (literal).
+    + (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = (1 + 2) * 3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        + (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 + 2) * 3 /dev/null
+* (operator):
+    + (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = (1 * 2) + 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 * 2) + 3 /dev/null
++ (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 +   2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 +   2 ** 3 /dev/null
++ (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 **  2 +  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 **  2 +  3 /dev/null
++ (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 +  (2 ** 3) /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 +  (2 ** 3) /dev/null
++ (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 ** (2 +  3) /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        1 (literal).
+        + (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 ** (2 +  3) /dev/null
+** (operator):
+    1 (literal).
+    + (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = (1 +  2) ** 3 /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        + (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 +  2) ** 3 /dev/null
+** (operator):
+    + (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = (1 ** 2) +  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 ** 2) +  3 /dev/null
++ (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 *   2 ** 3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 *   2 ** 3 /dev/null
+* (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 **  2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v       1 **  2 *  3 /dev/null
+* (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 *  (2 ** 3) /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        1 (literal).
+        ** (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 *  (2 ** 3) /dev/null
+* (operator):
+    1 (literal).
+    ** (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 ** (2 *  3) /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        1 (literal).
+        * (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v       1 ** (2 *  3) /dev/null
+** (operator):
+    1 (literal).
+    * (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = (1 *  2) ** 3 /dev/null
+= (operator):
+    x (field_name).
+    ** (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 *  2) ** 3 /dev/null
+** (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = (1 ** 2) *  3 /dev/null
+= (operator):
+    x (field_name).
+    * (operator):
+        ** (operator):
+            1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      (1 ** 2) *  3 /dev/null
+* (operator):
+    ** (operator):
+        1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x = -1 +  2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        - (operator):
+            1 (literal).
+        * (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      -1 +  2 *  3 /dev/null
++ (operator):
+    - (operator):
+        1 (literal).
+    * (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = -1 *  2 +  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            - (operator):
+                1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      -1 *  2 +  3 /dev/null
++ (operator):
+    * (operator):
+        - (operator):
+            1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 + -2 *  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        * (operator):
+            - (operator):
+                2 (literal).
+            3 (literal).
+
+mlr filter -v       1 + -2 *  3 /dev/null
++ (operator):
+    1 (literal).
+    * (operator):
+        - (operator):
+            2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 * -2 +  3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            1 (literal).
+            - (operator):
+                2 (literal).
+        3 (literal).
+
+mlr filter -v       1 * -2 +  3 /dev/null
++ (operator):
+    * (operator):
+        1 (literal).
+        - (operator):
+            2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 +  2 * -3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        1 (literal).
+        * (operator):
+            2 (literal).
+            - (operator):
+                3 (literal).
+
+mlr filter -v       1 +  2 * -3 /dev/null
++ (operator):
+    1 (literal).
+    * (operator):
+        2 (literal).
+        - (operator):
+            3 (literal).
+
+mlr put -v $x =  1 *  2 + -3 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        * (operator):
+            1 (literal).
+            2 (literal).
+        - (operator):
+            3 (literal).
+
+mlr filter -v       1 *  2 + -3 /dev/null
++ (operator):
+    * (operator):
+        1 (literal).
+        2 (literal).
+    - (operator):
+        3 (literal).
+
+mlr put -v $x = ~1 |  2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        ~ (operator):
+            1 (literal).
+        & (operator):
+            2 (literal).
+            3 (literal).
+
+mlr filter -v      ~1 |  2 &  3 /dev/null
+| (operator):
+    ~ (operator):
+        1 (literal).
+    & (operator):
+        2 (literal).
+        3 (literal).
+
+mlr put -v $x = ~1 &  2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        & (operator):
+            ~ (operator):
+                1 (literal).
+            2 (literal).
+        3 (literal).
+
+mlr filter -v      ~1 &  2 |  3 /dev/null
+| (operator):
+    & (operator):
+        ~ (operator):
+            1 (literal).
+        2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 | ~2 &  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        1 (literal).
+        & (operator):
+            ~ (operator):
+                2 (literal).
+            3 (literal).
+
+mlr filter -v       1 | ~2 &  3 /dev/null
+| (operator):
+    1 (literal).
+    & (operator):
+        ~ (operator):
+            2 (literal).
+        3 (literal).
+
+mlr put -v $x =  1 & ~2 |  3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        & (operator):
+            1 (literal).
+            ~ (operator):
+                2 (literal).
+        3 (literal).
+
+mlr filter -v       1 & ~2 |  3 /dev/null
+| (operator):
+    & (operator):
+        1 (literal).
+        ~ (operator):
+            2 (literal).
+    3 (literal).
+
+mlr put -v $x =  1 |  2 & ~3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        1 (literal).
+        & (operator):
+            2 (literal).
+            ~ (operator):
+                3 (literal).
+
+mlr filter -v       1 |  2 & ~3 /dev/null
+| (operator):
+    1 (literal).
+    & (operator):
+        2 (literal).
+        ~ (operator):
+            3 (literal).
+
+mlr put -v $x =  1 &  2 | ~3 /dev/null
+= (operator):
+    x (field_name).
+    | (operator):
+        & (operator):
+            1 (literal).
+            2 (literal).
+        ~ (operator):
+            3 (literal).
+
+mlr filter -v       1 &  2 | ~3 /dev/null
+| (operator):
+    & (operator):
+        1 (literal).
+        2 (literal).
+    ~ (operator):
+        3 (literal).
+
+mlr put -v $x = $a==1 && $b == 1 && $c == 1 /dev/null
+= (operator):
+    x (field_name).
+    && (operator):
+        && (operator):
+            == (operator):
+                a (field_name).
+                1 (literal).
+            == (operator):
+                b (field_name).
+                1 (literal).
+        == (operator):
+            c (field_name).
+            1 (literal).
+
+mlr filter -v      $a==1 && $b == 1 && $c == 1 /dev/null
+&& (operator):
+    && (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+mlr put -v $x = $a==1 || $b == 1 && $c == 1 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        && (operator):
+            == (operator):
+                b (field_name).
+                1 (literal).
+            == (operator):
+                c (field_name).
+                1 (literal).
+
+mlr filter -v      $a==1 || $b == 1 && $c == 1 /dev/null
+|| (operator):
+    == (operator):
+        a (field_name).
+        1 (literal).
+    && (operator):
+        == (operator):
+            b (field_name).
+            1 (literal).
+        == (operator):
+            c (field_name).
+            1 (literal).
+
+mlr put -v $x = $a==1 || $b == 1 || $c == 1 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        || (operator):
+            == (operator):
+                a (field_name).
+                1 (literal).
+            == (operator):
+                b (field_name).
+                1 (literal).
+        == (operator):
+            c (field_name).
+            1 (literal).
+
+mlr filter -v      $a==1 || $b == 1 || $c == 1 /dev/null
+|| (operator):
+    || (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+mlr put -v $x = $a==1 && $b == 1 || $c == 1 /dev/null
+= (operator):
+    x (field_name).
+    || (operator):
+        && (operator):
+            == (operator):
+                a (field_name).
+                1 (literal).
+            == (operator):
+                b (field_name).
+                1 (literal).
+        == (operator):
+            c (field_name).
+            1 (literal).
+
+mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
+|| (operator):
+    && (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            1 (literal).
+    == (operator):
+        c (field_name).
+        1 (literal).
+
+
+================================================================
+DSL FUNCTIONAL TESTS
 
 mlr filter $x>.3 ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -3970,223 +5778,6 @@ eks zee 7  0.6117840605678454  0.1878849191181694  17 7   7  2
 zee wye 8  0.5985540091064224  0.976181385699006   18 8   7  2
 hat wye 9  0.03144187646093577 0.7495507603507059  19 9   7  2
 pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2
-
-
-================================================================
-OPERATOR PRECEDENCE AND ASSOCIATIVITY
-
-mlr put -v $x=$a+$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b-$c /dev/null
-= (operator):
-    x (field_name).
-    - (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a-$b-$c /dev/null
-= (operator):
-    x (field_name).
-    - (operator):
-        - (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a-$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        - (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a*$b*$c /dev/null
-= (operator):
-    x (field_name).
-    * (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a*$b/$c /dev/null
-= (operator):
-    x (field_name).
-    / (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a/$b/$c /dev/null
-= (operator):
-    x (field_name).
-    / (operator):
-        / (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a/$b*$c /dev/null
-= (operator):
-    x (field_name).
-    * (operator):
-        / (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b*$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            b (field_name).
-            c (field_name).
-
-mlr put -v $x=$a*$b*$c /dev/null
-= (operator):
-    x (field_name).
-    * (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a*$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b**$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        ** (operator):
-            b (field_name).
-            c (field_name).
-
-mlr put -v $x=$a**$b**$c /dev/null
-= (operator):
-    x (field_name).
-    ** (operator):
-        a (field_name).
-        ** (operator):
-            b (field_name).
-            c (field_name).
-
-mlr put -v $x=$a**$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        ** (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a.$b.$c /dev/null
-= (operator):
-    x (field_name).
-    . (operator):
-        . (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=-$a+$b*$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        - (operator):
-            a (field_name).
-        * (operator):
-            b (field_name).
-            c (field_name).
-
-mlr put -v $x=-$a*$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            - (operator):
-                a (field_name).
-            b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+-$b*$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            - (operator):
-                b (field_name).
-            c (field_name).
-
-mlr put -v $x=$a*-$b+$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            - (operator):
-                b (field_name).
-        c (field_name).
-
-mlr put -v $x=$a+$b*-$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            b (field_name).
-            - (operator):
-                c (field_name).
-
-mlr put -v $x=$a*$b+-$c /dev/null
-= (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        - (operator):
-            c (field_name).
 
 mlr --opprint put $y=madd($x,10,37) then put $z=msub($x,10,37) ./reg_test/input/modarith.dat
 x   y  z
@@ -4416,234 +6007,1517 @@ x   y  z
 72  18 1
 73  36 1
 
-mlr filter -v $a==1 && $b == 1 && $c == 1 /dev/null
-&& (operator):
-    && (operator):
-        == (operator):
-            a (field_name).
-            1 (literal).
-        == (operator):
-            b (field_name).
-            1 (literal).
-    == (operator):
-        c (field_name).
-        1 (literal).
+mlr put $z=min($x, $y) ./reg_test/input/minmax.dkvp
+x=1,y=2,z=1
+x=1,y=,z=1
+x=,y=,z=
+x=,y=2,z=2
+x=3,y=2,z=2
+x=3,y=,z=3
+x=,y=,z=
+x=,y=2,z=2
 
-mlr filter -v $a==1 || $b == 1 && $c == 1 /dev/null
-|| (operator):
-    == (operator):
-        a (field_name).
-        1 (literal).
-    && (operator):
-        == (operator):
-            b (field_name).
-            1 (literal).
-        == (operator):
-            c (field_name).
-            1 (literal).
+mlr put $z=max($x, $y) ./reg_test/input/minmax.dkvp
+x=1,y=2,z=2
+x=1,y=,z=1
+x=,y=,z=
+x=,y=2,z=2
+x=3,y=2,z=3
+x=3,y=,z=3
+x=,y=,z=
+x=,y=2,z=2
 
-mlr filter -v $a==1 || $b == 1 || $c == 1 /dev/null
-|| (operator):
-    || (operator):
-        == (operator):
-            a (field_name).
-            1 (literal).
-        == (operator):
-            b (field_name).
-            1 (literal).
-    == (operator):
-        c (field_name).
-        1 (literal).
 
-mlr filter -v $a==1 && $b == 1 || $c == 1 /dev/null
-|| (operator):
-    && (operator):
-        == (operator):
-            a (field_name).
-            1 (literal).
-        == (operator):
-            b (field_name).
-            1 (literal).
-    == (operator):
-        c (field_name).
-        1 (literal).
+================================================================
+DSL TYPE-INFERENCE
 
-mlr filter -v $x<$a*$b*$c /dev/null
-< (operator):
-    x (field_name).
-    * (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=abs($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
 
-mlr filter -v $x<$a*$b/$c /dev/null
-< (operator):
-    x (field_name).
-    / (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=abs($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
 
-mlr filter -v $x<$a/$b/$c /dev/null
-< (operator):
-    x (field_name).
-    / (operator):
-        / (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=abs($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
 
-mlr filter -v $x<$a/$b*$c /dev/null
-< (operator):
-    x (field_name).
-    * (operator):
-        / (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=abs($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
 
-mlr filter -v $x<$a+$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=abs($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
 
-mlr filter -v $x<$a+$b*$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            b (field_name).
-            c (field_name).
+mlr --xtab put $y=abs($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
 
-mlr filter -v $x<$a*$b*$c /dev/null
-< (operator):
-    x (field_name).
-    * (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put -f $y=abs($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
 
-mlr filter -v $x<$a*$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put -f $y=abs($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
 
-mlr filter -v $x<$a+$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        + (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put -f $y=abs($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
 
-mlr filter -v $x<$a+$b**$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        ** (operator):
-            b (field_name).
-            c (field_name).
+mlr --xtab put -f $y=abs($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
 
-mlr filter -v $x<$a**$b**$c /dev/null
-< (operator):
-    x (field_name).
-    ** (operator):
-        a (field_name).
-        ** (operator):
-            b (field_name).
-            c (field_name).
+mlr --xtab put -f $y=abs($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
 
-mlr filter -v $x<$a**$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        ** (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put -f $y=abs($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
 
-mlr filter -v $x<$a.$b.$c /dev/null
-< (operator):
-    x (field_name).
-    . (operator):
-        . (operator):
-            a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=ceil($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   72.000000
 
-mlr filter -v $x<-$a+$b*$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        - (operator):
-            a (field_name).
-        * (operator):
-            b (field_name).
-            c (field_name).
+mlr --xtab put $y=ceil($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
 
-mlr filter -v $x<-$a*$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            - (operator):
-                a (field_name).
-            b (field_name).
-        c (field_name).
+mlr --xtab put $y=ceil($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
 
-mlr filter -v $x<$a+-$b*$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            - (operator):
-                b (field_name).
-            c (field_name).
+mlr --xtab put $y=ceil($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
 
-mlr filter -v $x<$a*-$b+$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            - (operator):
-                b (field_name).
-        c (field_name).
+mlr --xtab put $y=ceil($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75
 
-mlr filter -v $x<$a+$b*-$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        a (field_name).
-        * (operator):
-            b (field_name).
-            - (operator):
-                c (field_name).
+mlr --xtab put $y=ceil($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
 
-mlr filter -v $x<$a*$b+-$c /dev/null
-< (operator):
-    x (field_name).
-    + (operator):
-        * (operator):
-            a (field_name).
-            b (field_name).
-        - (operator):
-            c (field_name).
+mlr --xtab put -f $y=floor($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put -f $y=floor($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -72.000000
+
+mlr --xtab put -f $y=floor($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -f $y=floor($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -f $y=floor($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75.000000
+
+mlr --xtab put -f $y=floor($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=round($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put $y=round($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
+
+mlr --xtab put $y=round($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=round($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
+
+mlr --xtab put $y=round($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75
+
+mlr --xtab put $y=round($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -f $y=round($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put -f $y=round($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
+
+mlr --xtab put -f $y=round($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -f $y=round($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -f $y=round($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75.000000
+
+mlr --xtab put -f $y=round($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put $y=sgn($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1
+
+mlr --xtab put $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1
+
+mlr --xtab put $y=sgn($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -f $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put -f $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put -f $y=sgn($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -f $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put -f $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put -f $y=sgn($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75
+max 76
+
+mlr --xtab put -f $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put -f $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put -f $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put -f $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75.000000
+max 76.000000
+
+mlr --xtab put $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75
+max 76
+
+mlr --xtab put -f $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put -f $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put -f $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put -f $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75.000000
+max 76.000000
+
+mlr --xtab put $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  144.600000
+diff -2.200000
+
+mlr --xtab put $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  147.200000
+diff -4.800000
+
+mlr --xtab put $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  148.400000
+diff 1.600000
+
+mlr --xtab put $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  151
+diff -1
+
+mlr --xtab put -f $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  144.600000
+diff -2.200000
+
+mlr --xtab put -f $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  147.200000
+diff -4.800000
+
+mlr --xtab put -f $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  148.400000
+diff 1.600000
+
+mlr --xtab put -f $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  151.000000
+diff -1.000000
+
+mlr --xtab put $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5226.080000
+quot 0.970027
+
+mlr --xtab put $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5411.200000
+quot 0.936842
+
+mlr --xtab put $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5505.000000
+quot 1.021798
+
+mlr --xtab put $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5700
+quot 0.986842
+
+mlr --xtab put -f $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5226.080000
+quot 0.970027
+
+mlr --xtab put -f $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5411.200000
+quot 0.936842
+
+mlr --xtab put -f $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5505.000000
+quot 1.021798
+
+mlr --xtab put -f $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5700.000000
+quot 0.986842
+
+mlr --xtab put $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 1.000000
+mod   1.600000
+
+mlr --xtab put $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0
+mod   75
+
+mlr --xtab put -f $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put -f $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put -f $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 1.000000
+mod   1.600000
+
+mlr --xtab put -f $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   75.000000
+
+mlr --xtab put $a=roundm($pf1,10.0);$b=roundm($pf1,-10.0) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70.000000
+b   70.000000
+
+mlr --xtab put $a=roundm($pf1,10)  ;$b=roundm($pf1,-10)   ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70.000000
+b   70.000000
+
+mlr --xtab put $a=roundm($pi1,10.0);$b=roundm($pi1,-10.0) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   80.000000
+b   80.000000
+
+mlr --xtab put $a=roundm($pi1,10)  ;$b=roundm($pi1,-10)   ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70
+b   70
+
+
+================================================================
+DSL PYTHONIC DIVISION
+
+mlr --xtab put $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.120000
+iquot 7.000000
+mod   1.200000
+
+mlr --xtab put $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.500000
+iquot 7
+mod   5
+
+mlr --xtab put $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.120000
+iquot -8.000000
+mod   8.800000
+
+mlr --xtab put $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.500000
+iquot -8
+mod   5
+
+mlr --xtab put -f $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.120000
+iquot 7.000000
+mod   1.200000
+
+mlr --xtab put -f $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.500000
+iquot 7.000000
+mod   5.000000
+
+mlr --xtab put -f $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.120000
+iquot -8.000000
+mod   8.800000
+
+mlr --xtab put -f $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.500000
+iquot -8.000000
+mod   5.000000
+
+mlr --xtab put $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.120000
+iquot -8.000000
+mod   -8.800000
+
+mlr --xtab put $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.500000
+iquot -8
+mod   -5
+
+mlr --xtab put $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.120000
+iquot 7.000000
+mod   -1.200000
+
+mlr --xtab put $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.500000
+iquot 7
+mod   -5
+
+mlr --xtab put -f $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.120000
+iquot -8.000000
+mod   -8.800000
+
+mlr --xtab put -f $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.500000
+iquot -8.000000
+mod   -5.000000
+
+mlr --xtab put -f $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.120000
+iquot 7.000000
+mod   -1.200000
+
+mlr --xtab put -f $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.500000
+iquot 7.000000
+mod   -5.000000
+
+
+================================================================
+DSL REGEX MATCHING
 
 mlr filter -v $x =~ "bcd" ./reg_test/input/regex.dkvp
 =~ (operator):
@@ -4740,6 +7614,10 @@ mlr filter -v $x =~ "^a.*"."d$"i ./reg_test/input/regex.dkvp
         d$ (regexi).
 x=abcd,y=ghi
 
+
+================================================================
+DSL DATETIME FUNCTIONS
+
 mlr --csvlite put $gmt=sec2gmt($sec) ./reg_test/input/sec2gmt
 sec,gmt
 0,1970-01-01T00:00:00Z
@@ -4790,26 +7668,6 @@ sec
 2015-05-19T11:49:40Z
 2017-07-14T02:40:00Z
 2033-05-18T03:33:20Z
-
-mlr put $z=min($x, $y) ./reg_test/input/minmax.dkvp
-x=1,y=2,z=1.000000
-x=1,y=,z=1.000000
-x=,y=,z=
-x=,y=2,z=2.000000
-x=3,y=2,z=2.000000
-x=3,y=,z=3.000000
-x=,y=,z=
-x=,y=2,z=2.000000
-
-mlr put $z=max($x, $y) ./reg_test/input/minmax.dkvp
-x=1,y=2,z=2.000000
-x=1,y=,z=1.000000
-x=,y=,z=
-x=,y=2,z=2.000000
-x=3,y=2,z=3.000000
-x=3,y=,z=3.000000
-x=,y=,z=
-x=,y=2,z=2.000000
 
 mlr --opprint put $hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec ./reg_test/input/sec2xhms
 sec     hms        resec   diff
@@ -4935,7 +7793,7 @@ sec        hms                  resec          diff
 
 
 ================================================================
-SUB/GSUB
+DSL SUB/GSUB
 
 mlr --opprint put $y = sub($x, "e.*l",        "y123y") ./reg_test/input/sub.dat
 x     y

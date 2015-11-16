@@ -321,7 +321,267 @@ run_mlr --odkvp   step -a rsum,delta,counter -f x,y -g a $indir/abixy-het
 run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
 
 # ----------------------------------------------------------------
-announce DSLs
+announce DSL OPERATOR ASSOCIATIVITY
+# Note: filter -v and put -v print the AST.
+
+run_mlr put    -v '$x = 1 || 2 || 3'   /dev/null
+run_mlr filter -v '     1 || 2 || 3'   /dev/null
+run_mlr put    -v '$x = 1 ^^ 2 ^^ 3'   /dev/null
+run_mlr filter -v '     1 ^^ 2 ^^ 3'   /dev/null
+run_mlr put    -v '$x = 1 && 2 && 3'   /dev/null
+run_mlr filter -v '     1 && 2 && 3'   /dev/null
+
+run_mlr put    -v '$x = 1  == 2  == 3' /dev/null
+run_mlr filter -v '     1  == 2  == 3' /dev/null
+run_mlr put    -v '$x = 1  != 2  != 3' /dev/null
+run_mlr filter -v '     1  != 2  != 3' /dev/null
+run_mlr put    -v '$x = 1  =~ 2  =~ 3' /dev/null
+run_mlr filter -v '     1  =~ 2  =~ 3' /dev/null
+run_mlr put    -v '$x = 1 !=~ 2 !=~ 3' /dev/null
+run_mlr filter -v '     1 !=~ 2 !=~ 3' /dev/null
+run_mlr put    -v '$x = 1  == 2  != 3' /dev/null
+run_mlr filter -v '     1  == 2  != 3' /dev/null
+run_mlr put    -v '$x = 1  != 2  == 3' /dev/null
+run_mlr filter -v '     1  != 2  == 3' /dev/null
+
+run_mlr put    -v '$x = 1  <  2  <  3' /dev/null
+run_mlr filter -v '     1  <  2  <  3' /dev/null
+run_mlr put    -v '$x = 1  <= 2  <= 3' /dev/null
+run_mlr filter -v '     1  <= 2  <= 3' /dev/null
+run_mlr put    -v '$x = 1  >  2  >  3' /dev/null
+run_mlr filter -v '     1  >  2  >  3' /dev/null
+run_mlr put    -v '$x = 1  >= 2  >= 3' /dev/null
+run_mlr filter -v '     1  >= 2  >= 3' /dev/null
+run_mlr put    -v '$x = 1  <  2  <= 3' /dev/null
+run_mlr filter -v '     1  <  2  <= 3' /dev/null
+run_mlr put    -v '$x = 1  <= 2  <  3' /dev/null
+run_mlr filter -v '     1  <= 2  <  3' /dev/null
+
+run_mlr put    -v '$x = 1 |  2 |  3'   /dev/null
+run_mlr filter -v '     1 |  2 |  3'   /dev/null
+run_mlr put    -v '$x = 1 ^  2 ^  3'   /dev/null
+run_mlr filter -v '     1 ^  2 ^  3'   /dev/null
+run_mlr put    -v '$x = 1 &  2 &  3'   /dev/null
+run_mlr filter -v '     1 &  2 &  3'   /dev/null
+run_mlr put    -v '$x = 1 |  2 &  3'   /dev/null
+run_mlr filter -v '     1 |  2 &  3'   /dev/null
+run_mlr put    -v '$x = 1 |  2 ^  3'   /dev/null
+run_mlr filter -v '     1 |  2 ^  3'   /dev/null
+run_mlr put    -v '$x = 1 ^  2 |  3'   /dev/null
+run_mlr filter -v '     1 ^  2 |  3'   /dev/null
+run_mlr put    -v '$x = 1 ^  2 &  3'   /dev/null
+run_mlr filter -v '     1 ^  2 &  3'   /dev/null
+run_mlr put    -v '$x = 1 &  2 |  3'   /dev/null
+run_mlr filter -v '     1 &  2 |  3'   /dev/null
+run_mlr put    -v '$x = 1 &  2 ^  3'   /dev/null
+run_mlr filter -v '     1 &  2 ^  3'   /dev/null
+
+run_mlr put    -v '$x = 1  << 2  << 3' /dev/null
+run_mlr filter -v '     1  << 2  << 3' /dev/null
+run_mlr put    -v '$x = 1  >> 2  >> 3' /dev/null
+run_mlr filter -v '     1  >> 2  >> 3' /dev/null
+run_mlr put    -v '$x = 1  << 2  >> 3' /dev/null
+run_mlr filter -v '     1  << 2  >> 3' /dev/null
+run_mlr put    -v '$x = 1  >> 2  << 3' /dev/null
+run_mlr filter -v '     1  >> 2  << 3' /dev/null
+
+run_mlr put    -v '$x = 1 + 2 + 3'   /dev/null
+run_mlr filter -v '     1 + 2 + 3'   /dev/null
+run_mlr put    -v '$x = 1 - 2 - 3'   /dev/null
+run_mlr filter -v '     1 - 2 - 3'   /dev/null
+run_mlr put    -v '$x = 1 + 2 - 3'   /dev/null
+run_mlr filter -v '     1 + 2 - 3'   /dev/null
+run_mlr put    -v '$x = 1 - 2 + 3'   /dev/null
+run_mlr filter -v '     1 - 2 + 3'   /dev/null
+run_mlr put    -v '$x = 1 . 2 . 3'   /dev/null
+run_mlr filter -v '     1 . 2 . 3'   /dev/null
+
+run_mlr put    -v '$x = 1 * 2 * 3'   /dev/null
+run_mlr filter -v '     1 * 2 * 3'   /dev/null
+run_mlr put    -v '$x = 1 / 2 / 3'   /dev/null
+run_mlr filter -v '     1 / 2 / 3'   /dev/null
+run_mlr put    -v '$x = 1 // 2 // 3' /dev/null
+run_mlr filter -v '     1 // 2 // 3' /dev/null
+run_mlr put    -v '$x = 1 % 2 % 3'   /dev/null
+run_mlr filter -v '     1 % 2 % 3'   /dev/null
+run_mlr put    -v '$x = 1 ** 2 ** 3' /dev/null
+run_mlr filter -v '     1 ** 2 ** 3' /dev/null
+
+
+run_mlr put    -v '$x = 1 *  2 /  3'   /dev/null
+run_mlr filter -v '     1 *  2 /  3'   /dev/null
+run_mlr put    -v '$x = 1 *  2 // 3'   /dev/null
+run_mlr filter -v '     1 *  2 // 3'   /dev/null
+run_mlr put    -v '$x = 1 *  2 %  3'   /dev/null
+run_mlr filter -v '     1 *  2 %  3'   /dev/null
+run_mlr put    -v '$x = 1 *  2 ** 3'   /dev/null
+run_mlr filter -v '     1 *  2 ** 3'   /dev/null
+
+run_mlr put    -v '$x = 1 /  2 *  3'   /dev/null
+run_mlr filter -v '     1 /  2 *  3'   /dev/null
+run_mlr put    -v '$x = 1 /  2 // 3'   /dev/null
+run_mlr filter -v '     1 /  2 // 3'   /dev/null
+run_mlr put    -v '$x = 1 /  2 %  3'   /dev/null
+run_mlr filter -v '     1 /  2 %  3'   /dev/null
+run_mlr put    -v '$x = 1 /  2 ** 3'   /dev/null
+run_mlr filter -v '     1 /  2 ** 3'   /dev/null
+
+run_mlr put    -v '$x = 1 // 2 *  3'   /dev/null
+run_mlr filter -v '     1 // 2 *  3'   /dev/null
+run_mlr put    -v '$x = 1 // 2 /  3'   /dev/null
+run_mlr filter -v '     1 // 2 /  3'   /dev/null
+run_mlr put    -v '$x = 1 // 2 %  3'   /dev/null
+run_mlr filter -v '     1 // 2 %  3'   /dev/null
+run_mlr put    -v '$x = 1 // 2 ** 3'   /dev/null
+run_mlr filter -v '     1 // 2 ** 3'   /dev/null
+
+run_mlr put    -v '$x = 1 %  2 *  3'   /dev/null
+run_mlr filter -v '     1 %  2 *  3'   /dev/null
+run_mlr put    -v '$x = 1 %  2 /  3'   /dev/null
+run_mlr filter -v '     1 %  2 /  3'   /dev/null
+run_mlr put    -v '$x = 1 %  2 // 3'   /dev/null
+run_mlr filter -v '     1 %  2 // 3'   /dev/null
+run_mlr put    -v '$x = 1 %  2 ** 3'   /dev/null
+run_mlr filter -v '     1 %  2 ** 3'   /dev/null
+
+run_mlr put    -v '$x = 1 ** 2 *  3'   /dev/null
+run_mlr filter -v '     1 ** 2 *  3'   /dev/null
+run_mlr put    -v '$x = 1 ** 2 /  3'   /dev/null
+run_mlr filter -v '     1 ** 2 /  3'   /dev/null
+run_mlr put    -v '$x = 1 ** 2 // 3'   /dev/null
+run_mlr filter -v '     1 ** 2 // 3'   /dev/null
+run_mlr put    -v '$x = 1 ** 2 %  3'   /dev/null
+run_mlr filter -v '     1 ** 2 %  3'   /dev/null
+
+#run_mlr put    -v '$x = ++1'   /dev/null
+#run_mlr filter -v '     ++1'   /dev/null
+#run_mlr put    -v '$x = --1'   /dev/null
+#run_mlr filter -v '     --1'   /dev/null
+#run_mlr put    -v '$x = !!1'   /dev/null
+#run_mlr filter -v '     !!1'   /dev/null
+#run_mlr put    -v '$x = ~;1'   /dev/null
+#run_mlr filter -v '     ~~1'   /dev/null
+
+# ----------------------------------------------------------------
+announce DSL OPERATOR PRECEDENCE
+# Note: filter -v and put -v print the AST.
+
+run_mlr put    -v '$x = 1 || 2 ^^ 3'   /dev/null
+run_mlr filter -v '     1 || 2 ^^ 3'   /dev/null
+run_mlr put    -v '$x = 1 || 2 && 3'   /dev/null
+run_mlr filter -v '     1 || 2 && 3'   /dev/null
+
+run_mlr put    -v '$x = 1 ^^ 2 || 3'   /dev/null
+run_mlr filter -v '     1 ^^ 2 || 3'   /dev/null
+run_mlr put    -v '$x = 1 ^^ 2 && 3'   /dev/null
+run_mlr filter -v '     1 ^^ 2 && 3'   /dev/null
+
+run_mlr put    -v '$x = 1 && 2 || 3'   /dev/null
+run_mlr filter -v '     1 && 2 || 3'   /dev/null
+run_mlr put    -v '$x = 1 && 2 ^^ 3'   /dev/null
+run_mlr filter -v '     1 && 2 ^^ 3'   /dev/null
+
+run_mlr put    -v '$x =  1 == 2 <= 3'  /dev/null
+run_mlr filter -v '      1 == 2 <= 3'  /dev/null
+run_mlr put    -v '$x =  1 <= 2 == 3'  /dev/null
+run_mlr filter -v '      1 <= 2 == 3'  /dev/null
+
+run_mlr put    -v '$x =  1 <= 2 |  3'  /dev/null
+run_mlr filter -v '      1 <= 2 |  3'  /dev/null
+run_mlr put    -v '$x =  1 |  2 <= 3'  /dev/null
+run_mlr filter -v '      1 |  2 <= 3'  /dev/null
+
+run_mlr put    -v '$x =  1 |  2 ^  3'  /dev/null
+run_mlr filter -v '      1 |  2 ^  3'  /dev/null
+run_mlr put    -v '$x =  1 ^  2 |  3'  /dev/null
+run_mlr filter -v '      1 ^  2 |  3'  /dev/null
+
+run_mlr put    -v '$x =  1 ^  2 &  3'  /dev/null
+run_mlr filter -v '      1 ^  2 &  3'  /dev/null
+run_mlr put    -v '$x =  1 &  2 ^  3'  /dev/null
+run_mlr filter -v '      1 &  2 ^  3'  /dev/null
+
+run_mlr put    -v '$x =  1 &  2 << 3'  /dev/null
+run_mlr filter -v '      1 &  2 << 3'  /dev/null
+run_mlr put    -v '$x =  1 << 2 &  3'  /dev/null
+run_mlr filter -v '      1 << 2 &  3'  /dev/null
+
+run_mlr put    -v '$x =  1 +  2 * 3'   /dev/null
+run_mlr filter -v '      1 +  2 * 3'   /dev/null
+run_mlr put    -v '$x =  1 *  2 + 3'   /dev/null
+run_mlr filter -v '      1 *  2 + 3'   /dev/null
+run_mlr put    -v '$x =  1 + (2 * 3)'  /dev/null
+run_mlr filter -v '      1 + (2 * 3)'  /dev/null
+run_mlr put    -v '$x =  1 * (2 + 3)'  /dev/null
+run_mlr filter -v '      1 * (2 + 3)'  /dev/null
+run_mlr put    -v '$x = (1 + 2) * 3'   /dev/null
+run_mlr filter -v '     (1 + 2) * 3'   /dev/null
+run_mlr put    -v '$x = (1 * 2) + 3'   /dev/null
+run_mlr filter -v '     (1 * 2) + 3'   /dev/null
+
+run_mlr put    -v '$x =  1 +   2 ** 3'  /dev/null
+run_mlr filter -v '      1 +   2 ** 3'  /dev/null
+run_mlr put    -v '$x =  1 **  2 +  3'  /dev/null
+run_mlr filter -v '      1 **  2 +  3'  /dev/null
+run_mlr put    -v '$x =  1 +  (2 ** 3)' /dev/null
+run_mlr filter -v '      1 +  (2 ** 3)' /dev/null
+run_mlr put    -v '$x =  1 ** (2 +  3)' /dev/null
+run_mlr filter -v '      1 ** (2 +  3)' /dev/null
+run_mlr put    -v '$x = (1 +  2) ** 3'  /dev/null
+run_mlr filter -v '     (1 +  2) ** 3'  /dev/null
+run_mlr put    -v '$x = (1 ** 2) +  3'  /dev/null
+run_mlr filter -v '     (1 ** 2) +  3'  /dev/null
+
+run_mlr put    -v '$x =  1 *   2 ** 3'  /dev/null
+run_mlr filter -v '      1 *   2 ** 3'  /dev/null
+run_mlr put    -v '$x =  1 **  2 *  3'  /dev/null
+run_mlr filter -v '      1 **  2 *  3'  /dev/null
+run_mlr put    -v '$x =  1 *  (2 ** 3)' /dev/null
+run_mlr filter -v '      1 *  (2 ** 3)' /dev/null
+run_mlr put    -v '$x =  1 ** (2 *  3)' /dev/null
+run_mlr filter -v '      1 ** (2 *  3)' /dev/null
+run_mlr put    -v '$x = (1 *  2) ** 3'  /dev/null
+run_mlr filter -v '     (1 *  2) ** 3'  /dev/null
+run_mlr put    -v '$x = (1 ** 2) *  3'  /dev/null
+run_mlr filter -v '     (1 ** 2) *  3'  /dev/null
+
+run_mlr put    -v '$x = -1 +  2 *  3'  /dev/null
+run_mlr filter -v '     -1 +  2 *  3'  /dev/null
+run_mlr put    -v '$x = -1 *  2 +  3'  /dev/null
+run_mlr filter -v '     -1 *  2 +  3'  /dev/null
+run_mlr put    -v '$x =  1 + -2 *  3'  /dev/null
+run_mlr filter -v '      1 + -2 *  3'  /dev/null
+run_mlr put    -v '$x =  1 * -2 +  3'  /dev/null
+run_mlr filter -v '      1 * -2 +  3'  /dev/null
+run_mlr put    -v '$x =  1 +  2 * -3'  /dev/null
+run_mlr filter -v '      1 +  2 * -3'  /dev/null
+run_mlr put    -v '$x =  1 *  2 + -3'  /dev/null
+run_mlr filter -v '      1 *  2 + -3'  /dev/null
+
+run_mlr put    -v '$x = ~1 |  2 &  3'  /dev/null
+run_mlr filter -v '     ~1 |  2 &  3'  /dev/null
+run_mlr put    -v '$x = ~1 &  2 |  3'  /dev/null
+run_mlr filter -v '     ~1 &  2 |  3'  /dev/null
+run_mlr put    -v '$x =  1 | ~2 &  3'  /dev/null
+run_mlr filter -v '      1 | ~2 &  3'  /dev/null
+run_mlr put    -v '$x =  1 & ~2 |  3'  /dev/null
+run_mlr filter -v '      1 & ~2 |  3'  /dev/null
+run_mlr put    -v '$x =  1 |  2 & ~3'  /dev/null
+run_mlr filter -v '      1 |  2 & ~3'  /dev/null
+run_mlr put    -v '$x =  1 &  2 | ~3'  /dev/null
+run_mlr filter -v '      1 &  2 | ~3'  /dev/null
+
+run_mlr put    -v '$x = $a==1 && $b == 1 && $c == 1' /dev/null
+run_mlr filter -v '     $a==1 && $b == 1 && $c == 1' /dev/null
+run_mlr put    -v '$x = $a==1 || $b == 1 && $c == 1' /dev/null
+run_mlr filter -v '     $a==1 || $b == 1 && $c == 1' /dev/null
+run_mlr put    -v '$x = $a==1 || $b == 1 || $c == 1' /dev/null
+run_mlr filter -v '     $a==1 || $b == 1 || $c == 1' /dev/null
+run_mlr put    -v '$x = $a==1 && $b == 1 || $c == 1' /dev/null
+run_mlr filter -v '     $a==1 && $b == 1 || $c == 1' /dev/null
+
+# ----------------------------------------------------------------
+announce DSL FUNCTIONAL TESTS
 
 run_mlr filter '$x>.3'    $indir/abixy
 run_mlr filter '$x>0.3'   $indir/abixy
@@ -343,70 +603,149 @@ run_mlr put '$c = $a . $b' $indir/abixy
 
 run_mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM' $indir/abixy $indir/abixy
 
-announce OPERATOR PRECEDENCE AND ASSOCIATIVITY
-
-# Note: filter -v and put -v print the AST. Here we're checking associativity
-# and precedence.
-run_mlr put -v '$x=$a+$b+$c'   /dev/null
-run_mlr put -v '$x=$a+$b-$c'   /dev/null
-run_mlr put -v '$x=$a-$b-$c'   /dev/null
-run_mlr put -v '$x=$a-$b+$c'   /dev/null
-
-run_mlr put -v '$x=$a*$b*$c'   /dev/null
-run_mlr put -v '$x=$a*$b/$c'   /dev/null
-run_mlr put -v '$x=$a/$b/$c'   /dev/null
-run_mlr put -v '$x=$a/$b*$c'   /dev/null
-
-run_mlr put -v '$x=$a+$b+$c'   /dev/null
-run_mlr put -v '$x=$a+$b*$c'   /dev/null
-run_mlr put -v '$x=$a*$b*$c'   /dev/null
-run_mlr put -v '$x=$a*$b+$c'   /dev/null
-
-run_mlr put -v '$x=$a+$b+$c'   /dev/null
-run_mlr put -v '$x=$a+$b**$c'  /dev/null
-run_mlr put -v '$x=$a**$b**$c' /dev/null
-run_mlr put -v '$x=$a**$b+$c'  /dev/null
-
-run_mlr put -v '$x=$a.$b.$c'   /dev/null
-
-run_mlr put -v '$x=-$a+$b*$c'  /dev/null
-run_mlr put -v '$x=-$a*$b+$c'  /dev/null
-run_mlr put -v '$x=$a+-$b*$c'  /dev/null
-run_mlr put -v '$x=$a*-$b+$c'  /dev/null
-run_mlr put -v '$x=$a+$b*-$c'  /dev/null
-run_mlr put -v '$x=$a*$b+-$c'  /dev/null
-
 run_mlr --opprint put '$y=madd($x,10,37)' then put '$z=msub($x,10,37)' $indir/modarith.dat
 run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/modarith.dat
 
-run_mlr filter -v '$a==1 && $b == 1 && $c == 1'   /dev/null
-run_mlr filter -v '$a==1 || $b == 1 && $c == 1'   /dev/null
-run_mlr filter -v '$a==1 || $b == 1 || $c == 1'   /dev/null
-run_mlr filter -v '$a==1 && $b == 1 || $c == 1'   /dev/null
+run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
+run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
-run_mlr filter -v '$x<$a*$b*$c'   /dev/null
-run_mlr filter -v '$x<$a*$b/$c'   /dev/null
-run_mlr filter -v '$x<$a/$b/$c'   /dev/null
-run_mlr filter -v '$x<$a/$b*$c'   /dev/null
+# ----------------------------------------------------------------
+announce DSL TYPE-INFERENCE
 
-run_mlr filter -v '$x<$a+$b+$c'   /dev/null
-run_mlr filter -v '$x<$a+$b*$c'   /dev/null
-run_mlr filter -v '$x<$a*$b*$c'   /dev/null
-run_mlr filter -v '$x<$a*$b+$c'   /dev/null
+run_mlr --xtab put    '$y=abs($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=abs($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=abs($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=abs($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=abs($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=abs($zi)'  $indir/mixed-types.xtab
 
-run_mlr filter -v '$x<$a+$b+$c'   /dev/null
-run_mlr filter -v '$x<$a+$b**$c'  /dev/null
-run_mlr filter -v '$x<$a**$b**$c' /dev/null
-run_mlr filter -v '$x<$a**$b+$c'  /dev/null
+run_mlr --xtab put -f '$y=abs($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=abs($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=abs($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=abs($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=abs($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=abs($zi)'  $indir/mixed-types.xtab
 
-run_mlr filter -v '$x<$a.$b.$c'   /dev/null
+run_mlr --xtab put    '$y=ceil($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=ceil($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=ceil($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=ceil($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=ceil($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=ceil($zi)'  $indir/mixed-types.xtab
 
-run_mlr filter -v '$x<-$a+$b*$c'  /dev/null
-run_mlr filter -v '$x<-$a*$b+$c'  /dev/null
-run_mlr filter -v '$x<$a+-$b*$c'  /dev/null
-run_mlr filter -v '$x<$a*-$b+$c'  /dev/null
-run_mlr filter -v '$x<$a+$b*-$c'  /dev/null
-run_mlr filter -v '$x<$a*$b+-$c'  /dev/null
+run_mlr --xtab put -f '$y=floor($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=floor($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=floor($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=floor($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=floor($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=floor($zi)'  $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$y=round($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=round($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=round($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=round($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=round($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=round($zi)'  $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$y=round($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=round($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=round($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=round($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=round($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=round($zi)'  $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$y=sgn($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=sgn($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=sgn($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=sgn($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=sgn($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$y=sgn($zi)'  $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$y=sgn($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=sgn($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=sgn($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=sgn($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=sgn($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$y=sgn($zi)'  $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$sum=$pf1+$pf2;$diff=$pf1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$sum=$pf1+$pi2;$diff=$pf1-$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$sum=$pi1+$pf2;$diff=$pi1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$sum=$pi1+$pi2;$diff=$pi1-$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$sum=$pf1+$pf2;$diff=$pf1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$sum=$pf1+$pi2;$diff=$pf1-$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$sum=$pi1+$pf2;$diff=$pi1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$sum=$pi1+$pi2;$diff=$pi1-$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$prod=$pf1*$pf2;$quot=$pf1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$prod=$pf1*$pi2;$quot=$pf1/$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$prod=$pi1*$pf2;$quot=$pi1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$prod=$pi1*$pi2;$quot=$pi1/$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$prod=$pf1*$pf2;$quot=$pf1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$prod=$pf1*$pi2;$quot=$pf1/$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$prod=$pi1*$pf2;$quot=$pi1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$prod=$pi1*$pi2;$quot=$pi1/$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$iquot=$pf1//$pf2;$mod=$pf1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$iquot=$pi1//$pf2;$mod=$pi1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put    '$iquot=$pi1//$pi2;$mod=$pi1%$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put -f '$iquot=$pf1//$pf2;$mod=$pf1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$iquot=$pi1//$pf2;$mod=$pi1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$iquot=$pi1//$pi2;$mod=$pi1%$pi2' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$a=roundm($pf1,10.0);$b=roundm($pf1,-10.0)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$a=roundm($pf1,10)  ;$b=roundm($pf1,-10)  ' $indir/mixed-types.xtab
+run_mlr --xtab put    '$a=roundm($pi1,10.0);$b=roundm($pi1,-10.0)' $indir/mixed-types.xtab
+run_mlr --xtab put    '$a=roundm($pi1,10)  ;$b=roundm($pi1,-10)  ' $indir/mixed-types.xtab
+
+# ----------------------------------------------------------------
+announce DSL PYTHONIC DIVISION
+
+run_mlr --xtab put    '$quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10  ' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10  ' $indir/mixed-types.xtab
+
+run_mlr --xtab put    '$quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10  ' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put    '$quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -f '$quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10  ' $indir/mixed-types.xtab
+
+# ----------------------------------------------------------------
+announce DSL REGEX MATCHING
 
 run_mlr filter -v '$x =~ "bcd"'       $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^bcd"'      $indir/regex.dkvp
@@ -423,20 +762,21 @@ run_mlr filter -v '$x =~ "^abc$"i'     $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*d$"i'    $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*"."d$"i' $indir/regex.dkvp
 
+# ----------------------------------------------------------------
+announce DSL DATETIME FUNCTIONS
+
 run_mlr --csvlite put '$gmt=sec2gmt($sec)' $indir/sec2gmt
 run_mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
 
 run_mlr --csvlite sec2gmt sec $indir/sec2gmt
-
-run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
-run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
 run_mlr --opprint put '$hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec' $indir/sec2xhms
 run_mlr --opprint put '$hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec' $indir/fsec2xhms
 run_mlr --opprint put '$hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec' $indir/sec2xhms
 run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec' $indir/fsec2xhms
 
-announce SUB/GSUB
+# ----------------------------------------------------------------
+announce DSL SUB/GSUB
 
 run_mlr --opprint put '$y = sub($x, "e.*l",        "y123y")'      $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*l"i,       "y123y")'      $indir/sub.dat
@@ -614,7 +954,7 @@ run_mlr --icsvlite --oxtab   cat $indir/utf8-2.csv
 
 run_mlr --inidx --ifs space --opprint         cat $indir/utf8-align.nidx
 run_mlr --inidx --ifs space --opprint --right cat $indir/utf8-align.nidx
-run_mlr --oxtab cat $indir/utf8-align.dkvp 
+run_mlr --oxtab cat $indir/utf8-align.dkvp
 
 run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
 

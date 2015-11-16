@@ -895,6 +895,7 @@ static mv_t divide_f_if(mv_t* pa, mv_t* pb) {
 static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = (double)pb->u.intv;
+	// Pythonic division, not C division.
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
 	return rv;
 }
@@ -934,9 +935,23 @@ static mv_t int_divide_f_if(mv_t* pa, mv_t* pb) {
 	return rv;
 }
 static mv_t int_divide_i_ii(mv_t* pa, mv_t* pb) {
-	double a = (double)pa->u.intv;
-	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	// Pythonic division, not C division.
+	long long q = a / b;
+	long long r = a % b;
+	if (a < 0) {
+		if (b > 0) {
+			if (r != 0)
+				q--;
+		}
+	} else {
+		if (b < 0) {
+			if (r != 0)
+				q--;
+		}
+	}
+	mv_t rv = {.type = MT_INT, .u.intv = q};
 	return rv;
 }
 
@@ -961,25 +976,26 @@ static mv_t mod_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b * floor(a / b)};
 	return rv;
 }
 static mv_t mod_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b * floor(a / b)};
 	return rv;
 }
 static mv_t mod_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = floor(a / b)};
+	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b * floor(a / b)};
 	return rv;
 }
 static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
 	long long u = a % b;
+	// Pythonic division, not C division.
 	if (a >= 0LL) {
 		if (b < 0LL) {
 			u += b;
@@ -989,7 +1005,7 @@ static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 			u += b;
 		}
 	}
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = u};
+	mv_t rv = {.type = MT_INT, .u.intv = u};
 	return rv;
 }
 

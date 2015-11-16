@@ -376,7 +376,8 @@ Numerical formatting:
                      function within mlr put (mlr --help-all-functions).
 
 Other options:
-  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter urand().
+  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
+                     urand()/urandint().
 
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.
@@ -2946,6 +2947,7 @@ binary+ binary- .      left to right
 &lt; &lt;= &gt; &gt;=              left to right
 == != =~ !=~           left to right
 &amp;&amp;                     left to right
+^^                     left to right
 ||                     left to right
 =                      N/A for Miller (there is no $a=$b=$c)
 </pre>

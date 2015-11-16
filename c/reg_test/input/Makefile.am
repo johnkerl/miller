@@ -36,6 +36,7 @@ EXTRA_DIST=	\
 		logi.dkvp \
 		minmax.dkvp \
 		missings.dkvp \
+		mixed-types.xtab \
 		modarith.dat \
 		multi-ips.dkvp \
 		multi-sep.csv \
