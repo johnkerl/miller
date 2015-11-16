@@ -22,35 +22,11 @@ TOP OF LIST
   ! try to get a grip on jb issues 1st
 
 * full-int64 I/O & math:
-  - proofread associativity & precedence UTs
-  - proofread int/float UTs x all of + - ~ * / // % abs ceil floor max min round roundm sgn. incl. ./tmod
-  - proofread put/filter -s/-f tests
-  ! -75 //  10
-  !  75 // -10
   o visually check all precedence stackings (horiz/vert) in the grammars
   o faqent '$y=~$x' vs. '$y= ~$x'; also, mlr filter '-$y==-$x' error @ cli parse due to leading "-".
   o dsls bake deps
   o filter/put -s
   ? $y = ! ! $x
-  o more functional tests
-
-    Operators              Associativity
-    ---------              -------------
-    ()                     left to right
-    **                     right to left
-    ! ~ unary+ unary- &    right to left
-    binary* / // %         left to right
-    binary+ binary- .      left to right
-    << >>                  left to right
-    &                      left to right
-    ^                      left to right
-    |                      left to right
-    < <= > >=              left to right
-    == != =~ !=~           left to right
-    &&                     left to right
-    ^^                     left to right
-    ||                     left to right
-    =                      N/A for Miller (there is no $a=$b=$c)
 
 * packaging:
   - brew version bump?!?
