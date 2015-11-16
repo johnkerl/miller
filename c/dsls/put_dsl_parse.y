@@ -185,16 +185,16 @@ pdsl_muldiv_term(A) ::= pdsl_muldiv_term(B) PUT_DSL_MOD(O) pdsl_unary_bitwise_op
 pdsl_unary_bitwise_op_term(A) ::= pdsl_pow_term(B). {
 	A = B;
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_PLUS(O) pdsl_pow_term(C). {
+pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_PLUS(O) pdsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_MINUS(O) pdsl_pow_term(C). {
+pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_MINUS(O) pdsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_LOGICAL_NOT(O) pdsl_pow_term(C). {
+pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_LOGICAL_NOT(O) pdsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_BITWISE_NOT(O) pdsl_pow_term(C). {
+pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_BITWISE_NOT(O) pdsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 

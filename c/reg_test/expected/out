@@ -4768,6 +4768,54 @@ mlr filter -v      1 ** 2 %  3 /dev/null
         2 (literal).
     3 (literal).
 
+mlr put -v $x = ++1 /dev/null
+= (operator):
+    x (field_name).
+    + (operator):
+        + (operator):
+            1 (literal).
+
+mlr filter -v      ++1 /dev/null
++ (operator):
+    + (operator):
+        1 (literal).
+
+mlr put -v $x = --1 /dev/null
+= (operator):
+    x (field_name).
+    - (operator):
+        - (operator):
+            1 (literal).
+
+mlr filter -v      --1 /dev/null
+- (operator):
+    - (operator):
+        1 (literal).
+
+mlr put -v $x = !!1 /dev/null
+= (operator):
+    x (field_name).
+    ! (operator):
+        ! (operator):
+            1 (literal).
+
+mlr filter -v      !!1 /dev/null
+! (operator):
+    ! (operator):
+        1 (literal).
+
+mlr put -v $x = ~~1 /dev/null
+= (operator):
+    x (field_name).
+    ~ (operator):
+        ~ (operator):
+            1 (literal).
+
+mlr filter -v      ~~1 /dev/null
+~ (operator):
+    ~ (operator):
+        1 (literal).
+
 
 ================================================================
 DSL OPERATOR PRECEDENCE
