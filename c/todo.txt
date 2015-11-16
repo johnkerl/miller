@@ -26,7 +26,6 @@ TOP OF LIST
   o faqent '$y=~$x' vs. '$y= ~$x'; also, mlr filter '-$y==-$x' error @ cli parse due to leading "-".
   o dsls bake deps
   o filter/put -s
-  ? $y = ! ! $x
 
 * packaging:
   - brew version bump?!?

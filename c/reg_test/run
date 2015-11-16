@@ -612,6 +612,13 @@ run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
 
+run_mlr --xtab put       '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    -f '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    -s '$y     = $pi1 . $pi2' $indir/mixed-types.xtab
+run_mlr --xtab filter    '999   != $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab filter -f '999   != $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab filter -s '"999" != $pi1 . $pi2' $indir/mixed-types.xtab
+
 run_mlr --xtab put    '$y=abs($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($nf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($zf)'  $indir/mixed-types.xtab

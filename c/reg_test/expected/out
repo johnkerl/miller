@@ -6079,6 +6079,81 @@ x=,y=2,z=2
 ================================================================
 DSL TYPE-INFERENCE
 
+mlr --xtab put $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   151
+
+mlr --xtab put -f $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   151.000000
+
+mlr --xtab put -s $y     = $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   7576
+
+mlr --xtab filter 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
+mlr --xtab filter -f 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
+mlr --xtab filter -s "999" != $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
 mlr --xtab put $y=abs($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
