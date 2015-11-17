@@ -893,11 +893,15 @@ static mv_t divide_f_if(mv_t* pa, mv_t* pb) {
 	return rv;
 }
 static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
-	double a = (double)pa->u.intv;
-	double b = (double)pb->u.intv;
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	long long r = a % b;
 	// Pythonic division, not C division.
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = a / b};
-	return rv;
+	if (r == 0LL) {
+		return (mv_t) {.type = MT_INT, .u.intv = a / b};
+	} else {
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = (double)a / (double)b};
+	}
 }
 
 static mv_binary_func_t* divide_dispositions[MT_MAX][MT_MAX] = {
