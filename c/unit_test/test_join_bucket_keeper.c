@@ -442,7 +442,6 @@ static char* test_het_unpaired_before_left_start() {
 	slls_t* pright_field_values = slls_single_no_free("0");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	// xxx pick up from here
 	mu_assert_lf(list_has_length(precords_left_unpaired, 1, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
@@ -469,12 +468,12 @@ static char* test_het_unpaired_after_left_end() {
 	slls_t* pright_field_values = slls_single_no_free("6");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 9, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
 	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
+	mu_assert_lf(list_is_null(precords_left_unpaired, "unpaired", "(eof)"));
 	printf("\n");
 	printf("test_het_unpaired_after_left_end exit\n");
 	printf("\n");
@@ -492,16 +491,16 @@ static char* test_het_initial_pairing() {
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
-	// xxx fix me next
 	slls_t* pright_field_values = slls_single_no_free("1");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
-	//mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 1, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
-	//mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 6, "unpaired", "(eof)"));
+
 	printf("\n");
 	printf("test_het_initial_pairing exit\n");
 	printf("\n");
@@ -519,16 +518,15 @@ static char* test_het_middle_pairing() {
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
-	// xxx fix me next
 	slls_t* pright_field_values = slls_single_no_free("3");
 	emit(pkeeper, pright_field_values, &precords_paired, &precords_left_unpaired);
-	//mu_assert_lf(list_is_null(precords_paired, "paired", pright_field_values->phead->value));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_paired, 2, "paired", pright_field_values->phead->value));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 4, "unpaired", pright_field_values->phead->value));
 	printf("\n");
 
 	emit(pkeeper, NULL, &precords_paired, &precords_left_unpaired);
-	//mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
-	//mu_assert_lf(list_has_length(precords_left_unpaired, 5, "unpaired", "(eof)"));
+	mu_assert_lf(list_is_null(precords_paired, "paired", "(eof)"));
+	mu_assert_lf(list_has_length(precords_left_unpaired, 3, "unpaired", "(eof)"));
 	printf("\n");
 	printf("test_het_middle_pairing exit\n");
 	printf("\n");
@@ -536,7 +534,7 @@ static char* test_het_middle_pairing() {
 }
 
 // ================================================================
-static char * run_all_tests() {
+static char * run_all_tests(int do_dev_only) {
 	mu_run_test(test_left_empty_right_empty);
 	mu_run_test(test_left_empty);
 	mu_run_test(test_right_empty);
@@ -545,19 +543,27 @@ static char * run_all_tests() {
 	mu_run_test(test_middle_pairings);
 	mu_run_test(test_middle);
 	mu_run_test(test_walk_through_all);
-	mu_run_test(test_het_unpaired_before_left_start);
-	mu_run_test(test_het_unpaired_after_left_end);
-	mu_run_test(test_het_initial_pairing);
-	mu_run_test(test_het_middle_pairing);
+	if (do_dev_only) {
+		mu_run_test(test_het_unpaired_before_left_start);
+		mu_run_test(test_het_unpaired_after_left_end);
+		mu_run_test(test_het_initial_pairing);
+		mu_run_test(test_het_middle_pairing);
+	}
+	printf("----------------------------------------------------------------\n");
 	return 0;
 }
 
 int main(int argc, char **argv) {
 	printf("TEST_JOIN_BUCKET_KEEPER ENTER\n");
-	if ((argc == 2) && streq(argv[1], "-v"))
-		tjbk_verbose = TRUE;
+	int do_dev_only = FALSE;
+	for (int argi = 1; argi < argc; argi++) {
+		if (streq(argv[argi], "-v"))
+			tjbk_verbose = TRUE;
+		else if (streq(argv[argi], "--dev"))
+			do_dev_only = TRUE;
+	}
 
-	char *result = run_all_tests();
+	char *result = run_all_tests(do_dev_only);
 	printf("\n");
 	if (result != 0) {
 		printf("Not all unit tests passed\n");

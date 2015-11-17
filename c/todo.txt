@@ -12,21 +12,26 @@ BUGFIXES
 TOP OF LIST
 
 ! int ops are backward incompatible (ish) so make this miller 3.
-  ! first fix join on partial value-field matches
-  ! try to get a grip on jb issues 1st
+  ! fix join on partial value-field matches
+  ! try to get a grip on jb issues
+  ! int-int division: check % and if 0, quotient type = int
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"
     - no implicit SOS/EOS anchors
     - what else?
+  o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
+  o expose str{p,f}time; gmt fmts as #defined default
   o cut a release w/ manpage etc.
   o highlight precedence & semantics docs
   o mlr per-release docs: linkto from releases page
 
 * full-int64 I/O & math:
-  o visually check all precedence stackings (horiz/vert) in the grammars against the operator prec/assoc table
+  o visually check all precedence stackings (horiz/vert) in the grammars
+    against the operator prec/assoc table
   o faqent '$y=~$x' vs. '$y= ~$x'
   o dsls bake deps
+  o elaborate in put/filter -s/-f help: this means '$z=int($x)+int($y)' ...
 
 * packaging:
   - brew version bump?!?
