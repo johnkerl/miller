@@ -383,9 +383,9 @@ static void main_usage_see_also(FILE* o, char* argv0) {
 	fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n");
 	fprintf(o, "http://github.com/johnkerl/miller.");
 #ifdef HAVE_CONFIG_H
-	fprintf(o, " This is Miller version >= %s.\n", PACKAGE_VERSION);
+	fprintf(o, " This is Miller version %s.\n", PACKAGE_VERSION);
 #else
-	fprintf(o, " This is Miller version >= %s.\n", MLR_VERSION);
+	fprintf(o, " This is Miller version %s.\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
 }
 

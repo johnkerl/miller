@@ -772,8 +772,11 @@ run_mlr filter -v '$x =~ "^a.*"."d$"i' $indir/regex.dkvp
 # ----------------------------------------------------------------
 announce DSL DATETIME FUNCTIONS
 
-run_mlr --csvlite put '$gmt=sec2gmt($sec)' $indir/sec2gmt
-run_mlr --csvlite put '$sec=gmt2sec($gmt)' $indir/gmt2sec
+run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt
+run_mlr --csvlite put '$sec = gmt2sec($gmt)' $indir/gmt2sec
+
+run_mlr --csvlite put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ")' $indir/sec2gmt
+run_mlr --csvlite put '$sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ")' $indir/gmt2sec
 
 run_mlr --csvlite sec2gmt sec $indir/sec2gmt
 

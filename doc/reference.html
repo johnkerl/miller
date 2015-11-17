@@ -299,7 +299,8 @@ Functions for the filter and put verbs:
    qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / //
    % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub tolower
    toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
-   sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
+   strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
+   hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -385,7 +386,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 
 For more information please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller. This is Miller version &gt;= v2.3.2.
+http://github.com/johnkerl/miller. This is Miller version &gt;= v3.0.0-almost.
 </pre>
 </div>
 <p/>
@@ -2910,6 +2911,8 @@ fmtnum     (conversion: #args=2): Convert int/float/bool to string using printf-
 systime    (time:       #args=0): Floating-point seconds since the epoch, e.g. 1440768801.748936.
 sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
+strftime   (time:       #args=2): Formats seconds since epoch (integer part only) as timestamp, e.g. strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
+strptime   (time:       #args=2): Parses timestamp as integer seconds since epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 sec2hms    (time:       #args=1): Formats integer seconds as in sec2hms(5000) = "01:23:20"
 sec2dhms   (time:       #args=1): Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
 hms2sec    (time:       #args=1): Recovers integer seconds as in hms2sec("01:23:20") = 5000

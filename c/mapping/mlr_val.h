@@ -239,6 +239,9 @@ mv_t f_s_hms2fsec_func(mv_t* pval1);
 mv_t i_s_dhms2sec_func(mv_t* pval1);
 mv_t f_s_dhms2fsec_func(mv_t* pval1);
 
+mv_t s_fs_strftime_func(mv_t* pval1, mv_t* pval2);
+mv_t f_ss_strptime_func(mv_t* pval1, mv_t* pval2);
+
 mv_t i_s_strlen_func(mv_t* pval1);
 
 // ----------------------------------------------------------------

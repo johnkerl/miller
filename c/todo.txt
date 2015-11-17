@@ -22,7 +22,10 @@ TOP OF LIST
     - no implicit SOS/EOS anchors
     - what else?
   o note manpage is now ongoing-current
+  o prune down .travis.yml
   o highlight precedence & semantics docs
+
+* localdir reorg w/ releases out of head. & redirect/symlink for mld@jko.
 
 * full-int64 I/O & math:
   o visually check all precedence stackings (horiz/vert) in the grammars

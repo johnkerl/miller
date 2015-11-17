@@ -30,6 +30,7 @@
 //   type(s).
 // ================================================================
 
+#define RFC8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
 
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
@@ -465,7 +466,7 @@ mv_t s_f_sec2gmt_func(mv_t* pval1) {
 	// xxx error-check all of this ...
 	char* string = mlr_malloc_or_die(32);
 	// xxx make mlrutil func
-	(void)strftime(string, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
+	(void)strftime(string, 32, RFC8601_TIME_FORMAT, ptm);
 
 	mv_t rv = {.type = MT_STRING, .u.strv = string};
 	return rv;
@@ -476,12 +477,30 @@ mv_t i_s_gmt2sec_func(mv_t* pval1) {
 	if (*pval1->u.strv == '\0') {
 		return MV_NULL;
 	} else {
-		strptime(pval1->u.strv, "%Y-%m-%dT%H:%M:%SZ", &tm);
+		strptime(pval1->u.strv, RFC8601_TIME_FORMAT, &tm);
 		time_t t = mlr_timegm(&tm);
 
 		mv_t rv = {.type = MT_INT, .u.intv = (long long)t};
 		return rv;
 	}
+}
+
+mv_t s_fs_strftime_func(mv_t* pval1, mv_t* pval2) {
+	time_t clock = (time_t) pval1->u.fltv;
+	struct tm tm;
+	struct tm *ptm = gmtime_r(&clock, &tm);
+	char* string = mlr_malloc_or_die(32);
+	(void)strftime(string, 32, pval2->u.strv, ptm);
+
+	return (mv_t) {.type = MT_STRING, .u.strv = string}; // xxx stub
+}
+mv_t f_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
+	struct tm tm;
+	strptime(pval1->u.strv, pval2->u.strv, &tm);
+	time_t t = mlr_timegm(&tm);
+	long long seconds = (long long) t;
+
+	return (mv_t) {.type = MT_INT, .u.intv = seconds}; // xxx stub
 }
 
 // ----------------------------------------------------------------

@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-16
+.\"      Date: 2015-11-17
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-16" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-17" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,7 +143,8 @@ output separator to the given value.
  qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / // %
  ** | ^ & ~ << >> =~ !=~ == != > >= < <= && || ^^ ! strlen sub gsub tolower
  toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
- sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms hms2fsec dhms2fsec
+ strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
+ hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 .fi

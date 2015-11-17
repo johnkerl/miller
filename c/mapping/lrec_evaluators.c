@@ -479,6 +479,7 @@ typedef struct _lrec_evaluator_s_f_state_t {
 mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	// xxx use the new nullable methods
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type == MT_FLOAT) {
 		;
@@ -645,6 +646,44 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_b_xx_func(mv_binary_func_t* pfunc,
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
 	pevaluator->pevaluator_func = lrec_evaluator_b_xx_func;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+typedef struct _lrec_evaluator_x_fs_state_t {
+	mv_binary_func_t* pfunc;
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+} lrec_evaluator_x_fs_state_t;
+
+mv_t lrec_evaluator_x_fs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_fs_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
+	mt_get_float_nullable(&val1);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type != MT_FLOAT)
+		return MV_ERROR;
+
+	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	if (val2.type != MT_STRING)
+		return MV_ERROR;
+
+	return pstate->pfunc(&val1, &val2);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_fs_func(mv_binary_func_t* pfunc,
+	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
+{
+	lrec_evaluator_x_fs_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_fs_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pevaluator_func = lrec_evaluator_x_fs_func;
 
 	return pevaluator;
 }
@@ -1197,6 +1236,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_TIME, "systime",   0 , "Floating-point seconds since the epoch, e.g. 1440768801.748936." },
 	{ FUNC_CLASS_TIME, "sec2gmt",   1 , "Formats seconds since epoch (integer part only) as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\"."},
 	{ FUNC_CLASS_TIME, "gmt2sec",   1 , "Parses GMT timestamp as integer seconds since epoch."},
+	{ FUNC_CLASS_TIME, "strftime",  2 , "Formats seconds since epoch (integer part only) as timestamp, e.g. strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%SZ\") = \"2015-08-28T13:33:21Z\"."},
+	{ FUNC_CLASS_TIME, "strptime",  2 , "Parses timestamp as integer seconds since epoch, e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801."},
 	{ FUNC_CLASS_TIME, "sec2hms",   1 , "Formats integer seconds as in sec2hms(5000) = \"01:23:20\""},
 	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "Formats integer seconds as in sec2dhms(500000) = \"5d18h53m20s\""},
 	{ FUNC_CLASS_TIME, "hms2sec",   1 , "Recovers integer seconds as in hms2sec(\"01:23:20\") = 5000"},
@@ -1419,6 +1460,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "&"))      { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_and_func,          parg1, parg2);
 	} else if (streq(fnnm, "<<"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_lsh_func,          parg1, parg2);
 	} else if (streq(fnnm, ">>"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_rsh_func,          parg1, parg2);
+	} else if (streq(fnnm, "strftime")) { return lrec_evaluator_alloc_from_x_fs_func(s_fs_strftime_func,           parg1, parg2);
+	} else if (streq(fnnm, "strptime")) { return lrec_evaluator_alloc_from_x_ss_func(f_ss_strptime_func,           parg1, parg2);
 	} else  { return NULL; }
 }
 
