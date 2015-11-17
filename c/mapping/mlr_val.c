@@ -490,7 +490,7 @@ mv_t s_fs_strftime_func(mv_t* pval1, mv_t* pval2) {
 	struct tm tm;
 	struct tm *ptm = gmtime_r(&clock, &tm);
 	char* string = mlr_malloc_or_die(32);
-	(void)strftime(string, 32, pval2->u.strv, ptm);
+	(void)strftime(string, 31, pval2->u.strv, ptm);
 
 	return (mv_t) {.type = MT_STRING, .u.strv = string}; // xxx stub
 }
