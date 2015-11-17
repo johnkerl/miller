@@ -14,17 +14,15 @@ TOP OF LIST
 ! int ops are backward incompatible (ish) so make this miller 3.
   ! fix join on partial value-field matches
   ! try to get a grip on jb issues
-  ! int-int division: check % and if 0, quotient type = int
+  o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
+  o expose str{p,f}time; gmt fmts as #defined default
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"
     - no implicit SOS/EOS anchors
     - what else?
-  o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
-  o expose str{p,f}time; gmt fmts as #defined default
-  o cut a release w/ manpage etc.
+  o note manpage is now ongoing-current
   o highlight precedence & semantics docs
-  o mlr per-release docs: linkto from releases page
 
 * full-int64 I/O & math:
   o visually check all precedence stackings (horiz/vert) in the grammars
@@ -40,10 +38,6 @@ TOP OF LIST
   - mlrutil libfunc for code dedup
   - gmt2sec?
   ? expose strftime/strptime formats in here as well as the DSL functions?
-
-* verb bar:
-  - out-of-place bar -- preserving count as separate column?
-  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
 ----------------------------------------------------------------
 
@@ -79,6 +73,10 @@ TOP OF LIST
 * introduce a fourth, padding separator for all formats? (for leading/trailing strip/skip.)
   o allows 'x = 10' in DKVP
   o allows right-justified keys in XTAB
+
+* verb bar:
+  - out-of-place bar -- preserving count as separate column?
+  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
 ----------------------------------------------------------------
 MINOR: bootstrap sampling in hold-and-emit mode??
