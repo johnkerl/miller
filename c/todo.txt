@@ -16,6 +16,7 @@ TOP OF LIST
 
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
   o mlr -f into manpage? line-wraps ...
+    - ./ cleanup @ manpage
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"

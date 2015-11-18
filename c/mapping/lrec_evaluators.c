@@ -1366,6 +1366,15 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 	}
 }
 
+void lrec_evaluator_list_all_functions_raw(FILE* output_stream) {
+	for (int i = 0; ; i++) {
+		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
+		if (plookup->function_name == NULL) // end of table
+			break;
+		printf("%s\n", plookup->function_name);
+	}
+}
+
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1)  {
 	if        (streq(fnnm, "!"))         { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,       parg1);

@@ -12,6 +12,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* proot, int t
 void lrec_evaluator_list_functions(FILE* output_stream, char* leader);
 // Pass function_name == NULL to get usage for all functions:
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name);
+void lrec_evaluator_list_all_functions_raw(FILE* output_stream);
 
 int test_lrec_evaluators_main(int argc, char **argv);
 

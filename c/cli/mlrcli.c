@@ -540,6 +540,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--list-all-verbs-raw")) {
 			list_all_verbs_raw(stdout);
 			exit(0);
+		} else if (streq(argv[argi], "--list-all-functions-raw")) {
+			lrec_evaluator_list_all_functions_raw(stdout);
+			exit(0);
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			lrec_evaluator_function_usage(stdout, NULL);
 			exit(0);
