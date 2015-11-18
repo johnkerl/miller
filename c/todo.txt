@@ -11,18 +11,18 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! miller 3:
+! before releasing miller 3:
   ! fix join on partial value-field matches
 
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
-  o mlr -f into manpage? line-wraps ...
-    - ./ cleanup @ manpage
+  o ./ cleanup @ manpage
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"
     - no implicit SOS/EOS anchors
     - what else?
 
+* miller 3 release info:
   o functions:
     - strftime/strptime as generalization of sec2gmt/gmt2sec
     - bitwise operators: | ^ & << >>
