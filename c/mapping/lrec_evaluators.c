@@ -152,29 +152,29 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_f_f_func(mv_unary_func_t* pfunc, lre
 }
 
 // ----------------------------------------------------------------
-typedef struct _lrec_evaluator_n_n_state_t {
+typedef struct _lrec_evaluator_x_n_state_t {
 	mv_unary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
-} lrec_evaluator_n_n_state_t;
+} lrec_evaluator_x_n_state_t;
 
-mv_t lrec_evaluator_n_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_n_n_state_t* pstate = pvstate;
+mv_t lrec_evaluator_x_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_n_state_t* pstate = pvstate;
+
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-
 	mt_get_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_n_n_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
-	lrec_evaluator_n_n_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_n_n_state_t));
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_n_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
+	lrec_evaluator_x_n_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_n_state_t));
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_n_n_func;
+	pevaluator->pevaluator_func = lrec_evaluator_x_n_func;
 
 	return pevaluator;
 }
@@ -651,19 +651,17 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_b_xx_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
-typedef struct _lrec_evaluator_x_fs_state_t {
+typedef struct _lrec_evaluator_x_ns_state_t {
 	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
 	lrec_evaluator_t* parg2;
-} lrec_evaluator_x_fs_state_t;
+} lrec_evaluator_x_ns_state_t;
 
-mv_t lrec_evaluator_x_fs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_x_fs_state_t* pstate = pvstate;
+mv_t lrec_evaluator_x_ns_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_ns_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_float_nullable(&val1);
+	mt_get_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_FLOAT)
-		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
@@ -673,17 +671,17 @@ mv_t lrec_evaluator_x_fs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return pstate->pfunc(&val1, &val2);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_x_fs_func(mv_binary_func_t* pfunc,
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_ns_func(mv_binary_func_t* pfunc,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
 {
-	lrec_evaluator_x_fs_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_fs_state_t));
+	lrec_evaluator_x_ns_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_ns_state_t));
 	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 	pstate->parg2 = parg2;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_x_fs_func;
+	pevaluator->pevaluator_func = lrec_evaluator_x_ns_func;
 
 	return pevaluator;
 }
@@ -1372,10 +1370,10 @@ void lrec_evaluator_function_usage(FILE* output_stream, char* function_name) {
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_evaluator_t* parg1)  {
 	if        (streq(fnnm, "!"))         { return lrec_evaluator_alloc_from_b_b_func(b_b_not_func,       parg1);
-	} else if (streq(fnnm, "+"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_upos_func,      parg1);
-	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_n_n_func(n_n_uneg_func,      parg1);
+	} else if (streq(fnnm, "+"))         { return lrec_evaluator_alloc_from_x_n_func(n_n_upos_func,      parg1);
+	} else if (streq(fnnm, "-"))         { return lrec_evaluator_alloc_from_x_n_func(n_n_uneg_func,      parg1);
 	} else if (streq(fnnm, "~"))         { return lrec_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
-	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_n_n_func(n_n_abs_func,       parg1);
+	} else if (streq(fnnm, "abs"))       { return lrec_evaluator_alloc_from_x_n_func(n_n_abs_func,       parg1);
 	} else if (streq(fnnm, "acos"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_acos_func,      parg1);
 	} else if (streq(fnnm, "acosh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_acosh_func,     parg1);
 	} else if (streq(fnnm, "asin"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_asin_func,      parg1);
@@ -1384,7 +1382,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "atanh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,     parg1);
 	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_x_x_func(b_x_boolean_func,   parg1);
 	} else if (streq(fnnm, "cbrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,      parg1);
-	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_n_n_func(n_n_ceil_func,      parg1);
+	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_x_n_func(n_n_ceil_func,      parg1);
 	} else if (streq(fnnm, "cos"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,       parg1);
 	} else if (streq(fnnm, "cosh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,      parg1);
 	} else if (streq(fnnm, "erf"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,       parg1);
@@ -1392,7 +1390,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "exp"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,       parg1);
 	} else if (streq(fnnm, "expm1"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,     parg1);
 	} else if (streq(fnnm, "float"))     { return lrec_evaluator_alloc_from_x_x_func(f_x_float_func,     parg1);
-	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_n_n_func(n_n_floor_func,     parg1);
+	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_x_n_func(n_n_floor_func,     parg1);
 	} else if (streq(fnnm, "gmt2sec"))   { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2sec"))   { return lrec_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
 	} else if (streq(fnnm, "hms2fsec"))  { return lrec_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,  parg1);
@@ -1405,13 +1403,13 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "log1p"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,     parg1);
 	} else if (streq(fnnm, "qnorm"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,     parg1);
 	} else if (streq(fnnm, "invqnorm"))  { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
-	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_n_n_func(n_n_round_func,     parg1);
-	} else if (streq(fnnm, "sec2gmt"))   { return lrec_evaluator_alloc_from_s_f_func(s_f_sec2gmt_func,   parg1);
+	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_x_n_func(n_n_round_func,     parg1);
+	} else if (streq(fnnm, "sec2gmt"))   { return lrec_evaluator_alloc_from_x_n_func(s_n_sec2gmt_func,   parg1);
 	} else if (streq(fnnm, "sec2hms"))   { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,   parg1);
 	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
 	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,  parg1);
 	} else if (streq(fnnm, "fsec2dhms")) { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func, parg1);
-	} else if (streq(fnnm, "sgn"))       { return lrec_evaluator_alloc_from_n_n_func(n_n_sgn_func,       parg1);
+	} else if (streq(fnnm, "sgn"))       { return lrec_evaluator_alloc_from_x_n_func(n_n_sgn_func,       parg1);
 	} else if (streq(fnnm, "sin"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,       parg1);
 	} else if (streq(fnnm, "sinh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,      parg1);
 	} else if (streq(fnnm, "sqrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sqrt_func,      parg1);
@@ -1460,8 +1458,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "&"))      { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_and_func,          parg1, parg2);
 	} else if (streq(fnnm, "<<"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_lsh_func,          parg1, parg2);
 	} else if (streq(fnnm, ">>"))     { return lrec_evaluator_alloc_from_i_ii_func(i_ii_bitwise_rsh_func,          parg1, parg2);
-	} else if (streq(fnnm, "strftime")) { return lrec_evaluator_alloc_from_x_fs_func(s_fs_strftime_func,           parg1, parg2);
-	} else if (streq(fnnm, "strptime")) { return lrec_evaluator_alloc_from_x_ss_func(f_ss_strptime_func,           parg1, parg2);
+	} else if (streq(fnnm, "strftime")) { return lrec_evaluator_alloc_from_x_ns_func(s_ns_strftime_func,           parg1, parg2);
+	} else if (streq(fnnm, "strptime")) { return lrec_evaluator_alloc_from_x_ss_func(i_ss_strptime_func,           parg1, parg2);
 	} else  { return NULL; }
 }
 

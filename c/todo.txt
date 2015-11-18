@@ -16,7 +16,6 @@ TOP OF LIST
   ! try to get a grip on jb issues
   o mlr -f into manpage? line-wraps ...
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
-  o expose str{p,f}time: more error-checking; more UT cases
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"
@@ -35,6 +34,8 @@ TOP OF LIST
   o faqent '$y=~$x' vs. '$y= ~$x'
   o dsls bake deps
   o elaborate in put/filter -s/-f help: this means '$z=int($x)+int($y)' ...
+
+* lrec_eval nullable etc. cleanup
 
 * packaging:
   - brew version bump?!?

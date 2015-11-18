@@ -247,15 +247,11 @@ time_t mlr_timegm(struct tm* tm) {
 	char* tz;
 
 	tz = getenv("TZ");
-	if (tz) {
-		tz = mlr_strdup_or_die(tz);
-	}
 	setenv("TZ", "GMT0", 1);
 	tzset();
 	ret = mktime(tm);
 	if (tz) {
 		setenv("TZ", tz, 1);
-		free(tz);
 	} else {
 		unsetenv("TZ");
 	}

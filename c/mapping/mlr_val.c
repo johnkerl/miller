@@ -30,7 +30,7 @@
 //   type(s).
 // ================================================================
 
-#define RFC8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
+#define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
 
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
@@ -453,54 +453,66 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-mv_t s_f_sec2gmt_func(mv_t* pval1) {
-	ERROR_OUT(*pval1);
-	mt_get_float_nullable(pval1);
-	NULL_OUT(*pval1);
-	if (pval1->type != MT_FLOAT)
-		return MV_ERROR;
-	time_t clock = (time_t) pval1->u.fltv;
+#define NZBUFLEN 63
+
+// Precondition: psec is either int or float.
+static mv_t time_string_from_seconds(mv_t* psec, char* format) {
+	time_t clock = 0;
+	if (psec->type == MT_FLOAT) {
+		clock = (time_t) psec->u.fltv;
+	} else {
+		clock = (time_t) psec->u.intv;
+	}
+
 	struct tm tm;
 	struct tm *ptm = gmtime_r(&clock, &tm);
-	// xxx use retval which is size_t
-	// xxx error-check all of this ...
-	char* string = mlr_malloc_or_die(32);
-	// xxx make mlrutil func
-	(void)strftime(string, 32, RFC8601_TIME_FORMAT, ptm);
+	if (ptm == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
+	int written_length = strftime(string, NZBUFLEN, format, ptm);
+	if (written_length > NZBUFLEN || written_length == 0) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
 
-	mv_t rv = {.type = MT_STRING, .u.strv = string};
-	return rv;
+	return (mv_t) {.type = MT_STRING, .u.strv = string};
 }
 
-mv_t i_s_gmt2sec_func(mv_t* pval1) {
-	struct tm tm;
-	if (*pval1->u.strv == '\0') {
+mv_t s_n_sec2gmt_func(mv_t* pval1) {
+	return time_string_from_seconds(pval1, ISO8601_TIME_FORMAT);
+}
+
+mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
+	return time_string_from_seconds(pval1, pval2->u.strv);
+}
+
+// ----------------------------------------------------------------
+static mv_t seconds_from_time_string(char* time, char* format) {
+	if (*time == '\0') {
 		return MV_NULL;
 	} else {
-		strptime(pval1->u.strv, RFC8601_TIME_FORMAT, &tm);
+		struct tm tm;
+		char* retval = strptime(time, format, &tm);
+		if (retval == NULL) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
 		time_t t = mlr_timegm(&tm);
-
-		mv_t rv = {.type = MT_INT, .u.intv = (long long)t};
-		return rv;
+		return (mv_t) {.type = MT_INT, .u.intv = (long long)t};
 	}
 }
 
-mv_t s_fs_strftime_func(mv_t* pval1, mv_t* pval2) {
-	time_t clock = (time_t) pval1->u.fltv;
-	struct tm tm;
-	struct tm *ptm = gmtime_r(&clock, &tm);
-	char* string = mlr_malloc_or_die(32);
-	(void)strftime(string, 31, pval2->u.strv, ptm);
-
-	return (mv_t) {.type = MT_STRING, .u.strv = string}; // xxx stub
+mv_t i_s_gmt2sec_func(mv_t* pval1) {
+	return seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT);
 }
-mv_t f_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
-	struct tm tm;
-	strptime(pval1->u.strv, pval2->u.strv, &tm);
-	time_t t = mlr_timegm(&tm);
-	long long seconds = (long long) t;
 
-	return (mv_t) {.type = MT_INT, .u.intv = seconds}; // xxx stub
+mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
+	return seconds_from_time_string(pval1->u.strv, pval2->u.strv);
 }
 
 // ----------------------------------------------------------------
