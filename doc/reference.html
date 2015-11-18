@@ -2829,98 +2829,221 @@ yellow triangle 468
 <div class="pokipanel">
 <pre>
 $ mlr --help-all-functions
-abs        (math:       #args=1): Absolute value.
-acos       (math:       #args=1): Inverse trigonometric cosine.
-acosh      (math:       #args=1): Inverse hyperbolic cosine.
-asin       (math:       #args=1): Inverse trigonometric sine.
-asinh      (math:       #args=1): Inverse hyperbolic sine.
-atan       (math:       #args=1): One-argument arctangent.
-atan2      (math:       #args=2): Two-argument arctangent.
-atanh      (math:       #args=1): Inverse hyperbolic tangent.
-cbrt       (math:       #args=1): Cube root.
-ceil       (math:       #args=1): Ceiling: nearest integer at or above.
-cos        (math:       #args=1): Trigonometric cosine.
-cosh       (math:       #args=1): Hyperbolic cosine.
-erf        (math:       #args=1): Error function.
-erfc       (math:       #args=1): Complementary error function.
-exp        (math:       #args=1): Exponential function e**x.
-expm1      (math:       #args=1): e**x - 1.
-floor      (math:       #args=1): Floor: nearest integer at or below.
-invqnorm   (math:       #args=1): Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
-log        (math:       #args=1): Natural (base-e) logarithm.
-log10      (math:       #args=1): Base-10 logarithm.
-log1p      (math:       #args=1): log(1-x).
-logifit    (math:       #args=3): Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
-madd       (math:       #args=3): a + b mod m (integers)
-msub       (math:       #args=3): a - b mod m (integers)
-mmul       (math:       #args=3): a * b mod m (integers)
-mexp       (math:       #args=3): a ** b mod m (integers)
-max        (math:       #args=2): max of two numbers; null loses
-min        (math:       #args=2): min of two numbers; null loses
-pow        (math:       #args=2): Exponentiation; same as **.
-qnorm      (math:       #args=1): Normal cumulative distribution function.
-round      (math:       #args=1): Round to nearest integer.
-roundm     (math:       #args=2): Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m
-sgn        (math:       #args=1): +1 for positive input, 0 for zero input, -1 for negative input.
-sin        (math:       #args=1): Trigonometric sine.
-sinh       (math:       #args=1): Hyperbolic sine.
-sqrt       (math:       #args=1): Square root.
-tan        (math:       #args=1): Trigonometric tangent.
-tanh       (math:       #args=1): Hyperbolic tangent.
-urand      (math:       #args=0): Floating-point numbers on the unit interval. Int-valued example: '$n=floor(20+urand()*11)'.
-urandint   (math:       #args=2): Integer uniformly distributed between inclusive integer endpoints.
-+          (math:       #args=2): Addition.
-+          (math:       #args=1): Unary plus.
--          (math:       #args=2): Subtraction.
--          (math:       #args=1): Unary minus.
-*          (math:       #args=2): Multiplication.
-/          (math:       #args=2): Division.
-//         (math:       #args=2): Integer division.
-%          (math:       #args=2): Remainder; never negative-valued.
-**         (math:       #args=2): Exponentiation; same as pow.
-|          (math:       #args=2): Bitwise OR.
-^          (math:       #args=2): Bitwise XOR.
-&amp;          (math:       #args=2): Bitwise AND.
-~          (math:       #args=1): Bitwise NOT.
-&lt;&lt;         (math:       #args=2): Bitwise left-shift.
-&gt;&gt;         (math:       #args=2): Bitwise right-shift.
-=~         (boolean:    #args=2): String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-!=~        (boolean:    #args=2): String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-==         (boolean:    #args=2): String/numeric equality. Mixing number and string results in string compare.
-!=         (boolean:    #args=2): String/numeric inequality. Mixing number and string results in string compare.
-&gt;          (boolean:    #args=2): String/numeric greater-than. Mixing number and string results in string compare.
-&gt;=         (boolean:    #args=2): String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-&lt;          (boolean:    #args=2): String/numeric less-than. Mixing number and string results in string compare.
-&lt;=         (boolean:    #args=2): String/numeric less-than-or-equals. Mixing number and string results in string compare.
-&amp;&amp;         (boolean:    #args=2): Logical AND.
-||         (boolean:    #args=2): Logical OR.
-^^         (boolean:    #args=2): Logical XOR.
-!          (boolean:    #args=1): Logical negation.
-strlen     (string:     #args=1): String length.
-sub        (string:     #args=3): Example: '$name=sub($name, "old", "new")' (replace once).
-gsub       (string:     #args=3): Example: '$name=gsub($name, "old", "new")' (replace all).
-tolower    (string:     #args=1): Convert string to lowercase.
-toupper    (string:     #args=1): Convert string to uppercase.
-.          (string:     #args=2): String concatenation.
-boolean    (conversion: #args=1): Convert int/float/bool/string to boolean.
-float      (conversion: #args=1): Convert int/float/bool/string to float.
-int        (conversion: #args=1): Convert int/float/bool/string to int.
-string     (conversion: #args=1): Convert int/float/bool/string to string.
-hexfmt     (conversion: #args=1): Convert int to string, e.g. 255 to "0xff".
-fmtnum     (conversion: #args=2): Convert int/float/bool to string using printf-style format string, e.g. "%06lld".
-systime    (time:       #args=0): Floating-point seconds since the epoch, e.g. 1440768801.748936.
-sec2gmt    (time:       #args=1): Formats seconds since epoch (integer part only) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-gmt2sec    (time:       #args=1): Parses GMT timestamp as integer seconds since epoch.
-strftime   (time:       #args=2): Formats seconds since epoch (integer part only) as timestamp, e.g. strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
-strptime   (time:       #args=2): Parses timestamp as integer seconds since epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
-sec2hms    (time:       #args=1): Formats integer seconds as in sec2hms(5000) = "01:23:20"
-sec2dhms   (time:       #args=1): Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
-hms2sec    (time:       #args=1): Recovers integer seconds as in hms2sec("01:23:20") = 5000
-dhms2sec   (time:       #args=1): Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
-fsec2hms   (time:       #args=1): Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
-fsec2dhms  (time:       #args=1): Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
-hms2fsec   (time:       #args=1): Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
-dhms2fsec  (time:       #args=1): Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
+abs (class=math #args=1): Absolute value.
+
+acos (class=math #args=1): Inverse trigonometric cosine.
+
+acosh (class=math #args=1): Inverse hyperbolic cosine.
+
+asin (class=math #args=1): Inverse trigonometric sine.
+
+asinh (class=math #args=1): Inverse hyperbolic sine.
+
+atan (class=math #args=1): One-argument arctangent.
+
+atan2 (class=math #args=2): Two-argument arctangent.
+
+atanh (class=math #args=1): Inverse hyperbolic tangent.
+
+cbrt (class=math #args=1): Cube root.
+
+ceil (class=math #args=1): Ceiling: nearest integer at or above.
+
+cos (class=math #args=1): Trigonometric cosine.
+
+cosh (class=math #args=1): Hyperbolic cosine.
+
+erf (class=math #args=1): Error function.
+
+erfc (class=math #args=1): Complementary error function.
+
+exp (class=math #args=1): Exponential function e**x.
+
+expm1 (class=math #args=1): e**x - 1.
+
+floor (class=math #args=1): Floor: nearest integer at or below.
+
+invqnorm (class=math #args=1): Inverse of normal cumulative distribution
+function. Note that invqorm(urand()) is normally distributed.
+
+log (class=math #args=1): Natural (base-e) logarithm.
+
+log10 (class=math #args=1): Base-10 logarithm.
+
+log1p (class=math #args=1): log(1-x).
+
+logifit (class=math #args=3): Given m and b from logistic regression, compute
+fit: $yhat=logifit($x,$m,$b).
+
+madd (class=math #args=3): a + b mod m (integers)
+
+msub (class=math #args=3): a - b mod m (integers)
+
+mmul (class=math #args=3): a * b mod m (integers)
+
+mexp (class=math #args=3): a ** b mod m (integers)
+
+max (class=math #args=2): max of two numbers; null loses
+
+min (class=math #args=2): min of two numbers; null loses
+
+pow (class=math #args=2): Exponentiation; same as **.
+
+qnorm (class=math #args=1): Normal cumulative distribution function.
+
+round (class=math #args=1): Round to nearest integer.
+
+roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m
+
+sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
+negative input.
+
+sin (class=math #args=1): Trigonometric sine.
+
+sinh (class=math #args=1): Hyperbolic sine.
+
+sqrt (class=math #args=1): Square root.
+
+tan (class=math #args=1): Trigonometric tangent.
+
+tanh (class=math #args=1): Hyperbolic tangent.
+
+urand (class=math #args=0): Floating-point numbers on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.
+
+urandint (class=math #args=2): Integer uniformly distributed between inclusive
+integer endpoints.
+
++ (class=math #args=2): Addition.
+
++ (class=math #args=1): Unary plus.
+
+- (class=math #args=2): Subtraction.
+
+- (class=math #args=1): Unary minus.
+
+* (class=math #args=2): Multiplication.
+
+/ (class=math #args=2): Division.
+
+// (class=math #args=2): Integer division.
+
+% (class=math #args=2): Remainder; never negative-valued.
+
+** (class=math #args=2): Exponentiation; same as pow.
+
+| (class=math #args=2): Bitwise OR.
+
+^ (class=math #args=2): Bitwise XOR.
+
+&amp; (class=math #args=2): Bitwise AND.
+
+~ (class=math #args=1): Bitwise NOT.
+
+&lt;&lt; (class=math #args=2): Bitwise left-shift.
+
+&gt;&gt; (class=math #args=2): Bitwise right-shift.
+
+=~ (class=boolean #args=2): String (left-hand side) matches regex (right-hand
+side), e.g. '$name =~ "^a.*b$"'.
+
+!=~ (class=boolean #args=2): String (left-hand side) does not match regex
+(right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+== (class=boolean #args=2): String/numeric equality. Mixing number and string
+results in string compare.
+
+!= (class=boolean #args=2): String/numeric inequality. Mixing number and string
+results in string compare.
+
+&gt; (class=boolean #args=2): String/numeric greater-than. Mixing number and string
+results in string compare.
+
+&gt;= (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
+and string results in string compare.
+
+&lt; (class=boolean #args=2): String/numeric less-than. Mixing number and string
+results in string compare.
+
+&lt;= (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
+and string results in string compare.
+
+&amp;&amp; (class=boolean #args=2): Logical AND.
+
+|| (class=boolean #args=2): Logical OR.
+
+^^ (class=boolean #args=2): Logical XOR.
+
+! (class=boolean #args=1): Logical negation.
+
+strlen (class=string #args=1): String length.
+
+sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
+(replace once).
+
+gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
+(replace all).
+
+tolower (class=string #args=1): Convert string to lowercase.
+
+toupper (class=string #args=1): Convert string to uppercase.
+
+. (class=string #args=2): String concatenation.
+
+boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
+
+float (class=conversion #args=1): Convert int/float/bool/string to float.
+
+int (class=conversion #args=1): Convert int/float/bool/string to int.
+
+string (class=conversion #args=1): Convert int/float/bool/string to string.
+
+hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+
+fmtnum (class=conversion #args=2): Convert int/float/bool to string using
+printf-style format string, e.g. "%06lld".
+
+systime (class=time #args=0): Floating-point seconds since the epoch,
+e.g. 1440768801.748936.
+
+sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
+as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+
+gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
+the epoch.
+
+strftime (class=time #args=2): Formats seconds since epoch (integer part)
+as timestamp, e.g.
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
+
+strptime (class=time #args=2): Parses timestamp as integer seconds since epoch,
+e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
+
+sec2hms (class=time #args=1): Formats integer seconds as in
+sec2hms(5000) = "01:23:20"
+
+sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
+= "5d18h53m20s"
+
+hms2sec (class=time #args=1): Recovers integer seconds as in
+hms2sec("01:23:20") = 5000
+
+dhms2sec (class=time #args=1): Recovers integer seconds as in
+dhms2sec("5d18h53m20s") = 500000
+
+fsec2hms (class=time #args=1): Formats floating-point seconds as in
+fsec2hms(5000.25) = "01:23:20.250000"
+
+fsec2dhms (class=time #args=1): Formats floating-point seconds as in
+fsec2dhms(500000.25) = "5d18h53m20.250000s"
+
+hms2fsec (class=time #args=1): Recovers floating-point seconds as in
+hms2fsec("01:23:20.250000") = 5000.250000
+
+dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
+dhms2fsec("5d18h53m20.250000s") = 500000.250000
+
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit
 numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
 Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)
