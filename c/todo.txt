@@ -21,7 +21,6 @@ TOP OF LIST
     - "\(..\)" vs. "(..)"
     - no implicit SOS/EOS anchors
     - what else?
-  o prune down .travis.yml
 
   o functions:
     - strftime/strptime as generalization of sec2gmt/gmt2sec
