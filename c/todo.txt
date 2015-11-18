@@ -13,7 +13,6 @@ TOP OF LIST
 
 ! miller 3:
   ! fix join on partial value-field matches
-  ! try to get a grip on jb issues
 
   o mlr -f into manpage? line-wraps ...
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
