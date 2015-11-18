@@ -3,9 +3,7 @@
 [![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
 
 With Miller, you get to use named fields without needing to count positional
-indices.
-
-For example:
+indices.  Examples:
 
 ```
 % mlr --csv cut -f hostname,uptime mydata.csv
