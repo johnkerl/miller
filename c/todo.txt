@@ -14,6 +14,7 @@ TOP OF LIST
 ! int ops are backward incompatible (ish) so make this miller 3.
   ! fix join on partial value-field matches
   ! try to get a grip on jb issues
+
   o mlr -f into manpage? line-wraps ...
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
   o mlr --regex-help and/or new section @ mld ref:
@@ -21,9 +22,24 @@ TOP OF LIST
     - "\(..\)" vs. "(..)"
     - no implicit SOS/EOS anchors
     - what else?
-  o note manpage is now ongoing-current
   o prune down .travis.yml
-  o highlight precedence & semantics docs
+
+  o functions:
+    - strftime/strptime as generalization of sec2gmt/gmt2sec
+    - bitwise operators: | ^ & << >>
+    - int-to-int and pythonic division
+    - sgn
+    - modular arithmetic
+    - urandint
+  o I/O:
+    - --xvright
+  o verbs:
+    - mlr cat -n; mlr grep
+    - stats1 skewness & kurtosis
+    - bar
+  o docs:
+    - manpage is now autogenned
+    - precedence & semantics docs
 
 * localdir reorg w/ releases outside of head dir. & redirect/symlink for mld@jko. make reldoc page
   all relative paths :D
@@ -33,17 +49,11 @@ TOP OF LIST
     against the operator prec/assoc table
   o faqent '$y=~$x' vs. '$y= ~$x'
   o dsls bake deps
-  o elaborate in put/filter -s/-f help: this means '$z=int($x)+int($y)' ...
 
 * lrec_eval nullable etc. cleanup
 
 * packaging:
   - brew version bump?!?
-
-* verb sec2gmt:
-  - mlrutil libfunc for code dedup
-  - gmt2sec?
-  ? expose strftime/strptime formats in here as well as the DSL functions?
 
 ----------------------------------------------------------------
 
