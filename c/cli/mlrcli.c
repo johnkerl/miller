@@ -521,9 +521,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--version")) {
 #ifdef HAVE_CONFIG_H
-			printf("Miller version >= %s.\n", PACKAGE_VERSION);
+			printf("Miller %s\n", PACKAGE_VERSION);
 #else
-			printf("Miller version >= %s.\n", MLR_VERSION);
+			printf("Miller %s\n", MLR_VERSION);
 #endif // HAVE_CONFIG_H
 			exit(0);
 		} else if (streq(argv[argi], "-h")) {
