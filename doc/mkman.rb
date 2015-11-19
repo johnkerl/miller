@@ -200,7 +200,8 @@ def make_code_block(block)
   retval += ".RS 0\n"
   retval += ".\\}\n"
   retval += ".nf\n"
-  retval += block.gsub('\\', '\e')
+  # In case the line starts with a dot:
+  retval += block.gsub('\\', '\e').gsub(/^\./){'\&.'}
   retval += ".fi\n"
   retval += ".if n \\{\\\n"
   retval += ".RE\n"
@@ -210,9 +211,10 @@ end
 def groff_encode(line)
   #line = line.gsub(/'/, '\(cq')
   #line = line.gsub(/"/, '\(dq')
-  line = line.gsub(/\./, '\&')
+  #line = line.gsub(/\./, '\&')
   #line = line.gsub(/-/, '\-')
   line = line.gsub(/\\/, '\e')
+  line = line.gsub(/^\./){'\&.'}
   line
 end
 

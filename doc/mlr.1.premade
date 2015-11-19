@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-18
+.\"      Date: 2015-11-19
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-18" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-19" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1512,7 +1512,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-. (class=string #args=2): String concatenation.
+\&. (class=string #args=2): String concatenation.
 .fi
 .if n \{\
 .RE
