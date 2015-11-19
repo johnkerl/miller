@@ -114,7 +114,9 @@ output separator to the given value."""
   }.uniq
   for function in functions
     print make_subsection(function, [])
-    print make_code_block(`mlr --help-function '#{function}'`)
+    text = `mlr --help-function '#{function}'`
+    text = text.sub(function + ' ', '')
+    print make_code_block(text)
   end
 
   print make_section('AUTHOR', [

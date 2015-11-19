@@ -15,7 +15,6 @@ TOP OF LIST
   ! fix join on partial value-field matches
 
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
-  o ./ cleanup @ manpage
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
     - "\(..\)" vs. "(..)"

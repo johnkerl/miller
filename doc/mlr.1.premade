@@ -819,7 +819,7 @@ count-distinct.
 .RS 0
 .\}
 .nf
-abs (class=math #args=1): Absolute value.
+(class=math #args=1): Absolute value.
 .fi
 .if n \{\
 .RE
@@ -828,7 +828,7 @@ abs (class=math #args=1): Absolute value.
 .RS 0
 .\}
 .nf
-acos (class=math #args=1): Inverse trigonometric cosine.
+(class=math #args=1): Inverse trigonometric cosine.
 .fi
 .if n \{\
 .RE
@@ -837,7 +837,7 @@ acos (class=math #args=1): Inverse trigonometric cosine.
 .RS 0
 .\}
 .nf
-acosh (class=math #args=1): Inverse hyperbolic cosine.
+(class=math #args=1): Inverse hyperbolic cosine.
 .fi
 .if n \{\
 .RE
@@ -846,7 +846,7 @@ acosh (class=math #args=1): Inverse hyperbolic cosine.
 .RS 0
 .\}
 .nf
-asin (class=math #args=1): Inverse trigonometric sine.
+(class=math #args=1): Inverse trigonometric sine.
 .fi
 .if n \{\
 .RE
@@ -855,7 +855,7 @@ asin (class=math #args=1): Inverse trigonometric sine.
 .RS 0
 .\}
 .nf
-asinh (class=math #args=1): Inverse hyperbolic sine.
+(class=math #args=1): Inverse hyperbolic sine.
 .fi
 .if n \{\
 .RE
@@ -864,7 +864,7 @@ asinh (class=math #args=1): Inverse hyperbolic sine.
 .RS 0
 .\}
 .nf
-atan (class=math #args=1): One-argument arctangent.
+(class=math #args=1): One-argument arctangent.
 .fi
 .if n \{\
 .RE
@@ -873,7 +873,7 @@ atan (class=math #args=1): One-argument arctangent.
 .RS 0
 .\}
 .nf
-atan2 (class=math #args=2): Two-argument arctangent.
+(class=math #args=2): Two-argument arctangent.
 .fi
 .if n \{\
 .RE
@@ -882,7 +882,7 @@ atan2 (class=math #args=2): Two-argument arctangent.
 .RS 0
 .\}
 .nf
-atanh (class=math #args=1): Inverse hyperbolic tangent.
+(class=math #args=1): Inverse hyperbolic tangent.
 .fi
 .if n \{\
 .RE
@@ -891,7 +891,7 @@ atanh (class=math #args=1): Inverse hyperbolic tangent.
 .RS 0
 .\}
 .nf
-boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
+(class=conversion #args=1): Convert int/float/bool/string to boolean.
 .fi
 .if n \{\
 .RE
@@ -900,7 +900,7 @@ boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 .RS 0
 .\}
 .nf
-cbrt (class=math #args=1): Cube root.
+(class=math #args=1): Cube root.
 .fi
 .if n \{\
 .RE
@@ -909,7 +909,7 @@ cbrt (class=math #args=1): Cube root.
 .RS 0
 .\}
 .nf
-ceil (class=math #args=1): Ceiling: nearest integer at or above.
+(class=math #args=1): Ceiling: nearest integer at or above.
 .fi
 .if n \{\
 .RE
@@ -918,7 +918,7 @@ ceil (class=math #args=1): Ceiling: nearest integer at or above.
 .RS 0
 .\}
 .nf
-cos (class=math #args=1): Trigonometric cosine.
+(class=math #args=1): Trigonometric cosine.
 .fi
 .if n \{\
 .RE
@@ -927,7 +927,7 @@ cos (class=math #args=1): Trigonometric cosine.
 .RS 0
 .\}
 .nf
-cosh (class=math #args=1): Hyperbolic cosine.
+(class=math #args=1): Hyperbolic cosine.
 .fi
 .if n \{\
 .RE
@@ -936,7 +936,7 @@ cosh (class=math #args=1): Hyperbolic cosine.
 .RS 0
 .\}
 .nf
-dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
+(class=time #args=1): Recovers floating-point seconds as in
 dhms2fsec("5d18h53m20.250000s") = 500000.250000
 .fi
 .if n \{\
@@ -946,7 +946,7 @@ dhms2fsec("5d18h53m20.250000s") = 500000.250000
 .RS 0
 .\}
 .nf
-dhms2sec (class=time #args=1): Recovers integer seconds as in
+(class=time #args=1): Recovers integer seconds as in
 dhms2sec("5d18h53m20s") = 500000
 .fi
 .if n \{\
@@ -956,7 +956,7 @@ dhms2sec("5d18h53m20s") = 500000
 .RS 0
 .\}
 .nf
-erf (class=math #args=1): Error function.
+(class=math #args=1): Error function.
 .fi
 .if n \{\
 .RE
@@ -965,7 +965,7 @@ erf (class=math #args=1): Error function.
 .RS 0
 .\}
 .nf
-erfc (class=math #args=1): Complementary error function.
+(class=math #args=1): Complementary error function.
 .fi
 .if n \{\
 .RE
@@ -974,7 +974,7 @@ erfc (class=math #args=1): Complementary error function.
 .RS 0
 .\}
 .nf
-exp (class=math #args=1): Exponential function e**x.
+(class=math #args=1): Exponential function e**x.
 .fi
 .if n \{\
 .RE
@@ -983,7 +983,7 @@ exp (class=math #args=1): Exponential function e**x.
 .RS 0
 .\}
 .nf
-expm1 (class=math #args=1): e**x - 1.
+(class=math #args=1): e**x - 1.
 .fi
 .if n \{\
 .RE
@@ -992,7 +992,7 @@ expm1 (class=math #args=1): e**x - 1.
 .RS 0
 .\}
 .nf
-float (class=conversion #args=1): Convert int/float/bool/string to float.
+(class=conversion #args=1): Convert int/float/bool/string to float.
 .fi
 .if n \{\
 .RE
@@ -1001,7 +1001,7 @@ float (class=conversion #args=1): Convert int/float/bool/string to float.
 .RS 0
 .\}
 .nf
-floor (class=math #args=1): Floor: nearest integer at or below.
+(class=math #args=1): Floor: nearest integer at or below.
 .fi
 .if n \{\
 .RE
@@ -1010,7 +1010,7 @@ floor (class=math #args=1): Floor: nearest integer at or below.
 .RS 0
 .\}
 .nf
-fmtnum (class=conversion #args=2): Convert int/float/bool to string using
+(class=conversion #args=2): Convert int/float/bool to string using
 printf-style format string, e.g. "%06lld".
 .fi
 .if n \{\
@@ -1020,7 +1020,7 @@ printf-style format string, e.g. "%06lld".
 .RS 0
 .\}
 .nf
-fsec2dhms (class=time #args=1): Formats floating-point seconds as in
+(class=time #args=1): Formats floating-point seconds as in
 fsec2dhms(500000.25) = "5d18h53m20.250000s"
 .fi
 .if n \{\
@@ -1030,7 +1030,7 @@ fsec2dhms(500000.25) = "5d18h53m20.250000s"
 .RS 0
 .\}
 .nf
-fsec2hms (class=time #args=1): Formats floating-point seconds as in
+(class=time #args=1): Formats floating-point seconds as in
 fsec2hms(5000.25) = "01:23:20.250000"
 .fi
 .if n \{\
@@ -1040,7 +1040,7 @@ fsec2hms(5000.25) = "01:23:20.250000"
 .RS 0
 .\}
 .nf
-gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
+(class=time #args=1): Parses GMT timestamp as integer seconds since
 the epoch.
 .fi
 .if n \{\
@@ -1050,7 +1050,7 @@ the epoch.
 .RS 0
 .\}
 .nf
-gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
+(class=string #args=3): Example: '$name=gsub($name, "old", "new")'
 (replace all).
 .fi
 .if n \{\
@@ -1060,7 +1060,7 @@ gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
 .RS 0
 .\}
 .nf
-hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+(class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
 .fi
 .if n \{\
 .RE
@@ -1069,7 +1069,7 @@ hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
 .RS 0
 .\}
 .nf
-hms2fsec (class=time #args=1): Recovers floating-point seconds as in
+(class=time #args=1): Recovers floating-point seconds as in
 hms2fsec("01:23:20.250000") = 5000.250000
 .fi
 .if n \{\
@@ -1079,7 +1079,7 @@ hms2fsec("01:23:20.250000") = 5000.250000
 .RS 0
 .\}
 .nf
-hms2sec (class=time #args=1): Recovers integer seconds as in
+(class=time #args=1): Recovers integer seconds as in
 hms2sec("01:23:20") = 5000
 .fi
 .if n \{\
@@ -1089,7 +1089,7 @@ hms2sec("01:23:20") = 5000
 .RS 0
 .\}
 .nf
-int (class=conversion #args=1): Convert int/float/bool/string to int.
+(class=conversion #args=1): Convert int/float/bool/string to int.
 .fi
 .if n \{\
 .RE
@@ -1098,7 +1098,7 @@ int (class=conversion #args=1): Convert int/float/bool/string to int.
 .RS 0
 .\}
 .nf
-invqnorm (class=math #args=1): Inverse of normal cumulative distribution
+(class=math #args=1): Inverse of normal cumulative distribution
 function. Note that invqorm(urand()) is normally distributed.
 .fi
 .if n \{\
@@ -1108,7 +1108,7 @@ function. Note that invqorm(urand()) is normally distributed.
 .RS 0
 .\}
 .nf
-log (class=math #args=1): Natural (base-e) logarithm.
+(class=math #args=1): Natural (base-e) logarithm.
 .fi
 .if n \{\
 .RE
@@ -1117,7 +1117,7 @@ log (class=math #args=1): Natural (base-e) logarithm.
 .RS 0
 .\}
 .nf
-log10 (class=math #args=1): Base-10 logarithm.
+(class=math #args=1): Base-10 logarithm.
 .fi
 .if n \{\
 .RE
@@ -1126,7 +1126,7 @@ log10 (class=math #args=1): Base-10 logarithm.
 .RS 0
 .\}
 .nf
-log1p (class=math #args=1): log(1-x).
+(class=math #args=1): log(1-x).
 .fi
 .if n \{\
 .RE
@@ -1135,7 +1135,7 @@ log1p (class=math #args=1): log(1-x).
 .RS 0
 .\}
 .nf
-logifit (class=math #args=3): Given m and b from logistic regression, compute
+(class=math #args=3): Given m and b from logistic regression, compute
 fit: $yhat=logifit($x,$m,$b).
 .fi
 .if n \{\
@@ -1145,7 +1145,7 @@ fit: $yhat=logifit($x,$m,$b).
 .RS 0
 .\}
 .nf
-madd (class=math #args=3): a + b mod m (integers)
+(class=math #args=3): a + b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -1154,7 +1154,7 @@ madd (class=math #args=3): a + b mod m (integers)
 .RS 0
 .\}
 .nf
-max (class=math #args=2): max of two numbers; null loses
+(class=math #args=2): max of two numbers; null loses
 .fi
 .if n \{\
 .RE
@@ -1163,7 +1163,7 @@ max (class=math #args=2): max of two numbers; null loses
 .RS 0
 .\}
 .nf
-mexp (class=math #args=3): a ** b mod m (integers)
+(class=math #args=3): a ** b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -1172,7 +1172,7 @@ mexp (class=math #args=3): a ** b mod m (integers)
 .RS 0
 .\}
 .nf
-min (class=math #args=2): min of two numbers; null loses
+(class=math #args=2): min of two numbers; null loses
 .fi
 .if n \{\
 .RE
@@ -1181,7 +1181,7 @@ min (class=math #args=2): min of two numbers; null loses
 .RS 0
 .\}
 .nf
-mmul (class=math #args=3): a * b mod m (integers)
+(class=math #args=3): a * b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -1190,7 +1190,7 @@ mmul (class=math #args=3): a * b mod m (integers)
 .RS 0
 .\}
 .nf
-msub (class=math #args=3): a - b mod m (integers)
+(class=math #args=3): a - b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -1199,7 +1199,7 @@ msub (class=math #args=3): a - b mod m (integers)
 .RS 0
 .\}
 .nf
-pow (class=math #args=2): Exponentiation; same as **.
+(class=math #args=2): Exponentiation; same as **.
 .fi
 .if n \{\
 .RE
@@ -1208,7 +1208,7 @@ pow (class=math #args=2): Exponentiation; same as **.
 .RS 0
 .\}
 .nf
-qnorm (class=math #args=1): Normal cumulative distribution function.
+(class=math #args=1): Normal cumulative distribution function.
 .fi
 .if n \{\
 .RE
@@ -1217,7 +1217,7 @@ qnorm (class=math #args=1): Normal cumulative distribution function.
 .RS 0
 .\}
 .nf
-round (class=math #args=1): Round to nearest integer.
+(class=math #args=1): Round to nearest integer.
 .fi
 .if n \{\
 .RE
@@ -1226,7 +1226,7 @@ round (class=math #args=1): Round to nearest integer.
 .RS 0
 .\}
 .nf
-roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
+(class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
 the same as round($x/$m)*$m
 .fi
 .if n \{\
@@ -1236,7 +1236,7 @@ the same as round($x/$m)*$m
 .RS 0
 .\}
 .nf
-sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
+(class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 = "5d18h53m20s"
 .fi
 .if n \{\
@@ -1246,7 +1246,7 @@ sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 .RS 0
 .\}
 .nf
-sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
+(class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 .fi
 .if n \{\
@@ -1256,7 +1256,7 @@ as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 .RS 0
 .\}
 .nf
-sec2hms (class=time #args=1): Formats integer seconds as in
+(class=time #args=1): Formats integer seconds as in
 sec2hms(5000) = "01:23:20"
 .fi
 .if n \{\
@@ -1266,7 +1266,7 @@ sec2hms(5000) = "01:23:20"
 .RS 0
 .\}
 .nf
-sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
+(class=math #args=1): +1 for positive input, 0 for zero input, -1 for
 negative input.
 .fi
 .if n \{\
@@ -1276,7 +1276,7 @@ negative input.
 .RS 0
 .\}
 .nf
-sin (class=math #args=1): Trigonometric sine.
+(class=math #args=1): Trigonometric sine.
 .fi
 .if n \{\
 .RE
@@ -1285,7 +1285,7 @@ sin (class=math #args=1): Trigonometric sine.
 .RS 0
 .\}
 .nf
-sinh (class=math #args=1): Hyperbolic sine.
+(class=math #args=1): Hyperbolic sine.
 .fi
 .if n \{\
 .RE
@@ -1294,7 +1294,7 @@ sinh (class=math #args=1): Hyperbolic sine.
 .RS 0
 .\}
 .nf
-sqrt (class=math #args=1): Square root.
+(class=math #args=1): Square root.
 .fi
 .if n \{\
 .RE
@@ -1303,7 +1303,7 @@ sqrt (class=math #args=1): Square root.
 .RS 0
 .\}
 .nf
-strftime (class=time #args=2): Formats seconds since epoch (integer part)
+(class=time #args=2): Formats seconds since epoch (integer part)
 as timestamp, e.g.
 strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
 .fi
@@ -1314,7 +1314,7 @@ strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
 .RS 0
 .\}
 .nf
-string (class=conversion #args=1): Convert int/float/bool/string to string.
+(class=conversion #args=1): Convert int/float/bool/string to string.
 .fi
 .if n \{\
 .RE
@@ -1323,7 +1323,7 @@ string (class=conversion #args=1): Convert int/float/bool/string to string.
 .RS 0
 .\}
 .nf
-strlen (class=string #args=1): String length.
+(class=string #args=1): String length.
 .fi
 .if n \{\
 .RE
@@ -1332,7 +1332,7 @@ strlen (class=string #args=1): String length.
 .RS 0
 .\}
 .nf
-strptime (class=time #args=2): Parses timestamp as integer seconds since epoch,
+(class=time #args=2): Parses timestamp as integer seconds since epoch,
 e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 .fi
 .if n \{\
@@ -1342,7 +1342,7 @@ e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 .RS 0
 .\}
 .nf
-sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
+(class=string #args=3): Example: '$name=sub($name, "old", "new")'
 (replace once).
 .fi
 .if n \{\
@@ -1352,7 +1352,7 @@ sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
 .RS 0
 .\}
 .nf
-systime (class=time #args=0): Floating-point seconds since the epoch,
+(class=time #args=0): Floating-point seconds since the epoch,
 e.g. 1440768801.748936.
 .fi
 .if n \{\
@@ -1362,7 +1362,7 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-tan (class=math #args=1): Trigonometric tangent.
+(class=math #args=1): Trigonometric tangent.
 .fi
 .if n \{\
 .RE
@@ -1371,7 +1371,7 @@ tan (class=math #args=1): Trigonometric tangent.
 .RS 0
 .\}
 .nf
-tanh (class=math #args=1): Hyperbolic tangent.
+(class=math #args=1): Hyperbolic tangent.
 .fi
 .if n \{\
 .RE
@@ -1380,7 +1380,7 @@ tanh (class=math #args=1): Hyperbolic tangent.
 .RS 0
 .\}
 .nf
-tolower (class=string #args=1): Convert string to lowercase.
+(class=string #args=1): Convert string to lowercase.
 .fi
 .if n \{\
 .RE
@@ -1389,7 +1389,7 @@ tolower (class=string #args=1): Convert string to lowercase.
 .RS 0
 .\}
 .nf
-toupper (class=string #args=1): Convert string to uppercase.
+(class=string #args=1): Convert string to uppercase.
 .fi
 .if n \{\
 .RE
@@ -1398,7 +1398,7 @@ toupper (class=string #args=1): Convert string to uppercase.
 .RS 0
 .\}
 .nf
-urand (class=math #args=0): Floating-point numbers on the unit interval.
+(class=math #args=0): Floating-point numbers on the unit interval.
 Int-valued example: '$n=floor(20+urand()*11)'.
 .fi
 .if n \{\
@@ -1408,7 +1408,7 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .RS 0
 .\}
 .nf
-urandint (class=math #args=2): Integer uniformly distributed between inclusive
+(class=math #args=2): Integer uniformly distributed between inclusive
 integer endpoints.
 .fi
 .if n \{\
@@ -1418,7 +1418,7 @@ integer endpoints.
 .RS 0
 .\}
 .nf
-! (class=boolean #args=1): Logical negation.
+(class=boolean #args=1): Logical negation.
 .fi
 .if n \{\
 .RE
@@ -1427,7 +1427,7 @@ integer endpoints.
 .RS 0
 .\}
 .nf
-!= (class=boolean #args=2): String/numeric inequality. Mixing number and string
+(class=boolean #args=2): String/numeric inequality. Mixing number and string
 results in string compare.
 .fi
 .if n \{\
@@ -1437,7 +1437,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-!=~ (class=boolean #args=2): String (left-hand side) does not match regex
+(class=boolean #args=2): String (left-hand side) does not match regex
 (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 .fi
 .if n \{\
@@ -1447,7 +1447,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-% (class=math #args=2): Remainder; never negative-valued.
+(class=math #args=2): Remainder; never negative-valued.
 .fi
 .if n \{\
 .RE
@@ -1456,7 +1456,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-& (class=math #args=2): Bitwise AND.
+(class=math #args=2): Bitwise AND.
 .fi
 .if n \{\
 .RE
@@ -1465,7 +1465,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-&& (class=boolean #args=2): Logical AND.
+(class=boolean #args=2): Logical AND.
 .fi
 .if n \{\
 .RE
@@ -1474,7 +1474,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-* (class=math #args=2): Multiplication.
+(class=math #args=2): Multiplication.
 .fi
 .if n \{\
 .RE
@@ -1483,7 +1483,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-** (class=math #args=2): Exponentiation; same as pow.
+(class=math #args=2): Exponentiation; same as pow.
 .fi
 .if n \{\
 .RE
@@ -1492,7 +1492,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-+ (class=math #args=2): Addition.
+(class=math #args=2): Addition.
 + (class=math #args=1): Unary plus.
 .fi
 .if n \{\
@@ -1502,7 +1502,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-- (class=math #args=2): Subtraction.
+(class=math #args=2): Subtraction.
 - (class=math #args=1): Unary minus.
 .fi
 .if n \{\
@@ -1512,7 +1512,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-\&. (class=string #args=2): String concatenation.
+(class=string #args=2): String concatenation.
 .fi
 .if n \{\
 .RE
@@ -1521,7 +1521,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-/ (class=math #args=2): Division.
+(class=math #args=2): Division.
 .fi
 .if n \{\
 .RE
@@ -1530,7 +1530,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-// (class=math #args=2): Integer division.
+(class=math #args=2): Integer division.
 .fi
 .if n \{\
 .RE
@@ -1539,7 +1539,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-< (class=boolean #args=2): String/numeric less-than. Mixing number and string
+(class=boolean #args=2): String/numeric less-than. Mixing number and string
 results in string compare.
 .fi
 .if n \{\
@@ -1549,7 +1549,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-<< (class=math #args=2): Bitwise left-shift.
+(class=math #args=2): Bitwise left-shift.
 .fi
 .if n \{\
 .RE
@@ -1558,7 +1558,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-<= (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
+(class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
 and string results in string compare.
 .fi
 .if n \{\
@@ -1568,7 +1568,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-== (class=boolean #args=2): String/numeric equality. Mixing number and string
+(class=boolean #args=2): String/numeric equality. Mixing number and string
 results in string compare.
 .fi
 .if n \{\
@@ -1578,7 +1578,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
-=~ (class=boolean #args=2): String (left-hand side) matches regex (right-hand
+(class=boolean #args=2): String (left-hand side) matches regex (right-hand
 side), e.g. '$name =~ "^a.*b$"'.
 .fi
 .if n \{\
@@ -1588,7 +1588,7 @@ side), e.g. '$name =~ "^a.*b$"'.
 .RS 0
 .\}
 .nf
-> (class=boolean #args=2): String/numeric greater-than. Mixing number and string
+(class=boolean #args=2): String/numeric greater-than. Mixing number and string
 results in string compare.
 .fi
 .if n \{\
@@ -1598,7 +1598,7 @@ results in string compare.
 .RS 0
 .\}
 .nf
->= (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
+(class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
 and string results in string compare.
 .fi
 .if n \{\
@@ -1608,7 +1608,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
->> (class=math #args=2): Bitwise right-shift.
+(class=math #args=2): Bitwise right-shift.
 .fi
 .if n \{\
 .RE
@@ -1617,7 +1617,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-^ (class=math #args=2): Bitwise XOR.
+(class=math #args=2): Bitwise XOR.
 .fi
 .if n \{\
 .RE
@@ -1626,7 +1626,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-^^ (class=boolean #args=2): Logical XOR.
+(class=boolean #args=2): Logical XOR.
 .fi
 .if n \{\
 .RE
@@ -1635,7 +1635,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-| (class=math #args=2): Bitwise OR.
+(class=math #args=2): Bitwise OR.
 .fi
 .if n \{\
 .RE
@@ -1644,7 +1644,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-|| (class=boolean #args=2): Logical OR.
+(class=boolean #args=2): Logical OR.
 .fi
 .if n \{\
 .RE
@@ -1653,7 +1653,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-~ (class=math #args=1): Bitwise NOT.
+(class=math #args=1): Bitwise NOT.
 .fi
 .if n \{\
 .RE
