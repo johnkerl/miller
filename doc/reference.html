@@ -296,11 +296,11 @@ Verbs:
 Functions for the filter and put verbs:
    abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
    expm1 floor invqnorm log log10 log1p logifit madd msub mmul mexp max min pow
-   qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / //
-   % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub tolower
-   toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
-   strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
-   hms2fsec dhms2fsec
+   qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint urand32 + + - -
+   * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; =~ !=~ == != &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! strlen sub gsub
+   tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
+   gmt2sec strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms
+   fsec2dhms hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -379,7 +379,7 @@ Numerical formatting:
 
 Other options:
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-                     urand()/urandint().
+                     urand()/urandint()/urand32().
 
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.
@@ -2914,6 +2914,9 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 
 urandint (class=math #args=2): Integer uniformly distributed between inclusive
 integer endpoints.
+
+urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
+inclusive.
 
 + (class=math #args=2): Addition.
 

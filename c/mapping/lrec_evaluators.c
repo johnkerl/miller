@@ -100,23 +100,23 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
-typedef struct _lrec_evaluator_f_z_state_t {
+typedef struct _lrec_evaluator_x_z_state_t {
 	mv_zary_func_t* pfunc;
-} lrec_evaluator_f_z_state_t;
+} lrec_evaluator_x_z_state_t;
 
-mv_t lrec_evaluator_f_z_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	lrec_evaluator_f_z_state_t* pstate = pvstate;
+mv_t lrec_evaluator_x_z_func(lrec_t* prec, context_t* pctx, void* pvstate) {
+	lrec_evaluator_x_z_state_t* pstate = pvstate;
 
 	return pstate->pfunc();
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_f_z_func(mv_zary_func_t* pfunc) {
-	lrec_evaluator_f_z_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_f_z_state_t));
+lrec_evaluator_t* lrec_evaluator_alloc_from_x_z_func(mv_zary_func_t* pfunc) {
+	lrec_evaluator_x_z_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_x_z_state_t));
 	pstate->pfunc = pfunc;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pevaluator_func = lrec_evaluator_f_z_func;
+	pevaluator->pevaluator_func = lrec_evaluator_x_z_func;
 
 	return pevaluator;
 }
@@ -1123,9 +1123,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) {
 	if        (streq(function_name, "urand")) {
-		return lrec_evaluator_alloc_from_f_z_func(f_z_urand_func);
+		return lrec_evaluator_alloc_from_x_z_func(f_z_urand_func);
+	} else if (streq(function_name, "urand32")) {
+		return lrec_evaluator_alloc_from_x_z_func(i_z_urand32_func);
 	} else if (streq(function_name, "systime")) {
-		return lrec_evaluator_alloc_from_f_z_func(f_z_systime_func);
+		return lrec_evaluator_alloc_from_x_z_func(f_z_systime_func);
 	} else  {
 		return NULL;
 	}
@@ -1187,6 +1189,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "tanh",     1 , "Hyperbolic tangent."},
 	{ FUNC_CLASS_MATH, "urand",    0 , "Floating-point numbers on the unit interval.\nInt-valued example: '$n=floor(20+urand()*11)'." },
 	{ FUNC_CLASS_MATH, "urandint", 2 , "Integer uniformly distributed between inclusive\ninteger endpoints." },
+	{ FUNC_CLASS_MATH, "urand32",  0 , "Integer uniformly distributed 0 and 2**32-1\ninclusive." },
 
 	{ FUNC_CLASS_MATH, "+",       2 , "Addition."},
 	{ FUNC_CLASS_MATH, "+",       1 , "Unary plus."},

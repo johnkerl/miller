@@ -105,6 +105,10 @@ static inline mv_t f_z_systime_func() {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = get_systime()}; // mlrutil.h
 	return rv;
 }
+static inline mv_t i_z_urand32_func() {
+	mv_t rv = {.type = MT_INT, .u.intv = get_mtrand_int32()}; // mtrand.h
+	return rv;
+}
 
 // ----------------------------------------------------------------
 static inline mv_t f_f_acos_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=acos(pval1->u.fltv)};     return rv;}

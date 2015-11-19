@@ -140,10 +140,10 @@ output separator to the given value.
 .nf
  abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
  expm1 floor invqnorm log log10 log1p logifit madd msub mmul mexp max min pow
- qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint + + - - * / // %
- ** | ^ & ~ << >> =~ !=~ == != > >= < <= && || ^^ ! strlen sub gsub tolower
- toupper . boolean float int string hexfmt fmtnum systime sec2gmt gmt2sec
- strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
+ qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint urand32 + + - - *
+ / // % ** | ^ & ~ << >> =~ !=~ == != > >= < <= && || ^^ ! strlen sub gsub
+ tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
+ gmt2sec strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
  hms2fsec dhms2fsec
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
@@ -259,7 +259,7 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 .\}
 .nf
   --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-                     urand()/urandint().
+                     urand()/urandint()/urand32().
 .fi
 .if n \{\
 .RE
@@ -1400,6 +1400,16 @@ e.g. 1440768801.748936.
 .nf
 (class=math #args=0): Floating-point numbers on the unit interval.
 Int-valued example: '$n=floor(20+urand()*11)'.
+.fi
+.if n \{\
+.RE
+.SS "urand32"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=math #args=0): Integer uniformly distributed 0 and 2**32-1
+inclusive.
 .fi
 .if n \{\
 .RE
