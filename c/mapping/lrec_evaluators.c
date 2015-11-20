@@ -1141,13 +1141,58 @@ typedef struct _function_lookup_t {
 	char* usage_string;
 } function_lookup_t;
 
-#define FUNC_CLASS_MATH       0xa0
-#define FUNC_CLASS_BOOLEAN    0xa1
+#define FUNC_CLASS_ARITHMETIC 0xa0
+#define FUNC_CLASS_MATH       0xa1
+#define FUNC_CLASS_BOOLEAN    0xa2
 #define FUNC_CLASS_STRING     0xa3
 #define FUNC_CLASS_CONVERSION 0xa4
-#define FUNC_CLASS_TIME       0xa2
+#define FUNC_CLASS_TIME       0xa5
 
 static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
+
+	{ FUNC_CLASS_ARITHMETIC, "+",  2 , "Addition."},
+	{ FUNC_CLASS_ARITHMETIC, "+",  1 , "Unary plus."},
+	{ FUNC_CLASS_ARITHMETIC, "-",  2 , "Subtraction."},
+	{ FUNC_CLASS_ARITHMETIC, "-",  1 , "Unary minus."},
+	{ FUNC_CLASS_ARITHMETIC, "*",  2 , "Multiplication."},
+	{ FUNC_CLASS_ARITHMETIC, "/",  2 , "Division."},
+	{ FUNC_CLASS_ARITHMETIC, "//", 2 , "Integer division: rounds to negative (pythonic)."},
+	{ FUNC_CLASS_ARITHMETIC, "%",  2 , "Remainder; never negative-valued (pythonic)."},
+	{ FUNC_CLASS_ARITHMETIC, "**", 2 , "Exponentiation; same as pow, but as infix operator."},
+	{ FUNC_CLASS_ARITHMETIC, "|",  2 , "Bitwise OR."},
+	{ FUNC_CLASS_ARITHMETIC, "^",  2 , "Bitwise XOR."},
+	{ FUNC_CLASS_ARITHMETIC, "&",  2 , "Bitwise AND."},
+	{ FUNC_CLASS_ARITHMETIC, "~",  1 , "Bitwise NOT."},
+	{ FUNC_CLASS_ARITHMETIC, "<<", 2 , "Bitwise left-shift."},
+	{ FUNC_CLASS_ARITHMETIC, ">>", 2 , "Bitwise right-shift."},
+
+	{ FUNC_CLASS_BOOLEAN, "==",      2 , "String/numeric equality. Mixing number and string\nresults in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "!=",      2 , "String/numeric inequality. Mixing number and string\nresults in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand\nside), e.g. '$name =~ \"^a.*b$\"'."},
+	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex\n(right-hand side), e.g. '$name !=~ \"^a.*b$\"'."},
+	{ FUNC_CLASS_BOOLEAN, ">",       2 , "String/numeric greater-than. Mixing number and string\nresults in string compare."},
+	{ FUNC_CLASS_BOOLEAN, ">=",      2 , "String/numeric greater-than-or-equals. Mixing number\nand string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "<",       2 , "String/numeric less-than. Mixing number and string\nresults in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "<=",      2 , "String/numeric less-than-or-equals. Mixing number\nand string results in string compare."},
+	{ FUNC_CLASS_BOOLEAN, "&&",      2 , "Logical AND."},
+	{ FUNC_CLASS_BOOLEAN, "||",      2 , "Logical OR."},
+	{ FUNC_CLASS_BOOLEAN, "^^",      2 , "Logical XOR."},
+	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
+
+	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
+	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
+	{ FUNC_CLASS_CONVERSION, "fmtnum",   2 , "Convert int/float/bool to string using\nprintf-style format string, e.g. \"%06lld\"."},
+	{ FUNC_CLASS_CONVERSION, "hexfmt",   1 , "Convert int to string, e.g. 255 to \"0xff\"."},
+	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
+	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
+
+	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
+	{ FUNC_CLASS_STRING, "gsub",     3 , "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
+	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
+	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
+	{ FUNC_CLASS_STRING, "tolower",  1 , "Convert string to lowercase."},
+	{ FUNC_CLASS_STRING, "toupper",  1 , "Convert string to uppercase."},
+
 	{ FUNC_CLASS_MATH, "abs",      1 , "Absolute value."},
 	{ FUNC_CLASS_MATH, "acos",     1 , "Inverse trigonometric cosine."},
 	{ FUNC_CLASS_MATH, "acosh",    1 , "Inverse hyperbolic cosine."},
@@ -1172,11 +1217,11 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "log1p",    1 , "log(1-x)."},
 	{ FUNC_CLASS_MATH, "logifit",  3 , "Given m and b from logistic regression, compute\nfit: $yhat=logifit($x,$m,$b)."},
 	{ FUNC_CLASS_MATH, "madd",     3 , "a + b mod m (integers)"},
-	{ FUNC_CLASS_MATH, "msub",     3 , "a - b mod m (integers)"},
-	{ FUNC_CLASS_MATH, "mmul",     3 , "a * b mod m (integers)"},
-	{ FUNC_CLASS_MATH, "mexp",     3 , "a ** b mod m (integers)"},
 	{ FUNC_CLASS_MATH, "max",      2 , "max of two numbers; null loses"},
+	{ FUNC_CLASS_MATH, "mexp",     3 , "a ** b mod m (integers)"},
 	{ FUNC_CLASS_MATH, "min",      2 , "min of two numbers; null loses"},
+	{ FUNC_CLASS_MATH, "mmul",     3 , "a * b mod m (integers)"},
+	{ FUNC_CLASS_MATH, "msub",     3 , "a - b mod m (integers)"},
 	{ FUNC_CLASS_MATH, "pow",      2 , "Exponentiation; same as **."},
 	{ FUNC_CLASS_MATH, "qnorm",    1 , "Normal cumulative distribution function."},
 	{ FUNC_CLASS_MATH, "round",    1 , "Round to nearest integer."},
@@ -1188,65 +1233,22 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_MATH, "tan",      1 , "Trigonometric tangent."},
 	{ FUNC_CLASS_MATH, "tanh",     1 , "Hyperbolic tangent."},
 	{ FUNC_CLASS_MATH, "urand",    0 , "Floating-point numbers on the unit interval.\nInt-valued example: '$n=floor(20+urand()*11)'." },
-	{ FUNC_CLASS_MATH, "urandint", 2 , "Integer uniformly distributed between inclusive\ninteger endpoints." },
 	{ FUNC_CLASS_MATH, "urand32",  0 , "Integer uniformly distributed 0 and 2**32-1\ninclusive." },
+	{ FUNC_CLASS_MATH, "urandint", 2 , "Integer uniformly distributed between inclusive\ninteger endpoints." },
 
-	{ FUNC_CLASS_MATH, "+",       2 , "Addition."},
-	{ FUNC_CLASS_MATH, "+",       1 , "Unary plus."},
-	{ FUNC_CLASS_MATH, "-",       2 , "Subtraction."},
-	{ FUNC_CLASS_MATH, "-",       1 , "Unary minus."},
-	{ FUNC_CLASS_MATH, "*",       2 , "Multiplication."},
-	{ FUNC_CLASS_MATH, "/",       2 , "Division."},
-	{ FUNC_CLASS_MATH, "//",      2 , "Integer division."},
-	{ FUNC_CLASS_MATH, "%",       2 , "Remainder; never negative-valued."},
-	{ FUNC_CLASS_MATH, "**",      2 , "Exponentiation; same as pow."},
-	{ FUNC_CLASS_MATH, "|",       2 , "Bitwise OR."},
-	{ FUNC_CLASS_MATH, "^",       2 , "Bitwise XOR."},
-	{ FUNC_CLASS_MATH, "&",       2 , "Bitwise AND."},
-	{ FUNC_CLASS_MATH, "~",       1 , "Bitwise NOT."},
-	{ FUNC_CLASS_MATH, "<<",      2 , "Bitwise left-shift."},
-	{ FUNC_CLASS_MATH, ">>",      2 , "Bitwise right-shift."},
-
-	{ FUNC_CLASS_BOOLEAN, "=~",      2 , "String (left-hand side) matches regex (right-hand\nside), e.g. '$name =~ \"^a.*b$\"'."},
-	{ FUNC_CLASS_BOOLEAN, "!=~",     2 , "String (left-hand side) does not match regex\n(right-hand side), e.g. '$name !=~ \"^a.*b$\"'."},
-	{ FUNC_CLASS_BOOLEAN, "==",      2 , "String/numeric equality. Mixing number and string\nresults in string compare."},
-	{ FUNC_CLASS_BOOLEAN, "!=",      2 , "String/numeric inequality. Mixing number and string\nresults in string compare."},
-	{ FUNC_CLASS_BOOLEAN, ">",       2 , "String/numeric greater-than. Mixing number and string\nresults in string compare."},
-	{ FUNC_CLASS_BOOLEAN, ">=",      2 , "String/numeric greater-than-or-equals. Mixing number\nand string results in string compare."},
-	{ FUNC_CLASS_BOOLEAN, "<",       2 , "String/numeric less-than. Mixing number and string\nresults in string compare."},
-	{ FUNC_CLASS_BOOLEAN, "<=",      2 , "String/numeric less-than-or-equals. Mixing number\nand string results in string compare."},
-	{ FUNC_CLASS_BOOLEAN, "&&",      2 , "Logical AND."},
-	{ FUNC_CLASS_BOOLEAN, "||",      2 , "Logical OR."},
-	{ FUNC_CLASS_BOOLEAN, "^^",      2 , "Logical XOR."},
-	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
-
-	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
-	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
-	{ FUNC_CLASS_STRING, "gsub",     3 , "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
-	{ FUNC_CLASS_STRING, "tolower",  1 , "Convert string to lowercase."},
-	{ FUNC_CLASS_STRING, "toupper",  1 , "Convert string to uppercase."},
-	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
-
-	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
-	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
-	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
-	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
-	{ FUNC_CLASS_CONVERSION, "hexfmt",   1 , "Convert int to string, e.g. 255 to \"0xff\"."},
-	{ FUNC_CLASS_CONVERSION, "fmtnum",   2 , "Convert int/float/bool to string using\nprintf-style format string, e.g. \"%06lld\"."},
-
-	{ FUNC_CLASS_TIME, "systime",   0 , "Floating-point seconds since the epoch,\ne.g. 1440768801.748936." },
-	{ FUNC_CLASS_TIME, "sec2gmt",   1 , "Formats seconds since epoch (integer part)\nas GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\"."},
+	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "Recovers floating-point seconds as in\ndhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
+	{ FUNC_CLASS_TIME, "dhms2sec",  1 , "Recovers integer seconds as in\ndhms2sec(\"5d18h53m20s\") = 500000"},
+	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "Formats floating-point seconds as in\nfsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
+	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "Formats floating-point seconds as in\nfsec2hms(5000.25) = \"01:23:20.250000\""},
 	{ FUNC_CLASS_TIME, "gmt2sec",   1 , "Parses GMT timestamp as integer seconds since\nthe epoch."},
+	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "Recovers floating-point seconds as in\nhms2fsec(\"01:23:20.250000\") = 5000.250000"},
+	{ FUNC_CLASS_TIME, "hms2sec",   1 , "Recovers integer seconds as in\nhms2sec(\"01:23:20\") = 5000"},
+	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "Formats integer seconds as in sec2dhms(500000)\n= \"5d18h53m20s\""},
+	{ FUNC_CLASS_TIME, "sec2gmt",   1 , "Formats seconds since epoch (integer part)\nas GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\"."},
+	{ FUNC_CLASS_TIME, "sec2hms",   1 , "Formats integer seconds as in\nsec2hms(5000) = \"01:23:20\""},
 	{ FUNC_CLASS_TIME, "strftime",  2 , "Formats seconds since epoch (integer part)\nas timestamp, e.g.\nstrftime(1440768801.7,\"%Y-%m-%dT%H:%M:%SZ\") = \"2015-08-28T13:33:21Z\"."},
 	{ FUNC_CLASS_TIME, "strptime",  2 , "Parses timestamp as integer seconds since epoch,\ne.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801."},
-	{ FUNC_CLASS_TIME, "sec2hms",   1 , "Formats integer seconds as in\nsec2hms(5000) = \"01:23:20\""},
-	{ FUNC_CLASS_TIME, "sec2dhms",  1 , "Formats integer seconds as in sec2dhms(500000)\n= \"5d18h53m20s\""},
-	{ FUNC_CLASS_TIME, "hms2sec",   1 , "Recovers integer seconds as in\nhms2sec(\"01:23:20\") = 5000"},
-	{ FUNC_CLASS_TIME, "dhms2sec",  1 , "Recovers integer seconds as in\ndhms2sec(\"5d18h53m20s\") = 500000"},
-	{ FUNC_CLASS_TIME, "fsec2hms",  1 , "Formats floating-point seconds as in\nfsec2hms(5000.25) = \"01:23:20.250000\""},
-	{ FUNC_CLASS_TIME, "fsec2dhms", 1 , "Formats floating-point seconds as in\nfsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
-	{ FUNC_CLASS_TIME, "hms2fsec",  1 , "Recovers floating-point seconds as in\nhms2fsec(\"01:23:20.250000\") = 5000.250000"},
-	{ FUNC_CLASS_TIME, "dhms2fsec", 1 , "Recovers floating-point seconds as in\ndhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
+	{ FUNC_CLASS_TIME, "systime",   0 , "Floating-point seconds since the epoch,\ne.g. 1440768801.748936." },
 
 	{  0, NULL,      -1 , NULL}, // table terminator
 };
@@ -1303,6 +1305,7 @@ static void check_arity_with_report(function_lookup_t function_lookup_table[], c
 
 static char* function_class_to_desc(int function_class) {
 	switch(function_class) {
+	case FUNC_CLASS_ARITHMETIC: return "arithmetic"; break;
 	case FUNC_CLASS_MATH:       return "math";       break;
 	case FUNC_CLASS_BOOLEAN:    return "boolean";    break;
 	case FUNC_CLASS_STRING:     return "string";     break;

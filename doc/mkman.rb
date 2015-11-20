@@ -95,23 +95,7 @@ output separator to the given value."""
   print make_section('FUNCTIONS FOR FILTER/PUT', [
     ""
   ])
-  functions = functions.strip.split("\n").sort { |a,b|
-    aalpha = a =~ /^[a-z]/
-    balpha = b =~ /^[a-z]/
-    if aalpha
-      if balpha
-        a <=> b
-      else
-        -1
-      end
-    else
-      if balpha
-        1
-      else
-        a <=> b
-      end
-    end
-  }.uniq
+  functions = functions.strip.split("\n").uniq
   for function in functions
     print make_subsection(function, [])
     text = `mlr --help-function '#{function}'`

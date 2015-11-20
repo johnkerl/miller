@@ -138,13 +138,13 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp
- expm1 floor invqnorm log log10 log1p logifit madd msub mmul mexp max min pow
- qnorm round roundm sgn sin sinh sqrt tan tanh urand urandint urand32 + + - - *
- / // % ** | ^ & ~ << >> =~ !=~ == != > >= < <= && || ^^ ! strlen sub gsub
- tolower toupper . boolean float int string hexfmt fmtnum systime sec2gmt
- gmt2sec strftime strptime sec2hms sec2dhms hms2sec dhms2sec fsec2hms fsec2dhms
- hms2fsec dhms2fsec
+ + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! boolean
+ float fmtnum hexfmt int string . gsub strlen sub tolower toupper abs acos
+ acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor
+ invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm round
+ roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec
+ fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2hms strftime
+ strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 .fi
@@ -814,6 +814,352 @@ count-distinct.
 .SH "FUNCTIONS FOR FILTER/PUT"
 .sp
 
+.SS "+"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Addition.
++ (class=arithmetic #args=1): Unary plus.
+.fi
+.if n \{\
+.RE
+.SS "-"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Subtraction.
+- (class=arithmetic #args=1): Unary minus.
+.fi
+.if n \{\
+.RE
+.SS "*"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Multiplication.
+.fi
+.if n \{\
+.RE
+.SS "/"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Division.
+.fi
+.if n \{\
+.RE
+.SS "//"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
+.fi
+.if n \{\
+.RE
+.SS "%"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
+.fi
+.if n \{\
+.RE
+.SS "**"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Exponentiation; same as pow, but as infix operator.
+.fi
+.if n \{\
+.RE
+.SS "|"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Bitwise OR.
+.fi
+.if n \{\
+.RE
+.SS "^"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Bitwise XOR.
+.fi
+.if n \{\
+.RE
+.SS "&"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Bitwise AND.
+.fi
+.if n \{\
+.RE
+.SS "~"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=1): Bitwise NOT.
+.fi
+.if n \{\
+.RE
+.SS "<<"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Bitwise left-shift.
+.fi
+.if n \{\
+.RE
+.SS ">>"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=arithmetic #args=2): Bitwise right-shift.
+.fi
+.if n \{\
+.RE
+.SS "=="
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric equality. Mixing number and string
+results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "!="
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric inequality. Mixing number and string
+results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "=~"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String (left-hand side) matches regex (right-hand
+side), e.g. '$name =~ "^a.*b$"'.
+.fi
+.if n \{\
+.RE
+.SS "!=~"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String (left-hand side) does not match regex
+(right-hand side), e.g. '$name !=~ "^a.*b$"'.
+.fi
+.if n \{\
+.RE
+.SS ">"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric greater-than. Mixing number and string
+results in string compare.
+.fi
+.if n \{\
+.RE
+.SS ">="
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
+and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "<"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric less-than. Mixing number and string
+results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "<="
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
+and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "&&"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): Logical AND.
+.fi
+.if n \{\
+.RE
+.SS "||"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): Logical OR.
+.fi
+.if n \{\
+.RE
+.SS "^^"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=2): Logical XOR.
+.fi
+.if n \{\
+.RE
+.SS "!"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=1): Logical negation.
+.fi
+.if n \{\
+.RE
+.SS "boolean"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Convert int/float/bool/string to boolean.
+.fi
+.if n \{\
+.RE
+.SS "float"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Convert int/float/bool/string to float.
+.fi
+.if n \{\
+.RE
+.SS "fmtnum"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=2): Convert int/float/bool to string using
+printf-style format string, e.g. "%06lld".
+.fi
+.if n \{\
+.RE
+.SS "hexfmt"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+.fi
+.if n \{\
+.RE
+.SS "int"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Convert int/float/bool/string to int.
+.fi
+.if n \{\
+.RE
+.SS "string"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Convert int/float/bool/string to string.
+.fi
+.if n \{\
+.RE
+.SS "."
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=2): String concatenation.
+.fi
+.if n \{\
+.RE
+.SS "gsub"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=3): Example: '$name=gsub($name, "old", "new")'
+(replace all).
+.fi
+.if n \{\
+.RE
+.SS "strlen"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=1): String length.
+.fi
+.if n \{\
+.RE
+.SS "sub"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=3): Example: '$name=sub($name, "old", "new")'
+(replace once).
+.fi
+.if n \{\
+.RE
+.SS "tolower"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=1): Convert string to lowercase.
+.fi
+.if n \{\
+.RE
+.SS "toupper"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=1): Convert string to uppercase.
+.fi
+.if n \{\
+.RE
 .SS "abs"
 .if n \{\
 .RS 0
@@ -886,15 +1232,6 @@ count-distinct.
 .fi
 .if n \{\
 .RE
-.SS "boolean"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=1): Convert int/float/bool/string to boolean.
-.fi
-.if n \{\
-.RE
 .SS "cbrt"
 .if n \{\
 .RS 0
@@ -928,26 +1265,6 @@ count-distinct.
 .\}
 .nf
 (class=math #args=1): Hyperbolic cosine.
-.fi
-.if n \{\
-.RE
-.SS "dhms2fsec"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Recovers floating-point seconds as in
-dhms2fsec("5d18h53m20.250000s") = 500000.250000
-.fi
-.if n \{\
-.RE
-.SS "dhms2sec"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Recovers integer seconds as in
-dhms2sec("5d18h53m20s") = 500000
 .fi
 .if n \{\
 .RE
@@ -987,109 +1304,12 @@ dhms2sec("5d18h53m20s") = 500000
 .fi
 .if n \{\
 .RE
-.SS "float"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=1): Convert int/float/bool/string to float.
-.fi
-.if n \{\
-.RE
 .SS "floor"
 .if n \{\
 .RS 0
 .\}
 .nf
 (class=math #args=1): Floor: nearest integer at or below.
-.fi
-.if n \{\
-.RE
-.SS "fmtnum"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=2): Convert int/float/bool to string using
-printf-style format string, e.g. "%06lld".
-.fi
-.if n \{\
-.RE
-.SS "fsec2dhms"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Formats floating-point seconds as in
-fsec2dhms(500000.25) = "5d18h53m20.250000s"
-.fi
-.if n \{\
-.RE
-.SS "fsec2hms"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Formats floating-point seconds as in
-fsec2hms(5000.25) = "01:23:20.250000"
-.fi
-.if n \{\
-.RE
-.SS "gmt2sec"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Parses GMT timestamp as integer seconds since
-the epoch.
-.fi
-.if n \{\
-.RE
-.SS "gsub"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-(replace all).
-.fi
-.if n \{\
-.RE
-.SS "hexfmt"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
-.fi
-.if n \{\
-.RE
-.SS "hms2fsec"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Recovers floating-point seconds as in
-hms2fsec("01:23:20.250000") = 5000.250000
-.fi
-.if n \{\
-.RE
-.SS "hms2sec"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Recovers integer seconds as in
-hms2sec("01:23:20") = 5000
-.fi
-.if n \{\
-.RE
-.SS "int"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=1): Convert int/float/bool/string to int.
 .fi
 .if n \{\
 .RE
@@ -1231,36 +1451,6 @@ the same as round($x/$m)*$m
 .fi
 .if n \{\
 .RE
-.SS "sec2dhms"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Formats integer seconds as in sec2dhms(500000)
-= "5d18h53m20s"
-.fi
-.if n \{\
-.RE
-.SS "sec2gmt"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Formats seconds since epoch (integer part)
-as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-.fi
-.if n \{\
-.RE
-.SS "sec2hms"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=1): Formats integer seconds as in
-sec2hms(5000) = "01:23:20"
-.fi
-.if n \{\
-.RE
 .SS "sgn"
 .if n \{\
 .RS 0
@@ -1298,65 +1488,6 @@ negative input.
 .fi
 .if n \{\
 .RE
-.SS "strftime"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=2): Formats seconds since epoch (integer part)
-as timestamp, e.g.
-strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
-.fi
-.if n \{\
-.RE
-.SS "string"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=conversion #args=1): Convert int/float/bool/string to string.
-.fi
-.if n \{\
-.RE
-.SS "strlen"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=string #args=1): String length.
-.fi
-.if n \{\
-.RE
-.SS "strptime"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=2): Parses timestamp as integer seconds since epoch,
-e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
-.fi
-.if n \{\
-.RE
-.SS "sub"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=string #args=3): Example: '$name=sub($name, "old", "new")'
-(replace once).
-.fi
-.if n \{\
-.RE
-.SS "systime"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=time #args=0): Floating-point seconds since the epoch,
-e.g. 1440768801.748936.
-.fi
-.if n \{\
-.RE
 .SS "tan"
 .if n \{\
 .RS 0
@@ -1372,24 +1503,6 @@ e.g. 1440768801.748936.
 .\}
 .nf
 (class=math #args=1): Hyperbolic tangent.
-.fi
-.if n \{\
-.RE
-.SS "tolower"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=string #args=1): Convert string to lowercase.
-.fi
-.if n \{\
-.RE
-.SS "toupper"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=string #args=1): Convert string to uppercase.
 .fi
 .if n \{\
 .RE
@@ -1423,247 +1536,134 @@ integer endpoints.
 .fi
 .if n \{\
 .RE
-.SS "!"
+.SS "dhms2fsec"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=boolean #args=1): Logical negation.
+(class=time #args=1): Recovers floating-point seconds as in
+dhms2fsec("5d18h53m20.250000s") = 500000.250000
 .fi
 .if n \{\
 .RE
-.SS "!="
+.SS "dhms2sec"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=boolean #args=2): String/numeric inequality. Mixing number and string
-results in string compare.
+(class=time #args=1): Recovers integer seconds as in
+dhms2sec("5d18h53m20s") = 500000
 .fi
 .if n \{\
 .RE
-.SS "!=~"
+.SS "fsec2dhms"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=boolean #args=2): String (left-hand side) does not match regex
-(right-hand side), e.g. '$name !=~ "^a.*b$"'.
+(class=time #args=1): Formats floating-point seconds as in
+fsec2dhms(500000.25) = "5d18h53m20.250000s"
 .fi
 .if n \{\
 .RE
-.SS "%"
+.SS "fsec2hms"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Remainder; never negative-valued.
+(class=time #args=1): Formats floating-point seconds as in
+fsec2hms(5000.25) = "01:23:20.250000"
 .fi
 .if n \{\
 .RE
-.SS "&"
+.SS "gmt2sec"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Bitwise AND.
+(class=time #args=1): Parses GMT timestamp as integer seconds since
+the epoch.
 .fi
 .if n \{\
 .RE
-.SS "&&"
+.SS "hms2fsec"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=boolean #args=2): Logical AND.
+(class=time #args=1): Recovers floating-point seconds as in
+hms2fsec("01:23:20.250000") = 5000.250000
 .fi
 .if n \{\
 .RE
-.SS "*"
+.SS "hms2sec"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Multiplication.
+(class=time #args=1): Recovers integer seconds as in
+hms2sec("01:23:20") = 5000
 .fi
 .if n \{\
 .RE
-.SS "**"
+.SS "sec2dhms"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Exponentiation; same as pow.
+(class=time #args=1): Formats integer seconds as in sec2dhms(500000)
+= "5d18h53m20s"
 .fi
 .if n \{\
 .RE
-.SS "+"
+.SS "sec2gmt"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Addition.
-+ (class=math #args=1): Unary plus.
+(class=time #args=1): Formats seconds since epoch (integer part)
+as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 .fi
 .if n \{\
 .RE
-.SS "-"
+.SS "sec2hms"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Subtraction.
-- (class=math #args=1): Unary minus.
+(class=time #args=1): Formats integer seconds as in
+sec2hms(5000) = "01:23:20"
 .fi
 .if n \{\
 .RE
-.SS "."
+.SS "strftime"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=string #args=2): String concatenation.
+(class=time #args=2): Formats seconds since epoch (integer part)
+as timestamp, e.g.
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
 .fi
 .if n \{\
 .RE
-.SS "/"
+.SS "strptime"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Division.
+(class=time #args=2): Parses timestamp as integer seconds since epoch,
+e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 .fi
 .if n \{\
 .RE
-.SS "//"
+.SS "systime"
 .if n \{\
 .RS 0
 .\}
 .nf
-(class=math #args=2): Integer division.
-.fi
-.if n \{\
-.RE
-.SS "<"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String/numeric less-than. Mixing number and string
-results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "<<"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=math #args=2): Bitwise left-shift.
-.fi
-.if n \{\
-.RE
-.SS "<="
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
-and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "=="
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String/numeric equality. Mixing number and string
-results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "=~"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String (left-hand side) matches regex (right-hand
-side), e.g. '$name =~ "^a.*b$"'.
-.fi
-.if n \{\
-.RE
-.SS ">"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String/numeric greater-than. Mixing number and string
-results in string compare.
-.fi
-.if n \{\
-.RE
-.SS ">="
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
-and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS ">>"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=math #args=2): Bitwise right-shift.
-.fi
-.if n \{\
-.RE
-.SS "^"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=math #args=2): Bitwise XOR.
-.fi
-.if n \{\
-.RE
-.SS "^^"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): Logical XOR.
-.fi
-.if n \{\
-.RE
-.SS "|"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=math #args=2): Bitwise OR.
-.fi
-.if n \{\
-.RE
-.SS "||"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=boolean #args=2): Logical OR.
-.fi
-.if n \{\
-.RE
-.SS "~"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=math #args=1): Bitwise NOT.
+(class=time #args=0): Floating-point seconds since the epoch,
+e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE

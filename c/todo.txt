@@ -31,8 +31,6 @@ TOP OF LIST
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
     -> stats1/stats2/step -f ...
 
-  o cmt doc/M*g re local manpage install
-
   o single in-the-code ordering for mlr -f??
 
   o mlr --regex-help and/or new section @ mld ref:
@@ -41,6 +39,7 @@ TOP OF LIST
     - no implicit SOS/EOS anchors
     - what else?
 
+----------------------------------------------------------------
 * miller 3 release info:
   o functions:
     - strftime/strptime as generalization of sec2gmt/gmt2sec
@@ -66,6 +65,7 @@ TOP OF LIST
   o faqent '$y=~$x' vs. '$y= ~$x'
   o dsls bake deps
 
+----------------------------------------------------------------
 * lrec_eval nullable etc. cleanup
 
 * packaging:
