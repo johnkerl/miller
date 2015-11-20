@@ -43,6 +43,7 @@ EXTRA_DIST=	\
 		multi-sep.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
+		null-vs-empty.dkvp \
 		ofmt.dat \
 		regex.dkvp \
 		regularize.dkvp \

@@ -600,6 +600,8 @@ run_mlr filter '$nosuchfield>.3'    $indir/abixy
 run_mlr put '$x2 = $x**2' $indir/abixy
 run_mlr put '$z = -0.024*$x+0.13' $indir/abixy
 run_mlr put '$c = $a . $b' $indir/abixy
+run_mlr put '$ii = $i + $i' $indir/abixy
+run_mlr put '$emptytest = $i + $nosuch' $indir/abixy
 
 run_mlr --opprint put '$nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM' $indir/abixy $indir/abixy
 
@@ -608,6 +610,19 @@ run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/mo
 
 run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
+
+# ----------------------------------------------------------------
+announce DSL NULL/EMPTY HANDLING
+
+run_mlr put '$z = $x + $y'      $indir/null-vs-empty.dkvp
+run_mlr put '$z = $y + $y'      $indir/null-vs-empty.dkvp
+run_mlr put '$z = $x + $nosuch' $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($s,       "ell", "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($s,       "ell", "")'  $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($nosuch,  "ell", "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($s,      "l",   "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($s,      "l",   "")'  $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
 
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
@@ -788,9 +803,12 @@ run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$rese
 # ----------------------------------------------------------------
 announce DSL SUB/GSUB
 
-run_mlr --opprint put '$y = sub($x, "e.*l",        "y123y")'      $indir/sub.dat
-run_mlr --opprint put '$y = sub($x, "e.*l"i,       "y123y")'      $indir/sub.dat
-run_mlr --opprint put '$y = sub($x, "e.*"."l",     "y123y")'      $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l",        "")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l"i,       "")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*"."l",     "")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l",        "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*l"i,       "y123y")' $indir/sub.dat
+run_mlr --opprint put '$y = sub($x, "e.*"."l",     "y123y")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "([hg])e.*l.",   "y\1y123\2y")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "([hg])e.*l(.)", "y\1y123.y")'  $indir/sub.dat
@@ -802,14 +820,11 @@ run_mlr --opprint put '$y = gsub($x, "a"i,   "Aa")'   $indir/gsub.dat
 run_mlr --opprint put '$y = gsub($x, "A"i,   "Aa")'   $indir/gsub.dat
 run_mlr --opprint put '$y = gsub($x, "a(.)", "aa\1\1\1")' $indir/gsub.dat
 
-# $ echo 'x=<abcabc_abcabc>'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
-# x=<abcabc_abcabc>,y=<[aXc][aXc]_[aXc][aXc]>
-
-# $ echo 'x=<abcabc_abcab>'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
-# x=<abcabc_abcab>,y=<[aXc][aXc]_[aXc][aX>]
-
-# $ echo 'x=<abcabc_abcab'|mlr put '$y=gsub($x,"(.)b(.)","[\1X\2]")'
-# x=<abcabc_abcab,y=<[aXc][aXc]_[aXc]ab
+run_mlr --opprint put '$y = sub($x,  "a",    "")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a",    "")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A",    "")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "a"i,   "")'   $indir/gsub.dat
+run_mlr --opprint put '$y = gsub($x, "A"i,   "")'   $indir/gsub.dat
 
 # ----------------------------------------------------------------
 announce CHAINING

@@ -1,6 +1,8 @@
 ================================================================
 BUGFIXES
 
+! -b/m
+
 ! $ cat a
   x=2
   a=3
@@ -12,6 +14,7 @@ BUGFIXES
 TOP OF LIST
 
 ! before releasing miller 3:
+
   ! fix join on partial value-field matches
 
   o overflow logic: put -i, ignorance, i128, i/f delta method. pursue the latter.
@@ -21,28 +24,16 @@ TOP OF LIST
 
     - #define MLR_IMAX -> something like 2**63 - 2**12
     - programatically identify the precise guard band
-    - use it for int +, int binary-, int *
-
-    0x7ffffffffffffff0      = 9223372036854775792
-    0x7ffffffffffffff0 >> 1 = 4611686018427387896
-    0x7ffffffffffffff0 >> 2 = 2305843009213693948
-    0x7ffffffffffffff0 >> 3 = 1152921504606846974
-    0x7ffffffffffffff0 >> 4 =  576460752303423487
-
-    echo x=576460752303423487 | mlr put '$y=hexfmt($x*16)' x=576460752303423487,y=0x7ffffffffffffff0
-
-    echo x=576460752303423487 | mlr put '$y=hexfmt($x*16-1)'
-    x=576460752303423487,y=0x7fffffffffffffef
-
-    echo x=576460752303423487 | mlr put '$y=float($x*16)'
-    x=576460752303423487,y=9223372036854775808.000000
-
-    echo x=576460752303423487 | mlr put '$y=float($x*16-1)'
-    x=576460752303423487,y=9223372036854775808.000000
+    - use it for int *
+    - for binary int + and -, use sign-change algorithm
+    - ./ovf.txt
 
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
+    -> stats1/stats2/step -f ...
 
-  o single ordering for mlr -f??
+  o cmt doc/M*g re local manpage install
+
+  o single in-the-code ordering for mlr -f??
 
   o mlr --regex-help and/or new section @ mld ref:
     - /.../, "...", "..."i,
@@ -118,6 +109,8 @@ TOP OF LIST
 * verb bar:
   - out-of-place bar -- preserving count as separate column?
   - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
+
+* time-until feature?? or just readme-type info?
 
 ----------------------------------------------------------------
 MINOR: bootstrap sampling in hold-and-emit mode??
