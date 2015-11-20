@@ -1,13 +1,17 @@
 all: html man
 
+# Respective MANPATH entries would include /usr/local/share/man or $HOME/man
+INSTALLDIR=/usr/local/share/man/man1
+INSTALLHOME=$(HOME)/man/man1
+
 html: .always
 	poki
 man: .always
 	mkman.rb > mlr.1.premade
 install: man
-	cp mlr.1.premade /usr/local/share/man/man1/mlr.1
+	cp mlr.1.premade $(INSTALLDIR)/mlr.1
 installhome: man
-	cp mlr.1.premade $(HOME)/man/man1/mlr.1
+	cp mlr.1.premade $(INSTALLHOME)/mlr.1
 
 .always:
 	@true
