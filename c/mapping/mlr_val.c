@@ -910,11 +910,17 @@ static mv_t times_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a * b};
 	return rv;
 }
-static mv_t times_i_ii(mv_t* pa, mv_t* pb) {
+static mv_t times_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .u.intv = a * b};
-	return rv;
+
+	double d = (double)a * (double)b;
+	// xxx cmt w/ xref
+	if (fabs(d) > 9223372036854774784.0) {
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
+	} else {
+		return (mv_t) {.type = MT_INT, .u.intv = a * b};
+	}
 }
 
 static mv_binary_func_t* times_dispositions[MT_MAX][MT_MAX] = {
@@ -923,7 +929,7 @@ static mv_binary_func_t* times_dispositions[MT_MAX][MT_MAX] = {
 	/*ERROR*/  {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
 	/*BOOL*/   {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
 	/*FLOAT*/  {times_e_xx, times_e_xx, times_e_xx, times_f_ff, times_f_fi, times_e_xx},
-	/*INT*/    {times_e_xx, times_e_xx, times_e_xx, times_f_if, times_i_ii, times_e_xx},
+	/*INT*/    {times_e_xx, times_e_xx, times_e_xx, times_f_if, times_n_ii, times_e_xx},
 	/*STRING*/ {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
 };
 
