@@ -30,14 +30,7 @@ TOP OF LIST
 
   o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
     -> stats1/stats2/step -f ...
-
-  o single in-the-code ordering for mlr -f??
-
-  o mlr --regex-help and/or new section @ mld ref:
-    - /.../, "...", "..."i,
-    - "\(..\)" vs. "(..)"
-    - no implicit SOS/EOS anchors
-    - what else?
+    -> or maybe just %g format?? emph @ mlr3 release notes if so
 
 ----------------------------------------------------------------
 * miller 3 release info:
