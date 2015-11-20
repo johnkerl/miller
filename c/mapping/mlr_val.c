@@ -800,11 +800,25 @@ static mv_t plus_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a + b};
 	return rv;
 }
-static mv_t plus_i_ii(mv_t* pa, mv_t* pb) {
+static mv_t plus_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .u.intv = a + b};
-	return rv;
+	long long c = a + b;
+
+	int overflowed = FALSE;
+	if (a > 0LL) {
+		if (b > 0LL && c < 0LL)
+			overflowed = TRUE;
+	} else if (a < 0LL) {
+		if (b < 0LL && c > 0LL)
+			overflowed = TRUE;
+	}
+
+	if (overflowed) {
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = (double)a + (double)b};
+	} else {
+		return (mv_t) {.type = MT_INT, .u.intv = c};
+	}
 }
 
 static mv_binary_func_t* plus_dispositions[MT_MAX][MT_MAX] = {
@@ -813,7 +827,7 @@ static mv_binary_func_t* plus_dispositions[MT_MAX][MT_MAX] = {
 	/*ERROR*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*BOOL*/   {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*FLOAT*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
-	/*INT*/    {plus_e_xx, plus_e_xx, plus_e_xx, plus_f_if, plus_i_ii, plus_e_xx},
+	/*INT*/    {plus_e_xx, plus_e_xx, plus_e_xx, plus_f_if, plus_n_ii, plus_e_xx},
 	/*STRING*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 };
 
@@ -841,11 +855,25 @@ static mv_t minus_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b};
 	return rv;
 }
-static mv_t minus_i_ii(mv_t* pa, mv_t* pb) {
+static mv_t minus_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .u.intv = a - b};
-	return rv;
+	long long c = a - b;
+
+	int overflowed = FALSE;
+	if (a > 0LL) {
+		if (b < 0LL && c < 0LL)
+			overflowed = TRUE;
+	} else if (a < 0LL) {
+		if (b > 0LL && c > 0LL)
+			overflowed = TRUE;
+	}
+
+	if (overflowed) {
+		return (mv_t) {.type = MT_FLOAT, .u.fltv = (double)a + (double)b};
+	} else {
+		return (mv_t) {.type = MT_INT, .u.intv = c};
+	}
 }
 
 static mv_binary_func_t* minus_dispositions[MT_MAX][MT_MAX] = {
@@ -854,7 +882,7 @@ static mv_binary_func_t* minus_dispositions[MT_MAX][MT_MAX] = {
 	/*ERROR*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*BOOL*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*FLOAT*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_f_ff, minus_f_fi, minus_e_xx},
-	/*INT*/    {minus_e_xx, minus_e_xx, minus_e_xx, minus_f_if, minus_i_ii, minus_e_xx},
+	/*INT*/    {minus_e_xx, minus_e_xx, minus_e_xx, minus_f_if, minus_n_ii, minus_e_xx},
 	/*STRING*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 };
 
