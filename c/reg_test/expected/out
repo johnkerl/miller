@@ -6101,6 +6101,55 @@ x=,y=2,z=2
 
 
 ================================================================
+DSL NULL/EMPTY HANDLING
+
+mlr put $z = $x + $y ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=3
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=
+
+mlr put $z = $y + $y ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=4
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=
+
+mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=
+
+mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=hXo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = sub($s,       "ell", "") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=ho
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = sub($nosuch,  "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=
+
+mlr put $t = gsub($s,      "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=heXXo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = gsub($s,      "l",   "") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=heo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = gsub($nosuch, "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=
+
+
+================================================================
 DSL TYPE-INFERENCE
 
 mlr --xtab put $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
