@@ -15,7 +15,6 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  o ovf UTs
   o stats1/stats2/step -f
 
 ----------------------------------------------------------------
