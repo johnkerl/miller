@@ -250,7 +250,7 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
                      double-precision. Applies to verbs which compute new
                      values, e.g. put, stats1, stats2. See also the fmtnum
                      function within mlr put (mlr --help-all-functions).
-                     Defaults to %lg
+                     Defaults to %lg.
 .fi
 .if n \{\
 .RE
