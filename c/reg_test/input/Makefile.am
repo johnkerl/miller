@@ -29,7 +29,8 @@ EXTRA_DIST=	\
 		having-fields-regex.dkvp \
 		het.csv \
 		het.dkvp \
-		int64.dkvp \
+		int64io.dkvp \
+		int64arith.dkvp \
 		join-het.dkvp \
 		joina.dkvp \
 		joinb.dkvp \
