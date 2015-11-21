@@ -59,7 +59,7 @@ char* mt_describe_type(int type) {
 }
 
 // The caller should free the return value
-char* mt_format_val(mv_t* pval) {
+char* mv_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_NULL:
 		return mlr_strdup_or_die("");
@@ -85,9 +85,9 @@ char* mt_format_val(mv_t* pval) {
 	}
 }
 
-char* mt_describe_val(mv_t val) {
+char* mv_describe_val(mv_t val) {
 	char* stype = mt_describe_type(val.type);
-	char* strv  = mt_format_val(&val);
+	char* strv  = mv_format_val(&val);
 	char* desc  = mlr_malloc_or_die(strlen(stype) + strlen(strv) + 4);
 	strcpy(desc, "[");
 	strcat(desc, stype);
@@ -97,7 +97,7 @@ char* mt_describe_val(mv_t val) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_boolean_strict(mv_t* pval) {
+void mv_get_boolean_strict(mv_t* pval) {
 	if (pval->type != MT_BOOL) {
 		char* desc = mt_describe_type(pval->type);
 		fprintf(stderr, "Expression does not evaluate to boolean: got %s.\n", desc);
@@ -106,7 +106,7 @@ void mt_get_boolean_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_float_strict(mv_t* pval) {
+void mv_get_float_strict(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -140,7 +140,7 @@ void mt_get_float_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_float_nullable(mv_t* pval) {
+void mv_get_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -177,7 +177,7 @@ void mt_get_float_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_int_nullable(mv_t* pval) {
+void mv_get_int_nullable(mv_t* pval) {
 	long long intv = 0LL;
 	switch (pval->type) {
 	case MT_NULL:
@@ -214,7 +214,7 @@ void mt_get_int_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mt_get_number_nullable(mv_t* pval) {
+void mv_get_number_nullable(mv_t* pval) {
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -230,7 +230,7 @@ void mt_get_number_nullable(mv_t* pval) {
 		break;
 	case MT_STRING:
 		// xxx freeing ...
-		*pval = mt_scan_number_nullable(pval->u.strv);
+		*pval = mv_scan_number_nullable(pval->u.strv);
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
@@ -239,7 +239,7 @@ void mt_get_number_nullable(mv_t* pval) {
 	}
 }
 
-mv_t mt_scan_number_nullable(char* string) {
+mv_t mv_scan_number_nullable(char* string) {
 	double fltv = 0.0;
 	long long intv = 0LL;
 	mv_t rv =  {.type = MT_NULL, .u.intv = 0LL};
@@ -259,8 +259,8 @@ mv_t mt_scan_number_nullable(char* string) {
 	return rv;
 }
 
-mv_t mt_scan_number_or_die(char* string) {
-	mv_t rv = mt_scan_number_nullable(string);
+mv_t mv_scan_number_or_die(char* string) {
+	mv_t rv = mv_scan_number_nullable(string);
 	if (!mv_is_numeric(&rv)) {
 		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
 			MLR_GLOBALS.argv0, string);
@@ -1656,74 +1656,74 @@ static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.bo
 static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return (mv_t) {.type = MT_BOOL, .u.boolv = pa->u.intv <= pb->u.fltv}; }
 
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) == 0};
 	free(a);
 	return rv;
 }
 static  mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) != 0};
 	free(a);
 	return rv;
 }
 static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) >  0};
 	free(a);
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) >= 0};
 	free(a);
 	return rv;
 }
 static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) <  0};
 	free(a);
 	return rv;
 }
 static  mv_t le_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mt_format_val(pa);
+	char* a = mv_format_val(pa);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(a, pb->u.strv) <= 0};
 	free(a);
 	return rv;
 }
 
 static  mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) == 0};
 	free(b);
 	return rv;
 }
 static  mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) != 0};
 	free(b);
 	return rv;
 }
 static  mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) >  0};
 	free(b);
 	return rv;
 }
 static  mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) >= 0};
 	free(b);
 	return rv;
 }
 static  mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) <  0};
 	free(b);
 	return rv;
 }
 static  mv_t le_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mt_format_val(pb);
+	char* b = mv_format_val(pb);
 	mv_t rv = {.type = MT_BOOL, .u.boolv = strcmp(pa->u.strv, b) <= 0};
 	free(b);
 	return rv;

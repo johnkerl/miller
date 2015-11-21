@@ -26,7 +26,6 @@ TOP OF LIST
     -> separate ofmt/sfmt?
     -> mt_scan_number UTs
     -> stats1/stats2/step UTs
-    -> mv/mt name prefixes are inconsistent
 
 ----------------------------------------------------------------
 acc/sum

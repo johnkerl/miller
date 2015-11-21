@@ -333,7 +333,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			}
 			if (pstats1->pningest_func != NULL) {
 				if (!have_nval) {
-					value_field_nval = mt_scan_number_or_die(value_field_sval);
+					value_field_nval = mv_scan_number_or_die(value_field_sval);
 					have_nval = TRUE;
 				}
 				pstats1->pningest_func(pstats1->pvstate, &value_field_nval);
@@ -530,7 +530,7 @@ static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 }
 static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
-	lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->sum),
+	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->sum),
 		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
@@ -744,7 +744,7 @@ static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_
 	if (mv_is_null(&pstate->min)) {
 		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->min),
+		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->min),
 			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
@@ -775,7 +775,7 @@ static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_
 	if (mv_is_null(&pstate->max)) {
 		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->max),
+		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->max),
 			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }

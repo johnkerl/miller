@@ -131,7 +131,7 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
-	mt_get_float_nullable(&val1);
+	mv_get_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
@@ -161,7 +161,7 @@ mv_t lrec_evaluator_x_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_x_n_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_number_nullable(&val1);
+	mv_get_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
@@ -189,7 +189,7 @@ mv_t lrec_evaluator_i_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_i_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 
-	mt_get_int_nullable(&val1);
+	mv_get_int_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
@@ -217,11 +217,11 @@ typedef struct _lrec_evaluator_f_ff_state_t {
 mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_float_nullable(&val1);
+	mv_get_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	mt_get_float_nullable(&val2);
+	mv_get_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -254,10 +254,10 @@ mv_t lrec_evaluator_n_nn_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 
-	mt_get_number_nullable(&val1);
+	mv_get_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
-	mt_get_number_nullable(&val2);
+	mv_get_number_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -285,11 +285,11 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_func(mv_binary_func_t* pfunc,
 mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_number_nullable(&val1);
+	mv_get_number_nullable(&val1);
 	ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	mt_get_number_nullable(&val2);
+	mv_get_number_nullable(&val2);
 	ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -321,15 +321,15 @@ typedef struct _lrec_evaluator_f_fff_state_t {
 mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_fff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_float_nullable(&val1);
+	mv_get_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
-	mt_get_float_nullable(&val2);
+	mv_get_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	mv_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
-	mt_get_float_nullable(&val3);
+	mv_get_float_nullable(&val3);
 	NULL_OR_ERROR_OUT(val3);
 
 	return pstate->pfunc(&val1, &val2, &val3);
@@ -362,14 +362,14 @@ mv_t lrec_evaluator_i_ii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_ii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_int_nullable(&val1);
+	mv_get_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mt_get_int_nullable(&val2);
+	mv_get_int_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_INT)
 		return MV_ERROR;
@@ -404,21 +404,21 @@ mv_t lrec_evaluator_i_iii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_iii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mt_get_int_nullable(&val1);
+	mv_get_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mt_get_int_nullable(&val2);
+	mv_get_int_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val3 = pstate->parg3->pevaluator_func(prec, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
-	mt_get_int_nullable(&val3);
+	mv_get_int_nullable(&val3);
 	NULL_OUT(val3);
 	if (val3.type != MT_INT)
 		return MV_ERROR;
@@ -660,7 +660,7 @@ typedef struct _lrec_evaluator_x_ns_state_t {
 mv_t lrec_evaluator_x_ns_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_x_ns_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pevaluator_func(prec, pctx, pstate->parg1->pvstate);
-	mt_get_number_nullable(&val1);
+	mv_get_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pevaluator_func(prec, pctx, pstate->parg2->pvstate);
@@ -1647,23 +1647,23 @@ static char * test1() {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	mv_t val = pnr->pevaluator_func(prec, pctx, pnr->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 888);
 
 	val = pfnr->pevaluator_func(prec, pctx, pfnr->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 999);
 
 	val = pfilename->pevaluator_func(prec, pctx, pfilename->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "filename-goes-here"));
 
 	val = pfilenum->pevaluator_func(prec, pctx, pfilenum->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 123);
 
@@ -1688,31 +1688,31 @@ static char * test2() {
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
 	mv_t val = ps->pevaluator_func(prec, pctx, ps->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abc"));
 
 	val = pdef->pevaluator_func(prec, pctx, pdef->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "def"));
 
 	val = pdot->pevaluator_func(prec, pctx, pdot->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptolower->pevaluator_func(prec, pctx, ptolower->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptoupper->pevaluator_func(prec, pctx, ptoupper->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mt_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "ABCDEF"));
@@ -1754,12 +1754,12 @@ static char * test3() {
 	mv_t valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
     printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mt_describe_val(valp2));
-    printf("newval 4        = %s\n", mt_describe_val(valp4));
-    printf("newval x        = %s\n", mt_describe_val(valpx));
-    printf("newval x^2      = %s\n", mt_describe_val(valpx2));
-    printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
-    printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
+    printf("newval 2        = %s\n", mv_describe_val(valp2));
+    printf("newval 4        = %s\n", mv_describe_val(valp4));
+    printf("newval x        = %s\n", mv_describe_val(valpx));
+    printf("newval x^2      = %s\n", mv_describe_val(valpx2));
+    printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
+    printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
 
 	printf("XXX %s\n", mt_describe_type(valp2.type));
 	mu_assert_lf(valp2.type     == MT_FLOAT);
@@ -1777,7 +1777,7 @@ static char * test3() {
 	mu_assert_lf(fabs(valp2logx.u.fltv - 1.306425) < 1e-5);
 
 	mlr_dsl_ast_node_print(p2logxnode);
-	printf("newval AST      = %s\n",  mt_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
+	printf("newval AST      = %s\n",  mv_describe_val(pastr->pevaluator_func(prec, pctx, pastr->pvstate)));
 	printf("\n");
 
 	lrec_rename(prec, "x", "y", FALSE);
@@ -1790,12 +1790,12 @@ static char * test3() {
 	valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
     printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mt_describe_val(valp2));
-    printf("newval 4        = %s\n", mt_describe_val(valp4));
-    printf("newval x        = %s\n", mt_describe_val(valpx));
-    printf("newval x^2      = %s\n", mt_describe_val(valpx2));
-    printf("newval log(x)   = %s\n", mt_describe_val(valplogx));
-    printf("newval 2*log(x) = %s\n", mt_describe_val(valp2logx));
+    printf("newval 2        = %s\n", mv_describe_val(valp2));
+    printf("newval 4        = %s\n", mv_describe_val(valp4));
+    printf("newval x        = %s\n", mv_describe_val(valpx));
+    printf("newval x^2      = %s\n", mv_describe_val(valpx2));
+    printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
+    printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
 
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);

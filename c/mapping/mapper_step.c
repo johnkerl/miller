@@ -227,7 +227,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 			if (pstep->pnprocess_func != NULL) {
 				if (!have_nval) {
-					value_field_nval = mt_scan_number_or_die(value_field_sval);
+					value_field_nval = mv_scan_number_or_die(value_field_sval);
 					have_nval = TRUE;
 				}
 				pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
@@ -262,7 +262,7 @@ static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	} else {
 		delta = n_nn_minus_func(&pstate->prev, pnumv);
 	}
-	lrec_put(prec, pstate->output_field_name, mt_format_val(&delta), LREC_FREE_ENTRY_VALUE);
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&delta), LREC_FREE_ENTRY_VALUE);
 	pstate->prev = *pnumv;
 }
 static step_t* step_delta_alloc(char* input_field_name) {
@@ -319,7 +319,7 @@ typedef struct _step_rsum_state_t {
 static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum = n_nn_plus_func(&pstate->rsum, pnumv);
-	lrec_put(prec, pstate->output_field_name, mt_format_val(&pstate->rsum),
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->rsum),
 		LREC_FREE_ENTRY_VALUE);
 }
 

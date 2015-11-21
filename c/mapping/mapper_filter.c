@@ -125,7 +125,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		if (val.type == MT_NULL) {
 			return NULL;
 		} else {
-			mt_get_boolean_strict(&val);
+			mv_get_boolean_strict(&val);
 			if (val.u.boolv ^ pstate->do_exclude) {
 				return sllv_single(pinrec);
 			} else {

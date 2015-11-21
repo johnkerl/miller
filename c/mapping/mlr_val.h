@@ -82,17 +82,17 @@ static inline int mv_is_null(mv_t* pval) {
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);
-char* mt_format_val(mv_t* pval); // For debug only; the caller should free the return value
-char* mt_describe_val(mv_t val);
-void mt_get_boolean_strict(mv_t* pval);
-void mt_get_float_strict(mv_t* pval);
-void mt_get_float_nullable(mv_t* pval);
-void mt_get_int_nullable(mv_t* pval);
+char* mv_format_val(mv_t* pval); // For debug only; the caller should free the return value
+char* mv_describe_val(mv_t val);
+void mv_get_boolean_strict(mv_t* pval);
+void mv_get_float_strict(mv_t* pval);
+void mv_get_float_nullable(mv_t* pval);
+void mv_get_int_nullable(mv_t* pval);
 
 // int or float:
-void mt_get_number_nullable(mv_t* pval);
-mv_t mt_scan_number_nullable(char* string);
-mv_t mt_scan_number_or_die(char* string);
+void mv_get_number_nullable(mv_t* pval);
+mv_t mv_scan_number_nullable(char* string);
+mv_t mv_scan_number_or_die(char* string);
 
 // ----------------------------------------------------------------
 typedef mv_t mv_zary_func_t();

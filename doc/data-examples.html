@@ -168,7 +168,7 @@ Steel Frame         Commercial  272
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012
 tiv_2012_min tiv_2012_mean  tiv_2012_max
-73.370000    2571004.097342 1701000000.000000
+73.370000    2571004.097342 73.370000
 </pre>
 </div>
 <p/>
@@ -176,12 +176,12 @@ tiv_2012_min tiv_2012_mean  tiv_2012_max
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
-construction        line        tiv_2012_min    tiv_2012_mean    tiv_2012_max
-Masonry             Residential 261168.070000   1041986.129217   3234970.920000
-Wood                Residential 73.370000       113493.017049    649046.120000
-Reinforced Concrete Commercial  6416016.010000  20212428.681840  60570000.000000
-Reinforced Masonry  Commercial  1287817.340000  4621372.981117   16650000.000000
-Steel Frame         Commercial  29790000.000000 133492500.000000 1701000000.000000
+construction        line        tiv_2012_min   tiv_2012_mean    tiv_2012_max
+Masonry             Residential 261168.070000  1041986.129217   261168.070000
+Wood                Residential 73.370000      113493.017049    73.370000
+Reinforced Concrete Commercial  6416016.010000 20212428.681840  6416016.010000
+Reinforced Masonry  Commercial  1287817.340000 4621372.981117   1287817.340000
+Steel Frame         Commercial  29790000       133492500.000000 29790000
 </pre>
 </div>
 <p/>
@@ -349,17 +349,17 @@ Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up w
 <div class="pokipanel">
 <pre>
 $ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
-flag_min  0.000000
+flag_min  0
 flag_mean 0.398889
-flag_max  1.000000
+flag_max  0
 
 u_min     0.000044
 u_mean    0.498326
-u_max     0.999969
+u_max     0.000044
 
 v_min     -0.092709
 v_mean    0.497787
-v_max     1.072500
+v_max     -0.092709
 </pre>
 </div>
 <p/>
@@ -394,12 +394,12 @@ Bernoulli probablities from the data-generator script:
 <pre>
 $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
 color  flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
-blue   0.000000 0.584354  1.000000 0.000044 0.517717 0.999969 0.001489  0.491056 0.999576
-green  0.000000 0.209197  1.000000 0.000488 0.504861 0.999936 0.000501  0.499085 0.999676
-orange 0.000000 0.521452  1.000000 0.001235 0.490532 0.998885 0.002449  0.487764 0.998475
-purple 0.000000 0.090193  1.000000 0.000266 0.494005 0.999647 0.000364  0.497051 0.999975
-red    0.000000 0.303167  1.000000 0.000671 0.492560 0.999882 -0.092709 0.496535 1.072500
-yellow 0.000000 0.892427  1.000000 0.001300 0.497129 0.999923 0.000711  0.510627 0.999919
+blue   0        0.584354  0        0.000044 0.517717 0.000044 0.001489  0.491056 0.001489
+green  0        0.209197  0        0.000488 0.504861 0.000488 0.000501  0.499085 0.000501
+orange 0        0.521452  0        0.001235 0.490532 0.001235 0.002449  0.487764 0.002449
+purple 0        0.090193  0        0.000266 0.494005 0.000266 0.000364  0.497051 0.000364
+red    0        0.303167  0        0.000671 0.492560 0.000671 -0.092709 0.496535 -0.092709
+yellow 0        0.892427  0        0.001300 0.497129 0.001300 0.000711  0.510627 0.000711
 </pre>
 </div>
 <p/>
@@ -408,9 +408,9 @@ yellow 0.000000 0.892427  1.000000 0.001300 0.497129 0.999923 0.000711  0.510627
 <pre>
 $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
 shape    flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
-circle   0.000000 0.399846  1.000000 0.000044 0.498555 0.999923 -0.092709 0.495524 1.072500
-square   0.000000 0.396112  1.000000 0.000188 0.499385 0.999969 0.000089  0.496538 0.999975
-triangle 0.000000 0.401542  1.000000 0.000881 0.496859 0.999661 0.000717  0.501050 0.999995
+circle   0        0.399846  0        0.000044 0.498555 0.000044 -0.092709 0.495524 -0.092709
+square   0        0.396112  0        0.000188 0.499385 0.000188 0.000089  0.496538 0.000089
+triangle 0        0.401542  0        0.000881 0.496859 0.000881 0.000717  0.501050 0.000717
 </pre>
 </div>
 <p/>

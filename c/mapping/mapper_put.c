@@ -155,7 +155,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		for (int i = 0; i < pstate->num_evaluators; i++) {
 			mv_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
 				pctx, pstate->pevaluators[i]->pvstate);
-			char* string = mt_format_val(&val);
+			char* string = mv_format_val(&val);
 			lrec_put(pinrec, pstate->output_field_names[i], string, LREC_FREE_ENTRY_VALUE);
 		}
 		return sllv_single(pinrec);
