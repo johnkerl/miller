@@ -521,27 +521,26 @@ static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name) {
 
 // ----------------------------------------------------------------
 typedef struct _stats1_sum_state_t {
-	double sum;
+	mv_t sum;
 	char* output_field_name;
 } stats1_sum_state_t;
-static void stats1_sum_dingest(void* pvstate, double val) {
+static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 	stats1_sum_state_t* pstate = pvstate;
-	pstate->sum += val;
+	pstate->sum = n_nn_plus_func(&pstate->sum, pval);
 }
 static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
-	char* val = mlr_alloc_string_from_double(pstate->sum, MLR_GLOBALS.ofmt);
-	lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->sum),
+		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_sum_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_sum_state_t));
-	pstate->sum         = 0.0;
+	pstate->sum = mv_from_int(0LL);
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
-
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->pdingest_func = stats1_sum_dingest;
-	pstats1->pningest_func = NULL;
+	pstats1->pdingest_func = NULL;
+	pstats1->pningest_func = stats1_sum_ningest;
 	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_sum_emit;
 	return pstats1;

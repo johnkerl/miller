@@ -46,8 +46,8 @@ int-to-int in stats1/stats2/step:
    f meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
    f skewness Compute sample skewness of specified fields
    f kurtosis Compute sample kurtosis of specified fields
-  *I min      Compute minimum values of specified fields
-  *I max      Compute maximum values of specified fields
+  kI min      Compute minimum values of specified fields
+  kI max      Compute maximum values of specified fields
 
    f linreg-pca   Linear regression using principal component analysis
    f linreg-ols   Linear regression using ordinary least squares
