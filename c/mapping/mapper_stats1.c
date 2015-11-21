@@ -111,7 +111,7 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
 	fprintf(o, "                    one or more of:\n");
 	for (int i = 0; i < stats1_lookup_table_length; i++) {
-		fprintf(o, "  %-7s %s\n", stats1_lookup_table[i].name, stats1_lookup_table[i].desc);
+		fprintf(o, "  %-9s %s\n", stats1_lookup_table[i].name, stats1_lookup_table[i].desc);
 	}
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f}  Optional group-by-field names\n");

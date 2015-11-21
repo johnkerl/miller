@@ -904,7 +904,9 @@ float output: e.g. <tt>exp(0) = 1.0</tt> rather than <tt>1</tt>.  The
 following, however, produce integer output if their inputs are integers:
 <tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt> <tt>abs</tt>
 <tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt> <tt>round</tt>
-<tt>roundm</tt> <tt>sgn</tt>.
+<tt>roundm</tt> <tt>sgn</tt>. As well, <tt>stats1 -a min</tt>, <tt>stats1 -a
+max</tt>, <tt>stats1 -a sum</tt>, <tt>step -a delta</tt>, and <tt>step -a
+rsum</tt> produce integer output if their inputs are integers.
 
 <h2>Conversion by arithmetic operators</h2>
 

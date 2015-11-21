@@ -2218,17 +2218,17 @@ Usage: mlr stats1 [options]
 Options:
 -a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
                     one or more of:
-  count   Count instances of fields
-  mode    Find most-frequently-occurring values for fields; first-found wins tie
-  sum     Compute sums of specified fields
-  mean    Compute averages (sample means) of specified fields
-  stddev  Compute sample standard deviation of specified fields
-  var     Compute sample variance of specified fields
-  meaneb  Estimate error bars for averages (assuming no sample autocorrelation)
-  skewness Compute sample skewness of specified fields
-  kurtosis Compute sample kurtosis of specified fields
-  min     Compute minimum values of specified fields
-  max     Compute maximum values of specified fields
+  count     Count instances of fields
+  mode      Find most-frequently-occurring values for fields; first-found wins tie
+  sum       Compute sums of specified fields
+  mean      Compute averages (sample means) of specified fields
+  stddev    Compute sample standard deviation of specified fields
+  var       Compute sample variance of specified fields
+  meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
+  skewness  Compute sample skewness of specified fields
+  kurtosis  Compute sample kurtosis of specified fields
+  min       Compute minimum values of specified fields
+  max       Compute maximum values of specified fields
 -f {a,b,c}  Value-field names on which to compute statistics
 -g {d,e,f}  Optional group-by-field names
 -s          Print iterative stats. Useful in tail -f contexts (in which
@@ -3224,7 +3224,9 @@ float output: e.g. <tt>exp(0) = 1.0</tt> rather than <tt>1</tt>.  The
 following, however, produce integer output if their inputs are integers:
 <tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt> <tt>abs</tt>
 <tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt> <tt>round</tt>
-<tt>roundm</tt> <tt>sgn</tt>.
+<tt>roundm</tt> <tt>sgn</tt>. As well, <tt>stats1 -a min</tt>, <tt>stats1 -a
+max</tt>, <tt>stats1 -a sum</tt>, <tt>step -a delta</tt>, and <tt>step -a
+rsum</tt> produce integer output if their inputs are integers.
 
 <a id="Conversion_by_arithmetic_operators"/><h2>Conversion by arithmetic operators</h2>
 
