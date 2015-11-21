@@ -46,19 +46,6 @@ mv_t MV_ERROR = {
 };
 
 // ----------------------------------------------------------------
-mv_t mv_from_float(double d) {
-	return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
-}
-
-mv_t mv_from_int(long long i) {
-	return (mv_t) {.type = MT_INT, .u.intv = i};
-}
-
-int mv_is_numeric(mv_t* pval) {
-	return pval->type == MT_INT || pval->type == MT_FLOAT;
-}
-
-// ----------------------------------------------------------------
 char* mt_describe_type(int type) {
 	switch (type) {
 	case MT_NULL:   return "T_NULL";   break;

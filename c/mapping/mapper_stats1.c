@@ -14,6 +14,7 @@
 #include "containers/mixutil.h"
 #include "containers/percentile_keeper.h"
 #include "mapping/mappers.h"
+#include "mapping/mlr_val.h"
 #include "cli/argparse.h"
 
 #define DO_STDDEV 0xc1
@@ -22,13 +23,15 @@
 
 // ================================================================
 typedef void stats1_dingest_func_t(void* pvstate, double val);
+typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void stats1_singest_func_t(void* pvstate, char*  val);
 typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec);
 
 typedef struct _stats1_t {
 	void* pvstate;
-	stats1_singest_func_t* psingest_func;
 	stats1_dingest_func_t* pdingest_func;
+	stats1_ningest_func_t* pningest_func;
+	stats1_singest_func_t* psingest_func;
 	stats1_emit_func_t*    pemit_func;
 } stats1_t;
 
@@ -303,8 +306,10 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		if (value_field_sval == NULL)
 			continue;
 
-		int   have_dval = FALSE;
+		int have_dval = FALSE;
+		int have_nval = FALSE;
 		double value_field_dval = -999.0;
+		mv_t   value_field_nval = mv_from_float(-888.0);
 
 		// There isn't a one-to-one mapping between user-specified stats1_names
 		// and internal stats1_t's. Here in the ingestor we feed each datum into
@@ -319,9 +324,6 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 				continue;
 			stats1_t* pstats1 = pc->pvvalue;
 
-			if (pstats1->psingest_func != NULL) {
-				pstats1->psingest_func(pstats1->pvstate, value_field_sval);
-			}
 			if (pstats1->pdingest_func != NULL) {
 				if (!have_dval) {
 					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
@@ -329,6 +331,17 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 				}
 				pstats1->pdingest_func(pstats1->pvstate, value_field_dval);
 			}
+			if (pstats1->pningest_func != NULL) {
+				if (!have_nval) {
+					value_field_nval = mt_scan_number_or_die(value_field_sval);
+					have_nval = TRUE;
+				}
+				pstats1->pningest_func(pstats1->pvstate, &value_field_nval);
+			}
+			if (pstats1->psingest_func != NULL) {
+				pstats1->psingest_func(pstats1->pvstate, value_field_sval);
+			}
+
 			if (pstate->do_iterative_stats) {
 				mapper_stats1_emit(pstate, pinrec, value_field_name, stats1_name, acc_field_to_acc_state);
 			}
@@ -456,8 +469,9 @@ static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name) {
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = stats1_count_singest;
 	pstats1->pdingest_func = NULL;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = stats1_count_singest;
 	pstats1->pemit_func    = stats1_count_emit;
 	return pstats1;
 }
@@ -498,8 +512,9 @@ static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name) {
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = stats1_mode_singest;
 	pstats1->pdingest_func = NULL;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = stats1_mode_singest;
 	pstats1->pemit_func    = stats1_mode_emit;
 	return pstats1;
 }
@@ -525,8 +540,9 @@ static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_sum_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_sum_emit;
 	return pstats1;
 }
@@ -562,8 +578,9 @@ static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name) {
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_mean_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_mean_emit;
 	return pstats1;
 }
@@ -608,8 +625,9 @@ static stats1_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* st
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_stddev_var_meaneb_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_stddev_var_meaneb_emit;
 	return pstats1;
 }
@@ -660,8 +678,9 @@ static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_skewness_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_skewness_emit;
 	return pstats1;
 }
@@ -705,8 +724,9 @@ static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_kurtosis_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_kurtosis_emit;
 	return pstats1;
 }
@@ -744,47 +764,41 @@ static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name) {
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->psingest_func = NULL;
 	pstats1->pdingest_func = stats1_min_dingest;
+	pstats1->pningest_func = NULL;
+	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_min_emit;
 	return pstats1;
 }
 
 // ----------------------------------------------------------------
 typedef struct _stats1_max_state_t {
-	int have_max;
-	double max;
+	mv_t max;
 	char* output_field_name;
 } stats1_max_state_t;
-static void stats1_max_dingest(void* pvstate, double val) {
+static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 	stats1_max_state_t* pstate = pvstate;
-	if (pstate->have_max) {
-		if (val > pstate->max)
-			pstate->max = val;
-	} else {
-		pstate->have_max = TRUE;
-		pstate->max = val;
-	}
+	pstate->max = n_nn_min_func(&pstate->max, pval);
 }
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
-	if (pstate->have_max) {
-		char* val = mlr_alloc_string_from_double(pstate->max, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-	} else {
+	if (mv_is_null(&pstate->max)) {
 		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->max),
+			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
 static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
-	pstate->have_max    = FALSE;
-	pstate->max         = -999.0;
+	pstate->max = mv_from_null();
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
+	pstats1->pdingest_func = NULL;
+	pstats1->pningest_func = stats1_max_ningest;
 	pstats1->psingest_func = NULL;
-	pstats1->pdingest_func = stats1_max_dingest;
 	pstats1->pemit_func    = stats1_max_emit;
 	return pstats1;
 }
@@ -814,8 +828,9 @@ static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_na
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
 
 	pstats1->pvstate        = (void*)pstate;
-	pstats1->psingest_func  = NULL;
 	pstats1->pdingest_func  = stats1_percentile_dingest;
+	pstats1->pningest_func  = NULL;
+	pstats1->psingest_func  = NULL;
 	pstats1->pemit_func     = stats1_percentile_emit;
 	return pstats1;
 }

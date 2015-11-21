@@ -58,9 +58,25 @@ extern mv_t MV_ERROR;
 }
 
 // ----------------------------------------------------------------
-mv_t mv_from_float(double d);
-mv_t mv_from_int(long long i);
-int mv_is_numeric(mv_t* pval);
+static inline mv_t mv_from_float(double d) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
+}
+
+static inline mv_t mv_from_int(long long i) {
+	return (mv_t) {.type = MT_INT, .u.intv = i};
+}
+
+static inline mv_t mv_from_null() {
+	return (mv_t) {.type = MT_NULL, .u.intv = 0LL};
+}
+
+static inline int mv_is_numeric(mv_t* pval) {
+	return pval->type == MT_INT || pval->type == MT_FLOAT;
+}
+
+static inline int mv_is_null(mv_t* pval) {
+	return pval->type == MT_NULL;
+}
 
 // ----------------------------------------------------------------
 char* mt_describe_type(int type);
