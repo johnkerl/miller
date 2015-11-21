@@ -876,7 +876,8 @@ count-distinct.
 .RS 0
 .\}
 .nf
-(class=arithmetic #args=2): Exponentiation; same as pow, but as infix operator.
+(class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
+operator.
 .fi
 .if n \{\
 .RE
@@ -912,7 +913,8 @@ count-distinct.
 .RS 0
 .\}
 .nf
-(class=arithmetic #args=1): Bitwise NOT.
+(class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.
 .fi
 .if n \{\
 .RE

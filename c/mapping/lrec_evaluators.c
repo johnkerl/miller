@@ -1158,11 +1158,11 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_ARITHMETIC, "/",  2 , "Division."},
 	{ FUNC_CLASS_ARITHMETIC, "//", 2 , "Integer division: rounds to negative (pythonic)."},
 	{ FUNC_CLASS_ARITHMETIC, "%",  2 , "Remainder; never negative-valued (pythonic)."},
-	{ FUNC_CLASS_ARITHMETIC, "**", 2 , "Exponentiation; same as pow, but as infix operator."},
+	{ FUNC_CLASS_ARITHMETIC, "**", 2 , "Exponentiation; same as pow, but as an infix\noperator."},
 	{ FUNC_CLASS_ARITHMETIC, "|",  2 , "Bitwise OR."},
 	{ FUNC_CLASS_ARITHMETIC, "^",  2 , "Bitwise XOR."},
 	{ FUNC_CLASS_ARITHMETIC, "&",  2 , "Bitwise AND."},
-	{ FUNC_CLASS_ARITHMETIC, "~",  1 , "Bitwise NOT."},
+	{ FUNC_CLASS_ARITHMETIC, "~",  1 , "Bitwise NOT. Beware '$y=~$x' since =~ is the\nregex-match operator: try '$y = ~$x'."},
 	{ FUNC_CLASS_ARITHMETIC, "<<", 2 , "Bitwise left-shift."},
 	{ FUNC_CLASS_ARITHMETIC, ">>", 2 , "Bitwise right-shift."},
 

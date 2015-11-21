@@ -2935,7 +2935,8 @@ $ mlr --help-all-functions
 
 % (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
 
-** (class=arithmetic #args=2): Exponentiation; same as pow, but as infix operator.
+** (class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
+operator.
 
 | (class=arithmetic #args=2): Bitwise OR.
 
@@ -2943,7 +2944,8 @@ $ mlr --help-all-functions
 
 &amp; (class=arithmetic #args=2): Bitwise AND.
 
-~ (class=arithmetic #args=1): Bitwise NOT.
+~ (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.
 
 &lt;&lt; (class=arithmetic #args=2): Bitwise left-shift.
 
