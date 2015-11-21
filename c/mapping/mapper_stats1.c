@@ -733,39 +733,30 @@ static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name
 
 // ----------------------------------------------------------------
 typedef struct _stats1_min_state_t {
-	int have_min;
-	double min;
+	mv_t min;
 	char* output_field_name;
 } stats1_min_state_t;
-static void stats1_min_dingest(void* pvstate, double val) {
+static void stats1_min_ningest(void* pvstate, mv_t* pval) {
 	stats1_min_state_t* pstate = pvstate;
-	if (pstate->have_min) {
-		if (val < pstate->min)
-			pstate->min = val;
-	} else {
-		pstate->have_min = TRUE;
-		pstate->min = val;
-	}
+	pstate->min = n_nn_min_func(&pstate->min, pval);
 }
 static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
-	if (pstate->have_min) {
-		char* val = mlr_alloc_string_from_double(pstate->min, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-	} else {
+	if (mv_is_null(&pstate->min)) {
 		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+	} else {
+		lrec_put(poutrec, pstate->output_field_name, mt_format_val(&pstate->min),
+			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
 static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
-	pstate->have_min    = FALSE;
-	pstate->min         = -999.0;
+	pstate->min = mv_from_null();
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
-
 	pstats1->pvstate       = (void*)pstate;
-	pstats1->pdingest_func = stats1_min_dingest;
-	pstats1->pningest_func = NULL;
+	pstats1->pdingest_func = NULL;
+	pstats1->pningest_func = stats1_min_ningest;
 	pstats1->psingest_func = NULL;
 	pstats1->pemit_func    = stats1_min_emit;
 	return pstats1;
@@ -794,7 +785,6 @@ static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name) {
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
 	pstate->max = mv_from_null();
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
-
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
 	pstats1->pningest_func = stats1_max_ningest;
