@@ -97,12 +97,12 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Command_overview">Command overview</a><br/>
 &bull;&nbsp;<a href="#On-line_help">On-line help</a><br/>
-&bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
+&bull;&nbsp;<a href="#Data_types">Data types</a><br/>
+&bull;&nbsp;<a href="#Null_data">Null data</a><br/>
 &bull;&nbsp;<a href="#I/O_options">I/O options</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#bar">bar</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
@@ -132,11 +132,16 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#tail">tail</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
+&bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
 &bull;&nbsp;<a href="#Operator_precedence">Operator precedence</a><br/>
 &bull;&nbsp;<a href="#Operator_and_function_semantics">Operator and function semantics</a><br/>
-&bull;&nbsp;<a href="#Data_types">Data types</a><br/>
-&bull;&nbsp;<a href="#Null_data">Null data</a><br/>
+&bull;&nbsp;<a href="#Arithmetic">Arithmetic</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Input_scanning">Input scanning</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Conversion_by_math_routines">Conversion by math routines</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Conversion_by_arithmetic_operators">Conversion by arithmetic operators</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pythonic_division">Pythonic division</a><br/>
+&bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 </div>
 <p/>
 
@@ -414,70 +419,145 @@ which is the same as:
 </div>
 <p/>
 
-<a id="then-chaining"/><h1>then-chaining</h1>
+<!-- ================================================================ -->
+<a id="Data_types"/><h1>Data types</h1>
+
+<p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
+August 2015 anyway) no support for binary record packing. In this sense,
+everything is a string in and out of Miller.  During processing, field names
+are always strings, even if they have names like "3"; field values are usually
+strings.  Field values&rsquo; ability to be interpreted as a non-string type
+only has meaning when comparison or function operations are done on them.  And
+it is an error condition if Miller encounters non-numeric (or otherwise
+mistyped) data in a field in which it has been asked to do numeric (or
+otherwise type-specific) operations.
+
+<p/> Field values are treated as numeric for the following:
+<ul>
+<li/> Numeric sort: <tt>mlr sort -n</tt>, <tt>mlr sort -nr</tt>.
+<li/> Statistics: <tt>mlr histogram</tt>, <tt>mlr stats1</tt>, <tt>mlr stats2</tt>.
+<li/> Cross-record arithmetic: <tt>mlr step</tt>.
+</ul>
+
+<p/>For <tt>mlr put</tt> and <tt>mlr filter</tt>:
+
+<ul>
+
+<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty
+string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision),
+<b>int</b> (64-bit signed), and <b>boolean</b>.
+
+<li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
+treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
+<tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and <tt>mlr put
+'$z=$x.$y'</tt> gives an error.  To coerce back to string for processing, use
+the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt> will
+produce <tt>x=1,y=2,z=12</tt>.
+
+<li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
+<tt>"false"</tt>) are <i>not</i> automatically treated as boolean.  (This is
+because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto
+string-to-boolean on a column consisting of words would result in some strings
+mixed with some booleans.) Use the <tt>boolean</tt> function to coerce: e.g.
+giving the record <tt>x=1,y=2,w=false</tt> to <tt>mlr put '$z=($x&lt;$y) ||
+boolean($w)'</tt>.
+
+<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>:
+for example, <tt>log10</tt> takes float input and produces float output,
+<tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt> maps int to string.
+
+<li/> All math functions described in <tt>mlr --help-all-functions</tt> take
+integer as well as float input.
+
+</ul>
+
+<!-- ================================================================ -->
+<a id="Null_data"/><h1>Null data</h1>
+
+<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
+Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
+stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although you could
+pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
+Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
+
+<p/> Field values may also be null by being
+specified with present key but empty value: e.g. sending <tt>x=,y=2</tt> to <tt>mlr put '$z=$x+$y'</tt>.
 
 <p/>
-In accord with the
-<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
-Miller. For example:
-
+Rules for null-handling:
+<ul>
+<li> Records with one or more null sort-field values sort after records with all sort-field values present:
 <p/>
 <div class="pokipanel">
 <pre>
-mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
+$ mlr --opprint cat data/sort-null.dat
+a b
+3 2
+1 8
+- 4
+5 7
 </pre>
 </div>
 <p/>
-
-<p/>
-You can, if you like, instead simply chain commands together using the
-<tt>then</tt> keyword:
-
 <p/>
 <div class="pokipanel">
 <pre>
-mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
+$ mlr --opprint sort -n  a data/sort-null.dat
+a b
+1 8
+3 2
+5 7
+- 4
 </pre>
 </div>
 <p/>
-
-Here&rsquo;s a performance comparison:
-
 <p/>
 <div class="pokipanel">
 <pre>
-% cat piped.sh
-mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
-
-% time sh piped.sh
-real 0m2.828s
-user 0m3.183s
-sys  0m0.137s
-
-
-% cat chained.sh
-mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
-
-% time sh chained.sh
-real 0m2.082s
-user 0m1.933s
-sys  0m0.137s
+$ mlr --opprint sort -nr a data/sort-null.dat
+a b
+- 4
+5 7
+3 2
+1 8
 </pre>
 </div>
 <p/>
-
-There are two reasons to use then-chaining: one is for performance, although I
-don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
-redundant string-parsing and string-formatting at each pipeline step: instead
-input records are parsed once, they are fed through each pipeline stage in
-memory, and then output records are formatted once. On the other hand, Miller
-is single-threaded, while modern systems are usually multi-processor, and when
-streaming-data programs operate through pipes, each one can use a CPU.  Rest
-assured you get the same results either way.
-
-<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
-have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
-pipeline stage.
+<li> Functions which have one or more null arguments produce null output: e.g.
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=2,y=3' | mlr put '$a=$x+$y'
+x=2,y=3,a=5
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=,y=3' | mlr put '$a=$x+$y'
+x=,y=3,a=
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
+x=,y=3,a=,b=1.098612
+</pre>
+</div>
+<p/>
+<li> The <tt>min</tt> and <tt>max</tt> functions are special: if one argument is non-null, it wins:
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
+x=,y=3,a=3,b=3
+</pre>
+</div>
+<p/>
+</ul>
 
 <!-- ================================================================ -->
 <a id="I/O_options"/><h1>I/O options</h1>
@@ -635,63 +715,6 @@ Example:
 <pre>
 $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
 x=0xffff,y=0xff,z=0xfeff01
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-<a id="Regular_expressions"/><h2>Regular expressions</h2>
-
-<p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
-
-<ul>
-
-<li/> In <tt>mlr filter</tt> with <tt>=~</tt> or <tt>!=~</tt>, e.g. <tt>mlr
-filter '$url =~ "http.*com"'</tt>
-
-<li/> In <tt>mlr put</tt> with <tt>sub</tt> or <tt>gsub</tt>, e.g. <tt>mlr put
-'$url = sub($url, "http.*com", "")'</tt>
-
-<li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
---any-matching '^sda[0-9]'</tt>
-
-<li/> In <tt>mlr cut</tt>, e.g. <tt>mlr cut -r -f '^status$,^sda[0-9]'</tt>
-
-<li/> In <tt>mlr rename</tt>, e.g. <tt>mlr rename -r '^(sda[0-9]).*$,dev/\1'</tt>
-
-<li/> In <tt>mlr grep</tt>, e.g. <tt>mlr --csv grep 00188555487 myfiles*.csv</tt>
-
-</ul>
-
-<p/>The <tt>i</tt> after the double-quoted regular-expression string is used to
-signify case-insensitive match.
-
-<p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
-literal (the normal case), it is precompiled at process start and reused
-thereafter, which is efficient. If the regular expression is a more complex
-expression, including string concatenation using <tt>.</tt>, or a column name
-(in which case you can take regular expressions from input data!), then regexes
-are compiled on each record which works but is less efficient. As well, in this
-case there is no way to specify case-insensitive matching.
-
-<p/>Example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/regex-in-data.dat
-name=jane,regex=^j.*e$
-name=bill,regex=^b[ou]ll$
-name=bull,regex=^b[ou]ll$
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr filter '$name =~ $regex' data/regex-in-data.dat
-name=jane,regex=^j.*e$
-name=bull,regex=^b[ou]ll$
 </pre>
 </div>
 <p/>
@@ -2823,6 +2846,72 @@ yellow triangle 468
 </td></tr></table>
 
 <!-- ================================================================ -->
+<a id="then-chaining"/><h1>then-chaining</h1>
+
+<p/>
+In accord with the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
+Miller. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
+</pre>
+</div>
+<p/>
+
+<p/>
+You can, if you like, instead simply chain commands together using the
+<tt>then</tt> keyword:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
+</pre>
+</div>
+<p/>
+
+Here&rsquo;s a performance comparison:
+
+<p/>
+<div class="pokipanel">
+<pre>
+% cat piped.sh
+mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
+
+% time sh piped.sh
+real 0m2.828s
+user 0m3.183s
+sys  0m0.137s
+
+
+% cat chained.sh
+mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
+
+% time sh chained.sh
+real 0m2.082s
+user 0m1.933s
+sys  0m0.137s
+</pre>
+</div>
+<p/>
+
+There are two reasons to use then-chaining: one is for performance, although I
+don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
+redundant string-parsing and string-formatting at each pipeline step: instead
+input records are parsed once, they are fed through each pipeline stage in
+memory, and then output records are formatted once. On the other hand, Miller
+is single-threaded, while modern systems are usually multi-processor, and when
+streaming-data programs operate through pipes, each one can use a CPU.  Rest
+assured you get the same results either way.
+
+<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
+have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
+pipeline stage.
+
+<!-- ================================================================ -->
 <a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
 
 <p/>
@@ -3092,18 +3181,6 @@ binary+ binary- .      left to right
 <li/> Functions are in general pass-throughs straight to the system-standard C
 library.
 
-<li/> Numbers in Miller are double-precision float or 64-bit signed integers.
-For most math functions, integers are cast to float on input, and produce float
-output.  <li/> The following, however, produce integer output if all inputs are
-integers: <tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt>
-<tt>abs</tt> <tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt>
-<tt>round</tt> <tt>roundm</tt> <tt>sgn</tt>. Note that integer overflow is
-possible for large numbers when inputs look like integers. Explicit use of
-<tt>float()</tt> (e.g. replacing <tt>$c = $a * $b</tt> with <tt>$c = float($a)
-* float($b)</tt>) guards against this &mdash; or, more simply, use
-<tt>mlr filter -f</tt> and <tt>mlr put -f</tt> which forces all numeric input,
-whether from expression literals or field values, to float.
-
 <li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
 multi-argument functions which return null if any of their inputs are null: for
 <tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
@@ -3119,7 +3196,82 @@ C.
 <li/> The regex-match and regex-not-match operators <tt>=~</tt> and
 <tt>!=~</tt> are similar to those in Ruby and Perl.
 
-<li/> Division and remainder are
+</ul>
+
+<!-- ================================================================ -->
+<a id="Arithmetic"/><h1>Arithmetic</h1>
+
+<a id="Input_scanning"/><h2>Input scanning</h2>
+
+<p/>Numbers in Miller are double-precision float or 64-bit signed integers.
+Anything scannable as int, e.g <tt>123</tt> or <tt>0xabcd</tt>, is treated as
+an integer; otherwise, input scannable as float (<tt>4.56</tt> or <tt>8e9</tt>)
+is treated as float; everything else is a string.
+
+<p/>If you want all numbers to be treated as floats, then you may use
+<tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
+$b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
+<tt>mlr filter -f</tt> and <tt>mlr put -f</tt> which forces all numeric input,
+whether from expression literals or field values, to float.
+
+<a id="Conversion_by_math_routines"/><h2>Conversion by math routines</h2>
+
+<p/>For most math functions, integers are cast to float on input, and produce
+float output: e.g. <tt>exp(0) = 1.0</tt> rather than <tt>1</tt>.  The
+following, however, produce integer output if their inputs are integers:
+<tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt> <tt>abs</tt>
+<tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt> <tt>round</tt>
+<tt>roundm</tt> <tt>sgn</tt>.
+
+<a id="Conversion_by_arithmetic_operators"/><h2>Conversion by arithmetic operators</h2>
+
+<p/>The sum, difference, and product of integers is again integer, except for
+when that would overflow a 64-bit integer at which point Miller converts the
+result to float.
+
+<p/>The short of it is that Miller does this transparently for you so you
+needn&rsquo;t think about it.
+
+<p/>Implementation details of this, for the interested: integer adds and
+subtracts overflow by at most one bit so it suffices to check sign-changes.
+Miller allows you to add and subtract arbitrary 64-bit signed integers,
+converting only to float strictly when the result is less than -2<sup>63</sup>
+or greater than 2<sup>63</sup>-1.  Multiplies, on the other hand, can overflow
+by a word size and a sign-change technique does not suffice to detect overflow.
+Instead Miller tests whether the floating-point product exceeds the
+representable integer range. Now, 64-bit integers have 64-bit precision while
+IEEE-doubles have only 52-bit mantissas &mdash; so, there are 53 bits including
+implicit leading one.  The following experiment explicitly demonstrates the
+resolution at this range:
+
+<div class=pokipanel>
+<pre>
+   64-bit integer     64-bit integer     Casted to double           Back to 64-bit
+       in hex           in decimal                                    integer
+0x7ffffffffffff9ff 9223372036854774271 9223372036854773760.000000 0x7ffffffffffff800
+0x7ffffffffffffa00 9223372036854774272 9223372036854773760.000000 0x7ffffffffffff800
+0x7ffffffffffffbff 9223372036854774783 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffc00 9223372036854774784 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffdff 9223372036854775295 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffe00 9223372036854775296 9223372036854775808.000000 0x8000000000000000
+0x7ffffffffffffffe 9223372036854775806 9223372036854775808.000000 0x8000000000000000
+0x7fffffffffffffff 9223372036854775807 9223372036854775808.000000 0x8000000000000000
+</pre>
+</div>
+
+<p/>That is, one cannot check an integer product to see if it is precisely
+greater than 2<sup>63</sup>-1 or less than -2<sup>63</sup> using either integer
+arithmetic (it may have already overflowed) or using double-precision (due to
+granularity).  Instead Miller checks for overflow in 64-bit integer
+multiplication by seeing whether the absolute value of the double-precision
+product exceeds the largest representable IEEE double less than 2<sup>63</sup>,
+which we see from the listing above is 9223372036854774784. (An alternative
+would be to do all integer multiplies using handcrafted multi-word 128-bit
+arithmetic.  This approach is not taken.)
+
+<a id="Pythonic_division"/><h2>Pythonic division</h2>
+
+<p/>Division and remainder are
 <a href="http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html">
 pythonic</a>:
   <ul>
@@ -3128,147 +3280,63 @@ pythonic</a>:
     This rounds toward the negative.
   <li/> Remainders are non-negative.
   </ul>
-</ul>
 
 <!-- ================================================================ -->
-<a id="Data_types"/><h1>Data types</h1>
+<a id="Regular_expressions"/><h1>Regular expressions</h1>
 
-<p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
-August 2015 anyway) no support for binary record packing. In this sense,
-everything is a string in and out of Miller.  During processing, field names
-are always strings, even if they have names like "3"; field values are usually
-strings.  Field values&rsquo; ability to be interpreted as a non-string type
-only has meaning when comparison or function operations are done on them.  And
-it is an error condition if Miller encounters non-numeric (or otherwise
-mistyped) data in a field in which it has been asked to do numeric (or
-otherwise type-specific) operations.
-
-<p/> Field values are treated as numeric for the following:
-<ul>
-<li/> Numeric sort: <tt>mlr sort -n</tt>, <tt>mlr sort -nr</tt>.
-<li/> Statistics: <tt>mlr histogram</tt>, <tt>mlr stats1</tt>, <tt>mlr stats2</tt>.
-<li/> Cross-record arithmetic: <tt>mlr step</tt>.
-</ul>
-
-<p/>For <tt>mlr put</tt> and <tt>mlr filter</tt>:
+<p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
 
 <ul>
 
-<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty
-string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision),
-<b>int</b> (64-bit signed), and <b>boolean</b>.
+<li/> In <tt>mlr filter</tt> with <tt>=~</tt> or <tt>!=~</tt>, e.g. <tt>mlr
+filter '$url =~ "http.*com"'</tt>
 
-<li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
-treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
-<tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and <tt>mlr put
-'$z=$x.$y'</tt> gives an error.  To coerce back to string for processing, use
-the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt> will
-produce <tt>x=1,y=2,z=12</tt>.
+<li/> In <tt>mlr put</tt> with <tt>sub</tt> or <tt>gsub</tt>, e.g. <tt>mlr put
+'$url = sub($url, "http.*com", "")'</tt>
 
-<li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
-<tt>"false"</tt>) are <i>not</i> automatically treated as boolean.  (This is
-because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto
-string-to-boolean on a column consisting of words would result in some strings
-mixed with some booleans.) Use the <tt>boolean</tt> function to coerce: e.g.
-giving the record <tt>x=1,y=2,w=false</tt> to <tt>mlr put '$z=($x&lt;$y) ||
-boolean($w)'</tt>.
+<li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
+--any-matching '^sda[0-9]'</tt>
 
-<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>:
-for example, <tt>log10</tt> takes float input and produces float output,
-<tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt> maps int to string.
+<li/> In <tt>mlr cut</tt>, e.g. <tt>mlr cut -r -f '^status$,^sda[0-9]'</tt>
 
-<li/> All math functions described in <tt>mlr --help-all-functions</tt> take
-integer as well as float input.
+<li/> In <tt>mlr rename</tt>, e.g. <tt>mlr rename -r '^(sda[0-9]).*$,dev/\1'</tt>
+
+<li/> In <tt>mlr grep</tt>, e.g. <tt>mlr --csv grep 00188555487 myfiles*.csv</tt>
 
 </ul>
 
-<!-- ================================================================ -->
-<a id="Null_data"/><h1>Null data</h1>
+<p/>The <tt>i</tt> after the double-quoted regular-expression string is used to
+signify case-insensitive match.
 
-<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
-Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
-stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although you could
-pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
-Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
+<p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
+literal (the normal case), it is precompiled at process start and reused
+thereafter, which is efficient. If the regular expression is a more complex
+expression, including string concatenation using <tt>.</tt>, or a column name
+(in which case you can take regular expressions from input data!), then regexes
+are compiled on each record which works but is less efficient. As well, in this
+case there is no way to specify case-insensitive matching.
 
-<p/> Field values may also be null by being
-specified with present key but empty value: e.g. sending <tt>x=,y=2</tt> to <tt>mlr put '$z=$x+$y'</tt>.
+<p/>Example:
 
 <p/>
-Rules for null-handling:
-<ul>
-<li> Records with one or more null sort-field values sort after records with all sort-field values present:
-<p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint cat data/sort-null.dat
-a b
-3 2
-1 8
-- 4
-5 7
+$ cat data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bill,regex=^b[ou]ll$
+name=bull,regex=^b[ou]ll$
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint sort -n  a data/sort-null.dat
-a b
-1 8
-3 2
-5 7
-- 4
+$ mlr filter '$name =~ $regex' data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bull,regex=^b[ou]ll$
 </pre>
 </div>
 <p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint sort -nr a data/sort-null.dat
-a b
-- 4
-5 7
-3 2
-1 8
-</pre>
-</div>
-<p/>
-<li> Functions which have one or more null arguments produce null output: e.g.
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'x=2,y=3' | mlr put '$a=$x+$y'
-x=2,y=3,a=5
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'x=,y=3' | mlr put '$a=$x+$y'
-x=,y=3,a=
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
-x=,y=3,a=,b=1.098612
-</pre>
-</div>
-<p/>
-<li> The <tt>min</tt> and <tt>max</tt> functions are special: if one argument is non-null, it wins:
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
-x=,y=3,a=3,b=3
-</pre>
-</div>
-<p/>
-</ul>
     </div>
   </td>
 

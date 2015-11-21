@@ -800,6 +800,8 @@ static mv_t plus_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a + b};
 	return rv;
 }
+// Adds & subtracts overflow by at most one bit so it suffices to check
+// sign-changes.
 static mv_t plus_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
@@ -855,6 +857,8 @@ static mv_t minus_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a - b};
 	return rv;
 }
+// Adds & subtracts overflow by at most one bit so it suffices to check
+// sign-changes.
 static mv_t minus_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
@@ -910,6 +914,32 @@ static mv_t times_f_if(mv_t* pa, mv_t* pb) {
 	mv_t rv = {.type = MT_FLOAT, .u.fltv = a * b};
 	return rv;
 }
+// Unlike adds & subtracts which overflow by at most one bit, multiplies can
+// overflow by a word size. Thus detecting sign-changes does not suffice to
+// detect overflow. Instead we test whether the floating-point product exceeds
+// the representable integer range. Now 64-bit integers have 64-bit precision
+// while IEEE-doubles have only 52-bit mantissas -- so, 53 bits including
+// implicit leading one.
+//
+// The following experiment explicitly demonstrates the resolution at this range:
+//
+//    64-bit integer     64-bit integer     Casted to double           Back to 64-bit
+//        in hex           in decimal                                    integer
+// 0x7ffffffffffff9ff 9223372036854774271 9223372036854773760.000000 0x7ffffffffffff800
+// 0x7ffffffffffffa00 9223372036854774272 9223372036854773760.000000 0x7ffffffffffff800
+// 0x7ffffffffffffbff 9223372036854774783 9223372036854774784.000000 0x7ffffffffffffc00
+// 0x7ffffffffffffc00 9223372036854774784 9223372036854774784.000000 0x7ffffffffffffc00
+// 0x7ffffffffffffdff 9223372036854775295 9223372036854774784.000000 0x7ffffffffffffc00
+// 0x7ffffffffffffe00 9223372036854775296 9223372036854775808.000000 0x8000000000000000
+// 0x7ffffffffffffffe 9223372036854775806 9223372036854775808.000000 0x8000000000000000
+// 0x7fffffffffffffff 9223372036854775807 9223372036854775808.000000 0x8000000000000000
+//
+// That is, we cannot check an integer product to see if it is greater than
+// 2**63-1 (or is less than -2**63) using integer arithmetic (it may have
+// already overflowed) *or* using double-precision (granularity). Instead we
+// check if the absolute value of the product exceeds the largest representable
+// double less than 2**63. (An alterative would be to do all integer multipies
+// using handcrafted multi-word 128-bit arithmetic).
 static mv_t times_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
