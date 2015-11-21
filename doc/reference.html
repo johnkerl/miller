@@ -3310,8 +3310,22 @@ filter '$url =~ "http.*com"'</tt>
 
 </ul>
 
-<p/>The <tt>i</tt> after the double-quoted regular-expression string is used to
-signify case-insensitive match.
+<p/>Points demonstrated by the above examples:
+
+<ul>
+
+<li/> There are no implicit start-of-string or end-of-string anchors; please
+use <tt>^</tt> and/or <tt>$</tt> explicitly.
+
+<li/> Miller regexes are wrapped with double quotes rather than slashes.
+
+<li/> The <tt>i</tt> after the ending double quote indicates a case-insensitive
+regex.
+
+<li/> Capture groups are wrapped with <tt>(...)</tt> rather than
+<tt>\(...\)</tt>; use <tt>\(</tt> and <tt>\)</tt> to match against parentheses.
+
+</ul>
 
 <p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
 literal (the normal case), it is precompiled at process start and reused
