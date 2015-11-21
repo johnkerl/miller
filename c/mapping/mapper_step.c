@@ -251,32 +251,28 @@ static step_t* make_step(char* step_name, char* input_field_name) {
 
 // ----------------------------------------------------------------
 typedef struct _step_delta_state_t {
-	double prev;
-	int    have_prev;
-	char*  output_field_name;
+	mv_t  prev;
+	char* output_field_name;
 } step_delta_state_t;
-static void step_delta_dprocess(void* pvstate, double fltv, lrec_t* prec) {
+static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
-	double delta = 0.0;
-	if (pstate->have_prev) {
-		delta = fltv - pstate->prev;
+	mv_t delta;
+	if (mv_is_null(&pstate->prev)) {
+		delta = mv_from_int(0);
 	} else {
-		pstate->have_prev = TRUE;
+		delta = n_nn_minus_func(&pstate->prev, pnumv);
 	}
-	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(delta, MLR_GLOBALS.ofmt),
-		LREC_FREE_ENTRY_VALUE);
-	pstate->prev = fltv;
+	lrec_put(prec, pstate->output_field_name, mt_format_val(&delta), LREC_FREE_ENTRY_VALUE);
+	pstate->prev = *pnumv;
 }
 static step_t* step_delta_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
-	pstate->prev          = -999.0;
-	pstate->have_prev     = FALSE;
+	pstate->prev = mv_from_null();
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
-
 	pstep->pvstate        = (void*)pstate;
-	pstep->pdprocess_func = step_delta_dprocess;
-	pstep->pnprocess_func = NULL;
+	pstep->pdprocess_func = NULL;
+	pstep->pnprocess_func = step_delta_nprocess;
 	pstep->psprocess_func = NULL;
 	return pstep;
 }
@@ -332,7 +328,6 @@ static step_t* step_rsum_alloc(char* input_field_name) {
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
 	pstate->rsum  = mv_from_int(0LL);
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-
 	pstep->pvstate        = (void*)pstate;
 	pstep->pdprocess_func = NULL;
 	pstep->pnprocess_func = step_rsum_nprocess;;

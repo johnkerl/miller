@@ -39,7 +39,7 @@ diff
 int-to-int in stats1/stats2/step:
    k count    Count instances of fields
    k mode     Find most-frequently-occurring values for fields; first-found wins tie
-  *I sum      Compute sums of specified fields
+  kI sum      Compute sums of specified fields
    f mean     Compute averages (sample means) of specified fields
    f stddev   Compute sample standard deviation of specified fields
    f var      Compute sample variance of specified fields
@@ -57,9 +57,9 @@ int-to-int in stats1/stats2/step:
    f cov          Sample covariance
    f covx         Sample-covariance matrix
 
-  *I delta    Compute differences in field(s) between successive records
+  kI delta    Compute differences in field(s) between successive records
    f ratio    Compute ratios in field(s) between successive records
-  *I rsum     Compute running sums of field(s) between successive records
+  kI rsum     Compute running sums of field(s) between successive records
    k counter  Count instances of field(s) between successive records
 
 ----------------------------------------------------------------
