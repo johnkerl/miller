@@ -15,10 +15,6 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  o mv_t int/float accumulator logic for stats1 sum, step rsum, ... ? & note these in the dox.
-    -> stats1/stats2/step -f ...
-    -> or maybe just %g format?? emph @ mlr3 release notes if so
-
   o time_string_from_seconds: defend against "", -inf, etc. before claiming 'internal coding error'. UTs.
 
 ----------------------------------------------------------------
@@ -33,6 +29,8 @@ TOP OF LIST
     - strftime/strptime as generalization of sec2gmt/gmt2sec
   o I/O:
     - --xvright
+    - default ofmt %lf to %lg. more humanized formatting including stats1
+      nteger-formatted sum of integer inputs.
   o verbs:
     - mlr cat -n; mlr grep
     - stats1 skewness & kurtosis
@@ -64,6 +62,9 @@ TOP OF LIST
       then  put '$nleft=$target-$n' \
       then stats2 -s -a linreg-pca -f t,nleft \
       then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
+
+----------------------------------------------------------------
+! mlrdoc not printable as PDF?!
 
 ----------------------------------------------------------------
 * lrec_eval nullable etc. cleanup

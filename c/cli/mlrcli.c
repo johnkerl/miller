@@ -175,7 +175,7 @@ static char* rebackslash(char* sep) {
 }
 
 // ----------------------------------------------------------------
-#define DEFAULT_OFMT "%lf"
+#define DEFAULT_OFMT "%lg"
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
@@ -367,6 +367,7 @@ static void main_usage_numerical_formatting(FILE* o, char* argv0) {
 	fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
 	fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
 	fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
+	fprintf(o, "                     Defaults to %s\n", DEFAULT_OFMT);
 }
 
 static void main_usage_other_options(FILE* o, char* argv0) {
