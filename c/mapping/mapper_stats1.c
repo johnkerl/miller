@@ -201,32 +201,32 @@ static void mapper_stats1_free(void* pvstate) {
 // {
 //   ["s","t"] : {                <--- group-by field names
 //     ["x"] : {                  <--- value field names
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //   },
 //   ["u","v"] : {
 //     ["x"] : {
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //   },
 //   ["u","w"] : {
 //     ["x"] : {
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //     ["y"] : {
-//       "count" : stats2_count_t object,
-//       "sum"   : stats2_sum_t  object
+//       "count" : stats1_count_t object,
+//       "sum"   : stats1_sum_t  object
 //     },
 //   },
 // }

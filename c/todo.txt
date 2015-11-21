@@ -11,18 +11,51 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-!! undo %lg. borks timestamps. :/
-
 ! before releasing miller 3:
 
   ! fix join on partial value-field matches
 
   ! ovf UTs
 
+  ! neaten stats1/stats2/step subverb help output
+
   ! decide how to get more humanized formatting including stats1, e.g.
     integer-formatted sum of integer inputs. defaulting ofmt %lf to %lg loses
     precision in epoch seconds; not ok.
-    -> mv_t int-to-float logic? ofmt/sfmt?
+    -> mv_t int-to-float logic? implement stats1/stats2/step -f if so.
+    -> separate ofmt/sfmt?
+
+----------------------------------------------------------------
+acc/sum
+min
+max
+diff
+
+int-to-int in stats1/stats2/step:
+   k count    Count instances of fields
+   k mode     Find most-frequently-occurring values for fields; first-found wins tie
+  *I sum      Compute sums of specified fields
+   f mean     Compute averages (sample means) of specified fields
+   f stddev   Compute sample standard deviation of specified fields
+   f var      Compute sample variance of specified fields
+   f meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+   f skewness Compute sample skewness of specified fields
+   f kurtosis Compute sample kurtosis of specified fields
+  *I min      Compute minimum values of specified fields
+  *I max      Compute maximum values of specified fields
+
+   f linreg-pca   Linear regression using principal component analysis
+   f linreg-ols   Linear regression using ordinary least squares
+   f r2           Quality metric for linreg-ols (linreg-pca emits its own)
+   f logireg      Logistic regression
+   f corr         Sample correlation
+   f cov          Sample covariance
+   f covx         Sample-covariance matrix
+
+  *I delta    Compute differences in field(s) between successive records
+   f ratio    Compute ratios in field(s) between successive records
+  *I rsum     Compute running sums of field(s) between successive records
+   k counter  Count instances of field(s) between successive records
 
 ----------------------------------------------------------------
 * miller 3 release info:
