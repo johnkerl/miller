@@ -917,8 +917,8 @@ needn&rsquo;t think about it.
 
 <p/>Implementation details of this, for the interested: integer adds and
 subtracts overflow by at most one bit so it suffices to check sign-changes.
-Miller allows you to add and subtract arbitrary 64-bit signed integers,
-converting only to float strictly when the result is less than -2<sup>63</sup>
+Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers,
+converting only to float precisely when the result is less than -2<sup>63</sup>
 or greater than 2<sup>63</sup>-1.  Multiplies, on the other hand, can overflow
 by a word size and a sign-change technique does not suffice to detect overflow.
 Instead Miller tests whether the floating-point product exceeds the
