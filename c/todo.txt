@@ -15,8 +15,6 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  o time_string_from_seconds: defend against "", -inf, etc. before claiming 'internal coding error'. UTs.
-
 ----------------------------------------------------------------
 * miller 3 release info:
   o functions:

@@ -459,6 +459,9 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 static mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	time_t clock = 0;
 	if (psec->type == MT_FLOAT) {
+		if (isinf(psec->u.fltv) || isnan(psec->u.fltv)) {
+			return (mv_t) {.type = MT_ERROR, .u.intv = 0LL};
+		}
 		clock = (time_t) psec->u.fltv;
 	} else {
 		clock = (time_t) psec->u.intv;
