@@ -175,7 +175,7 @@ static char* rebackslash(char* sep) {
 }
 
 // ----------------------------------------------------------------
-#define DEFAULT_OFMT "%lg"
+#define DEFAULT_OFMT "%lf"
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 

@@ -11,9 +11,18 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+!! undo %lg. borks timestamps. :/
+
 ! before releasing miller 3:
 
   ! fix join on partial value-field matches
+
+  ! ovf UTs
+
+  ! decide how to get more humanized formatting including stats1, e.g.
+    integer-formatted sum of integer inputs. defaulting ofmt %lf to %lg loses
+    precision in epoch seconds; not ok.
+    -> mv_t int-to-float logic? ofmt/sfmt?
 
 ----------------------------------------------------------------
 * miller 3 release info:
@@ -27,8 +36,6 @@ TOP OF LIST
     - strftime/strptime as generalization of sec2gmt/gmt2sec
   o I/O:
     - --xvright
-    - default ofmt %lf to %lg. more humanized formatting including stats1
-      nteger-formatted sum of integer inputs.
   o verbs:
     - mlr cat -n; mlr grep
     - stats1 skewness & kurtosis

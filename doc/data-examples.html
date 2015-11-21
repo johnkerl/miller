@@ -167,8 +167,8 @@ Steel Frame         Commercial  272
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012
-tiv_2012_min tiv_2012_mean tiv_2012_max
-73.37        2.571e+06     1.701e+09
+tiv_2012_min tiv_2012_mean  tiv_2012_max
+73.370000    2571004.097342 1701000000.000000
 </pre>
 </div>
 <p/>
@@ -176,12 +176,12 @@ tiv_2012_min tiv_2012_mean tiv_2012_max
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
-construction        line        tiv_2012_min tiv_2012_mean tiv_2012_max
-Masonry             Residential 261168       1.04199e+06   3.23497e+06
-Wood                Residential 73.37        113493        649046
-Reinforced Concrete Commercial  6.41602e+06  2.02124e+07   6.057e+07
-Reinforced Masonry  Commercial  1.28782e+06  4.62137e+06   1.665e+07
-Steel Frame         Commercial  2.979e+07    1.33492e+08   1.701e+09
+construction        line        tiv_2012_min    tiv_2012_mean    tiv_2012_max
+Masonry             Residential 261168.070000   1041986.129217   3234970.920000
+Wood                Residential 73.370000       113493.017049    649046.120000
+Reinforced Concrete Commercial  6416016.010000  20212428.681840  60570000.000000
+Reinforced Masonry  Commercial  1287817.340000  4621372.981117   16650000.000000
+Steel Frame         Commercial  29790000.000000 133492500.000000 1701000000.000000
 </pre>
 </div>
 <p/>
@@ -190,13 +190,13 @@ Steel Frame         Commercial  2.979e+07    1.33492e+08   1.701e+09
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
-hu_site_deductible_p0   0
-hu_site_deductible_p10  0
-hu_site_deductible_p50  0
-hu_site_deductible_p90  76.5
-hu_site_deductible_p95  6829.2
-hu_site_deductible_p99  126270
-hu_site_deductible_p100 7.38e+06
+hu_site_deductible_p0   0.000000
+hu_site_deductible_p10  0.000000
+hu_site_deductible_p50  0.000000
+hu_site_deductible_p90  76.500000
+hu_site_deductible_p95  6829.200000
+hu_site_deductible_p99  126270.000000
+hu_site_deductible_p100 7380000.000000
 </pre>
 </div>
 <p/>
@@ -205,15 +205,15 @@ hu_site_deductible_p100 7.38e+06
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
 county              hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
-ALACHUA COUNTY      30630.6                107312                 1.64138e+06
-BAKER COUNTY        0                      0                      0
-BAY COUNTY          26131.5                181912                 630000
-BRADFORD COUNTY     3355.2                 8163                   8163
-BREVARD COUNTY      5360.4                 78975                  1.97346e+06
-BROWARD COUNTY      0                      148500                 3.2589e+06
-CALHOUN COUNTY      0                      33339.6                33339.6
-CHARLOTTE COUNTY    5400                   52650                  250995
-CITRUS COUNTY       1332.9                 79974.9                483785
+ALACHUA COUNTY      30630.600000           107312.400000          1641375.000000
+BAKER COUNTY        0.000000               0.000000               0.000000
+BAY COUNTY          26131.500000           181912.500000          630000.000000
+BRADFORD COUNTY     3355.200000            8163.000000            8163.000000
+BREVARD COUNTY      5360.400000            78975.000000           1973461.500000
+BROWARD COUNTY      0.000000               148500.000000          3258900.000000
+CALHOUN COUNTY      0.000000               33339.600000           33339.600000
+CHARLOTTE COUNTY    5400.000000            52650.000000           250994.700000
+CITRUS COUNTY       1332.900000            79974.900000           483785.100000
 </pre>
 </div>
 <p/>
@@ -221,9 +221,9 @@ CITRUS COUNTY       1332.9                 79974.9                483785
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
-tiv_2011_tiv_2012_corr  0.97305
+tiv_2011_tiv_2012_corr  0.973050
 tiv_2011_tiv_2012_ols_m 0.983558
-tiv_2011_tiv_2012_ols_b 433855
+tiv_2011_tiv_2012_ols_b 433854.642897
 tiv_2011_tiv_2012_ols_n 36634
 tiv_2011_tiv_2012_r2    0.946826
 </pre>
@@ -234,73 +234,73 @@ tiv_2011_tiv_2012_r2    0.946826
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
 county              tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
-CLAY COUNTY         0.962716               1.09012                 46450.5                 363                     0.926822
-SUWANNEE COUNTY     0.989208               1.07466                 36253                   154                     0.978533
-NASSAU COUNTY       0.973135               1.29632                 -45369.2                135                     0.946993
-COLUMBIA COUNTY     0.999492               0.931447                117184                  125                     0.998985
-ST  JOHNS COUNTY    0.96617                1.23006                 -596.624                657                     0.933485
-BAKER COUNTY        0.963515               0.942771                29063.1                 70                      0.92836
-BRADFORD COUNTY     0.999766               0.849029                69544.3                 31                      0.999533
-HAMILTON COUNTY     0.987026               1.22495                 1045.05                 35                      0.97422
-UNION COUNTY        0.997745               1.43258                 -56.1257                15                      0.995495
-MADISON COUNTY      0.985213               1.51211                 -84278                  81                      0.970645
-LAFAYETTE COUNTY    0.967499               1.13429                 9904.86                 68                      0.936055
-FLAGLER COUNTY      0.984854               1.00792                 95340.5                 204                     0.969937
-DUVAL COUNTY        0.978815               1.24563                 -60831.7                1894                    0.958079
-LAKE COUNTY         0.999727               1.29386                 -107696                 206                     0.999455
-VOLUSIA COUNTY      0.994636               1.20225                 -36277.8                1367                    0.9893
-PUTNAM COUNTY       0.961167               1.17629                 6405.06                 268                     0.923841
-MARION COUNTY       0.975774               1.17564                 20434.9                 1138                    0.952136
-SUMTER COUNTY       0.98976                1.3724                  -62649                  158                     0.979625
-LEON COUNTY         0.978644               1.25968                 -90816                  246                     0.957743
-FRANKLIN COUNTY     0.98943                1.04851                 36026.5                 37                      0.978972
-LIBERTY COUNTY      0.995175               1.36983                 -79755.5                36                      0.990373
-GADSDEN COUNTY      0.997898               1.18058                 7335.01                 196                     0.995801
-WAKULLA COUNTY      0.978267               1.19235                 44607.9                 85                      0.957006
-JEFFERSON COUNTY    0.976543               0.976066                74884.2                 57                      0.953637
-TAYLOR COUNTY       0.98177                1.38619                 -56856.9                113                     0.963873
-BAY COUNTY          0.975404               1.00445                 373000                  403                     0.951412
-WALTON COUNTY       0.985855               1.31958                 -83273.1                288                     0.971909
-JACKSON COUNTY      0.991195               1.17154                 8128.44                 208                     0.982468
-CALHOUN COUNTY      0.967974               1.27408                 -739.602                68                      0.936973
-HOLMES COUNTY       0.997366               1.15938                 42610.6                 40                      0.994738
-WASHINGTON COUNTY   0.982582               1.21341                 -13125.2                116                     0.965468
-GULF COUNTY         0.990367               1.13563                 26094.5                 72                      0.980826
-ESCAMBIA COUNTY     0.986666               1.19534                 46106.3                 494                     0.973509
-SANTA ROSA COUNTY   0.972696               1.01385                 30496                   856                     0.946138
-OKALOOSA COUNTY     0.970781               1.46208                 -116127                 1115                    0.942416
-ALACHUA COUNTY      0.982825               1.14275                 52671.3                 973                     0.965945
-GILCHRIST COUNTY    0.977467               1.37574                 -15309.4                39                      0.955442
-LEVY COUNTY         0.956302               1.20051                 265.391                 126                     0.914513
-DIXIE COUNTY        0.99578                1.64015                 -98273.8                40                      0.991578
-SEMINOLE COUNTY     0.985925               0.880108                427892                  1100                    0.972048
-ORANGE COUNTY       0.990658               0.872027                1.29897e+06             1811                    0.981403
-BREVARD COUNTY      0.978015               1.27123                 -19295.2                872                     0.956513
-INDIAN RIVER COUNTY 0.985673               1.28462                 -116580                 380                     0.97155
-MIAMI DADE COUNTY   0.987833               1.29311                 -237169                 4315                    0.975815
-BROWARD COUNTY      0.983847               1.18769                 81931.9                 3193                    0.967954
-MONROE COUNTY       0.982555               1.01314                 455470                  152                     0.965414
-PALM BEACH COUNTY   0.982591               1.24759                 -77252.4                2791                    0.965485
-MARTIN COUNTY       0.975896               1.03287                 8668.75                 109                     0.952374
-HENDRY COUNTY       0.971645               0.969699                208613                  74                      0.944093
-PASCO COUNTY        0.986556               1.28823                 -152936                 790                     0.973294
-GLADES COUNTY       0.983518               0.982993                125667                  22                      0.967308
-HILLSBOROUGH COUNTY 0.985446               1.21162                 214513                  1166                    0.971103
-HERNANDO COUNTY     0.974068               0.759748                701096                  120                     0.948809
-PINELLAS COUNTY     0.987215               1.1548                  38609.8                 1774                    0.974593
-POLK COUNTY         0.979963               1.09485                 153371                  1629                    0.960327
+CLAY COUNTY         0.962716               1.090115                46450.531268            363                     0.926822
+SUWANNEE COUNTY     0.989208               1.074658                36253.003174            154                     0.978533
+NASSAU COUNTY       0.973135               1.296321                -45369.242673           135                     0.946993
+COLUMBIA COUNTY     0.999492               0.931447                117183.548383           125                     0.998985
+ST  JOHNS COUNTY    0.966170               1.230056                -596.623856             657                     0.933485
+BAKER COUNTY        0.963515               0.942771                29063.065747            70                      0.928360
+BRADFORD COUNTY     0.999766               0.849029                69544.341944            31                      0.999533
+HAMILTON COUNTY     0.987026               1.224952                1045.052170             35                      0.974220
+UNION COUNTY        0.997745               1.432575                -56.125738              15                      0.995495
+MADISON COUNTY      0.985213               1.512114                -84278.028498           81                      0.970645
+LAFAYETTE COUNTY    0.967499               1.134289                9904.860798             68                      0.936055
+FLAGLER COUNTY      0.984854               1.007922                95340.508354            204                     0.969937
+DUVAL COUNTY        0.978815               1.245630                -60831.675023           1894                    0.958079
+LAKE COUNTY         0.999727               1.293864                -107695.848518          206                     0.999455
+VOLUSIA COUNTY      0.994636               1.202247                -36277.755477           1367                    0.989300
+PUTNAM COUNTY       0.961167               1.176294                6405.060826             268                     0.923841
+MARION COUNTY       0.975774               1.175642                20434.945602            1138                    0.952136
+SUMTER COUNTY       0.989760               1.372395                -62648.989750           158                     0.979625
+LEON COUNTY         0.978644               1.259681                -90816.033261           246                     0.957743
+FRANKLIN COUNTY     0.989430               1.048513                36026.508852            37                      0.978972
+LIBERTY COUNTY      0.995175               1.369834                -79755.544362           36                      0.990373
+GADSDEN COUNTY      0.997898               1.180585                7335.013009             196                     0.995801
+WAKULLA COUNTY      0.978267               1.192350                44607.922080            85                      0.957006
+JEFFERSON COUNTY    0.976543               0.976066                74884.170791            57                      0.953637
+TAYLOR COUNTY       0.981770               1.386188                -56856.945239           113                     0.963873
+BAY COUNTY          0.975404               1.004452                373000.300167           403                     0.951412
+WALTON COUNTY       0.985855               1.319583                -83273.091503           288                     0.971909
+JACKSON COUNTY      0.991195               1.171538                8128.438198             208                     0.982468
+CALHOUN COUNTY      0.967974               1.274077                -739.602262             68                      0.936973
+HOLMES COUNTY       0.997366               1.159384                42610.647058            40                      0.994738
+WASHINGTON COUNTY   0.982582               1.213413                -13125.214494           116                     0.965468
+GULF COUNTY         0.990367               1.135626                26094.474571            72                      0.980826
+ESCAMBIA COUNTY     0.986666               1.195336                46106.277408            494                     0.973509
+SANTA ROSA COUNTY   0.972696               1.013849                30496.045069            856                     0.946138
+OKALOOSA COUNTY     0.970781               1.462083                -116127.032201          1115                    0.942416
+ALACHUA COUNTY      0.982825               1.142748                52671.269211            973                     0.965945
+GILCHRIST COUNTY    0.977467               1.375740                -15309.425813           39                      0.955442
+LEVY COUNTY         0.956302               1.200506                265.391211              126                     0.914513
+DIXIE COUNTY        0.995780               1.640150                -98273.767115           40                      0.991578
+SEMINOLE COUNTY     0.985925               0.880108                427892.123991           1100                    0.972048
+ORANGE COUNTY       0.990658               0.872027                1298970.668186          1811                    0.981403
+BREVARD COUNTY      0.978015               1.271225                -19295.177646           872                     0.956513
+INDIAN RIVER COUNTY 0.985673               1.284620                -116579.613922          380                     0.971550
+MIAMI DADE COUNTY   0.987833               1.293106                -237168.505282          4315                    0.975815
+BROWARD COUNTY      0.983847               1.187689                81931.896276            3193                    0.967954
+MONROE COUNTY       0.982555               1.013142                455469.576218           152                     0.965414
+PALM BEACH COUNTY   0.982591               1.247594                -77252.429421           2791                    0.965485
+MARTIN COUNTY       0.975896               1.032873                8668.746202             109                     0.952374
+HENDRY COUNTY       0.971645               0.969699                208613.031856           74                      0.944093
+PASCO COUNTY        0.986556               1.288225                -152936.104164          790                     0.973294
+GLADES COUNTY       0.983518               0.982993                125666.627729           22                      0.967308
+HILLSBOROUGH COUNTY 0.985446               1.211620                214512.927989           1166                    0.971103
+HERNANDO COUNTY     0.974068               0.759748                701096.129434           120                     0.948809
+PINELLAS COUNTY     0.987215               1.154797                38609.763660            1774                    0.974593
+POLK COUNTY         0.979963               1.094848                153371.308143           1629                    0.960327
 North Fort Myers    -                      -                       -                       1                       -
 Orlando             -                      -                       -                       1                       -
-HIGHLANDS COUNTY    0.993054               1.52876                 -300198                 369                     0.986157
-HARDEE COUNTY       0.977999               1.32344                 -98513.4                81                      0.956482
-MANATEE COUNTY      0.967526               1.0685                  137191                  518                     0.936106
+HIGHLANDS COUNTY    0.993054               1.528760                -300198.361569          369                     0.986157
+HARDEE COUNTY       0.977999               1.323440                -98513.434797           81                      0.956482
+MANATEE COUNTY      0.967526               1.068496                137190.708238           518                     0.936106
 OSCEOLA COUNTY      -                      -                       -                       1                       -
-LEE COUNTY          0.978945               1.25272                 -16843.1                678                     0.958334
-CHARLOTTE COUNTY    0.979024               1.01321                 178461                  414                     0.958488
-COLLIER COUNTY      0.958031               1.16976                 110270                  787                     0.917824
-SARASOTA COUNTY     0.984781               1.29251                 -109940                 417                     0.969793
-DESOTO COUNTY       0.98013                1.28621                 -9987.04                108                     0.960654
-CITRUS COUNTY       0.989943               0.96594                 138636                  384                     0.979986
+LEE COUNTY          0.978945               1.252722                -16843.109269           678                     0.958334
+CHARLOTTE COUNTY    0.979024               1.013211                178461.328878           414                     0.958488
+COLLIER COUNTY      0.958031               1.169759                110270.385201           787                     0.917824
+SARASOTA COUNTY     0.984781               1.292514                -109939.723017          417                     0.969793
+DESOTO COUNTY       0.980130               1.286205                -9987.042982            108                     0.960654
+CITRUS COUNTY       0.989943               0.965940                138635.818880           384                     0.979986
 </pre>
 </div>
 <p/>
@@ -349,17 +349,17 @@ Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up w
 <div class="pokipanel">
 <pre>
 $ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
-flag_min  0
+flag_min  0.000000
 flag_mean 0.398889
-flag_max  1
+flag_max  1.000000
 
-u_min     4.39125e-05
+u_min     0.000044
 u_mean    0.498326
 u_max     0.999969
 
-v_min     -0.0927091
+v_min     -0.092709
 v_mean    0.497787
-v_max     1.0725
+v_max     1.072500
 </pre>
 </div>
 <p/>
@@ -368,19 +368,19 @@ v_max     1.0725
 <div class="pokipanel">
 <pre>
 $ mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
-bin_lo      bin_hi      flag_count u_count v_count
--0.1        1.38778e-17 6058       0       36
-1.38778e-17 0.1         0          1062    988
-0.1         0.2         0          985     1003
-0.2         0.3         0          1024    1014
-0.3         0.4         0          1002    991
-0.4         0.5         0          989     1041
-0.5         0.6         0          1001    1016
-0.6         0.7         0          972     962
-0.7         0.8         0          1035    1070
-0.8         0.9         0          995     993
-0.9         1           4020       1013    939
-1           1.1         0          0       25
+bin_lo    bin_hi   flag_count u_count v_count
+-0.100000 0.000000 6058       0       36
+0.000000  0.100000 0          1062    988
+0.100000  0.200000 0          985     1003
+0.200000  0.300000 0          1024    1014
+0.300000  0.400000 0          1002    991
+0.400000  0.500000 0          989     1041
+0.500000  0.600000 0          1001    1016
+0.600000  0.700000 0          972     962
+0.700000  0.800000 0          1035    1070
+0.800000  0.900000 0          995     993
+0.900000  1.000000 4020       1013    939
+1.000000  1.100000 0          0       25
 </pre>
 </div>
 <p/>
@@ -393,13 +393,13 @@ Bernoulli probablities from the data-generator script:
 <div class="pokipanel">
 <pre>
 $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
-color  flag_min flag_mean flag_max u_min       u_mean   u_max    v_min       v_mean   v_max
-blue   0        0.584354  1        4.39125e-05 0.517717 0.999969 0.00148868  0.491056 0.999576
-green  0        0.209197  1        0.000487507 0.504861 0.999936 0.000501267 0.499085 0.999676
-orange 0        0.521452  1        0.00123538  0.490532 0.998885 0.00244867  0.487764 0.998475
-purple 0        0.0901926 1        0.000265521 0.494005 0.999647 0.000364114 0.497051 0.999975
-red    0        0.303167  1        0.000671137 0.49256  0.999882 -0.0927091  0.496535 1.0725
-yellow 0        0.892427  1        0.00130023  0.497129 0.999923 0.00071097  0.510627 0.999919
+color  flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
+blue   0.000000 0.584354  1.000000 0.000044 0.517717 0.999969 0.001489  0.491056 0.999576
+green  0.000000 0.209197  1.000000 0.000488 0.504861 0.999936 0.000501  0.499085 0.999676
+orange 0.000000 0.521452  1.000000 0.001235 0.490532 0.998885 0.002449  0.487764 0.998475
+purple 0.000000 0.090193  1.000000 0.000266 0.494005 0.999647 0.000364  0.497051 0.999975
+red    0.000000 0.303167  1.000000 0.000671 0.492560 0.999882 -0.092709 0.496535 1.072500
+yellow 0.000000 0.892427  1.000000 0.001300 0.497129 0.999923 0.000711  0.510627 0.999919
 </pre>
 </div>
 <p/>
@@ -407,10 +407,10 @@ yellow 0        0.892427  1        0.00130023  0.497129 0.999923 0.00071097  0.5
 <div class="pokipanel">
 <pre>
 $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
-shape    flag_min flag_mean flag_max u_min       u_mean   u_max    v_min       v_mean   v_max
-circle   0        0.399846  1        4.39125e-05 0.498555 0.999923 -0.0927091  0.495524 1.0725
-square   0        0.396112  1        0.000188194 0.499385 0.999969 8.93028e-05 0.496538 0.999975
-triangle 0        0.401542  1        0.000881025 0.496859 0.999661 0.000716883 0.50105  0.999995
+shape    flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
+circle   0.000000 0.399846  1.000000 0.000044 0.498555 0.999923 -0.092709 0.495524 1.072500
+square   0.000000 0.396112  1.000000 0.000188 0.499385 0.999969 0.000089  0.496538 0.999975
+triangle 0.000000 0.401542  1.000000 0.000881 0.496859 0.999661 0.000717  0.501050 0.999995
 </pre>
 </div>
 <p/>
@@ -420,8 +420,8 @@ triangle 0        0.401542  1        0.000881025 0.496859 0.999661 0.000716883 0
 <div class="pokipanel">
 <pre>
 $ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
-u_v_corr   w_x_corr
-0.133418 -0.0113199
+u_v_corr  w_x_corr
+0.133418 -0.011320
 </pre>
 </div>
 <p/>
@@ -429,25 +429,25 @@ u_v_corr   w_x_corr
 <div class="pokipanel">
 <pre>
 $ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
- color    shape   u_v_corr     w_x_corr
-   red   circle   0.980798    -0.018565
-orange   square   0.176858   -0.0710437
- green   circle  0.0576443    0.0117952
-   red   square  0.0557448 -0.000680218
-yellow triangle  0.0445727    0.0246048
-yellow   square  0.0437917   -0.0446227
-purple   circle  0.0358735     0.134112
-  blue   square  0.0324116   -0.0535079
-  blue triangle  0.0153563 -0.000608478
-orange   circle  0.0105187    -0.162795
-   red triangle 0.00809781    0.0124858
-purple triangle 0.00515504   -0.0450579
-purple   square -0.0256802    0.0576944
- green   square  -0.025776  -0.00326525
-orange triangle -0.0304569     -0.13187
-yellow   circle -0.0647734    0.0736947
-  blue   circle  -0.102348    -0.030529
- green triangle  -0.109018   -0.0484882
+ color    shape  u_v_corr  w_x_corr
+   red   circle  0.980798 -0.018565
+orange   square  0.176858 -0.071044
+ green   circle  0.057644  0.011795
+   red   square  0.055745 -0.000680
+yellow triangle  0.044573  0.024605
+yellow   square  0.043792 -0.044623
+purple   circle  0.035874  0.134112
+  blue   square  0.032412 -0.053508
+  blue triangle  0.015356 -0.000608
+orange   circle  0.010519 -0.162795
+   red triangle  0.008098  0.012486
+purple triangle  0.005155 -0.045058
+purple   square -0.025680  0.057694
+ green   square -0.025776 -0.003265
+orange triangle -0.030457 -0.131870
+yellow   circle -0.064773  0.073695
+  blue   circle -0.102348 -0.030529
+ green triangle -0.109018 -0.048488
 </pre>
 </div>
 <p/>
