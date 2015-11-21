@@ -123,7 +123,8 @@ char* mlr_alloc_hexfmt_from_ll(long  long value) {
 double mlr_double_from_string_or_die(char* string) {
 	double d;
 	if (!mlr_try_float_from_string(string, &d)) {
-		fprintf(stderr, "Couldn't parse \"%s\" as number.\n", string);
+		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
+			MLR_GLOBALS.argv0, string);
 		exit(1);
 	}
 	return d;

@@ -11,16 +11,19 @@
 #include "containers/lhmsv.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
+#include "mapping/mlr_val.h"
 #include "cli/argparse.h"
 
 // ----------------------------------------------------------------
-typedef void  step_dprocess_func_t(void* pvstate, double fltv, lrec_t* prec);
-typedef void  step_sprocess_func_t(void* pvstate, char*  strv, lrec_t* prec);
+typedef void step_dprocess_func_t(void* pvstate, double fltv, lrec_t* prec);
+typedef void step_nprocess_func_t(void* pvstate, mv_t* pval,  lrec_t* prec);
+typedef void step_sprocess_func_t(void* pvstate, char*  strv, lrec_t* prec);
 
 typedef struct _step_t {
 	void* pvstate;
-	step_sprocess_func_t* psprocess_func;
 	step_dprocess_func_t* pdprocess_func;
+	step_nprocess_func_t* pnprocess_func;
+	step_sprocess_func_t* psprocess_func;
 } step_t;
 
 typedef step_t* step_alloc_func_t(char* input_field_name);
@@ -188,8 +191,10 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		if (value_field_sval == NULL)
 			continue;
 
-		int   have_dval = FALSE;
+		int have_dval = FALSE;
+		int have_nval = FALSE;
 		double value_field_dval = -999.0;
+		mv_t   value_field_nval = mv_from_int(-888LL);
 
 		lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
 		if (acc_field_to_acc_state == NULL) {
@@ -212,9 +217,6 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				lhmsv_put(acc_field_to_acc_state, step_name, pstep);
 			}
 
-			if (pstep->psprocess_func != NULL) {
-				pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
-			}
 			if (pstep->pdprocess_func != NULL) {
 				if (!have_dval) {
 					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
@@ -222,6 +224,19 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				}
 				pstep->pdprocess_func(pstep->pvstate, value_field_dval, pinrec);
 			}
+
+			if (pstep->pnprocess_func != NULL) {
+				if (!have_nval) {
+					value_field_nval = mt_scan_number_or_die(value_field_sval);
+					have_nval = TRUE;
+				}
+				pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
+			}
+
+			if (pstep->psprocess_func != NULL) {
+				pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
+			}
+
 		}
 	}
 	return sllv_single(pinrec);
@@ -260,8 +275,9 @@ static step_t* step_delta_alloc(char* input_field_name) {
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
 
 	pstep->pvstate        = (void*)pstate;
-	pstep->psprocess_func = NULL;
 	pstep->pdprocess_func = step_delta_dprocess;
+	pstep->pnprocess_func = NULL;
+	pstep->psprocess_func = NULL;
 	return pstep;
 }
 // xxx step_delta_free et al.
@@ -292,31 +308,35 @@ static step_t* step_ratio_alloc(char* input_field_name) {
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
 
 	pstep->pvstate        = (void*)pstate;
-	pstep->psprocess_func = NULL;
 	pstep->pdprocess_func = step_ratio_dprocess;
+	pstep->pnprocess_func = NULL;
+	pstep->psprocess_func = NULL;
 	return pstep;
 }
 
 // ----------------------------------------------------------------
 typedef struct _step_rsum_state_t {
-	double rsum;
+	mv_t   rsum;
 	char*  output_field_name;
 } step_rsum_state_t;
-static void step_rsum_dprocess(void* pvstate, double fltv, lrec_t* prec) {
+
+static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
-	pstate->rsum += fltv;
-	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(pstate->rsum, MLR_GLOBALS.ofmt),
+	pstate->rsum = n_nn_plus_func(&pstate->rsum, pnumv);
+	lrec_put(prec, pstate->output_field_name, mt_format_val(&pstate->rsum),
 		LREC_FREE_ENTRY_VALUE);
 }
+
 static step_t* step_rsum_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-	pstate->rsum          = 0.0;
+	pstate->rsum  = mv_from_int(0LL);
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
 
 	pstep->pvstate        = (void*)pstate;
+	pstep->pdprocess_func = NULL;
+	pstep->pnprocess_func = step_rsum_nprocess;;
 	pstep->psprocess_func = NULL;
-	pstep->pdprocess_func = step_rsum_dprocess;
 	return pstep;
 }
 
@@ -338,7 +358,8 @@ static step_t* step_counter_alloc(char* input_field_name) {
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
 
 	pstep->pvstate        = (void*)pstate;
-	pstep->psprocess_func = step_counter_sprocess;
 	pstep->pdprocess_func = NULL;
+	pstep->psprocess_func = step_counter_sprocess;
+	pstep->pnprocess_func = NULL;
 	return pstep;
 }

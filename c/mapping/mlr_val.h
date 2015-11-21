@@ -58,6 +58,11 @@ extern mv_t MV_ERROR;
 }
 
 // ----------------------------------------------------------------
+mv_t mv_from_float(double d);
+mv_t mv_from_int(long long i);
+int mv_is_numeric(mv_t* pval);
+
+// ----------------------------------------------------------------
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);
@@ -67,7 +72,11 @@ void mt_get_boolean_strict(mv_t* pval);
 void mt_get_float_strict(mv_t* pval);
 void mt_get_float_nullable(mv_t* pval);
 void mt_get_int_nullable(mv_t* pval);
-void mt_get_number_nullable(mv_t* pval); // int or float
+
+// int or float:
+void mt_get_number_nullable(mv_t* pval);
+mv_t mt_scan_number_nullable(char* string);
+mv_t mt_scan_number_or_die(char* string);
 
 // ----------------------------------------------------------------
 typedef mv_t mv_zary_func_t();

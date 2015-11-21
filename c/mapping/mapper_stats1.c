@@ -174,7 +174,6 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t*
 	pmapper->pprocess_func = mapper_stats1_process;
 	pmapper->pfree_func    = mapper_stats1_free;
 
-
 	return pmapper;
 }
 

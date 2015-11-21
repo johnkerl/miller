@@ -15,21 +15,25 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  ! ovf UTs
-
-  ! neaten stats1/stats2/step subverb help output
+  o ovf UTs
+  o clarify a bit in mld regex section
+  o neaten stats1/stats2/step subverb help output
 
   ! decide how to get more humanized formatting including stats1, e.g.
     integer-formatted sum of integer inputs. defaulting ofmt %lf to %lg loses
     precision in epoch seconds; not ok.
     -> mv_t int-to-float logic? implement stats1/stats2/step -f if so.
     -> separate ofmt/sfmt?
+    -> mt_scan_number UTs
+    -> stats1/stats2/step UTs
 
 ----------------------------------------------------------------
 acc/sum
 min
 max
 diff
+	mt_get_number_nullable(&val1); NULL_OR_ERROR_OUT(val1);
+  mv_t n_nn_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 int-to-int in stats1/stats2/step:
    k count    Count instances of fields

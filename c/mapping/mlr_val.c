@@ -46,6 +46,19 @@ mv_t MV_ERROR = {
 };
 
 // ----------------------------------------------------------------
+mv_t mv_from_float(double d) {
+	return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
+}
+
+mv_t mv_from_int(long long i) {
+	return (mv_t) {.type = MT_INT, .u.intv = i};
+}
+
+int mv_is_numeric(mv_t* pval) {
+	return pval->type == MT_INT || pval->type == MT_FLOAT;
+}
+
+// ----------------------------------------------------------------
 char* mt_describe_type(int type) {
 	switch (type) {
 	case MT_NULL:   return "T_NULL";   break;
@@ -58,7 +71,7 @@ char* mt_describe_type(int type) {
 	}
 }
 
-// For debug only; the caller should free the return value
+// The caller should free the return value
 char* mt_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_NULL:
@@ -215,8 +228,6 @@ void mt_get_int_nullable(mv_t* pval) {
 
 // ----------------------------------------------------------------
 void mt_get_number_nullable(mv_t* pval) {
-	double fltv = 0.0;
-	long long intv = 0LL;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -231,25 +242,43 @@ void mt_get_number_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
-		if (*pval->u.strv == '\0') {
-			pval->type = MT_NULL;
-			pval->u.intv = 0LL;
-		} else if (mlr_try_int_from_string(pval->u.strv, &intv)) {
-			pval->type = MT_INT;
-			pval->u.intv = intv;
-		} else if (mlr_try_float_from_string(pval->u.strv, &fltv)) {
-			pval->type = MT_FLOAT;
-			pval->u.intv = fltv;
-		} else {
-			pval->type = MT_ERROR;
-			pval->u.intv = 0LL;
-		}
+		// xxx freeing ...
+		*pval = mt_scan_number_nullable(pval->u.strv);
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
 		break;
 	}
+}
+
+mv_t mt_scan_number_nullable(char* string) {
+	double fltv = 0.0;
+	long long intv = 0LL;
+	mv_t rv =  {.type = MT_NULL, .u.intv = 0LL};
+	if (*string == '\0') {
+		rv.type = MT_NULL;
+		rv.u.intv = 0LL;
+	} else if (mlr_try_int_from_string(string, &intv)) {
+		rv.type = MT_INT;
+		rv.u.intv = intv;
+	} else if (mlr_try_float_from_string(string, &fltv)) {
+		rv.type = MT_FLOAT;
+		rv.u.fltv = fltv;
+	} else {
+		rv.type = MT_ERROR;
+		rv.u.intv = 0LL;
+	}
+	return rv;
+}
+
+mv_t mt_scan_number_or_die(char* string) {
+	mv_t rv = mt_scan_number_nullable(string);
+	if (!mv_is_numeric(&rv)) {
+		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
+			MLR_GLOBALS.argv0, string);
+	}
+	return rv;
 }
 
 // ----------------------------------------------------------------
