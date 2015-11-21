@@ -199,7 +199,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 	peek_file_reader_t* pfr = pstate->pfr;
 	string_builder_t*   psb = pstate->psb;
 
-	if (pfr_peek_char(pfr) == EOF)
+	if (pfr_peek_char(pfr) == (char)EOF) // char defaults to unsigned on some platforms
 		return NULL;
 	slls_t* pfields = slls_alloc();
 

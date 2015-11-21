@@ -20,8 +20,8 @@ static char* test_empty() {
 
 	peek_file_reader_t* pfr = pfr_alloc(pbr, 7);
 
-	mu_assert_lf(pfr_peek_char(pfr) == EOF);
-	mu_assert_lf(pfr_read_char(pfr) == EOF);
+	mu_assert_lf(pfr_peek_char(pfr) == (char)EOF); // char defaults to unsigned on some platforms
+	mu_assert_lf(pfr_read_char(pfr) == (char)EOF);
 
 	pbr->pclose_func(pbr);
 	pfr_free(pfr);
