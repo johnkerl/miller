@@ -16,9 +16,7 @@ TOP OF LIST
   ! fix join on partial value-field matches
 
   o ovf UTs
-  o clarify a bit in mld regex section
-  o neaten stats1/stats2/step subverb help output
-  o doc re stats1 sum min max & step delta rsum int-preference
+  o stats1/stats2/step -f
 
 ----------------------------------------------------------------
 * miller 3 release info:
