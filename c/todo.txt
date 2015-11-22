@@ -15,19 +15,13 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  o stats1/stats2/step -F
-  o usage messages re
-  o mld section re
-  ? *all* stats1/step produce float if -F? even the old, always-have-been-int ones??
-    stats1 count
-    step counter
-
 ----------------------------------------------------------------
 * miller 3 release info:
   o functions:
     - int-to-int, pythonic division, and overflow math (all w/ one xref to mld/ref:arithmetic)
       this is backward incompatible (ish) hence the major version increment from 2 to 3.
-    - bitwise operators: | ^ & << >>
+      put/filter/stats1/step -F.
+    - bitwise operators: | ^ & << >>. now possible with int-preserving math.
     - modular arithmetic
     - urandint
     - sgn
