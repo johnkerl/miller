@@ -31,6 +31,7 @@ EXTRA_DIST=	\
 		het.dkvp \
 		int64io.dkvp \
 		int64arith.dkvp \
+		int-float.dkvp \
 		join-het.dkvp \
 		joina.dkvp \
 		joinb.dkvp \
