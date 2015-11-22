@@ -16,11 +16,11 @@ TOP OF LIST
   ! fix join on partial value-field matches
 
   o stats1/stats2/step -F
-  o UTs for that
-  o usage messages for that
+  o usage messages re
   o mld section re
-
-  ! delta sign !
+  ? *all* stats1/step produce float if -F? even the old, always-have-been-int ones??
+    stats1 count
+    step counter
 
 ----------------------------------------------------------------
 * miller 3 release info:

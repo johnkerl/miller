@@ -347,19 +347,21 @@ static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float) {
 
 // ----------------------------------------------------------------
 typedef struct _step_counter_state_t {
-	unsigned long long counter;
+	mv_t counter;
+	mv_t one;
 	char*  output_field_name;
 } step_counter_state_t;
 static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
-	pstate->counter++;
-	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),
+	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->counter),
 		LREC_FREE_ENTRY_VALUE);
 }
 static step_t* step_counter_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
-	pstate->counter       = 0LL;
+	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
+	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
 
 	pstep->pvstate        = (void*)pstate;
