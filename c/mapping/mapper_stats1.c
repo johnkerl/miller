@@ -456,23 +456,26 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 
 // ----------------------------------------------------------------
 typedef struct _stats1_count_state_t {
-	unsigned long long count;
+	mv_t counter;
+	mv_t one;
 	char* output_field_name;
 } stats1_count_state_t;
 
 static void stats1_count_singest(void* pvstate, char* val) {
 	stats1_count_state_t* pstate = pvstate;
-	pstate->count++;
+	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
+
 }
 static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_count_state_t* pstate = pvstate;
-	char* val = mlr_alloc_string_from_ull(pstate->count);
-	lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->counter),
+		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_count_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_count_state_t));
-	pstate->count       = 0LL;
+	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
+	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 
 	pstats1->pvstate       = (void*)pstate;
