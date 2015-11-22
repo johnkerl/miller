@@ -125,6 +125,7 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	int             do_verbose            = FALSE;
 	int             do_iterative_stats    = FALSE;
 	int             do_hold_and_fit       = FALSE;
+	int             allow_int_float       = TRUE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -135,6 +136,12 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,         "-v",    &do_verbose);
 	ap_define_true_flag(pstate,         "-s",    &do_iterative_stats);
 	ap_define_true_flag(pstate,         "--fit", &do_hold_and_fit);
+	// The -F isn't used for stats2: all arithmetic here is floating-point. Yet
+	// it is supported for step and stats1 for all applicable stats1/step
+	// accumulators, so we accept here as well for all applicable stats2
+	// accumulators (i.e. none of them).
+	ap_define_false_flag(pstate,        "-F",    &allow_int_float);
+
 	// xxx abend here or elsewhere if hold & fit requested for non-supporting accumulator
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {

@@ -15,8 +15,10 @@ TOP OF LIST
 
   ! fix join on partial value-field matches
 
-  o stats1/stats2/step -f
-  o UT for that
+  o stats1/stats2/step -F
+  o UTs for that
+  o usage messages for that
+  o mld section re
 
   ! delta sign !
 

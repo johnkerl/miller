@@ -35,7 +35,7 @@ typedef struct _stats1_t {
 	stats1_emit_func_t*    pemit_func;
 } stats1_t;
 
-typedef stats1_t* stats1_alloc_func_t(char* value_field_name, char* stats1_name);
+typedef stats1_t* stats1_alloc_func_t(char* value_field_name, char* stats1_name, int allow_int_float);
 
 typedef struct _mapper_stats1_state_t {
 	slls_t*         paccumulator_names;
@@ -44,13 +44,14 @@ typedef struct _mapper_stats1_state_t {
 	slls_t*         pgroup_by_field_names;  // parameter
 	lhmslv_t*       groups;
 	int             do_iterative_stats;
+	int             allow_int_float;
 } mapper_stats1_state_t;
 
 // ----------------------------------------------------------------
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats);
+	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float);
 static void      mapper_stats1_free(void* pvstate);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
@@ -58,22 +59,22 @@ static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
 	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state);
 
-static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name);
+static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
 static stats1_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_name, int do_which);
-static stats1_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_var_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name);
-static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name);
+static stats1_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_var_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
+static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
 
-static stats1_t* make_acc(char* value_field_name, char* stats1_name);
-static void make_accs(char* value_field_name, slls_t* paccumulator_names, lhmsv_t* acc_field_to_acc_state);
+static stats1_t* make_acc(char* value_field_name, char* stats1_name, int allow_int_float);
+static void make_accs(char* value_field_name, slls_t* paccumulator_names, int allow_int_float, lhmsv_t* acc_field_to_acc_state);
 
 // ----------------------------------------------------------------
 // Lookups for all but percentiles, which are a special case.
@@ -135,6 +136,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	string_array_t* pvalue_field_names    = NULL;
 	slls_t*         pgroup_by_field_names = slls_alloc();
 	int             do_iterative_stats    = FALSE;
+	int             allow_int_float       = TRUE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -143,6 +145,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
 	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,         "-s", &do_iterative_stats);
+	ap_define_false_flag(pstate,        "-F", &allow_int_float);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats1_usage(stderr, argv[0], verb);
@@ -155,12 +158,12 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names,
-		do_iterative_stats);
+		do_iterative_stats, allow_int_float);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats)
+	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -172,6 +175,7 @@ static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t*
 	pstate->pvalue_field_values    = string_array_alloc(pvalue_field_names->length);
 	pstate->groups                 = lhmslv_alloc();
 	pstate->do_iterative_stats     = do_iterative_stats;
+	pstate->allow_int_float        = allow_int_float;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
@@ -256,10 +260,10 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	}
 }
 
-static stats1_t* make_acc(char* value_field_name, char* stats1_name) {
+static stats1_t* make_acc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	for (int i = 0; i < stats1_lookup_table_length; i++)
 		if (streq(stats1_name, stats1_lookup_table[i].name))
-			return stats1_lookup_table[i].palloc_func(value_field_name, stats1_name);
+			return stats1_lookup_table[i].palloc_func(value_field_name, stats1_name, allow_int_float);
 	return NULL;
 }
 
@@ -299,7 +303,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// Look up presence of all accumulators at this level's hashmap.
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
-			make_accs(value_field_name, pstate->paccumulator_names, acc_field_to_acc_state);
+			make_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float, acc_field_to_acc_state);
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
 		}
 
@@ -309,7 +313,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		int have_dval = FALSE;
 		int have_nval = FALSE;
 		double value_field_dval = -999.0;
-		mv_t   value_field_nval = mv_from_float(-888.0);
+		mv_t   value_field_nval = mv_from_null();
 
 		// There isn't a one-to-one mapping between user-specified stats1_names
 		// and internal stats1_t's. Here in the ingestor we feed each datum into
@@ -333,7 +337,9 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			}
 			if (pstats1->pningest_func != NULL) {
 				if (!have_nval) {
-					value_field_nval = mv_scan_number_or_die(value_field_sval);
+					value_field_nval = pstate->allow_int_float
+						? mv_scan_number_or_die(value_field_sval)
+						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 					have_nval = TRUE;
 				}
 				pstats1->pningest_func(pstats1->pvstate, &value_field_nval);
@@ -370,6 +376,7 @@ static int is_percentile_acc_name(char* stats1_name) {
 static void make_accs(
 	char*      value_field_name,       // input
 	slls_t*    paccumulator_names,     // input
+	int        allow_int_float,        // input
 	lhmsv_t*   acc_field_to_acc_state) // output
 {
 	stats1_t* ppercentile_acc = NULL;
@@ -379,11 +386,11 @@ static void make_accs(
 
 		if (is_percentile_acc_name(stats1_name)) {
 			if (ppercentile_acc == NULL) {
-				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_name);
+				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_name, allow_int_float);
 			}
 			lhmsv_put(acc_field_to_acc_state, stats1_name, ppercentile_acc);
 		} else {
-			stats1_t* pstats1 = make_acc(value_field_name, stats1_name);
+			stats1_t* pstats1 = make_acc(value_field_name, stats1_name, allow_int_float);
 			if (pstats1 == NULL) {
 				fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
 					MLR_GLOBALS.argv0, stats1_name);
@@ -462,7 +469,7 @@ static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats
 	char* val = mlr_alloc_string_from_ull(pstate->count);
 	lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_count_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_count_state_t));
 	pstate->count       = 0LL;
@@ -505,7 +512,7 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 	}
 	lrec_put(poutrec, pstate->output_field_name, max_key, LREC_FREE_ENTRY_KEY);
 }
-static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_mode_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mode_state_t));
 	pstate->pcounts_for_value = lhmsi_alloc();
@@ -523,6 +530,7 @@ static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name) {
 typedef struct _stats1_sum_state_t {
 	mv_t sum;
 	char* output_field_name;
+	int allow_int_float;
 } stats1_sum_state_t;
 static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 	stats1_sum_state_t* pstate = pvstate;
@@ -533,10 +541,11 @@ static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_
 	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->sum),
 		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_sum_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_sum_state_t));
-	pstate->sum = mv_from_int(0LL);
+	pstate->allow_int_float = allow_int_float;
+	pstate->sum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
@@ -569,7 +578,7 @@ static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1
 		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_mean_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mean_state_t));
 	pstate->sum         = 0.0;
@@ -630,13 +639,13 @@ static stats1_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* st
 	pstats1->pemit_func    = stats1_stddev_var_meaneb_emit;
 	return pstats1;
 }
-static stats1_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_STDDEV);
 }
-static stats1_t* stats1_var_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_var_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_VAR);
 }
-static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_MEANEB);
 }
 
@@ -667,7 +676,7 @@ static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* st
 	}
 }
 
-static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_skewness_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_skewness_state_t));
 	pstate->count       = 0LL;
@@ -713,7 +722,7 @@ static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* st
 	}
 }
 
-static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_kurtosis_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_kurtosis_state_t));
 	pstate->count       = 0LL;
@@ -748,7 +757,7 @@ static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_
 			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
 	pstate->min = mv_from_null();
@@ -779,7 +788,7 @@ static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_
 			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 	}
 }
-static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
 	pstate->max = mv_from_null();
@@ -811,7 +820,7 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	char* output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
 	lrec_put(poutrec, output_field_name, s, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 }
-static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name) {
+static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
