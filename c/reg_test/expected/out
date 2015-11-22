@@ -3766,52 +3766,52 @@ x_y_cov
 mlr --opprint step -a rsum,delta,counter -f x,y ./reg_test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0         1         0.726803 0         1
-eks pan 2  0.7586799647899636  0.5221511083334797  1.105470 -0.411890 2         1.248954 0.204652  2
-wye wye 3  0.20460330576630303 0.33831852551664776 1.310073 0.554077  3         1.587272 0.183833  3
-eks wye 4  0.38139939387114097 0.13418874328430463 1.691473 -0.176796 4         1.721461 0.204130  4
-wye pan 5  0.5732889198020006  0.8636244699032729  2.264762 -0.191890 5         2.585086 -0.729436 5
-zee pan 6  0.5271261600918548  0.49322128674835697 2.791888 0.046163  6         3.078307 0.370403  6
-eks zee 7  0.6117840605678454  0.1878849191181694  3.403672 -0.084658 7         3.266192 0.305336  7
-zee wye 8  0.5985540091064224  0.976181385699006   4.002226 0.013230  8         4.242373 -0.788296 8
-hat wye 9  0.03144187646093577 0.7495507603507059  4.033668 0.567112  9         4.991924 0.226631  9
-pan wye 10 0.5026260055412137  0.9526183602969864  4.536294 -0.471184 10        5.944542 -0.203068 10
+eks pan 2  0.7586799647899636  0.5221511083334797  1.105470 0.411890  2         1.248954 -0.204652 2
+wye wye 3  0.20460330576630303 0.33831852551664776 1.310073 -0.554077 3         1.587272 -0.183833 3
+eks wye 4  0.38139939387114097 0.13418874328430463 1.691473 0.176796  4         1.721461 -0.204130 4
+wye pan 5  0.5732889198020006  0.8636244699032729  2.264762 0.191890  5         2.585086 0.729436  5
+zee pan 6  0.5271261600918548  0.49322128674835697 2.791888 -0.046163 6         3.078307 -0.370403 6
+eks zee 7  0.6117840605678454  0.1878849191181694  3.403672 0.084658  7         3.266192 -0.305336 7
+zee wye 8  0.5985540091064224  0.976181385699006   4.002226 -0.013230 8         4.242373 0.788296  8
+hat wye 9  0.03144187646093577 0.7495507603507059  4.033668 -0.567112 9         4.991924 -0.226631 9
+pan wye 10 0.5026260055412137  0.9526183602969864  4.536294 0.471184  10        5.944542 0.203068  10
 
 mlr --opprint step -a rsum,delta,counter -f x,y -g a ./reg_test/input/abixy
 a   b   i  x                   y                   x_rsum   x_delta   x_counter y_rsum   y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 0         1         0.726803 0         1
 eks pan 2  0.7586799647899636  0.5221511083334797  0.758680 0         1         0.522151 0         1
 wye wye 3  0.20460330576630303 0.33831852551664776 0.204603 0         1         0.338319 0         1
-eks wye 4  0.38139939387114097 0.13418874328430463 1.140079 0.377281  2         0.656340 0.387962  2
-wye pan 5  0.5732889198020006  0.8636244699032729  0.777892 -0.368686 2         1.201943 -0.525306 2
+eks wye 4  0.38139939387114097 0.13418874328430463 1.140079 -0.377281 2         0.656340 -0.387962 2
+wye pan 5  0.5732889198020006  0.8636244699032729  0.777892 0.368686  2         1.201943 0.525306  2
 zee pan 6  0.5271261600918548  0.49322128674835697 0.527126 0         1         0.493221 0         1
-eks zee 7  0.6117840605678454  0.1878849191181694  1.751863 -0.230385 3         0.844225 -0.053696 3
-zee wye 8  0.5985540091064224  0.976181385699006   1.125680 -0.071428 2         1.469403 -0.482960 2
+eks zee 7  0.6117840605678454  0.1878849191181694  1.751863 0.230385  3         0.844225 0.053696  3
+zee wye 8  0.5985540091064224  0.976181385699006   1.125680 0.071428  2         1.469403 0.482960  2
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442 0         1         0.749551 0         1
-pan wye 10 0.5026260055412137  0.9526183602969864  0.849416 -0.155836 2         1.679421 -0.225815 2
+pan wye 10 0.5026260055412137  0.9526183602969864  0.849416 0.155836  2         1.679421 0.225815  2
 
 mlr --odkvp step -a rsum,delta,counter -f x,y ./reg_test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delta=0,x_counter=1,y_rsum=0.726803,y_delta=0,y_counter=1
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=1.105470,x_delta=-0.411890,x_counter=2,y_rsum=1.248954,y_delta=0.204652,y_counter=2
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_rsum=1.310073,x_delta=0.554077,x_counter=3,y_rsum=1.587272,y_delta=0.183833,y_counter=3
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.691473,x_delta=-0.176796,x_counter=4,y_rsum=1.721461,y_delta=0.204130,y_counter=4
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,y_rsum=2.585086,y_delta=-0.729436,y_counter=5
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=2.218599,x_delta=-0.145727,x_counter=5,y_rsum=3.078307,y_delta=0.370403,y_counter=6
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=2.830383,x_delta=-0.084658,x_counter=6,y_rsum=3.266192,y_delta=0.305336,y_counter=7
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=3.428937,x_delta=0.013230,x_counter=7
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=3.460379,x_delta=0.567112,x_counter=8,y_rsum=4.015743,y_delta=-0.561666,y_counter=8
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.963005,x_delta=-0.471184,x_counter=9,y_rsum=4.968361,y_delta=-0.203068,y_counter=9
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=1.105470,x_delta=0.411890,x_counter=2,y_rsum=1.248954,y_delta=-0.204652,y_counter=2
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_rsum=1.310073,x_delta=-0.554077,x_counter=3,y_rsum=1.587272,y_delta=-0.183833,y_counter=3
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.691473,x_delta=0.176796,x_counter=4,y_rsum=1.721461,y_delta=-0.204130,y_counter=4
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,y_rsum=2.585086,y_delta=0.729436,y_counter=5
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=2.218599,x_delta=0.145727,x_counter=5,y_rsum=3.078307,y_delta=-0.370403,y_counter=6
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=2.830383,x_delta=0.084658,x_counter=6,y_rsum=3.266192,y_delta=-0.305336,y_counter=7
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=3.428937,x_delta=-0.013230,x_counter=7
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=3.460379,x_delta=-0.567112,x_counter=8,y_rsum=4.015743,y_delta=0.561666,y_counter=8
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.963005,x_delta=0.471184,x_counter=9,y_rsum=4.968361,y_delta=0.203068,y_counter=9
 
 mlr --odkvp step -a rsum,delta,counter -f x,y -g a ./reg_test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_delta=0,x_counter=1,y_rsum=0.726803,y_delta=0,y_counter=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=0.758680,x_delta=0,x_counter=1,y_rsum=0.522151,y_delta=0,y_counter=1
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.140079,x_delta=0.377281,x_counter=2,y_rsum=0.656340,y_delta=0.387962,y_counter=2
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,x_rsum=1.140079,x_delta=-0.377281,x_counter=2,y_rsum=0.656340,y_delta=-0.387962,y_counter=2
 a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,y_rsum=0.863624,y_delta=0,y_counter=1
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,x_rsum=0.527126,x_delta=0,x_counter=1,y_rsum=0.493221,y_delta=0,y_counter=1
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=1.751863,x_delta=-0.230385,x_counter=3,y_rsum=0.844225,y_delta=-0.053696,y_counter=3
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=1.125680,x_delta=-0.071428,x_counter=2
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,x_rsum=1.751863,x_delta=0.230385,x_counter=3,y_rsum=0.844225,y_delta=0.053696,y_counter=3
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=1.125680,x_delta=0.071428,x_counter=2
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_delta=-0.155836,x_counter=2,y_rsum=1.679421,y_delta=-0.225815,y_counter=2
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_delta=0.155836,x_counter=2,y_rsum=1.679421,y_delta=0.225815,y_counter=2
 
 mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 ./reg_test/input/small
 bin_lo   bin_hi   x_count y_count
@@ -6165,7 +6165,7 @@ pi2 76
 ni2 -76
 y   151
 
-mlr --xtab put -f $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6178,7 +6178,7 @@ pi2 76
 ni2 -76
 y   151.000000
 
-mlr --xtab put -s $y     = $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -S $y     = $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6203,7 +6203,7 @@ zi  0
 pi2 76
 ni2 -76
 
-mlr --xtab filter -f 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab filter -F 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6215,7 +6215,7 @@ zi  0
 pi2 76
 ni2 -76
 
-mlr --xtab filter -s "999" != $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab filter -S "999" != $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6305,7 +6305,7 @@ pi2 76
 ni2 -76
 y   0
 
-mlr --xtab put -f $y=abs($pf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6318,7 +6318,7 @@ pi2 76
 ni2 -76
 y   71.200000
 
-mlr --xtab put -f $y=abs($nf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($nf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6331,7 +6331,7 @@ pi2 76
 ni2 -76
 y   71.200000
 
-mlr --xtab put -f $y=abs($zf) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($zf) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6344,7 +6344,7 @@ pi2 76
 ni2 -76
 y   0.000000
 
-mlr --xtab put -f $y=abs($pi1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($pi1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6357,7 +6357,7 @@ pi2 76
 ni2 -76
 y   75.000000
 
-mlr --xtab put -f $y=abs($ni1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($ni1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6370,7 +6370,7 @@ pi2 76
 ni2 -76
 y   75.000000
 
-mlr --xtab put -f $y=abs($zi) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=abs($zi) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6461,7 +6461,7 @@ pi2 76
 ni2 -76
 y   0
 
-mlr --xtab put -f $y=floor($pf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6474,7 +6474,7 @@ pi2 76
 ni2 -76
 y   71.000000
 
-mlr --xtab put -f $y=floor($nf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($nf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6487,7 +6487,7 @@ pi2 76
 ni2 -76
 y   -72.000000
 
-mlr --xtab put -f $y=floor($zf) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($zf) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6500,7 +6500,7 @@ pi2 76
 ni2 -76
 y   0.000000
 
-mlr --xtab put -f $y=floor($pi1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($pi1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6513,7 +6513,7 @@ pi2 76
 ni2 -76
 y   75.000000
 
-mlr --xtab put -f $y=floor($ni1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($ni1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6526,7 +6526,7 @@ pi2 76
 ni2 -76
 y   -75.000000
 
-mlr --xtab put -f $y=floor($zi) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=floor($zi) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6617,7 +6617,7 @@ pi2 76
 ni2 -76
 y   0
 
-mlr --xtab put -f $y=round($pf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6630,7 +6630,7 @@ pi2 76
 ni2 -76
 y   71.000000
 
-mlr --xtab put -f $y=round($nf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($nf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6643,7 +6643,7 @@ pi2 76
 ni2 -76
 y   -71.000000
 
-mlr --xtab put -f $y=round($zf) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($zf) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6656,7 +6656,7 @@ pi2 76
 ni2 -76
 y   0.000000
 
-mlr --xtab put -f $y=round($pi1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($pi1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6669,7 +6669,7 @@ pi2 76
 ni2 -76
 y   75.000000
 
-mlr --xtab put -f $y=round($ni1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($ni1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6682,7 +6682,7 @@ pi2 76
 ni2 -76
 y   -75.000000
 
-mlr --xtab put -f $y=round($zi) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=round($zi) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6773,7 +6773,7 @@ pi2 76
 ni2 -76
 y   0
 
-mlr --xtab put -f $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6786,7 +6786,7 @@ pi2 76
 ni2 -76
 y   1.000000
 
-mlr --xtab put -f $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6799,7 +6799,7 @@ pi2 76
 ni2 -76
 y   -1.000000
 
-mlr --xtab put -f $y=sgn($zf) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($zf) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6812,7 +6812,7 @@ pi2 76
 ni2 -76
 y   0.000000
 
-mlr --xtab put -f $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6825,7 +6825,7 @@ pi2 76
 ni2 -76
 y   1.000000
 
-mlr --xtab put -f $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6838,7 +6838,7 @@ pi2 76
 ni2 -76
 y   -1.000000
 
-mlr --xtab put -f $y=sgn($zi) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $y=sgn($zi) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6907,7 +6907,7 @@ ni2 -76
 min 75
 max 76
 
-mlr --xtab put -f $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6921,7 +6921,7 @@ ni2 -76
 min 71.200000
 max 73.400000
 
-mlr --xtab put -f $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6935,7 +6935,7 @@ ni2 -76
 min 71.200000
 max 76.000000
 
-mlr --xtab put -f $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -6949,7 +6949,7 @@ ni2 -76
 min 73.400000
 max 75.000000
 
-mlr --xtab put -f $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -7019,7 +7019,7 @@ ni2 -76
 min 75
 max 76
 
-mlr --xtab put -f $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -7033,7 +7033,7 @@ ni2 -76
 min 71.200000
 max 73.400000
 
-mlr --xtab put -f $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -7047,7 +7047,7 @@ ni2 -76
 min 71.200000
 max 76.000000
 
-mlr --xtab put -f $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -7061,7 +7061,7 @@ ni2 -76
 min 73.400000
 max 75.000000
 
-mlr --xtab put -f $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2
 zf  0.0
@@ -7131,7 +7131,7 @@ ni2  -76
 sum  151
 diff -1
 
-mlr --xtab put -f $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7145,7 +7145,7 @@ ni2  -76
 sum  144.600000
 diff -2.200000
 
-mlr --xtab put -f $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7159,7 +7159,7 @@ ni2  -76
 sum  147.200000
 diff -4.800000
 
-mlr --xtab put -f $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7173,7 +7173,7 @@ ni2  -76
 sum  148.400000
 diff 1.600000
 
-mlr --xtab put -f $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7243,7 +7243,7 @@ ni2  -76
 prod 5700
 quot 0.986842
 
-mlr --xtab put -f $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7257,7 +7257,7 @@ ni2  -76
 prod 5226.080000
 quot 0.970027
 
-mlr --xtab put -f $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7271,7 +7271,7 @@ ni2  -76
 prod 5411.200000
 quot 0.936842
 
-mlr --xtab put -f $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7285,7 +7285,7 @@ ni2  -76
 prod 5505.000000
 quot 1.021798
 
-mlr --xtab put -f $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
 pf1  71.2
 nf1  -71.2
 zf   0.0
@@ -7355,7 +7355,7 @@ ni2   -76
 iquot 0
 mod   75
 
-mlr --xtab put -f $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7369,7 +7369,7 @@ ni2   -76
 iquot 0.000000
 mod   71.200000
 
-mlr --xtab put -f $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7383,7 +7383,7 @@ ni2   -76
 iquot 0.000000
 mod   71.200000
 
-mlr --xtab put -f $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7397,7 +7397,7 @@ ni2   -76
 iquot 1.000000
 mod   1.600000
 
-mlr --xtab put -f $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7531,7 +7531,7 @@ quot  -7.500000
 iquot -8
 mod   5
 
-mlr --xtab put -f $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7546,7 +7546,7 @@ quot  7.120000
 iquot 7.000000
 mod   1.200000
 
-mlr --xtab put -f $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7561,7 +7561,7 @@ quot  7.500000
 iquot 7.000000
 mod   5.000000
 
-mlr --xtab put -f $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7576,7 +7576,7 @@ quot  -7.120000
 iquot -8.000000
 mod   8.800000
 
-mlr --xtab put -f $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7651,7 +7651,7 @@ quot  7.500000
 iquot 7
 mod   -5
 
-mlr --xtab put -f $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7666,7 +7666,7 @@ quot  -7.120000
 iquot -8.000000
 mod   -8.800000
 
-mlr --xtab put -f $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7681,7 +7681,7 @@ quot  -7.500000
 iquot -8.000000
 mod   -5.000000
 
-mlr --xtab put -f $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -7696,7 +7696,7 @@ quot  7.120000
 iquot 7.000000
 mod   -1.200000
 
-mlr --xtab put -f $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0

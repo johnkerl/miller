@@ -26,7 +26,7 @@ typedef struct _step_t {
 	step_sprocess_func_t* psprocess_func;
 } step_t;
 
-typedef step_t* step_alloc_func_t(char* input_field_name);
+typedef step_t* step_alloc_func_t(char* input_field_name, int allow_int_float);
 
 typedef struct _mapper_step_state_t {
 	slls_t* pstepper_names;
@@ -34,6 +34,7 @@ typedef struct _mapper_step_state_t {
 	string_array_t* pvalue_field_values; // scratch space used per-record
 	slls_t* pgroup_by_field_names;       // parameter
 	lhmslv_t* groups;
+	int allow_int_float;
 } mapper_step_state_t;
 
 // Multilevel hashmap structure:
@@ -62,20 +63,20 @@ typedef struct _mapper_step_state_t {
 static void      mapper_step_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_step_alloc(slls_t* pstepper_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names);
+	slls_t* pgroup_by_field_names, int allow_int_float);
 static void      mapper_step_free(void* pvstate);
 static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
-static step_t* step_delta_alloc(char* input_field_name);
-static step_t* step_ratio_alloc(char* input_field_name);
-static step_t* step_rsum_alloc(char* input_field_name);
-static step_t* step_counter_alloc(char* input_field_name);
+static step_t* step_delta_alloc(char* input_field_name, int allow_int_float);
+static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float);
+static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float);
+static step_t* step_counter_alloc(char* input_field_name, int allow_int_float);
 
-static step_t* make_step(char* step_name, char* input_field_name);
+static step_t* make_step(char* step_name, char* input_field_name, int allow_int_float);
 
 typedef struct _step_lookup_t {
 	char* name;
-	step_alloc_func_t* pnew_func;
+	step_alloc_func_t* palloc_func;
 	char* desc;
 } step_lookup_t;
 static step_lookup_t step_lookup_table[] = {
@@ -110,6 +111,7 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t*         pstepper_names        = NULL;
 	string_array_t* pvalue_field_names    = NULL;
 	slls_t*         pgroup_by_field_names = slls_alloc();
+	int             allow_int_float = TRUE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -117,6 +119,7 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate,  "-a", &pstepper_names);
 	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
 	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
+	ap_define_false_flag(pstate,        "-F", &allow_int_float);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_step_usage(stderr, argv[0], verb);
@@ -128,12 +131,12 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_step_alloc(pstepper_names, pvalue_field_names, pgroup_by_field_names);
+	return mapper_step_alloc(pstepper_names, pvalue_field_names, pgroup_by_field_names, allow_int_float);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_step_alloc(slls_t* pstepper_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names)
+	slls_t* pgroup_by_field_names, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -144,6 +147,7 @@ static mapper_t* mapper_step_alloc(slls_t* pstepper_names, string_array_t* pvalu
 	pstate->pvalue_field_values   = string_array_alloc(pvalue_field_names->length);
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->groups                = lhmslv_alloc();
+	pstate->allow_int_float       = allow_int_float;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_step_process;
@@ -194,7 +198,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		int have_dval = FALSE;
 		int have_nval = FALSE;
 		double value_field_dval = -999.0;
-		mv_t   value_field_nval = mv_from_int(-888LL);
+		mv_t   value_field_nval = mv_from_null();
 
 		lhmsv_t* acc_field_to_acc_state = lhmsv_get(group_to_acc_field, value_field_name);
 		if (acc_field_to_acc_state == NULL) {
@@ -208,7 +212,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			char* step_name = pc->value;
 			step_t* pstep = lhmsv_get(acc_field_to_acc_state, step_name);
 			if (pstep == NULL) {
-				pstep = make_step(step_name, value_field_name);
+				pstep = make_step(step_name, value_field_name, pstate->allow_int_float);
 				if (pstep == NULL) {
 					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
 						step_name);
@@ -227,7 +231,9 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 			if (pstep->pnprocess_func != NULL) {
 				if (!have_nval) {
-					value_field_nval = mv_scan_number_or_die(value_field_sval);
+					value_field_nval = pstate->allow_int_float
+						? mv_scan_number_or_die(value_field_sval)
+						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 					have_nval = TRUE;
 				}
 				pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
@@ -242,10 +248,10 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	return sllv_single(pinrec);
 }
 
-static step_t* make_step(char* step_name, char* input_field_name) {
+static step_t* make_step(char* step_name, char* input_field_name, int allow_int_float) {
 	for (int i = 0; i < step_lookup_table_length; i++)
 		if (streq(step_name, step_lookup_table[i].name))
-			return step_lookup_table[i].pnew_func(input_field_name);
+			return step_lookup_table[i].palloc_func(input_field_name, allow_int_float);
 	return NULL;
 }
 
@@ -253,22 +259,24 @@ static step_t* make_step(char* step_name, char* input_field_name) {
 typedef struct _step_delta_state_t {
 	mv_t  prev;
 	char* output_field_name;
+	int   allow_int_float;
 } step_delta_state_t;
 static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_delta_state_t* pstate = pvstate;
 	mv_t delta;
 	if (mv_is_null(&pstate->prev)) {
-		delta = mv_from_int(0);
+		delta = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 	} else {
-		delta = n_nn_minus_func(&pstate->prev, pnumv);
+		delta = n_nn_minus_func(pnumv, &pstate->prev);
 	}
 	lrec_put(prec, pstate->output_field_name, mv_format_val(&delta), LREC_FREE_ENTRY_VALUE);
 	pstate->prev = *pnumv;
 }
-static step_t* step_delta_alloc(char* input_field_name) {
+static step_t* step_delta_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
 	pstate->prev = mv_from_null();
+	pstate->allow_int_float = allow_int_float;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
 	pstep->pvstate        = (void*)pstate;
 	pstep->pdprocess_func = NULL;
@@ -296,7 +304,7 @@ static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 		LREC_FREE_ENTRY_VALUE);
 	pstate->prev = fltv;
 }
-static step_t* step_ratio_alloc(char* input_field_name) {
+static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_ratio_state_t* pstate = mlr_malloc_or_die(sizeof(step_ratio_state_t));
 	pstate->prev          = -999.0;
@@ -314,6 +322,7 @@ static step_t* step_ratio_alloc(char* input_field_name) {
 typedef struct _step_rsum_state_t {
 	mv_t   rsum;
 	char*  output_field_name;
+	int    allow_int_float;
 } step_rsum_state_t;
 
 static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
@@ -323,10 +332,11 @@ static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 		LREC_FREE_ENTRY_VALUE);
 }
 
-static step_t* step_rsum_alloc(char* input_field_name) {
+static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-	pstate->rsum = mv_from_int(0LL);
+	pstate->allow_int_float = allow_int_float;
+	pstate->rsum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
 	pstep->pvstate        = (void*)pstate;
 	pstep->pdprocess_func = NULL;
@@ -346,7 +356,7 @@ static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_ull(pstate->counter),
 		LREC_FREE_ENTRY_VALUE);
 }
-static step_t* step_counter_alloc(char* input_field_name) {
+static step_t* step_counter_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
 	pstate->counter       = 0LL;

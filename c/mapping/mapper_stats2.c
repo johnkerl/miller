@@ -73,7 +73,7 @@ static stats2_t* stats2_covx_alloc      (char* value_field_name_1, char* value_f
 // ----------------------------------------------------------------
 typedef struct _stats2_lookup_t {
 	char* name;
-	stats2_alloc_func_t* pnew_func;
+	stats2_alloc_func_t* palloc_func;
 	char* desc;
 } stats2_lookup_t;
 static stats2_lookup_t stats2_lookup_table[] = {
@@ -445,7 +445,7 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 static stats2_t* make_stats2(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	for (int i = 0; i < stats2_lookup_table_length; i++)
 		if (streq(stats2_name, stats2_lookup_table[i].name))
-			return stats2_lookup_table[i].pnew_func(value_field_name_1, value_field_name_2, stats2_name, do_verbose);
+			return stats2_lookup_table[i].palloc_func(value_field_name_1, value_field_name_2, stats2_name, do_verbose);
 	return NULL;
 }
 

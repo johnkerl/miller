@@ -79,7 +79,7 @@ static void make_accs(char* value_field_name, slls_t* paccumulator_names, lhmsv_
 // Lookups for all but percentiles, which are a special case.
 typedef struct _acc_lookup_t {
 	char* name;
-	stats1_alloc_func_t* pnew_func;
+	stats1_alloc_func_t* palloc_func;
 	char* desc;
 } stats1_lookup_t;
 static stats1_lookup_t stats1_lookup_table[] = {
@@ -259,7 +259,7 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 static stats1_t* make_acc(char* value_field_name, char* stats1_name) {
 	for (int i = 0; i < stats1_lookup_table_length; i++)
 		if (streq(stats1_name, stats1_lookup_table[i].name))
-			return stats1_lookup_table[i].pnew_func(value_field_name, stats1_name);
+			return stats1_lookup_table[i].palloc_func(value_field_name, stats1_name);
 	return NULL;
 }
 

@@ -16,6 +16,9 @@ TOP OF LIST
   ! fix join on partial value-field matches
 
   o stats1/stats2/step -f
+  o UT for that
+
+  ! delta sign !
 
 ----------------------------------------------------------------
 * miller 3 release info:
