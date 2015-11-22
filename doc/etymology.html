@@ -88,7 +88,46 @@ Miller commands were run with pretty-print-tabular output format.
 
   <!-- page body -->
   <td>
-    <div style="overflow-y:scroll;height:1500px">
+    <!--
+      This is a visually gorgeous feature (here & in the CSS): it allows for
+      independent scroll of the nav and body panels. In particular the nav
+      stays on-screen as you scroll the body.
+
+      However, two problems:
+
+      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
+      more content but I can't scroll down to it unless I repeatedly retry the
+      scrolldown. Which is weird.
+
+      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
+
+      For now I'm disabling this separate-scroll feature. A frontender, I am
+      not ... maybe someday I'll find a config which gets *all* the features
+      I want; for now, it's a tradeoff.
+    -->
+
+    <!-- Implementation details: one bit is right here:
+
+    div style="overflow-y:scroll;height:1500px"
+
+    and the other bit is in css/poki-callbacks.css:
+
+    .pokinav {
+      display:        inline-block;
+      background:     #e8d9bc;
+      border:         1;
+      box-shadow:     0px 0px 3px 3px #C9C9C9;
+      margin:         10px;
+      padding-top:    10px;
+      padding-bottom: 10px;
+      padding-left:   10px;
+      padding-right:  10px;
+      overflow-y:     scroll;  < - - - - - - here
+      height: 1500px;
+    }
+
+    -->
+    <div>
     <center> <titleinbody> Why call it Miller? </titleinbody> </center>
     <p/>
     

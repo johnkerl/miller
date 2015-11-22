@@ -36,14 +36,15 @@ TOP OF LIST
   o docs:
     - manpage is now autogenned
     - precedence & semantics docs
+    - HTML pages are now PDF-renderable
 
-* full-int64 I/O & math:
-  o visually check all precedence stackings (horiz/vert) in the grammars
-    against the operator prec/assoc table
-  o dsls bake deps
+* visually check all precedence stackings (horiz/vert) in the grammars
+  against the operator prec/assoc table
+* dsls bake deps
 
 ----------------------------------------------------------------
 * etc feature:
+-> or maybe just cookbook entry ... and/or xref to estdonetime
   - in1 optional: t (epoch seconds); default systime()
   - in2: nleft
   - in3 optional: target #/field name
