@@ -23,6 +23,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
 void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
 	string_array_t* pvalues);
+int record_has_all_keys(lrec_t* prec, slls_t* pselected_field_names);
 
 // Copies data; no referencing concerns.
 hss_t*  hss_from_slls(slls_t* plist);

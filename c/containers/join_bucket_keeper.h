@@ -12,6 +12,7 @@
 #include "containers/sllv.h"
 #include "input/lrec_reader.h"
 
+// ----------------------------------------------------------------
 typedef struct _join_bucket_t {
 	slls_t* pleft_field_values;
 	sllv_t* precords;
@@ -32,6 +33,7 @@ typedef struct _join_bucket_keeper_t {
 	int            state;
 } join_bucket_keeper_t;
 
+// ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* left_file_name,
 	char* input_file_format,

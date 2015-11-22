@@ -68,6 +68,16 @@ void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_fi
 	}
 }
 
+int record_has_all_keys(lrec_t* prec, slls_t* pselected_field_names) {
+	for (sllse_t* pe = pselected_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* selected_field_name = pe->value;
+		char* value = lrec_get(prec, selected_field_name);
+		if (value == NULL)
+			return FALSE;
+	}
+	return TRUE;
+}
+
 // ----------------------------------------------------------------
 hss_t* hss_from_slls(slls_t* plist) {
 	hss_t* pset = hss_alloc();
