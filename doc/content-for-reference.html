@@ -895,7 +895,9 @@ is treated as float; everything else is a string.
 <tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
 $b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
 <tt>mlr filter -F</tt> and <tt>mlr put -F</tt> which forces all numeric input,
-whether from expression literals or field values, to float.
+whether from expression literals or field values, to float. Likewise <tt>mlr
+stats1 -F</tt> and <tt>mlr step -F</tt> force integerable accumulators (such as
+<tt>count</tt>) to be done in floating-point.
 
 <h2>Conversion by math routines</h2>
 

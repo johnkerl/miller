@@ -283,8 +283,8 @@ Output of one verb may be chained as input to another using "then", e.g.
 .\}
 .nf
 Usage: mlr bar [options]
-Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.
-These align best with --opprint or --oxtab output format.
+Replaces a numeric field with a number of asterisks, allowing for cheesy
+bar plots. These align best with --opprint or --oxtab output format.
 Options:
 -f   {a,b,c}      Field names to convert to bars.
 -c   {character}  Fill character: default '*'.
@@ -696,6 +696,7 @@ Options:
 -s          Print iterative stats. Useful in tail -f contexts (in which
             case please avoid pprint-format output since end of input
             stream will never be seen).
+-F          Computes integerable things (e.g. count) in floating point.
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
 Example: mlr stats1 -a count,mode -f size
 Example: mlr stats1 -a count,mode -f size -g shape
@@ -747,15 +748,16 @@ Example: mlr stats2 -a corr -f x,y
 .\}
 .nf
 Usage: mlr step [options]
+Computes values dependent on the previous record, optionally grouped
+by category.
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
   delta    Compute differences in field(s) between successive records
   ratio    Compute ratios in field(s) between successive records
   rsum     Compute running sums of field(s) between successive records
   counter  Count instances of field(s) between successive records
--f {a,b,c}            Value-field names on which to compute statistics
--g {d,e,f}            Optional group-by-field names
-Computes values dependent on the previous record, optionally grouped
-by category.
+-f {a,b,c} Value-field names on which to compute statistics
+-g {d,e,f} Optional group-by-field names
+-F         Computes integerable things (e.g. counter) in floating point.
 .fi
 .if n \{\
 .RE

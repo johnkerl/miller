@@ -733,8 +733,8 @@ x=0xffff,y=0xff,z=0xfeff01
 <pre>
 $ mlr bar -h
 Usage: mlr bar [options]
-Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.
-These align best with --opprint or --oxtab output format.
+Replaces a numeric field with a number of asterisks, allowing for cheesy
+bar plots. These align best with --opprint or --oxtab output format.
 Options:
 -f   {a,b,c}      Field names to convert to bars.
 -c   {character}  Fill character: default '*'.
@@ -2234,6 +2234,7 @@ Options:
 -s          Print iterative stats. Useful in tail -f contexts (in which
             case please avoid pprint-format output since end of input
             stream will never be seen).
+-F          Computes integerable things (e.g. count) in floating point.
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
 Example: mlr stats1 -a count,mode -f size
 Example: mlr stats1 -a count,mode -f size -g shape
@@ -2512,15 +2513,16 @@ donesec                 25.108529
 <pre>
 $ mlr step --help
 Usage: mlr step [options]
+Computes values dependent on the previous record, optionally grouped
+by category.
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
   delta    Compute differences in field(s) between successive records
   ratio    Compute ratios in field(s) between successive records
   rsum     Compute running sums of field(s) between successive records
   counter  Count instances of field(s) between successive records
--f {a,b,c}            Value-field names on which to compute statistics
--g {d,e,f}            Optional group-by-field names
-Computes values dependent on the previous record, optionally grouped
-by category.
+-f {a,b,c} Value-field names on which to compute statistics
+-g {d,e,f} Optional group-by-field names
+-F         Computes integerable things (e.g. counter) in floating point.
 </pre>
 </div>
 <p/>
@@ -3215,7 +3217,9 @@ is treated as float; everything else is a string.
 <tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
 $b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
 <tt>mlr filter -F</tt> and <tt>mlr put -F</tt> which forces all numeric input,
-whether from expression literals or field values, to float.
+whether from expression literals or field values, to float. Likewise <tt>mlr
+stats1 -F</tt> and <tt>mlr step -F</tt> force integerable accumulators (such as
+<tt>count</tt>) to be done in floating-point.
 
 <a id="Conversion_by_math_routines"/><h2>Conversion by math routines</h2>
 

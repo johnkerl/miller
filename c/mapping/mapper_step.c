@@ -97,14 +97,15 @@ mapper_setup_t mapper_step_setup = {
 // ----------------------------------------------------------------
 static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Computes values dependent on the previous record, optionally grouped\n");
+	fprintf(o, "by category.\n");
 	fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n");
 	for (int i = 0; i < step_lookup_table_length; i++) {
 		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
 	}
-	fprintf(o, "-f {a,b,c}            Value-field names on which to compute statistics\n");
-	fprintf(o, "-g {d,e,f}            Optional group-by-field names\n");
-	fprintf(o, "Computes values dependent on the previous record, optionally grouped\n");
-	fprintf(o, "by category.\n");
+	fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n");
+	fprintf(o, "-g {d,e,f} Optional group-by-field names\n");
+	fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n");
 }
 
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {

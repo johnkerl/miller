@@ -40,8 +40,8 @@ mapper_setup_t mapper_bar_setup = {
 // ----------------------------------------------------------------
 static void mapper_bar_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy bar plots.\n");
-	fprintf(o, "These align best with --opprint or --oxtab output format.\n");
+	fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy\n");
+	fprintf(o, "bar plots. These align best with --opprint or --oxtab output format.\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-f   {a,b,c}      Field names to convert to bars.\n");
 	fprintf(o, "-c   {character}  Fill character: default '%c'.\n", DEFAULT_FILL_CHAR);

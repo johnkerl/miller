@@ -119,6 +119,7 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-s          Print iterative stats. Useful in tail -f contexts (in which\n");
 	fprintf(o, "            case please avoid pprint-format output since end of input\n");
 	fprintf(o, "            stream will never be seen).\n");
+	fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n");
 	fprintf(o, "Example: %s %s -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a count,mode -f size\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
