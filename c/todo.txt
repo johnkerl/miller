@@ -1,12 +1,7 @@
 ================================================================
 BUGFIXES
 
-! $ cat a
-  x=2
-  a=3
-
-  $ mlr join -j a -f a a
-  mlr: internal coding error: failed transition from prefill state.
+! fix join on partial value-field matches
 
 ================================================================
 TOP OF LIST
@@ -14,6 +9,8 @@ TOP OF LIST
 ! before releasing miller 3:
 
   ! fix join on partial value-field matches
+  -> 1st order of business is to clarify pre/post conditions in jbk
+     private methods, including whether peek can be het or only hom.
 
 ----------------------------------------------------------------
 * miller 3 release info:
@@ -41,6 +38,7 @@ TOP OF LIST
 * visually check all precedence stackings (horiz/vert) in the grammars
   against the operator prec/assoc table
 * dsls bake deps
+* memlk @ string-to-num!
 
 ----------------------------------------------------------------
 * etc feature:
@@ -60,9 +58,6 @@ TOP OF LIST
       then  put '$nleft=$target-$n' \
       then stats2 -s -a linreg-pca -f t,nleft \
       then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
-
-----------------------------------------------------------------
-! mlrdoc not printable as PDF?!
 
 ----------------------------------------------------------------
 * lrec_eval nullable etc. cleanup

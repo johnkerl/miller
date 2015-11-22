@@ -61,5 +61,7 @@ void join_bucket_keeper_emit(
 
 void join_bucket_print(join_bucket_t* pbucket, char* indent);
 void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper);
+void join_bucket_keeper_print_aux(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired);
 
 #endif // JOIN_BUCKET_KEEPER_H

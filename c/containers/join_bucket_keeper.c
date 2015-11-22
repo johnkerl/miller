@@ -136,6 +136,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired);
 static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired);
+static char* describe_state(int state);
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
@@ -150,7 +151,6 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	int   use_implicit_csv_header,
 	slls_t* pleft_field_names
 ) {
-
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(input_file_format, use_mmap_for_read,
 		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips, use_implicit_csv_header);
 
@@ -163,7 +163,6 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	char*          left_file_name,
 	slls_t*        pleft_field_names)
 {
-
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, left_file_name);
@@ -210,11 +209,27 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 	*pprecords_left_unpaired = NULL;
 	int cmp = 0;
 
-	//printf("[istate] %d\n", pkeeper->state);
+	// x=100,b=10
+	// l=1,b=11
+	// l=1,b=12
+	// x=200,b=13
+	// l=3,b=14
+	// l=3,b=15
+	// x=300,b=16
+	// l=5,b=17
+	// l=5,b=18
+
+	//printf("[istate] %s\n", describe_state(pkeeper->state));
+	//printf("EMIT INTERNAL 1\n");
+	//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+	//printf("\n");
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
 		join_bucket_keeper_initial_fill(pkeeper, pprecords_left_unpaired);
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
-		//printf("[nstate] %d\n", pkeeper->state);
+		//printf("EMIT INTERNAL 2\n");
+		//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+		//printf("\n");
+		//printf("[nstate] %s\n", describe_state(pkeeper->state));
 	}
 
 	if (pright_field_values != NULL) { // Not right EOF
@@ -223,6 +238,9 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 			if (cmp < 0) {
 				// Advance left until match or left EOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+				//printf("EMIT INTERNAL 3\n");
+				//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+				//printf("\n");
 			} else if (cmp == 0) {
 				pkeeper->pbucket->was_paired = TRUE;
 				*pprecords_paired = pkeeper->pbucket->precords;
@@ -237,6 +255,9 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 
 	} else { // Right EOF: return the final left-unpaireds.
 		join_bucket_keeper_drain(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+		//printf("EMIT INTERNAL 4\n");
+		//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+		//printf("\n");
 	}
 
 	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
@@ -330,7 +351,6 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (pkeeper->pbucket->was_paired) {
 		sllv_free(pkeeper->pbucket->precords);
 	} else {
-		// xxx if non-null then transfer else alloc & transfer ...
 		if (*pprecords_left_unpaired == NULL) {
 			*pprecords_left_unpaired = pkeeper->pbucket->precords;
 		} else {
@@ -348,6 +368,11 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	if (pkeeper->prec_peek == NULL) { // left EOF
 		return;
 	}
+
+	// Need a double condition here ... the peek record is either het or hom.
+	// (Or, change that: -> ensure elsewhere the peek record is hom.)
+	// The former is destined for lunp and shouldn't be lexcmped. The latter
+	// should be.
 
 	int cmp = lrec_slls_compare_lexically(pkeeper->prec_peek, pkeeper->pleft_field_names, pright_field_values);
 	if (cmp < 0) {
@@ -429,7 +454,22 @@ void join_bucket_keeper_print(join_bucket_keeper_t* pkeeper) {
 		lrec_print(pkeeper->prec_peek);
 	}
 	printf("  leof  = %d\n", pkeeper->leof);
-	printf("  state = %d\n", pkeeper->state);
+	printf("  state = %s\n", describe_state(pkeeper->state));
+}
+
+void join_bucket_keeper_print_aux(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
+	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
+{
+	join_bucket_keeper_print(pkeeper);
+	printf("  pright_field_values = ");
+	slls_print(pright_field_values);
+	printf("\n");
+	printf("  precords_paired =\n");
+	lrec_print_list_with_prefix(*pprecords_paired, "      ");
+	printf("\n");
+	printf("  precords_left_unpaired =\n");
+	lrec_print_list_with_prefix(*pprecords_left_unpaired, "      ");
+	printf("\n");
 }
 
 void join_bucket_print(join_bucket_t* pbucket, char* indent) {
@@ -445,4 +485,14 @@ void join_bucket_print(join_bucket_t* pbucket, char* indent) {
 		lrec_print_list_with_prefix(pbucket->precords, "      ");
 	}
 	printf("%s  was_paired = %d\n", indent, pbucket->was_paired);
+}
+
+static char* describe_state(int state) {
+	switch (state) {
+	case LEFT_STATE_0_PREFILL:     return "LEFT_STATE_0_PREFILL";
+	case LEFT_STATE_1_FULL:        return "LEFT_STATE_1_FULL";
+	case LEFT_STATE_2_LAST_BUCKET: return "LEFT_STATE_2_LAST_BUCKET";
+	case LEFT_STATE_3_EOF:         return "LEFT_STATE_3_EOF";
+	default:                       return "???";
+	}
 }

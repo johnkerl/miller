@@ -84,9 +84,13 @@ void lrec_print_list(sllv_t* plist) {
 }
 
 void lrec_print_list_with_prefix(sllv_t* plist, char* prefix) {
-	for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
-		printf("%s", prefix);
-		lrec_print(pe->pvdata);
+	if (plist == NULL) {
+		printf("%s NULL", prefix);
+	} else {
+		for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
+			printf("%s", prefix);
+			lrec_print(pe->pvdata);
+		}
 	}
 }
 
