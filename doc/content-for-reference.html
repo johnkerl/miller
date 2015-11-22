@@ -894,7 +894,7 @@ is treated as float; everything else is a string.
 <p/>If you want all numbers to be treated as floats, then you may use
 <tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
 $b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
-<tt>mlr filter -f</tt> and <tt>mlr put -f</tt> which forces all numeric input,
+<tt>mlr filter -F</tt> and <tt>mlr put -F</tt> which forces all numeric input,
 whether from expression literals or field values, to float.
 
 <h2>Conversion by math routines</h2>

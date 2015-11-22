@@ -628,11 +628,11 @@ run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
 announce DSL TYPE-INFERENCE
 
 run_mlr --xtab put       '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
-run_mlr --xtab put    -f '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
-run_mlr --xtab put    -s '$y     = $pi1 . $pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    -F '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab put    -S '$y     = $pi1 . $pi2' $indir/mixed-types.xtab
 run_mlr --xtab filter    '999   != $pi1 + $pi2' $indir/mixed-types.xtab
-run_mlr --xtab filter -f '999   != $pi1 + $pi2' $indir/mixed-types.xtab
-run_mlr --xtab filter -s '"999" != $pi1 . $pi2' $indir/mixed-types.xtab
+run_mlr --xtab filter -F '999   != $pi1 + $pi2' $indir/mixed-types.xtab
+run_mlr --xtab filter -S '"999" != $pi1 . $pi2' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$y=abs($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($nf1)' $indir/mixed-types.xtab
@@ -641,12 +641,12 @@ run_mlr --xtab put    '$y=abs($pi1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($ni1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($zi)'  $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$y=abs($pf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=abs($nf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=abs($zf)'  $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=abs($pi1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=abs($ni1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=abs($zi)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=abs($zi)'  $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$y=ceil($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=ceil($nf1)' $indir/mixed-types.xtab
@@ -655,12 +655,12 @@ run_mlr --xtab put    '$y=ceil($pi1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=ceil($ni1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=ceil($zi)'  $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$y=floor($pf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=floor($nf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=floor($zf)'  $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=floor($pi1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=floor($ni1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=floor($zi)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=floor($zi)'  $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$y=round($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=round($nf1)' $indir/mixed-types.xtab
@@ -669,12 +669,12 @@ run_mlr --xtab put    '$y=round($pi1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=round($ni1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=round($zi)'  $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$y=round($pf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=round($nf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=round($zf)'  $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=round($pi1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=round($ni1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=round($zi)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=round($zi)'  $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$y=sgn($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=sgn($nf1)' $indir/mixed-types.xtab
@@ -683,62 +683,62 @@ run_mlr --xtab put    '$y=sgn($pi1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=sgn($ni1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=sgn($zi)'  $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$y=sgn($pf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=sgn($nf1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=sgn($zf)'  $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=sgn($pi1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=sgn($ni1)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$y=sgn($zi)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($pf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($nf1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($zf)'  $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($pi1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($ni1)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$y=sgn($zi)'  $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pf1,$pf2);$max=max($pf1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pi1,$pf2);$max=max($pi1,$pf2)' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$min=min($pi1,$pi2);$max=max($pi1,$pi2)' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$sum=$pf1+$pf2;$diff=$pf1-$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$sum=$pf1+$pi2;$diff=$pf1-$pi2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$sum=$pi1+$pf2;$diff=$pi1-$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$sum=$pi1+$pi2;$diff=$pi1-$pi2' $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$sum=$pf1+$pf2;$diff=$pf1-$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$sum=$pf1+$pi2;$diff=$pf1-$pi2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$sum=$pi1+$pf2;$diff=$pi1-$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$sum=$pi1+$pi2;$diff=$pi1-$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$sum=$pf1+$pf2;$diff=$pf1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$sum=$pf1+$pi2;$diff=$pf1-$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$sum=$pi1+$pf2;$diff=$pi1-$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$sum=$pi1+$pi2;$diff=$pi1-$pi2' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$prod=$pf1*$pf2;$quot=$pf1/$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$prod=$pf1*$pi2;$quot=$pf1/$pi2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$prod=$pi1*$pf2;$quot=$pi1/$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$prod=$pi1*$pi2;$quot=$pi1/$pi2' $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$prod=$pf1*$pf2;$quot=$pf1/$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$prod=$pf1*$pi2;$quot=$pf1/$pi2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$prod=$pi1*$pf2;$quot=$pi1/$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$prod=$pi1*$pi2;$quot=$pi1/$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$prod=$pf1*$pf2;$quot=$pf1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$prod=$pf1*$pi2;$quot=$pf1/$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$prod=$pi1*$pf2;$quot=$pi1/$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$prod=$pi1*$pi2;$quot=$pi1/$pi2' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$iquot=$pf1//$pf2;$mod=$pf1%$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$iquot=$pi1//$pf2;$mod=$pi1%$pf2' $indir/mixed-types.xtab
 run_mlr --xtab put    '$iquot=$pi1//$pi2;$mod=$pi1%$pi2' $indir/mixed-types.xtab
 
-run_mlr --xtab put -f '$iquot=$pf1//$pf2;$mod=$pf1%$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$iquot=$pi1//$pf2;$mod=$pi1%$pf2' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$iquot=$pi1//$pi2;$mod=$pi1%$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$iquot=$pf1//$pf2;$mod=$pf1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$iquot=$pi1//$pf2;$mod=$pi1%$pf2' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$iquot=$pi1//$pi2;$mod=$pi1%$pi2' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$a=roundm($pf1,10.0);$b=roundm($pf1,-10.0)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$a=roundm($pf1,10)  ;$b=roundm($pf1,-10)  ' $indir/mixed-types.xtab
@@ -752,19 +752,19 @@ run_mlr --xtab put    '$quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0' $indir/
 run_mlr --xtab put    '$quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10  ' $indir/mixed-types.xtab
 run_mlr --xtab put    '$quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0' $indir/mixed-types.xtab
 run_mlr --xtab put    '$quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10  ' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10  ' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10  ' $indir/mixed-types.xtab
 
 run_mlr --xtab put    '$quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0' $indir/mixed-types.xtab
 run_mlr --xtab put    '$quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10  ' $indir/mixed-types.xtab
 run_mlr --xtab put    '$quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0' $indir/mixed-types.xtab
 run_mlr --xtab put    '$quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10  ' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10  ' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0' $indir/mixed-types.xtab
-run_mlr --xtab put -f '$quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10  ' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0' $indir/mixed-types.xtab
+run_mlr --xtab put -F '$quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10  ' $indir/mixed-types.xtab
 
 # ----------------------------------------------------------------
 announce DSL REGEX MATCHING

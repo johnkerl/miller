@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-21
+.\"      Date: 2015-11-22
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-21" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-22" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -367,9 +367,9 @@ Prints records for which {expression} evaluates to true.
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
     full transparency on the precedence and associativity rules of Miller's
     grammar.
--s: Keeps field values, or literals in the expression, as strings with no type 
+-S: Keeps field values, or literals in the expression, as strings with no type 
     inference to int or float.
--f: Keeps field values, or literals in the expression, as strings or floats
+-F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
 Please use a dollar sign for field names and double-quotes for string
 literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.
@@ -548,9 +548,9 @@ Adds/updates specified field(s).
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
     full transparency on the precedence and associativity rules of Miller's
     grammar.
--s: Keeps field values, or literals in the expression, as strings with no type 
+-S: Keeps field values, or literals in the expression, as strings with no type 
     inference to int or float.
--f: Keeps field values, or literals in the expression, as strings or floats
+-F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
 Please use a dollar sign for field names and double-quotes for string
 literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.

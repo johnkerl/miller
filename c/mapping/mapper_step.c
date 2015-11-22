@@ -326,7 +326,7 @@ static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 static step_t* step_rsum_alloc(char* input_field_name) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-	pstate->rsum  = mv_from_int(0LL);
+	pstate->rsum = mv_from_int(0LL);
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
 	pstep->pvstate        = (void*)pstate;
 	pstep->pdprocess_func = NULL;

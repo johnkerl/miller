@@ -33,9 +33,9 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
-	fprintf(o, "-s: Keeps field values, or literals in the expression, as strings with no type \n");
+	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
 	fprintf(o, "    inference to int or float.\n");
-	fprintf(o, "-f: Keeps field values, or literals in the expression, as strings or floats\n");
+	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
@@ -59,8 +59,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate, "-v", &print_asts);
-	ap_define_int_value_flag(pstate, "-s", TYPE_INFER_STRING_ONLY,  &type_inferencing);
-	ap_define_int_value_flag(pstate, "-f", TYPE_INFER_STRING_FLOAT, &type_inferencing);
+	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
+	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
