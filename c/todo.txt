@@ -9,8 +9,9 @@ TOP OF LIST
 ! before releasing miller 3:
 
   ! fix join on partial value-field matches
-  -> 1st order of business is to clarify pre/post conditions in jbk
-     private methods, including whether peek can be het or only hom.
+  - proofread --dev
+  - stdize --dev
+  - more RT cases
 
 ----------------------------------------------------------------
 * miller 3 release info:
