@@ -17,6 +17,7 @@ typedef struct _cli_opts_t {
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;
 	int   use_implicit_csv_header;
+	int   headerless_csv_output;
 	int   use_mmap_for_read;
 	char* ifile_fmt;
 	char* ofile_fmt;

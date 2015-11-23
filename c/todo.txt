@@ -6,9 +6,14 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! before releasing miller 3:
+before releasing miller 3:
+
+* het-join:
   - ci RT cases for sorted het-join
   - fix RT cases for unsorted het-join
+  - more opposite-side-pairing cases?
+  - reg_test/run --dev
+* --headerless-csv-output
 
 ----------------------------------------------------------------
 * miller 3 release info:
@@ -23,6 +28,7 @@ TOP OF LIST
     - strftime/strptime as generalization of sec2gmt/gmt2sec
   o I/O:
     - --xvright
+    - --headerless-csv-output
   o verbs:
     - mlr cat -n; mlr grep
     - stats1 skewness & kurtosis

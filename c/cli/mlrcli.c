@@ -350,6 +350,7 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
+	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
 }
 
 static void main_usage_double_quoting(FILE* o, char* argv0) {
@@ -494,6 +495,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
 	popts->allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
 	popts->use_implicit_csv_header = FALSE;
+	popts->headerless_csv_output   = FALSE;
 
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
@@ -629,6 +631,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->allow_repeat_ifs = TRUE;
 		} else if (streq(argv[argi], "--implicit-csv-header")) {
 			popts->use_implicit_csv_header = TRUE;
+		} else if (streq(argv[argi], "--headerless-csv-output")) {
+			popts->headerless_csv_output = TRUE;
 
 		} else if (streq(argv[argi], "-p")) {
 			popts->ifile_fmt = "nidx";
@@ -789,9 +793,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if      (streq(popts->ofile_fmt, "dkvp"))
 		popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(popts->ofile_fmt, "csv"))
-		popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting);
+		popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting,
+			popts->headerless_csv_output);
 	else if (streq(popts->ofile_fmt, "csvlite"))
-		popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs);
+		popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs, popts->headerless_csv_output);
 	else if (streq(popts->ofile_fmt, "nidx"))
 		popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
 	else if (streq(popts->ofile_fmt, "xtab"))

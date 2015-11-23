@@ -20,6 +20,7 @@ typedef struct _lrec_writer_csv_state_t {
 	quoted_output_func_t* pquoted_output_func;
 	long long num_header_lines_output;
 	slls_t* plast_header_output;
+	int headerless_csv_output;
 } lrec_writer_csv_state_t;
 
 // ----------------------------------------------------------------
@@ -31,7 +32,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
+lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting, int headerless_csv_output) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));
@@ -40,6 +41,7 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting) {
 	pstate->ofs    = ofs;
 	pstate->orslen = strlen(pstate->ors);
 	pstate->ofslen = strlen(pstate->ofs);
+	pstate->headerless_csv_output = headerless_csv_output;
 
 	switch(oquoting) {
 	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
@@ -89,14 +91,16 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 
 	if (pstate->plast_header_output == NULL) {
 		int nf = 0;
-		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			if (nf > 0)
-				fputs(ofs, output_stream);
-			pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
-				pstate->orslen, pstate->ofslen);
-			nf++;
+		if (!pstate->headerless_csv_output) {
+			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+				if (nf > 0)
+					fputs(ofs, output_stream);
+				pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
+					pstate->orslen, pstate->ofslen);
+				nf++;
+			}
+			fputs(ors, output_stream);
 		}
-		fputs(ors, output_stream);
 		pstate->plast_header_output = mlr_copy_keys_from_record(prec);
 		pstate->num_header_lines_output++;
 	}

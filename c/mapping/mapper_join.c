@@ -326,6 +326,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	if (pstate->pleft_buckets_by_join_field_values == NULL) // First call
+		// xxx ingest_left_file needs to take the left-unpaired as an argument.
 		ingest_left_file(pstate);
 
 	if (pright_rec == NULL) { // End of input record stream
@@ -484,6 +485,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pleft_rec);
 			}
+		} else {
 		}
 	}
 

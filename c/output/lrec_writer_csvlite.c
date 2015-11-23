@@ -9,13 +9,14 @@ typedef struct _lrec_writer_csvlite_state_t {
 	char* ofs;
 	long long num_header_lines_output;
 	slls_t* plast_header_output;
+	int headerless_csv_output;
 } lrec_writer_csvlite_state_t;
 
 static void lrec_writer_csvlite_free(void* pvstate);
 static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs) {
+lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_csv_output) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csvlite_state_t));
@@ -24,6 +25,7 @@ lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs) {
 	pstate->ofs                     = ofs;
 	pstate->num_header_lines_output = 0LL;
 	pstate->plast_header_output     = NULL;
+	pstate->headerless_csv_output   = headerless_csv_output;
 
 	plrec_writer->pvstate       = (void*)pstate;
 	plrec_writer->pprocess_func = lrec_writer_csvlite_process;
@@ -58,14 +60,16 @@ static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void*
 	}
 
 	if (pstate->plast_header_output == NULL) {
-		int nf = 0;
-		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			if (nf > 0)
-				fputs(ofs, output_stream);
-			fputs(pe->key, output_stream);
-			nf++;
+		if (!pstate->headerless_csv_output) {
+			int nf = 0;
+			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+				if (nf > 0)
+					fputs(ofs, output_stream);
+				fputs(pe->key, output_stream);
+				nf++;
+			}
+			fputs(ors, output_stream);
 		}
-		fputs(ors, output_stream);
 		pstate->plast_header_output = mlr_copy_keys_from_record(prec);
 		pstate->num_header_lines_output++;
 	}
