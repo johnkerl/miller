@@ -534,7 +534,7 @@ static char* test_het_middle_pairing() {
 }
 
 // ================================================================
-static char * run_all_tests(int do_dev_only) {
+static char * run_all_tests() {
 	mu_run_test(test_left_empty_right_empty);
 	mu_run_test(test_left_empty);
 	mu_run_test(test_right_empty);
@@ -543,27 +543,22 @@ static char * run_all_tests(int do_dev_only) {
 	mu_run_test(test_middle_pairings);
 	mu_run_test(test_middle);
 	mu_run_test(test_walk_through_all);
-	if (do_dev_only) {
-		mu_run_test(test_het_unpaired_before_left_start);
-		mu_run_test(test_het_unpaired_after_left_end);
-		mu_run_test(test_het_initial_pairing);
-		mu_run_test(test_het_middle_pairing);
-	}
+	mu_run_test(test_het_unpaired_before_left_start);
+	mu_run_test(test_het_unpaired_after_left_end);
+	mu_run_test(test_het_initial_pairing);
+	mu_run_test(test_het_middle_pairing);
 	printf("----------------------------------------------------------------\n");
 	return 0;
 }
 
 int main(int argc, char **argv) {
 	printf("TEST_JOIN_BUCKET_KEEPER ENTER\n");
-	int do_dev_only = FALSE;
 	for (int argi = 1; argi < argc; argi++) {
 		if (streq(argv[argi], "-v"))
 			tjbk_verbose = TRUE;
-		else if (streq(argv[argi], "--dev"))
-			do_dev_only = TRUE;
 	}
 
-	char *result = run_all_tests(do_dev_only);
+	char *result = run_all_tests();
 	printf("\n");
 	if (result != 0) {
 		printf("Not all unit tests passed\n");

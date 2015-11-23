@@ -9,7 +9,7 @@ TOP OF LIST
 ! before releasing miller 3:
 
   ! fix join on partial value-field matches
-  - proofread --dev
+  - TMP_DBG rmv
   - stdize --dev
   - more RT cases
 
