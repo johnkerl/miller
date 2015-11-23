@@ -7,11 +7,8 @@ BUGFIXES
 TOP OF LIST
 
 ! before releasing miller 3:
-
-  ! fix join on partial value-field matches
-  - TMP_DBG rmv
-  - stdize --dev
-  - more RT cases
+  - ci RT cases for sorted het-join
+  - fix RT cases for unsorted het-join
 
 ----------------------------------------------------------------
 * miller 3 release info:
