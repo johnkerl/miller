@@ -202,6 +202,7 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper) {
 }
 
 // ----------------------------------------------------------------
+//#define TEMP_DEBUG
 void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
@@ -219,17 +220,19 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 	// l=5,b=17
 	// l=5,b=18
 
-	//printf("[istate] %s\n", describe_state(pkeeper->state));
-	//printf("EMIT INTERNAL 1\n");
-	//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-	//printf("\n");
+#ifdef TEMP_DEBUG
+	printf("EMIT INTERNAL 1\n");
+	join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+	printf("\n");
+#endif
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
 		join_bucket_keeper_initial_fill(pkeeper, pprecords_left_unpaired);
 		pkeeper->state = join_bucket_keeper_get_state(pkeeper);
-		//printf("EMIT INTERNAL 2\n");
-		//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-		//printf("\n");
-		//printf("[nstate] %s\n", describe_state(pkeeper->state));
+#ifdef TEMP_DEBUG
+		printf("EMIT INTERNAL 2\n");
+		join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+		printf("\n");
+#endif
 	}
 
 	if (pright_field_values != NULL) { // Not right EOF
@@ -238,9 +241,11 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 			if (cmp < 0) {
 				// Advance left until match or left EOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-				//printf("EMIT INTERNAL 3\n");
-				//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-				//printf("\n");
+#ifdef TEMP_DEBUG
+				printf("EMIT INTERNAL 3\n");
+				join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+				printf("\n");
+#endif
 			} else if (cmp == 0) {
 				pkeeper->pbucket->was_paired = TRUE;
 				*pprecords_paired = pkeeper->pbucket->precords;
@@ -255,9 +260,11 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 
 	} else { // Right EOF: return the final left-unpaireds.
 		join_bucket_keeper_drain(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-		//printf("EMIT INTERNAL 4\n");
-		//join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
-		//printf("\n");
+#ifdef TEMP_DEBUG
+		printf("EMIT INTERNAL 4\n");
+		join_bucket_keeper_print_aux(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
+		printf("\n");
+#endif
 	}
 
 	pkeeper->state = join_bucket_keeper_get_state(pkeeper);
@@ -281,16 +288,34 @@ static int join_bucket_keeper_get_state(join_bucket_keeper_t* pkeeper) {
 static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
 	sllv_t** pprecords_left_unpaired)
 {
+#ifdef TEMP_DEBUG
+	printf("\n");
+	printf("JBK.IF ENTER\n");
+#endif
 	while (TRUE) {
 		// Skip over records not having the join keys. These go straight to the
 		// left-unpaired list.
 		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
 			pkeeper->pvhandle, pkeeper->pctx);
-		if (pkeeper->prec_peek == NULL)
+		if (pkeeper->prec_peek == NULL) {
+#ifdef TEMP_DEBUG
+			printf("JBK.IF BREAK NULL\n");
+#endif
 			break;
+		}
 		if (record_has_all_keys(pkeeper->prec_peek, pkeeper->pleft_field_names)) {
+#ifdef TEMP_DEBUG
+			printf("JBK.IF BREAK AK: ");
+			lrec_print(pkeeper->prec_peek);
+			printf("\n");
+#endif
 			break;
 		} else {
+#ifdef TEMP_DEBUG
+			printf("JBK.IF !BREAK !AK: ");
+			lrec_print(pkeeper->prec_peek);
+			printf("\n");
+#endif
 			if (*pprecords_left_unpaired == NULL)
 				*pprecords_left_unpaired = sllv_alloc();
 			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
@@ -307,42 +332,105 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
 // Preconditions:
 // * prec_peek != NULL
 // * prec_peek has the join keys
+//static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired) {
+//	while (TRUE) {
+//		slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+//			pkeeper->pleft_field_names);
+//		if (pleft_field_values == NULL) { // Start of bucket
+//			if (*pprecords_left_unpaired == NULL)
+//				*pprecords_left_unpaired = sllv_alloc();
+//			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+//
+////			while (TRUE) {
+//				pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+//					pkeeper->pvhandle, pkeeper->pctx);
+////				if (pkeeper->prec_peek == NULL) {
+////					pkeeper->leof = TRUE;
+////					break;
+////				}
+////				int cmp = slls_lrec_compare_lexically(
+////					pkeeper->pbucket->pleft_field_values,
+////					pkeeper->prec_peek,
+////					pkeeper->pleft_field_names);
+////				if (cmp != 0) {
+////					break;
+////				}
+////				sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+////				pkeeper->prec_peek = NULL;
+////			}
+//
+//		} else { // Continuation of bucket
+//			pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
+//			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+//			pkeeper->pbucket->was_paired = FALSE;
+//			pkeeper->prec_peek = NULL;
+//
+////			while (TRUE) {
+//				pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+//					pkeeper->pvhandle, pkeeper->pctx);
+////				if (pkeeper->prec_peek == NULL) {
+////					pkeeper->leof = TRUE;
+////					break;
+////				}
+////				int cmp = slls_lrec_compare_lexically(
+////					pkeeper->pbucket->pleft_field_values,
+////					pkeeper->prec_peek,
+////					pkeeper->pleft_field_names);
+////				if (cmp != 0) {
+////					break;
+////				}
+////				sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+////				pkeeper->prec_peek = NULL;
+////			}
+//
+//			break;
+//		}
+//	}
+//}
+
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired) {
+	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+		pkeeper->pleft_field_names);
+	if (pleft_field_values == NULL) {
+		fprintf(stderr, "%s: internal coding error: peek record should have had join keys.\n",
+			MLR_GLOBALS.argv0);
+		exit(1);
+	}
+
+	pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
+	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+	pkeeper->pbucket->was_paired = FALSE;
+	pkeeper->prec_peek = NULL;
 	while (TRUE) {
-		slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
-			pkeeper->pleft_field_names);
-		if (pleft_field_values == NULL) {
+		// Skip over records not having the join keys. These go straight to the
+		// left-unpaired list.
+		pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
+			pkeeper->pvhandle, pkeeper->pctx);
+		if (pkeeper->prec_peek == NULL) {
+//			printf("JBK.IF BREAK NULL\n");
+			pkeeper->leof = TRUE;
+			break;
+		}
+
+		if (record_has_all_keys(pkeeper->prec_peek, pkeeper->pleft_field_names)) {
+			int cmp = slls_lrec_compare_lexically(
+				pkeeper->pbucket->pleft_field_values,
+				pkeeper->prec_peek,
+				pkeeper->pleft_field_names);
+			if (cmp != 0) {
+				break;
+			}
+			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+
+		} else {
+//			printf("JBK.IF !BREAK !AK: ");
+//			lrec_print(pkeeper->prec_peek);
+//			printf("\n");
 			if (*pprecords_left_unpaired == NULL)
 				*pprecords_left_unpaired = sllv_alloc();
 			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
-			pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
-				pkeeper->pvhandle, pkeeper->pctx);
-		} else {
-			pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
-			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-			pkeeper->pbucket->was_paired = FALSE;
-			pkeeper->prec_peek = NULL;
-			while (TRUE) {
-				pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
-					pkeeper->pvhandle, pkeeper->pctx);
-				if (pkeeper->prec_peek == NULL) {
-					pkeeper->leof = TRUE;
-					break;
-				}
-
-				int cmp = slls_lrec_compare_lexically(
-					pkeeper->pbucket->pleft_field_values,
-					pkeeper->prec_peek,
-					pkeeper->pleft_field_names);
-
-				if (cmp != 0) {
-					break;
-				}
-				sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-				pkeeper->prec_peek = NULL;
-			}
-			break;
 		}
+		pkeeper->prec_peek = NULL;
 	}
 }
 
