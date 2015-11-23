@@ -29,35 +29,35 @@ EXTRA_DIST=	\
 		having-fields-regex.dkvp \
 		het.csv \
 		het.dkvp \
-		reg_test/input/het-join-left \
-		reg_test/input/het-join-right-r0 \
-		reg_test/input/het-join-right-r1 \
-		reg_test/input/het-join-right-r2 \
-		reg_test/input/het-join-right-r3 \
-		reg_test/input/het-join-right-r4 \
-		reg_test/input/het-join-right-r5 \
-		reg_test/input/het-join-right-r6 \
-		reg_test/input/het-join-right-r11 \
-		reg_test/input/het-join-right-r12 \
-		reg_test/input/het-join-right-r13 \
-		reg_test/input/het-join-right-r14 \
-		reg_test/input/het-join-right-r15 \
-		reg_test/input/het-join-right-r16 \
-		reg_test/input/het-join-right-r22 \
-		reg_test/input/het-join-right-r23 \
-		reg_test/input/het-join-right-r24 \
-		reg_test/input/het-join-right-r25 \
-		reg_test/input/het-join-right-r26 \
-		reg_test/input/het-join-right-r33 \
-		reg_test/input/het-join-right-r34 \
-		reg_test/input/het-join-right-r35 \
-		reg_test/input/het-join-right-r36 \
-		reg_test/input/het-join-right-r44 \
-		reg_test/input/het-join-right-r45 \
-		reg_test/input/het-join-right-r46 \
-		reg_test/input/het-join-right-r55 \
-		reg_test/input/het-join-right-r56 \
-		reg_test/input/het-join-right-r66 \
+		het-join-left \
+		het-join-right-r0 \
+		het-join-right-r1 \
+		het-join-right-r2 \
+		het-join-right-r3 \
+		het-join-right-r4 \
+		het-join-right-r5 \
+		het-join-right-r6 \
+		het-join-right-r11 \
+		het-join-right-r12 \
+		het-join-right-r13 \
+		het-join-right-r14 \
+		het-join-right-r15 \
+		het-join-right-r16 \
+		het-join-right-r22 \
+		het-join-right-r23 \
+		het-join-right-r24 \
+		het-join-right-r25 \
+		het-join-right-r26 \
+		het-join-right-r33 \
+		het-join-right-r34 \
+		het-join-right-r35 \
+		het-join-right-r36 \
+		het-join-right-r44 \
+		het-join-right-r45 \
+		het-join-right-r46 \
+		het-join-right-r55 \
+		het-join-right-r56 \
+		het-join-right-r66 \
 		int64io.dkvp \
 		int64arith.dkvp \
 		int-float.dkvp \
