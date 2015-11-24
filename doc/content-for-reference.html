@@ -302,8 +302,13 @@ POKI_RUN_COMMAND{{cat a.csv}}HERE
 POKI_RUN_COMMAND{{cat b.csv}}HERE
 </td> <td>
 POKI_RUN_COMMAND{{mlr --csv cat a.csv b.csv}}HERE
+</td></tr></table>
+
+<table><tr><td>
 </td> <td>
 POKI_RUN_COMMAND{{mlr --icsv --oxtab cat a.csv b.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --csv cat -n a.csv b.csv}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
