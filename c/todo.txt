@@ -1,75 +1,10 @@
 ================================================================
 BUGFIXES
 
-! fix join on partial value-field matches
+:D
 
 ================================================================
 TOP OF LIST
-
-before releasing miller 3:
-
-* het-join:
-  - ci RT cases for sorted het-join
-  - fix RT cases for unsorted het-join
-  - more opposite-side-pairing cases?
-  - reg_test/run --dev
-* --headerless-csv-output UTs
-* memlk @ string-to-num -- separate commit
-
-----------------------------------------------------------------
-* miller 3 release info:
-  o functions:
-    - int-to-int, pythonic division, and overflow math (all w/ one xref to mld/ref:arithmetic)
-      this is backward incompatible (ish) hence the major version increment from 2 to 3.
-      put/filter/stats1/step -F.
-    - bitwise operators: | ^ & << >>. now possible with int-preserving math.
-    - modular arithmetic
-    - urandint
-    - sgn
-    - strftime/strptime as generalization of sec2gmt/gmt2sec
-  o I/O:
-    - --xvright
-    - --headerless-csv-output
-  o verbs:
-    - mlr cat -n; mlr grep
-    - stats1 skewness & kurtosis
-    - bar
-    - het-join bugfix
-  o docs:
-    - manpage is now autogenned
-    - precedence & semantics docs
-    - HTML pages are now PDF-renderable
-
-* visually check all precedence stackings (horiz/vert) in the grammars
-  against the operator prec/assoc table
-* dsls bake deps
-
-----------------------------------------------------------------
-* etc feature:
--> or maybe just cookbook entry ... and/or xref to estdonetime
-  - in1 optional: t (epoch seconds); default systime()
-  - in2: nleft
-  - in3 optional: target #/field name
-  - in optional: -s flag or not
-  - out1: etchours
-  - out2: etcstamp
-
-  o expose mapper_stats2_alloc
-  o expose mapper_cut_alloc
-  o encapsulate the following:
-    mlr put '$t=systime()' \
-      then filter 'NR>4' \
-      then  put '$nleft=$target-$n' \
-      then stats2 -s -a linreg-pca -f t,nleft \
-      then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
-
-----------------------------------------------------------------
-* lrec_eval nullable etc. cleanup
-
-* packaging:
-  - brew version bump?!?
-
-* stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
 
 ----------------------------------------------------------------
 
@@ -102,25 +37,18 @@ before releasing miller 3:
     o lose ~10% perf due to no mmap
   - faqent re rsum as proxy for per-record/agg-only mixed output
 
-----------------------------------------------------------------
-* introduce a fourth, padding separator for all formats? (for leading/trailing strip/skip.)
-  o allows 'x = 10' in DKVP
-  o allows right-justified keys in XTAB
-
-* verb bar:
-  - out-of-place bar -- preserving count as separate column?
-  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
+* comma-number -- using locale?
+* poki cover -> readme
 
 ----------------------------------------------------------------
-MINOR: bootstrap sampling in hold-and-emit mode??
+* lrec_eval nullable etc. cleanup
 
-MINOR: hold-and-emit fraction?
+* packaging:
+  - brew version bump?!?
 
-MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
+* stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
 
-MAJOR: uni/multivariate logistic for ternary & above?
-
-? wiki quickselect ?
+* bootstrap sampling in hold-and-emit mode?? needs an lrec_copy
 
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
@@ -141,6 +69,50 @@ MAJOR: csv mem-leak/read-perf
   issue, pfr+psb is 3.5x slower than getdelim. again suggesting
   multi-char-terminated getdelim might be the best line of approach.
 
+================================================================
+OTHER
+
+----------------------------------------------------------------
+* visually check all precedence stackings (horiz/vert) in the grammars
+  against the operator prec/assoc table
+* dsls bake deps
+
+----------------------------------------------------------------
+* etc feature:
+-> or maybe just cookbook entry ... and/or xref to estdonetime
+  - in1 optional: t (epoch seconds); default systime()
+  - in2: nleft
+  - in3 optional: target #/field name
+  - in optional: -s flag or not
+  - out1: etchours
+  - out2: etcstamp
+
+  o expose mapper_stats2_alloc
+  o expose mapper_cut_alloc
+  o encapsulate the following:
+    mlr put '$t=systime()' \
+      then filter 'NR>4' \
+      then  put '$nleft=$target-$n' \
+      then stats2 -s -a linreg-pca -f t,nleft \
+      then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
+
+----------------------------------------------------------------
+* introduce a fourth, padding separator for all formats? (for leading/trailing strip/skip.)
+  o allows 'x = 10' in DKVP
+  o allows right-justified keys in XTAB
+
+* verb bar:
+  - out-of-place bar -- preserving count as separate column?
+  - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
+
+MINOR: hold-and-emit fraction?
+
+MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
+
+MAJOR: uni/multivariate logistic for ternary & above?
+
+? wiki quickselect ?
+
 ----------------------------------------------------------------
 MINOR:
 
@@ -149,8 +121,6 @@ MINOR:
 * hash-chain ifdef instrumentation -> maybe find a better hash function out there
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
 * pprint join?
-* comma-number -- using locale?
-* poki cover -> readme
 * include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
 * gprof link with -lc on FreeBSD -- ?
