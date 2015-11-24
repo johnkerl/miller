@@ -405,6 +405,7 @@ Relevant to CSV/CSV-lite input only:
   --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
                      of input files. Tip: combine with "label" to recreate
                      missing headers.
+  --headerless-csv-output   Print only CSV data lines.
 
 Double-quoting for CSV output:
   --quote-all        Wrap all fields in double quotes
@@ -431,7 +432,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 
 For more information please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller. This is Miller version v3.0.0-almost.
+http://github.com/johnkerl/miller. This is Miller version v3.0.0.
 </pre>
 </div>
 <p/>

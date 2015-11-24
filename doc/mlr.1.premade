@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-22
+.\"      Date: 2015-11-24
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-22" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-24" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +38,8 @@ on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
 familiar CSV.  (Miller can handle positionally-indexed data as a special
-case.)
+case.) This manpage documents Miller v3.0.0
+\&.
 .SH "EXAMPLES"
 .sp
 
@@ -223,6 +224,7 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
   --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
                      of input files. Tip: combine with "label" to recreate
                      missing headers.
+  --headerless-csv-output   Print only CSV data lines.
 .fi
 .if n \{\
 .RE
