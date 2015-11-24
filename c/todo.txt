@@ -13,7 +13,8 @@ before releasing miller 3:
   - fix RT cases for unsorted het-join
   - more opposite-side-pairing cases?
   - reg_test/run --dev
-* --headerless-csv-output
+* --headerless-csv-output UTs
+* memlk @ string-to-num -- separate commit
 
 ----------------------------------------------------------------
 * miller 3 release info:
@@ -42,7 +43,6 @@ before releasing miller 3:
 * visually check all precedence stackings (horiz/vert) in the grammars
   against the operator prec/assoc table
 * dsls bake deps
-* memlk @ string-to-num!
 
 ----------------------------------------------------------------
 * etc feature:
@@ -110,8 +110,6 @@ before releasing miller 3:
   - out-of-place bar -- preserving count as separate column?
   - fix # for just-above-lo bar: "[...]" & "<...]" & "[...>" ?
 
-* time-until feature?? or just readme-type info?
-
 ----------------------------------------------------------------
 MINOR: bootstrap sampling in hold-and-emit mode??
 
@@ -147,7 +145,6 @@ MINOR:
 
 * double-check for off-by-one buflen in cline/sline
 * off-by-one error on fnr dkvp errmsg?
-* scroll-stalls in mlrdoc!! really bad on the droid.
 * hash-chain ifdef instrumentation -> maybe find a better hash function out there
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
 * pprint join?
@@ -284,7 +281,5 @@ Given a version number MAJOR.MINOR.PATCH, increment the:
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-Initial release:
-https://news.ycombinator.com/item?id=10066742
-v2.0.0:
-https://news.ycombinator.com/item?id=10132831
+Initial release: https://news.ycombinator.com/item?id=10066742
+v2.0.0  release: https://news.ycombinator.com/item?id=10132831
