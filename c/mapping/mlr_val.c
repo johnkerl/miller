@@ -215,6 +215,7 @@ void mv_get_int_nullable(mv_t* pval) {
 
 // ----------------------------------------------------------------
 void mv_get_number_nullable(mv_t* pval) {
+	char* strv = NULL;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -229,8 +230,9 @@ void mv_get_number_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
-		// xxx freeing ...
+		strv = pval->u.strv;
 		*pval = mv_scan_number_nullable(pval->u.strv);
+		free(strv);
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
