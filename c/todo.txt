@@ -83,6 +83,7 @@ before releasing miller 3:
 
 * faqents:
   ! some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
+  - eval stuff from https://github.com/johnkerl/miller/issues/88
   - csv/csvlite compare/contrast @ mld formats
   - faqent distrib mapred paradigm in general: use distributed mean as example
   - faqent re R/mysql/etc inouts

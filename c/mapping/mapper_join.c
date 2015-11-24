@@ -50,6 +50,7 @@ typedef struct _mapper_join_state_t {
 
 	// For unsorted input
 	lhmslv_t* pleft_buckets_by_join_field_values;
+	sllv_t*   pleft_unpaired_records;
 
 } mapper_join_state_t;
 
@@ -323,10 +324,12 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
+	if (pstate->pleft_unpaired_records == NULL) // First call
+		pstate->pleft_unpaired_records = sllv_alloc();
+
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	if (pstate->pleft_buckets_by_join_field_values == NULL) // First call
-		// xxx ingest_left_file needs to take the left-unpaired as an argument.
 		ingest_left_file(pstate);
 
 	if (pright_rec == NULL) { // End of input record stream
@@ -341,6 +344,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 					}
 				}
 			}
+			sllv_transfer(poutrecs, pstate->pleft_unpaired_records);
 			sllv_add(poutrecs, NULL);
 			return poutrecs;
 		} else {
@@ -368,7 +372,11 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			return NULL;
 		}
 	} else {
-		return NULL;
+		if (pstate->popts->emit_right_unpairables) {
+			return sllv_single(pright_rec);
+		} else {
+			return NULL;
+		}
 	}
 }
 
@@ -486,6 +494,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 				sllv_add(pbucket->precords, pleft_rec);
 			}
 		} else {
+			sllv_add(pstate->pleft_unpaired_records, pleft_rec);
 		}
 	}
 
