@@ -7,7 +7,7 @@ CFLAGS=-I.. -O3
 top: filter_dsl_lexer.o filter_dsl_parse.o filter_dsl_wrapper.o put_dsl_lexer.o put_dsl_parse.o put_dsl_wrapper.o
 
 # ----------------------------------------------------------------
-put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h
+put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h put_dsl_parse.h
 	$(CC) -Wall $(CFLAGS) -c -std=gnu99 put_dsl_wrapper.c
 
 put_dsl_parse.o: put_dsl_parse.c put_dsl_parse.h
@@ -33,13 +33,13 @@ put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
 #   lemon_parser_parse_token
 #   yy_destructor
 
-put_dsl_lexer.o: put_dsl_lexer.c put_dsl_lexer.h
+put_dsl_lexer.o: put_dsl_lexer.c put_dsl_lexer.h put_dsl_parse.h
 	$(CC) $(CFLAGS) -c -std=gnu99 put_dsl_lexer.c
 put_dsl_lexer.c put_dsl_lexer.h: put_dsl_lexer.l
 	flex --prefix=put_dsl_lexer_ --outfile=put_dsl_lexer.c --header-file=put_dsl_lexer.h put_dsl_lexer.l
 
 # ----------------------------------------------------------------
-filter_dsl_wrapper.o: filter_dsl_wrapper.c filter_dsl_wrapper.h
+filter_dsl_wrapper.o: filter_dsl_wrapper.c filter_dsl_wrapper.h filter_dsl_parse.h
 	$(CC) -Wall $(CFLAGS) -c -std=gnu99 filter_dsl_wrapper.c
 
 filter_dsl_parse.o: filter_dsl_parse.c filter_dsl_parse.h
@@ -57,7 +57,7 @@ filter_dsl_parse.c filter_dsl_parse.h: filter_dsl_parse.y lemon
 		filter_dsl_parse.c.tmp > filter_dsl_parse.c
 	rm -f filter_dsl_parse.c.tmp
 
-filter_dsl_lexer.o: filter_dsl_lexer.c filter_dsl_lexer.h
+filter_dsl_lexer.o: filter_dsl_lexer.c filter_dsl_lexer.h filter_dsl_parse.h
 	$(CC) $(CFLAGS) -c -std=gnu99 filter_dsl_lexer.c
 filter_dsl_lexer.c filter_dsl_lexer.h: filter_dsl_lexer.l
 	flex --prefix=filter_dsl_lexer_ --outfile=filter_dsl_lexer.c --header-file=filter_dsl_lexer.h filter_dsl_lexer.l

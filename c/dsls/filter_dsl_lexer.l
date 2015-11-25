@@ -134,7 +134,17 @@
 	return FILTER_DSL_FIELD_NAME;
 }
 
-[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+ {
+[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
+  // Leading minus sign is handled via the unary-minus operator, not here.
+  // 123
+  // 123. 123.4
+  // .234
+  // 1e2
+  // 1e-2
+  // 1.2e3 1.e3
+  // 1.2e-3 1.e-3
+  // .2e3
+  // .2e-3 1.e-3
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
 	return FILTER_DSL_NUMBER;
 }

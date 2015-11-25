@@ -79,6 +79,8 @@ EXTRA_DIST=	\
 		regex.dkvp \
 		regularize.dkvp \
 		rfc-csv \
+		scinot.dkvp \
+		scinot1.dkvp \
 		sec2gmt \
 		sec2xhms \
 		short \

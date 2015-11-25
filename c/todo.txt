@@ -9,7 +9,8 @@ TOP OF LIST
 ----------------------------------------------------------------
 
 ! 1e6 accepted from field value but not literal. DSLs, and UTs.
-? +=, -=, *=, etc?
+* mlr step from-first (check against delta + rsum ...)
+* bar --auto (w/ hold & emit & left-right labels)
 
 * faqents:
   ! some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
@@ -43,8 +44,6 @@ TOP OF LIST
 * --mmap @ mlr -h
 * bus-insurance dev page
 
-? mlr step from-first? (check against delta + rsum ...)
-
 ----------------------------------------------------------------
 * lrec_eval nullable etc. cleanup
 
@@ -76,16 +75,8 @@ MAJOR: csv mem-leak/read-perf
 
 ================================================================
 OTHER
-
-----------------------------------------------------------------
-* visually check all precedence stackings (horiz/vert) in the grammars
-  against the operator prec/assoc table
-* dsls bake deps
-
-----------------------------------------------------------------
-* etc feature:
--> or maybe just cookbook entry ... and/or xref to estdonetime
-  - in1 optional: t (epoch seconds); default systime()
+--------------------------------------------------------------
+  d in1 optional: t (epoch seconds); default systime()
   - in2: nleft
   - in3 optional: target #/field name
   - in optional: -s flag or not
