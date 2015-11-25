@@ -1,4 +1,5 @@
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "containers/lrec.h"
 #include "containers/string_array.h"
 #include "containers/mixutil.h"
@@ -7,19 +8,22 @@
 
 typedef struct _mapper_bar_state_t {
 	string_array_t*  pfield_names;
-	char   fill_char;
-	char   oob_char;
-	char   blank_char;
-	double lo;
-	double hi;
-	int    width;
-	char** bars;
+	char    fill_char;
+	char    oob_char;
+	char    blank_char;
+	double  lo;
+	double  hi;
+	int     width;
+	char**  bars;
+	sllv_t* precords; // only for auto mode
 } mapper_bar_state_t;
 
-static sllv_t*   mapper_bar_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_bar_free(void* pvstate);
 static mapper_t* mapper_bar_alloc(string_array_t* pfield_names,
-	char fill_char, char oob_char, char blank_char, double lo, double hi, int width);
+	char fill_char, char oob_char, char blank_char, double lo, double hi,
+	int width, int do_auto);
 static void      mapper_bar_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
 
@@ -29,6 +33,8 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
 #define DEFAULT_LO         0.0
 #define DEFAULT_HI         100.0
 #define DEFAULT_WIDTH      40
+
+#define SB_ALLOC_LENGTH    128
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_bar_setup = {
@@ -50,6 +56,8 @@ static void mapper_bar_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--lo {lo}         Lower-limit value for min-width bar: default '%lf'.\n", DEFAULT_LO);
 	fprintf(o, "--hi {hi}         Upper-limit value for max-width bar: default '%lf'.\n", DEFAULT_HI);
 	fprintf(o, "-w   {n}          Bar-field width: default '%d'.\n", DEFAULT_WIDTH);
+	fprintf(o, "--auto            Automatically computes limits, ignoring --lo and --hi.\n");
+	fprintf(o, "                  Holds all records in memory before producing any output.\n");
 }
 
 // ----------------------------------------------------------------
@@ -61,17 +69,19 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
 	double lo           = DEFAULT_LO;
 	double hi           = DEFAULT_HI;
 	int    width        = DEFAULT_WIDTH;
+	int    do_auto      = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_array_flag(pstate, "-f",   &pfield_names);
-	ap_define_string_flag(pstate,       "-c",   &fill_string);
-	ap_define_string_flag(pstate,       "-x",   &oob_string);
-	ap_define_string_flag(pstate,       "-b",   &blank_string);
-	ap_define_float_flag(pstate,       "--lo", &lo);
-	ap_define_float_flag(pstate,       "--hi", &hi);
-	ap_define_int_flag(pstate,          "-w",   &width);
+	ap_define_string_array_flag(pstate, "-f",     &pfield_names);
+	ap_define_string_flag(pstate,       "-c",     &fill_string);
+	ap_define_string_flag(pstate,       "-x",     &oob_string);
+	ap_define_string_flag(pstate,       "-b",     &blank_string);
+	ap_define_float_flag(pstate,        "--lo",   &lo);
+	ap_define_float_flag(pstate,        "--hi",   &hi);
+	ap_define_int_flag(pstate,          "-w",     &width);
+	ap_define_true_flag(pstate,         "--auto", &do_auto);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_bar_usage(stderr, argv[0], verb);
@@ -111,12 +121,14 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
 		blank_char = blank_string[0];
 	}
 
-	return mapper_bar_alloc(pfield_names, fill_char, oob_char, blank_char, lo, hi, width);
+	return mapper_bar_alloc(pfield_names, fill_char, oob_char, blank_char,
+		lo, hi, width, do_auto);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_bar_alloc(string_array_t* pfield_names,
-	char fill_char, char oob_char, char blank_char, double lo, double hi, int width)
+	char fill_char, char oob_char, char blank_char, double lo, double hi,
+	int width, int do_auto)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -144,10 +156,13 @@ static mapper_t* mapper_bar_alloc(string_array_t* pfield_names,
 		}
 		pstate->bars[i] = bar;
 	}
+	pstate->precords = do_auto ? sllv_alloc() : NULL;
 
-	pmapper->pprocess_func = mapper_bar_process;
-	pmapper->pvstate       = (void*)pstate;
-	pmapper->pfree_func    = mapper_bar_free;
+	pmapper->pprocess_func = do_auto
+		? mapper_bar_process_auto
+		: mapper_bar_process_no_auto;
+	pmapper->pvstate    = (void*)pstate;
+	pmapper->pfree_func = mapper_bar_free;
 
 	return pmapper;
 }
@@ -161,7 +176,7 @@ static void mapper_bar_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_bar_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // end of stream
 		return sllv_single(NULL);
 
@@ -181,4 +196,74 @@ static sllv_t* mapper_bar_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		lrec_put_no_free(pinrec, name, pstate->bars[idx]);
 	}
 	return sllv_single(pinrec);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_bar_state_t* pstate = (mapper_bar_state_t*)pvstate;
+
+	if (pinrec != NULL) { // not end of stream
+		sllv_add(pstate->precords, pinrec);
+		return NULL;
+	}
+
+	// end of stream
+	int n = pstate->pfield_names->length;
+	string_builder_t* psb = sb_alloc(SB_ALLOC_LENGTH);
+
+	// Loop over field names to be barred
+	for (int i = 0; i < n; i++) {
+		char* name = pstate->pfield_names->strings[i];
+		double lo = 0.0;
+		double hi = 0.0;
+
+		// First pass computes lo and hi from the data
+		int j = 0;
+		for (sllve_t* pe = pstate->precords->phead; pe != NULL; pe = pe->pnext, j++) {
+			lrec_t* prec = pe->pvdata;
+			char* sval = lrec_get(prec, name);
+			if (sval == NULL)
+				continue;
+			double dval = mlr_double_from_string_or_die(sval);
+			if (j == 0 || dval < lo)
+				lo = dval;
+			if (j == 0 || dval > hi)
+				hi = dval;
+		}
+
+		// Second pass applies the bars. There is some redundant computation
+		// which could be hoisted out of the loop for performance ... but this
+		// verb computes data solely for visual inspection and I take the
+		// nominal use case to be tens or hundreds of records. So, optimization
+		// isn't worth the effort here.
+		char* slo = mlr_alloc_string_from_double(lo, "%g");
+		char* shi = mlr_alloc_string_from_double(hi, "%g");
+
+		for (sllve_t* pe = pstate->precords->phead; pe != NULL; pe = pe->pnext) {
+			lrec_t* prec = pe->pvdata;
+			char* sval = lrec_get(prec, name);
+			if (sval == NULL)
+				continue;
+			double dval = mlr_double_from_string_or_die(sval);
+
+			int idx = (int)(pstate->width * (dval - lo) / (hi - lo));
+			if (idx < 0)
+				idx = 0;
+			if (idx > pstate->width)
+				idx = pstate->width;
+			sb_append_string(psb, "[");
+			sb_append_string(psb, slo);
+			sb_append_string(psb, "]");
+			sb_append_string(psb, pstate->bars[idx]);
+			sb_append_string(psb, "[");
+			sb_append_string(psb, shi);
+			sb_append_string(psb, "]");
+			lrec_put(prec, name, sb_finish(psb), LREC_FREE_ENTRY_VALUE);
+		}
+
+	}
+
+	sb_free(psb);
+	sllv_add(pstate->precords, NULL);
+	return pstate->precords;
 }
