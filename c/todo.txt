@@ -8,8 +8,8 @@ TOP OF LIST
 
 ----------------------------------------------------------------
 
-! 1e6 accepted from field value but not literal. DSLs, and UTs.
-* mlr step from-first (check against delta + rsum ...)
+! scinot@literals: cut a 3.0.1
+
 * bar --auto (w/ hold & emit & left-right labels)
 
 * faqents:

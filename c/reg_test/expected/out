@@ -4893,6 +4893,24 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=1.125680,x_del
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_delta=0.155836,x_counter=2,y_rsum=1.679421,y_delta=0.225815,y_counter=2
 
+mlr --icsvlite --opprint step -a from-first -f x ./reg_test/input/from-first.csv
+x   g     x_from_first
+100 red   0
+203 red   103
+101 green 1
+307 red   207
+209 green 109
+314 green 214
+
+mlr --icsvlite --opprint step -a from-first -f x -g g ./reg_test/input/from-first.csv
+x   g     x_from_first
+100 red   0
+203 red   103
+101 green 0
+307 red   207
+209 green 108
+314 green 213
+
 mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 ./reg_test/input/small
 bin_lo   bin_hi   x_count y_count
 0.000000 0.050000 1       0

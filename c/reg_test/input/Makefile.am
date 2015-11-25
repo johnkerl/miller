@@ -21,6 +21,7 @@ EXTRA_DIST=	\
 		e.pprint \
 		f.csv \
 		f.pprint \
+		from-first.csv \
 		fsec2xhms \
 		g.csv \
 		g.pprint \

@@ -68,6 +68,7 @@ static void      mapper_step_free(void* pvstate);
 static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static step_t* step_delta_alloc(char* input_field_name, int allow_int_float);
+static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float);
 static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float);
 static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float);
 static step_t* step_counter_alloc(char* input_field_name, int allow_int_float);
@@ -80,10 +81,11 @@ typedef struct _step_lookup_t {
 	char* desc;
 } step_lookup_t;
 static step_lookup_t step_lookup_table[] = {
-	{"delta",   step_delta_alloc,   "Compute differences in field(s) between successive records"},
-	{"ratio",   step_ratio_alloc,   "Compute ratios in field(s) between successive records"},
-	{"rsum",    step_rsum_alloc,    "Compute running sums of field(s) between successive records"},
-	{"counter", step_counter_alloc, "Count instances of field(s) between successive records"},
+	{"delta",      step_delta_alloc,      "Compute differences in field(s) between successive records"},
+	{"from-first", step_from_first_alloc, "Compute differences in field(s) from first record"},
+	{"ratio",      step_ratio_alloc,      "Compute ratios in field(s) between successive records"},
+	{"rsum",       step_rsum_alloc,       "Compute running sums of field(s) between successive records"},
+	{"counter",    step_counter_alloc,    "Count instances of field(s) between successive records"},
 };
 static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lookup_table[0]);
 
@@ -286,6 +288,36 @@ static step_t* step_delta_alloc(char* input_field_name, int allow_int_float) {
 	return pstep;
 }
 // xxx step_delta_free et al.
+
+// ----------------------------------------------------------------
+typedef struct _step_from_first_state_t {
+	mv_t  first;
+	char* output_field_name;
+	int   allow_int_float;
+} step_from_first_state_t;
+static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
+	step_from_first_state_t* pstate = pvstate;
+	mv_t from_first;
+	if (mv_is_null(&pstate->first)) {
+		from_first = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
+		pstate->first = *pnumv;
+	} else {
+		from_first = n_nn_minus_func(pnumv, &pstate->first);
+	}
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&from_first), LREC_FREE_ENTRY_VALUE);
+}
+static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float) {
+	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+	step_from_first_state_t* pstate = mlr_malloc_or_die(sizeof(step_from_first_state_t));
+	pstate->first = mv_from_null();
+	pstate->allow_int_float = allow_int_float;
+	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_from_first");
+	pstep->pvstate        = (void*)pstate;
+	pstep->pdprocess_func = NULL;
+	pstep->pnprocess_func = step_from_first_nprocess;
+	pstep->psprocess_func = NULL;
+	return pstep;
+}
 
 // ----------------------------------------------------------------
 typedef struct _step_ratio_state_t {

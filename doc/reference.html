@@ -432,7 +432,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 
 For more information please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller. This is Miller version v3.0.0.
+http://github.com/johnkerl/miller. This is Miller version v3.0.0-dev.
 </pre>
 </div>
 <p/>
@@ -2572,6 +2572,7 @@ Computes values dependent on the previous record, optionally grouped
 by category.
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
   delta    Compute differences in field(s) between successive records
+  from-first Compute differences in field(s) from first record
   ratio    Compute ratios in field(s) between successive records
   rsum     Compute running sums of field(s) between successive records
   counter  Count instances of field(s) between successive records
