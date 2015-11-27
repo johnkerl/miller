@@ -14,6 +14,7 @@ TOP OF LIST
 ----------------------------------------------------------------
 
 ! scinot@literals: cut a 3.0.1
+  - also `mlr bar --auto`
   ! brew version bump?!?
 
 * cookbook:
