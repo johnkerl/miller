@@ -9,24 +9,28 @@ TOP OF LIST
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
+* count-distinct | wc -l is oft-repeating ... automate it.
 
 ----------------------------------------------------------------
 
 ! scinot@literals: cut a 3.0.1
+  ! brew version bump?!?
 
-* faqents:
-  ! some of these putative faqents (and maybe some of the existing ones) should be in a cookbook page
+* cookbook:
+  - $-math from faq
+  - log-snarf stuff from faq
   - eval stuff from https://github.com/johnkerl/miller/issues/88
-  - csv/csvlite compare/contrast @ mld formats
   - faqent distrib mapred paradigm in general: use distributed mean as example
   - faqent re R/mysql/etc inouts
   - hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
   - faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
     note count-distinct w/ int() func
   - faqent on two-pass lin/logi reg vs. hold-and-fit
+  - faqent on polyglottal dkvp/etc production
+
+* faqents:
   - faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
     in-language handling in case not field/line formatted. see h.p. mail.
-  - faqent on polyglottal dkvp/etc production
   - faqent re join without -u -- it's a weird default & i'm imitating un*x join
   - same w/ cut -o
   - faqent re cat xyz | mlr ... vs. mlr ... xyz:
@@ -35,22 +39,21 @@ TOP OF LIST
     o lose ~10% perf due to no mmap
   - faqent re rsum as proxy for per-record/agg-only mixed output
 
+* other doc besides cookbook & faq:
+  - csv/csvlite compare/contrast @ mld formats
+  - R doc:
+    ! xref @ covers x 2
+    ! be very clear streaming vs. dataframe -- each has things the other can't do
+    ! emph mlr has light stats but for heavyweight analysis use R et al.
+
 * comma-number -- using locale?
 * poki cover -> readme
-
-* R doc:
-! xref @ covers x 2
-! be very clear streaming vs. dataframe -- each has things the other can't do
-! emph mlr has light stats but for heavyweight analysis use R et al.
 
 * --mmap @ mlr -h
 * bus-insurance dev page
 
 ----------------------------------------------------------------
 * lrec_eval nullable etc. cleanup
-
-* packaging:
-  - brew version bump?!?
 
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
 
