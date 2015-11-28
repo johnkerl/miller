@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-11-27
+.\"      Date: 2015-11-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-11-27" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-11-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -329,7 +329,8 @@ Useful for doing a well-formatted check on input data.
 .\}
 .nf
 Usage: mlr count-distinct [options]
--f {a,b,c}   Field names for distinct count.
+-f {a,b,c}    Field names for distinct count.
+-n            Show only the number of distinct values.
 Prints number of records having distinct values for specified field names.
 Same as uniq -c.
 .fi
@@ -811,8 +812,9 @@ optionally by category.
 .\}
 .nf
 Usage: mlr uniq [options]
--g {d,e,f}    Group-by-field names for uniq counts
--c            Show repeat counts in addition to unique values
+-g {d,e,f}    Group-by-field names for uniq counts.
+-c            Show repeat counts in addition to unique values.
+-n            Show only the number of distinct values.
 Prints distinct values for specified field names. With -c, same as
 count-distinct.
 .fi

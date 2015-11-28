@@ -6,16 +6,19 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+! debian port issues
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
-* count-distinct | wc -l is oft-repeating ... automate it.
+
+* packaging/currency:
+  - brew
+  - netbsd
+  - debian
+  ? redhat ?
+  ? other ?
 
 ----------------------------------------------------------------
-
-! scinot@literals: cut a 3.0.1
-  - also `mlr bar --auto`
-  ! brew version bump?!?
 
 * cookbook:
   - $-math from faq

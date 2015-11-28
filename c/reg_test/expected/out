@@ -407,7 +407,7 @@ zee wye 8  ccccccccccccbbbbbbbb cccccccccccccccccccx
 hat wye 9  xbbbbbbbbbbbbbbbbbbb ccccccccccccccccbbbb
 pan wye 10 ccccccccccbbbbbbbbbb cccccccccccccccccccx
 
-mlr --opprint bar --auto -f x,y -w 10 reg_test/input/abixy
+mlr --opprint bar --auto -f x,y -w 10 ./reg_test/input/abixy
 a   b   i  x                              y
 pan pan 1  [0.0314419]****......[0.75868] [0.134189]*******...[0.976181]
 eks pan 2  [0.0314419]*********#[0.75868] [0.134189]****......[0.976181]
@@ -618,6 +618,12 @@ a=eks,b=zee,count=2
 a=zee,b=wye,count=2
 a=hat,b=wye,count=2
 a=pan,b=wye,count=2
+
+mlr count-distinct -f a -n ./reg_test/input/small ./reg_test/input/abixy
+count=5
+
+mlr count-distinct -f a,b -n ./reg_test/input/small ./reg_test/input/abixy
+count=10
 
 mlr grep pan ./reg_test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
