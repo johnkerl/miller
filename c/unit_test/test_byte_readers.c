@@ -17,16 +17,18 @@ static char* test_string_byte_reader() {
 
 	int ok = pbr->popen_func(pbr, "");
 	mu_assert_lf(ok == TRUE);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF); // char defaults to unsigned on some platforms
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	// char defaults to unsigned on some platforms -- but, byte_reader_t API is
+	// in terms of ints.
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	pbr->pclose_func(pbr);
 
 	ok = pbr->popen_func(pbr, "a");
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	pbr->pclose_func(pbr);
 
 	ok = pbr->popen_func(pbr, "abc");
@@ -34,8 +36,8 @@ static char* test_string_byte_reader() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
 	mu_assert_lf(pbr->pread_func(pbr) == 'c');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	pbr->pclose_func(pbr);
 
 	return NULL;
@@ -49,9 +51,9 @@ static char* test_stdio_byte_reader_1() {
 	char* path = write_temp_file_or_die(contents);
 	int ok = pbr->popen_func(pbr, path);
 	mu_assert_lf(ok == TRUE);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
@@ -72,9 +74,9 @@ static char* test_stdio_byte_reader_2() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');
 	mu_assert_lf(pbr->pread_func(pbr) == 'f');
 	mu_assert_lf(pbr->pread_func(pbr) == 'g');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
@@ -91,9 +93,9 @@ static char* test_stdio_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
 	mu_assert_lf(pbr->pread_func(pbr) == 'c');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	contents = "defg";
@@ -104,9 +106,9 @@ static char* test_stdio_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');
 	mu_assert_lf(pbr->pread_func(pbr) == 'f');
 	mu_assert_lf(pbr->pread_func(pbr) == 'g');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
@@ -120,9 +122,9 @@ static char* test_mmap_byte_reader_1() {
 	char* path = write_temp_file_or_die(contents);
 	int ok = pbr->popen_func(pbr, path);
 	mu_assert_lf(ok == TRUE);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
@@ -143,9 +145,9 @@ static char* test_mmap_byte_reader_2() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');
 	mu_assert_lf(pbr->pread_func(pbr) == 'f');
 	mu_assert_lf(pbr->pread_func(pbr) == 'g');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
@@ -162,9 +164,9 @@ static char* test_mmap_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
 	mu_assert_lf(pbr->pread_func(pbr) == 'c');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	contents = "defg";
@@ -175,9 +177,9 @@ static char* test_mmap_byte_reader_reuse() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');
 	mu_assert_lf(pbr->pread_func(pbr) == 'f');
 	mu_assert_lf(pbr->pread_func(pbr) == 'g');
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
-	mu_assert_lf(pbr->pread_func(pbr) == (char)EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
+	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	unlink_file_or_die(path);
 
 	return NULL;
