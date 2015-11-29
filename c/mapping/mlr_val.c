@@ -795,7 +795,7 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 
 // ----------------------------------------------------------------
 mv_t i_s_strlen_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_INT, .u.intv = strlen(pval1->u.strv)};
+	mv_t rv = {.type = MT_INT, .u.intv = strlen_for_utf8_display(pval1->u.strv)};
 	return rv;
 }
 
