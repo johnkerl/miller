@@ -21,21 +21,21 @@ w debian port issues
 ----------------------------------------------------------------
 
 * cookbook:
-  - $-math from faq
-  - log-snarf stuff from faq
   - eval stuff from https://github.com/johnkerl/miller/issues/88
-  - faqent distrib mapred paradigm in general: use distributed mean as example
-  - faqent re R/mysql/etc inouts
-  - hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass & the saving of fit parameters
-  - faqent re histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
-    note count-distinct w/ int() func
-  - faqent on two-pass lin/logi reg vs. hold-and-fit
-  - faqent on polyglottal dkvp/etc production
+  - distrib mapred paradigm in general: use distributed mean as example
+  - R/mysql/etc inouts
+  - hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass &
+    the saving of fit parameters
+  - histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
+    note count-distinct w/ int() func.
+  - two-pass lin/logi reg vs. hold-and-fit.
+  - polyglottal dkvp/etc production.
 
 * faqents:
-  - faqent on xml/json/etc: generally no to recursive data structures; punctuation re-writes w/ well-formatted;
-    in-language handling in case not field/line formatted. see h.p. mail.
-  - faqent re join without -u -- it's a weird default & i'm imitating un*x join
+  - xml/json/etc: generally no to recursive data structures; punctuation
+    re-writes w/ well-formatted; in-language handling in case not field/line
+    formatted. see h.p. mail.
+  - join without -u -- it's a weird default & i'm imitating un*x join
   - same w/ cut -o
   - faqent re cat xyz | mlr ... vs. mlr ... xyz:
     o easier to up-arrow/control-P & tack on a then-statement
