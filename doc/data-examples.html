@@ -69,6 +69,7 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="data-examples.html"><b>Data examples</b></a>
+<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook</a>
 <br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
 <br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
@@ -136,7 +137,6 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#flins_data">flins data</a><br/>
 &bull;&nbsp;<a href="#Color/shape_data">Color/shape data</a><br/>
-&bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 </div>
 <p/>
 <a id="flins_data"/><h1>flins data</h1>
@@ -487,47 +487,6 @@ orange triangle -0.030457 -0.131870
 yellow   circle -0.064773  0.073695
   blue   circle -0.102348 -0.030529
  green triangle -0.109018 -0.048488
-</pre>
-</div>
-<p/>
-
-<a id="Program_timing"/><h1>Program timing</h1>
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
-
-$ head -n 5 lines.txt
-i=1
-i=2
-i=3
-i=4
-i=5
-
-mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
-i     t                 t_delta
-1     1430603027.018016 1.430603027e+09
-2     1430603027.018043 2.694129944e-05
-3     1430603027.018048 5.006790161e-06
-4     1430603027.018052 4.053115845e-06
-5     1430603027.018055 2.861022949e-06
-6     1430603027.018058 3.099441528e-06
-
-mlr --ofmt '%.9le' --oxtab \
-  put '$t=systime()' then \
-  step -a delta -f t then \
-  filter '$i&gt;1' then \
-  stats1 -a min,mean,max -f t_delta \
-  lines.txt
-t_delta_min  2.861022949e-06
-t_delta_mean 4.077508505e-06
-t_delta_max  5.388259888e-05
 </pre>
 </div>
 <p/>

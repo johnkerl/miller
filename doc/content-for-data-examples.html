@@ -52,12 +52,3 @@ POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then
 <p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp}}HERE
-
-<h1>Program timing</h1>
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE

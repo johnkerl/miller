@@ -69,6 +69,7 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data examples</a>
+<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook</a>
 <br/>&bull;&nbsp;<a href="faq.html"><b>FAQ</b></a>
 <br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/>&bull;&nbsp;<a href="build.html">Compiling, portability, dependencies, and testing</a>
@@ -138,9 +139,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Fields_not_selected">Fields not selected</a><br/>
 &bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
 &bull;&nbsp;<a href="#Error-output_in_certain_string_cases">Error-output in certain string cases</a><br/>
-&bull;&nbsp;<a href="#How_do_I_parse_log-file_output?">How do I parse log-file output?</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
-&bull;&nbsp;<a href="#How_do_I_do_arithmetic_on_fields_with_currency_symbols?">How do I do arithmetic on fields with currency symbols?</a><br/>
 </div>
 <p/>
 
@@ -246,28 +245,6 @@ numeric data such as <tt>x=123</tt> while <tt>mlr put
 <tt>y</tt> is computed and stored as a string, then re-parsed as an integer,
 for which string-concatenation is an invalid operator.
 
-<a id="How_do_I_parse_log-file_output?"/><h1>How do I parse log-file output?</h1>
-
-<p/>Suppose you have log-file lines such as
-
-<p/>
-<div class="pokipanel">
-<pre>
-2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {&amp; punctuation} hits=1 status=0 time=2.378
-</pre>
-</div>
-<p/>
-
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
-</pre>
-</div>
-<p/>
-
 <a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
@@ -334,47 +311,6 @@ paid    cash         2
 pending debit        1
 pending credit       1
 paid    debit        1
-</pre>
-</div>
-<p/>
-
-<a id="How_do_I_do_arithmetic_on_fields_with_currency_symbols?"/><h1>How do I do arithmetic on fields with currency symbols?</h1>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat sample.csv
-EventOccurred,EventType,Description,Status,PaymentType,NameonAccount,TransactionNumber,Amount
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,John,1,$230.36
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Fred,2,$32.25
-10/1/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Bob,3,$39.02
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Alice,4,$57.54
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Jungle,5,$230.36
-10/1/2015,Charged Back,Reason: Payment Stopped,Disputed,Checking,Joe,6,$281.96
-10/2/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Joseph,7,$188.19
-10/2/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Joseph,8,$188.19
-10/2/2015,Charged Back,Reason: Payment Stopped,Disputed,Checking,Anthony,9,$250.00
-
-$ mlr --icsv --opprint cat sample.csv
-EventOccurred EventType    Description                               Status   PaymentType NameonAccount TransactionNumber Amount
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    John          1                 $230.36
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Fred          2                 $32.25
-10/1/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Bob           3                 $39.02
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Alice         4                 $57.54
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Jungle        5                 $230.36
-10/1/2015     Charged Back Reason: Payment Stopped                   Disputed Checking    Joe           6                 $281.96
-10/2/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Joseph        7                 $188.19
-10/2/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Joseph        8                 $188.19
-10/2/2015     Charged Back Reason: Payment Stopped                   Disputed Checking    Anthony       9                 $250.00
-
-$ mlr --csv put '$Amount = sub(string($Amount), "\$", "")' then stats1 -a sum -f Amount sample.csv
-Amount_sum
-1497.870000
-
-$ mlr --csv --ofmt '%.2lf' put '$Amount = sub(string($Amount), "\$", "")' then stats1 -a sum -f Amount sample.csv
-Amount_sum
-1497.87
-
 </pre>
 </div>
 <p/>

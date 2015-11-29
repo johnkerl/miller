@@ -6,13 +6,13 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! debian port issues
+w debian port issues
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
 
 * packaging/currency:
-  - brew
+  k brew
   - netbsd
   - debian
   ? redhat ?

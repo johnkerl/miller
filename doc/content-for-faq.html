@@ -35,16 +35,6 @@ numeric data such as <tt>x=123</tt> while <tt>mlr put
 <tt>y</tt> is computed and stored as a string, then re-parsed as an integer,
 for which string-concatenation is an invalid operator.
 
-<h1>How do I parse log-file output?</h1>
-
-<p/>Suppose you have log-file lines such as
-
-POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
-
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
-
 <h1>How do I examine then-chaining?</h1>
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
@@ -69,7 +59,3 @@ Now if you include another <tt>then</tt> step after this, the columns <tt>Status
 
 <p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
 POKI_RUN_COMMAND{{mlr --csv --rs lf count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --rs lf --opprint sort -nr count}}HERE
-
-<h1>How do I do arithmetic on fields with currency symbols?</h1>
-
-POKI_INCLUDE_ESCAPED(data/dollar-sign.txt)HERE
