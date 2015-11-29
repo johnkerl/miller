@@ -140,6 +140,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
 &bull;&nbsp;<a href="#Error-output_in_certain_string_cases">Error-output in certain string cases</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
+&bull;&nbsp;<a href="#Why_doesn't_mlr_cut_put_fields_in_the_order_I_want?">Why doesn't mlr cut put fields in the order I want?</a><br/>
 &bull;&nbsp;<a href="#Why_am_I_not_seeing_all_possible_joins_occur?">Why am I not seeing all possible joins occur?</a><br/>
 </div>
 <p/>
@@ -316,6 +317,54 @@ paid    debit        1
 </div>
 <p/>
 
+<a id="Why_doesn't_mlr_cut_put_fields_in_the_order_I_want?"/><h1>Why doesn't mlr cut put fields in the order I want?</h1>
+
+<p/>Example: columns <tt>x,i,a</tt> were requested but they appear here in the order <tt>a,i,x</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cut -f x,i,a data/small
+a=pan,i=1,x=0.3467901443380824
+a=eks,i=2,x=0.7586799647899636
+a=wye,i=3,x=0.20460330576630303
+a=eks,i=4,x=0.38139939387114097
+a=wye,i=5,x=0.5732889198020006
+</pre>
+</div>
+<p/>
+
+<p/>The issue is that Miller&rsquo;s <tt>cut</tt>, by default, outputs cut fields in the order they
+appear in the input data. This design decision was made intentionally to parallel the *nix system <tt>cut</tt>
+command, which has the same semantics.
+
+<p/>The solution is to use the <tt>-o</tt> option:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cut -o -f x,i,a data/small
+x=0.3467901443380824,i=1,a=pan
+x=0.7586799647899636,i=2,a=eks
+x=0.20460330576630303,i=3,a=wye
+x=0.38139939387114097,i=4,a=eks
+x=0.5732889198020006,i=5,a=wye
+</pre>
+</div>
+<p/>
+
 <a id="Why_am_I_not_seeing_all_possible_joins_occur?"/><h1>Why am I not seeing all possible joins occur?</h1>
 
 <p/>For example, the right file here has nine records, and the left file should
@@ -363,33 +412,25 @@ ipaddr    hostname              timestamp  bytes
 </div>
 <p/>
 
-<p/>The issue is that Miller&rsquo;s <tt>join</tt>, by default, takes input sorted (lexically ascending) by the sort keys on both the left and right files. This design decision was made intentionally to parallel the *nix system <tt>join</tt> command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
+<p/>The issue is that Miller&rsquo;s <tt>join</tt>, by default, takes input
+sorted (lexically ascending) by the sort keys on both the left and right files.
+This design decision was made intentionally to parallel the *nix system
+<tt>join</tt> command, which has the same semantics. The benefit of this
+default is that the joiner program can stream through the left and right files,
+needing to load neither entirely into memory. The drawback, of course, is that
+is requires sorted input.
 
 <p/>The solution (besides pre-sorting the input files on the join keys) is to
 simply use <b>mlr join -u</b>. This loads the left file entirely into memory
 (while the right file is still streamed one line at a time) and does all
 possible joins without requiring sorted input:
 
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
-ipaddr    hostname              timestamp  bytes
-10.3.1.27 zenith.west.our.org   1448762579 4568
-10.3.1.18 nadir.east.our.org    1448762578 8729
-10.4.5.94 apoapsis.east.our.org 1448762579 17445
-10.3.1.27 zenith.west.our.org   1448762589 12
-10.3.1.18 nadir.east.our.org    1448762588 44558
-10.4.5.94 apoapsis.east.our.org 1448762589 8899
-10.3.1.27 zenith.west.our.org   1448762599 0
-10.3.1.18 nadir.east.our.org    1448762598 73425
-10.4.5.94 apoapsis.east.our.org 1448762599 12200
-</pre>
-</div>
-<p/>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f
+data/join-u-left.csv data/join-u-right.csv}}HERE
 
 <p/>General advice is to make sure the left-file is relatively small, e.g.
-containing name-to-number mappings, while saving large amounts of data for the right file.
+containing name-to-number mappings, while saving large amounts of data for the
+right file.
     </div>
   </td>
 

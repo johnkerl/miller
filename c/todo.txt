@@ -35,13 +35,11 @@ w debian port issues
   - xml/json/etc: generally no to recursive data structures; punctuation
     re-writes w/ well-formatted; in-language handling in case not field/line
     formatted. see h.p. mail.
-  - join without -u -- it's a weird default & i'm imitating un*x join
-  - same w/ cut -o
-  - faqent re cat xyz | mlr ... vs. mlr ... xyz:
+  - cat xyz | mlr ... vs. mlr ... xyz:
     o easier to up-arrow/control-P & tack on a then-statement
     o lose no functionality except FILENAME/FNR
     o lose ~10% perf due to no mmap
-  - faqent re rsum as proxy for per-record/agg-only mixed output
+  - rsum as proxy for per-record/agg-only mixed output
 
 * other doc besides cookbook & faq:
   - csv/csvlite compare/contrast @ mld formats
