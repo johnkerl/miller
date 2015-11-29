@@ -801,6 +801,11 @@ run_mlr --opprint put '$y = -.2e-3  + $i' $indir/scinot1.dkvp
 run_mlr --opprint put '$y = -1.e-3  + $i' $indir/scinot1.dkvp
 
 # ----------------------------------------------------------------
+announce UTF-8 STRLEN
+
+run_mlr --inidx --ifs comma --oxtab put '$s1=strlen($1);$s2=strlen($2);$s3=strlen($3);$s4=strlen($4)' $indir/utf8-align.dkvp
+
+# ----------------------------------------------------------------
 announce STATS1/STEP INT/FLOAT
 
 run_mlr --opprint step      -a rsum,delta,counter  -f x,y,z $indir/int-float.dkvp
