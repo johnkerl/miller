@@ -1,4 +1,11 @@
 # ================================================================
+# NOTE: This makefile is not intended to be used in a packaging system --
+# rather, Miller uses autconfig for that. This makefile is intended for users
+# who prefer (for whatever reason) to bypass autoconfig.  Please also see
+# http://johnkerl.org/miller/doc/build.html#Without_using_autoconfig
+# ================================================================
+
+# ================================================================
 # Travis does "export CC=gcc", "export CC=clang" so we can pick those up via
 # "make -e" in ../.travis.yml.  Note that "CC?=gcc", without make -e, results
 # in CC being expanded to cc on my OSX laptop, which is not OK.  Hence make -e.
