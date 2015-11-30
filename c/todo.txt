@@ -30,6 +30,7 @@ w debian port issues
     note count-distinct w/ int() func.
   - two-pass lin/logi reg vs. hold-and-fit.
   - polyglottal dkvp/etc production.
+  - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
 * faqents:
   - xml/json/etc: generally no to recursive data structures; punctuation
@@ -118,7 +119,6 @@ MAJOR: uni/multivariate logistic for ternary & above?
 MINOR:
 
 * double-check for off-by-one buflen in cline/sline
-* off-by-one error on fnr dkvp errmsg?
 * hash-chain ifdef instrumentation -> maybe find a better hash function out there
 * dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
 * pprint join?
@@ -148,11 +148,6 @@ NEATEN
 * source hygiene: top-of-header comments, readme re memory management, etc.
 
 ================================================================
-COOKBOOK
-
-* doc w/ very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
-
-================================================================
 MEM MGMT:
 
 * full void-star-payload frees
@@ -166,30 +161,6 @@ MEM MGMT:
   to be sure i don't miss the ones that *do* matter in the record-loops
 
 ================================================================
-NIDX/DKVP/...:
-
-* maybe have a mode where "a" (not "a=1") -> "a=" with dkvp and "1=a" with nidx? 3rd format? 3 flavors
-  of one format??
-
-* dkvp as generalization of nidx. restructure mlrwik to emphasize this.
-  tightly integrate 'mlr label'. maybe rename 'mlr label' to 'mlr name' or
-  some such.  perhaps entirely coalesce nidx&dkvp in the code & the docs;
-  presumably with a different name.  something about "header with data" or
-  "key with value"?? lower-cased only rather than making it an acronym?
-
-* nidx via field widths; left/right space-strip -- *only* if headers also don't have whitespace!!!
-
-* maybe call dkvp labeled-index fmt
-* definitely put nidx before dkvp in the mlrwik/formats page
-* "index-numbered" -> "implicitly index-numbered" in mlrwik
-
-================================================================
-FUNCTIONS
-? index   (i_ss) -- not very useful unless there are functions which take an index as an argument ...
-? bit ops (i_ii) & | ^ << >>
-? log2, exp2
-
-================================================================
 UT/REG
 * cat/X/cat for all X
 * tac/X/cat for all X
@@ -198,15 +169,10 @@ UT/REG
 * multi-csv I/O: include --icsvlite --odkvp and --idkvp --ocsv, as well as --csv cases
 * het-xtab out
 * modulus operator
-* strlen
 * make should-fail machinery & use it for null-key dkvp cases.
 * all mathlib funcs
 * int/float/string
 * roundm function: round to multiple of m
-* boolean() function
-* boolean-valued put, e.g. mlr put '$ok = $x <= 10'
-* nullability cases, esp. sort, and math funcs
-* join with het data
 * join with mixed-format/separator (left vs. right)
 * join with left/right-prefix
 * mmap/stdio UTs; run all cases with --mmap and again with --no-mmap

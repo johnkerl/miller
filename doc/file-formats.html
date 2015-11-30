@@ -374,6 +374,37 @@ read CSV data which lacks a header line, applying column labels <tt>1</tt>,
 <tt>label</tt> to replace those numerical column names with labels of your
 choosing.
 
+<p/>Here are the differences between CSV and CSV-lite:
+
+<ul>
+
+<li/>CSV supports <a href="https://tools.ietf.org/html/rfc4180">
+RFC-4180</a>)-style double-quoting, including the ability to have commas and/or
+CR-LF line-endings contained within an input field; CSV-lite does not.
+
+<li/>Default record separator for CSV is CR-LF; default record separator for
+CSV-lite is LF.
+
+<li/>CSV does not allow heterogeneous data; CSV-lite does (see also <a
+href="record-heterogeneity.html">here</a>).
+
+<li/>The CSV-lite input-reading code is more efficient than the CSV
+input-reader.
+
+</ul>
+
+<p/>Here are things they have in common:
+
+<ul>
+
+<li/>The ability to specify record/field separators other than the default,
+e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
+
+<li/>The <tt>--implicit-csv-header</tt> flag for input and the
+<tt>--headerless-csv-output</tt> flag for output.
+
+</ul>
+
 <a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 
