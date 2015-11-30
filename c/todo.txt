@@ -33,17 +33,9 @@ w debian port issues
   - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
 * faqents:
-  - xml/json/etc: generally no to recursive data structures; punctuation
-    re-writes w/ well-formatted; in-language handling in case not field/line
-    formatted. see h.p. mail.
-  - cat xyz | mlr ... vs. mlr ... xyz:
-    o easier to up-arrow/control-P & tack on a then-statement
-    o lose no functionality except FILENAME/FNR
-    o lose ~10% perf due to no mmap
   - rsum as proxy for per-record/agg-only mixed output
 
 * other doc besides cookbook & faq:
-  - csv/csvlite compare/contrast @ mld formats
   - R doc:
     ! xref @ covers x 2
     ! be very clear streaming vs. dataframe -- each has things the other can't do

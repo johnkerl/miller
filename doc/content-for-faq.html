@@ -104,3 +104,58 @@ data/join-u-left.csv data/join-u-right.csv}}HERE
 <p/>General advice is to make sure the left-file is relatively small, e.g.
 containing name-to-number mappings, while saving large amounts of data for the
 right file.
+
+<h1>What about XML or JSON file formats?</h1>
+
+<p/>Miller handles <boldmaroon>tabular data</boldmaroon>, which is a list of
+records each having fields which are key-value pairs. Miller also doesn&rsquo;t
+require that each record have the same field names (see also <a
+href="record-heterogeneity.html">here</a>). Regardless, tabular data is a
+<boldmaroon>non-recursive data structure</boldmaroon>.
+
+<p/> XML, JSON, etc. are, by contrast, all <boldmaroon>recursive</boldmaroon>
+or <boldmaroon>nested</boldmaroon> data structures. For example, in JSON
+you can represent a hash map whose values are lists of lists.
+
+<p/>Now, you can put tabular data into these formats &mdash; since list-of-key-value-pairs
+is one of the things representable in XML or JSON. Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+# DKVP
+x=1,y=2
+z=3
+
+# XML
+&lt;table&gt;
+  &lt;record&gt;
+    &lt;field&gt;
+      &lt;key&gt; x &lt;/key&gt; &lt;value&gt; 1 &lt;/value&gt;
+    &lt;/field&gt;
+    &lt;field&gt;
+      &lt;key&gt; y &lt;/key&gt; &lt;value&gt; 2 &lt;/value&gt;
+    &lt;/field&gt;
+  &lt;/record&gt;
+    &lt;field&gt;
+      &lt;key&gt; z &lt;/key&gt; &lt;value&gt; 3 &lt;/value&gt;
+    &lt;/field&gt;
+  &lt;record&gt;
+  &lt;/record&gt;
+&lt;/table&gt;
+
+# JSON
+[{"x":1,"y":2},{"z":3}]
+</pre>
+</div>
+
+<p/>However, tool like Miller which handles non-recursive data is never going
+to be able to handle full XML/JSON semantics &mdash; only a small subset.  If
+XML/JSON/etc is sufficiently well-structured, it may be easy to grep/sed out
+the data into a simpler text form.
+
+<p/>My preference is to leave XML to XML tools such as <tt>xmllint</tt> and
+JSON to JSON tools such as <tt>jq</tt> or <tt>recs</tt>. Putting (necessarily)
+limited support for these file formats into Miller seems like a slippery slope
+wherein inadequate solutions would be delivered for an inherently constrained
+goal.
