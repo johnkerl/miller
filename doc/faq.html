@@ -477,10 +477,11 @@ z=3
 </pre>
 </div>
 
-<p/>However, tool like Miller which handles non-recursive data is never going
+<p/>However, a tool like Miller which handles non-recursive data is never going
 to be able to handle full XML/JSON semantics &mdash; only a small subset.  If
-XML/JSON/etc is sufficiently well-structured, it may be easy to grep/sed out
-the data into a simpler text form.
+tabular data represented in XML/JSON/etc are sufficiently well-structured, it
+may be easy to grep/sed out the data into a simpler text form &mdash; but this
+is a general text-processing problem.
 
 <p/>My preference is to keep Miller doing what it does well, and to leave XML
 to XML tools such as <tt>xmllint</tt> and JSON to JSON tools such as
