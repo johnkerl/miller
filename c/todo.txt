@@ -22,13 +22,26 @@ w debian port issues
 
 * cookbook:
   - eval stuff from https://github.com/johnkerl/miller/issues/88
-  - distrib mapred paradigm in general: use distributed mean as example
-  - R/mysql/etc inouts
+
+    $ mlr --csvlite stats2 -a linreg-pca  -f x,y x
+    x_y_pca_m,x_y_pca_b,x_y_pca_n,x_y_pca_quality
+    1.030300,0.949250,4,0.999859
+    $ mlr --csvlite --odkvp --ofs semicolon stats2 -a linreg-pca  -f x,y x
+    x_y_pca_m=1.030300;x_y_pca_b=0.949250;x_y_pca_n=4;x_y_pca_quality=0.999859
+    $ eval $(mlr --csvlite --odkvp --ofs semicolon stats2 -a linreg-pca  -f x,y x)
+    $ echo $x_y_pca_m
+    1.030300
+
   - hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass &
     the saving of fit parameters
   - histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
     note count-distinct w/ int() func.
   - two-pass lin/logi reg vs. hold-and-fit.
+
+  - distrib mapred paradigm in general: use distributed mean as example
+
+  - R/mysql/etc inouts
+
   - polyglottal dkvp/etc production.
   - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
