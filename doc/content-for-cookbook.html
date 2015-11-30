@@ -1,0 +1,25 @@
+POKI_PUT_TOC_HERE
+
+<h1>Parsing log-file output</h1>
+
+<p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
+an example, suppose you have log-file lines such as
+
+POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
+
+I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+
+POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
+
+<h1>Doing arithmetic on fields with currency symbols</h1>
+
+POKI_INCLUDE_ESCAPED(data/dollar-sign.txt)HERE
+
+<h1>Program timing</h1>
+
+This admittedly artificial example demonstrates using Miller time and stats
+functions to introspectly acquire some information about Miller&rsquo;s own
+runtime. The <tt>delta</tt> function computes the difference between successive
+timestamps.
+
+POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
