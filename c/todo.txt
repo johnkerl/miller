@@ -3,8 +3,6 @@ BUGFIXES
 
 :D
 
-e
-
 ================================================================
 TOP OF LIST
 
@@ -12,7 +10,6 @@ w debian port issues
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
-* uniq -f == -g
 * percentiles int-to-int -- ?
 
 * packaging/currency:
