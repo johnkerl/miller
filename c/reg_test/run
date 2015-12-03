@@ -347,6 +347,8 @@ run_mlr --icsvlite --opprint step -a from-first -f x -g g $indir/from-first.csv
 
 run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
 
+run_mlr --opprint histogram --nbins 9 --auto -f x,y $indir/ints.dkvp
+
 # ----------------------------------------------------------------
 announce DSL OPERATOR ASSOCIATIVITY
 # Note: filter -v and put -v print the AST.

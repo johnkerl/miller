@@ -62,6 +62,7 @@ EXTRA_DIST=	\
 		int64io.dkvp \
 		int64arith.dkvp \
 		int-float.dkvp \
+		ints.dkvp \
 		join-het.dkvp \
 		joina.dkvp \
 		joinb.dkvp \
