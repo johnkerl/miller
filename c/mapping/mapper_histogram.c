@@ -8,8 +8,11 @@
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
+#include "containers/dvector.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
+
+#define DVECTOR_INITIAL_SIZE 1024
 
 typedef struct _mapper_histogram_state_t {
 	slls_t* value_field_names;
@@ -18,17 +21,22 @@ typedef struct _mapper_histogram_state_t {
 	double hi;
 	double mul;
 	lhmsv_t* pcounts_by_field;
+	lhmsv_t* pvectors_by_field; // For auto-mode
 } mapper_histogram_state_t;
+
+static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi,
+	int do_auto);
+static void      mapper_histogram_free(void* pvstate);
 
 static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
 static sllv_t*   mapper_histogram_emit(mapper_histogram_state_t* pstate);
 static sllv_t*   mapper_histogram_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
-static sllv_t*   mapper_histogram_emit(mapper_histogram_state_t* pstate);
-static void      mapper_histogram_free(void* pvstate);
-static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi);
-static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
+
+static void      mapper_histogram_ingest_auto(lrec_t* pinrec, mapper_histogram_state_t* pstate);
+static sllv_t*   mapper_histogram_emit_auto(mapper_histogram_state_t* pstate);
+static sllv_t*   mapper_histogram_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_histogram_setup = {
@@ -44,6 +52,8 @@ static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--lo {lo}     Histogram low value\n");
 	fprintf(o, "--hi {hi}     Histogram high value\n");
 	fprintf(o, "--nbins {n}   Number of histogram bins\n");
+	fprintf(o, "--auto        Automatically computes limits, ignoring --lo and --hi.\n");
+	fprintf(o, "              Holds all values in memory before producing any output.\n");
 	fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
@@ -52,14 +62,16 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 	double lo = 0.0;
 	double hi = 0.0;
 	int nbins = 0;
+	int do_auto = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_float_flag(pstate, "--lo", &lo);
-	ap_define_float_flag(pstate, "--hi", &hi);
-	ap_define_int_flag(pstate, "--nbins", &nbins);
+	ap_define_float_flag(pstate, "--lo",    &lo);
+	ap_define_float_flag(pstate, "--hi",    &hi);
+	ap_define_int_flag(pstate,   "--nbins", &nbins);
+	ap_define_true_flag(pstate,  "--auto",  &do_auto);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_histogram_usage(stderr, argv[0], verb);
@@ -71,25 +83,29 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	if ((lo == hi) || (nbins == 0)) {
+	if (nbins == 0) {
 		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	return mapper_histogram_alloc(pvalue_field_names, lo, nbins, hi);
+	if (lo == hi && !do_auto) {
+		mapper_histogram_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	return mapper_histogram_alloc(pvalue_field_names, lo, nbins, hi, do_auto);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi) {
+static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi,
+	int do_auto)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_histogram_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_histogram_state_t));
 
 	pstate->value_field_names = slls_copy(value_field_names);
-	pstate->lo    = lo;
 	pstate->nbins = nbins;
-	pstate->hi    = hi;
-	pstate->mul   = nbins / (hi - lo);
 	pstate->pcounts_by_field = lhmsv_alloc();
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* value_field_name = pe->value;
@@ -98,9 +114,22 @@ static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, in
 			pcounts[i] = 0LL;
 		lhmsv_put(pstate->pcounts_by_field, value_field_name, pcounts);
 	}
+	if (do_auto) {
+		pstate->pvectors_by_field = lhmsv_alloc();
+		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+			char* value_field_name = pe->value;
+			dvector_t* pvector = dvector_alloc(DVECTOR_INITIAL_SIZE);
+			lhmsv_put(pstate->pvectors_by_field, value_field_name, pvector);
+		}
+	} else {
+		pstate->pvectors_by_field = NULL;
+		pstate->lo  = lo;
+		pstate->hi  = hi;
+		pstate->mul = nbins / (hi - lo);
+	}
 
 	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_histogram_process;
+	pmapper->pprocess_func = do_auto ? mapper_histogram_process_auto : mapper_histogram_process;
 	pmapper->pfree_func    = mapper_histogram_free;
 
 	return pmapper;
@@ -182,5 +211,111 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 	lhmss_free(pcount_field_names);
 
 	sllv_add(poutrecs, NULL);
+	return poutrecs;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_histogram_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_histogram_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		mapper_histogram_ingest_auto(pinrec, pstate);
+		lrec_free(pinrec);
+		return NULL;
+	}
+	else {
+		return mapper_histogram_emit_auto(pstate);
+	}
+}
+
+static void mapper_histogram_ingest_auto(lrec_t* pinrec, mapper_histogram_state_t* pstate) {
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		char* strv = lrec_get(pinrec, value_field_name);
+		dvector_t* pvector = lhmsv_get(pstate->pvectors_by_field, value_field_name);
+		if (strv != NULL) {
+			dvector_append(pvector, mlr_double_from_string_or_die(strv));
+		}
+	}
+}
+
+static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
+	int have_lo_hi = FALSE;
+	double lo = 0.0, hi = 1.0;
+	int nbins = pstate->nbins;
+
+	// Limits pass
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		dvector_t* pvector = lhmsv_get(pstate->pvectors_by_field, value_field_name);
+		int n = pvector->size;
+		for (int i = 0; i < n; i++) {
+			double val = pvector->data[i];
+			if (have_lo_hi) {
+				if (lo > val)
+					lo = val;
+				if (hi < val)
+					hi = val;
+			} else {
+				lo = val;
+				hi = val;
+				have_lo_hi = TRUE;
+			}
+		}
+	}
+
+	// Binning pass
+	double mul = nbins / (hi - lo);
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		dvector_t* pvector = lhmsv_get(pstate->pvectors_by_field, value_field_name);
+		unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
+		int n = pvector->size;
+		for (int i = 0; i < n; i++) {
+			double val = pvector->data[i];
+			if ((val >= lo) && (val < hi)) {
+				int idx = (int)((val-lo) * mul);
+				pcounts[idx]++;
+			} else if (val == hi) {
+				int idx = nbins - 1;
+				pcounts[idx]++;
+			}
+		}
+	}
+
+	// Emission pass
+	sllv_t* poutrecs = sllv_alloc();
+
+	lhmss_t* pcount_field_names = lhmss_alloc();
+	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* value_field_name = pe->value;
+		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
+		lhmss_put(pcount_field_names, value_field_name, count_field_name);
+	}
+
+	for (int i = 0; i < nbins; i++) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		char* value = mlr_alloc_string_from_double(lo + i / mul, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, "bin_lo", value, LREC_FREE_ENTRY_VALUE);
+		free(value);
+
+		value = mlr_alloc_string_from_double(lo + (i+1) / mul, MLR_GLOBALS.ofmt);
+		lrec_put(poutrec, "bin_hi", value, LREC_FREE_ENTRY_VALUE);
+		free(value);
+
+		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
+			char* value_field_name = pe->value;
+			unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
+			char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
+			value = mlr_alloc_string_from_ull(pcounts[i]);
+			lrec_put(poutrec, count_field_name, value, LREC_FREE_ENTRY_VALUE);
+			free(value);
+		}
+
+		sllv_add(poutrecs, poutrec);
+	}
+	sllv_add(poutrecs, NULL);
+
+	lhmss_free(pcount_field_names);
 	return poutrecs;
 }

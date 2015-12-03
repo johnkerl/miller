@@ -273,7 +273,7 @@ mv_t mv_scan_number_or_die(char* string) {
 // ----------------------------------------------------------------
 mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	int len1 = strlen(pval1->u.strv);
-	int len2 = strlen(pval1->u.strv);
+	int len2 = strlen(pval2->u.strv);
 	int len3 = len1 + len2 + 1; // for the null-terminator byte
 	char* string3 = mlr_malloc_or_die(len3);
 	strcpy(&string3[0], pval1->u.strv);

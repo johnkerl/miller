@@ -3,6 +3,8 @@ BUGFIXES
 
 :D
 
+e
+
 ================================================================
 TOP OF LIST
 
@@ -10,6 +12,10 @@ w debian port issues
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
+* histogram --auto
+* uniq -f == -g
+* mlr decimate (-b/-e; -n)
+* percentiles int-to-int -- ?
 
 * packaging/currency:
   k brew

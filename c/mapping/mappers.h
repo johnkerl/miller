@@ -17,6 +17,7 @@ extern mapper_setup_t mapper_cat_setup;
 extern mapper_setup_t mapper_check_setup;
 extern mapper_setup_t mapper_count_distinct_setup;
 extern mapper_setup_t mapper_cut_setup;
+extern mapper_setup_t mapper_decimate_setup;
 extern mapper_setup_t mapper_filter_setup;
 extern mapper_setup_t mapper_grep_setup;
 extern mapper_setup_t mapper_group_by_setup;
