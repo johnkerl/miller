@@ -78,7 +78,7 @@ static void mapper_uniq_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-c            Show repeat counts in addition to unique values.\n");
 	fprintf(o, "-n            Show only the number of distinct values.\n");
 	fprintf(o, "Prints distinct values for specified field names. With -c, same as\n");
-	fprintf(o, "count-distinct.\n");
+	fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n");
 }
 
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
@@ -89,6 +89,7 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
+	ap_define_string_list_flag(pstate, "-f", &pgroup_by_field_names);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,        "-c", &show_counts);
 	ap_define_true_flag(pstate,        "-n", &show_num_distinct_only);

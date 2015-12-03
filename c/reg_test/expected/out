@@ -585,6 +585,21 @@ a=eks,b=zee
 a=zee,b=wye
 a=pan,b=wye
 
+mlr uniq -f a ./reg_test/input/abixy-het
+a=pan
+a=eks
+a=wye
+a=zee
+
+mlr uniq -f a,b ./reg_test/input/abixy-het
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=pan,b=wye
+
 mlr uniq -c -g a ./reg_test/input/abixy-het
 a=pan,count=2
 a=eks,count=3

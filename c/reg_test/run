@@ -163,6 +163,9 @@ run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het
 run_mlr uniq    -g a   $indir/abixy-het
 run_mlr uniq    -g a,b $indir/abixy-het
 
+run_mlr uniq    -f a   $indir/abixy-het
+run_mlr uniq    -f a,b $indir/abixy-het
+
 run_mlr uniq -c -g a   $indir/abixy-het
 run_mlr uniq -c -g a,b $indir/abixy-het
 

@@ -12,7 +12,6 @@ w debian port issues
 * faqents/cookbook
 * csv read perf
 * misc neaten issues
-* histogram --auto
 * uniq -f == -g
 * percentiles int-to-int -- ?
 
