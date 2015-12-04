@@ -38,7 +38,7 @@ static void mapper_decimate_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-b            Decimate by printing first of every n.\n");
 	fprintf(o, "-e            Decimate by printing last of every n (default).\n");
 	fprintf(o, "-g {a,b,c}    Optional group-by-field names for decimate counts\n");
-	fprintf(o, "Passes through the first n records, optionally by category.\n");
+	fprintf(o, "Passes through one of every n records, optionally by category.\n");
 }
 
 static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv) {
