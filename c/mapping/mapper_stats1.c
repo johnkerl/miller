@@ -13,8 +13,8 @@
 #include "containers/lhmsi.h"
 #include "containers/mixutil.h"
 #include "containers/percentile_keeper.h"
+#include "containers/mlr_val.h"
 #include "mapping/mappers.h"
-#include "mapping/mlr_val.h"
 #include "cli/argparse.h"
 
 #define DO_STDDEV 0xc1

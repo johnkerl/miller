@@ -8,9 +8,12 @@ TOP OF LIST
 
 w debian port issues
 * faqents/cookbook
-* csv read perf
-* misc neaten issues
+
 * percentiles int-to-int -- ?
+
+* csv read perf
+* mem-mgmt scrutinize
+* misc neaten issues
 
 * packaging/currency:
   k brew

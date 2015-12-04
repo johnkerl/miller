@@ -144,7 +144,7 @@ TEST_LREC_EVALUATORS_SRCS = \
   containers/sllv.c \
   containers/slls.c \
   containers/lrec.c \
-  mapping/mlr_val.c \
+  containers/mlr_val.c \
   mapping/lrec_evaluators.c \
   unit_test/test_lrec_evaluators.c
 

@@ -5,7 +5,7 @@
 #include <regex.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "mapping/mlr_val.h"
+#include "containers/mlr_val.h"
 
 // ================================================================
 // NOTES:
