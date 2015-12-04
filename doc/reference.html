@@ -147,6 +147,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#bar">bar</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#check">check</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#decimate">decimate</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
@@ -931,6 +932,23 @@ $ mlr check --help
 Usage: mlr check
 Consumes records without printing any output.
 Useful for doing a well-formatted check on input data.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="decimate"/><h2>decimate</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr decimate --help
+Usage: mlr decimate [options]
+-n {count}    Decimation factor; default 10
+-b            Decimate by printing first of every n.
+-e            Decimate by printing last of every n (default).
+-g {a,b,c}    Optional group-by-field names for decimate counts
+Passes through one of every n records, optionally by category.
 </pre>
 </div>
 <p/>
