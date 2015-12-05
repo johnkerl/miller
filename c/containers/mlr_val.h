@@ -287,4 +287,8 @@ mv_t ge_op_func(mv_t* pval1, mv_t* pval2);
 mv_t lt_op_func(mv_t* pval1, mv_t* pval2);
 mv_t le_op_func(mv_t* pval1, mv_t* pval2);
 
+// ----------------------------------------------------------------
+// For qsort of numeric mlrvals.
+int mv_nn_comparator(const void* pva, const void* pvb);
+
 #endif // MLR_VAL_H
