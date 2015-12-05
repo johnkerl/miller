@@ -7,7 +7,6 @@ BUGFIXES
 TOP OF LIST
 
 w debian port issues
-* mv_i_nn_comparator -> mlr_val.[ch]
 * top int-to-int: & use -F
 
 * faqents/cookbook
@@ -42,8 +41,6 @@ w debian port issues
   - histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
     note count-distinct w/ int() func.
   - two-pass lin/logi reg vs. hold-and-fit.
-
-  - distrib mapred paradigm in general: use distributed mean as example
 
   - R/mysql/etc inouts
 
