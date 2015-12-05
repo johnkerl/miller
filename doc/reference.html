@@ -1002,6 +1002,15 @@ a=eks,b=zee,count=357
 </div>
 <p/>
 
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count-distinct -n -f a,b data/medium
+count=25
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 <a id="cut"/><h2>cut</h2>
 
@@ -2927,6 +2936,16 @@ red    triangle 1560
 yellow circle   356
 yellow square   589
 yellow triangle 468
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
+count
+18
 </pre>
 </div>
 <p/>

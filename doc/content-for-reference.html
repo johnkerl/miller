@@ -328,6 +328,8 @@ POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
 
 POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HERE
 
+POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
+
 <!-- ================================================================ -->
 <h2>cut</h2>
 
@@ -797,6 +799,8 @@ POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr uniq -g color,shape data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
