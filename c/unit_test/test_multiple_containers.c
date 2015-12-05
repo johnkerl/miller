@@ -547,37 +547,49 @@ static char* test_top_keeper() {
 	top_keeper_t* ptop_keeper = top_keeper_alloc(capacity);
 	mu_assert_lf(ptop_keeper->size == 0);
 
-	top_keeper_add(ptop_keeper, 5.0, NULL);
+	top_keeper_add(ptop_keeper, mv_from_float(5.0), NULL);
 	top_keeper_print(ptop_keeper);
 	mu_assert_lf(ptop_keeper->size == 1);
-	mu_assert_lf(ptop_keeper->top_values[0] == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[0].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[0].u.fltv == 5.0);
 
-	top_keeper_add(ptop_keeper, 6.0, NULL);
+	top_keeper_add(ptop_keeper, mv_from_float(6.0), NULL);
 	top_keeper_print(ptop_keeper);
 	mu_assert_lf(ptop_keeper->size == 2);
-	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
-	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[0].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[0].u.fltv == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[1].u.fltv == 5.0);
 
-	top_keeper_add(ptop_keeper, 4.0, NULL);
+	top_keeper_add(ptop_keeper, mv_from_int(4), NULL);
 	top_keeper_print(ptop_keeper);
 	mu_assert_lf(ptop_keeper->size == 3);
-	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
-	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
-	mu_assert_lf(ptop_keeper->top_values[2] == 4.0);
+	mu_assert_lf(ptop_keeper->top_values[0].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[0].u.fltv == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[1].u.fltv == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[2].type == MT_INT);
+	mu_assert_lf(ptop_keeper->top_values[2].u.intv == 4.0);
 
-	top_keeper_add(ptop_keeper, 2.0, NULL);
+	top_keeper_add(ptop_keeper, mv_from_int(2), NULL);
 	top_keeper_print(ptop_keeper);
 	mu_assert_lf(ptop_keeper->size == 3);
-	mu_assert_lf(ptop_keeper->top_values[0] == 6.0);
-	mu_assert_lf(ptop_keeper->top_values[1] == 5.0);
-	mu_assert_lf(ptop_keeper->top_values[2] == 4.0);
+	mu_assert_lf(ptop_keeper->top_values[0].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[0].u.fltv == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[1].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[1].u.fltv == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[2].type == MT_INT);
+	mu_assert_lf(ptop_keeper->top_values[2].u.intv == 4.0);
 
-	top_keeper_add(ptop_keeper, 7.0, NULL);
+	top_keeper_add(ptop_keeper, mv_from_int(7), NULL);
 	top_keeper_print(ptop_keeper);
 	mu_assert_lf(ptop_keeper->size == 3);
-	mu_assert_lf(ptop_keeper->top_values[0] == 7.0);
-	mu_assert_lf(ptop_keeper->top_values[1] == 6.0);
-	mu_assert_lf(ptop_keeper->top_values[2] == 5.0);
+	mu_assert_lf(ptop_keeper->top_values[0].type == MT_INT);
+	mu_assert_lf(ptop_keeper->top_values[0].u.intv == 7);
+	mu_assert_lf(ptop_keeper->top_values[1].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[1].u.fltv == 6.0);
+	mu_assert_lf(ptop_keeper->top_values[2].type == MT_FLOAT);
+	mu_assert_lf(ptop_keeper->top_values[2].u.fltv == 5.0);
 
 	top_keeper_free(ptop_keeper);
 	return NULL;

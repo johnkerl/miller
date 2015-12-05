@@ -156,6 +156,16 @@ run_mlr top -f x,y -n 2        $indir/abixy-het
 run_mlr top -f x,y -n 2 -g a   $indir/abixy-het
 run_mlr top -f x,y -n 2 -g a,b $indir/abixy-het
 
+run_mlr top -f x,y -n 2        $indir/ints.dkvp
+run_mlr top -f x,y -n 2 -F     $indir/ints.dkvp
+
+run_mlr top    -n 4 -f x        $indir/abixy-wide
+run_mlr top    -n 1 -f x,y      $indir/abixy-wide
+run_mlr top    -n 4 -f x   -g a $indir/abixy-wide
+run_mlr top    -n 1 -f x,y -g a $indir/abixy-wide
+run_mlr top -a -n 4 -f x        $indir/abixy-wide
+run_mlr top -a -n 4 -f x   -g a $indir/abixy-wide
+
 run_mlr --seed 12345 sample -k 2        $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a   $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het
@@ -208,16 +218,6 @@ run_mlr sort -f a -r b -nf x -nr y $indir/abixy
 
 run_mlr sort -f x $indir/sort-het.dkvp
 run_mlr sort -r x $indir/sort-het.dkvp
-
-# ----------------------------------------------------------------
-announce TOP
-
-run_mlr top    -n 4 -f x        $indir/abixy-wide
-run_mlr top    -n 1 -f x,y      $indir/abixy-wide
-run_mlr top    -n 4 -f x   -g a $indir/abixy-wide
-run_mlr top    -n 1 -f x,y -g a $indir/abixy-wide
-run_mlr top -a -n 4 -f x        $indir/abixy-wide
-run_mlr top -a -n 4 -f x   -g a $indir/abixy-wide
 
 # ----------------------------------------------------------------
 announce JOIN

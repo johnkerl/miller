@@ -280,6 +280,7 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2);
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb);
 mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb);
 
+// For filter/put DSLs:
 mv_t eq_op_func(mv_t* pval1, mv_t* pval2);
 mv_t ne_op_func(mv_t* pval1, mv_t* pval2);
 mv_t gt_op_func(mv_t* pval1, mv_t* pval2);
@@ -287,8 +288,18 @@ mv_t ge_op_func(mv_t* pval1, mv_t* pval2);
 mv_t lt_op_func(mv_t* pval1, mv_t* pval2);
 mv_t le_op_func(mv_t* pval1, mv_t* pval2);
 
+// For non-DSL comparison of mlrvals:
+int mv_i_nn_eq(mv_t* pval1, mv_t* pval2);
+int mv_i_nn_ne(mv_t* pval1, mv_t* pval2);
+int mv_i_nn_gt(mv_t* pval1, mv_t* pval2);
+int mv_i_nn_ge(mv_t* pval1, mv_t* pval2);
+int mv_i_nn_lt(mv_t* pval1, mv_t* pval2);
+int mv_i_nn_le(mv_t* pval1, mv_t* pval2);
+
 // ----------------------------------------------------------------
 // For qsort of numeric mlrvals.
 int mv_nn_comparator(const void* pva, const void* pvb);
+
+int mlr_bsearch_mv_n_for_insert(mv_t* array, int size, mv_t* pvalue);
 
 #endif // MLR_VAL_H

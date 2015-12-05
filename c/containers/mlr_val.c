@@ -35,6 +35,9 @@
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
 
+typedef int mv_i_nn_comparator_func_t(mv_t* pa, mv_t* pb);
+typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
+
 // ----------------------------------------------------------------
 mv_t MV_NULL = {
 	.type = MT_NULL,
@@ -1806,6 +1809,103 @@ mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type]
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
+static int eq_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv == pb->u.intv; }
+static int ne_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv != pb->u.intv; }
+static int gt_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv >  pb->u.intv; }
+static int ge_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv >= pb->u.intv; }
+static int lt_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv <  pb->u.intv; }
+static int le_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv <= pb->u.intv; }
+
+static int eq_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv == pb->u.fltv; }
+static int ne_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv != pb->u.fltv; }
+static int gt_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv >  pb->u.fltv; }
+static int ge_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv >= pb->u.fltv; }
+static int lt_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv <  pb->u.fltv; }
+static int le_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv <= pb->u.fltv; }
+
+static int eq_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv == pb->u.intv; }
+static int ne_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv != pb->u.intv; }
+static int gt_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv >  pb->u.intv; }
+static int ge_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv >= pb->u.intv; }
+static int lt_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv <  pb->u.intv; }
+static int le_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv <= pb->u.intv; }
+
+static int eq_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv == pb->u.fltv; }
+static int ne_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv != pb->u.fltv; }
+static int gt_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv >  pb->u.fltv; }
+static int ge_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv >= pb->u.fltv; }
+static int lt_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv <  pb->u.fltv; }
+static int le_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv <= pb->u.fltv; }
+
+static mv_i_nn_comparator_func_t* ieq_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, eq_i_ff, eq_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, eq_i_if, eq_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+static mv_i_nn_comparator_func_t* ine_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, ne_i_ff, ne_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, ne_i_if, ne_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+static mv_i_nn_comparator_func_t* igt_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, gt_i_ff, gt_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, gt_i_if, gt_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+static mv_i_nn_comparator_func_t* ige_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, ge_i_ff, ge_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, ge_i_if, ge_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+static mv_i_nn_comparator_func_t* ilt_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, lt_i_ff, lt_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, lt_i_if, lt_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+static mv_i_nn_comparator_func_t* ile_dispositions[MT_MAX][MT_MAX] = {
+	//         NULL   ERROR BOOL  FLOAT    INT      STRING
+	/*NULL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*ERROR*/  {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*BOOL*/   {NULL, NULL, NULL, NULL,    NULL,    NULL},
+	/*FLOAT*/  {NULL, NULL, NULL, le_i_ff, le_i_fi, NULL},
+	/*INT*/    {NULL, NULL, NULL, le_i_if, le_i_ii, NULL},
+	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
+};
+
+
+int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+int mv_i_nn_gt(mv_t* pval1, mv_t* pval2) { return (igt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+int mv_i_nn_ge(mv_t* pval1, mv_t* pval2) { return (ige_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) { return (ilt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+
+// ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
 mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	char* s1 = pval1->u.strv;
@@ -1849,7 +1949,6 @@ mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t*
 }
 
 // ----------------------------------------------------------------
-typedef int mv_comparator_func_t(const mv_t* pa, const mv_t* pb);
 static int mv_ff_comparator(const mv_t* pa, const mv_t* pb) {
 	double d = pa->u.fltv - pb->u.fltv;
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
@@ -1867,7 +1966,7 @@ static int mv_ii_comparator(const mv_t* pa, const mv_t* pb) {
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
 }
 // We assume mv_t's coming into percentile keeper are int or double -- in particular, non-null.
-static mv_comparator_func_t* mv_comparator_dispositions[MT_MAX][MT_MAX] = {
+static mv_i_cncn_comparator_func_t* mv_comparator_dispositions[MT_MAX][MT_MAX] = {
 	//         NULL   ERROR BOOL  FLOAT             INT               STRING
 	/*NULL*/   {NULL, NULL, NULL, NULL,             NULL,             NULL},
 	/*ERROR*/  {NULL, NULL, NULL, NULL,             NULL,             NULL},
@@ -1880,4 +1979,45 @@ int mv_nn_comparator(const void* pva, const void* pvb) {
 	const mv_t* pa = pva;
 	const mv_t* pb = pvb;
 	return mv_comparator_dispositions[pa->type][pb->type](pa, pb);
+}
+
+// ----------------------------------------------------------------
+int mlr_bsearch_mv_n_for_insert(mv_t* array, int size, mv_t* pvalue) {
+	int lo = 0;
+	int hi = size-1;
+	int mid = (hi+lo)/2;
+	int newmid;
+
+	if (size == 0)
+		return 0;
+	if (mv_i_nn_gt(pvalue, &array[0]))
+		return 0;
+	if (mv_i_nn_lt(pvalue, &array[hi]))
+		return size;
+
+	while (lo < hi) {
+		mv_t* pa = &array[mid];
+		if (mv_i_nn_eq(pvalue, pa)) {
+			return mid;
+		}
+		else if (mv_i_nn_gt(pvalue, pa)) {
+			hi = mid;
+			newmid = (hi+lo)/2;
+		}
+		else {
+			lo = mid;
+			newmid = (hi+lo)/2;
+		}
+		if (mid == newmid) {
+			if (mv_i_nn_ge(pvalue, &array[lo]))
+				return lo;
+			else if (mv_i_nn_ge(pvalue, &array[hi]))
+				return hi;
+			else
+				return hi+1;
+		}
+		mid = newmid;
+	}
+
+	return lo;
 }

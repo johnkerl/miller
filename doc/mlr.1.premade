@@ -819,6 +819,7 @@ Usage: mlr top [options]
               to print only value and group-by fields. Requires a single
               value-field name only.
 --min         Print top smallest values; default is top largest values.
+-F            Keep top values as floats even if they look like integers.
 Prints the n records with smallest/largest values at specified fields,
 optionally by category.
 .fi

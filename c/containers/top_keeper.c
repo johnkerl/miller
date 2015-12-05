@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------
 top_keeper_t* top_keeper_alloc(int capacity) {
 	top_keeper_t* ptop_keeper = mlr_malloc_or_die(sizeof(top_keeper_t));
-	ptop_keeper->top_values   = mlr_malloc_or_die(capacity*sizeof(double));
+	ptop_keeper->top_values   = mlr_malloc_or_die(capacity*sizeof(mv_t));
 	ptop_keeper->top_precords = mlr_malloc_or_die(capacity*sizeof(lrec_t*));
 	ptop_keeper->size         = 0;
 	ptop_keeper->capacity     = capacity;
@@ -56,8 +56,8 @@ void top_keeper_free(top_keeper_t* ptop_keeper) {
 // [9  ]   [9  ]                            [9 #]   [9 #]
 
 // Our caller, mapper_top, feeds us records. We keep them or free them.
-void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
-	int destidx = mlr_bsearch_double_for_insert(ptop_keeper->top_values, ptop_keeper->size, value);
+void top_keeper_add(top_keeper_t* ptop_keeper, mv_t value, lrec_t* prec) {
+	int destidx = mlr_bsearch_mv_n_for_insert(ptop_keeper->top_values, ptop_keeper->size, &value);
 	if (ptop_keeper->size < ptop_keeper->capacity) {
 		for (int i = ptop_keeper->size-1; i >= destidx; i--) {
 			ptop_keeper->top_values[i+1]   = ptop_keeper->top_values[i];
@@ -84,8 +84,13 @@ void top_keeper_add(top_keeper_t* ptop_keeper, double value, lrec_t* prec) {
 // ----------------------------------------------------------------
 void top_keeper_print(top_keeper_t* ptop_keeper) {
 	printf("top_keeper dump:\n");
-	for (int i = 0; i < ptop_keeper->size; i++)
-		printf("[%02d] %.8lf\n", i, ptop_keeper->top_values[i]);
+	for (int i = 0; i < ptop_keeper->size; i++) {
+		mv_t* pvalue = &ptop_keeper->top_values[i];
+		if (pvalue->type == MT_FLOAT)
+			printf("[%02d] %.8lf\n", i, pvalue->u.fltv);
+		else
+			printf("[%02d] %lld\n", i, pvalue->u.intv);
+	}
 	for (int i = ptop_keeper->size; i < ptop_keeper->capacity; i++)
 		printf("[%02d] ---\n", i);
 }

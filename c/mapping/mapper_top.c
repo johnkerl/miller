@@ -17,9 +17,10 @@
 typedef struct _mapper_top_state_t {
 	slls_t* pvalue_field_names;
 	slls_t* pgroup_by_field_names;
-	int show_full_records;
 	int top_count;
-	double sign; // for +1 for max; -1 for min
+	int show_full_records;
+	int allow_int_float;
+	mv_t sign; // for +1 for max; -1 for min
 	lhmslv_t* groups;
 } mapper_top_state_t;
 
@@ -30,7 +31,7 @@ static void      mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 static void      mapper_top_free(void* pvstate);
 static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int top_count, int do_max, int show_full_records);
+	int top_count, int do_max, int show_full_records, int allow_int_float);
 static void      mapper_top_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv);
 
@@ -51,6 +52,8 @@ static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "              to print only value and group-by fields. Requires a single\n");
 	fprintf(o, "              value-field name only.\n");
 	fprintf(o, "--min         Print top smallest values; default is top largest values.\n");
+	fprintf(o, "-F            Keep top values as floats even if they look like integers.\n");
+
 	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
 	fprintf(o, "optionally by category.\n");
 }
@@ -61,6 +64,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* pgroup_by_field_names = slls_alloc();
 	int     show_full_records     = FALSE;
 	int     do_max                = TRUE;
+	int     allow_int_float       = TRUE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -71,6 +75,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "-a",    &show_full_records);
 	ap_define_true_flag(pstate,        "--max", &do_max);
 	ap_define_false_flag(pstate,       "--min", &do_max);
+    ap_define_false_flag(pstate,       "-F",    &allow_int_float);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_top_usage(stderr, argv[0], verb);
@@ -86,12 +91,12 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_top_alloc(pvalue_field_names, pgroup_by_field_names,
-		top_count, do_max, show_full_records);
+		top_count, do_max, show_full_records, allow_int_float);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int top_count, int do_max, int show_full_records)
+	int top_count, int do_max, int show_full_records, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -100,8 +105,9 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 	pstate->pvalue_field_names    = slls_copy(pvalue_field_names);
 	pstate->pgroup_by_field_names = slls_copy(pgroup_by_field_names);
 	pstate->show_full_records     = show_full_records;
+	pstate->allow_int_float       = allow_int_float;
 	pstate->top_count             = top_count;
-	pstate->sign                  = do_max ? 1.0 : -1.0;
+	pstate->sign                  = mv_from_int(do_max ? 1 : -1);
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate       = pstate;
@@ -161,7 +167,9 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
 		char*  value_field_name = pa->value;
 		char*  value_field_sval = pb->value;
-		double value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+		mv_t value_field_nval = pstate->allow_int_float
+			? mv_scan_number_or_die(value_field_sval)
+			: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 
 		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
 		if (ptop_keeper_for_group == NULL) {
@@ -171,7 +179,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 
 		// The top-keeper object will free the record if it isn't retained, or
 		// keep it if it is.
-		top_keeper_add(ptop_keeper_for_group, value_field_dval * pstate->sign,
+		top_keeper_add(ptop_keeper_for_group, n_nn_times_func(&value_field_nval, &pstate->sign),
 			pstate->show_full_records ? pinrec : NULL);
 	}
 }
@@ -221,10 +229,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
 					if (i < ptop_keeper_for_group->size) {
-						double fltv = ptop_keeper_for_group->top_values[i] * pstate->sign;
-						char* strv = mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt);
+						mv_t numv = n_nn_times_func(&ptop_keeper_for_group->top_values[i], &pstate->sign);
+						char* strv = mv_format_val(&numv);
 						lrec_put(poutrec, key, strv, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
-						free(strv);
 					} else {
 						lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
 					}
