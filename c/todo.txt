@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* make a 3.1.0 w/ recent --auto etc & debian-port findings
-
 * faqents/cookbook
 
 * csv read perf
