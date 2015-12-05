@@ -6,7 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-w debian port issues
+* make a 3.1.0 w/ recent --auto etc & debian-port findings
+
 * top int-to-int: & use -F
 
 * faqents/cookbook
