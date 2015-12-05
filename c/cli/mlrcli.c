@@ -250,27 +250,27 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 		"  | apple=1,bat=2,cog=3 |  Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
 		"  | dish=7,egg=8,flint  |  Record 2: \"dish\" => \"7\", \"egg\" => \"8\", \"3\" => \"flint\"\n"
 		"  +---------------------+\n"
-		"  \n"
+		"\n"
 		"  NIDX: implicitly numerically indexed (Unix-toolkit style)\n"
 		"  +---------------------+\n"
 		"  | the quick brown     | Record 1: \"1\" => \"the\", \"2\" => \"quick\", \"3\" => \"brown\"\n"
 		"  | fox jumped          | Record 2: \"1\" => \"fox\", \"2\" => \"jumped\"\n"
 		"  +---------------------+\n"
-		"  \n"
+		"\n"
 		"  CSV/CSV-lite: comma-separated values with separate header line\n"
 		"  +---------------------+\n"
 		"  | apple,bat,cog       |\n"
 		"  | 1,2,3               | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
 		"  | 4,5,6               | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
 		"  +---------------------+\n"
-		"  \n"
+		"\n"
 		"  PPRINT: pretty-printed tabular\n"
 		"  +---------------------+\n"
 		"  | apple bat cog       |\n"
 		"  | 1     2   3         | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
 		"  | 4     5   6         | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
 		"  +---------------------+\n"
-		"  \n"
+		"\n"
 		"  XTAB: pretty-printed transposed tabular\n"
 		"  +---------------------+\n"
 		"  | apple 1             | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
@@ -280,7 +280,6 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 		"  | dish 7              | Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
 		"  | egg  8              |\n"
 		"  +---------------------+\n");
-
 }
 
 static void main_usage_data_format_options(FILE* o, char* argv0) {
@@ -356,7 +355,7 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 
 static void main_usage_double_quoting(FILE* o, char* argv0) {
 	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
-	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have \n");
+	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have\n");
 	fprintf(o, "                     OFS or ORS in them\n");
 	fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n");
 	fprintf(o, "                     in them (default)\n");

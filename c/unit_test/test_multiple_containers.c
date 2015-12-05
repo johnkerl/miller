@@ -496,38 +496,44 @@ static char* test_lhmslv() {
 static char* test_percentile_keeper() {
 
 	percentile_keeper_t* ppercentile_keeper = percentile_keeper_alloc();
-	percentile_keeper_ingest(ppercentile_keeper, 1.0);
-	percentile_keeper_ingest(ppercentile_keeper, 2.0);
-	percentile_keeper_ingest(ppercentile_keeper, 3.0);
-	percentile_keeper_ingest(ppercentile_keeper, 4.0);
-	percentile_keeper_ingest(ppercentile_keeper, 5.0);
+	percentile_keeper_ingest(ppercentile_keeper, mv_from_float(1.0));
+	percentile_keeper_ingest(ppercentile_keeper, mv_from_int(2));
+	percentile_keeper_ingest(ppercentile_keeper, mv_from_int(3));
+	percentile_keeper_ingest(ppercentile_keeper, mv_from_float(4.0));
+	percentile_keeper_ingest(ppercentile_keeper, mv_from_float(5.0));
 	percentile_keeper_print(ppercentile_keeper);
 
-	double p, q;
+	double p;
+	mv_t q;
 	p = 0.0;
 	q = percentile_keeper_emit(ppercentile_keeper, p);
-	printf("%4.2lf -> %7.4lf\n", p, q);
-	mu_assert_lf(q == 1.0);
+	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
+	mu_assert_lf(q.type == MT_FLOAT);
+	mu_assert_lf(q.u.fltv == 1.0);
 
 	p = 10.0;
 	q = percentile_keeper_emit(ppercentile_keeper, p);
-	printf("%4.2lf -> %7.4lf\n", p, q);
-	mu_assert_lf(q == 1.0);
+	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
+	mu_assert_lf(q.type == MT_FLOAT);
+	mu_assert_lf(q.u.fltv == 1.0);
 
 	p = 50.0;
 	q = percentile_keeper_emit(ppercentile_keeper, p);
-	printf("%4.2lf -> %7.4lf\n", p, q);
-	mu_assert_lf(q == 3.0);
+	printf("%4.2lf -> %lld\n", p, q.u.intv);
+	mu_assert_lf(q.type == MT_INT);
+	mu_assert_lf(q.u.intv == 3LL);
 
 	p = 90.0;
 	q = percentile_keeper_emit(ppercentile_keeper, p);
-	printf("%4.2lf -> %7.4lf\n", p, q);
-	mu_assert_lf(q == 5.0);
+	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
+	mu_assert_lf(q.type == MT_FLOAT);
+	mu_assert_lf(q.u.fltv == 5.0);
 
 	p = 100.0;
 	q = percentile_keeper_emit(ppercentile_keeper, p);
-	printf("%4.2lf -> %7.4lf\n", p, q);
-	mu_assert_lf(q == 5.0);
+	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
+	mu_assert_lf(q.type == MT_FLOAT);
+	mu_assert_lf(q.u.fltv == 5.0);
 
 	percentile_keeper_free(ppercentile_keeper);
 

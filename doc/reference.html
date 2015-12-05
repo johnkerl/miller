@@ -1085,8 +1085,9 @@ b=2,c=3,a=1
 <div class="pokipanel">
 <pre>
 $ mlr filter --help
-Usage: mlr filter [-v] [-x] [-s|-f] {expression}
+Usage: mlr filter [options] {expression}
 Prints records for which {expression} evaluates to true.
+Options:
 -x: Prints records for which {expression} evaluates to false.
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
     full transparency on the precedence and associativity rules of Miller's
@@ -1797,8 +1798,9 @@ Carol 45  present
 <div class="pokipanel">
 <pre>
 $ mlr put --help
-Usage: mlr put [-v] [-s|-f] {expression}
+Usage: mlr put [options] {expression}
 Adds/updates specified field(s).
+Options:
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
     full transparency on the precedence and associativity rules of Miller's
     grammar.

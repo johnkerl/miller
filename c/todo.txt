@@ -7,9 +7,10 @@ BUGFIXES
 TOP OF LIST
 
 w debian port issues
-* faqents/cookbook
+* mv_i_nn_comparator -> mlr_val.[ch]
+* top int-to-int: & use -F
 
-* percentiles int-to-int -- ?
+* faqents/cookbook
 
 * csv read perf
 * mem-mgmt scrutinize

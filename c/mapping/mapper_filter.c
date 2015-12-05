@@ -26,8 +26,9 @@ mapper_setup_t mapper_filter_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [-v] [-x] [-s|-f] {expression}\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
+	fprintf(o, "Options:\n");
 	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");

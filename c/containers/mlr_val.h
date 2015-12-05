@@ -27,7 +27,7 @@
 
 #define MV_SB_ALLOC_LENGTH 32
 
-typedef struct _mlr_val_t {
+typedef struct _mv_t {
 	union {
 		int        boolv;
 		double     fltv;

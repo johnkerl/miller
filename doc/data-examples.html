@@ -229,13 +229,13 @@ Steel Frame         Commercial  29790000       133492500.000000 29790000
 <div class="pokipanel">
 <pre>
 $ cat data/flins.csv | mlr --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
-hu_site_deductible_p0   0.000000
-hu_site_deductible_p10  0.000000
-hu_site_deductible_p50  0.000000
+hu_site_deductible_p0   0
+hu_site_deductible_p10  0
+hu_site_deductible_p50  0
 hu_site_deductible_p90  76.500000
 hu_site_deductible_p95  6829.200000
-hu_site_deductible_p99  126270.000000
-hu_site_deductible_p100 7380000.000000
+hu_site_deductible_p99  126270
+hu_site_deductible_p100 7380000
 </pre>
 </div>
 <p/>
@@ -244,14 +244,14 @@ hu_site_deductible_p100 7380000.000000
 <pre>
 $ cat data/flins.csv | mlr --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
 county              hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
-ALACHUA COUNTY      30630.600000           107312.400000          1641375.000000
-BAKER COUNTY        0.000000               0.000000               0.000000
-BAY COUNTY          26131.500000           181912.500000          630000.000000
-BRADFORD COUNTY     3355.200000            8163.000000            8163.000000
-BREVARD COUNTY      5360.400000            78975.000000           1973461.500000
-BROWARD COUNTY      0.000000               148500.000000          3258900.000000
-CALHOUN COUNTY      0.000000               33339.600000           33339.600000
-CHARLOTTE COUNTY    5400.000000            52650.000000           250994.700000
+ALACHUA COUNTY      30630.600000           107312.400000          1641375
+BAKER COUNTY        0                      0                      0
+BAY COUNTY          26131.500000           181912.500000          630000
+BRADFORD COUNTY     3355.200000            8163                   8163
+BREVARD COUNTY      5360.400000            78975                  1973461.500000
+BROWARD COUNTY      0                      148500                 3258900
+CALHOUN COUNTY      0                      33339.600000           33339.600000
+CHARLOTTE COUNTY    5400                   52650                  250994.700000
 CITRUS COUNTY       1332.900000            79974.900000           483785.100000
 </pre>
 </div>
