@@ -7,8 +7,10 @@
 
 // ----------------------------------------------------------------
 char* write_temp_file_or_die(char* contents) {
-	char* path = mktemp(mlr_strdup_or_die("/tmp/mlr.ut.XXXXXXXX"));
-	FILE* fp = fopen(path, "w");
+	// This template will be overwritten by mkstemp
+	char* path = mlr_strdup_or_die("/tmp/mlr.ut.XXXXXXXX");
+	int fd = mkstemp(path);
+	FILE* fp = fdopen(fd, "w");
 	int len = strlen(contents);
 	int rc = fwrite(contents, 1, len, fp);
 	if (rc != len) {
