@@ -2275,7 +2275,7 @@ static void parseonetoken(struct pstate *psp)
 ** macros.  This routine looks for "%ifdef" and "%ifndef" and "%endif" and
 ** comments them out.  Text in between is also commented out as appropriate.
 */
-static int preprocess_input(char *z){
+static void preprocess_input(char *z){
 	int i, j, k, n;
 	int exclude = 0;
 	int start;
@@ -3019,7 +3019,7 @@ PRIVATE char *append_str(char *zText, int n, int p1, int p2) {
 ** the symbols in this string so that the refer to elements of the parser
 ** stack.  Return a new string stored in space obtained from malloc.
 */
-PRIVATE char *translate_code(struct lemon *lemp, struct rule *rp) {
+PRIVATE void translate_code(struct lemon *lemp, struct rule *rp) {
 	char *cp, *xp;
 	int i;
 	char lhsused = 0;    /* True if the LHS element has been used */
