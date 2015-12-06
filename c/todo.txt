@@ -225,3 +225,9 @@ Given a version number MAJOR.MINOR.PATCH, increment the:
 
 Initial release: https://news.ycombinator.com/item?id=10066742
 v2.0.0  release: https://news.ycombinator.com/item?id=10132831
+
+----------------------------------------------------------------
+git remote add upstream https://github.com/Homebrew/homebrew
+git fetch upstream
+git diff HEAD^  HEAD
+git diff HEAD^2 HEAD
