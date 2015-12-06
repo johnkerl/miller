@@ -2577,7 +2577,8 @@ PRIVATE char *file_makename(struct lemon *lemp, char *suffix)
 	return name;
 }
 PRIVATE char* capitalize(char* string) {
-	for (char* p = string; *p; p++) {
+	char* p;
+	for (p = string; *p; p++) {
 		*p = toupper(*p);
 	}
 	return string;
