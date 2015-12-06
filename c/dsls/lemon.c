@@ -2355,7 +2355,13 @@ int Parse(struct lemon *gp)
 		gp->errorcnt++;
 		return 0;
 	}
-	fseek(fp, 0, 2);
+	int rc = fseek(fp, 0, 2);
+	if (rc < 0) {
+		perror("fseek");
+		ErrorMsg(ps.filename,0,"fseek failure.");
+		gp->errorcnt++;
+		return 0;
+	}
 	filesize = ftell(fp);
 	rewind(fp);
 	filebuf = (char *)malloc (filesize+1) ;
