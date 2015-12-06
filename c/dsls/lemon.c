@@ -2576,6 +2576,12 @@ PRIVATE char *file_makename(struct lemon *lemp, char *suffix)
 	strcat(name,suffix);
 	return name;
 }
+PRIVATE char* capitalize(char* string) {
+	for (char* p = string; *p; p++) {
+		*p = toupper(*p);
+	}
+	return string;
+}
 
 /* Open a file with a name based on the name of the input file,
 ** but with a different (specified) suffix, and return a pointer
@@ -3712,9 +3718,15 @@ void ReportHeader(struct lemon *lemp)
 	}
 	out = file_open(lemp,".h","w");
 	if (out) {
+		char* ident = capitalize(file_makename(lemp, "_h"));
+		fprintf(out, "#ifndef %s\n", ident);
+		fprintf(out, "#define %s\n", ident);
+		fprintf(out, "\n");
 		for(i=1; i<lemp->nterminal; i++){
 			fprintf(out,"#define %s%-30s %2d\n",prefix,lemp->symbols[i]->name,i);
 		}
+		fprintf(out, "\n");
+		fprintf(out, "#endif // %s\n", ident);
 		fclose(out);
 	}
 	return;

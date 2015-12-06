@@ -6,7 +6,20 @@
 #include "../lib/mlrutil.h"
 #include "../containers/mlr_dsl_ast.h"
 
+// These prototypes are copied out manually from filter_dsl_parse.c. With some
+// more work I could have Lemon autogenerate these prototypes into
+// filter_dsl_parse.h.
 void *filter_dsl_lemon_parser_alloc(void *(*mallocProc)(size_t));
+
+int filter_dsl_lemon_parser_parse_token(
+	void *pvparser,                   /* The parser */
+	int yymajor,                      /* The major token code number */
+	mlr_dsl_ast_node_t* yyminor,      /* The value for the token */
+	mlr_dsl_ast_node_holder_t* past); /* Optional %extra_argument parameter */
+
+void filter_dsl_lemon_parser_free(
+	void *pvparser,             /* The parser to be deleted */
+	void (*freeProc)(void*));   /* Function used to reclaim memory */
 
 // ----------------------------------------------------------------
 // http://flex.sourceforge.net/manual/Init-and-Destroy-Functions.html
