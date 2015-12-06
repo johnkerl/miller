@@ -166,6 +166,11 @@ run_mlr top    -n 1 -f x,y -g a $indir/abixy-wide
 run_mlr top -a -n 4 -f x        $indir/abixy-wide
 run_mlr top -a -n 4 -f x   -g a $indir/abixy-wide
 
+run_mlr top    -n 3 -f x,y       $indir/near-ovf.dkvp
+run_mlr top    -n 3 -f x,y --min $indir/near-ovf.dkvp
+run_mlr top -F -n 3 -f x,y       $indir/near-ovf.dkvp
+run_mlr top -F -n 3 -f x,y --min $indir/near-ovf.dkvp
+
 run_mlr --seed 12345 sample -k 2        $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a   $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het
@@ -325,6 +330,9 @@ run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a,b $indi
 
 run_mlr --oxtab   stats1 -a mean -f x      $indir/abixy-het
 run_mlr --oxtab   stats1 -a mean -f x -g a $indir/abixy-het
+
+run_mlr --oxtab   stats1 -a p0,p50,p100 -f x,y    $indir/near-ovf.dkvp
+run_mlr --oxtab   stats1 -a p0,p50,p100 -f x,y -F $indir/near-ovf.dkvp
 
 run_mlr --opprint stats2       -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2        $indir/abixy-wide
 run_mlr --opprint stats2       -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 -g a,b $indir/abixy-wide

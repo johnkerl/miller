@@ -14,13 +14,15 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+typedef mv_t maybe_sign_flipper_t(mv_t* pval1);
+
 typedef struct _mapper_top_state_t {
 	slls_t* pvalue_field_names;
 	slls_t* pgroup_by_field_names;
 	int top_count;
 	int show_full_records;
 	int allow_int_float;
-	mv_t sign; // for +1 for max; -1 for min
+	maybe_sign_flipper_t* pmaybe_sign_flipper;
 	lhmslv_t* groups;
 } mapper_top_state_t;
 
@@ -107,7 +109,7 @@ static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_
 	pstate->show_full_records     = show_full_records;
 	pstate->allow_int_float       = allow_int_float;
 	pstate->top_count             = top_count;
-	pstate->sign                  = mv_from_int(do_max ? 1 : -1);
+	pstate->pmaybe_sign_flipper   = do_max ? n_n_upos_func : n_n_uneg_func;
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate       = pstate;
@@ -179,7 +181,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 
 		// The top-keeper object will free the record if it isn't retained, or
 		// keep it if it is.
-		top_keeper_add(ptop_keeper_for_group, n_nn_times_func(&value_field_nval, &pstate->sign),
+		top_keeper_add(ptop_keeper_for_group, pstate->pmaybe_sign_flipper(&value_field_nval),
 			pstate->show_full_records ? pinrec : NULL);
 	}
 }
@@ -229,7 +231,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
 					if (i < ptop_keeper_for_group->size) {
-						mv_t numv = n_nn_times_func(&ptop_keeper_for_group->top_values[i], &pstate->sign);
+						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_format_val(&numv);
 						lrec_put(poutrec, key, strv, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
 					} else {
