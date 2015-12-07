@@ -15,7 +15,7 @@
 // spelled out a lot in lrec_evaluators.c.
 // ================================================================
 
-// Among other things, these defines are used in mlr_val.c to index disposition matrices.
+// Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So if the numeric values are changed, the matrices must be as well.
 #define MT_NULL   0 // E.g. field name not present in input record -- not a problem.
 #define MT_ERROR  1 // E.g. error encountered in one eval & it propagates up the AST.

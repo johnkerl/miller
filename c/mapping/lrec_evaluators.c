@@ -17,17 +17,17 @@
 //   static prototypes at the top of the file to keep the compiler happy),
 //   please read this one from the bottom up.
 //
-// * Comparison to mlr_val.c: the latter is functions from mlr_val(s) to
-//   mlr_val; in this file we have the higher-level notion of evaluating lrec
-//   objects, using mlr_val.c to do so.
+// * Comparison to mlrval.c: the latter is functions from mlrval(s) to
+//   mlrval; in this file we have the higher-level notion of evaluating lrec
+//   objects, using mlrval.c to do so.
 //
 // * There are two kinds of lrec-evaluators here: those with _x_ in their names
-//   which accept various types of mlr_val, with disposition-matrices in
-//   mlr_val.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
+//   which accept various types of mlrval, with disposition-matrices in
+//   mlrval.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
 //   string) which either type-check or type-coerce their arguments, invoking
-//   type-specific functions in mlr_val.c.  Those with _n_ take int or float
+//   type-specific functions in mlrval.c.  Those with _n_ take int or float
 //   and also use disposition matrices.  In all cases it's the job of
-//   lrec_evaluators.c to invoke functions here with mlr_vals of the correct
+//   lrec_evaluators.c to invoke functions here with mlrvals of the correct
 //   type(s).
 // ================================================================
 

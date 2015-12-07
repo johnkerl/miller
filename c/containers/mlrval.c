@@ -5,7 +5,7 @@
 #include <regex.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "containers/mlr_val.h"
+#include "containers/mlrval.h"
 
 // ================================================================
 // NOTES:
@@ -20,17 +20,17 @@
 //   functions and I chose not to write out so many prototypes: they would have
 //   made things less clear by their very volume.
 //
-// * Comparison to lrec_evaluators.c: this file is functions from mlr_val(s) to
-//   mlr_val; in lrec_evaluators.c we have the higher-level notion of
-//   evaluating lrec objects, using mlr_val.c to do so.
+// * Comparison to lrec_evaluators.c: this file is functions from mlrval(s) to
+//   mlrval; in lrec_evaluators.c we have the higher-level notion of
+//   evaluating lrec objects, using mlrval.c to do so.
 //
 // * There are two kinds of functions here: those with _x_ in their names
-//   which accept various types of mlr_val, with disposition-matrices in
-//   mlr_val.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
+//   which accept various types of mlrval, with disposition-matrices in
+//   mlrval.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
 //   string) which either type-check or type-coerce their arguments, invoking
-//   type-specific functions in mlr_val.c.  Those with _n_ take int or float
+//   type-specific functions in mlrval.c.  Those with _n_ take int or float
 //   and also use disposition matrices.  In all cases it's the job of
-//   the calling routines to invoke functions here with mlr_vals of the correct
+//   the calling routines to invoke functions here with mlrvals of the correct
 //   type(s).
 // ================================================================
 

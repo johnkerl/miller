@@ -26,8 +26,8 @@ libcontainers_la_SOURCES=	\
 			mixutil.h \
 			mlr_dsl_ast.c \
 			mlr_dsl_ast.h \
-			mlr_val.c \
-			mlr_val.h \
+			mlrval.c \
+			mlrval.h \
 			parse_trie.c \
 			parse_trie.h \
 			percentile_keeper.c \

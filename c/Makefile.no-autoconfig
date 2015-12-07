@@ -104,7 +104,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/lhmsv.c \
   containers/lhms2v.c \
   containers/lhmslv.c \
-  containers/mlr_val.c \
+  containers/mlrval.c \
   containers/percentile_keeper.c \
   containers/top_keeper.c \
   containers/dheap.c \
@@ -145,7 +145,7 @@ TEST_LREC_EVALUATORS_SRCS = \
   containers/sllv.c \
   containers/slls.c \
   containers/lrec.c \
-  containers/mlr_val.c \
+  containers/mlrval.c \
   mapping/lrec_evaluators.c \
   unit_test/test_lrec_evaluators.c
 
