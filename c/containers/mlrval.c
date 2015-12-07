@@ -973,7 +973,6 @@ static mv_t times_n_ii(mv_t* pa, mv_t* pb) {
 	long long b = pb->u.intv;
 
 	double d = (double)a * (double)b;
-	// xxx cmt w/ xref
 	if (fabs(d) > 9223372036854774784.0) {
 		return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
 	} else {
