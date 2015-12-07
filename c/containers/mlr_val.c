@@ -55,12 +55,12 @@ mv_t MV_ERROR = {
 // ----------------------------------------------------------------
 char* mt_describe_type(int type) {
 	switch (type) {
-	case MT_NULL:   return "T_NULL";   break;
-	case MT_ERROR:  return "T_ERROR";  break;
-	case MT_BOOL:   return "T_BOOL";   break;
-	case MT_FLOAT:  return "T_FLOAT";  break;
-	case MT_INT:    return "T_INT";    break;
-	case MT_STRING: return "T_STRING"; break;
+	case MT_NULL:   return "MT_NULL";   break;
+	case MT_ERROR:  return "MT_ERROR";  break;
+	case MT_BOOL:   return "MT_BOOL";   break;
+	case MT_FLOAT:  return "MT_FLOAT";  break;
+	case MT_INT:    return "MT_INT";    break;
+	case MT_STRING: return "MT_STRING"; break;
 	default:        return "???";      break;
 	}
 }
