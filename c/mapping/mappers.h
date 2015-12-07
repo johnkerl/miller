@@ -4,14 +4,6 @@
 #include "containers/slls.h"
 #include "mapping/mapper.h"
 
-// xxx move to a different header file
-#define HAVING_FIELDS_AT_LEAST     0x4a
-#define HAVING_FIELDS_WHICH_ARE    0x5b
-#define HAVING_FIELDS_AT_MOST      0x6c
-#define HAVING_ALL_FIELDS_MATCHING 0x7d
-#define HAVING_ANY_FIELDS_MATCHING 0x8e
-#define HAVING_NO_FIELDS_MATCHING  0x9f
-
 extern mapper_setup_t mapper_bar_setup;
 extern mapper_setup_t mapper_cat_setup;
 extern mapper_setup_t mapper_check_setup;
