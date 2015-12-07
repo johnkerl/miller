@@ -88,7 +88,7 @@ static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, 
 		}
 		fprintf(output_stream, "%s%s%s", pstate->ops, pe->value, pstate->ofs);
 	}
-	lrec_free(prec); // xxx cmt mem-mgmt
+	lrec_free(prec); // end of baton-pass
 }
 
 static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec, void* pvstate) {
@@ -103,5 +103,5 @@ static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec
 		// "%-*s" fprintf format isn't correct for non-ASCII UTF-8
 		fprintf(output_stream, "%s%s%s%s", pe->key, pstate->ops, pe->value, pstate->ofs);
 	}
-	lrec_free(prec); // xxx cmt mem-mgmt
+	lrec_free(prec); // end of baton-pass
 }

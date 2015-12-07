@@ -412,11 +412,6 @@ mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	return rv;
 }
 
-mv_t i_iii_moddiv_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
-	mv_t rv = {.type = MT_NULL, .u.intv = 0LL}; // xxx stub
-	return rv;
-}
-
 mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	long long m = pval3->u.intv;
 	if (m <= 0LL)

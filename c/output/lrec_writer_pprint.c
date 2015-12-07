@@ -159,7 +159,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 		}
 		fputs(ors, output_stream);
 
-		lrec_free(prec); // xxx cmt mem-mgmt
+		lrec_free(prec); // end of baton-pass
 	}
 
 	free(max_widths);

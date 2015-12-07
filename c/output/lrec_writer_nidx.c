@@ -44,5 +44,5 @@ static void lrec_writer_nidx_process(FILE* output_stream, lrec_t* prec, void* pv
 		nf++;
 	}
 	fputs(ors, output_stream);
-	lrec_free(prec); // xxx cmt mem-mgmt
+	lrec_free(prec); // end of baton-pass
 }

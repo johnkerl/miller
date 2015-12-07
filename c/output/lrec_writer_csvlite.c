@@ -84,5 +84,5 @@ static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void*
 	fputs(ors, output_stream);
 	pstate->onr++;
 
-	lrec_free(prec); // xxx cmt mem-mgmt
+	lrec_free(prec); // end of baton-pass
 }
