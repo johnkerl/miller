@@ -9,6 +9,7 @@ TOP OF LIST
 * faqents/cookbook
 
 * csv read perf
+  - char[] -> int[] for parser delimiters and full int EOF
 * mem-mgmt scrutinize
 * misc neaten issues
 
