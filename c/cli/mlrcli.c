@@ -100,6 +100,7 @@ static lhmss_t* get_default_rses() {
 		lhmss_put(singleton_default_rses, "dkvp",    "\n");
 		lhmss_put(singleton_default_rses, "nidx",    "\n");
 		lhmss_put(singleton_default_rses, "csv",     "\r\n");
+		lhmss_put(singleton_default_rses, "csvex",   "\r\n"); // xxx temp
 		lhmss_put(singleton_default_rses, "csvlite", "\n");
 		lhmss_put(singleton_default_rses, "pprint",  "\n");
 		lhmss_put(singleton_default_rses, "xtab",    "(N/A)");
@@ -113,6 +114,7 @@ static lhmss_t* get_default_fses() {
 		lhmss_put(singleton_default_fses, "dkvp",    ",");
 		lhmss_put(singleton_default_fses, "nidx",    " ");
 		lhmss_put(singleton_default_fses, "csv",     ",");
+		lhmss_put(singleton_default_fses, "csvex",   ","); // xxx temp
 		lhmss_put(singleton_default_fses, "csvlite", ",");
 		lhmss_put(singleton_default_fses, "pprint",  " ");
 		lhmss_put(singleton_default_fses, "xtab",    "\n");
@@ -126,6 +128,7 @@ static lhmss_t* get_default_pses() {
 		lhmss_put(singleton_default_pses, "dkvp",    "=");
 		lhmss_put(singleton_default_pses, "nidx",    "(N/A)");
 		lhmss_put(singleton_default_pses, "csv",     "(N/A)");
+		lhmss_put(singleton_default_pses, "csvex",   "(N/A)"); // xxx temp
 		lhmss_put(singleton_default_pses, "csvlite", "(N/A)");
 		lhmss_put(singleton_default_pses, "pprint",  "(N/A)");
 		lhmss_put(singleton_default_pses, "xtab",    " ");
@@ -138,6 +141,7 @@ static lhmsi_t* get_default_repeat_ifses() {
 		singleton_default_repeat_ifses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE);
 		lhmsi_put(singleton_default_repeat_ifses, "csv",     FALSE);
+		lhmsi_put(singleton_default_repeat_ifses, "csvex",   FALSE); // xxx temp
 		lhmsi_put(singleton_default_repeat_ifses, "csvlite", FALSE);
 		lhmsi_put(singleton_default_repeat_ifses, "nidx",    FALSE);
 		lhmsi_put(singleton_default_repeat_ifses, "xtab",    FALSE);
@@ -151,6 +155,7 @@ static lhmsi_t* get_default_repeat_ipses() {
 		singleton_default_repeat_ipses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE);
 		lhmsi_put(singleton_default_repeat_ipses, "csv",     FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "csvex",   FALSE); // xxx temp
 		lhmsi_put(singleton_default_repeat_ipses, "csvlite", FALSE);
 		lhmsi_put(singleton_default_repeat_ipses, "nidx",    FALSE);
 		lhmsi_put(singleton_default_repeat_ipses, "xtab",    TRUE);
@@ -661,6 +666,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
 		} else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";
 		} else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";
+
+		// xxx temp
+		} else if (streq(argv[argi], "--csvex"))    { popts->ifile_fmt = "csvex"; popts->ofile_fmt = "csv";
+		} else if (streq(argv[argi], "--icsvex"))   { popts->ifile_fmt = "csvex";
+		} else if (streq(argv[argi], "--ocsvex"))   { popts->ofile_fmt = "csv";
 
 		} else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";
 		} else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";

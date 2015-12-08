@@ -9,7 +9,6 @@ TOP OF LIST
 * faqents/cookbook
 
 * csv read perf
-  - char[] -> int[] for parser delimiters and full int EOF
 * mem-mgmt scrutinize
 * misc neaten issues
 
@@ -21,6 +20,29 @@ TOP OF LIST
   ? other ?
 
 ----------------------------------------------------------------
+MAJOR: csv mem-leak/read-perf
+
+* current option runs faster w/o free, apparently due to heap-fragging
+  ! malloc-trace ... verify heap-frag hypothesis for fp-csv reader.
+  ! mmap vopen/vclose -> api, for unit-testability. & x all readers.
+  o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
+  o redo inline-pasting but this time correctly weight the fragging effect
+  o power-of-two
+* for stdio, needs some thought ...
+* ... but for mmap, it's almost always not necessary to strdup at all:
+  only on escaped-double-quote case.
+* denormalize the pbr & make stdio pbr & ptr-backed (mmap,UT-string) pbr.
+* code-dup (yes, sadly!) the CSV reader into two & do strups in stdio
+  but lrec_put w/ !LREC_FREE_VALUE for ptr-backed.
+* or *maybe* pbr retent/free-flags for string/mmap w/o denorm, but only
+  if it's both elegant and fast
+! experimental/getlines.c shows that even without the heap-fragging
+  issue, pfr+psb is 3.5x slower than getdelim. again suggesting
+  multi-char-terminated getdelim might be the best line of approach.
+* char[] -> int[] for parser delimiters and full int EOF
+
+----------------------------------------------------------------
+COOKBOOK/FAQ/ETC.:
 
 * cookbook:
   - eval stuff from https://github.com/johnkerl/miller/issues/88
@@ -66,25 +88,6 @@ TOP OF LIST
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
 
 * bootstrap sampling in hold-and-emit mode?? needs an lrec_copy
-
-----------------------------------------------------------------
-MAJOR: csv mem-leak/read-perf
-
-* current option runs faster w/o free, apparently due to heap-fragging
-  o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
-  o redo inline-pasting but this time correctly weight the fragging effect
-  o power-of-two
-* for stdio, needs some thought ...
-* ... but for mmap, it's almost always not necessary to strdup at all:
-  only on escaped-double-quote case.
-* denormalize the pbr & make stdio pbr & ptr-backed (mmap,UT-string) pbr.
-* code-dup (yes, sadly!) the CSV reader into two & do strups in stdio
-  but lrec_put w/ !LREC_FREE_VALUE for ptr-backed.
-* or *maybe* pbr retent/free-flags for string/mmap w/o denorm, but only
-  if it's both elegant and fast
-! experimental/getlines.c shows that even without the heap-fragging
-  issue, pfr+psb is 3.5x slower than getdelim. again suggesting
-  multi-char-terminated getdelim might be the best line of approach.
 
 ================================================================
 OTHER
