@@ -40,19 +40,21 @@ echo Using mlr executable $path_to_mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output
+outfile=$outdir/out
+expfile=$expdir/out
 mkdir -p $outdir
 
-rm -f $outdir/out
-touch $outdir/out
+rm -f $outfile
+touch $outfile
 echo
 
 num_passed=0
 
 announce() {
-	echo >> $outdir/out
-	echo "================================================================" >> $outdir/out
-	echo "$@" >> $outdir/out
-	echo >> $outdir/out
+	echo >> $outfile
+	echo "================================================================" >> $outfile
+	echo "$@" >> $outfile
+	echo >> $outfile
 }
 
 # A key feature of this regression script is that it can be invoked from any
@@ -62,10 +64,10 @@ announce() {
 run_mlr() {
   # Use just "mlr" for info messages
 	echo mlr "$@"
-	echo mlr "$@" >> $outdir/out
+	echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
-	$path_to_mlr "$@" >> $outdir/out
-	echo >> $outdir/out
+	$path_to_mlr "$@" >> $outfile
+	echo >> $outfile
 	# since set -e
 	num_passed=`expr $num_passed + 1`
 }
@@ -1177,7 +1179,7 @@ run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x
 # may vary. Nonetheless for debugging it's crucial that we echo out each
 # command being executed -- here we use diff -I to skip the info lines and
 # focus the test on program output per se.
-diff -I '^mlr ' -C5 $expdir/out $outdir/out
+diff -I '^mlr ' -C5 $expfile $outfile
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED
