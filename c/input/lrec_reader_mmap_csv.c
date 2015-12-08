@@ -199,8 +199,10 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 	// loop over fields in record
 	record_done = FALSE;
 	while (!record_done) {
+		// xxx only increment sol at entry/exit to this method
+		char* sofld = phandle->sol;
 		// Assumption is dquote is "\""
-		if (*phandle->sol != pstate->dquote[0]) {
+		if (*phandle->sol != pstate->dquote[0]) { // start of non-quoted field
 
 			// Loop over characters in field
 			field_done = FALSE;
@@ -209,6 +211,7 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 				if (rc) {
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -219,10 +222,12 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 						exit(1);
 						break;
 					case IFS_STRIDX: // end of field
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -245,8 +250,9 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 				}
 			}
 
-		} else {
+		} else { // start of quoted field
 			phandle->sol += pstate->dquotelen;
+			sofld = phandle->sol;
 
 			// loop over characters in field
 			field_done = FALSE;
@@ -262,20 +268,24 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
+						*phandle->sol = 0;
 						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_DQUOTE_STRIDX: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
+						// xxx here must switch over to psb
 						sb_append_char(psb, pstate->dquote[0]);
 						break;
 					default:

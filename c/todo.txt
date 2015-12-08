@@ -25,6 +25,8 @@ MAJOR: csv mem-leak/read-perf
 * current option runs faster w/o free, apparently due to heap-fragging
   ! malloc-trace ... verify heap-frag hypothesis for fp-csv reader.
   ! mmap vopen/vclose -> api, for unit-testability. & x all readers.
+  ! eliminate string-builder except where necessary
+  ! reusable_slls: x both csv and both csvlite readers; xtab too?
   o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
   o redo inline-pasting but this time correctly weight the fragging effect
   o power-of-two
