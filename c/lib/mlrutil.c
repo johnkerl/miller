@@ -62,6 +62,7 @@ void* mlr_malloc_or_die(size_t size) {
 		fprintf(stderr, "malloc(%lu) failed.\n", (unsigned long)size);
 		exit(1);
 	}
+	//fprintf(stderr, "size=%d,p=%p\n", (int)size, p);
 	return p;
 }
 

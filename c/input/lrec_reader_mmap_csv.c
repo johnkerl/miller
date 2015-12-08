@@ -190,7 +190,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 
 static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate, file_reader_mmap_state_t* phandle) {
 	int rc, stridx, matchlen, record_done, field_done;
-	string_builder_t*   psb = pstate->psb;
+	string_builder_t* psb = pstate->psb;
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -302,10 +302,6 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, slls
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
-		// Need to deal with heap-fragmentation among other things ...
-		// https://github.com/johnkerl/miller/issues/66
-		// xxx
-		//char free_flags = LREC_FREE_ENTRY_VALUE;
 		char free_flags = 0;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
@@ -326,11 +322,6 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		// xxx
-		// Need to deal with heap-fragmentation among other things ...
-		// https://github.com/johnkerl/miller/issues/66
-		//
-		// lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
 		lrec_put_no_free(prec, ph->value, pd->value);
 	}
 	return prec;
