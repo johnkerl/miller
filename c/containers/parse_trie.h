@@ -48,7 +48,7 @@ void parse_trie_add_string(parse_trie_t* ptrie, char* string, int stridx);
 // The start of buffer (sob), buflen, and mask attributes are nominally
 // presented from a ring_buffer object.
 
-static inline int parse_trie_match(parse_trie_t* ptrie, char* buf, int sob, int buflen, int mask,
+static inline int parse_trie_ring_match(parse_trie_t* ptrie, char* buf, int sob, int buflen, int mask,
 	int* pstridx, int* pmatchlen)
 {
 	parse_trie_node_t* pnode = ptrie->proot;

@@ -10,7 +10,7 @@
 // This is a ring-buffered peekahead file/string reader.
 
 // Note: Throughout Miller as a general rule I treat struct attributes as if
-// they were private attributes. However, for performance, parse_trie_match
+// they were private attributes. However, for performance, parse_trie_ring_match
 // accesses this ring buffer directly.
 typedef struct _peek_file_reader_t {
 	byte_reader_t* pbr;

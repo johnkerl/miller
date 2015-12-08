@@ -4,7 +4,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
-#include "input/file_reader_stdio.h"
+#include "input/file_reader_mmap.h"
 #include "input/byte_reader.h"
 #include "input/lrec_readers.h"
 #include "input/peek_file_reader.h"
@@ -216,7 +216,7 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
 
-				rc = parse_trie_match(pstate->pno_dquote_parse_trie,
+				rc = parse_trie_ring_match(pstate->pno_dquote_parse_trie,
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 #ifdef DEBUG_PARSER
@@ -277,7 +277,7 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
 
-				rc = parse_trie_match(pstate->pdquote_parse_trie,
+				rc = parse_trie_ring_match(pstate->pdquote_parse_trie,
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 
@@ -372,3 +372,42 @@ static void lrec_reader_mmap_csv_close(void* pvstate, void* pvhandle) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
 }
+
+//// ----------------------------------------------------------------
+//lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header) {
+//	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
+//	...
+//	plrec_reader->popen_func    = file_reader_mmap_vopen;
+//	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+//	...
+//}
+
+//// ----------------------------------------------------------------
+//static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
+//	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
+//	pstate->ifnr = 0LL;
+//	pstate->ilno = 0LL;
+//	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
+//}
+
+//static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_state_t* phandle,
+//	lrec_reader_mmap_csvlite_state_t* pstate)
+//{
+//	...
+//	while ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
+//		phandle->sol += irslen;
+//		pstate->ilno++;
+//	}
+//	...
+//}
+
+//static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
+//	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
+//{
+//	if (phandle->sol >= phandle->eof)
+//		return NULL;
+//
+//		...
+//			phandle->sol = p + irslen;
+//		...
+//}

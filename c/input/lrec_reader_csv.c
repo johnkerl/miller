@@ -214,7 +214,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
 
-				rc = parse_trie_match(pstate->pno_dquote_parse_trie,
+				rc = parse_trie_ring_match(pstate->pno_dquote_parse_trie,
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 #ifdef DEBUG_PARSER
@@ -275,7 +275,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 			while (!field_done) {
 				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
 
-				rc = parse_trie_match(pstate->pdquote_parse_trie,
+				rc = parse_trie_ring_match(pstate->pdquote_parse_trie,
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&stridx, &matchlen);
 

@@ -303,7 +303,7 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, p
 	int rc, stridx, matchlen;
 	while (TRUE) {
 		pfr_buffer_by(pfr, ptrie->maxlen);
-		rc = parse_trie_match(ptrie, pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+		rc = parse_trie_ring_match(ptrie, pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 			&stridx, &matchlen);
 		if (rc) {
 			pfr_advance_by(pfr, matchlen);
