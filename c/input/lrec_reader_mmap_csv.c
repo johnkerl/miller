@@ -12,8 +12,6 @@
 #include "containers/lhmslv.h"
 #include "containers/parse_trie.h"
 
-// xxx temp
-
 // Idea of pheader_keepers: each header_keeper object retains the input-line backing
 // and the slls_t for a CSV header line which is used by one or more CSV data
 // lines.  Meanwhile some mappers retain input records from the entire data
@@ -57,8 +55,6 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 	int   dquotelen;
 
 	string_builder_t*   psb;
-	byte_reader_t*      pbr;
-	peek_file_reader_t* pfr;
 
 	parse_trie_t*       pno_dquote_parse_trie;
 	parse_trie_t*       pdquote_parse_trie;
@@ -73,11 +69,10 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 static void    lrec_reader_mmap_csv_free(void* pvstate);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
-static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate);
+static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
+	file_reader_mmap_state_t* phandle);
 static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
 static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
-static void*   lrec_reader_mmap_csv_open(void* pvstate, char* filename);
-static void    lrec_reader_mmap_csv_close(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
@@ -114,9 +109,6 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* i
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
 	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
-	pstate->pbr = pbr;
-	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
-		pstate->pdquote_parse_trie->maxlen));
 
 	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
 	pstate->use_implicit_header       = use_implicit_header;
@@ -124,8 +116,8 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* i
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = lrec_reader_mmap_csv_open;
-	plrec_reader->pclose_func   = lrec_reader_mmap_csv_close;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 	plrec_reader->pprocess_func = lrec_reader_mmap_csv_process;
 	plrec_reader->psof_func     = lrec_reader_mmap_csv_sof;
 	plrec_reader->pfree_func    = lrec_reader_mmap_csv_free;
@@ -140,14 +132,12 @@ static void lrec_reader_mmap_csv_free(void* pvstate) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
-	pfr_free(pstate->pfr);
 	parse_trie_free(pstate->pno_dquote_parse_trie);
 	parse_trie_free(pstate->pdquote_parse_trie);
 	sb_free(pstate->psb);
 }
 
 // ----------------------------------------------------------------
-// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
 static void lrec_reader_mmap_csv_sof(void* pvstate) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
@@ -157,9 +147,10 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
+	file_reader_mmap_state_t* phandle = pvhandle;
 
 	if (pstate->expect_header_line_next) {
-		slls_t* pheader_fields = lrec_reader_mmap_csv_get_fields(pstate);
+		slls_t* pheader_fields = lrec_reader_mmap_csv_get_fields(pstate, phandle);
 		if (pheader_fields == NULL)
 			return NULL;
 		pstate->ilno++;
@@ -182,11 +173,12 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 
 		pstate->expect_header_line_next = FALSE;
 	}
-	slls_t* pdata_fields = lrec_reader_mmap_csv_get_fields(pstate);
+	slls_t* pdata_fields = lrec_reader_mmap_csv_get_fields(pstate, phandle);
 	pstate->ilno++;
 	if (pdata_fields == NULL) // EOF
 		return NULL;
 	else {
+		// xxx
 		//lrec_t* prec = paste_header_and_data(pstate, pdata_fields);
 		//slls_free(pdata_fields);
 		//return prec;
@@ -196,12 +188,11 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 	}
 }
 
-static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate) {
+static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate, file_reader_mmap_state_t* phandle) {
 	int rc, stridx, matchlen, record_done, field_done;
-	peek_file_reader_t* pfr = pstate->pfr;
 	string_builder_t*   psb = pstate->psb;
 
-	if (pfr_peek_char(pfr) == (char)EOF) // char defaults to unsigned on some platforms
+	if (phandle->sol >= phandle->eof)
 		return NULL;
 	slls_t* pfields = slls_alloc();
 
@@ -209,23 +200,13 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 	record_done = FALSE;
 	while (!record_done) {
 		// Assumption is dquote is "\""
-		if (pfr_peek_char(pfr) != pstate->dquote[0]) {
+		if (*phandle->sol != pstate->dquote[0]) {
 
 			// Loop over characters in field
 			field_done = FALSE;
 			while (!field_done) {
-				pfr_buffer_by(pfr, pstate->pno_dquote_parse_trie->maxlen);
-
-				rc = parse_trie_ring_match(pstate->pno_dquote_parse_trie,
-					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
-					&stridx, &matchlen);
-#ifdef DEBUG_PARSER
-				pfr_print(pfr);
-#endif
+				rc = parse_trie_match(pstate->pno_dquote_parse_trie, phandle->sol, phandle->eof, &stridx, &matchlen);
 				if (rc) {
-#ifdef DEBUG_PARSER
-					printf("RC=%d stridx=0x%04x matchlen=%d\n", rc, stridx, matchlen);
-#endif
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
 						slls_add_with_free(pfields, sb_finish(psb));
@@ -257,29 +238,21 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 						exit(1);
 						break;
 					}
-					pfr_advance_by(pfr, matchlen);
+					phandle->sol += matchlen;
 				} else {
-#ifdef DEBUG_PARSER
-					char c = pfr_read_char(pfr);
-					printf("CHAR=%c [%02x]\n", isprint((unsigned char)c) ? c : ' ', (unsigned)c);
-					sb_append_char(psb, c);
-#else
-					sb_append_char(psb, pfr_read_char(pfr));
-#endif
+					sb_append_char(psb, *phandle->sol);
+					phandle->sol++;
 				}
 			}
 
 		} else {
-			pfr_advance_by(pfr, pstate->dquotelen);
+			phandle->sol += pstate->dquotelen;
 
 			// loop over characters in field
 			field_done = FALSE;
 			while (!field_done) {
-				pfr_buffer_by(pfr, pstate->pdquote_parse_trie->maxlen);
 
-				rc = parse_trie_ring_match(pstate->pdquote_parse_trie,
-					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
-					&stridx, &matchlen);
+				rc = parse_trie_match(pstate->pdquote_parse_trie, phandle->sol, phandle->eof, &stridx, &matchlen);
 
 				if (rc) {
 					switch(stridx) {
@@ -311,9 +284,10 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 						exit(1);
 						break;
 					}
-					pfr_advance_by(pfr, matchlen);
+					phandle->sol += matchlen;
 				} else {
-					sb_append_char(psb, pfr_read_char(pfr));
+					sb_append_char(psb, *phandle->sol);
+					phandle->sol++;
 				}
 			}
 
@@ -330,6 +304,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, slls
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
 		// Need to deal with heap-fragmentation among other things ...
 		// https://github.com/johnkerl/miller/issues/66
+		// xxx
 		//char free_flags = LREC_FREE_ENTRY_VALUE;
 		char free_flags = 0;
 		idx++;
@@ -351,6 +326,7 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
+		// xxx
 		// Need to deal with heap-fragmentation among other things ...
 		// https://github.com/johnkerl/miller/issues/66
 		//
@@ -359,55 +335,3 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_
 	}
 	return prec;
 }
-
-// ----------------------------------------------------------------
-static void* lrec_reader_mmap_csv_open(void* pvstate, char* filename) {
-	lrec_reader_mmap_csv_state_t* pstate = pvstate;
-	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
-	pfr_reset(pstate->pfr);
-	return NULL; // xxx modify the API after the functional refactor is complete
-}
-
-static void lrec_reader_mmap_csv_close(void* pvstate, void* pvhandle) {
-	lrec_reader_mmap_csv_state_t* pstate = pvstate;
-	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
-}
-
-//// ----------------------------------------------------------------
-//lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header) {
-//	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-//	...
-//	plrec_reader->popen_func    = file_reader_mmap_vopen;
-//	plrec_reader->pclose_func   = file_reader_mmap_vclose;
-//	...
-//}
-
-//// ----------------------------------------------------------------
-//static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
-//	lrec_reader_mmap_csvlite_state_t* pstate = pvstate;
-//	pstate->ifnr = 0LL;
-//	pstate->ilno = 0LL;
-//	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
-//}
-
-//static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_state_t* phandle,
-//	lrec_reader_mmap_csvlite_state_t* pstate)
-//{
-//	...
-//	while ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
-//		phandle->sol += irslen;
-//		pstate->ilno++;
-//	}
-//	...
-//}
-
-//static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
-//	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
-//{
-//	if (phandle->sol >= phandle->eof)
-//		return NULL;
-//
-//		...
-//			phandle->sol = p + irslen;
-//		...
-//}

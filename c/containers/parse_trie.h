@@ -73,4 +73,27 @@ static inline int parse_trie_ring_match(parse_trie_t* ptrie, char* buf, int sob,
 	}
 }
 
+static inline int parse_trie_match(parse_trie_t* ptrie, char* p, char* e, int* pstridx, int* pmatchlen) {
+	parse_trie_node_t* pnode = ptrie->proot;
+	parse_trie_node_t* pnext;
+	parse_trie_node_t* pterm = NULL;
+	for ( ; p < e; p++) {
+		char c = *p;
+		pnext = pnode->pnexts[(unsigned char) c];
+		if (pnext == NULL)
+			break;
+		if (pnext->strlen > 0) {
+			pterm = pnext;
+		}
+		pnode = pnext;
+	}
+	if (pterm == NULL) {
+		return FALSE;
+	} else {
+		*pstridx   = pterm->stridx;
+		*pmatchlen = pterm->strlen;
+		return TRUE;
+	}
+}
+
 #endif // PARSE_TRIE_H
