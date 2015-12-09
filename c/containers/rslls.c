@@ -3,12 +3,6 @@
 #include "lib/mlrutil.h"
 #include "containers/rslls.h"
 
-// []
-// [a]
-// [a,b]
-// [a,b,c]
-// [x,x,x]
-
 // ----------------------------------------------------------------
 rslls_t* rslls_alloc() {
 	rslls_t* plist = mlr_malloc_or_die(sizeof(rslls_t));
