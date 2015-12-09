@@ -110,6 +110,7 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* i
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
+	pstate->pfields = rslls_alloc();
 	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 
 	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
@@ -136,6 +137,7 @@ static void lrec_reader_mmap_csv_free(void* pvstate) {
 	}
 	parse_trie_free(pstate->pno_dquote_parse_trie);
 	parse_trie_free(pstate->pdquote_parse_trie);
+	rslls_free(pstate->pfields);
 	sb_free(pstate->psb);
 }
 
@@ -172,8 +174,10 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
-			slls_add_no_free(pheader_fields, pe->value); // xxx free-flags need to be correct here.
+			slls_add(pheader_fields, pe->value, pe->free_flag);
+			pe->free_flag = 0;
 		}
+		rslls_reset(pstate->pfields);
 
 		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 		if (pstate->pheader_keeper == NULL) {
@@ -345,11 +349,11 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rsll
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
 	for (rsllse_t* pd = pdata_fields->phead; idx < pdata_fields->length && pd != NULL; pd = pd->pnext) {
-		char free_flags = 0;
+		char free_flags = pd->free_flag;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
 		lrec_put(prec, key, pd->value, free_flags);
-		// xxx unify free-flags into a single header, used by all containers
+		pd->free_flag = 0;
 	}
 	return prec;
 }
@@ -366,7 +370,8 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls
 	sllse_t* ph  = pstate->pheader_keeper->pkeys->phead;
 	rsllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		lrec_put_no_free(prec, ph->value, pd->value);
+		lrec_put(prec, ph->value, pd->value, pd->free_flag);
+		pd->free_flag = 0;
 	}
 	return prec;
 }
