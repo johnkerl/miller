@@ -284,62 +284,6 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
 // Preconditions:
 // * prec_peek != NULL
 // * prec_peek has the join keys
-//static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired) {
-//	while (TRUE) {
-//		slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
-//			pkeeper->pleft_field_names);
-//		if (pleft_field_values == NULL) { // Start of bucket
-//			if (*pprecords_left_unpaired == NULL)
-//				*pprecords_left_unpaired = sllv_alloc();
-//			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
-//
-////			while (TRUE) {
-//				pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
-//					pkeeper->pvhandle, pkeeper->pctx);
-////				if (pkeeper->prec_peek == NULL) {
-////					pkeeper->leof = TRUE;
-////					break;
-////				}
-////				int cmp = slls_lrec_compare_lexically(
-////					pkeeper->pbucket->pleft_field_values,
-////					pkeeper->prec_peek,
-////					pkeeper->pleft_field_names);
-////				if (cmp != 0) {
-////					break;
-////				}
-////				sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-////				pkeeper->prec_peek = NULL;
-////			}
-//
-//		} else { // Continuation of bucket
-//			pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
-//			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-//			pkeeper->pbucket->was_paired = FALSE;
-//			pkeeper->prec_peek = NULL;
-//
-////			while (TRUE) {
-//				pkeeper->prec_peek = pkeeper->plrec_reader->pprocess_func(pkeeper->plrec_reader->pvstate,
-//					pkeeper->pvhandle, pkeeper->pctx);
-////				if (pkeeper->prec_peek == NULL) {
-////					pkeeper->leof = TRUE;
-////					break;
-////				}
-////				int cmp = slls_lrec_compare_lexically(
-////					pkeeper->pbucket->pleft_field_values,
-////					pkeeper->prec_peek,
-////					pkeeper->pleft_field_names);
-////				if (cmp != 0) {
-////					break;
-////				}
-////				sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
-////				pkeeper->prec_peek = NULL;
-////			}
-//
-//			break;
-//		}
-//	}
-//}
-
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired) {
 	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
 		pkeeper->pleft_field_names);
