@@ -781,7 +781,7 @@ typedef struct _stats1_max_state_t {
 } stats1_max_state_t;
 static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 	stats1_max_state_t* pstate = pvstate;
-	pstate->max = n_nn_min_func(&pstate->max, pval);
+	pstate->max = n_nn_max_func(&pstate->max, pval);
 }
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
