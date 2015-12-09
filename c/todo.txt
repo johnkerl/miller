@@ -27,6 +27,7 @@ MAJOR: csv mem-leak/read-perf
   ! mmap vopen/vclose -> api, for unit-testability. & x all readers.
   ! eliminate string-builder except where necessary
   ! reusable_slls: x both csv and both csvlite readers; xtab too?
+  ! eofpoke in wrapper vopen
   o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
   o redo inline-pasting but this time correctly weight the fragging effect
   o power-of-two

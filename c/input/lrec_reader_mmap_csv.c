@@ -68,6 +68,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 
 static void    lrec_reader_mmap_csv_free(void* pvstate);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
+static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* file_name);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	file_reader_mmap_state_t* phandle);
@@ -116,7 +117,7 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* i
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_mmap_vopen;
+	plrec_reader->popen_func    = lrec_reader_mmap_csv_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 	plrec_reader->pprocess_func = lrec_reader_mmap_csv_process;
 	plrec_reader->psof_func     = lrec_reader_mmap_csv_sof;
@@ -142,6 +143,14 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
+}
+
+// ----------------------------------------------------------------
+static void* lrec_reader_mmap_csv_vopen(void* pvstate, char* file_name) {
+	void* pvhandle = file_reader_mmap_open(file_name);
+	file_reader_mmap_state_t* phandle = pvhandle;
+	*phandle->eof = EOF;
+	return pvhandle;
 }
 
 // ----------------------------------------------------------------
@@ -253,6 +262,14 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 						break;
 					}
 					e += matchlen;
+				} else if (e >= phandle->eof) {
+					// xxx this is awkward w/r/t EOF_STRIDX
+					*e = 0;
+					slls_add_no_free(pfields, p);
+					p = e + matchlen;
+					field_done  = TRUE;
+					record_done = TRUE;
+					break;
 				} else {
 					////printf("CHAR %d %c\n", *e, *e);
 					e++;
