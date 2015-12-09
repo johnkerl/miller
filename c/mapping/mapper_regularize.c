@@ -69,7 +69,7 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 		} else {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 			for (sllse_t* pe = previous_sorted_field_names->phead; pe != NULL; pe = pe->pnext) {
-				lrec_put(poutrec, pe->value, mlr_strdup_or_die(lrec_get(pinrec, pe->value)), LREC_FREE_ENTRY_VALUE);
+				lrec_put(poutrec, pe->value, mlr_strdup_or_die(lrec_get(pinrec, pe->value)), FREE_ENTRY_VALUE);
 			}
 			lrec_free(pinrec);
 			return sllv_single(poutrec);

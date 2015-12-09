@@ -71,11 +71,11 @@ void lrec_put_no_free(lrec_t* prec, char* key, char* value) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) {
-		if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
+		if (pe->free_flags & FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
 		pe->value = value;
-		pe->free_flags &= ~LREC_FREE_ENTRY_VALUE;
+		pe->free_flags &= ~FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
 		pe->key        = key;
@@ -101,16 +101,16 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) {
-		if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
+		if (pe->free_flags & FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
 		pe->value = mlr_strdup_or_die(value);
-		pe->free_flags |= LREC_FREE_ENTRY_VALUE;
+		pe->free_flags |= FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
 		pe->key         = mlr_strdup_or_die(key);
 		pe->value       = mlr_strdup_or_die(value);
-		pe->free_flags  = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
+		pe->free_flags  = FREE_ENTRY_KEY | FREE_ENTRY_VALUE;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
@@ -131,16 +131,16 @@ void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) {
-		if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
+		if (pe->free_flags & FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
 		pe->value = mlr_strdup_or_die(value);
-		pe->free_flags |= LREC_FREE_ENTRY_VALUE;
+		pe->free_flags |= FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
 		pe->key         = mlr_strdup_or_die(key);
 		pe->value       = mlr_strdup_or_die(value);
-		pe->free_flags  = LREC_FREE_ENTRY_KEY | LREC_FREE_ENTRY_VALUE;
+		pe->free_flags  = FREE_ENTRY_KEY | FREE_ENTRY_VALUE;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
@@ -175,10 +175,10 @@ void lrec_remove(lrec_t* prec, char* key) {
 
 	lrec_unlink(prec, pe);
 
-	if (pe->free_flags & LREC_FREE_ENTRY_KEY) {
+	if (pe->free_flags & FREE_ENTRY_KEY) {
 		free(pe->key);
 	}
-	if (pe->free_flags & LREC_FREE_ENTRY_VALUE) {
+	if (pe->free_flags & FREE_ENTRY_VALUE) {
 		free(pe->value);
 	}
 
@@ -203,30 +203,30 @@ void lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freei
 		lrece_t* pnew = lrec_find_entry(prec, new_key);
 
 		if (pnew == NULL) { // E.g. rename "x" to "y" when "y" is not present
-			if (pold->free_flags & LREC_FREE_ENTRY_KEY) {
+			if (pold->free_flags & FREE_ENTRY_KEY) {
 				free(pold->key);
 				pold->key = new_key;
 				if (!new_needs_freeing)
-					pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
+					pold->free_flags &= ~FREE_ENTRY_KEY;
 			} else {
 				pold->key = new_key;
 				if (new_needs_freeing)
-					pold->free_flags |=  LREC_FREE_ENTRY_KEY;
+					pold->free_flags |=  FREE_ENTRY_KEY;
 			}
 
 		} else { // E.g. rename "x" to "y" when "y" is already present
-			if (pnew->free_flags & LREC_FREE_ENTRY_VALUE) {
+			if (pnew->free_flags & FREE_ENTRY_VALUE) {
 				free(pnew->value);
 			}
-			if (pold->free_flags & LREC_FREE_ENTRY_KEY) {
+			if (pold->free_flags & FREE_ENTRY_KEY) {
 				free(pold->key);
-				pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
+				pold->free_flags &= ~FREE_ENTRY_KEY;
 			}
 			pold->key = new_key;
 			if (new_needs_freeing)
-				pold->free_flags |=  LREC_FREE_ENTRY_KEY;
+				pold->free_flags |=  FREE_ENTRY_KEY;
 			else
-				pold->free_flags &= ~LREC_FREE_ENTRY_KEY;
+				pold->free_flags &= ~FREE_ENTRY_KEY;
 			lrec_unlink(prec, pnew);
 			free(pnew);
 		}
@@ -311,9 +311,9 @@ void lrec_free(lrec_t* prec) {
 	if (prec == NULL)
 		return;
 	for (lrece_t* pe = prec->phead; pe != NULL; /*pe = pe->pnext*/) {
-		if ((pe->free_flags & LREC_FREE_ENTRY_KEY) && (pe->key != NULL))
+		if ((pe->free_flags & FREE_ENTRY_KEY) && (pe->key != NULL))
 			free(pe->key);
-		if ((pe->free_flags & LREC_FREE_ENTRY_VALUE) && (pe->value != NULL))
+		if ((pe->free_flags & FREE_ENTRY_VALUE) && (pe->value != NULL))
 			free(pe->value);
 		lrece_t* ope = pe;
 		pe = pe->pnext;
@@ -384,7 +384,7 @@ char* make_nidx_key(int idx, char* pfree_flags) {
 	} else {
 		char buf[32];
 		sprintf(buf, "%d", idx);
-		*pfree_flags = LREC_FREE_ENTRY_KEY;
+		*pfree_flags = FREE_ENTRY_KEY;
 		return mlr_strdup_or_die(buf);
 	}
 }

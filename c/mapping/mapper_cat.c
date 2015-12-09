@@ -91,7 +91,7 @@ static sllv_t* mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
 	if (pinrec != NULL) {
 		char* counter_field_value = mlr_alloc_string_from_ull(pstate->counter++);
-		lrec_prepend(pinrec, pstate->counter_field_name, counter_field_value, LREC_FREE_ENTRY_VALUE);
+		lrec_prepend(pinrec, pstate->counter_field_name, counter_field_value, FREE_ENTRY_VALUE);
 		return sllv_single(pinrec);
 	} else {
 		return sllv_single(NULL);

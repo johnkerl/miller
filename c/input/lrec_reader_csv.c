@@ -328,7 +328,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* p
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
 		// Need to deal with heap-fragmentation among other things ...
 		// https://github.com/johnkerl/miller/issues/66
-		//char free_flags = LREC_FREE_ENTRY_VALUE;
+		//char free_flags = FREE_ENTRY_VALUE;
 		char free_flags = 0;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
@@ -352,7 +352,7 @@ static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pd
 		// Need to deal with heap-fragmentation among other things ...
 		// https://github.com/johnkerl/miller/issues/66
 		//
-		// lrec_put(prec, ph->value, pd->value, LREC_FREE_ENTRY_VALUE);
+		// lrec_put(prec, ph->value, pd->value, FREE_ENTRY_VALUE);
 		lrec_put_no_free(prec, ph->value, pd->value);
 	}
 	return prec;

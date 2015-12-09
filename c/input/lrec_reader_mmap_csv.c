@@ -8,7 +8,7 @@
 #include "input/byte_reader.h"
 #include "input/lrec_readers.h"
 #include "input/peek_file_reader.h"
-#include "containers/slls.h"
+#include "containers/rslls.h"
 #include "containers/lhmslv.h"
 #include "containers/parse_trie.h"
 
@@ -54,6 +54,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 
 	int   dquotelen;
 
+	rslls_t*            pfields;
 	string_builder_t*   psb;
 
 	parse_trie_t*       pno_dquote_parse_trie;
@@ -70,10 +71,10 @@ static void    lrec_reader_mmap_csv_free(void* pvstate);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
 static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* file_name);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
-static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
-	file_reader_mmap_state_t* phandle);
-static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
-static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
+static int     lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
+	rslls_t* pfields, file_reader_mmap_state_t* phandle);
+static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
+static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
@@ -159,17 +160,19 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 	file_reader_mmap_state_t* phandle = pvhandle;
 
 	if (pstate->expect_header_line_next) {
-		slls_t* pheader_fields = lrec_reader_mmap_csv_get_fields(pstate, phandle);
-		if (pheader_fields == NULL)
+		if (!lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle))
 			return NULL;
 		pstate->ilno++;
 
-		for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
+		slls_t* pheader_fields = slls_alloc();
+		int i = 0;
+		for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext, i++) {
 			if (*pe->value == 0) {
 				fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
+			slls_add_no_free(pheader_fields, pe->value); // xxx free-flags need to be correct here.
 		}
 
 		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
@@ -182,32 +185,31 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 
 		pstate->expect_header_line_next = FALSE;
 	}
-	slls_t* pdata_fields = lrec_reader_mmap_csv_get_fields(pstate, phandle);
+	int rc = lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle);
 	pstate->ilno++;
-	if (pdata_fields == NULL) // EOF
+	if (rc == FALSE) // EOF
 		return NULL;
 	else {
-		// xxx
-		//lrec_t* prec = paste_header_and_data(pstate, pdata_fields);
-		//slls_free(pdata_fields);
-		//return prec;
-		return pstate->use_implicit_header
-			? paste_indices_and_data(pstate, pdata_fields, pctx)
-			: paste_header_and_data(pstate, pdata_fields, pctx);
+		lrec_t* prec = pstate->use_implicit_header
+			? paste_indices_and_data(pstate, pstate->pfields, pctx)
+			: paste_header_and_data(pstate, pstate->pfields, pctx);
+		rslls_reset(pstate->pfields);
+		return prec;
 	}
 }
 
-static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate, file_reader_mmap_state_t* phandle) {
+static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
+	rslls_t* pfields, file_reader_mmap_state_t* phandle)
+{
 	////printf("GF ENTER\n");
 	int rc, stridx, matchlen, record_done, field_done;
 	string_builder_t* psb = pstate->psb;
 
 	if (phandle->sol >= phandle->eof)
-		return NULL;
+		return FALSE;
 
 	char* p = phandle->sol;
 	char* e = p;
-	slls_t* pfields = slls_alloc();
 
 	// loop over fields in record
 	record_done = FALSE;
@@ -225,7 +227,7 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					case EOF_STRIDX: // end of record
 						////printf("EOF\n");
 						*e = 0;
-						slls_add_no_free(pfields, p);
+						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -238,14 +240,14 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					case IFS_STRIDX: // end of field
 						////printf("IFS %c\n", *e);
 						*e = 0;
-						slls_add_no_free(pfields, p);
+						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
 						////printf("IRS %c\n", *e);
 						*e = 0;
-						slls_add_no_free(pfields, p);
+						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -265,7 +267,7 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 				} else if (e >= phandle->eof) {
 					// xxx this is awkward w/r/t EOF_STRIDX
 					*e = 0;
-					slls_add_no_free(pfields, p);
+					rslls_add_no_free(pfields, p);
 					p = e + matchlen;
 					field_done  = TRUE;
 					record_done = TRUE;
@@ -297,20 +299,20 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					case DQUOTE_EOF_STRIDX: // end of record
 						*e = 0;
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
+						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
 						*e = 0;
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
+						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
 						*e = 0;
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
+						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -335,24 +337,25 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 	}
 	phandle->sol = e;
 
-	return pfields;
+	return TRUE;
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx) {
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
-	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
+	for (rsllse_t* pd = pdata_fields->phead; idx < pdata_fields->length && pd != NULL; pd = pd->pnext) {
 		char free_flags = 0;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
 		lrec_put(prec, key, pd->value, free_flags);
+		// xxx unify free-flags into a single header, used by all containers
 	}
 	return prec;
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch (%d != %d) at file \"%s\" line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
@@ -360,8 +363,8 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, slls_
 		exit(1);
 	}
 	lrec_t* prec = lrec_unbacked_alloc();
-	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
-	sllse_t* pd = pdata_fields->phead;
+	sllse_t* ph  = pstate->pheader_keeper->pkeys->phead;
+	rsllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
 		lrec_put_no_free(prec, ph->value, pd->value);
 	}

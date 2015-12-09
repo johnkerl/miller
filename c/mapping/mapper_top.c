@@ -219,7 +219,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 				}
 
 				char* sidx = mlr_alloc_string_from_ull(i+1);
-				lrec_put(poutrec, "top_idx", sidx, LREC_FREE_ENTRY_VALUE);
+				lrec_put(poutrec, "top_idx", sidx, FREE_ENTRY_VALUE);
 				free(sidx);
 
 				// Add in fields such as x_top_1=#
@@ -233,9 +233,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_format_val(&numv);
-						lrec_put(poutrec, key, strv, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+						lrec_put(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 					} else {
-						lrec_put(poutrec, key, "", LREC_FREE_ENTRY_KEY);
+						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
 					}
 				}
 				sllv_add(poutrecs, poutrec);

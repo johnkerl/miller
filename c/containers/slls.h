@@ -6,8 +6,7 @@
 #define SLLS_H
 
 #include <stdio.h>
-
-#define SLLS_FREE_ENTRY_VALUE 0x20
+#include "containers/free_flags.h"
 
 typedef struct _sllse_t {
 	char* value;
@@ -28,6 +27,7 @@ slls_t* slls_single_with_free(char* value);
 slls_t* slls_single_no_free(char* value);
 void    slls_add_with_free(slls_t* plist, char* value);
 void    slls_add_no_free(slls_t* plist, char* value);
+void    slls_add(slls_t* plist, char* value, char free_flag);
 int     slls_equals(slls_t* pa, slls_t* pb);
 slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs);
 

@@ -28,7 +28,7 @@ void slls_free(slls_t* plist) {
 	while (pnode != NULL) {
 		sllse_t* pdel = pnode;
 		pnode = pnode->pnext;
-		if (pdel->free_flag & SLLS_FREE_ENTRY_VALUE)
+		if (pdel->free_flag & FREE_ENTRY_VALUE)
 			free(pdel->value);
 		free(pdel);
 	}
@@ -53,7 +53,7 @@ slls_t* slls_single_no_free(char* value) {
 }
 
 // ----------------------------------------------------------------
-static inline void slls_add(slls_t* plist, char* value, char free_flag) {
+void slls_add(slls_t* plist, char* value, char free_flag) {
 	sllse_t* pnode = mlr_malloc_or_die(sizeof(sllse_t));
 	pnode->value = value;
 	pnode->free_flag = free_flag;
@@ -71,7 +71,7 @@ static inline void slls_add(slls_t* plist, char* value, char free_flag) {
 }
 
 void slls_add_with_free(slls_t* plist, char* value) {
-	slls_add(plist, value, SLLS_FREE_ENTRY_VALUE);
+	slls_add(plist, value, FREE_ENTRY_VALUE);
 }
 void slls_add_no_free(slls_t* plist, char* value) {
 	slls_add(plist, value, 0);

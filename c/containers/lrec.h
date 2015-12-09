@@ -43,11 +43,9 @@
 #ifndef LREC_H
 #define LREC_H
 
+#include "containers/free_flags.h"
 #include "containers/sllv.h"
 #include "containers/header_keeper.h"
-
-#define LREC_FREE_ENTRY_KEY        0x08
-#define LREC_FREE_ENTRY_VALUE      0x80
 
 struct _lrec_t; // forward reference
 typedef struct _lrec_t lrec_t;
@@ -122,7 +120,7 @@ char* lrec_sprint(lrec_t* prec, char* ors, char* ofs, char* ops);
 // in the file, e.g. line "a b c" splits to an lrec with "{"1" => "a", "2" =>
 // "b", "3" => "c"}. This function creates the keys, avoiding redundant memory
 // allocation for most-used keys such as "1", "2", ... up to 100 or so. In case
-// of large idx, free_flags & LREC_FREE_ENTRY_KEY will indicate that the key
+// of large idx, free_flags & FREE_ENTRY_KEY will indicate that the key
 // was dynamically allocated.
 char* make_nidx_key(int idx, char* pfree_flags);
 

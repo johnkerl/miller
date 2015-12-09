@@ -157,7 +157,7 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		int count = pstate->pcounts_by_group->num_occupied;
-		lrec_put(poutrec, "count", mlr_alloc_string_from_int(count), LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, "count", mlr_alloc_string_from_int(count), FREE_ENTRY_VALUE);
 		sllv_add(poutrecs, poutrec);
 
 		sllv_add(poutrecs, NULL);
@@ -178,7 +178,7 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 			if (pstate->show_counts) {
 				unsigned long long* pcount = pa->pvvalue;
-				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), LREC_FREE_ENTRY_VALUE);
+				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
 			}
 
 			sllv_add(poutrecs, poutrec);

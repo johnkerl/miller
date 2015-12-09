@@ -470,7 +470,7 @@ static void stats1_count_singest(void* pvstate, char* val) {
 static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_count_state_t* pstate = pvstate;
 	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->counter),
-		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
@@ -514,7 +514,7 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 			max_count = count;
 		}
 	}
-	lrec_put(poutrec, pstate->output_field_name, max_key, LREC_FREE_ENTRY_KEY);
+	lrec_put(poutrec, pstate->output_field_name, max_key, FREE_ENTRY_KEY);
 }
 static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
@@ -543,7 +543,7 @@ static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
 	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->sum),
-		LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
@@ -573,13 +573,13 @@ static void stats1_mean_dingest(void* pvstate, double val) {
 static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_mean_state_t* pstate = pvstate;
 	if (pstate->count == 0LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double quot = pstate->sum / pstate->count;
 		char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
 		// xxx to do: the output field names should be freed by our free
-		// method, & the flags shouldn't include LREC_FREE_ENTRY_KEY.
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		// method, & the flags shouldn't include FREE_ENTRY_KEY.
+		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -615,7 +615,7 @@ static void stats1_stddev_var_meaneb_dingest(void* pvstate, double val) {
 static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_stddev_var_meaneb_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double output = mlr_get_var(pstate->count, pstate->sumx, pstate->sumx2);
 		if (pstate->do_which == DO_STDDEV)
@@ -623,7 +623,7 @@ static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name,
 		else if (pstate->do_which == DO_MEANEB)
 			output = sqrt(output / pstate->count);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 
@@ -672,11 +672,11 @@ static void stats1_skewness_dingest(void* pvstate, double val) {
 static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_skewness_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double output = mlr_get_skewness(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 
@@ -718,11 +718,11 @@ static void stats1_kurtosis_dingest(void* pvstate, double val) {
 static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_kurtosis_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double output = mlr_get_kurtosis(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3, pstate->sumx4);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 
@@ -755,10 +755,10 @@ static void stats1_min_ningest(void* pvstate, mv_t* pval) {
 static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->min)) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->min),
-			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -786,10 +786,10 @@ static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->max)) {
-		lrec_put(poutrec, pstate->output_field_name, "", LREC_FREE_ENTRY_KEY);
+		lrec_put(poutrec, pstate->output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->max),
-			LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -824,7 +824,7 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	// xxx to do: keep a hashmap from string stats1_name to string
 	// output_field_name in the pstate, populated by the alloc. or, lazily populated here.
 	char* output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
-	lrec_put(poutrec, output_field_name, s, LREC_FREE_ENTRY_KEY|LREC_FREE_ENTRY_VALUE);
+	lrec_put(poutrec, output_field_name, s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));

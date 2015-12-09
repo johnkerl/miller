@@ -16,8 +16,7 @@
 #define RSLLS_H
 
 #include <stdio.h>
-
-#define RSLLS_FREE_ENTRY_VALUE 0x04
+#include "containers/free_flags.h"
 
 typedef struct _rsllse_t {
 	char* value;

@@ -258,7 +258,7 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 			sb_append_string(psb, "[");
 			sb_append_string(psb, shi);
 			sb_append_string(psb, "]");
-			lrec_put(prec, name, sb_finish(psb), LREC_FREE_ENTRY_VALUE);
+			lrec_put(prec, name, sb_finish(psb), FREE_ENTRY_VALUE);
 		}
 
 	}

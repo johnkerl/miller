@@ -20,7 +20,7 @@ void rslls_reset(rslls_t* plist) {
 		return;
 	rsllse_t* pnode = plist->phead;
 	while (pnode != NULL) {
-		if (pnode->free_flag & RSLLS_FREE_ENTRY_VALUE)
+		if (pnode->free_flag & FREE_ENTRY_VALUE)
 			free(pnode->value);
 		pnode->value = NULL;
 		pnode = pnode->pnext;
@@ -37,7 +37,7 @@ void rslls_free(rslls_t* plist) {
 	while (pnode != NULL) {
 		rsllse_t* pdel = pnode;
 		pnode = pnode->pnext;
-		if (pdel->free_flag & RSLLS_FREE_ENTRY_VALUE)
+		if (pdel->free_flag & FREE_ENTRY_VALUE)
 			free(pdel->value);
 		free(pdel);
 	}
@@ -76,7 +76,7 @@ static inline void rslls_add(rslls_t* plist, char* value, char free_flag) {
 }
 
 void rslls_add_with_free(rslls_t* plist, char* value) {
-	rslls_add(plist, value, RSLLS_FREE_ENTRY_VALUE);
+	rslls_add(plist, value, FREE_ENTRY_VALUE);
 }
 void rslls_add_no_free(rslls_t* plist, char* value) {
 	rslls_add(plist, value, 0);
