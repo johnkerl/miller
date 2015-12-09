@@ -216,8 +216,8 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					case EOF_STRIDX: // end of record
 						////printf("EOF\n");
 						*e = 0;
+						slls_add_no_free(pfields, p);
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -229,15 +229,15 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					case IFS_STRIDX: // end of field
 						////printf("IFS %c\n", *e);
 						*e = 0;
+						slls_add_no_free(pfields, p);
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
 						////printf("IRS %c\n", *e);
 						*e = 0;
+						slls_add_no_free(pfields, p);
 						p = e + matchlen;
-						slls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -255,7 +255,6 @@ static slls_t* lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pst
 					e += matchlen;
 				} else {
 					////printf("CHAR %d %c\n", *e, *e);
-					sb_append_char(psb, *e);
 					e++;
 				}
 			}
