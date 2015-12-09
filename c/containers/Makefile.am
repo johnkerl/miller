@@ -32,6 +32,8 @@ libcontainers_la_SOURCES=	\
 			parse_trie.h \
 			percentile_keeper.c \
 			percentile_keeper.h \
+			rslls.c \
+			rslls.h \
 			slls.c \
 			slls.h \
 			sllv.c \

@@ -84,7 +84,7 @@ TEST_PEEK_FILE_READER_SRCS = \
 TEST_LREC_SRCS = \
   lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
   containers/lrec.c containers/header_keeper.c containers/sllv.c \
-  containers/slls.c containers/lhmslv.c \
+  containers/slls.c containers/rslls.c containers/lhmslv.c \
   input/line_readers.c \
   input/file_reader_mmap.c      input/file_reader_stdio.c \
   input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
@@ -97,6 +97,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
   containers/lrec.c containers/header_keeper.c containers/sllv.c \
   containers/slls.c \
+  containers/rslls.c \
   containers/string_array.c \
   containers/hss.c \
   containers/lhmsi.c \

@@ -3,6 +3,7 @@
 #include "lib/minunit.h"
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
+#include "containers/rslls.h"
 #include "containers/sllv.h"
 #include "containers/string_array.h"
 #include "containers/hss.h"
@@ -51,6 +52,78 @@ static char* test_slls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
+
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_rslls() {
+
+	rslls_t* pa = rslls_alloc();
+	rslls_add_no_free(pa, "a");
+	rslls_add_no_free(pa, "b");
+	rslls_add_no_free(pa, "c");
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 3);
+	rsllse_t* pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_reset(pa);
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 0);
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_add_no_free(pa, "d");
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 1);
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_add_no_free(pa, "e");
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 2);
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_add_no_free(pa, "f");
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 3);
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "f")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_add_no_free(pa, "g");
+
+	rslls_print(pa); printf("\n");
+	mu_assert_lf(pa->length == 4);
+	pe = pa->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "f")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "g")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
+
+	rslls_free(pa);
 
 	return NULL;
 }
@@ -668,6 +741,7 @@ static char* test_dheap() {
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_slls);
+	mu_run_test(test_rslls);
 	mu_run_test(test_sllv);
 	mu_run_test(test_string_array);
 	mu_run_test(test_hss);
