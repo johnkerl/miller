@@ -34,6 +34,7 @@ MAJOR: csv mem-leak/read-perf
   ! rethink lrec_put/lrec_put_no_free entirely. 1st get timings for all filetypes.
   ! also do lrec_prepend
   ! big thick warning in lrec.h about the semantics
+  ! rename csv reader to stdio-csv reader
   ! mv_format_val take pfree_flags arg
   ! rm strdups in stdio-csv reader
   o redo inline-pasting but this time correctly weight the fragging effect
