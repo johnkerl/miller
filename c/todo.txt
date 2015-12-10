@@ -8,6 +8,9 @@ TOP OF LIST
 
 ! link to release notes from release-docs page
 
+* debian screenshot
+* wiz ack @ dox
+
 * faqents/cookbook
 
 * csv read perf
@@ -25,20 +28,23 @@ TOP OF LIST
 MAJOR: csv mem-leak/read-perf
 
 * current option runs faster w/o free, apparently due to heap-fragging
-  !! rslls -> stdio-csv reader
-  ~ malloc-trace ... verify heap-frag hypothesis for fp-csv reader.
-  ? mmap vopen/vclose -> api, for unit-testability. & x all readers.
-  k eliminate string-builder except where necessary
+
+  ! rename csv reader to stdio-csv reader
+  ! rslls -> stdio-csv reader
+  ! rm strdups in stdio-csv reader
+  ! also do lrec_prepend
   * in mmap-csv, try harder to not use the psb even in the dquoted case
+
+  * big thick warning in lrec.h about the semantics
+  * mv_format_val take pfree_flags arg
+  * redo inline-pasting but this time correctly weight the fragging effect
+  * power-of-two ...
+
+  ? mmap vopen/vclose -> api, for unit-testability. & x all readers.
+
   k reusable_slls: x both csv and both csvlite readers; xtab too.
   k eofpoke in wrapper vopen
-  ! also do lrec_prepend
-  ! big thick warning in lrec.h about the semantics
-  ! rename csv reader to stdio-csv reader
-  ! mv_format_val take pfree_flags arg
-  ! rm strdups in stdio-csv reader
-  o redo inline-pasting but this time correctly weight the fragging effect
-  o power-of-two ...
+
 * for stdio, needs some thought ...
 * ... but for mmap, it's almost always not necessary to strdup at all:
   only on escaped-double-quote case.

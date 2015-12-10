@@ -37,7 +37,7 @@
 #define DQUOTE_DQUOTE_STRIDX 0x2008
 
 // ----------------------------------------------------------------
-typedef struct _lrec_reader_csv_state_t {
+typedef struct _lrec_reader_stdio_csv_state_t {
 	// Input line number is not the same as the record-counter in context_t,
 	// which counts records.
 	long long  ilno;
@@ -66,22 +66,22 @@ typedef struct _lrec_reader_csv_state_t {
 	header_keeper_t*    pheader_keeper;
 	lhmslv_t*           pheader_keepers;
 
-} lrec_reader_csv_state_t;
+} lrec_reader_stdio_csv_state_t;
 
-static void    lrec_reader_csv_free(void* pvstate);
-static void    lrec_reader_csv_sof(void* pvstate);
-static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
-static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate);
-static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
-static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
-static void*   lrec_reader_csv_open(void* pvstate, char* filename);
-static void    lrec_reader_csv_close(void* pvstate, void* pvhandle);
+static void    lrec_reader_stdio_csv_free(void* pvstate);
+static void    lrec_reader_stdio_csv_sof(void* pvstate);
+static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
+static slls_t* lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstate);
+static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
+static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx);
+static void*   lrec_reader_stdio_csv_open(void* pvstate, char* filename);
+static void    lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
+lrec_reader_t* lrec_reader_stdio_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	lrec_reader_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_csv_state_t));
+	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
 	pstate->ilno          = 0LL;
 
 	pstate->eof           = "\xff";
@@ -122,18 +122,18 @@ lrec_reader_t* lrec_reader_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, i
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = lrec_reader_csv_open;
-	plrec_reader->pclose_func   = lrec_reader_csv_close;
-	plrec_reader->pprocess_func = lrec_reader_csv_process;
-	plrec_reader->psof_func     = lrec_reader_csv_sof;
-	plrec_reader->pfree_func    = lrec_reader_csv_free;
+	plrec_reader->popen_func    = lrec_reader_stdio_csv_open;
+	plrec_reader->pclose_func   = lrec_reader_stdio_csv_close;
+	plrec_reader->pprocess_func = lrec_reader_stdio_csv_process;
+	plrec_reader->psof_func     = lrec_reader_stdio_csv_sof;
+	plrec_reader->pfree_func    = lrec_reader_stdio_csv_free;
 
 	return plrec_reader;
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_csv_free(void* pvstate) {
-	lrec_reader_csv_state_t* pstate = pvstate;
+static void lrec_reader_stdio_csv_free(void* pvstate) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
@@ -146,18 +146,18 @@ static void lrec_reader_csv_free(void* pvstate) {
 
 // ----------------------------------------------------------------
 // xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
-static void lrec_reader_csv_sof(void* pvstate) {
-	lrec_reader_csv_state_t* pstate = pvstate;
+static void lrec_reader_stdio_csv_sof(void* pvstate) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
 }
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
-	lrec_reader_csv_state_t* pstate = pvstate;
+static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 
 	if (pstate->expect_header_line_next) {
-		slls_t* pheader_fields = lrec_reader_csv_get_fields(pstate);
+		slls_t* pheader_fields = lrec_reader_stdio_csv_get_fields(pstate);
 		if (pheader_fields == NULL)
 			return NULL;
 		pstate->ilno++;
@@ -180,7 +180,7 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 
 		pstate->expect_header_line_next = FALSE;
 	}
-	slls_t* pdata_fields = lrec_reader_csv_get_fields(pstate);
+	slls_t* pdata_fields = lrec_reader_stdio_csv_get_fields(pstate);
 	pstate->ilno++;
 	if (pdata_fields == NULL) // EOF
 		return NULL;
@@ -194,7 +194,7 @@ static lrec_t* lrec_reader_csv_process(void* pvstate, void* pvhandle, context_t*
 	}
 }
 
-static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
+static slls_t* lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstate) {
 	int rc, stridx, matchlen, record_done, field_done;
 	peek_file_reader_t* pfr = pstate->pfr;
 	string_builder_t*   psb = pstate->psb;
@@ -322,7 +322,7 @@ static slls_t* lrec_reader_csv_get_fields(lrec_reader_csv_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
@@ -335,7 +335,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* p
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, slls_t* pdata_fields, context_t* pctx) {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch (%d != %d) at file \"%s\" line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
@@ -352,14 +352,14 @@ static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pd
 }
 
 // ----------------------------------------------------------------
-static void* lrec_reader_csv_open(void* pvstate, char* filename) {
-	lrec_reader_csv_state_t* pstate = pvstate;
+static void* lrec_reader_stdio_csv_open(void* pvstate, char* filename) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
 	pfr_reset(pstate->pfr);
 	return NULL; // xxx modify the API after the functional refactor is complete
 }
 
-static void lrec_reader_csv_close(void* pvstate, void* pvhandle) {
-	lrec_reader_csv_state_t* pstate = pvstate;
+static void lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle) {
+	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->pclose_func(pstate->pfr->pbr);
 }
