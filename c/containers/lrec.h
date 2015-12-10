@@ -98,8 +98,6 @@ lrec_t* lrec_csv_alloc(char* data_line);
 lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 
 void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
-void  lrec_put_get_rid_of(lrec_t* prec, char* key, char* value, char free_flags);
-// xxx comment
 void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);

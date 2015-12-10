@@ -326,13 +326,10 @@ static lrec_t* paste_indices_and_data(lrec_reader_csv_state_t* pstate, slls_t* p
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
 	for (sllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
-		// Need to deal with heap-fragmentation among other things ...
-		// https://github.com/johnkerl/miller/issues/66
-		//char free_flags = FREE_ENTRY_VALUE;
-		char free_flags = 0;
+		char free_flags = FREE_ENTRY_VALUE;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, pd->value, free_flags);
+		lrec_put(prec, key, mlr_strdup_or_die(pd->value), free_flags);
 	}
 	return prec;
 }
@@ -349,11 +346,7 @@ static lrec_t* paste_header_and_data(lrec_reader_csv_state_t* pstate, slls_t* pd
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	sllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		// Need to deal with heap-fragmentation among other things ...
-		// https://github.com/johnkerl/miller/issues/66
-		//
-		// lrec_put_get_rid_of(prec, ph->value, pd->value, FREE_ENTRY_VALUE);
-		lrec_put(prec, ph->value, pd->value, NO_FREE);
+		lrec_put(prec, ph->value, mlr_strdup_or_die(pd->value), FREE_ENTRY_VALUE);
 	}
 	return prec;
 }

@@ -35,6 +35,7 @@ MAJOR: csv mem-leak/read-perf
   ! also do lrec_prepend
   ! big thick warning in lrec.h about the semantics
   ! mv_format_val take pfree_flags arg
+  ! rm strdups in stdio-csv reader
   o redo inline-pasting but this time correctly weight the fragging effect
   o power-of-two ...
 * for stdio, needs some thought ...

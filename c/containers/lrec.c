@@ -99,36 +99,6 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 	}
 }
 
-void lrec_put_get_rid_of(lrec_t* prec, char* key, char* value, char free_flags) {
-	lrece_t* pe = lrec_find_entry(prec, key);
-
-	if (pe != NULL) {
-		if (pe->free_flags & FREE_ENTRY_VALUE) {
-			free(pe->value);
-		}
-		pe->value = mlr_strdup_or_die(value);
-		pe->free_flags |= FREE_ENTRY_VALUE;
-	} else {
-		pe = mlr_malloc_or_die(sizeof(lrece_t));
-		pe->key         = mlr_strdup_or_die(key);
-		pe->value       = mlr_strdup_or_die(value);
-		pe->free_flags  = FREE_ENTRY_KEY | FREE_ENTRY_VALUE;
-
-		if (prec->phead == NULL) {
-			pe->pprev   = NULL;
-			pe->pnext   = NULL;
-			prec->phead = pe;
-			prec->ptail = pe;
-		} else {
-			pe->pprev   = prec->ptail;
-			pe->pnext   = NULL;
-			prec->ptail->pnext = pe;
-			prec->ptail = pe;
-		}
-		prec->field_count++;
-	}
-}
-
 void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
