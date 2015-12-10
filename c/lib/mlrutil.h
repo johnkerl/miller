@@ -76,6 +76,7 @@ static inline char * mlr_strdup_or_die(const char *s1) {
 		fprintf(stderr, "malloc/strdup failed\n");
 		exit(1);
 	}
+	//fprintf(stderr, "STRDUP size=%d,p=%p\n", (int)strlen(s2), s2);
 	return s2;
 }
 

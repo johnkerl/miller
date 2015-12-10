@@ -25,14 +25,15 @@ TOP OF LIST
 MAJOR: csv mem-leak/read-perf
 
 * current option runs faster w/o free, apparently due to heap-fragging
-  ! malloc-trace ... verify heap-frag hypothesis for fp-csv reader.
-  ! mmap vopen/vclose -> api, for unit-testability. & x all readers.
-  ! eliminate string-builder except where necessary
-  ! reusable_slls: x both csv and both csvlite readers; xtab too?
-  ! eofpoke in wrapper vopen
-  o memory leak in csv reader! careful about slls data, and do not use lrec_put_no_free
+  ~ malloc-trace ... verify heap-frag hypothesis for fp-csv reader.
+  ? mmap vopen/vclose -> api, for unit-testability. & x all readers.
+  k eliminate string-builder except where necessary
+  * in mmap-csv, try harder to not use the psb even in the dquoted case
+  k reusable_slls: x both csv and both csvlite readers; xtab too.
+  k eofpoke in wrapper vopen
+  ! rethink lrec_put/lrec_put_no_free entirely. 1st get timings for all filetypes.
   o redo inline-pasting but this time correctly weight the fragging effect
-  o power-of-two
+  o power-of-two ...
 * for stdio, needs some thought ...
 * ... but for mmap, it's almost always not necessary to strdup at all:
   only on escaped-double-quote case.

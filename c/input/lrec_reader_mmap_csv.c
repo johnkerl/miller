@@ -370,7 +370,8 @@ static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls
 	sllse_t* ph  = pstate->pheader_keeper->pkeys->phead;
 	rsllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		lrec_put(prec, ph->value, pd->value, pd->free_flag);
+		//lrec_put(prec, ph->value, pd->value, pd->free_flag);
+		lrec_put_no_free(prec, ph->value, pd->value);
 		pd->free_flag = 0;
 	}
 	return prec;

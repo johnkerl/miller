@@ -62,7 +62,7 @@ void* mlr_malloc_or_die(size_t size) {
 		fprintf(stderr, "malloc(%lu) failed.\n", (unsigned long)size);
 		exit(1);
 	}
-	//fprintf(stderr, "size=%d,p=%p\n", (int)size, p);
+	//fprintf(stderr, "MALLOC size=%d,p=%p\n", (int)size, p);
 	return p;
 }
 
@@ -73,6 +73,7 @@ void* mlr_realloc_or_die(void *optr, size_t size) {
 		fprintf(stderr, "realloc(%lu) failed.\n", (unsigned long)size);
 		exit(1);
 	}
+	//fprintf(stderr, "REALLOC size=%d,p=%p\n", (int)size, nptr);
 	return nptr;
 }
 
