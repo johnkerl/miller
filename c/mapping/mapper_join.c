@@ -407,14 +407,14 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		for ( ; pg != NULL && ph != NULL && pi != NULL; pg = pg->pnext, ph = ph->pnext, pi = pi->pnext) {
 			char* v = lrec_get(pleft_rec, pg->value);
 			if (v != NULL) {
-				lrec_put_get_rid_of(pout_rec, pi->value, mlr_strdup_or_die(v), FREE_ENTRY_VALUE);
+				lrec_put(pout_rec, pi->value, mlr_strdup_or_die(v), FREE_ENTRY_VALUE);
 			}
 		}
 
 		// add the left-record fields not already added
 		for (lrece_t* pl = pleft_rec->phead; pl != NULL; pl = pl->pnext) {
 			if (!hss_has(pstate->pleft_field_name_set, pl->key)) {
-				lrec_put_get_rid_of(pout_rec, compose_keys(pstate->popts->left_prefix, pl->key),
+				lrec_put(pout_rec, compose_keys(pstate->popts->left_prefix, pl->key),
 					mlr_strdup_or_die(pl->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			}
 		}
@@ -422,7 +422,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 		// add the right-record fields not already added
 		for (lrece_t* pr = pright_rec->phead; pr != NULL; pr = pr->pnext) {
 			if (!hss_has(pstate->pright_field_name_set, pr->key)) {
-				lrec_put_get_rid_of(pout_rec, compose_keys(pstate->popts->right_prefix, pr->key),
+				lrec_put(pout_rec, compose_keys(pstate->popts->right_prefix, pr->key),
 					mlr_strdup_or_die(pr->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			}
 		}
