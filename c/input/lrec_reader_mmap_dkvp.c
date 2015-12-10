@@ -131,7 +131,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -161,7 +161,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);
@@ -204,7 +204,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -234,7 +234,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);
@@ -277,7 +277,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -307,7 +307,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);
@@ -350,7 +350,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -380,7 +380,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put_get_rid_of(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);
