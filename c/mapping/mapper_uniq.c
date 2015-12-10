@@ -173,7 +173,7 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			sllse_t* pb = pstate->pgroup_by_field_names->phead;
 			sllse_t* pc =         pgroup_by_field_values->phead;
 			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-				lrec_put(poutrec, pb->value, pc->value, 0);
+				lrec_put(poutrec, pb->value, pc->value, NO_FREE);
 			}
 
 			if (pstate->show_counts) {

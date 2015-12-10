@@ -215,12 +215,11 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 				sllse_t* pb = pstate->pgroup_by_field_names->phead;
 				sllse_t* pc =         pgroup_by_field_values->phead;
 				for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-					lrec_put_get_rid_of(poutrec, pb->value, pc->value, 0);
+					lrec_put(poutrec, pb->value, pc->value, NO_FREE);
 				}
 
 				char* sidx = mlr_alloc_string_from_ull(i+1);
-				lrec_put_get_rid_of(poutrec, "top_idx", sidx, FREE_ENTRY_VALUE);
-				free(sidx);
+				lrec_put(poutrec, "top_idx", sidx, FREE_ENTRY_VALUE);
 
 				// Add in fields such as x_top_1=#
 				lhmsv_t* group_to_acc_field = pa->pvvalue;
@@ -233,9 +232,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_format_val(&numv);
-						lrec_put_get_rid_of(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+						lrec_put(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 					} else {
-						lrec_put_get_rid_of(poutrec, key, "", FREE_ENTRY_KEY);
+						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
 					}
 				}
 				sllv_add(poutrecs, poutrec);
