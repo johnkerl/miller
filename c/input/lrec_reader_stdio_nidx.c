@@ -117,7 +117,7 @@ lrec_t* lrec_parse_stdio_nidx_single_sep(char* line, char ifs, int allow_repeat_
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -135,7 +135,7 @@ lrec_t* lrec_parse_stdio_nidx_single_sep(char* line, char ifs, int allow_repeat_
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -161,7 +161,7 @@ lrec_t* lrec_parse_stdio_nidx_multi_sep(char* line, char* ifs, int ifslen, int a
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -179,7 +179,7 @@ lrec_t* lrec_parse_stdio_nidx_multi_sep(char* line, char* ifs, int ifslen, int a
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
