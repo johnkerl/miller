@@ -202,6 +202,15 @@ fdsl_atom_or_fcn(A) ::= FILTER_DSL_FIELD_NAME(B). {
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
+fdsl_atom_or_fcn(A) ::= FILTER_DSL_BRACKETED_FIELD_NAME(B). {
+  // xxx
+	char* dollar_name = B->text;
+	char* no_dollar_name = &dollar_name[2];
+  int len = strlen(no_dollar_name);
+  if (len > 0)
+    no_dollar_name[len-1] = 0;
+	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
+}
 fdsl_atom_or_fcn(A) ::= FILTER_DSL_NUMBER(B). {
 	A = B;
 }

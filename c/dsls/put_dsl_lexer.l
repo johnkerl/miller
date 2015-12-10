@@ -144,6 +144,13 @@
 	return PUT_DSL_FIELD_NAME;
 }
 
+\$\{([^\}]|\\.)*\} {
+	// Note: the parser depends on the dollar sign being here. If this is changed,
+	// that needs to be changed as well.
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
+	return PUT_DSL_BRACKETED_FIELD_NAME;
+}
+
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
   // Leading minus sign is handled via the unary-minus operator, not here.
   // 123
