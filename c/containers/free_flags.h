@@ -7,6 +7,7 @@
 // keys/values; examples of the latter include data from string literals, or
 // from mmapped file-input data.
 
+#define NO_FREE          0x00
 #define FREE_ENTRY_KEY   0x80
 #define FREE_ENTRY_VALUE 0x08
 

@@ -16,16 +16,16 @@ static char* test_lrec_unbacked_api() {
 	lrec_t* prec = lrec_unbacked_alloc();
 	mu_assert_lf(prec->field_count == 0);
 
-	lrec_put_no_free(prec, "x", "3");
+	lrec_put(prec, "x", "3", NO_FREE);
 	mu_assert_lf(prec->field_count == 1);
 	mu_assert_lf(streq(lrec_get(prec, "x"), "3"));
 
-	lrec_put_no_free(prec, "y", "4");
+	lrec_put(prec, "y", "4", NO_FREE);
 	mu_assert_lf(prec->field_count == 2);
 	mu_assert_lf(streq(lrec_get(prec, "x"), "3"));
 	mu_assert_lf(streq(lrec_get(prec, "y"), "4"));
 
-	lrec_put_no_free(prec, "x", "5");
+	lrec_put(prec, "x", "5", NO_FREE);
 	mu_assert_lf(prec->field_count == 2);
 	mu_assert_lf(streq(lrec_get(prec, "x"), "5"));
 	mu_assert_lf(streq(lrec_get(prec, "y"), "4"));
@@ -48,9 +48,9 @@ static char* test_lrec_unbacked_api() {
 	// Replacing-rename case
 	prec = lrec_unbacked_alloc();
 
-	lrec_put_no_free(prec, "x", "3");
-	lrec_put_no_free(prec, "y", "4");
-	lrec_put_no_free(prec, "z", "5");
+	lrec_put(prec, "x", "3", NO_FREE);
+	lrec_put(prec, "y", "4", NO_FREE);
+	lrec_put(prec, "z", "5", NO_FREE);
 	mu_assert_lf(prec->field_count == 3);
 
 	//lrec_dump_titled("Before rename", prec);

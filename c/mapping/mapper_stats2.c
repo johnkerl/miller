@@ -337,7 +337,7 @@ static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 		sllse_t* pb = pstate->pgroup_by_field_names->phead;
 		sllse_t* pc =         pgroup_by_field_values->phead;
 		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-			lrec_put(poutrec, pb->value, pc->value, 0);
+			lrec_put_get_rid_of(poutrec, pb->value, pc->value, 0);
 		}
 
 		// Add in fields such as x_y_corr, etc.
@@ -486,20 +486,20 @@ static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec
 	stats2_linreg_ols_state_t* pstate = pvstate;
 
 	if (pstate->count < 2) {
-		lrec_put(poutrec, pstate->m_output_field_name, "", FREE_ENTRY_KEY);
-		lrec_put(poutrec, pstate->b_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->m_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->b_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double m, b;
 		mlr_get_linear_regression_ols(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumxy, pstate->sumy, &m, &b);
 		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
 		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 
-		lrec_put(poutrec, pstate->m_output_field_name, mval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		lrec_put(poutrec, pstate->b_output_field_name, bval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->m_output_field_name, mval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->b_output_field_name, bval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 
 	char* nval = mlr_alloc_string_from_ll(pstate->count);
-	lrec_put(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	lrec_put_get_rid_of(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 
 static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
@@ -512,11 +512,11 @@ static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* pou
 	}
 
 	if (pstate->count < 2) {
-		lrec_put(poutrec, pstate->fit_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->fit_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double yfit = pstate->m * x + pstate->b;
 		char* sfit = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->fit_output_field_name, sfit, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->fit_output_field_name, sfit, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 
@@ -566,20 +566,20 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 	stats2_logireg_state_t* pstate = pvstate;
 
 	if (pstate->pxs->size < 2) {
-		lrec_put(poutrec, pstate->m_output_field_name, "", FREE_ENTRY_KEY);
-		lrec_put(poutrec, pstate->b_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->m_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->b_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double m, b;
 		mlr_logistic_regression(pstate->pxs->data, pstate->pys->data, pstate->pxs->size, &m, &b);
 		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt);
 		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt);
 
-		lrec_put(poutrec, pstate->m_output_field_name, mval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		lrec_put(poutrec, pstate->b_output_field_name, bval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->m_output_field_name, mval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->b_output_field_name, bval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 
 	char* nval = mlr_alloc_string_from_ll(pstate->pxs->size);
-	lrec_put(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	lrec_put_get_rid_of(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 
 static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
@@ -591,11 +591,11 @@ static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutre
 	}
 
 	if (pstate->pxs->size < 2) {
-		lrec_put(poutrec, pstate->fit_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->fit_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double yfit = 1.0 / (1.0 + exp(-pstate->m*x - pstate->b));
 		char* fitval = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->fit_output_field_name, fitval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->fit_output_field_name, fitval, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 
@@ -644,7 +644,7 @@ static void stats2_r2_ingest(void* pvstate, double x, double y) {
 static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
 	stats2_r2_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->r2_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->r2_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		unsigned long long n = pstate->count;
 		double sumx  = pstate->sumx;
@@ -657,7 +657,7 @@ static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* pout
 		double denominator = (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy);
 		double output = numerator/denominator;
 		char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->r2_output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, pstate->r2_output_field_name, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 }
 static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
@@ -734,10 +734,10 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		char* key10 = pstate->covx_10_output_field_name;
 		char* key11 = pstate->covx_11_output_field_name;
 		if (pstate->count < 2LL) {
-			lrec_put(poutrec, key00, "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, key01, "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, key10, "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, key11, "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, key00, "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, key01, "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, key10, "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, key11, "", FREE_ENTRY_KEY);
 		} else {
 			double Q[2][2];
 			mlr_get_cov_matrix(pstate->count,
@@ -746,10 +746,10 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 			char* val01 = mlr_alloc_string_from_double(Q[0][1], MLR_GLOBALS.ofmt);
 			char* val10 = mlr_alloc_string_from_double(Q[1][0], MLR_GLOBALS.ofmt);
 			char* val11 = mlr_alloc_string_from_double(Q[1][1], MLR_GLOBALS.ofmt);
-			lrec_put(poutrec, key00, val00, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			lrec_put(poutrec, key01, val01, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			lrec_put(poutrec, key10, val10, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			lrec_put(poutrec, key11, val11, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, key00, val00, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, key01, val01, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, key10, val10, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, key11, val11, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
 
 	} else if (pstate->do_which == DO_LINREG_PCA) {
@@ -764,17 +764,17 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 		char* keyv21 = pstate->pca_v21_output_field_name;
 		char* keyv22 = pstate->pca_v22_output_field_name;
 		if (pstate->count < 2LL) {
-			lrec_put(poutrec, keym,   "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, keyb,   "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, keyn,   "", FREE_ENTRY_KEY);
-			lrec_put(poutrec, keyq,   "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, keym,   "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, keyb,   "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, keyn,   "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, keyq,   "", FREE_ENTRY_KEY);
 			if (pstate->do_verbose) {
-				lrec_put(poutrec, keyl1,  "", FREE_ENTRY_KEY);
-				lrec_put(poutrec, keyl2,  "", FREE_ENTRY_KEY);
-				lrec_put(poutrec, keyv11, "", FREE_ENTRY_KEY);
-				lrec_put(poutrec, keyv12, "", FREE_ENTRY_KEY);
-				lrec_put(poutrec, keyv21, "", FREE_ENTRY_KEY);
-				lrec_put(poutrec, keyv22, "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyl1,  "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyl2,  "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyv11, "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyv12, "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyv21, "", FREE_ENTRY_KEY);
+				lrec_put_get_rid_of(poutrec, keyv22, "", FREE_ENTRY_KEY);
 			}
 		} else {
 			double Q[2][2];
@@ -791,23 +791,23 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 			mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q);
 
 			char free_flags = FREE_ENTRY_KEY|FREE_ENTRY_VALUE;
-			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt), free_flags);
-			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt), free_flags);
-			lrec_put(poutrec, keyn, mlr_alloc_string_from_ll(pstate->count),           free_flags);
-			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put_get_rid_of(poutrec, keym, mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put_get_rid_of(poutrec, keyb, mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt), free_flags);
+			lrec_put_get_rid_of(poutrec, keyn, mlr_alloc_string_from_ll(pstate->count),           free_flags);
+			lrec_put_get_rid_of(poutrec, keyq, mlr_alloc_string_from_double(q, MLR_GLOBALS.ofmt), free_flags);
 			if (pstate->do_verbose) {
-				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    MLR_GLOBALS.ofmt), free_flags);
-				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    MLR_GLOBALS.ofmt), free_flags);
-				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], MLR_GLOBALS.ofmt), free_flags);
-				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], MLR_GLOBALS.ofmt), free_flags);
-				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], MLR_GLOBALS.ofmt), free_flags);
-				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], MLR_GLOBALS.ofmt), free_flags);
+				lrec_put_get_rid_of(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], MLR_GLOBALS.ofmt), free_flags);
 			}
 		}
 	} else {
 		char* key = (pstate->do_which == DO_CORR) ? pstate->corr_output_field_name : pstate->cov_output_field_name;
 		if (pstate->count < 2LL) {
-			lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
+			lrec_put_get_rid_of(poutrec, key, "", FREE_ENTRY_KEY);
 		} else {
 			double output = mlr_get_cov(pstate->count, pstate->sumx, pstate->sumy, pstate->sumxy);
 			if (pstate->do_which == DO_CORR) {
@@ -816,7 +816,7 @@ static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t
 				output = output / sigmax / sigmay;
 			}
 			char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-			lrec_put(poutrec, key, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, key, val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
 	}
 }
@@ -840,11 +840,11 @@ static void linreg_pca_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 		pstate->fit_ready = TRUE;
 	}
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->pca_fit_output_field_name, "", FREE_ENTRY_KEY);
+		lrec_put_get_rid_of(poutrec, pstate->pca_fit_output_field_name, "", FREE_ENTRY_KEY);
 	} else {
 		double yfit = pstate->m * x + pstate->b;
 		char free_flags = FREE_ENTRY_KEY|FREE_ENTRY_VALUE;
-		lrec_put(poutrec, pstate->pca_fit_output_field_name, mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt),
+		lrec_put_get_rid_of(poutrec, pstate->pca_fit_output_field_name, mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt),
 			free_flags);
 	}
 }

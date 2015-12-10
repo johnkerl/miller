@@ -193,7 +193,7 @@ static sllv_t* mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void*
 			idx = 0;
 		if (idx > pstate->width)
 			idx = pstate->width;
-		lrec_put_no_free(pinrec, name, pstate->bars[idx]);
+		lrec_put(pinrec, name, pstate->bars[idx], NO_FREE);
 	}
 	return sllv_single(pinrec);
 }
@@ -258,7 +258,7 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 			sb_append_string(psb, "[");
 			sb_append_string(psb, shi);
 			sb_append_string(psb, "]");
-			lrec_put(prec, name, sb_finish(psb), FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(prec, name, sb_finish(psb), FREE_ENTRY_VALUE);
 		}
 
 	}

@@ -97,13 +97,13 @@ lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allo
 		while (*p != 0 && *p != ips)
 			p++;
 		if (*p == 0) {
-			lrec_put_no_free(prec, key, "");
+			lrec_put(prec, key, "", NO_FREE);
 		} else {
 			while (*p != 0 && *p == ips) {
 				*p = 0;
 				p++;
 			}
-			lrec_put_no_free(prec, key, p);
+			lrec_put(prec, key, p, NO_FREE);
 		}
 	}
 
@@ -121,13 +121,13 @@ lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipsl
 		while (*p != 0 && !streqn(p, ips, ipslen))
 			p++; // Advance by only 1 in case of subsequent match
 		if (*p == 0) {
-			lrec_put_no_free(prec, key, "");
+			lrec_put(prec, key, "", NO_FREE);
 		} else {
 			while (*p != 0 && !streqn(p, ips, ipslen)) {
 				*p = 0;
 				p += ipslen;
 			}
-			lrec_put_no_free(prec, key, p);
+			lrec_put(prec, key, p, NO_FREE);
 		}
 	}
 

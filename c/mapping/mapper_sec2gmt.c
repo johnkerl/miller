@@ -80,7 +80,7 @@ static sllv_t* mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvs
 			continue;
 
 		if (*sval == 0) {
-			lrec_put_no_free(pinrec, name, "");
+			lrec_put(pinrec, name, "", NO_FREE);
 		} else {
 			double dval = mlr_double_from_string_or_die(sval);
 
@@ -91,7 +91,7 @@ static sllv_t* mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvs
 			char* stamp = mlr_malloc_or_die(32);
 			(void)strftime(stamp, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
 
-			lrec_put(pinrec, name, stamp, FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(pinrec, name, stamp, FREE_ENTRY_VALUE);
 		}
 	}
 	return sllv_single(pinrec);

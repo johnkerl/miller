@@ -136,7 +136,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 		if (p >= phandle->eof)
 			phandle->sol = p+1;
 
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 
 		if (phandle->sol >= phandle->eof || *phandle->sol == ifs)
 			break;
@@ -190,7 +190,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 		if (p >= phandle->eof)
 			phandle->sol = p+1;
 
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 
 		if (phandle->sol >= phandle->eof || *phandle->sol == ifs)
 			break;
@@ -244,7 +244,7 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phan
 		if (p >= phandle->eof)
 			phandle->sol = p+1;
 
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 
 		if (phandle->sol >= phandle->eof || streqn(phandle->sol, ifs, ifslen))
 			break;
@@ -298,7 +298,7 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phand
 		if (p >= phandle->eof)
 			phandle->sol = p+1;
 
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 
 		if (phandle->sol >= phandle->eof || streqn(phandle->sol, ifs, ifslen))
 			break;

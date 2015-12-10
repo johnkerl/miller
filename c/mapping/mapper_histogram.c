@@ -187,11 +187,11 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
 		free(value);
 
 		value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
 		free(value);
 
 		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
@@ -201,7 +201,7 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 			char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
 
 			value = mlr_alloc_string_from_ull(pcounts[i]);
-			lrec_put(poutrec, count_field_name, value, FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, count_field_name, value, FREE_ENTRY_VALUE);
 			free(value);
 		}
 
@@ -296,11 +296,11 @@ static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		char* value = mlr_alloc_string_from_double(lo + i / mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
 		free(value);
 
 		value = mlr_alloc_string_from_double(lo + (i+1) / mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+		lrec_put_get_rid_of(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
 		free(value);
 
 		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
@@ -308,7 +308,7 @@ static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
 			unsigned long long* pcounts = lhmsv_get(pstate->pcounts_by_field, value_field_name);
 			char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
 			value = mlr_alloc_string_from_ull(pcounts[i]);
-			lrec_put(poutrec, count_field_name, value, FREE_ENTRY_VALUE);
+			lrec_put_get_rid_of(poutrec, count_field_name, value, FREE_ENTRY_VALUE);
 			free(value);
 		}
 

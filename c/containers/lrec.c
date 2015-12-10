@@ -67,7 +67,7 @@ lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines) {
 }
 
 // ----------------------------------------------------------------
-void lrec_put_no_free(lrec_t* prec, char* key, char* value) {
+void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) {
@@ -76,11 +76,13 @@ void lrec_put_no_free(lrec_t* prec, char* key, char* value) {
 		}
 		pe->value = value;
 		pe->free_flags &= ~FREE_ENTRY_VALUE;
+		if (free_flags & FREE_ENTRY_VALUE)
+			pe->free_flags |= FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
 		pe->key        = key;
 		pe->value      = value;
-		pe->free_flags = 0;
+		pe->free_flags = free_flags;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
@@ -97,7 +99,7 @@ void lrec_put_no_free(lrec_t* prec, char* key, char* value) {
 	}
 }
 
-void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
+void lrec_put_get_rid_of(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) {
@@ -425,31 +427,31 @@ static lrece_t* lrec_find_entry(lrec_t* prec, char* key) {
 // ----------------------------------------------------------------
 lrec_t* lrec_literal_1(char* k1, char* v1) {
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, k1, v1);
+	lrec_put(prec, k1, v1, NO_FREE);
 	return prec;
 }
 
 lrec_t* lrec_literal_2(char* k1, char* v1, char* k2, char* v2) {
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, k1, v1);
-	lrec_put_no_free(prec, k2, v2);
+	lrec_put(prec, k1, v1, NO_FREE);
+	lrec_put(prec, k2, v2, NO_FREE);
 	return prec;
 }
 
 lrec_t* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3) {
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, k1, v1);
-	lrec_put_no_free(prec, k2, v2);
-	lrec_put_no_free(prec, k3, v3);
+	lrec_put(prec, k1, v1, NO_FREE);
+	lrec_put(prec, k2, v2, NO_FREE);
+	lrec_put(prec, k3, v3, NO_FREE);
 	return prec;
 }
 
 lrec_t* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3, char* k4, char* v4) {
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, k1, v1);
-	lrec_put_no_free(prec, k2, v2);
-	lrec_put_no_free(prec, k3, v3);
-	lrec_put_no_free(prec, k4, v4);
+	lrec_put(prec, k1, v1, NO_FREE);
+	lrec_put(prec, k2, v2, NO_FREE);
+	lrec_put(prec, k3, v3, NO_FREE);
+	lrec_put(prec, k4, v4, NO_FREE);
 	return prec;
 }
 

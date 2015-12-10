@@ -349,7 +349,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			}
 			key = pe->value;
 			pe = pe->pnext;
-			lrec_put_no_free(prec, key, value);
+			lrec_put(prec, key, value, NO_FREE);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -372,7 +372,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 		exit(1);
 	} else {
 		key = pe->value;
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
@@ -426,7 +426,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			}
 			key = pe->value;
 			pe = pe->pnext;
-			lrec_put_no_free(prec, key, value);
+			lrec_put(prec, key, value, NO_FREE);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -449,7 +449,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 		exit(1);
 	} else {
 		key = pe->value;
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
@@ -497,7 +497,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 		} else if (*p == ifs) {
 			*p = 0;
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put(prec, key, value, free_flags);
+			lrec_put_get_rid_of(prec, key, value, free_flags);
 			p++;
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
@@ -515,7 +515,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put(prec, key, value, free_flags);
+		lrec_put_get_rid_of(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -559,7 +559,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put(prec, key, value, free_flags);
+			lrec_put_get_rid_of(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -578,7 +578,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put(prec, key, value, free_flags);
+		lrec_put_get_rid_of(prec, key, value, free_flags);
 	}
 
 	return prec;

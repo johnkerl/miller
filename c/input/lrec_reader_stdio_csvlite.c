@@ -270,7 +270,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 			}
 			key = pe->value;
 			pe = pe->pnext;
-			lrec_put_no_free(prec, key, value);
+			lrec_put(prec, key, value, NO_FREE);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -290,7 +290,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 		exit(1);
 	} else {
 		key = pe->value;
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.argv0, filename, ilno);
@@ -325,7 +325,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 			}
 			key = pe->value;
 			pe = pe->pnext;
-			lrec_put_no_free(prec, key, value);
+			lrec_put(prec, key, value, NO_FREE);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -345,7 +345,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 		exit(1);
 	} else {
 		key = pe->value;
-		lrec_put_no_free(prec, key, value);
+		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.argv0, filename, ilno);
@@ -377,7 +377,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 			*p = 0;
 
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put(prec, key, value, free_flags);
+			lrec_put_get_rid_of(prec, key, value, free_flags);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -393,8 +393,8 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put_no_free(prec, key, value);
-		lrec_put(prec, key, value, free_flags);
+		lrec_put(prec, key, value, NO_FREE);
+		lrec_put_get_rid_of(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -419,7 +419,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put(prec, key, value, free_flags);
+			lrec_put_get_rid_of(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -435,7 +435,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put(prec, key, value, free_flags);
+		lrec_put_get_rid_of(prec, key, value, free_flags);
 	}
 
 	return prec;

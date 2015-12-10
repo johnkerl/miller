@@ -1684,7 +1684,7 @@ static char * test2() {
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, "s", "abc");
+	lrec_put(prec, "s", "abc", NO_FREE);
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
 	mv_t val = ps->pevaluator_func(prec, pctx, ps->pvstate);
@@ -1744,7 +1744,7 @@ static char * test3() {
 	lrec_evaluator_t*  pastr = lrec_evaluator_alloc_from_ast(p2logxnode, TYPE_INFER_STRING_FLOAT_INT);
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	lrec_put_no_free(prec, "x", "4.5");
+	lrec_put(prec, "x", "4.5", NO_FREE);
 
 	mv_t valp2     = p2->pevaluator_func(prec,     pctx, p2->pvstate);
 	mv_t valp4     = p4->pevaluator_func(prec,     pctx, p4->pvstate);
