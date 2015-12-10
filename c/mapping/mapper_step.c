@@ -272,7 +272,7 @@ static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	} else {
 		delta = n_nn_minus_func(pnumv, &pstate->prev);
 	}
-	lrec_put_get_rid_of(prec, pstate->output_field_name, mv_format_val(&delta), FREE_ENTRY_VALUE);
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&delta), FREE_ENTRY_VALUE);
 	pstate->prev = *pnumv;
 }
 static step_t* step_delta_alloc(char* input_field_name, int allow_int_float) {
@@ -304,7 +304,7 @@ static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	} else {
 		from_first = n_nn_minus_func(pnumv, &pstate->first);
 	}
-	lrec_put_get_rid_of(prec, pstate->output_field_name, mv_format_val(&from_first), FREE_ENTRY_VALUE);
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&from_first), FREE_ENTRY_VALUE);
 }
 static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
@@ -333,7 +333,7 @@ static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 	} else {
 		pstate->have_prev = TRUE;
 	}
-	lrec_put_get_rid_of(prec, pstate->output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
+	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
 		FREE_ENTRY_VALUE);
 	pstate->prev = fltv;
 }
@@ -361,7 +361,7 @@ typedef struct _step_rsum_state_t {
 static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum = n_nn_plus_func(&pstate->rsum, pnumv);
-	lrec_put_get_rid_of(prec, pstate->output_field_name, mv_format_val(&pstate->rsum),
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->rsum),
 		FREE_ENTRY_VALUE);
 }
 
@@ -387,7 +387,7 @@ typedef struct _step_counter_state_t {
 static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
 	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
-	lrec_put_get_rid_of(prec, pstate->output_field_name, mv_format_val(&pstate->counter),
+	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->counter),
 		FREE_ENTRY_VALUE);
 }
 static step_t* step_counter_alloc(char* input_field_name, int allow_int_float) {
