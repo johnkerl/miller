@@ -120,7 +120,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -140,7 +140,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -172,7 +172,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -192,7 +192,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -224,7 +224,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phan
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -244,7 +244,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phan
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -276,7 +276,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phand
 
 			idx++;
 			key = make_nidx_key(idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -296,7 +296,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phand
 		; // OK
 	} else {
 		key = make_nidx_key(idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
