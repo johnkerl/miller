@@ -497,7 +497,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 		} else if (*p == ifs) {
 			*p = 0;
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 			p++;
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
@@ -515,7 +515,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
@@ -559,7 +559,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			key = make_nidx_key(++idx, &free_flags);
-			lrec_put_get_rid_of(prec, key, value, free_flags);
+			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -578,7 +578,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 		; // OK
 	} else {
 		key = make_nidx_key(++idx, &free_flags);
-		lrec_put_get_rid_of(prec, key, value, free_flags);
+		lrec_put(prec, key, value, free_flags);
 	}
 
 	return prec;
