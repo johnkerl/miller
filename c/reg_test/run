@@ -653,6 +653,9 @@ run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/mo
 run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
+run_mlr --icsvlite --oxtab put '$z = ${b.c} + ${d*e}' $indir/braced.csv
+run_mlr --icsvlite --oxtab filter '${b.c} < ${d*e}' $indir/braced.csv
+
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 

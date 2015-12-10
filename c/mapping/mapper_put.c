@@ -39,8 +39,9 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
-	fprintf(o, "literals. Miller built-in variables are NF NR FNR FILENUM FILENAME PI E.\n");
-	fprintf(o, "Multiple assignments may be separated with a semicolon.\n");
+	fprintf(o, "literals. If field names have special characters such as \".\". then you might\n");
+	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
+	fprintf(o, "NF NR FNR FILENUM FILENAME PI E.\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$filename = FILENAME'\n", argv0, verb);

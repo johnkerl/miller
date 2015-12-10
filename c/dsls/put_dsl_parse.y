@@ -220,7 +220,7 @@ pdsl_atom_or_fcn(A) ::= PUT_DSL_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 pdsl_atom_or_fcn(A) ::= PUT_DSL_BRACKETED_FIELD_NAME(B). {
-  // xxx
+  // Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
   int len = strlen(no_dollar_name);

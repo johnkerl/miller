@@ -6916,6 +6916,22 @@ x=3,y=,z=3
 x=,y=,z=
 x=,y=2,z=2
 
+mlr --icsvlite --oxtab put $z = ${b.c} + ${d*e} ./reg_test/input/braced.csv
+a   1
+b.c 2
+d*e 3
+z   5
+
+a   4
+b.c 6
+d*e 5
+z   11
+
+mlr --icsvlite --oxtab filter ${b.c} < ${d*e} ./reg_test/input/braced.csv
+a   1
+b.c 2
+d*e 3
+
 
 ================================================================
 DSL NULL/EMPTY HANDLING

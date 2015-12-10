@@ -8,6 +8,7 @@ EXTRA_DIST=	\
 		abixy-wide-short \
 		b.csv \
 		b.pprint \
+		braced.csv \
 		c.csv \
 		c.pprint \
 		d.csv \
