@@ -99,8 +99,6 @@ static void mapper_sample_free(void* pvstate) {
 		sample_bucket_t* pbucket = pa->pvvalue;
 		sample_bucket_free(pbucket);
 	}
-
-	// xxx free the void-star payloads 1st
 	lhmslv_free(pstate->pbuckets_by_group);
 }
 
