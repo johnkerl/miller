@@ -77,7 +77,13 @@ static void mapper_tail_free(void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
-	// xxx free the void-star payloads 1st
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
+		sllv_t* precord_list_for_group = pa->pvvalue;
+		// outrecs were freed by caller of mapper_tail_process. Here, just free
+		// the sllv container itself.
+		sllv_free(precord_list_for_group);
+	}
 	lhmslv_free(pstate->precord_lists_by_group);
 }
 
@@ -107,6 +113,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
 			sllv_t* precord_list_for_group = pa->pvvalue;
 			for (sllve_t* pb = precord_list_for_group->phead; pb != NULL; pb = pb->pnext) {
+				// The caller will free the outrecs.
 				sllv_add(poutrecs, pb->pvdata);
 			}
 		}

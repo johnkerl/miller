@@ -8,8 +8,6 @@ TOP OF LIST
 
 ! link to release notes from release-docs page
 
-!! bracketed @ lhs + UTs for put
-
 * debian screenshot
 * wiz ack @ dox
 
