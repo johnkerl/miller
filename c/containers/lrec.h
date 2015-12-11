@@ -97,6 +97,23 @@ lrec_t* lrec_csvlite_alloc(char* data_line);
 lrec_t* lrec_csv_alloc(char* data_line);
 lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 
+// The only difference between lrec_put and lrec_prepend is that the latter
+// adds to the end of the record, while the former adds to the beginning.
+//
+// For both, the key/value respectively will be freed by lrec_free if the
+// corresponding bits are set in the free_flags.
+//
+// * If a string literal or other non-allocated pointer (e.g. mmapped memory
+//   from a file reader) is passed in, the free flag should not be set.
+//
+// * If dynamically allocated pointers are passed in, then either:
+//
+//   o The respective free_flag(s) should be set and the caller should be sure
+//     not to also free (else, there will be heap corruption due to
+//     double-free), or
+//
+//   o The respective free_flag(s) should not be set and the caller should
+//     free the memory (else, there will be a memory leak).
 void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
 void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 

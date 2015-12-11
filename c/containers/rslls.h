@@ -8,8 +8,22 @@
 // of fields (say N), so using slls, the CSV reader would be allocating and
 // freeing N nodes on every line. Mingled in with other mallocs and frees, this
 // results in needless heap fragmentation. Here, by contrast, as a performance
-// optimization, the CSV reader can keep and reuse an N-node list, only
+// optimization, the CSV reader can keep and reuse the nodes of a list, only
 // changing the value-pointers on each CSV line.
+//
+// This means that while an slls iteration looks like
+//
+//   for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
+//     ...
+//   }
+//
+// an rslls iteration must also check length:
+//
+//   int i = 0;
+//   for (rsllse_t* pe = plist->phead; i < plist->length && pe != NULL; pe = pe->pnext, i++) {
+//     ...
+//   }
+//
 // ================================================================
 
 #ifndef RSLLS_H

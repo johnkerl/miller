@@ -24,7 +24,6 @@ TOP OF LIST
   - EOF_STRIDX <-> p>=e in mmap-csv reader
   - mainly xxxes
   - look for others
-  - cmt i<n needed in rslls iterator, at the .h
 
 * compressed I/O:
   - libs ...
@@ -42,8 +41,6 @@ NEATEN:
 
 * in mmap-csv, try harder to not use the psb even in the dquoted case
 * big thick warning in lrec.h about the semantics
-* cmt the csv readers x 2 re free-flags handoffs
-* char[] -> int[] for parser delimiters and full int EOF
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
