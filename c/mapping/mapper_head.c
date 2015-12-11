@@ -85,8 +85,6 @@ static void mapper_head_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-// xxx if empty key then make a way to communicate back to the reader that it
-// can stop reading further records -- ?
 static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_head_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
@@ -108,8 +106,7 @@ static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				return NULL;
 			}
 		}
-	}
-	else {
+	} else {
 		return sllv_single(NULL);
 	}
 }
