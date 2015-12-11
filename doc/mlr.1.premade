@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2015-12-10
+.\"      Date: 2015-12-11
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2015-12-10" "\ \&" "\ \&"
+.TH "MILLER" "1" "2015-12-11" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,7 +209,6 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
       dkvp         \en       ,        =
       nidx         \en       space    (N/A)
       csv          \er\en     ,        (N/A)
-      csvex        \er\en     ,        (N/A)
       csvlite      \en       ,        (N/A)
       pprint       \en       space    (N/A)
       xtab         (N/A)    \en       space
