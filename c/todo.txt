@@ -27,8 +27,6 @@ TOP OF LIST
 ----------------------------------------------------------------
 MAJOR: csv mem-leak/read-perf
 
-* current option runs faster w/o free, apparently due to heap-fragging
-
   ! also do lrec_prepend
   * in mmap-csv, try harder to not use the psb even in the dquoted case
 

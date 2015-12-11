@@ -106,13 +106,15 @@ void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 		if (pe->free_flags & FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
-		pe->value = mlr_strdup_or_die(value);
-		pe->free_flags |= FREE_ENTRY_VALUE;
+		pe->value = value;
+		pe->free_flags &= ~FREE_ENTRY_VALUE;
+		if (free_flags & FREE_ENTRY_VALUE)
+			pe->free_flags |= FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
-		pe->key         = mlr_strdup_or_die(key);
-		pe->value       = mlr_strdup_or_die(value);
-		pe->free_flags  = FREE_ENTRY_KEY | FREE_ENTRY_VALUE;
+		pe->key         = key;
+		pe->value       = value;
+		pe->free_flags  = free_flags;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
