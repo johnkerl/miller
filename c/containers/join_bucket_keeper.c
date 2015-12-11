@@ -335,8 +335,6 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** ppre
 // * consume left input stream, feeding into unpaired, for as long as leftvals < rightvals && !eof.
 // * if there is leftrec with vals == rightvals: parallel initial_fill.
 //   else ... parallel initial_fill. :)
-// Post-conditions:
-// * xxx
 
 static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t* pright_field_values,
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
