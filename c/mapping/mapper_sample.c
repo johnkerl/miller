@@ -94,6 +94,11 @@ static void mapper_sample_free(void* pvstate) {
 	mapper_sample_state_t* pstate = pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->pbuckets_by_group->phead; pa != NULL; pa = pa->pnext) {
+		sample_bucket_t* pbucket = pa->pvvalue;
+		sample_bucket_free(pbucket);
+	}
 
 	// xxx free the void-star payloads 1st
 	lhmslv_free(pstate->pbuckets_by_group);
@@ -122,6 +127,7 @@ static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvst
 			sample_bucket_t* pbucket = pa->pvvalue;
 			for (int i = 0; i < pbucket->nused; i++) {
 				sllv_add(poutrecs, pbucket->plrecs[i]);
+				pbucket->plrecs[i] = NULL;
 			}
 			pbucket->nused = 0;
 		}
