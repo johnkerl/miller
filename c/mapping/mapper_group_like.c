@@ -58,7 +58,11 @@ static mapper_t* mapper_group_like_alloc() {
 
 static void mapper_group_like_free(void* pvstate) {
 	mapper_group_like_state_t* pstate = (mapper_group_like_state_t*)pvstate;
-	// xxx check for full recursive free
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->precords_by_key_field_names->phead; pa != NULL; pa = pa->pnext) {
+		sllv_t* plist = pa->pvvalue;
+		sllv_free(plist);
+	}
 	lhmslv_free(pstate->precords_by_key_field_names);
 }
 
@@ -76,13 +80,13 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 			sllv_add(plist, pinrec);
 		}
 		return NULL;
-	}
-	else {
+	} else {
 		sllv_t* poutput = sllv_alloc();
 		for (lhmslve_t* pe = pstate->precords_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 			sllv_t* plist = pe->pvvalue;
 			for (sllve_t* pf = plist->phead; pf != NULL; pf = pf->pnext) {
 				sllv_add(poutput, pf->pvdata);
+				pf->pvdata = NULL;
 			}
 		}
 		sllv_add(poutput, NULL);
