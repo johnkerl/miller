@@ -52,15 +52,15 @@ static mapper_t* mapper_tac_alloc() {
 
 static void mapper_tac_free(void* pvstate) {
 	mapper_tac_state_t* pstate = pvstate;
-	if (pstate->records != NULL)
-		// xxx free the void-star payload
-		sllv_free(pstate->records);
+	// Free the container
+	sllv_free(pstate->records);
 }
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tac_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
+		// The caller will free the outrecs
 		sllv_add(pstate->records, pinrec);
 		return NULL;
 	}
