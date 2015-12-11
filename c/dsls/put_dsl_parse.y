@@ -48,11 +48,24 @@ pdsl_assignments ::= pdsl_assignment PUT_DSL_SEMICOLON pdsl_assignments.
 // within Miller internally, field names are of the form "x".  We coded the
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
+
 pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
+  // Replace "$field.name" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+	sllv_add(pasts, A);
+}
 
+pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
+  // Replace "${field.name}" with just "field.name"
+	char* dollar_name = B->text;
+	char* no_dollar_name = &dollar_name[2];
+  int len = strlen(no_dollar_name);
+  if (len > 0)
+    no_dollar_name[len-1] = 0;
+	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 	sllv_add(pasts, A);
 }

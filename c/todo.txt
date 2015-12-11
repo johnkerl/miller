@@ -8,20 +8,24 @@ TOP OF LIST
 
 ! link to release notes from release-docs page
 
+!! bracketed @ lhs + UTs for put
+
 * debian screenshot
 * wiz ack @ dox
 
 * faqents/cookbook
 
 * more perf tuning:
-  - strict power-of-two malloc/strdups thruout?!?
+  - strict power-of-two malloc/strdups thruout?!? profile.
   - mv_format_val take pfree_flags arg?
   - MT_STRING free-flags?
+  - in mmap-csv, try harder to not use the psb even in the dquoted case
 * mem-mgmt scrutinize:
   - frees
   - valgrind w/ leak check @ regtest/run
 * misc neaten issues:
   - EOF_STRIDX <-> p>=e in mmap-csv reader
+    > be sure no-term tests are both mmap and nommap
   - mainly xxxes
   - look for others
 
@@ -36,11 +40,11 @@ TOP OF LIST
   ? redhat ?
   ? other ?
 
-----------------------------------------------------------------
-NEATEN:
-
-* in mmap-csv, try harder to not use the psb even in the dquoted case
-* big thick warning in lrec.h about the semantics
+* flight misc:
+  - --rs lf splatters
+  - .screenrc -> dotfiles
+  - fminus -> python too
+  - mlr as data prep clean
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:

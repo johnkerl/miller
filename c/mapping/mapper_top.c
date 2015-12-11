@@ -123,7 +123,16 @@ static void mapper_top_free(void* pvstate) {
 	mapper_top_state_t* pstate = pvstate;
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
+
+	// Free the hashmap pvvalues; the lhm free methods will free the hashmap keys.
+	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+		lhmsv_t* pgroup = pa->pvvalue;
+		for (lhmsve_t* pb = pgroup->phead; pb != NULL; pb = pb->pnext) {
+			top_keeper_t* ptop_keeper_for_group = pb->pvvalue;
+			top_keeper_free(ptop_keeper_for_group);
+		}
+	}
+
 	lhmslv_free(pstate->groups);
 }
 

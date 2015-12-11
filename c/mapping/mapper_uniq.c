@@ -128,7 +128,11 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 static void mapper_uniq_free(void* pvstate) {
 	mapper_uniq_state_t* pstate = pvstate;
 	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the void-star payload
+	// lhmslv_free will free the keys: we only need to free the void-star values.
+	for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
+		unsigned long long* pcount = pa->pvvalue;
+		free(pcount);
+	}
 	lhmslv_free(pstate->pcounts_by_group);
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;

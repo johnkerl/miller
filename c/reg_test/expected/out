@@ -6916,21 +6916,23 @@ x=3,y=,z=3
 x=,y=,z=
 x=,y=2,z=2
 
-mlr --icsvlite --oxtab put $z = ${b.c} + ${d*e} ./reg_test/input/braced.csv
-a   1
-b.c 2
-d*e 3
-z   5
+mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y} ./reg_test/input/braced.csv
+name.x 1
+name.y 2
+z      3
+x+y    3
+x*y    2
 
-a   4
-b.c 6
-d*e 5
-z   11
+name.x 4
+name.y 6
+z      5
+x+y    10
+x*y    24
 
-mlr --icsvlite --oxtab filter ${b.c} < ${d*e} ./reg_test/input/braced.csv
-a   1
-b.c 2
-d*e 3
+mlr --icsvlite --oxtab filter ${name.y} < ${z} ./reg_test/input/braced.csv
+name.x 1
+name.y 2
+z      3
 
 
 ================================================================
