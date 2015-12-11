@@ -205,7 +205,6 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	rslls_t* pfields, file_reader_mmap_state_t* phandle)
 {
-	////printf("GF ENTER\n");
 	int rc, stridx, matchlen, record_done, field_done;
 	string_builder_t* psb = pstate->psb;
 
@@ -220,7 +219,6 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	while (!record_done) {
 		// Assumption is dquote is "\""
 		if (*e != pstate->dquote[0]) { // start of non-quoted field
-			////printf("LOOP TOP NON-DQ %c\n", *e);
 
 			// Loop over characters in field
 			field_done = FALSE;
@@ -229,7 +227,6 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 				if (rc) {
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
-						////printf("EOF\n");
 						*e = 0;
 						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
@@ -242,14 +239,12 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						exit(1);
 						break;
 					case IFS_STRIDX: // end of field
-						////printf("IFS %c\n", *e);
 						*e = 0;
 						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
-						////printf("IRS %c\n", *e);
 						*e = 0;
 						rslls_add_no_free(pfields, p);
 						p = e + matchlen;
@@ -277,15 +272,12 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					record_done = TRUE;
 					break;
 				} else {
-					////printf("CHAR %d %c\n", *e, *e);
 					e++;
 				}
 			}
 
 		} else { // start of quoted field
-			////printf("LOOP TOP DQ %c\n", *e);
 			e += pstate->dquotelen;
-			////printf("LOOP TOP DQ %c\n", *e);
 
 			// loop over characters in field
 			field_done = FALSE;

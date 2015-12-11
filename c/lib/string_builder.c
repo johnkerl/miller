@@ -4,6 +4,11 @@
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 
+// To avoid heap fragmentation, round alloc lengths up to a round number.
+#define BLOCK_SIZE 32
+#define BLOCK_LENGTH_MASK  (BLOCK_SIZE-1)
+#define BLOCK_LENGTH_NMASK (~(BLOCK_SIZE-1))
+
 // ----------------------------------------------------------------
 string_builder_t* sb_alloc(int alloc_length) {
 	string_builder_t* psb = mlr_malloc_or_die(sizeof(string_builder_t));
@@ -47,7 +52,8 @@ int sb_is_empty(string_builder_t* psb) {
 // the size needed.
 char* sb_finish(string_builder_t* psb) {
 	sb_append_char(psb, '\0');
-	char* rv = mlr_malloc_or_die(psb->used_length);
+	int alloc_length = (psb->used_length + BLOCK_LENGTH_MASK) & BLOCK_LENGTH_NMASK;
+	char* rv = mlr_malloc_or_die(alloc_length);
 	memcpy(rv, psb->buffer, psb->used_length);
 	psb->used_length  = 0;
 	return rv;

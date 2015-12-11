@@ -33,6 +33,7 @@ MAJOR: csv mem-leak/read-perf
   ! rslls -> stdio-csv reader
   ! rm strdups in stdio-csv reader
   ! also do lrec_prepend
+  ! round psb copy size
   * in mmap-csv, try harder to not use the psb even in the dquoted case
 
   * big thick warning in lrec.h about the semantics
@@ -40,6 +41,7 @@ MAJOR: csv mem-leak/read-perf
   * redo inline-pasting but this time correctly weight the fragging effect
   * power-of-two ...
 
+  * cmt the csv readers x 2 re free-flags handoffs
   ? mmap vopen/vclose -> api, for unit-testability. & x all readers.
 
   k reusable_slls: x both csv and both csvlite readers; xtab too.
