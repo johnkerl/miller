@@ -18,6 +18,10 @@ TOP OF LIST
 * misc neaten issues
   - mainly frees & xxxes
 
+* compressed I/O:
+  - libs ...
+  - popen w/ specified args, e.g. zcat or gzip -v9
+
 * packaging/currency:
   k brew
   - netbsd
