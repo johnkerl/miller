@@ -329,21 +329,25 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+	context_t* pctx)
+{
 	int idx = 0;
 	lrec_t* prec = lrec_unbacked_alloc();
 	for (rsllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
 		char free_flags = pd->free_flag;
 		idx++;
 		char* key = make_nidx_key(idx, &free_flags);
-		lrec_put(prec, key, mlr_strdup_or_die(pd->value), free_flags);
+		lrec_put(prec, key, pd->value, free_flags);
 		pd->free_flag = 0;
 	}
 	return prec;
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx) {
+static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+	context_t* pctx)
+{
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch (%d != %d) at file \"%s\" line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
@@ -354,7 +358,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 	sllse_t* ph = pstate->pheader_keeper->pkeys->phead;
 	rsllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
-		lrec_put(prec, ph->value, mlr_strdup_or_die(pd->value), pd->free_flag);
+		lrec_put(prec, ph->value, pd->value, pd->free_flag);
 		pd->free_flag = 0;
 	}
 	return prec;

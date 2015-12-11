@@ -12,6 +12,8 @@
 #define FALSE 0
 #define NEITHER_TRUE_NOR_FALSE -1
 
+//#define MLR_MALLOC_TRACE
+
 // ----------------------------------------------------------------
 //int mlr_canonical_mod(int a, int n);
 static inline int mlr_canonical_mod(int a, int n) {
@@ -76,7 +78,9 @@ static inline char * mlr_strdup_or_die(const char *s1) {
 		fprintf(stderr, "malloc/strdup failed\n");
 		exit(1);
 	}
-	//fprintf(stderr, "STRDUP size=%d,p=%p\n", (int)strlen(s2), s2);
+#ifdef MLR_MALLOC_TRACE
+	fprintf(stderr, "STRDUP size=%d,p=%p\n", (int)strlen(s2), s2);
+#endif
 	return s2;
 }
 
