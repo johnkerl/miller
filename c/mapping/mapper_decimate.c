@@ -86,7 +86,11 @@ static void mapper_decimate_free(void* pvstate) {
 	mapper_decimate_state_t* pstate = (mapper_decimate_state_t*)pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
-	// xxx recursively free void-stars ... here & elsewhere.
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
+		unsigned long long* pcount_for_group = pa->pvvalue;
+		free(pcount_for_group);
+	}
 	lhmslv_free(pstate->precord_lists_by_group);
 }
 
