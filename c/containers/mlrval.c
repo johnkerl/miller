@@ -34,8 +34,6 @@
 //   type(s).
 // ================================================================
 
-#define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
-
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *tm);
 
@@ -476,7 +474,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 #define NZBUFLEN 63
 
 // Precondition: psec is either int or float.
-static mv_t time_string_from_seconds(mv_t* psec, char* format) {
+mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	time_t clock = 0;
 	if (psec->type == MT_FLOAT) {
 		if (isinf(psec->u.fltv) || isnan(psec->u.fltv)) {

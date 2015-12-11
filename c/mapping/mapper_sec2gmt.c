@@ -1,5 +1,6 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
+#include "containers/mlrval.h"
 #include "containers/slls.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
@@ -82,16 +83,10 @@ static sllv_t* mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvs
 		if (*sval == 0) {
 			lrec_put(pinrec, name, "", NO_FREE);
 		} else {
-			double dval = mlr_double_from_string_or_die(sval);
+			mv_t mval = mv_scan_number_or_die(sval);
+			mv_t stamp = time_string_from_seconds(&mval, ISO8601_TIME_FORMAT);
 
-			// xxx make mlrutil func
-			time_t clock = (time_t) dval;
-			struct tm tm;
-			struct tm *ptm = gmtime_r(&clock, &tm);
-			char* stamp = mlr_malloc_or_die(32);
-			(void)strftime(stamp, 32, "%Y-%m-%dT%H:%M:%SZ", ptm);
-
-			lrec_put(pinrec, name, stamp, FREE_ENTRY_VALUE);
+			lrec_put(pinrec, name, stamp.u.strv, FREE_ENTRY_VALUE);
 		}
 	}
 	return sllv_single(pinrec);

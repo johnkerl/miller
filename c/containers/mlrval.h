@@ -27,6 +27,8 @@
 
 #define MV_SB_ALLOC_LENGTH 32
 
+#define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
+
 typedef struct _mv_t {
 	union {
 		int        boolv;
@@ -269,6 +271,8 @@ mv_t i_s_hms2sec_func(mv_t* pval1);
 mv_t f_s_hms2fsec_func(mv_t* pval1);
 mv_t i_s_dhms2sec_func(mv_t* pval1);
 mv_t f_s_dhms2fsec_func(mv_t* pval1);
+
+mv_t time_string_from_seconds(mv_t* psec, char* format);
 
 mv_t i_s_strlen_func(mv_t* pval1);
 
