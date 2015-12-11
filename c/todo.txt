@@ -16,6 +16,7 @@ TOP OF LIST
 * csv read perf
 * mem-mgmt scrutinize
 * misc neaten issues
+  - mainly frees & xxxes
 
 * packaging/currency:
   k brew
@@ -25,37 +26,17 @@ TOP OF LIST
   ? other ?
 
 ----------------------------------------------------------------
-MAJOR: csv mem-leak/read-perf
+NEATEN:
 
-  ! also do lrec_prepend
-  * in mmap-csv, try harder to not use the psb even in the dquoted case
+! strict power-of-two malloc/strdups thruout?!?
 
-  * big thick warning in lrec.h about the semantics
-  * mv_format_val take pfree_flags arg
-  * redo inline-pasting but this time correctly weight the fragging effect
+* in mmap-csv, try harder to not use the psb even in the dquoted case
 
-  * cmt the csv readers x 2 re free-flags handoffs
-  ? mmap vopen/vclose -> api, for unit-testability. & x all readers.
+* big thick warning in lrec.h about the semantics
+? mv_format_val take pfree_flags arg?
 
-  k power-of-two ...
-  k round psb copy size
-  k rm strdups in stdio-csv reader
-  k rename csv reader to stdio-csv reader
-  k rslls -> stdio-csv reader
-  k reusable_slls: x both csv and both csvlite readers; xtab too.
-  k eofpoke in wrapper vopen
+* cmt the csv readers x 2 re free-flags handoffs
 
-* for stdio, needs some thought ...
-* ... but for mmap, it's almost always not necessary to strdup at all:
-  only on escaped-double-quote case.
-* denormalize the pbr & make stdio pbr & ptr-backed (mmap,UT-string) pbr.
-* code-dup (yes, sadly!) the CSV reader into two & do strups in stdio
-  but lrec_put w/ !LREC_FREE_VALUE for ptr-backed.
-* or *maybe* pbr retent/free-flags for string/mmap w/o denorm, but only
-  if it's both elegant and fast
-! experimental/getlines.c shows that even without the heap-fragging
-  issue, pfr+psb is 3.5x slower than getdelim. again suggesting
-  multi-char-terminated getdelim might be the best line of approach.
 * char[] -> int[] for parser delimiters and full int EOF
 
 ----------------------------------------------------------------
