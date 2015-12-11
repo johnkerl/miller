@@ -26,12 +26,14 @@
 typedef void stats2_ingest_func_t(void* pvstate, double x, double y);
 typedef void   stats2_emit_func_t(void* pvstate, char* name1, char* name2, lrec_t* poutrec);
 typedef void    stats2_fit_func_t(void* pvstate, double x, double y, lrec_t* poutrec);
+typedef void   stats2_free_func_t(void* pvstate);
 
 typedef struct _stats2_t {
 	void* pvstate;
 	stats2_ingest_func_t* pingest_func;
 	stats2_emit_func_t*   pemit_func;
 	stats2_fit_func_t*    pfit_func;
+	stats2_free_func_t*   pfree_func;
 } stats2_t;
 
 typedef struct _mapper_stats2_state_t {
@@ -57,7 +59,7 @@ static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pv
 static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
 static sllv_t*   mapper_stats2_emit_all(mapper_stats2_state_t* pstate);
 static void      mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* pinrec,
-	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state);
+	char* value_field_name_1, char* value_field_name_2, lhmsv_t* pacc_fields_to_acc_state);
 static sllv_t*   mapper_stats2_fit_all(mapper_stats2_state_t* pstate);
 
 static stats2_t* make_stats2            (char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose);
@@ -193,8 +195,24 @@ static void mapper_stats2_free(void* pvstate) {
 	slls_free(pstate->paccumulator_names);
 	string_array_free(pstate->pvalue_field_name_pairs);
 	slls_free(pstate->pgroup_by_field_names);
-	// xxx free the level-2's 1st
+	// lhmslv_free and lhmsv_free will free the hashmap keys; we need to free
+	// the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->acc_groups->phead; pa != NULL; pa = pa->pnext) {
+		lhms2v_t* pgroup_to_acc_field = pa->pvvalue;
+		for (lhms2ve_t* pb = pgroup_to_acc_field->phead; pb != NULL; pb = pb->pnext) {
+			lhmsv_t* pacc_fields_to_acc_state = pb->pvvalue;
+			for (lhmsve_t* pc = pacc_fields_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
+				stats2_t* pstats2 = pc->pvvalue;
+				if (pstats2->pfree_func != NULL) // xxx
+					pstats2->pfree_func(pstats2->pvstate);
+			}
+			lhmsv_free(pacc_fields_to_acc_state);
+		}
+		lhms2v_free(pgroup_to_acc_field);
+	}
 	lhmslv_free(pstate->acc_groups);
+	// xxx
+	//sllv_t* group_to_records = lhmslv_get(pstate->record_groups, pgroup_by_field_values);
 	lhmslv_free(pstate->record_groups);
 }
 
@@ -265,10 +283,10 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		return;
 	}
 
-	lhms2v_t* group_to_acc_field = lhmslv_get(pstate->acc_groups, pgroup_by_field_values);
-	if (group_to_acc_field == NULL) {
-		group_to_acc_field = lhms2v_alloc();
-		lhmslv_put(pstate->acc_groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+	lhms2v_t* pgroup_to_acc_field = lhmslv_get(pstate->acc_groups, pgroup_by_field_values);
+	if (pgroup_to_acc_field == NULL) {
+		pgroup_to_acc_field = lhms2v_alloc();
+		lhmslv_put(pstate->acc_groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field);
 	}
 
 	if (pstate->do_hold_and_fit) { // Retain the input record in memory, for fitting and delivery at end of stream
@@ -286,10 +304,10 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		char* value_field_name_1 = pstate->pvalue_field_name_pairs->strings[i];
 		char* value_field_name_2 = pstate->pvalue_field_name_pairs->strings[i+1];
 
-		lhmsv_t* acc_fields_to_acc_state = lhms2v_get(group_to_acc_field, value_field_name_1, value_field_name_2);
-		if (acc_fields_to_acc_state == NULL) {
-			acc_fields_to_acc_state = lhmsv_alloc();
-			lhms2v_put(group_to_acc_field, value_field_name_1, value_field_name_2, acc_fields_to_acc_state);
+		lhmsv_t* pacc_fields_to_acc_state = lhms2v_get(pgroup_to_acc_field, value_field_name_1, value_field_name_2);
+		if (pacc_fields_to_acc_state == NULL) {
+			pacc_fields_to_acc_state = lhmsv_alloc();
+			lhms2v_put(pgroup_to_acc_field, value_field_name_1, value_field_name_2, pacc_fields_to_acc_state);
 		}
 
 		char* sval1 = lrec_get(pinrec, value_field_name_1);
@@ -299,7 +317,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		sllse_t* pc = pstate->paccumulator_names->phead;
 		for ( ; pc != NULL; pc = pc->pnext) {
 			char* stats2_name = pc->value;
-			stats2_t* pstats2 = lhmsv_get(acc_fields_to_acc_state, stats2_name);
+			stats2_t* pstats2 = lhmsv_get(pacc_fields_to_acc_state, stats2_name);
 			if (pstats2 == NULL) {
 				pstats2 = make_stats2(value_field_name_1, value_field_name_2, stats2_name, pstate->do_verbose);
 				if (pstats2 == NULL) {
@@ -307,7 +325,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 						stats2_name);
 					exit(1);
 				}
-				lhmsv_put(acc_fields_to_acc_state, stats2_name, pstats2);
+				lhmsv_put(pacc_fields_to_acc_state, stats2_name, pstats2);
 			}
 			if (sval1 == NULL || sval2 == NULL)
 				continue;
@@ -318,7 +336,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		}
 		if (pstate->do_iterative_stats) {
 			mapper_stats2_emit(pstate, pinrec, value_field_name_1, value_field_name_2,
-				acc_fields_to_acc_state);
+				pacc_fields_to_acc_state);
 		}
 	}
 
@@ -341,19 +359,19 @@ static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 		}
 
 		// Add in fields such as x_y_corr, etc.
-		lhms2v_t* group_to_acc_field = pa->pvvalue;
+		lhms2v_t* pgroup_to_acc_field = pa->pvvalue;
 
 		// For "x","y"
-		for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+		for (lhms2ve_t* pd = pgroup_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 			char*    value_field_name_1 = pd->key1;
 			char*    value_field_name_2 = pd->key2;
-			lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
+			lhmsv_t* pacc_fields_to_acc_state = pd->pvvalue;
 
 			mapper_stats2_emit(pstate, poutrec, value_field_name_1, value_field_name_2,
-				acc_fields_to_acc_state);
+				pacc_fields_to_acc_state);
 
 			// For "corr", "linreg"
-			for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+			for (lhmsve_t* pe = pacc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 				stats2_t* pstats2 = pe->pvvalue;
 				pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 			}
@@ -366,10 +384,10 @@ static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 }
 
 static void mapper_stats2_emit(mapper_stats2_state_t* pstate, lrec_t* poutrec,
-	char* value_field_name_1, char* value_field_name_2, lhmsv_t* acc_fields_to_acc_state)
+	char* value_field_name_1, char* value_field_name_2, lhmsv_t* pacc_fields_to_acc_state)
 {
 	// For "corr", "linreg"
-	for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsve_t* pe = pacc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 		stats2_t* pstats2 = pe->pvvalue;
 		pstats2->pemit_func(pstats2->pvstate, value_field_name_1, value_field_name_2, poutrec);
 	}
@@ -386,16 +404,16 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 		while (precords->phead) {
 			lrec_t* prec = sllv_pop(precords);
 
-			lhms2v_t* group_to_acc_field = pa->pvvalue;
+			lhms2v_t* pgroup_to_acc_field = pa->pvvalue;
 
 			// For "x","y"
-			for (lhms2ve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
+			for (lhms2ve_t* pd = pgroup_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				char*    value_field_name_1 = pd->key1;
 				char*    value_field_name_2 = pd->key2;
-				lhmsv_t* acc_fields_to_acc_state = pd->pvvalue;
+				lhmsv_t* pacc_fields_to_acc_state = pd->pvvalue;
 
 				// For "linreg-ols", "logireg"
-				for (lhmsve_t* pe = acc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
+				for (lhmsve_t* pe = pacc_fields_to_acc_state->phead; pe != NULL; pe = pe->pnext) {
 					stats2_t* pstats2 = pe->pvvalue;
 					if (pstats2->pfit_func != NULL) {
 						char* sx = lrec_get(prec, value_field_name_1);
@@ -540,6 +558,7 @@ static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_f
 	pstats2->pingest_func = stats2_linreg_ols_ingest;
 	pstats2->pemit_func   = stats2_linreg_ols_emit;
 	pstats2->pfit_func    = stats2_linreg_ols_fit;
+	pstats2->pfree_func   = NULL;
 	return pstats2;
 }
 
@@ -581,6 +600,15 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 	char* nval = mlr_alloc_string_from_ll(pstate->pxs->size);
 	lrec_put(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_VALUE);
 }
+static void stats2_logireg_free(void* pvstate) {
+  stats2_logireg_state_t* pstate = pvstate;
+  free(pstate->m_output_field_name);
+  free(pstate->b_output_field_name);
+  free(pstate->n_output_field_name);
+  free(pstate->fit_output_field_name);
+  dvector_free(pstate->pxs);
+  dvector_free(pstate->pys);
+}
 
 static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	stats2_logireg_state_t* pstate = pvstate;
@@ -616,6 +644,7 @@ static stats2_t* stats2_logireg_alloc(char* value_field_name_1, char* value_fiel
 	pstats2->pingest_func = stats2_logireg_ingest;
 	pstats2->pemit_func   = stats2_logireg_emit;
 	pstats2->pfit_func    = stats2_logireg_fit;
+	pstats2->pfree_func   = stats2_logireg_free;
 	return pstats2;
 }
 
@@ -660,6 +689,10 @@ static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* pout
 		lrec_put(poutrec, pstate->r2_output_field_name, val, FREE_ENTRY_VALUE);
 	}
 }
+static void stats2_r2_free(void* pvstate) {
+	stats2_r2_state_t* pstate = pvstate;
+	free(pstate->r2_output_field_name);
+}
 static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_r2_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_r2_state_t));
@@ -675,6 +708,7 @@ static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_nam
 	pstats2->pingest_func = stats2_r2_ingest;
 	pstats2->pemit_func   = stats2_r2_emit;
 	pstats2->pfit_func    = NULL;
+	pstats2->pfree_func   = stats2_r2_free;
 
 	return pstats2;
 }
@@ -847,6 +881,30 @@ static void linreg_pca_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
 	}
 }
 
+static void stats2_corr_cov_free(void* pvstate) {
+	stats2_corr_cov_state_t* pstate = pvstate;
+
+	free(pstate->covx_00_output_field_name);
+	free(pstate->covx_01_output_field_name);
+	free(pstate->covx_10_output_field_name);
+	free(pstate->covx_11_output_field_name);
+
+	free(pstate->pca_m_output_field_name);
+	free(pstate->pca_b_output_field_name);
+	free(pstate->pca_n_output_field_name);
+	free(pstate->pca_q_output_field_name);
+	free(pstate->pca_l1_output_field_name);
+	free(pstate->pca_l2_output_field_name);
+	free(pstate->pca_v11_output_field_name);
+	free(pstate->pca_v12_output_field_name);
+	free(pstate->pca_v21_output_field_name);
+	free(pstate->pca_v22_output_field_name);
+	free(pstate->pca_fit_output_field_name);
+
+	free(pstate->corr_output_field_name);
+	free(pstate->cov_output_field_name);
+}
+
 static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_which, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
@@ -892,6 +950,7 @@ static stats2_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_fie
 		pstats2->pfit_func = linreg_pca_fit;
 	else
 		pstats2->pfit_func = NULL;
+	pstats2->pfree_func = stats2_corr_cov_free;
 
 	return pstats2;
 }
