@@ -227,14 +227,17 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 }
 
 // ----------------------------------------------------------------
-// xxx to do: at end of sort, free and nullify the things populated within
-// mapper_sort_process.  here, free the things allocated at setup time.
 static void mapper_sort_free(void* pvstate) {
 	mapper_sort_state_t* pstate = pvstate;
 	if (pstate->pkey_field_names != NULL)
 		slls_free(pstate->pkey_field_names);
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pa = pstate->pbuckets_by_key_field_names->phead; pa != NULL; pa = pa->pnext) {
+		bucket_t* pbucket = pa->pvvalue;
+		free(pbucket->typed_sort_keys);
+		// precords freed in emitter
+	}
 
-	// xxx free void-star payloads 1st
 	lhmslv_free(pstate->pbuckets_by_key_field_names);
 	free(pstate->sort_params);
 }
@@ -251,7 +254,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
 			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 				slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
-				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t)); // xxx free in the free func
+				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
 				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 				pbucket->precords = sllv_alloc();
 				sllv_add(pbucket->precords, pinrec);
