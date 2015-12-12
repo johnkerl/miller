@@ -873,6 +873,7 @@ static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int
 // ----------------------------------------------------------------
 typedef struct _stats1_percentile_state_t {
 	percentile_keeper_t* ppercentile_keeper;
+	lhmss_t* poutput_field_names;
 } stats1_percentile_state_t;
 static void stats1_percentile_ningest(void* pvstate, mv_t* pval) {
 	stats1_percentile_state_t* pstate = pvstate;
@@ -885,10 +886,12 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	(void)sscanf(stats1_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
 	mv_t v = percentile_keeper_emit(pstate->ppercentile_keeper, p);
 	char* s = mv_format_val(&v);
-	// For this type, one accumulator tracks many stats1_names.
-	// xxx to do: keep a hashmap from string stats1_name to string
-	// output_field_name in the pstate, populated by the alloc. or, lazily populated here.
-	char* output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	// For this type, one accumulator tracks many stats1_names, but a single value_field_name.
+	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_name);
+	if (output_field_name == NULL) {
+		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+		lhmss_put(pstate->poutput_field_names, stats1_name, output_field_name);
+	}
 	lrec_put(poutrec, output_field_name, s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 static void stats1_percentile_free(void* pvstate) {
@@ -899,6 +902,7 @@ static stats1_t* stats1_percentile_alloc(char* value_field_name, char* stats1_na
 	stats1_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_t));
 	stats1_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
+	pstate->poutput_field_names = lhmss_alloc();
 
 	pstats1->pvstate        = (void*)pstate;
 	pstats1->pdingest_func  = NULL;
