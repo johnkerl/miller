@@ -851,7 +851,6 @@ typedef struct _lrec_evaluator_x_sr_state_t {
 	lrec_evaluator_t*             parg1;
 	regex_t                       regex;
 	string_builder_t*             psb;
-	// xxx other odders
 } lrec_evaluator_x_sr_state_t;
 
 mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
