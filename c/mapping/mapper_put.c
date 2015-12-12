@@ -146,7 +146,10 @@ static mapper_t* mapper_put_alloc(sllv_t* pasts, int type_inferencing) {
 static void mapper_put_free(void* pvstate) {
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 	free(pstate->output_field_names);
-	// xxx recursively free them.
+	for (int i = 0; i < pstate->num_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
+		pevaluator->pfree_func(pevaluator->pvstate);
+	}
 	free(pstate->pevaluators);
 }
 
@@ -155,7 +158,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	if (pinrec != NULL) {
 		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 		for (int i = 0; i < pstate->num_evaluators; i++) {
-			mv_t val = pstate->pevaluators[i]->pevaluator_func(pinrec,
+			mv_t val = pstate->pevaluators[i]->pprocess_func(pinrec,
 				pctx, pstate->pevaluators[i]->pvstate);
 			char* string = mv_format_val(&val);
 			lrec_put(pinrec, pstate->output_field_names[i], string, FREE_ENTRY_VALUE);

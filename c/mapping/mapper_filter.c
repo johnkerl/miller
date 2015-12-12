@@ -113,17 +113,15 @@ static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferenc
 }
 
 static void mapper_filter_free(void* pvstate) {
-	//mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
-	//xxx lrec_evaluator needs a pfree_func
-	//if (pstate->pevaluator != NULL)
-		//hss_free(pstate->pevaluator);
+	mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
+	pstate->pevaluator->pfree_func(pstate->pevaluator->pvstate);
 }
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		mv_t val = pstate->pevaluator->pevaluator_func(pinrec,
+		mv_t val = pstate->pevaluator->pprocess_func(pinrec,
 			pctx, pstate->pevaluator->pvstate);
 		if (val.type == MT_NULL) {
 			return NULL;

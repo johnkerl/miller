@@ -237,7 +237,6 @@ static void mapper_sort_free(void* pvstate) {
 		free(pbucket->typed_sort_keys);
 		// precords freed in emitter
 	}
-
 	lhmslv_free(pstate->pbuckets_by_key_field_names);
 	free(pstate->sort_params);
 }
