@@ -20,6 +20,7 @@ TOP OF LIST
   - in mmap-csv, try harder to not use the psb even in the dquoted case
 * mem-mgmt scrutinize:
   - frees
+  - more prec-pop logic ...
   - valgrind w/ leak check @ regtest/run
 * misc neaten issues:
   - EOF_STRIDX <-> p>=e in mmap-csv reader

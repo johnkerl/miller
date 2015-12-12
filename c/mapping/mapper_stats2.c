@@ -203,16 +203,17 @@ static void mapper_stats2_free(void* pvstate) {
 			lhmsv_t* pacc_fields_to_acc_state = pb->pvvalue;
 			for (lhmsve_t* pc = pacc_fields_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
 				stats2_t* pstats2 = pc->pvvalue;
-				if (pstats2->pfree_func != NULL) // xxx
-					pstats2->pfree_func(pstats2->pvstate);
+				pstats2->pfree_func(pstats2->pvstate);
 			}
 			lhmsv_free(pacc_fields_to_acc_state);
 		}
 		lhms2v_free(pgroup_to_acc_field);
 	}
 	lhmslv_free(pstate->acc_groups);
-	// xxx
-	//sllv_t* group_to_records = lhmslv_get(pstate->record_groups, pgroup_by_field_values);
+	for (lhmslve_t* pd = pstate->record_groups->phead; pd != NULL; pd = pd->pnext) {
+		sllv_t* plist = pd->pvvalue;
+		sllv_free(plist);
+	}
 	lhmslv_free(pstate->record_groups);
 }
 
