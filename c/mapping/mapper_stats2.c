@@ -538,7 +538,11 @@ static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* pou
 	}
 }
 static void stats2_linreg_ols_free(void* pvstate) {
-	//stats2_linreg_ols_state_t* pstate = pvstate;
+	stats2_linreg_ols_state_t* pstate = pvstate;
+	free(pstate->m_output_field_name);
+	free(pstate->b_output_field_name);
+	free(pstate->n_output_field_name);
+	free(pstate->fit_output_field_name);
 }
 
 static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
