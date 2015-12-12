@@ -1110,12 +1110,12 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_E() {
 // ================================================================
 lrec_evaluator_t* lrec_evaluator_alloc_from_context_variable(char* variable_name) {
 	if        (streq(variable_name, "NF"))       { return lrec_evaluator_alloc_from_NF();
-    } else if (streq(variable_name, "NR"))       { return lrec_evaluator_alloc_from_NR();
-    } else if (streq(variable_name, "FNR"))      { return lrec_evaluator_alloc_from_FNR();
-    } else if (streq(variable_name, "FILENAME")) { return lrec_evaluator_alloc_from_FILENAME();
-    } else if (streq(variable_name, "FILENUM"))  { return lrec_evaluator_alloc_from_FILENUM();
-    } else if (streq(variable_name, "PI"))       { return lrec_evaluator_alloc_from_PI();
-    } else if (streq(variable_name, "E"))        { return lrec_evaluator_alloc_from_E();
+	} else if (streq(variable_name, "NR"))       { return lrec_evaluator_alloc_from_NR();
+	} else if (streq(variable_name, "FNR"))      { return lrec_evaluator_alloc_from_FNR();
+	} else if (streq(variable_name, "FILENAME")) { return lrec_evaluator_alloc_from_FILENAME();
+	} else if (streq(variable_name, "FILENUM"))  { return lrec_evaluator_alloc_from_FILENUM();
+	} else if (streq(variable_name, "PI"))       { return lrec_evaluator_alloc_from_PI();
+	} else if (streq(variable_name, "E"))        { return lrec_evaluator_alloc_from_E();
 	} else  { return NULL; 
 	}
 }
@@ -1753,13 +1753,13 @@ static char * test3() {
 	mv_t valplogx  = plogx->pevaluator_func(prec,  pctx, plogx->pvstate);
 	mv_t valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
-    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mv_describe_val(valp2));
-    printf("newval 4        = %s\n", mv_describe_val(valp4));
-    printf("newval x        = %s\n", mv_describe_val(valpx));
-    printf("newval x^2      = %s\n", mv_describe_val(valpx2));
-    printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
-    printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
+	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
+	printf("newval 2        = %s\n", mv_describe_val(valp2));
+	printf("newval 4        = %s\n", mv_describe_val(valp4));
+	printf("newval x        = %s\n", mv_describe_val(valpx));
+	printf("newval x^2      = %s\n", mv_describe_val(valpx2));
+	printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
+	printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
 
 	printf("XXX %s\n", mt_describe_type(valp2.type));
 	mu_assert_lf(valp2.type     == MT_FLOAT);
@@ -1789,13 +1789,13 @@ static char * test3() {
 	valplogx  = plogx->pevaluator_func(prec,  pctx, plogx->pvstate);
 	valp2logx = p2logx->pevaluator_func(prec, pctx, p2logx->pvstate);
 
-    printf("lrec   x        = %s\n", lrec_get(prec, "x"));
-    printf("newval 2        = %s\n", mv_describe_val(valp2));
-    printf("newval 4        = %s\n", mv_describe_val(valp4));
-    printf("newval x        = %s\n", mv_describe_val(valpx));
-    printf("newval x^2      = %s\n", mv_describe_val(valpx2));
-    printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
-    printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
+	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
+	printf("newval 2        = %s\n", mv_describe_val(valp2));
+	printf("newval 4        = %s\n", mv_describe_val(valp4));
+	printf("newval x        = %s\n", mv_describe_val(valpx));
+	printf("newval x^2      = %s\n", mv_describe_val(valpx2));
+	printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
+	printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
 
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);

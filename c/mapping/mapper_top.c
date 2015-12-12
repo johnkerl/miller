@@ -77,7 +77,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "-a",    &show_full_records);
 	ap_define_true_flag(pstate,        "--max", &do_max);
 	ap_define_false_flag(pstate,       "--min", &do_max);
-    ap_define_false_flag(pstate,       "-F",    &allow_int_float);
+	ap_define_false_flag(pstate,       "-F",    &allow_int_float);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_top_usage(stderr, argv[0], verb);

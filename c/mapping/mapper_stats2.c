@@ -537,6 +537,9 @@ static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* pou
 		lrec_put(poutrec, pstate->fit_output_field_name, sfit, FREE_ENTRY_VALUE);
 	}
 }
+static void stats2_linreg_ols_free(void* pvstate) {
+	//stats2_linreg_ols_state_t* pstate = pvstate;
+}
 
 static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
 	stats2_t* pstats2 = mlr_malloc_or_die(sizeof(stats2_t));
@@ -558,7 +561,7 @@ static stats2_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_f
 	pstats2->pingest_func = stats2_linreg_ols_ingest;
 	pstats2->pemit_func   = stats2_linreg_ols_emit;
 	pstats2->pfit_func    = stats2_linreg_ols_fit;
-	pstats2->pfree_func   = NULL;
+	pstats2->pfree_func   = stats2_linreg_ols_free;
 	return pstats2;
 }
 
@@ -601,13 +604,13 @@ static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t*
 	lrec_put(poutrec, pstate->n_output_field_name, nval, FREE_ENTRY_VALUE);
 }
 static void stats2_logireg_free(void* pvstate) {
-  stats2_logireg_state_t* pstate = pvstate;
-  free(pstate->m_output_field_name);
-  free(pstate->b_output_field_name);
-  free(pstate->n_output_field_name);
-  free(pstate->fit_output_field_name);
-  dvector_free(pstate->pxs);
-  dvector_free(pstate->pys);
+	stats2_logireg_state_t* pstate = pvstate;
+	free(pstate->m_output_field_name);
+	free(pstate->b_output_field_name);
+	free(pstate->n_output_field_name);
+	free(pstate->fit_output_field_name);
+	dvector_free(pstate->pxs);
+	dvector_free(pstate->pys);
 }
 
 static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutrec) {

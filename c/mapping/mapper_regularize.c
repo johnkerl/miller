@@ -32,7 +32,7 @@ static void mapper_regularize_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) {
-    *pargi += 1;
+	*pargi += 1;
 	return mapper_regularize_alloc();
 }
 
