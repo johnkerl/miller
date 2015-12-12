@@ -150,7 +150,6 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-// xxx after the pfr/pbr refactor is complete, vsof and vopen may be redundant.
 static void lrec_reader_stdio_csv_sof(void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
