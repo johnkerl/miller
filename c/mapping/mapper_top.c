@@ -210,8 +210,10 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 			lhmsv_t* group_to_acc_field = pa->pvvalue;
 			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
-				for (int i = 0;  i < ptop_keeper_for_group->size; i++)
+				for (int i = 0;  i < ptop_keeper_for_group->size; i++) {
 					sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
+					ptop_keeper_for_group->top_precords[i] = NULL;
+				}
 			}
 		}
 

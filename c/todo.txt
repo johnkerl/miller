@@ -9,13 +9,13 @@ TOP OF LIST
 ! link to release notes from release-docs page
 
 * debian screenshot
-* wiz ack @ dox
+* wiz ack @ dox x 2
 
 * faqents/cookbook
 
 * compressed I/O:
-  - libs ...
   - popen w/ specified args, e.g. zcat (or sh -c zcat ... or env zcat ...)
+  - doc why not libs
   - consider popen output, but probably just suggest pipe.
 
 * more perf tuning:
@@ -25,7 +25,6 @@ TOP OF LIST
   - in mmap-csv, try harder to not use the psb even in the dquoted case
 * mem-mgmt scrutinize:
   - frees
-  - more prec-pop logic ...
   - valgrind w/ leak check @ regtest/run
 * misc neaten issues:
   - EOF_STRIDX <-> p>=e in mmap-csv reader

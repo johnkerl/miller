@@ -84,10 +84,7 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 		sllv_t* poutput = sllv_alloc();
 		for (lhmslve_t* pe = pstate->precords_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
 			sllv_t* plist = pe->pvvalue;
-			for (sllve_t* pf = plist->phead; pf != NULL; pf = pf->pnext) {
-				sllv_add(poutput, pf->pvdata);
-				pf->pvdata = NULL;
-			}
+			sllv_transfer(poutput, plist);
 		}
 		sllv_add(poutput, NULL);
 		return poutput;
