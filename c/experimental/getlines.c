@@ -89,6 +89,33 @@ static int read_file_mlr_getsdelim(char* filename, int do_write) {
 }
 
 // ================================================================
+static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) {
+	char* command = mlr_malloc_or_die(strlen(reader) + 1 + strlen(filename) + 1);
+	strcpy(command, reader);
+	strcat(command, " ");
+	strcat(command, filename);
+	// xxx need a popen_or_die
+	FILE* fp = popen(command, "r");
+	char* irs = "\r\n";
+	int irslen = strlen(irs);
+	int bc = 0;
+	while (1) {
+		char* line = mlr_get_sline(fp, irs, irslen);
+		if (line == NULL)
+			break;
+		//bc += linelen; // available by API, but make a fair comparison
+		bc += strlen(line);
+		if (do_write) {
+			fputs(line, stdout);
+			fputc('\n', stdout);
+		}
+		free(line);
+	}
+	pclose(fp);
+	return bc;
+}
+
+// ================================================================
 static char* read_line_fgetc(FILE* fp, char* irs) {
 	char* line = mlr_malloc_or_die(FIXED_LINE_LEN);
 	char* p = line;
@@ -395,6 +422,13 @@ int main(int argc, char** argv) {
 		e = get_systime();
 		t = e - s;
 		printf("type=mlr_getsdelim,t=%.6lf,n=%d\n", t, bc);
+		fflush(stdout);
+
+		s = get_systime();
+		bc = popen_file_mlr_getsdelim("zcat -cf < ", filename, do_write);
+		e = get_systime();
+		t = e - s;
+		printf("type=mlr_popen_getsdelim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();

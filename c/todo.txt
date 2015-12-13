@@ -13,6 +13,11 @@ TOP OF LIST
 
 * faqents/cookbook
 
+* compressed I/O:
+  - libs ...
+  - popen w/ specified args, e.g. zcat (or sh -c zcat ... or env zcat ...)
+  - consider popen output, but probably just suggest pipe.
+
 * more perf tuning:
   - strict power-of-two malloc/strdups thruout?!? profile.
   - mv_format_val take pfree_flags arg?
@@ -27,10 +32,6 @@ TOP OF LIST
     > be sure no-term tests are both mmap and nommap
   - mainly xxxes
   - look for others
-
-* compressed I/O:
-  - libs ...
-  - popen w/ specified args, e.g. zcat (or sh -c zcat ... or env zcat ...)
 
 * packaging/currency:
   k brew
