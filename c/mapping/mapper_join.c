@@ -98,6 +98,10 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "               be loaded into memory. Without -u, records must be sorted\n");
 	fprintf(o, "               lexically by their join-field names, else not all records will\n");
 	fprintf(o, "               be paired.\n");
+	fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
+		MLR_GLOBALS.argv0);
+	fprintf(o, "               If you wish to use a prepipe command for the main input as well\n");
+	fprintf(o, "               as here, it must be specified there as well as here.\n");
 	fprintf(o, "File-format options default to those for the right file names on the Miller\n");
 	fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n");
 	fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
@@ -166,6 +170,10 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+
+	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
+	if (popts->prepipe != NULL)
+		popts->use_mmap_for_read = FALSE;
 
 	if (popts->left_file_name == NULL) {
 		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.argv0, verb);

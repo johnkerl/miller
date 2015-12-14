@@ -312,6 +312,10 @@ for sorted_flag in "" "-u"; do
   done
 done
 
+run_mlr --prepipe cat --odkvp join -u -j a -f $indir/join-het.dkvp $indir/abixy-het
+run_mlr --odkvp join --prepipe cat -u -j a -f $indir/join-het.dkvp $indir/abixy-het
+run_mlr --prepipe cat --odkvp join --prepipe cat -u -j a -f $indir/join-het.dkvp $indir/abixy-het
+
 # ----------------------------------------------------------------
 announce STATS
 
