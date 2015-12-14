@@ -50,7 +50,7 @@ pdsl_assignments ::= pdsl_assignment PUT_DSL_SEMICOLON pdsl_assignments.
 // off here.
 
 pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
-  // Replace "$field.name" with just "field.name"
+	// Replace "$field.name" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
@@ -59,12 +59,12 @@ pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_
 }
 
 pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
-  // Replace "${field.name}" with just "field.name"
+	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
-  int len = strlen(no_dollar_name);
-  if (len > 0)
-    no_dollar_name[len-1] = 0;
+	int len = strlen(no_dollar_name);
+	if (len > 0)
+		no_dollar_name[len-1] = 0;
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 	sllv_add(pasts, A);
@@ -227,18 +227,18 @@ pdsl_pow_term(A) ::= pdsl_atom_or_fcn(B) PUT_DSL_POW(O) pdsl_pow_term(C). {
 // off here.
 pdsl_atom_or_fcn(A) ::= PUT_DSL_FIELD_NAME(B). {
 	// not:
-  // A = B;
+	// A = B;
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 pdsl_atom_or_fcn(A) ::= PUT_DSL_BRACKETED_FIELD_NAME(B). {
-  // Replace "${field.name}" with just "field.name"
+	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
-  int len = strlen(no_dollar_name);
-  if (len > 0)
-    no_dollar_name[len-1] = 0;
+	int len = strlen(no_dollar_name);
+	if (len > 0)
+		no_dollar_name[len-1] = 0;
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 pdsl_atom_or_fcn(A) ::= PUT_DSL_NUMBER(B). {
