@@ -370,7 +370,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 // ----------------------------------------------------------------
 static void* lrec_reader_stdio_csv_open(void* pvstate, char* prepipe, char* filename) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
-	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
+	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, prepipe, filename);
 	pfr_reset(pstate->pfr);
 	// Different from the other readers, we keep the file handle within the
 	// byte_reader object.

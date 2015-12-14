@@ -13,6 +13,11 @@
 void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 	FILE* input_stream = stdin;
 
+//	if (prepipe == NULL)
+//		printf("NULL PREPIPE\n");
+//	else
+//		printf("PREPIPE [%s]\n", prepipe);
+
 	if (!streq(filename, "-")) {
 		input_stream = fopen(filename, "r");
 		if (input_stream == NULL) {

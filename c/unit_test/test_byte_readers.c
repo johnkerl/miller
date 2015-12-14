@@ -15,7 +15,7 @@ int assertions_failed = 0;
 static char* test_string_byte_reader() {
 	byte_reader_t* pbr = string_byte_reader_alloc();
 
-	int ok = pbr->popen_func(pbr, "");
+	int ok = pbr->popen_func(pbr, NULL, "");
 	mu_assert_lf(ok == TRUE);
 	// char defaults to unsigned on some platforms -- but, byte_reader_t API is
 	// in terms of ints.
@@ -24,14 +24,14 @@ static char* test_string_byte_reader() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	pbr->pclose_func(pbr);
 
-	ok = pbr->popen_func(pbr, "a");
+	ok = pbr->popen_func(pbr, NULL, "a");
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	pbr->pclose_func(pbr);
 
-	ok = pbr->popen_func(pbr, "abc");
+	ok = pbr->popen_func(pbr, NULL, "abc");
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
@@ -49,7 +49,7 @@ static char* test_stdio_byte_reader_1() {
 
 	char* contents = "";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
@@ -65,7 +65,7 @@ static char* test_stdio_byte_reader_2() {
 
 	char* contents = "abcdefg";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
@@ -88,7 +88,7 @@ static char* test_stdio_byte_reader_reuse() {
 
 	char* contents = "abc";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
@@ -100,7 +100,7 @@ static char* test_stdio_byte_reader_reuse() {
 
 	contents = "defg";
 	path = write_temp_file_or_die(contents);
-	ok = pbr->popen_func(pbr, path);
+	ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'd');
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');
@@ -120,7 +120,7 @@ static char* test_mmap_byte_reader_1() {
 
 	char* contents = "";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
@@ -136,7 +136,7 @@ static char* test_mmap_byte_reader_2() {
 
 	char* contents = "abcdefg";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
@@ -159,7 +159,7 @@ static char* test_mmap_byte_reader_reuse() {
 
 	char* contents = "abc";
 	char* path = write_temp_file_or_die(contents);
-	int ok = pbr->popen_func(pbr, path);
+	int ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == 'b');
@@ -171,7 +171,7 @@ static char* test_mmap_byte_reader_reuse() {
 
 	contents = "defg";
 	path = write_temp_file_or_die(contents);
-	ok = pbr->popen_func(pbr, path);
+	ok = pbr->popen_func(pbr, NULL, path);
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'd');
 	mu_assert_lf(pbr->pread_func(pbr) == 'e');

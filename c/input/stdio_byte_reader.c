@@ -9,7 +9,7 @@ typedef struct _stdio_byte_reader_state_t {
 	FILE* fp;
 } stdio_byte_reader_state_t;
 
-static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename);
+static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename);
 static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr);
 static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr);
 
@@ -34,8 +34,14 @@ void stdio_byte_reader_free(byte_reader_t* pbr) {
 }
 
 // ----------------------------------------------------------------
-static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* filename) {
+static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename) {
 	stdio_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(stdio_byte_reader_state_t));
+
+//	if (prepipe == NULL)
+//		printf("NULL QREPIPE\n");
+//	else
+//		printf("QREPIPE [%s]\n", prepipe);
+
 	pstate->filename = mlr_strdup_or_die(filename);
 	if (streq(pstate->filename, "-")) {
 		pstate->fp = stdin;

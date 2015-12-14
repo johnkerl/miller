@@ -8,7 +8,7 @@ typedef struct _string_byte_reader_state_t {
 	char* pend;
 } string_byte_reader_state_t;
 
-static int  string_byte_reader_open_func(struct _byte_reader_t* pbr, char* backing);
+static int  string_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* backing);
 static int  string_byte_reader_read_func(struct _byte_reader_t* pbr);
 static void string_byte_reader_close_func(struct _byte_reader_t* pbr);
 
@@ -29,7 +29,8 @@ void string_byte_reader_free(byte_reader_t* pbr) {
 }
 
 // ----------------------------------------------------------------
-static int string_byte_reader_open_func(struct _byte_reader_t* pbr, char* backing) {
+static int string_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* backing) {
+	// xxx abend unless prepipe == NULL
 	string_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(string_byte_reader_state_t));
 	pstate->backing = backing;
 	pstate->p       = pstate->backing;

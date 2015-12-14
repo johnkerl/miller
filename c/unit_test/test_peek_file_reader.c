@@ -15,7 +15,7 @@ int assertions_failed = 0;
 // ----------------------------------------------------------------
 static char* test_empty() {
 	byte_reader_t* pbr = string_byte_reader_alloc();
-	int ok = pbr->popen_func(pbr, "");
+	int ok = pbr->popen_func(pbr, NULL, "");
 	mu_assert_lf(ok == TRUE);
 
 	peek_file_reader_t* pfr = pfr_alloc(pbr, 7);
@@ -33,6 +33,9 @@ static char* test_empty() {
 static char* test_non_empty() {
 	byte_reader_t* pbr = string_byte_reader_alloc();
 	int ok = pbr->popen_func(pbr,
+
+		NULL,
+
 		"ab,cde\n"
 		"123,4567\n"
 	);

@@ -10,7 +10,7 @@ struct _byte_reader_t;
 
 // The open function should return TRUE on success and FALSE on failure.
 // For the string reader, the char* argument is the backing string itself.
-typedef int byte_reader_open_func_t(struct _byte_reader_t* pbr, char* filename);
+typedef int byte_reader_open_func_t(struct _byte_reader_t* pbr, char* prepipe, char* filename);
 
 // The reader function should return a character, as an int. Reads past end of
 // file should keep returning EOF, even if called multiple times.
