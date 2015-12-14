@@ -13,15 +13,7 @@ TOP OF LIST
 
 * faqents/cookbook
 
-* compressed I/O:
-  - popen w/ specified args, e.g. zcat (or sh -c zcat ... or env zcat ...)
-  - doc why not libs
-  - consider popen output, but probably just suggest pipe.
-  - UT join w/ mixed left/right compressed/not
-  - mlr -h, mld section, etc.
-    o zcat -cf <
-    o gunzip <
-    o xz -cd <
+* test join w/ mixed left/right compressed/not
 
 * more perf tuning:
   - strict power-of-two malloc/strdups thruout?!? profile.
