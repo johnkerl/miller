@@ -9,7 +9,7 @@ TOP OF LIST
 ! link to release notes from release-docs page
 
 * debian screenshot
-* wiz ack @ dox x 2
+* wiz/veith ack @ dox x 2
 
 * faqents/cookbook
 
