@@ -73,6 +73,12 @@ static inline mv_t mv_from_int(long long i) {
 static inline mv_t mv_from_bool(int b) {
 	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = b};
 }
+static inline mv_t mv_from_true() {
+	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = TRUE};
+}
+static inline mv_t mv_from_false() {
+	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = FALSE};
+}
 
 static inline mv_t mv_from_null() {
 	return (mv_t) {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
