@@ -19,6 +19,9 @@ TOP OF LIST
   - consider popen output, but probably just suggest pipe.
   - UT join w/ mixed left/right compressed/not
   - mlr -h, mld section, etc.
+    o zcat -cf <
+    o gunzip <
+    o xz -cd <
 
 * more perf tuning:
   - strict power-of-two malloc/strdups thruout?!? profile.

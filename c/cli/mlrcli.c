@@ -299,6 +299,25 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
 }
 
+static void main_usage_compressed_data_options(FILE* o, char* argv0) {
+	fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
+	fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
+		argv0);
+	fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
+	fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
+	fprintf(o, "  specify an action to be taken on each input file.\n");
+	fprintf(o, "  Examples:\n");
+	fprintf(o, "    %s --prepipe 'gunzip <'\n", argv0);
+	fprintf(o, "    %s --prepipe 'zcat -cf <'\n", argv0);
+	fprintf(o, "    %s --prepipe 'xz -cd <'\n", argv0);
+	fprintf(o, "    %s --prepipe cat\n", argv0);
+	fprintf(o, "    %s --prepipe 'cat <'\n", argv0);
+	fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
+	fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
+	fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
+	fprintf(o, "    %s ... | {your compression command}\n", argv0);
+}
+
 static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
 	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
@@ -418,6 +437,10 @@ static void main_usage(FILE* o, char* argv0) {
 
 	fprintf(o, "Data-format options, for input, output, or both:\n");
 	main_usage_data_format_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Compressed-data options:\n");
+	main_usage_compressed_data_options(o, argv0);
 	fprintf(o, "\n");
 
 	fprintf(o, "Separator options, for input, output, or both:\n");
@@ -579,6 +602,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			exit(0);
 		} else if (streq(argv[argi], "--usage-data-format-options")) {
 			main_usage_data_format_options(stdout, argv[0]);
+			exit(0);
+		} else if (streq(argv[argi], "--usage-compressed-data-options")) {
+			main_usage_compressed_data_options(stdout, argv[0]);
 			exit(0);
 		} else if (streq(argv[argi], "--usage-separator-options")) {
 			main_usage_separator_options(stdout, argv[0]);

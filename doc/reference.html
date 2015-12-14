@@ -366,6 +366,23 @@ Data-format options, for input, output, or both:
   Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
   DKVP-formatted input and pretty-printed output.
 
+Compressed-data options:
+  --prepipe {command} This allows Miller to handle compressed inputs. You can do
+  without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
+  However, when multiple input files are present, between-file separations are
+  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
+  specify an action to be taken on each input file.
+  Examples:
+    mlr --prepipe 'gunzip &lt;'
+    mlr --prepipe 'zcat -cf &lt;'
+    mlr --prepipe 'xz -cd &lt;'
+    mlr --prepipe cat
+    mlr --prepipe 'cat &lt;'
+  Note that this feature is quite general and is not limited to decompression
+  utilities. You can use it to apply per-file filters of your choice.
+  For output compression (or other) utilities, simply pipe the output:
+    mlr ... | {your compression command}
+
 Separator options, for input, output, or both:
   --rs     --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
   --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma

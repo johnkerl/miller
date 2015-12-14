@@ -63,6 +63,9 @@ output separator to the given value."""
 	print make_subsection('I/O FORMATTING', [])
 	print make_code_block(`mlr --usage-data-format-options`)
 
+	print make_subsection('COMPRESSED I/O', [])
+	print make_code_block(`mlr --usage-compressed-data-options`)
+
 	print make_subsection('SEPARATORS', [])
 	print make_code_block(`mlr --usage-separator-options`)
 
