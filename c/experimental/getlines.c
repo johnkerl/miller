@@ -304,7 +304,7 @@ static char* read_line_mmap_psb(file_reader_mmap_state_t* ph, string_builder_t* 
 }
 
 static int read_file_mmap_psb(char* filename, int do_write) {
-	file_reader_mmap_state_t* ph = file_reader_mmap_open(filename);
+	file_reader_mmap_state_t* ph = file_reader_mmap_open(NULL, filename);
 	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	char* irs = "\n";
 	int bc = 0;
@@ -357,7 +357,7 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, p
 static int read_file_pfr_psb(char* filename, int do_write) {
 	byte_reader_t* pbr = stdio_byte_reader_alloc();
 	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
-	pbr->popen_func(pbr, filename);
+	pbr->popen_func(pbr, NULL, filename);
 
 	peek_file_reader_t* pfr = pfr_alloc(pbr, PEEK_BUF_LEN);
 
@@ -380,7 +380,7 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 		free(line);
 	}
 	sb_free(psb);
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 	return bc;
 }
 

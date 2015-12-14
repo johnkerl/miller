@@ -9,6 +9,7 @@
 #include "lib/mlrutil.h"
 #include "lib/mtrand.h"
 #include "lib/string_builder.h"
+#include "containers/free_flags.h"
 
 // ================================================================
 // MT for Miller type -- highly abbreviated here since these are
@@ -37,6 +38,7 @@ typedef struct _mv_t {
 		char*      strv;
 	} u;
 	unsigned char type;
+	unsigned char free_flags;
 } mv_t;
 
 // ----------------------------------------------------------------
@@ -61,15 +63,15 @@ extern mv_t MV_ERROR;
 
 // ----------------------------------------------------------------
 static inline mv_t mv_from_float(double d) {
-	return (mv_t) {.type = MT_FLOAT, .u.fltv = d};
+	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = d};
 }
 
 static inline mv_t mv_from_int(long long i) {
-	return (mv_t) {.type = MT_INT, .u.intv = i};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = i};
 }
 
 static inline mv_t mv_from_null() {
-	return (mv_t) {.type = MT_NULL, .u.intv = 0LL};
+	return (mv_t) {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
 }
 
 static inline int mv_is_numeric(mv_t* pval) {
@@ -106,64 +108,64 @@ typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_b
 
 // ----------------------------------------------------------------
 static inline mv_t b_b_not_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_BOOL, .u.boolv = !pval1->u.boolv};
+	mv_t rv = {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = !pval1->u.boolv};
 	return rv;
 }
 
 static inline mv_t b_bb_or_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_BOOL, .u.boolv = pval1->u.boolv || pval2->u.boolv};
+	mv_t rv = {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = pval1->u.boolv || pval2->u.boolv};
 	return rv;
 }
 static inline mv_t b_bb_and_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_BOOL, .u.boolv = pval1->u.boolv && pval2->u.boolv};
+	mv_t rv = {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = pval1->u.boolv && pval2->u.boolv};
 	return rv;
 }
 static inline mv_t b_bb_xor_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_BOOL, .u.boolv = (int)pval1->u.boolv ^ (int)pval2->u.boolv};
+	mv_t rv = {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = (int)pval1->u.boolv ^ (int)pval2->u.boolv};
 	return rv;
 }
 
 // ----------------------------------------------------------------
 static inline mv_t f_z_urand_func() {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = get_mtrand_double()}; // mtrand.h
+	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = get_mtrand_double()}; // mtrand.h
 	return rv;
 }
 static inline mv_t f_z_systime_func() {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = get_systime()}; // mlrutil.h
+	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = get_systime()}; // mlrutil.h
 	return rv;
 }
 static inline mv_t i_z_urand32_func() {
-	mv_t rv = {.type = MT_INT, .u.intv = get_mtrand_int32()}; // mtrand.h
+	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = get_mtrand_int32()}; // mtrand.h
 	return rv;
 }
 
 // ----------------------------------------------------------------
-static inline mv_t f_f_acos_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=acos(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_acosh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=acosh(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_asin_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=asin(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_asinh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=asinh(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_atan_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=atan(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_atanh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=atanh(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_cbrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=cbrt(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_cos_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=cos(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_cosh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=cosh(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_erf_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=erf(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_erfc_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=erfc(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_exp_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=exp(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_expm1_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=expm1(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_invqnorm_func(mv_t* pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=invqnorm(pval1->u.fltv)}; return rv;}
-static inline mv_t f_f_log10_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=log10(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_log1p_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=log1p(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_log_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=log(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_qnorm_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=qnorm(pval1->u.fltv)};    return rv;}
-static inline mv_t f_f_sin_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=sin(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_sinh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=sinh(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_sqrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=sqrt(pval1->u.fltv)};     return rv;}
-static inline mv_t f_f_tan_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tan(pval1->u.fltv)};      return rv;}
-static inline mv_t f_f_tanh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.u.fltv=tanh(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_acos_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=acos(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_acosh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=acosh(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_asin_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=asin(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_asinh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=asinh(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_atan_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=atan(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_atanh_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=atanh(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_cbrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=cbrt(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_cos_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=cos(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_cosh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=cosh(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_erf_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=erf(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_erfc_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=erfc(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_exp_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=exp(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_expm1_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=expm1(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_invqnorm_func(mv_t* pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=invqnorm(pval1->u.fltv)}; return rv;}
+static inline mv_t f_f_log10_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=log10(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_log1p_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=log1p(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_log_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=log(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_qnorm_func(mv_t*    pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=qnorm(pval1->u.fltv)};    return rv;}
+static inline mv_t f_f_sin_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=sin(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_sinh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=sinh(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_sqrt_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=sqrt(pval1->u.fltv)};     return rv;}
+static inline mv_t f_f_tan_func(mv_t*      pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=tan(pval1->u.fltv)};      return rv;}
+static inline mv_t f_f_tanh_func(mv_t*     pval1){mv_t rv={.type=MT_FLOAT,.free_flags=NO_FREE,.u.fltv=tanh(pval1->u.fltv)};     return rv;}
 
 static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
+	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pow(pval1->u.fltv, pval2->u.fltv)};
 	return rv;
 }
 
@@ -195,7 +197,7 @@ mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2);
 
 // ----------------------------------------------------------------
 static inline mv_t f_ff_atan2_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = atan2(pval1->u.fltv, pval2->u.fltv)};
+	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = atan2(pval1->u.fltv, pval2->u.fltv)};
 	return rv;
 }
 
@@ -203,7 +205,7 @@ static inline mv_t f_fff_logifit_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	double x = pval1->u.fltv;
 	double m = pval2->u.fltv;
 	double b = pval3->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .u.fltv = 1.0 / (1.0 + exp(-m*x-b))};
+	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = 1.0 / (1.0 + exp(-m*x-b))};
 	return rv;
 }
 
@@ -219,26 +221,26 @@ static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
 		hi = a + 1;
 	}
 	long long u  = lo + (hi - lo) * get_mtrand_double();
-	return (mv_t) {.type = MT_INT, .u.intv = u};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = u};
 }
 
 static inline mv_t i_ii_bitwise_or_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv | pval2->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pval1->u.intv | pval2->u.intv};
 }
 static inline mv_t i_ii_bitwise_xor_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv ^ pval2->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pval1->u.intv ^ pval2->u.intv};
 }
 static inline mv_t i_ii_bitwise_and_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv & pval2->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pval1->u.intv & pval2->u.intv};
 }
 static inline mv_t i_ii_bitwise_lsh_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv << pval2->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pval1->u.intv << pval2->u.intv};
 }
 static inline mv_t i_ii_bitwise_rsh_func(mv_t* pval1, mv_t* pval2) {
-	return (mv_t) {.type = MT_INT, .u.intv = pval1->u.intv >> pval2->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pval1->u.intv >> pval2->u.intv};
 }
 static inline mv_t i_i_bitwise_not_func(mv_t* pval1) {
-	return (mv_t) {.type = MT_INT, .u.intv = ~pval1->u.intv};
+	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = ~pval1->u.intv};
 }
 
 mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
