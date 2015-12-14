@@ -19,7 +19,7 @@ typedef struct _mmap_byte_reader_state_t {
 
 static int  mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename);
 static int  mmap_byte_reader_read_func(struct _byte_reader_t* pbr);
-static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr);
+static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe);
 
 // ----------------------------------------------------------------
 byte_reader_t* mmap_byte_reader_alloc() {
@@ -88,7 +88,7 @@ static int mmap_byte_reader_read_func(struct _byte_reader_t* pbr) {
 	}
 }
 
-static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr) {
+static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe) {
 	mmap_byte_reader_state_t* pstate = pbr->pvstate;
 	if (close(pstate->fd) < 0) {
 		perror("close");

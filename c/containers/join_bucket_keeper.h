@@ -53,7 +53,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	char*          left_file_name,
 	slls_t*        pleft_field_names);
 
-void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper);
+void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper, char* prepipe);
 
 // *pprecords_paired should not be freed by the caller.
 // *pprecords_left_unpaired should be freed by the caller.

@@ -18,7 +18,7 @@ typedef int   byte_reader_read_func_t(struct _byte_reader_t* pbr);
 
 // The close function should close file pointers/descriptors, as well as any
 // necessary heap-frees.
-typedef void  byte_reader_close_func_t(struct _byte_reader_t* pbr);
+typedef void  byte_reader_close_func_t(struct _byte_reader_t* pbr, char* prepipe);
 
 typedef struct _byte_reader_t {
 	void*                       pvstate;

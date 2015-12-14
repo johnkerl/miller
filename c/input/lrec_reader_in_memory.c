@@ -14,7 +14,7 @@ static void    lrec_reader_in_memory_free(void* pvstate);
 static void    lrec_reader_in_memory_sof(void* pvstate);
 static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx);
 static void*   lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename);
-static void    lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle);
+static void    lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle, char* prepipe);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
@@ -56,5 +56,5 @@ static void* lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* fil
 	return NULL;
 }
 
-static void lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle) {
+static void lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle, char* prepipe) {
 }

@@ -43,7 +43,7 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 }
 
 // ----------------------------------------------------------------
-void file_reader_mmap_close(file_reader_mmap_state_t* pstate) {
+void file_reader_mmap_close(file_reader_mmap_state_t* pstate, char* prepipe) {
 	if (close(pstate->fd) < 0) {
 		perror("close");
 		exit(1);
@@ -57,6 +57,6 @@ void* file_reader_mmap_vopen(void* pvstate, char* prepipe, char* file_name) {
 }
 
 // ----------------------------------------------------------------
-void file_reader_mmap_vclose(void* pvstate, void* pvhandle) {
-	file_reader_mmap_close(pvhandle);
+void file_reader_mmap_vclose(void* pvstate, void* pvhandle, char* prepipe) {
+	file_reader_mmap_close(pvhandle, prepipe);
 }

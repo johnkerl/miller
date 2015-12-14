@@ -317,7 +317,7 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 		bc += strlen(line);
 	}
 	sb_free(psb);
-	file_reader_mmap_close(ph);
+	file_reader_mmap_close(ph, NULL);
 	return bc;
 }
 

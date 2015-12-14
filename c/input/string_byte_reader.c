@@ -10,7 +10,7 @@ typedef struct _string_byte_reader_state_t {
 
 static int  string_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* backing);
 static int  string_byte_reader_read_func(struct _byte_reader_t* pbr);
-static void string_byte_reader_close_func(struct _byte_reader_t* pbr);
+static void string_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe);
 
 // ----------------------------------------------------------------
 byte_reader_t* string_byte_reader_alloc() {
@@ -48,6 +48,6 @@ static int string_byte_reader_read_func(struct _byte_reader_t* pbr) {
 	}
 }
 
-static void string_byte_reader_close_func(struct _byte_reader_t* pbr) {
+static void string_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe) {
 	pbr->pvstate = NULL;
 }

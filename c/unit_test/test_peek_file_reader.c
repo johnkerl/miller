@@ -23,7 +23,7 @@ static char* test_empty() {
 	mu_assert_lf(pfr_peek_char(pfr) == (char)EOF); // char defaults to unsigned on some platforms
 	mu_assert_lf(pfr_read_char(pfr) == (char)EOF);
 
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 	pfr_free(pfr);
 
 	return NULL;
@@ -62,7 +62,7 @@ static char* test_non_empty() {
 	pfr_print(pfr); pfr_advance_by(pfr, 5);
 	pfr_print(pfr); mu_assert_lf(pfr_read_char(pfr) == '\n');
 
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 	pfr_free(pfr);
 
 	return NULL;

@@ -22,14 +22,14 @@ static char* test_string_byte_reader() {
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 
 	ok = pbr->popen_func(pbr, NULL, "a");
 	mu_assert_lf(ok == TRUE);
 	mu_assert_lf(pbr->pread_func(pbr) == 'a');
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 
 	ok = pbr->popen_func(pbr, NULL, "abc");
 	mu_assert_lf(ok == TRUE);
@@ -38,7 +38,7 @@ static char* test_string_byte_reader() {
 	mu_assert_lf(pbr->pread_func(pbr) == 'c');
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
 	mu_assert_lf(pbr->pread_func(pbr) == EOF);
-	pbr->pclose_func(pbr);
+	pbr->pclose_func(pbr, NULL);
 
 	return NULL;
 }

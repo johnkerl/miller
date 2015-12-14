@@ -45,6 +45,8 @@ TOP OF LIST
   - fminus -> python too
   - mlr as data prep clean
 
+* mixed-format joins ...
+
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
 

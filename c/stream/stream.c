@@ -74,7 +74,7 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
-	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle);
+	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, prepipe);
 	return 1;
 }
 

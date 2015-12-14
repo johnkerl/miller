@@ -30,7 +30,7 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 }
 
 // ----------------------------------------------------------------
-void file_reader_stdio_vclose(void* pvstate, void* pvhandle) {
+void file_reader_stdio_vclose(void* pvstate, void* pvhandle, char* prepipe) {
 	FILE* input_stream = pvhandle;
 	if (input_stream != stdin)
 		fclose(input_stream);

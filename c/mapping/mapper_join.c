@@ -236,7 +236,7 @@ static void mapper_join_free(void* pvstate) {
 	if (pstate->popts->poutput_join_field_names != NULL)
 		slls_free(pstate->popts->poutput_join_field_names);
 	if (pstate->pjoin_bucket_keeper != NULL)
-		join_bucket_keeper_free(pstate->pjoin_bucket_keeper);
+		join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 }
 
 // ----------------------------------------------------------------
@@ -504,5 +504,5 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		}
 	}
 
-	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle);
+	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, pstate->popts->prepipe);
 }

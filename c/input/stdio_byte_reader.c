@@ -11,7 +11,7 @@ typedef struct _stdio_byte_reader_state_t {
 
 static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename);
 static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr);
-static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr);
+static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe);
 
 // ----------------------------------------------------------------
 byte_reader_t* stdio_byte_reader_alloc() {
@@ -68,7 +68,8 @@ static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr) {
 	return c;
 }
 
-static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr) {
+static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepipe) {
+	// xxx
 	stdio_byte_reader_state_t* pstate = pbr->pvstate;
 	if (pstate->fp != stdin)
 		fclose(pstate->fp);
