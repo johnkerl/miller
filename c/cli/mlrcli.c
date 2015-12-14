@@ -725,6 +725,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--prepipe")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->prepipe = argv[argi+1];
+			popts->use_mmap_for_read = FALSE;
 			argi++;
 
 		} else {
