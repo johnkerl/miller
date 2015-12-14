@@ -10,7 +10,7 @@
 #include "file_reader_stdio.h"
 
 // ----------------------------------------------------------------
-void* file_reader_stdio_vopen(void* pvstate, char* filename) {
+void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 	FILE* input_stream = stdin;
 
 	if (!streq(filename, "-")) {

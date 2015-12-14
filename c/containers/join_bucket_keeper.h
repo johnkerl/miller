@@ -35,6 +35,7 @@ typedef struct _join_bucket_keeper_t {
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
+	char* prepipe,
 	char* left_file_name,
 	char* input_file_format,
 	int   use_mmap_for_read,
@@ -48,6 +49,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	lrec_reader_t* plrec_reader,
+	char*          prepipe,
 	char*          left_file_name,
 	slls_t*        pleft_field_names);
 

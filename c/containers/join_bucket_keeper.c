@@ -140,6 +140,7 @@ static char* describe_state(int state);
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc(
+	char* prepipe,
 	char* left_file_name,
 	char* input_file_format,
 	int   use_mmap_for_read,
@@ -154,18 +155,19 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(input_file_format, use_mmap_for_read,
 		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips, use_implicit_csv_header);
 
-	return join_bucket_keeper_alloc_from_reader(plrec_reader, left_file_name, pleft_field_names);
+	return join_bucket_keeper_alloc_from_reader(plrec_reader, prepipe, left_file_name, pleft_field_names);
 }
 
 // ----------------------------------------------------------------
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	lrec_reader_t* plrec_reader,
+	char*          prepipe,
 	char*          left_file_name,
 	slls_t*        pleft_field_names)
 {
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
 
-	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, left_file_name);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	context_t* pctx = mlr_malloc_or_die(sizeof(context_t));

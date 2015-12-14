@@ -506,10 +506,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_reader      = NULL;
 	popts->plrec_writer      = NULL;
+
+	popts->prepipe           = NULL;
 	popts->filenames         = NULL;
 
 	popts->ifile_fmt         = "dkvp";
-	popts->ofile_fmt          = "dkvp";
+	popts->ofile_fmt         = "dkvp";
 
 	popts->use_mmap_for_read = TRUE;
 	int left_align_pprint    = TRUE;
@@ -718,6 +720,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 				main_usage(stderr, argv[0]);
 				exit(1);
 			}
+			argi++;
+
+		} else if (streq(argv[argi], "--prepipe")) {
+			check_arg_count(argv, argi, argc, 2);
+			popts->prepipe = argv[argi+1];
 			argi++;
 
 		} else {

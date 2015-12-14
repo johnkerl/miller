@@ -24,6 +24,7 @@ typedef struct _mapper_join_opts_t {
 	int      emit_left_unpairables;
 	int      emit_right_unpairables;
 
+	char*    prepipe;
 	char*    left_file_name;
 
 	// These allow the joiner to have its own different format/delimiter for
@@ -117,6 +118,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
 	popts->left_prefix              = NULL;
 	popts->right_prefix             = NULL;
+	popts->prepipe                  = NULL;
 	popts->left_file_name           = NULL;
 	popts->poutput_join_field_names = NULL;
 	popts->pleft_join_field_names   = NULL;
@@ -138,6 +140,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
+	ap_define_string_flag(pstate,      "--prepipe",  &popts->prepipe);
 	ap_define_string_flag(pstate,      "-f",         &popts->left_file_name);
 	ap_define_string_list_flag(pstate, "-j",         &popts->poutput_join_field_names);
 	ap_define_string_list_flag(pstate, "-l",         &popts->pleft_join_field_names);
@@ -246,6 +249,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		mapper_join_opts_t* popts = pstate->popts;
 		merge_options(pstate->popts);
 		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
+			popts->prepipe,
 			popts->left_file_name,
 			popts->input_file_format,
 			popts->use_mmap_for_read,
@@ -466,7 +470,9 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
 		popts->use_implicit_csv_header);
 
-	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->left_file_name);
+	// xxx override ...
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->prepipe,
+		pstate->popts->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->popts->left_file_name };

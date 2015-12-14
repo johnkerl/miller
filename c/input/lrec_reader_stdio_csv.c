@@ -77,7 +77,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rsl
 	context_t* pctx);
 static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
 	context_t* pctx);
-static void*   lrec_reader_stdio_csv_open(void* pvstate, char* filename);
+static void*   lrec_reader_stdio_csv_open(void* pvstate, char* prepipe, char* filename);
 static void    lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
@@ -368,7 +368,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 }
 
 // ----------------------------------------------------------------
-static void* lrec_reader_stdio_csv_open(void* pvstate, char* filename) {
+static void* lrec_reader_stdio_csv_open(void* pvstate, char* prepipe, char* filename) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->pfr->pbr->popen_func(pstate->pfr->pbr, filename);
 	pfr_reset(pstate->pfr);

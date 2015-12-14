@@ -10,7 +10,7 @@
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 
-static int do_file_chained(char* filename, context_t* pctx,
+static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
@@ -19,7 +19,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 	FILE* output_stream);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
+int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
 	lrec_writer_t* plrec_writer, char* ofmt)
 {
 	FILE* output_stream = stdout;
@@ -36,7 +36,7 @@ int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pma
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
-		ok = do_file_chained("-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
+		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
 	} else {
 		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
 			ctx.filenum++;
@@ -44,7 +44,8 @@ int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pma
 			ctx.fnr = 0;
 			// Start-of-file hook, e.g. expecting CSV headers on input.
 			plrec_reader->psof_func(plrec_reader->pvstate);
-			ok = do_file_chained(*pfilename, &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
+			ok = do_file_chained(prepipe, *pfilename, &ctx, plrec_reader, pmapper_list,
+				plrec_writer, output_stream) && ok;
 		}
 	}
 
@@ -59,10 +60,10 @@ int do_stream_chained(char** filenames, lrec_reader_t* plrec_reader, sllv_t* pma
 }
 
 // ----------------------------------------------------------------
-static int do_file_chained(char* filename, context_t* pctx,
+static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
-	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, filename);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
 
 	while (1) {
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);

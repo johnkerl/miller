@@ -68,7 +68,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 
 static void    lrec_reader_mmap_csv_free(void* pvstate);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
-static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* file_name);
+static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* prepipe, char* file_name);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static int     lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	rslls_t* pfields, file_reader_mmap_state_t* phandle);
@@ -148,8 +148,8 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-static void* lrec_reader_mmap_csv_vopen(void* pvstate, char* file_name) {
-	void* pvhandle = file_reader_mmap_open(file_name);
+static void* lrec_reader_mmap_csv_vopen(void* pvstate, char* prepipe, char* file_name) {
+	void* pvhandle = file_reader_mmap_open(prepipe, file_name);
 	file_reader_mmap_state_t* phandle = pvhandle;
 	*phandle->eof = EOF;
 	return pvhandle;

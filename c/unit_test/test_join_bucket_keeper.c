@@ -122,7 +122,7 @@ static char* test_left_empty_right_empty() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_empty(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -144,7 +144,7 @@ static char* test_left_empty() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_empty(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -172,7 +172,7 @@ static char* test_right_empty() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -194,7 +194,7 @@ static char* test_unpaired_before_left_start() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -222,7 +222,7 @@ static char* test_unpaired_after_left_end() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -250,7 +250,7 @@ static char* test_middle_pairings() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -290,7 +290,7 @@ static char* test_middle() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -330,7 +330,7 @@ static char* test_walk_through_all() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_113335(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -435,7 +435,7 @@ static char* test_het_unpaired_before_left_start() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_het(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -461,7 +461,7 @@ static char* test_het_unpaired_after_left_end() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_het(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -487,7 +487,7 @@ static char* test_het_initial_pairing() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_het(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 
@@ -514,7 +514,7 @@ static char* test_het_middle_pairing() {
 	slls_t* pleft_field_names;
 	lrec_reader_t* preader;
 	set_up(make_records_het(), &pleft_field_names, &preader);
-	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, pleft_field_names);
+	join_bucket_keeper_t* pkeeper = join_bucket_keeper_alloc_from_reader(preader, NULL, NULL, pleft_field_names);
 	sllv_t* precords_paired;
 	sllv_t* precords_left_unpaired;
 

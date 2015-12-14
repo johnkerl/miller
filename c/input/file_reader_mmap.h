@@ -11,10 +11,10 @@ typedef struct _file_reader_mmap_state_t {
 	int   fd;
 } file_reader_mmap_state_t;
 
-file_reader_mmap_state_t* file_reader_mmap_open(char* file_name);
+file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name);
 void file_reader_mmap_close(file_reader_mmap_state_t* pstate);
 
-void* file_reader_mmap_vopen(void* pvstate, char* file_name);
+void* file_reader_mmap_vopen(void* pvstate, char* prepipe, char* file_name);
 void file_reader_mmap_vclose(void* pvstate, void* pvhandle);
 
 #endif // FILE_READER_MMAP_H

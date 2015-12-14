@@ -13,7 +13,7 @@ typedef struct _lrec_reader_in_memory_state_t {
 static void    lrec_reader_in_memory_free(void* pvstate);
 static void    lrec_reader_in_memory_sof(void* pvstate);
 static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx);
-static void*   lrec_reader_in_memory_vopen(void* pvstate, char* filename);
+static void*   lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename);
 static void    lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
@@ -51,7 +51,8 @@ static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, cont
 		return sllv_pop(pstate->precords);
 }
 
-static void* lrec_reader_in_memory_vopen(void* pvstate, char* filename) {
+static void* lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename) {
+	// xxx abend if prepipe != NULL
 	return NULL;
 }
 
