@@ -78,6 +78,14 @@ static inline mv_t mv_from_null() {
 	return (mv_t) {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
 }
 
+static inline mv_t mv_from_string_with_free(char* s) {
+	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = s};
+}
+
+static inline mv_t mv_from_string_no_free(char* s) {
+	return (mv_t) {.type = MT_STRING, .free_flags = NO_FREE, .u.strv = s};
+}
+
 // ----------------------------------------------------------------
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;

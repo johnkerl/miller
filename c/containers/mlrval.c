@@ -66,6 +66,7 @@ char* mt_describe_type(int type) {
 }
 
 // The caller should free the return value
+// xxx free-flags here
 char* mv_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_NULL:
@@ -96,10 +97,7 @@ char* mv_describe_val(mv_t val) {
 	char* stype = mt_describe_type(val.type);
 	char* strv  = mv_format_val(&val);
 	char* desc  = mlr_malloc_or_die(strlen(stype) + strlen(strv) + 4);
-	strcpy(desc, "[");
-	strcat(desc, stype);
-	strcat(desc, "] ");
-	strcat(desc, strv);
+	sprintf(desc, "[%s] %s", stype, strv);
 	return desc;
 }
 
@@ -123,6 +121,7 @@ void mv_get_float_strict(mv_t* pval) {
 	case MT_FLOAT:
 		break;
 	case MT_STRING:
+		// xxx free
 		if (!mlr_try_float_from_string(pval->u.strv, &fltv)) {
 			pval->type = MT_ERROR;
 			pval->u.intv = 0LL;
@@ -165,6 +164,7 @@ void mv_get_float_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
+		// xxxx free
 		if (*pval->u.strv == '\0') {
 			pval->type = MT_NULL;
 			pval->u.intv = 0LL;
@@ -202,6 +202,7 @@ void mv_get_int_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
+		// xxx free
 		if (*pval->u.strv == '\0') {
 			pval->type = MT_NULL;
 			pval->u.intv = 0LL;
@@ -239,7 +240,7 @@ void mv_get_number_nullable(mv_t* pval) {
 	case MT_STRING:
 		strv = pval->u.strv;
 		*pval = mv_scan_number_nullable(pval->u.strv);
-		free(strv);
+		free(strv); // xxx
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
@@ -251,6 +252,7 @@ void mv_get_number_nullable(mv_t* pval) {
 mv_t mv_scan_number_nullable(char* string) {
 	double fltv = 0.0;
 	long long intv = 0LL;
+	// xxx free
 	mv_t rv =  {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
 	if (*string == '\0') {
 		rv.type = MT_NULL;
@@ -262,6 +264,7 @@ mv_t mv_scan_number_nullable(char* string) {
 		rv.type = MT_FLOAT;
 		rv.u.fltv = fltv;
 	} else {
+		// xxx clean up using mv_from_* functions
 		rv.type = MT_ERROR;
 		rv.u.intv = 0LL;
 	}
@@ -291,8 +294,7 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	pval1->u.strv = NULL;
 	pval2->u.strv = NULL;
 
-	mv_t rv = {.type = MT_STRING, .free_flags = FREE_ENTRY_VALUE, .u.strv = string3};
-	return rv;
+	return mv_from_string_with_free(string3);
 }
 
 // ----------------------------------------------------------------
@@ -326,7 +328,7 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 	if (matched)
 		free(pval1->u.strv);
 	free(pval3->u.strv);
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_VALUE, .u.strv = output};
+	return mv_from_string_with_free(output);
 }
 
 // ----------------------------------------------------------------
@@ -361,7 +363,7 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	free(pval3->u.strv);
 	pval1->u.strv = NULL;
 	pval3->u.strv = NULL;
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_VALUE, .u.strv = output};
+	return mv_from_string_with_free(output);
 }
 
 // ----------------------------------------------------------------
@@ -376,8 +378,7 @@ mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	if (b < 0LL)
 		b += m;
 	long long c = (a + b) % m;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = c};
-	return rv;
+	return mv_from_int(c);
 }
 
 mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
@@ -393,8 +394,7 @@ mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	long long c = (a - b) % m;
 	if (c < 0LL)
 		c += m;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = c};
-	return rv;
+	return mv_from_int(c);
 }
 
 mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
@@ -408,14 +408,13 @@ mv_t i_iii_modmul_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	if (b < 0LL)
 		b += m;
 	long long c = (a * b) % m;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = c};
-	return rv;
+	return mv_from_int(c);
 }
 
 mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	long long m = pval3->u.intv;
 	if (m <= 0LL)
-		return (mv_t) {.type = MT_ERROR, .free_flags = NO_FREE, .u.intv = 0LL};
+		return MV_ERROR;
 	long long a = pval1->u.intv % m;
 	if (a < 0LL)
 		a += m; // crazy C-language mod operator
@@ -441,12 +440,10 @@ mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 			ap = (ap * ap) % m;
 		}
 	} else {
-		mv_t rv = {.type = MT_ERROR, .free_flags = NO_FREE, .u.intv = 0LL};
-		return rv;
+		return MV_ERROR;
 	}
 
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = c};
-	return rv;
+	return mv_from_int(c);
 }
 
 // ----------------------------------------------------------------
@@ -457,8 +454,7 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;
 
-	mv_t rv = {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
-	return rv;
+	return mv_from_string_with_free(string);
 }
 
 mv_t s_s_toupper_func(mv_t* pval1) {
@@ -468,8 +464,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	free(pval1->u.strv);
 	pval1->u.strv = NULL;
 
-	mv_t rv = {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
-	return rv;
+	return mv_from_string_with_free(string);
 }
 
 // ----------------------------------------------------------------
@@ -480,7 +475,7 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	time_t clock = 0;
 	if (psec->type == MT_FLOAT) {
 		if (isinf(psec->u.fltv) || isnan(psec->u.fltv)) {
-			return (mv_t) {.type = MT_ERROR, .free_flags = NO_FREE, .u.intv = 0LL};
+			return MV_ERROR;
 		}
 		clock = (time_t) psec->u.fltv;
 	} else {
@@ -502,7 +497,7 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 		exit(1);
 	}
 
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+	return mv_from_string_with_free(string);
 }
 
 mv_t s_n_sec2gmt_func(mv_t* pval1) {
@@ -526,7 +521,7 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 			exit(1);
 		}
 		time_t t = mlr_timegm(&tm);
-		return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = (long long)t};
+		return mv_from_int((long long)t);
 	}
 }
 
@@ -609,7 +604,7 @@ mv_t s_i_sec2hms_func(mv_t* pval1) {
 	int n = snprintf(NULL, 0, fmt, h, m, s);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s);
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+	return mv_from_string_with_free(string);
 }
 
 mv_t s_f_fsec2hms_func(mv_t* pval1) {
@@ -625,7 +620,7 @@ mv_t s_f_fsec2hms_func(mv_t* pval1) {
 	int n = snprintf(NULL, 0, fmt, h, m, s+f);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, fmt, h, m, s+f);
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+	return mv_from_string_with_free(string);
 }
 
 mv_t s_i_sec2dhms_func(mv_t* pval1) {
@@ -637,25 +632,25 @@ mv_t s_i_sec2dhms_func(mv_t* pval1) {
 		int n = snprintf(NULL, 0, fmt, d, h, m, s);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, d, h, m, s);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else if (h != 0.0) {
 		char* fmt = "%lldh%02lldm%02llds";
 		int n = snprintf(NULL, 0, fmt, h, m, s);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, h, m, s);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else if (m != 0.0) {
 		char* fmt = "%lldm%02llds";
 		int n = snprintf(NULL, 0, fmt, m, s);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, m, s);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else {
 		char* fmt = "%llds";
 		int n = snprintf(NULL, 0, fmt, s);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, s);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	}
 }
 
@@ -672,21 +667,21 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 		int n = snprintf(NULL, 0, fmt, d, h, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, d, h, m, s+f);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else if (h != 0.0) {
 		h = sign * h;
 		char* fmt = "%lldh%02lldm%09.6lfs";
 		int n = snprintf(NULL, 0, fmt, h, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, h, m, s+f);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else if (m != 0.0) {
 		m = sign * m;
 		char* fmt = "%lldm%09.6lfs";
 		int n = snprintf(NULL, 0, fmt, m, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, m, s+f);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	} else {
 		s = sign * s;
 		f = sign * f;
@@ -694,7 +689,7 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 		int n = snprintf(NULL, 0, fmt, s+f);
 		char* string = mlr_malloc_or_die(n+1);
 		sprintf(string, fmt, s+f);
-		return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = string};
+		return mv_from_string_with_free(string);
 	}
 }
 
@@ -723,7 +718,7 @@ mv_t i_s_hms2sec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = sec * sign};
+	return mv_from_int(sec * sign);
 }
 
 mv_t f_s_hms2fsec_func(mv_t* pval1) {
@@ -731,10 +726,10 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	double s = 0.0;
 	double sec = 0.0;
 	char* p = pval1->u.strv;
-	long long sign = 1LL;
+	double sign = 1.0;
 	if (*p == '-') {
 		p++;
-		sign = -1LL;
+		sign = -1.0;
 	}
 	if (sscanf(p, "%lld:%lld:%lf", &h, &m, &s) == 3) {
 		sec = 3600*h + 60*m + s;
@@ -745,7 +740,7 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = sec * sign};
+	return mv_from_float(sec * sign);
 }
 
 mv_t i_s_dhms2sec_func(mv_t* pval1) {
@@ -768,7 +763,7 @@ mv_t i_s_dhms2sec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = sec * sign};
+	return mv_from_int(sec * sign);
 }
 
 mv_t f_s_dhms2fsec_func(mv_t* pval1) {
@@ -776,10 +771,10 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	double s = 0.0;
 	double sec = 0.0;
 	char* p = pval1->u.strv;
-	long long sign = 1LL;
+	long long sign = 1.0;
 	if (*p == '-') {
 		p++;
-		sign = -1LL;
+		sign = -1.0;
 	}
 	if (sscanf(p, "%lldd%lldh%lldm%lfs", &d, &h, &m, &s) == 4) {
 		sec = 86400*d + 3600*h + 60*m + s;
@@ -792,18 +787,17 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	} else {
 		return MV_ERROR;
 	}
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = sec * sign};
+	return mv_from_float(sec * sign);
 }
 
 // ----------------------------------------------------------------
 mv_t i_s_strlen_func(mv_t* pval1) {
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = strlen_for_utf8_display(pval1->u.strv)};
-	return rv;
+	return mv_from_int(strlen_for_utf8_display(pval1->u.strv));
 }
 
 // ----------------------------------------------------------------
 static mv_t plus_e_xx(mv_t* pa, mv_t* pb) {
-	return (mv_t) {.type = MT_ERROR, .free_flags = NO_FREE, .u.intv = 0LL};
+	return MV_ERROR;
 }
 static mv_t plus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
