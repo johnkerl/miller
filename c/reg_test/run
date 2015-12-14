@@ -1097,6 +1097,14 @@ run_mlr --oxtab --ofmt '%.8g' put '$n0=$n-0;$n1=$n-1;$n2=$n-2;$n3=$n-3' $indir/i
 run_mlr --oxtab --ofmt '%.8g' put '$n0=$n*0;$n1=$n*1;$n2=$n*2;$n3=$n*3' $indir/int64arith.dkvp
 
 # ================================================================
+announce COMPRESSED INPUT
+
+run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv
+run_mlr --dkvp --prepipe 'cat'   cat   $indir/abixy
+run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv
+run_mlr --dkvp --prepipe 'cat'   cat < $indir/abixy
+
+# ================================================================
 announce STDIN
 
 run_mlr --csv cat < $indir/rfc-csv/simple.csv
