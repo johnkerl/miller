@@ -141,6 +141,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Null_data">Null data</a><br/>
 &bull;&nbsp;<a href="#I/O_options">I/O options</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Compression">Compression</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
@@ -682,6 +683,43 @@ wye pan 5  0.5732889198020006  0.8636244699032729
 <tt>--oxtab</tt> is the same as <tt>--idkvp --oxtab</tt>.
 
 </ul>
+
+<!-- ================================================================ -->
+<a id="Compression"/><h2>Compression</h2>
+
+<p/> Options:
+
+<pre>
+  --prepipe {command}
+</pre>
+
+<p/>The prepipe command is anything which reads from standard input and produces data acceptable to
+Miller. Nominally this allows you to use whichever decompression utilities you have installed on your
+system, on a per-file basis. If the command has flags, quote them: e.g. <tt>mlr --prepipe 'zcat -cf'</tt>. Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+# These two produce the same output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz
+# With multiple input files you need --prepipe:
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
+$ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
+
+# Similar to the above, but with compressed output as well as input:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip &gt; outfile.csv.gz
+
+# Similar to the above, but with different compression tools for input and output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z &gt; outfile.csv.xz
+$ xz -cd &lt; myfile1.csv.xz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.xz
+$ mlr --prepipe 'xz -cd' cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | xz -z &gt; outfile.csv.xz
+
+... etc.
+</pre>
+</div>
 
 <!-- ================================================================ -->
 <a id="Record/field/pair_separators"/><h2>Record/field/pair separators</h2>

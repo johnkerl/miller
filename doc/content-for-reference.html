@@ -202,6 +202,43 @@ POKI_RUN_COMMAND{{mlr --opprint --right cat data/small}}HERE
 </ul>
 
 <!-- ================================================================ -->
+<h2>Compression</h2>
+
+<p/> Options:
+
+<pre>
+  --prepipe {command}
+</pre>
+
+<p/>The prepipe command is anything which reads from standard input and produces data acceptable to
+Miller. Nominally this allows you to use whichever decompression utilities you have installed on your
+system, on a per-file basis. If the command has flags, quote them: e.g. <tt>mlr --prepipe 'zcat -cf'</tt>. Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+# These two produce the same output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz
+# With multiple input files you need --prepipe:
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
+$ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
+
+# Similar to the above, but with compressed output as well as input:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip &gt; outfile.csv.gz
+
+# Similar to the above, but with different compression tools for input and output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z &gt; outfile.csv.xz
+$ xz -cd &lt; myfile1.csv.xz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.xz
+$ mlr --prepipe 'xz -cd' cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | xz -z &gt; outfile.csv.xz
+
+... etc.
+</pre>
+</div>
+
+<!-- ================================================================ -->
 <h2>Record/field/pair separators</h2>
 
 <p/> Miller has record separators <tt>IRS</tt> and <tt>ORS</tt>, field
