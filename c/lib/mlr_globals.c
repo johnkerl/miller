@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
 
-mlr_globals_t MLR_GLOBALS = { .argv0 = "mlr-globals-argv0-tbd", .ofmt = NULL, .popts = NULL };
+mlr_globals_t MLR_GLOBALS = { .argv0 = "mlr", .ofmt = NULL, .popts = NULL };
 void mlr_global_init(char* argv0, char* ofmt, cli_opts_t* popts) {
 	MLR_GLOBALS.argv0  = argv0;
 	MLR_GLOBALS.ofmt   = ofmt;

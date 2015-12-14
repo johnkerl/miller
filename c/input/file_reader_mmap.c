@@ -13,7 +13,13 @@ static char empty_buf[1] = { 0 };
 
 // ----------------------------------------------------------------
 file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) {
-	// xxx abend if prepipe is non-null
+	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
+	if (prepipe != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
 	file_reader_mmap_state_t* pstate = mlr_malloc_or_die(sizeof(file_reader_mmap_state_t));
 	pstate->fd = open(file_name, O_RDONLY);
 	if (pstate->fd < 0) {

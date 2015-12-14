@@ -1,5 +1,6 @@
 #include <stdio.h> // For definition of EOF
 #include "input/byte_readers.h"
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 
 typedef struct _string_byte_reader_state_t {
@@ -30,7 +31,13 @@ void string_byte_reader_free(byte_reader_t* pbr) {
 
 // ----------------------------------------------------------------
 static int string_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* backing) {
-	// xxx abend unless prepipe == NULL
+	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
+	if (prepipe != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
 	string_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(string_byte_reader_state_t));
 	pstate->backing = backing;
 	pstate->p       = pstate->backing;

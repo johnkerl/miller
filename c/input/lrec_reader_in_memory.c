@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "input/file_reader_stdio.h"
 #include "input/lrec_readers.h"
 #include "containers/sllv.h"
@@ -52,7 +53,13 @@ static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, cont
 }
 
 static void* lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename) {
-	// xxx abend if prepipe != NULL
+	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
+	if (prepipe != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
 	return NULL;
 }
 

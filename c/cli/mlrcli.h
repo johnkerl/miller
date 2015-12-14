@@ -35,8 +35,11 @@ typedef struct _cli_opts_t {
 	sllv_t*        pmapper_list;
 	lrec_writer_t* plrec_writer;
 
-	char*  prepipe;   // Command for popen on input, e.g. "zcat -cf <". Can be null.
-	char** filenames; // null-terminated
+	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
+	// files are read directly rather than through a pipe.
+	char*  prepipe;
+	// Null-terminated array:
+	char** filenames;
 
 } cli_opts_t;
 

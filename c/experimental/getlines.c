@@ -94,8 +94,11 @@ static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) 
 	strcpy(command, reader);
 	strcat(command, " ");
 	strcat(command, filename);
-	// xxx need a popen_or_die
 	FILE* fp = popen(command, "r");
+	if (fp == NULL) {
+		perror("popen");
+		exit(1);
+	}
 	char* irs = "\r\n";
 	int irslen = strlen(irs);
 	int bc = 0;

@@ -43,7 +43,13 @@ void mmap_byte_reader_free(byte_reader_t* pbr) {
 
 // ----------------------------------------------------------------
 static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename) {
-	// xxx abend unless prepipe == NULL
+	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
+	if (prepipe != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
 	mmap_byte_reader_state_t* pstate = mlr_malloc_or_die(sizeof(mmap_byte_reader_state_t));
 	pstate->filename = mlr_strdup_or_die(filename);
 	pstate->fd = open(filename, O_RDONLY);
