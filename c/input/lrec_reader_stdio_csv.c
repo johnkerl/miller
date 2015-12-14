@@ -5,7 +5,7 @@
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
 #include "input/file_reader_stdio.h"
-#include "input/byte_reader.h"
+#include "input/byte_readers.h"
 #include "input/lrec_readers.h"
 #include "input/peek_file_reader.h"
 #include "containers/rslls.h"
@@ -81,7 +81,7 @@ static void*   lrec_reader_stdio_csv_open(void* pvstate, char* filename);
 static void    lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
+lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));
@@ -116,7 +116,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(byte_reader_t* pbr, char* irs, char* 
 
 	pstate->pfields = rslls_alloc();
 	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
-	pstate->pbr = pbr;
+	pstate->pbr = stdio_byte_reader_alloc();
 	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
 		pstate->pdquote_parse_trie->maxlen));
 

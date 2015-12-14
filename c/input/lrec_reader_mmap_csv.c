@@ -5,7 +5,6 @@
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
 #include "input/file_reader_mmap.h"
-#include "input/byte_reader.h"
 #include "input/lrec_readers.h"
 #include "input/peek_file_reader.h"
 #include "containers/rslls.h"
@@ -77,7 +76,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rsll
 static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_csv_alloc(byte_reader_t* pbr, char* irs, char* ifs, int use_implicit_header) {
+lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_header) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));
