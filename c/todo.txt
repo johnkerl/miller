@@ -3,6 +3,8 @@ BUGFIXES
 
 :D
 
+watsec!
+
 ================================================================
 TOP OF LIST
 
@@ -15,8 +17,9 @@ TOP OF LIST
 
 * more perf tuning:
   - mv_format_val take pfree_flags arg?
-  - MT_STRING free-flags?
+  - MT_STRING free-flags
     > xxx emph args invalidated after eval; nominally inputs pointing into lrec; nn cases in mappers are ok
+    > .xtype, .xu, etc. temporarily to flush out all callsites
   - in mmap-csv, try harder to not use the psb even in the dquoted case
 * mem-mgmt scrutinize:
   - valgrind w/ leak check @ regtest/run
