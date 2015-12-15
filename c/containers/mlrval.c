@@ -113,6 +113,7 @@ void mv_set_boolean_strict(mv_t* pval) {
 // ----------------------------------------------------------------
 void mv_set_float_strict(mv_t* pval) {
 	double fltv = 0.0;
+	mv_t nval = MV_ERROR;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -121,14 +122,13 @@ void mv_set_float_strict(mv_t* pval) {
 	case MT_FLOAT:
 		break;
 	case MT_STRING:
-		// xxx free
 		if (!mlr_try_float_from_string(pval->u.strv, &fltv)) {
-			pval->type = MT_ERROR;
-			pval->u.intv = 0LL;
+			// keep nval = MV_ERROR
 		} else {
-			pval->type = MT_FLOAT;
-			pval->u.fltv = fltv;
+			nval = mv_from_float(fltv);
 		}
+		mv_free(pval);
+		*pval = nval;
 		break;
 	case MT_INT:
 		pval ->type = MT_FLOAT;
@@ -148,6 +148,7 @@ void mv_set_float_strict(mv_t* pval) {
 // ----------------------------------------------------------------
 void mv_set_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
+	mv_t nval = MV_ERROR;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -164,17 +165,15 @@ void mv_set_float_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
-		// xxxx free
 		if (*pval->u.strv == '\0') {
-			pval->type = MT_NULL;
-			pval->u.intv = 0LL;
+			nval = MV_NULL;
 		} else if (!mlr_try_float_from_string(pval->u.strv, &fltv)) {
-			pval->type = MT_ERROR;
-			pval->u.intv = 0LL;
+			// keep nval = MV_ERROR
 		} else {
-			pval->type = MT_FLOAT;
-			pval->u.fltv = fltv;
+			nval = mv_from_float(fltv);
 		}
+		mv_free(pval);
+		*pval = nval;
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
@@ -186,6 +185,7 @@ void mv_set_float_nullable(mv_t* pval) {
 // ----------------------------------------------------------------
 void mv_set_int_nullable(mv_t* pval) {
 	long long intv = 0LL;
+	mv_t nval = MV_ERROR;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -202,17 +202,15 @@ void mv_set_int_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
-		// xxx free
 		if (*pval->u.strv == '\0') {
-			pval->type = MT_NULL;
-			pval->u.intv = 0LL;
+			nval = MV_NULL;
 		} else if (!mlr_try_int_from_string(pval->u.strv, &intv)) {
-			pval->type = MT_ERROR;
-			pval->u.intv = 0LL;
+			// keep nval = MV_ERROR
 		} else {
-			pval->type = MT_INT;
-			pval->u.intv = intv;
+			nval = mv_from_int(intv);
 		}
+		mv_free(pval);
+		*pval = nval;
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
@@ -252,19 +250,15 @@ void mv_set_number_nullable(mv_t* pval) {
 mv_t mv_scan_number_nullable(char* string) {
 	double fltv = 0.0;
 	long long intv = 0LL;
-	// xxx free
-	mv_t rv =  MV_NULL;
+	mv_t rv = MV_NULL;
 	if (*string == '\0') {
+		// keep rv = MV_NULL;
 	} else if (mlr_try_int_from_string(string, &intv)) {
-		rv.type = MT_INT;
-		rv.u.intv = intv;
+		rv = mv_from_int(intv);
 	} else if (mlr_try_float_from_string(string, &fltv)) {
-		rv.type = MT_FLOAT;
-		rv.u.fltv = fltv;
+		rv = mv_from_float(fltv);
 	} else {
-		// xxx clean up using mv_from_* functions
-		rv.type = MT_ERROR;
-		rv.u.intv = 0LL;
+		rv = MV_ERROR;
 	}
 	return rv;
 }
