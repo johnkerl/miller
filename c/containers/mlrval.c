@@ -1134,10 +1134,10 @@ static mv_t upos_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t upos_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.fltv};
+	return mv_from_float(pa->u.fltv);
 }
 static mv_t upos_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_unary_func_t* upos_dispositions[MT_MAX] = {
@@ -1156,10 +1156,10 @@ static mv_t uneg_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t uneg_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = - pa->u.fltv};
+	return mv_from_float(-pa->u.fltv);
 }
 static mv_t uneg_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = - pa->u.intv };
+	return mv_from_int(-pa->u.intv);
 }
 
 static mv_unary_func_t* uneg_dispositions[MT_MAX] = {
@@ -1178,10 +1178,10 @@ static mv_t abs_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t abs_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fabs(pa->u.fltv)};
+	return mv_from_float(fabs(pa->u.fltv));
 }
 static mv_t abs_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv < 0LL ? -pa->u.intv : pa->u.intv};
+	return mv_from_int(pa->u.intv < 0LL ? -pa->u.intv : pa->u.intv);
 }
 
 static mv_unary_func_t* abs_dispositions[MT_MAX] = {
@@ -1200,10 +1200,10 @@ static mv_t ceil_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t ceil_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = ceil(pa->u.fltv)};
+	return mv_from_float(ceil(pa->u.fltv));
 }
 static mv_t ceil_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_unary_func_t* ceil_dispositions[MT_MAX] = {
@@ -1222,10 +1222,10 @@ static mv_t floor_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t floor_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = floor(pa->u.fltv)};
+	return mv_from_float(floor(pa->u.fltv));
 }
 static mv_t floor_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_unary_func_t* floor_dispositions[MT_MAX] = {
@@ -1244,10 +1244,10 @@ static mv_t round_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t round_n_f(mv_t* pa) {
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = round(pa->u.fltv)};
+	return mv_from_float(round(pa->u.fltv));
 }
 static mv_t round_n_i(mv_t* pa) {
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_unary_func_t* round_dispositions[MT_MAX] = {
