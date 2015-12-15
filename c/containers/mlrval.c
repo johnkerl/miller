@@ -146,7 +146,6 @@ void mv_set_float_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-// xxx rename from get to set
 void mv_set_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
@@ -223,7 +222,6 @@ void mv_set_int_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-// xxx rename
 void mv_set_number_nullable(mv_t* pval) {
 	mv_t nval = MV_NULL;
 	switch (pval->type) {
