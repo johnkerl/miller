@@ -1042,7 +1042,7 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, context_t* pctx, v
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.intv = 0};
+		return MV_NULL;
 	} else {
 		return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
 	}
@@ -1052,7 +1052,7 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, context_t* pctx, 
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.intv = 0};
+		return MV_NULL;
 	} else {
 		double fltv;
 		if (mlr_try_float_from_string(string, &fltv)) {
@@ -1067,7 +1067,7 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pc
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	char* string = lrec_get(prec, pstate->field_name);
 	if (string == NULL) {
-		return (mv_t) {.type = MT_NULL, .u.intv = 0};
+		return MV_NULL;
 	} else {
 		long long intv;
 		double fltv;
@@ -1141,7 +1141,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
 	if (string == NULL) {
-		pstate->literal = (mv_t) {.type = MT_NULL, .u.intv = 0LL};
+		pstate->literal = MV_NULL;
 		pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 	} else {
 		long long intv;

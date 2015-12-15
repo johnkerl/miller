@@ -1546,12 +1546,15 @@ mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(
 // ----------------------------------------------------------------
 static mv_t string_s_n(mv_t* pa) { return MV_NULL; }
 static mv_t string_s_e(mv_t* pa) { return MV_ERROR; }
-static mv_t string_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_strdup_or_die(pa->u.boolv?"true":"false")}; }// xxx
-static mv_t string_s_f(mv_t* pa) {
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)};
+static mv_t string_s_b(mv_t* pa) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"true":"false")); }// xxx
+static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }
+static mv_t string_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_ll(pa->u.intv)); }
+static mv_t string_s_s(mv_t* pa) {
+	// xxx free here??
+	unsigned char free_flags = pa->free_flags;
+	pa->free_flags = NO_FREE;
+	return mv_from_string(pa->u.strv, free_flags);
 }
-static mv_t string_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_string_from_ll(pa->u.intv)}; }
-static mv_t string_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = pa->free_flags, .u.strv = pa->u.strv}; } // xxx
 
 static mv_unary_func_t* string_dispositions[MT_MAX] = {
 	/*NULL*/   string_s_n,
@@ -1567,12 +1570,15 @@ mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t hexfmt_s_n(mv_t* pa) { return MV_NULL; }
 static mv_t hexfmt_s_e(mv_t* pa) { return MV_ERROR; }
-static mv_t hexfmt_s_b(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = NO_FREE, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; } // xxx
-static mv_t hexfmt_s_f(mv_t* pa) {
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)};
+static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")); } // xxx
+static mv_t hexfmt_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)); }
+static mv_t hexfmt_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll(pa->u.intv)); }
+static mv_t hexfmt_s_s(mv_t* pa) {
+	// xxx free here??
+	unsigned char free_flags = pa->free_flags;
+	pa->free_flags = NO_FREE;
+	return mv_from_string(pa->u.strv, free_flags);
 }
-static mv_t hexfmt_s_i(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_hexfmt_from_ll(pa->u.intv)}; }
-static mv_t hexfmt_s_s(mv_t* pa) { return (mv_t) {.type = MT_STRING, .free_flags = pa->free_flags, .u.strv = pa->u.strv}; }
 
 static mv_unary_func_t* hexfmt_dispositions[MT_MAX] = {
 	/*NULL*/   hexfmt_s_n,
@@ -1588,13 +1594,9 @@ mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return MV_NULL; }
 static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
-static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")}; } // xxx
-static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv)};
-}
-static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) {
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv)};
-}
+static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")); } // xxx
+static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv)); } // xxx free pfmt ...
+static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv));} // xxx free pfmt ...
 static mv_t fmtnum_s_ss(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
 
 static mv_binary_func_t* fmtnum_dispositions[MT_MAX] = {
