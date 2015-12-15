@@ -1448,17 +1448,17 @@ static mv_t sgn_e_x(mv_t* pa) {
 }
 static mv_t sgn_n_f(mv_t* pa) {
 	if (pa->u.fltv > 0.0)
-		return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv =  1.0};
+		return mv_from_float(1.0);
 	if (pa->u.fltv < 0.0)
-		return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = -1.0};
-	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = 0.0};
+		return mv_from_float(-1.0);
+	return mv_from_float(0.0);
 }
 static mv_t sgn_n_i(mv_t* pa) {
 	if (pa->u.intv > 0LL)
-		return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv =  1LL};
+		return mv_from_int(1LL);
 	if (pa->u.intv < 0LL)
-		return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = -1LL};
-	return (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = 0LL};
+		return mv_from_int(-1LL);
+	return mv_from_int(0LL);
 }
 
 static mv_unary_func_t* sgn_dispositions[MT_MAX] = {
@@ -1475,15 +1475,15 @@ mv_t n_n_sgn_func(mv_t* pval1) { return (sgn_dispositions[pval1->type])(pval1); 
 // ----------------------------------------------------------------
 static mv_t int_i_n(mv_t* pa) { return MV_NULL; }
 static mv_t int_i_e(mv_t* pa) { return MV_ERROR; }
-static mv_t int_i_b(mv_t* pa) { return (mv_t) {.type = MT_INT,   .free_flags = NO_FREE, .u.intv = pa->u.boolv ? 1 : 0}; }
-static mv_t int_i_f(mv_t* pa) { return (mv_t) {.type = MT_INT,   .free_flags = NO_FREE, .u.intv = (long long)round(pa->u.fltv)}; }
-static mv_t int_i_i(mv_t* pa) { return (mv_t) {.type = MT_INT,   .free_flags = NO_FREE, .u.intv = pa->u.intv}; }
+static mv_t int_i_b(mv_t* pa) { return mv_from_int(pa->u.boolv ? 1 : 0); }
+static mv_t int_i_f(mv_t* pa) { return mv_from_int((long long)round(pa->u.fltv)); }
+static mv_t int_i_i(mv_t* pa) { return mv_from_int(pa->u.intv); }
 static mv_t int_i_s(mv_t* pa) {
-	mv_t retval = (mv_t) {.type = MT_INT, .free_flags = NO_FREE, .u.intv = 0};
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
+	mv_t retval = mv_from_int(0LL);
 	if (!mlr_try_int_from_string(pa->u.strv, &retval.u.intv))
-		retval.type = MT_ERROR;
+		return MV_ERROR;
 	return retval;
 }
 
@@ -1501,15 +1501,15 @@ mv_t i_x_int_func(mv_t* pval1) { return (int_dispositions[pval1->type])(pval1); 
 // ----------------------------------------------------------------
 static mv_t float_f_n(mv_t* pa) { return MV_NULL; }
 static mv_t float_f_e(mv_t* pa) { return MV_ERROR; }
-static mv_t float_f_b(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.boolv ? 1.0 : 0.0}; }
-static mv_t float_f_f(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.fltv}; }
-static mv_t float_f_i(mv_t* pa) { return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.intv}; }
+static mv_t float_f_b(mv_t* pa) { return mv_from_float(pa->u.boolv ? 1.0 : 0.0); }
+static mv_t float_f_f(mv_t* pa) { return mv_from_float(pa->u.fltv); }
+static mv_t float_f_i(mv_t* pa) { return mv_from_float((double)pa->u.intv); }
 static mv_t float_f_s(mv_t* pa) {
-	mv_t retval = (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.intv = 0 };
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
+	mv_t retval = mv_from_float(0.0);
 	if (!mlr_try_float_from_string(pa->u.strv, &retval.u.fltv))
-		retval.type = MT_ERROR;
+		return MV_ERROR;
 	return retval;
 }
 
