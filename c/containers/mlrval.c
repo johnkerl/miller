@@ -102,6 +102,7 @@ char* mv_describe_val(mv_t val) {
 }
 
 // ----------------------------------------------------------------
+// xxx rename from get to set
 void mv_get_boolean_strict(mv_t* pval) {
 	if (pval->type != MT_BOOL) {
 		char* desc = mt_describe_type(pval->type);
@@ -111,6 +112,7 @@ void mv_get_boolean_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// xxx rename from get to set
 void mv_get_float_strict(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
@@ -146,6 +148,7 @@ void mv_get_float_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// xxx rename from get to set
 void mv_get_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
