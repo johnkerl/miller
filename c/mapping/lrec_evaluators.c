@@ -1044,7 +1044,8 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, context_t* pctx, v
 	if (string == NULL) {
 		return MV_NULL;
 	} else {
-		return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+		// string points into lrec memory and is valid as long as the lrec is.
+		return mv_from_string_no_free(string);
 	}
 }
 
@@ -1058,7 +1059,8 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, context_t* pctx, 
 		if (mlr_try_float_from_string(string, &fltv)) {
 			return mv_from_float(fltv);
 		} else {
-			return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+			// string points into lrec memory and is valid as long as the lrec is.
+			return mv_from_string_no_free(string);
 		}
 	}
 }
@@ -1076,7 +1078,8 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pc
 		} else if (mlr_try_float_from_string(string, &fltv)) {
 			return mv_from_float(fltv);
 		} else {
-			return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+			// string points into lrec memory and is valid as long as the lrec is.
+			return mv_from_string_no_free(string);
 		}
 	}
 }
@@ -1125,15 +1128,11 @@ mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, context_t* pctx, void*
 
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
-	// This is due to strdup-only semantics in mlrvals. If we implement a
-	// free-flag as in slls and lrec, we could reduce some of the needless
-	// strdups (at the cost of some code complexity).
-	return mv_from_string_with_free(mlr_strdup_or_die(pstate->literal.u.strv)); // xxx
+	return mv_from_string_no_free(pstate->literal.u.strv);
 }
 static void lrec_evaluator_literal_free(void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
-	if (pstate->literal.type == MT_STRING)
-		free(pstate->literal.u.strv);
+	mv_free(&pstate->literal);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_inferencing) {
@@ -1150,7 +1149,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 		pevaluator->pprocess_func = NULL;
 		switch (type_inferencing) {
 		case TYPE_INFER_STRING_ONLY:
-			pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+			pstate->literal = mv_from_string_no_free(string);
 			pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			break;
 
@@ -1159,7 +1158,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 				pstate->literal = mv_from_float(fltv);
 				pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 			} else {
-				pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+				pstate->literal = mv_from_string_no_free(string);
 				pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			}
 			break;
@@ -1172,7 +1171,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 				pstate->literal = mv_from_float(fltv);
 				pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 			} else {
-				pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
+				pstate->literal = mv_from_string_no_free(string);
 				pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			}
 			break;
@@ -1234,7 +1233,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return mv_from_string_with_free(mlr_strdup_or_die(pctx->filename)); // xxx
+	return mv_from_string_no_free(pctx->filename);
 }
 static void lrec_evaluator_FILENAME_free(void* pvstate) {
 }

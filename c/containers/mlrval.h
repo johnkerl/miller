@@ -104,6 +104,14 @@ static inline int mv_is_null(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+static inline void mv_free(mv_t* pval) {
+	if ((pval->type) == MT_STRING && (pval->free_flags & FREE_ENTRY_VALUE)) {
+		free(pval->u.strv);
+		pval->u.strv = NULL;
+	}
+}
+
+// ----------------------------------------------------------------
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);

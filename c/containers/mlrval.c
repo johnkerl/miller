@@ -225,8 +225,9 @@ void mv_get_int_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// xxx rename
 void mv_get_number_nullable(mv_t* pval) {
-	char* strv = NULL;
+	mv_t nval = MV_NULL;
 	switch (pval->type) {
 	case MT_NULL:
 		break;
@@ -241,9 +242,9 @@ void mv_get_number_nullable(mv_t* pval) {
 		pval->u.intv = 0;
 		break;
 	case MT_STRING:
-		strv = pval->u.strv;
-		*pval = mv_scan_number_nullable(pval->u.strv);
-		free(strv); // xxx
+		nval = mv_scan_number_nullable(pval->u.strv);
+		mv_free(pval);
+		*pval = nval;
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
@@ -256,10 +257,8 @@ mv_t mv_scan_number_nullable(char* string) {
 	double fltv = 0.0;
 	long long intv = 0LL;
 	// xxx free
-	mv_t rv =  {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
+	mv_t rv =  MV_NULL;
 	if (*string == '\0') {
-		rv.type = MT_NULL;
-		rv.u.intv = 0LL;
 	} else if (mlr_try_int_from_string(string, &intv)) {
 		rv.type = MT_INT;
 		rv.u.intv = intv;
@@ -292,10 +291,8 @@ mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
 	strcpy(&string3[0], pval1->u.strv);
 	strcpy(&string3[len1], pval2->u.strv);
 
-	free(pval1->u.strv);
-	free(pval2->u.strv);
-	pval1->u.strv = NULL;
-	pval2->u.strv = NULL;
+	mv_free(pval1);
+	mv_free(pval2);
 
 	return mv_from_string_with_free(string3);
 }
@@ -328,10 +325,14 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 	char* input      = pval1->u.strv;
 	char* output     = regex_sub(input, pregex, psb, pval3->u.strv, &matched, &all_captured);
 
-	if (matched)
-		free(pval1->u.strv);
-	free(pval3->u.strv);
-	return mv_from_string_with_free(output);
+	if (matched) {
+		mv_free(pval1);
+		mv_free(pval3);
+		return mv_from_string_with_free(output);
+	} else {
+		mv_free(pval3);
+		return mv_from_string_no_free(output);
+	}
 }
 
 // ----------------------------------------------------------------
@@ -361,12 +362,14 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	char* input      = pval1->u.strv;
 	char* output     = regex_gsub(input, pregex, psb, pval3->u.strv, &matched, &all_captured);
 
-	if (matched)
-		free(pval1->u.strv);
-	free(pval3->u.strv);
-	pval1->u.strv = NULL;
-	pval3->u.strv = NULL;
-	return mv_from_string_with_free(output);
+	if (matched) {
+		mv_free(pval1);
+		mv_free(pval3);
+		return mv_from_string_with_free(output);
+	} else {
+		mv_free(pval3);
+		return mv_from_string_no_free(output);
+	}
 }
 
 // ----------------------------------------------------------------
@@ -454,7 +457,7 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = tolower((unsigned char)*c);
-	free(pval1->u.strv);
+	mv_free(pval1);
 	pval1->u.strv = NULL;
 
 	return mv_from_string_with_free(string);
@@ -464,7 +467,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
 		*c = toupper((unsigned char)*c);
-	free(pval1->u.strv);
+	mv_free(pval1);
 	pval1->u.strv = NULL;
 
 	return mv_from_string_with_free(string);
@@ -1549,11 +1552,10 @@ mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(
 // ----------------------------------------------------------------
 static mv_t string_s_n(mv_t* pa) { return MV_NULL; }
 static mv_t string_s_e(mv_t* pa) { return MV_ERROR; }
-static mv_t string_s_b(mv_t* pa) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"true":"false")); }// xxx
+static mv_t string_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"true":"false"); }
 static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }
 static mv_t string_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_ll(pa->u.intv)); }
 static mv_t string_s_s(mv_t* pa) {
-	// xxx free here??
 	unsigned char free_flags = pa->free_flags;
 	pa->free_flags = NO_FREE;
 	return mv_from_string(pa->u.strv, free_flags);
@@ -1573,11 +1575,10 @@ mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t hexfmt_s_n(mv_t* pa) { return MV_NULL; }
 static mv_t hexfmt_s_e(mv_t* pa) { return MV_ERROR; }
-static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")); } // xxx
+static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t hexfmt_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)); }
 static mv_t hexfmt_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll(pa->u.intv)); }
 static mv_t hexfmt_s_s(mv_t* pa) {
-	// xxx free here??
 	unsigned char free_flags = pa->free_flags;
 	pa->free_flags = NO_FREE;
 	return mv_from_string(pa->u.strv, free_flags);
@@ -1597,7 +1598,7 @@ mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pv
 // ----------------------------------------------------------------
 static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return MV_NULL; }
 static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
-static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_strdup_or_die(pa->u.boolv?"0x1":"0x0")); } // xxx
+static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv)); } // xxx free pfmt ...
 static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv));} // xxx free pfmt ...
 static mv_t fmtnum_s_ss(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
