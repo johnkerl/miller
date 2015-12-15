@@ -1527,13 +1527,10 @@ mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval
 // ----------------------------------------------------------------
 static mv_t boolean_b_n(mv_t* pa) { return MV_NULL; }
 static mv_t boolean_b_e(mv_t* pa) { return MV_ERROR; }
-static mv_t boolean_b_b(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .free_flags = NO_FREE, .u.boolv = pa->u.boolv}; }
-static mv_t boolean_b_f(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .free_flags = NO_FREE, .u.boolv = (pa->u.fltv == 0.0) ? FALSE : TRUE}; }
-static mv_t boolean_b_i(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .free_flags = NO_FREE, .u.boolv = (pa->u.intv == 0LL) ? FALSE : TRUE}; }
-static mv_t boolean_b_s(mv_t* pa) { return (mv_t) {.type = MT_BOOL,  .free_flags = NO_FREE,
-		.u.boolv = (streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE
-	};
-}
+static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
+static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }
+static mv_t boolean_b_i(mv_t* pa) { return mv_from_bool((pa->u.intv == 0LL) ? FALSE : TRUE); }
+static mv_t boolean_b_s(mv_t* pa) { return mv_from_bool((streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE);}
 
 static mv_unary_func_t* boolean_dispositions[MT_MAX] = {
 	/*NULL*/   boolean_b_n,
