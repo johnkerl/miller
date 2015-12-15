@@ -1044,7 +1044,7 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, context_t* pctx, v
 	if (string == NULL) {
 		return MV_NULL;
 	} else {
-		return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+		return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 	}
 }
 
@@ -1056,9 +1056,9 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, context_t* pctx, 
 	} else {
 		double fltv;
 		if (mlr_try_float_from_string(string, &fltv)) {
-			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+			return mv_from_float(fltv);
 		} else {
-			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+			return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 		}
 	}
 }
@@ -1072,11 +1072,11 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pc
 		long long intv;
 		double fltv;
 		if (mlr_try_int_from_string(string, &intv)) {
-			return (mv_t) {.type = MT_INT, .u.intv = intv};
+			return mv_from_int(intv);
 		} else if (mlr_try_float_from_string(string, &fltv)) {
-			return (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+			return mv_from_float(fltv);
 		} else {
-			return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+			return mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 		}
 	}
 }
@@ -1128,7 +1128,7 @@ mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 	// This is due to strdup-only semantics in mlrvals. If we implement a
 	// free-flag as in slls and lrec, we could reduce some of the needless
 	// strdups (at the cost of some code complexity).
-	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pstate->literal.u.strv)};
+	return mv_from_string_with_free(mlr_strdup_or_die(pstate->literal.u.strv)); // xxx
 }
 static void lrec_evaluator_literal_free(void* pvstate) {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
@@ -1150,29 +1150,29 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 		pevaluator->pprocess_func = NULL;
 		switch (type_inferencing) {
 		case TYPE_INFER_STRING_ONLY:
-			pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+			pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 			pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			break;
 
 		case TYPE_INFER_STRING_FLOAT:
 			if (mlr_try_float_from_string(string, &fltv)) {
-				pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+				pstate->literal = mv_from_float(fltv);
 				pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 			} else {
-				pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+				pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 				pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			}
 			break;
 
 		case TYPE_INFER_STRING_FLOAT_INT:
 			if (mlr_try_int_from_string(string, &intv)) {
-				pstate->literal = (mv_t) {.type = MT_INT, .u.intv = intv};
+				pstate->literal = mv_from_int(intv);
 				pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 			} else if (mlr_try_float_from_string(string, &fltv)) {
-				pstate->literal = (mv_t) {.type = MT_FLOAT, .u.fltv = fltv};
+				pstate->literal = mv_from_float(fltv);
 				pevaluator->pprocess_func = lrec_evaluator_non_string_literal_func;
 			} else {
-				pstate->literal = (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(string)};
+				pstate->literal = mv_from_string_with_free(mlr_strdup_or_die(string)); // xxx
 				pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			}
 			break;
@@ -1192,7 +1192,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 
 // ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.intv = prec->field_count};
+	return mv_from_int(prec->field_count);
 }
 static void lrec_evaluator_NF_free(void* pvstate) {
 }
@@ -1206,7 +1206,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_NR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.intv = pctx->nr};
+	return mv_from_int(pctx->nr);
 }
 static void lrec_evaluator_NR_free(void* pvstate) {
 }
@@ -1220,7 +1220,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FNR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.intv = pctx->fnr};
+	return mv_from_int(pctx->fnr);
 }
 static void lrec_evaluator_FNR_free(void* pvstate) {
 }
@@ -1234,7 +1234,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_STRING, .u.strv = mlr_strdup_or_die(pctx->filename)};
+	return mv_from_string_with_free(mlr_strdup_or_die(pctx->filename)); // xxx
 }
 static void lrec_evaluator_FILENAME_free(void* pvstate) {
 }
@@ -1249,7 +1249,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENUM_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_INT, .u.intv = pctx->filenum};
+	return mv_from_int(pctx->filenum);
 }
 static void lrec_evaluator_FILENUM_free(void* pvstate) {
 }
@@ -1263,7 +1263,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_PI_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_FLOAT, .u.fltv = M_PI};
+	return mv_from_float(M_PI);
 }
 static void lrec_evaluator_PI_free(void* pvstate) {
 }
@@ -1277,7 +1277,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_E_func(lrec_t* prec, context_t* pctx, void* pvstate) {
-	return (mv_t) {.type = MT_FLOAT, .u.fltv = M_E};
+	return mv_from_float(M_E);
 }
 static void lrec_evaluator_E_free(void* pvstate) {
 }
