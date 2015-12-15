@@ -916,20 +916,17 @@ static mv_t times_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t times_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a * b};
-	return rv;
+	return mv_from_float(a * b);
 }
 static mv_t times_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a * b};
-	return rv;
+	return mv_from_float(a * b);
 }
 static mv_t times_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a * b};
-	return rv;
+	return mv_from_float(a * b);
 }
 // Unlike adds & subtracts which overflow by at most one bit, multiplies can
 // overflow by a word size. Thus detecting sign-changes does not suffice to
@@ -1031,20 +1028,17 @@ static mv_t int_divide_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t int_divide_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = floor(a / b)};
-	return rv;
+	return mv_from_float(floor(a / b));
 }
 static mv_t int_divide_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = floor(a / b)};
-	return rv;
+	return mv_from_float(floor(a / b));
 }
 static mv_t int_divide_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = floor(a / b)};
-	return rv;
+	return mv_from_float(floor(a / b));
 }
 static mv_t int_divide_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
@@ -1063,8 +1057,7 @@ static mv_t int_divide_i_ii(mv_t* pa, mv_t* pb) {
 				q--;
 		}
 	}
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = q};
-	return rv;
+	return mv_from_int(q);
 }
 
 static mv_binary_func_t* int_divide_dispositions[MT_MAX][MT_MAX] = {
@@ -1088,20 +1081,17 @@ static mv_t mod_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a - b * floor(a / b)};
-	return rv;
+	return mv_from_float(a - b * floor(a / b));
 }
 static mv_t mod_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a - b * floor(a / b)};
-	return rv;
+	return mv_from_float(a - b * floor(a / b));
 }
 static mv_t mod_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = a - b * floor(a / b)};
-	return rv;
+	return mv_from_float(a - b * floor(a / b));
 }
 static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
@@ -1117,8 +1107,7 @@ static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 			u += b;
 		}
 	}
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = u};
-	return rv;
+	return mv_from_int(u);
 }
 
 static mv_binary_func_t* mod_dispositions[MT_MAX][MT_MAX] = {
@@ -1274,26 +1263,22 @@ static mv_t roundm_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t roundm_f_ff(mv_t* pa, mv_t* pb) {
 	double x = pa->u.fltv;
 	double m = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = round(x / m) * m};
-	return rv;
+	return mv_from_float(round(x / m) * m);
 }
 static mv_t roundm_f_fi(mv_t* pa, mv_t* pb) {
 	double x = pa->u.fltv;
 	double m = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = round(x / m) * m};
-	return rv;
+	return mv_from_float(round(x / m) * m);
 }
 static mv_t roundm_f_if(mv_t* pa, mv_t* pb) {
 	double x = (double)pa->u.intv;
 	double m = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = round(x / m) * m};
-	return rv;
+	return mv_from_float(round(x / m) * m);
 }
 static mv_t roundm_i_ii(mv_t* pa, mv_t* pb) {
 	long long x = pa->u.intv;
 	long long m = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = (x / m) * m};
-	return rv;
+	return mv_from_int((x / m) * m);
 }
 
 static mv_binary_func_t* roundm_dispositions[MT_MAX][MT_MAX] = {
@@ -1316,54 +1301,45 @@ static mv_t min_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t min_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmin(a, b)};
-	return rv;
+	return mv_from_float(fmin(a, b));
 }
 
 static mv_t min_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmin(a, b)};
-	return rv;
+	return mv_from_float(fmin(a, b));
 }
 
 static mv_t min_f_fz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.fltv};
-	return rv;
+	return mv_from_float(pa->u.fltv);
 }
 
 static mv_t min_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmin(a, b)};
-	return rv;
+	return mv_from_float(fmin(a, b));
 }
 
 static mv_t min_f_zf(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pb->u.fltv};
-	return rv;
+	return mv_from_float(pb->u.fltv);
 }
 
 static mv_t min_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = a < b ? a : b};
-	return rv;
+	return mv_from_int(a < b ? a : b);
 }
 
 static mv_t min_i_iz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
-	return rv;
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_t min_i_zi(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pb->u.intv};
-	return rv;
+	return mv_from_int(pb->u.intv);
 }
 
 static mv_t min_z_zz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_NULL, .u.intv = 0LL};
-	return rv;
+	return MV_NULL;
 }
 
 static mv_binary_func_t* min_dispositions[MT_MAX][MT_MAX] = {
@@ -1386,54 +1362,45 @@ static mv_t max_e_xx(mv_t* pa, mv_t* pb) {
 static mv_t max_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmax(a, b)};
-	return rv;
+	return mv_from_float(fmax(a, b));
 }
 
 static mv_t max_f_fi(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = (double)pb->u.intv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmax(a, b)};
-	return rv;
+	return mv_from_float(fmax(a, b));
 }
 
 static mv_t max_f_fz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pa->u.fltv};
-	return rv;
+	return mv_from_float(pa->u.fltv);
 }
 
 static mv_t max_f_if(mv_t* pa, mv_t* pb) {
 	double a = (double)pa->u.intv;
 	double b = pb->u.fltv;
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = fmax(a, b)};
-	return rv;
+	return mv_from_float(fmax(a, b));
 }
 
 static mv_t max_f_zf(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = pb->u.fltv};
-	return rv;
+	return mv_from_float(pb->u.fltv);
 }
 
 static mv_t max_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = a > b ? a : b};
-	return rv;
+	return mv_from_int(a > b ? a : b);
 }
 
 static mv_t max_i_iz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pa->u.intv};
-	return rv;
+	return mv_from_int(pa->u.intv);
 }
 
 static mv_t max_i_zi(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_INT, .free_flags = NO_FREE, .u.intv = pb->u.intv};
-	return rv;
+	return mv_from_int(pb->u.intv);
 }
 
 static mv_t max_z_zz(mv_t* pa, mv_t* pb) {
-	mv_t rv = {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
-	return rv;
+	return MV_NULL;
 }
 
 static mv_binary_func_t* max_dispositions[MT_MAX][MT_MAX] = {

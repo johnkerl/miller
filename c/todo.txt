@@ -13,6 +13,9 @@ TOP OF LIST
 * debian screenshot
 * wiz/veith ack @ dox x 2
 
+* negdhms?
+* also spsrv
+
 * faqents/cookbook
 
 * more perf tuning:
