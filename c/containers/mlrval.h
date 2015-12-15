@@ -117,13 +117,13 @@ char* mt_describe_type(int type);
 char* mt_describe_type(int type);
 char* mv_format_val(mv_t* pval); // For debug only; the caller should free the return value
 char* mv_describe_val(mv_t val);
-void mv_get_boolean_strict(mv_t* pval);
-void mv_get_float_strict(mv_t* pval);
-void mv_get_float_nullable(mv_t* pval);
-void mv_get_int_nullable(mv_t* pval);
+void mv_set_boolean_strict(mv_t* pval);
+void mv_set_float_strict(mv_t* pval);
+void mv_set_float_nullable(mv_t* pval);
+void mv_set_int_nullable(mv_t* pval);
 
 // int or float:
-void mv_get_number_nullable(mv_t* pval);
+void mv_set_number_nullable(mv_t* pval);
 mv_t mv_scan_number_nullable(char* string);
 mv_t mv_scan_number_or_die(char* string);
 

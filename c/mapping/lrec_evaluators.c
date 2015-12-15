@@ -145,7 +145,7 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
 
-	mv_get_float_nullable(&val1);
+	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_FLOAT)
 		return MV_ERROR;
@@ -180,7 +180,7 @@ mv_t lrec_evaluator_x_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_x_n_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	mv_get_number_nullable(&val1);
+	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
@@ -213,7 +213,7 @@ mv_t lrec_evaluator_i_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_i_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
 
-	mv_get_int_nullable(&val1);
+	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
@@ -246,11 +246,11 @@ typedef struct _lrec_evaluator_f_ff_state_t {
 mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	mv_get_float_nullable(&val1);
+	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
-	mv_get_float_nullable(&val2);
+	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -289,10 +289,10 @@ mv_t lrec_evaluator_n_nn_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 
-	mv_get_number_nullable(&val1);
+	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
-	mv_get_number_nullable(&val2);
+	mv_set_number_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -333,11 +333,11 @@ typedef struct _lrec_evaluator_n_nn_nullable_state_t {
 mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_n_nn_nullable_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	mv_get_number_nullable(&val1);
+	mv_set_number_nullable(&val1);
 	ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
-	mv_get_number_nullable(&val2);
+	mv_set_number_nullable(&val2);
 	ERROR_OUT(val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -375,15 +375,15 @@ typedef struct _lrec_evaluator_f_fff_state_t {
 mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_f_fff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	mv_get_float_nullable(&val1);
+	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
-	mv_get_float_nullable(&val2);
+	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, pctx, pstate->parg3->pvstate);
-	mv_get_float_nullable(&val3);
+	mv_set_float_nullable(&val3);
 	NULL_OR_ERROR_OUT(val3);
 
 	return pstate->pfunc(&val1, &val2, &val3);
@@ -423,14 +423,14 @@ mv_t lrec_evaluator_i_ii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_ii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mv_get_int_nullable(&val1);
+	mv_set_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mv_get_int_nullable(&val2);
+	mv_set_int_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_INT)
 		return MV_ERROR;
@@ -471,21 +471,21 @@ mv_t lrec_evaluator_i_iii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_i_iii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mv_get_int_nullable(&val1);
+	mv_set_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	mv_get_int_nullable(&val2);
+	mv_set_int_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_INT)
 		return MV_ERROR;
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
-	mv_get_int_nullable(&val3);
+	mv_set_int_nullable(&val3);
 	NULL_OUT(val3);
 	if (val3.type != MT_INT)
 		return MV_ERROR;
@@ -770,7 +770,7 @@ typedef struct _lrec_evaluator_x_ns_state_t {
 mv_t lrec_evaluator_x_ns_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_x_ns_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	mv_get_number_nullable(&val1);
+	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);

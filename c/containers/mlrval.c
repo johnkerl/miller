@@ -102,8 +102,7 @@ char* mv_describe_val(mv_t val) {
 }
 
 // ----------------------------------------------------------------
-// xxx rename from get to set
-void mv_get_boolean_strict(mv_t* pval) {
+void mv_set_boolean_strict(mv_t* pval) {
 	if (pval->type != MT_BOOL) {
 		char* desc = mt_describe_type(pval->type);
 		fprintf(stderr, "Expression does not evaluate to boolean: got %s.\n", desc);
@@ -112,8 +111,7 @@ void mv_get_boolean_strict(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-// xxx rename from get to set
-void mv_get_float_strict(mv_t* pval) {
+void mv_set_float_strict(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -149,7 +147,7 @@ void mv_get_float_strict(mv_t* pval) {
 
 // ----------------------------------------------------------------
 // xxx rename from get to set
-void mv_get_float_nullable(mv_t* pval) {
+void mv_set_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	switch (pval->type) {
 	case MT_NULL:
@@ -187,7 +185,7 @@ void mv_get_float_nullable(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
-void mv_get_int_nullable(mv_t* pval) {
+void mv_set_int_nullable(mv_t* pval) {
 	long long intv = 0LL;
 	switch (pval->type) {
 	case MT_NULL:
@@ -226,7 +224,7 @@ void mv_get_int_nullable(mv_t* pval) {
 
 // ----------------------------------------------------------------
 // xxx rename
-void mv_get_number_nullable(mv_t* pval) {
+void mv_set_number_nullable(mv_t* pval) {
 	mv_t nval = MV_NULL;
 	switch (pval->type) {
 	case MT_NULL:
