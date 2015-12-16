@@ -28,8 +28,7 @@ TOP OF LIST
 
 * flight misc:
   - --rs lf splatters
-  - .screenrc -> dotfiles
-  - fminus -> python too
+  - .screenrc -> dotfiles; more dotfile currency
   - mlr as data prep clean
 
 * mixed-format joins ...
