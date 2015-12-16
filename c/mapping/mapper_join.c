@@ -478,7 +478,6 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
 		popts->use_implicit_csv_header);
 
-	// xxx override ...
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->prepipe,
 		pstate->popts->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate);

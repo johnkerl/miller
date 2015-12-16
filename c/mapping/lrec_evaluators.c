@@ -558,16 +558,9 @@ typedef struct _lrec_evaluator_s_f_state_t {
 mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_f_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
-	// xxx use the new nullable methods
+
+	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type == MT_FLOAT) {
-		;
-	} else if (val1.type == MT_INT) {
-		val1.type = MT_FLOAT;
-		val1.u.fltv = (double)val1.u.intv;
-	} else {
-		return MV_ERROR;
-	}
 
 	return pstate->pfunc(&val1);
 }
@@ -598,15 +591,9 @@ typedef struct _lrec_evaluator_s_i_state_t {
 mv_t lrec_evaluator_s_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	lrec_evaluator_s_i_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, pctx, pstate->parg1->pvstate);
+
+	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
-	if (val1.type == MT_INT) {
-		;
-	} else if (val1.type == MT_FLOAT) {
-		val1.type = MT_INT;
-		val1.u.intv = (long long)val1.u.fltv;
-	} else {
-		return MV_ERROR;
-	}
 
 	return pstate->pfunc(&val1);
 }
