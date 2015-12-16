@@ -85,7 +85,7 @@ static inline mv_t mv_from_null() {
 }
 
 static inline mv_t mv_from_string_with_free(char* s) {
-	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_KEY, .u.strv = s};
+	return (mv_t) {.type = MT_STRING, .free_flags = FREE_ENTRY_VALUE, .u.strv = s};
 }
 static inline mv_t mv_from_string_no_free(char* s) {
 	return (mv_t) {.type = MT_STRING, .free_flags = NO_FREE, .u.strv = s};
