@@ -288,7 +288,7 @@ static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	} else {
 		delta = n_nn_minus_func(pnumv, &pstate->prev);
 	}
-	lrec_put(prec, pstate->output_field_name, mv_format_val(&delta), FREE_ENTRY_VALUE);
+	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&delta), FREE_ENTRY_VALUE);
 	pstate->prev = *pnumv;
 }
 static void step_delta_free(void* pvstate) {
@@ -324,7 +324,7 @@ static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	} else {
 		from_first = n_nn_minus_func(pnumv, &pstate->first);
 	}
-	lrec_put(prec, pstate->output_field_name, mv_format_val(&from_first), FREE_ENTRY_VALUE);
+	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&from_first), FREE_ENTRY_VALUE);
 }
 static void step_from_first_free(void* pvstate) {
 	step_from_first_state_t* pstate = pvstate;
@@ -390,7 +390,7 @@ typedef struct _step_rsum_state_t {
 static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	step_rsum_state_t* pstate = pvstate;
 	pstate->rsum = n_nn_plus_func(&pstate->rsum, pnumv);
-	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->rsum),
+	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->rsum),
 		FREE_ENTRY_VALUE);
 }
 static void step_rsum_free(void* pvstate) {
@@ -420,7 +420,7 @@ typedef struct _step_counter_state_t {
 static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	step_counter_state_t* pstate = pvstate;
 	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
-	lrec_put(prec, pstate->output_field_name, mv_format_val(&pstate->counter),
+	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
 		FREE_ENTRY_VALUE);
 }
 static void step_counter_free(void* pvstate) {

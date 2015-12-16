@@ -115,7 +115,7 @@ static inline void mv_free(mv_t* pval) {
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);
-char* mv_format_val(mv_t* pval); // For debug only; the caller should free the return value
+char* mv_alloc_format_val(mv_t* pval); // For debug only; the caller should free the return value
 char* mv_describe_val(mv_t val);
 void mv_set_boolean_strict(mv_t* pval);
 void mv_set_float_strict(mv_t* pval);

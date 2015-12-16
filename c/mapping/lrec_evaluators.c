@@ -1815,23 +1815,23 @@ static char * test1() {
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	mv_t val = pnr->pprocess_func(prec, pctx, pnr->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 888);
 
 	val = pfnr->pprocess_func(prec, pctx, pfnr->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 999);
 
 	val = pfilename->pprocess_func(prec, pctx, pfilename->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "filename-goes-here"));
 
 	val = pfilenum->pprocess_func(prec, pctx, pfilenum->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 123);
 
@@ -1856,31 +1856,31 @@ static char * test2() {
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
 	mv_t val = ps->pprocess_func(prec, pctx, ps->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abc"));
 
 	val = pdef->pprocess_func(prec, pctx, pdef->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "def"));
 
 	val = pdot->pprocess_func(prec, pctx, pdot->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptolower->pprocess_func(prec, pctx, ptolower->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
 	val = ptoupper->pprocess_func(prec, pctx, ptoupper->pvstate);
-	printf("[%s] %s\n", mt_describe_type(val.type), mv_format_val(&val));
+	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "ABCDEF"));

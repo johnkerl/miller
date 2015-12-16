@@ -491,7 +491,7 @@ static void stats1_count_singest(void* pvstate, char* val) {
 }
 static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_count_state_t* pstate = pvstate;
-	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->counter),
+	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
 		FREE_ENTRY_VALUE);
 }
 static void stats1_count_free(void* pvstate) {
@@ -575,7 +575,7 @@ static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 }
 static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
-	lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->sum),
+	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->sum),
 		FREE_ENTRY_VALUE);
 }
 static void stats1_sum_free(void* pvstate) {
@@ -812,7 +812,7 @@ static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_
 	if (mv_is_null(&pstate->min)) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->min),
+		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->min),
 			FREE_ENTRY_VALUE);
 	}
 }
@@ -848,7 +848,7 @@ static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_
 	if (mv_is_null(&pstate->max)) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mv_format_val(&pstate->max),
+		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->max),
 			FREE_ENTRY_VALUE);
 	}
 }
@@ -885,7 +885,7 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	double p;
 	(void)sscanf(stats1_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
 	mv_t v = percentile_keeper_emit(pstate->ppercentile_keeper, p);
-	char* s = mv_format_val(&v);
+	char* s = mv_alloc_format_val(&v);
 	// For this type, one accumulator tracks many stats1_names, but a single value_field_name.
 	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_name);
 	if (output_field_name == NULL) {

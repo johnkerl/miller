@@ -67,7 +67,7 @@ char* mt_describe_type(int type) {
 
 // The caller should free the return value
 // xxx free-flags here
-char* mv_format_val(mv_t* pval) {
+char* mv_alloc_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_NULL:
 		return mlr_strdup_or_die("");
@@ -95,7 +95,7 @@ char* mv_format_val(mv_t* pval) {
 
 char* mv_describe_val(mv_t val) {
 	char* stype = mt_describe_type(val.type);
-	char* strv  = mv_format_val(&val);
+	char* strv  = mv_alloc_format_val(&val);
 	char* desc  = mlr_malloc_or_die(strlen(stype) + strlen(strv) + 4);
 	sprintf(desc, "[%s] %s", stype, strv);
 	return desc;
@@ -1612,74 +1612,75 @@ static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb-
 static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
 
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	// xxx don't need the copy ...
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) == 0);
 	free(a);
 	return rv;
 }
 static  mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) != 0);
 	free(a);
 	return rv;
 }
 static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) > 0);
 	free(a);
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) >= 0);
 	free(a);
 	return rv;
 }
 static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) < 0);
 	free(a);
 	return rv;
 }
 static  mv_t le_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_format_val(pa);
+	char* a = mv_alloc_format_val(pa);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) <= 0);
 	free(a);
 	return rv;
 }
 
 static  mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) == 0);
 	free(b);
 	return rv;
 }
 static  mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) != 0);
 	free(b);
 	return rv;
 }
 static  mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) > 0);
 	free(b);
 	return rv;
 }
 static  mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) >= 0);
 	free(b);
 	return rv;
 }
 static  mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) < 0);
 	free(b);
 	return rv;
 }
 static  mv_t le_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_format_val(pb);
+	char* b = mv_alloc_format_val(pb);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) <= 0);
 	free(b);
 	return rv;

@@ -242,7 +242,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
 					if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
-						char* strv = mv_format_val(&numv);
+						char* strv = mv_alloc_format_val(&numv);
 						lrec_put(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 					} else {
 						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
