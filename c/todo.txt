@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-* stats1 handle empty-key nulls? stats2? step? top? etc ...
+:D
 
 ================================================================
 TOP OF LIST
@@ -13,6 +13,7 @@ TOP OF LIST
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
 * mlr as data prep clean
 * mixed-format joins ...
+* stats1 handle empty-key nulls? stats2? step? top? etc ...
 
 * cut a new release soon
 
