@@ -26,8 +26,19 @@ static parse_trie_node_t* parse_trie_node_alloc(char c) {
 }
 
 // ----------------------------------------------------------------
+static void parse_trie_free_node_descendants(parse_trie_node_t* pnode) {
+	for (int i = 0; i < 256; i++) {
+		parse_trie_node_t* pnext = pnode->pnexts[i];
+		if (pnext != NULL) {
+			parse_trie_free_node_descendants(pnext);
+			free(pnext);
+		}
+	}
+}
+
 void parse_trie_free(parse_trie_t* ptrie) {
-	return; // xxx stub
+	parse_trie_free_node_descendants(ptrie->proot);
+	free(ptrie->proot);
 }
 
 // ----------------------------------------------------------------
