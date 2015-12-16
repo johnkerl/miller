@@ -1,8 +1,7 @@
 ================================================================
 BUGFIXES
 
-* watsec!
-* stats1 handle empty-key nulls?
+* stats1 handle empty-key nulls? stats2? step? top? etc ...
 
 ================================================================
 TOP OF LIST
@@ -13,7 +12,7 @@ TOP OF LIST
 * wiz/veith ack @ dox x 2
 
 * negdhms?
-* also spsrv
+* also spsrv that
 
 * faqents/cookbook
 

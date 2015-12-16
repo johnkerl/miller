@@ -66,7 +66,6 @@ char* mt_describe_type(int type) {
 }
 
 // The caller should free the return value
-// xxx free-flags here
 char* mv_alloc_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_NULL:
@@ -89,6 +88,40 @@ char* mv_alloc_format_val(mv_t* pval) {
 		break;
 	default:
 		return mlr_strdup_or_die("???");
+		break;
+	}
+}
+
+// The caller should free the return value if the free-flag is non-zero after return
+char* mv_format_val(mv_t* pval, char* pfree_flags) {
+	switch(pval->type) {
+	case MT_NULL:
+		*pfree_flags = NO_FREE;
+		return "";
+		break;
+	case MT_ERROR:
+		*pfree_flags = NO_FREE;
+		return "(error)";
+		break;
+	case MT_BOOL:
+		*pfree_flags = NO_FREE;
+		return pval->u.boolv ? "true" : "false";
+		break;
+	case MT_FLOAT:
+		*pfree_flags = FREE_ENTRY_VALUE;
+		return mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
+		break;
+	case MT_INT:
+		*pfree_flags = FREE_ENTRY_VALUE;
+		return mlr_alloc_string_from_ll(pval->u.intv);
+		break;
+	case MT_STRING:
+		*pfree_flags = NO_FREE;
+		return pval->u.strv;
+		break;
+	default:
+		*pfree_flags = NO_FREE;
+		return "???";
 		break;
 	}
 }
