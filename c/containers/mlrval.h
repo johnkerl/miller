@@ -14,10 +14,55 @@
 // ================================================================
 // MT for Miller type -- highly abbreviated here since these are
 // spelled out a lot in lrec_evaluators.c.
+//
+// ================================================================
+// NOTE: mlrval functions invalidate their arguments. In particular, dynamically
+// allocated strings input to these functions will either be freed, or will
+// have their ownership transferred to the output mlrval.
+//
+// This is because the primary purpose of mlrvals is for evaluation of abstract
+// syntax trees defined by the DSLs for put and filter. Example AST:
+//
+//   $ mlr put -v '$z = $x . $y . "sum"' /dev/null
+//   = (operator):
+//       z (field_name).
+//       . (operator):
+//           . (operator):
+//               x (field_name).
+//               y (field_name).
+//           sum (literal).
+//
+// * Given an lrec with fields named "x" and "y", there will be pointers to x
+//   and y's field values from the input-data stream -- either to mmapped data
+//   from a file, or pointers into dynamically allocated lines from stdio.
+//
+// * The from-field-name mlrvals for x and y values will point into lrec memory
+//   but will have their own free-flags unset (since freeing of lrec memory is
+//   the job of the lrec instance).
+//
+// * The dot operator will do any necessary freeing of the x and y mlrval
+//   strings -- none in this case since they are direct references to field
+//   values. The output of $x . $y, by contrast, will be dynamically
+//   allocated.
+//
+// * The "sum" literal string is a pointer ultimately into argv[].
+//   The from-literal mlrval will not have its free-flag set.
+//
+// * The concatenation of $x . $y and "sum" will dynamically allocated.
+//   The $x . $y input string will be freed; the "sum" string won't be
+//   since it wasn't owned by the from-literal mlrval.
+//
+// * The result of this outer concatenation will be stored in the $z field of
+//   the current record, with ownership for the dynamically allocated string
+//   transferred to the lrec instance.
+//
+// There is also some use of mlrvals in mixed float/int handling inside various
+// mappers (e.g. stats1). There the use is much simpler: accumulation of
+// numeric quantities, ultimately formatted as a string for output.
 // ================================================================
 
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
-// So if the numeric values are changed, the matrices must be as well.
+// So, if the numeric values are changed, all the matrices must be as well.
 #define MT_NULL   0 // E.g. field name not present in input record -- not a problem.
 #define MT_ERROR  1 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_BOOL   2

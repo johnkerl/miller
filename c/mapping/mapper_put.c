@@ -160,8 +160,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		for (int i = 0; i < pstate->num_evaluators; i++) {
 			mv_t val = pstate->pevaluators[i]->pprocess_func(pinrec,
 				pctx, pstate->pevaluators[i]->pvstate);
-			char* string = mv_alloc_format_val(&val);
-			lrec_put(pinrec, pstate->output_field_names[i], string, FREE_ENTRY_VALUE);
+			char free_flags;
+			char* string = mv_format_val(&val, &free_flags);
+			lrec_put(pinrec, pstate->output_field_names[i], string, free_flags);
 		}
 		return sllv_single(pinrec);
 	}

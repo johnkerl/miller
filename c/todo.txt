@@ -17,11 +17,7 @@ TOP OF LIST
 * faqents/cookbook
 
 * more perf tuning:
-  - mv_format_val take pfree_flags arg?
-  - MT_STRING free-flags
-    > xxx emph args invalidated after eval (incl. string free, e.g. on dot operator);
-      nominally inputs pointing into lrec; nn cases in mappers are ok
-    > check xxxes
+  - check xxxes
   - in mmap-csv, try harder to not use the psb even in the dquoted case
 * mem-mgmt scrutinize:
   - valgrind w/ leak check @ regtest/run
