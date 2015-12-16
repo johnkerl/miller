@@ -5,8 +5,6 @@
 // Use powers of two exclusively, to help avoid heap fragmentation
 #define INITIAL_SIZE 128
 
-// xxx should i be using restrict more often?
-
 // ----------------------------------------------------------------
 char* mlr_get_cline(FILE* fp, char irs) {
 	char* line = NULL;

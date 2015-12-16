@@ -8,8 +8,6 @@
 // * The line-terminator is not returned as part of the string.
 // * Null is returned at EOF.
 
-// xxx maybe return the line-length by reference? it's available in the function bodies.
-
 // Get a line terminated by a single character, e.g. '\n' (LF).
 char*  mlr_get_cline(FILE* input_stream, char irs);
 
