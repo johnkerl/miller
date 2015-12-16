@@ -237,14 +237,10 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
 // ----------------------------------------------------------------
 static void mapper_join_free(void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
-	if (pstate->popts->pleft_join_field_names != NULL)
-		slls_free(pstate->popts->pleft_join_field_names);
-	if (pstate->popts->pright_join_field_names != NULL)
-		slls_free(pstate->popts->pright_join_field_names);
-	if (pstate->popts->poutput_join_field_names != NULL)
-		slls_free(pstate->popts->poutput_join_field_names);
-	if (pstate->pjoin_bucket_keeper != NULL)
-		join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
+	slls_free(pstate->popts->pleft_join_field_names);
+	slls_free(pstate->popts->pright_join_field_names);
+	slls_free(pstate->popts->poutput_join_field_names);
+	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 }
 
 // ----------------------------------------------------------------

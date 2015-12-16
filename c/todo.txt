@@ -77,14 +77,13 @@ COOKBOOK/FAQ/ETC.:
     ! be very clear streaming vs. dataframe -- each has things the other can't do
     ! emph mlr has light stats but for heavyweight analysis use R et al.
 
-* comma-number -- using locale?
-* poki cover -> readme
-
 * --mmap @ mlr -h
 * bus-insurance dev page
 
 ----------------------------------------------------------------
-* lrec_eval nullable etc. cleanup
+* comma-number -- using locale?
+
+* poki cover -> readme
 
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
 
@@ -116,11 +115,11 @@ OTHER
   o allows 'x = 10' in DKVP
   o allows right-justified keys in XTAB
 
-MINOR: hold-and-emit fraction?
+* hold-and-emit fraction?
 
-MAJOR: statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
+* statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
 
-MAJOR: uni/multivariate logistic for ternary & above?
+* uni/multivariate logistic for ternary & above?
 
 ? wiki quickselect ?
 
@@ -129,9 +128,7 @@ MINOR:
 
 * double-check for off-by-one buflen in cline/sline
 * hash-chain ifdef instrumentation -> maybe find a better hash function out there
-* dsls/ build outside of pwd? or just lemon $(absdir)/filenamegoeshere.y?
 * pprint join?
-* include lemon-generated .c/.h or not
 * lemon in-dir -- cf wiz note
 * gprof link with -lc on FreeBSD -- ?
 
@@ -149,25 +146,6 @@ look-ats:
 
 xperf:
 * post rust/go cmps
-
-================================================================
-NEATEN
-
-!! xxx's in the code
-* source hygiene: top-of-header comments, readme re memory management, etc.
-
-================================================================
-MEM MGMT:
-
-* full void-star-payload frees
-* multi-level frees in stats1/stats2/step subcmds (control-plane structures)
-* multi-level frees in stats1/stats2/step hashmaps (data-plane structures)
-* _free funcptr/funcs for mappers
-* free last rec in streamer?
-* look strdups at other lhm*
-* look at any other strdups
-* note that this free-at-end is highly pedantic *except* it allows me to check valgrind 100% leak-free
-  to be sure i don't miss the ones that *do* matter in the record-loops
 
 ================================================================
 UT/REG
@@ -196,8 +174,6 @@ DOC
 
 ================================================================
 IMPROVEMENTS
-
-* free-flag for string mlrvals
 
 * run go/d/etc on sprax & include #'s in perf pg, and/or rm xref in the latter & just post xlang perf #'s there
 * link to gh/jk/m xlang impls ... and/or cardify their sources :) ... or maybe just link to gh/jk/m xlang dir

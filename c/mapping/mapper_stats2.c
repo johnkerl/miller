@@ -144,8 +144,6 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 	// accumulators (i.e. none of them).
 	ap_define_false_flag(pstate,        "-F",    &allow_int_float);
 
-	// xxx abend here or elsewhere if hold & fit requested for non-supporting accumulator
-
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats2_usage(stderr, argv[0], verb);
 		return NULL;

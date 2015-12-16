@@ -177,7 +177,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	pkeeper->pvhandle = pvhandle;
 	pkeeper->pctx = pctx;
 
-	pkeeper->pleft_field_names           = slls_copy(pleft_field_names); // xxx be sure the caller frees its own
+	pkeeper->pleft_field_names           = slls_copy(pleft_field_names);
 
 	pkeeper->pbucket                     = mlr_malloc_or_die(sizeof(join_bucket_t));
 	pkeeper->pbucket->precords           = sllv_alloc();
