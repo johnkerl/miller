@@ -280,9 +280,17 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 
 		} else { // start of quoted field
 			e += pstate->dquotelen;
+			p = e;
 
 			// loop over characters in field
 			field_done = FALSE;
+			int contiguous = TRUE;
+			// If there are no embedded double-double quotes, then the field value is a contiguous
+			// array of bytes between the start and end double-quotes (non-inclusive). E.g. "ab,c"
+			// has contents ab,c. In that case we can point the rslls at that range of bytes
+			// with no data-copying. However, if there are embedded double-double quotes, then
+			// we use the string-build logic to build up a dynamically allocated string. E.g.
+			// "ab""c" becomes ab"c.
 			while (!field_done) {
 
 				rc = parse_trie_match(pstate->pdquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
@@ -296,27 +304,40 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
 						*e = 0;
+						if (contiguous)
+							rslls_add_no_free(pfields, p);
+						else
+							rslls_add_with_free(pfields, sb_finish(psb));
 						p = e + matchlen;
-						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
 						*e = 0;
+						if (contiguous)
+							rslls_add_no_free(pfields, p);
+						else
+							rslls_add_with_free(pfields, sb_finish(psb));
 						p = e + matchlen;
-						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
 						*e = 0;
+						if (contiguous)
+							rslls_add_no_free(pfields, p);
+						else
+							rslls_add_with_free(pfields, sb_finish(psb));
 						p = e + matchlen;
-						rslls_add_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_DQUOTE_STRIDX: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
-						// xxx here must switch over to psb
-						sb_append_char(psb, pstate->dquote[0]);
+						if (contiguous) { // not anymore it isn't
+							sb_append_char_range(psb, p, e);
+							contiguous = FALSE;
+						} else {
+							sb_append_char(psb, pstate->dquote[0]);
+						}
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
@@ -326,11 +347,11 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					}
 					e += matchlen;
 				} else {
-					sb_append_char(psb, *e);
+					if (!contiguous)
+						sb_append_char(psb, *e);
 					e++;
 				}
 			}
-
 		}
 	}
 	phandle->sol = e;

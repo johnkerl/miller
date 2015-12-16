@@ -10306,54 +10306,101 @@ x,y"yy,z
 ================================================================
 RFC-CSV
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple.csv
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
 x,y"yy,z
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple.csv
+a,b,c
+1,x,3
+4,5,6
+x,y"yy,z
+
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/narrow.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
+a,b,c
+1,x,3
+4,5,6
+
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-mlr --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
+a
+1
+2
+3
+4
+
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
+a
+1
+2
+3
+4
+
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
+a,b,c
+1,"x,3",y
+4,5,6
+
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
+a,b,c
+1,"x,3",y
+4,5,6
+
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
+a,b,c
+1,"x
+3",y
+4,5,6
+
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
+a,b,c
+1,"x
+3",y
+4,5,6
+
+mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
@@ -10361,7 +10408,23 @@ a,b,c
 4,5,6
 x,y"yy,z
 
-mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
+mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv
+a,b,c
+1,x,3
+4,5,6
+1,x,3
+4,5,6
+x,y"yy,z
+
+mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
+a|c
+
+1|3
+
+4|6
+
+
+mlr --mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
 a|c
 
 1|3

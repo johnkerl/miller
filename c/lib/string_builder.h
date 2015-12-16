@@ -23,6 +23,11 @@ static inline void sb_append_chars(string_builder_t* psb, char* s, int so, int e
 	while (p <= e)
 		sb_append_char(psb, *(p++));
 }
+static inline void sb_append_char_range(string_builder_t* psb, char* b, char* e) {
+	char* p = b;
+	while (p <= e)
+		sb_append_char(psb, *(p++));
+}
 
 void  sb_append_string(string_builder_t* psb, char* s);
 int   sb_is_empty(string_builder_t* psb);
