@@ -1556,8 +1556,16 @@ mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pv
 static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return MV_NULL; }
 static mv_t fmtnum_s_es(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
 static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
-static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv)); } // xxx free pfmt ...
-static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) { return mv_from_string_with_free(mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv));} // xxx free pfmt ...
+static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
+	mv_t rv = mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv));
+	mv_free(pfmt);
+	return rv;
+}
+static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) {
+	mv_t rv = mv_from_string_with_free(mlr_alloc_string_from_ll_and_format(pa->u.intv, pfmt->u.strv));
+	mv_free(pfmt);
+	return rv;
+}
 static mv_t fmtnum_s_ss(mv_t* pa, mv_t* pfmt) { return MV_ERROR; }
 
 static mv_binary_func_t* fmtnum_dispositions[MT_MAX] = {
