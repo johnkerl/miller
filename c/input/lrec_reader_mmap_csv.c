@@ -265,7 +265,8 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					}
 					e += matchlen;
 				} else if (e >= phandle->eof) {
-					// xxx this is awkward w/r/t EOF_STRIDX
+					// Note: for the mmap reader, this is awkward duplication with respect to EOF_STRIDX.
+					// (In the stdio-reader case there is no duplication.)
 					*e = 0;
 					rslls_add_no_free(pfields, p);
 					p = e + matchlen;
