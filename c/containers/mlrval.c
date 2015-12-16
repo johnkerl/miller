@@ -1645,77 +1645,100 @@ static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb-
 static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
 
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
-	// xxx don't need the copy ...
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) == 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 static  mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) != 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) > 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) >= 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) < 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 static  mv_t le_b_xs(mv_t* pa, mv_t* pb) {
-	char* a = mv_alloc_format_val(pa);
+	char free_flags;
+	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) <= 0);
-	free(a);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(a);
 	return rv;
 }
 
 static  mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) == 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 static  mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) != 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 static  mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) > 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 static  mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) >= 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 static  mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) < 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 static  mv_t le_b_sx(mv_t* pa, mv_t* pb) {
-	char* b = mv_alloc_format_val(pb);
+	char free_flags;
+	char* b = mv_format_val(pb, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) <= 0);
-	free(b);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(b);
 	return rv;
 }
 
