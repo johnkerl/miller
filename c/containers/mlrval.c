@@ -131,6 +131,7 @@ char* mv_describe_val(mv_t val) {
 	char* strv  = mv_alloc_format_val(&val);
 	char* desc  = mlr_malloc_or_die(strlen(stype) + strlen(strv) + 4);
 	sprintf(desc, "[%s] %s", stype, strv);
+	free(strv);
 	return desc;
 }
 
