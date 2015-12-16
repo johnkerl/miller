@@ -6,16 +6,13 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! link to release notes from release-docs page
-
+! --rs lf splatters
+* link to release notes from release-docs page
 * wiz/veith ack @ dox x 2
 * debian screenshot
-
-* negdhms?
-* also spsrv that
-
-* mem-mgmt scrutinize:
-  - valgrind w/ leak check @ regtest/run
+* mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
+* mlr as data prep clean
+* mixed-format joins ...
 
 * cut a new release soon
 
@@ -26,12 +23,7 @@ TOP OF LIST
   ? redhat ?
   ? other ?
 
-* flight misc:
-  - --rs lf splatters
-  - .screenrc -> dotfiles; more dotfile currency
-  - mlr as data prep clean
-
-* mixed-format joins ...
+* flight misc: .screenrc -> dotfiles; more dotfile currency
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
