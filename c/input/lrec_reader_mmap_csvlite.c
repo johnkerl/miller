@@ -103,8 +103,6 @@ static void lrec_reader_mmap_csvlite_sof(void* pvstate) {
 	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
 }
 
-// xxx restore free func for header_keepers ... ?
-
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void* pvhandle, context_t* pctx) {
 	file_reader_mmap_state_t* phandle = pvhandle;
