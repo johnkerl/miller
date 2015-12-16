@@ -11,7 +11,6 @@ TOP OF LIST
 * wiz/veith ack @ dox x 2
 * debian screenshot
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
-* mlr as data prep clean
 * mixed-format joins ...
 * stats1 handle empty-key nulls? stats2? step? top? etc ...
 * comma-number -- using locale?
