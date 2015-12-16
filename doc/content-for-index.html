@@ -21,8 +21,11 @@ positionally-indexed data as a special case.)
 <ul>
 
 <li> I/O formats including <b>tabular pretty-printing</b> and <b>positionally indexed</b> (Unix-toolkit style)
+
 <li> <b>Conversion</b> between formats
+
 <li> <b>Format-aware processing</b>: e.g. CSV sort and tac keep header lines first
+
 <li> High-throughput <b>performance</b> on par with the Unix toolkit
 
 <li/> Miller is <b>pipe-friendly</b> and interoperates with Unix toolkit.
@@ -35,14 +38,18 @@ This means that whenever functionally possible you can operate on files which
 are larger than your system&rsquo;s available RAM, and you can use Miller in
 <tt>tail -f</tt> contexts.
 
-<li/> It complements SQL <b>databases</b>: you can slice, dice, and reformat
+<li/> Miller complements SQL <b>databases</b>: you can slice, dice, and reformat
 data on the client side on its way into or out of a database. You can also reap
 some of the benefits of databases for quick, setup-free one-off tasks when just
 need to query some data in disk files in a hurry.
 
-<li/> Likewise, you can use Miller&rsquo;s text-reformatting strengths to
-(among other examples) snarf and munge log-file data into CSV format and then
-load that into R for further statistical and/or graphical processing.
+<li/> Miller complements <b>data-analysis tools</b> such as <b>R</b>,
+<b>pandas</b>, etc.: you can use Miller to <b>clean</b> and <b>prepare</b> your
+data. While you can do basic statistics entirely in Miller, its streaming-data
+feature and single-pass algorithms enable you to reduce very large data sets.
+You can snarf and munge log-file data, including selecting out relevant
+substreams, then produce CSV format and load that into all-in-memory/data-frame
+utilities for further statistical and/or graphical processing.
 
 <li/>Miller also goes beyond classic Unix tools by stepping into our modern,
 <b>no-SQL</b> world: its essential record-heterogeneity property allows it to

@@ -44,10 +44,18 @@ functionally possible, you can operate on files which are larger than your
 system&rsquo;s available RAM, and you can use Miller in `tail -f`
 contexts.
 
-* It complements SQL **databases**: you can slice, dice, and reformat data on
+* Miller complements SQL **databases**: you can slice, dice, and reformat data on
 the client side on its way into or out of a database. You can also reap some of
 the benefits of databases for quick, setup-free one-off tasks when just need to
 query some data in disk files in a hurry.
+
+* Miller complements **data-analysis tools** such as **R**, **pandas**, etc.:
+you can use Miller to **clean** and **prepare** your data. While you can do
+basic statistics entirely in Miller, its streaming-data feature and single-pass
+algorithms enable you to reduce very large data sets.  You can snarf and munge
+log-file data, including selecting out relevant substreams, then produce CSV
+format and load that into all-in-memory/data-frame utilities for further
+statistical and/or graphical processing.
 
 * Miller also goes beyond the classic Unix tools by stepping into our modern,
 **no-SQL** world: its essential record-heterogeneity property allows Miller to
