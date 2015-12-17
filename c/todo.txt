@@ -18,8 +18,6 @@ TOP OF LIST
 * comma-number -- using locale?
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
   - needs refactor for lrec_reader_alloc callsite
-* poki cover -> readme
-? make uniq w/o -c have streaming output -- ?
 
 * cut a new release soon
 
