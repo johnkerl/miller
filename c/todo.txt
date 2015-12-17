@@ -8,7 +8,6 @@ TOP OF LIST
 
 * rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 ! --rs lf splatters
-* bar --auto example @ mld
 * link to release notes from release-docs page
 * --mmap/--no-mmap @ mlr -h
 * wiz/veith ack @ dox x 2
