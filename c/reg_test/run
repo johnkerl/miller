@@ -25,7 +25,6 @@ pwd=`pwd`
 
 try1=$pwd/../mlr    # For autoconf builds, in-tree or out-of-tree
 try2=$srcdir/c/mlr  # For non-autoconf builds
-#try2="valgrind --leak-check=full $srcdir/c/mlrg"  # For non-autoconf builds
 if [ -x "$try1" ]; then
   path_to_mlr=$try1
 elif [ -x "$try2" ]; then
@@ -36,6 +35,8 @@ else
   echo "Try 2: $try2" 1>&2
   exit 1
 fi
+# Uncomment to leak-check the test suite
+# path_to_mlr="valgrind --leak-check=full $srcdir/c/mlrg"
 echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input

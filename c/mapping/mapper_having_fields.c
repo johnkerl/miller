@@ -241,6 +241,7 @@ static sllv_t* mapper_having_all_fields_matching_process(lrec_t* pinrec, context
 
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		if (!regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
+			lrec_free(pinrec);
 			return NULL;
 		}
 	}
@@ -257,6 +258,7 @@ static sllv_t* mapper_having_any_fields_matching_process(lrec_t* pinrec, context
 			return sllv_single(pinrec);
 		}
 	}
+	lrec_free(pinrec);
 	return NULL;
 }
 
@@ -267,6 +269,7 @@ static sllv_t* mapper_having_no_fields_matching_process(lrec_t* pinrec, context_
 
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
+			lrec_free(pinrec);
 			return NULL;
 		}
 	}

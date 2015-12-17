@@ -13,6 +13,7 @@ TOP OF LIST
 * wiz/veith ack @ dox x 2
 * debian screenshot
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
+* profile new streqn vs. strncmp ...
 * mixed-format joins ...
 * stats1 handle empty-key nulls? stats2? step? top? etc ...
 * comma-number -- using locale?
@@ -51,7 +52,7 @@ COOKBOOK/FAQ/ETC.:
     note count-distinct w/ int() func.
   - two-pass lin/logi reg vs. hold-and-fit.
 
-  - R/mysql/etc inouts
+  - very specific R/mysql/etc inouts
 
   - polyglottal dkvp/etc production.
   - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
