@@ -235,12 +235,13 @@ static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, vo
 	if (pcount == NULL) {
 		pcount = mlr_malloc_or_die(sizeof(unsigned long long));
 		*pcount = 1LL;
-		lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+		slls_t* pcopy = slls_copy(pgroup_by_field_values);
+		lhmslv_put(pstate->pcounts_by_group, pcopy, pcount);
 
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		sllse_t* pb = pstate->pgroup_by_field_names->phead;
-		sllse_t* pc =         pgroup_by_field_values->phead;
+		sllse_t* pc = pcopy->phead;
 		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
 			lrec_put(poutrec, pb->value, pc->value, NO_FREE);
 		}
