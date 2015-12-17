@@ -6,8 +6,11 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+* rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 ! --rs lf splatters
+* bar --auto example @ mld
 * link to release notes from release-docs page
+* --mmap/--no-mmap @ mlr -h
 * wiz/veith ack @ dox x 2
 * debian screenshot
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
@@ -17,6 +20,7 @@ TOP OF LIST
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
   - needs refactor for lrec_reader_alloc callsite
 * poki cover -> readme
+? make uniq w/o -c have streaming output -- ?
 
 * cut a new release soon
 

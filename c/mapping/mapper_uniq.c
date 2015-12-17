@@ -17,13 +17,16 @@ typedef struct _mapper_uniq_state_t {
 	lhmslv_t* pcounts_by_group;
 } mapper_uniq_state_t;
 
-static sllv_t*   mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_uniq_free(void* pvstate);
-static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts, int show_num_distinct_only);
 static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv);
 static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts, int show_num_distinct_only);
+static void      mapper_uniq_free(void* pvstate);
+
+static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_count_distinct_setup = {
@@ -118,9 +121,14 @@ static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_count
 	pstate->show_num_distinct_only = show_num_distinct_only;
 	pstate->pcounts_by_group       = lhmslv_alloc();
 
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_uniq_process;
-	pmapper->pfree_func    = mapper_uniq_free;
+	pmapper->pvstate = pstate;
+	if (show_num_distinct_only)
+		pmapper->pprocess_func = mapper_uniq_process_num_distinct_only;
+	else if (show_counts)
+		pmapper->pprocess_func = mapper_uniq_process_with_counts;
+	else
+		pmapper->pprocess_func = mapper_uniq_process_no_counts;
+	pmapper->pfree_func = mapper_uniq_free;
 
 	return pmapper;
 }
@@ -139,7 +147,7 @@ static void mapper_uniq_free(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
@@ -156,7 +164,7 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		lrec_free(pinrec);
 		return NULL;
 	}
-	else if (pstate->show_num_distinct_only) {
+	else {
 		sllv_t* poutrecs = sllv_alloc();
 
 		lrec_t* poutrec = lrec_unbacked_alloc();
@@ -166,6 +174,25 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 		sllv_add(poutrecs, NULL);
 		return poutrecs;
+	}
+}
+
+static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_uniq_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+		if (pgroup_by_field_values != NULL) {
+			unsigned long long* pcount = lhmslv_get(pstate->pcounts_by_group, pgroup_by_field_values);
+			if (pcount == NULL) {
+				pcount = mlr_malloc_or_die(sizeof(unsigned long long));
+				*pcount = 1LL;
+				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+			} else {
+				(*pcount)++;
+			}
+		}
+		lrec_free(pinrec);
+		return NULL;
 	} else {
 		sllv_t* poutrecs = sllv_alloc();
 
@@ -189,5 +216,40 @@ static sllv_t* mapper_uniq_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		}
 		sllv_add(poutrecs, NULL);
 		return poutrecs;
+	}
+}
+
+static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_uniq_state_t* pstate = pvstate;
+	if (pinrec == NULL) {
+		return sllv_single(NULL);
+	}
+
+	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+	if (pgroup_by_field_values == NULL) {
+		slls_free(pgroup_by_field_values);
+		return NULL;
+	}
+
+	unsigned long long* pcount = lhmslv_get(pstate->pcounts_by_group, pgroup_by_field_values);
+	if (pcount == NULL) {
+		pcount = mlr_malloc_or_die(sizeof(unsigned long long));
+		*pcount = 1LL;
+		lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+
+		lrec_t* poutrec = lrec_unbacked_alloc();
+
+		sllse_t* pb = pstate->pgroup_by_field_names->phead;
+		sllse_t* pc =         pgroup_by_field_values->phead;
+		for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+			lrec_put(poutrec, pb->value, pc->value, NO_FREE);
+		}
+
+		lrec_free(pinrec);
+		return sllv_single(poutrec);
+	} else {
+		(*pcount)++;
+		lrec_free(pinrec);
+		return NULL;
 	}
 }
