@@ -47,7 +47,7 @@ static inline int streqn(char* a, char* b, int n) {
 #if 0 // performance comparison
 	return !strncmp(a, b, n);
 #else
-	while (*a && *b) {
+	while (n > 0 && *a && *b) {
 		if (n-- <= 0) {
 			return TRUE;
 		}
@@ -57,8 +57,10 @@ static inline int streqn(char* a, char* b, int n) {
 		a++;
 		b++;
 	}
+	if (n == 0)
+		return TRUE;
 	if (*a || *b) {
-		return (n <= 0) ? TRUE : FALSE;
+		return FALSE;
 	}
 	return TRUE;
 #endif
