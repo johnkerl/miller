@@ -79,6 +79,7 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 		} else {
 			sllv_add(plist, pinrec);
 		}
+		slls_free(pkey_field_names);
 		return NULL;
 	} else {
 		sllv_t* poutput = sllv_alloc();
