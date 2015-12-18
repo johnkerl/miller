@@ -99,6 +99,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				precord_list_for_group = sllv_alloc();
 				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), precord_list_for_group);
 			}
+			slls_free(pgroup_by_field_values);
 			if (precord_list_for_group->length >= pstate->tail_count) {
 				lrec_t* porec = sllv_pop(precord_list_for_group);
 				lrec_free(porec);

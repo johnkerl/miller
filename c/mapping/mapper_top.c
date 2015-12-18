@@ -162,6 +162,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		return;
 	}
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		slls_free(pgroup_by_field_values);
 		lrec_free(pinrec);
 		return;
 	}
@@ -171,6 +172,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		group_to_acc_field = lhmsv_alloc();
 		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
 	}
+	slls_free(pgroup_by_field_values);
 
 	sllse_t* pa = pstate->pvalue_field_names->phead;
 	sllse_t* pb =         pvalue_field_values->phead;
