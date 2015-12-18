@@ -235,6 +235,7 @@ static void mapper_sort_free(void* pvstate) {
 	for (lhmslve_t* pa = pstate->pbuckets_by_key_field_names->phead; pa != NULL; pa = pa->pnext) {
 		bucket_t* pbucket = pa->pvvalue;
 		free(pbucket->typed_sort_keys);
+		free(pbucket);
 		// precords freed in emitter
 	}
 	lhmslv_free(pstate->pbuckets_by_key_field_names);

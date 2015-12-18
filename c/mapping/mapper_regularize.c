@@ -52,6 +52,10 @@ static mapper_t* mapper_regularize_alloc() {
 
 static void mapper_regularize_free(void* pvstate) {
 	mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+	for (lhmslve_t* pe = pstate->psorted_to_original->phead; pe != NULL; pe = pe->pnext) {
+		slls_free(pe->pvvalue);
+	}
 	lhmslv_free(pstate->psorted_to_original);
 }
 
@@ -65,6 +69,7 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 		if (previous_sorted_field_names == NULL) {
 			previous_sorted_field_names = slls_copy(current_sorted_field_names);
 			lhmslv_put(pstate->psorted_to_original, previous_sorted_field_names, mlr_copy_keys_from_record(pinrec));
+			slls_free(current_sorted_field_names);
 			return sllv_single(pinrec);
 		} else {
 			lrec_t* poutrec = lrec_unbacked_alloc();
@@ -72,6 +77,7 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 				lrec_put(poutrec, pe->value, mlr_strdup_or_die(lrec_get(pinrec, pe->value)), FREE_ENTRY_VALUE);
 			}
 			lrec_free(pinrec);
+			slls_free(current_sorted_field_names);
 			return sllv_single(poutrec);
 		}
 	}

@@ -261,6 +261,9 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 			lrec_put(prec, name, sb_finish(psb), FREE_ENTRY_VALUE);
 		}
 
+		free(slo);
+		free(shi);
+
 	}
 
 	sb_free(psb);
