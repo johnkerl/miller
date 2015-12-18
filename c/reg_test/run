@@ -35,8 +35,12 @@ else
   echo "Try 2: $try2" 1>&2
   exit 1
 fi
-# Uncomment to leak-check the test suite
-# path_to_mlr="valgrind --leak-check=full $srcdir/c/mlrg"
+
+if [ "$1" = "--valgrind" ]; then
+  # Leak-check the test suite. Needs 'make mlrg' first.
+  # ../tools/clean-valg can be used to filter the output.
+  path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
+fi
 echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input
