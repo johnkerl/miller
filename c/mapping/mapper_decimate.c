@@ -112,10 +112,12 @@ static sllv_t* mapper_decimate_process(lrec_t* pinrec, context_t* pctx, void* pv
 			unsigned long long remainder = *pcount_for_group % pstate->decimate_count;
 			if (remainder == pstate->remainder_for_keep) {
 				(*pcount_for_group)++;
+				slls_free(pgroup_by_field_values);
 				return sllv_single(pinrec);
 			} else {
 				(*pcount_for_group)++;
 				lrec_free(pinrec);
+				slls_free(pgroup_by_field_values);
 				return NULL;
 			}
 		}

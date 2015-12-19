@@ -29,6 +29,7 @@ TOP OF LIST
   - needs refactor for lrec_reader_alloc callsite
 * perf page: (1) redo; (2) note GNU/etc; (3) compare to mawk (http://invisible-island.net/mawk/)
 * EOS comments thruout
+* valgrind note @ new dev page/section
 
 * cut a new release soon
 
