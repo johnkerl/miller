@@ -518,11 +518,12 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 	}
 }
 
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pmatched, int* pall_captured) {
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pmatched, int* pall_captured, unsigned char* pfree_flags) {
 	const size_t nmatch = 10;
 	regmatch_t matches[nmatch];
 	*pmatched = FALSE;
 	*pall_captured = TRUE;
+	*pfree_flags = NO_FREE;
 
 	int   match_start = 0;
 	char* current_input = input;
@@ -559,6 +560,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		sb_append_chars(psb, current_input, match_start + matches[0].rm_eo, strlen(current_input));
 
 		current_input = sb_finish(psb);
+		*pfree_flags = FREE_ENTRY_VALUE;
 
 		match_start += matches[0].rm_so + replen;
 	}
