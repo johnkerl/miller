@@ -247,10 +247,12 @@ static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, vo
 		}
 
 		lrec_free(pinrec);
+		slls_free(pgroup_by_field_values);
 		return sllv_single(poutrec);
 	} else {
 		(*pcount)++;
 		lrec_free(pinrec);
+		slls_free(pgroup_by_field_values);
 		return NULL;
 	}
 }
