@@ -146,6 +146,7 @@ sample_bucket_t* sample_bucket_alloc(int nalloc) {
 void sample_bucket_free(sample_bucket_t* pbucket) {
 	for (int i = 0; i < pbucket->nused; i++)
 		lrec_free(pbucket->plrecs[i]);
+	free(pbucket->plrecs);
 	free(pbucket);
 }
 
