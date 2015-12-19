@@ -111,6 +111,8 @@ static sllv_t* mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	sllv_t* poutrecs = NULL;
 	if (matches ^ pstate->exclude) {
 		poutrecs = sllv_single(pinrec);
+	} else {
+		lrec_free(pinrec);
 	}
 	free(line);
 	return poutrecs;
