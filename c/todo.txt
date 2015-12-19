@@ -20,7 +20,8 @@ TOP OF LIST
 * wiz/veith ack @ dox x 2
 * debian screenshot
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
-* xxxes
+  - track-origins?
+  - xxxes
 * profile new streqn vs. strncmp ...
 * mixed-format joins ...
 * stats1 handle empty-key nulls? stats2? step? top? etc ...

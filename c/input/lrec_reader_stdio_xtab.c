@@ -66,6 +66,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;
 			if (pxtab_lines->length == 0) {
+				slls_free(pxtab_lines);
 				return NULL;
 			} else {
 				return (pstate->ipslen == 1)
