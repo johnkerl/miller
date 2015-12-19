@@ -97,8 +97,8 @@ static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount_for_group = 0LL;
 				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group);
-				slls_free(pgroup_by_field_values);
 			}
+			slls_free(pgroup_by_field_values);
 			(*pcount_for_group)++;
 			if (*pcount_for_group <= pstate->head_count) {
 				return sllv_single(pinrec);
