@@ -105,6 +105,8 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				lrec_free(porec);
 			}
 			sllv_add(precord_list_for_group, pinrec);
+		} else {
+			lrec_free(pinrec);
 		}
 		return NULL;
 	}

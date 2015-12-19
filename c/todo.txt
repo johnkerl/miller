@@ -28,6 +28,7 @@ TOP OF LIST
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
   - needs refactor for lrec_reader_alloc callsite
 * perf page: (1) redo; (2) note GNU/etc; (3) compare to mawk (http://invisible-island.net/mawk/)
+* EOS comments thruout
 
 * cut a new release soon
 

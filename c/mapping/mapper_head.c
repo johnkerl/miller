@@ -90,6 +90,7 @@ static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values == NULL) {
+			lrec_free(pinrec);
 			return NULL;
 		} else {
 			unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);

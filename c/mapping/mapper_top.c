@@ -195,6 +195,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		top_keeper_add(ptop_keeper_for_group, pstate->pmaybe_sign_flipper(&value_field_nval),
 			pstate->show_full_records ? pinrec : NULL);
 	}
+	slls_free(pvalue_field_values);
 }
 
 // ----------------------------------------------------------------
