@@ -262,6 +262,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pinrec);
 			}
+			slls_free(pkey_field_values);
 		}
 		return NULL;
 	} else if (!pstate->do_sort) {
