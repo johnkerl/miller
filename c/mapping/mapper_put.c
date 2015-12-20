@@ -161,8 +161,12 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			mv_t val = pstate->pevaluators[i]->pprocess_func(pinrec,
 				pctx, pstate->pevaluators[i]->pvstate);
 			char free_flags;
-			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(pinrec, pstate->output_field_names[i], string, free_flags);
+			if (val.type == MT_STRING) {
+				lrec_put(pinrec, pstate->output_field_names[i], val.u.strv, val.free_flags);
+			} else {
+				char* string = mv_format_val(&val, &free_flags);
+				lrec_put(pinrec, pstate->output_field_names[i], string, free_flags);
+			}
 		}
 		return sllv_single(pinrec);
 	}

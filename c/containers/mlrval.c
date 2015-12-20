@@ -116,6 +116,7 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 		return mlr_alloc_string_from_ll(pval->u.intv);
 		break;
 	case MT_STRING:
+		// xxx need a transfer-ownership mechanism; invalidation; two API func? something.
 		*pfree_flags = NO_FREE;
 		return pval->u.strv;
 		break;
