@@ -131,6 +131,7 @@ static void mapper_top_free(void* pvstate) {
 			top_keeper_t* ptop_keeper_for_group = pb->pvvalue;
 			top_keeper_free(ptop_keeper_for_group);
 		}
+		lhmsv_free(pgroup);
 	}
 
 	lhmslv_free(pstate->groups);
@@ -162,6 +163,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		return;
 	}
 	if (pgroup_by_field_values->length != pstate->pgroup_by_field_names->length) {
+		slls_free(pvalue_field_values);
 		slls_free(pgroup_by_field_values);
 		lrec_free(pinrec);
 		return;
