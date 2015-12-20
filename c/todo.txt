@@ -15,7 +15,9 @@ TOP OF LIST
 
 * rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 ! --rs lf splatters
+  - termcvt flins & rework that page
 * link to release notes from release-docs page
+* light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
 * wiz/veith ack @ dox x 2
 * debian screenshot
