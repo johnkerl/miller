@@ -87,6 +87,7 @@ void lhmslv_free(lhmslv_t* pmap) {
 	for (lhmslve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
 		slls_free(pe->key);
 	free(pmap->entries);
+	free(pmap->states);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;

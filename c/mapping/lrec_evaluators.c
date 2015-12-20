@@ -762,8 +762,10 @@ mv_t lrec_evaluator_x_ns_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING)
+	if (val2.type != MT_STRING) {
+		mv_free(&val1);
 		return MV_ERROR;
+	}
 
 	return pstate->pfunc(&val1, &val2);
 }
@@ -932,13 +934,18 @@ mv_t lrec_evaluator_s_sss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING)
+	if (val2.type != MT_STRING) {
+		mv_free(&val1);
 		return MV_ERROR;
+	}
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
-	if (val3.type != MT_STRING)
+	if (val3.type != MT_STRING) {
+		mv_free(&val1);
+		mv_free(&val2);
 		return MV_ERROR;
+	}
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
@@ -985,8 +992,10 @@ mv_t lrec_evaluator_x_srs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
-	if (val3.type != MT_STRING)
+	if (val3.type != MT_STRING) {
+		mv_free(&val1);
 		return MV_ERROR;
+	}
 
 	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, &val3);
 }

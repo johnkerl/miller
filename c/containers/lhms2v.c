@@ -85,6 +85,7 @@ void lhms2v_free(lhms2v_t* pmap) {
 	if (pmap == NULL)
 		return;
 	free(pmap->entries);
+	free(pmap->states);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;

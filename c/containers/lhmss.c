@@ -88,6 +88,7 @@ void lhmss_free(lhmss_t* pmap) {
 		free(pe->value);
 	}
 	free(pmap->entries);
+	free(pmap->states);
 	pmap->entries      = NULL;
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;
