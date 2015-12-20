@@ -11,10 +11,10 @@ POKI_RUN_COMMAND{{mlr cat data/small}}HERE
 
 Such data are easy to generate, e.g. in Ruby with
 POKI_CARDIFY(puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}")HERE
-POKI_CARDIFY(puts mymap.collect{|k,v| "#{k}=#{v}"}.join(','))HERE
+POKI_CARDIFY{{puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')}}HERE
 or <tt>print</tt> statements in various languages, e.g.
 POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
-POKI_CARDIFY(logger.log("type=3,user=$USER,date=$date\n");)HERE
+POKI_CARDIFY{{logger.log("type=3,user=$USER,date=$date\n");}}HERE
 
 <p/>Fields lacking an IPS will have positional index (starting at 1) used as
 the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed

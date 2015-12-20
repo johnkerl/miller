@@ -213,7 +213,13 @@ puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 </pre>
 </div>
 <p/>
-POKI_CARDIFY(puts mymap.collect{|k,v| "#{k}=#{v}"}.join(','))HERE
+<p/>
+<div class="pokipanel">
+<pre>
+puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+</pre>
+</div>
+<p/>
 or <tt>print</tt> statements in various languages, e.g.
 <p/>
 <div class="pokipanel">
@@ -222,7 +228,13 @@ echo "type=3,user=$USER,date=$date\n";
 </pre>
 </div>
 <p/>
-POKI_CARDIFY(logger.log("type=3,user=$USER,date=$date\n");)HERE
+<p/>
+<div class="pokipanel">
+<pre>
+logger.log("type=3,user=$USER,date=$date\n");
+</pre>
+</div>
+<p/>
 
 <p/>Fields lacking an IPS will have positional index (starting at 1) used as
 the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
