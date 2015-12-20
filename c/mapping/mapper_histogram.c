@@ -181,6 +181,7 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 		char* value_field_name = pe->value;
 		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
 		lhmss_put(pcount_field_names, value_field_name, count_field_name);
+		free(count_field_name);
 	}
 
 	for (int i = 0; i < pstate->nbins; i++) {

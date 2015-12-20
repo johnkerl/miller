@@ -205,6 +205,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		pgroup_to_acc_field = lhmsv_alloc();
 		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field);
 	}
+	slls_free(pgroup_by_field_values);
 
 	// for x=1 and y=2
 	int n = pstate->pvalue_field_names->length;
