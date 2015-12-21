@@ -115,6 +115,7 @@ static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvst
 				lhmslv_put(pstate->pbuckets_by_group, slls_copy(pgroup_by_field_values), pbucket);
 			}
 			sample_bucket_handle(pbucket, pinrec, pctx->nr);
+			slls_free(pgroup_by_field_values);
 		}
 		return NULL;
 	}

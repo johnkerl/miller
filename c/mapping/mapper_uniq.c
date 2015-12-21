@@ -227,6 +227,7 @@ static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, vo
 
 	slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 	if (pgroup_by_field_values == NULL) {
+		lrec_free(pinrec);
 		return NULL;
 	}
 
