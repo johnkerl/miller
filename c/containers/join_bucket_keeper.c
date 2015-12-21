@@ -295,6 +295,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** ppre
 	}
 
 	pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
+	slls_free(pleft_field_values);
 	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
 	pkeeper->pbucket->was_paired = FALSE;
 	pkeeper->prec_peek = NULL;
