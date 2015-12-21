@@ -195,10 +195,9 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper, char* prepipe) {
 	if (pkeeper == NULL)
 		return;
-	if (pkeeper->pbucket->pleft_field_values != NULL)
-		slls_free(pkeeper->pbucket->pleft_field_values);
-	if (pkeeper->pbucket->precords != NULL)
-		sllv_free(pkeeper->pbucket->precords);
+	slls_free(pkeeper->pbucket->pleft_field_values);
+	sllv_free(pkeeper->pbucket->precords);
+	free(pkeeper->pbucket);
 	pkeeper->plrec_reader->pclose_func(pkeeper->plrec_reader->pvstate, pkeeper->pvhandle, prepipe);
 	free(pkeeper);
 }
