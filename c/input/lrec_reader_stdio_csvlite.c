@@ -51,7 +51,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	lhmslv_t*     pheader_keepers;
 } lrec_reader_stdio_csvlite_state_t;
 
-static void    lrec_reader_stdio_csvlite_free(void* pvstate);
+static void    lrec_reader_stdio_csvlite_free(lrec_reader_t* preader, void* pvstate);
 static void    lrec_reader_stdio_sof(void* pvstate);
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx);
 
@@ -82,12 +82,13 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_csvlite_free(void* pvstate) {
+static void lrec_reader_stdio_csvlite_free(lrec_reader_t* preader, void* pvstate) {
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
+	free(preader);
 }
 
 // ----------------------------------------------------------------

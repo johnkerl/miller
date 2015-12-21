@@ -190,6 +190,7 @@ static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, 
 			} else {
 				(*pcount)++;
 			}
+			slls_free(pgroup_by_field_values);
 		}
 		lrec_free(pinrec);
 		return NULL;

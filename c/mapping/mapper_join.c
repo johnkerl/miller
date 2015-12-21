@@ -509,4 +509,6 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 	}
 
 	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, pstate->popts->prepipe);
+
+	plrec_reader->pfree_func(plrec_reader, plrec_reader->pvstate);
 }

@@ -11,6 +11,7 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 	int   allow_repeat_ifs;
 } lrec_reader_mmap_nidx_state_t;
 
+static void    lrec_reader_mmap_nidx_free(lrec_reader_t* preader, void* pvstate);
 static void    lrec_reader_mmap_nidx_sof(void* pvstate);
 static lrec_t* lrec_reader_mmap_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
@@ -43,9 +44,13 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 	}
 
 	plrec_reader->psof_func     = lrec_reader_mmap_nidx_sof;
-	plrec_reader->pfree_func    = NULL;
+	plrec_reader->pfree_func    = lrec_reader_mmap_nidx_free;
 
 	return plrec_reader;
+}
+
+static void lrec_reader_mmap_nidx_free(lrec_reader_t* preader, void* pvstate) {
+	free(preader);
 }
 
 // No-op for stateless readers such as this one.

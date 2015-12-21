@@ -906,8 +906,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 void cli_opts_free(cli_opts_t* popts) {
 	if (popts == NULL)
 		return;
-	if (popts->plrec_reader->pfree_func != NULL)
-		popts->plrec_reader->pfree_func(popts->plrec_reader->pvstate);
+
+	popts->plrec_reader->pfree_func(popts->plrec_reader, popts->plrec_reader->pvstate);
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvdata;

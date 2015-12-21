@@ -69,7 +69,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 
 } lrec_reader_stdio_csv_state_t;
 
-static void    lrec_reader_stdio_csv_free(void* pvstate);
+static void    lrec_reader_stdio_csv_free(lrec_reader_t* preader, void* pvstate);
 static void    lrec_reader_stdio_csv_sof(void* pvstate);
 static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static int     lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pfields);
@@ -136,7 +136,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_stdio_csv_free(void* pvstate) {
+static void lrec_reader_stdio_csv_free(lrec_reader_t* preader, void* pvstate) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
@@ -147,6 +147,7 @@ static void lrec_reader_stdio_csv_free(void* pvstate) {
 	parse_trie_free(pstate->pdquote_parse_trie);
 	rslls_free(pstate->pfields);
 	sb_free(pstate->psb);
+	free(preader);
 }
 
 // ----------------------------------------------------------------

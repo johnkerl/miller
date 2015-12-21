@@ -66,7 +66,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 
 } lrec_reader_mmap_csv_state_t;
 
-static void    lrec_reader_mmap_csv_free(void* pvstate);
+static void    lrec_reader_mmap_csv_free(lrec_reader_t* preader, void* pvstate);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
 static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* prepipe, char* file_name);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
@@ -128,7 +128,7 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_mmap_csv_free(void* pvstate) {
+static void lrec_reader_mmap_csv_free(lrec_reader_t* preader, void* pvstate) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
@@ -138,6 +138,7 @@ static void lrec_reader_mmap_csv_free(void* pvstate) {
 	parse_trie_free(pstate->pdquote_parse_trie);
 	rslls_free(pstate->pfields);
 	sb_free(pstate->psb);
+	free(preader);
 }
 
 // ----------------------------------------------------------------
