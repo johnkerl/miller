@@ -195,8 +195,10 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		// The top-keeper object will free the record if it isn't retained, or
 		// keep it if it is.
 		top_keeper_add(ptop_keeper_for_group, pstate->pmaybe_sign_flipper(&value_field_nval),
-			pstate->show_full_records ? pinrec : NULL);
+			(pstate->show_full_records) ? pinrec : NULL);
 	}
+	if (!pstate->show_full_records)
+		lrec_free(pinrec);
 	slls_free(pvalue_field_values);
 }
 
