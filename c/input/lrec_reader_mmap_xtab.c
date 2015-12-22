@@ -12,7 +12,7 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	int   allow_repeat_ips;
 } lrec_reader_mmap_xtab_state_t;
 
-static void    lrec_reader_mmap_xtab_free(lrec_reader_t* preader, void* pvstate);
+static void    lrec_reader_mmap_xtab_free(lrec_reader_t* preader);
 static void    lrec_reader_mmap_xtab_sof(void* pvstate);
 static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx);
@@ -51,7 +51,7 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_mmap_xtab_free(lrec_reader_t* preader, void* pvstate) {
+static void lrec_reader_mmap_xtab_free(lrec_reader_t* preader) {
 	free(preader);
 }
 

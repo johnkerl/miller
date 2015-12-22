@@ -15,7 +15,7 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   allow_repeat_ifs;
 } lrec_reader_mmap_dkvp_state_t;
 
-static void    lrec_reader_mmap_dkvp_free(lrec_reader_t* preader, void* pvstate);
+static void    lrec_reader_mmap_dkvp_free(lrec_reader_t* preader);
 static void    lrec_reader_mmap_dkvp_sof(void* pvstate);
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
@@ -53,7 +53,7 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	return plrec_reader;
 }
 
-static void lrec_reader_mmap_dkvp_free(lrec_reader_t* preader, void* pvstate) {
+static void lrec_reader_mmap_dkvp_free(lrec_reader_t* preader) {
 	free(preader);
 }
 

@@ -14,7 +14,7 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	int   at_eof;
 } lrec_reader_stdio_xtab_state_t;
 
-static void    lrec_reader_stdio_xtab_free(lrec_reader_t* preader, void* pvstate);
+static void    lrec_reader_stdio_xtab_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_xtab_sof(void* pvstate);
 static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx);
 
@@ -40,7 +40,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	return plrec_reader;
 }
 
-static void lrec_reader_stdio_xtab_free(lrec_reader_t* preader, void* pvstate) {
+static void lrec_reader_stdio_xtab_free(lrec_reader_t* preader) {
 	free(preader);
 }
 

@@ -12,7 +12,7 @@ typedef struct _lrec_writer_csvlite_state_t {
 	int headerless_csv_output;
 } lrec_writer_csvlite_state_t;
 
-static void lrec_writer_csvlite_free(lrec_writer_t* pwriter, void* pvstate);
+static void lrec_writer_csvlite_free(lrec_writer_t* pwriter);
 static void lrec_writer_csvlite_process(FILE* output_stream, lrec_t* prec, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -34,8 +34,8 @@ lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_cs
 	return plrec_writer;
 }
 
-static void lrec_writer_csvlite_free(lrec_writer_t* pwriter, void* pvstate) {
-	lrec_writer_csvlite_state_t* pstate = pvstate;
+static void lrec_writer_csvlite_free(lrec_writer_t* pwriter) {
+	lrec_writer_csvlite_state_t* pstate = pwriter->pvstate;
 	if (pstate->plast_header_output != NULL) {
 		slls_free(pstate->plast_header_output);
 		pstate->plast_header_output = NULL;

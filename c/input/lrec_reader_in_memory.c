@@ -11,7 +11,7 @@ typedef struct _lrec_reader_in_memory_state_t {
 	sllv_t* precords;
 } lrec_reader_in_memory_state_t;
 
-static void    lrec_reader_in_memory_free(lrec_reader_t* preader, void* pvstate);
+static void    lrec_reader_in_memory_free(lrec_reader_t* preader);
 static void    lrec_reader_in_memory_sof(void* pvstate);
 static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx);
 static void*   lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename);
@@ -34,7 +34,7 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 	return plrec_reader;
 }
 
-static void lrec_reader_in_memory_free(lrec_reader_t* preader, void* pvstate) {
+static void lrec_reader_in_memory_free(lrec_reader_t* preader) {
 	free(preader);
 }
 

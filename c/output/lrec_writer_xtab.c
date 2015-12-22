@@ -27,7 +27,7 @@ typedef struct _lrec_writer_xtab_state_t {
 	int   right_justify_value;
 } lrec_writer_xtab_state_t;
 
-static void lrec_writer_xtab_free(lrec_writer_t* pwriter, void* pvstate);
+static void lrec_writer_xtab_free(lrec_writer_t* pwriter);
 static void lrec_writer_xtab_process_aligned(FILE* output_stream, lrec_t* prec, void* pvstate);
 static void lrec_writer_xtab_process_unaligned(FILE* output_stream, lrec_t* prec, void* pvstate);
 
@@ -51,7 +51,7 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops, int right_justify_va
 	return plrec_writer;
 }
 
-static void lrec_writer_xtab_free(lrec_writer_t* pwriter, void* pvstate) {
+static void lrec_writer_xtab_free(lrec_writer_t* pwriter) {
 	free(pwriter);
 }
 

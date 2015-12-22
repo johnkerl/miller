@@ -42,7 +42,7 @@ typedef struct _lrec_reader_mmap_csvlite_state_t {
 	lhmslv_t*     pheader_keepers;
 } lrec_reader_mmap_csvlite_state_t;
 
-static void    lrec_reader_mmap_csvlite_free(lrec_reader_t* preader, void* pvstate);
+static void    lrec_reader_mmap_csvlite_free(lrec_reader_t* preader);
 static void    lrec_reader_mmap_csvlite_sof(void* pvstate);
 static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* pvhandle, context_t* pctx);
@@ -97,7 +97,7 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 }
 
 // ----------------------------------------------------------------
-static void lrec_reader_mmap_csvlite_free(lrec_reader_t* preader, void* pvstate) {
+static void lrec_reader_mmap_csvlite_free(lrec_reader_t* preader) {
 	free(preader);
 }
 
