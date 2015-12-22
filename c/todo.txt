@@ -26,6 +26,9 @@ TOP OF LIST
   - xxxes
   - more rid of "double" in fcn names
   - mv_format_val in case string is allocated. modify semantics to nullify the arg??
+  - regex_gsub: fix up
+  - ap_state_t* into mapper states and free at free
+  - lhmss incorporate free-flags as with slls
 * profile new streqn vs. strncmp ...
 * mixed-format joins ...
 * stats1 handle empty-key nulls? stats2? step? top? etc ...

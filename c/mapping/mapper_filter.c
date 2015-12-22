@@ -121,9 +121,9 @@ static void mapper_filter_free(void* pvstate) {
 static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_filter_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		mv_t val = pstate->pevaluator->pprocess_func(pinrec,
-			pctx, pstate->pevaluator->pvstate);
+		mv_t val = pstate->pevaluator->pprocess_func(pinrec, pctx, pstate->pevaluator->pvstate);
 		if (val.type == MT_NULL) {
+			lrec_free(pinrec);
 			return NULL;
 		} else {
 			mv_set_boolean_strict(&val);
@@ -134,8 +134,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 				return NULL;
 			}
 		}
-	}
-	else {
+	} else {
 		return sllv_single(NULL);
 	}
 }

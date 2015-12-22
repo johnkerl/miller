@@ -287,7 +287,9 @@ static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* value_field_name = pe->value;
 		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
+		// xxx make a transfer-ownership option for lhmss (which currently is strdup-only)
 		lhmss_put(pcount_field_names, value_field_name, count_field_name);
+		free(count_field_name);
 	}
 
 	for (int i = 0; i < nbins; i++) {

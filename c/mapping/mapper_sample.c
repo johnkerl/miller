@@ -116,6 +116,8 @@ static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvst
 			}
 			sample_bucket_handle(pbucket, pinrec, pctx->nr);
 			slls_free(pgroup_by_field_values);
+		} else {
+			lrec_free(pinrec);
 		}
 		return NULL;
 	}
@@ -152,6 +154,8 @@ void sample_bucket_free(sample_bucket_t* pbucket) {
 }
 
 // This is the reservoir-sampling algorithm.
+// Here we retain a pointer to an input record (if retained in the sample) or
+// free it (if not retained in the sample).
 void sample_bucket_handle(sample_bucket_t* pbucket, lrec_t* prec, int record_number) {
 	if (pbucket->nused < pbucket->nalloc) {
 		// Always accept new entries until the bucket is full
