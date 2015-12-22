@@ -915,6 +915,7 @@ void cli_opts_free(cli_opts_t* popts) {
 	}
 	sllv_free(popts->pmapper_list);
 
-	popts->plrec_writer->pfree_func(popts->plrec_writer->pvstate);
+	popts->plrec_writer->pfree_func(popts->plrec_writer, popts->plrec_writer->pvstate);
+
 	free(popts);
 }

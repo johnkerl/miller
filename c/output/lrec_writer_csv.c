@@ -25,7 +25,7 @@ typedef struct _lrec_writer_csv_state_t {
 
 // ----------------------------------------------------------------
 static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate);
-static void lrec_writer_csv_free(void* pvstate);
+static void lrec_writer_csv_free(lrec_writer_t* pwriter, void* pvstate);
 static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
@@ -64,12 +64,13 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting, int hea
 	return plrec_writer;
 }
 
-static void lrec_writer_csv_free(void* pvstate) {
+static void lrec_writer_csv_free(lrec_writer_t* pwriter, void* pvstate) {
 	lrec_writer_csv_state_t* pstate = pvstate;
 	if (pstate->plast_header_output != NULL) {
 		slls_free(pstate->plast_header_output);
 		pstate->plast_header_output = NULL;
 	}
+	free(pwriter);
 }
 
 // ----------------------------------------------------------------
