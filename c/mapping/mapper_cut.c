@@ -61,7 +61,7 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-f", &pfield_name_list);
+	ap_define_string_list_flag(pstate, "-f",    &pfield_name_list);
 	ap_define_true_flag(pstate, "-o",           &do_arg_order);
 	ap_define_true_flag(pstate, "-x",           &do_complement);
 	ap_define_true_flag(pstate, "--complement", &do_complement);
@@ -93,6 +93,7 @@ static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 		slls_reverse(pstate->pfield_name_list);
 		pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
 		pstate->nregex             = 0;
+		pstate->regexes            = NULL;
 		pmapper->pprocess_func     = mapper_cut_process_no_regexes;
 	} else {
 		pstate->pfield_name_list   = NULL;
@@ -118,12 +119,11 @@ static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 
 static void mapper_cut_free(mapper_t* pmapper) {
 	mapper_cut_state_t* pstate = pmapper->pvstate;
-	if (pstate->pfield_name_list != NULL)
-		slls_free(pstate->pfield_name_list);
-	if (pstate->pfield_name_set != NULL)
-		hss_free(pstate->pfield_name_set);
+	slls_free(pstate->pfield_name_list);
+	hss_free(pstate->pfield_name_set);
 	for (int i = 0; i < pstate->nregex; i++)
 		regfree(&pstate->regexes[i]);
+	free(pstate->regexes);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
