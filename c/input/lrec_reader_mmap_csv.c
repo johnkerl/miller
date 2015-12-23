@@ -138,6 +138,7 @@ static void lrec_reader_mmap_csv_free(lrec_reader_t* preader) {
 	parse_trie_free(pstate->pdquote_parse_trie);
 	rslls_free(pstate->pfields);
 	sb_free(pstate->psb);
+	free(pstate);
 	free(preader);
 }
 

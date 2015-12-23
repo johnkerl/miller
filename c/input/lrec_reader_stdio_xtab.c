@@ -41,6 +41,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 }
 
 static void lrec_reader_stdio_xtab_free(lrec_reader_t* preader) {
+	free(preader->pvstate);
 	free(preader);
 }
 

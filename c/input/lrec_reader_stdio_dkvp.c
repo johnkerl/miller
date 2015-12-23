@@ -55,6 +55,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 }
 
 static void lrec_reader_stdio_dkvp_free(lrec_reader_t* preader) {
+	free(preader->pvstate);
 	free(preader);
 }
 

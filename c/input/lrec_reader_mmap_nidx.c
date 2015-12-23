@@ -50,6 +50,7 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 }
 
 static void lrec_reader_mmap_nidx_free(lrec_reader_t* preader) {
+	free(preader->pvstate);
 	free(preader);
 }
 

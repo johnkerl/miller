@@ -36,10 +36,8 @@ lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_cs
 
 static void lrec_writer_csvlite_free(lrec_writer_t* pwriter) {
 	lrec_writer_csvlite_state_t* pstate = pwriter->pvstate;
-	if (pstate->plast_header_output != NULL) {
-		slls_free(pstate->plast_header_output);
-		pstate->plast_header_output = NULL;
-	}
+	slls_free(pstate->plast_header_output);
+	free(pstate);
 	free(pwriter);
 }
 

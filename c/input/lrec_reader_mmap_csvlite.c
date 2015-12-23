@@ -98,6 +98,12 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 
 // ----------------------------------------------------------------
 static void lrec_reader_mmap_csvlite_free(lrec_reader_t* preader) {
+	lrec_reader_mmap_csvlite_state_t* pstate = preader->pvstate;
+	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
+		header_keeper_t* pheader_keeper = pe->pvvalue;
+		header_keeper_free(pheader_keeper);
+	}
+	free(pstate);
 	free(preader);
 }
 

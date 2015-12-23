@@ -26,6 +26,7 @@ lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
 }
 
 static void lrec_writer_nidx_free(lrec_writer_t* pwriter) {
+	free(pwriter->pvstate);
 	free(pwriter);
 }
 

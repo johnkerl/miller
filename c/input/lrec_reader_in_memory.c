@@ -35,6 +35,9 @@ lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords) {
 }
 
 static void lrec_reader_in_memory_free(lrec_reader_t* preader) {
+	lrec_reader_in_memory_state_t* pstate = preader->pvstate;
+	sllv_free(pstate->precords);
+	free(pstate);
 	free(preader);
 }
 

@@ -28,6 +28,7 @@ lrec_writer_t* lrec_writer_dkvp_alloc(char* ors, char* ofs, char* ops) {
 }
 
 static void lrec_writer_dkvp_free(lrec_writer_t* pwriter) {
+	free(pwriter->pvstate);
 	free(pwriter);
 }
 

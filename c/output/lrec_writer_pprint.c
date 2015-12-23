@@ -48,6 +48,7 @@ static void lrec_writer_pprint_free(lrec_writer_t* pwriter) {
 		slls_free(pstate->pprev_keys);
 		pstate->pprev_keys = NULL;
 	}
+	free(pstate);
 	free(pwriter);
 }
 

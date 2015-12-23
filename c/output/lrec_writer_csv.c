@@ -66,10 +66,8 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting, int hea
 
 static void lrec_writer_csv_free(lrec_writer_t* pwriter) {
 	lrec_writer_csv_state_t* pstate = pwriter->pvstate;
-	if (pstate->plast_header_output != NULL) {
-		slls_free(pstate->plast_header_output);
-		pstate->plast_header_output = NULL;
-	}
+	slls_free(pstate->plast_header_output);
+	free(pstate);
 	free(pwriter);
 }
 

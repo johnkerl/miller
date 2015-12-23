@@ -88,6 +88,7 @@ static void lrec_reader_stdio_csvlite_free(lrec_reader_t* preader) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
+	free(pstate);
 	free(preader);
 }
 

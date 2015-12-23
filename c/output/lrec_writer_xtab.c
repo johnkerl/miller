@@ -52,6 +52,7 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops, int right_justify_va
 }
 
 static void lrec_writer_xtab_free(lrec_writer_t* pwriter) {
+	free(pwriter->pvstate);
 	free(pwriter);
 }
 
