@@ -103,7 +103,7 @@ static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, in
 	pstate->pargp = pargp;
 	if (do_regexes) {
 		pmapper->pprocess_func = mapper_rename_regex_process;
-		pstate->pold_to_new    = NULL;
+		pstate->pold_to_new    = pold_to_new;
 		pstate->pregex_pairs   = sllv_alloc();
 
 		for (lhmsse_t* pe = pold_to_new->phead; pe != NULL; pe = pe->pnext) {
