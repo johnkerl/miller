@@ -302,6 +302,7 @@ static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 static void step_delta_free(step_t* pstep) {
 	step_delta_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstep);
 }
 static step_t* step_delta_alloc(char* input_field_name, int allow_int_float) {
@@ -338,6 +339,7 @@ static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 static void step_from_first_free(step_t* pstep) {
 	step_from_first_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstep);
 }
 static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float) {
@@ -375,6 +377,7 @@ static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 static void step_ratio_free(step_t* pstep) {
 	step_ratio_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstep);
 }
 static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float) {
@@ -407,6 +410,7 @@ static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 static void step_rsum_free(step_t* pstep) {
 	step_rsum_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstep);
 }
 static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float) {
@@ -438,6 +442,7 @@ static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 static void step_counter_free(step_t* pstep) {
 	step_counter_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstep);
 }
 static step_t* step_counter_alloc(char* input_field_name, int allow_int_float) {

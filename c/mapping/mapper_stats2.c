@@ -550,6 +550,7 @@ static void stats2_linreg_ols_free(stats2_t* pstats2) {
 	free(pstate->b_output_field_name);
 	free(pstate->n_output_field_name);
 	free(pstate->fit_output_field_name);
+	free(pstate);
 	free(pstats2);
 }
 
@@ -623,6 +624,7 @@ static void stats2_logireg_free(stats2_t* pstats2) {
 	free(pstate->fit_output_field_name);
 	dvector_free(pstate->pxs);
 	dvector_free(pstate->pys);
+	free(pstate);
 	free(pstats2);
 }
 
@@ -708,6 +710,7 @@ static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* pout
 static void stats2_r2_free(stats2_t* pstats2) {
 	stats2_r2_state_t* pstate = pstats2->pvstate;
 	free(pstate->r2_output_field_name);
+	free(pstate);
 	free(pstats2);
 }
 static stats2_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_name, int do_verbose) {
@@ -921,6 +924,7 @@ static void stats2_corr_cov_free(stats2_t* pstats2) {
 	free(pstate->corr_output_field_name);
 	free(pstate->cov_output_field_name);
 
+	free(pstate);
 	free(pstats2);
 }
 

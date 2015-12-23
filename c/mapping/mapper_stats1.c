@@ -502,6 +502,7 @@ static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats
 static void stats1_count_free(stats1_t* pstats1) {
 	stats1_count_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -553,6 +554,7 @@ static void stats1_mode_free(stats1_t* pstats1) {
 	stats1_mode_state_t* pstate = pstats1->pvstate;
 	lhmsi_free(pstate->pcounts_for_value);
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -588,6 +590,7 @@ static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_
 static void stats1_sum_free(stats1_t* pstats1) {
 	stats1_sum_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -629,6 +632,7 @@ static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1
 static void stats1_mean_free(stats1_t* pstats1) {
 	stats1_mean_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -679,6 +683,7 @@ static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name,
 static void stats1_stddev_var_meaneb_free(stats1_t* pstats1) {
 	stats1_stddev_var_meaneb_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 
@@ -738,6 +743,7 @@ static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* st
 static void stats1_skewness_free(stats1_t* pstats1) {
 	stats1_skewness_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 
@@ -790,6 +796,7 @@ static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* st
 static void stats1_kurtosis_free(stats1_t* pstats1) {
 	stats1_kurtosis_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -831,6 +838,7 @@ static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_
 static void stats1_min_free(stats1_t* pstats1) {
 	stats1_min_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -868,6 +876,7 @@ static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_
 static void stats1_max_free(stats1_t* pstats1) {
 	stats1_max_state_t* pstate = pstats1->pvstate;
 	free(pstate->output_field_name);
+	free(pstate);
 	free(pstats1);
 }
 static stats1_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
@@ -914,6 +923,7 @@ static void stats1_percentile_free(stats1_t* pstats1) {
 	pstate->reference_count--;
 	if (pstate->reference_count == 0) {
 		percentile_keeper_free(pstate->ppercentile_keeper);
+		free(pstate);
 		free(pstats1);
 	}
 }
