@@ -88,6 +88,7 @@ static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
 	for (sllse_t* pe = pnames->phead; pe != NULL; pe = pe->pnext->pnext) {
 		lhmss_put(pold_to_new, pe->value, pe->pnext->value);
 	}
+	slls_free(pnames);
 
 	*pargi += 1;
 	return mapper_rename_alloc(pstate, pold_to_new, do_regexes, do_gsub);
@@ -133,6 +134,7 @@ static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, in
 static void mapper_rename_free(mapper_t* pmapper) {
 	mapper_rename_state_t* pstate = pmapper->pvstate;
 	lhmss_free(pstate->pold_to_new);
+	sllv_free(pstate->pregex_pairs);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
