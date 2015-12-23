@@ -199,6 +199,7 @@ void join_bucket_keeper_free(join_bucket_keeper_t* pkeeper, char* prepipe) {
 	sllv_free(pkeeper->pbucket->precords);
 	free(pkeeper->pbucket);
 	pkeeper->plrec_reader->pclose_func(pkeeper->plrec_reader->pvstate, pkeeper->pvhandle, prepipe);
+	lrec_free(pkeeper->prec_peek);
 	free(pkeeper->pctx);
 	free(pkeeper);
 }
