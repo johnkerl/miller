@@ -527,6 +527,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pleft_rec);
 			}
+			slls_free(pleft_field_values);
 		} else {
 			sllv_add(pstate->pleft_unpaired_records, pleft_rec);
 		}
