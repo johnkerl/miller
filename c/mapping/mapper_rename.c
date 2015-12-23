@@ -135,6 +135,7 @@ static void mapper_rename_free(mapper_t* pmapper) {
 	mapper_rename_state_t* pstate = pmapper->pvstate;
 	lhmss_free(pstate->pold_to_new);
 	sllv_free(pstate->pregex_pairs);
+	sb_free(pstate->psb);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
