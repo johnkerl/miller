@@ -52,12 +52,14 @@ void ap_free(ap_state_t* pstate) {
 	for (sllve_t* pe = pstate->pflag_defs->phead; pe != NULL; pe = pe->pnext) {
 		ap_flag_def_t* pdef = pe->pvdata;
 
-// xxx temp double-frees w/r/t mappers retaining lists as well ...
-//		if (pdef->type == AP_STRING_LIST_FLAG && pdef->pval != NULL) {
-//			slls_t** pplist = pdef->pval;
-//			if (*pplist != NULL)
-//				slls_free(*pplist);
-//		}
+		// Linked-lists are pointed to by mappers and freed by their free
+		// methods.  If any mappers miss on that contract, we can find out by
+		// using valgrind --leak-check=full (e.g. reg_test/run --valgrind).
+		//
+		//if (pdef->type == AP_STRING_LIST_FLAG && pdef->pval != NULL) {
+		//	slls_t** pplist = pdef->pval;
+		//	slls_free(*pplist);
+		//}
 
 		free(pdef);
 	}
