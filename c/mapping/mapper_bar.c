@@ -176,6 +176,7 @@ static void mapper_bar_free(void* pvstate) {
 		free(pstate->bars[i]);
 	free(pstate->bars);
 	ap_free(pstate->pargp);
+	free(pstate);
 }
 
 // ----------------------------------------------------------------

@@ -34,13 +34,14 @@ static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_check_alloc() {
-	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
+	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = NULL;
 	pmapper->pprocess_func = mapper_check_process;
 	pmapper->pfree_func    = mapper_check_free;
 	return pmapper;
 }
 static void mapper_check_free(void* pvstate) {
+	free(pvstate);
 }
 
 // ----------------------------------------------------------------

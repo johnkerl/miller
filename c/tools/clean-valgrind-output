@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# E.g. for filtering the output of reg_test/run --valgrind.
+# This just strips out some false positives, e.g. system-level stuff not
+# relevant to Miller itself. mgrepv is at
+# https://github.com/johnkerl/scripts/blob/master/fundam/mgrepv
+
+sed 's/^==.*== //' "$@" | swipe \
+  | mgrepv dyld \
+  | mgrepv copySwiftV1MangledName \
+  | mgrepv 'LEAK SUMMARY' \
+  | mgrepv 'HEAP SUMMARY' \
+  | mgrepv 'UNKNOWN fcntl' \
+  | grep -v 'ERROR SUMMARY' \
+  | grep -v 'Memcheck,' \
+  | grep -v 'Copyright' \
+  | grep -v 'Using Valgrind' \
+  | grep -v 'For counts of' \
+  | mgrepv 'mlr_try_float_from_string' \
+  | cat
+
+  #| mgrepv 'parse_command_line'
