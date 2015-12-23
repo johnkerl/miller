@@ -134,7 +134,15 @@ static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, in
 static void mapper_rename_free(mapper_t* pmapper) {
 	mapper_rename_state_t* pstate = pmapper->pvstate;
 	lhmss_free(pstate->pold_to_new);
-	sllv_free(pstate->pregex_pairs);
+	if (pstate->pregex_pairs != NULL) {
+		for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
+			regex_pair_t* ppair = pe->pvdata;
+			regfree(&ppair->regex);
+			// replacement is in pthe old_to_new list, already freed
+			free(ppair);
+		}
+		sllv_free(pstate->pregex_pairs);
+	}
 	sb_free(pstate->psb);
 	ap_free(pstate->pargp);
 	free(pstate);
