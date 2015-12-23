@@ -103,6 +103,8 @@ static void lrec_reader_mmap_csvlite_free(lrec_reader_t* preader) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
+	// xxx fix: double-free after header_keeper_free
+	// lhmslv_free(pstate->pheader_keepers);
 	free(pstate);
 	free(preader);
 }
