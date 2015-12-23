@@ -239,6 +239,7 @@ static void mapper_sort_free(mapper_t* pmapper) {
 		// precords freed in emitter
 	}
 	lhmslv_free(pstate->pbuckets_by_key_field_names);
+	sllv_free(pstate->precords_missing_sort_keys);
 	free(pstate->sort_params);
 	free(pstate);
 	free(pmapper);
