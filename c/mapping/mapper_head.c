@@ -18,7 +18,7 @@ typedef struct _mapper_head_state_t {
 } mapper_head_state_t;
 
 static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_head_free(void* pvstate);
+static void      mapper_head_free(mapper_t* pmapper);
 static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
 static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
@@ -74,8 +74,8 @@ static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	return pmapper;
 }
 
-static void mapper_head_free(void* pvstate) {
-	mapper_head_state_t* pstate = (mapper_head_state_t*)pvstate;
+static void mapper_head_free(mapper_t* pmapper) {
+	mapper_head_state_t* pstate = pmapper->pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
@@ -85,6 +85,8 @@ static void mapper_head_free(void* pvstate) {
 	}
 	lhmslv_free(pstate->precord_lists_by_group);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

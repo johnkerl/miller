@@ -69,7 +69,7 @@ static void      mapper_step_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_step_alloc(ap_state_t* pargp, slls_t* pstepper_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int allow_int_float);
-static void      mapper_step_free(void* pvstate);
+static void      mapper_step_free(mapper_t* pmapper);
 static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static step_t* step_delta_alloc(char* input_field_name, int allow_int_float);
@@ -165,8 +165,8 @@ static mapper_t* mapper_step_alloc(ap_state_t* pargp, slls_t* pstepper_names, st
 	return pmapper;
 }
 
-static void mapper_step_free(void* pvstate) {
-	mapper_step_state_t* pstate = pvstate;
+static void mapper_step_free(mapper_t* pmapper) {
+	mapper_step_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pstepper_names);
 	string_array_free(pstate->pvalue_field_names);
 	string_array_free(pstate->pvalue_field_values);
@@ -188,6 +188,8 @@ static void mapper_step_free(void* pvstate) {
 	}
 	lhmslv_free(pstate->groups);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

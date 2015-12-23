@@ -24,7 +24,7 @@ static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	int show_counts, int show_num_distinct_only);
-static void      mapper_uniq_free(void* pvstate);
+static void      mapper_uniq_free(mapper_t* pmapper);
 
 static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -138,8 +138,8 @@ static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	return pmapper;
 }
 
-static void mapper_uniq_free(void* pvstate) {
-	mapper_uniq_state_t* pstate = pvstate;
+static void mapper_uniq_free(mapper_t* pmapper) {
+	mapper_uniq_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the keys: we only need to free the void-star values.
 	for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
@@ -150,6 +150,8 @@ static void mapper_uniq_free(void* pvstate) {
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

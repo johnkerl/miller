@@ -61,7 +61,7 @@ typedef struct _mapper_join_state_t {
 static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts);
-static void mapper_join_free(void* pvstate);
+static void mapper_join_free(mapper_t* pmapper);
 static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
@@ -239,13 +239,15 @@ static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts)
 }
 
 // ----------------------------------------------------------------
-static void mapper_join_free(void* pvstate) {
-	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
+static void mapper_join_free(mapper_t* pmapper) {
+	mapper_join_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->popts->pleft_join_field_names);
 	slls_free(pstate->popts->pright_join_field_names);
 	slls_free(pstate->popts->poutput_join_field_names);
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

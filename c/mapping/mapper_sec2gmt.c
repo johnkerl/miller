@@ -10,7 +10,7 @@ typedef struct _mapper_sec2gmt_state_t {
 } mapper_sec2gmt_state_t;
 
 static sllv_t*   mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_sec2gmt_free(void* pvstate);
+static void      mapper_sec2gmt_free(mapper_t* pmapper);
 static mapper_t* mapper_sec2gmt_alloc(slls_t* pfield_names);
 static void      mapper_sec2gmt_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv);
@@ -62,9 +62,11 @@ static mapper_t* mapper_sec2gmt_alloc(slls_t* pfield_names)
 	return pmapper;
 }
 
-static void mapper_sec2gmt_free(void* pvstate) {
-	mapper_sec2gmt_state_t* pstate = (mapper_sec2gmt_state_t*)pvstate;
+static void mapper_sec2gmt_free(mapper_t* pmapper) {
+	mapper_sec2gmt_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pfield_names);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

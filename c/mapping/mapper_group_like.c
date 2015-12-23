@@ -16,7 +16,7 @@ typedef struct _mapper_group_like_state_t {
 static void      mapper_group_like_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_group_like_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_group_like_alloc();
-static void      mapper_group_like_free(void* pvstate);
+static void      mapper_group_like_free(mapper_t* pmapper);
 static sllv_t*   mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -56,14 +56,16 @@ static mapper_t* mapper_group_like_alloc() {
 	return pmapper;
 }
 
-static void mapper_group_like_free(void* pvstate) {
-	mapper_group_like_state_t* pstate = (mapper_group_like_state_t*)pvstate;
+static void mapper_group_like_free(mapper_t* pmapper) {
+	mapper_group_like_state_t* pstate = pmapper->pvstate;
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pa = pstate->precords_by_key_field_names->phead; pa != NULL; pa = pa->pnext) {
 		sllv_t* plist = pa->pvvalue;
 		sllv_free(plist);
 	}
 	lhmslv_free(pstate->precords_by_key_field_names);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

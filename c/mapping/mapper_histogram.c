@@ -29,7 +29,7 @@ static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names, double lo, int nbins, double hi,
 	int do_auto);
-static void      mapper_histogram_free(void* pvstate);
+static void      mapper_histogram_free(mapper_t* pmapper);
 
 static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
 static sllv_t*   mapper_histogram_emit(mapper_histogram_state_t* pstate);
@@ -137,12 +137,14 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 	return pmapper;
 }
 
-static void mapper_histogram_free(void* pvstate) {
-	mapper_histogram_state_t* pstate = (mapper_histogram_state_t*)pvstate;
+static void mapper_histogram_free(mapper_t* pmapper) {
+	mapper_histogram_state_t* pstate = pmapper->pvstate;
 	if (pstate->value_field_names != NULL)
 		slls_free(pstate->value_field_names);
 	lhmsv_free(pstate->pcounts_by_field);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

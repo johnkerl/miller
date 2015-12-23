@@ -12,7 +12,7 @@ typedef struct _mapper_reorder_state_t {
 } mapper_reorder_state_t;
 
 static sllv_t*   mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_reorder_free(void* pvstate);
+static void      mapper_reorder_free(mapper_t* pmapper);
 static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_list, int put_at_end);
 static void      mapper_reorder_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv);
@@ -79,11 +79,13 @@ static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_lis
 	return pmapper;
 }
 
-static void mapper_reorder_free(void* pvstate) {
-	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
+static void mapper_reorder_free(mapper_t* pmapper) {
+	mapper_reorder_state_t* pstate = pmapper->pvstate;
 	if (pstate->pfield_name_list != NULL)
 		slls_free(pstate->pfield_name_list);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

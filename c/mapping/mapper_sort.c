@@ -84,7 +84,7 @@ static void      mapper_group_by_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort);
 static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_sort_free(void* pvstate);
+static void      mapper_sort_free(mapper_t* pmapper);
 
 static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params, context_t* pctx);
 
@@ -227,8 +227,8 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 }
 
 // ----------------------------------------------------------------
-static void mapper_sort_free(void* pvstate) {
-	mapper_sort_state_t* pstate = pvstate;
+static void mapper_sort_free(mapper_t* pmapper) {
+	mapper_sort_state_t* pstate = pmapper->pvstate;
 	if (pstate->pkey_field_names != NULL)
 		slls_free(pstate->pkey_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
@@ -240,6 +240,8 @@ static void mapper_sort_free(void* pvstate) {
 	}
 	lhmslv_free(pstate->pbuckets_by_key_field_names);
 	free(pstate->sort_params);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

@@ -18,7 +18,7 @@ typedef struct _mapper_cut_state_t {
 
 static sllv_t*   mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_cut_free(void* pvstate);
+static void      mapper_cut_free(mapper_t* pmapper);
 static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	int do_arg_order, int do_complement, int do_regexes);
 static void      mapper_cut_usage(FILE* o, char* argv0, char* verb);
@@ -116,8 +116,8 @@ static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	return pmapper;
 }
 
-static void mapper_cut_free(void* pvstate) {
-	mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
+static void mapper_cut_free(mapper_t* pmapper) {
+	mapper_cut_state_t* pstate = pmapper->pvstate;
 	if (pstate->pfield_name_list != NULL)
 		slls_free(pstate->pfield_name_list);
 	if (pstate->pfield_name_set != NULL)
@@ -125,6 +125,8 @@ static void mapper_cut_free(void* pvstate) {
 	for (int i = 0; i < pstate->nregex; i++)
 		regfree(&pstate->regexes[i]);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

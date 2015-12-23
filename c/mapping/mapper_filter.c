@@ -13,7 +13,7 @@ typedef struct _mapper_filter_state_t {
 } mapper_filter_state_t;
 
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_filter_free(void* pvstate);
+static void      mapper_filter_free(mapper_t* pmapper);
 static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past,
 	int type_inferencing, int do_exclude);
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
@@ -117,10 +117,12 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past
 	return pmapper;
 }
 
-static void mapper_filter_free(void* pvstate) {
-	mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
+static void mapper_filter_free(mapper_t* pmapper) {
+	mapper_filter_state_t* pstate = pmapper->pvstate;
 	pstate->pevaluator->pfree_func(pstate->pevaluator->pvstate);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

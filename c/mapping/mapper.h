@@ -11,15 +11,17 @@
 // ----------------------------------------------------------------
 // Data plane:
 
+struct _mapper_t* pmapper; // forward reference for method declarations
+
 // Returns linked list of records (lrec_t*).
 typedef sllv_t* mapper_process_func_t(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
-typedef void    mapper_free_func_t(void* pvstate);
+typedef void mapper_free_func_t(struct _mapper_t* pmapper);
 
 typedef struct _mapper_t {
 	void* pvstate;
 	mapper_process_func_t* pprocess_func;
-	mapper_free_func_t*    pfree_func;
+	mapper_free_func_t*    pfree_func; // virtual destructor
 } mapper_t;
 
 // ----------------------------------------------------------------

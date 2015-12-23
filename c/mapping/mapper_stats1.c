@@ -58,7 +58,7 @@ static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float);
-static void      mapper_stats1_free(void* pvstate);
+static void      mapper_stats1_free(mapper_t* pmapper);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
@@ -193,8 +193,8 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 	return pmapper;
 }
 
-static void mapper_stats1_free(void* pvstate) {
-	mapper_stats1_state_t* pstate = pvstate;
+static void mapper_stats1_free(mapper_t* pmapper) {
+	mapper_stats1_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->paccumulator_names);
 	string_array_free(pstate->pvalue_field_names);
 	string_array_free(pstate->pvalue_field_values);
@@ -218,6 +218,8 @@ static void mapper_stats1_free(void* pvstate) {
 	}
 	lhmslv_free(pstate->groups);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ================================================================

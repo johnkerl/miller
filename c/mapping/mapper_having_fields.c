@@ -24,7 +24,7 @@ static void      mapper_having_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv);
 
 static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, int criterion);
-static void      mapper_having_fields_free(void* pvstate);
+static void      mapper_having_fields_free(mapper_t* pmapper);
 
 static sllv_t*   mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_having_fields_which_are_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -177,13 +177,15 @@ static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_st
 	return pmapper;
 }
 
-static void mapper_having_fields_free(void* pvstate) {
-	mapper_having_fields_state_t* pstate = (mapper_having_fields_state_t*)pvstate;
+static void mapper_having_fields_free(mapper_t* pmapper) {
+	mapper_having_fields_state_t* pstate = pmapper->pvstate;
 	if (pstate->pfield_names != NULL)
 		slls_free(pstate->pfield_names);
 	if (pstate->pfield_name_set != NULL)
 		hss_free(pstate->pfield_name_set);
 	regfree(&pstate->regex);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

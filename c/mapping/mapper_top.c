@@ -32,7 +32,7 @@ static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 static sllv_t*   mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
-static void      mapper_top_free(void* pvstate);
+static void      mapper_top_free(mapper_t* pmapper);
 static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records, int allow_int_float);
 static void      mapper_top_usage(FILE* o, char* argv0, char* verb);
@@ -121,8 +121,8 @@ static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names,
 	return pmapper;
 }
 
-static void mapper_top_free(void* pvstate) {
-	mapper_top_state_t* pstate = pvstate;
+static void mapper_top_free(mapper_t* pmapper) {
+	mapper_top_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);
 
@@ -138,6 +138,8 @@ static void mapper_top_free(void* pvstate) {
 
 	lhmslv_free(pstate->groups);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

@@ -3,7 +3,7 @@
 #include "containers/sllv.h"
 
 static sllv_t*   mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_check_free(void* pvstate);
+static void      mapper_check_free(mapper_t* pmapper);
 static mapper_t* mapper_check_alloc();
 static void      mapper_check_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv);
@@ -40,8 +40,8 @@ static mapper_t* mapper_check_alloc() {
 	pmapper->pfree_func    = mapper_check_free;
 	return pmapper;
 }
-static void mapper_check_free(void* pvstate) {
-	free(pvstate);
+static void mapper_check_free(mapper_t* pmapper) {
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

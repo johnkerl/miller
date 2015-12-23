@@ -21,7 +21,7 @@ typedef struct _mapper_bar_state_t {
 
 static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_bar_free(void* pvstate);
+static void      mapper_bar_free(mapper_t* pmapper);
 static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto);
@@ -169,14 +169,15 @@ static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_name
 	return pmapper;
 }
 
-static void mapper_bar_free(void* pvstate) {
-	mapper_bar_state_t* pstate = (mapper_bar_state_t*)pvstate;
+static void mapper_bar_free(mapper_t* pmapper) {
+	mapper_bar_state_t* pstate = (mapper_bar_state_t*)pmapper->pvstate;
 	string_array_free(pstate->pfield_names);
 	for (int i = 0; i <= pstate->width; i++)
 		free(pstate->bars[i]);
 	free(pstate->bars);
 	ap_free(pstate->pargp);
 	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

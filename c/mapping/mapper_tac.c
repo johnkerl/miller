@@ -8,7 +8,7 @@ typedef struct _mapper_tac_state_t {
 } mapper_tac_state_t;
 
 static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_tac_free(void* pvstate);
+static void      mapper_tac_free(mapper_t* pmapper);
 static mapper_t* mapper_tac_alloc();
 static void      mapper_tac_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv);
@@ -50,10 +50,12 @@ static mapper_t* mapper_tac_alloc() {
 	return pmapper;
 }
 
-static void mapper_tac_free(void* pvstate) {
-	mapper_tac_state_t* pstate = pvstate;
+static void mapper_tac_free(mapper_t* pmapper) {
+	mapper_tac_state_t* pstate = pmapper->pvstate;
 	// Free the container
 	sllv_free(pstate->records);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

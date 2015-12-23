@@ -32,7 +32,7 @@ typedef struct _mapper_sample_state_t {
 } mapper_sample_state_t;
 
 static sllv_t*   mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_sample_free(void* pvstate);
+static void      mapper_sample_free(mapper_t* pmapper);
 static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long sample_count);
 static void      mapper_sample_usage(FILE* o, char* argv0, char* verb);
@@ -95,8 +95,8 @@ static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_
 	return pmapper;
 }
 
-static void mapper_sample_free(void* pvstate) {
-	mapper_sample_state_t* pstate = pvstate;
+static void mapper_sample_free(mapper_t* pmapper) {
+	mapper_sample_state_t* pstate = pmapper->pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
@@ -106,6 +106,8 @@ static void mapper_sample_free(void* pvstate) {
 	}
 	lhmslv_free(pstate->pbuckets_by_group);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

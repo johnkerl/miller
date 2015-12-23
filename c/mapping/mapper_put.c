@@ -15,7 +15,7 @@ typedef struct _mapper_put_state_t {
 } mapper_put_state_t;
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_put_free(void* pvstate);
+static void      mapper_put_free(mapper_t* pmapper);
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
@@ -145,8 +145,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	return pmapper;
 }
 
-static void mapper_put_free(void* pvstate) {
-	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
+static void mapper_put_free(mapper_t* pmapper) {
+	mapper_put_state_t* pstate = pmapper->pvstate;
 	free(pstate->output_field_names);
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
@@ -154,6 +154,8 @@ static void mapper_put_free(void* pvstate) {
 	}
 	free(pstate->pevaluators);
 	ap_free(pstate->pargp);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------

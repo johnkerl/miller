@@ -9,7 +9,7 @@ typedef struct _mapper_regularize_state_t {
 } mapper_regularize_state_t;
 
 static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_regularize_free(void* pvstate);
+static void      mapper_regularize_free(mapper_t* pmapper);
 static mapper_t* mapper_regularize_alloc();
 static void      mapper_regularize_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv);
@@ -50,13 +50,15 @@ static mapper_t* mapper_regularize_alloc() {
 	return pmapper;
 }
 
-static void mapper_regularize_free(void* pvstate) {
-	mapper_regularize_state_t* pstate = (mapper_regularize_state_t*)pvstate;
+static void mapper_regularize_free(mapper_t* pmapper) {
+	mapper_regularize_state_t* pstate = pmapper->pvstate;
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pe = pstate->psorted_to_original->phead; pe != NULL; pe = pe->pnext) {
 		slls_free(pe->pvvalue);
 	}
 	lhmslv_free(pstate->psorted_to_original);
+	free(pstate);
+	free(pmapper);
 }
 
 // ----------------------------------------------------------------
