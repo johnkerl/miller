@@ -103,8 +103,16 @@ static void lrec_reader_mmap_csvlite_free(lrec_reader_t* preader) {
 		header_keeper_t* pheader_keeper = pe->pvvalue;
 		header_keeper_free(pheader_keeper);
 	}
-	// xxx fix: double-free after header_keeper_free
-	// lhmslv_free(pstate->pheader_keepers);
+
+	// header-fields lists are doubly referenced: as hashmap keys in
+	// pstate->pheader_keepers, and within the header_keeper objects.
+	// Nullify the keys here to avoid a double free.
+	// xxx this could be refactored to be more elegant.
+	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
+		pe->key = NULL;
+	}
+	lhmslv_free(pstate->pheader_keepers);
+
 	free(pstate);
 	free(preader);
 }
