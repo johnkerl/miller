@@ -43,6 +43,7 @@ typedef struct _stats1_t {
 typedef stats1_t* stats1_alloc_func_t(char* value_field_name, char* stats1_name, int allow_int_float);
 
 typedef struct _mapper_stats1_state_t {
+	ap_state_t* pargp;
 	slls_t*         paccumulator_names;
 	string_array_t* pvalue_field_names;     // parameter
 	string_array_t* pvalue_field_values;    // scratch space used per-record
@@ -55,7 +56,7 @@ typedef struct _mapper_stats1_state_t {
 // ----------------------------------------------------------------
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
+static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float);
 static void      mapper_stats1_free(void* pvstate);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -164,25 +165,26 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_stats1_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names,
+	return mapper_stats1_alloc(pstate, paccumulator_names, pvalue_field_names, pgroup_by_field_names,
 		do_iterative_stats, allow_int_float);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_stats1_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_names,
+static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_stats1_state_t* pstate  = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
 
-	pstate->paccumulator_names     = paccumulator_names;
-	pstate->pvalue_field_names     = pvalue_field_names;
-	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->pvalue_field_values    = string_array_alloc(pvalue_field_names->length);
-	pstate->groups                 = lhmslv_alloc();
-	pstate->do_iterative_stats     = do_iterative_stats;
-	pstate->allow_int_float        = allow_int_float;
+	pstate->pargp                 = pargp;
+	pstate->paccumulator_names    = paccumulator_names;
+	pstate->pvalue_field_names    = pvalue_field_names;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->pvalue_field_values   = string_array_alloc(pvalue_field_names->length);
+	pstate->groups                = lhmslv_alloc();
+	pstate->do_iterative_stats    = do_iterative_stats;
+	pstate->allow_int_float       = allow_int_float;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
@@ -215,6 +217,7 @@ static void mapper_stats1_free(void* pvstate) {
 		lhmsv_free(pgroup_to_acc_field);
 	}
 	lhmslv_free(pstate->groups);
+	ap_free(pstate->pargp);
 }
 
 // ================================================================

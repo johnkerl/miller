@@ -7,13 +7,15 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_filter_state_t {
+	ap_state_t* pargp;
 	lrec_evaluator_t* pevaluator;
 	int do_exclude;
 } mapper_filter_state_t;
 
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_filter_free(void* pvstate);
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude);
+static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past,
+	int type_inferencing, int do_exclude);
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
 
@@ -93,13 +95,16 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_node_print(past->proot);
 	}
 
-	return mapper_filter_alloc(past->proot, type_inferencing, do_exclude);
+	return mapper_filter_alloc(pstate, past->proot, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude) {
+static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past,
+	int type_inferencing, int do_exclude)
+{
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 
+	pstate->pargp      = pargp;
 	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 	pstate->do_exclude = do_exclude;
 
@@ -115,6 +120,7 @@ static mapper_t* mapper_filter_alloc(mlr_dsl_ast_node_t* past, int type_inferenc
 static void mapper_filter_free(void* pvstate) {
 	mapper_filter_state_t* pstate = (mapper_filter_state_t*)pvstate;
 	pstate->pevaluator->pfree_func(pstate->pevaluator->pvstate);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

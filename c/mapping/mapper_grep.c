@@ -6,13 +6,14 @@
 #include "containers/sllv.h"
 
 typedef struct _mapper_grep_state_t {
+	ap_state_t* pargp;
 	int exclude;
 	regex_t regex;
 } mapper_grep_state_t;
 
 static sllv_t*   mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_grep_free(void* pvstate);
-static mapper_t* mapper_grep_alloc(char* regex_string, int exclude, int ignore_case);
+static mapper_t* mapper_grep_alloc(ap_state_t* pargp, char* regex_string, int exclude, int ignore_case);
 static void      mapper_grep_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv);
 
@@ -52,7 +53,7 @@ static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv) {
 
 	regex_string = argv[(*pargi)++];
 
-	mapper_t* pmapper = mapper_grep_alloc(regex_string, exclude, ignore_case);
+	mapper_t* pmapper = mapper_grep_alloc(pstate, regex_string, exclude, ignore_case);
 	return pmapper;
 }
 static void mapper_grep_usage(FILE* o, char* argv0, char* verb) {
@@ -75,10 +76,11 @@ static void mapper_grep_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_grep_alloc(char* regex_string, int exclude, int ignore_case) {
+static mapper_t* mapper_grep_alloc(ap_state_t* pargp, char* regex_string, int exclude, int ignore_case) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_grep_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_grep_state_t));
+	pstate->pargp = pargp;
 	int cflags = REG_NOSUB;
 	if (ignore_case)
 		cflags |= REG_ICASE;
@@ -93,6 +95,7 @@ static mapper_t* mapper_grep_alloc(char* regex_string, int exclude, int ignore_c
 static void mapper_grep_free(void* pvstate) {
 	mapper_grep_state_t* pstate = (mapper_grep_state_t*)pvstate;
 	regfree(&pstate->regex);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

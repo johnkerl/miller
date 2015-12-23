@@ -17,6 +17,7 @@
 typedef mv_t maybe_sign_flipper_t(mv_t* pval1);
 
 typedef struct _mapper_top_state_t {
+	ap_state_t* pargp;
 	slls_t* pvalue_field_names;
 	slls_t* pgroup_by_field_names;
 	int top_count;
@@ -32,7 +33,7 @@ static sllv_t*   mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 static void      mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 static void      mapper_top_free(void* pvstate);
-static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
+static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records, int allow_int_float);
 static void      mapper_top_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv);
@@ -92,18 +93,19 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_top_alloc(pvalue_field_names, pgroup_by_field_names,
+	return mapper_top_alloc(pstate, pvalue_field_names, pgroup_by_field_names,
 		top_count, do_max, show_full_records, allow_int_float);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_top_alloc(slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
+static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_top_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_top_state_t));
 
+	pstate->pargp                 = pargp;
 	pstate->pvalue_field_names    = slls_copy(pvalue_field_names);
 	pstate->pgroup_by_field_names = slls_copy(pgroup_by_field_names);
 	pstate->show_full_records     = show_full_records;
@@ -135,6 +137,7 @@ static void mapper_top_free(void* pvstate) {
 	}
 
 	lhmslv_free(pstate->groups);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

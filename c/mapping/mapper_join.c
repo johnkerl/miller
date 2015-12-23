@@ -41,6 +41,8 @@ typedef struct _mapper_join_opts_t {
 } mapper_join_opts_t;
 
 typedef struct _mapper_join_state_t {
+	ap_state_t* pargp;
+
 	mapper_join_opts_t* popts;
 
 	hss_t*   pleft_field_name_set;
@@ -58,7 +60,7 @@ typedef struct _mapper_join_state_t {
 // ----------------------------------------------------------------
 static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts);
+static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts);
 static void mapper_join_free(void* pvstate);
 static void merge_options(mapper_join_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
@@ -208,15 +210,16 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		exit(1);
 	}
 
-	return mapper_join_alloc(popts);
+	return mapper_join_alloc(pstate, popts);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts)
+static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_join_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_join_state_t));
+	pstate->pargp                              = pargp;
 	pstate->popts                              = popts;
 	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_join_field_names);
 	pstate->pright_field_name_set              = hss_from_slls(popts->pright_join_field_names);
@@ -242,6 +245,7 @@ static void mapper_join_free(void* pvstate) {
 	slls_free(pstate->popts->pright_join_field_names);
 	slls_free(pstate->popts->poutput_join_field_names);
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

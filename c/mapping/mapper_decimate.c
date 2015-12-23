@@ -11,6 +11,7 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_decimate_state_t {
+	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	unsigned long long decimate_count;
 	unsigned long long remainder_for_keep;
@@ -19,7 +20,7 @@ typedef struct _mapper_decimate_state_t {
 
 static sllv_t*   mapper_decimate_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_decimate_free(void* pvstate);
-static mapper_t* mapper_decimate_alloc(slls_t* pgroup_by_field_names,
+static mapper_t* mapper_decimate_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long decimate_count, int keep_last);
 static void      mapper_decimate_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv);
@@ -59,17 +60,18 @@ static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_decimate_alloc(pgroup_by_field_names, decimate_count, keep_last);
+	return mapper_decimate_alloc(pstate, pgroup_by_field_names, decimate_count, keep_last);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_decimate_alloc(slls_t* pgroup_by_field_names,
+static mapper_t* mapper_decimate_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long decimate_count, int keep_last)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_decimate_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_decimate_state_t));
 
+	pstate->pargp                  = pargp;
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->decimate_count         = decimate_count;
 	pstate->remainder_for_keep     = keep_last ? decimate_count - 1 : 0;
@@ -92,6 +94,7 @@ static void mapper_decimate_free(void* pvstate) {
 		free(pcount_for_group);
 	}
 	lhmslv_free(pstate->precord_lists_by_group);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

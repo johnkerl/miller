@@ -25,6 +25,7 @@ void             sample_bucket_handle(sample_bucket_t* pbucket, lrec_t* prec, in
 
 // ----------------------------------------------------------------
 typedef struct _mapper_sample_state_t {
+	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	unsigned long long sample_count;
 	lhmslv_t* pbuckets_by_group;
@@ -32,7 +33,8 @@ typedef struct _mapper_sample_state_t {
 
 static sllv_t*   mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_sample_free(void* pvstate);
-static mapper_t* mapper_sample_alloc(slls_t* pgroup_by_field_names, unsigned long long sample_count);
+static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	unsigned long long sample_count);
 static void      mapper_sample_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv);
 
@@ -70,15 +72,18 @@ static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_sample_alloc(pgroup_by_field_names, sample_count);
+	return mapper_sample_alloc(pstate, pgroup_by_field_names, sample_count);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_sample_alloc(slls_t* pgroup_by_field_names, unsigned long long sample_count) {
+static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	unsigned long long sample_count)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_sample_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sample_state_t));
 
+	pstate->pargp                 = pargp;
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->sample_count          = sample_count;
 	pstate->pbuckets_by_group     = lhmslv_alloc();
@@ -100,6 +105,7 @@ static void mapper_sample_free(void* pvstate) {
 		sample_bucket_free(pbucket);
 	}
 	lhmslv_free(pstate->pbuckets_by_group);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

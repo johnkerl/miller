@@ -51,11 +51,14 @@ void ap_free(ap_state_t* pstate) {
 
 	for (sllve_t* pe = pstate->pflag_defs->phead; pe != NULL; pe = pe->pnext) {
 		ap_flag_def_t* pdef = pe->pvdata;
-		if (pdef->type == AP_STRING_LIST_FLAG && pdef->pval != NULL) {
-			slls_t** pplist = pdef->pval;
-			if (*pplist != NULL)
-				slls_free(*pplist);
-		}
+
+// xxx temp double-frees w/r/t mappers retaining lists as well ...
+//		if (pdef->type == AP_STRING_LIST_FLAG && pdef->pval != NULL) {
+//			slls_t** pplist = pdef->pval;
+//			if (*pplist != NULL)
+//				slls_free(*pplist);
+//		}
+
 		free(pdef);
 	}
 	sllv_free(pstate->pflag_defs);

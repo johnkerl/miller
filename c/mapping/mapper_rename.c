@@ -13,6 +13,7 @@ typedef struct _regex_pair_t {
 } regex_pair_t;
 
 typedef struct _mapper_rename_state_t {
+	ap_state_t* pargp;
 	lhmss_t* pold_to_new;
 	sllv_t*  pregex_pairs;
 	string_builder_t* psb;
@@ -22,7 +23,7 @@ typedef struct _mapper_rename_state_t {
 static sllv_t*   mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_rename_free(void* pvstate);
-static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new, int do_regexes, int do_gsub);
+static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, int do_regexes, int do_gsub);
 static void      mapper_rename_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv);
 
@@ -89,15 +90,16 @@ static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	*pargi += 1;
-	return mapper_rename_alloc(pold_to_new, do_regexes, do_gsub);
+	return mapper_rename_alloc(pstate, pold_to_new, do_regexes, do_gsub);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new, int do_regexes, int do_gsub) {
+static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, int do_regexes, int do_gsub) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_rename_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_rename_state_t));
 
+	pstate->pargp = pargp;
 	if (do_regexes) {
 		pmapper->pprocess_func = mapper_rename_regex_process;
 		pstate->pold_to_new    = NULL;
@@ -131,6 +133,7 @@ static mapper_t* mapper_rename_alloc(lhmss_t* pold_to_new, int do_regexes, int d
 static void mapper_rename_free(void* pvstate) {
 	mapper_rename_state_t* pstate = (mapper_rename_state_t*)pvstate;
 	lhmss_free(pstate->pold_to_new);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

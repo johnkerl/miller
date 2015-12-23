@@ -38,6 +38,7 @@ typedef struct _stats2_t {
 } stats2_t;
 
 typedef struct _mapper_stats2_state_t {
+	ap_state_t* pargp;
 	slls_t* paccumulator_names;
 	string_array_t* pvalue_field_name_pairs;
 	slls_t*   pgroup_by_field_names;
@@ -53,8 +54,9 @@ typedef stats2_t* stats2_alloc_func_t(char* value_field_name_1, char* value_fiel
 // ----------------------------------------------------------------
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats, int do_hold_and_fit);
+static mapper_t* mapper_stats2_alloc(ap_state_t* pargp, slls_t* paccumulator_names,
+	string_array_t* pvalue_field_name_pairs, slls_t* pgroup_by_field_names,
+	int do_verbose, int do_iterative_stats, int do_hold_and_fit);
 static void      mapper_stats2_free(void* pvstate);
 static sllv_t*   mapper_stats2_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* pstate);
@@ -162,17 +164,19 @@ static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_stats2_alloc(paccumulator_names, pvalue_field_names, pgroup_by_field_names,
+	return mapper_stats2_alloc(pstate, paccumulator_names, pvalue_field_names, pgroup_by_field_names,
 		do_verbose, do_iterative_stats, do_hold_and_fit);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_stats2_alloc(slls_t* paccumulator_names, string_array_t* pvalue_field_name_pairs,
-	slls_t* pgroup_by_field_names, int do_verbose, int do_iterative_stats, int do_hold_and_fit)
+static mapper_t* mapper_stats2_alloc(ap_state_t* pargp, slls_t* paccumulator_names,
+	string_array_t* pvalue_field_name_pairs, slls_t* pgroup_by_field_names,
+	int do_verbose, int do_iterative_stats, int do_hold_and_fit)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_stats2_state_t* pstate    = mlr_malloc_or_die(sizeof(mapper_stats2_state_t));
+	pstate->pargp                    = pargp;
 	pstate->paccumulator_names       = paccumulator_names;
 	pstate->pvalue_field_name_pairs  = pvalue_field_name_pairs; // caller validates length is even
 	pstate->pgroup_by_field_names    = pgroup_by_field_names;
@@ -214,6 +218,7 @@ static void mapper_stats2_free(void* pvstate) {
 		sllv_free(plist);
 	}
 	lhmslv_free(pstate->record_groups);
+	ap_free(pstate->pargp);
 }
 
 // ================================================================

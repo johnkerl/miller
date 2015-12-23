@@ -11,6 +11,7 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_uniq_state_t {
+	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	int show_counts;
 	int show_num_distinct_only;
@@ -21,7 +22,8 @@ static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv);
 static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts, int show_num_distinct_only);
+static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	int show_counts, int show_num_distinct_only);
 static void      mapper_uniq_free(void* pvstate);
 
 static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -71,7 +73,7 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 		return NULL;
 	}
 
-	return mapper_uniq_alloc(pfield_names, TRUE, show_num_distinct_only);
+	return mapper_uniq_alloc(pstate, pfield_names, TRUE, show_num_distinct_only);
 }
 
 // ----------------------------------------------------------------
@@ -107,15 +109,18 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_uniq_alloc(pgroup_by_field_names, show_counts, show_num_distinct_only);
+	return mapper_uniq_alloc(pstate, pgroup_by_field_names, show_counts, show_num_distinct_only);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_uniq_alloc(slls_t* pgroup_by_field_names, int show_counts, int show_num_distinct_only) {
+static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	int show_counts, int show_num_distinct_only)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_uniq_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_uniq_state_t));
 
+	pstate->pargp                  = pargp;
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->show_counts            = show_counts;
 	pstate->show_num_distinct_only = show_num_distinct_only;
@@ -144,6 +149,7 @@ static void mapper_uniq_free(void* pvstate) {
 	lhmslv_free(pstate->pcounts_by_group);
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

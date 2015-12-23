@@ -4,6 +4,7 @@
 #include "containers/sllv.h"
 
 typedef struct _mapper_cat_state_t {
+	ap_state_t* pargp;
 	char* counter_field_name;
 	unsigned long long counter;
 } mapper_cat_state_t;
@@ -13,7 +14,7 @@ typedef struct _mapper_cat_state_t {
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_cat_free(void* pvstate);
-static mapper_t* mapper_cat_alloc(int do_counters, char* counter_field_name);
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name);
 static void      mapper_cat_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv);
 
@@ -52,7 +53,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
 		counter_field_name = default_counter_field_name;
 	}
 
-	mapper_t* pmapper = mapper_cat_alloc(do_counters, counter_field_name);
+	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, counter_field_name);
 	return pmapper;
 }
 static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
@@ -65,9 +66,10 @@ static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_cat_alloc(int do_counters, char* counter_field_name) {
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 	mapper_cat_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cat_state_t));
+	pstate->pargp              = pargp;
 	pstate->counter_field_name = counter_field_name;
 	pstate->counter            = 0LL;
 	pmapper->pvstate           = pstate;
@@ -76,6 +78,8 @@ static mapper_t* mapper_cat_alloc(int do_counters, char* counter_field_name) {
 	return pmapper;
 }
 static void mapper_cat_free(void* pvstate) {
+	mapper_cat_state_t* pstate = pvstate;
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

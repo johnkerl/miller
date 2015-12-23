@@ -7,6 +7,7 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_bar_state_t {
+	ap_state_t* pargp;
 	string_array_t*  pfield_names;
 	char    fill_char;
 	char    oob_char;
@@ -21,7 +22,7 @@ typedef struct _mapper_bar_state_t {
 static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_bar_free(void* pvstate);
-static mapper_t* mapper_bar_alloc(string_array_t* pfield_names,
+static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto);
 static void      mapper_bar_usage(FILE* o, char* argv0, char* verb);
@@ -121,18 +122,19 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
 		blank_char = blank_string[0];
 	}
 
-	return mapper_bar_alloc(pfield_names, fill_char, oob_char, blank_char,
+	return mapper_bar_alloc(pstate, pfield_names, fill_char, oob_char, blank_char,
 		lo, hi, width, do_auto);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_bar_alloc(string_array_t* pfield_names,
+static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_bar_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_bar_state_t));
+	pstate->pargp        = pargp;
 	pstate->pfield_names = pfield_names;
 	pstate->fill_char    = fill_char;
 	pstate->oob_char     = oob_char;
@@ -173,6 +175,7 @@ static void mapper_bar_free(void* pvstate) {
 	for (int i = 0; i <= pstate->width; i++)
 		free(pstate->bars[i]);
 	free(pstate->bars);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

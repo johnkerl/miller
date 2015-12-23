@@ -6,13 +6,14 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_reorder_state_t {
+	ap_state_t* pargp;
 	slls_t* pfield_name_list;
 	int     put_at_end;
 } mapper_reorder_state_t;
 
 static sllv_t*   mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_reorder_free(void* pvstate);
-static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end);
+static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_list, int put_at_end);
 static void      mapper_reorder_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv);
 
@@ -57,14 +58,15 @@ static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_reorder_alloc(pfield_name_list, put_at_end);
+	return mapper_reorder_alloc(pstate, pfield_name_list, put_at_end);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_reorder_alloc(slls_t* pfield_name_list, int put_at_end) {
+static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_list, int put_at_end) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_reorder_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_reorder_state_t));
+	pstate->pargp = pargp;
 	pstate->pfield_name_list = pfield_name_list;
 	pstate->put_at_end = put_at_end;
 	if (!put_at_end)
@@ -81,6 +83,7 @@ static void mapper_reorder_free(void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pstate->pfield_name_list != NULL)
 		slls_free(pstate->pfield_name_list);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

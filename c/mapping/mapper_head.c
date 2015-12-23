@@ -11,6 +11,7 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_head_state_t {
+	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	unsigned long long head_count;
 	lhmslv_t* precord_lists_by_group;
@@ -18,7 +19,7 @@ typedef struct _mapper_head_state_t {
 
 static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_head_free(void* pvstate);
-static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count);
+static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
 static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
 
@@ -52,15 +53,16 @@ static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_head_alloc(pgroup_by_field_names, head_count);
+	return mapper_head_alloc(pstate, pgroup_by_field_names, head_count);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_head_alloc(slls_t* pgroup_by_field_names, unsigned long long head_count) {
+static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_head_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_head_state_t));
 
+	pstate->pargp                  = pargp;
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->head_count             = head_count;
 	pstate->precord_lists_by_group = lhmslv_alloc();
@@ -82,6 +84,7 @@ static void mapper_head_free(void* pvstate) {
 		free(pcount_for_group);
 	}
 	lhmslv_free(pstate->precord_lists_by_group);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

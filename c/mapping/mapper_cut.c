@@ -7,6 +7,7 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_cut_state_t {
+	ap_state_t* pargp;
 	slls_t*  pfield_name_list;
 	hss_t*   pfield_name_set;
 	regex_t* regexes;
@@ -18,7 +19,7 @@ typedef struct _mapper_cut_state_t {
 static sllv_t*   mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_cut_free(void* pvstate);
-static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
+static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	int do_arg_order, int do_complement, int do_regexes);
 static void      mapper_cut_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv);
@@ -76,16 +77,17 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_cut_alloc(pfield_name_list, do_arg_order, do_complement, do_regexes);
+	return mapper_cut_alloc(pstate, pfield_name_list, do_arg_order, do_complement, do_regexes);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_cut_alloc(slls_t* pfield_name_list,
+static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	int do_arg_order, int do_complement, int do_regexes)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_cut_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cut_state_t));
+	pstate->pargp = pargp;
 	if (!do_regexes) {
 		pstate->pfield_name_list   = pfield_name_list;
 		slls_reverse(pstate->pfield_name_list);
@@ -122,6 +124,7 @@ static void mapper_cut_free(void* pvstate) {
 		hss_free(pstate->pfield_name_set);
 	for (int i = 0; i < pstate->nregex; i++)
 		regfree(&pstate->regexes[i]);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------

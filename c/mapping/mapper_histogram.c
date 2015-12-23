@@ -15,6 +15,7 @@
 #define DVECTOR_INITIAL_SIZE 1024
 
 typedef struct _mapper_histogram_state_t {
+	ap_state_t* pargp;
 	slls_t* value_field_names;
 	double lo;
 	int    nbins;
@@ -26,7 +27,7 @@ typedef struct _mapper_histogram_state_t {
 
 static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi,
+static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names, double lo, int nbins, double hi,
 	int do_auto);
 static void      mapper_histogram_free(void* pvstate);
 
@@ -93,17 +94,18 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_histogram_alloc(pvalue_field_names, lo, nbins, hi, do_auto);
+	return mapper_histogram_alloc(pstate, pvalue_field_names, lo, nbins, hi, do_auto);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_histogram_alloc(slls_t* value_field_names, double lo, int nbins, double hi,
-	int do_auto)
+static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names,
+	double lo, int nbins, double hi, int do_auto)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_histogram_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_histogram_state_t));
 
+	pstate->pargp = pargp;
 	pstate->value_field_names = slls_copy(value_field_names);
 	pstate->nbins = nbins;
 	pstate->pcounts_by_field = lhmsv_alloc();
@@ -140,6 +142,7 @@ static void mapper_histogram_free(void* pvstate) {
 	if (pstate->value_field_names != NULL)
 		slls_free(pstate->value_field_names);
 	lhmsv_free(pstate->pcounts_by_field);
+	ap_free(pstate->pargp);
 }
 
 // ----------------------------------------------------------------
