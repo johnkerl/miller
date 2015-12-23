@@ -106,8 +106,8 @@ static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names,
 	mapper_top_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_top_state_t));
 
 	pstate->pargp                 = pargp;
-	pstate->pvalue_field_names    = slls_copy(pvalue_field_names);
-	pstate->pgroup_by_field_names = slls_copy(pgroup_by_field_names);
+	pstate->pvalue_field_names    = pvalue_field_names;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->show_full_records     = show_full_records;
 	pstate->allow_int_float       = allow_int_float;
 	pstate->top_count             = top_count;

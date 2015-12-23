@@ -106,6 +106,7 @@ static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 			// Strip off the leading " and trailing " or "i.
 			regcomp_or_die_quoted(&pstate->regexes[i], pe->value, REG_NOSUB);
 		}
+		slls_free(pfield_name_list);
 		pmapper->pprocess_func     = mapper_cut_process_with_regexes;
 	}
 	pstate->do_arg_order   = do_arg_order;
