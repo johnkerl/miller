@@ -257,7 +257,8 @@ static void mapper_join_free(mapper_t* pmapper) {
 		lhmslv_free(pstate->pleft_buckets_by_join_field_values);
 	}
 
-	// xxx free void-star payload
+	// The void-star payload, which is lrec_t*'s, should have been sllv_transferred out.
+	// Misses should be detected by valgrind --leak-check=full, e.g. reg_test/run --valgrind.
 	sllv_free(pstate->pleft_unpaired_records);
 
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
