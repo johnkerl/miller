@@ -250,6 +250,7 @@ static void mapper_join_free(mapper_t* pmapper) {
 	sllv_free(pstate->pleft_unpaired_records);
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 	ap_free(pstate->pargp);
+	free(pstate->popts);
 	free(pstate);
 	free(pmapper);
 }
