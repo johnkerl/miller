@@ -246,8 +246,21 @@ static void mapper_join_free(mapper_t* pmapper) {
 	slls_free(pstate->popts->poutput_join_field_names);
 	hss_free(pstate->pleft_field_name_set);
 	hss_free(pstate->pright_field_name_set);
-	lhmslv_free(pstate->pleft_buckets_by_join_field_values);
+
+	if (pstate->pleft_buckets_by_join_field_values != NULL) {
+		for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
+			join_bucket_t* pbucket = pe->pvvalue;
+			slls_free(pbucket->pleft_field_values);
+			// xxx debug:
+			// sllv_free(pbucket->precords);
+			free(pbucket);
+		}
+		lhmslv_free(pstate->pleft_buckets_by_join_field_values);
+	}
+
+	// xxx free void-star payload
 	sllv_free(pstate->pleft_unpaired_records);
+
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 	ap_free(pstate->pargp);
 	free(pstate->popts);
@@ -376,6 +389,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		pstate->popts->pright_join_field_names);
 	if (pright_field_values != NULL) {
 		join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
+		slls_free(pright_field_values);
 		if (pleft_bucket == NULL) {
 			if (pstate->popts->emit_right_unpairables) {
 				return sllv_single(pright_rec);
