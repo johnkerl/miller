@@ -48,7 +48,9 @@ TOP OF LIST
   ? redhat ?
   ? other ?
 
-* stats1/stats2 sliding-window feature?
+* stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
+  - mean/stddev/var; skew/kurt?
+  - linregs; corr/cov?
 
 * flight misc: .screenrc -> dotfiles; more dotfile currency
 

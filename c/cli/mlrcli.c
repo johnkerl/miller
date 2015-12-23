@@ -159,6 +159,15 @@ static lhmsi_t* get_default_repeat_ipses() {
 	return singleton_default_repeat_ipses;
 }
 
+static void free_opt_singletons() {
+	lhmss_free(singleton_pdesc_to_chars_map);
+	lhmss_free(singleton_default_rses);
+	lhmss_free(singleton_default_fses);
+	lhmss_free(singleton_default_pses);
+	lhmsi_free(singleton_default_repeat_ifses);
+	lhmsi_free(singleton_default_repeat_ipses);
+}
+
 // For displaying the default separators in on-line help
 static char* rebackslash(char* sep) {
 	if (streq(sep, "\r"))
@@ -918,4 +927,39 @@ void cli_opts_free(cli_opts_t* popts) {
 	popts->plrec_writer->pfree_func(popts->plrec_writer);
 
 	free(popts);
+
+	free_opt_singletons();
 }
+
+//typedef struct _cli_opts_t {
+//	char* irs;
+//	char* ifs;
+//	char* ips;
+//	int   allow_repeat_ifs;
+//	int   allow_repeat_ips;
+//	int   use_implicit_csv_header;
+//	int   headerless_csv_output;
+//	int   use_mmap_for_read;
+//	char* ifile_fmt;
+//	char* ofile_fmt;
+//
+//	char* ors;
+//	char* ofs;
+//	char* ops;
+//
+//	int   right_justify_xtab_value;
+//
+//	char* ofmt;
+//	int   oquoting;
+//
+//	lrec_reader_t* plrec_reader;
+//	sllv_t*        pmapper_list;
+//	lrec_writer_t* plrec_writer;
+//
+//	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
+//	// files are read directly rather than through a pipe.
+//	char*  prepipe;
+//	// Null-terminated array:
+//	char** filenames;
+//
+//} cli_opts_t;
