@@ -56,6 +56,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv) {
 	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, counter_field_name);
 	return pmapper;
 }
+
 static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n");
@@ -80,6 +81,7 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 static void mapper_cat_free(void* pvstate) {
 	mapper_cat_state_t* pstate = pvstate;
 	ap_free(pstate->pargp);
+	free(pstate);
 }
 
 // ----------------------------------------------------------------
