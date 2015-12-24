@@ -84,6 +84,10 @@ lhms2v_t* lhms2v_alloc() {
 void lhms2v_free(lhms2v_t* pmap) {
 	if (pmap == NULL)
 		return;
+	for (lhms2ve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+		free(pe->key1);
+		free(pe->key2);
+	}
 	free(pmap->entries);
 	free(pmap->states);
 	pmap->entries      = NULL;
