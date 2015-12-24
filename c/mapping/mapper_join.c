@@ -292,20 +292,6 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
-	// $ cat a
-	// x=2
-	// a=3
-	//
-	// $ cat b
-	// a=1
-	//
-	// $ mlr join  -j a -f a b
-	// [rightrec] a=1
-	// mlr: internal coding error: failed transition from prefill state.
-
-	// printf("[rightrec] "); // XXX
-	// lrec_print(pright_rec);
-
 	sllv_t* pleft_records = NULL;
 	sllv_t* pbucket_left_unpaired = NULL;
 	sllv_t* pout_recs = sllv_alloc();
@@ -323,14 +309,9 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
 		pstate->popts->pright_join_field_names);
 
-	// printf("[right-field-values] "); // XXX
-	// slls_print(pright_field_values);
-	// printf("\n");
-
 	if (pright_field_values != NULL) {
-		// printf("pre-emit\n");
 		join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
-		// printf("post-emit\n");
+		slls_free(pright_field_values);
 	}
 
 	if (pstate->popts->emit_left_unpairables) {

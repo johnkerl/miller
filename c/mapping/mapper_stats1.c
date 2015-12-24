@@ -923,6 +923,7 @@ static void stats1_percentile_free(stats1_t* pstats1) {
 	pstate->reference_count--;
 	if (pstate->reference_count == 0) {
 		percentile_keeper_free(pstate->ppercentile_keeper);
+		lhmss_free(pstate->poutput_field_names);
 		free(pstate);
 		free(pstats1);
 	}
