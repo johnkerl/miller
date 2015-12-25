@@ -17,6 +17,10 @@ sed 's/^==.*== //' "$@" | swipe \
   | grep -v 'Using Valgrind' \
   | grep -v 'For counts of' \
   | mgrepv 'mlr_try_float_from_string' \
+  | mgrepv '__snprintf_chk' \
+  | mgrepv 'NXMapRemove' \
+  | mgrepv '_platform_memchr' \
+  | mgrepv 'xpc_pipe_routine' \
   | cat
 
   #| mgrepv 'parse_command_line'

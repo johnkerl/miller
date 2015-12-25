@@ -133,8 +133,9 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 		if (pstate->expect_header_line_next) {
 
 			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header_single_seps(phandle, pstate);
-			if (pheader_fields == NULL) // EOF
+			if (pheader_fields == NULL) { // EOF
 				return NULL;
+			}
 
 			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
 				if (*pe->value == 0) {
@@ -161,6 +162,12 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			:  lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate, pctx,
 				pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
+			//if (prec != NULL) {
+				//printf("XXXXXXXXXXXXXXXXXXXXXX\n");
+				//lrec_dump(prec);
+				//lrec_free(prec);
+				//printf("XXXXXXXXXXXXXXXXXXXXXX\n");
+			//}
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
 			return NULL;
