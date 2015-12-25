@@ -88,6 +88,7 @@ static void stdio_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepi
 	} else {
 		pclose(pstate->fp);
 	}
+	free(pstate->filename);
 	free(pstate);
 	pbr->pvstate = NULL;
 }
