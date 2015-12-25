@@ -353,6 +353,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 		if (*p == irs) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
+				lrec_free(prec);
 				return NULL;
 			}
 			*p = 0;
@@ -430,6 +431,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 		if (streqn(p, irs, irslen)) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
+				lrec_free(prec);
 				return NULL;
 			}
 			*p = 0;
@@ -507,6 +509,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 		if (*p == irs) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
+				lrec_free(prec);
 				return NULL;
 			}
 			*p = 0;
@@ -569,6 +572,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 		if (streqn(p, irs, irslen)) {
 			if (p == line) {
 				*pend_of_stanza = TRUE;
+				lrec_free(prec);
 				return NULL;
 			}
 			*p = 0;
