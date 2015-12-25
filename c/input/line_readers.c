@@ -11,6 +11,8 @@ char* mlr_get_cline(FILE* fp, char irs) {
 	size_t linecap = 0;
 	ssize_t linelen = getdelim(&line, &linecap, irs, fp);
 	if (linelen <= 0) {
+		if (line != NULL)
+			free(line);
 		return NULL;
 	}
 	if (line[linelen-1] == irs) { // chomp
