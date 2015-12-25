@@ -32,6 +32,8 @@
 //   and also use disposition matrices.  In all cases it's the job of
 //   the calling routines to invoke functions here with mlrvals of the correct
 //   type(s).
+//
+// See also important notes at the top of mlrval.h.
 // ================================================================
 
 // For some Linux distros, in spite of including time.h:
@@ -329,6 +331,7 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	mv_t rv = sub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), psb, pval3);
 	sb_free(psb);
 	regfree(&regex);
+	mv_free(pval2);
 	return rv;
 }
 
@@ -378,6 +381,7 @@ mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	mv_t rv = gsub_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), psb, pval3);
 	sb_free(psb);
 	regfree(&regex);
+	mv_free(pval2);
 	return rv;
 }
 
@@ -537,6 +541,7 @@ mv_t s_n_sec2gmt_func(mv_t* pval1) {
 }
 
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
+	// xxx free input strings
 	return time_string_from_seconds(pval1, pval2->u.strv);
 }
 
@@ -558,10 +563,12 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 }
 
 mv_t i_s_gmt2sec_func(mv_t* pval1) {
+	// xxx free input strings
 	return seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT);
 }
 
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
+	// xxx free input strings
 	return seconds_from_time_string(pval1->u.strv, pval2->u.strv);
 }
 
@@ -726,6 +733,7 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+// xxx free input strings
 mv_t i_s_hms2sec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
@@ -823,6 +831,7 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+// xxx free input strings
 mv_t i_s_strlen_func(mv_t* pval1) {
 	return mv_from_int(strlen_for_utf8_display(pval1->u.strv));
 }
@@ -1504,6 +1513,7 @@ static mv_t float_f_b(mv_t* pa) { return mv_from_float(pa->u.boolv ? 1.0 : 0.0);
 static mv_t float_f_f(mv_t* pa) { return mv_from_float(pa->u.fltv); }
 static mv_t float_f_i(mv_t* pa) { return mv_from_float((double)pa->u.intv); }
 static mv_t float_f_s(mv_t* pa) {
+// xxx free input strings
 	if (*pa->u.strv == '\0')
 		return MV_NULL;
 	mv_t retval = mv_from_float(0.0);
@@ -1672,6 +1682,7 @@ static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
+// xxx free input strings
 	char free_flags;
 	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) >= 0);
@@ -1907,7 +1918,6 @@ static mv_i_nn_comparator_func_t* ile_dispositions[MT_MAX][MT_MAX] = {
 	/*INT*/    {NULL, NULL, NULL, le_i_if, le_i_ii, NULL},
 	/*STRING*/ {NULL, NULL, NULL, NULL,    NULL,    NULL},
 };
-
 
 int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
