@@ -541,8 +541,9 @@ mv_t s_n_sec2gmt_func(mv_t* pval1) {
 }
 
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
-	// xxx free input strings
-	return time_string_from_seconds(pval1, pval2->u.strv);
+	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv);
+	mv_free(pval2);
+	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -563,13 +564,16 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 }
 
 mv_t i_s_gmt2sec_func(mv_t* pval1) {
-	// xxx free input strings
-	return seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT);
+	mv_t rv = seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT);
+	mv_free(pval1);
+	return rv;
 }
 
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
-	// xxx free input strings
-	return seconds_from_time_string(pval1->u.strv, pval2->u.strv);
+	mv_t rv = seconds_from_time_string(pval1->u.strv, pval2->u.strv);
+	mv_free(pval1);
+	mv_free(pval2);
+	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -733,7 +737,6 @@ mv_t s_f_fsec2dhms_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-// xxx free input strings
 mv_t i_s_hms2sec_func(mv_t* pval1) {
 	long long h = 0LL, m = 0LL, s = 0LL;
 	long long sec = 0LL;
@@ -756,8 +759,10 @@ mv_t i_s_hms2sec_func(mv_t* pval1) {
 	} else if (sscanf(p, "%lld", &s) == 1) {
 		sec = s;
 	} else {
+		mv_free(pval1);
 		return MV_ERROR;
 	}
+	mv_free(pval1);
 	return mv_from_int(sec * sign);
 }
 
@@ -778,8 +783,10 @@ mv_t f_s_hms2fsec_func(mv_t* pval1) {
 	} else if (sscanf(p, "%lf", &s) == 2) {
 		sec = s;
 	} else {
+		mv_free(pval1);
 		return MV_ERROR;
 	}
+	mv_free(pval1);
 	return mv_from_float(sec * sign);
 }
 
@@ -801,8 +808,10 @@ mv_t i_s_dhms2sec_func(mv_t* pval1) {
 	} else if (sscanf(p, "%llds", &s) == 1) {
 		sec = s;
 	} else {
+		mv_free(pval1);
 		return MV_ERROR;
 	}
+	mv_free(pval1);
 	return mv_from_int(sec * sign);
 }
 
@@ -825,15 +834,18 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	} else if (sscanf(p, "%lfs", &s) == 1) {
 		sec = s;
 	} else {
+		mv_free(pval1);
 		return MV_ERROR;
 	}
+	mv_free(pval1);
 	return mv_from_float(sec * sign);
 }
 
 // ----------------------------------------------------------------
-// xxx free input strings
 mv_t i_s_strlen_func(mv_t* pval1) {
-	return mv_from_int(strlen_for_utf8_display(pval1->u.strv));
+	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
+	mv_free(pval1);
+	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -1487,11 +1499,16 @@ static mv_t int_i_b(mv_t* pa) { return mv_from_int(pa->u.boolv ? 1 : 0); }
 static mv_t int_i_f(mv_t* pa) { return mv_from_int((long long)round(pa->u.fltv)); }
 static mv_t int_i_i(mv_t* pa) { return mv_from_int(pa->u.intv); }
 static mv_t int_i_s(mv_t* pa) {
-	if (*pa->u.strv == '\0')
+	if (*pa->u.strv == '\0') {
+		mv_free(pa);
 		return MV_NULL;
+	}
 	mv_t retval = mv_from_int(0LL);
-	if (!mlr_try_int_from_string(pa->u.strv, &retval.u.intv))
+	if (!mlr_try_int_from_string(pa->u.strv, &retval.u.intv)) {
+		mv_free(pa);
 		return MV_ERROR;
+	}
+	mv_free(pa);
 	return retval;
 }
 
@@ -1513,12 +1530,16 @@ static mv_t float_f_b(mv_t* pa) { return mv_from_float(pa->u.boolv ? 1.0 : 0.0);
 static mv_t float_f_f(mv_t* pa) { return mv_from_float(pa->u.fltv); }
 static mv_t float_f_i(mv_t* pa) { return mv_from_float((double)pa->u.intv); }
 static mv_t float_f_s(mv_t* pa) {
-// xxx free input strings
-	if (*pa->u.strv == '\0')
+	if (*pa->u.strv == '\0') {
+		mv_free(pa);
 		return MV_NULL;
+	}
 	mv_t retval = mv_from_float(0.0);
-	if (!mlr_try_float_from_string(pa->u.strv, &retval.u.fltv))
+	if (!mlr_try_float_from_string(pa->u.strv, &retval.u.fltv)) {
+		mv_free(pa);
 		return MV_ERROR;
+	}
+	mv_free(pa);
 	return retval;
 }
 
@@ -1657,6 +1678,7 @@ static  mv_t ge_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >= pb-
 static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb->u.fltv); }
 static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
 
+// xxx free input strings while avoiding double-frees
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
 	char* a = mv_format_val(pa, &free_flags);
@@ -1682,12 +1704,13 @@ static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
-// xxx free input strings
 	char free_flags;
 	char* a = mv_format_val(pa, &free_flags);
 	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) >= 0);
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(a);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
