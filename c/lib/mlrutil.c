@@ -518,7 +518,9 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 	}
 }
 
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int *pmatched, int* pall_captured, unsigned char* pfree_flags) {
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
+	int *pmatched, int* pall_captured, unsigned char* pfree_flags)
+{
 	const size_t nmatch = 10;
 	regmatch_t matches[nmatch];
 	*pmatched = FALSE;
@@ -559,7 +561,10 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		int replen = psb->used_length - len1;
 		sb_append_chars(psb, current_input, match_start + matches[0].rm_eo, strlen(current_input));
 
-		current_input = sb_finish(psb);
+		char* next_input = sb_finish(psb);
+		if (*pfree_flags & FREE_ENTRY_VALUE)
+			free(current_input);
+		current_input = next_input;
 		*pfree_flags = FREE_ENTRY_VALUE;
 
 		match_start += matches[0].rm_so + replen;
