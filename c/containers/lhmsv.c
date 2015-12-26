@@ -244,7 +244,9 @@ static void lhmsv_enlarge(lhmsv_t* pmap) {
 	lhmsv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
+		// xxx implement free-flags here so we can do this without the redundant strdups
 		lhmsv_put_no_enlarge(pmap, pe->key, pe->pvvalue);
+		free(pe->key);
 	}
 	free(old_entries);
 	free(old_states);

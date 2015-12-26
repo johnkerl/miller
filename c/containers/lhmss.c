@@ -181,11 +181,11 @@ char* lhmss_get(lhmss_t* pmap, char* key) {
 	int index = lhmss_find_index_for_key(pmap, key);
 	lhmsse_t* pe = &pmap->entries[index];
 
-	if (pmap->states[index] == OCCUPIED)
+	if (pmap->states[index] == OCCUPIED) {
 		return pe->value;
-	else if (pmap->states[index] == EMPTY)
+	} else if (pmap->states[index] == EMPTY) {
 		return NULL;
-	else {
+	} else {
 		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
@@ -254,7 +254,10 @@ static void lhmss_enlarge(lhmss_t* pmap) {
 	lhmss_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsse_t* pe = old_head; pe != NULL; pe = pe->pnext) {
+		// xxx implement free-flags here so we can do this without the redundant strdups
 		lhmss_put_no_enlarge(pmap, pe->key, pe->value);
+		free(pe->key);
+		free(pe->value);
 	}
 	free(old_entries);
 	free(old_states);

@@ -288,7 +288,9 @@ static void lhmsi_enlarge(lhmsi_t* pmap) {
 	lhmsi_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsie_t* pe = old_head; pe != NULL; pe = pe->pnext) {
+		// xxx implement free-flags here so we can do this without the redundant strdups
 		lhmsi_put_no_enlarge(pmap, pe->key, pe->value);
+		free(pe->key);
 	}
 	free(old_entries);
 	free(old_states);

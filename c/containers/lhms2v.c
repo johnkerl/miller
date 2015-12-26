@@ -278,7 +278,10 @@ static void lhms2v_enlarge(lhms2v_t* pmap) {
 	lhms2v_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhms2ve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
+		// xxx implement free-flags here so we can do this without the redundant strdups
 		lhms2v_put_no_enlarge(pmap, pe->key1, pe->key2, pe->pvvalue);
+		free(pe->key1);
+		free(pe->key2);
 	}
 	free(old_entries);
 	free(old_states);
