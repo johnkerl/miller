@@ -2014,9 +2014,13 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 
 	if (regmatch_or_die(&regex, sstr, 0, NULL)) {
 		regfree(&regex);
+		mv_free(pval1);
+		mv_free(pval2);
 		return mv_from_true();
 	} else {
 		regfree(&regex);
+		mv_free(pval1);
+		mv_free(pval2);
 		return mv_from_false();
 	}
 }
@@ -2031,8 +2035,10 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
 	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) {
+		mv_free(pval1);
 		return mv_from_true();
 	} else {
+		mv_free(pval1);
 		return mv_from_false();
 	}
 }
