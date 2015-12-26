@@ -21,6 +21,10 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'NXMapRemove' \
   | mgrepv '_platform_memchr' \
   | mgrepv 'xpc_pipe_routine' \
+  | mgrepv 'filter_dsl_lexer_lex' \
+  | mgrepv 'put_dsl_lexer_lex' \
+  | mgrepv 'filter_dsl_parse' \
+  | mgrepv 'put_dsl_parse' \
   | cat
 
   #| mgrepv 'parse_command_line'
