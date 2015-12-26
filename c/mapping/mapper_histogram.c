@@ -140,9 +140,11 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 static void mapper_histogram_free(mapper_t* pmapper) {
 	mapper_histogram_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->value_field_names);
-	for (lhmsve_t* pe = pstate->pcounts_by_field->phead; pe != NULL; pe = pe->pnext) {
-		unsigned long long* pcounts = pe->pvvalue;
-		free(pcounts);
+	if (pstate->pcounts_by_field != NULL) {
+		for (lhmsve_t* pe = pstate->pcounts_by_field->phead; pe != NULL; pe = pe->pnext) {
+			unsigned long long* pcounts = pe->pvvalue;
+			free(pcounts);
+		}
 	}
 	lhmsv_free(pstate->pcounts_by_field);
 	ap_free(pstate->pargp);
