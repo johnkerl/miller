@@ -157,6 +157,9 @@ static void lrec_reader_stdio_csv_free(lrec_reader_t* preader) {
 	parse_trie_free(pstate->pdquote_parse_trie);
 	rslls_free(pstate->pfields);
 	sb_free(pstate->psb);
+	free(pstate->ifs_eof);
+	free(pstate->dquote_irs);
+	free(pstate->dquote_ifs);
 	free(pstate);
 	free(preader);
 }
