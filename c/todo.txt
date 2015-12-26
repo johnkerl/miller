@@ -6,8 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* since 3.1.2:
-  - read perf
+* make a 3.2.2 once mem-mgmt cleanup + misc are done. new since 3.1.2:
+  - read perf, esp. csv
   - ${...}
   - compression support
   - uniq streaming
@@ -26,8 +26,6 @@ TOP OF LIST
   - xxxes
   - more rid of "double" in fcn names
   - lhmss incorporate free-flags as with slls?
-  ! parse_command_line @ vg
-    ! all lrec-eval-frees: take level-up pointer as arg
   ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
   ! join
 * profile new streqn vs. strncmp ...

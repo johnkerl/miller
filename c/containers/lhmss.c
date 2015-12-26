@@ -148,10 +148,10 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value) {
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (streq(pe->key, key)) {
+			free(pe->value);
 			pe->value = mlr_strdup_or_die(value);
 		}
-	}
-	else if (pmap->states[index] == EMPTY) {
+	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
 		pe->key = mlr_strdup_or_die(key);
@@ -170,8 +170,7 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value) {
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
-	}
-	else {
+	} else {
 		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
 		exit(1);
 	}
