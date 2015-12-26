@@ -1678,113 +1678,164 @@ static  mv_t ge_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >= pb-
 static  mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb->u.fltv); }
 static  mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
 
-// xxx free input strings while avoiding double-frees
 static  mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) == 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) == 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) != 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) != 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) > 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) > 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) >= 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) >= 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
 	mv_free(pa);
 	mv_free(pb);
 	return rv;
 }
 static  mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) < 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) < 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t le_b_xs(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* a = mv_format_val(pa, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(a, pb->u.strv) <= 0);
+	char* sa = mv_format_val(pa, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) <= 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(a);
+		free(sa);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 
 static  mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) == 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) == 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) != 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) != 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) > 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) > 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) >= 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) >= 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) < 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) < 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 static  mv_t le_b_sx(mv_t* pa, mv_t* pb) {
 	char free_flags;
-	char* b = mv_format_val(pb, &free_flags);
-	mv_t rv = mv_from_bool(strcmp(pa->u.strv, b) <= 0);
+	char* sb = mv_format_val(pb, &free_flags);
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) <= 0);
 	if (free_flags & FREE_ENTRY_VALUE)
-		free(b);
+		free(sb);
+	mv_free(pa);
+	mv_free(pb);
 	return rv;
 }
 
-static mv_t eq_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) == 0);}
-static mv_t ne_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) != 0);}
-static mv_t gt_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >  0);}
-static mv_t ge_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >= 0);}
-static mv_t lt_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <  0);}
-static mv_t le_b_ss(mv_t*pa, mv_t*pb) {return mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <= 0);}
+static mv_t eq_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) == 0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
+static mv_t ne_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) != 0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
+static mv_t gt_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >  0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
+static mv_t ge_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >= 0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
+static mv_t lt_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <  0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
+static mv_t le_b_ss(mv_t*pa, mv_t*pb) {
+	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <= 0);
+	mv_free(pa);
+	mv_free(pb);
+	return rv;
+}
 
 static mv_binary_func_t* eq_dispositions[MT_MAX][MT_MAX] = {
 	//         NULL      ERROR    BOOL     FLOAT   INT      STRING
