@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <time.h>
 #include <regex.h>
@@ -37,7 +38,7 @@
 // ================================================================
 
 // For some Linux distros, in spite of including time.h:
-char *strptime(const char *s, const char *format, struct tm *tm);
+char *strptime(const char *s, const char *format, struct tm *ptm);
 
 typedef int mv_i_nn_comparator_func_t(mv_t* pa, mv_t* pb);
 typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
@@ -552,10 +553,16 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 		return MV_NULL;
 	} else {
 		struct tm tm;
+		memset(&tm, 0, sizeof(tm));
 		char* retval = strptime(time, format, &tm);
 		if (retval == NULL) {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+		if (*retval != 0) { // Parseable input followed by non-parseable
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d: unparseable trailer \"%s\".\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__, retval);
 			exit(1);
 		}
 		time_t t = mlr_timegm(&tm);

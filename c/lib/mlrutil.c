@@ -249,14 +249,14 @@ int mlr_string_pair_hash_func(char* str1, char* str2) {
 
 // ----------------------------------------------------------------
 // See the GNU timegm manpage -- this is what it does.
-time_t mlr_timegm(struct tm* tm) {
+time_t mlr_timegm(struct tm* ptm) {
 	time_t ret;
 	char* tz;
 
 	tz = getenv("TZ");
 	setenv("TZ", "GMT0", 1);
 	tzset();
-	ret = mktime(tm);
+	ret = mktime(ptm);
 	if (tz) {
 		setenv("TZ", tz, 1);
 	} else {

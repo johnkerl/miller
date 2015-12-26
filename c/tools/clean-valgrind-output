@@ -21,7 +21,7 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'NXMapRemove' \
   | mgrepv '_platform_memchr' \
   | mgrepv 'xpc_pipe_routine' \
-  | mgrepv 'MACH_SEND_TRAILER' \
+  | grep -v 'MACH_SEND_TRAILER' \
   | mgrepv 'filter_dsl_lexer_lex' \
   | mgrepv 'put_dsl_lexer_lex' \
   | mgrepv 'filter_dsl_parse' \

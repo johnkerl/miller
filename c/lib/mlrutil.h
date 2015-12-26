@@ -110,7 +110,7 @@ int mlr_string_hash_func(char *str);
 int mlr_string_pair_hash_func(char* str1, char* str2);
 
 // portable timegm replacement
-time_t mlr_timegm (struct tm *tm);
+time_t mlr_timegm (struct tm *ptm);
 
 int strlen_for_utf8_display(char* str);
 int string_starts_with(char* string, char* prefix);
