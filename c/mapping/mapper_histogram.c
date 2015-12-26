@@ -145,14 +145,15 @@ static void mapper_histogram_free(mapper_t* pmapper) {
 			unsigned long long* pcounts = pe->pvvalue;
 			free(pcounts);
 		}
+		lhmsv_free(pstate->pcounts_by_field);
 	}
 	if (pstate->pvectors_by_field != NULL) {
 		for (lhmsve_t* pe = pstate->pvectors_by_field->phead; pe != NULL; pe = pe->pnext) {
 			dvector_t* pvector = pe->pvvalue;
 			dvector_free(pvector);
 		}
+		lhmsv_free(pstate->pvectors_by_field);
 	}
-	lhmsv_free(pstate->pcounts_by_field);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
