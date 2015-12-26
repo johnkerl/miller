@@ -47,9 +47,10 @@ mv_t lrec_evaluator_b_b_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_b_b_free(void* pvstate) {
-	lrec_evaluator_b_b_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_b_b_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_b_b_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -88,10 +89,11 @@ mv_t lrec_evaluator_b_bb_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_b_bb_free(void* pvstate) {
-	lrec_evaluator_b_bb_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_b_bb_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_b_bb_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_func(mv_binary_func_t* pfunc,
@@ -120,7 +122,8 @@ mv_t lrec_evaluator_x_z_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc();
 }
-static void lrec_evaluator_x_z_free(void* pvstate) {
+static void lrec_evaluator_x_z_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_z_func(mv_zary_func_t* pfunc) {
@@ -152,9 +155,10 @@ mv_t lrec_evaluator_f_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_f_f_free(void* pvstate) {
-	lrec_evaluator_f_f_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_f_f_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_f_f_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_f_f_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -185,9 +189,10 @@ mv_t lrec_evaluator_x_n_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_x_n_free(void* pvstate) {
-	lrec_evaluator_x_n_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_x_n_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_n_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_n_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -218,9 +223,10 @@ mv_t lrec_evaluator_i_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_i_i_free(void* pvstate) {
-	lrec_evaluator_i_i_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_i_i_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_i_i_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_i_i_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -255,10 +261,11 @@ mv_t lrec_evaluator_f_ff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_f_ff_free(void* pvstate) {
-	lrec_evaluator_f_ff_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_f_ff_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_f_ff_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
@@ -297,10 +304,11 @@ mv_t lrec_evaluator_n_nn_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_n_nn_free(void* pvstate) {
-	lrec_evaluator_n_nn_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_n_nn_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_n_nn_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_func(mv_binary_func_t* pfunc,
@@ -342,10 +350,11 @@ mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, context_t* pctx, void* pvst
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_n_nn_nullable_free(void* pvstate) {
-	lrec_evaluator_n_nn_nullable_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_n_nn_nullable_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_n_nn_nullable_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
 	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_n_nn_nullable_func(mv_binary_func_t* pfunc,
@@ -388,11 +397,12 @@ mv_t lrec_evaluator_f_fff_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
-static void lrec_evaluator_f_fff_free(void* pvstate) {
-	lrec_evaluator_f_fff_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
-	pstate->parg3->pfree_func(pstate->parg3->pvstate);
+static void lrec_evaluator_f_fff_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_f_fff_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	pstate->parg3->pfree_func(pstate->parg3);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_f_fff_func(mv_ternary_func_t* pfunc,
@@ -437,10 +447,11 @@ mv_t lrec_evaluator_i_ii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_i_ii_free(void* pvstate) {
-	lrec_evaluator_i_ii_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_i_ii_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_i_ii_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_i_ii_func(mv_binary_func_t* pfunc,
@@ -492,11 +503,12 @@ mv_t lrec_evaluator_i_iii_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
-static void lrec_evaluator_i_iii_free(void* pvstate) {
-	lrec_evaluator_i_iii_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
-	pstate->parg3->pfree_func(pstate->parg3->pvstate);
+static void lrec_evaluator_i_iii_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_i_iii_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	pstate->parg3->pfree_func(pstate->parg3);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_i_iii_func(mv_ternary_func_t* pfunc,
@@ -531,9 +543,10 @@ mv_t lrec_evaluator_s_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_s_s_free(void* pvstate) {
-	lrec_evaluator_s_s_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_s_s_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_s_s_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_s_s_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -564,9 +577,10 @@ mv_t lrec_evaluator_s_f_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_s_f_free(void* pvstate) {
-	lrec_evaluator_s_f_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_s_f_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_s_f_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_s_f_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -597,9 +611,10 @@ mv_t lrec_evaluator_s_i_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_s_i_free(void* pvstate) {
-	lrec_evaluator_s_i_state_t* pstate = pvstate;
+static void lrec_evaluator_s_i_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_s_i_state_t* pstate = pevaluator->pvstate;
 	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_s_i_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -630,9 +645,10 @@ mv_t lrec_evaluator_f_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_f_s_free(void* pvstate) {
-	lrec_evaluator_f_s_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_f_s_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_f_s_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_f_s_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -663,9 +679,10 @@ mv_t lrec_evaluator_i_s_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_i_s_free(void* pvstate) {
-	lrec_evaluator_i_s_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_i_s_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_i_s_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -694,9 +711,10 @@ mv_t lrec_evaluator_x_x_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1);
 }
-static void lrec_evaluator_x_x_free(void* pvstate) {
-	lrec_evaluator_x_x_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_x_x_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_x_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, lrec_evaluator_t* parg1) {
@@ -725,10 +743,11 @@ mv_t lrec_evaluator_b_xx_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	mv_t val2 = pstate->parg2->pprocess_func(prec, pctx, pstate->parg2->pvstate);
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_b_xx_free(void* pvstate) {
-	lrec_evaluator_b_xx_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_b_xx_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_b_xx_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_b_xx_func(mv_binary_func_t* pfunc,
@@ -769,10 +788,11 @@ mv_t lrec_evaluator_x_ns_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_x_ns_free(void* pvstate) {
-	lrec_evaluator_x_ns_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_x_ns_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_ns_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_ns_func(mv_binary_func_t* pfunc,
@@ -812,10 +832,11 @@ mv_t lrec_evaluator_x_ss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_x_ss_free(void* pvstate) {
-	lrec_evaluator_x_ss_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_x_ss_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_ss_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_ss_func(mv_binary_func_t* pfunc,
@@ -851,11 +872,12 @@ mv_t lrec_evaluator_x_sr_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &pstate->regex, pstate->psb);
 }
-static void lrec_evaluator_x_sr_free(void* pvstate) {
-	lrec_evaluator_x_sr_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_x_sr_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_sr_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
 	regfree(&pstate->regex);
 	sb_free(pstate->psb);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_t* pfunc,
@@ -895,10 +917,11 @@ mv_t lrec_evaluator_s_xs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2);
 }
-static void lrec_evaluator_s_xs_free(void* pvstate) {
-	lrec_evaluator_s_xs_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
+static void lrec_evaluator_s_xs_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_s_xs_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_s_xs_func(mv_binary_func_t* pfunc,
@@ -949,11 +972,12 @@ mv_t lrec_evaluator_s_sss_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
-static void lrec_evaluator_s_sss_free(void* pvstate) {
-	lrec_evaluator_s_sss_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
-	pstate->parg2->pfree_func(pstate->parg2->pvstate);
-	pstate->parg3->pfree_func(pstate->parg3->pvstate);
+static void lrec_evaluator_s_sss_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_s_sss_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	pstate->parg3->pfree_func(pstate->parg3);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_s_sss_func(mv_ternary_func_t* pfunc,
@@ -999,12 +1023,13 @@ mv_t lrec_evaluator_x_srs_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 
 	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, &val3);
 }
-static void lrec_evaluator_x_srs_free(void* pvstate) {
-	lrec_evaluator_x_srs_state_t* pstate = pvstate;
-	pstate->parg1->pfree_func(pstate->parg1->pvstate);
+static void lrec_evaluator_x_srs_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_x_srs_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
 	regfree(&pstate->regex);
-	pstate->parg3->pfree_func(pstate->parg3->pvstate);
+	pstate->parg3->pfree_func(pstate->parg3);
 	sb_free(pstate->psb);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
@@ -1079,9 +1104,10 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pc
 		}
 	}
 }
-static void lrec_evaluator_field_name_free(void* pvstate) {
-	lrec_evaluator_field_name_state_t* pstate = pvstate;
+static void lrec_evaluator_field_name_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_field_name_state_t* pstate = pevaluator->pvstate;
 	free(pstate->field_name);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_field_name(char* field_name, int type_inferencing) {
@@ -1126,9 +1152,10 @@ mv_t lrec_evaluator_string_literal_func(lrec_t* prec, context_t* pctx, void* pvs
 	lrec_evaluator_literal_state_t* pstate = pvstate;
 	return mv_from_string_no_free(pstate->literal.u.strv);
 }
-static void lrec_evaluator_literal_free(void* pvstate) {
-	lrec_evaluator_literal_state_t* pstate = pvstate;
+static void lrec_evaluator_literal_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_literal_state_t* pstate = pevaluator->pvstate;
 	mv_free(&pstate->literal);
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_inferencing) {
@@ -1189,7 +1216,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 mv_t lrec_evaluator_NF_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_int(prec->field_count);
 }
-static void lrec_evaluator_NF_free(void* pvstate) {
+static void lrec_evaluator_NF_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1203,7 +1231,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 mv_t lrec_evaluator_NR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_int(pctx->nr);
 }
-static void lrec_evaluator_NR_free(void* pvstate) {
+static void lrec_evaluator_NR_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1217,7 +1246,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 mv_t lrec_evaluator_FNR_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_int(pctx->fnr);
 }
-static void lrec_evaluator_FNR_free(void* pvstate) {
+static void lrec_evaluator_FNR_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1231,7 +1261,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_string_no_free(pctx->filename);
 }
-static void lrec_evaluator_FILENAME_free(void* pvstate) {
+static void lrec_evaluator_FILENAME_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
@@ -1246,7 +1277,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 mv_t lrec_evaluator_FILENUM_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_int(pctx->filenum);
 }
-static void lrec_evaluator_FILENUM_free(void* pvstate) {
+static void lrec_evaluator_FILENUM_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1260,7 +1292,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 mv_t lrec_evaluator_PI_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_float(M_PI);
 }
-static void lrec_evaluator_PI_free(void* pvstate) {
+static void lrec_evaluator_PI_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
@@ -1274,7 +1307,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 mv_t lrec_evaluator_E_func(lrec_t* prec, context_t* pctx, void* pvstate) {
 	return mv_from_float(M_E);
 }
-static void lrec_evaluator_E_free(void* pvstate) {
+static void lrec_evaluator_E_free(lrec_evaluator_t* pevaluator) {
+	free(pevaluator);
 }
 lrec_evaluator_t* lrec_evaluator_alloc_from_E() {
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));

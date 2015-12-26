@@ -119,7 +119,7 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past
 
 static void mapper_filter_free(mapper_t* pmapper) {
 	mapper_filter_state_t* pstate = pmapper->pvstate;
-	pstate->pevaluator->pfree_func(pstate->pevaluator->pvstate);
+	pstate->pevaluator->pfree_func(pstate->pevaluator);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);

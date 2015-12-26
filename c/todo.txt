@@ -27,6 +27,7 @@ TOP OF LIST
   - more rid of "double" in fcn names
   - lhmss incorporate free-flags as with slls?
   ! parse_command_line @ vg
+    ! all lrec-eval-frees: take level-up pointer as arg
   ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
   ! join
 * profile new streqn vs. strncmp ...
@@ -195,6 +196,9 @@ look-ats:
 * https://github.com/pydata/pandas/blob/master/pandas/io/tests/test_parsers.py
 * https://drill.apache.org
 * https://github.com/dbro/csvquote
+
+shell: mlr put '$z=$x+$y'
+lldb:  run put "\$z=\$x+\$y"
 
 ----------------------------------------------------------------
 git remote add upstream https://github.com/Homebrew/homebrew

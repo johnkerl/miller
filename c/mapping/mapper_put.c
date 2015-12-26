@@ -150,7 +150,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	free(pstate->output_field_names);
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
-		pevaluator->pfree_func(pevaluator->pvstate);
+		pevaluator->pfree_func(pevaluator);
 	}
 	free(pstate->pevaluators);
 	ap_free(pstate->pargp);
