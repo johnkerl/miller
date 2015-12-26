@@ -59,7 +59,7 @@ static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pvalue_field_names = NULL;
+	slls_t* value_field_names = NULL;
 	double lo = 0.0;
 	double hi = 0.0;
 	int nbins = 0;
@@ -68,18 +68,18 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_float_flag(pstate, "--lo",    &lo);
-	ap_define_float_flag(pstate, "--hi",    &hi);
-	ap_define_int_flag(pstate,   "--nbins", &nbins);
-	ap_define_true_flag(pstate,  "--auto",  &do_auto);
+	ap_define_string_list_flag(pstate, "-f", &value_field_names);
+	ap_define_float_flag(pstate, "--lo",     &lo);
+	ap_define_float_flag(pstate, "--hi",     &hi);
+	ap_define_int_flag(pstate,   "--nbins",  &nbins);
+	ap_define_true_flag(pstate,  "--auto",   &do_auto);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	if (pvalue_field_names == NULL) {
+	if (value_field_names == NULL) {
 		mapper_histogram_usage(stderr, argv[0], verb);
 		return NULL;
 	}
@@ -94,7 +94,7 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_histogram_alloc(pstate, pvalue_field_names, lo, nbins, hi, do_auto);
+	return mapper_histogram_alloc(pstate, value_field_names, lo, nbins, hi, do_auto);
 }
 
 // ----------------------------------------------------------------
@@ -106,7 +106,7 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 	mapper_histogram_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_histogram_state_t));
 
 	pstate->pargp = pargp;
-	pstate->value_field_names = slls_copy(value_field_names);
+	pstate->value_field_names = value_field_names;
 	pstate->nbins = nbins;
 	pstate->pcounts_by_field = lhmsv_alloc();
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
@@ -139,8 +139,11 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 
 static void mapper_histogram_free(mapper_t* pmapper) {
 	mapper_histogram_state_t* pstate = pmapper->pvstate;
-	if (pstate->value_field_names != NULL)
-		slls_free(pstate->value_field_names);
+	slls_free(pstate->value_field_names);
+	for (lhmsve_t* pe = pstate->pcounts_by_field->phead; pe != NULL; pe = pe->pnext) {
+		unsigned long long* pcounts = pe->pvvalue;
+		free(pcounts);
+	}
 	lhmsv_free(pstate->pcounts_by_field);
 	ap_free(pstate->pargp);
 	free(pstate);
