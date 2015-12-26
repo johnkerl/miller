@@ -25,6 +25,7 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'put_dsl_lexer_lex' \
   | mgrepv 'filter_dsl_parse' \
   | mgrepv 'put_dsl_parse' \
+  | mgrepv 'unbackslash' \
   | cat
 
   #| mgrepv 'parse_command_line'

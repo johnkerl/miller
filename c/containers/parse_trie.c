@@ -39,6 +39,7 @@ static void parse_trie_free_node_descendants(parse_trie_node_t* pnode) {
 void parse_trie_free(parse_trie_t* ptrie) {
 	parse_trie_free_node_descendants(ptrie->proot);
 	free(ptrie->proot);
+	free(ptrie);
 }
 
 // ----------------------------------------------------------------
