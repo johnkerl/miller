@@ -8,6 +8,7 @@
 
 typedef struct _mapper_filter_state_t {
 	ap_state_t* pargp;
+	mlr_dsl_ast_node_t* past;
 	lrec_evaluator_t* pevaluator;
 	int do_exclude;
 } mapper_filter_state_t;
@@ -105,6 +106,7 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 
 	pstate->pargp      = pargp;
+	pstate->past       = past;
 	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 	pstate->do_exclude = do_exclude;
 
@@ -121,6 +123,7 @@ static void mapper_filter_free(mapper_t* pmapper) {
 	mapper_filter_state_t* pstate = pmapper->pvstate;
 	pstate->pevaluator->pfree_func(pstate->pevaluator);
 	ap_free(pstate->pargp);
+	mlr_dsl_ast_node_free(pstate->past);
 	free(pstate);
 	free(pmapper);
 }

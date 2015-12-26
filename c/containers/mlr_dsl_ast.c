@@ -99,3 +99,16 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	default: return "???";
 	}
 }
+
+// ----------------------------------------------------------------
+void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode) {
+	if (pnode->pchildren) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvdata;
+			mlr_dsl_ast_node_free(pchild);
+		}
+		sllv_free(pnode->pchildren);
+	}
+	free(pnode->text);
+	free(pnode);
+}

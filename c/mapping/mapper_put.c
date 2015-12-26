@@ -9,6 +9,7 @@
 
 typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
+	sllv_t* pasts;
 	int num_evaluators;
 	char** output_field_names;
 	lrec_evaluator_t** pevaluators;
@@ -97,6 +98,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
+	pstate->pasts = pasts;
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
@@ -148,12 +150,21 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 	free(pstate->output_field_names);
+
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
 		pevaluator->pfree_func(pevaluator);
 	}
 	free(pstate->pevaluators);
+
+	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* past = pe->pvdata;
+		mlr_dsl_ast_node_free(past);
+	}
+	sllv_free(pstate->pasts);
+
 	ap_free(pstate->pargp);
+
 	free(pstate);
 	free(pmapper);
 }

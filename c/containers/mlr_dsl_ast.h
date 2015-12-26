@@ -48,4 +48,6 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
 char* mlr_dsl_ast_node_describe_type(int type);
 
+void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
+
 #endif // MLR_DSL_AST_H

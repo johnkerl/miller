@@ -1089,7 +1089,7 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, context_t* pctx, v
 	if (string == NULL) {
 		return MV_NULL;
 	} else {
-		// string points into lrec memory and is valid as long as the lrec is.
+		// string points into AST memory and is valid as long as the AST is.
 		return mv_from_string_no_free(string);
 	}
 }
@@ -1104,7 +1104,7 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, context_t* pctx, 
 		if (mlr_try_float_from_string(string, &fltv)) {
 			return mv_from_float(fltv);
 		} else {
-			// string points into lrec memory and is valid as long as the lrec is.
+			// string points into AST memory and is valid as long as the AST is.
 			return mv_from_string_no_free(string);
 		}
 	}
@@ -1123,7 +1123,7 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, context_t* pc
 		} else if (mlr_try_float_from_string(string, &fltv)) {
 			return mv_from_float(fltv);
 		} else {
-			// string points into lrec memory and is valid as long as the lrec is.
+			// string points into AST memory and is valid as long as the AST is.
 			return mv_from_string_no_free(string);
 		}
 	}
