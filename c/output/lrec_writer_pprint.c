@@ -86,8 +86,10 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 
 // ----------------------------------------------------------------
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align) {
-	if (precords->length == 0)
+	if (precords->length == 0) {
+		sllv_free(precords);
 		return;
+	}
 	lrec_t* prec1 = precords->phead->pvdata;
 
 	int* max_widths = mlr_malloc_or_die(sizeof(int) * prec1->field_count);
