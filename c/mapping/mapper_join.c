@@ -361,6 +361,10 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			sllv_add(poutrecs, NULL);
 			return poutrecs;
 		} else {
+			while (pstate->pleft_unpaired_records->phead) {
+				lrec_t* prec = sllv_pop(pstate->pleft_unpaired_records);
+				lrec_free(prec);
+			}
 			return sllv_single(NULL);
 		}
 	}
