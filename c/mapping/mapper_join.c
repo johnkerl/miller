@@ -251,6 +251,10 @@ static void mapper_join_free(mapper_t* pmapper) {
 		for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
 			join_bucket_t* pbucket = pe->pvvalue;
 			slls_free(pbucket->pleft_field_values);
+			while (pbucket->precords->phead) {
+				lrec_t* prec = sllv_pop(pbucket->precords);
+				lrec_free(prec);
+			}
 			sllv_free(pbucket->precords);
 			free(pbucket);
 		}
@@ -373,8 +377,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 	}
 
-	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
-		pstate->popts->pright_join_field_names);
+	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_join_field_names);
 	if (pright_field_values != NULL) {
 		join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
 		slls_free(pright_field_values);
