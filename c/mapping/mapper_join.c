@@ -515,8 +515,9 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 				join_bucket_t* pbucket = mlr_malloc_or_die(sizeof(join_bucket_t));
 				pbucket->precords = sllv_alloc();
 				pbucket->was_paired = FALSE;
-				sllv_add(pbucket->precords, pleft_rec);
+				pbucket->pleft_field_values = slls_copy(pleft_field_values);
 				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket);
+				sllv_add(pbucket->precords, pleft_rec);
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pleft_rec);
 			}
