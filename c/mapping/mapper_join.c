@@ -306,6 +306,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		return pout_recs;
 	}
 
+	int produced_right = FALSE;
 	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
 		pstate->popts->pright_join_field_names);
 
@@ -324,6 +325,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	if (pstate->popts->emit_right_unpairables) {
 		if (pleft_records == NULL || pleft_records->length == 0) {
 			sllv_add(pout_recs, pright_rec);
+			produced_right = TRUE;
 		}
 	}
 
@@ -331,6 +333,8 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		mapper_join_form_pairs(pleft_records, pright_rec, pstate, pout_recs);
 	}
 
+	if (!produced_right)
+		lrec_free(pright_rec);
 	return pout_recs;
 }
 
@@ -378,21 +382,25 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 			if (pstate->popts->emit_right_unpairables) {
 				return sllv_single(pright_rec);
 			} else {
+				lrec_free(pright_rec);
 				return NULL;
 			}
 		} else if (pstate->popts->emit_pairables) {
 			sllv_t* pout_recs = sllv_alloc();
 			pleft_bucket->was_paired = TRUE;
 			mapper_join_form_pairs(pleft_bucket->precords, pright_rec, pstate, pout_recs);
+			lrec_free(pright_rec);
 			return pout_recs;
 		} else {
 			pleft_bucket->was_paired = TRUE;
+			lrec_free(pright_rec);
 			return NULL;
 		}
 	} else {
 		if (pstate->popts->emit_right_unpairables) {
 			return sllv_single(pright_rec);
 		} else {
+			lrec_free(pright_rec);
 			return NULL;
 		}
 	}
