@@ -16,12 +16,11 @@ TOP OF LIST
 * wiz/veith ack @ dox x 2
 * ruby @ optextdep @ mld; poki+mkman
 * rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
-! --rs lf splatters
-  - termcvt flins & rework that page
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
 * debian screenshot
+* termcvt flins & rework that page
 
 * mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
   - xxxes
