@@ -305,6 +305,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_transfer(pout_recs, pbucket_left_unpaired);
 		}
+		// pleft_records are not caller-owned; we don't free them.
 		sllv_free(pbucket_left_unpaired);
 		sllv_add(pout_recs, NULL);
 		return pout_recs;
@@ -338,6 +339,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	if (!produced_right)
 		lrec_free(pright_rec);
+	// pleft_records are not caller-owned; we don't free them.
 	sllv_free(pbucket_left_unpaired);
 	return pout_recs;
 }

@@ -345,7 +345,10 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 	sllv_t** pprecords_paired, sllv_t** pprecords_left_unpaired)
 {
 	if (pkeeper->pbucket->was_paired) {
+		while (pkeeper->pbucket->precords->phead)
+			lrec_free(sllv_pop(pkeeper->pbucket->precords));
 		sllv_free(pkeeper->pbucket->precords);
+		pkeeper->pbucket->precords = NULL;
 	} else {
 		if (*pprecords_left_unpaired == NULL) {
 			*pprecords_left_unpaired = pkeeper->pbucket->precords;
