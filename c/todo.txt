@@ -201,5 +201,7 @@ lldb:  run put "\$z=\$x+\$y"
 ----------------------------------------------------------------
 git remote add upstream https://github.com/Homebrew/homebrew
 git fetch upstream
+git rebase upstream/master
+shasum -a 256 ../mlr-3.2.2.tar.gz
 git diff HEAD^  HEAD
 git diff HEAD^2 HEAD
