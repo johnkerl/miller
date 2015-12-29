@@ -87,7 +87,12 @@ POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
 
 <p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
 https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
-of platform. You can use <tt>mlr --csv --rs lf</tt> for native Un*x (LF-terminated) CSV files.
+of platform.
+
+<p/>
+<b>
+Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
+</b>
 
 <p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
 line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to

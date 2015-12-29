@@ -304,8 +304,12 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  The --right option right-justifies all fields for PPRINT output format.\n");
 	fprintf(o, "  The --xvright option right-justifies values for XTAB format.\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
+	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
+	fprintf(o, "\n");
+	fprintf(o, "  Please use \"%s --csv --rs lf\" for for native Un*x (linefeed-terminated) CSV files.\n",
+		argv0);
 }
 
 static void main_usage_compressed_data_options(FILE* o, char* argv0) {
