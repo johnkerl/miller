@@ -429,10 +429,12 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 		if (*pprecords_left_unpaired == NULL)
 			*pprecords_left_unpaired = sllv_alloc();
 	} else {
-		if (*pprecords_left_unpaired == NULL)
+		if (*pprecords_left_unpaired == NULL) {
 			*pprecords_left_unpaired = pkeeper->pbucket->precords;
-		else
+		} else {
 			sllv_transfer(*pprecords_left_unpaired, pkeeper->pbucket->precords);
+			sllv_free(pkeeper->pbucket->precords);
+		}
 	}
 	// 2. Peek-record, if any
 	if (pkeeper->prec_peek != NULL) {
