@@ -6,14 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* make a 3.2.2 once mem-mgmt cleanup + misc are done. new since 3.1.2:
-  - read perf, esp. csv
-  - ${...}
-  - compression support
-  - uniq streaming
-  - string-ref / valgrind
-  ! homebrew
-
 * ruby @ optextdep @ mld; poki+mkman
 * rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 
