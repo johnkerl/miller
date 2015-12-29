@@ -13,15 +13,6 @@ TOP OF LIST
   - uniq streaming
   - string-ref / valgrind
 
-* mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
-  - xxxes
-  - more rid of "double" in fcn names
-  - fix string-involving comparators
-  - lhms* incorporate free-flags as with slls
-    > use ownership-transfer for hash-map enlarges
-  ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
-  ! join
-
 * wiz/veith ack @ dox x 2
 * ruby @ optextdep @ mld; poki+mkman
 * rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
@@ -31,6 +22,14 @@ TOP OF LIST
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
 * debian screenshot
+
+* mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
+  - xxxes
+  - more rid of "double" in fcn names
+  - lhms* incorporate free-flags as with slls
+    > use ownership-transfer for hash-map enlarges
+  ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
+  - join: final sllv_free in destructor (lo-pri)
 
 * profile new streqn vs. strncmp ...
 * mixed-format joins ...

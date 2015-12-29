@@ -146,7 +146,7 @@ static void lrec_reader_stdio_csv_free(lrec_reader_t* preader) {
 	// header-fields lists are doubly referenced: as hashmap keys in
 	// pstate->pheader_keepers, and within the header_keeper objects.
 	// Nullify the keys here to avoid a double free.
-	// xxx this could be refactored to be more elegant.
+	// This could be refactored to be more elegant.
 	for (lhmslve_t* pe = pstate->pheader_keepers->phead; pe != NULL; pe = pe->pnext) {
 		pe->key = NULL;
 	}
