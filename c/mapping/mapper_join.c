@@ -251,10 +251,9 @@ static void mapper_join_free(mapper_t* pmapper) {
 		for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
 			join_bucket_t* pbucket = pe->pvvalue;
 			slls_free(pbucket->pleft_field_values);
-			while (pbucket->precords->phead) {
-				lrec_t* prec = sllv_pop(pbucket->precords);
-				lrec_free(prec);
-			}
+			if (pbucket->precords)
+				while (pbucket->precords->phead)
+					lrec_free(sllv_pop(pbucket->precords));
 			sllv_free(pbucket->precords);
 			free(pbucket);
 		}
@@ -304,6 +303,10 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		join_bucket_keeper_emit(pkeeper, NULL, &pleft_records, &pbucket_left_unpaired);
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_transfer(pout_recs, pbucket_left_unpaired);
+		} else {
+			if (pbucket_left_unpaired)
+				while (pbucket_left_unpaired->phead)
+					lrec_free(sllv_pop(pbucket_left_unpaired));
 		}
 		// pleft_records are not caller-owned; we don't free them.
 		sllv_free(pbucket_left_unpaired);
@@ -340,6 +343,9 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	if (!produced_right)
 		lrec_free(pright_rec);
 	// pleft_records are not caller-owned; we don't free them.
+	if (pbucket_left_unpaired)
+		while (pbucket_left_unpaired->phead)
+			lrec_free(sllv_pop(pbucket_left_unpaired));
 	sllv_free(pbucket_left_unpaired);
 	return pout_recs;
 }
