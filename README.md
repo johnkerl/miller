@@ -68,8 +68,8 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
 Documentation:
 
+* **For full documentation, please visit** http://johnkerl.org/miller/doc
 * Miller's license is two-clause BSD: https://github.com/johnkerl/miller/blob/master/LICENSE.txt
 * Build information including dependencies: http://johnkerl.org/miller/doc/build.html
 * Notes about issue-labeling in the Github repo: https://github.com/johnkerl/miller/wiki/Issue-labeling
 * See [here] (https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
-* **For full documentation, please visit** http://johnkerl.org/miller/doc
