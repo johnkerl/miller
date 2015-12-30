@@ -17,6 +17,7 @@ libmapping_la_SOURCES=	\
 			mapper_histogram.c \
 			mapper_join.c \
 			mapper_label.c \
+			mapper_merge_fields.c \
 			mapper_put.c \
 			mapper_regularize.c \
 			mapper_rename.c \
