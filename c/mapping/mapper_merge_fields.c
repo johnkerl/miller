@@ -233,23 +233,23 @@ static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_sta
 // accumulator3.free
 
 // ----------------------------------------------------------------
-// mlr merge -c 'in|out' -a sum
+// mlr merge -c in_,out_ -a sum
 // a_in_x  1     a_sum_x 3
 // a_out_x 2     b_sum_y 4
 // b_in_y  4     b_sum_x 8
 // b_out_x 8
 
-// map = {}
+// short_names_to_acc_lists = {}
 // for field in inrec {
 //   matched = FALSE
 //   for substring in substrings {
 //     if field.key contains substring {
 //       short_name = sub(field.key, substring, "")
-//       if !map.has(short_name) { // First such
+//       if !short_names_to_acc_lists.has(short_name) { // First such
 //         accumulator1 = alloc(short_name, "min", TRUE)
 //         accumulator2 = alloc(short_name, "p50", TRUE)
 //         accumulator3 = alloc(short_name, "max", TRUE)
-//         map.put(short_name, [acc1, acc2, acc3])
+//         short_names_to_acc_lists.put(short_name, [acc1, acc2, acc3])
 //       }
 //       accumulator1.ningest(field.value)
 //       accumulator2.ningest(field.value)
@@ -261,12 +261,14 @@ static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_sta
 //     }
 //   }
 // }
-// for (short_name, acc_list) in map {
+// for (short_name, acc_list) in short_names_to_acc_lists {
 //   for acc in acc_list {
 //     acc.emit(short_name, acc_name, inrec)
 //     acc.free
 //   }
+//   sllv_free(acc_list)
 // }
+// lhmsv_free(short_names_to_acc_lists)
 
 
 
