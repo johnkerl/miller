@@ -21,10 +21,10 @@
 #define DO_VAR    0xc2
 #define DO_MEANEB 0xc3
 
-char* fake_acc_name_for_setups = "__setup_done__";
+static char* fake_acc_name_for_setups = "__setup_done__";
 
 // ================================================================
-struct _stats1_t; // forward reference for method definitons
+struct _stats1_t; // forward reference for method definitions
 typedef void stats1_dingest_func_t(void* pvstate, double val);
 typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void stats1_singest_func_t(void* pvstate, char*  val);

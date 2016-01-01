@@ -116,6 +116,7 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 		}
 
 		if (argc - argi < 2) {
+			mapper_having_fields_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		argi += 2;

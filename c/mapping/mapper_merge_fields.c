@@ -7,7 +7,6 @@
 #include "lib/mlrstat.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
-#include "containers/string_array.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/lhmsi.h"
@@ -16,10 +15,13 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-char* merge_fields_fake_acc_name_for_setups = "__setup_done__";
+#define MERGE_BY_NAME_LIST  0xef01
+#define MERGE_BY_NAME_REGEX 0xef02
+#define MERGE_BY_COLLAPSING 0xef03
+#define MERGE_UNSPECIFIED   0xef04
 
 // ================================================================
-struct _merge_fields_t; // forward reference for method definitons
+struct _merge_fields_t; // forward reference for method definitions
 typedef void merge_fields_dingest_func_t(void* pvstate, double val);
 typedef void merge_fields_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void merge_fields_emit_func_t(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec);
@@ -36,46 +38,21 @@ typedef struct _merge_fields_t {
 typedef merge_fields_t* merge_fields_alloc_func_t(char* value_field_name, char* merge_fields_name, int allow_int_float);
 
 typedef struct _mapper_merge_fields_state_t {
-	ap_state_t*     pargp;
-	slls_t*         paccumulator_names;
-	string_array_t* pvalue_field_names;
-	int             allow_int_float;
+	slls_t*  paccumulator_names;
+	slls_t*  pvalue_field_names;
+	regex_t* pvalue_field_regexes;
+	int      allow_int_float;
 } mapper_merge_fields_state_t;
 
 // ----------------------------------------------------------------
 static void      mapper_merge_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_merge_fields_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	int allow_int_float);
+static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names,
+	slls_t* pvalue_field_names, int allow_int_float);
 static void      mapper_merge_fields_free(mapper_t* pmapper);
-static sllv_t*   mapper_merge_fields_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-//static void      mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate);
-//static lrec_t*   mapper_merge_fields_emit(mapper_merge_fields_state_t* pstate, lrec_t* poutrec,
-//	char* value_field_name, char* merge_fields_name, lhmsv_t* acc_field_to_acc_state);
-
-//static merge_fields_t* merge_fields_count_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-//static merge_fields_t* merge_fields_sum_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-//static merge_fields_t* merge_fields_mean_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-//static merge_fields_t* merge_fields_min_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-//static merge_fields_t* merge_fields_max_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-
-//static merge_fields_t* make_acc(char* value_field_name, char* merge_fields_name, int allow_int_float);
-//static void make_accs(char* value_field_name, slls_t* paccumulator_names, int allow_int_float, lhmsv_t* acc_field_to_acc_state);
-
-//// ----------------------------------------------------------------
-//typedef struct _acc_lookup_t {
-//	char* name;
-//	merge_fields_alloc_func_t* palloc_func;
-//	char* desc;
-//} merge_fields_lookup_t;
-//static merge_fields_lookup_t merge_fields_lookup_table[] = {
-//	{"count",    merge_fields_count_alloc,    "Count instances of fields"},
-//	{"sum",      merge_fields_sum_alloc,      "Compute sums of specified fields"},
-//	{"mean",     merge_fields_mean_alloc,     "Compute averages (sample means) of specified fields"},
-//	{"min",      merge_fields_min_alloc,      "Compute minimum values of specified fields"},
-//	{"max",      merge_fields_max_alloc,      "Compute maximum values of specified fields"},
-//};
-//static int merge_fields_lookup_table_length = sizeof(merge_fields_lookup_table) / sizeof(merge_fields_lookup_table[0]);
+static sllv_t*   mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_merge_fields_setup = {
@@ -94,53 +71,125 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 		//fprintf(o, "  %-9s %s\n", merge_fields_lookup_table[i].name, merge_fields_lookup_table[i].desc);
 	//}
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
+	fprintf(o, "-r {a,b,c}  xxx describe me\n");
+	fprintf(o, "-c {a,b,c}  xxx describe me\n");
+	fprintf(o, "-o {x}      xxx describe me\n");
 	fprintf(o, "-k          xxx put description here.\n");
 	fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n");
 	fprintf(o, "Example: %s %s -a min,max -f 'bytes_.*'\n", argv0, verb);
 }
 
+// mlr merge-fields -k -a min,p50,max -f a,b,c -o foo
+// mlr merge-fields -k -a min,p50,max -r 'bytes_.*,byte_.*' -o bytes
+// mlr merge-fields -c in_,out_ -a sum
+
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t*         paccumulator_names    = NULL;
-	string_array_t* pvalue_field_names    = NULL;
-	int             allow_int_float       = TRUE;
-	// xxx -k flag
+	slls_t* paccumulator_names    = NULL;
+	slls_t* pvalue_field_names    = NULL;
+	char*   output_field_basename = NULL;
+	int     allow_int_float       = TRUE;
+	int     keep_input_fields     = FALSE;
+	int     do_which              = MERGE_UNSPECIFIED;
 
 	char* verb = argv[(*pargi)++];
 
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate,  "-a", &paccumulator_names);
-	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_false_flag(pstate,        "-F", &allow_int_float);
+	int argi = *pargi;
 
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+	while (argi < argc && argv[argi][0] == '-') {
+
+		if (streq(argv[argi], "-a")) {
+			if (argc - argi < 2) {
+				mapper_merge_fields_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			if (pvalue_field_names != NULL)
+				slls_free(pvalue_field_names);
+			pvalue_field_names = slls_from_line(argv[argi+1], ',', FALSE);
+			argi += 2;
+		} else if (streq(argv[argi], "-f")) {
+			if (argc - argi < 2) {
+				mapper_merge_fields_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			if (pvalue_field_names != NULL)
+				slls_free(pvalue_field_names);
+			pvalue_field_names = slls_from_line(argv[argi+1], ',', FALSE);
+			do_which = MERGE_BY_NAME_LIST;
+			argi += 2;
+		} else if (streq(argv[argi], "-r")) {
+			if (argc - argi < 2) {
+				mapper_merge_fields_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			if (pvalue_field_names != NULL)
+				slls_free(pvalue_field_names);
+			pvalue_field_names = slls_from_line(argv[argi+1], ',', FALSE);
+			do_which = MERGE_BY_NAME_REGEX;
+			argi += 2;
+		} else if (streq(argv[argi], "-c")) {
+			if (argc - argi < 2) {
+				mapper_merge_fields_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			if (pvalue_field_names != NULL) {
+				slls_free(pvalue_field_names);
+				pvalue_field_names = NULL;
+			}
+			do_which = MERGE_BY_COLLAPSING;
+			argi += 2;
+		} else if (streq(argv[argi], "-o")) {
+			if (argc - argi < 2) {
+				mapper_merge_fields_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			output_field_basename = argv[argi+1];
+			argi += 2;
+		} else if (streq(argv[argi], "-k")) {
+			keep_input_fields = TRUE;
+			argi += 1;
+		} else if (streq(argv[argi], "-F")) {
+			allow_int_float = FALSE;
+			argi += 1;
+		} else {
+			mapper_merge_fields_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+	}
+
+	if (paccumulator_names == NULL) {
 		mapper_merge_fields_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
+	if (pvalue_field_names == NULL) {
 		mapper_merge_fields_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	return mapper_merge_fields_alloc(pstate, paccumulator_names, pvalue_field_names, allow_int_float);
+	*pargi = argi;
+	return mapper_merge_fields_alloc(paccumulator_names, pvalue_field_names, allow_int_float);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_merge_fields_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	int allow_int_float)
+static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names,
+	slls_t* pvalue_field_names, int allow_int_float)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_merge_fields_state_t* pstate  = mlr_malloc_or_die(sizeof(mapper_merge_fields_state_t));
 
-	pstate->pargp                 = pargp;
-	pstate->paccumulator_names    = paccumulator_names;
-	pstate->pvalue_field_names    = pvalue_field_names;
-	pstate->allow_int_float       = allow_int_float;
+	pstate->paccumulator_names   = paccumulator_names;
+	pstate->pvalue_field_names   = pvalue_field_names;
+	pstate->pvalue_field_regexes = NULL;
+	pstate->allow_int_float      = allow_int_float;
 
-	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_merge_fields_process;
-	pmapper->pfree_func    = mapper_merge_fields_free;
+	pmapper->pvstate = pstate;
+	// xxx temp
+	pmapper->pprocess_func = FALSE ? mapper_merge_fields_process_by_name_list :
+		FALSE ? mapper_merge_fields_process_by_name_regex :
+		mapper_merge_fields_process_by_collapsing;
+	// xxx split out x 3?
+	pmapper->pfree_func = mapper_merge_fields_free;
 
 	return pmapper;
 }
@@ -148,35 +197,20 @@ static mapper_t* mapper_merge_fields_alloc(ap_state_t* pargp, slls_t* paccumulat
 static void mapper_merge_fields_free(mapper_t* pmapper) {
 	mapper_merge_fields_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->paccumulator_names);
-	string_array_free(pstate->pvalue_field_names);
-	ap_free(pstate->pargp);
+	slls_free(pstate->pvalue_field_names);
 	free(pstate);
 	free(pmapper);
 }
 
-static sllv_t* mapper_merge_fields_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	//mapper_merge_fields_state_t* pstate = pvstate;
-	if (pinrec == NULL) { // end of input stream
+// ----------------------------------------------------------------
+static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // end of input stream
 		return NULL;
-	}
 
-	//mapper_merge_fields_emit_all(pinrec, pstate);
-
+	//mapper_merge_fields_state_t* pstate = pvstate;
 	return sllv_single(pinrec);
 }
 
-// ----------------------------------------------------------------
-//static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate) {
-//}
-
-//static merge_fields_t* make_acc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	for (int i = 0; i < merge_fields_lookup_table_length; i++)
-//		if (streq(merge_fields_name, merge_fields_lookup_table[i].name))
-//			return merge_fields_lookup_table[i].palloc_func(value_field_name, merge_fields_name, allow_int_float);
-//	return NULL;
-//}
-
-// ----------------------------------------------------------------
 // mlr merge-fields -k -a min,p50,max -f a,b,c -o foo
 // accumulator1 = alloc("foo", "min", TRUE)
 // accumulator2 = alloc("foo", "p50", TRUE)
@@ -205,6 +239,14 @@ static sllv_t* mapper_merge_fields_process(lrec_t* pinrec, context_t* pctx, void
 // accumulator3.free
 
 // ----------------------------------------------------------------
+static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // end of input stream
+		return NULL;
+
+	//mapper_merge_fields_state_t* pstate = pvstate;
+	return sllv_single(pinrec);
+}
+
 // mlr merge-fields -k -a min,p50,max -r 'bytes_.*,byte_.*' -o bytes
 // accumulator1 = alloc("bytes", "min", TRUE)
 // accumulator2 = alloc("bytes", "p50", TRUE)
@@ -239,42 +281,64 @@ static sllv_t* mapper_merge_fields_process(lrec_t* pinrec, context_t* pctx, void
 // b_in_y  4     b_sum_x 8
 // b_out_x 8
 
-// short_names_to_acc_lists = {}
-// for field in inrec {
-//   matched = FALSE
-//   for substring in substrings {
-//     if field.key contains substring {
+	//slls_t* paccumulator_names;
+	//slls_t* pvalue_field_names;
+
+// map char* short_name to
+//   map acc_name to acc_state
+static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // end of input stream
+		return NULL;
+
+	//mapper_merge_fields_state_t* pstate = pvstate;
+	lhmsv_t* short_names_to_acc_lists = lhmsv_alloc();
+
+	for (lrece_t* pa = pinrec->phead; pa != NULL; pa = pa->pnext) {
+//   for regex in regexes {
+//     if field.key matches regex {
 //       short_name = sub(field.key, substring, "")
 //       if !short_names_to_acc_lists.has(short_name) { // First such
-//         accumulator1 = alloc(short_name, "min", TRUE)
-//         accumulator2 = alloc(short_name, "p50", TRUE)
-//         accumulator3 = alloc(short_name, "max", TRUE)
+//         accumulator1 = alloc(short_name, "min", pstate->allow_int_float)
+//         accumulator2 = alloc(short_name, "p50", pstate->allow_int_float)
+//         accumulator3 = alloc(short_name, "max", pstate->allow_int_float)
 //         short_names_to_acc_lists.put(short_name, [acc1, acc2, acc3])
 //       }
 //       accumulator1.ningest(field.value)
 //       accumulator2.ningest(field.value)
 //       accumulator3.ningest(field.value)
 //       if !keep
-//         lrec_remove(inrec, field.key)
-//       matched = TRUE
+//         lrec_remove(inrec, field.key) // xxx either don't modify the lrec during iteration, or do so carefully.
 //       break
 //     }
 //   }
-// }
-// for (short_name, acc_list) in short_names_to_acc_lists {
-//   for acc in acc_list {
-//     acc.emit(short_name, acc_name, inrec)
-//     acc.free
-//   }
-//   sllv_free(acc_list)
-// }
-// lhmsv_free(short_names_to_acc_lists)
+	}
 
-
-
+	for (lhmsve_t* pe = short_names_to_acc_lists->phead; pe != NULL; pe = pe->pnext) {
+		//char* short_name = pe->key;
+		sllv_t* acc_list = pe->pvvalue;
+		for (sllve_t* pf = acc_list->phead; pf != NULL; pf = pf->pnext) {
+			// acc.emit(short_name, acc_name, inrec)
+			// acc.freefunc
+		}
+		sllv_free(acc_list);
+	}
+	lhmsv_free(short_names_to_acc_lists);
+	return sllv_single(pinrec);
+}
 
 
 // ================================================================
+//static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate) {
+//}
+
+//static merge_fields_t* make_acc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
+//	for (int i = 0; i < merge_fields_lookup_table_length; i++)
+//		if (streq(merge_fields_name, merge_fields_lookup_table[i].name))
+//			return merge_fields_lookup_table[i].palloc_func(value_field_name, merge_fields_name, allow_int_float);
+//	return NULL;
+//}
+
+// ----------------------------------------------------------------
 //	for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
 //		regex_pair_t* ppair = pe->pvdata;
 //		regex_t* pregex = &ppair->regex;
@@ -348,208 +412,3 @@ static sllv_t* mapper_merge_fields_process(lrec_t* pinrec, context_t* pctx, void
 //		}
 //	}
 //	slls_free(pgroup_by_field_values);
-
-//// ----------------------------------------------------------------
-//static void make_accs(
-//	char*      value_field_name,       // input
-//	slls_t*    paccumulator_names,     // input
-//	int        allow_int_float,        // input
-//	lhmsv_t*   acc_field_to_acc_state) // output
-//{
-//	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
-//		// for "sum", "count"
-//		char* merge_fields_name = pc->value;
-//
-//		merge_fields_t* pmerge_fields = make_acc(value_field_name, merge_fields_name, allow_int_float);
-//		if (pmerge_fields == NULL) {
-//			fprintf(stderr, "%s merge_fields: accumulator \"%s\" not found.\n",
-//				MLR_GLOBALS.argv0, merge_fields_name);
-//			exit(1);
-//		}
-//		lhmsv_put(acc_field_to_acc_state, merge_fields_name, pmerge_fields);
-//	}
-//}
-//
-//// ----------------------------------------------------------------
-//typedef struct _merge_fields_count_state_t {
-//	mv_t counter;
-//	mv_t one;
-//	char* output_field_name;
-//} merge_fields_count_state_t;
-//
-//static void merge_fields_count_emit(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec) {
-//	merge_fields_count_state_t* pstate = pvstate;
-//	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
-//		FREE_ENTRY_VALUE);
-//}
-//static void merge_fields_count_free(merge_fields_t* pmerge_fields) {
-//	merge_fields_count_state_t* pstate = pmerge_fields->pvstate;
-//	free(pstate->output_field_name);
-//	free(pstate);
-//	free(pmerge_fields);
-//}
-//static merge_fields_t* merge_fields_count_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	merge_fields_t* pmerge_fields = mlr_malloc_or_die(sizeof(merge_fields_t));
-//	merge_fields_count_state_t* pstate = mlr_malloc_or_die(sizeof(merge_fields_count_state_t));
-//	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
-//	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", merge_fields_name);
-//
-//	pmerge_fields->pvstate       = (void*)pstate;
-//	pmerge_fields->pdingest_func = NULL;
-//	pmerge_fields->pningest_func = NULL;
-//	pmerge_fields->pemit_func    = merge_fields_count_emit;
-//	pmerge_fields->pfree_func    = merge_fields_count_free;
-//	return pmerge_fields;
-//}
-//
-//// ----------------------------------------------------------------
-//typedef struct _merge_fields_sum_state_t {
-//	mv_t sum;
-//	char* output_field_name;
-//	int allow_int_float;
-//} merge_fields_sum_state_t;
-//static void merge_fields_sum_ningest(void* pvstate, mv_t* pval) {
-//	merge_fields_sum_state_t* pstate = pvstate;
-//	pstate->sum = n_nn_plus_func(&pstate->sum, pval);
-//}
-//static void merge_fields_sum_emit(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec) {
-//	merge_fields_sum_state_t* pstate = pvstate;
-//	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->sum),
-//		FREE_ENTRY_VALUE);
-//}
-//static void merge_fields_sum_free(merge_fields_t* pmerge_fields) {
-//	merge_fields_sum_state_t* pstate = pmerge_fields->pvstate;
-//	free(pstate->output_field_name);
-//	free(pstate);
-//	free(pmerge_fields);
-//}
-//static merge_fields_t* merge_fields_sum_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	merge_fields_t* pmerge_fields = mlr_malloc_or_die(sizeof(merge_fields_t));
-//	merge_fields_sum_state_t* pstate = mlr_malloc_or_die(sizeof(merge_fields_sum_state_t));
-//	pstate->allow_int_float = allow_int_float;
-//	pstate->sum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", merge_fields_name);
-//	pmerge_fields->pvstate       = (void*)pstate;
-//	pmerge_fields->pdingest_func = NULL;
-//	pmerge_fields->pningest_func = merge_fields_sum_ningest;
-//	pmerge_fields->pemit_func    = merge_fields_sum_emit;
-//	pmerge_fields->pfree_func    = merge_fields_sum_free;
-//	return pmerge_fields;
-//}
-//
-//// ----------------------------------------------------------------
-//typedef struct _merge_fields_mean_state_t {
-//	double sum;
-//	unsigned long long count;
-//	char* output_field_name;
-//} merge_fields_mean_state_t;
-//static void merge_fields_mean_dingest(void* pvstate, double val) {
-//	merge_fields_mean_state_t* pstate = pvstate;
-//	pstate->sum   += val;
-//	pstate->count++;
-//}
-//static void merge_fields_mean_emit(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec) {
-//	merge_fields_mean_state_t* pstate = pvstate;
-//	if (pstate->count == 0LL) {
-//		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
-//	} else {
-//		double quot = pstate->sum / pstate->count;
-//		char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
-//		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
-//	}
-//}
-//static void merge_fields_mean_free(merge_fields_t* pmerge_fields) {
-//	merge_fields_mean_state_t* pstate = pmerge_fields->pvstate;
-//	free(pstate->output_field_name);
-//	free(pstate);
-//	free(pmerge_fields);
-//}
-//static merge_fields_t* merge_fields_mean_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	merge_fields_t* pmerge_fields = mlr_malloc_or_die(sizeof(merge_fields_t));
-//	merge_fields_mean_state_t* pstate = mlr_malloc_or_die(sizeof(merge_fields_mean_state_t));
-//	pstate->sum         = 0.0;
-//	pstate->count       = 0LL;
-//	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", merge_fields_name);
-//
-//	pmerge_fields->pvstate       = (void*)pstate;
-//	pmerge_fields->pdingest_func = merge_fields_mean_dingest;
-//	pmerge_fields->pningest_func = NULL;
-//	pmerge_fields->pemit_func    = merge_fields_mean_emit;
-//	pmerge_fields->pfree_func    = merge_fields_mean_free;
-//	return pmerge_fields;
-//}
-//
-//// ----------------------------------------------------------------
-//typedef struct _merge_fields_min_state_t {
-//	mv_t min;
-//	char* output_field_name;
-//} merge_fields_min_state_t;
-//static void merge_fields_min_ningest(void* pvstate, mv_t* pval) {
-//	merge_fields_min_state_t* pstate = pvstate;
-//	pstate->min = n_nn_min_func(&pstate->min, pval);
-//}
-//static void merge_fields_min_emit(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec) {
-//	merge_fields_min_state_t* pstate = pvstate;
-//	if (mv_is_null(&pstate->min)) {
-//		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
-//	} else {
-//		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->min),
-//			FREE_ENTRY_VALUE);
-//	}
-//}
-//static void merge_fields_min_free(merge_fields_t* pmerge_fields) {
-//	merge_fields_min_state_t* pstate = pmerge_fields->pvstate;
-//	free(pstate->output_field_name);
-//	free(pstate);
-//	free(pmerge_fields);
-//}
-//static merge_fields_t* merge_fields_min_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	merge_fields_t* pmerge_fields = mlr_malloc_or_die(sizeof(merge_fields_t));
-//	merge_fields_min_state_t* pstate = mlr_malloc_or_die(sizeof(merge_fields_min_state_t));
-//	pstate->min = mv_from_null();
-//	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", merge_fields_name);
-//	pmerge_fields->pvstate       = (void*)pstate;
-//	pmerge_fields->pdingest_func = NULL;
-//	pmerge_fields->pningest_func = merge_fields_min_ningest;
-//	pmerge_fields->pemit_func    = merge_fields_min_emit;
-//	pmerge_fields->pfree_func    = merge_fields_min_free;
-//	return pmerge_fields;
-//}
-//
-//// ----------------------------------------------------------------
-//typedef struct _merge_fields_max_state_t {
-//	mv_t max;
-//	char* output_field_name;
-//} merge_fields_max_state_t;
-//static void merge_fields_max_ningest(void* pvstate, mv_t* pval) {
-//	merge_fields_max_state_t* pstate = pvstate;
-//	pstate->max = n_nn_max_func(&pstate->max, pval);
-//}
-//static void merge_fields_max_emit(void* pvstate, char* value_field_name, char* merge_fields_name, lrec_t* poutrec) {
-//	merge_fields_max_state_t* pstate = pvstate;
-//	if (mv_is_null(&pstate->max)) {
-//		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
-//	} else {
-//		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->max),
-//			FREE_ENTRY_VALUE);
-//	}
-//}
-//static void merge_fields_max_free(merge_fields_t* pmerge_fields) {
-//	merge_fields_max_state_t* pstate = pmerge_fields->pvstate;
-//	free(pstate->output_field_name);
-//	free(pstate);
-//	free(pmerge_fields);
-//}
-//static merge_fields_t* merge_fields_max_alloc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	merge_fields_t* pmerge_fields = mlr_malloc_or_die(sizeof(merge_fields_t));
-//	merge_fields_max_state_t* pstate = mlr_malloc_or_die(sizeof(merge_fields_max_state_t));
-//	pstate->max = mv_from_null();
-//	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", merge_fields_name);
-//	pmerge_fields->pvstate       = (void*)pstate;
-//	pmerge_fields->pdingest_func = NULL;
-//	pmerge_fields->pningest_func = merge_fields_max_ningest;
-//	pmerge_fields->pemit_func    = merge_fields_max_emit;
-//	pmerge_fields->pfree_func    = merge_fields_max_free;
-//	return pmerge_fields;
-//}
