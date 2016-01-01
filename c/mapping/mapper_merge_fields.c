@@ -174,7 +174,105 @@ static merge_fields_t* make_acc(char* value_field_name, char* merge_fields_name,
 // ----------------------------------------------------------------
 static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate) {
 	make_accs(NULL, NULL, FALSE, NULL); // xxx temp stub
+}
 
+// ----------------------------------------------------------------
+// mlr merge-fields -k -a min,p50,max -f a,b,c -o foo
+// accumulator1 = alloc("foo", "min", TRUE)
+// accumulator2 = alloc("foo", "p50", TRUE)
+// accumulator3 = alloc("foo", "max", TRUE)
+// for field in inrec {
+//   matches = FALSE
+//   for regex in regexes {
+//     if field.key matches regex {
+//       matches = TRUE
+//       break
+//     }
+//   }
+//   if matches {
+//     accumulator1.ningest(field.value)
+//     accumulator2.ningest(field.value)
+//     accumulator3.ningest(field.value)
+//   }
+//   if !keep
+//     lrec_remove(pinrec, field.key)
+// }
+// accumulator1.emit("foo", "min", inrec)
+// accumulator2.emit("foo", "p50", inrec)
+// accumulator3.emit("foo", "max", inrec)
+// accumulator1.free
+// accumulator2.free
+// accumulator3.free
+
+// ----------------------------------------------------------------
+// mlr merge-fields -k -a min,p50,max -r 'bytes_.*,byte_.*' -o bytes
+// accumulator1 = alloc("bytes", "min", TRUE)
+// accumulator2 = alloc("bytes", "p50", TRUE)
+// accumulator3 = alloc("bytes", "max", TRUE)
+// for field in inrec {
+//   matches = FALSE
+//   for regex in regexes {
+//     if field.key matches regex {
+//       matches = TRUE
+//       break
+//     }
+//   }
+//   if matches {
+//     accumulator1.ningest(field.value)
+//     accumulator2.ningest(field.value)
+//     accumulator3.ningest(field.value)
+//   }
+//   if !keep
+//     lrec_remove(pinrec, field.key)
+// }
+// accumulator1.emit("bytes", "min", inrec)
+// accumulator2.emit("bytes", "p50", inrec)
+// accumulator3.emit("bytes", "max", inrec)
+// accumulator1.free
+// accumulator2.free
+// accumulator3.free
+
+// ----------------------------------------------------------------
+// mlr merge -c 'in|out' -a sum
+// a_in_x  1     a_sum_x 3
+// a_out_x 2     b_sum_y 4
+// b_in_y  4     b_sum_x 8
+// b_out_x 8
+
+// map = {}
+// for field in inrec {
+//   matched = FALSE
+//   for substring in substrings {
+//     if field.key contains substring {
+//       short_name = sub(field.key, substring, "")
+//       if !map.has(short_name) { // First such
+//         accumulator1 = alloc(short_name, "min", TRUE)
+//         accumulator2 = alloc(short_name, "p50", TRUE)
+//         accumulator3 = alloc(short_name, "max", TRUE)
+//         map.put(short_name, [acc1, acc2, acc3])
+//       }
+//       accumulator1.ningest(field.value)
+//       accumulator2.ningest(field.value)
+//       accumulator3.ningest(field.value)
+//       if !keep
+//         lrec_remove(inrec, field.key)
+//       matched = TRUE
+//       break
+//     }
+//   }
+// }
+// for (short_name, acc_list) in map {
+//   for acc in acc_list {
+//     acc.emit(short_name, acc_name, inrec)
+//     acc.free
+//   }
+// }
+
+
+
+
+
+// ================================================================
 //	for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
 //		regex_pair_t* ppair = pe->pvdata;
 //		regex_t* pregex = &ppair->regex;
@@ -191,8 +289,6 @@ static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_sta
 //			}
 //		}
 //	}
-
-}
 
 //	mlr_reference_values_from_record(pinrec, pstate->pvalue_field_names, pstate->pvalue_field_values);
 //

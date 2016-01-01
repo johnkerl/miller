@@ -421,7 +421,7 @@ static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float) {
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
 	pstep->pvstate        = (void*)pstate;
 	pstep->pdprocess_func = NULL;
-	pstep->pnprocess_func = step_rsum_nprocess;;
+	pstep->pnprocess_func = step_rsum_nprocess;
 	pstep->psprocess_func = NULL;
 	pstep->pfree_func     = step_rsum_free;
 	return pstep;
