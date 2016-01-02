@@ -48,7 +48,7 @@ typedef struct _mapper_merge_fields_state_t {
 static void      mapper_merge_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names,
-	slls_t* pvalue_field_names, int allow_int_float);
+	slls_t* pvalue_field_names, int allow_int_float, int keep_input_fields);
 static void      mapper_merge_fields_free(mapper_t* pmapper);
 static sllv_t*   mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -167,12 +167,12 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 	}
 
 	*pargi = argi;
-	return mapper_merge_fields_alloc(paccumulator_names, pvalue_field_names, allow_int_float);
+	return mapper_merge_fields_alloc(paccumulator_names, pvalue_field_names, allow_int_float, keep_input_fields);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names,
-	slls_t* pvalue_field_names, int allow_int_float)
+	slls_t* pvalue_field_names, int allow_int_float, int keep_input_fields)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
