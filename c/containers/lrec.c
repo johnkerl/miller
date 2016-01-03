@@ -9,7 +9,6 @@
 #define SB_ALLOC_LENGTH 256
 
 static lrece_t* lrec_find_entry(lrec_t* prec, char* key);
-static void lrec_unlink(lrec_t* prec, lrece_t* pe);
 static void lrec_link_at_head(lrec_t* prec, lrece_t* pe);
 static void lrec_link_at_tail(lrec_t* prec, lrece_t* pe);
 
@@ -227,7 +226,7 @@ void lrec_move_to_tail(lrec_t* prec, char* key) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_unlink(lrec_t* prec, lrece_t* pe) {
+void lrec_unlink(lrec_t* prec, lrece_t* pe) {
 	if (pe == prec->phead) {
 		if (pe == prec->ptail) {
 			prec->phead = NULL;

@@ -40,8 +40,10 @@ typedef merge_fields_t* merge_fields_alloc_func_t(char* value_field_name, char* 
 typedef struct _mapper_merge_fields_state_t {
 	slls_t*  paccumulator_names;
 	slls_t*  pvalue_field_names;
-	regex_t* pvalue_field_regexes;
+	sllv_t*  pvalue_field_regexes;
 	int      allow_int_float;
+	int      keep_input_fields;
+	string_builder_t* psb;
 } mapper_merge_fields_state_t;
 
 // ----------------------------------------------------------------
@@ -181,8 +183,10 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_wh
 
 	pstate->paccumulator_names   = paccumulator_names;
 	pstate->pvalue_field_names   = pvalue_field_names;
-	pstate->pvalue_field_regexes = NULL;
+	pstate->pvalue_field_regexes = sllv_alloc(); // xxx temp
 	pstate->allow_int_float      = allow_int_float;
+	pstate->keep_input_fields    = keep_input_fields;
+	pstate->psb                  = sb_alloc(32); // xxx need #define for length
 
 	pmapper->pvstate = pstate;
 	pmapper->pprocess_func = (do_which == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
@@ -281,62 +285,62 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 // b_in_y  4     b_sum_x 8
 // b_out_x 8
 
-	//slls_t* paccumulator_names;
-	//slls_t* pvalue_field_names;
-
-// map char* short_name to
-//   map acc_name to acc_state
 static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // end of input stream
 		return NULL;
 
-	//mapper_merge_fields_state_t* pstate = pvstate;
-	lhmsv_t* short_names_to_acc_lists = lhmsv_alloc();
+	mapper_merge_fields_state_t* pstate = pvstate;
+	lhmsv_t* short_names_to_acc_maps = lhmsv_alloc();
 
 	for (lrece_t* pa = pinrec->phead; pa != NULL; /* increment inside loop */ ) {
-//		for regex in regexes {
-//			int matched = FALSE;
-//			if field.key matches regex {
-//				matched = TRUE;
-//				short_name = sub(field.key, substring, "")
-//				if !short_names_to_acc_lists.has(short_name) { // First such
-//					lhmsv_t* acc_list_for_short_name = lhmsv_alloc();
-//					for (sllse_t* pb = pstate->paccumulator_names->phead; pb != NULL; pb = pb->pnext) {
-//						char* acc_name = pb->value;
+		int matched = FALSE;
+		for (sllve_t* pb = pstate->pvalue_field_regexes->phead; pb != NULL && !matched; pb = pb->pnext) {
+			regex_t* pvalue_field_regex = pb->pvdata;
+
+			// xxx need a flag for no in-free
+			char* short_name = regex_sub(pa->key, pvalue_field_regex, pstate->psb, "", &matched, NULL);
+			if (matched) {
+				lhmsv_t* acc_map_for_short_name = lhmsv_get(short_names_to_acc_maps, short_name);
+				if (acc_map_for_short_name == NULL) { // First such
+					acc_map_for_short_name = lhmsv_alloc();
+					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
+						char* acc_name = pc->value;
 //						// xxx implement free-flags here (& for all lhm's) for copy-reduction
 //						acc_t* pacc = alloc(short_name, "min", pstate->allow_int_float);
-//						lhmsv_put(acc_list_for_short_name, acc_name, pacc);
-//					}
-//				}
-//				for (lhmsve_t* pc = acc_list_for_short_name->phead; pc != NULL; pc = pc->pnext) {
-//					acc_t* pacc = pc->pvvalue;
+						void* pacc = NULL; // xxx temp
+						lhmsv_put(acc_map_for_short_name, acc_name, pacc);
+					}
+					lhmsv_put(short_names_to_acc_maps, short_name, acc_map_for_short_name);
+				}
+				for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
+//					acc_t* pacc = pd->pvvalue;
 //					pacc->ningest(field.value)
-//				}
-//				if (!pstate->keep_input_fields) {
-//					// We are modifying the lrec while iterating over it.
-//					lrece_t* pnext = pa->pnext;
-//					lrec_unlink(pinrec, pa);
-//					pa = pnext;
-//				} else {
-//					pa = pa->pnext;
-//				}
-//				break;
-//			}
-//		}
-//		if (!matched)
-//			pa = pa->pnext;
+				}
+				if (!pstate->keep_input_fields) {
+					// We are modifying the lrec while iterating over it.
+					lrece_t* pnext = pa->pnext;
+					lrec_unlink(pinrec, pa);
+					pa = pnext;
+				} else {
+					pa = pa->pnext;
+				}
+				break;
+			}
+		}
+		if (!matched)
+			pa = pa->pnext;
 	}
 
-	for (lhmsve_t* pe = short_names_to_acc_lists->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsve_t* pe = short_names_to_acc_maps->phead; pe != NULL; pe = pe->pnext) {
 		//char* short_name = pe->key;
-		sllv_t* acc_list = pe->pvvalue;
-		for (sllve_t* pf = acc_list->phead; pf != NULL; pf = pf->pnext) {
+		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
+		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
 			// acc.emit(short_name, acc_name, inrec)
 			// acc.freefunc()
 		}
-		sllv_free(acc_list);
+		lhmsv_free(acc_map_for_short_name);
 	}
-	lhmsv_free(short_names_to_acc_lists);
+	lhmsv_free(short_names_to_acc_maps);
 	return sllv_single(pinrec);
 }
 

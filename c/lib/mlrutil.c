@@ -488,7 +488,8 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int *pall_captured) {
 	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatch];
-	*pall_captured = TRUE;
+	if (pall_captured)
+		*pall_captured = TRUE;
 
 	*pmatched = regmatch_or_die(pregex, input, nmatch, matches);
 	if (!*pmatched) {
@@ -501,7 +502,8 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 				int idx = p[1] - '0';
 				regmatch_t* pmatch = &matches[idx];
 				if (pmatch->rm_so == -1) {
-					*pall_captured = FALSE;
+					if (pall_captured)
+						*pall_captured = FALSE;
 					sb_append_chars(psb, p, 0, 1);
 				} else {
 					sb_append_chars(psb, input, matches[idx].rm_so, matches[idx].rm_eo-1);

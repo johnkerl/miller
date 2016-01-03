@@ -122,6 +122,9 @@ void  lrec_remove(lrec_t* prec, char* key);
 void  lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freeing);
 void  lrec_move_to_head(lrec_t* prec, char* key);
 void  lrec_move_to_tail(lrec_t* prec, char* key);
+// Mostly for lrec-internal use; may be used for removing fields from a record
+// while iterating over it.
+void lrec_unlink(lrec_t* prec, lrece_t* pe);
 
 void  lrec_free(lrec_t* prec);
 
