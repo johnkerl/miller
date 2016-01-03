@@ -185,9 +185,8 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_wh
 	pstate->allow_int_float      = allow_int_float;
 
 	pmapper->pvstate = pstate;
-	// xxx temp
-	pmapper->pprocess_func = FALSE ? mapper_merge_fields_process_by_name_list :
-		FALSE ? mapper_merge_fields_process_by_name_regex :
+	pmapper->pprocess_func = (do_which == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
+		(do_which == MERGE_BY_NAME_REGEX) ? mapper_merge_fields_process_by_name_regex :
 		mapper_merge_fields_process_by_collapsing;
 	// xxx split out x 3?
 	pmapper->pfree_func = mapper_merge_fields_free;
@@ -294,24 +293,38 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	//mapper_merge_fields_state_t* pstate = pvstate;
 	lhmsv_t* short_names_to_acc_lists = lhmsv_alloc();
 
-	for (lrece_t* pa = pinrec->phead; pa != NULL; pa = pa->pnext) {
-//   for regex in regexes {
-//     if field.key matches regex {
-//       short_name = sub(field.key, substring, "")
-//       if !short_names_to_acc_lists.has(short_name) { // First such
-//         accumulator1 = alloc(short_name, "min", pstate->allow_int_float)
-//         accumulator2 = alloc(short_name, "p50", pstate->allow_int_float)
-//         accumulator3 = alloc(short_name, "max", pstate->allow_int_float)
-//         short_names_to_acc_lists.put(short_name, [acc1, acc2, acc3])
-//       }
-//       accumulator1.ningest(field.value)
-//       accumulator2.ningest(field.value)
-//       accumulator3.ningest(field.value)
-//       if !keep
-//         lrec_remove(inrec, field.key) // xxx either don't modify the lrec during iteration, or do so carefully.
-//       break
-//     }
-//   }
+	for (lrece_t* pa = pinrec->phead; pa != NULL; /* increment inside loop */ ) {
+//		for regex in regexes {
+//			int matched = FALSE;
+//			if field.key matches regex {
+//				matched = TRUE;
+//				short_name = sub(field.key, substring, "")
+//				if !short_names_to_acc_lists.has(short_name) { // First such
+//					lhmsv_t* acc_list_for_short_name = lhmsv_alloc();
+//					for (sllse_t* pb = pstate->paccumulator_names->phead; pb != NULL; pb = pb->pnext) {
+//						char* acc_name = pb->value;
+//						// xxx implement free-flags here (& for all lhm's) for copy-reduction
+//						acc_t* pacc = alloc(short_name, "min", pstate->allow_int_float);
+//						lhmsv_put(acc_list_for_short_name, acc_name, pacc);
+//					}
+//				}
+//				for (lhmsve_t* pc = acc_list_for_short_name->phead; pc != NULL; pc = pc->pnext) {
+//					acc_t* pacc = pc->pvvalue;
+//					pacc->ningest(field.value)
+//				}
+//				if (!pstate->keep_input_fields) {
+//					// We are modifying the lrec while iterating over it.
+//					lrece_t* pnext = pa->pnext;
+//					lrec_unlink(pinrec, pa);
+//					pa = pnext;
+//				} else {
+//					pa = pa->pnext;
+//				}
+//				break;
+//			}
+//		}
+//		if (!matched)
+//			pa = pa->pnext;
 	}
 
 	for (lhmsve_t* pe = short_names_to_acc_lists->phead; pe != NULL; pe = pe->pnext) {
@@ -319,7 +332,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 		sllv_t* acc_list = pe->pvvalue;
 		for (sllve_t* pf = acc_list->phead; pf != NULL; pf = pf->pnext) {
 			// acc.emit(short_name, acc_name, inrec)
-			// acc.freefunc
+			// acc.freefunc()
 		}
 		sllv_free(acc_list);
 	}
