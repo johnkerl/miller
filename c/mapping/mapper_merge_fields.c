@@ -272,7 +272,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		int matched = FALSE;
 		for (sllve_t* pb = pstate->pvalue_field_regexes->phead; pb != NULL && !matched; pb = pb->pnext) {
 			regex_t* pvalue_field_regex = pb->pvdata;
-			matched = regmatch_or_die(pvalue_field_regex, pa->value, 0, NULL);
+			matched = regmatch_or_die(pvalue_field_regex, pa->key, 0, NULL);
 			if (matched) {
 				for (sllve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
 //					acc_t* pacc = pd->pvvalue;
