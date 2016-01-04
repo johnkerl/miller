@@ -485,7 +485,9 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 // sed: $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/' gives <<AYEBEEcDEEefGEE>>
 // mlr: echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")' x=<<AYEBEEcDEEefGEE>>
 
-char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int *pall_captured) {
+char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
+	int* pmatched, int *pall_captured)
+{
 	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatch];
 	if (pall_captured)

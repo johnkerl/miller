@@ -11,6 +11,8 @@ TOP OF LIST
 
 * merge-fields:
   - @ mld, why multiple accs but single regex: '[ab],[bc]' example.
+  - xxxes
+  - value/data confusery in containers -- pick one and uniformize
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
