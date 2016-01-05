@@ -3,6 +3,7 @@
 #include <string.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
+#include "cli/argparse.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/string_array.h"
@@ -12,7 +13,6 @@
 #include "containers/mlrval.h"
 #include "mapping/mappers.h"
 #include "mapping/stats1_accumulators.h"
-#include "cli/argparse.h"
 
 static char* fake_acc_name_for_setups = "__setup_done__";
 
@@ -37,7 +37,7 @@ static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pv
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
-	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state);
+	char* value_field_name, char* stats1_acc_name, lhmsv_t* acc_field_to_acc_state);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_stats1_setup = {
@@ -52,8 +52,8 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
 	fprintf(o, "                    one or more of:\n");
-	for (int i = 0; i < stats1_lookup_table_length; i++) {
-		fprintf(o, "  %-9s %s\n", stats1_lookup_table[i].name, stats1_lookup_table[i].desc);
+	for (int i = 0; i < stats1_acc_lookup_table_length; i++) {
+		fprintf(o, "  %-9s %s\n", stats1_acc_lookup_table[i].name, stats1_acc_lookup_table[i].desc);
 	}
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f}  Optional group-by-field names\n");
@@ -276,8 +276,8 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// the emitter it will be asked to produce output twice: once for the
 		// 10th percentile & once for the 90th.
 		for (lhmsve_t* pc = acc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
-			char* stats1_name = pc->key;
-			if (streq(stats1_name, fake_acc_name_for_setups))
+			char* stats1_acc_name = pc->key;
+			if (streq(stats1_acc_name, fake_acc_name_for_setups))
 				continue;
 			stats1_acc_t* pstats1 = pc->pvvalue;
 
@@ -302,7 +302,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			}
 
 			if (pstate->do_iterative_stats) {
-				mapper_stats1_emit(pstate, pinrec, value_field_name, stats1_name, acc_field_to_acc_state);
+				mapper_stats1_emit(pstate, pinrec, value_field_name, stats1_acc_name, acc_field_to_acc_state);
 			}
 		}
 	}
@@ -332,8 +332,8 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 			lhmsv_t* acc_field_to_acc_state = pd->pvvalue;
 
 			for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
-				char* stats1_name = pe->value;
-				mapper_stats1_emit(pstate, poutrec, value_field_name, stats1_name, acc_field_to_acc_state);
+				char* stats1_acc_name = pe->value;
+				mapper_stats1_emit(pstate, poutrec, value_field_name, stats1_acc_name, acc_field_to_acc_state);
 			}
 		}
 		sllv_add(poutrecs, poutrec);
@@ -344,20 +344,20 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 
 // ----------------------------------------------------------------
 static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
-	char* value_field_name, char* stats1_name, lhmsv_t* acc_field_to_acc_state)
+	char* value_field_name, char* stats1_acc_name, lhmsv_t* acc_field_to_acc_state)
 {
 	// Add in fields such as x_sum=#, y_count=#, etc.:
 	for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
-		char* stats1_name = pe->value;
-		if (streq(stats1_name, fake_acc_name_for_setups))
+		char* stats1_acc_name = pe->value;
+		if (streq(stats1_acc_name, fake_acc_name_for_setups))
 			continue;
-		stats1_acc_t* pstats1 = lhmsv_get(acc_field_to_acc_state, stats1_name);
+		stats1_acc_t* pstats1 = lhmsv_get(acc_field_to_acc_state, stats1_acc_name);
 		if (pstats1 == NULL) {
-			fprintf(stderr, "%s stats1: internal coding error: stats1_name \"%s\" has gone missing.\n",
-				MLR_GLOBALS.argv0, stats1_name);
+			fprintf(stderr, "%s stats1: internal coding error: stats1_acc_name \"%s\" has gone missing.\n",
+				MLR_GLOBALS.argv0, stats1_acc_name);
 			exit(1);
 		}
-		pstats1->pemit_func(pstats1->pvstate, value_field_name, stats1_name, poutrec);
+		pstats1->pemit_func(pstats1->pvstate, value_field_name, stats1_acc_name, poutrec);
 	}
 	return poutrec;
 }

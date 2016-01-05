@@ -5,6 +5,7 @@
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrstat.h"
+#include "cli/argparse.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
@@ -13,7 +14,7 @@
 #include "containers/mixutil.h"
 #include "containers/mlrval.h"
 #include "mapping/mappers.h"
-#include "cli/argparse.h"
+#include "mapping/stats1_accumulators.h"
 
 #define MERGE_BY_NAME_LIST  0xef01
 #define MERGE_BY_NAME_REGEX 0xef02
@@ -41,6 +42,7 @@ typedef struct _mapper_merge_fields_state_t {
 	slls_t*  paccumulator_names;
 	slls_t*  pvalue_field_names;
 	sllv_t*  pvalue_field_regexes;
+	char*    output_field_basename;
 	int      allow_int_float;
 	int      keep_input_fields;
 	string_builder_t* psb;
@@ -69,13 +71,13 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-- UNDER CONSTRUCTION --\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-a {sum,count,...}  Names of accumulators. One or more of:\n");
-	//for (int i = 0; i < merge_fields_lookup_table_length; i++) {
-		//fprintf(o, "  %-9s %s\n", merge_fields_lookup_table[i].name, merge_fields_lookup_table[i].desc);
-	//}
+	for (int i = 0; i < stats1_acc_lookup_table_length; i++) {
+		fprintf(o, "  %-9s %s\n", stats1_acc_lookup_table[i].name, stats1_acc_lookup_table[i].desc);
+	}
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
 	fprintf(o, "-r {a,b,c}  xxx describe me\n");
 	fprintf(o, "-c {a,b,c}  xxx describe me\n");
-	fprintf(o, "-o {x}      xxx describe me\n");
+	fprintf(o, "-o {x}      xxx describe me. xxx required for -f/-r.\n");
 	fprintf(o, "-k          xxx put description here.\n");
 	fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n");
 	fprintf(o, "Example: %s %s -a min,max -f 'bytes_.*'\n", argv0, verb);
@@ -171,6 +173,12 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 		mapper_merge_fields_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+	if (output_field_basename == NULL) {
+		if (do_which == MERGE_BY_NAME_LIST || do_which == MERGE_BY_NAME_REGEX) {
+			mapper_merge_fields_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+	}
 
 	*pargi = argi;
 	return mapper_merge_fields_alloc(paccumulator_names, do_which,
@@ -194,9 +202,10 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_wh
 		regcomp_or_die(pvalue_field_regex, value_field_name, 0);
 		sllv_add(pstate->pvalue_field_regexes, pvalue_field_regex);
 	}
-	pstate->allow_int_float      = allow_int_float;
-	pstate->keep_input_fields    = keep_input_fields;
-	pstate->psb                  = sb_alloc(32); // xxx need #define for length
+	pstate->output_field_basename = output_field_basename;
+	pstate->allow_int_float       = allow_int_float;
+	pstate->keep_input_fields     = keep_input_fields;
+	pstate->psb                   = sb_alloc(32); // xxx need #define for length
 
 	pmapper->pvstate = pstate;
 	pmapper->pprocess_func = (do_which == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
@@ -228,9 +237,9 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 	mapper_merge_fields_state_t* pstate = pvstate;
 	sllv_t* paccs = sllv_alloc();
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
-//		char* accumulator_name = pa->value;
-//		acc_t* pacc = alloc(pstate->output_field_basename, accumulator_name, pstate->allow_int_float);
-		void* pacc = NULL; // xxx temp
+		char* acc_name = pa->value;
+		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
+			pstate->allow_int_float);
 		sllv_add(paccs, pacc);
 	}
 
@@ -262,9 +271,9 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 	mapper_merge_fields_state_t* pstate = pvstate;
 	sllv_t* paccs = sllv_alloc();
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
-//		char* accumulator_name = pa->value;
-//		acc_t* pacc = alloc(pstate->output_field_basename, accumulator_name, pstate->allow_int_float);
-		void* pacc = NULL; // xxx temp
+		char* acc_name = pa->value;
+		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
+			pstate->allow_int_float);
 		sllv_add(paccs, pacc);
 	}
 
@@ -330,12 +339,11 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					acc_map_for_short_name = lhmsv_alloc();
 					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 						char* acc_name = pc->value;
-//						acc_t* pacc = alloc(short_name, "min", pstate->allow_int_float);
-						void* pacc = NULL; // xxx temp
-//						// xxx implement free-flags here (& for all lhm's) for copy-reduction
+						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float);
+						// xxx implement free-flags here (& for all lhm's) for copy-reduction
 						lhmsv_put(acc_map_for_short_name, acc_name, pacc);
 					}
-//					// xxx implement free-flags here (& for all lhm's) for copy-reduction
+					// xxx implement free-flags here (& for all lhm's) for copy-reduction
 					lhmsv_put(short_names_to_acc_maps, short_name, acc_map_for_short_name);
 				}
 				for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
@@ -369,90 +377,3 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	lhmsv_free(short_names_to_acc_maps);
 	return sllv_single(pinrec);
 }
-
-
-// ================================================================
-//static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate) {
-//}
-
-//static merge_fields_t* make_stats1_acc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
-//	for (int i = 0; i < merge_fields_lookup_table_length; i++)
-//		if (streq(merge_fields_name, merge_fields_lookup_table[i].name))
-//			return merge_fields_lookup_table[i].palloc_func(value_field_name, merge_fields_name, allow_int_float);
-//	return NULL;
-//}
-
-// ----------------------------------------------------------------
-//	for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
-//		regex_pair_t* ppair = pe->pvdata;
-//		regex_t* pregex = &ppair->regex;
-//		char* replacement = ppair->replacement;
-//		for (lrece_t* pf = pinrec->phead; pf != NULL; pf = pf->pnext) {
-//			int matched = FALSE;
-//			int all_captured = FALSE;
-//			char* old_name = pf->key;
-//			// xxx clean this up. maybe free-flags into regex_sub. or maybe just a needs-freeing
-//			// arg to both.
-//			char* new_name = regex_sub(old_name, pregex, pstate->psb, replacement, &matched, &all_captured);
-//			if (matched)
-//				lrec_rename(pinrec, old_name, new_name, TRUE);
-//			}
-//		}
-//	}
-
-//	mlr_reference_values_from_record(pinrec, pstate->pvalue_field_names, pstate->pvalue_field_values);
-//
-//	// for x=1 and y=2
-//	int n = pstate->pvalue_field_names->length;
-//	for (int i = 0; i < n; i++) {
-//		char* value_field_name = pstate->pvalue_field_names->strings[i];
-//		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-//
-//		if (value_field_sval == NULL)
-//			continue;
-//
-//		int have_dval = FALSE;
-//		int have_nval = FALSE;
-//		double value_field_dval = -999.0;
-//		mv_t   value_field_nval = mv_from_null();
-//
-//		for (lhmsve_t* pc = acc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
-//			char* merge_fields_name = pc->key;
-//			if (streq(merge_fields_name, merge_fields_fake_acc_name_for_setups))
-//				continue;
-//			merge_fields_t* pmerge_fields = pc->pvvalue;
-//
-//			if (pmerge_fields->pdingest_func != NULL) {
-//				if (!have_dval) {
-//					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-//					have_dval = TRUE;
-//				}
-//				pmerge_fields->pdingest_func(pmerge_fields->pvstate, value_field_dval);
-//			}
-//			if (pmerge_fields->pningest_func != NULL) {
-//				if (!have_nval) {
-//					value_field_nval = pstate->allow_int_float
-//						? mv_scan_number_or_die(value_field_sval)
-//						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-//					have_nval = TRUE;
-//				}
-//				pmerge_fields->pningest_func(pmerge_fields->pvstate, &value_field_nval);
-//			}
-//
-//
-//			// Add in fields such as x_sum=#, y_count=#, etc.:
-//			for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
-//				char* merge_fields_name = pe->value;
-//				if (streq(merge_fields_name, merge_fields_fake_acc_name_for_setups))
-//					continue;
-//				merge_fields_t* pmerge_fields = lhmsv_get(acc_field_to_acc_state, merge_fields_name);
-//				if (pmerge_fields == NULL) {
-//					fprintf(stderr, "%s merge_fields: internal coding error: merge_fields_name \"%s\" has gone missing.\n",
-//						MLR_GLOBALS.argv0, merge_fields_name);
-//					exit(1);
-//				}
-//				pmerge_fields->pemit_func(pmerge_fields->pvstate, value_field_name, merge_fields_name, poutrec);
-//			}
-//		}
-//	}
-//	slls_free(pgroup_by_field_values);

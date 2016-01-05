@@ -5,11 +5,14 @@
 #include "containers/lhmsv.h"
 
 // ----------------------------------------------------------------
+// These are used by mlr stats1 as well as mlr merge-fields.
+
+// ----------------------------------------------------------------
 struct _stats1_acc_t; // forward reference for method definitions
 typedef void stats1_dingest_func_t(void* pvstate, double val);
 typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void stats1_singest_func_t(void* pvstate, char*  val);
-typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec);
+typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec);
 typedef void stats1_free_func_t(struct _stats1_acc_t* pstats1);
 
 typedef struct _stats1_acc_t {
@@ -21,34 +24,34 @@ typedef struct _stats1_acc_t {
 	stats1_free_func_t*    pfree_func; // virtual destructor
 } stats1_acc_t;
 
-typedef stats1_acc_t* stats1_alloc_func_t(char* value_field_name, char* stats1_name, int allow_int_float);
+typedef stats1_acc_t* stats1_alloc_func_t(char* value_field_name, char* stats1_acc_name, int allow_int_float);
 
-stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_name, int do_which);
-stats1_acc_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_var_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name, int allow_int_float);
-void      stats1_percentile_reuse(stats1_acc_t* pstats1);
+stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_mode_alloc              (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_sum_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_mean_alloc              (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_stddev_var_meaneb_alloc (char* value_field_name, char* stats1_acc_name, int do_which);
+stats1_acc_t* stats1_stddev_alloc            (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_var_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_meaneb_alloc            (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_skewness_alloc          (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_kurtosis_alloc          (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_min_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int allow_int_float);
+void          stats1_percentile_reuse        (stats1_acc_t* pstats1);
 
 void make_stats1_accs(char* value_field_name, slls_t* paccumulator_names, int allow_int_float, lhmsv_t* acc_field_to_acc_state);
-stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_name, int allow_int_float);
+stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float);
 
 // ----------------------------------------------------------------
 // Lookups for all but percentiles, which are a special case.
-typedef struct _acc_lookup_t {
+typedef struct _stats1_acc_lookup_t {
 	char* name;
 	stats1_alloc_func_t* palloc_func;
 	char* desc;
-} stats1_lookup_t;
-static stats1_lookup_t stats1_lookup_table[] = {
+} stats1_acc_lookup_t;
+static stats1_acc_lookup_t stats1_acc_lookup_table[] = {
 	{"count",    stats1_count_alloc,    "Count instances of fields"},
 	{"mode",     stats1_mode_alloc,     "Find most-frequently-occurring values for fields; first-found wins tie"},
 	{"sum",      stats1_sum_alloc,      "Compute sums of specified fields"},
@@ -61,6 +64,6 @@ static stats1_lookup_t stats1_lookup_table[] = {
 	{"min",      stats1_min_alloc,      "Compute minimum values of specified fields"},
 	{"max",      stats1_max_alloc,      "Compute maximum values of specified fields"},
 };
-static int stats1_lookup_table_length = sizeof(stats1_lookup_table) / sizeof(stats1_lookup_table[0]);
+static int stats1_acc_lookup_table_length = sizeof(stats1_acc_lookup_table) / sizeof(stats1_acc_lookup_table[0]);
 
 #endif // STATS1_ACCUMULATORS_H

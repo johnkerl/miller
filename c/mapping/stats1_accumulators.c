@@ -18,16 +18,16 @@
 #define DO_MEANEB 0xc3
 
 // ----------------------------------------------------------------
-static int is_percentile_acc_name(char* stats1_name) {
+static int is_percentile_acc_name(char* stats1_acc_name) {
 	double percentile;
-	// sscanf(stats1_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
-	if (stats1_name[0] != 'p')
+	// sscanf(stats1_acc_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
+	if (stats1_acc_name[0] != 'p')
 		return FALSE;
-	if (!mlr_try_float_from_string(&stats1_name[1], &percentile))
+	if (!mlr_try_float_from_string(&stats1_acc_name[1], &percentile))
 		return FALSE;
 	if (percentile < 0.0 || percentile > 100.0) {
 		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
-			MLR_GLOBALS.argv0, stats1_name);
+			MLR_GLOBALS.argv0, stats1_acc_name);
 		exit(1);
 	}
 	return TRUE;
@@ -43,31 +43,31 @@ void make_stats1_accs(
 	stats1_acc_t* ppercentile_acc = NULL;
 	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 		// for "sum", "count"
-		char* stats1_name = pc->value;
+		char* stats1_acc_name = pc->value;
 
-		if (is_percentile_acc_name(stats1_name)) {
+		if (is_percentile_acc_name(stats1_acc_name)) {
 			if (ppercentile_acc == NULL) {
-				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_name, allow_int_float);
+				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float);
 			} else {
 				stats1_percentile_reuse(ppercentile_acc);
 			}
-			lhmsv_put(acc_field_to_acc_state, stats1_name, ppercentile_acc);
+			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, ppercentile_acc);
 		} else {
-			stats1_acc_t* pstats1 = make_stats1_acc(value_field_name, stats1_name, allow_int_float);
+			stats1_acc_t* pstats1 = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float);
 			if (pstats1 == NULL) {
 				fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
-					MLR_GLOBALS.argv0, stats1_name);
+					MLR_GLOBALS.argv0, stats1_acc_name);
 				exit(1);
 			}
-			lhmsv_put(acc_field_to_acc_state, stats1_name, pstats1);
+			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, pstats1);
 		}
 	}
 }
 
-stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_name, int allow_int_float) {
-	for (int i = 0; i < stats1_lookup_table_length; i++)
-		if (streq(stats1_name, stats1_lookup_table[i].name))
-			return stats1_lookup_table[i].palloc_func(value_field_name, stats1_name, allow_int_float);
+stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
+	for (int i = 0; i < stats1_acc_lookup_table_length; i++)
+		if (streq(stats1_acc_name, stats1_acc_lookup_table[i].name))
+			return stats1_acc_lookup_table[i].palloc_func(value_field_name, stats1_acc_name, allow_int_float);
 	return NULL;
 }
 
@@ -83,7 +83,7 @@ static void stats1_count_singest(void* pvstate, char* val) {
 	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
 
 }
-static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_count_state_t* pstate = pvstate;
 	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
 		FREE_ENTRY_VALUE);
@@ -94,12 +94,12 @@ static void stats1_count_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_count_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_count_state_t));
 	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
@@ -126,7 +126,7 @@ static void stats1_mode_singest(void* pvstate, char* val) {
 		pe->value++;
 	}
 }
-static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_mode_state_t* pstate = pvstate;
 	int max_count = 0;
 	char* max_key = "";
@@ -146,11 +146,11 @@ static void stats1_mode_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_mode_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mode_state_t));
 	pstate->pcounts_for_value = lhmsi_alloc();
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
@@ -171,7 +171,7 @@ static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 	stats1_sum_state_t* pstate = pvstate;
 	pstate->sum = n_nn_plus_func(&pstate->sum, pval);
 }
-static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
 	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->sum),
 		FREE_ENTRY_VALUE);
@@ -182,12 +182,12 @@ static void stats1_sum_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_sum_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_sum_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_sum_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_sum_state_t));
 	pstate->allow_int_float = allow_int_float;
 	pstate->sum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
 	pstats1->pningest_func = stats1_sum_ningest;
@@ -208,7 +208,7 @@ static void stats1_mean_dingest(void* pvstate, double val) {
 	pstate->sum   += val;
 	pstate->count++;
 }
-static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_mean_state_t* pstate = pvstate;
 	if (pstate->count == 0LL) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -224,12 +224,12 @@ static void stats1_mean_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_mean_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_mean_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_mean_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mean_state_t));
 	pstate->sum         = 0.0;
 	pstate->count       = 0LL;
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = stats1_mean_dingest;
@@ -255,7 +255,7 @@ static void stats1_stddev_var_meaneb_dingest(void* pvstate, double val) {
 	pstate->sumx2 += val*val;
 }
 
-static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_stddev_var_meaneb_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -276,14 +276,14 @@ static void stats1_stddev_var_meaneb_free(stats1_acc_t* pstats1) {
 	free(pstats1);
 }
 
-stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_name, int do_which) {
+stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_acc_name, int do_which) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_stddev_var_meaneb_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_stddev_var_meaneb_state_t));
 	pstate->count       = 0LL;
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
 	pstate->do_which    = do_which;
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = stats1_stddev_var_meaneb_dingest;
@@ -293,14 +293,14 @@ stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats
 	pstats1->pfree_func    = stats1_stddev_var_meaneb_free;
 	return pstats1;
 }
-stats1_acc_t* stats1_stddev_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
-	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_STDDEV);
+stats1_acc_t* stats1_stddev_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
+	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_STDDEV);
 }
-stats1_acc_t* stats1_var_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
-	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_VAR);
+stats1_acc_t* stats1_var_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
+	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_VAR);
 }
-stats1_acc_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
-	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_name, DO_MEANEB);
+stats1_acc_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
+	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_MEANEB);
 }
 
 // ----------------------------------------------------------------
@@ -319,7 +319,7 @@ static void stats1_skewness_dingest(void* pvstate, double val) {
 	pstate->sumx3 += val*val*val;
 }
 
-static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_skewness_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -336,14 +336,14 @@ static void stats1_skewness_free(stats1_acc_t* pstats1) {
 	free(pstats1);
 }
 
-stats1_acc_t* stats1_skewness_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_skewness_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_skewness_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_skewness_state_t));
 	pstate->count       = 0LL;
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
 	pstate->sumx3       = 0.0;
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = stats1_skewness_dingest;
@@ -372,7 +372,7 @@ static void stats1_kurtosis_dingest(void* pvstate, double val) {
 	pstate->sumx4 += val*val*val*val;
 }
 
-static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_kurtosis_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -388,14 +388,14 @@ static void stats1_kurtosis_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_kurtosis_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_kurtosis_state_t));
 	pstate->count       = 0LL;
 	pstate->sumx        = 0.0;
 	pstate->sumx2       = 0.0;
 	pstate->sumx3       = 0.0;
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = stats1_kurtosis_dingest;
@@ -415,7 +415,7 @@ static void stats1_min_ningest(void* pvstate, mv_t* pval) {
 	stats1_min_state_t* pstate = pvstate;
 	pstate->min = n_nn_min_func(&pstate->min, pval);
 }
-static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->min)) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -430,11 +430,11 @@ static void stats1_min_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
 	pstate->min = mv_from_null();
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
 	pstats1->pningest_func = stats1_min_ningest;
@@ -453,7 +453,7 @@ static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 	stats1_max_state_t* pstate = pvstate;
 	pstate->max = n_nn_max_func(&pstate->max, pval);
 }
-static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->max)) {
 		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
@@ -468,11 +468,11 @@ static void stats1_max_free(stats1_acc_t* pstats1) {
 	free(pstate);
 	free(pstats1);
 }
-stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
 	pstate->max = mv_from_null();
-	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
+	pstate->output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 	pstats1->pvstate       = (void*)pstate;
 	pstats1->pdingest_func = NULL;
 	pstats1->pningest_func = stats1_max_ningest;
@@ -492,18 +492,18 @@ static void stats1_percentile_ningest(void* pvstate, mv_t* pval) {
 	stats1_percentile_state_t* pstate = pvstate;
 	percentile_keeper_ingest(pstate->ppercentile_keeper, *pval);
 }
-static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_name, lrec_t* poutrec) {
+static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
 	stats1_percentile_state_t* pstate = pvstate;
 
 	double p;
-	(void)sscanf(stats1_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
+	(void)sscanf(stats1_acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
 	mv_t v = percentile_keeper_emit(pstate->ppercentile_keeper, p);
 	char* s = mv_alloc_format_val(&v);
 	// For this type, one accumulator tracks many stats1_names, but a single value_field_name.
-	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_name);
+	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_acc_name);
 	if (output_field_name == NULL) {
-		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_name);
-		lhmss_put(pstate->poutput_field_names, stats1_name, output_field_name);
+		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
+		lhmss_put(pstate->poutput_field_names, stats1_acc_name, output_field_name);
 	}
 	lrec_put(poutrec, output_field_name, s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
@@ -517,7 +517,7 @@ static void stats1_percentile_free(stats1_acc_t* pstats1) {
 		free(pstats1);
 	}
 }
-stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_name, int allow_int_float) {
+stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1 = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_percentile_state_t));
 	pstate->ppercentile_keeper = percentile_keeper_alloc();
