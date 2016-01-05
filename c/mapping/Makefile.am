@@ -32,7 +32,9 @@ libmapping_la_SOURCES=	\
 			mapper_tail.c \
 			mapper_top.c \
 			mapper_uniq.c \
-			mappers.h
+			mappers.h \
+			stats1_accumulators.c \
+			stats1_accumulators.h
 libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
 
 # TODO: replace the interesting content with unit tests; jettison the rest

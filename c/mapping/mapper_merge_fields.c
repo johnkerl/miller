@@ -305,23 +305,6 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 	return sllv_single(pinrec);
 }
 
-// for field in inrec {
-//   matches = FALSE
-//   for regex in regexes {
-//     if field.key matches regex {
-//       matches = TRUE
-//       break
-//     }
-//   }
-//   if matches {
-//     accumulator1.ningest(field.value)
-//     accumulator2.ningest(field.value)
-//     accumulator3.ningest(field.value)
-//   }
-//   if !keep
-//     lrec_remove(pinrec, field.key)
-// }
-
 // ----------------------------------------------------------------
 // mlr merge -c in_,out_ -a sum
 // a_in_x  1     a_sum_x 3
