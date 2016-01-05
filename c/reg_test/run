@@ -372,6 +372,13 @@ run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
 
 run_mlr --opprint histogram --nbins 9 --auto -f x,y $indir/ints.dkvp
 
+run_mlr --csvlite --opprint merge-fields    -a min,max,sum -c _in,_out $indir/merge-fields-in-out.csv
+run_mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out $indir/merge-fields-in-out.csv
+
+run_mlr --oxtab merge-fields -k -a sum,count -f a_in_x,a_out_x -o foo $indir/merge-fields-abxy.dkvp
+run_mlr --oxtab merge-fields -k -a sum,count -r in_,out_       -o bar $indir/merge-fields-abxy.dkvp
+run_mlr --oxtab merge-fields -k -a sum,count -c in_,out_              $indir/merge-fields-abxy.dkvp
+
 # ----------------------------------------------------------------
 announce DSL OPERATOR ASSOCIATIVITY
 # Note: filter -v and put -v print the AST.

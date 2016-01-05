@@ -68,6 +68,8 @@ EXTRA_DIST=	\
 		joina.dkvp \
 		joinb.dkvp \
 		logi.dkvp \
+		merge-fields-abxy.dkvp \
+		merge-fields-in-out.csv \
 		minmax.dkvp \
 		missings.dkvp \
 		mixed-types.xtab \
