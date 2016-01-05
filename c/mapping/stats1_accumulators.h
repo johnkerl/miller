@@ -1,6 +1,9 @@
 #ifndef STATS1_ACCUMULATORS_H
 #define STATS1_ACCUMULATORS_H
 
+#include "containers/slls.h"
+#include "containers/lhmsv.h"
+
 // ----------------------------------------------------------------
 struct _stats1_acc_t; // forward reference for method definitions
 typedef void stats1_dingest_func_t(void* pvstate, double val);
