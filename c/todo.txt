@@ -7,12 +7,12 @@ BUGFIXES
 TOP OF LIST
 
 * ruby @ optextdep @ mld; poki+mkman
-* rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 
 * merge-fields:
   - @ mld, why multiple accs but single regex: '[ab],[bc]' example.
   - xxxes
   - value/data confusery in containers -- pick one and uniformize
+  - rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h

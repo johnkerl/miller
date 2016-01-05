@@ -375,7 +375,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 //static void mapper_merge_fields_emit_all(lrec_t* pinrec, mapper_merge_fields_state_t* pstate) {
 //}
 
-//static merge_fields_t* make_acc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
+//static merge_fields_t* make_stats1_acc(char* value_field_name, char* merge_fields_name, int allow_int_float) {
 //	for (int i = 0; i < merge_fields_lookup_table_length; i++)
 //		if (streq(merge_fields_name, merge_fields_lookup_table[i].name))
 //			return merge_fields_lookup_table[i].palloc_func(value_field_name, merge_fields_name, allow_int_float);

@@ -143,7 +143,7 @@ static void mapper_stats1_free(mapper_t* pmapper) {
 			for (lhmsve_t* pc = pacc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
 				if (streq(pc->key, fake_acc_name_for_setups))
 					continue;
-				stats1_t* pstats1 = pc->pvvalue;
+				stats1_acc_t* pstats1 = pc->pvvalue;
 				pstats1->pfree_func(pstats1);
 			}
 			lhmsv_free(pacc_field_to_acc_state);
@@ -256,7 +256,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// Look up presence of all accumulators at this level's hashmap.
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
-			make_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float, acc_field_to_acc_state);
+			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float, acc_field_to_acc_state);
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
 		}
 
@@ -269,8 +269,8 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		mv_t   value_field_nval = mv_from_null();
 
 		// There isn't a one-to-one mapping between user-specified stats1_names
-		// and internal stats1_t's. Here in the ingestor we feed each datum
-		// into a stats1_t.  In the emitter, we loop over the stats1_names in
+		// and internal stats1_acc_t's. Here in the ingestor we feed each datum
+		// into a stats1_acc_t.  In the emitter, we loop over the stats1_names in
 		// user-specified order. Example: they ask for p10,mean,p90. Then there
 		// is only one percentiles accumulator to be told about each point. In
 		// the emitter it will be asked to produce output twice: once for the
@@ -279,7 +279,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			char* stats1_name = pc->key;
 			if (streq(stats1_name, fake_acc_name_for_setups))
 				continue;
-			stats1_t* pstats1 = pc->pvvalue;
+			stats1_acc_t* pstats1 = pc->pvvalue;
 
 			if (pstats1->pdingest_func != NULL) {
 				if (!have_dval) {
@@ -351,7 +351,7 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 		char* stats1_name = pe->value;
 		if (streq(stats1_name, fake_acc_name_for_setups))
 			continue;
-		stats1_t* pstats1 = lhmsv_get(acc_field_to_acc_state, stats1_name);
+		stats1_acc_t* pstats1 = lhmsv_get(acc_field_to_acc_state, stats1_name);
 		if (pstats1 == NULL) {
 			fprintf(stderr, "%s stats1: internal coding error: stats1_name \"%s\" has gone missing.\n",
 				MLR_GLOBALS.argv0, stats1_name);
