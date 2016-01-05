@@ -229,36 +229,66 @@ static void mapper_merge_fields_free(mapper_t* pmapper) {
 	free(pmapper);
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // end of input stream
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
-	sllv_t* paccs = sllv_alloc();
+	lhmsv_t* paccs = lhmsv_alloc();
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float);
-		sllv_add(paccs, pacc);
+		lhmsv_put(paccs, acc_name, pacc);
 	}
 
 	for (sllse_t* pb = pstate->pvalue_field_names->phead; pb != NULL; pb = pb->pnext) {
 		char* field_name = pb->value;
-		for (sllve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
-			//acc_t* pacc = pc->pvdata;
-			//pacc->ningest(pb->value);
+		char* value_field_sval = lrec_get(pinrec, field_name);
+		if (value_field_sval == NULL)
+			continue;
+
+		int have_dval = FALSE;
+		int have_nval = FALSE;
+		double value_field_dval = -999.0;
+		mv_t   value_field_nval = mv_from_null();
+
+		for (lhmsve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
+			stats1_acc_t* pacc = pc->pvvalue;
+
+			if (pacc->pdingest_func != NULL) {
+				if (!have_dval) {
+					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+					have_dval = TRUE;
+				}
+				pacc->pdingest_func(pacc->pvstate, value_field_dval);
+			}
+			if (pacc->pningest_func != NULL) {
+				if (!have_nval) {
+					value_field_nval = pstate->allow_int_float
+						? mv_scan_number_or_die(value_field_sval)
+						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+					have_nval = TRUE;
+				}
+				pacc->pningest_func(pacc->pvstate, &value_field_nval);
+			}
+			if (pacc->psingest_func != NULL) {
+				pacc->psingest_func(pacc->pvstate, value_field_sval);
+			}
 		}
+
 		if (!pstate->keep_input_fields)
 			lrec_remove(pinrec, field_name);
 	}
 
-	for (sllve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
-		// acc_t* pacc = pz->pvdata;
-		// pacc->emit(pstate->output_field_basename, xxx acc_name, pinrec);
-		// pacc->freefunc();
+	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
+		char* acc_name = pz->key;
+		stats1_acc_t* pacc = pz->pvvalue;
+		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, pinrec);
+		pacc->pfree_func(pacc);
 	}
-	sllv_free(paccs);
+	lhmsv_free(paccs);
 
 	return sllv_single(pinrec);
 }
@@ -269,12 +299,12 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
-	sllv_t* paccs = sllv_alloc();
+	lhmsv_t* paccs = lhmsv_alloc();
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float);
-		sllv_add(paccs, pacc);
+		lhmsv_put(paccs, acc_name, pacc);
 	}
 
 	for (lrece_t* pa = pinrec->phead; pa != NULL; /* increment inside loop */ ) {
@@ -283,9 +313,42 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 			regex_t* pvalue_field_regex = pb->pvdata;
 			matched = regmatch_or_die(pvalue_field_regex, pa->key, 0, NULL);
 			if (matched) {
-				for (sllve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
-//					acc_t* pacc = pd->pvvalue;
-//					pacc->ningest(field.value)
+				for (lhmsve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
+
+					char* field_name = pa->key;
+					char* value_field_sval = lrec_get(pinrec, field_name);
+					if (value_field_sval == NULL)
+						continue;
+
+					int have_dval = FALSE;
+					int have_nval = FALSE;
+					double value_field_dval = -999.0;
+					mv_t   value_field_nval = mv_from_null();
+
+					for (lhmsve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
+						stats1_acc_t* pacc = pc->pvvalue;
+
+						if (pacc->pdingest_func != NULL) {
+							if (!have_dval) {
+								value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+								have_dval = TRUE;
+							}
+							pacc->pdingest_func(pacc->pvstate, value_field_dval);
+						}
+						if (pacc->pningest_func != NULL) {
+							if (!have_nval) {
+								value_field_nval = pstate->allow_int_float
+									? mv_scan_number_or_die(value_field_sval)
+									: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+								have_nval = TRUE;
+							}
+							pacc->pningest_func(pacc->pvstate, &value_field_nval);
+						}
+						if (pacc->psingest_func != NULL) {
+							pacc->psingest_func(pacc->pvstate, value_field_sval);
+						}
+					}
+
 				}
 				if (!pstate->keep_input_fields) {
 					// We are modifying the lrec while iterating over it.
@@ -297,20 +360,20 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 				}
 				break;
 
-			}
+		}
 		}
 		if (!matched)
 			pa = pa->pnext;
 	}
 
-	for (sllve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
-		// acc_t* pacc = pz->pvdata;
-		// pacc->emit(pstate->output_field_basename, xxx acc_name, pinrec);
-		// pacc->freefunc();
+	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
+		char* acc_name = pz->key;
+		stats1_acc_t* pacc = pz->pvvalue;
+		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, pinrec);
+		pacc->pfree_func(pacc);
 	}
-	sllv_free(paccs);
+	lhmsv_free(paccs);
 
-	//mapper_merge_fields_state_t* pstate = pvstate;
 	return sllv_single(pinrec);
 }
 
@@ -329,10 +392,11 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	lhmsv_t* short_names_to_acc_maps = lhmsv_alloc();
 
 	for (lrece_t* pa = pinrec->phead; pa != NULL; /* increment inside loop */ ) {
+		char* field_name = pa->key;
 		int matched = FALSE;
 		for (sllve_t* pb = pstate->pvalue_field_regexes->phead; pb != NULL && !matched; pb = pb->pnext) {
 			regex_t* pvalue_field_regex = pb->pvdata;
-			char* short_name = regex_sub(pa->key, pvalue_field_regex, pstate->psb, "", &matched, NULL);
+			char* short_name = regex_sub(field_name, pvalue_field_regex, pstate->psb, "", &matched, NULL);
 			if (matched) {
 				lhmsv_t* acc_map_for_short_name = lhmsv_get(short_names_to_acc_maps, short_name);
 				if (acc_map_for_short_name == NULL) { // First such
@@ -346,9 +410,37 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					// xxx implement free-flags here (& for all lhm's) for copy-reduction
 					lhmsv_put(short_names_to_acc_maps, short_name, acc_map_for_short_name);
 				}
-				for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
-//					acc_t* pacc = pd->pvvalue;
-//					pacc->ningest(field.value)
+
+				char* value_field_sval = lrec_get(pinrec, field_name);
+				if (value_field_sval != NULL) {
+					for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
+						stats1_acc_t* pacc = pd->pvvalue;
+
+						int have_dval = FALSE;
+						int have_nval = FALSE;
+						double value_field_dval = -999.0;
+						mv_t   value_field_nval = mv_from_null();
+
+						if (pacc->pdingest_func != NULL) {
+							if (!have_dval) {
+								value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+								have_dval = TRUE;
+							}
+							pacc->pdingest_func(pacc->pvstate, value_field_dval);
+						}
+						if (pacc->pningest_func != NULL) {
+							if (!have_nval) {
+								value_field_nval = pstate->allow_int_float
+									? mv_scan_number_or_die(value_field_sval)
+									: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+								have_nval = TRUE;
+							}
+							pacc->pningest_func(pacc->pvstate, &value_field_nval);
+						}
+						if (pacc->psingest_func != NULL) {
+							pacc->psingest_func(pacc->pvstate, value_field_sval);
+						}
+					}
 				}
 				if (!pstate->keep_input_fields) {
 					// We are modifying the lrec while iterating over it.
@@ -366,14 +458,24 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	}
 
 	for (lhmsve_t* pe = short_names_to_acc_maps->phead; pe != NULL; pe = pe->pnext) {
-		//char* short_name = pe->key;
+		char* short_name = pe->key;
 		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
 		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
-			// acc.emit(short_name, acc_name, inrec)
-			// acc.freefunc()
+			char* acc_name = pf->key;
+			stats1_acc_t* pacc = pf->pvvalue;
+			pacc->pemit_func(pacc->pvstate, short_name, acc_name, pinrec);
+		}
+	}
+
+	for (lhmsve_t* pe = short_names_to_acc_maps->phead; pe != NULL; pe = pe->pnext) {
+		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
+		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
+			stats1_acc_t* pacc = pf->pvvalue;
+			pacc->pfree_func(pacc);
 		}
 		lhmsv_free(acc_map_for_short_name);
 	}
+
 	lhmsv_free(short_names_to_acc_maps);
 	return sllv_single(pinrec);
 }

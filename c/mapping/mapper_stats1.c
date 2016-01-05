@@ -143,8 +143,8 @@ static void mapper_stats1_free(mapper_t* pmapper) {
 			for (lhmsve_t* pc = pacc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
 				if (streq(pc->key, fake_acc_name_for_setups))
 					continue;
-				stats1_acc_t* pstats1 = pc->pvvalue;
-				pstats1->pfree_func(pstats1);
+				stats1_acc_t* pstats1_acc = pc->pvvalue;
+				pstats1_acc->pfree_func(pstats1_acc);
 			}
 			lhmsv_free(pacc_field_to_acc_state);
 		}
@@ -279,26 +279,26 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			char* stats1_acc_name = pc->key;
 			if (streq(stats1_acc_name, fake_acc_name_for_setups))
 				continue;
-			stats1_acc_t* pstats1 = pc->pvvalue;
+			stats1_acc_t* pstats1_acc = pc->pvvalue;
 
-			if (pstats1->pdingest_func != NULL) {
+			if (pstats1_acc->pdingest_func != NULL) {
 				if (!have_dval) {
 					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
 					have_dval = TRUE;
 				}
-				pstats1->pdingest_func(pstats1->pvstate, value_field_dval);
+				pstats1_acc->pdingest_func(pstats1_acc->pvstate, value_field_dval);
 			}
-			if (pstats1->pningest_func != NULL) {
+			if (pstats1_acc->pningest_func != NULL) {
 				if (!have_nval) {
 					value_field_nval = pstate->allow_int_float
 						? mv_scan_number_or_die(value_field_sval)
 						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 					have_nval = TRUE;
 				}
-				pstats1->pningest_func(pstats1->pvstate, &value_field_nval);
+				pstats1_acc->pningest_func(pstats1_acc->pvstate, &value_field_nval);
 			}
-			if (pstats1->psingest_func != NULL) {
-				pstats1->psingest_func(pstats1->pvstate, value_field_sval);
+			if (pstats1_acc->psingest_func != NULL) {
+				pstats1_acc->psingest_func(pstats1_acc->pvstate, value_field_sval);
 			}
 
 			if (pstate->do_iterative_stats) {
@@ -351,13 +351,13 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 		char* stats1_acc_name = pe->value;
 		if (streq(stats1_acc_name, fake_acc_name_for_setups))
 			continue;
-		stats1_acc_t* pstats1 = lhmsv_get(acc_field_to_acc_state, stats1_acc_name);
-		if (pstats1 == NULL) {
+		stats1_acc_t* pstats1_acc = lhmsv_get(acc_field_to_acc_state, stats1_acc_name);
+		if (pstats1_acc == NULL) {
 			fprintf(stderr, "%s stats1: internal coding error: stats1_acc_name \"%s\" has gone missing.\n",
 				MLR_GLOBALS.argv0, stats1_acc_name);
 			exit(1);
 		}
-		pstats1->pemit_func(pstats1->pvstate, value_field_name, stats1_acc_name, poutrec);
+		pstats1_acc->pemit_func(pstats1_acc->pvstate, value_field_name, stats1_acc_name, poutrec);
 	}
 	return poutrec;
 }

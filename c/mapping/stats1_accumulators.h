@@ -13,7 +13,7 @@ typedef void stats1_dingest_func_t(void* pvstate, double val);
 typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void stats1_singest_func_t(void* pvstate, char*  val);
 typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec);
-typedef void stats1_free_func_t(struct _stats1_acc_t* pstats1);
+typedef void stats1_free_func_t(struct _stats1_acc_t* pstats1_acc);
 
 typedef struct _stats1_acc_t {
 	void* pvstate;
@@ -39,7 +39,7 @@ stats1_acc_t* stats1_kurtosis_alloc          (char* value_field_name, char* stat
 stats1_acc_t* stats1_min_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int allow_int_float);
-void          stats1_percentile_reuse        (stats1_acc_t* pstats1);
+void          stats1_percentile_reuse        (stats1_acc_t* pstats1_acc);
 
 void make_stats1_accs(char* value_field_name, slls_t* paccumulator_names, int allow_int_float, lhmsv_t* acc_field_to_acc_state);
 stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float);
