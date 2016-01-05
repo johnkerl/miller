@@ -357,7 +357,7 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 				MLR_GLOBALS.argv0, stats1_acc_name);
 			exit(1);
 		}
-		pstats1_acc->pemit_func(pstats1_acc->pvstate, value_field_name, stats1_acc_name, poutrec);
+		pstats1_acc->pemit_func(pstats1_acc->pvstate, value_field_name, stats1_acc_name, FALSE, poutrec);
 	}
 	return poutrec;
 }

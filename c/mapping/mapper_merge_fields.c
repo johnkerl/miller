@@ -285,7 +285,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
 		char* acc_name = pz->key;
 		stats1_acc_t* pacc = pz->pvvalue;
-		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, pinrec);
+		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, TRUE, pinrec);
 		pacc->pfree_func(pacc);
 	}
 	lhmsv_free(paccs);
@@ -369,7 +369,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
 		char* acc_name = pz->key;
 		stats1_acc_t* pacc = pz->pvvalue;
-		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, pinrec);
+		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, TRUE, pinrec);
 		pacc->pfree_func(pacc);
 	}
 	lhmsv_free(paccs);
@@ -463,7 +463,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
 			char* acc_name = pf->key;
 			stats1_acc_t* pacc = pf->pvvalue;
-			pacc->pemit_func(pacc->pvstate, short_name, acc_name, pinrec);
+			pacc->pemit_func(pacc->pvstate, short_name, acc_name, TRUE, pinrec);
 		}
 	}
 

@@ -83,10 +83,14 @@ static void stats1_count_singest(void* pvstate, char* val) {
 	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
 
 }
-static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_count_state_t* pstate = pvstate;
-	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
-		FREE_ENTRY_VALUE);
+	if (copy_data)
+		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mv_alloc_format_val(&pstate->counter),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	else
+		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
+			FREE_ENTRY_VALUE);
 }
 static void stats1_count_free(stats1_acc_t* pstats1_acc) {
 	stats1_count_state_t* pstate = pstats1_acc->pvstate;
@@ -126,7 +130,7 @@ static void stats1_mode_singest(void* pvstate, char* val) {
 		pe->value++;
 	}
 }
-static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_mode_state_t* pstate = pvstate;
 	int max_count = 0;
 	char* max_key = "";
@@ -137,7 +141,10 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 			max_count = count;
 		}
 	}
-	lrec_put(poutrec, pstate->output_field_name, max_key, NO_FREE);
+	if (copy_data)
+		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mlr_strdup_or_die(max_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	else
+		lrec_put(poutrec, pstate->output_field_name, max_key, NO_FREE);
 }
 static void stats1_mode_free(stats1_acc_t* pstats1_acc) {
 	stats1_mode_state_t* pstate = pstats1_acc->pvstate;
@@ -171,10 +178,14 @@ static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 	stats1_sum_state_t* pstate = pvstate;
 	pstate->sum = n_nn_plus_func(&pstate->sum, pval);
 }
-static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
-	lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->sum),
-		FREE_ENTRY_VALUE);
+	if (copy_data)
+		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mv_alloc_format_val(&pstate->sum),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	else
+		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->sum),
+			FREE_ENTRY_VALUE);
 }
 static void stats1_sum_free(stats1_acc_t* pstats1_acc) {
 	stats1_sum_state_t* pstate = pstats1_acc->pvstate;
@@ -209,14 +220,20 @@ static void stats1_mean_dingest(void* pvstate, double val) {
 	pstate->sum   += val;
 	pstate->count++;
 }
-static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_mean_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_mean_state_t* pstate = pvstate;
 	if (pstate->count == 0LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
 		double quot = pstate->sum / pstate->count;
 		char* val = mlr_alloc_string_from_double(quot, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_mean_free(stats1_acc_t* pstats1_acc) {
@@ -256,10 +273,13 @@ static void stats1_stddev_var_meaneb_dingest(void* pvstate, double val) {
 	pstate->sumx2 += val*val;
 }
 
-static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_stddev_var_meaneb_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
 		double output = mlr_get_var(pstate->count, pstate->sumx, pstate->sumx2);
 		if (pstate->do_which == DO_STDDEV)
@@ -267,7 +287,10 @@ static void stats1_stddev_var_meaneb_emit(void* pvstate, char* value_field_name,
 		else if (pstate->do_which == DO_MEANEB)
 			output = sqrt(output / pstate->count);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_stddev_var_meaneb_free(stats1_acc_t* pstats1_acc) {
@@ -320,14 +343,20 @@ static void stats1_skewness_dingest(void* pvstate, double val) {
 	pstate->sumx3 += val*val*val;
 }
 
-static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_skewness_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_skewness_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
 		double output = mlr_get_skewness(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_skewness_free(stats1_acc_t* pstats1_acc) {
@@ -373,14 +402,20 @@ static void stats1_kurtosis_dingest(void* pvstate, double val) {
 	pstate->sumx4 += val*val*val*val;
 }
 
-static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_kurtosis_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_kurtosis_state_t* pstate = pvstate;
 	if (pstate->count < 2LL) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
 		double output = mlr_get_kurtosis(pstate->count, pstate->sumx, pstate->sumx2, pstate->sumx3, pstate->sumx4);
 		char* val =  mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), val, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, val, FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_kurtosis_free(stats1_acc_t* pstats1_acc) {
@@ -416,13 +451,20 @@ static void stats1_min_ningest(void* pvstate, mv_t* pval) {
 	stats1_min_state_t* pstate = pvstate;
 	pstate->min = n_nn_min_func(&pstate->min, pval);
 }
-static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->min)) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->min),
-			FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mv_alloc_format_val(&pstate->min),
+				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->min),
+				FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_min_free(stats1_acc_t* pstats1_acc) {
@@ -455,13 +497,20 @@ static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 	stats1_max_state_t* pstate = pvstate;
 	pstate->max = n_nn_max_func(&pstate->max, pval);
 }
-static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
 	if (mv_is_null(&pstate->max)) {
-		lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), "", FREE_ENTRY_KEY);
+		else
+			lrec_put(poutrec, pstate->output_field_name, "", NO_FREE);
 	} else {
-		lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->max),
-			FREE_ENTRY_VALUE);
+		if (copy_data)
+			lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mv_alloc_format_val(&pstate->max),
+				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		else
+			lrec_put(poutrec, pstate->output_field_name, mv_alloc_format_val(&pstate->max),
+				FREE_ENTRY_VALUE);
 	}
 }
 static void stats1_max_free(stats1_acc_t* pstats1_acc) {
@@ -495,7 +544,7 @@ static void stats1_percentile_ningest(void* pvstate, mv_t* pval) {
 	stats1_percentile_state_t* pstate = pvstate;
 	percentile_keeper_ingest(pstate->ppercentile_keeper, *pval);
 }
-static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec) {
+static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_percentile_state_t* pstate = pvstate;
 
 	double p;

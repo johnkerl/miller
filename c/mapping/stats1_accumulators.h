@@ -12,7 +12,15 @@ struct _stats1_acc_t; // forward reference for method definitions
 typedef void stats1_dingest_func_t(void* pvstate, double val);
 typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
 typedef void stats1_singest_func_t(void* pvstate, char*  val);
-typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_acc_name, lrec_t* poutrec);
+// For mlr stats1, there is a single alloc at start including computation of
+// output field name; arbitrary number of records output with that field name;
+// then free. There it makes sense to point the poutrec key at the output field
+// name in the acc state rather than copying it. For mlr merge-fields, by
+// contrast, the outer/inner loops are reversed: arbitrary number of records;
+// for each, allocate, set output field key/value, free; then, the record is
+// output. There it is necessary to copy the key since it will be referenced
+// after the accumulator is freed.
+typedef void stats1_emit_func_t(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec);
 typedef void stats1_free_func_t(struct _stats1_acc_t* pstats1_acc);
 
 typedef struct _stats1_acc_t {
