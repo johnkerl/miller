@@ -160,6 +160,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#histogram">histogram</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#join">join</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#merge-fields">merge-fields</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
@@ -337,8 +338,8 @@ Help options:
 
 Verbs:
    bar cat check count-distinct cut decimate filter grep group-by group-like
-   having-fields head histogram join label put regularize rename reorder sample
-   sec2gmt sort stats1 stats2 step tac tail top uniq
+   having-fields head histogram join label merge-fields put regularize rename
+   reorder sample sec2gmt sort stats1 stats2 step tac tail top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! boolean
@@ -1879,6 +1880,93 @@ Carol 45  present
 <p/>
 
 <!-- ================================================================ -->
+<a id="merge-fields"/><h2>merge-fields</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr merge-fields --help
+Usage: mlr merge-fields [options]
+Computes univariate statistics for each input record, accumulated across
+specified fields.
+Options:
+-a {sum,count,...}  Names of accumulators. One or more of:
+  count     Count instances of fields
+  mode      Find most-frequently-occurring values for fields; first-found wins tie
+  sum       Compute sums of specified fields
+  mean      Compute averages (sample means) of specified fields
+  stddev    Compute sample standard deviation of specified fields
+  var       Compute sample variance of specified fields
+  meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
+  skewness  Compute sample skewness of specified fields
+  kurtosis  Compute sample kurtosis of specified fields
+  min       Compute minimum values of specified fields
+  max       Compute maximum values of specified fields
+-f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
+-r {a,b,c}  Regular expressions for value-field names on which to compute
+            statistics. Requires -o.
+-c {a,b,c}  Substrings for collapse mode. All fields which have the same names
+            after removing substrings will be accumulated together. Please see
+            examples below.
+-o {name}   Output field basename for -f/-r.
+-k          Keep the input fields which contributed to the output statistics;
+            the default is to omit them.
+-F          Computes integerable things (e.g. count) in floating point.
+Example input data: "a_in_x=1,a_out_x=2,b_in_y=4,b_out_x=8".
+Example: mlr merge-fields -a sum,count -f a_in_x,a_out_x -o foo
+  produces "b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2" since "a_in_x,a_out_x" are
+  summed over.
+Example: mlr merge-fields -a sum,count -r in_,out_ -o bar
+  produces "bar_sum=15,bar_count=4" since all four fields are summed over.
+Example: mlr merge-fields -a sum,count -c in_,out_
+  produces "a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1"
+  since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
+  "b_y", and "b_out_x" collapses to "b_x".
+</pre>
+</div>
+<p/>
+
+<p/>This is like <tt>mlr stats1</tt> but all accumulation is done across fields
+within each given record: horizontal rather than vertical statistics, if you
+will.
+
+<p/>Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite --opprint cat data/inout.csv
+a_in a_out b_in b_out
+436  490   446  195
+526  320   963  780
+220  888   705  831
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
+a_min a_max a_sum b_min b_max b_sum
+436   490   926   195   446   641
+320   526   846   780   963   1743
+220   888   1108  705   831   1536
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
+a_in a_out b_in b_out a_sum b_sum
+436  490   446  195   926   641
+526  320   963  780   846   1743
+220  888   705  831   1108  1536
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="put"/><h2>put</h2>
 
 <p/>
@@ -2384,6 +2472,8 @@ a=3
 <pre>
 $ mlr stats1 --help
 Usage: mlr stats1 [options]
+Computes univariate statistics for one or more given fields, accumulated across
+the input record stream.
 Options:
 -a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
                     one or more of:
@@ -2509,6 +2599,8 @@ circle   red
 <pre>
 $ mlr stats2 --help
 Usage: mlr stats2 [options]
+Computes bivariate statistics for one or more given field-name pairs,
+accumulated across the input record stream.
 -a {linreg-ols,corr,...}  Names of accumulators: one or more of:
   linreg-pca   Linear regression using principal component analysis
   linreg-ols   Linear regression using ordinary least squares

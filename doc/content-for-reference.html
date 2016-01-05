@@ -573,6 +573,21 @@ POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status 
 POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
 
 <!-- ================================================================ -->
+<h2>merge-fields</h2>
+
+POKI_RUN_COMMAND{{mlr merge-fields --help}}HERE
+
+<p/>This is like <tt>mlr stats1</tt> but all accumulation is done across fields
+within each given record: horizontal rather than vertical statistics, if you
+will.
+
+<p/>Examples:
+
+POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/inout.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv}}HERE
+
+<!-- ================================================================ -->
 <h2>put</h2>
 
 POKI_RUN_COMMAND{{mlr put --help}}HERE
