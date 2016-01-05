@@ -102,6 +102,8 @@ mapper_setup_t mapper_stats2_setup = {
 // ----------------------------------------------------------------
 static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Computes bivariate statistics for one or more given field-name pairs,\n");
+	fprintf(o, "accumulated across the input record stream.\n");
 	fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of:\n");
 	for (int i = 0; i < stats2_acc_lookup_table_length; i++) {
 		fprintf(o, "  %-12s %s\n", stats2_acc_lookup_table[i].name, stats2_acc_lookup_table[i].desc);

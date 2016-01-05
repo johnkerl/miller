@@ -49,6 +49,8 @@ mapper_setup_t mapper_stats1_setup = {
 // ----------------------------------------------------------------
 static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Computes univariate statistics for one or more given fields, accumulated across\n");
+	fprintf(o, "the input record stream.\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or\n");
 	fprintf(o, "                    one or more of:\n");
