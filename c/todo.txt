@@ -9,11 +9,9 @@ TOP OF LIST
 * ruby @ optextdep @ mld; poki+mkman
 
 * merge-fields:
-  - @ mld, why multiple accs but single regex: '[ab],[bc]' example.
   - xxxes
   - value/data confusery in containers -- pick one and uniformize
   - rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
-  - UT
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
