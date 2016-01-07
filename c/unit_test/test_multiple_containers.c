@@ -139,9 +139,9 @@ static char* test_sllv() {
 
 	sllve_t* pe = pa->phead;
 
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "b")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "c")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
 	sllv_t* pb = sllv_alloc();
@@ -151,8 +151,8 @@ static char* test_sllv() {
 
 	pe = pb->phead;
 
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
 	sllv_transfer(pa, pb);
@@ -163,11 +163,11 @@ static char* test_sllv() {
 	mu_assert_lf(pb->ptail == NULL);
 
 	pe = pa->phead;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "a")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "b")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "c")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "d")); pe = pe->pnext;
-	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvdata, "e")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "d")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
 	sllv_free(pb);

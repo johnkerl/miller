@@ -225,7 +225,7 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 		// First pass computes lo and hi from the data
 		int j = 0;
 		for (sllve_t* pe = pstate->precords->phead; pe != NULL; pe = pe->pnext, j++) {
-			lrec_t* prec = pe->pvdata;
+			lrec_t* prec = pe->pvvalue;
 			char* sval = lrec_get(prec, name);
 			if (sval == NULL)
 				continue;
@@ -245,7 +245,7 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 		char* shi = mlr_alloc_string_from_double(hi, "%g");
 
 		for (sllve_t* pe = pstate->precords->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* prec = pe->pvdata;
+			lrec_t* prec = pe->pvvalue;
 			char* sval = lrec_get(prec, name);
 			if (sval == NULL)
 				continue;

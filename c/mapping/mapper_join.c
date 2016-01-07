@@ -434,7 +434,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 	sllv_t* pout_recs)
 {
 	for (sllve_t* pe = pleft_records->phead; pe != NULL; pe = pe->pnext) {
-		lrec_t* pleft_rec = pe->pvdata;
+		lrec_t* pleft_rec = pe->pvvalue;
 		lrec_t* pout_rec = lrec_unbacked_alloc();
 
 		// add the joined-on fields

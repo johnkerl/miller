@@ -85,7 +85,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 	sllv_t* outrecs = chain_map(pinrec, pctx, pmapper_list_head);
 	if (outrecs != NULL) {
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* poutrec = pe->pvdata;
+			lrec_t* poutrec = pe->pvvalue;
 			if (poutrec != NULL) // writer frees records (sllv void-star payload)
 				plrec_writer->pprocess_func(output_stream, poutrec, plrec_writer->pvstate);
 		}
@@ -100,7 +100,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 // Return: list of lrec_t*. Input: lrec_t* and list of mapper_t*.
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head) {
-	mapper_t* pmapper = pmapper_list_head->pvdata;
+	mapper_t* pmapper = pmapper_list_head->pvvalue;
 	sllv_t* outrecs = pmapper->pprocess_func(pinrec, pctx, pmapper->pvstate);
 	if (pmapper_list_head->pnext == NULL) {
 		return outrecs;
@@ -110,7 +110,7 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 		sllv_t* nextrecs = sllv_alloc();
 
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* poutrec = pe->pvdata;
+			lrec_t* poutrec = pe->pvvalue;
 			sllv_t* nextrecsi = chain_map(poutrec, pctx, pmapper_list_head->pnext);
 			sllv_transfer(nextrecs, nextrecsi);
 			sllv_free(nextrecsi);

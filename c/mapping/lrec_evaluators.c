@@ -1790,12 +1790,12 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		if (user_provided_arity == 0) {
 			pevaluator = lrec_evaluator_alloc_from_zary_func_name(func_name);
 		} else if (user_provided_arity == 1) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
+			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
 			lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, function_lookup_table);
 			pevaluator = lrec_evaluator_alloc_from_unary_func_name(func_name, parg1);
 		} else if (user_provided_arity == 2) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
-			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
+			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
 			int type2 = parg2_node->type;
 
 			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
@@ -1815,9 +1815,9 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			}
 
 		} else if (user_provided_arity == 3) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvdata;
-			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvdata;
-			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvdata;
+			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
 			int type2 = parg2_node->type;
 
 			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {

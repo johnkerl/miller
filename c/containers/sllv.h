@@ -6,7 +6,7 @@
 #define SLLV_H
 
 typedef struct _sllve_t {
-	void* pvdata;
+	void* pvvalue;
 	struct _sllve_t *pnext;
 } sllve_t;
 
@@ -18,8 +18,8 @@ typedef struct _sllv_t {
 
 sllv_t* sllv_alloc();
 void    sllv_free(sllv_t* plist);
-sllv_t* sllv_single(void* pvdata);
-void    sllv_add(sllv_t* plist, void* pvdata);
+sllv_t* sllv_single(void* pvvalue);
+void    sllv_add(sllv_t* plist, void* pvvalue);
 void*   sllv_pop(sllv_t* plist);
 void    sllv_reverse(sllv_t* plist);
 // Move all records from pthat to end of pthis. Upon return, pthat is the empty

@@ -233,7 +233,7 @@ static void mapper_merge_fields_free(mapper_t* pmapper) {
 	slls_free(pstate->paccumulator_names);
 	slls_free(pstate->pvalue_field_names);
 	for (sllve_t* pa = pstate->pvalue_field_regexes->phead; pa != NULL; pa = pa->pnext) {
-		regex_t* pvalue_field_regex = pa->pvdata;
+		regex_t* pvalue_field_regex = pa->pvvalue;
 		regfree(pvalue_field_regex);
 	}
 	free(pstate);
@@ -322,7 +322,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		char* field_name = pb->key;
 		int matched = FALSE;
 		for (sllve_t* pc = pstate->pvalue_field_regexes->phead; pc != NULL && !matched; pc = pc->pnext) {
-			regex_t* pvalue_field_regex = pc->pvdata;
+			regex_t* pvalue_field_regex = pc->pvvalue;
 			matched = regmatch_or_die(pvalue_field_regex, field_name, 0, NULL);
 			if (matched) {
 				char* value_field_sval = lrec_get(pinrec, field_name);
@@ -402,7 +402,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 		char* field_name = pa->key;
 		int matched = FALSE;
 		for (sllve_t* pb = pstate->pvalue_field_regexes->phead; pb != NULL && !matched; pb = pb->pnext) {
-			regex_t* pvalue_field_regex = pb->pvdata;
+			regex_t* pvalue_field_regex = pb->pvvalue;
 			char* short_name = regex_sub(field_name, pvalue_field_regex, pstate->psb, "", &matched, NULL);
 			if (matched) {
 				lhmsv_t* acc_map_for_short_name = lhmsv_get(short_names_to_acc_maps, short_name);

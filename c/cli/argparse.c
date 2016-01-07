@@ -20,7 +20,7 @@ typedef struct _ap_flag_def_t {
 
 static ap_flag_def_t* ap_find(ap_state_t* pstate, char* flag_name) {
 	for (sllve_t* pe = pstate->pflag_defs->phead; pe != NULL; pe = pe->pnext) {
-		ap_flag_def_t* pdef = pe->pvdata;
+		ap_flag_def_t* pdef = pe->pvvalue;
 		if (streq(pdef->flag_name, flag_name))
 			return pdef;
 	}
@@ -50,7 +50,7 @@ void ap_free(ap_state_t* pstate) {
 		return;
 
 	for (sllve_t* pe = pstate->pflag_defs->phead; pe != NULL; pe = pe->pnext) {
-		ap_flag_def_t* pdef = pe->pvdata;
+		ap_flag_def_t* pdef = pe->pvvalue;
 
 		// Linked-lists are pointed to by mappers and freed by their free
 		// methods.  If any mappers miss on that contract, we can find out by

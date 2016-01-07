@@ -90,7 +90,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 		sllv_free(precords);
 		return;
 	}
-	lrec_t* prec1 = precords->phead->pvdata;
+	lrec_t* prec1 = precords->phead->pvvalue;
 
 	int* max_widths = mlr_malloc_or_die(sizeof(int) * prec1->field_count);
 	int j = 0;
@@ -98,7 +98,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 		max_widths[j] = strlen_for_utf8_display(pe->key);
 	}
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext) {
-		lrec_t* prec = pnode->pvdata;
+		lrec_t* prec = pnode->pvvalue;
 		j = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 			int width = strlen_for_utf8_display(pe->value);
@@ -109,7 +109,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 
 	int onr = 0;
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext, onr++) {
-		lrec_t* prec = pnode->pvdata;
+		lrec_t* prec = pnode->pvvalue;
 
 		if (onr == 0) {
 			j = 0;

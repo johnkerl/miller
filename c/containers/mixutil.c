@@ -89,7 +89,7 @@ hss_t* hss_from_slls(slls_t* plist) {
 // ----------------------------------------------------------------
 void lrec_print_list(sllv_t* plist) {
 	for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
-		lrec_print(pe->pvdata);
+		lrec_print(pe->pvvalue);
 	}
 }
 
@@ -99,7 +99,7 @@ void lrec_print_list_with_prefix(sllv_t* plist, char* prefix) {
 	} else {
 		for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
 			printf("%s", prefix);
-			lrec_print(pe->pvdata);
+			lrec_print(pe->pvvalue);
 		}
 	}
 }

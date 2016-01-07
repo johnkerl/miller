@@ -136,7 +136,7 @@ static void mapper_rename_free(mapper_t* pmapper) {
 	lhmss_free(pstate->pold_to_new);
 	if (pstate->pregex_pairs != NULL) {
 		for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
-			regex_pair_t* ppair = pe->pvdata;
+			regex_pair_t* ppair = pe->pvvalue;
 			regfree(&ppair->regex);
 			// replacement is in pthe old_to_new list, already freed
 			free(ppair);
@@ -172,7 +172,7 @@ static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void
 		mapper_rename_state_t* pstate = (mapper_rename_state_t*)pvstate;
 
 		for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
-			regex_pair_t* ppair = pe->pvdata;
+			regex_pair_t* ppair = pe->pvvalue;
 			regex_t* pregex = &ppair->regex;
 			char* replacement = ppair->replacement;
 			for (lrece_t* pf = pinrec->phead; pf != NULL; pf = pf->pnext) {

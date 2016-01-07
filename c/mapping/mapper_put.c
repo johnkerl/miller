@@ -88,7 +88,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	//   mlr put -v 'expression goes here' /dev/null
 	if (print_asts) {
 		for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext)
-			mlr_dsl_ast_node_print(pe->pvdata);
+			mlr_dsl_ast_node_print(pe->pvvalue);
 	}
 
 	return mapper_put_alloc(pstate, pasts, type_inferencing);
@@ -105,7 +105,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 
 	int i = 0;
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* past = pe->pvdata;
+		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
 		if ((past->type != MLR_DSL_AST_NODE_TYPE_OPERATOR) || !streq(past->text, "=")) {
 			fprintf(stderr,
@@ -118,8 +118,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			exit(1);
 		}
 
-		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvdata;
-		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvdata;
+		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 
 		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -158,7 +158,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	free(pstate->pevaluators);
 
 	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* past = pe->pvdata;
+		mlr_dsl_ast_node_t* past = pe->pvvalue;
 		mlr_dsl_ast_node_free(past);
 	}
 	sllv_free(pstate->pasts);

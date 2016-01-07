@@ -77,7 +77,7 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level) {
 		(pnode->pchildren != NULL) ? ":" : ".");
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_print_aux(pe->pvdata, level + 1);
+			mlr_dsl_ast_node_print_aux(pe->pvvalue, level + 1);
 		}
 	}
 }
@@ -104,7 +104,7 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pchild = pe->pvdata;
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 			mlr_dsl_ast_node_free(pchild);
 		}
 		sllv_free(pnode->pchildren);
