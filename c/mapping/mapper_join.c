@@ -527,7 +527,8 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 				pbucket->precords = sllv_alloc();
 				pbucket->was_paired = FALSE;
 				pbucket->pleft_field_values = slls_copy(pleft_field_values);
-				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket);
+				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket,
+					FREE_ENTRY_KEY);
 				sllv_add(pbucket->precords, pleft_rec);
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pleft_rec);

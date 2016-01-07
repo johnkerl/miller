@@ -111,7 +111,8 @@ static sllv_t* mapper_decimate_process(lrec_t* pinrec, context_t* pctx, void* pv
 			if (pcount_for_group == NULL) {
 				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount_for_group = 0LL;
-				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group);
+				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group,
+					FREE_ENTRY_KEY);
 			}
 
 			unsigned long long remainder = *pcount_for_group % pstate->decimate_count;

@@ -12,6 +12,8 @@ TOP OF LIST
   - use ownership-transfer for hash-map enlarges
   ? memory leak on hashput w/ existing key?
   ! lhm*remove methods
+  ! lhm*clear  methods
+  - re-valgrind
 ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
 * more rid of "double" in fcn names
 * join: final sllv_free in destructor (lo-pri)

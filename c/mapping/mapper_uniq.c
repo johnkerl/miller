@@ -164,7 +164,7 @@ static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* 
 			if (pcount == NULL) {
 				pcount = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount = 1LL;
-				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount, FREE_ENTRY_KEY);
 			} else {
 				(*pcount)++;
 			}
@@ -195,7 +195,7 @@ static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, 
 			if (pcount == NULL) {
 				pcount = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount = 1LL;
-				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount);
+				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values), pcount, FREE_ENTRY_KEY);
 			} else {
 				(*pcount)++;
 			}
@@ -246,7 +246,7 @@ static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, vo
 		pcount = mlr_malloc_or_die(sizeof(unsigned long long));
 		*pcount = 1LL;
 		slls_t* pcopy = slls_copy(pgroup_by_field_values);
-		lhmslv_put(pstate->pcounts_by_group, pcopy, pcount);
+		lhmslv_put(pstate->pcounts_by_group, pcopy, pcount, FREE_ENTRY_KEY);
 
 		lrec_t* poutrec = lrec_unbacked_alloc();
 

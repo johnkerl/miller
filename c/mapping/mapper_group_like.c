@@ -77,7 +77,8 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 		if (plist == NULL) {
 			plist = sllv_alloc();
 			sllv_add(plist, pinrec);
-			lhmslv_put(pstate->precords_by_key_field_names, slls_copy(pkey_field_names), plist);
+			lhmslv_put(pstate->precords_by_key_field_names, slls_copy(pkey_field_names), plist,
+				FREE_ENTRY_KEY);
 		} else {
 			sllv_add(plist, pinrec);
 		}

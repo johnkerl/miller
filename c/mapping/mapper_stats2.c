@@ -295,14 +295,14 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 	lhms2v_t* pgroup_to_acc_field = lhmslv_get(pstate->acc_groups, pgroup_by_field_values);
 	if (pgroup_to_acc_field == NULL) {
 		pgroup_to_acc_field = lhms2v_alloc();
-		lhmslv_put(pstate->acc_groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field);
+		lhmslv_put(pstate->acc_groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field, FREE_ENTRY_KEY);
 	}
 
 	if (pstate->do_hold_and_fit) { // Retain the input record in memory, for fitting and delivery at end of stream
 		sllv_t* group_to_records = lhmslv_get(pstate->record_groups, pgroup_by_field_values);
 		if (group_to_records == NULL) {
 			group_to_records = sllv_alloc();
-			lhmslv_put(pstate->record_groups, slls_copy(pgroup_by_field_values), group_to_records);
+			lhmslv_put(pstate->record_groups, slls_copy(pgroup_by_field_values), group_to_records, FREE_ENTRY_KEY);
 		}
 		sllv_add(group_to_records, pinrec);
 	}

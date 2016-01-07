@@ -41,7 +41,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue);
+static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, char free_flags);
 static void lhmslv_enlarge(lhmslv_t* pmap);
 
 // ================================================================
@@ -49,6 +49,7 @@ static void lhmslve_clear(lhmslve_t *pentry) {
 	pentry->ideal_index = -1;
 	pentry->key         = NULL;
 	pentry->pvvalue     = NULL;
+	pentry->free_flags  = NO_FREE;
 	pentry->pprev       = NULL;
 	pentry->pnext       = NULL;
 }
@@ -85,7 +86,8 @@ void lhmslv_free(lhmslv_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmslve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
-		slls_free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			slls_free(pe->key);
 	free(pmap->entries);
 	free(pmap->states);
 	pmap->entries      = NULL;
@@ -134,13 +136,13 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key) {
 }
 
 // ----------------------------------------------------------------
-void* lhmslv_put(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
+void* lhmslv_put(lhmslv_t* pmap, slls_t* key, void* pvvalue, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmslv_enlarge(pmap);
-	return lhmslv_put_no_enlarge(pmap, key, pvvalue);
+	return lhmslv_put_no_enlarge(pmap, key, pvvalue, free_flags);
 }
 
-static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
+static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, char free_flags) {
 	int index = lhmslv_find_index_for_key(pmap, key);
 	lhmslve_t* pe = &pmap->entries[index];
 
@@ -155,6 +157,7 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(slls_hash_func(key), pmap->array_length);
 		pe->key = key;
+		pe->free_flags = free_flags;
 		pe->pvvalue = pvvalue;
 		pmap->states[index] = OCCUPIED;
 
@@ -218,10 +221,13 @@ void* lhmslv_remove(lhmslv_t* pmap, slls_t* key) {
 	int index = lhmslv_find_index_for_key(pmap, key);
 	lhmslve_t* pe = &pmap->entries[index];
 	if (pmap->states[index] == OCCUPIED) {
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			slls_free(pe->key);
 		void* pvvalue   = pe->pvvalue;
 		pe->ideal_index = -1;
 		pe->key         = NULL;
 		pe->pvvalue     = NULL;
+		pe->free_flags  = NO_FREE;
 		pmap->states[index] = DELETED;
 
 		if (pe == pmap->phead) {
@@ -273,7 +279,7 @@ static void lhmslv_enlarge(lhmslv_t* pmap) {
 	lhmslv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmslve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		lhmslv_put_no_enlarge(pmap, pe->key, pe->pvvalue);
+		lhmslv_put_no_enlarge(pmap, pe->key, pe->pvvalue, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

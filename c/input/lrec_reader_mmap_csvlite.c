@@ -148,7 +148,8 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 			if (pstate->pheader_keeper == NULL) {
 				pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
-				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
+				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper,
+					NO_FREE); // freed by header-keeper
 			} else { // Re-use the header-keeper in the header cache
 				slls_free(pheader_fields);
 			}
@@ -162,12 +163,6 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			:  lrec_reader_mmap_csvlite_get_record_single_seps(phandle, pstate, pctx,
 				pstate->pheader_keeper, &end_of_stanza);
 		if (end_of_stanza) {
-			//if (prec != NULL) {
-				//printf("XXXXXXXXXXXXXXXXXXXXXX\n");
-				//lrec_dump(prec);
-				//lrec_free(prec);
-				//printf("XXXXXXXXXXXXXXXXXXXXXX\n");
-			//}
 			pstate->expect_header_line_next = TRUE;
 		} else if (prec == NULL) { // EOF
 			return NULL;
@@ -199,7 +194,8 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 			if (pstate->pheader_keeper == NULL) {
 				pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
-				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
+				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper,
+					NO_FREE); // freed by header-keeper
 			} else { // Re-use the header-keeper in the header cache
 				slls_free(pheader_fields);
 			}

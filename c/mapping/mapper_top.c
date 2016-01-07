@@ -177,7 +177,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	lhmsv_t* group_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
 	if (group_to_acc_field == NULL) {
 		group_to_acc_field = lhmsv_alloc();
-		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field);
+		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), group_to_acc_field, FREE_ENTRY_KEY);
 	}
 	slls_free(pgroup_by_field_values);
 

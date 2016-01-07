@@ -120,7 +120,8 @@ static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvst
 			sample_bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_group, pgroup_by_field_values);
 			if (pbucket == NULL) {
 				pbucket = sample_bucket_alloc(pstate->sample_count);
-				lhmslv_put(pstate->pbuckets_by_group, slls_copy(pgroup_by_field_values), pbucket);
+				lhmslv_put(pstate->pbuckets_by_group, slls_copy(pgroup_by_field_values), pbucket,
+					FREE_ENTRY_KEY);
 			}
 			sample_bucket_handle(pbucket, pinrec, pctx->nr);
 			slls_free(pgroup_by_field_values);

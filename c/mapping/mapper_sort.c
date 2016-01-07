@@ -261,7 +261,8 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 				pbucket->precords = sllv_alloc();
 				sllv_add(pbucket->precords, pinrec);
-				lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket);
+				lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket,
+					FREE_ENTRY_KEY);
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_add(pbucket->precords, pinrec);
 			}

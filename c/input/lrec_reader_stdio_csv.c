@@ -199,7 +199,8 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
 		if (pstate->pheader_keeper == NULL) {
 			pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
-			lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper);
+			lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper,
+				NO_FREE); // freed by header-keeper
 		} else { // Re-use the header-keeper in the header cache
 			slls_free(pheader_fields);
 		}

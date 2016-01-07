@@ -70,7 +70,8 @@ static sllv_t* mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* 
 		slls_t* previous_sorted_field_names = lhmslv_get(pstate->psorted_to_original, current_sorted_field_names);
 		if (previous_sorted_field_names == NULL) {
 			previous_sorted_field_names = slls_copy(current_sorted_field_names);
-			lhmslv_put(pstate->psorted_to_original, previous_sorted_field_names, mlr_copy_keys_from_record(pinrec));
+			lhmslv_put(pstate->psorted_to_original, previous_sorted_field_names, mlr_copy_keys_from_record(pinrec),
+				FREE_ENTRY_KEY);
 			slls_free(current_sorted_field_names);
 			return sllv_single(pinrec);
 		} else {
