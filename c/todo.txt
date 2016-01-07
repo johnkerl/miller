@@ -10,8 +10,6 @@ TOP OF LIST
 
 * merge-fields:
   - xxxes
-  - value/data confusery in containers -- pick one and uniformize
-  - rename mlr_selected_values_from_record to mlr_reference_selected_values_from_record
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
