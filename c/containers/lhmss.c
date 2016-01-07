@@ -2,7 +2,7 @@
 // Array-only (open addressing) string-to-string linked hash map with linear
 // probing for collisions.
 //
-// Keys and values are strduped.
+// Keys and values are not strduped.
 //
 // John Kerl 2012-08-13
 //
@@ -22,6 +22,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmss.h"
+#include "containers/free_flags.h"
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
@@ -43,7 +44,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value);
+static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char free_flags);
 static void lhmss_enlarge(lhmss_t* pmap);
 
 static void lhmss_init(lhmss_t *pmap, int length) {
@@ -76,7 +77,7 @@ lhmss_t* lhmss_alloc() {
 lhmss_t* lhmss_copy(lhmss_t* pmap) {
 	lhmss_t* pnew = lhmss_alloc();
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
-		lhmss_put(pnew, pe->key, pe->value);
+		lhmss_put(pnew, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	return pnew;
 }
 
@@ -84,8 +85,10 @@ void lhmss_free(lhmss_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		free(pe->key);
-		free(pe->value);
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_VALUE)
+			free(pe->value);
 	}
 	free(pmap->entries);
 	free(pmap->states);
@@ -135,27 +138,33 @@ static int lhmss_find_index_for_key(lhmss_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmss_put(lhmss_t* pmap, char* key, char* value) {
+void lhmss_put(lhmss_t* pmap, char* key, char* value, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmss_enlarge(pmap);
-	lhmss_put_no_enlarge(pmap, key, value);
+	lhmss_put_no_enlarge(pmap, key, value, free_flags);
 }
 
-static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value) {
+static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char free_flags) {
 	int index = lhmss_find_index_for_key(pmap, key);
 	lhmsse_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (streq(pe->key, key)) {
-			free(pe->value);
-			pe->value = mlr_strdup_or_die(value);
+			if (pe->free_flags & FREE_ENTRY_VALUE)
+				free(pe->value);
+			pe->value = value;
+			if (free_flags & FREE_ENTRY_VALUE)
+				pe->free_flags |= FREE_ENTRY_VALUE;
+			else
+				pe->free_flags &= ~FREE_ENTRY_VALUE;
 		}
 	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
-		pe->key = mlr_strdup_or_die(key);
-		pe->value = mlr_strdup_or_die(value);
+		pe->key = key;
+		pe->value = value;
+		pe->free_flags = free_flags;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -254,10 +263,7 @@ static void lhmss_enlarge(lhmss_t* pmap) {
 	lhmss_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsse_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		// xxx implement free-flags here so we can do this without the redundant strdups
-		lhmss_put_no_enlarge(pmap, pe->key, pe->value);
-		free(pe->key);
-		free(pe->value);
+		lhmss_put_no_enlarge(pmap, pe->key, pe->value, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

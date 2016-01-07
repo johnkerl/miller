@@ -74,9 +74,10 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 			free(pe->value);
 		}
 		pe->value = value;
-		pe->free_flags &= ~FREE_ENTRY_VALUE;
 		if (free_flags & FREE_ENTRY_VALUE)
 			pe->free_flags |= FREE_ENTRY_VALUE;
+		else
+			pe->free_flags &= ~FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
 		pe->key        = key;

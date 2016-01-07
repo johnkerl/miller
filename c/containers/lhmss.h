@@ -21,6 +21,7 @@
 // ----------------------------------------------------------------
 typedef struct _lhmsse_t {
 	int   ideal_index;
+	char  free_flags;
 	char* key;
 	char* value;
 	struct _lhmsse_t *pprev;
@@ -43,7 +44,7 @@ typedef struct _lhmss_t {
 lhmss_t* lhmss_alloc();
 lhmss_t* lhmss_copy(lhmss_t* pmap);
 void  lhmss_free(lhmss_t* pmap);
-void  lhmss_put(lhmss_t* pmap, char* key, char* value);
+void  lhmss_put(lhmss_t* pmap, char* key, char* value, char free_flags);
 char* lhmss_get(lhmss_t* pmap, char* key);
 int   lhmss_has_key(lhmss_t* pmap, char* key);
 void  lhmss_remove(lhmss_t* pmap, char* key);

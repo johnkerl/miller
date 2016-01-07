@@ -61,22 +61,22 @@ static lhmss_t* singleton_pdesc_to_chars_map = NULL;
 static lhmss_t* get_desc_to_chars_map() {
 	if (singleton_pdesc_to_chars_map == NULL) {
 		singleton_pdesc_to_chars_map = lhmss_alloc();
-		lhmss_put(singleton_pdesc_to_chars_map, "cr",        "\r");
-		lhmss_put(singleton_pdesc_to_chars_map, "crcr",      "\r\r");
-		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "lf",        "\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "lflf",      "\n\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "crlf",      "\r\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "tab",       "\t");
-		lhmss_put(singleton_pdesc_to_chars_map, "space",     " ");
-		lhmss_put(singleton_pdesc_to_chars_map, "comma",     ",");
-		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n");
-		lhmss_put(singleton_pdesc_to_chars_map, "pipe",      "|");
-		lhmss_put(singleton_pdesc_to_chars_map, "slash",     "/");
-		lhmss_put(singleton_pdesc_to_chars_map, "colon",     ":");
-		lhmss_put(singleton_pdesc_to_chars_map, "semicolon", ";");
-		lhmss_put(singleton_pdesc_to_chars_map, "equals",    "=");
+		lhmss_put(singleton_pdesc_to_chars_map, "cr",        "\r",       NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "crcr",      "\r\r",     NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n",       NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "lf",        "\n",       NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "lflf",      "\n\n",     NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "crlf",      "\r\n",     NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "crlfcrlf",  "\r\n\r\n", NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "tab",       "\t",       NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "space",     " ",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "comma",     ",",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "newline",   "\n",       NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "pipe",      "|",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "slash",     "/",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "colon",     ":",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "semicolon", ";",        NO_FREE);
+		lhmss_put(singleton_pdesc_to_chars_map, "equals",    "=",        NO_FREE);
 	}
 	return singleton_pdesc_to_chars_map;
 }
@@ -98,12 +98,12 @@ static lhmsi_t* singleton_default_repeat_ipses = NULL;
 static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
-		lhmss_put(singleton_default_rses, "dkvp",    "\n");
-		lhmss_put(singleton_default_rses, "nidx",    "\n");
-		lhmss_put(singleton_default_rses, "csv",     "\r\n");
-		lhmss_put(singleton_default_rses, "csvlite", "\n");
-		lhmss_put(singleton_default_rses, "pprint",  "\n");
-		lhmss_put(singleton_default_rses, "xtab",    "(N/A)");
+		lhmss_put(singleton_default_rses, "dkvp",    "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "nidx",    "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "csv",     "\r\n",  NO_FREE);
+		lhmss_put(singleton_default_rses, "csvlite", "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "pprint",  "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "xtab",    "(N/A)", NO_FREE);
 	}
 	return singleton_default_rses;
 }
@@ -111,12 +111,12 @@ static lhmss_t* get_default_rses() {
 static lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
-		lhmss_put(singleton_default_fses, "dkvp",    ",");
-		lhmss_put(singleton_default_fses, "nidx",    " ");
-		lhmss_put(singleton_default_fses, "csv",     ",");
-		lhmss_put(singleton_default_fses, "csvlite", ",");
-		lhmss_put(singleton_default_fses, "pprint",  " ");
-		lhmss_put(singleton_default_fses, "xtab",    "\n");
+		lhmss_put(singleton_default_fses, "dkvp",    ",",   NO_FREE);
+		lhmss_put(singleton_default_fses, "nidx",    " ",   NO_FREE);
+		lhmss_put(singleton_default_fses, "csv",     ",",   NO_FREE);
+		lhmss_put(singleton_default_fses, "csvlite", ",",   NO_FREE);
+		lhmss_put(singleton_default_fses, "pprint",  " ",   NO_FREE);
+		lhmss_put(singleton_default_fses, "xtab",    "\n",  NO_FREE);
 	}
 	return singleton_default_fses;
 }
@@ -124,12 +124,12 @@ static lhmss_t* get_default_fses() {
 static lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
-		lhmss_put(singleton_default_pses, "dkvp",    "=");
-		lhmss_put(singleton_default_pses, "nidx",    "(N/A)");
-		lhmss_put(singleton_default_pses, "csv",     "(N/A)");
-		lhmss_put(singleton_default_pses, "csvlite", "(N/A)");
-		lhmss_put(singleton_default_pses, "pprint",  "(N/A)");
-		lhmss_put(singleton_default_pses, "xtab",    " ");
+		lhmss_put(singleton_default_pses, "dkvp",    "=",     NO_FREE);
+		lhmss_put(singleton_default_pses, "nidx",    "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "csv",     "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "csvlite", "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "pprint",  "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "xtab",    " ",     NO_FREE);
 	}
 	return singleton_default_pses;
 }
