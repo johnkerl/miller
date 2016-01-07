@@ -40,7 +40,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue);
+static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue, char free_flags);
 static void lhms2v_enlarge(lhms2v_t* pmap);
 
 // ================================================================
@@ -85,8 +85,10 @@ void lhms2v_free(lhms2v_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhms2ve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		free(pe->key1);
-		free(pe->key2);
+		if (pe->free_flags & FREE_ENTRY_KEY) {
+			free(pe->key1);
+			free(pe->key2);
+		}
 	}
 	free(pmap->entries);
 	free(pmap->states);
@@ -138,13 +140,13 @@ static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2) {
 }
 
 // ----------------------------------------------------------------
-void* lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue) {
+void* lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhms2v_enlarge(pmap);
-	return lhms2v_put_no_enlarge(pmap, key1, key2, pvvalue);
+	return lhms2v_put_no_enlarge(pmap, key1, key2, pvvalue, free_flags);
 }
 
-static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue) {
+static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue, char free_flags) {
 	int index = lhms2v_find_index_for_key(pmap, key1, key2);
 	lhms2ve_t* pe = &pmap->entries[index];
 
@@ -158,9 +160,10 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_pair_hash_func(key1, key2), pmap->array_length);
-		pe->key1 = mlr_strdup_or_die(key1);
-		pe->key2 = mlr_strdup_or_die(key2);
+		pe->key1 = key1;
+		pe->key2 = key2;
 		pe->pvvalue = pvvalue;
+		pe->free_flags = free_flags;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -278,10 +281,7 @@ static void lhms2v_enlarge(lhms2v_t* pmap) {
 	lhms2v_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhms2ve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		// xxx implement free-flags here so we can do this without the redundant strdups
-		lhms2v_put_no_enlarge(pmap, pe->key1, pe->key2, pe->pvvalue);
-		free(pe->key1);
-		free(pe->key2);
+		lhms2v_put_no_enlarge(pmap, pe->key1, pe->key2, pe->pvvalue, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

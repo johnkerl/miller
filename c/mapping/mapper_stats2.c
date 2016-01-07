@@ -316,7 +316,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 		lhmsv_t* pacc_fields_to_acc_state = lhms2v_get(pgroup_to_acc_field, value_field_name_1, value_field_name_2);
 		if (pacc_fields_to_acc_state == NULL) {
 			pacc_fields_to_acc_state = lhmsv_alloc();
-			lhms2v_put(pgroup_to_acc_field, value_field_name_1, value_field_name_2, pacc_fields_to_acc_state);
+			lhms2v_put(pgroup_to_acc_field, value_field_name_1, value_field_name_2, pacc_fields_to_acc_state, NO_FREE);
 		}
 
 		char* sval1 = lrec_get(pinrec, value_field_name_1);

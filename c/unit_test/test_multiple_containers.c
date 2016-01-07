@@ -443,7 +443,7 @@ static char* test_lhms2v() {
 	mu_assert_lf(!lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(lhms2v_get(pmap, "b", "z") == NULL);
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
-	lhms2v_put(pmap, "a", "x", "3");
+	lhms2v_put(pmap, "a", "x", "3", NO_FREE);
 	mu_assert_lf(pmap->num_occupied == 1);
 	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "3"));
@@ -451,7 +451,7 @@ static char* test_lhms2v() {
 	mu_assert_lf(!lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(lhms2v_get(pmap, "b", "z") == NULL);
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
-	lhms2v_put(pmap, "a", "y", "5");
+	lhms2v_put(pmap, "a", "y", "5", NO_FREE);
 	mu_assert_lf(pmap->num_occupied == 2);
 	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "3"));
@@ -459,7 +459,7 @@ static char* test_lhms2v() {
 	mu_assert_lf(!lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(lhms2v_get(pmap, "b", "z") == NULL);
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
-	lhms2v_put(pmap, "a", "x", "4");
+	lhms2v_put(pmap, "a", "x", "4", NO_FREE);
 	mu_assert_lf(pmap->num_occupied == 2);
 	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "4"));
@@ -467,7 +467,7 @@ static char* test_lhms2v() {
 	mu_assert_lf(!lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(lhms2v_get(pmap, "b", "z") == NULL);
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
-	lhms2v_put(pmap, "b", "z", "7");
+	lhms2v_put(pmap, "b", "z", "7", NO_FREE);
 	mu_assert_lf(pmap->num_occupied == 3);
 	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "4"));
