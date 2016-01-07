@@ -21,6 +21,7 @@ typedef struct _lhmsie_t {
 	int   ideal_index;
 	char* key;
 	long long value;
+	char  free_flags;
 	struct _lhmsie_t *pprev;
 	struct _lhmsie_t *pnext;
 } lhmsie_t;
@@ -41,7 +42,7 @@ typedef struct _lhmsi_t {
 lhmsi_t* lhmsi_alloc();
 lhmsi_t* lhmsi_copy(lhmsi_t* pmap);
 void  lhmsi_free(lhmsi_t* pmap);
-void  lhmsi_put(lhmsi_t* pmap, char* key, int value);
+void  lhmsi_put(lhmsi_t* pmap, char* key, int value, char free_flags);
 long long lhmsi_get(lhmsi_t* pmap, char* key); // caller must do lhmsi_has_key to check validity
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key);
 int   lhmsi_has_key(lhmsi_t* pmap, char* key);

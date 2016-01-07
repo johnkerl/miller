@@ -137,12 +137,12 @@ static lhmss_t* get_default_pses() {
 static lhmsi_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
 		singleton_default_repeat_ifses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE);
-		lhmsi_put(singleton_default_repeat_ifses, "csv",     FALSE);
-		lhmsi_put(singleton_default_repeat_ifses, "csvlite", FALSE);
-		lhmsi_put(singleton_default_repeat_ifses, "nidx",    FALSE);
-		lhmsi_put(singleton_default_repeat_ifses, "xtab",    FALSE);
-		lhmsi_put(singleton_default_repeat_ifses, "pprint",  TRUE);
+		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "csv",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "csvlite", FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "nidx",    FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "xtab",    FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "pprint",  TRUE,  NO_FREE);
 	}
 	return singleton_default_repeat_ifses;
 }
@@ -150,12 +150,12 @@ static lhmsi_t* get_default_repeat_ifses() {
 static lhmsi_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
 		singleton_default_repeat_ipses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE);
-		lhmsi_put(singleton_default_repeat_ipses, "csv",     FALSE);
-		lhmsi_put(singleton_default_repeat_ipses, "csvlite", FALSE);
-		lhmsi_put(singleton_default_repeat_ipses, "nidx",    FALSE);
-		lhmsi_put(singleton_default_repeat_ipses, "xtab",    TRUE);
-		lhmsi_put(singleton_default_repeat_ipses, "pprint",  FALSE);
+		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "csv",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "csvlite", FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "nidx",    FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "xtab",    TRUE,  NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "pprint",  FALSE, NO_FREE);
 	}
 	return singleton_default_repeat_ipses;
 }

@@ -8,8 +8,9 @@ TOP OF LIST
 
 
 ! xxxes
-- lhms* incorporate free-flags as with slls
-  > use ownership-transfer for hash-map enlarges
+* lhms* incorporate free-flags as with slls
+  - use ownership-transfer for hash-map enlarges
+  ? memory leak on hashput w/ existing key?
 ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
 * more rid of "double" in fcn names
 * join: final sllv_free in destructor (lo-pri)

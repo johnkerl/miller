@@ -2,7 +2,7 @@
 // Array-only (open addressing) string-to-string linked hash map with linear
 // probing for collisions.
 //
-// Keys are strduped.
+// Keys are not strduped.
 //
 // John Kerl 2012-08-13
 //
@@ -43,7 +43,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value);
+static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_flags);
 static void lhmsi_enlarge(lhmsi_t* pmap);
 
 // ================================================================
@@ -77,7 +77,7 @@ lhmsi_t* lhmsi_alloc() {
 lhmsi_t* lhmsi_copy(lhmsi_t* pmap) {
 	lhmsi_t* pnew = lhmsi_alloc();
 	for (lhmsie_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
-		lhmsi_put(pnew, pe->key, pe->value);
+		lhmsi_put(pnew, mlr_strdup_or_die(pe->key), pe->value, FREE_ENTRY_KEY);
 	return pnew;
 }
 
@@ -85,7 +85,8 @@ void lhmsi_free(lhmsi_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsie_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
 	}
 	free(pmap->entries);
 	free(pmap->states);
@@ -135,13 +136,13 @@ static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmsi_put(lhmsi_t* pmap, char* key, int value) {
+void lhmsi_put(lhmsi_t* pmap, char* key, int value, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmsi_enlarge(pmap);
-	lhmsi_put_no_enlarge(pmap, key, value);
+	lhmsi_put_no_enlarge(pmap, key, value, free_flags);
 }
 
-static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value) {
+static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_flags) {
 	int index = lhmsi_find_index_for_key(pmap, key);
 	lhmsie_t* pe = &pmap->entries[index];
 
@@ -154,8 +155,9 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value) {
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
-		pe->key = mlr_strdup_or_die(key);
+		pe->key = key;
 		pe->value = value;
+		pe->free_flags = free_flags;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -288,9 +290,7 @@ static void lhmsi_enlarge(lhmsi_t* pmap) {
 	lhmsi_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsie_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		// xxx implement free-flags here so we can do this without the redundant strdups
-		lhmsi_put_no_enlarge(pmap, pe->key, pe->value);
-		free(pe->key);
+		lhmsi_put_no_enlarge(pmap, pe->key, pe->value, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

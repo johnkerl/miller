@@ -125,7 +125,7 @@ static void stats1_mode_singest(void* pvstate, char* val) {
 	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
 	if (pe == NULL) {
 		// lhmsi does a strdup so we needn't.
-		lhmsi_put(pstate->pcounts_for_value, val, 1);
+		lhmsi_put(pstate->pcounts_for_value, mlr_strdup_or_die(val), 1, FREE_ENTRY_KEY);
 	} else {
 		pe->value++;
 	}
