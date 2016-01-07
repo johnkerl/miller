@@ -6,23 +6,19 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* ruby @ optextdep @ mld; poki+mkman
 
-* merge-fields:
-  - xxxes
+! xxxes
+- lhms* incorporate free-flags as with slls
+  > use ownership-transfer for hash-map enlarges
+! mv_format_val in case string is allocated. modify semantics to nullify the arg??
+* more rid of "double" in fcn names
+* join: final sllv_free in destructor (lo-pri)
 
 * light edit on utf8 page
 * --mmap/--no-mmap @ mlr -h
 * debian screenshot
 * termcvt flins & rework that page
-
-* mem-mgmt scrutinize: valgrind w/ leak check @ regtest/run
-  - xxxes
-  - more rid of "double" in fcn names
-  - lhms* incorporate free-flags as with slls
-    > use ownership-transfer for hash-map enlarges
-  ! mv_format_val in case string is allocated. modify semantics to nullify the arg??
-  - join: final sllv_free in destructor (lo-pri)
+* ruby @ optextdep @ mld; poki+mkman
 
 * profile new streqn vs. strncmp ...
 ! mixed-format joins ... make UT cases

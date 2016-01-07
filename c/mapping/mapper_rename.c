@@ -179,8 +179,6 @@ static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void
 				int matched = FALSE;
 				int all_captured = FALSE;
 				char* old_name = pf->key;
-				// xxx clean this up. maybe free-flags into regex_sub. or maybe just a needs-freeing
-				// arg to both.
 				if (pstate->do_gsub) {
 					unsigned char free_flags = NO_FREE;
 					char* new_name = regex_gsub(old_name, pregex, pstate->psb, replacement, &matched,
