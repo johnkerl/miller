@@ -250,7 +250,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	mapper_sort_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		// Consume another input record.
-		slls_t* pkey_field_values = mlr_selected_values_from_record(pinrec, pstate->pkey_field_names);
+		slls_t* pkey_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pkey_field_names);
 		if (pkey_field_values == NULL) {
 			sllv_add(pstate->precords_missing_sort_keys, pinrec);
 		} else {

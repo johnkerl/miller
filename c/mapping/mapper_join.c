@@ -315,7 +315,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	int produced_right = FALSE;
-	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec,
+	slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec,
 		pstate->popts->pright_join_field_names);
 
 	if (pright_field_values != NULL) {
@@ -385,7 +385,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 	}
 
-	slls_t* pright_field_values = mlr_selected_values_from_record(pright_rec, pstate->popts->pright_join_field_names);
+	slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec, pstate->popts->pright_join_field_names);
 	if (pright_field_values != NULL) {
 		join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
 		slls_free(pright_field_values);
@@ -517,7 +517,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		if (pleft_rec == NULL)
 			break;
 
-		slls_t* pleft_field_values = mlr_selected_values_from_record(pleft_rec,
+		slls_t* pleft_field_values = mlr_reference_selected_values_from_record(pleft_rec,
 			pstate->popts->pleft_join_field_names);
 		if (pleft_field_values != NULL) {
 			join_bucket_t* pbucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pleft_field_values);

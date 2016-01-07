@@ -96,7 +96,7 @@ static void mapper_tail_free(mapper_t* pmapper) {
 static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tail_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec,
+		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
 			pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values != NULL) {
 			sllv_t* precord_list_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);

@@ -289,7 +289,7 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
 // * prec_peek != NULL
 // * prec_peek has the join keys
 static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** pprecords_left_unpaired) {
-	slls_t* pleft_field_values = mlr_selected_values_from_record(pkeeper->prec_peek,
+	slls_t* pleft_field_values = mlr_reference_selected_values_from_record(pkeeper->prec_peek,
 		pkeeper->pleft_field_names);
 	if (pleft_field_values == NULL) {
 		fprintf(stderr, "%s: internal coding error: peek record should have had join keys.\n",

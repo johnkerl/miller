@@ -20,7 +20,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 // Makes a list with values pointing into the lrec's values. slls_free() will
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
-slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
+slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
 void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
 	string_array_t* pvalues);
 int record_has_all_keys(lrec_t* prec, slls_t* pselected_field_names);
@@ -33,7 +33,7 @@ void lrec_print_list(sllv_t* plist);
 void lrec_print_list_with_prefix(sllv_t* plist, char* prefix);
 
 // Same as
-//   slls_t* prec_values = mlr_selected_values_from_record(prec, pkeys);
+//   slls_t* prec_values = mlr_reference_selected_values_from_record(prec, pkeys);
 //   return slls_compare_lexically(plist, prec_values);
 // but without the unnecessary copy.
 int slls_lrec_compare_lexically(

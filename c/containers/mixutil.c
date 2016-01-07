@@ -29,7 +29,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
 
-slls_t* mlr_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
+slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names) {
 	slls_t* pvalue_list = slls_alloc();
 	for (sllse_t* pe = pselected_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* selected_field_name = pe->value;

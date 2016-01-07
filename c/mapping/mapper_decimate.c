@@ -103,7 +103,7 @@ static void mapper_decimate_free(mapper_t* pmapper) {
 static sllv_t* mapper_decimate_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_decimate_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pgroup_by_field_values = mlr_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values == NULL) {
 			return NULL;
 		} else {
