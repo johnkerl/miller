@@ -2,7 +2,7 @@
 // Array-only (open addressing) string-to-void linked hash map with linear
 // probing for collisions.
 //
-// Keys are strduped; memory management of the void* values is left to the
+// Keys are not strduped; memory management of the void* values is left to the
 // caller.
 //
 // John Kerl 2012-08-13
@@ -23,6 +23,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmsv.h"
+#include "containers/free_flags.h"
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
@@ -44,7 +45,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue);
+static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags);
 static void lhmsv_enlarge(lhmsv_t* pmap);
 
 static void lhmsv_init(lhmsv_t *pmap, int length) {
@@ -78,7 +79,8 @@ void lhmsv_free(lhmsv_t* pmap) {
 	if (pmap == NULL)
 		return;
 	for (lhmsve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
 	}
 	free(pmap->entries);
 	free(pmap->states);
@@ -129,13 +131,13 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmsv_put(lhmsv_t* pmap, char* key, void* pvvalue) {
+void lhmsv_put(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmsv_enlarge(pmap);
-	lhmsv_put_no_enlarge(pmap, key, pvvalue);
+	lhmsv_put_no_enlarge(pmap, key, pvvalue, free_flags);
 }
 
-static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue) {
+static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags) {
 	int index = lhmsv_find_index_for_key(pmap, key);
 	lhmsve_t* pe = &pmap->entries[index];
 
@@ -148,8 +150,9 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue) {
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
-		pe->key = mlr_strdup_or_die(key);
+		pe->key = key;
 		pe->pvvalue = pvvalue;
+		pe->free_flags = free_flags;
 		pmap->states[index] = OCCUPIED;
 
 		if (pmap->phead == NULL) {
@@ -244,9 +247,7 @@ static void lhmsv_enlarge(lhmsv_t* pmap) {
 	lhmsv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		// xxx implement free-flags here so we can do this without the redundant strdups
-		lhmsv_put_no_enlarge(pmap, pe->key, pe->pvvalue);
-		free(pe->key);
+		lhmsv_put_no_enlarge(pmap, pe->key, pe->pvvalue, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

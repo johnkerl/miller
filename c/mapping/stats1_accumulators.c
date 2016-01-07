@@ -51,7 +51,7 @@ void make_stats1_accs(
 			} else {
 				stats1_percentile_reuse(ppercentile_acc);
 			}
-			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, ppercentile_acc);
+			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, ppercentile_acc, NO_FREE);
 		} else {
 			stats1_acc_t* pstats1_acc = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float);
 			if (pstats1_acc == NULL) {
@@ -59,7 +59,7 @@ void make_stats1_accs(
 					MLR_GLOBALS.argv0, stats1_acc_name);
 				exit(1);
 			}
-			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, pstats1_acc);
+			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, pstats1_acc, NO_FREE);
 		}
 	}
 }

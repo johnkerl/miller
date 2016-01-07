@@ -194,7 +194,7 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
 		if (ptop_keeper_for_group == NULL) {
 			ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);
-			lhmsv_put(group_to_acc_field, value_field_name, ptop_keeper_for_group);
+			lhmsv_put(group_to_acc_field, value_field_name, ptop_keeper_for_group, NO_FREE);
 		}
 
 		// The top-keeper object will free the record if it isn't retained, or

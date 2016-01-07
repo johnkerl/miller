@@ -230,7 +230,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		lhmsv_t* pacc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
 		if (pacc_field_to_acc_state == NULL) {
 			pacc_field_to_acc_state = lhmsv_alloc();
-			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_state);
+			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_state, NO_FREE);
 		}
 
 		// for "delta", "rsum"
@@ -245,7 +245,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 						step_name);
 					exit(1);
 				}
-				lhmsv_put(pacc_field_to_acc_state, step_name, pstep);
+				lhmsv_put(pacc_field_to_acc_state, step_name, pstep, NO_FREE);
 			}
 
 			if (pstep->pdprocess_func != NULL) {

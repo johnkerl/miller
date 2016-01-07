@@ -334,7 +334,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 						stats2_acc_name);
 					exit(1);
 				}
-				lhmsv_put(pacc_fields_to_acc_state, stats2_acc_name, pstats2_acc);
+				lhmsv_put(pacc_fields_to_acc_state, stats2_acc_name, pstats2_acc, NO_FREE);
 			}
 			if (sval1 == NULL || sval2 == NULL)
 				continue;

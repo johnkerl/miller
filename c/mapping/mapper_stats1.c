@@ -252,14 +252,14 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		lhmsv_t* acc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
 		if (acc_field_to_acc_state == NULL) {
 			acc_field_to_acc_state = lhmsv_alloc();
-			lhmsv_put(pgroup_to_acc_field, value_field_name, acc_field_to_acc_state);
+			lhmsv_put(pgroup_to_acc_field, value_field_name, acc_field_to_acc_state, NO_FREE);
 		}
 
 		// Look up presence of all accumulators at this level's hashmap.
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
 			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float, acc_field_to_acc_state);
-			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups);
+			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
 		}
 
 		if (value_field_sval == NULL)

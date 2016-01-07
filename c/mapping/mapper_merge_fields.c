@@ -251,7 +251,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float);
-		lhmsv_put(paccs, acc_name, pacc);
+		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
 	}
 
 	for (sllse_t* pb = pstate->pvalue_field_names->phead; pb != NULL; pb = pb->pnext) {
@@ -315,7 +315,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float);
-		lhmsv_put(paccs, acc_name, pacc);
+		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
 	}
 
 	for (lrece_t* pb = pinrec->phead; pb != NULL; /* increment inside loop */ ) {
@@ -411,11 +411,10 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 						char* acc_name = pc->value;
 						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float);
-						// xxx implement free-flags here (& for all lhm's) for copy-reduction
-						lhmsv_put(acc_map_for_short_name, acc_name, pacc);
+						lhmsv_put(acc_map_for_short_name, acc_name, pacc, NO_FREE);
 					}
-					// xxx implement free-flags here (& for all lhm's) for copy-reduction
-					lhmsv_put(short_names_to_acc_maps, short_name, acc_map_for_short_name);
+					lhmsv_put(short_names_to_acc_maps, mlr_strdup_or_die(short_name), acc_map_for_short_name,
+						FREE_ENTRY_KEY);
 				}
 
 				char* value_field_sval = lrec_get(pinrec, field_name);

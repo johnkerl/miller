@@ -114,14 +114,14 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 		unsigned long long* pcounts = mlr_malloc_or_die(nbins * sizeof(unsigned long long));
 		for (int i = 0; i < nbins; i++)
 			pcounts[i] = 0LL;
-		lhmsv_put(pstate->pcounts_by_field, value_field_name, pcounts);
+		lhmsv_put(pstate->pcounts_by_field, value_field_name, pcounts, NO_FREE);
 	}
 	if (do_auto) {
 		pstate->pvectors_by_field = lhmsv_alloc();
 		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 			char* value_field_name = pe->value;
 			dvector_t* pvector = dvector_alloc(DVECTOR_INITIAL_SIZE);
-			lhmsv_put(pstate->pvectors_by_field, value_field_name, pvector);
+			lhmsv_put(pstate->pvectors_by_field, value_field_name, pvector, NO_FREE);
 		}
 	} else {
 		pstate->pvectors_by_field = NULL;
