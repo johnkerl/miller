@@ -321,6 +321,14 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 
 		char* sval1 = lrec_get(pinrec, value_field_name_1);
 		char* sval2 = lrec_get(pinrec, value_field_name_2);
+		if (sval1 == NULL) // Key not present
+			continue;
+		if (*sval1 == 0) // Key present with null value
+			continue;
+		if (sval2 == NULL) // Key not present
+			continue;
+		if (*sval2 == 0) // Key present with null value
+			continue;
 
 		// for ["corr", "cov"]
 		sllse_t* pc = pstate->paccumulator_names->phead;

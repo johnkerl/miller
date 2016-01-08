@@ -6,9 +6,10 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+! stats1 handle empty-key nulls? stats2? step? top? etc ...
+  > UT
 * filter-then-put with capture-groups
 * interpolated percentiles
-* stats1 handle empty-key nulls? stats2? step? top? etc ...
 
 * stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
   - mean/stddev/var; skew/kurt?

@@ -219,7 +219,9 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	for (int i = 0; i < n; i++) {
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-		if (value_field_sval == NULL)
+		if (value_field_sval == NULL) // Key not present
+			continue;
+		if (*value_field_sval == 0) // Key present with null value
 			continue;
 
 		int have_dval = FALSE;

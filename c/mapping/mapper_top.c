@@ -187,6 +187,10 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 	for ( ; pa != NULL && pb != NULL; pa = pa->pnext, pb = pb->pnext) {
 		char*  value_field_name = pa->value;
 		char*  value_field_sval = pb->value;
+		if (value_field_sval == NULL) // Key not present
+			continue;
+		if (*value_field_sval == 0) // Key present with null value
+			continue;
 		mv_t value_field_nval = pstate->allow_int_float
 			? mv_scan_number_or_die(value_field_sval)
 			: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
@@ -241,8 +245,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					lrec_put(poutrec, pb->value, pc->value, NO_FREE);
 				}
 
-				char* sidx = mlr_alloc_string_from_ull(i+1);
-				lrec_put(poutrec, "top_idx", sidx, FREE_ENTRY_VALUE);
+				lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
 
 				// Add in fields such as x_top_1=#
 				lhmsv_t* group_to_acc_field = pa->pvvalue;
@@ -252,7 +255,9 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
-					if (i < ptop_keeper_for_group->size) {
+					if (ptop_keeper_for_group->size == 0) {
+						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
+					} else if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_alloc_format_val(&numv);
 						lrec_put(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);

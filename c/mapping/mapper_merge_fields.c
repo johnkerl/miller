@@ -257,7 +257,9 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 	for (sllse_t* pb = pstate->pvalue_field_names->phead; pb != NULL; pb = pb->pnext) {
 		char* field_name = pb->value;
 		char* value_field_sval = lrec_get(pinrec, field_name);
-		if (value_field_sval == NULL)
+		if (value_field_sval == NULL) // Key not present
+			continue;
+		if (*value_field_sval == 0) // Key present with null value
 			continue;
 
 		int have_dval = FALSE;

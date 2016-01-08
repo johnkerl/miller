@@ -263,7 +263,9 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
 		}
 
-		if (value_field_sval == NULL)
+		if (value_field_sval == NULL) // Key not present
+			continue;
+		if (*value_field_sval == 0) // Key present with null value
 			continue;
 
 		int have_dval = FALSE;
