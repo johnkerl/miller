@@ -59,8 +59,6 @@ static void lhmsv_init(lhmsv_t *pmap, int length) {
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
-	//for (int i = 0; i < length; i++)
-	//	lhmsve_clear(&entries[i]);
 
 	pmap->states       = (lhmsve_state_t*)mlr_malloc_or_die(sizeof(lhmsve_state_t) * length);
 	memset(pmap->states, EMPTY, length);
@@ -197,41 +195,6 @@ int  lhmsv_has_key(lhmsv_t* pmap, char* key) {
 		return TRUE;
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
-	else {
-		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
-void lhmsv_remove(lhmsv_t* pmap, char* key) {
-	int index = lhmsv_find_index_for_key(pmap, key);
-	lhmsve_t* pe = &pmap->entries[index];
-	if (pmap->states[index] == OCCUPIED) {
-		pe->ideal_index     = -1;
-		pe->key             = NULL;
-		pe->pvvalue         = NULL;
-		pmap->states[index] = DELETED;
-
-		if (pe == pmap->phead) {
-			if (pe == pmap->ptail) {
-				pmap->phead = NULL;
-				pmap->ptail = NULL;
-			} else {
-				pmap->phead = pe->pnext;
-			}
-		} else {
-			pe->pprev->pnext = pe->pnext;
-			pe->pnext->pprev = pe->pprev;
-		}
-
-		pmap->num_freed++;
-		pmap->num_occupied--;
-		return;
-	}
-	else if (pmap->states[index] == EMPTY) {
-		return;
-	}
 	else {
 		fprintf(stderr, "lhmsv_find_index_for_key did not find end of chain.\n");
 		exit(1);

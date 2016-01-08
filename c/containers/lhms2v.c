@@ -44,15 +44,6 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 static void lhms2v_enlarge(lhms2v_t* pmap);
 
 // ================================================================
-static void lhms2ve_clear(lhms2ve_t *pentry) {
-	pentry->ideal_index = -1;
-	pentry->key1        = NULL;
-	pentry->key2        = NULL;
-	pentry->pvvalue     = NULL;
-	pentry->pprev       = NULL;
-	pentry->pnext       = NULL;
-}
-
 static void lhms2v_init(lhms2v_t *pmap, int length) {
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;
@@ -64,8 +55,6 @@ static void lhms2v_init(lhms2v_t *pmap, int length) {
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
-	//for (int i = 0; i < length; i++)
-	//	lhms2ve_clear(&entries[i]);
 
 	pmap->states       = (lhms2ve_state_t*)mlr_malloc_or_die(sizeof(lhms2ve_state_t) * length);
 	memset(pmap->states, EMPTY, length);
@@ -221,53 +210,6 @@ int lhms2v_has_key(lhms2v_t* pmap, char* key1, char* key2) {
 }
 
 // ----------------------------------------------------------------
-void* lhms2v_remove(lhms2v_t* pmap, char* key1, char* key2) {
-	int index = lhms2v_find_index_for_key(pmap, key1, key2);
-	lhms2ve_t* pe = &pmap->entries[index];
-	if (pmap->states[index] == OCCUPIED) {
-		void* pvvalue   = pe->pvvalue;
-		pe->ideal_index = -1;
-		pe->key1        = NULL;
-		pe->key2        = NULL;
-		pe->pvvalue     = NULL;
-		pmap->states[index] = DELETED;
-
-		if (pe == pmap->phead) {
-			if (pe == pmap->ptail) {
-				pmap->phead = NULL;
-				pmap->ptail = NULL;
-			} else {
-				pmap->phead = pe->pnext;
-			}
-		} else {
-			pe->pprev->pnext = pe->pnext;
-			pe->pnext->pprev = pe->pprev;
-		}
-
-
-		pmap->num_freed++;
-		pmap->num_occupied--;
-		return pvvalue;
-	}
-	else if (pmap->states[index] == EMPTY) {
-		return NULL;
-	}
-	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
-void lhms2v_clear(lhms2v_t* pmap) {
-	for (int i = 0; i < pmap->array_length; i++) {
-		lhms2ve_clear(&pmap->entries[i]);
-		pmap->states[i] = EMPTY;
-	}
-	pmap->num_occupied = 0;
-	pmap->num_freed = 0;
-}
-
 int lhms2v_size(lhms2v_t* pmap) {
 	return pmap->num_occupied;
 }

@@ -9,8 +9,6 @@ TOP OF LIST
 
 * lhms* incorporate free-flags as with slls
   ? memory leak on hashput w/ existing key?
-  ! lhm*remove methods
-  ! lhm*clear  methods
   - re-valgrind
 * mv_format_val in case string is allocated. modify semantics to nullify the arg?
 * more rid of "double" in fcn names

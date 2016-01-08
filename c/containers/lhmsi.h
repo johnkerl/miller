@@ -46,8 +46,6 @@ void  lhmsi_put(lhmsi_t* pmap, char* key, int value, char free_flags);
 long long lhmsi_get(lhmsi_t* pmap, char* key); // caller must do lhmsi_has_key to check validity
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key);
 int   lhmsi_has_key(lhmsi_t* pmap, char* key);
-void  lhmsi_remove(lhmsi_t* pmap, char* key);
-void  lhmsi_clear(lhmsi_t* pmap);
 
 // Unit-test hook
 int lhmsi_check_counts(lhmsi_t* pmap);

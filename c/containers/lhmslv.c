@@ -45,15 +45,6 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, c
 static void lhmslv_enlarge(lhmslv_t* pmap);
 
 // ================================================================
-static void lhmslve_clear(lhmslve_t *pentry) {
-	pentry->ideal_index = -1;
-	pentry->key         = NULL;
-	pentry->pvvalue     = NULL;
-	pentry->free_flags  = NO_FREE;
-	pentry->pprev       = NULL;
-	pentry->pnext       = NULL;
-}
-
 static void lhmslv_init(lhmslv_t *pmap, int length) {
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;
@@ -65,8 +56,6 @@ static void lhmslv_init(lhmslv_t *pmap, int length) {
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
-	//for (int i = 0; i < length; i++)
-	//	lhmslve_clear(&entries[i]);
 
 	pmap->states       = (lhmslve_state_t*)mlr_malloc_or_die(sizeof(lhmslve_state_t) * length);
 	memset(pmap->states, EMPTY, length);
@@ -217,55 +206,6 @@ int lhmslv_has_key(lhmslv_t* pmap, slls_t* key) {
 }
 
 // ----------------------------------------------------------------
-void* lhmslv_remove(lhmslv_t* pmap, slls_t* key) {
-	int index = lhmslv_find_index_for_key(pmap, key);
-	lhmslve_t* pe = &pmap->entries[index];
-	if (pmap->states[index] == OCCUPIED) {
-		if (pe->free_flags & FREE_ENTRY_KEY)
-			slls_free(pe->key);
-		void* pvvalue   = pe->pvvalue;
-		pe->ideal_index = -1;
-		pe->key         = NULL;
-		pe->pvvalue     = NULL;
-		pe->free_flags  = NO_FREE;
-		pmap->states[index] = DELETED;
-
-		if (pe == pmap->phead) {
-			if (pe == pmap->ptail) {
-				pmap->phead = NULL;
-				pmap->ptail = NULL;
-			} else {
-				pmap->phead = pe->pnext;
-			}
-		} else {
-			pe->pprev->pnext = pe->pnext;
-			pe->pnext->pprev = pe->pprev;
-		}
-
-
-		pmap->num_freed++;
-		pmap->num_occupied--;
-		return pvvalue;
-	}
-	else if (pmap->states[index] == EMPTY) {
-		return NULL;
-	}
-	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
-void lhmslv_clear(lhmslv_t* pmap) {
-	for (int i = 0; i < pmap->array_length; i++) {
-		lhmslve_clear(&pmap->entries[i]);
-		pmap->states[i] = EMPTY;
-	}
-	pmap->num_occupied = 0;
-	pmap->num_freed = 0;
-}
-
 int lhmslv_size(lhmslv_t* pmap) {
 	return pmap->num_occupied;
 }

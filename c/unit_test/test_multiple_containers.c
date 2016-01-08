@@ -236,21 +236,6 @@ static char* test_hss() {
 	mu_assert_lf(hss_has(pset, "z"));
 	mu_assert_lf(hss_check_counts(pset));
 
-	hss_remove(pset, "y");
-	mu_assert_lf(pset->num_occupied == 2);
-	mu_assert_lf(!hss_has(pset, "w"));
-	mu_assert_lf( hss_has(pset, "x"));
-	mu_assert_lf(!hss_has(pset, "y"));
-	mu_assert_lf( hss_has(pset, "z"));
-	mu_assert_lf(hss_check_counts(pset));
-
-	hss_clear(pset);
-	mu_assert_lf(!hss_has(pset, "w"));
-	mu_assert_lf(!hss_has(pset, "x"));
-	mu_assert_lf(!hss_has(pset, "y"));
-	mu_assert_lf(!hss_has(pset, "z"));
-	mu_assert_lf(hss_check_counts(pset));
-
 	hss_free(pset);
 
 	return NULL;
@@ -299,22 +284,6 @@ static char* test_lhmsi() {
 	mu_assert_lf(lhmsi_has_key(pmap, "z"));  mu_assert_lf(lhmsi_get(pmap, "z") == 7);
 	mu_assert_lf(lhmsi_check_counts(pmap));
 
-	lhmsi_remove(pmap, "y");
-	mu_assert_lf(pmap->num_occupied == 2);
-	mu_assert_lf(!lhmsi_has_key(pmap, "w")); mu_assert_lf(lhmsi_get(pmap, "w") == -999);
-	mu_assert_lf( lhmsi_has_key(pmap, "x")); mu_assert_lf(lhmsi_get(pmap, "x") == 4);
-	mu_assert_lf(!lhmsi_has_key(pmap, "y")); mu_assert_lf(lhmsi_get(pmap, "y") == -999);
-	mu_assert_lf( lhmsi_has_key(pmap, "z")); mu_assert_lf(lhmsi_get(pmap, "z") == 7);
-	mu_assert_lf(lhmsi_check_counts(pmap));
-
-	lhmsi_clear(pmap);
-	mu_assert_lf(pmap->num_occupied == 0);
-	mu_assert_lf(!lhmsi_has_key(pmap, "w")); mu_assert_lf(lhmsi_get(pmap, "w") == -999);
-	mu_assert_lf(!lhmsi_has_key(pmap, "x")); mu_assert_lf(lhmsi_get(pmap, "x") == -999);
-	mu_assert_lf(!lhmsi_has_key(pmap, "y")); mu_assert_lf(lhmsi_get(pmap, "y") == -999);
-	mu_assert_lf(!lhmsi_has_key(pmap, "z")); mu_assert_lf(lhmsi_get(pmap, "z") == -999);
-	mu_assert_lf(lhmsi_check_counts(pmap));
-
 	lhmsi_free(pmap);
 
 	return NULL;
@@ -360,14 +329,6 @@ static char* test_lhmss() {
 	mu_assert_lf(!lhmss_has_key(pmap, "w")); mu_assert_lf(lhmss_get(pmap, "w") == NULL);
 	mu_assert_lf( lhmss_has_key(pmap, "x")); mu_assert_lf(streq(lhmss_get(pmap, "x"), "4"));
 	mu_assert_lf( lhmss_has_key(pmap, "y")); mu_assert_lf(streq(lhmss_get(pmap, "y"), "5"));
-	mu_assert_lf( lhmss_has_key(pmap, "z")); mu_assert_lf(streq(lhmss_get(pmap, "z"), "7"));
-	mu_assert_lf(lhmss_check_counts(pmap));
-
-	lhmss_remove(pmap, "y");
-	mu_assert_lf(pmap->num_occupied == 2);
-	mu_assert_lf(!lhmss_has_key(pmap, "w")); mu_assert_lf(lhmss_get(pmap, "w") == NULL);
-	mu_assert_lf( lhmss_has_key(pmap, "x")); mu_assert_lf(streq(lhmss_get(pmap, "x"), "4"));
-	mu_assert_lf(!lhmss_has_key(pmap, "y")); mu_assert_lf(lhmss_get(pmap, "y") == NULL);
 	mu_assert_lf( lhmss_has_key(pmap, "z")); mu_assert_lf(streq(lhmss_get(pmap, "z"), "7"));
 	mu_assert_lf(lhmss_check_counts(pmap));
 
@@ -419,14 +380,6 @@ static char* test_lhmsv() {
 	mu_assert_lf( lhmsv_has_key(pmap, "z")); mu_assert_lf(streq(lhmsv_get(pmap, "z"), "7"));
 	mu_assert_lf(lhmsv_check_counts(pmap));
 
-	lhmsv_remove(pmap, "y");
-	mu_assert_lf(pmap->num_occupied == 2);
-	mu_assert_lf(!lhmsv_has_key(pmap, "w")); mu_assert_lf(lhmsv_get(pmap, "w") == NULL);
-	mu_assert_lf( lhmsv_has_key(pmap, "x")); mu_assert_lf(streq(lhmsv_get(pmap, "x"), "4"));
-	mu_assert_lf(!lhmsv_has_key(pmap, "y")); mu_assert_lf(lhmsv_get(pmap, "y") == NULL);
-	mu_assert_lf( lhmsv_has_key(pmap, "z")); mu_assert_lf(streq(lhmsv_get(pmap, "z"), "7"));
-	mu_assert_lf(lhmsv_check_counts(pmap));
-
 	lhmsv_free(pmap);
 
 	return NULL;
@@ -473,22 +426,6 @@ static char* test_lhms2v() {
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "4"));
 	mu_assert_lf( lhms2v_has_key(pmap, "a", "y")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "y"), "5"));
 	mu_assert_lf( lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(streq(lhms2v_get(pmap, "b", "z"), "7"));
-	mu_assert_lf(lhms2v_check_counts(pmap));
-
-	lhms2v_remove(pmap, "a", "y");
-	mu_assert_lf(pmap->num_occupied == 2);
-	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
-	mu_assert_lf( lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(streq(lhms2v_get(pmap, "a", "x"), "4"));
-	mu_assert_lf(!lhms2v_has_key(pmap, "a", "y")); mu_assert_lf(lhms2v_get(pmap, "a", "y") == NULL);
-	mu_assert_lf( lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(streq(lhms2v_get(pmap, "b", "z"), "7"));
-	mu_assert_lf(lhms2v_check_counts(pmap));
-
-	lhms2v_clear(pmap);
-	mu_assert_lf(pmap->num_occupied == 0);
-	mu_assert_lf(!lhms2v_has_key(pmap, "a", "w")); mu_assert_lf(lhms2v_get(pmap, "a", "w") == NULL);
-	mu_assert_lf(!lhms2v_has_key(pmap, "a", "x")); mu_assert_lf(lhms2v_get(pmap, "a", "x") == NULL);
-	mu_assert_lf(!lhms2v_has_key(pmap, "a", "y")); mu_assert_lf(lhms2v_get(pmap, "a", "y") == NULL);
-	mu_assert_lf(!lhms2v_has_key(pmap, "b", "z")); mu_assert_lf(lhms2v_get(pmap, "b", "z") == NULL);
 	mu_assert_lf(lhms2v_check_counts(pmap));
 
 	lhms2v_free(pmap);
@@ -542,22 +479,6 @@ static char* test_lhmslv() {
 	mu_assert_lf( lhmslv_has_key(pmap, ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "4"));
 	mu_assert_lf( lhmslv_has_key(pmap, ay)); mu_assert_lf(streq(lhmslv_get(pmap, ay), "5"));
 	mu_assert_lf( lhmslv_has_key(pmap, bz)); mu_assert_lf(streq(lhmslv_get(pmap, bz), "7"));
-	mu_assert_lf(lhmslv_check_counts(pmap));
-
-	lhmslv_remove(pmap, ay);
-	mu_assert_lf(pmap->num_occupied == 2);
-	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
-	mu_assert_lf( lhmslv_has_key(pmap, ax)); mu_assert_lf(streq(lhmslv_get(pmap, ax), "4"));
-	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
-	mu_assert_lf( lhmslv_has_key(pmap, bz)); mu_assert_lf(streq(lhmslv_get(pmap, bz), "7"));
-	mu_assert_lf(lhmslv_check_counts(pmap));
-
-	lhmslv_clear(pmap);
-	mu_assert_lf(pmap->num_occupied == 0);
-	mu_assert_lf(!lhmslv_has_key(pmap, aw)); mu_assert_lf(lhmslv_get(pmap, aw) == NULL);
-	mu_assert_lf(!lhmslv_has_key(pmap, ax)); mu_assert_lf(lhmslv_get(pmap, ax) == NULL);
-	mu_assert_lf(!lhmslv_has_key(pmap, ay)); mu_assert_lf(lhmslv_get(pmap, ay) == NULL);
-	mu_assert_lf(!lhmslv_has_key(pmap, bz)); mu_assert_lf(lhmslv_get(pmap, bz) == NULL);
 	mu_assert_lf(lhmslv_check_counts(pmap));
 
 	lhmslv_free(pmap);

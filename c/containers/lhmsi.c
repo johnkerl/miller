@@ -58,8 +58,6 @@ static void lhmsi_init(lhmsi_t *pmap, int length) {
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
-	//for (int i = 0; i < length; i++)
-	//	lhmsie_clear(&entries[i]);
 
 	pmap->states       = (lhmsie_state_t*)mlr_malloc_or_die(sizeof(lhmsie_state_t) * length);
 	memset(pmap->states, EMPTY, length);
@@ -223,62 +221,9 @@ int lhmsi_has_key(lhmsi_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmsi_remove(lhmsi_t* pmap, char* key) {
-	int index = lhmsi_find_index_for_key(pmap, key);
-	lhmsie_t* pe = &pmap->entries[index];
-	if (pmap->states[index] == OCCUPIED) {
-		pe->ideal_index = -1;
-		pe->key         = NULL;
-		pe->value       = -999;
-		pmap->states[index] = DELETED;
-
-		if (pe == pmap->phead) {
-			if (pe == pmap->ptail) {
-				pmap->phead = NULL;
-				pmap->ptail = NULL;
-			} else {
-				pmap->phead = pe->pnext;
-			}
-		} else {
-			pe->pprev->pnext = pe->pnext;
-			pe->pnext->pprev = pe->pprev;
-		}
-
-		pmap->num_freed++;
-		pmap->num_occupied--;
-		return;
-	}
-	else if (pmap->states[index] == EMPTY) {
-		return;
-	}
-	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
 void  lhmsi_rename(lhmsi_t* pmap, char* old_key, char* new_key) {
 	fprintf(stderr, "rename is not supported in the hashed-record impl.\n");
 	exit(1);
-}
-
-// ----------------------------------------------------------------
-static void lhmsie_clear(lhmsie_t *pentry) {
-	pentry->ideal_index = -1;
-	pentry->key         = NULL;
-	pentry->value       = -1;
-	pentry->pprev       = NULL;
-	pentry->pnext       = NULL;
-}
-
-void lhmsi_clear(lhmsi_t* pmap) {
-	for (int i = 0; i < pmap->array_length; i++) {
-		lhmsie_clear(&pmap->entries[i]);
-		pmap->states[i] = EMPTY;
-	}
-	pmap->num_occupied = 0;
-	pmap->num_freed = 0;
 }
 
 // ----------------------------------------------------------------

@@ -58,8 +58,6 @@ static void lhmss_init(lhmss_t *pmap, int length) {
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
-	//for (int i = 0; i < length; i++)
-	//	lhmsse_clear(&entries[i]);
 
 	pmap->states = (lhmsse_state_t*)mlr_malloc_or_die(sizeof(lhmsse_state_t) * length);
 	memset(pmap->states, EMPTY, length);
@@ -215,40 +213,6 @@ int lhmss_has_key(lhmss_t* pmap, char* key) {
 }
 
 // ----------------------------------------------------------------
-void lhmss_remove(lhmss_t* pmap, char* key) {
-	int index = lhmss_find_index_for_key(pmap, key);
-	lhmsse_t* pe = &pmap->entries[index];
-	if (pmap->states[index] == OCCUPIED) {
-		pe->ideal_index = -1;
-		pe->key         = NULL;
-		pe->value       = NULL;
-		pmap->states[index] = DELETED;
-
-		if (pe == pmap->phead) {
-			if (pe == pmap->ptail) {
-				pmap->phead = NULL;
-				pmap->ptail = NULL;
-			} else {
-				pmap->phead = pe->pnext;
-			}
-		} else {
-			pe->pprev->pnext = pe->pnext;
-			pe->pnext->pprev = pe->pprev;
-		}
-
-		pmap->num_freed++;
-		pmap->num_occupied--;
-		return;
-	}
-	else if (pmap->states[index] == EMPTY) {
-		return;
-	}
-	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
-		exit(1);
-	}
-}
-
 void  lhmss_rename(lhmss_t* pmap, char* old_key, char* new_key) {
 	fprintf(stderr, "rename is not supported in the hashed-record impl.\n");
 	exit(1);

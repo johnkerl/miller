@@ -46,8 +46,6 @@ void   lhmslv_free(lhmslv_t* pmap);
 void*  lhmslv_put(lhmslv_t* pmap, slls_t* key, void* pvvalue, char free_flags);
 void*  lhmslv_get(lhmslv_t* pmap, slls_t* key);
 int    lhmslv_has_key(lhmslv_t* pmap, slls_t* key);
-void*  lhmslv_remove(lhmslv_t* pmap, slls_t* key);
-void   lhmslv_clear(lhmslv_t* pmap);
 int    lhmslv_size(lhmslv_t* pmap);
 
 // Unit-test hook
