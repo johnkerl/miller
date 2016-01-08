@@ -6,7 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* mv_format_val in case string is allocated. modify semantics to nullify the arg?
 * join: final sllv_free in destructor (lo-pri)
 
 * stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
