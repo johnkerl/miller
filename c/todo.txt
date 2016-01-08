@@ -9,8 +9,12 @@ TOP OF LIST
 * mv_format_val in case string is allocated. modify semantics to nullify the arg?
 * join: final sllv_free in destructor (lo-pri)
 
+* stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
+  - mean/stddev/var; skew/kurt?
+  - linregs; corr/cov?
+  ? also, option of weighted stats w/ explicit weights field?
+
 * light edit on utf8 page
-* --mmap/--no-mmap @ mlr -h
 * debian screenshot
 * ruby @ optextdep @ mld; poki+mkman
 
@@ -30,11 +34,6 @@ TOP OF LIST
   w debian
   ? redhat ?
   ? other ?
-
-* stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
-  - mean/stddev/var; skew/kurt?
-  - linregs; corr/cov?
-  ? also, option of weighted stats w/ explicit weights field?
 
 * flight misc: .screenrc -> dotfiles; more dotfile currency
 

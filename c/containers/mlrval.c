@@ -97,37 +97,40 @@ char* mv_alloc_format_val(mv_t* pval) {
 
 // The caller should free the return value if the free-flag is non-zero after return
 char* mv_format_val(mv_t* pval, char* pfree_flags) {
+	char* rv = NULL;
 	switch(pval->type) {
 	case MT_NULL:
 		*pfree_flags = NO_FREE;
-		return "";
+		rv = "";
 		break;
 	case MT_ERROR:
 		*pfree_flags = NO_FREE;
-		return "(error)";
+		rv = "(error)";
 		break;
 	case MT_BOOL:
 		*pfree_flags = NO_FREE;
-		return pval->u.boolv ? "true" : "false";
+		rv = pval->u.boolv ? "true" : "false";
 		break;
 	case MT_FLOAT:
 		*pfree_flags = FREE_ENTRY_VALUE;
-		return mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
+		rv = mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
 		break;
 	case MT_INT:
 		*pfree_flags = FREE_ENTRY_VALUE;
-		return mlr_alloc_string_from_ll(pval->u.intv);
+		rv = mlr_alloc_string_from_ll(pval->u.intv);
 		break;
 	case MT_STRING:
-		// xxx need a transfer-ownership mechanism; invalidation; two API func? something.
-		*pfree_flags = NO_FREE;
-		return pval->u.strv;
+		// Ownership transfer to the caller
+		*pfree_flags = FREE_ENTRY_VALUE;
+		rv = pval->u.strv;
+		*pval = MV_NULL;
 		break;
 	default:
 		*pfree_flags = NO_FREE;
-		return "???";
+		rv = "???";
 		break;
 	}
+	return rv;
 }
 
 char* mv_describe_val(mv_t val) {
