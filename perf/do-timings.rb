@@ -29,6 +29,7 @@ run("catc",      "catc                < ../data/big.dkvp > /dev/null")
 run("catc",      "catc                  ../data/big.dkvp > /dev/null")
 run("catm",      "catm                  ../data/big.dkvp > /dev/null")
 run("catawk",    "awk -F, '{print}'     ../data/big.dkvp > /dev/null")
+run("catmawk",   "mawk -F, '{print}'     ../data/big.dkvp > /dev/null")
 run("CATMLR",    "mlr --no-mmap cat     ../data/big.dkvp > /dev/null")
 run("CATMLRM",   "mlr --mmap cat        ../data/big.dkvp > /dev/null")
 puts
@@ -40,6 +41,7 @@ run("catcv",     "catc                       < ../data/big.csv > /dev/null")
 run("catcv",     "catc                         ../data/big.csv > /dev/null")
 run("catmv",     "catm                         ../data/big.csv > /dev/null")
 run("catawkv",   "awk -F, '{print}'            ../data/big.csv > /dev/null")
+run("catmawkv",  "mawk -F, '{print}'            ../data/big.csv > /dev/null")
 run("CATMLRV",   "mlr --no-mmap --csv --rs lf cat  ../data/big.csv > /dev/null")
 run("CATMLRVM",  "mlr --mmap --csv --rs lf cat     ../data/big.csv > /dev/null")
 run("CATMLRV",   "mlr --no-mmap --csvlite cat      ../data/big.csv > /dev/null")
@@ -49,6 +51,7 @@ puts
 
 run("cutcut",    "cut -d , -f 1,4              ../data/big.dkvp > /dev/null")
 run("cutawk",    "awk -F, '{print $1,$4}'      ../data/big.dkvp > /dev/null")
+run("cutmawk",   "mawk -F, '{print $1,$4}'      ../data/big.dkvp > /dev/null")
 run("CUTMLR",    "mlr --no-mmap cut -f a,x     ../data/big.dkvp > /dev/null")
 run("CUTMLRM",   "mlr --mmap cut -f a,x        ../data/big.dkvp > /dev/null")
 run("CUTMLRX",   "mlr --no-mmap cut -x -f a,x  ../data/big.dkvp > /dev/null")
@@ -57,6 +60,7 @@ puts
 
 run("cutcutv",   "cut -d , -f 1,4                 ../data/big.csv > /dev/null")
 run("cutawkv",   "awk -F, '{print $1,$4}'         ../data/big.csv > /dev/null")
+run("cutmawkv",  "mawk -F, '{print $1,$4}'         ../data/big.csv > /dev/null")
 run("CUTMLRV",   "mlr --no-mmap --csv --rs lf cut -f a,x            ../data/big.csv > /dev/null")
 run("CUTMLRVM",  "mlr --mmap    --csv --rs lf cut -f a,x            ../data/big.csv > /dev/null")
 run("CUTMLRXV",  "mlr --no-mmap --csv --rs lf cut -x -f a,x         ../data/big.csv > /dev/null")
@@ -82,11 +86,13 @@ puts
 puts
 
 run("addawk",    "awk -F, '{gsub(\"x=\",\"\",$4);gsub(\"y=\",\"\",$5);print $4+$5}' ../data/big.dkvp > /dev/null")
+run("addmawk",   "mawk -F, '{gsub(\"x=\",\"\",$4);gsub(\"y=\",\"\",$5);print $4+$5}' ../data/big.dkvp > /dev/null")
 run("ADDMLR",    "mlr --no-mmap put '$z=$x+$y'            ../data/big.dkvp > /dev/null")
 run("ADDMLRM",   "mlr --mmap put '$z=$x+$y'               ../data/big.dkvp > /dev/null")
 puts
 
 run("addawkv",   "awk -F, '{gsub(\"x=\",\"\",$4);gsub(\"y=\",\"\",$5);print $4+$5}' ../data/big.csv > /dev/null")
+run("addmawkv",  "mawk -F, '{gsub(\"x=\",\"\",$4);gsub(\"y=\",\"\",$5);print $4+$5}' ../data/big.csv > /dev/null")
 run("ADDMLRV",   "mlr --no-mmap --csv --rs lf put '$z=$x+$y'      ../data/big.csv > /dev/null")
 run("ADDMLRVM",  "mlr --mmap --csv --rs lf put '$z=$x+$y'         ../data/big.csv > /dev/null")
 run("ADDMLRV",   "mlr --no-mmap --csvlite  put '$z=$x+$y'      ../data/big.csv > /dev/null")

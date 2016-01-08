@@ -73,6 +73,8 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 		if (pe->free_flags & FREE_ENTRY_VALUE) {
 			free(pe->value);
 		}
+		if (free_flags & FREE_ENTRY_KEY)
+			free(key);
 		pe->value = value;
 		if (free_flags & FREE_ENTRY_VALUE)
 			pe->free_flags |= FREE_ENTRY_VALUE;

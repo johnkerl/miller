@@ -555,9 +555,10 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_acc_name);
 	if (output_field_name == NULL) {
 		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
-		lhmss_put(pstate->poutput_field_names, mlr_strdup_or_die(stats1_acc_name), mlr_strdup_or_die(output_field_name), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lhmss_put(pstate->poutput_field_names, mlr_strdup_or_die(stats1_acc_name),
+			mlr_strdup_or_die(output_field_name), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
-	lrec_put(poutrec, output_field_name, s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	lrec_put(poutrec, mlr_strdup_or_die(output_field_name), s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
 static void stats1_percentile_free(stats1_acc_t* pstats1_acc) {
 	stats1_percentile_state_t* pstate = pstats1_acc->pvstate;
