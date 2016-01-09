@@ -1416,12 +1416,14 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_BOOLEAN, "^^",      2 , "Logical XOR."},
 	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
 
-	{ FUNC_CLASS_CONVERSION, "boolean",  1 , "Convert int/float/bool/string to boolean."},
-	{ FUNC_CLASS_CONVERSION, "float",    1 , "Convert int/float/bool/string to float."},
-	{ FUNC_CLASS_CONVERSION, "fmtnum",   2 , "Convert int/float/bool to string using\nprintf-style format string, e.g. \"%06lld\"."},
-	{ FUNC_CLASS_CONVERSION, "hexfmt",   1 , "Convert int to string, e.g. 255 to \"0xff\"."},
-	{ FUNC_CLASS_CONVERSION, "int",      1 , "Convert int/float/bool/string to int."},
-	{ FUNC_CLASS_CONVERSION, "string",   1 , "Convert int/float/bool/string to string."},
+	{ FUNC_CLASS_CONVERSION, "isnull",    1 , "True if argument is null, false otherwise"},
+	{ FUNC_CLASS_CONVERSION, "isnotnull", 1 , "False if argument is null, true otherwise."},
+	{ FUNC_CLASS_CONVERSION, "boolean",   1 , "Convert int/float/bool/string to boolean."},
+	{ FUNC_CLASS_CONVERSION, "float",     1 , "Convert int/float/bool/string to float."},
+	{ FUNC_CLASS_CONVERSION, "fmtnum",    2 , "Convert int/float/bool to string using\nprintf-style format string, e.g. \"%06lld\"."},
+	{ FUNC_CLASS_CONVERSION, "hexfmt",    1 , "Convert int to string, e.g. 255 to \"0xff\"."},
+	{ FUNC_CLASS_CONVERSION, "int",       1 , "Convert int/float/bool/string to int."},
+	{ FUNC_CLASS_CONVERSION, "string",    1 , "Convert int/float/bool/string to string."},
 
 	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
 	{ FUNC_CLASS_STRING, "gsub",     3 , "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
@@ -1632,34 +1634,37 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 	} else if (streq(fnnm, "atan"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_atan_func,      parg1);
 	} else if (streq(fnnm, "atanh"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_atanh_func,     parg1);
 	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_x_x_func(b_x_boolean_func,   parg1);
+	} else if (streq(fnnm, "boolean"))   { return lrec_evaluator_alloc_from_x_x_func(b_x_boolean_func,   parg1);
 	} else if (streq(fnnm, "cbrt"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cbrt_func,      parg1);
 	} else if (streq(fnnm, "ceil"))      { return lrec_evaluator_alloc_from_x_n_func(n_n_ceil_func,      parg1);
 	} else if (streq(fnnm, "cos"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_cos_func,       parg1);
 	} else if (streq(fnnm, "cosh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_cosh_func,      parg1);
+	} else if (streq(fnnm, "dhms2fsec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_dhms2fsec_func, parg1);
+	} else if (streq(fnnm, "dhms2sec"))  { return lrec_evaluator_alloc_from_f_s_func(i_s_dhms2sec_func,  parg1);
 	} else if (streq(fnnm, "erf"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_erf_func,       parg1);
 	} else if (streq(fnnm, "erfc"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_erfc_func,      parg1);
 	} else if (streq(fnnm, "exp"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_exp_func,       parg1);
 	} else if (streq(fnnm, "expm1"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_expm1_func,     parg1);
 	} else if (streq(fnnm, "float"))     { return lrec_evaluator_alloc_from_x_x_func(f_x_float_func,     parg1);
 	} else if (streq(fnnm, "floor"))     { return lrec_evaluator_alloc_from_x_n_func(n_n_floor_func,     parg1);
+	} else if (streq(fnnm, "fsec2dhms")) { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func, parg1);
+	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
 	} else if (streq(fnnm, "gmt2sec"))   { return lrec_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,   parg1);
-	} else if (streq(fnnm, "hms2sec"))   { return lrec_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
-	} else if (streq(fnnm, "hms2fsec"))  { return lrec_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,  parg1);
-	} else if (streq(fnnm, "dhms2sec"))  { return lrec_evaluator_alloc_from_f_s_func(i_s_dhms2sec_func,  parg1);
-	} else if (streq(fnnm, "dhms2fsec")) { return lrec_evaluator_alloc_from_f_s_func(f_s_dhms2fsec_func, parg1);
 	} else if (streq(fnnm, "hexfmt"))    { return lrec_evaluator_alloc_from_x_x_func(s_x_hexfmt_func,    parg1);
+	} else if (streq(fnnm, "hms2fsec"))  { return lrec_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,  parg1);
+	} else if (streq(fnnm, "hms2sec"))   { return lrec_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
 	} else if (streq(fnnm, "int"))       { return lrec_evaluator_alloc_from_x_x_func(i_x_int_func,       parg1);
+	} else if (streq(fnnm, "invqnorm"))  { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
+	} else if (streq(fnnm, "isnotnull")) { return lrec_evaluator_alloc_from_x_x_func(b_x_isnotnull_func, parg1);
+	} else if (streq(fnnm, "isnull"))    { return lrec_evaluator_alloc_from_x_x_func(b_x_isnull_func,    parg1);
 	} else if (streq(fnnm, "log"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_log_func,       parg1);
 	} else if (streq(fnnm, "log10"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log10_func,     parg1);
 	} else if (streq(fnnm, "log1p"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_log1p_func,     parg1);
 	} else if (streq(fnnm, "qnorm"))     { return lrec_evaluator_alloc_from_f_f_func(f_f_qnorm_func,     parg1);
-	} else if (streq(fnnm, "invqnorm"))  { return lrec_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
 	} else if (streq(fnnm, "round"))     { return lrec_evaluator_alloc_from_x_n_func(n_n_round_func,     parg1);
+	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,  parg1);
 	} else if (streq(fnnm, "sec2gmt"))   { return lrec_evaluator_alloc_from_x_n_func(s_n_sec2gmt_func,   parg1);
 	} else if (streq(fnnm, "sec2hms"))   { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,   parg1);
-	} else if (streq(fnnm, "fsec2hms"))  { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,  parg1);
-	} else if (streq(fnnm, "sec2dhms"))  { return lrec_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,  parg1);
-	} else if (streq(fnnm, "fsec2dhms")) { return lrec_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func, parg1);
 	} else if (streq(fnnm, "sgn"))       { return lrec_evaluator_alloc_from_x_n_func(n_n_sgn_func,       parg1);
 	} else if (streq(fnnm, "sin"))       { return lrec_evaluator_alloc_from_f_f_func(f_f_sin_func,       parg1);
 	} else if (streq(fnnm, "sinh"))      { return lrec_evaluator_alloc_from_f_f_func(f_f_sinh_func,      parg1);

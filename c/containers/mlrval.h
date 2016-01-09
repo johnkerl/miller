@@ -255,6 +255,8 @@ mv_t n_nn_min_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_max_func(mv_t* pval1, mv_t* pval2);
 mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2);
 
+mv_t b_x_isnull_func(mv_t* pval1);
+mv_t b_x_isnotnull_func(mv_t* pval1);
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);

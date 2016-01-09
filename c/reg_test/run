@@ -690,6 +690,15 @@ run_mlr put '$t = gsub($s,      "l",   "X")' $indir/null-vs-empty.dkvp
 run_mlr put '$t = gsub($s,      "l",   "")'  $indir/null-vs-empty.dkvp
 run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
 
+run_mlr --opprint filter 'isnull($x)'         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($y)'         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($z)'         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($nosuch)'    $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($x)'      $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($y)'      $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($z)'      $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($nosuch)' $indir/nullvals.dkvp
+
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
 

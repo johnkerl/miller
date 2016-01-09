@@ -7465,6 +7465,42 @@ x=1,y=2,s=hello,t=
 x=1,y=,s=,t=
 x=,y=,s=hurrah,t=
 
+mlr --opprint filter isnull($x) ./reg_test/input/nullvals.dkvp
+a x y z
+b - 6 -
+b - - -
+
+mlr --opprint filter isnull($y) ./reg_test/input/nullvals.dkvp
+a x y z
+b 5 - -
+b - - -
+
+mlr --opprint filter isnull($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint filter isnull($nosuch) ./reg_test/input/nullvals.dkvp
+
+mlr --opprint filter isnotnull($x) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+
+mlr --opprint filter isnotnull($y) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b - 6 -
+
+mlr --opprint filter isnotnull($z) ./reg_test/input/nullvals.dkvp
+
+mlr --opprint filter isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
+
 
 ================================================================
 DSL TYPE-INFERENCE
