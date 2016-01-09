@@ -14,7 +14,7 @@ TOP OF LIST
   - linregs; corr/cov?
   ? also, option of weighted stats w/ explicit weights field?
   ? maybe just EMA with well-known sumw followed by then-chaining write up the weights if so.?
-    > step -a decay UTs
+    > step -a decay UTs. note disk-usage sys-stat @ mld; cf mem.
     > mld re cross-record stuff is limited to stats1/2 and step
 
 debian screenshot
