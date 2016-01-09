@@ -20,6 +20,7 @@ struct _step_t; // forward reference for method declarations
 typedef void step_dprocess_func_t(void* pvstate, double fltv, lrec_t* prec);
 typedef void step_nprocess_func_t(void* pvstate, mv_t* pval,  lrec_t* prec);
 typedef void step_sprocess_func_t(void* pvstate, char*  strv, lrec_t* prec);
+typedef void step_zprocess_func_t(void* pvstate,              lrec_t* prec);
 typedef void step_free_func_t(struct _step_t* pstep);
 
 typedef struct _step_t {
@@ -27,6 +28,7 @@ typedef struct _step_t {
 	step_dprocess_func_t* pdprocess_func;
 	step_nprocess_func_t* pnprocess_func;
 	step_sprocess_func_t* psprocess_func;
+	step_zprocess_func_t* pzprocess_func;
 	step_free_func_t*     pfree_func;
 } step_t;
 
@@ -221,8 +223,6 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
 		if (value_field_sval == NULL) // Key not present
 			continue;
-		if (*value_field_sval == 0) // Key present with null value
-			continue;
 
 		int have_dval = FALSE;
 		int have_nval = FALSE;
@@ -250,28 +250,34 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				lhmsv_put(pacc_field_to_acc_state, step_name, pstep, NO_FREE);
 			}
 
-			if (pstep->pdprocess_func != NULL) {
-				if (!have_dval) {
-					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-					have_dval = TRUE;
+			if (*value_field_sval == 0) { // Key present with null value
+				if (pstep->pzprocess_func != NULL) {
+					pstep->pzprocess_func(pstep->pvstate, pinrec);
 				}
-				pstep->pdprocess_func(pstep->pvstate, value_field_dval, pinrec);
-			}
+			} else {
 
-			if (pstep->pnprocess_func != NULL) {
-				if (!have_nval) {
-					value_field_nval = pstate->allow_int_float
-						? mv_scan_number_or_die(value_field_sval)
-						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-					have_nval = TRUE;
+				if (pstep->pdprocess_func != NULL) {
+					if (!have_dval) {
+						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+						have_dval = TRUE;
+					}
+					pstep->pdprocess_func(pstep->pvstate, value_field_dval, pinrec);
 				}
-				pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
-			}
 
-			if (pstep->psprocess_func != NULL) {
-				pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
-			}
+				if (pstep->pnprocess_func != NULL) {
+					if (!have_nval) {
+						value_field_nval = pstate->allow_int_float
+							? mv_scan_number_or_die(value_field_sval)
+							: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+						have_nval = TRUE;
+					}
+					pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
+				}
 
+				if (pstep->psprocess_func != NULL) {
+					pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
+				}
+			}
 		}
 	}
 	return sllv_single(pinrec);
@@ -301,6 +307,10 @@ static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&delta), FREE_ENTRY_VALUE);
 	pstate->prev = *pnumv;
 }
+static void step_delta_zprocess(void* pvstate, lrec_t* prec) {
+	step_delta_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+}
 static void step_delta_free(step_t* pstep) {
 	step_delta_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
@@ -317,6 +327,7 @@ static step_t* step_delta_alloc(char* input_field_name, int allow_int_float) {
 	pstep->pdprocess_func = NULL;
 	pstep->pnprocess_func = step_delta_nprocess;
 	pstep->psprocess_func = NULL;
+	pstep->pzprocess_func = step_delta_zprocess;
 	pstep->pfree_func     = step_delta_free;
 	return pstep;
 }
@@ -338,6 +349,10 @@ static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	}
 	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&from_first), FREE_ENTRY_VALUE);
 }
+static void step_from_first_zprocess(void* pvstate, lrec_t* prec) {
+	step_from_first_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+}
 static void step_from_first_free(step_t* pstep) {
 	step_from_first_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
@@ -354,6 +369,7 @@ static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float
 	pstep->pdprocess_func = NULL;
 	pstep->pnprocess_func = step_from_first_nprocess;
 	pstep->psprocess_func = NULL;
+	pstep->pzprocess_func = step_from_first_zprocess;
 	pstep->pfree_func     = step_from_first_free;
 	return pstep;
 }
@@ -376,6 +392,10 @@ static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 		FREE_ENTRY_VALUE);
 	pstate->prev = fltv;
 }
+static void step_ratio_zprocess(void* pvstate, lrec_t* prec) {
+	step_ratio_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+}
 static void step_ratio_free(step_t* pstep) {
 	step_ratio_state_t* pstate = pstep->pvstate;
 	free(pstate->output_field_name);
@@ -393,6 +413,7 @@ static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float) {
 	pstep->pdprocess_func = step_ratio_dprocess;
 	pstep->pnprocess_func = NULL;
 	pstep->psprocess_func = NULL;
+	pstep->pzprocess_func = step_ratio_zprocess;
 	pstep->pfree_func     = step_ratio_free;
 	return pstep;
 }
@@ -408,6 +429,10 @@ static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
 	pstate->rsum = n_nn_plus_func(&pstate->rsum, pnumv);
 	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->rsum),
 		FREE_ENTRY_VALUE);
+}
+static void step_rsum_zprocess(void* pvstate, lrec_t* prec) {
+	step_rsum_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 }
 static void step_rsum_free(step_t* pstep) {
 	step_rsum_state_t* pstate = pstep->pvstate;
@@ -425,6 +450,7 @@ static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float) {
 	pstep->pdprocess_func = NULL;
 	pstep->pnprocess_func = step_rsum_nprocess;
 	pstep->psprocess_func = NULL;
+	pstep->pzprocess_func = step_rsum_zprocess;
 	pstep->pfree_func     = step_rsum_free;
 	return pstep;
 }
@@ -440,6 +466,10 @@ static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
 	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
 	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
 		FREE_ENTRY_VALUE);
+}
+static void step_counter_zprocess(void* pvstate, lrec_t* prec) {
+	step_counter_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 }
 static void step_counter_free(step_t* pstep) {
 	step_counter_state_t* pstate = pstep->pvstate;
@@ -458,6 +488,7 @@ static step_t* step_counter_alloc(char* input_field_name, int allow_int_float) {
 	pstep->pdprocess_func = NULL;
 	pstep->pnprocess_func = NULL;
 	pstep->psprocess_func = step_counter_sprocess;
+	pstep->pzprocess_func = step_counter_zprocess;
 	pstep->pfree_func     = step_counter_free;
 	return pstep;
 }

@@ -1095,6 +1095,16 @@ run_mlr --oxtab stats2 -a cov -f y,z   -g a $indir/nullvals.dkvp
 #run_mlr --opprint top -a -n 5 -f y     -g a $indir/nullvals.dkvp
 #run_mlr --opprint top -a -n 5 -f z     -g a $indir/nullvals.dkvp
 
+run_mlr --opprint step -a counter,rsum -f x          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f y          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f z          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f x,y,z      $indir/nullvals.dkvp
+
+run_mlr --opprint step -a counter,rsum -f x     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f y     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f z     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f x,y,z -g a $indir/nullvals.dkvp
+
 # ================================================================
 announce SPACE-PADDING
 
