@@ -6,7 +6,7 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! stats1 handle empty-key nulls? stats2? step? top? etc ...
+! handle empty-key nulls: stats1, stats2, merge-fields, step, top
   > UT
 
 * filter-then-put with capture-groups

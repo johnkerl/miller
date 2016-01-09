@@ -78,6 +78,7 @@ EXTRA_DIST=	\
 		multi-sep.csv \
 		multi-sep.dkvp \
 		near-ovf.dkvp \
+		nullvals.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
 		null-vs-empty.dkvp \
