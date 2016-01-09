@@ -283,6 +283,16 @@ static void lrec_link_at_tail(lrec_t* prec, lrece_t* pe) {
 }
 
 // ----------------------------------------------------------------
+lrec_t* lrec_copy(lrec_t* pinrec) {
+	lrec_t* poutrec = lrec_unbacked_alloc();
+	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+		lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	}
+	return poutrec;
+}
+
+// ----------------------------------------------------------------
 void lrec_free(lrec_t* prec) {
 	if (prec == NULL)
 		return;

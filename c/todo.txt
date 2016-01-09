@@ -8,6 +8,11 @@ TOP OF LIST
 
 ! stats1 handle empty-key nulls? stats2? step? top? etc ...
   > UT
+
+* bootstrap sampling in hold-and-emit mode
+  > implement an nout < nin option
+  > UT
+
 * filter-then-put with capture-groups
 * interpolated percentiles
 
@@ -97,8 +102,6 @@ COOKBOOK/FAQ/ETC.:
       then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
 
 ----------------------------------------------------------------
-* bootstrap sampling in hold-and-emit mode?? needs an lrec_copy
-
 * introduce a fourth, padding separator for all formats? (for leading/trailing strip/skip.)
   o allows 'x = 10' in DKVP
   o allows right-justified keys in XTAB

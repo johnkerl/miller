@@ -48,7 +48,7 @@ mapper_setup_t mapper_sample_setup = {
 // ----------------------------------------------------------------
 static void mapper_sample_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "Reservoir sampling, optionally by category.\n");
+	fprintf(o, "Reservoir sampling (subsampling without replacement), optionally by category.\n");
 	fprintf(o, "-k {count}    Required: number of records to output, total, or by group if using -g.\n");
 	fprintf(o, "-g {a,b,c}    Optional: group-by-field names for samples.\n");
 }

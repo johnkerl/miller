@@ -125,7 +125,7 @@ void  lrec_move_to_tail(lrec_t* prec, char* key);
 // Mostly for lrec-internal use; may be used for removing fields from a record
 // while iterating over it.
 void lrec_unlink(lrec_t* prec, lrece_t* pe);
-
+lrec_t* lrec_copy(lrec_t* pinrec);
 void  lrec_free(lrec_t* prec);
 
 void lrec_print(lrec_t* prec);

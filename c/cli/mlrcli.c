@@ -24,6 +24,7 @@
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_bar_setup,
+	&mapper_bootstrap_setup,
 	&mapper_cat_setup,
 	&mapper_check_setup,
 	&mapper_count_distinct_setup,
