@@ -1072,6 +1072,13 @@ run_mlr --opprint merge-fields -a sum,min,max,mode -f x,y,z -o xyz $indir/nullva
 run_mlr --opprint merge-fields -a sum,min,max,mode -r x,y,z -o xyz $indir/nullvals.dkvp
 run_mlr --opprint merge-fields -a sum,min,max,mode -c x,y,z        $indir/nullvals.dkvp
 
+run_mlr --oxtab stats2 -a cov -f x,y        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,z        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f y,z        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,y   -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,z   -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f y,z   -g a $indir/nullvals.dkvp
+
 # ================================================================
 announce SPACE-PADDING
 

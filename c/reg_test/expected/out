@@ -10291,6 +10291,23 @@ b 5    5    5    5
 b 6    6    6    6
 b 0    -    -    -
 
+mlr --oxtab stats2 -a cov -f x,y ./reg_test/input/nullvals.dkvp
+x_y_cov 2.000000
+
+mlr --oxtab stats2 -a cov -f x,z ./reg_test/input/nullvals.dkvp
+
+mlr --oxtab stats2 -a cov -f y,z ./reg_test/input/nullvals.dkvp
+
+mlr --oxtab stats2 -a cov -f x,y -g a ./reg_test/input/nullvals.dkvp
+a       b
+x_y_cov 2.000000
+
+mlr --oxtab stats2 -a cov -f x,z -g a ./reg_test/input/nullvals.dkvp
+a b
+
+mlr --oxtab stats2 -a cov -f y,z -g a ./reg_test/input/nullvals.dkvp
+a b
+
 
 ================================================================
 SPACE-PADDING
