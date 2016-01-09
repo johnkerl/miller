@@ -259,8 +259,12 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		char* value_field_sval = lrec_get(pinrec, field_name);
 		if (value_field_sval == NULL) // Key not present
 			continue;
-		if (*value_field_sval == 0) // Key present with null value
+
+		if (*value_field_sval == 0) { // Key present with null value
+			if (!pstate->keep_input_fields)
+				lrec_remove(pinrec, field_name);
 			continue;
+		}
 
 		int have_dval = FALSE;
 		int have_nval = FALSE;
@@ -328,33 +332,35 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 			matched = regmatch_or_die(pvalue_field_regex, field_name, 0, NULL);
 			if (matched) {
 				char* value_field_sval = lrec_get(pinrec, field_name);
-				if (value_field_sval != NULL) {
+				if (value_field_sval != NULL) { // Key not present
 					int have_dval = FALSE;
 					int have_nval = FALSE;
 					double value_field_dval = -999.0;
 					mv_t   value_field_nval = mv_from_null();
 
-					for (lhmsve_t* pd = paccs->phead; pd != NULL; pd = pd->pnext) {
-						stats1_acc_t* pacc = pd->pvvalue;
+					if (*value_field_sval != 0) { // Key present with null value
+						for (lhmsve_t* pd = paccs->phead; pd != NULL; pd = pd->pnext) {
+							stats1_acc_t* pacc = pd->pvvalue;
 
-						if (pacc->pdingest_func != NULL) {
-							if (!have_dval) {
-								value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-								have_dval = TRUE;
+							if (pacc->pdingest_func != NULL) {
+								if (!have_dval) {
+									value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+									have_dval = TRUE;
+								}
+								pacc->pdingest_func(pacc->pvstate, value_field_dval);
 							}
-							pacc->pdingest_func(pacc->pvstate, value_field_dval);
-						}
-						if (pacc->pningest_func != NULL) {
-							if (!have_nval) {
-								value_field_nval = pstate->allow_int_float
-									? mv_scan_number_or_die(value_field_sval)
-									: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-								have_nval = TRUE;
+							if (pacc->pningest_func != NULL) {
+								if (!have_nval) {
+									value_field_nval = pstate->allow_int_float
+										? mv_scan_number_or_die(value_field_sval)
+										: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+									have_nval = TRUE;
+								}
+								pacc->pningest_func(pacc->pvstate, &value_field_nval);
 							}
-							pacc->pningest_func(pacc->pvstate, &value_field_nval);
-						}
-						if (pacc->psingest_func != NULL) {
-							pacc->psingest_func(pacc->pvstate, value_field_sval);
+							if (pacc->psingest_func != NULL) {
+								pacc->psingest_func(pacc->pvstate, value_field_sval);
+							}
 						}
 					}
 
@@ -420,35 +426,39 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 				}
 
 				char* value_field_sval = lrec_get(pinrec, field_name);
-				if (value_field_sval != NULL) {
-					for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
-						stats1_acc_t* pacc = pd->pvvalue;
+				if (value_field_sval != NULL) { // Key present
 
-						int have_dval = FALSE;
-						int have_nval = FALSE;
-						double value_field_dval = -999.0;
-						mv_t   value_field_nval = mv_from_null();
+					if (*value_field_sval != 0) { // Key present with non-null value
+						for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
+							stats1_acc_t* pacc = pd->pvvalue;
 
-						if (pacc->pdingest_func != NULL) {
-							if (!have_dval) {
-								value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-								have_dval = TRUE;
+							int have_dval = FALSE;
+							int have_nval = FALSE;
+							double value_field_dval = -999.0;
+							mv_t   value_field_nval = mv_from_null();
+
+							if (pacc->pdingest_func != NULL) {
+								if (!have_dval) {
+									value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+									have_dval = TRUE;
+								}
+								pacc->pdingest_func(pacc->pvstate, value_field_dval);
 							}
-							pacc->pdingest_func(pacc->pvstate, value_field_dval);
-						}
-						if (pacc->pningest_func != NULL) {
-							if (!have_nval) {
-								value_field_nval = pstate->allow_int_float
-									? mv_scan_number_or_die(value_field_sval)
-									: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-								have_nval = TRUE;
+							if (pacc->pningest_func != NULL) {
+								if (!have_nval) {
+									value_field_nval = pstate->allow_int_float
+										? mv_scan_number_or_die(value_field_sval)
+										: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+									have_nval = TRUE;
+								}
+								pacc->pningest_func(pacc->pvstate, &value_field_nval);
 							}
-							pacc->pningest_func(pacc->pvstate, &value_field_nval);
-						}
-						if (pacc->psingest_func != NULL) {
-							pacc->psingest_func(pacc->pvstate, value_field_sval);
+							if (pacc->psingest_func != NULL) {
+								pacc->psingest_func(pacc->pvstate, value_field_sval);
+							}
 						}
 					}
+
 					if (!pstate->keep_input_fields) {
 						// We are modifying the lrec while iterating over it.
 						lrece_t* pnext = pa->pnext;

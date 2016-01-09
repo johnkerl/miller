@@ -10267,6 +10267,30 @@ z_min
 z_max  
 z_mode 
 
+mlr --opprint merge-fields -a sum,min,max,mode -f x,y,z -o xyz ./reg_test/input/nullvals.dkvp
+a xyz_sum xyz_min xyz_max xyz_mode
+b 3       1       2       1
+b 7       3       4       3
+b 5       5       5       5
+b 6       6       6       6
+b 0       -       -       -
+
+mlr --opprint merge-fields -a sum,min,max,mode -r x,y,z -o xyz ./reg_test/input/nullvals.dkvp
+a xyz_sum xyz_min xyz_max xyz_mode
+b 3       1       2       1
+b 7       3       4       3
+b 5       5       5       5
+b 6       6       6       6
+b 0       -       -       -
+
+mlr --opprint merge-fields -a sum,min,max,mode -c x,y,z ./reg_test/input/nullvals.dkvp
+a _sum _min _max _mode
+b 3    1    2    1
+b 7    3    4    3
+b 5    5    5    5
+b 6    6    6    6
+b 0    -    -    -
+
 
 ================================================================
 SPACE-PADDING
