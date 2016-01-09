@@ -189,17 +189,19 @@ static void mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate) {
 		char*  value_field_sval = pb->value;
 		if (value_field_sval == NULL) // Key not present
 			continue;
-		if (*value_field_sval == 0) // Key present with null value
-			continue;
-		mv_t value_field_nval = pstate->allow_int_float
-			? mv_scan_number_or_die(value_field_sval)
-			: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 
 		top_keeper_t* ptop_keeper_for_group = lhmsv_get(group_to_acc_field, value_field_name);
 		if (ptop_keeper_for_group == NULL) {
 			ptop_keeper_for_group = top_keeper_alloc(pstate->top_count);
 			lhmsv_put(group_to_acc_field, value_field_name, ptop_keeper_for_group, NO_FREE);
 		}
+
+		if (*value_field_sval == 0) // Key present with null value
+			continue;
+
+		mv_t value_field_nval = pstate->allow_int_float
+			? mv_scan_number_or_die(value_field_sval)
+			: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
 
 		// The top-keeper object will free the record if it isn't retained, or
 		// keep it if it is.
