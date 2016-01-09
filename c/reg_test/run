@@ -179,6 +179,10 @@ run_mlr top    -n 3 -f x,y --min $indir/near-ovf.dkvp
 run_mlr top -F -n 3 -f x,y       $indir/near-ovf.dkvp
 run_mlr top -F -n 3 -f x,y --min $indir/near-ovf.dkvp
 
+run_mlr --seed 12345 bootstrap       $indir/abixy-het
+run_mlr --seed 12345 bootstrap -n  2 $indir/abixy-het
+run_mlr --seed 12345 bootstrap -n 20 $indir/abixy-het
+
 run_mlr --seed 12345 sample -k 2        $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a   $indir/abixy-het
 run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het

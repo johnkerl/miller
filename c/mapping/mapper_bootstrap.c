@@ -30,7 +30,7 @@ static void mapper_bootstrap_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Emits an n-sample, with replacement, of the input records.\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "-n {number} NUmber of samples to output. Defaults to number of input records.\n");
+	fprintf(o, "-n {number} Number of samples to output. Defaults to number of input records.\n");
 	fprintf(o, "            Must be non-negative.\n");
 }
 

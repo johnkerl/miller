@@ -146,6 +146,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
 &bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#bar">bar</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#bootstrap">bootstrap</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cat">cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#check">check</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#decimate">decimate</a><br/>
@@ -337,9 +338,10 @@ Help options:
   --help-all-verbs       Show help on all verbs.
 
 Verbs:
-   bar cat check count-distinct cut decimate filter grep group-by group-like
-   having-fields head histogram join label merge-fields put regularize rename
-   reorder sample sec2gmt sort stats1 stats2 step tac tail top uniq
+   bar bootstrap cat check count-distinct cut decimate filter grep group-by
+   group-like having-fields head histogram join label merge-fields put
+   regularize rename reorder sample sec2gmt sort stats1 stats2 step tac tail
+   top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! boolean
@@ -903,6 +905,22 @@ eks pan 2 [0.204603]***************************************#[0.75868] [0.134189]
 wye wye 3 [0.204603]#.......................................[0.75868] [0.134189]***********.............................[0.863624]
 eks wye 4 [0.204603]************............................[0.75868] [0.134189]#.......................................[0.863624]
 wye pan 5 [0.204603]**************************..............[0.75868] [0.134189]***************************************#[0.863624]
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="bootstrap"/><h2>bootstrap</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr bootstrap --help
+Usage: mlr bootstrap [options]
+Emits an n-sample, with replacement, of the input records.
+Options:
+-n {number} Number of samples to output. Defaults to number of input records.
+            Must be non-negative.
 </pre>
 </div>
 <p/>
@@ -2258,7 +2276,7 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 <pre>
 $ mlr sample --help
 Usage: mlr sample [options]
-Reservoir sampling, optionally by category.
+Reservoir sampling (subsampling without replacement), optionally by category.
 -k {count}    Required: number of records to output, total, or by group if using -g.
 -g {a,b,c}    Optional: group-by-field names for samples.
 </pre>
