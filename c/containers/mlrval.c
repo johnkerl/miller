@@ -1566,10 +1566,14 @@ mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval
 
 // ----------------------------------------------------------------
 mv_t b_x_isnull_func(mv_t* pval1) {
-	return mv_from_bool(pval1->type == MT_NULL || (pval1->type == MT_STRING && *pval1->u.strv == 0));
+	mv_t rv = mv_from_bool(pval1->type == MT_NULL || (pval1->type == MT_STRING && *pval1->u.strv == 0));
+	mv_free(pval1);
+	return rv;
 }
 mv_t b_x_isnotnull_func(mv_t* pval1) {
-	return mv_from_bool(pval1->type != MT_NULL && !(pval1->type == MT_STRING && *pval1->u.strv == 0));
+	mv_t rv = mv_from_bool(pval1->type != MT_NULL && !(pval1->type == MT_STRING && *pval1->u.strv == 0));
+	mv_free(pval1);
+	return rv;
 }
 
 // ----------------------------------------------------------------
