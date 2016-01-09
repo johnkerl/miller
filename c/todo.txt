@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! isnull / isnotnull fcns for filter
-
 * filter-then-put with capture-groups
 * interpolated percentiles
 
