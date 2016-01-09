@@ -6,9 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! handle empty-key nulls: stats1, stats2, merge-fields, step, top
-  > UT
-
 ! isnull / isnotnull fcns for filter
 
 * filter-then-put with capture-groups
