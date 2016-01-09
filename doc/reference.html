@@ -344,13 +344,13 @@ Verbs:
    top uniq
 
 Functions for the filter and put verbs:
-   + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! boolean
-   float fmtnum hexfmt int string . gsub strlen sub tolower toupper abs acos
-   acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1
-   floor invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm
-   round roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec
-   dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt
-   sec2hms strftime strptime systime
+   + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! isnull
+   isnotnull boolean float fmtnum hexfmt int string . gsub strlen sub tolower
+   toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf
+   erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min mmul
+   msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
+   urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec
+   sec2dhms sec2gmt sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -3276,6 +3276,10 @@ and string results in string compare.
 ^^ (class=boolean #args=2): Logical XOR.
 
 ! (class=boolean #args=1): Logical negation.
+
+isnull (class=conversion #args=1): True if argument is null, false otherwise
+
+isnotnull (class=conversion #args=1): False if argument is null, true otherwise.
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 
