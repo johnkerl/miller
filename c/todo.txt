@@ -9,10 +9,6 @@ TOP OF LIST
 ! stats1 handle empty-key nulls? stats2? step? top? etc ...
   > UT
 
-* bootstrap sampling in hold-and-emit mode
-  > implement an nout < nin option
-  > UT
-
 * filter-then-put with capture-groups
 * interpolated percentiles
 
