@@ -872,6 +872,7 @@ by category.
   ratio    Compute ratios in field(s) between successive records
   rsum     Compute running sums of field(s) between successive records
   counter  Count instances of field(s) between successive records
+  ewma     xxx doc line goes here
 -f {a,b,c} Value-field names on which to compute statistics
 -g {d,e,f} Optional group-by-field names
 -F         Computes integerable things (e.g. counter) in floating point.
