@@ -7501,6 +7501,70 @@ mlr --opprint filter isnotnull($z) ./reg_test/input/nullvals.dkvp
 
 mlr --opprint filter isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
 
+mlr --opprint put $f=isnull($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnull($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - true
+b - 6 - false
+b - - - true
+
+mlr --opprint put $f=isnull($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnull($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
+
+mlr --opprint put $f=isnotnull($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=isnotnull($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - false
+b - 6 - true
+b - - - false
+
+mlr --opprint put $f=isnotnull($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
+
 
 ================================================================
 DSL TYPE-INFERENCE

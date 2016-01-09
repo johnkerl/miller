@@ -699,6 +699,15 @@ run_mlr --opprint filter 'isnotnull($y)'      $indir/nullvals.dkvp
 run_mlr --opprint filter 'isnotnull($z)'      $indir/nullvals.dkvp
 run_mlr --opprint filter 'isnotnull($nosuch)' $indir/nullvals.dkvp
 
+run_mlr --opprint put '$f=isnull($x)'         $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnull($y)'         $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnull($z)'         $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnull($nosuch)'    $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnotnull($x)'      $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnotnull($y)'      $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnotnull($z)'      $indir/nullvals.dkvp
+run_mlr --opprint put '$f=isnotnull($nosuch)' $indir/nullvals.dkvp
+
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
 
