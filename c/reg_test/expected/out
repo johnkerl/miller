@@ -10326,19 +10326,19 @@ top_idx y_top
 
 mlr --opprint top -n 5 -f z ./reg_test/input/nullvals.dkvp
 top_idx z_top
--       -
--       -
--       -
--       -
--       -
+1       -
+2       -
+3       -
+4       -
+5       -
 
 mlr --opprint top -n 5 -f x,y,z ./reg_test/input/nullvals.dkvp
 top_idx x_top y_top z_top
--       5     6     -
--       3     4     -
--       1     2     -
--       -     -     -
--       -     -     -
+1       5     6     -
+2       3     4     -
+3       1     2     -
+4       -     -     -
+5       -     -     -
 
 mlr --opprint top -n 5 -f x -g a ./reg_test/input/nullvals.dkvp
 a top_idx x_top
@@ -10358,19 +10358,19 @@ b 5       -
 
 mlr --opprint top -n 5 -f z -g a ./reg_test/input/nullvals.dkvp
 a top_idx z_top
-b -       -
-b -       -
-b -       -
-b -       -
-b -       -
+b 1       -
+b 2       -
+b 3       -
+b 4       -
+b 5       -
 
 mlr --opprint top -n 5 -f x,y,z -g a ./reg_test/input/nullvals.dkvp
 a top_idx x_top y_top z_top
-b -       5     6     -
-b -       3     4     -
-b -       1     2     -
-b -       -     -     -
-b -       -     -     -
+b 1       5     6     -
+b 2       3     4     -
+b 3       1     2     -
+b 4       -     -     -
+b 5       -     -     -
 
 mlr --opprint top -a -n 5 -f x ./reg_test/input/nullvals.dkvp
 a x y z

@@ -255,10 +255,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 
 					char* key = mlr_paste_2_strings(value_field_name, "_top");
-					if (ptop_keeper_for_group->size == 0) {
-						lrec_put(poutrec, "top_idx", "", NO_FREE);
-						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
-					} else if (i < ptop_keeper_for_group->size) {
+					if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_alloc_format_val(&numv);
 						lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
