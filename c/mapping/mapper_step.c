@@ -80,7 +80,7 @@ static step_t* step_from_first_alloc (char* input_field_name, int allow_int_floa
 static step_t* step_ratio_alloc      (char* input_field_name, int allow_int_float, slls_t* unused);
 static step_t* step_rsum_alloc       (char* input_field_name, int allow_int_float, slls_t* unused);
 static step_t* step_counter_alloc    (char* input_field_name, int allow_int_float, slls_t* unused);
-static step_t* step_decay_alloc      (char* input_field_name, int unused,          slls_t* pstring_alphas);
+static step_t* step_ewma_alloc       (char* input_field_name, int unused,          slls_t* pstring_alphas);
 
 static step_t* make_step(char* step_name, char* input_field_name, int allow_int_float, slls_t* pstring_alphas);
 
@@ -95,7 +95,7 @@ static step_lookup_t step_lookup_table[] = {
 	{"ratio",      step_ratio_alloc,      "Compute ratios in field(s) between successive records"},
 	{"rsum",       step_rsum_alloc,       "Compute running sums of field(s) between successive records"},
 	{"counter",    step_counter_alloc,    "Count instances of field(s) between successive records"},
-	{"decay",      step_decay_alloc,      "xxx doc line goes here"},
+	{"ewma",       step_ewma_alloc,       "xxx doc line goes here"},
 };
 static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lookup_table[0]);
 
@@ -501,16 +501,17 @@ static step_t* step_counter_alloc(char* input_field_name, int allow_int_float, s
 }
 
 // ----------------------------------------------------------------
-typedef struct _step_decay_state_t {
+// https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+typedef struct _step_ewma_state_t {
 	int     num_alphas;
 	double* alphas;
 	double* alphacompls;
 	double* prevs;
 	int     have_prevs;
 	char**  output_field_names;
-} step_decay_state_t;
-static void step_decay_dprocess(void* pvstate, double fltv, lrec_t* prec) {
-	step_decay_state_t* pstate = pvstate;
+} step_ewma_state_t;
+static void step_ewma_dprocess(void* pvstate, double fltv, lrec_t* prec) {
+	step_ewma_state_t* pstate = pvstate;
 	if (!pstate->have_prevs) {
 		for (int i = 0; i < pstate->num_alphas; i++) {
 			lrec_put(prec, pstate->output_field_names[i], mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt),
@@ -528,13 +529,13 @@ static void step_decay_dprocess(void* pvstate, double fltv, lrec_t* prec) {
 		}
 	}
 }
-static void step_decay_zprocess(void* pvstate, lrec_t* prec) {
-	step_decay_state_t* pstate = pvstate;
+static void step_ewma_zprocess(void* pvstate, lrec_t* prec) {
+	step_ewma_state_t* pstate = pvstate;
 	for (int i = 0; i < pstate->num_alphas; i++)
 		lrec_put(prec, pstate->output_field_names[i], "", NO_FREE);
 }
-static void step_decay_free(step_t* pstep) {
-	step_decay_state_t* pstate = pstep->pvstate;
+static void step_ewma_free(step_t* pstep) {
+	step_ewma_state_t* pstate = pstep->pvstate;
 	for (int i = 0; i < pstate->num_alphas; i++) {
 		free(pstate->output_field_names[i]);
 	}
@@ -545,10 +546,10 @@ static void step_decay_free(step_t* pstep) {
 	free(pstate);
 	free(pstep);
 }
-static step_t* step_decay_alloc(char* input_field_name, int unused, slls_t* pstring_alphas) {
+static step_t* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas) {
 	step_t* pstep              = mlr_malloc_or_die(sizeof(step_t));
 
-	step_decay_state_t* pstate = mlr_malloc_or_die(sizeof(step_decay_state_t));
+	step_ewma_state_t* pstate = mlr_malloc_or_die(sizeof(step_ewma_state_t));
 	int n                      = pstring_alphas->length;
 	pstate->num_alphas         = n;
 	pstate->alphas             = mlr_malloc_or_die(n * sizeof(double));
@@ -562,15 +563,15 @@ static step_t* step_decay_alloc(char* input_field_name, int unused, slls_t* pstr
 		pstate->alphas[i]      = mlr_double_from_string_or_die(string_alpha);
 		pstate->alphacompls[i] = 1.0 - pstate->alphas[i];
 		pstate->prevs[i]       = 0.0;
-		pstate->output_field_names[i] = mlr_paste_3_strings(input_field_name, "_decay_", string_alpha);
+		pstate->output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", string_alpha);
 	}
 	pstate->have_prevs = FALSE;
 
 	pstep->pvstate        = (void*)pstate;
-	pstep->pdprocess_func = step_decay_dprocess;
+	pstep->pdprocess_func = step_ewma_dprocess;
 	pstep->pnprocess_func = NULL;
 	pstep->psprocess_func = NULL;
-	pstep->pzprocess_func = step_decay_zprocess;
-	pstep->pfree_func     = step_decay_free;
+	pstep->pzprocess_func = step_ewma_zprocess;
+	pstep->pfree_func     = step_ewma_free;
 	return pstep;
 }

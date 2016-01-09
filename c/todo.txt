@@ -16,6 +16,7 @@ TOP OF LIST
   ? maybe just EMA with well-known sumw followed by then-chaining write up the weights if so.?
     > step -a decay UTs. note disk-usage sys-stat @ mld; cf mem.
     > mld re cross-record stuff is limited to stats1/2 and step
+    > xxxes
 
 debian screenshot
 * ruby @ optextdep @ mld; poki+mkman
