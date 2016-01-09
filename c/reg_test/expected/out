@@ -10199,6 +10199,74 @@ c 3
 6 e
 f 6
 
+mlr --oxtab stats1 -a sum,min,max,mode -f x ./reg_test/input/nullvals.dkvp
+x_sum  9
+x_min  1
+x_max  5
+x_mode 1
+
+mlr --oxtab stats1 -a sum,min,max,mode -f y ./reg_test/input/nullvals.dkvp
+y_sum  12
+y_min  2
+y_max  6
+y_mode 2
+
+mlr --oxtab stats1 -a sum,min,max,mode -f z ./reg_test/input/nullvals.dkvp
+z_sum  0
+z_min  
+z_max  
+z_mode 
+
+mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z ./reg_test/input/nullvals.dkvp
+x_sum  9
+x_min  1
+x_max  5
+x_mode 1
+y_sum  12
+y_min  2
+y_max  6
+y_mode 2
+z_sum  0
+z_min  
+z_max  
+z_mode 
+
+mlr --oxtab stats1 -a sum,min,max,mode -f x -g a ./reg_test/input/nullvals.dkvp
+a      b
+x_sum  9
+x_min  1
+x_max  5
+x_mode 1
+
+mlr --oxtab stats1 -a sum,min,max,mode -f y -g a ./reg_test/input/nullvals.dkvp
+a      b
+y_sum  12
+y_min  2
+y_max  6
+y_mode 2
+
+mlr --oxtab stats1 -a sum,min,max,mode -f z -g a ./reg_test/input/nullvals.dkvp
+a      b
+z_sum  0
+z_min  
+z_max  
+z_mode 
+
+mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z -g a ./reg_test/input/nullvals.dkvp
+a      b
+x_sum  9
+x_min  1
+x_max  5
+x_mode 1
+y_sum  12
+y_min  2
+y_max  6
+y_mode 2
+z_sum  0
+z_min  
+z_max  
+z_mode 
+
 
 ================================================================
 SPACE-PADDING

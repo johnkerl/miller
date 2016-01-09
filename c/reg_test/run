@@ -1059,6 +1059,15 @@ run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
 run_mlr --inidx --ifs comma --odkvp cat $indir/null-fields.nidx
 run_mlr --idkvp --oxtab cat $indir/missings.dkvp
 
+run_mlr --oxtab stats1 -a sum,min,max,mode -f x          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f y          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f z          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z      $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f x     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f y     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f z     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z -g a $indir/nullvals.dkvp
+
 # ================================================================
 announce SPACE-PADDING
 
