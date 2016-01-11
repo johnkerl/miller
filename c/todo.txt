@@ -7,6 +7,7 @@ BUGFIXES
 TOP OF LIST
 
 * filter-then-put with capture-groups
+  > literal true/false into grammar?
 * interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
@@ -15,6 +16,9 @@ TOP OF LIST
   ? also, option of weighted stats w/ explicit weights field?
   ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
     > mld re cross-record stuff is limited to stats1/2 and step
+  * cump -> one-offs
+  * ewma output-label list in addition to rename
+  ! multi-pair stats2 !
 
 debian screenshot
 * ruby @ optextdep @ mld; poki+mkman
@@ -196,3 +200,4 @@ Squash commits by:
   mark each commit other than the first as "squash" or "fixup"
   git push -f
 
+http://codeinthehole.com/writing/pull-requests-and-other-good-practices-for-teams-using-github/
