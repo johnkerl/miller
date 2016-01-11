@@ -13,11 +13,8 @@ TOP OF LIST
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
   ? also, option of weighted stats w/ explicit weights field?
-  ? maybe just EMA with well-known sumw followed by then-chaining write up the weights if so.?
-    > step -a decay UTs. note disk-usage sys-stat @ mld; cf mem.
+  ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
     > mld re cross-record stuff is limited to stats1/2 and step
-    > xxxes
-    > mld expand
 
 debian screenshot
 * ruby @ optextdep @ mld; poki+mkman

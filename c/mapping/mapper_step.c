@@ -14,6 +14,8 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define DEFAULT_STRING_ALPHA "0.5"
+
 // ----------------------------------------------------------------
 struct _step_t; // forward reference for method declarations
 
@@ -121,7 +123,8 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n");
 	fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n");
 	fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n");
-	fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\".\n", argv0, verb);
+	fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", argv0, verb);
+	fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html#filter or\n");
 	fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
 	fprintf(o, "for more information on EWMA.\n");
@@ -131,7 +134,7 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t*         pstepper_names        = NULL;
 	string_array_t* pvalue_field_names    = NULL;
 	slls_t*         pgroup_by_field_names = slls_alloc();
-	slls_t*         pstring_alphas        = slls_single_no_free("0.5"); // xxx null default w/ check ... or #define dflt & into usg
+	slls_t*         pstring_alphas        = slls_single_no_free(DEFAULT_STRING_ALPHA);
 	int             allow_int_float       = TRUE;
 
 	char* verb = argv[(*pargi)++];
