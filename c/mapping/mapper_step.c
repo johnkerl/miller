@@ -95,7 +95,7 @@ static step_lookup_t step_lookup_table[] = {
 	{"ratio",      step_ratio_alloc,      "Compute ratios in field(s) between successive records"},
 	{"rsum",       step_rsum_alloc,       "Compute running sums of field(s) between successive records"},
 	{"counter",    step_counter_alloc,    "Count instances of field(s) between successive records"},
-	{"ewma",       step_ewma_alloc,       "xxx doc line goes here"},
+	{"ewma",       step_ewma_alloc,       "Exponentially weighted moving average over successive records"},
 };
 static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lookup_table[0]);
 
@@ -118,6 +118,13 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f} Optional group-by-field names\n");
 	fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n");
+	fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n");
+	fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n");
+	fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n");
+	fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\".\n", argv0, verb);
+	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html#filter or\n");
+	fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
+	fprintf(o, "for more information on EWMA.\n");
 }
 
 static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {

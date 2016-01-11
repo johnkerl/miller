@@ -17,6 +17,7 @@ TOP OF LIST
     > step -a decay UTs. note disk-usage sys-stat @ mld; cf mem.
     > mld re cross-record stuff is limited to stats1/2 and step
     > xxxes
+    > mld expand
 
 debian screenshot
 * ruby @ optextdep @ mld; poki+mkman
