@@ -9,7 +9,7 @@ TOP OF LIST
 * filter-then-put with capture-groups
 * interpolated percentiles
 
-* stats1/stats2 sliding-window feature? and/or with decay-coefficients (much easier)
+* stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
   ? also, option of weighted stats w/ explicit weights field?
