@@ -188,7 +188,7 @@ look-ats:
 shell: mlr put '$z=$x+$y'
 lldb:  run put "\$z=\$x+\$y"
 
-----------------------------------------------------------------
+================================================================
 git remote add upstream https://github.com/Homebrew/homebrew
 git fetch upstream
 git rebase upstream/master
@@ -196,6 +196,17 @@ shasum -a 256 ../mlr-3.2.2.tar.gz
 git diff HEAD^  HEAD
 git diff HEAD^2 HEAD
 
+----------------------------------------------------------------
+git remote add upstream https://github.com/Homebrew/homebrew
+git fetch upstream
+git rebase upstream/master
+git checkout -r miller-3.2.2
+shasum -a 256 ../mlr-3.2.2.tar.gz
+git add ...
+git commit -m 'miller 3.2.2'
+git push --all
+
+----------------------------------------------------------------
 Squash commits by:
   brew update
   git checkout $YOUR_BRANCH
