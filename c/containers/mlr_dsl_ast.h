@@ -20,6 +20,7 @@ typedef struct _mlr_dsl_ast_node_t {
 	sllv_t* pchildren;
 } mlr_dsl_ast_node_t;
 
+// xxx delete?
 // For convenience of the parser.
 typedef struct _mlr_dsl_ast_node_holder_t {
 	mlr_dsl_ast_node_t* proot;

@@ -3,7 +3,7 @@
 #include "containers/sllv.h"
 #include "mapping/lrec_evaluators.h"
 #include "mapping/mappers.h"
-#include "dsls/filter_dsl_wrapper.h"
+#include "dsls/put_dsl_wrapper.h"
 #include "cli/argparse.h"
 
 typedef struct _mapper_filter_state_t {
@@ -84,19 +84,25 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	mlr_dsl_expression = argv[(*pargi)++];
 
-	mlr_dsl_ast_node_holder_t* past = filter_dsl_parse(mlr_dsl_expression);
-	if (past == NULL) {
+	sllv_t* pasts = put_dsl_parse(mlr_dsl_expression);
+	if (pasts == NULL) {
 		mapper_filter_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+	if (pasts->length != 1) {
+		fprintf(stderr, "%s %s: multiple expressions are unsupported.\n", argv[0], verb);
+		return NULL;
+	}
+	mlr_dsl_ast_node_t* past = sllv_pop(pasts);
+	sllv_free(pasts);
 
 	// For just dev-testing the parser, you can do
 	//   mlr filter -v 'expression goes here' /dev/null
 	if (print_asts) {
-		mlr_dsl_ast_node_print(past->proot);
+		mlr_dsl_ast_node_print(past);
 	}
 
-	return mapper_filter_alloc(pstate, past->proot, type_inferencing, do_exclude);
+	return mapper_filter_alloc(pstate, past, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------
