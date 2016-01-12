@@ -11,13 +11,14 @@ typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
 	int num_evaluators;
+	int filter_exclude;
 	char** output_field_names;
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_put_free(mapper_t* pmapper);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int filter_exclude);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 
@@ -31,8 +32,9 @@ mapper_setup_t mapper_put_setup = {
 // ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
-	fprintf(o, "Adds/updates specified field(s).\n");
+	fprintf(o, "xxx fix me Adds/updates specified field(s).\n");
 	fprintf(o, "Options:\n");
+	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
@@ -58,13 +60,15 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
+	int   filter_exclude = FALSE;
 	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_asts = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate, "-v", &print_asts);
+	ap_define_true_flag(pstate,      "-v", &print_asts);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
+	ap_define_true_flag(pstate,      "-x", &filter_exclude);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -91,51 +95,55 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvvalue);
 	}
 
-	return mapper_put_alloc(pstate, pasts, type_inferencing);
+	return mapper_put_alloc(pstate, pasts, type_inferencing, filter_exclude);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int filter_exclude) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
 	pstate->pasts = pasts;
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
+	pstate->filter_exclude = filter_exclude;
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
 
 	int i = 0;
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
-		if ((past->type != MLR_DSL_AST_NODE_TYPE_OPERATOR) || !streq(past->text, "=")) {
-			fprintf(stderr,
-				"%s: expected assignment-rooted AST; got operator \"%s\" with node type %s.\n",
-					MLR_GLOBALS.argv0, past->text, mlr_dsl_ast_node_describe_type(past->type));
-			return NULL;
-		} else if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
+		if ((past->type == MLR_DSL_AST_NODE_TYPE_OPERATOR) && streq(past->text, "=")) {
+			// Assignment statement
+			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
+				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			}
+
+			mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+			if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
+				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			} else if (pleft->pchildren != NULL) {
+				fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			}
+
+			char* output_field_name = pleft->text;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = output_field_name;
+
+		} else {
+			// Filter statement
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = NULL;
 		}
-
-		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
-		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
-
-		if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		} else if (pleft->pchildren != NULL) {
-			fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		}
-
-		char* output_field_name = pleft->text;
-		lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-
-		pstate->pevaluators[i] = pevaluator;
-		pstate->output_field_names[i] = output_field_name;
 	}
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -171,22 +179,37 @@ static void mapper_put_free(mapper_t* pmapper) {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec != NULL) {
-		mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
-		for (int i = 0; i < pstate->num_evaluators; i++) {
-			mv_t val = pstate->pevaluators[i]->pprocess_func(pinrec,
-				pctx, pstate->pevaluators[i]->pvstate);
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+
+	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
+
+	for (int i = 0; i < pstate->num_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
+		if (pstate->output_field_names[i] != NULL) {
+			// Assignment statement
+			char* output_field_name = pstate->output_field_names[i];
+			mv_t val = pevaluator->pprocess_func(pinrec, pctx, pevaluator->pvstate);
 			char free_flags;
 			if (val.type == MT_STRING) {
-				lrec_put(pinrec, pstate->output_field_names[i], val.u.strv, val.free_flags);
+				lrec_put(pinrec, output_field_name, val.u.strv, val.free_flags);
 			} else {
 				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(pinrec, pstate->output_field_names[i], string, free_flags);
+				lrec_put(pinrec, output_field_name, string, free_flags);
+			}
+		} else {
+			// Filter statement
+			mv_t val = pevaluator->pprocess_func(pinrec, pctx, pevaluator->pvstate);
+			if (val.type == MT_NULL) {
+				lrec_free(pinrec);
+				return NULL;
+			}
+			mv_set_boolean_strict(&val);
+			if (!(val.u.boolv ^ pstate->filter_exclude)) {
+				lrec_free(pinrec);
+				return NULL;
 			}
 		}
-		return sllv_single(pinrec);
 	}
-	else {
-		return sllv_single(NULL);
-	}
+	return sllv_single(pinrec);
 }

@@ -37,13 +37,16 @@
 	fprintf(stderr, "Syntax error!\n");
 }
 
-pdsl_body ::= pdsl_assignments.                // For scan-from-string
+pdsl_body ::= pdsl_statements.                // For scan-from-string
 
 // ----------------------------------------------------------------
-pdsl_assignments ::= pdsl_assignment.
-pdsl_assignments ::= pdsl_assignment PUT_DSL_SEMICOLON pdsl_assignments.
+pdsl_statements ::= pdsl_statement.
+pdsl_statements ::= pdsl_statement PUT_DSL_SEMICOLON pdsl_statements.
 
-// ----------------------------------------------------------------
+pdsl_statement ::= pdsl_assignment.
+pdsl_statement ::= pdsl_filter.
+
+// ================================================================
 // In the grammar provided to the user, field names are of the form "$x".  But
 // within Miller internally, field names are of the form "x".  We coded the
 // lexer to give us field names with leading "$" so we can confidently strip it
@@ -70,7 +73,13 @@ pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_l
 	sllv_add(pasts, A);
 }
 
-// ----------------------------------------------------------------
+// ================================================================
+pdsl_filter(A) ::= pdsl_logical_or_term(B). {
+	A = B;
+	sllv_add(pasts, A);
+}
+
+// ================================================================
 pdsl_logical_or_term(A) ::= pdsl_logical_xor_term(B). {
 	A = B;
 }
