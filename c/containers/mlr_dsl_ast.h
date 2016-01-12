@@ -20,12 +20,6 @@ typedef struct _mlr_dsl_ast_node_t {
 	sllv_t* pchildren;
 } mlr_dsl_ast_node_t;
 
-// xxx delete?
-// For convenience of the parser.
-typedef struct _mlr_dsl_ast_node_holder_t {
-	mlr_dsl_ast_node_t* proot;
-} mlr_dsl_ast_node_holder_t;
-
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
@@ -38,7 +32,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 
-// See comments in {put,filter}_dsl_parse.y for this seemingly awkward syntax wherein
+// See comments in put_dsl_parse.y for this seemingly awkward syntax wherein
 // we change the function name after having set it up. This is a consequence of
 // bottom-up DSL parsing.
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
