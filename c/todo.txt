@@ -9,13 +9,15 @@ TOP OF LIST
 * filter-then-put with capture-groups
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
   ! pointer integrity for backcaptures followed by unlinks/renames etc. ... strdup them?
+  o name clash for \1 \2 etc.:
+    - mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
+    - mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
+
   o also typed name-to-mlrval map overlay (don't convert all fields, for performance)
   ? convert lrec_t *entirely* into string->mlrval?!?
     - compare_lexically now becomes expensive
     - breaks all lhmslv's at -g's
-  o name clash for \1 \2 etc.:
-    - mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
-    - mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
+    - so don't do this
 
 * ewma output-label list in addition to rename
 ! double-check multi-pair stats2 !
