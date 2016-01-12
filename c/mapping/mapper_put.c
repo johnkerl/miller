@@ -32,9 +32,13 @@ mapper_setup_t mapper_put_setup = {
 // ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
-	fprintf(o, "xxx fix me Adds/updates specified field(s).\n");
+	fprintf(o, "Adds/updates specified field(s), and/or filters records.  Expressions are\n");
+	fprintf(o, "semicolon-separated and must either be assignments, or evaluate to boolean.\n");
+	fprintf(o, "Each is evaluated in turn from left to right. Assignments are applied to the\n");
+	fprintf(o, "current record; the record is not printed if any boolean expression evaluates\n");
+	fprintf(o, "to false.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
@@ -42,18 +46,33 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "-x: Negates boolean expressions. Has no effect on assignment expressions.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
 	fprintf(o, "NF NR FNR FILENUM FILENAME PI E.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
+	fprintf(o, "  Assignment only:\n");
 	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$filename = FILENAME'\n", argv0, verb);
 	fprintf(o, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
 	fprintf(o, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$name = sub($name, \"http.*com\"i, \"\")'\n", argv0, verb);
+	fprintf(o, "  Filter only:\n");
+	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
+	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
+	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
+	fprintf(o, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
+	fprintf(o, "  %s %s 'urand() < 0.001'  (subsampling)\n", argv0, verb);
+	fprintf(o, "  Mixed assignment/filter:\n");
+	fprintf(o, "  %s %s '$x > 0.0; $y = log10($x); $z = sqrt($y)'\n", argv0, verb);
+	fprintf(o, "  %s %s '$y = log10($x); 1.1 < $y && $y < 7.0; $z = sqrt($y)'\n", argv0, verb);
+	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
-	fprintf(o, "including function list.\n");
+	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);
+	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
 }
 
 // ----------------------------------------------------------------

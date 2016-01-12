@@ -30,9 +30,9 @@ mapper_setup_t mapper_filter_setup = {
 // ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
-	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
+	fprintf(o, "Prints records for which {expression} evaluates to true. This is simply a\n");
+	fprintf(o, "special case of %s put, with only a single boolean expression allowed.\n", argv0);
 	fprintf(o, "Options:\n");
-	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
@@ -40,6 +40,7 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");

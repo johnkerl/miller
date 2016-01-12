@@ -9,6 +9,9 @@ TOP OF LIST
 * filter-then-put with capture-groups
   > literal true/false into grammar?
   > xxxes
+  > on-line help re expanded-put
+  > mld note re filter is just a special case of put now
+
 * interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
