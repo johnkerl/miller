@@ -30,7 +30,7 @@ CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
 # ----------------------------------------------------------------
-# Miller source except put/filter DSLs
+# Miller source except put-DSL
 NON_DSL_SRCS = \
   *.c \
   cli/*.c \
@@ -41,15 +41,11 @@ NON_DSL_SRCS = \
   mapping/*.c \
   output/*.c
 
-# put/filter DSLs
+# put-DSL
 PDSL_OBJS = \
   ./dsls/put_dsl_parse.o \
   ./dsls/put_dsl_lexer.o \
   ./dsls/put_dsl_wrapper.o
-FDSL_OBJS = \
-  ./dsls/filter_dsl_parse.o \
-  ./dsls/filter_dsl_lexer.o \
-  ./dsls/filter_dsl_wrapper.o
 
 # Unit-test code
 TEST_ARGPARSE_SRCS = \
@@ -196,24 +192,21 @@ tags: .always
 	ctags -R .
 
 mlr: .always dsls
-	$(CCOPT) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr
+	$(CCOPT) $(NON_DSL_SRCS) $(PDSL_OBJS) $(LFLAGS) -o mlr
 mlr.static: .always dsls
-	$(CCOPT) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlr.static
+	$(CCOPT) -static $(NON_DSL_SRCS) $(PDSL_OBJS) $(LFLAGS) -o mlr.static
 
 dsls: .always
 	make -C dsls -f Makefile.no-autoconfig put_dsl_parse.o
 	make -C dsls -f Makefile.no-autoconfig put_dsl_lexer.o
 	make -C dsls -f Makefile.no-autoconfig put_dsl_wrapper.o
-	make -C dsls -f Makefile.no-autoconfig filter_dsl_parse.o
-	make -C dsls -f Makefile.no-autoconfig filter_dsl_lexer.o
-	make -C dsls -f Makefile.no-autoconfig filter_dsl_wrapper.o
 
 # ----------------------------------------------------------------
 # Other executable variants
 
 # Debug version
 mlrg: .always dsls
-	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrg
+	$(CCDEBUG) $(NON_DSL_SRCS) $(PDSL_OBJS) $(LFLAGS) -o mlrg
 
 # Profile version. Usage:
 # * make mlrp
@@ -221,7 +214,7 @@ mlrg: .always dsls
 # * gprof mlrp gmon.out > myfile.txt
 # Note: works on Linux; not on OSX.
 mlrp: .always dsls
-	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(FDSL_OBJS) $(LFLAGS) -o mlrp
+	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(PDSL_OBJS) $(LFLAGS) -o mlrp
 
 # ================================================================
 tests: unit-test reg-test

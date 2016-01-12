@@ -22,7 +22,6 @@ all_ldadd=		\
 			../mapping/libmapping.la \
 			../output/liboutput.la \
 			../lib/libmlr.la \
-			../dsls/libfdsl.la \
 			../dsls/libpdsl.la \
 			-lm
 

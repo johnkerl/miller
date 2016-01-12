@@ -22,9 +22,7 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv '_platform_memchr' \
   | mgrepv 'xpc_pipe_routine' \
   | grep -v 'MACH_SEND_TRAILER' \
-  | mgrepv 'filter_dsl_lexer_lex' \
   | mgrepv 'put_dsl_lexer_lex' \
-  | mgrepv 'filter_dsl_parse' \
   | mgrepv 'put_dsl_parse' \
   | mgrepv 'unbackslash' \
   | cat
