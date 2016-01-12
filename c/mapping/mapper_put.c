@@ -208,7 +208,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		if (pstate->output_field_names[i] != NULL) {
 			// Assignment statement
 			char* output_field_name = pstate->output_field_names[i];
-			mv_t val = pevaluator->pprocess_func(pinrec, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, /*xxx ptyped_overlay,*/ pctx, pevaluator->pvstate);
 			char free_flags;
 			if (val.type == MT_STRING) {
 				lrec_put(pinrec, output_field_name, val.u.strv, val.free_flags);
