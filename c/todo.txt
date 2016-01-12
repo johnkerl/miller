@@ -7,10 +7,9 @@ BUGFIXES
 TOP OF LIST
 
 * filter-then-put with capture-groups
-  > literal true/false into grammar?
-  > xxxes
-  > on-line help re expanded-put
-  > mld note re filter is just a special case of put now
+  > expanded lrec_context or some such for the regex backcaptures
+  > ... also typed name-to-mlrval map overlay?? entirely replace lrec within
+    the evaluators?? (but don't convert all fields, for performance)
 
 * interpolated percentiles
 

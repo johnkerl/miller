@@ -439,34 +439,7 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and
-<a href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear in the data
-stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
-<tt>$1,$2,$3</tt>.  Likewise, enclose string literals in double quotes in
-<tt>filter</tt> expressions even though they don&rsquo;t appear in file data.
-In particular, <tt>mlr filter '$x=="abc"'</tt> passes through the record
-<tt>x=abc</tt>.
-
-<p/>The <tt>filter</tt> command supports the same built-in variables as for
-<a href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
-<tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This
-selects the 2nd record from each matching file:
-
-POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
-
-<p/>Expressions may be arbitrarily complex:
-
-POKI_RUN_COMMAND{{mlr --opprint filter '$a == "pan" || $b == "wye"' data/small}}HERE
-
-<table><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y > 0.5) || ($x < 0.5 && $y < 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
-</td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
-</td></tr></table>
-
-Newlines within the expression are ignored, which can help increase legibility of complex expressions:
-
-POKI_INCLUDE_ESCAPED(filter-multiline-example.txt)HERE
+<p/>This is a special case of <a href="#put"><tt>put</tt></a>, with a single boolean expression allowed.
 
 <!-- ================================================================ -->
 <h2>grep</h2>
@@ -641,12 +614,14 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out dat
 
 POKI_RUN_COMMAND{{mlr put --help}}HERE
 
-<p/>Field names must be specified using a <tt>$</tt> in <a href="#filter"><tt>filter</tt></a> and <tt>put</tt>
-expressions, even though they don&rsquo;t appear in the data stream. For
-integer-indexed data, this looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.
-Likewise, enclose string literals in double quotes in <tt>put</tt>
-expressions even though they don&rsquo;t appear in file data. In particular,
-<tt>mlr put '$x=="abc"'</tt> creates the field <tt>x=abc</tt>.
+<p/>Field names must be specified using a <tt>$</tt> in <a
+href="#filter"><tt>filter</tt></a> and <tt>put</tt> expressions, even though
+they don&rsquo;t appear in the data stream. For integer-indexed data, this
+looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string
+literals in double quotes in <tt>put</tt> expressions even though they
+don&rsquo;t appear in file data. In particular, <tt>mlr put '$x="abc"'</tt>
+creates the field <tt>x=abc</tt> and <tt>mlr put '$x=="abc"'</tt> passes
+through the field <tt>x</tt> if it has the value <tt>abc</tt>.
 
 <p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
@@ -661,6 +636,8 @@ POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM;
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
 POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
+
+POKI_INCLUDE_ESCAPED(put-multiline-example-2.txt)HERE
 
 <!-- ================================================================ -->
 <h2>regularize</h2>

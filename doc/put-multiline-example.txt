@@ -5,3 +5,4 @@ mlr --opprint put '
   $filenum  = FILENUM;
   $filename = FILENAME' \
   data/small data/small2
+

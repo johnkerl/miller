@@ -35,8 +35,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Adds/updates specified field(s), and/or filters records.  Expressions are\n");
 	fprintf(o, "semicolon-separated and must either be assignments, or evaluate to boolean.\n");
 	fprintf(o, "Each is evaluated in turn from left to right. Assignments are applied to the\n");
-	fprintf(o, "current record; the record is not printed if any boolean expression evaluates\n");
-	fprintf(o, "to false.\n");
+	fprintf(o, "current record; the record is not printed (and remaining expressions to the\n");
+	fprintf(o, "right are not evaluated) if any boolean expression evaluates to false.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
