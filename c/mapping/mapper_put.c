@@ -220,13 +220,11 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			// Filter statement
 			mv_t val = pevaluator->pprocess_func(pinrec, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL) {
-				lrec_free(pinrec);
-				return NULL;
+				break;
 			}
 			mv_set_boolean_strict(&val);
 			if (!(val.u.boolv ^ pstate->filter_exclude)) {
-				lrec_free(pinrec);
-				return NULL;
+				break;
 			}
 		}
 	}
