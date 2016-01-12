@@ -7,11 +7,8 @@ lemon_SOURCES=		lemon.c
 noinst_LTLIBRARIES=	libpdsl.la
 # if we don't want to distribute the generated sources, move them to a nodist_libfoo_la_SOURCES variable
 libpdsl_la_SOURCES=	put_dsl_lexer.c put_dsl_lexer.h put_dsl_parse.c put_dsl_parse.h put_dsl_wrapper.c put_dsl_wrapper.h
-			put_dsl_lexer.c put_dsl_lexer.h put_dsl_parse.c put_dsl_parse.h put_dsl_parse.out
-EXTRA_DIST=		\
-			lempar.c \
-			put_dsl_lexer.l \
-			put_dsl_parse.y
+CLEANFILES=		put_dsl_lexer.c put_dsl_lexer.h put_dsl_parse.c put_dsl_parse.h put_dsl_parse.out
+EXTRA_DIST=		lempar.c put_dsl_lexer.l put_dsl_parse.y
 
 put_dsl_wrapper.c: put_dsl_lexer.h
 put_dsl_parse.h: put_dsl_parse.c
