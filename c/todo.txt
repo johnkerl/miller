@@ -22,7 +22,6 @@ TOP OF LIST
     - breaks all lhmslv's at -g's
     - so don't do this
 
-* ewma output-label list in addition to rename
 ! double-check multi-pair stats2 !
 * cump -> one-offs
 
