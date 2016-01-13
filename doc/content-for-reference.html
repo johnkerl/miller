@@ -846,6 +846,8 @@ POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x data/medium | he
 POKI_RUN_COMMAND{{mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 ../doc/data/medium | head -15}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough ../doc/data/medium | head -15}}HERE
 </td></tr></table>
 
 Example deriving uptime-delta from system uptime:

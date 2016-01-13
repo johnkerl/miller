@@ -884,6 +884,8 @@ Example: mlr stats2 -a corr -f x,y
 Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped
 by category.
+
+Options:
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
   delta    Compute differences in field(s) between successive records
   from-first Compute differences in field(s) from first record
@@ -899,6 +901,10 @@ by category.
            heavy smoothing. Multiple weights may be specified, e.g.
            "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
            is "-d 0.5".
+-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
+           the -d values. If supplied, the number of -o values must be the same
+           as the number of -d values.
+
 Please see http://johnkerl.org/miller/doc/reference.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
