@@ -1231,8 +1231,8 @@ b=2,c=3,a=1
 <pre>
 $ mlr filter --help
 Usage: mlr filter [options] {expression}
-Prints records for which {expression} evaluates to true. This is simply a
-special case of mlr put, with only a single boolean expression allowed.
+Prints records for which {expression} evaluates to true.
+
 Options:
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
     full transparency on the precedence and associativity rules of Miller's
@@ -1242,10 +1242,12 @@ Options:
 -F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
 -x: Prints records for which {expression} evaluates to false.
+
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E.
+
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
   mlr filter 'FNR == 2          (second record in each file)'
@@ -1253,6 +1255,7 @@ Examples:
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
   mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
+
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f". Please also also "mlr grep" which is
 useful when you don't yet know which field name(s) you're looking for.
@@ -2037,11 +2040,12 @@ a_in a_out b_in b_out a_sum b_sum
 <pre>
 $ mlr put --help
 Usage: mlr put [options] {expression}
-Adds/updates specified field(s), and/or filters records.  Expressions are
-semicolon-separated and must either be assignments, or evaluate to boolean.
-Each is evaluated in turn from left to right. Assignments are applied to the
-current record; the record is not printed (and remaining expressions to the
-right are not evaluated) if any boolean expression evaluates to false.
+Adds/updates specified field(s). Expressions are semicolon-separated and must
+either be assignments, or evaluate to boolean.  Each expression is evaluated in
+turn from left to right. Assignment expressions are applied to the current
+record; once a boolean expression evaluates to false, the record is emitted
+with all changes up to that point and remaining expressions to the right are
+not evaluated.
 
 Options:
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
@@ -2065,19 +2069,12 @@ Examples:
   mlr put '$colored_shape = $color . "_" . $shape'
   mlr put '$y = cos($theta); $z = atan2($y, $x)'
   mlr put '$name = sub($name, "http.*com"i, "")'
-  Filter only:
-  mlr put '$color != "blue" &amp;&amp; $value &gt; 4.2'
-  mlr put '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
-  mlr put '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
-  mlr put 'FNR == 2          (second record in each file)'
-  mlr put 'urand() &lt; 0.001'  (subsampling)
-  Mixed assignment/filter:
+  Mixed assignment/boolean:
   mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)'
   mlr put '$y = log10($x); 1.1 &lt; $y &amp;&amp; $y &lt; 7.0; $z = sqrt($y)'
 
 Please see http://johnkerl.org/miller/doc/reference.html for more information
-including function list. Or "mlr -f". Please also also "mlr grep" which is
-useful when you don't yet know which field name(s) you're looking for.
+including function list. Or "mlr -f".
 </pre>
 </div>
 <p/>
