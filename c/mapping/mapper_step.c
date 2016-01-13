@@ -117,6 +117,8 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Computes values dependent on the previous record, optionally grouped\n");
 	fprintf(o, "by category.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Options:\n");
 	fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n");
 	for (int i = 0; i < step_lookup_table_length; i++) {
 		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
@@ -129,6 +131,11 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n");
 	fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", argv0, verb);
 	fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA);
+	fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n");
+	fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n");
+	fprintf(o, "           as the number of -d values.\n");
+	// xxx example here
+	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html#filter or\n");
 	fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
 	fprintf(o, "for more information on EWMA.\n");
@@ -160,6 +167,12 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	if (pstepper_names == NULL || pvalue_field_names == NULL) {
 		mapper_step_usage(stderr, argv[0], verb);
 		return NULL;
+	}
+	if (pstring_alphas != NULL && pewma_suffixes != NULL) {
+		if (pewma_suffixes->length != pstring_alphas->length) {
+			mapper_step_usage(stderr, argv[0], verb);
+			return NULL;
+		}
 	}
 
 	return mapper_step_alloc(pstate, pstepper_names, pvalue_field_names, pgroup_by_field_names,
@@ -567,10 +580,11 @@ static void step_ewma_free(step_t* pstep) {
 	free(pstate);
 	free(pstep);
 }
+
 static step_t* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas, slls_t* pewma_suffixes) {
 	step_t* pstep              = mlr_malloc_or_die(sizeof(step_t));
 
-	step_ewma_state_t* pstate = mlr_malloc_or_die(sizeof(step_ewma_state_t));
+	step_ewma_state_t* pstate  = mlr_malloc_or_die(sizeof(step_ewma_state_t));
 	int n                      = pstring_alphas->length;
 	pstate->num_alphas         = n;
 	pstate->alphas             = mlr_malloc_or_die(n * sizeof(double));
@@ -578,13 +592,16 @@ static step_t* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstri
 	pstate->prevs              = mlr_malloc_or_die(n * sizeof(double));
 	pstate->have_prevs         = FALSE;
 	pstate->output_field_names = mlr_malloc_or_die(n * sizeof(char*));
+	slls_t* psuffixes = (pewma_suffixes == NULL) ? pstring_alphas : pewma_suffixes;
 	sllse_t* pe = pstring_alphas->phead;
-	for (int i = 0; i < n; i++, pe = pe->pnext) {
+	sllse_t* pf = psuffixes->phead;
+	for (int i = 0; i < n; i++, pe = pe->pnext, pf = pf->pnext) {
 		char* string_alpha     = pe->value;
+		char* suffix           = pf->value;
 		pstate->alphas[i]      = mlr_double_from_string_or_die(string_alpha);
 		pstate->alphacompls[i] = 1.0 - pstate->alphas[i];
 		pstate->prevs[i]       = 0.0;
-		pstate->output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", string_alpha);
+		pstate->output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", suffix);
 	}
 	pstate->have_prevs = FALSE;
 
