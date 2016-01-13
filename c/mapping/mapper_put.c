@@ -32,11 +32,12 @@ mapper_setup_t mapper_put_setup = {
 // ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
-	fprintf(o, "Adds/updates specified field(s), and/or filters records.  Expressions are\n");
-	fprintf(o, "semicolon-separated and must either be assignments, or evaluate to boolean.\n");
-	fprintf(o, "Each is evaluated in turn from left to right. Assignments are applied to the\n");
-	fprintf(o, "current record; the record is not printed (and remaining expressions to the\n");
-	fprintf(o, "right are not evaluated) if any boolean expression evaluates to false.\n");
+	fprintf(o, "Adds/updates specified field(s). Expressions are semicolon-separated and must\n");
+	fprintf(o, "either be assignments, or evaluate to boolean.  Each expression is evaluated in\n");
+	fprintf(o, "turn from left to right. Assignment expressions are applied to the current\n");
+	fprintf(o, "record; once a boolean expression evaluates to false, the record is emitted\n");
+	fprintf(o, "with all changes up to that point and remaining expressions to the right are\n");
+	fprintf(o, "not evaluated.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
@@ -60,19 +61,12 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
 	fprintf(o, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$name = sub($name, \"http.*com\"i, \"\")'\n", argv0, verb);
-	fprintf(o, "  Filter only:\n");
-	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
-	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
-	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
-	fprintf(o, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
-	fprintf(o, "  %s %s 'urand() < 0.001'  (subsampling)\n", argv0, verb);
-	fprintf(o, "  Mixed assignment/filter:\n");
+	fprintf(o, "  Mixed assignment/boolean:\n");
 	fprintf(o, "  %s %s '$x > 0.0; $y = log10($x); $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$y = log10($x); 1.1 < $y && $y < 7.0; $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
-	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);
-	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
+	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
 }
 
 // ----------------------------------------------------------------
