@@ -26,6 +26,8 @@ TOP OF LIST
 ! double-check multi-pair stats2 !
 * cump -> one-offs
 
+! re-valgrind all !
+
 * interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
