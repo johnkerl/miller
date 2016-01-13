@@ -3,10 +3,12 @@
 
 #include "lib/context.h"
 #include "containers/lrec.h"
+#include "containers/lhmsv.h"
 #include "containers/mlrval.h"
 
 struct _lrec_evaluator_t; // forward reference for method declarations
-typedef mv_t lrec_evaluator_process_func_t(lrec_t* prec, context_t* pctx, void* pvstate);
+// xxx comment here
+typedef mv_t lrec_evaluator_process_func_t(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate);
 typedef void lrec_evaluator_free_func_t(struct _lrec_evaluator_t*);
 
 typedef struct _lrec_evaluator_t {
