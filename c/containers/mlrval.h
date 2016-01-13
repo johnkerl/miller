@@ -21,7 +21,7 @@
 // have their ownership transferred to the output mlrval.
 //
 // This is because the primary purpose of mlrvals is for evaluation of abstract
-// syntax trees defined by the DSLs for put and filter. Example AST:
+// syntax trees defined by the DSL for put and filter. Example AST:
 //
 //   $ mlr put -v '$z = $x . $y . "sum"' /dev/null
 //   = (operator):
@@ -353,7 +353,7 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2);
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb);
 mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb);
 
-// For filter/put DSLs:
+// For filter/put DSL:
 mv_t eq_op_func(mv_t* pval1, mv_t* pval2);
 mv_t ne_op_func(mv_t* pval1, mv_t* pval2);
 mv_t gt_op_func(mv_t* pval1, mv_t* pval2);

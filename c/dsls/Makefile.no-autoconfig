@@ -11,26 +11,26 @@ CFLAGS=-I.. -O3
 #CFLAGS=-I.. -g
 
 # ----------------------------------------------------------------
-top: put_dsl_lexer.o put_dsl_parse.o put_dsl_wrapper.o
+top: mlr_dsl_lexer.o mlr_dsl_parse.o mlr_dsl_wrapper.o
 
 # ----------------------------------------------------------------
-put_dsl_wrapper.o: put_dsl_wrapper.c put_dsl_wrapper.h put_dsl_parse.h
-	$(CC) -Wall $(CFLAGS) -c -std=gnu99 put_dsl_wrapper.c
+mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h
+	$(CC) -Wall $(CFLAGS) -c -std=gnu99 mlr_dsl_wrapper.c
 
-put_dsl_parse.o: put_dsl_parse.c put_dsl_parse.h
-	$(CC) $(CFLAGS) -c -std=gnu99 put_dsl_parse.c
-put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
-	./lemon put_dsl_parse.y
-	mv put_dsl_parse.c put_dsl_parse.c.tmp
+mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
+	$(CC) $(CFLAGS) -c -std=gnu99 mlr_dsl_parse.c
+mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon
+	./lemon mlr_dsl_parse.y
+	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
 	sed \
-			-e 's/ParseTrace/put_dsl_ParseTrace/g' \
-			-e 's/ParseTokenName/put_dsl_ParseTokenName/g' \
-			-e 's/lemon_parser_alloc/put_dsl_lemon_parser_alloc/g' \
-			-e 's/lemon_parser_free/put_dsl_lemon_parser_free/g' \
-			-e 's/lemon_parser_parse_token/put_dsl_lemon_parser_parse_token/g' \
-			-e 's/yy_destructor/put_dsl_yy_destructor/g' \
-		put_dsl_parse.c.tmp > put_dsl_parse.c
-	rm -f put_dsl_parse.c.tmp
+			-e 's/ParseTrace/mlr_dsl_ParseTrace/g' \
+			-e 's/ParseTokenName/mlr_dsl_ParseTokenName/g' \
+			-e 's/lemon_parser_alloc/mlr_dsl_lemon_parser_alloc/g' \
+			-e 's/lemon_parser_free/mlr_dsl_lemon_parser_free/g' \
+			-e 's/lemon_parser_parse_token/mlr_dsl_lemon_parser_parse_token/g' \
+			-e 's/yy_destructor/mlr_dsl_yy_destructor/g' \
+		mlr_dsl_parse.c.tmp > mlr_dsl_parse.c
+	rm -f mlr_dsl_parse.c.tmp
 
 # muldef:
 #   ParseTrace
@@ -40,10 +40,10 @@ put_dsl_parse.c put_dsl_parse.h: put_dsl_parse.y lemon
 #   lemon_parser_parse_token
 #   yy_destructor
 
-put_dsl_lexer.o: put_dsl_lexer.c put_dsl_lexer.h put_dsl_parse.h
-	$(CC) $(CFLAGS) -c -std=gnu99 put_dsl_lexer.c
-put_dsl_lexer.c put_dsl_lexer.h: put_dsl_lexer.l
-	flex --prefix=put_dsl_lexer_ --outfile=put_dsl_lexer.c --header-file=put_dsl_lexer.h put_dsl_lexer.l
+mlr_dsl_lexer.o: mlr_dsl_lexer.c mlr_dsl_lexer.h mlr_dsl_parse.h
+	$(CC) $(CFLAGS) -c -std=gnu99 mlr_dsl_lexer.c
+mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l
+	flex --prefix=mlr_dsl_lexer_ --outfile=mlr_dsl_lexer.c --header-file=mlr_dsl_lexer.h mlr_dsl_lexer.l
 
 # ----------------------------------------------------------------
 lemon: lemon.c lempar.c
@@ -52,8 +52,8 @@ lemon: lemon.c lempar.c
 # ----------------------------------------------------------------
 clean:
 	rm -f *.o
-	rm -f put_dsl_parse.c put_dsl_parse.h put_dsl_parse.out
-	rm -f put_dsl_lexer.c put_dsl_lexer.h
+	rm -f mlr_dsl_parse.c mlr_dsl_parse.h mlr_dsl_parse.out
+	rm -f mlr_dsl_lexer.c mlr_dsl_lexer.h
 	rm -f lemon
 
 .always:

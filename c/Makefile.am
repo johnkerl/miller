@@ -16,7 +16,7 @@ mlr_LDADD=		\
 			mapping/libmapping.la \
 			output/liboutput.la \
 			lib/libmlr.la \
-			dsls/libpdsl.la \
+			dsls/libdsl.la \
 			-lm
 
 # Other executable variants

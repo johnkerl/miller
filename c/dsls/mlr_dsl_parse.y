@@ -37,14 +37,14 @@
 	fprintf(stderr, "Syntax error!\n");
 }
 
-pdsl_body ::= pdsl_statements.                // For scan-from-string
+mlr_dsl_body ::= mlr_dsl_statements.                // For scan-from-string
 
 // ----------------------------------------------------------------
-pdsl_statements ::= pdsl_statement.
-pdsl_statements ::= pdsl_statement PUT_DSL_SEMICOLON pdsl_statements.
+mlr_dsl_statements ::= mlr_dsl_statement.
+mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
-pdsl_statement ::= pdsl_assignment.
-pdsl_statement ::= pdsl_filter.
+mlr_dsl_statement ::= mlr_dsl_assignment.
+mlr_dsl_statement ::= mlr_dsl_filter.
 
 // ================================================================
 // In the grammar provided to the user, field names are of the form "$x".  But
@@ -52,7 +52,7 @@ pdsl_statement ::= pdsl_filter.
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_ternary(C). {
+mlr_dsl_assignment(A)  ::= MLR_DSL_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	// Replace "$field.name" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
@@ -61,7 +61,7 @@ pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_ternary(C).
 	sllv_add(pasts, A);
 }
 
-pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_ternary(C). {
+mlr_dsl_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -74,166 +74,166 @@ pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_t
 }
 
 // ================================================================
-pdsl_filter(A) ::= pdsl_ternary(B). {
+mlr_dsl_filter(A) ::= mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(pasts, A);
 }
 
 // ================================================================
-pdsl_ternary(A) ::= pdsl_logical_or_term(B) PUT_DSL_QUESTION_MARK pdsl_ternary(C) PUT_DSL_COLON pdsl_ternary(D). {
+mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B) MLR_DSL_QUESTION_MARK mlr_dsl_ternary(C) MLR_DSL_COLON mlr_dsl_ternary(D). {
 	A = mlr_dsl_ast_node_alloc_ternary("? :", MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C, D);
 }
 
-pdsl_ternary(A) ::= pdsl_logical_or_term(B). {
+mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B). {
 	A = B;
 }
 
 // ================================================================
-pdsl_logical_or_term(A) ::= pdsl_logical_xor_term(B). {
+mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_xor_term(B). {
 	A = B;
 }
-pdsl_logical_or_term(A) ::= pdsl_logical_or_term(B) PUT_DSL_LOGICAL_OR(O) pdsl_logical_xor_term(C). {
+mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_or_term(B) MLR_DSL_LOGICAL_OR(O) mlr_dsl_logical_xor_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_logical_xor_term(A) ::= pdsl_logical_and_term(B). {
+mlr_dsl_logical_xor_term(A) ::= mlr_dsl_logical_and_term(B). {
 	A = B;
 }
-pdsl_logical_xor_term(A) ::= pdsl_logical_xor_term(B) PUT_DSL_LOGICAL_XOR(O) pdsl_logical_and_term(C). {
+mlr_dsl_logical_xor_term(A) ::= mlr_dsl_logical_xor_term(B) MLR_DSL_LOGICAL_XOR(O) mlr_dsl_logical_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_logical_and_term(A) ::= pdsl_eqne_term(B). {
+mlr_dsl_logical_and_term(A) ::= mlr_dsl_eqne_term(B). {
 	A = B;
 }
-pdsl_logical_and_term(A) ::= pdsl_logical_and_term(B) PUT_DSL_LOGICAL_AND(O) pdsl_eqne_term(C). {
+mlr_dsl_logical_and_term(A) ::= mlr_dsl_logical_and_term(B) MLR_DSL_LOGICAL_AND(O) mlr_dsl_eqne_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_eqne_term(A) ::= pdsl_cmp_term(B). {
+mlr_dsl_eqne_term(A) ::= mlr_dsl_cmp_term(B). {
 	A = B;
 }
-pdsl_eqne_term(A) ::= pdsl_eqne_term(B) PUT_DSL_MATCHES(O) pdsl_cmp_term(C). {
+mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_MATCHES(O) mlr_dsl_cmp_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_eqne_term(A) ::= pdsl_eqne_term(B) PUT_DSL_DOES_NOT_MATCH(O) pdsl_cmp_term(C). {
+mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_DOES_NOT_MATCH(O) mlr_dsl_cmp_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_eqne_term(A) ::= pdsl_eqne_term(B) PUT_DSL_EQ(O) pdsl_cmp_term(C). {
+mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_EQ(O) mlr_dsl_cmp_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_eqne_term(A) ::= pdsl_eqne_term(B) PUT_DSL_NE(O) pdsl_cmp_term(C). {
+mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_NE(O) mlr_dsl_cmp_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_cmp_term(A) ::= pdsl_bitwise_or_term(B). {
+mlr_dsl_cmp_term(A) ::= mlr_dsl_bitwise_or_term(B). {
 	A = B;
 }
-pdsl_cmp_term(A) ::= pdsl_cmp_term(B) PUT_DSL_GT(O) pdsl_bitwise_or_term(C). {
+mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_GT(O) mlr_dsl_bitwise_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_cmp_term(A) ::= pdsl_cmp_term(B) PUT_DSL_GE(O) pdsl_bitwise_or_term(C). {
+mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_GE(O) mlr_dsl_bitwise_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_cmp_term(A) ::= pdsl_cmp_term(B) PUT_DSL_LT(O) pdsl_bitwise_or_term(C). {
+mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_LT(O) mlr_dsl_bitwise_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_cmp_term(A) ::= pdsl_cmp_term(B) PUT_DSL_LE(O) pdsl_bitwise_or_term(C). {
+mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_LE(O) mlr_dsl_bitwise_or_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_bitwise_or_term(A) ::= pdsl_bitwise_xor_term(B). {
+mlr_dsl_bitwise_or_term(A) ::= mlr_dsl_bitwise_xor_term(B). {
 	A = B;
 }
-pdsl_bitwise_or_term(A) ::= pdsl_bitwise_or_term(B) PUT_DSL_BITWISE_OR(O) pdsl_bitwise_xor_term(C). {
+mlr_dsl_bitwise_or_term(A) ::= mlr_dsl_bitwise_or_term(B) MLR_DSL_BITWISE_OR(O) mlr_dsl_bitwise_xor_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_bitwise_xor_term(A) ::= pdsl_bitwise_and_term(B). {
+mlr_dsl_bitwise_xor_term(A) ::= mlr_dsl_bitwise_and_term(B). {
 	A = B;
 }
-pdsl_bitwise_xor_term(A) ::= pdsl_bitwise_xor_term(B) PUT_DSL_BITWISE_XOR(O) pdsl_bitwise_and_term(C). {
+mlr_dsl_bitwise_xor_term(A) ::= mlr_dsl_bitwise_xor_term(B) MLR_DSL_BITWISE_XOR(O) mlr_dsl_bitwise_and_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_bitwise_and_term(A) ::= pdsl_bitwise_shift_term(B). {
+mlr_dsl_bitwise_and_term(A) ::= mlr_dsl_bitwise_shift_term(B). {
 	A = B;
 }
-pdsl_bitwise_and_term(A) ::= pdsl_bitwise_and_term(B) PUT_DSL_BITWISE_AND(O) pdsl_bitwise_shift_term(C). {
+mlr_dsl_bitwise_and_term(A) ::= mlr_dsl_bitwise_and_term(B) MLR_DSL_BITWISE_AND(O) mlr_dsl_bitwise_shift_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_bitwise_shift_term(A) ::= pdsl_addsubdot_term(B). {
+mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_addsubdot_term(B). {
 	A = B;
 }
-pdsl_bitwise_shift_term(A) ::= pdsl_bitwise_shift_term(B) PUT_DSL_BITWISE_LSH(O) pdsl_addsubdot_term(C). {
+mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_bitwise_shift_term(B) MLR_DSL_BITWISE_LSH(O) mlr_dsl_addsubdot_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_bitwise_shift_term(A) ::= pdsl_bitwise_shift_term(B) PUT_DSL_BITWISE_RSH(O) pdsl_addsubdot_term(C). {
+mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_bitwise_shift_term(B) MLR_DSL_BITWISE_RSH(O) mlr_dsl_addsubdot_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_addsubdot_term(A) ::= pdsl_muldiv_term(B). {
+mlr_dsl_addsubdot_term(A) ::= mlr_dsl_muldiv_term(B). {
 	A = B;
 }
-pdsl_addsubdot_term(A) ::= pdsl_addsubdot_term(B) PUT_DSL_PLUS(O) pdsl_muldiv_term(C). {
+mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_PLUS(O) mlr_dsl_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_addsubdot_term(A) ::= pdsl_addsubdot_term(B) PUT_DSL_MINUS(O) pdsl_muldiv_term(C). {
+mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_MINUS(O) mlr_dsl_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_addsubdot_term(A) ::= pdsl_addsubdot_term(B) PUT_DSL_DOT(O) pdsl_muldiv_term(C). {
+mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_DOT(O) mlr_dsl_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_muldiv_term(A) ::= pdsl_unary_bitwise_op_term(B). {
+mlr_dsl_muldiv_term(A) ::= mlr_dsl_unary_bitwise_op_term(B). {
 	A = B;
 }
-pdsl_muldiv_term(A) ::= pdsl_muldiv_term(B) PUT_DSL_TIMES(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_TIMES(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_muldiv_term(A) ::= pdsl_muldiv_term(B) PUT_DSL_DIVIDE(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_DIVIDE(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_muldiv_term(A) ::= pdsl_muldiv_term(B) PUT_DSL_INT_DIVIDE(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_INT_DIVIDE(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
-pdsl_muldiv_term(A) ::= pdsl_muldiv_term(B) PUT_DSL_MOD(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_MOD(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_unary_bitwise_op_term(A) ::= pdsl_pow_term(B). {
+mlr_dsl_unary_bitwise_op_term(A) ::= mlr_dsl_pow_term(B). {
 	A = B;
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_PLUS(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_PLUS(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_MINUS(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_MINUS(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_LOGICAL_NOT(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_LOGICAL_NOT(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
-pdsl_unary_bitwise_op_term(A) ::= PUT_DSL_BITWISE_NOT(O) pdsl_unary_bitwise_op_term(C). {
+mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_BITWISE_NOT(O) mlr_dsl_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
 }
 
 // ----------------------------------------------------------------
-pdsl_pow_term(A) ::= pdsl_atom_or_fcn(B). {
+mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B). {
 	A = B;
 }
-pdsl_pow_term(A) ::= pdsl_atom_or_fcn(B) PUT_DSL_POW(O) pdsl_pow_term(C). {
+mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B) MLR_DSL_POW(O) mlr_dsl_pow_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
@@ -243,14 +243,14 @@ pdsl_pow_term(A) ::= pdsl_atom_or_fcn(B) PUT_DSL_POW(O) pdsl_pow_term(C). {
 // within Miller internally, field names are of the form "x".  We coded the
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
-pdsl_atom_or_fcn(A) ::= PUT_DSL_FIELD_NAME(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FIELD_NAME(B). {
 	// not:
 	// A = B;
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
-pdsl_atom_or_fcn(A) ::= PUT_DSL_BRACKETED_FIELD_NAME(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -259,18 +259,18 @@ pdsl_atom_or_fcn(A) ::= PUT_DSL_BRACKETED_FIELD_NAME(B). {
 		no_dollar_name[len-1] = 0;
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
-pdsl_atom_or_fcn(A) ::= PUT_DSL_NUMBER(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_NUMBER(B). {
 	A = B;
 }
 
-pdsl_atom_or_fcn(A) ::= PUT_DSL_STRING(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
-pdsl_atom_or_fcn(A) ::= PUT_DSL_REGEXI(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_REGEXI(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);
@@ -278,14 +278,14 @@ pdsl_atom_or_fcn(A) ::= PUT_DSL_REGEXI(B). {
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
 
-pdsl_atom_or_fcn(A) ::= PUT_DSL_CONTEXT_VARIABLE(B). {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_CONTEXT_VARIABLE(B). {
 	A = B;
 }
 
-pdsl_atom_or_fcn(A) ::= PUT_DSL_LPAREN pdsl_logical_or_term(B) PUT_DSL_RPAREN. {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_LPAREN mlr_dsl_logical_or_term(B) MLR_DSL_RPAREN. {
 	A = B;
 }
-///pdsl_atom_or_fcn(A) ::= PUT_DSL_MINUS(O) pdsl_atom_or_fcn(B). {
+///mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_MINUS(O) mlr_dsl_atom_or_fcn(B). {
 	///A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B);
 ///}
 
@@ -296,17 +296,17 @@ pdsl_atom_or_fcn(A) ::= PUT_DSL_LPAREN pdsl_logical_or_term(B) PUT_DSL_RPAREN. {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-pdsl_atom_or_fcn(A) ::= PUT_DSL_FCN_NAME(O) PUT_DSL_LPAREN pdsl_fcn_args(B) PUT_DSL_RPAREN. {
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FCN_NAME(O) MLR_DSL_LPAREN mlr_dsl_fcn_args(B) MLR_DSL_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // xxx need to invalidate "f(10,)" -- use some non-empty-args expr.
-pdsl_fcn_args(A) ::= . {
+mlr_dsl_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 }
 
-pdsl_fcn_args(A) ::= pdsl_logical_or_term(B). {
+mlr_dsl_fcn_args(A) ::= mlr_dsl_logical_or_term(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME, B);
 }
-pdsl_fcn_args(A) ::= pdsl_fcn_args(B) PUT_DSL_COMMA pdsl_logical_or_term(C). {
+mlr_dsl_fcn_args(A) ::= mlr_dsl_fcn_args(B) MLR_DSL_COMMA mlr_dsl_logical_or_term(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }

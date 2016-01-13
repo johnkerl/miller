@@ -1,7 +1,7 @@
 %{
 #include "stdio.h"  // for fileno() prototype
 #include "string.h" // for strdup() prototype
-#include "put_dsl_parse.h"
+#include "mlr_dsl_parse.h"
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
 %}
@@ -13,152 +13,152 @@
 %%
 ";" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-	return PUT_DSL_SEMICOLON;
+	return MLR_DSL_SEMICOLON;
 }
 
 "=" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_ASSIGN;
+	return MLR_DSL_ASSIGN;
 }
 
 "?" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_QUESTION_MARK;
+	return MLR_DSL_QUESTION_MARK;
 }
 
 ":" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_COLON;
+	return MLR_DSL_COLON;
 }
 
 "||" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LOGICAL_OR;
+	return MLR_DSL_LOGICAL_OR;
 }
 "^^" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LOGICAL_XOR;
+	return MLR_DSL_LOGICAL_XOR;
 }
 "&&" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LOGICAL_AND;
+	return MLR_DSL_LOGICAL_AND;
 }
 
 "=~" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_MATCHES;
+	return MLR_DSL_MATCHES;
 }
 "!=~" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_DOES_NOT_MATCH;
+	return MLR_DSL_DOES_NOT_MATCH;
 }
 "==" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_EQ;
+	return MLR_DSL_EQ;
 }
 "!=" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_NE;
+	return MLR_DSL_NE;
 }
 
 ">" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_GT;
+	return MLR_DSL_GT;
 }
 ">=" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_GE;
+	return MLR_DSL_GE;
 }
 "<" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LT;
+	return MLR_DSL_LT;
 }
 "<=" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LE;
+	return MLR_DSL_LE;
 }
 
 "|" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_OR;
+	return MLR_DSL_BITWISE_OR;
 }
 
 "^" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_XOR;
+	return MLR_DSL_BITWISE_XOR;
 }
 
 "&" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_AND;
+	return MLR_DSL_BITWISE_AND;
 }
 
 "<<" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_LSH;
+	return MLR_DSL_BITWISE_LSH;
 }
 ">>" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_RSH;
+	return MLR_DSL_BITWISE_RSH;
 }
 
 "+" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_PLUS;
+	return MLR_DSL_PLUS;
 }
 "-" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_MINUS;
+	return MLR_DSL_MINUS;
 }
 "\." {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_DOT;
+	return MLR_DSL_DOT;
 }
 
 "*" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_TIMES;
+	return MLR_DSL_TIMES;
 }
 "/" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_DIVIDE;
+	return MLR_DSL_DIVIDE;
 }
 "//" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_INT_DIVIDE;
+	return MLR_DSL_INT_DIVIDE;
 }
 "%" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_MOD;
+	return MLR_DSL_MOD;
 }
 
 "!" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_LOGICAL_NOT;
+	return MLR_DSL_LOGICAL_NOT;
 }
 
 "~" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_BITWISE_NOT;
+	return MLR_DSL_BITWISE_NOT;
 }
 
 "**" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
-	return PUT_DSL_POW;
+	return MLR_DSL_POW;
 }
 
 \$[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
-	return PUT_DSL_FIELD_NAME;
+	return MLR_DSL_FIELD_NAME;
 }
 
 \$\{([^\}]|\\.)*\} {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
-	return PUT_DSL_BRACKETED_FIELD_NAME;
+	return MLR_DSL_BRACKETED_FIELD_NAME;
 }
 
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
@@ -173,69 +173,69 @@
 	// .2e3
 	// .2e-3 1.e-3
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
-	return PUT_DSL_NUMBER;
+	return MLR_DSL_NUMBER;
 }
 0x[0-9a-fA-F]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
-	return PUT_DSL_NUMBER;
+	return MLR_DSL_NUMBER;
 }
 
 \"([^\\\"]|\\.)*\" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_LITERAL);
-	return PUT_DSL_STRING;
+	return MLR_DSL_STRING;
 }
 
 \"([^\\\"]|\\.)*\"\i {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_REGEXI);
-	return PUT_DSL_REGEXI;
+	return MLR_DSL_REGEXI;
 }
 
 "NF" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "NR" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "FNR" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "FILENAME" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "FILENUM" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "PI" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 "E" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
-	return PUT_DSL_CONTEXT_VARIABLE;
+	return MLR_DSL_CONTEXT_VARIABLE;
 }
 
 [a-zA-Z_][a-zA-Z_0-9]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
-	return PUT_DSL_FCN_NAME;
+	return MLR_DSL_FCN_NAME;
 }
 
 "(" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-	return PUT_DSL_LPAREN;
+	return MLR_DSL_LPAREN;
 }
 ")" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-	return PUT_DSL_RPAREN;
+	return MLR_DSL_RPAREN;
 }
 
 "," {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-	return PUT_DSL_COMMA;
+	return MLR_DSL_COMMA;
 }
 
 [ \t\r\n] { }

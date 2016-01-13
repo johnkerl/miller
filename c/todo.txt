@@ -7,7 +7,6 @@ BUGFIXES
 TOP OF LIST
 
 * filter-then-put with capture-groups
-  ! rename put_dsl / pdsl / etc
 
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
   ! pointer integrity for backcaptures followed by unlinks/renames etc. ... strdup them?
@@ -20,9 +19,6 @@ TOP OF LIST
     - compare_lexically now becomes expensive
     - breaks all lhmslv's at -g's
     - so don't do this
-
-  ! ternary operator
-    - UTs
 
 * ewma output-label list in addition to rename
 ! double-check multi-pair stats2 !

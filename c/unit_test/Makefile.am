@@ -22,7 +22,7 @@ all_ldadd=		\
 			../mapping/libmapping.la \
 			../output/liboutput.la \
 			../lib/libmlr.la \
-			../dsls/libpdsl.la \
+			../dsls/libdsl.la \
 			-lm
 
 # Unit-test mains

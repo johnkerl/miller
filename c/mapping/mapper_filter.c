@@ -3,7 +3,7 @@
 #include "containers/sllv.h"
 #include "mapping/lrec_evaluators.h"
 #include "mapping/mappers.h"
-#include "dsls/put_dsl_wrapper.h"
+#include "dsls/mlr_dsl_wrapper.h"
 #include "cli/argparse.h"
 
 typedef struct _mapper_filter_state_t {
@@ -88,7 +88,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	mlr_dsl_expression = argv[(*pargi)++];
 
-	sllv_t* pasts = put_dsl_parse(mlr_dsl_expression);
+	sllv_t* pasts = mlr_dsl_parse(mlr_dsl_expression);
 	if (pasts == NULL) {
 		mapper_filter_usage(stderr, argv[0], verb);
 		return NULL;
