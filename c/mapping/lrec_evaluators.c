@@ -540,6 +540,47 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_i_iii_func(mv_ternary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
+typedef struct _lrec_evaluator_ternop_state_t {
+	lrec_evaluator_t* parg1;
+	lrec_evaluator_t* parg2;
+	lrec_evaluator_t* parg3;
+} lrec_evaluator_ternop_state_t;
+
+mv_t lrec_evaluator_ternop_func(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate) {
+	lrec_evaluator_ternop_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	mv_set_boolean_strict(&val1);
+
+	return val1.u.boolv
+		? pstate->parg2->pprocess_func(prec, ptyped_overlay, pctx, pstate->parg2->pvstate)
+		: pstate->parg3->pprocess_func(prec, ptyped_overlay, pctx, pstate->parg3->pvstate);
+}
+static void lrec_evaluator_ternop_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_ternop_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	pstate->parg3->pfree_func(pstate->parg3);
+	free(pstate);
+	free(pevaluator);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_ternop(lrec_evaluator_t* parg1, lrec_evaluator_t* parg2, lrec_evaluator_t* parg3)
+{
+	lrec_evaluator_ternop_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_ternop_state_t));
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+	pstate->parg3 = parg3;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = lrec_evaluator_ternop_func;
+	pevaluator->pfree_func = lrec_evaluator_ternop_free;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _lrec_evaluator_s_s_state_t {
 	mv_unary_func_t*  pfunc;
 	lrec_evaluator_t* parg1;
@@ -1415,6 +1456,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_BOOLEAN, "||",      2 , "Logical OR."},
 	{ FUNC_CLASS_BOOLEAN, "^^",      2 , "Logical XOR."},
 	{ FUNC_CLASS_BOOLEAN, "!",       1 , "Logical negation."},
+	{ FUNC_CLASS_BOOLEAN, "? :",     3 , "Ternary operator."},
 
 	{ FUNC_CLASS_CONVERSION, "isnull",    1 , "True if argument is null, false otherwise"},
 	{ FUNC_CLASS_CONVERSION, "isnotnull", 1 , "False if argument is null, true otherwise."},
@@ -1425,7 +1467,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{ FUNC_CLASS_CONVERSION, "int",       1 , "Convert int/float/bool/string to int."},
 	{ FUNC_CLASS_CONVERSION, "string",    1 , "Convert int/float/bool/string to string."},
 
-	{ FUNC_CLASS_STRING, ".",       2 , "String concatenation."},
+	{ FUNC_CLASS_STRING, ".",        2 , "String concatenation."},
 	{ FUNC_CLASS_STRING, "gsub",     3 , "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
 	{ FUNC_CLASS_STRING, "strlen",   1 , "String length."},
 	{ FUNC_CLASS_STRING, "sub",      3 , "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
@@ -1747,6 +1789,8 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_ternary_func_name(char* fnnm,
 		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modmul_func,    parg1, parg2, parg3);
 	} else if (streq(fnnm, "mexp")) {
 		return lrec_evaluator_alloc_from_i_iii_func(i_iii_modexp_func,    parg1, parg2, parg3);
+	} else if (streq(fnnm, "? :")) {
+		return lrec_evaluator_alloc_from_ternop(parg1, parg2, parg3);
 	} else  { return NULL; }
 }
 

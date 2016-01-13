@@ -52,7 +52,7 @@ pdsl_statement ::= pdsl_filter.
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
+pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_ternary(C). {
 	// Replace "$field.name" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
@@ -61,7 +61,7 @@ pdsl_assignment(A)  ::= PUT_DSL_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_
 	sllv_add(pasts, A);
 }
 
-pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_logical_or_term(C). {
+pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_ternary(C). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -74,9 +74,18 @@ pdsl_assignment(A)  ::= PUT_DSL_BRACKETED_FIELD_NAME(B) PUT_DSL_ASSIGN(O) pdsl_l
 }
 
 // ================================================================
-pdsl_filter(A) ::= pdsl_logical_or_term(B). {
+pdsl_filter(A) ::= pdsl_ternary(B). {
 	A = B;
 	sllv_add(pasts, A);
+}
+
+// ================================================================
+pdsl_ternary(A) ::= pdsl_logical_or_term(B) PUT_DSL_QUESTION_MARK pdsl_ternary(C) PUT_DSL_COLON pdsl_ternary(D). {
+	A = mlr_dsl_ast_node_alloc_ternary("? :", MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C, D);
+}
+
+pdsl_ternary(A) ::= pdsl_logical_or_term(B). {
+	A = B;
 }
 
 // ================================================================

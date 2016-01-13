@@ -6157,6 +6157,60 @@ mlr filter -v      ~~1 /dev/null
     ~ (operator):
         1 (literal).
 
+mlr put -v $x = 1 ? 2 : 3 /dev/null
+= (operator):
+    x (field_name).
+    ? : (operator):
+        1 (literal).
+        2 (literal).
+        3 (literal).
+
+mlr filter -v      1 ? 2 : 3 /dev/null
+? : (operator):
+    1 (literal).
+    2 (literal).
+    3 (literal).
+
+mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
+= (operator):
+    x (field_name).
+    ? : (operator):
+        1 (literal).
+        ? : (operator):
+            2 (literal).
+            3 (literal).
+            4 (literal).
+        5 (literal).
+
+mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
+? : (operator):
+    1 (literal).
+    ? : (operator):
+        2 (literal).
+        3 (literal).
+        4 (literal).
+    5 (literal).
+
+mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
+= (operator):
+    x (field_name).
+    ? : (operator):
+        1 (literal).
+        2 (literal).
+        ? : (operator):
+            3 (literal).
+            4 (literal).
+            5 (literal).
+
+mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
+? : (operator):
+    1 (literal).
+    2 (literal).
+    ? : (operator):
+        3 (literal).
+        4 (literal).
+        5 (literal).
+
 
 ================================================================
 DSL OPERATOR PRECEDENCE
@@ -7032,6 +7086,32 @@ mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
     == (operator):
         c (field_name).
         1 (literal).
+
+mlr put -v $x = $a==1 ? $b == 2 : $c == 3 /dev/null
+= (operator):
+    x (field_name).
+    ? : (operator):
+        == (operator):
+            a (field_name).
+            1 (literal).
+        == (operator):
+            b (field_name).
+            2 (literal).
+        == (operator):
+            c (field_name).
+            3 (literal).
+
+mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
+? : (operator):
+    == (operator):
+        a (field_name).
+        1 (literal).
+    == (operator):
+        b (field_name).
+        2 (literal).
+    == (operator):
+        c (field_name).
+        3 (literal).
 
 
 ================================================================

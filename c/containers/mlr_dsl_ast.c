@@ -48,6 +48,18 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 }
 
 // ----------------------------------------------------------------
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
+	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc)
+{
+	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
+	pnode->pchildren = sllv_alloc();
+	sllv_add(pnode->pchildren, pa);
+	sllv_add(pnode->pchildren, pb);
+	sllv_add(pnode->pchildren, pc);
+	return pnode;
+}
+
+// ----------------------------------------------------------------
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb)
 {

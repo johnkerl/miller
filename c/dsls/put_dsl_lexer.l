@@ -21,6 +21,16 @@
 	return PUT_DSL_ASSIGN;
 }
 
+"?" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_QUESTION_MARK;
+}
+
+":" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
+	return PUT_DSL_COLON;
+}
+
 "||" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return PUT_DSL_LOGICAL_OR;

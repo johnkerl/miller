@@ -32,6 +32,9 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
+	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc);
+
 // See comments in put_dsl_parse.y for this seemingly awkward syntax wherein
 // we change the function name after having set it up. This is a consequence of
 // bottom-up DSL parsing.

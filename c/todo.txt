@@ -8,22 +8,21 @@ TOP OF LIST
 
 * filter-then-put with capture-groups
   ! rename put_dsl / pdsl / etc
-  ! bracing @ mld:ref:put
 
-  ! code/doc put-filter -> expression gate. & restore full filter-doc section at mld.
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
   ! pointer integrity for backcaptures followed by unlinks/renames etc. ... strdup them?
   o name clash for \1 \2 etc.:
     - mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
     - mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
 
-  o also typed name-to-mlrval map overlay (don't convert all fields, for performance)
+  o typed name-to-mlrval map overlay (don't convert all fields, for performance)
   ? convert lrec_t *entirely* into string->mlrval?!?
     - compare_lexically now becomes expensive
     - breaks all lhmslv's at -g's
     - so don't do this
 
   ! ternary operator
+    - UTs
 
 * ewma output-label list in addition to rename
 ! double-check multi-pair stats2 !
@@ -37,6 +36,8 @@ TOP OF LIST
   ? also, option of weighted stats w/ explicit weights field?
   ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
     > mld re cross-record stuff is limited to stats1/2 and step
+
+* lrec_evaluators cleanup re strict, redundant statements, etc.
 
 debian screenshot
 * ruby @ optextdep @ mld; poki+mkman

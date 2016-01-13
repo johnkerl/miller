@@ -138,7 +138,7 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! isnull
+ + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
  isnotnull boolean float fmtnum hexfmt int string . gsub strlen sub tolower
  toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc
  exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min mmul msub
@@ -1197,6 +1197,15 @@ and string results in string compare.
 .\}
 .nf
 (class=boolean #args=1): Logical negation.
+.fi
+.if n \{\
+.RE
+.SS "? :"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=boolean #args=3): Ternary operator.
 .fi
 .if n \{\
 .RE
