@@ -211,6 +211,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				char* string = mv_format_val(&val, &free_flags);
 				lrec_put(pinrec, output_field_name, string, free_flags);
 			}
+			// xxx avoid double-write until the end for efficiency?
+			// xxx temp mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+			// xxx temp lhmsv_put(ptyped_overlay, output_field_name, pval, 0); // xxx free-flags ...
 		} else {
 			// Filter statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
@@ -223,5 +226,10 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			}
 		}
 	}
+
+	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext)
+		mv_free(pe->pvvalue);
+	lhmsv_free(ptyped_overlay);
+
 	return sllv_single(pinrec);
 }

@@ -1126,24 +1126,14 @@ typedef struct _lrec_evaluator_field_name_state_t {
 
 mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate) {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
-	char* string = lrec_get(prec, pstate->field_name);
-	if (string == NULL) {
-		return MV_NULL;
+	// xxx comment here ...
+	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	if (poverlay != NULL) {
+		return *poverlay; // xxx mem-mgmt for strings ...
 	} else {
-		// string points into AST memory and is valid as long as the AST is.
-		return mv_from_string_no_free(string);
-	}
-}
-
-mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate) {
-	lrec_evaluator_field_name_state_t* pstate = pvstate;
-	char* string = lrec_get(prec, pstate->field_name);
-	if (string == NULL) {
-		return MV_NULL;
-	} else {
-		double fltv;
-		if (mlr_try_float_from_string(string, &fltv)) {
-			return mv_from_float(fltv);
+		char* string = lrec_get(prec, pstate->field_name);
+		if (string == NULL) {
+			return MV_NULL;
 		} else {
 			// string points into AST memory and is valid as long as the AST is.
 			return mv_from_string_no_free(string);
@@ -1151,21 +1141,47 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_o
 	}
 }
 
+mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate) {
+	lrec_evaluator_field_name_state_t* pstate = pvstate;
+	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	if (poverlay != NULL) {
+		return *poverlay; // xxx mem-mgmt for strings ...
+	} else {
+		char* string = lrec_get(prec, pstate->field_name);
+		if (string == NULL) {
+			return MV_NULL;
+		} else {
+			double fltv;
+			if (mlr_try_float_from_string(string, &fltv)) {
+				return mv_from_float(fltv);
+			} else {
+				// string points into AST memory and is valid as long as the AST is.
+				return mv_from_string_no_free(string);
+			}
+		}
+	}
+}
+
 mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate) {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
-	char* string = lrec_get(prec, pstate->field_name);
-	if (string == NULL) {
-		return MV_NULL;
+	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	if (poverlay != NULL) {
+		return *poverlay; // xxx mem-mgmt for strings ...
 	} else {
-		long long intv;
-		double fltv;
-		if (mlr_try_int_from_string(string, &intv)) {
-			return mv_from_int(intv);
-		} else if (mlr_try_float_from_string(string, &fltv)) {
-			return mv_from_float(fltv);
+		char* string = lrec_get(prec, pstate->field_name);
+		if (string == NULL) {
+			return MV_NULL;
 		} else {
-			// string points into AST memory and is valid as long as the AST is.
-			return mv_from_string_no_free(string);
+			long long intv;
+			double fltv;
+			if (mlr_try_int_from_string(string, &intv)) {
+				return mv_from_int(intv);
+			} else if (mlr_try_float_from_string(string, &fltv)) {
+				return mv_from_float(fltv);
+			} else {
+				// string points into AST memory and is valid as long as the AST is.
+				return mv_from_string_no_free(string);
+			}
 		}
 	}
 }

@@ -8,6 +8,8 @@ TOP OF LIST
 
 * filter-then-put with capture-groups
 
+  o xxxes
+
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
   ! pointer integrity for backcaptures followed by unlinks/renames etc. ... strdup them?
   o name clash for \1 \2 etc.:
