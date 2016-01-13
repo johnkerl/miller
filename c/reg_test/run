@@ -689,6 +689,8 @@ run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 run_mlr --icsvlite --oxtab put '${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}' $indir/braced.csv
 run_mlr --icsvlite --oxtab filter '${name.y} < ${z}' $indir/braced.csv
 
+run_mlr --opprint put '$z = $x < 0.5 ? 0 : 1' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 
