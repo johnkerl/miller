@@ -439,13 +439,14 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and
-<a href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear in the data
-stream. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
-<tt>$1,$2,$3</tt>.  Likewise, enclose string literals in double quotes in
-<tt>filter</tt> expressions even though they don&rsquo;t appear in file data.
-In particular, <tt>mlr filter '$x=="abc"'</tt> passes through the record
-<tt>x=abc</tt>.
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
+href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
+in the data stream. For integer-indexed data, this looks like
+<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
+double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
+appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
+through the record <tt>x=abc</tt>.  If field names have special characters such
+as <tt>.</t> then you might use braces, e.g. <tt>'${field.name}'</tt>.
 
 <p/>The <tt>filter</tt> command supports the same built-in variables as for
 <a href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
@@ -648,7 +649,9 @@ looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string
 literals in double quotes in <tt>put</tt> expressions even though they
 don&rsquo;t appear in file data. In particular, <tt>mlr put '$x="abc"'</tt>
 creates the field <tt>x=abc</tt> and <tt>mlr put '$x=="abc"'</tt> passes
-through the field <tt>x</tt> if it has the value <tt>abc</tt>.
+through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
+have special characters such as <tt>.</t> then you might use braces, e.g.
+<tt>'${field.name}'</tt>.
 
 <p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
