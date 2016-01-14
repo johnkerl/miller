@@ -140,6 +140,15 @@ static inline mv_t mv_from_string(char* s, unsigned char free_flags) {
 }
 
 // ----------------------------------------------------------------
+static inline mv_t mv_copy(mv_t* pval) {
+	if (pval->type == MT_STRING) {
+		return mv_from_string_with_free(mlr_strdup_or_die(pval->u.strv));
+	} else {
+		return *pval;
+	}
+}
+
+// ----------------------------------------------------------------
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }

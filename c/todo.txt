@@ -22,6 +22,8 @@ TOP OF LIST
     - breaks all lhmslv's at -g's
     - so don't do this
 
+! ternop @ cover x 2 !
+
 ! double-check multi-pair stats2 !
 * cump -> one-offs
 

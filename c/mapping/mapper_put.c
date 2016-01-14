@@ -204,16 +204,11 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			// Assignment statement
 			char* output_field_name = pstate->output_field_names[i];
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
-			char free_flags;
-			if (val.type == MT_STRING) {
-				lrec_put(pinrec, output_field_name, val.u.strv, val.free_flags);
-			} else {
-				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(pinrec, output_field_name, string, free_flags);
-			}
-			// xxx avoid double-write until the end for efficiency?
-			// xxx temp mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
-			// xxx temp lhmsv_put(ptyped_overlay, output_field_name, pval, 0); // xxx free-flags ...
+			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+			*pval = val;
+			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
+			// xxx comment NR, & perf
+			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 		} else {
 			// Filter statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
@@ -227,8 +222,19 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		}
 	}
 
-	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext)
-		mv_free(pe->pvvalue);
+	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		char* output_field_name = pe->key;
+		mv_t* pval = pe->pvvalue;
+		if (pval->type == MT_STRING) {
+			// Ownership transfer from mv_t to lrec.
+			lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(pval, &free_flags);
+			lrec_put(pinrec, output_field_name, string, free_flags);
+		}
+		free(pval);
+	}
 	lhmsv_free(ptyped_overlay);
 
 	return sllv_single(pinrec);

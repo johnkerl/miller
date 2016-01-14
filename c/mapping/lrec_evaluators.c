@@ -1129,7 +1129,8 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_ov
 	// xxx comment here ...
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		return *poverlay; // xxx mem-mgmt for strings ...
+		// xxx comment
+		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
@@ -1145,7 +1146,8 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_o
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		return *poverlay; // xxx mem-mgmt for strings ...
+		// xxx comment
+		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
@@ -1166,7 +1168,8 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyp
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		return *poverlay; // xxx mem-mgmt for strings ...
+		// xxx comment
+		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
