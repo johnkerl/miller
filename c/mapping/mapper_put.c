@@ -11,14 +11,14 @@ typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
 	int num_evaluators;
-	int filter_exclude;
+	int gate_exclude;
 	char** output_field_names;
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_put_free(mapper_t* pmapper);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int filter_exclude);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int gate_exclude);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 
@@ -73,7 +73,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
-	int   filter_exclude = FALSE;
+	int   gate_exclude = FALSE;
 	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_asts = FALSE;
 
@@ -81,7 +81,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,      "-v", &print_asts);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
-	ap_define_true_flag(pstate,      "-x", &filter_exclude);
+	ap_define_true_flag(pstate,      "-x", &gate_exclude);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -108,17 +108,17 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvvalue);
 	}
 
-	return mapper_put_alloc(pstate, pasts, type_inferencing, filter_exclude);
+	return mapper_put_alloc(pstate, pasts, type_inferencing, gate_exclude);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int filter_exclude) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int gate_exclude) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
 	pstate->pasts = pasts;
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
-	pstate->filter_exclude = filter_exclude;
+	pstate->gate_exclude = gate_exclude;
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
 
 	int i = 0;
@@ -152,7 +152,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			pstate->output_field_names[i] = output_field_name;
 
 		} else {
-			// Filter statement
+			// Gate statement
 			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = NULL;
@@ -198,30 +198,45 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
+	// Do the evaluations, writing typed mlrval output to the typed overlay
+	// rather than into the lrec (which holds only string values).
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
 		if (pstate->output_field_names[i] != NULL) {
+
 			// Assignment statement
 			char* output_field_name = pstate->output_field_names[i];
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
-			// xxx comment NR, & perf
+			// The lrec_evaluator reads the overlay before the lrec, e.g. if
+			// the input had "x"=>"abc","y"=>"def" but the previous pass
+			// through this loop set y=7.4 and z="ghi". So we don't need to do
+			// lrec_put here, and moreover should not for two reasons: (1)
+			// performance hit of doing throwaway number-to-string formatting
+			// -- better to do it once at the end; (2) having the string values
+			// doubly owned by the typed overlay and the lrec would result in
+			// double frees, or awkward bookkeeping. However, the NR variable
+			// evaluator reads prec->field_count, so we need to put something
+			// here. And putting something statically allocated minimizes
+			// copying/freeing.
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+
 		} else {
-			// Filter statement
+
+			// Gate statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
-			if (val.type == MT_NULL) {
+			if (val.type == MT_NULL)
 				break;
-			}
 			mv_set_boolean_strict(&val);
-			if (!(val.u.boolv ^ pstate->filter_exclude)) {
+			if (!(val.u.boolv ^ pstate->gate_exclude))
 				break;
-			}
+
 		}
 	}
 
+	// Write the output fields from the typed overlay back to the lrec.
 	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 		char* output_field_name = pe->key;
 		mv_t* pval = pe->pvvalue;

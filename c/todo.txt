@@ -9,12 +9,6 @@ TOP OF LIST
 ! ternop @ cover x 2 !
 * mlr rename -h: include -f examples
 
-* narrative intro:
-  - sql example
-  - logging example
-  - csv example
-  - what do these have in common?
-
 * filter-then-put with capture-groups
 
   o xxxes
@@ -34,6 +28,13 @@ TOP OF LIST
       - breaks all lhmslv's at -g's
       - so don't do this
       - make this to-do paragraph a comment somewhere
+
+
+* narrative intro:
+  - sql example
+  - logging example
+  - csv example
+  - what do these have in common?
 
 * cump -> one-offs
 
