@@ -202,25 +202,22 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	// rather than into the lrec (which holds only string values).
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
-		if (pstate->output_field_names[i] != NULL) {
+		char* output_field_name = pstate->output_field_names[i];
+		if (output_field_name != NULL) {
 
 			// Assignment statement
-			char* output_field_name = pstate->output_field_names[i];
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
-			// The lrec_evaluator reads the overlay before the lrec, e.g. if
-			// the input had "x"=>"abc","y"=>"def" but the previous pass
-			// through this loop set y=7.4 and z="ghi". So we don't need to do
-			// lrec_put here, and moreover should not for two reasons: (1)
-			// performance hit of doing throwaway number-to-string formatting
-			// -- better to do it once at the end; (2) having the string values
-			// doubly owned by the typed overlay and the lrec would result in
-			// double frees, or awkward bookkeeping. However, the NR variable
-			// evaluator reads prec->field_count, so we need to put something
-			// here. And putting something statically allocated minimizes
-			// copying/freeing.
+			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need to do
+			// lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing throwaway
+			// number-to-string formatting -- it's better to do it once at the end; (2) having the string values doubly
+			// owned by the typed overlay and the lrec would result in double frees, or awkward bookkeeping. However,
+			// the NR variable evaluator reads prec->field_count, so we need to put something here. And putting
+			// something statically allocated minimizes copying/freeing.
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 
 		} else {
