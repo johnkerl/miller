@@ -39,8 +39,6 @@ libcontainers_la_SOURCES=	\
 			slls.h \
 			sllv.c \
 			sllv.h \
-			string_array.c \
-			string_array.h \
 			top_keeper.c \
 			top_keeper.h
 libcontainers_la_LIBADD=	\

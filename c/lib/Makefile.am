@@ -12,6 +12,8 @@ libmlr_la_SOURCES=	minunit.h \
 			context.h \
 			mtrand.c \
 			mtrand.h \
+			string_array.c \
+			string_array.h \
 			string_builder.c \
 			string_builder.h \
 			mlr_test_util.c \

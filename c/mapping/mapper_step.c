@@ -6,7 +6,7 @@
 #include "lib/mlr_globals.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/mixutil.h"

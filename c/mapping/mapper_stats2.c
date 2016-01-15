@@ -8,7 +8,7 @@
 #include "lib/mlrstat.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 #include "containers/lhmslv.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmsv.h"

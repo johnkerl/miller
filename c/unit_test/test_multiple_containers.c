@@ -5,7 +5,7 @@
 #include "containers/slls.h"
 #include "containers/rslls.h"
 #include "containers/sllv.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 #include "containers/hss.h"
 #include "containers/lhmsi.h"
 #include "containers/lhmss.h"

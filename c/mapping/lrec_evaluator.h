@@ -5,7 +5,7 @@
 #include "containers/lrec.h"
 #include "containers/lhmsv.h"
 #include "containers/mlrval.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 
 struct _lrec_evaluator_t; // forward reference for method declarations
 // xxx comment here

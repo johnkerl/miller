@@ -7,7 +7,7 @@
 #include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/hss.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 
 // Makes a list with values pointing to the lrec's keys. slls_free() will
 // respect that and not corrupt the lrec. However, the slls values will be

@@ -55,7 +55,7 @@ TEST_ARGPARSE_SRCS = \
   cli/argparse.c \
   containers/slls.c \
   containers/sllv.c \
-  containers/string_array.c \
+  lib/string_array.c \
   unit_test/test_argparse.c
 
 TEST_BYTE_READERS_SRCS = \
@@ -94,7 +94,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/lrec.c containers/header_keeper.c containers/sllv.c \
   containers/slls.c \
   containers/rslls.c \
-  containers/string_array.c \
+  lib/string_array.c \
   containers/hss.c \
   containers/lhmsi.c \
   containers/lhmss.c \

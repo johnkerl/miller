@@ -6,7 +6,7 @@
 #define ARGPARSE_H
 #include "containers/slls.h"
 #include "containers/sllv.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 
 typedef struct _ap_state_t {
 	sllv_t* pflag_defs;

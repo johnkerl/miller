@@ -1,7 +1,7 @@
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
 #include "containers/lrec.h"
-#include "containers/string_array.h"
+#include "lib/string_array.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
