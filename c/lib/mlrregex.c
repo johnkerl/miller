@@ -166,6 +166,26 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
+void copy_regex_captures(string_array_t* pregex_captures, char* input, regmatch_t matches[], int nmatch) {
+	int n = 0;
+	for (int si = 1; si < nmatch; si++) {
+		if (matches[si].rm_so == -1) {
+			n = si;
+			break;
+		}
+	}
+	string_array_realloc(pregex_captures, n);
+	for (int si = 1; si < n; si++) {
+		int len = matches[si].rm_eo - matches[si].rm_so;
+		char* dst = mlr_malloc_or_die(len + 1);
+		memcpy(dst, &input[matches[si].rm_so], len);
+		dst[len] = 0;
+		pregex_captures->strings[si-1] = dst;
+	}
+	pregex_captures->strings_need_freeing = TRUE;
+}
+
+// ----------------------------------------------------------------
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
 	if (pregex_captures == NULL || pregex_captures->length == 0)
