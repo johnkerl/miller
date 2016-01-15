@@ -1286,8 +1286,6 @@ typedef struct _lrec_evaluator_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_literal_state_t;
 
-// xxx put this in lib dir
-
 mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
@@ -1299,7 +1297,15 @@ mv_t lrec_evaluator_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, s
 	context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_literal_state_t* pstate = pvstate;
-	return mv_from_string_no_free(pstate->literal.u.strv);
+
+	char* input = pstate->literal.u.strv;
+	int was_allocated = FALSE;
+	char *output = interpolate_regex_captures(input, pregex_captures, &was_allocated);
+	if (was_allocated) {
+		return mv_from_string_with_free(output);
+	} else {
+		return mv_from_string_no_free(output);
+	}
 }
 static void lrec_evaluator_literal_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_literal_state_t* pstate = pevaluator->pvstate;
