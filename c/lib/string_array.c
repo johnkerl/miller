@@ -6,7 +6,7 @@ string_array_t* string_array_alloc(int length) {
 	string_array_t* parray = mlr_malloc_or_die(sizeof(string_array_t));
 	parray->length = length;
 	parray->strings_need_freeing = FALSE;
-	parray->strings = mlr_malloc_or_die(length * sizeof(char**));
+	parray->strings = mlr_malloc_or_die(length * sizeof(char*));
 	for (int i = 0; i < length; i++)
 		parray->strings[i] = NULL;
 	return parray;
@@ -21,6 +21,18 @@ void string_array_free(string_array_t* parray) {
 	}
 	free(parray->strings);
 	free(parray);
+}
+
+void string_array_realloc(string_array_t* parray, int new_length) {
+	if (parray->strings_need_freeing)
+		for (int i = 0; i < parray->length; i++)
+			free(parray->strings[i]);
+	if (new_length > parray->length) // else re-use
+		parray->strings = mlr_realloc_or_die(parray->strings, new_length * sizeof(char*));
+	parray->length = new_length;
+	for (int i = 0; i < parray->length; i++)
+		parray->strings[i] = NULL;
+	parray->strings_need_freeing = FALSE;
 }
 
 string_array_t* string_array_from_line(char* line, char ifs) {

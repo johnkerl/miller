@@ -197,6 +197,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	string_array_t* pregex_captures = string_array_alloc(0);
 
 	// Do the evaluations, writing typed mlrval output to the typed overlay
 	// rather than into the lrec (which holds only string values).
@@ -206,7 +207,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		if (output_field_name != NULL) {
 
 			// Assignment statement
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
@@ -223,7 +224,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		} else {
 
 			// Gate statement
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);

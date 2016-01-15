@@ -2023,6 +2023,27 @@ int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) { return (ilt_dispositions[pval1->type]
 int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
+// xxx move to lib dir?
+static void copy_matches(string_array_t* pregex_captures, char* input, regmatch_t matches[], int nmatch) {
+	int n = 0;
+	for (int si = 1; si < nmatch; si++) {
+		if (matches[si].rm_so == -1) {
+			n = si;
+			break;
+		}
+	}
+	string_array_realloc(pregex_captures, n);
+	for (int si = 1; si < n; si++) {
+		int len = matches[si].rm_eo - matches[si].rm_so;
+		char* dst = mlr_malloc_or_die(len + 1);
+		memcpy(dst, &input[matches[si].rm_so], len);
+		dst[len] = 0;
+		pregex_captures->strings[si-1] = dst;
+	}
+	pregex_captures->strings_need_freeing = TRUE;
+}
+
+// ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
 mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures) {
 	char* s1 = pval1->u.strv;
@@ -2034,7 +2055,11 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_ca
 
 	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	if (regmatch_or_die(&regex, sstr, 0, NULL)) { // xxx captures
+	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatch];
+	if (regmatch_or_die(&regex, sstr, nmatch, matches)) {
+		if (pregex_captures != NULL)
+			copy_matches(pregex_captures, pval1->u.strv, matches, nmatch);
 		regfree(&regex);
 		mv_free(pval1);
 		mv_free(pval2);
@@ -2056,7 +2081,11 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pr
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
-	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) { // xxx captures
+	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatch];
+	if (regmatch_or_die(pregex, pval1->u.strv, nmatch, matches)) {
+		if (pregex_captures != NULL)
+			copy_matches(pregex_captures, pval1->u.strv, matches, nmatch);
 		mv_free(pval1);
 		return mv_from_true();
 	} else {

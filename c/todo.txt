@@ -1,7 +1,8 @@
 ================================================================
 BUGFIXES
 
-:D
+odat/osh
+zpoke@eof?
 
 ================================================================
 TOP OF LIST
@@ -9,16 +10,21 @@ TOP OF LIST
 ! ternop @ cover x 2 !
 * mlr rename -h: include -f examples
 
+* json-flat-to-dkvp filter (python ...)
+
 * filter-then-put with capture-groups
 
   o xxxes
 
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
+    ? separate lib/regex file?
     ! pointer integrity for backcaptures followed by unlinks/renames etc. ... strdup them?
     - name clash for \1 \2 etc.:
       > mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
       > mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
       > so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
+    - on-line help & mld
+    - UT
 
   ~ typed name-to-mlrval map overlay (don't convert all fields, for performance)
     ! UT
