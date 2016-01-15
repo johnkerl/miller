@@ -5,10 +5,12 @@
 #include "containers/lrec.h"
 #include "containers/lhmsv.h"
 #include "containers/mlrval.h"
+#include "containers/string_array.h"
 
 struct _lrec_evaluator_t; // forward reference for method declarations
 // xxx comment here
-typedef mv_t lrec_evaluator_process_func_t(lrec_t* prec, lhmsv_t* ptyped_overlay, context_t* pctx, void* pvstate);
+typedef mv_t lrec_evaluator_process_func_t(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
+	context_t* pctx, void* pvstate);
 typedef void lrec_evaluator_free_func_t(struct _lrec_evaluator_t*);
 
 typedef struct _lrec_evaluator_t {
