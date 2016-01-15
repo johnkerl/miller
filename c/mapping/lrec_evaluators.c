@@ -977,7 +977,7 @@ mv_t lrec_evaluator_x_sr_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_arra
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &pstate->regex, pstate->psb);
+	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, pregex_captures);
 }
 static void lrec_evaluator_x_sr_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_x_sr_state_t* pstate = pevaluator->pvstate;

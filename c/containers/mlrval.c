@@ -2055,8 +2055,8 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
-mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
-	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) {
+mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
+	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) { // xxx update
 		mv_free(pval1);
 		return mv_from_true();
 	} else {
@@ -2065,8 +2065,8 @@ mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
 	}
 }
 
-mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb) {
-	mv_t rv = matches_precomp_func(pval1, pregex, psb);
+mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
+	mv_t rv = matches_precomp_func(pval1, pregex, psb, pregex_captures);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }
