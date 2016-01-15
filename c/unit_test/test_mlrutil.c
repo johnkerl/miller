@@ -2,6 +2,7 @@
 #include <string.h>
 #include "lib/minunit.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 
 int tests_run         = 0;
 int tests_failed      = 0;

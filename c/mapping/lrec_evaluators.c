@@ -4,6 +4,7 @@
 #include <ctype.h> // for tolower(), toupper()
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "mapping/lrec_evaluators.h"

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrstat.h"
 #include "cli/argparse.h"

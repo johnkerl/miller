@@ -3,6 +3,7 @@
 #include "mapping/mappers.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "containers/sllv.h"
 
 typedef struct _mapper_grep_state_t {

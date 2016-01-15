@@ -6,6 +6,8 @@ libmlr_la_SOURCES=	minunit.h \
 			mlrmath.h \
 			mlrstat.c \
 			mlrstat.h \
+			mlrregex.c \
+			mlrregex.h \
 			mlrutil.c \
 			mlrutil.h \
 			context.c \

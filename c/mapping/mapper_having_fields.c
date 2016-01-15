@@ -1,6 +1,7 @@
 #include <regex.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "containers/hss.h"

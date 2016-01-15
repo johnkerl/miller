@@ -50,6 +50,7 @@ DSL_OBJS = \
 # Unit-test code
 TEST_ARGPARSE_SRCS = \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
   cli/argparse.c \
@@ -60,6 +61,7 @@ TEST_ARGPARSE_SRCS = \
 
 TEST_BYTE_READERS_SRCS = \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -70,6 +72,7 @@ TEST_BYTE_READERS_SRCS = \
 
 TEST_PEEK_FILE_READER_SRCS = \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -78,20 +81,38 @@ TEST_PEEK_FILE_READER_SRCS = \
   unit_test/test_peek_file_reader.c
 
 TEST_LREC_SRCS = \
-  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-  containers/lrec.c containers/header_keeper.c containers/sllv.c \
-  containers/slls.c containers/rslls.c containers/lhmsv.c containers/lhmslv.c \
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  containers/lrec.c \
+  containers/header_keeper.c \
+  containers/sllv.c \
+  containers/slls.c \
+  containers/rslls.c \
+  containers/lhmsv.c \
+  containers/lhmslv.c \
   input/line_readers.c \
-  input/file_reader_mmap.c      input/file_reader_stdio.c \
-  input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+  input/file_reader_mmap.c \
+  input/file_reader_stdio.c \
+  input/lrec_reader_mmap_csvlite.c \
+  input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c \
+  input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c \
+  input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c \
+  input/lrec_reader_stdio_xtab.c \
   unit_test/test_lrec.c
 
 TEST_MULTIPLE_CONTAINERS_SRCS = \
-  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c \
-  containers/lrec.c containers/header_keeper.c containers/sllv.c \
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  containers/lrec.c \
+  containers/header_keeper.c \
+  containers/sllv.c \
   containers/slls.c \
   containers/rslls.c \
   lib/string_array.c \
@@ -106,36 +127,45 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/top_keeper.c \
   containers/dheap.c \
   input/line_readers.c \
-  input/file_reader_mmap.c      input/file_reader_stdio.c \
-  input/lrec_reader_mmap_csvlite.c  input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
+  input/file_reader_mmap.c \
+  input/file_reader_stdio.c \
+  input/lrec_reader_mmap_csvlite.c \
+  input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c \
+  input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c \
+  input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c \
+  input/lrec_reader_stdio_xtab.c \
   unit_test/test_multiple_containers.c
 
 TEST_MLRUTIL_SRCS = \
-	lib/mlr_globals.c \
-	lib/mlrutil.c \
-	lib/string_builder.c \
-	lib/string_array.c \
-	unit_test/test_mlrutil.c
+  lib/mlr_globals.c \
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/string_builder.c \
+  lib/string_array.c \
+  unit_test/test_mlrutil.c
 
 TEST_STRING_BUILDER_SRCS = \
-	lib/mlrutil.c \
-	lib/mlr_globals.c \
-	lib/string_builder.c \
-	unit_test/test_string_builder.c
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  unit_test/test_string_builder.c
 
 TEST_PARSE_TRIE_SRCS = \
-	lib/mlrutil.c \
-	lib/mlr_globals.c \
-	lib/string_builder.c \
-	containers/parse_trie.c \
-	unit_test/test_parse_trie.c
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  containers/parse_trie.c \
+  unit_test/test_parse_trie.c
 
 TEST_LREC_EVALUATORS_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mtrand.c \
   lib/mlrmath.c \
   lib/string_builder.c \
@@ -150,27 +180,44 @@ TEST_LREC_EVALUATORS_SRCS = \
   unit_test/test_lrec_evaluators.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
-  lib/mlrutil.c lib/mlr_globals.c lib/string_builder.c lib/context.c \
+  lib/mlrutil.c \
+  lib/mlrregex.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  lib/context.c \
   containers/parse_trie.c \
   containers/lrec.c \
-  containers/sllv.c containers/rslls.c containers/slls.c containers/lhmslv.c containers/hss.c containers/mixutil.c \
+  containers/sllv.c \
+  containers/rslls.c \
+  containers/slls.c \
+  containers/lhmslv.c \
+  containers/hss.c \
+  containers/mixutil.c \
   containers/header_keeper.c \
   containers/join_bucket_keeper.c \
   input/mmap_byte_reader.c \
   input/stdio_byte_reader.c \
   input/line_readers.c \
-  input/lrec_reader_in_memory.c input/lrec_readers.c \
-  input/lrec_reader_mmap_csv.c input/lrec_reader_stdio_csv.c \
-  input/lrec_reader_mmap_csvlite.c input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c input/lrec_reader_stdio_xtab.c \
-  input/file_reader_mmap.c input/file_reader_stdio.c \
+  input/lrec_reader_in_memory.c \
+  input/lrec_readers.c \
+  input/lrec_reader_mmap_csv.c \
+  input/lrec_reader_stdio_csv.c \
+  input/lrec_reader_mmap_csvlite.c \
+  input/lrec_reader_stdio_csvlite.c \
+  input/lrec_reader_mmap_dkvp.c \
+  input/lrec_reader_stdio_dkvp.c \
+  input/lrec_reader_mmap_nidx.c \
+  input/lrec_reader_stdio_nidx.c \
+  input/lrec_reader_mmap_xtab.c \
+  input/lrec_reader_stdio_xtab.c \
+  input/file_reader_mmap.c \
+  input/file_reader_stdio.c \
   input/peek_file_reader.c \
   unit_test/test_join_bucket_keeper.c
 
 EXPERIMENTAL_READER_SRCS = \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
   input/stdio_byte_reader.c \

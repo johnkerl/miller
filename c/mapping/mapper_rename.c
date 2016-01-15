@@ -1,4 +1,5 @@
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "lib/string_builder.h"
 #include "containers/lhmss.h"
 #include "containers/sllv.h"
