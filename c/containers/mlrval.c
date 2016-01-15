@@ -2034,7 +2034,7 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_ca
 
 	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	if (regmatch_or_die(&regex, sstr, 0, NULL)) {
+	if (regmatch_or_die(&regex, sstr, 0, NULL)) { // xxx captures
 		regfree(&regex);
 		mv_free(pval1);
 		mv_free(pval2);
@@ -2056,7 +2056,7 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pr
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
-	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) { // xxx update
+	if (regmatch_or_die(pregex, pval1->u.strv, 0, NULL)) { // xxx captures
 		mv_free(pval1);
 		return mv_from_true();
 	} else {
