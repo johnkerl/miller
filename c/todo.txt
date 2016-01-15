@@ -2,7 +2,9 @@
 BUGFIXES
 
 odat/osh
-zpoke@eof?
+z/xpoke@eof?
+impl x 4 for mmap dkvp
+check other formats
 
 ================================================================
 TOP OF LIST
