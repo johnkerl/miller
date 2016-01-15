@@ -2024,7 +2024,7 @@ int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type]
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
-mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
+mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures) {
 	char* s1 = pval1->u.strv;
 	char* s2 = pval2->u.strv;
 
@@ -2047,8 +2047,8 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	}
 }
 
-mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = matches_no_precomp_func(pval1, pval2);
+mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures) {
+	mv_t rv = matches_no_precomp_func(pval1, pval2, pregex_captures);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }
