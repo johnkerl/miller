@@ -117,6 +117,7 @@ TEST_MLRUTIL_SRCS = \
 	lib/mlr_globals.c \
 	lib/mlrutil.c \
 	lib/string_builder.c \
+	lib/string_array.c \
 	unit_test/test_mlrutil.c
 
 TEST_STRING_BUILDER_SRCS = \

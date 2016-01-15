@@ -546,7 +546,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		char* p = replacement;
 		int len1 = psb->used_length;
 		while (*p) {
-			if (p[0] == '\\' && isdigit(p[1])) {
+			if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
 				int idx = p[1] - '0';
 				regmatch_t* pmatch = &matches[idx];
 				if (pmatch->rm_so == -1) {
@@ -572,5 +572,41 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		*pfree_flags = FREE_ENTRY_VALUE;
 
 		match_start += matches[0].rm_so + replen;
+	}
+}
+
+// ----------------------------------------------------------------
+char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
+	*pwas_allocated = FALSE;
+	if (pregex_captures == NULL || pregex_captures->length == 0)
+		return input;
+
+	string_builder_t* psb = sb_alloc(32);
+
+	char* p = input;
+	while (*p) {
+		if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
+			int idx = p[1] - '0' - 1;
+			if (idx < pregex_captures->length) {
+				*pwas_allocated = TRUE;
+				sb_append_string(psb, pregex_captures->strings[idx]);
+			} else {
+				sb_append_char(psb, p[0]);
+				sb_append_char(psb, p[1]);
+			}
+			p += 2;
+		} else {
+			sb_append_char(psb, *p);
+			p++;
+		}
+	}
+
+	if (*pwas_allocated) {
+		char* output = sb_finish(psb);
+		sb_free(psb);
+		return output;
+	} else {
+		sb_free(psb);
+		return input;
 	}
 }

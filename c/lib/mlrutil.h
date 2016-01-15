@@ -7,6 +7,7 @@
 #include <time.h>
 #include <regex.h>
 #include "string_builder.h"
+#include "string_array.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -147,5 +148,7 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 	int* pmatched, int* pall_captured);
 
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, unsigned char *pfree_flags);
+
+char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated);
 
 #endif // MLRUTIL_H

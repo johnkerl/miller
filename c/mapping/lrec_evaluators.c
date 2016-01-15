@@ -1288,40 +1288,6 @@ typedef struct _lrec_evaluator_literal_state_t {
 
 // xxx put this in lib dir
 
-//char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
-//	*pwas_allocated = FALSE;
-//	if (pregex_captures == NULL || pregex_captures->length == 0)
-//		return input;
-//	string_builder_t* psb = sb_alloc(MV_SB_ALLOC_LENGTH);
-//
-//	char* p = input;
-//	while (*p) {
-//		if (p[0] == '\\' && isdigit(p[1])) {
-//			int idx = p[1] - '0';
-//			if (idx < pregex_captures->length) {
-//				*pwas_allocated = TRUE;
-//				sb_append_string(psb, pregex_captures->strings[i]);
-//			} else {
-//				sb_append_char(psb, p[0]);
-//				sb_append_char(psb, p[1]);
-//			}
-//			p += 2;
-//		} else {
-//			sb_append_char(psb, *p);
-//			p++;
-//		}
-//	}
-//
-//	if (*pwas_allocated) {
-//		char* output = sb_finish(psb);
-//		sb_free(psb);
-//		return output;
-//	} else {
-//		sb_free(psb);
-//		return input;
-//	}
-//}
-
 mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
