@@ -11,6 +11,7 @@ EXTRA_DIST=	\
 		braced.csv \
 		c.csv \
 		c.pprint \
+		capture.dkvp \
 		d.csv \
 		d.pprint \
 		date1.csv \

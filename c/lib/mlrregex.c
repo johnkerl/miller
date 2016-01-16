@@ -220,3 +220,4 @@ char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, i
 		return input;
 	}
 }
+

@@ -27,6 +27,8 @@ TOP OF LIST
       > so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
     - on-line help & mld
     - UT
+    - boolean true/false literals into the DSL?
+    ! need a performant way to distinguish tried-but-no-match vs. no-match-tried for expanding \1 etc.
 
   ~ typed name-to-mlrval map overlay (don't convert all fields, for performance)
     ! UT
@@ -47,6 +49,8 @@ TOP OF LIST
 * cump -> one-offs
 
 ! re-valgrind all !
+
+* ternop w/ assignment after ?/:
 
 * interpolated percentiles
 
