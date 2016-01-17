@@ -166,29 +166,29 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
-void copy_regex_captures(string_array_t* pregex_captures, char* input, regmatch_t matches[], int nmatch) {
+void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchalloc) {
 	int n = 0;
-	for (int si = 1; si < nmatch; si++) {
-		if (matches[si].rm_so == -1) {
-			n = si;
+	for (int i = 1; i < nmatchalloc; i++) {
+		if (matches[i].rm_so == -1) {
+			n = i;
 			break;
 		}
 	}
-	string_array_realloc(pregex_captures, n);
-	for (int si = 1; si <= n; si++) {
-		int len = matches[si].rm_eo - matches[si].rm_so;
+	string_array_realloc(pregex_captures_1_up, n+1);
+	for (int i = 1; i <= n; i++) {
+		int len = matches[i].rm_eo - matches[i].rm_so;
 		char* dst = mlr_malloc_or_die(len + 1);
-		memcpy(dst, &input[matches[si].rm_so], len);
+		memcpy(dst, &input[matches[i].rm_so], len);
 		dst[len] = 0;
-		pregex_captures->strings[si-1] = dst;
+		pregex_captures_1_up->strings[i] = dst;
 	}
-	pregex_captures->strings_need_freeing = TRUE;
+	pregex_captures_1_up->strings_need_freeing = TRUE;
 }
 
 // ----------------------------------------------------------------
-char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
+char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
-	if (pregex_captures == NULL || pregex_captures->length == 0)
+	if (pregex_captures_1_up == NULL || pregex_captures_1_up->length == 0)
 		return input;
 
 	string_builder_t* psb = sb_alloc(32);
@@ -196,10 +196,10 @@ char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, i
 	char* p = input;
 	while (*p) {
 		if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
-			int idx = p[1] - '0' - 1;
-			if (idx < pregex_captures->length) {
+			int idx = p[1] - '0';
+			if (idx < pregex_captures_1_up->length) {
 				*pwas_allocated = TRUE;
-				sb_append_string(psb, pregex_captures->strings[idx]);
+				sb_append_string(psb, pregex_captures_1_up->strings[idx]);
 			} else {
 				sb_append_char(psb, p[0]);
 				sb_append_char(psb, p[1]);

@@ -33,8 +33,10 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, unsigned char *pfree_flags);
 
-void copy_regex_captures(string_array_t* pregex_captures, char* input, regmatch_t matches[], int nmatch);
+// xxx comment
+// xxx rename nmatch -> nmatchalloc thruout
+void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchalloc);
 
-char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated);
+char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated);
 
 #endif // MLRREGEX_H
