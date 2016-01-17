@@ -18,6 +18,9 @@ TOP OF LIST
 * regex-capture
 
   o xxxes
+  o carefully comment 1-up vs. 0-up in the code. or, shift the string-array indices to 1-up & cmt that.
+  o make a unit_test/test_mlrregex.c
+    - test copy_regex_captures
 
   o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
     - name clash for \1 \2 etc.:

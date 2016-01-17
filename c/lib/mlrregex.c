@@ -175,7 +175,7 @@ void copy_regex_captures(string_array_t* pregex_captures, char* input, regmatch_
 		}
 	}
 	string_array_realloc(pregex_captures, n);
-	for (int si = 1; si < n; si++) {
+	for (int si = 1; si <= n; si++) {
 		int len = matches[si].rm_eo - matches[si].rm_so;
 		char* dst = mlr_malloc_or_die(len + 1);
 		memcpy(dst, &input[matches[si].rm_so], len);
