@@ -48,6 +48,8 @@ TOP OF LIST
   - csv example
   - what do these have in common?
 
+* anim ref https://github.com/edi9999/path-extractor
+
 * cump -> one-offs
 
 ! re-valgrind all !
