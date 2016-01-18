@@ -1,6 +1,7 @@
 
 TESTS= $(check_PROGRAMS)
 check_PROGRAMS = 	test_mlrutil \
+			test_mlrregex \
 			test_argparse \
 			test_byte_readers \
 			test_peek_file_reader \
@@ -28,6 +29,9 @@ all_ldadd=		\
 # Unit-test mains
 test_mlrutil_CFLAGS=              -std=gnu99 -g ${AM_CFLAGS}
 test_mlrutil_LDADD=               ${all_ldadd}
+
+test_mlrregex_CFLAGS=             -std=gnu99 -g ${AM_CFLAGS}
+test_mlrregex_LDADD=              ${all_ldadd}
 
 test_argparse_CFLAGS=             -std=gnu99 -g ${AM_CFLAGS}
 test_argparse_LDADD=              ${all_ldadd}

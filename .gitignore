@@ -5,6 +5,7 @@ mlrp
 mlr-unit-tester
 test-argparse
 test-mlrutil
+test-mlrregex
 test-string-builder
 test-byte-readers
 test-peek-file-reader
@@ -66,6 +67,7 @@ test_byte_readers
 test_join_bucket_keeper
 test_lrec
 test_mlrutil
+test_mlrregex
 test_multiple_containers
 test_parse_trie
 test_peek_file_reader

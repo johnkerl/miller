@@ -139,6 +139,12 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
 TEST_MLRUTIL_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
+  lib/string_builder.c \
+  unit_test/test_mlrutil.c
+
+TEST_MLRREGEX_SRCS = \
+  lib/mlr_globals.c \
+  lib/mlrutil.c \
   lib/mlrregex.c \
   lib/string_builder.c \
   lib/string_array.c \
@@ -263,8 +269,9 @@ mlrp: .always dsls
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-lrec-evaluators test-join-bucket-keeper
+unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-string-builder test-lrec-evaluators test-join-bucket-keeper
 	./test-mlrutil
+	./test-mlrregex
 	./test-argparse
 	./test-byte-readers
 	./test-peek-file-reader
@@ -306,6 +313,9 @@ test-multiple-containers: .always
 
 test-mlrutil: .always
 	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ $(TEST_MLRUTIL_SRCS) -o test-mlrutil
+
+test-mlrregex: .always
+	$(CCDEBUG) -D__TEST_MLRREGEX_MAIN__ $(TEST_MLRREGEX_SRCS) -o test-mlrregex
 
 test-string-builder: .always
 	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ $(TEST_STRING_BUILDER_SRCS) -o test-string-builder
