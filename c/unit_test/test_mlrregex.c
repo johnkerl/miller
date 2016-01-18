@@ -110,8 +110,8 @@ static char * test_interpolate_regex_captures() {
 	psa = string_array_from_line(mlr_strdup_or_die("X,a,b,c"), ',');
 	output = interpolate_regex_captures("h\\4ello", psa, &was_allocated);
 	printf("output=[%s]\n", output);
-	mu_assert_lf(streq(output, "h\\4ello"));
-	mu_assert_lf(was_allocated == FALSE);
+	mu_assert_lf(streq(output, "hello"));
+	mu_assert_lf(was_allocated == TRUE);
 	string_array_free(psa);
 
 	psa = string_array_from_line(mlr_strdup_or_die("X,a,b,c"), ',');
@@ -124,7 +124,7 @@ static char * test_interpolate_regex_captures() {
 	psa = string_array_from_line(mlr_strdup_or_die("X,a,b,c"), ',');
 	output = interpolate_regex_captures("h\\3e\\1l\\2l\\4o", psa, &was_allocated);
 	printf("output=[%s]\n", output);
-	mu_assert_lf(streq(output, "hcealbl\\4o"));
+	mu_assert_lf(streq(output, "hcealblo"));
 	mu_assert_lf(was_allocated == TRUE);
 	string_array_free(psa);
 

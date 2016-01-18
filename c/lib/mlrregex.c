@@ -166,20 +166,32 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
+// Slot 0 is the entire input string.
+// Slots 1 and up are substring matches for parenthesized capture expressions (if any).
+// Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and n = 1.
+// Slot 2 has rm_so == -1.
+// (If all allocated slots have matches then there is no slot with -1's.)
+
+// Input "abcde"
+// Regex "a(.*)e"
+// matches[0].rm_so =  0, matches[0].rm_eo =  5
+// matches[1].rm_so =  1, matches[1].rm_eo =  4
+// matches[2].rm_so = -1, matches[2].rm_eo = -1
+//
+// pregex_captures_1_up->length = 2
+// pregex_captures_1_up->strings[0] = NULL
+// pregex_captures_1_up->strings[1] = "bcd"
+
 void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchmax) {
-	// Slot 0 is the entire input string.
-	// Slots 1 and up are substring matches for parenthesized capture expressions (if any).
-	// Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and n = 1.
-	// Slot 2 has rm_so == -1.
-	// If all allocated slots have matches then there is no slot with -1's.
+
 	int n = nmatchmax - 1;
-	for (int i = 1; i < nmatchmax; i++) {
+	for (int i = 0; i < nmatchmax; i++) {
 		if (matches[i].rm_so == -1) {
 			n = i - 1;
 			break;
 		}
 	}
-	string_array_realloc(pregex_captures_1_up, n+1);
+	string_array_realloc(pregex_captures_1_up, n+1); // n+1 since slot 0 of this 1-up array is unused
 	for (int i = 1; i <= n; i++) {
 		int len = matches[i].rm_eo - matches[i].rm_so;
 		char* dst = mlr_malloc_or_die(len + 1);
@@ -191,6 +203,17 @@ void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regm
 }
 
 // ----------------------------------------------------------------
+// Using the above example:
+// Input "abcde"
+// Regex "a(.*)e"
+//
+// pregex_captures_1_up->length = 2
+// pregex_captures_1_up->strings[0] = NULL
+// pregex_captures_1_up->strings[1] = "bcd"
+//
+// "\1" should be replaced with "bcd".
+// "\2" through "\9" should be replaced with "".
+
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
 	if (pregex_captures_1_up == NULL || pregex_captures_1_up->length == 0)
@@ -201,14 +224,10 @@ char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_
 	char* p = input;
 	while (*p) {
 		if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
+			*pwas_allocated = TRUE;
 			int idx = p[1] - '0';
-			if (idx < pregex_captures_1_up->length) {
-				*pwas_allocated = TRUE;
+			if (idx < pregex_captures_1_up->length)
 				sb_append_string(psb, pregex_captures_1_up->strings[idx]);
-			} else {
-				sb_append_char(psb, p[0]);
-				sb_append_char(psb, p[1]);
-			}
 			p += 2;
 		} else {
 			sb_append_char(psb, *p);
@@ -225,4 +244,3 @@ char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_
 		return input;
 	}
 }
-
