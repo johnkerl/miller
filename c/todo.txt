@@ -28,7 +28,7 @@ TOP OF LIST
       > mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
       > so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
     - on-line help & mld
-    - UT. incl. up to \9.
+    - UT. incl. up to \9. question current UTs.
     - boolean true/false literals into the DSL?
     ! need a performant way to distinguish tried-but-no-match vs. no-match-tried for expanding \1 etc., if impl'd
 
