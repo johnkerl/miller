@@ -12,6 +12,7 @@ EXTRA_DIST=	\
 		c.csv \
 		c.pprint \
 		capture.dkvp \
+		capture-lengths.dkvp \
 		d.csv \
 		d.pprint \
 		date1.csv \

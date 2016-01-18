@@ -11,14 +11,16 @@ typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
 	int num_evaluators;
-	int gate_exclude;
+	int gate_invert;
+	int gate_bypass;
 	char** output_field_names;
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_put_free(mapper_t* pmapper);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int gate_exclude);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing,
+	int gate_invert, int gate_bypass);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 
@@ -48,6 +50,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
 	fprintf(o, "-x: Negates boolean expressions. Has no effect on assignment expressions.\n");
+	fprintf(o, "-t: Continue evaluating remaining expressions after boolean expressions, whether\n");
+	fprintf(o, "    or not they evaluate to true. Has no effect on assignment expressions.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
@@ -73,7 +77,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
-	int   gate_exclude = FALSE;
+	int   gate_invert = FALSE;
+	int   gate_bypass = FALSE;
 	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_asts = FALSE;
 
@@ -81,7 +86,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,      "-v", &print_asts);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
-	ap_define_true_flag(pstate,      "-x", &gate_exclude);
+	ap_define_true_flag(pstate,      "-x", &gate_invert);
+	ap_define_true_flag(pstate,      "-t", &gate_bypass);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -108,17 +114,20 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvvalue);
 	}
 
-	return mapper_put_alloc(pstate, pasts, type_inferencing, gate_exclude);
+	return mapper_put_alloc(pstate, pasts, type_inferencing, gate_invert, gate_bypass);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing, int gate_exclude) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing,
+	int gate_invert, int gate_bypass)
+{
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
 	pstate->pasts = pasts;
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
-	pstate->gate_exclude = gate_exclude;
+	pstate->gate_invert = gate_invert;
+	pstate->gate_bypass = gate_bypass;
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
 
 	int i = 0;
@@ -228,7 +237,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
-			if (!(val.u.boolv ^ pstate->gate_exclude))
+			if (!((val.u.boolv ^ pstate->gate_invert) | pstate->gate_bypass))
 				break;
 
 		}
