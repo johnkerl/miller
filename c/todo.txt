@@ -15,20 +15,20 @@ TOP OF LIST
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
-* regex-capture
+* regex-capture:
 
   o xxxes
   o carefully comment 1-up vs. 0-up in the code. or, shift the string-array indices to 1-up & cmt that.
   o make a unit_test/test_mlrregex.c
     - test copy_regex_captures
 
-  o expanded lrec_context or some such for the regex backcaptures; or (better) within lrec_t itself
+  o context for the regex backcaptures
     - name clash for \1 \2 etc.:
       > mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
       > mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
       > so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
     - on-line help & mld
-    - UT
+    - UT. incl. up to \9.
     - boolean true/false literals into the DSL?
     ! need a performant way to distinguish tried-but-no-match vs. no-match-tried for expanding \1 etc., if impl'd
 
@@ -54,8 +54,6 @@ TOP OF LIST
 
 ! re-valgrind all !
 
-? ternop w/ assignment after ?/: ?? rater extensive DSL-processing mod. OTOH, '$lhs = cond ? a : b' is more functional
-
 * interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
@@ -65,11 +63,9 @@ TOP OF LIST
   ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
     > mld re cross-record stuff is limited to stats1/2 and step
 
+* debian screenshot
 * lrec_evaluators cleanup re strict, redundant statements, etc.
-
-debian screenshot
 * ruby @ optextdep @ mld; poki+mkman
-
 * profile new streqn vs. strncmp ...
 ! mixed-format joins ... make UT cases
 * comma-number -- using locale?

@@ -148,7 +148,7 @@ TEST_MLRREGEX_SRCS = \
   lib/mlrregex.c \
   lib/string_builder.c \
   lib/string_array.c \
-  unit_test/test_mlrutil.c
+  unit_test/test_mlrregex.c
 
 TEST_STRING_BUILDER_SRCS = \
   lib/mlrutil.c \
@@ -297,37 +297,37 @@ regtest-copy:
 # Unit-test executables
 
 test-argparse: .always
-	$(CCDEBUG) -D__TEST_ARGPARSE_MAIN__ $(TEST_ARGPARSE_SRCS) -o test-argparse
+	$(CCDEBUG) $(TEST_ARGPARSE_SRCS) -o test-argparse
 
 test-byte-readers: .always
-	$(CCDEBUG) -D__TEST_BYTE_READERS_MAIN__ $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
+	$(CCDEBUG) $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
 
 test-peek-file-reader: .always
-	$(CCDEBUG) -D__TEST_PEEK_FILE_READER_MAIN__ $(TEST_PEEK_FILE_READER_SRCS) -o test-peek-file-reader
+	$(CCDEBUG) $(TEST_PEEK_FILE_READER_SRCS) -o test-peek-file-reader
 
 test-lrec: .always
-	$(CCDEBUG) -D__TEST_LREC_MAIN__ $(TEST_LREC_SRCS) -o test-lrec
+	$(CCDEBUG) $(TEST_LREC_SRCS) -o test-lrec
 
 test-multiple-containers: .always
-	$(CCDEBUG) -D__TEST_MULTIPLE_CONTAINERS_MAIN__ $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers -lm
+	$(CCDEBUG) $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers -lm
 
 test-mlrutil: .always
-	$(CCDEBUG) -D__TEST_MLRUTIL_MAIN__ $(TEST_MLRUTIL_SRCS) -o test-mlrutil
+	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) -o test-mlrutil
 
 test-mlrregex: .always
-	$(CCDEBUG) -D__TEST_MLRREGEX_MAIN__ $(TEST_MLRREGEX_SRCS) -o test-mlrregex
+	$(CCDEBUG) $(TEST_MLRREGEX_SRCS) -o test-mlrregex
 
 test-string-builder: .always
-	$(CCDEBUG) -D__TEST_STRING_BUILDER_MAIN__ $(TEST_STRING_BUILDER_SRCS) -o test-string-builder
+	$(CCDEBUG) $(TEST_STRING_BUILDER_SRCS) -o test-string-builder
 
 test-parse-trie: .always
-	$(CCDEBUG) -D__TEST_PARSE_TRIE_MAIN__ $(TEST_PARSE_TRIE_SRCS) -o test-parse-trie
+	$(CCDEBUG) $(TEST_PARSE_TRIE_SRCS) -o test-parse-trie
 
 test-lrec-evaluators: .always
-	$(CCDEBUG) -D__TEST_LREC_EVALUATORS_MAIN__ $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
+	$(CCDEBUG) $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
 
 test-join-bucket-keeper: .always
-	$(CCDEBUG) -D__TEST_JOIN_BUCKET_KEEPER_MAIN__ $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
+	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
 
 # ----------------------------------------------------------------
 # Standalone mains

@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
 	char* sregex = argv[1];
 	char* sstr   = argv[2];
 	int cflags = REG_EXTENDED;
-	const size_t nmatch = 10;
-	regmatch_t pmatch[nmatch];
+	const size_t nmatchmax = 10;
+	regmatch_t pmatch[nmatchmax];
 	int eflags = 0;
 	int rc;
 
@@ -49,10 +49,10 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	rc = regexec(&reg, sstr, nmatch, pmatch, eflags);
+	rc = regexec(&reg, sstr, nmatchmax, pmatch, eflags);
 	printf("rc=%d\n", rc);
 	if (rc == 0) {
-		for (int i = 0; i < nmatch; i++) {
+		for (int i = 0; i < nmatchmax; i++) {
 			printf("pmatch[%i].rm_so=%4lld pmatch[%d].rm_eo=%4lld\n",
 				i, (long long)pmatch[i].rm_so,
 				i, (long long)pmatch[i].rm_eo);

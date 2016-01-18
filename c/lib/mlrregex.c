@@ -52,9 +52,9 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* orig_regex_string, int cfl
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
-	size_t nmatch, regmatch_t pmatch[restrict])
+	size_t nmatchmax, regmatch_t pmatch[restrict])
 {
-	int rc = regexec(pregex, match_string, nmatch, pmatch, 0);
+	int rc = regexec(pregex, match_string, nmatchmax, pmatch, 0);
 	if (rc == 0) {
 		return TRUE;
 	} else if (rc == REG_NOMATCH) {
@@ -78,12 +78,12 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
 	int* pmatched, int *pall_captured)
 {
-	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
-	regmatch_t matches[nmatch];
+	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatchmax];
 	if (pall_captured)
 		*pall_captured = TRUE;
 
-	*pmatched = regmatch_or_die(pregex, input, nmatch, matches);
+	*pmatched = regmatch_or_die(pregex, input, nmatchmax, matches);
 	if (!*pmatched) {
 		return input;
 	} else {
@@ -115,8 +115,8 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
 	int *pmatched, int* pall_captured, unsigned char* pfree_flags)
 {
-	const size_t nmatch = 10;
-	regmatch_t matches[nmatch];
+	const size_t nmatchmax = 10;
+	regmatch_t matches[nmatchmax];
 	*pmatched = FALSE;
 	*pall_captured = TRUE;
 	*pfree_flags = NO_FREE;
@@ -125,7 +125,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 	char* current_input = input;
 
 	while (TRUE) {
-		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatch, matches);
+		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatchmax, matches);
 		if (!matched) {
 			return current_input;
 		}
@@ -166,11 +166,16 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
-void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchalloc) {
-	int n = 0;
-	for (int i = 1; i < nmatchalloc; i++) {
+void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchmax) {
+	// Slot 0 is the entire input string.
+	// Slots 1 and up are substring matches for parenthesized capture expressions (if any).
+	// Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and n = 1.
+	// Slot 2 has rm_so == -1.
+	// If all allocated slots have matches then there is no slot with -1's.
+	int n = nmatchmax - 1;
+	for (int i = 1; i < nmatchmax; i++) {
 		if (matches[i].rm_so == -1) {
-			n = i;
+			n = i - 1;
 			break;
 		}
 	}

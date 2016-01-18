@@ -2035,11 +2035,11 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_ca
 
 	regcomp_or_die(&regex, sregex, REG_NOSUB);
 
-	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
-	regmatch_t matches[nmatch];
-	if (regmatch_or_die(&regex, sstr, nmatch, matches)) {
+	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatchmax];
+	if (regmatch_or_die(&regex, sstr, nmatchmax, matches)) {
 		if (pregex_captures != NULL)
-			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatch);
+			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatchmax);
 		regfree(&regex);
 		mv_free(pval1);
 		mv_free(pval2);
@@ -2061,11 +2061,11 @@ mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pr
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
 mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
-	const size_t nmatch = 10; // Capture-groups \1 through \9 supported, along with entire-string match
-	regmatch_t matches[nmatch];
-	if (regmatch_or_die(pregex, pval1->u.strv, nmatch, matches)) {
+	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	regmatch_t matches[nmatchmax];
+	if (regmatch_or_die(pregex, pval1->u.strv, nmatchmax, matches)) {
 		if (pregex_captures != NULL)
-			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatch);
+			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatchmax);
 		mv_free(pval1);
 		return mv_from_true();
 	} else {

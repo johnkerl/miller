@@ -22,7 +22,7 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* regex_string, int cflags);
 // Returns TRUE for match, FALSE for no match, and aborts the process if
 // regexec returns anything else.
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
-	size_t nmatch, regmatch_t pmatch[restrict]);
+	size_t nmatchmax, regmatch_t pmatch[restrict]);
 
 // If there is a match, the return value is dynamically allocated and returned.
 // If not, the input is returned.  So the caller should free the return value
@@ -34,8 +34,7 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, unsigned char *pfree_flags);
 
 // xxx comment
-// xxx rename nmatch -> nmatchalloc thruout
-void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchalloc);
+void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchmax);
 
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated);
 
