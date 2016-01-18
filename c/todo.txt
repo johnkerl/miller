@@ -3,6 +3,7 @@ BUGFIXES
 
 odat/osh
 z/xpoke@eof?
+blksz tests
 impl x 4 for mmap dkvp
 check other formats
 
@@ -20,9 +21,8 @@ TOP OF LIST
   o xxxes
 
   o context for the regex backcaptures
-    ! sat* prc -> sat** pprc w/ start from null -- to avoid a performance regression while handling 0 match.
-      but also need a way to inhibit captures on filter, to avoid a regression *there*.
-    - name clash for \1 \2 etc.:
+    * cmt 1uplen == 0 vs 1 & why (!perfregn)
+    k name clash for \1 \2 etc.:
       k mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
       k mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
       k so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
