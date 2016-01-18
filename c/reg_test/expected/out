@@ -9662,19 +9662,19 @@ F2    123
 F3    
 
 FIELD ABC..123
-F1    \1
-F2    \2
-F3    \3
+F1    
+F2    
+F3    
 
 FIELD ..ABC..123..
-F1    \1
-F2    \2
-F3    \3
+F1    
+F2    
+F3    
 
 FIELD none of the above
-F1    \1
-F2    \2
-F3    \3
+F1    
+F2    
+F3    
 
 mlr --oxtab put $FIELD =~ "([A-Z]+)([0-9]+)" then put $F1="\1"; $F2="\2" ; $F3="\3" ./reg_test/input/capture.dkvp
 FIELD ABC123

@@ -18,19 +18,19 @@ TOP OF LIST
 * regex-capture:
 
   o xxxes
-  o carefully comment 1-up vs. 0-up in the code. or, shift the string-array indices to 1-up & cmt that.
-  o make a unit_test/test_mlrregex.c
-    - test copy_regex_captures
 
   o context for the regex backcaptures
+    ! sat* prc -> sat** pprc w/ start from null -- to avoid a performance regression while handling 0 match.
+      but also need a way to inhibit captures on filter, to avoid a regression *there*.
     - name clash for \1 \2 etc.:
-      > mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
-      > mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
-      > so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
+      k mlr put '$f0 =~ "([A-Z]+)([0-9]+)"; $f1  = "\1"; $F2 = "abc"."\2"'
+      k mlr put '$y = sub($x, "([hg])e.*l(.)", "y\1y123\2y")'
+      k so sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
+      - doc this
     - on-line help & mld
-    - UT. incl. up to \9. question current UTs.
+    - UTs. incl. up to \9. question current UTs.
     - boolean true/false literals into the DSL?
-    ! need a performant way to distinguish tried-but-no-match vs. no-match-tried for expanding \1 etc., if impl'd
+    - think about gregfr flags suggestions
 
   ~ typed name-to-mlrval map overlay (don't convert all fields, for performance)
     ! UT

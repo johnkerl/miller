@@ -216,6 +216,7 @@ void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regm
 
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
+	// xxx cmt clearly here & elsewhere re length 0 vs. length 1. this is a trick.
 	if (pregex_captures_1_up == NULL || pregex_captures_1_up->length == 0)
 		return input;
 
