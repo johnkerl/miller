@@ -8,7 +8,7 @@ indices.  Examples:
 ```
 % mlr --csv cut -f hostname,uptime mydata.csv
 % mlr --csv --rs lf filter '$status != "down" && $upsec >= 10000' *.csv
-% mlr --nidx put '$sum = $7 + 2.1*$8' *.dat
+% mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.
 % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
 % mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*

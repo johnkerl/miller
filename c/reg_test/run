@@ -944,6 +944,14 @@ run_mlr --oxtab put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)"'  then put '$F1="\1"; $
 run_mlr --oxtab put '$FIELD =~ "([A-Z]+)([0-9]+)" || 1==1' then put '$F1="\1"; $F2="\2" ; $F3="\3"' $indir/capture.dkvp
 
 # ----------------------------------------------------------------
+announce DSL TYPED OVERLAY
+
+run_mlr put '$y = string($x); $z=$y.$y' $indir/int-float.dkvp
+run_mlr put '$z=string($x).string($x)' $indir/int-float.dkvp
+run_mlr put '$y = string($x)' then put '$z=$y.$y' $indir/int-float.dkvp
+run_mlr put '$a="hello"' then put '$b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell")' $indir/int-float.dkvp
+
+# ----------------------------------------------------------------
 announce DSL DATETIME FUNCTIONS
 
 run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt

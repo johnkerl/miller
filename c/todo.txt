@@ -33,8 +33,8 @@ TOP OF LIST
     - think about gregfr flags suggestions
 
   ~ typed name-to-mlrval map overlay (don't convert all fields, for performance)
-    ! UT
-      - $ echo a=hello,x=1,y=2 | mlr --oxtab put '$b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell")'
+    ! update FAQ page
+  ! mld @ ref:put section
     ? convert lrec_t *entirely* into string->mlrval?!?
       - compare_lexically now becomes expensive
       - breaks all lhmslv's at -g's
