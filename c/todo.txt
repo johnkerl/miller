@@ -2,10 +2,9 @@
 BUGFIXES
 
 ! segv on mmapped read of files whose size is a multiple of page size & do not end in IRS
-  - happens more in "some-writer > file &" and "tail -f file" where (multiples of) stdio buffer sizes
-    align with mmap page sizes
-  - zpoke@eof not ok as a solution, but xpoke@eof good for white-box testing
-  - need to copy out final field at missing final IRS
+  - not as much a corner case as it may sound: it happens in "some-writer > file &" and "mlr ... file" where (multiples
+    of) stdio buffer sizes align with mmap page sizes.
+  - need to copy out final key or key+value at missing final IRS
   - blksz UTs x 6
   - impl x 4 for mmap dkvp
   - check other formats

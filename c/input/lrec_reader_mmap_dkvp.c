@@ -121,11 +121,13 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	char* value = p;
 
 	int saw_ps = FALSE;
+	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
+			saw_rs = TRUE;
 			break;
 		} else if (*p == ifs) {
 			saw_ps = FALSE;
@@ -159,6 +161,11 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			p++;
 		}
 	}
+	// xxx if (saw_rs) {
+	//	easy & simple
+	// } else {
+	//	eof copy-out business
+	// }
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
