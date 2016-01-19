@@ -439,7 +439,7 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
-<h3>Field names</h3>
+<h3>Field names for filter</h3>
 
 <p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
 href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
@@ -450,7 +450,7 @@ appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
 through the record <tt>x=abc</tt>.  If field names have special characters such
 as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
 
-<h3>Built-in variables</h3>
+<h3>Built-in variables for filter</h3>
 
 <p/>The <tt>filter</tt> command supports the same built-in variables as for <a
 href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
@@ -460,7 +460,7 @@ record from each matching file:
 
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
 
-<h3>Expression formatting</h3>
+<h3>Expression formatting for filter</h3>
 
 <p/>Expressions may be arbitrarily complex:
 
@@ -649,7 +649,7 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out dat
 
 POKI_RUN_COMMAND{{mlr put --help}}HERE
 
-<h3>Field names</h3>
+<h3>Field names for put</h3>
 
 <p/>Field names must be specified using a <tt>$</tt> in <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt> expressions, even though
@@ -662,7 +662,7 @@ through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
 have special characters such as <tt>.</tt> then you can use braces, e.g.
 <tt>'${field.name}'</tt>.
 
-<h3>Built-in variables</h3>
+<h3>Built-in variables for put</h3>
 
 <p/>Miller supports the following five built-in variables for <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
@@ -670,7 +670,7 @@ href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
 <tt>E</tt>.
 
-<h3>Expression formatting</h3>
+<h3>Expression formatting for put</h3>
 
 <p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
@@ -682,7 +682,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
 
-<h3>Gating assignments by boolean expressions</h3>
+<h3>Gating assignments by boolean expressions for put</h3>
 
 <p/>Boolean expressions may be used as gates for subsequent semicolon-separated
 expressions within the same <tt>put</tt>. This can be used to allow assignments

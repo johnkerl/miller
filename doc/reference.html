@@ -153,9 +153,9 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting">Expression formatting</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_filter">Field names for filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_filter">Built-in variables for filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_filter">Expression formatting for filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#grep">grep</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-by">group-by</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-like">group-like</a><br/>
@@ -166,10 +166,10 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#merge-fields">merge-fields</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting">Expression formatting</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Gating_assignments_by_boolean_expressions">Gating assignments by boolean expressions</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_put">Field names for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_put">Expression formatting for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Gating_assignments_by_boolean_expressions_for_put">Gating assignments by boolean expressions for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -1271,7 +1271,7 @@ useful when you don't yet know which field name(s) you're looking for.
 </div>
 <p/>
 
-<a id="Field_names"/><h3>Field names</h3>
+<a id="Field_names_for_filter"/><h3>Field names for filter</h3>
 
 <p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
 href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
@@ -1282,7 +1282,7 @@ appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
 through the record <tt>x=abc</tt>.  If field names have special characters such
 as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
 
-<a id="Built-in_variables"/><h3>Built-in variables</h3>
+<a id="Built-in_variables_for_filter"/><h3>Built-in variables for filter</h3>
 
 <p/>The <tt>filter</tt> command supports the same built-in variables as for <a
 href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
@@ -1301,7 +1301,7 @@ a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </div>
 <p/>
 
-<a id="Expression_formatting"/><h3>Expression formatting</h3>
+<a id="Expression_formatting_for_filter"/><h3>Expression formatting for filter</h3>
 
 <p/>Expressions may be arbitrarily complex:
 
@@ -2097,7 +2097,7 @@ including function list. Or "mlr -f".
 </div>
 <p/>
 
-<a id="Field_names"/><h3>Field names</h3>
+<a id="Field_names_for_put"/><h3>Field names for put</h3>
 
 <p/>Field names must be specified using a <tt>$</tt> in <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt> expressions, even though
@@ -2110,7 +2110,7 @@ through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
 have special characters such as <tt>.</tt> then you can use braces, e.g.
 <tt>'${field.name}'</tt>.
 
-<a id="Built-in_variables"/><h3>Built-in variables</h3>
+<a id="Built-in_variables_for_put"/><h3>Built-in variables for put</h3>
 
 <p/>Miller supports the following five built-in variables for <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
@@ -2118,7 +2118,7 @@ href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
 <tt>E</tt>.
 
-<a id="Expression_formatting"/><h3>Expression formatting</h3>
+<a id="Expression_formatting_for_put"/><h3>Expression formatting for put</h3>
 
 <p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
@@ -2177,7 +2177,7 @@ mlr --opprint put '
 </div>
 <p/>
 
-<a id="Gating_assignments_by_boolean_expressions"/><h3>Gating assignments by boolean expressions</h3>
+<a id="Gating_assignments_by_boolean_expressions_for_put"/><h3>Gating assignments by boolean expressions for put</h3>
 
 <p/>Boolean expressions may be used as gates for subsequent semicolon-separated
 expressions within the same <tt>put</tt>. This can be used to allow assignments
