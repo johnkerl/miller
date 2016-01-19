@@ -1,6 +1,6 @@
 **Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.**
 
-[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller) [![Docs](https://img.shields.io/badge/docs-here-e8d9bc.svg)](http://johnkerl.org/miller/doc)
+[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
 
 [![Distros](https://img.shields.io/badge/distros-ubuntu-8888ff.svg)](https://launchpad.net/ubuntu/xenial/+package/miller) [![Distros](https://img.shields.io/badge/distros-debian-8888ff.svg)](https://buildd.debian.org/status/package.php?p=miller) [![Distros](https://img.shields.io/badge/distros-netbsd-8888ff.svg)](http://pkgsrc.se/textproc/miller) [![Distros](https://img.shields.io/badge/distros-macosxbrew-8888ff.svg)](https://github.com/Homebrew/homebrew/search?utf8=%E2%9C%93&q=miller)
 
