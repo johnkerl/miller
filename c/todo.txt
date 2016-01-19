@@ -1,11 +1,11 @@
 ================================================================
 BUGFIXES
 
-odat/osh
-z/xpoke@eof?
-blksz tests
-impl x 4 for mmap dkvp
-check other formats
+! odat/osh
+  - z/xpoke@eof?
+  - blksz tests
+  - impl x 4 for mmap dkvp
+  - check other formats
 
 ================================================================
 TOP OF LIST
@@ -14,7 +14,7 @@ TOP OF LIST
   - & to the FAQ
 
 ? boolean true/false literals into the DSL?
-  - bare "literal" -> string_or_number_literal
+  - bare "literal" -> string_or_number_literal & likewise for uppercase
   - UT
 
 ----------------------------------------------------------------
