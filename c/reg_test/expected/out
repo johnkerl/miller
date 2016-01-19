@@ -7155,6 +7155,61 @@ mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
         c (field_name).
         3 (strnum_literal).
 
+mlr put -v $x = true /dev/null
+= (operator):
+    x (field_name).
+    true (boolean_literal).
+
+mlr filter -v      true /dev/null
+true (boolean_literal).
+
+mlr put -v true || 1==0; $x = 3 /dev/null
+|| (operator):
+    true (boolean_literal).
+    == (operator):
+        1 (strnum_literal).
+        0 (strnum_literal).
+= (operator):
+    x (field_name).
+    3 (strnum_literal).
+
+mlr filter -v         true || 1==0 /dev/null
+|| (operator):
+    true (boolean_literal).
+    == (operator):
+        1 (strnum_literal).
+        0 (strnum_literal).
+
+mlr put -v 1==0 || false; $x = 3 /dev/null
+|| (operator):
+    == (operator):
+        1 (strnum_literal).
+        0 (strnum_literal).
+    false (boolean_literal).
+= (operator):
+    x (field_name).
+    3 (strnum_literal).
+
+mlr filter -v         1==0 || false /dev/null
+|| (operator):
+    == (operator):
+        1 (strnum_literal).
+        0 (strnum_literal).
+    false (boolean_literal).
+
+mlr put -v true && false; $x = 3 /dev/null
+&& (operator):
+    true (boolean_literal).
+    false (boolean_literal).
+= (operator):
+    x (field_name).
+    3 (strnum_literal).
+
+mlr filter -v         true && false /dev/null
+&& (operator):
+    true (boolean_literal).
+    false (boolean_literal).
+
 
 ================================================================
 DSL FUNCTIONAL TESTS

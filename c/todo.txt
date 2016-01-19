@@ -13,10 +13,6 @@ TOP OF LIST
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
-? boolean true/false literals into the DSL?
-  - bare "literal" -> string_or_number_literal & likewise for uppercase
-  - UT
-
 ----------------------------------------------------------------
 * narrative intro:
   - sql example
