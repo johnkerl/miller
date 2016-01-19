@@ -122,8 +122,6 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 
 	int saw_ps = FALSE;
 
-	////printf("\n");
-
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
@@ -139,11 +137,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				////printf("Z1 [%d]=>[%s]\n", idx, value);
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
-				////printf("Z2 [%s/%p]=>[%s/%p]\n", key, key, value, value);
 				lrec_put(prec, key, value, NO_FREE);
 			}
 
@@ -177,7 +173,6 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
-			////printf("Z4 [%s/%p]=>[%s/%p] EOF[%p]\n", key, key, value, value, phandle->eof);
 			if (value >= phandle->eof)
 				lrec_put(prec, key, "", NO_FREE);
 			else

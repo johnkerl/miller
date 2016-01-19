@@ -85,6 +85,10 @@ EXTRA_DIST=	\
 		null-fields.nidx \
 		null-vs-empty.dkvp \
 		ofmt.dat \
+		page-aligned-final-ifs.dkvp \
+		page-aligned-final-irs.dkvp \
+		page-aligned-final-no-ifs.dkvp \
+		page-aligned-no-final-irs.dkvp \
 		regex.dkvp \
 		regularize.dkvp \
 		rfc-csv \

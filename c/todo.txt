@@ -226,6 +226,8 @@ git commit -m 'miller 3.2.2'
 git push --all
 
 ----------------------------------------------------------------
+https://help.github.com/articles/github-flavored-markdown/
+----------------------------------------------------------------
 Squash commits by:
   brew update
   git checkout $YOUR_BRANCH
