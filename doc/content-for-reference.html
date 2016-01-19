@@ -446,12 +446,13 @@ in the data stream. For integer-indexed data, this looks like
 double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
 appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
 through the record <tt>x=abc</tt>.  If field names have special characters such
-as <tt>.</t> then you might use braces, e.g. <tt>'${field.name}'</tt>.
+as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
 
-<p/>The <tt>filter</tt> command supports the same built-in variables as for
-<a href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
-<tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>. This
-selects the 2nd record from each matching file:
+<p/>The <tt>filter</tt> command supports the same built-in variables as for <a
+href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
+<tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>, as well as
+the mathematical constants <tt>PI</tt> and <tt>E</tt>. This selects the 2nd
+record from each matching file:
 
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
 
@@ -648,18 +649,20 @@ they don&rsquo;t appear in the data stream. For integer-indexed data, this
 looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string
 literals in double quotes in <tt>put</tt> expressions even though they
 don&rsquo;t appear in file data. In particular, <tt>mlr put '$x="abc"'</tt>
-creates the field <tt>x=abc</tt> and <tt>mlr put '$x=="abc"'</tt> passes
+creates the field <tt>x=abc</tt> and <tt>mlr filter '$x=="abc"'</tt> passes
 through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
-have special characters such as <tt>.</t> then you might use braces, e.g.
+have special characters such as <tt>.</tt> then you can use braces, e.g.
 <tt>'${field.name}'</tt>.
 
 <p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
-POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j=$i+1;$k=$i+$j'}}HERE
+POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
 
-<p/>Miller supports the following five built-in variables for <a href="#filter"><tt>filter</tt></a>
-and <tt>put</tt>, all <tt>awk</tt>-inspired: <tt>NF</tt>, <tt>NR</tt>,
-<tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>.
+<p/>Miller supports the following five built-in variables for <a
+href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
+<tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
+<tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
+<tt>E</tt>.
 
 POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2}}HERE
 
@@ -667,7 +670,25 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
 
-POKI_INCLUDE_ESCAPED(put-multiline-example-2.txt)HERE
+<p/>Boolean expressions may be used as a gate for subsequent
+semicolon-separated expressions within the same <tt>put</tt>. This can be used
+to allow assignments to be done only when appropriate &mdash; e.g. for
+math-function domain restrictions, regex-matching, and so on:
+
+POKI_RUN_COMMAND{{mlr cat put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr cat put-gating-example-2.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp}}HERE
+
+<p/>This produces heteregenous output which Miller, of course, has no problems
+with. But if homogeneous output is desired, the <tt>put -t</tt> flag can be
+used.  This causes <tt>put</tt> to evaluate boolean expressions (along with any
+side effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
+doesn&rsquo;t use them as a criterion for whether subsequent assignments should
+be executed. Instead, subsequent assignments are done unconditionally:
+
+POKI_RUN_COMMAND{{mlr put -t '$x > 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put -t '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp}}HERE
 
 <!-- ================================================================ -->
 <h2>regularize</h2>
@@ -1150,3 +1171,57 @@ case there is no way to specify case-insensitive matching.
 
 POKI_RUN_COMMAND{{cat data/regex-in-data.dat}}HERE
 POKI_RUN_COMMAND{{mlr filter '$name =~ $regex' data/regex-in-data.dat}}HERE
+
+<h2>Regex captures</h2>
+
+<p/>Regex captures of the form <tt>\1</tt>, <tt>\2</tt>, etc. are supported as follows:
+<ul>
+
+<li/> Captures have in-function context for <tt>sub</tt> and <tt>gsub</tt>.
+For example, the first <tt>\1,\2</tt> pair belong to the first <tt>sub</tt> and
+the second <tt>\1,\2</tt> pair belong to the second <tt>sub</tt>:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")'
+</pre>
+</div>
+
+<li/> Captures endure for the entirety of a <tt>put</tt> for the <tt>=~</tt>
+and <tt>!=~</tt> operators. For example, here the <tt>\1,\2</tt> are set by the
+<tt>=~</tt> operator and are used by both subsequent assignment statements:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'
+</pre>
+</div>
+
+<li/>The captures are not retained across multiple puts. For example, here the
+<tt>\1,\2</tt> won&rsquo;t be expanded from the regex capture:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'
+</pre>
+</div>
+
+<li/> Captures are ignored in <tt>filter</tt> for the <tt>=~</tt> and
+<tt>!=~</tt> operators. For example, there is no mechanism provided to refer to
+the first <tt>(..)</tt> as <tt>\1</tt> or to the second <tt>(....)</tt> as
+<tt>\2</tt> in the following filter statement:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr filter '$a =~ "(..)_(....)'
+</pre>
+</div>
+
+<li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>.
+The substring <tt>\0</tt> is ignored for regex-capture substitution, and
+<tt>\15</tt> is treated as <tt>\1</tt> followed by an unrelated <tt>5</tt>.
+</ul>

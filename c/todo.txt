@@ -15,18 +15,11 @@ TOP OF LIST
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
-----------------------------------------------------------------
-* regex-capture:
-
-  o doc this: sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
-  o on-line help & mld
-  ? boolean true/false literals into the DSL?
+? boolean true/false literals into the DSL?
 
 * typed name-to-mlrval map overlay (don't convert all fields, for performance):
   o update FAQ page
   o also ref:put
-
-* fix bogus put-boolean @ mld:ref:put
 
 ----------------------------------------------------------------
 * narrative intro:
