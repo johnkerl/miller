@@ -216,7 +216,10 @@ void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regm
 
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
-	// xxx cmt clearly here & elsewhere re length 0 vs. length 1. this is a trick.
+	// See comments in mapper_put.c. The pregex_captures_1_up is for mapper_filter which doesn't do regex-captures (so
+	// this function should exit quickly). The length == 0 case is a trick as described in mapper_put.c which, for mlr
+	// put, allows us to quickly short-circuit out of the potentially time-consuming function in cases when we know
+	// there are no regex-captures to interpolate.
 	if (pregex_captures_1_up == NULL || pregex_captures_1_up->length == 0)
 		return input;
 

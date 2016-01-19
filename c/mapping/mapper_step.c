@@ -134,7 +134,13 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n");
 	fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n");
 	fprintf(o, "           as the number of -d values.\n");
-	// xxx example here
+	fprintf(o, "\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  %s %s -a rsum -f request_size\n", argv0, verb);
+	fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", argv0, verb);
+	fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", argv0, verb);
+	fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", argv0, verb);
+	fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", argv0, verb);
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html#filter or\n");
 	fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
@@ -156,7 +162,7 @@ static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
 	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
 	ap_define_string_list_flag(pstate,  "-d", &pstring_alphas);
-	ap_define_string_list_flag(pstate,  "-o", &pewma_suffixes); // xxx -> online help
+	ap_define_string_list_flag(pstate,  "-o", &pewma_suffixes);
 	ap_define_false_flag(pstate,        "-F", &allow_int_float);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {

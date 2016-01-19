@@ -33,9 +33,18 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, unsigned char *pfree_flags);
 
-// xxx comment
+// The regex library gives us an array of match pointers into the input string. This function strdups them
+// out into separate storage, to implement "\1", "\2", etc. regex-captures for the =~ and !=~ operators.
 void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchmax);
 
+// Given an array of regex-captures and an input string, interpolates the matches. E.g. if capture 1 is "abc"
+// and capture 2 is "def" and the input is "hello \1 goodbye \2", then the output is a newly allocated string
+// with value "hello abc goodbye def".  The was-allocated flag is an output flag: if true upon return, there was
+// something modified and the returnv value should be freed; if false, nothing was modified and the input string was
+// returned as the function value.
+//
+// To avoid performance regressions in non-match cases, this function quickly returns if the regex-captures array is
+// NULL or has length 0. See comments in mapper_put.c for more information.
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated);
 
 #endif // MLRREGEX_H

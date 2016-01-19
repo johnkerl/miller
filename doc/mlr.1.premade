@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-01-18
+.\"      Date: 2016-01-19
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-01-18" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-01-19" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -674,6 +674,8 @@ Options:
 -F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
 -x: Negates boolean expressions. Has no effect on assignment expressions.
+-t: Continue evaluating remaining expressions after boolean expressions, whether
+    or not they evaluate to true. Has no effect on assignment expressions.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
@@ -729,6 +731,8 @@ Options:
 -g         Do global replacement within each field name rather than
            first-match replacement.
 Examples:
+mlr rename -f old_name,new_name'
+mlr rename -f old_name_1,new_name_1,old_name_2,new_name_2'
 mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
 mlr rename -r '"Date_[0-9]+",Date' Same
 mlr rename -r 'Date_([0-9]+).*,\e1' Rename all such fields to be of the form 20151015
@@ -904,6 +908,13 @@ Options:
 -o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
            the -d values. If supplied, the number of -o values must be the same
            as the number of -d values.
+
+Examples:
+  mlr step -a rsum -f request_size
+  mlr step -a delta -f request_size -g hostname
+  mlr step -a ewma -d 0.1,0.9 -f x,y
+  mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
+  mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
 
 Please see http://johnkerl.org/miller/doc/reference.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average

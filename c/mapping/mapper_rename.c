@@ -51,6 +51,8 @@ static void mapper_rename_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-g         Do global replacement within each field name rather than\n");
 	fprintf(o, "           first-match replacement.\n");
 	fprintf(o, "Examples:\n");
+	fprintf(o, "%s %s -f old_name,new_name'\n", argv0, verb);
+	fprintf(o, "%s %s -f old_name_1,new_name_1,old_name_2,new_name_2'\n", argv0, verb);
 	fprintf(o, "%s %s -r 'Date_[0-9]+,Date,'  Rename all such fields to be \"Date\"\n", argv0, verb);
 	fprintf(o, "%s %s -r '\"Date_[0-9]+\",Date' Same\n", argv0, verb);
 	fprintf(o, "%s %s -r 'Date_([0-9]+).*,\\1' Rename all such fields to be of the form 20151015\n", argv0, verb);

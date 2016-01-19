@@ -1228,11 +1228,13 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_ov
 	context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
-	// xxx comment here ...
+	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		// xxx comment
-		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		return mv_copy(poverlay);
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
@@ -1248,10 +1250,13 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_o
 	context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
+	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		// xxx comment
-		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		return mv_copy(poverlay);
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
@@ -1272,10 +1277,13 @@ mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyp
 	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
+	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
-		// xxx comment
-		return mv_copy(poverlay); // xxx mem-mgmt for strings ...
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		return mv_copy(poverlay);
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {

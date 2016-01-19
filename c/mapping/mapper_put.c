@@ -200,6 +200,43 @@ static void mapper_put_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
+// The typed-overlay holds intermediate values such as in
+//
+//   echo x=1 | mlr put '$y = string($x); $z = $y . $y'
+//
+// because otherwise
+// * lrecs store insertion-ordered maps of string to string (since this is ultimately file I/O);
+// * types are inferred at entry to put;
+// * x=1 would be inferred to int; string($x) would be string; written back to the
+//   lrec, y would be "1" which would be re-inferred to int.
+//
+// So the typed overlay allows us to remember that y is string "1" not integer 1.
+//
+// But this raises the question: why stop here? Why not have lrecs be insertion-ordered maps from
+// string to mlrval? Then we could preserve types for the duration of each lrec, not just for
+// the duration of the put operation. Reasons:
+// * The compare_lexically operation would suffer a performance regression;
+// * Worse, all lhmslv group-by operations (used by many Miller verbs) would likewise suffer a performance regression.
+//
+// ----------------------------------------------------------------
+// The regex-capture string-array holds copies of regex matches, e.g. in
+//
+//   echo name=abc_def | mlr put '$name =~ "(.*)_(.*)"; $left = "\1"; $right = "\2"'
+//
+// produces a record with left=abc and right=def.
+//
+// There is an important trick here with the length of the string-array:
+// * It is allocated here with length 0.
+// * It is passed by reference to the lrec-evaluator tree. In particular, the matches and does-not-match functions
+//   (which implement the =~ and !=~ operators) resize it and populate it.
+// * For simplicity, it is a 1-up array: so \1, \2, \3 are at array indices 1, 2, 3.
+// * If the matches/does-not-match functions are entered, even with no matches, the regex-captures string-array
+//   will be resized to have length at least 1: length 1 for 0 matches, length 2 for 1 match, etc. since
+//   the array is indexed 1-up.
+// * When the lrec-evaluator's from-literal function is invoked, the interpolate_regex_captures function can quickly
+//   check to see if the regex-captures array has length 0 and thereby know that a time-consuming scan for \1, \2, \3,
+//   etc. does not need to be done.
+
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
@@ -208,8 +245,8 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	string_array_t* pregex_captures = string_array_alloc(0);
 
-	// Do the evaluations, writing typed mlrval output to the typed overlay
-	// rather than into the lrec (which holds only string values).
+	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
+	// string values).
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
 		char* output_field_name = pstate->output_field_names[i];

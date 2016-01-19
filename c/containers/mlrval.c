@@ -2069,7 +2069,9 @@ mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, s
 		mv_free(pval1);
 		return mv_from_true();
 	} else {
-		// xxx cmt/rework
+		// See comments in mapper_put.c. Setting this 1-up array to length 1 (i.e. zero matches) signals to the
+		// lrec-evaluator's from-literal function that we are in a regex-match context and there are no matches to
+		// be interpolated.
 		if (pregex_captures != NULL)
 			string_array_realloc(pregex_captures, 1);
 		mv_free(pval1);

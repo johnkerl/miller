@@ -12,17 +12,12 @@ TOP OF LIST
 
 * --group-by in addition to -g throughout; etc for other flags
 
-* mlr rename -h: include -f examples
-
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
 ----------------------------------------------------------------
 * regex-capture:
 
-  o xxxes
-
-  o cmt 1uplen == 0 vs 1 & why (!perfregn)
   o doc this: sub/gsub backcaptures are in-function only; =~/!=~ are out-of-function
   o on-line help & mld
   ? boolean true/false literals into the DSL?
@@ -31,10 +26,7 @@ TOP OF LIST
   o update FAQ page
   o also ref:put
 
-* comment somewhere why not convert lrec_t *entirely* into string->mlrval:
-  o compare_lexically now becomes expensive
-  o breaks all lhmslv's at -g's
-  o so don't do this
+* fix bogus put-boolean @ mld:ref:put
 
 ----------------------------------------------------------------
 * narrative intro:
