@@ -6,7 +6,7 @@
 #define MLR_DSL_AST_H
 #include "sllv.h"
 
-#define MLR_DSL_AST_NODE_TYPE_LITERAL          0xaa00 // string or number
+#define MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL          0xaa00 // string or number
 #define MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL  0xaa55 // true/false
 #define MLR_DSL_AST_NODE_TYPE_REGEXI           0xaaaa
 #define MLR_DSL_AST_NODE_TYPE_FIELD_NAME       0xbbbb

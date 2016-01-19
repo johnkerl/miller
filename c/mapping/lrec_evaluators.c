@@ -2011,7 +2011,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
-		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_LITERAL) {
+		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL) {
 			return lrec_evaluator_alloc_from_boolean_literal(pnode->text);
@@ -2049,7 +2049,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
 			int type2 = parg2_node->type;
 
-			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
+			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
 				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, fcn_lookup_table);
 				pevaluator = lrec_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text, FALSE);
 			} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MLR_DSL_AST_NODE_TYPE_REGEXI) {
@@ -2071,7 +2071,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
 			int type2 = parg2_node->type;
 
-			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_LITERAL) {
+			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
 				// sub/gsub-regex special case:
 				lrec_evaluator_t* parg1 = lrec_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, fcn_lookup_table);
 				lrec_evaluator_t* parg3 = lrec_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing, fcn_lookup_table);
@@ -2229,7 +2229,7 @@ static char * test3() {
 	mlr_dsl_ast_node_t* pxnode     = mlr_dsl_ast_node_alloc("x",  MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
 	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 	mlr_dsl_ast_node_t* plogxnode  = mlr_dsl_ast_node_append_arg(plognode, pxnode);
-	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MLR_DSL_AST_NODE_TYPE_LITERAL);
+	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL);
 	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MLR_DSL_AST_NODE_TYPE_OPERATOR,
 		p2node, plogxnode);
 
