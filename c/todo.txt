@@ -10,16 +10,10 @@ check other formats
 ================================================================
 TOP OF LIST
 
-* --group-by in addition to -g throughout; etc for other flags
-
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
 ? boolean true/false literals into the DSL?
-
-* typed name-to-mlrval map overlay (don't convert all fields, for performance):
-  o update FAQ page
-  o also ref:put
 
 ----------------------------------------------------------------
 * narrative intro:
@@ -62,6 +56,8 @@ TOP OF LIST
   w debian
   ? redhat ?
   ? other ?
+
+? --group-by in addition to -g throughout; etc for other flags
 
 * flight misc: .screenrc -> dotfiles; more dotfile currency
 

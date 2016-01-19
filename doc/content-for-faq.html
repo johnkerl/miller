@@ -35,11 +35,15 @@ POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
 
 <h1>Error-output in certain string cases</h1>
 
-<p/> <tt>mlr put '$y = string($x); $z=$y.$y'</tt> gives <tt>(error)</tt> on
-numeric data such as <tt>x=123</tt> while <tt>mlr put
-'$z=string($x).string($x)'</tt> does not. This is because in the former case
-<tt>y</tt> is computed and stored as a string, then re-parsed as an integer,
-for which string-concatenation is an invalid operator.
+<p/> <tt>mlr put '$y = string($x)' then put '$z = $y . $y'</tt> gives
+<tt>(error)</tt> on numeric data such as <tt>x=123</tt>, while <tt>mlr put
+'$z=string($x).string($x)'</tt> and <tt>mlr put '$y = string($x); $z = $y .
+$y'</tt> do not.  This is because in the first case <tt>y</tt> is computed and
+stored as a string, then re-parsed as an integer, for which
+string-concatenation is an invalid operator. In the second case, casts are done
+independently; in the third case, both assignments are within the same
+<tt>put</tt> statement, where type information is maintained for the duration
+of all assignments in the <tt>put</tt>.
 
 <h1>How do I examine then-chaining?</h1>
 
