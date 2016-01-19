@@ -439,6 +439,8 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
+<h3>Field names</h3>
+
 <p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
 href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
 in the data stream. For integer-indexed data, this looks like
@@ -448,6 +450,8 @@ appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
 through the record <tt>x=abc</tt>.  If field names have special characters such
 as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
 
+<h3>Built-in variables</h3>
+
 <p/>The <tt>filter</tt> command supports the same built-in variables as for <a
 href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
 <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>, as well as
@@ -455,6 +459,8 @@ the mathematical constants <tt>PI</tt> and <tt>E</tt>. This selects the 2nd
 record from each matching file:
 
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
+
+<h3>Expression formatting</h3>
 
 <p/>Expressions may be arbitrarily complex:
 
@@ -643,6 +649,8 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out dat
 
 POKI_RUN_COMMAND{{mlr put --help}}HERE
 
+<h3>Field names</h3>
+
 <p/>Field names must be specified using a <tt>$</tt> in <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt> expressions, even though
 they don&rsquo;t appear in the data stream. For integer-indexed data, this
@@ -654,9 +662,7 @@ through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
 have special characters such as <tt>.</tt> then you can use braces, e.g.
 <tt>'${field.name}'</tt>.
 
-<p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
-
-POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
+<h3>Built-in variables</h3>
 
 <p/>Miller supports the following five built-in variables for <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
@@ -664,16 +670,24 @@ href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
 <tt>E</tt>.
 
+<h3>Expression formatting</h3>
+
+<p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
+
+POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
+
 POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2}}HERE
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
 POKI_INCLUDE_ESCAPED(put-multiline-example.txt)HERE
 
-<p/>Boolean expressions may be used as a gate for subsequent
-semicolon-separated expressions within the same <tt>put</tt>. This can be used
-to allow assignments to be done only when appropriate &mdash; e.g. for
-math-function domain restrictions, regex-matching, and so on:
+<h3>Gating assignments by boolean expressions</h3>
+
+<p/>Boolean expressions may be used as gates for subsequent semicolon-separated
+expressions within the same <tt>put</tt>. This can be used to allow assignments
+to be done only when appropriate &mdash; e.g. for math-function domain
+restrictions, regex-matching, and so on:
 
 POKI_RUN_COMMAND{{mlr cat put-gating-example-1.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp}}HERE
@@ -681,9 +695,10 @@ POKI_RUN_COMMAND{{mlr cat put-gating-example-2.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp}}HERE
 
 <p/>This produces heteregenous output which Miller, of course, has no problems
-with. But if homogeneous output is desired, the <tt>put -t</tt> flag can be
-used.  This causes <tt>put</tt> to evaluate boolean expressions (along with any
-side effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
+with (see POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE).  But
+if homogeneous output is desired, the <tt>put -t</tt> flag can be used.  This
+causes <tt>put</tt> to evaluate boolean expressions (along with any side
+effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
 doesn&rsquo;t use them as a criterion for whether subsequent assignments should
 be executed. Instead, subsequent assignments are done unconditionally:
 
