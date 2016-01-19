@@ -1425,6 +1425,47 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 }
 
 // ================================================================
+typedef struct _lrec_evaluator_boolean_literal_state_t {
+	mv_t literal;
+} lrec_evaluator_boolean_literal_state_t;
+
+mv_t lrec_evaluator_boolean_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
+	context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_boolean_literal_state_t* pstate = pvstate;
+	return pstate->literal;
+}
+
+static void lrec_evaluator_boolean_literal_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_boolean_literal_state_t* pstate = pevaluator->pvstate;
+	mv_free(&pstate->literal);
+	free(pstate);
+	free(pevaluator);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_boolean_literal(char* string) {
+	lrec_evaluator_boolean_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_boolean_literal_state_t));
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+
+	if (string == NULL) {
+		pstate->literal = MV_NULL;
+	} else if (streq(string, "true")) {
+		pstate->literal = mv_from_true();
+	} else if (streq(string, "false")) {
+		pstate->literal = mv_from_false();
+	} else {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	pevaluator->pprocess_func = lrec_evaluator_boolean_literal_func;
+	pevaluator->pfree_func = lrec_evaluator_boolean_literal_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
+
+// ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
@@ -1972,6 +2013,8 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_LITERAL) {
 			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
+		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL) {
+			return lrec_evaluator_alloc_from_boolean_literal(pnode->text);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_REGEXI) {
 			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE) {

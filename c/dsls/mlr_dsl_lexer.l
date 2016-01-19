@@ -190,6 +190,15 @@
 	return MLR_DSL_REGEXI;
 }
 
+true {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL);
+	return MLR_DSL_TRUE;
+}
+false {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL);
+	return MLR_DSL_FALSE;
+}
+
 "NF" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MLR_DSL_CONTEXT_VARIABLE;

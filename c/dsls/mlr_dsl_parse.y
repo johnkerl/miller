@@ -89,6 +89,12 @@ mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B). {
 }
 
 // ================================================================
+mlr_dsl_logical_or_term(A) ::= MLR_DSL_TRUE(B). {
+	A = B;
+}
+mlr_dsl_logical_or_term(A) ::= MLR_DSL_FALSE(B). {
+	A = B;
+}
 mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_xor_term(B). {
 	A = B;
 }
