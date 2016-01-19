@@ -1338,21 +1338,21 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_field_name(char* field_name, int typ
 }
 
 // ================================================================
-typedef struct _lrec_evaluator_literal_state_t {
+typedef struct _lrec_evaluator_strnum_strnum_literal_state_t {
 	mv_t literal;
-} lrec_evaluator_literal_state_t;
+} lrec_evaluator_strnum_literal_state_t;
 
 mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
-	lrec_evaluator_literal_state_t* pstate = pvstate;
+	lrec_evaluator_strnum_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
 
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
-	lrec_evaluator_literal_state_t* pstate = pvstate;
+	lrec_evaluator_strnum_literal_state_t* pstate = pvstate;
 
 	char* input = pstate->literal.u.strv;
 	int was_allocated = FALSE;
@@ -1363,15 +1363,15 @@ mv_t lrec_evaluator_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, s
 		return mv_from_string_no_free(output);
 	}
 }
-static void lrec_evaluator_literal_free(lrec_evaluator_t* pevaluator) {
-	lrec_evaluator_literal_state_t* pstate = pevaluator->pvstate;
+static void lrec_evaluator_strnum_literal_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_strnum_literal_state_t* pstate = pevaluator->pvstate;
 	mv_free(&pstate->literal);
 	free(pstate);
 	free(pevaluator);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_inferencing) {
-	lrec_evaluator_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_literal_state_t));
+lrec_evaluator_t* lrec_evaluator_alloc_from_strnum_literal(char* string, int type_inferencing) {
+	lrec_evaluator_strnum_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_strnum_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
 	if (string == NULL) {
@@ -1410,7 +1410,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 				pevaluator->pprocess_func = lrec_evaluator_string_literal_func;
 			}
 			break;
-
 		default:
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 				MLR_GLOBALS.argv0, __FILE__, __LINE__);
@@ -1418,7 +1417,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_literal(char* string, int type_infer
 			break;
 		}
 	}
-	pevaluator->pfree_func = lrec_evaluator_literal_free;
+	pevaluator->pfree_func = lrec_evaluator_strnum_literal_free;
 
 	pevaluator->pvstate = pstate;
 	return pevaluator;
@@ -1447,9 +1446,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_boolean_literal(char* string) {
 	lrec_evaluator_boolean_literal_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_boolean_literal_state_t));
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 
-	if (string == NULL) {
-		pstate->literal = MV_NULL;
-	} else if (streq(string, "true")) {
+	if (streq(string, "true")) {
 		pstate->literal = mv_from_true();
 	} else if (streq(string, "false")) {
 		pstate->literal = mv_from_false();
@@ -2012,11 +2009,11 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
-			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
+			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL) {
 			return lrec_evaluator_alloc_from_boolean_literal(pnode->text);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_REGEXI) {
-			return lrec_evaluator_alloc_from_literal(pnode->text, type_inferencing);
+			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return lrec_evaluator_alloc_from_context_variable(pnode->text);
 		} else {
@@ -2168,7 +2165,7 @@ static char * test2() {
 	context_t* pctx = &ctx;
 
 	lrec_evaluator_t* ps       = lrec_evaluator_alloc_from_field_name("s", TYPE_INFER_STRING_FLOAT_INT);
-	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_literal("def", TYPE_INFER_STRING_FLOAT_INT);
+	lrec_evaluator_t* pdef     = lrec_evaluator_alloc_from_strnum_literal("def", TYPE_INFER_STRING_FLOAT_INT);
 	lrec_evaluator_t* pdot     = lrec_evaluator_alloc_from_x_ss_func(s_ss_dot_func, ps, pdef);
 	lrec_evaluator_t* ptolower = lrec_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	lrec_evaluator_t* ptoupper = lrec_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
@@ -2219,7 +2216,7 @@ static char * test3() {
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
-	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_literal("2.0", TYPE_INFER_STRING_FLOAT_INT);
+	lrec_evaluator_t* p2     = lrec_evaluator_alloc_from_strnum_literal("2.0", TYPE_INFER_STRING_FLOAT_INT);
 	lrec_evaluator_t* px     = lrec_evaluator_alloc_from_field_name("x", TYPE_INFER_STRING_FLOAT_INT);
 	lrec_evaluator_t* plogx  = lrec_evaluator_alloc_from_f_f_func(f_f_log10_func, px);
 	lrec_evaluator_t* p2logx = lrec_evaluator_alloc_from_n_nn_func(n_nn_times_func, p2, plogx);
