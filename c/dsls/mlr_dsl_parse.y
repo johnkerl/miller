@@ -89,12 +89,6 @@ mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B). {
 }
 
 // ================================================================
-mlr_dsl_logical_or_term(A) ::= MLR_DSL_TRUE(B). {
-	A = B;
-}
-mlr_dsl_logical_or_term(A) ::= MLR_DSL_FALSE(B). {
-	A = B;
-}
 mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_xor_term(B). {
 	A = B;
 }
@@ -266,6 +260,12 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_NUMBER(B). {
+	A = B;
+}
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_TRUE(B). {
+	A = B;
+}
+mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FALSE(B). {
 	A = B;
 }
 
