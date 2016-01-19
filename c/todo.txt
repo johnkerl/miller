@@ -1,9 +1,12 @@
 ================================================================
 BUGFIXES
 
-! odat/osh
-  - z/xpoke@eof?
-  - blksz tests
+! segv on mmapped read of files whose size is a multiple of page size & do not end in IRS
+  - happens more in "some-writer > file &" and "tail -f file" where (multiples of) stdio buffer sizes
+    align with mmap page sizes
+  - zpoke@eof not ok as a solution, but xpoke@eof good for white-box testing
+  - need to copy out final field at missing final IRS
+  - blksz UTs x 6
   - impl x 4 for mmap dkvp
   - check other formats
 
@@ -20,13 +23,15 @@ TOP OF LIST
   - csv example
   - what do these have in common?
 
+* interpolated percentiles
+
+* faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
+
 * anim ref https://github.com/edi9999/path-extractor
 
 * cump -> one-offs
 
 ! re-valgrind all !
-
-* interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
