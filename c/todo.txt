@@ -5,7 +5,8 @@ BUGFIXES
   - not as much a corner case as it may sound: it happens in "some-writer > file &" and "mlr ... file" where (multiples
     of) stdio buffer sizes align with mmap page sizes.
   - need to copy out final key or key+value at missing final IRS
-  - blksz UTs x 6
+  - blksz UTs
+    for x in reg_test/input/page-aligned-*; do echo; echo $x; mlr tail $x; done
   - impl x 4 for mmap dkvp
   - check other formats
 
