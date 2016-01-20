@@ -88,6 +88,7 @@ EXTRA_DIST=	\
 		page-aligned-final-ifs.dkvp \
 		page-aligned-final-irs.dkvp \
 		page-aligned-final-no-ifs.dkvp \
+		page-aligned-no-final-eol.xtab \
 		page-aligned-no-final-irs.csvl \
 		page-aligned-no-final-irs.dkvp \
 		regex.dkvp \
