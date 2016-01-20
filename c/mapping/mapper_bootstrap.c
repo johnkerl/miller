@@ -126,7 +126,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 
 	// Do the sample-with-replacment, reading from random indices in the input
 	// array and appending to the output list.
-	for (int i = 0; i < nout; i++, pe = pe->pnext) {
+	for (int i = 0; i < nout; i++) {
 		int index = nin * get_mtrand_double();
 		if (index >= nin)
 			index = nin - 1;
@@ -140,6 +140,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 	}
 
 	// Free non-output records
+	pe = pstate->records->phead;
 	for (int i = 0; i < nin; i++, pe = pe->pnext)
 		if (!used_flags[i])
 			lrec_free(record_array[i]);
