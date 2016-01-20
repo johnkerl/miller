@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+! re-valgrind all !
+
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
@@ -15,8 +17,6 @@ TOP OF LIST
 
 * anim ref https://github.com/edi9999/path-extractor
 
-! re-valgrind all !
-
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
@@ -24,6 +24,9 @@ TOP OF LIST
   ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
     > mld re cross-record stuff is limited to stats1/2 and step
 
+* tbin/ok -> cookbook
+* faqent why dollar signs in the DSL at all
+* make "Homebrew" a hyperlink at http://johnkerl.org/miller/doc/build.html
 * debian screenshot
 * lrec_evaluators cleanup re strict, redundant statements, etc.
 * ruby @ optextdep @ mld; poki+mkman
@@ -81,6 +84,8 @@ COOKBOOK/FAQ/ETC.:
   - polyglottal dkvp/etc production.
   - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
+  - checku.dash -> cookbook
+
 * faqents:
   - rsum as proxy for per-record/agg-only mixed output
 
@@ -111,6 +116,19 @@ COOKBOOK/FAQ/ETC.:
       then  put '$nleft=$target-$n' \
       then stats2 -s -a linreg-pca -f t,nleft \
       then put '$etc= -$t_n_pca_b/$t_n_pca_m; $etcstamp=sec2gmt($etc); $etchours=($etc-systime())/3600.0'
+
+* mlr step -a from-first -f t \
+    then cut -o -f t_from_first,ntodo \
+    then step -a ewma -d 0.005,0.01,0.1 -o a,b,c -f ntodo \
+    then stats2 -s -a linreg-pca -f \
+      t_from_first,ntodo,t_from_first,ntodo_ewma_a,t_from_first,ntodo_ewma_b,t_from_first,ntodo_ewma_c \
+    then put '
+      $ect0 = -$t_from_first_ntodo_pca_b/$t_from_first_ntodo_pca_m;
+      $ecta = -$t_from_first_ntodo_ewma_a_pca_b/$t_from_first_ntodo_ewma_a_pca_m;
+      $ectb = -$t_from_first_ntodo_ewma_b_pca_b/$t_from_first_ntodo_ewma_b_pca_m;
+      $ectc = -$t_from_first_ntodo_ewma_c_pca_b/$t_from_first_ntodo_ewma_c_pca_m
+    ' \
+    then cut -o -f t_from_first,ect0,ecta,ectb,ectc
 
 ----------------------------------------------------------------
 * introduce a fourth, padding separator for all formats? (for leading/trailing strip/skip.)

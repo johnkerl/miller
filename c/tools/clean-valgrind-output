@@ -18,6 +18,7 @@ sed 's/^==.*== //' "$@" | swipe \
   | grep -v 'For counts of' \
   | mgrepv 'mlr_try_float_from_string' \
   | mgrepv '__snprintf_chk' \
+  | mgrepv 'vsscanf_l' \
   | mgrepv 'NXMapRemove' \
   | mgrepv '_platform_memchr' \
   | mgrepv 'xpc_pipe_routine' \
