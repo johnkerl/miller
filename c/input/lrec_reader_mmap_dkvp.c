@@ -161,30 +161,52 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			p++;
 		}
 	}
-	// xxx if (saw_rs) {
-	//	easy & simple
-	// } else {
-	//	eof copy-out business
-	// }
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
-	if (allow_repeat_ifs && *key == 0 && *value == 0) {
-		; // OK
+
+	if (saw_rs) {
+		// Easy and simple case: we read until end of line.
+
+		if (allow_repeat_ifs && *key == 0 && *value == 0) {
+			; // OK
+		} else {
+			if (*key == 0 || value <= key) {
+				char free_flags = 0;
+				if (value >= phandle->eof)
+					lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				else
+					lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			}
+			else {
+				if (value >= phandle->eof)
+					lrec_put(prec, key, "", NO_FREE);
+				else
+					lrec_put(prec, key, value, NO_FREE);
+			}
+		}
+
 	} else {
-		if (*key == 0 || value <= key) {
-			char free_flags = 0;
-			if (value >= phandle->eof)
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
-			else
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+		// Messier case: we read to end of file without seeing end of line.
+
+		if (allow_repeat_ifs && *key == 0 && *value == 0) {
+			; // OK
+		} else {
+			if (*key == 0 || value <= key) {
+				char free_flags = 0;
+				if (value >= phandle->eof)
+					lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				else
+					lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			}
+			else {
+				if (value >= phandle->eof)
+					lrec_put(prec, key, "", NO_FREE);
+				else
+					lrec_put(prec, key, value, NO_FREE);
+			}
 		}
-		else {
-			if (value >= phandle->eof)
-				lrec_put(prec, key, "", NO_FREE);
-			else
-				lrec_put(prec, key, value, NO_FREE);
-		}
+
 	}
 
 	return prec;
