@@ -1252,6 +1252,18 @@ run_mlr --oxtab cat $indir/utf8-align.dkvp
 run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
 
 # ================================================================
+announce MMAP AT PAGE BOUNDARIES
+
+run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-ifs.dkvp
+run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-irs.dkvp
+run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-no-ifs.dkvp
+run_mlr --dkvp        tail -n 4 $indir/page-aligned-no-final-irs.dkvp
+run_mlr --nidx        tail -n 4 $indir/page-aligned-no-final-irs.nidx
+run_mlr --csvlite     tail -n 4 $indir/page-aligned-no-final-irs.csvl
+run_mlr --csv --rs lf tail -n 4 $indir/page-aligned-no-final-irs.csvl
+run_mlr --xtab        tail -n 4 $indir/page-aligned-no-final-eol.xtab
+
+# ================================================================
 announce INT64 I/O
 
 run_mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' $indir/int64io.dkvp

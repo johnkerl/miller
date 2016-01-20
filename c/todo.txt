@@ -1,11 +1,7 @@
 ================================================================
 BUGFIXES
 
-! segv on mmapped read of files whose size is a multiple of page size & do not end in IRS
-  - not as much a corner case as it may sound: it happens in "some-writer > file &" and "mlr ... file" where (multiples
-    of) stdio buffer sizes align with mmap page sizes.
-  - UTs x all formats
-  - dead-strip EOF_STRIDX et al.
+:D
 
 ================================================================
 TOP OF LIST

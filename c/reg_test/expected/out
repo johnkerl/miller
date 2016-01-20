@@ -11642,6 +11642,71 @@ mlr --inidx --ifs space --oxtab --xvright cat ./reg_test/input/utf8-align.nidx
 
 
 ================================================================
+MMAP AT PAGE BOUNDARIES
+
+mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-ifs.dkvp
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=
+
+mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-irs.dkvp
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+
+mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-no-ifs.dkvp
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,3=z
+
+mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-no-final-irs.dkvp
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
+x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=ccccccccccccccccccccccccccccccccccccccccccccccccc
+
+mlr --nidx tail -n 4 ./reg_test/input/page-aligned-no-final-irs.nidx
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
+
+mlr --csvlite tail -n 4 ./reg_test/input/page-aligned-no-final-irs.csvl
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,ccccccccccccccccccccccccccccccccccccccccccc
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
+
+mlr --csv --rs lf tail -n 4 ./reg_test/input/page-aligned-no-final-irs.csvl
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,ccccccccccccccccccccccccccccccccccccccccccc
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
+11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
+
+mlr --xtab tail -n 4 ./reg_test/input/page-aligned-no-final-eol.xtab
+aaaaaaaaaaaaaaaaaaaa 111111111111111111111
+bbbbbbbbbbbbbbbbbbbb 22222222222222222222
+cccccccccccccccccccc 33333333333333333333
+
+aaaaaaaaaaaaaaaaaaaa 111111111111111111111
+bbbbbbbbbbbbbbbbbbbb 22222222222222222222
+cccccccccccccccccccc 33333333333333333333
+
+aaaaaaaaaaaaaaaaaaaa 111111111111111111111
+bbbbbbbbbbbbbbbbbbbb 22222222222222222222
+cccccccccccccccccccc 33333333333333333333
+
+aaaaaaaaaaaaaaaaaaaa 111111111111111111111
+bbbbbbbbbbbbbbbbbbbb 22222222222222222222
+cccccccccccccccccccc 3333333333333333333333
+
+
+================================================================
 INT64 I/O
 
 mlr --oxtab put $c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b) ./reg_test/input/int64io.dkvp
