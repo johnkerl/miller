@@ -9,14 +9,13 @@ TOP OF LIST
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 
-----------------------------------------------------------------
+* interpolated percentiles
+
 * narrative intro:
   - sql example
   - logging example
   - csv example
   - what do these have in common?
-
-* interpolated percentiles
 
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 
@@ -48,9 +47,10 @@ TOP OF LIST
 
 * packaging/currency:
   k brew
-  - netbsd
-  w debian
+  ~ netbsd
+  k debian
   ? redhat ?
+  ? centos ?
   ? other ?
 
 ? --group-by in addition to -g throughout; etc for other flags
