@@ -194,10 +194,7 @@ void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regm
 	string_array_realloc(pregex_captures_1_up, n+1); // n+1 since slot 0 of this 1-up array is unused
 	for (int i = 1; i <= n; i++) {
 		int len = matches[i].rm_eo - matches[i].rm_so;
-		char* dst = mlr_malloc_or_die(len + 1);
-		memcpy(dst, &input[matches[i].rm_so], len);
-		dst[len] = 0;
-		pregex_captures_1_up->strings[i] = dst;
+		pregex_captures_1_up->strings[i] = mlr_alloc_string_from_char_range(&input[matches[i].rm_so], len);
 	}
 	pregex_captures_1_up->strings_need_freeing = TRUE;
 }

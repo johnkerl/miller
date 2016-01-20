@@ -119,6 +119,13 @@ char* mlr_alloc_string_from_int(int value) {
 	return string;
 }
 
+char* mlr_alloc_string_from_char_range(char* start, int num_bytes) {
+	char* string = mlr_malloc_or_die(num_bytes+1);
+	memcpy(string, start, num_bytes);
+	string[num_bytes] = 0;
+	return string;
+}
+
 char* mlr_alloc_hexfmt_from_ll(long  long value) {
 	int n = snprintf(NULL, 0, "0x%llx", (unsigned long long)value);
 	char* string = mlr_malloc_or_die(n+1);
