@@ -123,7 +123,6 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	int saw_ps = FALSE;
 	int saw_rs = FALSE;
 
-	//*phandle->eof = 'A'; // xxx temp
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
@@ -173,7 +172,6 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	if (saw_rs) {
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
 		// C string so it's OK to retain a pointer to that.
-
 		if (*key == 0 || value <= key) {
 			char free_flags = 0;
 			if (value >= phandle->eof)
@@ -187,13 +185,11 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			else
 				lrec_put(prec, key, value, NO_FREE);
 		}
-
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
 		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
 		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
 		// byte past the page and that will segv us.
-
 		if (*key == 0 || value <= key) {
 			char free_flags = 0;
 			if (value >= phandle->eof) {
@@ -211,7 +207,6 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 			}
 		}
-
 	}
 
 	return prec;
@@ -234,11 +229,13 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	char* value = p;
 
 	int saw_ps = FALSE;
+	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
 		if (streqn(p, irs, irslen)) {
 			*p = 0;
 			phandle->sol = p + irslen;
+			saw_rs = TRUE;
 			break;
 		} else if (*p == ifs) {
 			saw_ps = FALSE;
@@ -275,15 +272,48 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
-	if (allow_repeat_ifs && *key == 0 && *value == 0) {
-		; // OK
-	} else {
+
+	if (allow_repeat_ifs && *key == 0 && *value == 0)
+		return prec;
+
+	// There are two ways out of that loop: saw IRS, or saw end of file.
+	if (saw_rs) {
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char  free_flags = 0;
-			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			char free_flags = 0;
+			if (value >= phandle->eof)
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			else
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
-			lrec_put(prec, key, value, NO_FREE);
+			if (value >= phandle->eof)
+				lrec_put(prec, key, "", NO_FREE);
+			else
+				lrec_put(prec, key, value, NO_FREE);
+		}
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		if (*key == 0 || value <= key) {
+			char free_flags = 0;
+			if (value >= phandle->eof) {
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+			}
+		}
+		else {
+			if (value >= phandle->eof) {
+				lrec_put(prec, key, "", NO_FREE);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
+			}
 		}
 	}
 
@@ -307,11 +337,13 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	char* value = p;
 
 	int saw_ps = FALSE;
+	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
 			phandle->sol = p+1;
+			saw_rs = TRUE;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			saw_ps = FALSE;
@@ -349,15 +381,48 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
-	if (allow_repeat_ifs && *key == 0 && *value == 0) {
-		; // OK
-	} else {
+
+	if (allow_repeat_ifs && *key == 0 && *value == 0)
+		return prec;
+
+	// There are two ways out of that loop: saw IRS, or saw end of file.
+	if (saw_rs) {
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char  free_flags = 0;
-			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			char free_flags = 0;
+			if (value >= phandle->eof)
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			else
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
-			lrec_put(prec, key, value, NO_FREE);
+			if (value >= phandle->eof)
+				lrec_put(prec, key, "", NO_FREE);
+			else
+				lrec_put(prec, key, value, NO_FREE);
+		}
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		if (*key == 0 || value <= key) {
+			char free_flags = 0;
+			if (value >= phandle->eof) {
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+			}
+		}
+		else {
+			if (value >= phandle->eof) {
+				lrec_put(prec, key, "", NO_FREE);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
+			}
 		}
 	}
 
@@ -381,11 +446,13 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	char* value = p;
 
 	int saw_ps = FALSE;
+	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
 		if (streqn(p, irs, irslen)) {
 			*p = 0;
 			phandle->sol = p + irslen;
+			saw_rs = TRUE;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			saw_ps = FALSE;
@@ -422,15 +489,48 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 	idx++;
-	if (allow_repeat_ifs && *key == 0 && *value == 0) {
-		; // OK
-	} else {
+
+	if (allow_repeat_ifs && *key == 0 && *value == 0)
+		return prec;
+
+	// There are two ways out of that loop: saw IRS, or saw end of file.
+	if (saw_rs) {
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char  free_flags = 0;
-			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			char free_flags = 0;
+			if (value >= phandle->eof)
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			else
+				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 		}
 		else {
-			lrec_put(prec, key, value, NO_FREE);
+			if (value >= phandle->eof)
+				lrec_put(prec, key, "", NO_FREE);
+			else
+				lrec_put(prec, key, value, NO_FREE);
+		}
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		if (*key == 0 || value <= key) {
+			char free_flags = 0;
+			if (value >= phandle->eof) {
+				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+			}
+		}
+		else {
+			if (value >= phandle->eof) {
+				lrec_put(prec, key, "", NO_FREE);
+			} else {
+				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+				lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
+			}
 		}
 	}
 
