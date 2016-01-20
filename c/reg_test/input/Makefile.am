@@ -91,6 +91,7 @@ EXTRA_DIST=	\
 		page-aligned-no-final-eol.xtab \
 		page-aligned-no-final-irs.csvl \
 		page-aligned-no-final-irs.dkvp \
+		page-aligned-no-final-irs.nidx \
 		regex.dkvp \
 		regularize.dkvp \
 		rfc-csv \

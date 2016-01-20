@@ -11,17 +11,9 @@ TOP OF LIST
 
 * interpolated percentiles
 
-* narrative intro:
-  - sql example
-  - logging example
-  - csv example
-  - what do these have in common?
-
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 
 * anim ref https://github.com/edi9999/path-extractor
-
-* cump -> one-offs
 
 ! re-valgrind all !
 
@@ -53,9 +45,15 @@ TOP OF LIST
   ? centos ?
   ? other ?
 
-? --group-by in addition to -g throughout; etc for other flags
-
 * flight misc: .screenrc -> dotfiles; more dotfile currency
+* cump -> one-offs
+
+----------------------------------------------------------------
+NARRATIVE INTRO:
+* sql example
+* logging example
+* csv example
+* what do these have in common?
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
@@ -127,9 +125,6 @@ COOKBOOK/FAQ/ETC.:
 
 ? wiki quickselect ?
 
-----------------------------------------------------------------
-MINOR:
-
 * double-check for off-by-one buflen in cline/sline
 * hash-collision ifdef instrumentation -> maybe find a better hash function out there
 * pprint join?
@@ -197,6 +192,8 @@ look-ats:
 * https://drill.apache.org
 * https://github.com/dbro/csvquote
 
+https://help.github.com/articles/github-flavored-markdown/
+
 shell: mlr put '$z=$x+$y'
 lldb:  run put "\$z=\$x+\$y"
 
@@ -218,8 +215,6 @@ git add ...
 git commit -m 'miller 3.2.2'
 git push --all
 
-----------------------------------------------------------------
-https://help.github.com/articles/github-flavored-markdown/
 ----------------------------------------------------------------
 Squash commits by:
   brew update
