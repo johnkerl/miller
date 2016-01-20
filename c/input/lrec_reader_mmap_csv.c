@@ -25,14 +25,11 @@
 #define STRING_BUILDER_INIT_SIZE 1024
 
 // AKA "token"
-#define EOF_STRIDX           0x2000
 #define IRS_STRIDX           0x2001
-#define IFS_EOF_STRIDX       0x2002
 #define IFS_STRIDX           0x2003
 #define DQUOTE_STRIDX        0x2004
 #define DQUOTE_IRS_STRIDX    0x2005
 #define DQUOTE_IFS_STRIDX    0x2006
-#define DQUOTE_EOF_STRIDX    0x2007
 #define DQUOTE_DQUOTE_STRIDX 0x2008
 
 // ----------------------------------------------------------------
@@ -95,17 +92,13 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 	pstate->dquotelen     = strlen(pstate->dquote);
 
 	pstate->pno_dquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs_eof, IFS_EOF_STRIDX);
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
 
 	pstate->pdquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->eof,           EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,    DQUOTE_IRS_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
 	pstate->pfields = rslls_alloc();
@@ -225,18 +218,6 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 				rc = parse_trie_match(pstate->pno_dquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
 				if (rc) {
 					switch(stridx) {
-					case EOF_STRIDX: // end of record
-						*e = 0;
-						rslls_add_no_free(pfields, p);
-						p = e + matchlen;
-						field_done  = TRUE;
-						record_done = TRUE;
-						break;
-					case IFS_EOF_STRIDX:
-						fprintf(stderr, "%s: syntax error: record-ending field separator at line %lld.\n",
-							MLR_GLOBALS.argv0, pstate->ilno);
-						exit(1);
-						break;
 					case IFS_STRIDX: // end of field
 						*e = 0;
 						rslls_add_no_free(pfields, p);
@@ -263,15 +244,10 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					}
 					e += matchlen;
 				} else if (e >= phandle->eof) {
-					// xxx Note: for the mmap reader, this is awkward duplication with respect to EOF_STRIDX.
-					// In fact the EOF character isn't poked at EOF. So there is dead code to be stripped here.
-					// (In the stdio-reader case there is no duplication.)
-
 					// We read to end of file without seeing end of line.  We can't always zero-poke a null character to
 					// terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's
 					// our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking
 					// at EOF is one byte past the page and that will segv us.
-
 				    char* copy = mlr_alloc_string_from_char_range(p, phandle->eof - p);
 					rslls_add_with_free(pfields, copy);
 					p = e + matchlen;
@@ -302,21 +278,6 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 
 				if (rc) {
 					switch(stridx) {
-					case EOF_STRIDX: // end of record
-						fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n",
-							MLR_GLOBALS.argv0, pstate->ilno);
-						exit(1);
-						break;
-					case DQUOTE_EOF_STRIDX: // end of record
-						*e = 0;
-						if (contiguous)
-							rslls_add_no_free(pfields, p);
-						else
-							rslls_add_with_free(pfields, sb_finish(psb));
-						p = e + matchlen;
-						field_done  = TRUE;
-						record_done = TRUE;
-						break;
 					case DQUOTE_IFS_STRIDX: // end of field
 						*e = 0;
 						if (contiguous)
