@@ -68,7 +68,6 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 
 static void    lrec_reader_mmap_csv_free(lrec_reader_t* preader);
 static void    lrec_reader_mmap_csv_sof(void* pvstate);
-static void*   lrec_reader_mmap_csv_vopen(void* pvstate, char* prepipe, char* file_name);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static int     lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	rslls_t* pfields, file_reader_mmap_state_t* phandle);
@@ -118,7 +117,7 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 	pstate->pheader_keepers           = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = lrec_reader_mmap_csv_vopen;
+	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 	plrec_reader->pprocess_func = lrec_reader_mmap_csv_process;
 	plrec_reader->psof_func     = lrec_reader_mmap_csv_sof;
@@ -151,14 +150,6 @@ static void lrec_reader_mmap_csv_sof(void* pvstate) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
-}
-
-// ----------------------------------------------------------------
-static void* lrec_reader_mmap_csv_vopen(void* pvstate, char* prepipe, char* file_name) {
-	void* pvhandle = file_reader_mmap_open(prepipe, file_name);
-	file_reader_mmap_state_t* phandle = pvhandle;
-	*phandle->eof = EOF;
-	return pvhandle;
 }
 
 // ----------------------------------------------------------------
@@ -272,10 +263,17 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					}
 					e += matchlen;
 				} else if (e >= phandle->eof) {
-					// Note: for the mmap reader, this is awkward duplication with respect to EOF_STRIDX.
+					// xxx Note: for the mmap reader, this is awkward duplication with respect to EOF_STRIDX.
+					// In fact the EOF character isn't poked at EOF. So there is dead code to be stripped here.
 					// (In the stdio-reader case there is no duplication.)
-					*e = 0;
-					rslls_add_no_free(pfields, p);
+
+					// We read to end of file without seeing end of line.  We can't always zero-poke a null character to
+					// terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's
+					// our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking
+					// at EOF is one byte past the page and that will segv us.
+
+				    char* copy = mlr_alloc_string_from_char_range(p, phandle->eof - p);
+					rslls_add_with_free(pfields, copy);
 					p = e + matchlen;
 					field_done  = TRUE;
 					record_done = TRUE;
