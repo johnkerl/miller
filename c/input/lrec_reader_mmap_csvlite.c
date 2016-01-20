@@ -343,6 +343,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	}
 	char* key   = NULL;
 	char* value = p;
+	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			if (p == line) {
@@ -353,6 +354,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			*p = 0;
 			phandle->sol = p+1;
 			pstate->ilno++;
+			saw_rs = TRUE;
 			break;
 		} else if (*p == ifs) {
 			*p = 0;
@@ -378,20 +380,33 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else if (pe == NULL) {
+	if (allow_repeat_ifs && *value == 0)
+		return prec;
+
+	if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 		exit(1);
-	} else {
-		key = pe->value;
+	}
+	key = pe->value;
+
+	if (saw_rs) {
+        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+        // C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, NO_FREE);
-		if (pe->pnext != NULL) {
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
-			exit(1);
-		}
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+		lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
+	}
+
+	if (pe->pnext != NULL) {
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+		exit(1);
 	}
 
 	return prec;
@@ -421,6 +436,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	}
 	char* key   = NULL;
 	char* value = p;
+	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {
 		if (streqn(p, irs, irslen)) {
 			if (p == line) {
@@ -431,6 +447,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			*p = 0;
 			phandle->sol = p + irslen;
 			pstate->ilno++;
+			saw_rs = TRUE;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
@@ -456,20 +473,33 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else if (pe == NULL) {
+	if (allow_repeat_ifs && *value == 0)
+		return prec;
+
+	if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
 		exit(1);
-	} else {
-		key = pe->value;
+	}
+	key = pe->value;
+
+	if (saw_rs) {
+        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+        // C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, NO_FREE);
-		if (pe->pnext != NULL) {
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
-			exit(1);
-		}
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+		lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
+	}
+
+	if (pe->pnext != NULL) {
+		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+		exit(1);
 	}
 
 	return prec;
@@ -499,6 +529,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 	char* value = p;
 	char  free_flags;
 	int idx = 0;
+	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			if (p == line) {
@@ -509,6 +540,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 			*p = 0;
 			phandle->sol = p+1;
 			pstate->ilno++;
+			saw_rs = TRUE;
 			break;
 		} else if (*p == ifs) {
 			*p = 0;
@@ -527,11 +559,22 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else {
-		key = make_nidx_key(++idx, &free_flags);
+	if (allow_repeat_ifs && *value == 0)
+		return prec;
+
+	key = make_nidx_key(++idx, &free_flags);
+
+	if (saw_rs) {
+        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+        // C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+		lrec_put(prec, key, copy, free_flags|FREE_ENTRY_VALUE);
 	}
 
 	return prec;
@@ -562,6 +605,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	char* value = p;
 	char  free_flags;
 	int idx = 0;
+	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {
 		if (streqn(p, irs, irslen)) {
 			if (p == line) {
@@ -572,6 +616,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 			*p = 0;
 			phandle->sol = p + irslen;
 			pstate->ilno++;
+			saw_rs = TRUE;
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
@@ -591,11 +636,22 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	if (p >= phandle->eof)
 		phandle->sol = p+1;
 
-	if (allow_repeat_ifs && *value == 0) {
-		; // OK
-	} else {
-		key = make_nidx_key(++idx, &free_flags);
+	if (allow_repeat_ifs && *value == 0)
+		return prec;
+
+	key = make_nidx_key(++idx, &free_flags);
+
+	if (saw_rs) {
+        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+        // C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
+	} else {
+		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
+		// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
+		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
+		// byte past the page and that will segv us.
+		char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
+		lrec_put(prec, key, copy, free_flags|FREE_ENTRY_VALUE);
 	}
 
 	return prec;
