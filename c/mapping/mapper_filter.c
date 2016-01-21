@@ -140,23 +140,29 @@ static void mapper_filter_free(mapper_t* pmapper) {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+
 	mapper_filter_state_t* pstate = pvstate;
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
-	if (pinrec != NULL) {
-		mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, pctx, pstate->pevaluator->pvstate);
-		if (val.type == MT_NULL) {
-			lrec_free(pinrec);
-			return NULL;
-		} else {
-			mv_set_boolean_strict(&val);
-			if (val.u.boolv ^ pstate->do_exclude) {
-				return sllv_single(pinrec);
-			} else {
-				lrec_free(pinrec);
-				return NULL;
-			}
-		}
+	sllv_t* rv = NULL;
+
+	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, pctx, pstate->pevaluator->pvstate);
+	if (val.type == MT_NULL) {
+		lrec_free(pinrec);
 	} else {
-		return sllv_single(NULL);
+		mv_set_boolean_strict(&val);
+		if (val.u.boolv ^ pstate->do_exclude) {
+			rv = sllv_single(pinrec);
+		} else {
+			lrec_free(pinrec);
+		}
 	}
+
+	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		mv_t* pmv = pe->pvvalue;
+		mv_free(pmv);
+	}
+	lhmsv_free(ptyped_overlay);
+	return rv;
 }

@@ -236,7 +236,10 @@ static void mapper_merge_fields_free(mapper_t* pmapper) {
 	for (sllve_t* pa = pstate->pvalue_field_regexes->phead; pa != NULL; pa = pa->pnext) {
 		regex_t* pvalue_field_regex = pa->pvvalue;
 		regfree(pvalue_field_regex);
+		free(pvalue_field_regex);
 	}
+	sllv_free(pstate->pvalue_field_regexes);
+	sb_free(pstate->psb);
 	free(pstate);
 	free(pmapper);
 }
@@ -471,6 +474,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 				} else {
 					pa = pa->pnext;
 				}
+				free(short_name);
 			}
 		}
 		if (!matched)
