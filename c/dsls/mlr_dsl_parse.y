@@ -44,7 +44,10 @@ mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
 mlr_dsl_statement ::= mlr_dsl_assignment.
-mlr_dsl_statement ::= mlr_dsl_filter.
+mlr_dsl_statement ::= mlr_dsl_bare_boolean.
+mlr_dsl_statement ::= mlr_dsl_record_filter.
+mlr_dsl_statement ::= mlr_dsl_expression_gate.
+//mlr_dsl_statement ::= mlr_dsl_emit.
 
 // ================================================================
 // In the grammar provided to the user, field names are of the form "$x".  But
@@ -73,8 +76,17 @@ mlr_dsl_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr
 	sllv_add(pasts, A);
 }
 
-// ================================================================
-mlr_dsl_filter(A) ::= mlr_dsl_ternary(B). {
+mlr_dsl_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+	A = B;
+	sllv_add(pasts, A);
+}
+
+mlr_dsl_record_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+	sllv_add(pasts, A);
+}
+mlr_dsl_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	A = B;
 	sllv_add(pasts, A);
 }

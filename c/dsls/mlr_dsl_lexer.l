@@ -4,6 +4,20 @@
 #include "mlr_dsl_parse.h"
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
+
+//"emit" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_GATE);
+//	return MLR_DSL_GATE;
+//}
+//"begin" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BEGIN);
+//	return MLR_DSL_GATE;
+//}
+//"end" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_END);
+//	return MLR_DSL_GATE;
+//}
+
 %}
 
 %option reentrant
@@ -19,6 +33,15 @@
 "=" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);
 	return MLR_DSL_ASSIGN;
+}
+
+"filter" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FILTER);
+	return MLR_DSL_FILTER;
+}
+"gate" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_EMIT);
+	return MLR_DSL_GATE;
 }
 
 "?" {
