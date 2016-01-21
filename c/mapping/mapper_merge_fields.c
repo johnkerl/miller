@@ -371,7 +371,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 					if (!pstate->keep_input_fields) {
 						// We are modifying the lrec while iterating over it.
 						lrece_t* pnext = pb->pnext;
-						lrec_unlink(pinrec, pb);
+						lrec_unlink_and_free(pinrec, pb);
 						pb = pnext;
 					} else {
 						pb = pb->pnext;
@@ -466,7 +466,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					if (!pstate->keep_input_fields) {
 						// We are modifying the lrec while iterating over it.
 						lrece_t* pnext = pa->pnext;
-						lrec_unlink(pinrec, pa);
+						lrec_unlink_and_free(pinrec, pa);
 						pa = pnext;
 					} else {
 						pa = pa->pnext;

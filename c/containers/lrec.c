@@ -249,6 +249,16 @@ void lrec_unlink(lrec_t* prec, lrece_t* pe) {
 	prec->field_count--;
 }
 
+void lrec_unlink_and_free(lrec_t* prec, lrece_t* pe) {
+	if (pe->free_flags & FREE_ENTRY_KEY)
+		free(pe->key);
+	if (pe->free_flags & FREE_ENTRY_VALUE)
+		free(pe->value);
+	lrec_unlink(prec, pe);
+	free(pe);
+}
+
+// ----------------------------------------------------------------
 static void lrec_link_at_head(lrec_t* prec, lrece_t* pe) {
 
 	if (prec->phead == NULL) {
@@ -297,9 +307,9 @@ void lrec_free(lrec_t* prec) {
 	if (prec == NULL)
 		return;
 	for (lrece_t* pe = prec->phead; pe != NULL; /*pe = pe->pnext*/) {
-		if ((pe->free_flags & FREE_ENTRY_KEY) && (pe->key != NULL))
+		if (pe->free_flags & FREE_ENTRY_KEY)
 			free(pe->key);
-		if ((pe->free_flags & FREE_ENTRY_VALUE) && (pe->value != NULL))
+		if (pe->free_flags & FREE_ENTRY_VALUE)
 			free(pe->value);
 		lrece_t* ope = pe;
 		pe = pe->pnext;
