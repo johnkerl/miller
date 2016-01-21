@@ -163,7 +163,7 @@ Unix tools operate on integer-indexed fields: if the natural data structure for
 the latter is the array, then Miller&rsquo;s natural data structure is the
 insertion-ordered hash map.  This encompasses a <b>variety of data formats</b>,
 including but not limited to the familiar CSV.  (Miller can handle
-positionally-indexed data as a special case.)
+<b>positionally-indexed data</b> as a special case.)
 
 <p/> Features:
 <ul>
@@ -184,31 +184,30 @@ For those operations which require deeper retention (<tt>sort</tt>,
 <tt>tac</tt>, <tt>stats1</tt>), Miller retains only as much data as needed.
 This means that whenever functionally possible you can operate on files which
 are larger than your system&rsquo;s available RAM, and you can use Miller in
-<tt>tail -f</tt> contexts.
+<b>tail -f</b> contexts.
 
-<li/> Miller complements SQL <b>databases</b>: you can slice, dice, and reformat
-data on the client side on its way into or out of a database. You can also reap
-some of the benefits of databases for quick, setup-free one-off tasks when just
-need to query some data in disk files in a hurry.
+<li/> Miller complements SQL <b>databases</b>: you can slice, dice, and
+reformat data on the client side on its way into or out of a database. You can
+also reap some of the benefits of databases for quick, setup-free one-off tasks
+when you just need to query some data in disk files in a hurry.
 
 <li/> Miller complements <b>data-analysis tools</b> such as <b>R</b>,
 <b>pandas</b>, etc.: you can use Miller to <b>clean</b> and <b>prepare</b> your
-data. While you can do basic statistics entirely in Miller, its streaming-data
-feature and single-pass algorithms enable you to reduce very large data sets.
-You can snarf and munge log-file data, including selecting out relevant
+data. While you can do <b>basic statistics</b> entirely in Miller, its streaming-data
+feature and single-pass algorithms enable you to <b>reduce very large data sets</b>.
+You can snarf and munge <b>log-file data</b>, including selecting out relevant
 substreams, then produce CSV format and load that into all-in-memory/data-frame
 utilities for further statistical and/or graphical processing.
 
-<li/>Miller also goes beyond classic Unix tools by stepping into our modern,
-<b>no-SQL</b> world: its essential record-heterogeneity property allows it to
-operate on data where records with different schema (field names) are
+<li/>Miller also goes beyond classic Unix tools by stepping fully into our
+modern, <b>no-SQL</b> world: its essential record-heterogeneity property allows
+it to operate on data where records with different schema (field names) are
 interleaved.
 
 <li/> Not unlike <a href="http://stedolan.github.io/jq/">jq</a> (for JSON),
-Miller is written in modern C, and it has <b>zero runtime dependencies</b>. You
-can download or compile a single binary, <tt>scp</tt> it to a faraway machine,
-and expect it to work.
-</ul>
+Miller is written in portable, modern C, with <b>zero runtime dependencies</b>.
+You can download or compile a single binary, <tt>scp</tt> it to a faraway
+machine, and expect it to work.  </ul>
 
 <p>Releases and release notes:
 <a href="https://github.com/johnkerl/miller/releases">https://github.com/johnkerl/miller/releases</a>.
