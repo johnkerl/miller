@@ -556,7 +556,7 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	if (output_field_name == NULL) {
 		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 		lhmss_put(pstate->poutput_field_names, mlr_strdup_or_die(stats1_acc_name),
-			mlr_strdup_or_die(output_field_name), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			output_field_name, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 	lrec_put(poutrec, mlr_strdup_or_die(output_field_name), s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }

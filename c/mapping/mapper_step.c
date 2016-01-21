@@ -216,6 +216,8 @@ static void mapper_step_free(mapper_t* pmapper) {
 	string_array_free(pstate->pvalue_field_names);
 	string_array_free(pstate->pvalue_field_values);
 	slls_free(pstate->pgroup_by_field_names);
+	slls_free(pstate->pstring_alphas);
+	slls_free(pstate->pewma_suffixes);
 
 	// lhmslv_free and lhmsv_free will free the hashmap keys; we need to free
 	// the void-star hashmap values.

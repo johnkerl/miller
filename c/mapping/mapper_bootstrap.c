@@ -144,6 +144,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 	for (int i = 0; i < nin; i++, pe = pe->pnext)
 		if (!used_flags[i])
 			lrec_free(record_array[i]);
+	free(used_flags);
 	// Free the temp array
 	free(record_array);
 
