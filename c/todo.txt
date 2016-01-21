@@ -7,6 +7,14 @@ BUGFIXES
 TOP OF LIST
 
 !! filter/gate into the put DSL.
+  o if / else / begin / end / off-record vars ... not yet (if ever) but think carefully about how not to break the
+    (possible) future while implementing the present
+
+! boolean-eval short-circuiting !
+  o lrec_evaluator_alloc_from_b_bb_func is used by && || ^^
+  o split out three funcs
+
+* cat/cut langcomps (w/ gh links) -> perf page
 
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
