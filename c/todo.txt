@@ -8,6 +8,8 @@ TOP OF LIST
 
 ! re-valgrind all !
 
+!! filter/gate into the put DSL.
+
 * json-flat-to-dkvp filter (python ...)
   - & to the FAQ
 

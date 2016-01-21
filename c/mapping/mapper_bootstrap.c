@@ -14,7 +14,7 @@ typedef struct _mapper_bootstrap_state_t {
 
 static sllv_t*   mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_bootstrap_free(mapper_t* pmapper);
-static mapper_t* mapper_bootstrap_alloc(int nout);
+static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp);
 static void      mapper_bootstrap_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_bootstrap_parse_cli(int* pargi, int argc, char** argv);
 
@@ -57,16 +57,17 @@ static mapper_t* mapper_bootstrap_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	mapper_t* pmapper = mapper_bootstrap_alloc(nout);
+	mapper_t* pmapper = mapper_bootstrap_alloc(nout, pstate);
 	return pmapper;
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_bootstrap_alloc(int nout) {
+static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_bootstrap_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_bootstrap_state_t));
 	pstate->nout    = nout;
+	pstate->pargp   = pargp;
 	pstate->records = sllv_alloc();
 
 	pmapper->pvstate       = pstate;
