@@ -295,6 +295,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		free(pval);
 	}
 	lhmsv_free(ptyped_overlay);
+	string_array_free(pregex_captures);
 
 	return sllv_single(pinrec);
 }
