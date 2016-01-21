@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-! re-valgrind all !
-
 !! filter/gate into the put DSL.
 
 * json-flat-to-dkvp filter (python ...)
@@ -15,24 +13,19 @@ TOP OF LIST
 
 * interpolated percentiles
 
-* faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
-
-* anim ref https://github.com/edi9999/path-extractor
-
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
   ? also, option of weighted stats w/ explicit weights field?
-  ? maybe just EMA with well-known sumw followed by then-chaining. write up the weights if so?
-    > mld re cross-record stuff is limited to stats1/2 and step
+  ? maybe just EWMA with well-known sumw followed by then-chaining. write up the weights if so?
 
+* mld re cross-record stuff is limited to stats1/2 and step
+* faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 * tbin/ok -> cookbook
 * faqent why dollar signs in the DSL at all
-* make "Homebrew" a hyperlink at http://johnkerl.org/miller/doc/build.html
 * debian screenshot
 * lrec_evaluators cleanup re strict, redundant statements, etc.
 * ruby @ optextdep @ mld; poki+mkman
-* profile new streqn vs. strncmp ...
 ! mixed-format joins ... make UT cases
 * comma-number -- using locale?
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
@@ -41,6 +34,7 @@ TOP OF LIST
 * EOS comments thruout
 * valgrind note @ new dev page/section
 * join: final sllv_free in destructor (lo-pri)
+* anim ref https://github.com/edi9999/path-extractor
 
 * packaging/currency:
   k brew
