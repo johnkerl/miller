@@ -87,7 +87,6 @@ mlr_dsl_record_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
 }
 mlr_dsl_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
-	A = B;
 	sllv_add(pasts, A);
 }
 

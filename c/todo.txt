@@ -17,7 +17,7 @@ TOP OF LIST
     - both? missing leading "name." implies _. or some such ... or, single outrecs with single attrs.
     - output some/all of them at the end, conditionally. not "print" but something like that.
     - allow per-record statements to read/write them.
-    - sigil syntax w/ @? or just sigil-free? (sum vs. @sum ...)
+    - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
 
   o mlr put '
       begin {
@@ -39,12 +39,17 @@ TOP OF LIST
   i if / else / begin / end / off-record vars ... not yet (if ever) but think carefully about how not to break the
     (possible) future while implementing the present
 
-  1. bare-boolean / filter / gate keywords into the dsl
-  2. rid of put -x and put -t
-  3. emit keyword into the DSL
-  4. oosrec names into the DSL. disallow assignment-to-keyword.
-  5. begin{} / end{} into the DSL.
-  6+ action-taking within mapper_put/lrec_evaluators ...
+  k bare-boolean / filter / gate keywords into the dsl
+  ? put -v testing; UTs
+  ? filter action-taking within mapper_put/lrec_evaluators + UTs
+  ? gate   action-taking within mapper_put/lrec_evaluators + UTs
+  ? get rid of put -x and put -t
+  ? emit keyword into the DSL
+  ? oosrec names into the DSL. disallow assignment-to-keyword (use a hashmap).
+  ? begin{} / end{} into the DSL.
+  ? begin{} / end{} action-taking within mapper_put:
+    > first just echo out something to stub-action-take on emit
+    > then populate lrecs
 
 ----------------------------------------------------------------
 ! boolean-eval short-circuiting !

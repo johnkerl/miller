@@ -109,6 +109,9 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	case MLR_DSL_AST_NODE_TYPE_OPERATOR:         return "operator";         break;
 	case MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE: return "context_variable"; break;
 	case MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY:    return "stripped_away";    break;
+	case MLR_DSL_AST_NODE_TYPE_FILTER:           return "filter";           break;
+	case MLR_DSL_AST_NODE_TYPE_GATE:             return "gate";             break;
+	case MLR_DSL_AST_NODE_TYPE_EMIT:             return "emit";             break;
 	default: return "???";
 	}
 }
