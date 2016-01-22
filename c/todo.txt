@@ -11,6 +11,9 @@ TOP OF LIST
   - UT
   - mld:ref:regex update
 
+* boolean-short-circuit UT w/ regex-captures
+
+----------------------------------------------------------------
 !! filter/gate into the put DSL: and begin/end.
 
   o begin/end statements: useful only with out-of-stream variables (oosvars)
@@ -60,10 +63,8 @@ TOP OF LIST
       > rhs is field name or oosvar or literal
       > want xref[] = $0 kinds of record-from-record assignments
       ? want $0 = xref[] kinds of record-from-record assignments?!?
-    - gate: RHS must evaluate to boolean mlrval
-    - filter: RHS must evaluate to boolean mlrval
+    - gate/filter/bare-booleans must work with oosvars as well as iisrecs
     - emit: RHS must evaluate to lrec (via $0 or oosvar)
-    - bare-boolean: expression must evaluate to boolean mlrval
     - begin: each child node is:
       > oosvar-from-oosvar-or-literal assignment
       > emit oosvar or literal
@@ -77,11 +78,11 @@ TOP OF LIST
     k filter action-taking within mapper_put/lrec_evaluators + UTs
     k gate   action-taking within mapper_put/lrec_evaluators + UTs
     k get rid of put -x and put -t
-    ! provide a special node type for assignment operator (not just operator)
+    k provide a special node type for assignment operator (not just operator)
     ! define/test behavior for null-valued filter/gate
     ? write put -v UTs from /dev/null
-    ? emit keyword into the DSL
     ? oosvar names into the DSL. disallow assignment-to-keyword (use a hashmap).
+    ? emit keyword into the DSL
     ? begin{} / end{} into the DSL.
     ? begin{} / end{} action-taking within mapper_put:
       > first just echo out something to stub-action-take on emit
@@ -109,6 +110,7 @@ TOP OF LIST
   ? maybe just EWMA with well-known sumw followed by then-chaining. write up the weights if so?
 
 * mld re cross-record stuff is limited to stats1/2 and step
+  o this will change with begin/end and oosvars
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 * tbin/ok -> cookbook
 * faqent why dollar signs in the DSL at all
