@@ -7,6 +7,10 @@ BUGFIXES
 TOP OF LIST
 
 ----------------------------------------------------------------
+* implement \0 after all? the regex lib provides it, after all.
+  - UT
+  - mld:ref:regex update
+
 !! filter/gate into the put DSL: and begin/end.
 
   o pick good names for eval (or bare-boolean ...)/filter/gate
@@ -18,6 +22,7 @@ TOP OF LIST
     - output some/all of them at the end, conditionally. not "print" but something like that.
     - allow per-record statements to read/write them.
     - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
+    - implement $0 now
   o more:
     - need an unset/clear syntax
     - people will ask for +=, -=, etc.
@@ -28,13 +33,15 @@ TOP OF LIST
         count = 0;
         x[1] = 1;
         x[2] = 2;
-        emit x;
+        emit x[];
+        emit sum;
       }
       gate $3 > 0;
       filter $2 =~ "(..)_(...)";
       $left = "\1";
       $right = "\1";
       sum += $3;
+      emit sum;
       $3_rsum = sum;
       $y[] = $0;
       end {

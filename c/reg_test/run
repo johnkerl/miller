@@ -948,57 +948,64 @@ run_mlr filter -v '$x =~ "^a.*d$"i'    $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*"."d$"i' $indir/regex.dkvp
 
 # ----------------------------------------------------------------
-announce DSL REGEX CAPTURES
-
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)([0-9]+)";         $F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)";  $F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)([0-9]+)" || 1==1; $F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)([0-9]+)"'         then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)"'  then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-run_mlr --oxtab put '$FIELD =~ "([A-Z]+)([0-9]+)" || 1==1' then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
-
-run_mlr --opprint put    '$FIELD =~ "(.)";                            $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)";                         $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)";                      $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)";                   $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)";                $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put    '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-
-run_mlr --opprint put -x '$FIELD =~ "(.)";                            $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)";                         $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)";                      $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)";                   $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)";                $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -x '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-
-run_mlr --opprint put -t '$FIELD =~ "(.)";                            $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)";                         $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)";                      $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)";                   $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)";                $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-run_mlr --opprint put -t '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
-
-
-# ----------------------------------------------------------------
 announce DSL TYPED OVERLAY
 
 run_mlr put '$y = string($x); $z=$y.$y' $indir/int-float.dkvp
 run_mlr put '$z=string($x).string($x)' $indir/int-float.dkvp
 run_mlr put '$y = string($x)' then put '$z=$y.$y' $indir/int-float.dkvp
 run_mlr put '$a="hello"' then put '$b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell")' $indir/int-float.dkvp
+
+# ----------------------------------------------------------------
+announce DSL REGEX CAPTURES
+
+run_mlr --opprint put '$FIELD =~ "([A-Z]+)([0-9]+)";         $F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
+run_mlr --opprint put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)";  $F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
+
+run_mlr --opprint put '$FIELD =~ "([A-Z]+)([0-9]+)"'         then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
+run_mlr --opprint put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)"'  then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
+
+run_mlr --opprint put '$FIELD =~ "(.)";                            $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)";                         $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)";                      $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)";                   $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)";                $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put '$FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+
+run_mlr --opprint put 'gate $FIELD =~ "(.)";                            $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)";                         $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)";                      $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)";                   $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)";                $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+
+run_mlr --opprint put 'filter $FIELD =~ "(.)";                            $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)";                         $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)";                      $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)";                   $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)";                $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
+
+# ----------------------------------------------------------------
+announce DSL FILTER/GATE
+
+run_mlr --opprint put '         $x > 0.5;  $z = "flag"' $indir/abixy
+run_mlr --opprint put '       !($x > 0.5); $z = "flag"' $indir/abixy
+run_mlr --opprint put 'filter   $x > 0.5;  $z = "flag"' $indir/abixy
+run_mlr --opprint put 'gate     $x > 0.5;  $z = "flag"' $indir/abixy
+run_mlr --opprint put 'filter !($x > 0.5); $z = "flag"' $indir/abixy
+run_mlr --opprint put 'gate   !($x > 0.5); $z = "flag"' $indir/abixy
 
 # ----------------------------------------------------------------
 announce DSL DATETIME FUNCTIONS
