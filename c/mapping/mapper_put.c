@@ -122,7 +122,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
-		if ((past->type == MLR_DSL_AST_NODE_TYPE_OPERATOR) && streq(past->text, "=")) {
+		if (past->type == MLR_DSL_AST_NODE_TYPE_ASSIGNMENT) {
 			// Assignment statement
 			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -254,9 +254,8 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
 		char* output_field_name = pstate->output_field_names[i];
 		int node_type = pstate->node_types[i];
-		if (output_field_name != NULL) {
 
-			// Assignment statement
+		if (node_type == MLR_DSL_AST_NODE_TYPE_ASSIGNMENT) {
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
@@ -290,8 +289,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				break;
 			}
 
-		} else {
-			// Bare-boolean statement
+		} else { // Bare-boolean statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);

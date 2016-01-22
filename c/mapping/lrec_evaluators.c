@@ -72,29 +72,72 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, lre
 
 // ----------------------------------------------------------------
 typedef struct _lrec_evaluator_b_bb_state_t {
-	mv_binary_func_t* pfunc;
 	lrec_evaluator_t* parg1;
 	lrec_evaluator_t* parg2;
 } lrec_evaluator_b_bb_state_t;
 
-mv_t lrec_evaluator_b_bb_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
+// This is different from most of the lrec-evaluator functions in that it does short-circuiting:
+// since is logical AND, the LHS is not evaluated if the RHS is false.
+mv_t lrec_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
 	context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_bb_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg1->pvstate);
 
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type != MT_BOOL)
+		return MV_ERROR;
+	if (val1.u.boolv == FALSE)
+		return val1;
+
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	if (val2.type != MT_BOOL)
+		return MV_ERROR;
+
+	return val2;
+}
+
+// This is different from most of the lrec-evaluator functions in that it does short-circuiting:
+// since is logical OR, the LHS is not evaluated if the RHS is true.
+mv_t lrec_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
+	context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_b_bb_state_t* pstate = pvstate;
+
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg1->pvstate);
+	NULL_OR_ERROR_OUT(val1);
+	if (val1.type != MT_BOOL)
+		return MV_ERROR;
+	if (val1.u.boolv == TRUE)
+		return val1;
+
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg2->pvstate);
+	NULL_OR_ERROR_OUT(val2);
+	if (val2.type != MT_BOOL)
+		return MV_ERROR;
+
+	return val2;
+}
+
+mv_t lrec_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, string_array_t* pregex_captures,
+	context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_b_bb_state_t* pstate = pvstate;
+
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_BOOL)
 		return MV_ERROR;
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, pregex_captures, pctx, pstate->parg2->pvstate);
-
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_BOOL)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &val2);
+	return mv_from_bool(val1.u.boolv ^ val2.u.boolv);
 }
+
 static void lrec_evaluator_b_bb_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_b_bb_state_t* pstate = pevaluator->pvstate;
 	pstate->parg1->pfree_func(pstate->parg1);
@@ -103,17 +146,40 @@ static void lrec_evaluator_b_bb_free(lrec_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_func(mv_binary_func_t* pfunc,
-	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
-{
+lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_and_func(lrec_evaluator_t* parg1, lrec_evaluator_t* parg2) {
 	lrec_evaluator_b_bb_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_b_bb_state_t));
-	pstate->pfunc = pfunc;
 	pstate->parg1 = parg1;
 	pstate->parg2 = parg2;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
 	pevaluator->pvstate = pstate;
-	pevaluator->pprocess_func = lrec_evaluator_b_bb_func;
+	pevaluator->pprocess_func = lrec_evaluator_b_bb_and_func;
+	pevaluator->pfree_func = lrec_evaluator_b_bb_free;
+
+	return pevaluator;
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_or_func(lrec_evaluator_t* parg1, lrec_evaluator_t* parg2) {
+	lrec_evaluator_b_bb_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_b_bb_state_t));
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = lrec_evaluator_b_bb_or_func;
+	pevaluator->pfree_func = lrec_evaluator_b_bb_free;
+
+	return pevaluator;
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_b_bb_xor_func(lrec_evaluator_t* parg1, lrec_evaluator_t* parg2) {
+	lrec_evaluator_b_bb_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_b_bb_state_t));
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = lrec_evaluator_b_bb_xor_func;
 	pevaluator->pfree_func = lrec_evaluator_b_bb_free;
 
 	return pevaluator;
@@ -1922,9 +1988,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_unary_func_name(char* fnnm, lrec_eva
 lrec_evaluator_t* lrec_evaluator_alloc_from_binary_func_name(char* fnnm,
 	lrec_evaluator_t* parg1, lrec_evaluator_t* parg2)
 {
-	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_and_func,          parg1, parg2);
-	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_or_func,           parg1, parg2);
-	} else if (streq(fnnm, "^^"))     { return lrec_evaluator_alloc_from_b_bb_func(b_bb_xor_func,          parg1, parg2);
+	if        (streq(fnnm, "&&"))     { return lrec_evaluator_alloc_from_b_bb_and_func(parg1, parg2);
+	} else if (streq(fnnm, "||"))     { return lrec_evaluator_alloc_from_b_bb_or_func (parg1, parg2);
+	} else if (streq(fnnm, "^^"))     { return lrec_evaluator_alloc_from_b_bb_xor_func(parg1, parg2);
 	} else if (streq(fnnm, "=~"))     { return lrec_evaluator_alloc_from_x_ssc_func(matches_no_precomp_func, parg1, parg2);
 	} else if (streq(fnnm, "!=~"))    { return lrec_evaluator_alloc_from_x_ssc_func(does_not_match_no_precomp_func, parg1, parg2);
 	} else if (streq(fnnm, "=="))     { return lrec_evaluator_alloc_from_b_xx_func(eq_op_func,             parg1, parg2);

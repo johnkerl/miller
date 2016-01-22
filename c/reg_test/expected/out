@@ -7665,6 +7665,42 @@ zee wye 8  0.5985540091064224  0.976181385699006   1
 hat wye 9  0.03144187646093577 0.7495507603507059  0
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
+mlr --csvlite filter true  && true ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter true  && false ./reg_test/input/b.csv
+
+mlr --csvlite filter false && true ./reg_test/input/b.csv
+
+mlr --csvlite filter false && false ./reg_test/input/b.csv
+
+mlr --csvlite filter true  || true ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter true  || false ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter false || true ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter false || false ./reg_test/input/b.csv
+
+mlr --csvlite filter true  ^^ true ./reg_test/input/b.csv
+
+mlr --csvlite filter true  ^^ false ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter false ^^ true ./reg_test/input/b.csv
+d,e,f
+5,6,7
+
+mlr --csvlite filter false ^^ false ./reg_test/input/b.csv
+
 
 ================================================================
 DSL NULL/EMPTY HANDLING

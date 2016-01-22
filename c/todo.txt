@@ -13,19 +13,15 @@ TOP OF LIST
 
 !! filter/gate into the put DSL: and begin/end.
 
-  o pick good names for eval (or bare-boolean ...)/filter/gate
-
-  o begin/end statements: useful only with out of stream variables (oosrecs)
-    - single oosrec? (sum, count)
-    - multiple oosrecs? (x.sum, y.count)
+  o begin/end statements: useful only with out-of-stream variables (oosvars)
+    - single oosvar? (sum, count)
+    - multiple oosvars? (x.sum, y.count)
     - both? missing leading "name." implies _. or some such ... or, single outrecs with single attrs.
     - output some/all of them at the end, conditionally. not "print" but something like that.
     - allow per-record statements to read/write them.
     - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
     - implement $0 now
-  o more:
-    - need an unset/clear syntax
-    - people will ask for +=, -=, etc.
+    ? make the oosvars lrecs? lrec-with-typed-overlay? new string-to-mlrval LHM?
 
   o mlr put '
       begin {
@@ -51,10 +47,8 @@ TOP OF LIST
         emit y[];
       }
     '
-  o now: grammar makes array of AST w/ each being assignment or bare-boolean
-    - assignment: LHS -> output field name; RHS evaluates to mlrval
-    - bare-boolean: null output field name; RHS must evaluate to boolean mlrval
-  o next:
+
+  o now:
     - assignment: LHS -> output field name; RHS evaluates to mlrval
     - bare-boolean: null output field name; RHS must evaluate to boolean mlrval
     - gate: RHS must evaluate to boolean mlrval
@@ -68,7 +62,7 @@ TOP OF LIST
       ? want $0 = xref[] kinds of record-from-record assignments?!?
     - gate: RHS must evaluate to boolean mlrval
     - filter: RHS must evaluate to boolean mlrval
-    - emit: RHS must evaluate to lrec (via $0 or oosrec)
+    - emit: RHS must evaluate to lrec (via $0 or oosvar)
     - bare-boolean: expression must evaluate to boolean mlrval
     - begin: each child node is:
       > oosvar-from-oosvar-or-literal assignment
@@ -77,30 +71,29 @@ TOP OF LIST
       > oosvar-from-oosvar-or-literal assignment
       > emit oosvar or literal
 
+  o iterates:
+    k bare-boolean / filter / gate keywords into the dsl
+    k provide a keyword for bare-boolean
+    k filter action-taking within mapper_put/lrec_evaluators + UTs
+    k gate   action-taking within mapper_put/lrec_evaluators + UTs
+    k get rid of put -x and put -t
+    ! provide a special node type for assignment operator (not just operator)
+    ! define/test behavior for null-valued filter/gate
+    ? write put -v UTs from /dev/null
+    ? emit keyword into the DSL
+    ? oosvar names into the DSL. disallow assignment-to-keyword (use a hashmap).
+    ? begin{} / end{} into the DSL.
+    ? begin{} / end{} action-taking within mapper_put:
+      > first just echo out something to stub-action-take on emit
+      > then populate lrecs
 
-  i if / else / begin / end / off-record vars ... not yet (if ever) but think carefully about how not to break the
-    (possible) future while implementing the present
-
-  iterates:
-  k bare-boolean / filter / gate keywords into the dsl
-  ! provide a keyword for bare-boolean
-  ! provide a special node type for assignment operator (not just operator)
-  ! define behavior for null-valued filter/gate
-  ? put -v UTs from /dev/null
-  ? filter action-taking within mapper_put/lrec_evaluators + UTs
-  ? gate   action-taking within mapper_put/lrec_evaluators + UTs
-  ? get rid of put -x and put -t
-  ? emit keyword into the DSL
-  ? oosrec names into the DSL. disallow assignment-to-keyword (use a hashmap).
-  ? begin{} / end{} into the DSL.
-  ? begin{} / end{} action-taking within mapper_put:
-    > first just echo out something to stub-action-take on emit
-    > then populate lrecs
+  o DSL more:
+    - people will ask for an unset/clear syntax
+    - people will ask for +=, -=, etc.
+    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
+      implementing the present
 
 ----------------------------------------------------------------
-! boolean-eval short-circuiting !
-  o lrec_evaluator_alloc_from_b_bb_func is used by && || ^^
-  o split out three funcs
 
 * cat/cut langcomps (w/ gh links) -> perf page
 

@@ -708,6 +708,21 @@ run_mlr --icsvlite --oxtab filter '${name.y} < ${z}' $indir/braced.csv
 
 run_mlr --opprint put '$z = $x < 0.5 ? 0 : 1' $indir/abixy
 
+run_mlr --csvlite filter 'true  && true'  $indir/b.csv
+run_mlr --csvlite filter 'true  && false' $indir/b.csv
+run_mlr --csvlite filter 'false && true'  $indir/b.csv
+run_mlr --csvlite filter 'false && false' $indir/b.csv
+
+run_mlr --csvlite filter 'true  || true'  $indir/b.csv
+run_mlr --csvlite filter 'true  || false' $indir/b.csv
+run_mlr --csvlite filter 'false || true'  $indir/b.csv
+run_mlr --csvlite filter 'false || false' $indir/b.csv
+
+run_mlr --csvlite filter 'true  ^^ true'  $indir/b.csv
+run_mlr --csvlite filter 'true  ^^ false' $indir/b.csv
+run_mlr --csvlite filter 'false ^^ true'  $indir/b.csv
+run_mlr --csvlite filter 'false ^^ false' $indir/b.csv
+
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 

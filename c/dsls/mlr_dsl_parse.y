@@ -60,7 +60,7 @@ mlr_dsl_assignment(A)  ::= MLR_DSL_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_terna
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_ASSIGNMENT, B, C);
 	sllv_add(pasts, A);
 }
 
@@ -72,7 +72,7 @@ mlr_dsl_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr
 	if (len > 0)
 		no_dollar_name[len-1] = 0;
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_ASSIGNMENT, B, C);
 	sllv_add(pasts, A);
 }
 
