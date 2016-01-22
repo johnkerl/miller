@@ -160,6 +160,13 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = NULL;
 
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_EMIT) {
+			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = NULL;
+			printf("XXX [%s]\n", past->text);
+
 		} else {
 			// Bare-boolean statement
 			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
@@ -246,6 +253,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	string_array_t* pregex_captures = string_array_alloc(0);
+	sllv_t* poutrecs = sllv_alloc();
 
 	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
@@ -289,6 +297,26 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				break;
 			}
 
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
+
+			// xxx needs DSL work on name-capture:
+			// * "emit sum" => sum=3.7 or what have you
+			// * "emit 3.7" => name = what??
+
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			lrec_t* pemit_rec = lrec_unbacked_alloc();
+
+			if (val.type == MT_STRING) {
+				// Ownership transfer from mv_t to lrec.
+				lrec_put(pemit_rec, "stub", val.u.strv, val.free_flags);
+			} else {
+				char free_flags = NO_FREE;
+				char* string = mv_format_val(&val, &free_flags);
+				lrec_put(pemit_rec, "stub", string, free_flags);
+			}
+
+			sllv_add(poutrecs, pemit_rec);
+
 		} else { // Bare-boolean statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
@@ -301,6 +329,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
 			mv_t* pval = pe->pvvalue;
+
 			if (pval->type == MT_STRING) {
 				// Ownership transfer from mv_t to lrec.
 				lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
@@ -310,13 +339,16 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				lrec_put(pinrec, output_field_name, string, free_flags);
 			}
 			free(pval);
+
 		}
 	}
 	lhmsv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	if (emit_rec)
-		return sllv_single(pinrec);
-	else
-		return NULL;
+	if (emit_rec) {
+		sllv_add(poutrecs, pinrec);
+	} else {
+		lrec_free(pinrec);
+	}
+	return poutrecs;
 }

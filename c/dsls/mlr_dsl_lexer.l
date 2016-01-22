@@ -40,8 +40,12 @@
 	return MLR_DSL_FILTER;
 }
 "gate" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_EMIT);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_GATE);
 	return MLR_DSL_GATE;
+}
+"emit" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_EMIT);
+	return MLR_DSL_EMIT;
 }
 
 "?" {
