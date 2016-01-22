@@ -287,12 +287,12 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
-			if (val.type == MT_NULL)
-				break;
-			mv_set_boolean_strict(&val);
-			if (!val.u.boolv) {
-				emit_rec = FALSE;
-				break;
+			if (val.type != MT_NULL) {
+				mv_set_boolean_strict(&val);
+				if (!val.u.boolv) {
+					emit_rec = FALSE;
+					break;
+				}
 			}
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {

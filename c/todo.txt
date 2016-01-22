@@ -18,6 +18,9 @@ TOP OF LIST
     - output some/all of them at the end, conditionally. not "print" but something like that.
     - allow per-record statements to read/write them.
     - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
+  o more:
+    - need an unset/clear syntax
+    - people will ask for +=, -=, etc.
 
   o mlr put '
       begin {
@@ -25,24 +28,58 @@ TOP OF LIST
         count = 0;
         x[1] = 1;
         x[2] = 2;
+        emit x;
       }
       gate $3 > 0;
-      filter $field =~ "(..)_(...)";
+      filter $2 =~ "(..)_(...)";
+      $left = "\1";
+      $right = "\1";
       sum += $3;
-      $rsum = sum;
+      $3_rsum = sum;
+      $y[] = $0;
       end {
         emit sum;
         emit count;
-        emit x;
+        emit x[];
+        emit y[];
       }
     '
-  o now: grammar makes array of AST w/ each being bare-boolean or assignment
+  o now: grammar makes array of AST w/ each being assignment or bare-boolean
+    - assignment: LHS -> output field name; RHS evaluates to mlrval
+    - bare-boolean: null output field name; RHS must evaluate to boolean mlrval
+  o next:
+    - assignment: LHS -> output field name; RHS evaluates to mlrval
+    - bare-boolean: null output field name; RHS must evaluate to boolean mlrval
+    - gate: RHS must evaluate to boolean mlrval
+    - filter: RHS must evaluate to boolean mlrval
+  o new: array of AST being assignment, gate, filter, emit, bare-boolean/newname, begin, end
+    - or maybe array of begin nodes, array of mid nodes, array of end nodes
+    - assignment: LHS -> output field name; RHS evaluates to mlrval
+      > lhs is $0 or oosvar
+      > rhs is field name or oosvar or literal
+      > want xref[] = $0 kinds of record-from-record assignments
+      ? want $0 = xref[] kinds of record-from-record assignments?!?
+    - gate: RHS must evaluate to boolean mlrval
+    - filter: RHS must evaluate to boolean mlrval
+    - emit: RHS must evaluate to lrec (via $0 or oosrec)
+    - bare-boolean: expression must evaluate to boolean mlrval
+    - begin: each child node is:
+      > oosvar-from-oosvar-or-literal assignment
+      > emit oosvar or literal
+    - end: each child node is:
+      > oosvar-from-oosvar-or-literal assignment
+      > emit oosvar or literal
+
 
   i if / else / begin / end / off-record vars ... not yet (if ever) but think carefully about how not to break the
     (possible) future while implementing the present
 
+  iterates:
   k bare-boolean / filter / gate keywords into the dsl
-  ? put -v testing + UTs
+  ! provide a keyword for bare-boolean
+  ! provide a special node type for assignment operator (not just operator)
+  ! define behavior for null-valued filter/gate
+  ? put -v UTs from /dev/null
   ? filter action-taking within mapper_put/lrec_evaluators + UTs
   ? gate   action-taking within mapper_put/lrec_evaluators + UTs
   ? get rid of put -x and put -t
