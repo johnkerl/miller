@@ -23,10 +23,11 @@ TOP OF LIST
       begin {
         sum = 0;
         count = 0;
-        x.1 = 1;
-        x.2 = 2;
+        x[1] = 1;
+        x[2] = 2;
       }
-      $field =~ "(..)_(...)";
+      gate $3 > 0;
+      filter $field =~ "(..)_(...)";
       sum += $3;
       $rsum = sum;
       end {
@@ -35,12 +36,13 @@ TOP OF LIST
         emit x;
       }
     '
+  o now: grammar makes array of AST w/ each being bare-boolean or assignment
 
   i if / else / begin / end / off-record vars ... not yet (if ever) but think carefully about how not to break the
     (possible) future while implementing the present
 
   k bare-boolean / filter / gate keywords into the dsl
-  ? put -v testing; UTs
+  ? put -v testing + UTs
   ? filter action-taking within mapper_put/lrec_evaluators + UTs
   ? gate   action-taking within mapper_put/lrec_evaluators + UTs
   ? get rid of put -x and put -t

@@ -14,6 +14,7 @@ typedef struct _mapper_put_state_t {
 	int gate_invert;
 	int gate_bypass;
 	char** output_field_names;
+	int*   node_types;
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
@@ -126,6 +127,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	pstate->pasts = pasts;
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
+	pstate->node_types  = mlr_malloc_or_die(pasts->length * sizeof(int));
 	pstate->gate_invert = gate_invert;
 	pstate->gate_bypass = gate_bypass;
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
@@ -160,12 +162,25 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = output_field_name;
 
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_FILTER) {
+			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = NULL;
+
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_GATE) {
+			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = NULL;
+
 		} else {
-			// Gate statement
+			// Bare-boolean statement
 			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = NULL;
 		}
+		pstate->node_types[i] = past->type;
 	}
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -180,6 +195,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 	free(pstate->output_field_names);
+	free(pstate->node_types);
 
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
@@ -247,9 +263,11 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
+	int emit_rec = TRUE;
 	for (int i = 0; i < pstate->num_evaluators; i++) {
 		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
 		char* output_field_name = pstate->output_field_names[i];
+		int node_type = pstate->node_types[i];
 		if (output_field_name != NULL) {
 
 			// Assignment statement
@@ -267,9 +285,28 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			// something statically allocated minimizes copying/freeing.
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			if (val.type == MT_NULL)
+				break;
+			mv_set_boolean_strict(&val);
+			if (!val.u.boolv) {
+				emit_rec = FALSE;
+				break;
+			}
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			if (val.type == MT_NULL)
+				break;
+			mv_set_boolean_strict(&val);
+			if (!val.u.boolv) {
+				break;
+			}
+
 		} else {
 
-			// Gate statement
+			// Bare-boolean statement
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
@@ -280,22 +317,27 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		}
 	}
 
-	// Write the output fields from the typed overlay back to the lrec.
-	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
-		char* output_field_name = pe->key;
-		mv_t* pval = pe->pvvalue;
-		if (pval->type == MT_STRING) {
-			// Ownership transfer from mv_t to lrec.
-			lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(pval, &free_flags);
-			lrec_put(pinrec, output_field_name, string, free_flags);
+	if (emit_rec) {
+		// Write the output fields from the typed overlay back to the lrec.
+		for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+			char* output_field_name = pe->key;
+			mv_t* pval = pe->pvvalue;
+			if (pval->type == MT_STRING) {
+				// Ownership transfer from mv_t to lrec.
+				lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
+			} else {
+				char free_flags = NO_FREE;
+				char* string = mv_format_val(pval, &free_flags);
+				lrec_put(pinrec, output_field_name, string, free_flags);
+			}
+			free(pval);
 		}
-		free(pval);
 	}
 	lhmsv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	return sllv_single(pinrec);
+	if (emit_rec)
+		return sllv_single(pinrec);
+	else
+		return NULL;
 }
