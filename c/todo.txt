@@ -14,40 +14,71 @@ TOP OF LIST
 * boolean-short-circuit UT w/ regex-captures
 
 ----------------------------------------------------------------
-!! filter/gate into the put DSL: and begin/end.
+!! oosvars/begin/end:
+
+  ! no put-usage/filter-usage on "syntax error!"
+
+  o initial sketch: there are two lrecs:
+    - one starts with "@" and is out-of-stream.
+    - the other starts with "$" and varies per-record.
+    - continue the partitioning between LHS name, RHS eval-AST
+    - now there are simply two assignment flavors
+    - evaluators simply need a reference to two lrecs-with-overlay.
+    - this is fine for experimenting.
+    ! QUESTION: how far does this get me?? I think I need two-level (oosrecs) in order to put
+      things like "stats1 -g foo" firmly into userspace.
+    - Q: what userspace data structures would be needed for:
+      > bootstrap?
+      > count-distinct?
+      > cut?
+      > decimate? easy now with NR%10 if not -g; what about with -g?
+      > group-by?
+      > group-like?
+      > having-fields?
+      > head?
+      > histogram?
+      > (rename? reorder?)
+      > sample, w/ & w/o -g?
+      > stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max
+      > stats2 linregs,r2,corr,cov
+      > step
+      > tail
+      > top
+      > uniq
 
   o begin/end statements: useful only with out-of-stream variables (oosvars)
+    - so implement oosvars before begin/end ... or implement them with stub-emit 'emit("foo", "bar")'
     - single oosvar? (sum, count)
     - multiple oosvars? (x.sum, y.count)
     - both? missing leading "name." implies _. or some such ... or, single outrecs with single attrs.
     - output some/all of them at the end, conditionally. not "print" but something like that.
     - allow per-record statements to read/write them.
     - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
-    - implement $0 now
+    ? implement $0 now
     ? make the oosvars lrecs? lrec-with-typed-overlay? new string-to-mlrval LHM?
 
   o mlr put '
       begin {
-        sum = 0;
-        count = 0;
-        x[1] = 1;
-        x[2] = 2;
-        emit x[];
-        emit sum;
+        @sum = 0;
+        @count = 0;
+        @x[1] = 1;
+        @x[2] = 2;
+        emit @sum;
+        emit @x[];
       }
       gate $3 > 0;
       filter $2 =~ "(..)_(...)";
       $left = "\1";
       $right = "\1";
-      sum += $3;
-      emit sum;
-      $3_rsum = sum;
+      @sum += $3;
+      emit @sum;
+      $3_rsum = @sum;
       $y[] = $0;
       end {
-        emit sum;
-        emit count;
-        emit x[];
-        emit y[];
+        emit @sum;
+        emit @count;
+        emit @x[];
+        emit @y[];
       }
     '
 

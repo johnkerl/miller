@@ -2074,6 +2074,8 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
+		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME) {
+			return NULL; // xxx stub
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL) {

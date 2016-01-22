@@ -180,11 +180,23 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
 	return MLR_DSL_FIELD_NAME;
 }
-
 \$\{([^\}]|\\.)*\} {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
+	return MLR_DSL_BRACKETED_FIELD_NAME;
+}
+
+@[a-zA-Z_0-9]+ {
+	// Note: the parser depends on the at-sign being here. If this is changed,
+	// that needs to be changed as well.
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME);
+	return MLR_DSL_OOSVAR_NAME;
+}
+@\{([^\}]|\\.)*\} {
+	// Note: the parser depends on the at-sign being here. If this is changed,
+	// that needs to be changed as well.
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME);
 	return MLR_DSL_BRACKETED_FIELD_NAME;
 }
 

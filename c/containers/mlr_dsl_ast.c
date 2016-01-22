@@ -105,6 +105,7 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	case MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL:  return "boolean_literal";  break;
 	case MLR_DSL_AST_NODE_TYPE_REGEXI:           return "regexi";           break;
 	case MLR_DSL_AST_NODE_TYPE_FIELD_NAME:       return "field_name";       break;
+	case MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME:      return "oosvar_name";      break;
 	case MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME:    return "function_name";    break;
 	case MLR_DSL_AST_NODE_TYPE_OPERATOR:         return "operator";         break;
 	case MLR_DSL_AST_NODE_TYPE_ASSIGNMENT:       return "assignment";       break;
