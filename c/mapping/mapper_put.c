@@ -149,23 +149,30 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			pstate->output_field_names[i] = output_field_name;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_FILTER) {
-			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_GATE) {
-			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
 			pstate->pevaluators[i] = pevaluator;
 			pstate->output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_EMIT) {
-			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
-			pstate->output_field_names[i] = NULL;
-			printf("XXX [%s]\n", past->text);
+			sllv_t* pchildren = past->pchildren;
+			if (pchildren->length == 1) { // emit oosvarname
+				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
+				mlr_dsl_ast_node_t* pright = pchildren->phead->pvvalue;
+				pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+				pstate->output_field_names[i] = pleft->text;
+			} else { // emit(name, value)
+				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
+				mlr_dsl_ast_node_t* pright = pchildren->phead->pnext->pvvalue;
+				pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+				pstate->output_field_names[i] = pleft->text;
+			}
 
 		} else {
 			// Bare-boolean statement
@@ -302,17 +309,22 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			// xxx needs DSL work on name-capture:
 			// * "emit sum" => sum=3.7 or what have you
 			// * "emit 3.7" => name = what??
+			//
+			// ? grammar split out
+			//     "emit {oosvar_name}" or
+			//     "emit({name}, {value})"
+			// ?
 
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			lrec_t* pemit_rec = lrec_unbacked_alloc();
 
 			if (val.type == MT_STRING) {
 				// Ownership transfer from mv_t to lrec.
-				lrec_put(pemit_rec, "stub", val.u.strv, val.free_flags);
+				lrec_put(pemit_rec, pstate->output_field_names[i], val.u.strv, val.free_flags);
 			} else {
 				char free_flags = NO_FREE;
 				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(pemit_rec, "stub", string, free_flags);
+				lrec_put(pemit_rec, pstate->output_field_names[i], string, free_flags);
 			}
 
 			sllv_add(poutrecs, pemit_rec);

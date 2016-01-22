@@ -89,8 +89,16 @@ mlr_dsl_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(pasts, A);
 }
-mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_ternary(B). {
+mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) MLR_DSL_STRING(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
+	sllv_add(pasts, A);
+}
+mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) MLR_DSL_LPAREN MLR_DSL_STRING(B) MLR_DSL_RPAREN. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
+	sllv_add(pasts, A);
+}
+mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) MLR_DSL_LPAREN mlr_dsl_ternary(B) MLR_DSL_COMMA mlr_dsl_ternary(C) MLR_DSL_RPAREN. {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B, C);
 	sllv_add(pasts, A);
 }
 
