@@ -5224,7 +5224,7 @@ b_oot_x 8
 DSL OPERATOR ASSOCIATIVITY
 
 mlr put -v $x = 1 || 2 || 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         || (operator):
@@ -5240,7 +5240,7 @@ mlr filter -v      1 || 2 || 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^^ (operator):
         ^^ (operator):
@@ -5256,7 +5256,7 @@ mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 && 2 && 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     && (operator):
         && (operator):
@@ -5272,7 +5272,7 @@ mlr filter -v      1 && 2 && 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  == 2  == 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     == (operator):
         == (operator):
@@ -5288,7 +5288,7 @@ mlr filter -v      1  == 2  == 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  != 2  != 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     != (operator):
         != (operator):
@@ -5304,7 +5304,7 @@ mlr filter -v      1  != 2  != 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     =~ (operator):
         =~ (operator):
@@ -5320,7 +5320,7 @@ mlr filter -v      1  =~ 2  =~ 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     !=~ (operator):
         !=~ (operator):
@@ -5336,7 +5336,7 @@ mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  == 2  != 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     != (operator):
         == (operator):
@@ -5352,7 +5352,7 @@ mlr filter -v      1  == 2  != 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  != 2  == 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     == (operator):
         != (operator):
@@ -5368,7 +5368,7 @@ mlr filter -v      1  != 2  == 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  <  2  <  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     < (operator):
         < (operator):
@@ -5384,7 +5384,7 @@ mlr filter -v      1  <  2  <  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  <= 2  <= 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     <= (operator):
         <= (operator):
@@ -5400,7 +5400,7 @@ mlr filter -v      1  <= 2  <= 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  >  2  >  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     > (operator):
         > (operator):
@@ -5416,7 +5416,7 @@ mlr filter -v      1  >  2  >  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  >= 2  >= 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     >= (operator):
         >= (operator):
@@ -5432,7 +5432,7 @@ mlr filter -v      1  >= 2  >= 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  <  2  <= 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     <= (operator):
         < (operator):
@@ -5448,7 +5448,7 @@ mlr filter -v      1  <  2  <= 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  <= 2  <  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     < (operator):
         <= (operator):
@@ -5464,7 +5464,7 @@ mlr filter -v      1  <= 2  <  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 |  2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         | (operator):
@@ -5480,7 +5480,7 @@ mlr filter -v      1 |  2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ^  2 ^  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^ (operator):
         ^ (operator):
@@ -5496,7 +5496,7 @@ mlr filter -v      1 ^  2 ^  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 &  2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     & (operator):
         & (operator):
@@ -5512,7 +5512,7 @@ mlr filter -v      1 &  2 &  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 |  2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         1 (strnum_literal).
@@ -5528,7 +5528,7 @@ mlr filter -v      1 |  2 &  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 |  2 ^  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         1 (strnum_literal).
@@ -5544,7 +5544,7 @@ mlr filter -v      1 |  2 ^  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 ^  2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         ^ (operator):
@@ -5560,7 +5560,7 @@ mlr filter -v      1 ^  2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ^  2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^ (operator):
         1 (strnum_literal).
@@ -5576,7 +5576,7 @@ mlr filter -v      1 ^  2 &  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 &  2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         & (operator):
@@ -5592,7 +5592,7 @@ mlr filter -v      1 &  2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 &  2 ^  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^ (operator):
         & (operator):
@@ -5608,7 +5608,7 @@ mlr filter -v      1 &  2 ^  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  << 2  << 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     << (operator):
         << (operator):
@@ -5624,7 +5624,7 @@ mlr filter -v      1  << 2  << 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  >> 2  >> 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     >> (operator):
         >> (operator):
@@ -5640,7 +5640,7 @@ mlr filter -v      1  >> 2  >> 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  << 2  >> 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     >> (operator):
         << (operator):
@@ -5656,7 +5656,7 @@ mlr filter -v      1  << 2  >> 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1  >> 2  << 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     << (operator):
         >> (operator):
@@ -5672,7 +5672,7 @@ mlr filter -v      1  >> 2  << 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 + 2 + 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         + (operator):
@@ -5688,7 +5688,7 @@ mlr filter -v      1 + 2 + 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 - 2 - 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     - (operator):
         - (operator):
@@ -5704,7 +5704,7 @@ mlr filter -v      1 - 2 - 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 + 2 - 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     - (operator):
         + (operator):
@@ -5720,7 +5720,7 @@ mlr filter -v      1 + 2 - 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 - 2 + 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         - (operator):
@@ -5736,7 +5736,7 @@ mlr filter -v      1 - 2 + 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 . 2 . 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     . (operator):
         . (operator):
@@ -5752,7 +5752,7 @@ mlr filter -v      1 . 2 . 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 * 2 * 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         * (operator):
@@ -5768,7 +5768,7 @@ mlr filter -v      1 * 2 * 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 / 2 / 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         / (operator):
@@ -5784,7 +5784,7 @@ mlr filter -v      1 / 2 / 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 // 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         // (operator):
@@ -5800,7 +5800,7 @@ mlr filter -v      1 // 2 // 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 % 2 % 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         % (operator):
@@ -5816,7 +5816,7 @@ mlr filter -v      1 % 2 % 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ** (operator):
         1 (strnum_literal).
@@ -5832,7 +5832,7 @@ mlr filter -v      1 ** 2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 /  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         * (operator):
@@ -5848,7 +5848,7 @@ mlr filter -v      1 *  2 /  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 // 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         * (operator):
@@ -5864,7 +5864,7 @@ mlr filter -v      1 *  2 // 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 %  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         * (operator):
@@ -5880,7 +5880,7 @@ mlr filter -v      1 *  2 %  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         1 (strnum_literal).
@@ -5896,7 +5896,7 @@ mlr filter -v      1 *  2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         / (operator):
@@ -5912,7 +5912,7 @@ mlr filter -v      1 /  2 *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 // 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         / (operator):
@@ -5928,7 +5928,7 @@ mlr filter -v      1 /  2 // 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 %  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         / (operator):
@@ -5944,7 +5944,7 @@ mlr filter -v      1 /  2 %  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         1 (strnum_literal).
@@ -5960,7 +5960,7 @@ mlr filter -v      1 /  2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         // (operator):
@@ -5976,7 +5976,7 @@ mlr filter -v      1 // 2 *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 /  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         // (operator):
@@ -5992,7 +5992,7 @@ mlr filter -v      1 // 2 /  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 %  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         // (operator):
@@ -6008,7 +6008,7 @@ mlr filter -v      1 // 2 %  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         1 (strnum_literal).
@@ -6024,7 +6024,7 @@ mlr filter -v      1 // 2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 %  2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         % (operator):
@@ -6040,7 +6040,7 @@ mlr filter -v      1 %  2 *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 %  2 /  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         % (operator):
@@ -6056,7 +6056,7 @@ mlr filter -v      1 %  2 /  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 %  2 // 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         % (operator):
@@ -6072,7 +6072,7 @@ mlr filter -v      1 %  2 // 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 %  2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         1 (strnum_literal).
@@ -6088,7 +6088,7 @@ mlr filter -v      1 %  2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         ** (operator):
@@ -6104,7 +6104,7 @@ mlr filter -v      1 ** 2 *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 /  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     / (operator):
         ** (operator):
@@ -6120,7 +6120,7 @@ mlr filter -v      1 ** 2 /  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 // 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     // (operator):
         ** (operator):
@@ -6136,7 +6136,7 @@ mlr filter -v      1 ** 2 // 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 %  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     % (operator):
         ** (operator):
@@ -6152,7 +6152,7 @@ mlr filter -v      1 ** 2 %  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = ++1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         + (operator):
@@ -6164,7 +6164,7 @@ mlr filter -v      ++1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = --1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     - (operator):
         - (operator):
@@ -6176,7 +6176,7 @@ mlr filter -v      --1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = !!1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ! (operator):
         ! (operator):
@@ -6188,7 +6188,7 @@ mlr filter -v      !!1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = ~~1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ~ (operator):
         ~ (operator):
@@ -6200,7 +6200,7 @@ mlr filter -v      ~~1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = 1 ? 2 : 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ? : (operator):
         1 (strnum_literal).
@@ -6214,7 +6214,7 @@ mlr filter -v      1 ? 2 : 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ? : (operator):
         1 (strnum_literal).
@@ -6234,7 +6234,7 @@ mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
     5 (strnum_literal).
 
 mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ? : (operator):
         1 (strnum_literal).
@@ -6258,7 +6258,7 @@ mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
 DSL OPERATOR PRECEDENCE
 
 mlr put -v $x = 1 || 2 ^^ 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         1 (strnum_literal).
@@ -6274,7 +6274,7 @@ mlr filter -v      1 || 2 ^^ 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 || 2 && 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         1 (strnum_literal).
@@ -6290,7 +6290,7 @@ mlr filter -v      1 || 2 && 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 ^^ 2 || 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         ^^ (operator):
@@ -6306,7 +6306,7 @@ mlr filter -v      1 ^^ 2 || 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 ^^ 2 && 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^^ (operator):
         1 (strnum_literal).
@@ -6322,7 +6322,7 @@ mlr filter -v      1 ^^ 2 && 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = 1 && 2 || 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         && (operator):
@@ -6338,7 +6338,7 @@ mlr filter -v      1 && 2 || 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = 1 && 2 ^^ 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^^ (operator):
         && (operator):
@@ -6354,7 +6354,7 @@ mlr filter -v      1 && 2 ^^ 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 == 2 <= 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     == (operator):
         1 (strnum_literal).
@@ -6370,7 +6370,7 @@ mlr filter -v       1 == 2 <= 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 <= 2 == 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     == (operator):
         <= (operator):
@@ -6386,7 +6386,7 @@ mlr filter -v       1 <= 2 == 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 <= 2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     <= (operator):
         1 (strnum_literal).
@@ -6402,7 +6402,7 @@ mlr filter -v       1 <= 2 |  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 |  2 <= 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     <= (operator):
         | (operator):
@@ -6418,7 +6418,7 @@ mlr filter -v       1 |  2 <= 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 |  2 ^  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         1 (strnum_literal).
@@ -6434,7 +6434,7 @@ mlr filter -v       1 |  2 ^  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 ^  2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         ^ (operator):
@@ -6450,7 +6450,7 @@ mlr filter -v       1 ^  2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 ^  2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^ (operator):
         1 (strnum_literal).
@@ -6466,7 +6466,7 @@ mlr filter -v       1 ^  2 &  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 &  2 ^  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ^ (operator):
         & (operator):
@@ -6482,7 +6482,7 @@ mlr filter -v       1 &  2 ^  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 &  2 << 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     & (operator):
         1 (strnum_literal).
@@ -6498,7 +6498,7 @@ mlr filter -v       1 &  2 << 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 << 2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     & (operator):
         << (operator):
@@ -6514,7 +6514,7 @@ mlr filter -v       1 << 2 &  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 +  2 * 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6530,7 +6530,7 @@ mlr filter -v       1 +  2 * 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 *  2 + 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         * (operator):
@@ -6546,7 +6546,7 @@ mlr filter -v       1 *  2 + 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 + (2 * 3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6562,7 +6562,7 @@ mlr filter -v       1 + (2 * 3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 * (2 + 3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         1 (strnum_literal).
@@ -6578,7 +6578,7 @@ mlr filter -v       1 * (2 + 3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = (1 + 2) * 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         + (operator):
@@ -6594,7 +6594,7 @@ mlr filter -v      (1 + 2) * 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = (1 * 2) + 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         * (operator):
@@ -6610,7 +6610,7 @@ mlr filter -v      (1 * 2) + 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 +   2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6626,7 +6626,7 @@ mlr filter -v       1 +   2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 **  2 +  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         ** (operator):
@@ -6642,7 +6642,7 @@ mlr filter -v       1 **  2 +  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 +  (2 ** 3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6658,7 +6658,7 @@ mlr filter -v       1 +  (2 ** 3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 ** (2 +  3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ** (operator):
         1 (strnum_literal).
@@ -6674,7 +6674,7 @@ mlr filter -v       1 ** (2 +  3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = (1 +  2) ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ** (operator):
         + (operator):
@@ -6690,7 +6690,7 @@ mlr filter -v      (1 +  2) ** 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = (1 ** 2) +  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         ** (operator):
@@ -6706,7 +6706,7 @@ mlr filter -v      (1 ** 2) +  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 *   2 ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         1 (strnum_literal).
@@ -6722,7 +6722,7 @@ mlr filter -v       1 *   2 ** 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 **  2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         ** (operator):
@@ -6738,7 +6738,7 @@ mlr filter -v       1 **  2 *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 *  (2 ** 3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         1 (strnum_literal).
@@ -6754,7 +6754,7 @@ mlr filter -v       1 *  (2 ** 3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 ** (2 *  3) /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ** (operator):
         1 (strnum_literal).
@@ -6770,7 +6770,7 @@ mlr filter -v       1 ** (2 *  3) /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = (1 *  2) ** 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ** (operator):
         * (operator):
@@ -6786,7 +6786,7 @@ mlr filter -v      (1 *  2) ** 3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = (1 ** 2) *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     * (operator):
         ** (operator):
@@ -6802,7 +6802,7 @@ mlr filter -v      (1 ** 2) *  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x = -1 +  2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         - (operator):
@@ -6820,7 +6820,7 @@ mlr filter -v      -1 +  2 *  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = -1 *  2 +  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         * (operator):
@@ -6838,7 +6838,7 @@ mlr filter -v      -1 *  2 +  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 + -2 *  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6856,7 +6856,7 @@ mlr filter -v       1 + -2 *  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 * -2 +  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         * (operator):
@@ -6874,7 +6874,7 @@ mlr filter -v       1 * -2 +  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 +  2 * -3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         1 (strnum_literal).
@@ -6892,7 +6892,7 @@ mlr filter -v       1 +  2 * -3 /dev/null
             3 (strnum_literal).
 
 mlr put -v $x =  1 *  2 + -3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     + (operator):
         * (operator):
@@ -6910,7 +6910,7 @@ mlr filter -v       1 *  2 + -3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = ~1 |  2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         ~ (operator):
@@ -6928,7 +6928,7 @@ mlr filter -v      ~1 |  2 &  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = ~1 &  2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         & (operator):
@@ -6946,7 +6946,7 @@ mlr filter -v      ~1 &  2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 | ~2 &  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         1 (strnum_literal).
@@ -6964,7 +6964,7 @@ mlr filter -v       1 | ~2 &  3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x =  1 & ~2 |  3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         & (operator):
@@ -6982,7 +6982,7 @@ mlr filter -v       1 & ~2 |  3 /dev/null
     3 (strnum_literal).
 
 mlr put -v $x =  1 |  2 & ~3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         1 (strnum_literal).
@@ -7000,7 +7000,7 @@ mlr filter -v       1 |  2 & ~3 /dev/null
             3 (strnum_literal).
 
 mlr put -v $x =  1 &  2 | ~3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     | (operator):
         & (operator):
@@ -7018,7 +7018,7 @@ mlr filter -v       1 &  2 | ~3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = $a==1 && $b == 1 && $c == 1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     && (operator):
         && (operator):
@@ -7046,7 +7046,7 @@ mlr filter -v      $a==1 && $b == 1 && $c == 1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = $a==1 || $b == 1 && $c == 1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         == (operator):
@@ -7074,7 +7074,7 @@ mlr filter -v      $a==1 || $b == 1 && $c == 1 /dev/null
             1 (strnum_literal).
 
 mlr put -v $x = $a==1 || $b == 1 || $c == 1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         || (operator):
@@ -7102,7 +7102,7 @@ mlr filter -v      $a==1 || $b == 1 || $c == 1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = $a==1 && $b == 1 || $c == 1 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     || (operator):
         && (operator):
@@ -7130,7 +7130,7 @@ mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
         1 (strnum_literal).
 
 mlr put -v $x = $a==1 ? $b == 2 : $c == 3 /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     ? : (operator):
         == (operator):
@@ -7156,7 +7156,7 @@ mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
         3 (strnum_literal).
 
 mlr put -v $x = true /dev/null
-= (operator):
+= (assignment):
     x (field_name).
     true (boolean_literal).
 
@@ -7169,7 +7169,7 @@ mlr put -v true || 1==0; $x = 3 /dev/null
     == (operator):
         1 (strnum_literal).
         0 (strnum_literal).
-= (operator):
+= (assignment):
     x (field_name).
     3 (strnum_literal).
 
@@ -7186,7 +7186,7 @@ mlr put -v 1==0 || false; $x = 3 /dev/null
         1 (strnum_literal).
         0 (strnum_literal).
     false (boolean_literal).
-= (operator):
+= (assignment):
     x (field_name).
     3 (strnum_literal).
 
@@ -7201,7 +7201,7 @@ mlr put -v true && false; $x = 3 /dev/null
 && (operator):
     true (boolean_literal).
     false (boolean_literal).
-= (operator):
+= (assignment):
     x (field_name).
     3 (strnum_literal).
 
@@ -7216,7 +7216,7 @@ mlr put -v true && false && true; $x = 3 /dev/null
         true (boolean_literal).
         false (boolean_literal).
     true (boolean_literal).
-= (operator):
+= (assignment):
     x (field_name).
     3 (strnum_literal).
 
