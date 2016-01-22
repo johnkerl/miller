@@ -2071,9 +2071,6 @@ Options:
     inference to int or float.
 -F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
--x: Negates boolean expressions. Has no effect on assignment expressions.
--t: Continue evaluating remaining expressions after boolean expressions, whether
-    or not they evaluate to true. Has no effect on assignment expressions.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
@@ -2199,7 +2196,7 @@ x=3
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp
+$ mlr put 'gate $x &gt; 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp
 x=-1
 x=0
 x=1,y=0.000000,z=0.000000
@@ -2221,7 +2218,7 @@ a=xyz_789
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp
+$ mlr put 'gate $a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp
 a=abc_123,b=left_abc,c=right_123
 a=some other name
 a=xyz_789,b=left_xyz,c=right_789
@@ -2231,16 +2228,16 @@ a=xyz_789,b=left_xyz,c=right_789
 
 <p/>This produces heteregenous output which Miller, of course, has no problems
 with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But
-if homogeneous output is desired, the <tt>put -t</tt> flag can be used.  This
-causes <tt>put</tt> to evaluate boolean expressions (along with any side
+if homogeneous output is desired, the <tt>gate</tt> can be omitted.  This
+causes <tt>put</tt> to evaluate the boolean expression (along with any side
 effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
-doesn&rsquo;t use them as a criterion for whether subsequent assignments should
+doesn&rsquo;t use it as a criterion for whether subsequent assignments should
 be executed. Instead, subsequent assignments are done unconditionally:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put -t '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp
+$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' put-gating-example-1.dkvp
 x=-1,y=nan,z=nan
 x=0,y=-inf,z=nan
 x=1,y=0.000000,z=0.000000
@@ -2252,7 +2249,7 @@ x=3,y=0.477121,z=0.690740
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put -t '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' put-gating-example-2.dkvp
 a=abc_123,b=left_abc,c=right_123
 a=some other name,b=left_,c=right_
 a=xyz_789,b=left_xyz,c=right_789
