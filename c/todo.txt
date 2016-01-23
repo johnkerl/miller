@@ -17,6 +17,7 @@ TOP OF LIST
 !! oosvars/begin/end:
 
   o next up:
+    !! regtest/runex
     !! implement multi-emit: emit @a, @b.
     !! work harder on tolerating final semicolon
     !! # comments: replace with spaces from # to EOL/EOS, whichever comes first?
@@ -61,10 +62,12 @@ TOP OF LIST
       mlr put '
         begin @count=0; begin @sum=0;
         @count=@count+1; @sum=@sum+$x;
-        end @mean=@sum/@count; end emit @count; end emit @sum; end emit @mean'
+        end @mean=@sum/@count; end emit @count; end emit @sum; end emit @mean' ../data/small
       mlr --opprint put 'begin @ox=0;$d=$x-@ox;@ox=$x' ../data/small
       mlr --opprint put 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x ../data/small
       mlr --opprint put '$d=$x/@ox;@ox=$x' then step -a ratio -f x ../data/small
+      mlr --opprint put 'begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum' ../data/small
+      mlr --opprint put 'begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i' ../data/small
 
   o begin/end statements: useful only with out-of-stream variables (oosvars)
     k so implement oosvars before begin/end ... or implement them with stub-emit 'emit("foo", "bar")'

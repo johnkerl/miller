@@ -1,3 +1,5 @@
+// vim: set filetype=none:
+// (Lemon files have .y extensions like Yacc files but are not Yacc.)
 
 %include {
 #include <stdio.h>
@@ -93,21 +95,7 @@ mlr_dsl_top_level_oosvar_assignment(A) ::= mlr_dsl_oosvar_assignment(B). {
 	sllv_add(pasts, A);
 }
 
-mlr_dsl_oosvar_assignment(A)  ::= MLR_DSL_OOSVAR_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
-	// Replace "$field.name" with just "field.name"
-	char* at_name = B->text;
-	char* no_at_name = &at_name[1];
-	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
-}
-mlr_dsl_oosvar_assignment(A)  ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
-	// Replace "${field.name}" with just "field.name"
-	char* at_name = B->text;
-	char* no_at_name = &at_name[2];
-	int len = strlen(no_at_name);
-	if (len > 0)
-		no_at_name[len-1] = 0;
-	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+mlr_dsl_oosvar_assignment(A)  ::= mlr_dsl_oosvar_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
 
@@ -358,14 +346,17 @@ mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B) MLR_DSL_POW(O) mlr_dsl_pow_term(C
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FIELD_NAME(B). {
+mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_field_name(B). {
+	A = B;
+}
+mlr_dsl_field_name(A) ::= MLR_DSL_FIELD_NAME(B). {
 	// not:
 	// A = B;
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
+mlr_dsl_field_name(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -375,14 +366,17 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_OOSVAR_NAME(B). {
+mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_oosvar_name(B). {
+	A = B;
+}
+mlr_dsl_oosvar_name(A) ::= MLR_DSL_OOSVAR_NAME(B). {
 	// not:
 	// A = B;
 	char* at_name = B->text;
 	char* no_at_name = &at_name[1];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B). {
+mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B). {
 	// Replace "${field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
@@ -424,9 +418,6 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_CONTEXT_VARIABLE(B). {
 mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_LPAREN mlr_dsl_logical_or_term(B) MLR_DSL_RPAREN. {
 	A = B;
 }
-///mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_MINUS(O) mlr_dsl_atom_or_fcn(B). {
-	///A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B);
-///}
 
 // Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
 // then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
