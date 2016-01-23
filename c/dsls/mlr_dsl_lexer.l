@@ -36,6 +36,14 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_EMIT);
 	return MLR_DSL_EMIT;
 }
+"begin" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BEGIN);
+	return MLR_DSL_BEGIN;
+}
+"end" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_END);
+	return MLR_DSL_END;
+}
 
 "?" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OPERATOR);

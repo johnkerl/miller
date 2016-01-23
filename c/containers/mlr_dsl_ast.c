@@ -115,6 +115,8 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	case MLR_DSL_AST_NODE_TYPE_FILTER:            return "filter";            break;
 	case MLR_DSL_AST_NODE_TYPE_GATE:              return "gate";              break;
 	case MLR_DSL_AST_NODE_TYPE_EMIT:              return "emit";              break;
+	case MLR_DSL_AST_NODE_TYPE_BEGIN:             return "begin";             break;
+	case MLR_DSL_AST_NODE_TYPE_END:               return "end";               break;
 	default: return "???";
 	}
 }

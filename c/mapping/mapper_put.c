@@ -10,15 +10,30 @@
 typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
-	int num_evaluators;
-	char** output_field_names;
-	int*   node_types;
-	int*   is_oosvars;
+
+	// xxx maybe transpose these from separate arrays to arrays of structs.
+
+	int num_begin_evaluators;
+	lrec_evaluator_t** pbegin_evaluators;
+	char** begin_output_field_names;
+	int*   begin_node_types;
+	int*   begin_is_oosvars;
+
+	int num_main_evaluators;
+	lrec_evaluator_t** pmain_evaluators;
+	char** main_output_field_names;
+	int*   main_node_types;
+	int*   main_is_oosvars;
+
+	int num_end_evaluators;
+	lrec_evaluator_t** pend_evaluators;
+	char** end_output_field_names;
+	int*   end_node_types;
+	int*   end_is_oosvars;
 
 	lrec_t* poosvars;
 	lhmsv_t* poosvars_typed_overlay;
 
-	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -118,18 +133,73 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
 	pstate->pasts = pasts;
-	pstate->num_evaluators = pasts->length;
-	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
-	pstate->node_types  = mlr_malloc_or_die(pasts->length * sizeof(int));
-	pstate->is_oosvars  = mlr_malloc_or_die(pasts->length * sizeof(int));
-	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
 
-	int i = 0;
-	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
+	pstate->num_begin_evaluators = 0;
+	pstate->num_main_evaluators  = 0;
+	pstate->num_end_evaluators   = 0;
+	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* past = pe->pvvalue;
+		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+			pstate->num_begin_evaluators++;
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
+			pstate->num_end_evaluators++;
+		} else {
+			pstate->num_main_evaluators++;
+		}
+	}
+
+	pstate->begin_output_field_names = mlr_malloc_or_die(pstate->num_begin_evaluators * sizeof(char*));
+	pstate->begin_node_types  = mlr_malloc_or_die(pstate->num_begin_evaluators * sizeof(int));
+	pstate->begin_is_oosvars  = mlr_malloc_or_die(pstate->num_begin_evaluators * sizeof(int));
+	pstate->pbegin_evaluators = mlr_malloc_or_die(pstate->num_begin_evaluators * sizeof(lrec_evaluator_t*));
+
+	pstate->main_output_field_names = mlr_malloc_or_die(pstate->num_main_evaluators * sizeof(char*));
+	pstate->main_node_types  = mlr_malloc_or_die(pstate->num_main_evaluators * sizeof(int));
+	pstate->main_is_oosvars  = mlr_malloc_or_die(pstate->num_main_evaluators * sizeof(int));
+	pstate->pmain_evaluators = mlr_malloc_or_die(pstate->num_main_evaluators * sizeof(lrec_evaluator_t*));
+
+	pstate->end_output_field_names = mlr_malloc_or_die(pstate->num_end_evaluators * sizeof(char*));
+	pstate->end_node_types  = mlr_malloc_or_die(pstate->num_end_evaluators * sizeof(int));
+	pstate->end_is_oosvars  = mlr_malloc_or_die(pstate->num_end_evaluators * sizeof(int));
+	pstate->pend_evaluators = mlr_malloc_or_die(pstate->num_end_evaluators * sizeof(lrec_evaluator_t*));
+
+	int bi = 0;
+	int mi = 0;
+	int ei = 0;
+	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
-		pstate->node_types[i] = past->type;
-		pstate->is_oosvars[i] = FALSE;
+		lrec_evaluator_t** pevaluators = NULL;
+		char** output_field_names = NULL;
+		int*   node_types = NULL;
+		int*   is_oosvars = NULL;
+		int    i = 0;
+
+		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+			pevaluators        = pstate->pbegin_evaluators;
+			output_field_names = pstate->begin_output_field_names;
+			node_types         = pstate->begin_node_types;
+			is_oosvars         = pstate->begin_is_oosvars;
+			i                  = bi;
+			past = past->pchildren->phead->pvvalue;
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
+			pevaluators        = pstate->pend_evaluators;
+			output_field_names = pstate->end_output_field_names;
+			node_types         = pstate->end_node_types;
+			is_oosvars         = pstate->end_is_oosvars;
+			i                  = ei;
+			past = past->pchildren->phead->pvvalue;
+		} else {
+			pevaluators        = pstate->pmain_evaluators;
+			output_field_names = pstate->main_output_field_names;
+			node_types         = pstate->main_node_types;
+			is_oosvars         = pstate->main_is_oosvars;
+			i                  = mi;
+		}
+
+		node_types[i] = past->type;
+		is_oosvars[i] = FALSE;
+
 		if (past->type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -151,8 +221,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			}
 
 			char* output_field_name = pleft->text;
-			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-			pstate->output_field_names[i] = output_field_name;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			output_field_names[i] = output_field_name;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
@@ -175,40 +245,49 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			}
 
 			char* output_field_name = pleft->text;
-			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-			pstate->output_field_names[i] = output_field_name;
-			pstate->is_oosvars[i] = TRUE;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			output_field_names[i] = output_field_name;
+			is_oosvars[i] = TRUE;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
-			pstate->output_field_names[i] = NULL;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
+			output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_GATE) {
 			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
-			pstate->output_field_names[i] = NULL;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
+			output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_EMIT) {
 			sllv_t* pchildren = past->pchildren;
 			if (pchildren->length == 1) { // emit oosvarname
 				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
 				mlr_dsl_ast_node_t* pright = pchildren->phead->pvvalue;
-				pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-				pstate->output_field_names[i] = pleft->text;
+				pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+				output_field_names[i] = pleft->text;
 			} else { // emit(name, value)
 				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
 				mlr_dsl_ast_node_t* pright = pchildren->phead->pnext->pvvalue;
-				pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-				pstate->output_field_names[i] = pleft->text;
+				pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+				output_field_names[i] = pleft->text;
 			}
 
 		} else {
 			// Bare-boolean statement
-			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(past, type_inferencing);
-			pstate->output_field_names[i] = NULL;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(past, type_inferencing);
+			output_field_names[i] = NULL;
+		}
+
+		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+			bi++;
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
+			ei++;
+		} else {
+			mi++;
 		}
 	}
+
 	pstate->poosvars = lrec_unbacked_alloc();
 	pstate->poosvars_typed_overlay = lhmsv_alloc();
 
@@ -223,14 +302,30 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
-	free(pstate->output_field_names);
-	free(pstate->node_types);
 
-	for (int i = 0; i < pstate->num_evaluators; i++) {
-		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
+	free(pstate->begin_output_field_names);
+	free(pstate->begin_node_types);
+	for (int i = 0; i < pstate->num_begin_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pbegin_evaluators[i];
 		pevaluator->pfree_func(pevaluator);
 	}
-	free(pstate->pevaluators);
+	free(pstate->pbegin_evaluators);
+
+	free(pstate->main_output_field_names);
+	free(pstate->main_node_types);
+	for (int i = 0; i < pstate->num_main_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pmain_evaluators[i];
+		pevaluator->pfree_func(pevaluator);
+	}
+	free(pstate->pmain_evaluators);
+
+	free(pstate->end_output_field_names);
+	free(pstate->end_node_types);
+	for (int i = 0; i < pstate->num_end_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pend_evaluators[i];
+		pevaluator->pfree_func(pevaluator);
+	}
+	free(pstate->pend_evaluators);
 
 	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
@@ -298,10 +393,10 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
 	int emit_rec = TRUE;
-	for (int i = 0; i < pstate->num_evaluators; i++) {
-		lrec_evaluator_t* pevaluator = pstate->pevaluators[i];
-		char* output_field_name = pstate->output_field_names[i];
-		int node_type = pstate->node_types[i];
+	for (int i = 0; i < pstate->num_main_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pstate->pmain_evaluators[i];
+		char* output_field_name = pstate->main_output_field_names[i];
+		int node_type = pstate->main_node_types[i];
 
 		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
@@ -360,11 +455,11 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 			if (val.type == MT_STRING) {
 				// Ownership transfer from mv_t to lrec.
-				lrec_put(pemit_rec, pstate->output_field_names[i], val.u.strv, val.free_flags);
+				lrec_put(pemit_rec, output_field_name, val.u.strv, val.free_flags);
 			} else {
 				char free_flags = NO_FREE;
 				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(pemit_rec, pstate->output_field_names[i], string, free_flags);
+				lrec_put(pemit_rec, output_field_name, string, free_flags);
 			}
 
 			sllv_add(poutrecs, pemit_rec);
