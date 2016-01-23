@@ -108,8 +108,7 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	case MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME:       return "oosvar_name";       break;
 	case MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME:     return "function_name";     break;
 	case MLR_DSL_AST_NODE_TYPE_OPERATOR:          return "operator";          break;
-	case MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT:   return "assignment";   break;
-	//case MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT:   return "srec_assignment";   break;
+	case MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT:   return "srec_assignment";   break;
 	case MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT: return "oosvar_assignment"; break;
 	case MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE:  return "context_variable";  break;
 	case MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY:     return "stripped_away";     break;
