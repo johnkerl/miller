@@ -17,11 +17,10 @@ TOP OF LIST
 !! oosvars/begin/end:
 
   o next up:
-    !! implement multi-emit: emit @a, @b.
+    !! begin{}/end{} into the grammar
     !! work harder on tolerating final semicolon
-    !! # comments: replace with spaces from # to EOL/EOS, whichever comes first?
-    !  begin{}/end{} into the grammar
-    !  accumulate begin/end/main statements within the parser
+    !! comments: replace with spaces from # to EOL/EOS, whichever comes first
+    ?  accumulate begin/end/main statements within the parser itself; root-noded AST ...
     !  re-valgrind continuously
     !  xxxes
     !  filter is also gating. it should not.
