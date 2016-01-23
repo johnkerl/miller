@@ -120,18 +120,19 @@ mlr_dsl_top_level_emit(A) ::= mlr_dsl_emit(B). {
 
 // Given "emit @a,@b,@c": since this is a bottom-up parser, we get first the "@a",
 // then "@a,@b", then "@a,@b,@c", then finally "emit @a,@b,@c". So:
-// * On the "@a" we make a function sub-AST called "emit @a".
-// * On the "@b" we append the next argument to get "emit @a,@b".
-// * On the "@c" we append the next argument to get "emit @a,@b,@c".
+// * On the "@a" we make a sub-AST called "temp @a" (although we could call it "emit").
+// * On the "@b" we append the next argument to get "temp @a,@b".
+// * On the "@c" we append the next argument to get "temp @a,@b,@c".
+// * On the "emit" we change the name to get "emit @a,@b,@c".
 mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_emit_args(B). {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // Need to invalidate "emit $a," -- use some non-empty-args expr.
 mlr_dsl_emit_args(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("emit", MLR_DSL_AST_NODE_TYPE_EMIT);
+	A = mlr_dsl_ast_node_alloc_zary("temp", MLR_DSL_AST_NODE_TYPE_EMIT);
 }
 mlr_dsl_emit_args(A) ::= mlr_dsl_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary("emit", MLR_DSL_AST_NODE_TYPE_EMIT, B);
+	A = mlr_dsl_ast_node_alloc_unary("temp", MLR_DSL_AST_NODE_TYPE_EMIT, B);
 }
 mlr_dsl_emit_args(A) ::= mlr_dsl_emit_args(B) MLR_DSL_COMMA mlr_dsl_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);

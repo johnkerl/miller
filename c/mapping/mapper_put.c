@@ -7,6 +7,29 @@
 #include "dsls/mlr_dsl_wrapper.h"
 #include "cli/argparse.h"
 
+// begin list of:
+// main  list of:
+// end   list of:
+//
+// * node type
+// * list of:
+//   o output field name
+//   o evaluator
+//   o is_oosvar
+
+//typedef struct _mlr_dsl_cst_node_item_t {
+//	lrec_evaluator_t* pevaluator;
+//	char* output_field_name;
+//	int is_oosvar;
+//} mlr_dsl_cst_node_item_t;
+
+//typedef struct _mlr_dsl_cst_node_t {
+//	int ast_node_type;
+//	sllv_t* pnode_items;
+//} mlr_dsl_cst_node_t;
+
+// xxx also move these outside of mapper_put & into their own CST source file. (lrec_evaluators.c is big already.)
+
 typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
