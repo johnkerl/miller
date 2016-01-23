@@ -1067,13 +1067,13 @@ run_mlr --opprint put '$y = gsub($x, "A"i,   "")'   $indir/gsub.dat
 # ----------------------------------------------------------------
 announce DSL EXPERIMENTAL OOSVARS
 
-run_mlr --opprint put 'begin @ox=0;$d=$x-@ox;@ox=$x' $indir/abixy
-run_mlr --opprint put 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
-run_mlr --opprint put '$d=$x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
-run_mlr --opprint put 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
-run_mlr --opprint put 'begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum' $indir/abixy
-run_mlr --opprint put 'begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i' $indir/abixy
-run_mlr --opprint put 'begin @ox=0;$d=$x-@ox;@ox=$x' $indir/abixy
+run_mlr --opprint put -v 'begin @ox=0;$d=$x-@ox;@ox=$x' $indir/abixy
+run_mlr --opprint put -v 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
+run_mlr --opprint put -v '$d=$x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
+run_mlr --opprint put -v 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x $indir/abixy
+run_mlr --opprint put -v 'begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum' $indir/abixy
+run_mlr --opprint put -v 'begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i' $indir/abixy
+run_mlr --opprint put -v 'begin @ox=0;$d=$x-@ox;@ox=$x' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING
