@@ -1075,6 +1075,9 @@ run_mlr --opprint put -v 'begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum' $i
 run_mlr --opprint put -v 'begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i' $indir/abixy
 run_mlr --opprint put -v 'begin @ox=0;$d=$x-@ox;@ox=$x' $indir/abixy
 
+run_mlr put -v '@a=$a;@b=$b;@c=$x;end emit @a; end emit @b; end emit @c' /dev/null
+run_mlr put -v '@a=$a;@b=$b;@c=$x;end emit @a, @b, @c' /dev/null
+
 # ----------------------------------------------------------------
 announce CHAINING
 

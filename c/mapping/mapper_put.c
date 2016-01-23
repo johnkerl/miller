@@ -13,7 +13,7 @@ typedef struct _mapper_put_state_t {
 
 	int at_begin;
 
-	// xxx maybe transpose these from separate arrays to arrays of structs.
+	// xxx transpose these from separate arrays to arrays of structs.
 
 	int num_begin_evaluators;
 	lrec_evaluator_t** pbegin_evaluators;
@@ -284,17 +284,11 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_EMIT) {
 			sllv_t* pchildren = past->pchildren;
-			if (pchildren->length == 1) { // emit oosvarname
-				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
-				mlr_dsl_ast_node_t* pright = pchildren->phead->pvvalue;
-				pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-				output_field_names[i] = pleft->text;
-			} else { // emit(name, value)
-				mlr_dsl_ast_node_t* pleft  = pchildren->phead->pvvalue;
-				mlr_dsl_ast_node_t* pright = pchildren->phead->pnext->pvvalue;
-				pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-				output_field_names[i] = pleft->text;
-			}
+
+			// xxx need to loop over multis in 'emit @a, @b, @c'
+			mlr_dsl_ast_node_t* pnode  = pchildren->phead->pvvalue;
+			pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
+			output_field_names[i] = pnode->text;
 
 		} else {
 			// Bare-boolean statement

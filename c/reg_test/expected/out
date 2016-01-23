@@ -10909,6 +10909,46 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
+mlr put -v @a=$a;@b=$b;@c=$x;end emit @a; end emit @b; end emit @c /dev/null
+= (oosvar_assignment):
+    a (oosvar_name).
+    a (field_name).
+= (oosvar_assignment):
+    b (oosvar_name).
+    b (field_name).
+= (oosvar_assignment):
+    c (oosvar_name).
+    x (field_name).
+end (end):
+    emit (emit):
+        a (oosvar_name).
+end (end):
+    emit (emit):
+        b (oosvar_name).
+end (end):
+    emit (emit):
+        c (oosvar_name).
+a=
+b=
+c=
+
+mlr put -v @a=$a;@b=$b;@c=$x;end emit @a, @b, @c /dev/null
+= (oosvar_assignment):
+    a (oosvar_name).
+    a (field_name).
+= (oosvar_assignment):
+    b (oosvar_name).
+    b (field_name).
+= (oosvar_assignment):
+    c (oosvar_name).
+    x (field_name).
+end (end):
+    emit (emit):
+        a (oosvar_name).
+        b (oosvar_name).
+        c (oosvar_name).
+a=
+
 
 ================================================================
 CHAINING

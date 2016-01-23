@@ -119,9 +119,9 @@ mlr_dsl_top_level_emit(A) ::= mlr_dsl_emit(B). {
 }
 
 
-mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
-}
+//mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_oosvar_name(B). {
+//	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
+//}
 
 //mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_emit_args(B). {
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
@@ -135,6 +135,28 @@ mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_oosvar_name(B). {
 //mlr_dsl_emit_args(A) ::= mlr_dsl_emit_args(B) MLR_DSL_COMMA mlr_dsl_oosvar_name(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
+
+// Given "emit @a,@b,@c": since this is a bottom-up parser, we get first the "@a",
+// then "@a,@b", then "@a,@b,@c", then finally "emit @a,@b,@c". So:
+// * On the "@a" we make a function sub-AST called "anon(a)".
+// * On the "@b" we append the next argument to get "anon(a,b)".
+// * On the "@c" we append the next argument to get "anon(a,b,c)".
+// * On the "@f" we change the function name to get "f(a,b,c)".
+
+mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_emit_args(B). {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+// Need to invalidate "emit $a," -- use some non-empty-args expr.
+mlr_dsl_emit_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_EMIT);
+}
+
+mlr_dsl_emit_args(A) ::= mlr_dsl_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MLR_DSL_AST_NODE_TYPE_EMIT, B);
+}
+mlr_dsl_emit_args(A) ::= mlr_dsl_emit_args(B) MLR_DSL_COMMA mlr_dsl_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
 
 // ================================================================
 mlr_dsl_begin_oosvar_assignment(A)  ::= MLR_DSL_BEGIN(X) mlr_dsl_oosvar_assignment(B). {
@@ -440,7 +462,7 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_LPAREN mlr_dsl_logical_or_term(B) MLR_DSL_RPA
 mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FCN_NAME(O) MLR_DSL_LPAREN mlr_dsl_fcn_args(B) MLR_DSL_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
-// xxx need to invalidate "f(10,)" -- use some non-empty-args expr.
+// Need to invalidate "f(10,)" -- use some non-empty-args expr.
 mlr_dsl_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
 }
