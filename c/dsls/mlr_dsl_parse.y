@@ -118,11 +118,25 @@ mlr_dsl_top_level_emit(A) ::= mlr_dsl_emit(B). {
 	sllv_add(pasts, A);
 }
 
+
 mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
 }
 
-// ----------------------------------------------------------------
+//mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_emit_args(B). {
+//	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
+//}
+//mlr_dsl_emit_args(A) ::= . {
+//	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
+//}
+//mlr_dsl_emit_args(A) ::= mlr_dsl_oosvar_name(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME, B);
+//}
+//mlr_dsl_emit_args(A) ::= mlr_dsl_emit_args(B) MLR_DSL_COMMA mlr_dsl_oosvar_name(C). {
+//	A = mlr_dsl_ast_node_append_arg(B, C);
+//}
+
+// ================================================================
 mlr_dsl_begin_oosvar_assignment(A)  ::= MLR_DSL_BEGIN(X) mlr_dsl_oosvar_assignment(B). {
 	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
 	sllv_add(pasts, A);

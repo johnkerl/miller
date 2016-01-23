@@ -10703,7 +10703,19 @@ ABABBABBBA BBBBBB
 ================================================================
 DSL EXPERIMENTAL OOSVARS
 
-mlr --opprint put begin @ox=0;$d=$x-@ox;@ox=$x ./reg_test/input/abixy
+mlr --opprint put -v begin @ox=0;$d=$x-@ox;@ox=$x ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        0 (strnum_literal).
+= (srec_assignment):
+    d (field_name).
+    - (operator):
+        x (field_name).
+        ox (oosvar_name).
+= (oosvar_assignment):
+    ox (oosvar_name).
+    x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
@@ -10716,7 +10728,24 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
-mlr --opprint put begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+mlr --opprint put -v begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        no (strnum_literal).
+= (srec_assignment):
+    d (field_name).
+    ? : (operator):
+        == (operator):
+            ox (oosvar_name).
+            no (strnum_literal).
+        1.0 (strnum_literal).
+        / (operator):
+            x (field_name).
+            ox (oosvar_name).
+= (oosvar_assignment):
+    ox (oosvar_name).
+    x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -10729,7 +10758,15 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put $d=$x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+mlr --opprint put -v $d=$x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+= (srec_assignment):
+    d (field_name).
+    / (operator):
+        x (field_name).
+        ox (oosvar_name).
+= (oosvar_assignment):
+    ox (oosvar_name).
+    x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  -         1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -10742,7 +10779,24 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+mlr --opprint put -v begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x then step -a ratio -f x ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        no (strnum_literal).
+= (srec_assignment):
+    d (field_name).
+    ? : (operator):
+        == (operator):
+            ox (oosvar_name).
+            no (strnum_literal).
+        1.0 (strnum_literal).
+        / (operator):
+            x (field_name).
+            ox (oosvar_name).
+= (oosvar_assignment):
+    ox (oosvar_name).
+    x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -10755,7 +10809,19 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum ./reg_test/input/abixy
+mlr --opprint put -v begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        rsum (oosvar_name).
+        0 (strnum_literal).
+= (oosvar_assignment):
+    rsum (oosvar_name).
+    + (operator):
+        rsum (oosvar_name).
+        x (field_name).
+= (srec_assignment):
+    rsum (field_name).
+    rsum (oosvar_name).
 a   b   i  x                   y                   rsum
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  1.105470
@@ -10768,7 +10834,44 @@ zee wye 8  0.5985540091064224  0.976181385699006   4.002226
 hat wye 9  0.03144187646093577 0.7495507603507059  4.033668
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294
 
-mlr --opprint put begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i ./reg_test/input/abixy
+mlr --opprint put -v begin @a=0;begin @b=0; begin @c=0; $za=@a;$zb=@b;$zc=@c;$d=@a+@b+@c;@a=@b;@b=@c;@c=$i ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        a (oosvar_name).
+        0 (strnum_literal).
+begin (begin):
+    = (oosvar_assignment):
+        b (oosvar_name).
+        0 (strnum_literal).
+begin (begin):
+    = (oosvar_assignment):
+        c (oosvar_name).
+        0 (strnum_literal).
+= (srec_assignment):
+    za (field_name).
+    a (oosvar_name).
+= (srec_assignment):
+    zb (field_name).
+    b (oosvar_name).
+= (srec_assignment):
+    zc (field_name).
+    c (oosvar_name).
+= (srec_assignment):
+    d (field_name).
+    + (operator):
+        + (operator):
+            a (oosvar_name).
+            b (oosvar_name).
+        c (oosvar_name).
+= (oosvar_assignment):
+    a (oosvar_name).
+    b (oosvar_name).
+= (oosvar_assignment):
+    b (oosvar_name).
+    c (oosvar_name).
+= (oosvar_assignment):
+    c (oosvar_name).
+    i (field_name).
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
 eks pan 2  0.7586799647899636  0.5221511083334797  0  0  1  1
@@ -10781,7 +10884,19 @@ zee wye 8  0.5985540091064224  0.976181385699006   5  6  7  18
 hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
-mlr --opprint put begin @ox=0;$d=$x-@ox;@ox=$x ./reg_test/input/abixy
+mlr --opprint put -v begin @ox=0;$d=$x-@ox;@ox=$x ./reg_test/input/abixy
+begin (begin):
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        0 (strnum_literal).
+= (srec_assignment):
+    d (field_name).
+    - (operator):
+        x (field_name).
+        ox (oosvar_name).
+= (oosvar_assignment):
+    ox (oosvar_name).
+    x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
