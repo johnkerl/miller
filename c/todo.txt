@@ -16,18 +16,23 @@ TOP OF LIST
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
-  ! no put-usage/filter-usage on "syntax error!"
+  o next up:
+    !! implement multi-emit: emit @a, @b.
+    !! work harder on tolerating final semicolon
+    !! # comments: replace with spaces from # to EOL/EOS, whichever comes first?
+    !  begin{}/end{} into the grammar
+    !  accumulate begin/end/main statements within the parser
 
   o initial sketch: there are two lrecs:
-    - one starts with "@" and is out-of-stream.
-    - the other starts with "$" and varies per-record.
-    - continue the partitioning between LHS name, RHS eval-AST
-    - now there are simply two assignment flavors
-    - evaluators simply need a reference to two lrecs-with-overlay.
-    - this is fine for experimenting.
+    k one starts with "@" and is out-of-stream.
+    k the other starts with "$" and varies per-record.
+    k continue the partitioning between LHS name, RHS eval-AST
+    k now there are simply two assignment flavors
+    k evaluators simply need a reference to two lrecs-with-overlay.
+    k this is fine for experimenting.
     ! QUESTION: how far does this get me?? I think I need two-level (oosrecs) in order to put
       things like "stats1 -g foo" firmly into userspace.
-    - Q: what userspace data structures would be needed for:
+    - experiments: what userspace data structures would be needed for:
       > bootstrap?
       > count-distinct?
       > cut?
@@ -42,27 +47,99 @@ TOP OF LIST
       > stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max
       > stats2 linregs,r2,corr,cov
       > step
+        - delta
+        - from-first
+        - ratio
+        - rsum
+        - counter
+        - ewma
       > tail
       > top
       > uniq
 
+      mlr put '@a = min(@a, $x); @b = max(@b, $x); end emit @a; end emit @b' ../data/small
+      mlr put '
+        begin @count=0; begin @sum=0;
+        @count=@count+1; @sum=@sum+$x;
+        end @mean=@sum/@count; end emit @count; end emit @sum; end emit @mean'
+      mlr --opprint put 'begin @ox=0;$d=$x-@ox;@ox=$x' ../data/small
+      mlr --opprint put 'begin @ox="no";$d=@ox == "no" ? 1.0 : $x/@ox;@ox=$x' then step -a ratio -f x ../data/small
+      mlr --opprint put '$d=$x/@ox;@ox=$x' then step -a ratio -f x ../data/small
+
   o begin/end statements: useful only with out-of-stream variables (oosvars)
-    - so implement oosvars before begin/end ... or implement them with stub-emit 'emit("foo", "bar")'
-    - single oosvar? (sum, count)
-    - maybe start with per-line prelabels "begin ..." and "end ..." and curly-brace after that?
-    - multiple oosvars? (x.sum, y.count)
+    k so implement oosvars before begin/end ... or implement them with stub-emit 'emit("foo", "bar")'
+    k single oosvar? (sum, count)
+    k maybe start with per-line prelabels "begin ..." and "end ..." and curly-brace after that?
+    - oosrecs? (x.sum, y.count, $x["sum"], $y["count"])
     - both? missing leading "name." implies _. or some such ... or, single outrecs with single attrs.
     - output some/all of them at the end, conditionally. not "print" but something like that.
-    - allow per-record statements to read/write them.
-    - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
+    k allow per-record statements to read/write them.
+    k sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
     ? implement $0 now
-    ? make the oosvars lrecs? lrec-with-typed-overlay? new string-to-mlrval LHM?
-    - work harder on tolerating final semicolon
+    k make the oosvars lrecs? lrec-with-typed-overlay? new string-to-mlrval LHM?
 
-  o mlr put '
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    oosvar-only progress point:
+
+    % mlr put -v '
+      begin @count=0;
+      begin @sum = 0;
+      @count = @count + 1;
+      @sum = @sum + $x;
+      filter false;
+      end @mean = @sum / @count;
+      end emit @count;
+      end emit @sum;
+      end emit @mean
+    ' ../data/small
+
+    begin (begin):
+        = (oosvar_assignment):
+            count (oosvar_name).
+            0 (strnum_literal).
+    begin (begin):
+        = (oosvar_assignment):
+            sum (oosvar_name).
+            0 (strnum_literal).
+    = (oosvar_assignment):
+        count (oosvar_name).
+        + (operator):
+            count (oosvar_name).
+            1 (strnum_literal).
+    = (oosvar_assignment):
+        sum (oosvar_name).
+        + (operator):
+            sum (oosvar_name).
+            x (field_name).
+    filter (filter):
+        false (boolean_literal).
+    end (end):
+        = (oosvar_assignment):
+            mean (oosvar_name).
+            / (operator):
+                sum (oosvar_name).
+                count (oosvar_name).
+    end (end):
+        emit (emit):
+            count (oosvar_name).
+    end (end):
+        emit (emit):
+            sum (oosvar_name).
+    end (end):
+        emit (emit):
+            mean (oosvar_name).
+
+    count=10
+    sum=4.536294
+    mean=0.453629
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  o goal: support oosrecs as well as oosvars.
+    mlr put '
       begin {
         @sum = 0;
         @count = 0;
+        @gsum[] = {};
         @x[1] = 1;
         @x[2] = 2;
         emit @sum;
@@ -73,11 +150,13 @@ TOP OF LIST
       $left = "\1";
       $right = "\1";
       @sum += $3;
+      @gsum[$4] += $3;
       emit @sum;
       $3_rsum = @sum;
       $y[] = $0;
       end {
         emit @sum;
+        emit @gsum[];
         emit @count;
         emit @x[];
         emit @y[];
@@ -85,15 +164,17 @@ TOP OF LIST
     '
 
   o now:
-    - assignment: LHS -> output field name; RHS evaluates to mlrval
-    - bare-boolean: null output field name; RHS must evaluate to boolean mlrval
-    - gate: RHS must evaluate to boolean mlrval
-    - filter: RHS must evaluate to boolean mlrval
+    k assignment: LHS -> output field name; RHS evaluates to mlrval
+    k bare-boolean: null output field name; RHS must evaluate to boolean mlrval
+    k gate: RHS must evaluate to boolean mlrval
+    k filter: RHS must evaluate to boolean mlrval
   o new: array of AST being assignment, gate, filter, emit, bare-boolean/newname, begin, end
-    - or maybe array of begin nodes, array of mid nodes, array of end nodes
-    - assignment: LHS -> output field name; RHS evaluates to mlrval
-      > lhs is $0 or oosvar
-      > rhs is field name or oosvar or literal
+    - or maybe array of begin nodes, array of mid nodes, array of end nodes within the parser
+      (instead of separating out later in mapper_put)
+    k oosvar assignment: LHS -> output field name; RHS evaluates to mlrval
+      k lhs is $0 or oosvar
+      k rhs is field name or oosvar or literal
+    k oosrec assignment
       > want xref[] = $0 kinds of record-from-record assignments
       ? want $0 = xref[] kinds of record-from-record assignments?!?
     - gate/filter/bare-booleans must work with oosvars as well as iisrecs
@@ -114,18 +195,19 @@ TOP OF LIST
     k provide a special node type for assignment operator (not just operator)
     ! define/test behavior for null-valued filter/gate
     ? write put -v UTs from /dev/null
-    ? oosvar names into the DSL. disallow assignment-to-keyword (use a hashmap).
-    ? emit keyword into the DSL
-    ? begin{} / end{} into the DSL.
-    ? begin{} / end{} action-taking within mapper_put:
-      > first just echo out something to stub-action-take on emit
-      > then populate lrecs
+    k oosvar names into the DSL.
+    - disallow assignment-to-keyword (use a hashmap).
+    k emit keyword into the DSL
+    ~ begin{} / end{} into the DSL.
+    ~ begin{} / end{} action-taking within mapper_put:
 
   o DSL more:
     - people will ask for an unset/clear syntax
     - people will ask for +=, -=, etc.
     - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
       implementing the present
+
+  o replace "null" with "absent" and "uninit"?
 
 ----------------------------------------------------------------
 
