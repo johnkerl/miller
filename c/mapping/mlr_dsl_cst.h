@@ -39,9 +39,9 @@
 // ================================================================
 
 typedef struct _mlr_dsl_cst_statement_item_t {
-	lrec_evaluator_t* pevaluator;
 	char* output_field_name;
 	int is_oosvar;
+	lrec_evaluator_t* pevaluator;
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {

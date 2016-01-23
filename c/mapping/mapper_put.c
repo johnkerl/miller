@@ -1,11 +1,12 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "cli/argparse.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "mapping/mappers.h"
 #include "mapping/lrec_evaluators.h"
 #include "dsls/mlr_dsl_wrapper.h"
-#include "cli/argparse.h"
+#include "mlr_dsl_cst.h"
 
 typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
@@ -13,7 +14,7 @@ typedef struct _mapper_put_state_t {
 
 	int at_begin;
 
-	// xxx transpose these from separate arrays to arrays of structs.
+	mlr_dsl_cst_t* pcst;
 
 	int num_begin_evaluators;
 	lrec_evaluator_t** pbegin_evaluators;
@@ -154,6 +155,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	pstate->pasts = pasts;
 
 	pstate->at_begin = TRUE;
+
+	pstate->pcst = cst_alloc(pasts, type_inferencing);
 
 	pstate->num_begin_evaluators = 0;
 	pstate->num_main_evaluators  = 0;
@@ -319,6 +322,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
+
+	cst_free(pstate->pcst);
 
 	free(pstate->begin_output_field_names);
 	free(pstate->begin_node_types);

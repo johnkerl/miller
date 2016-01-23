@@ -88,6 +88,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	pstatement->ast_node_type = past->type;
 	pstatement->pitems = sllv_alloc();
 
+	if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN || past->type == MLR_DSL_AST_NODE_TYPE_END)
+		past = past->pchildren->phead->pvvalue;
+
 	if (past->type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 		if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -184,7 +187,7 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char* output_field_name, int is_oosvar, lrec_evaluator_t* pevaluator)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
-	pitem->output_field_name = mlr_strdup_or_die(output_field_name);
+	pitem->output_field_name = output_field_name == NULL ? NULL : mlr_strdup_or_die(output_field_name);
 	pitem->pevaluator = pevaluator;
 	pitem->is_oosvar = is_oosvar;
 	return pitem;
