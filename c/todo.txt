@@ -49,6 +49,7 @@ TOP OF LIST
   o begin/end statements: useful only with out-of-stream variables (oosvars)
     - so implement oosvars before begin/end ... or implement them with stub-emit 'emit("foo", "bar")'
     - single oosvar? (sum, count)
+    - maybe start with per-line prelabels "begin ..." and "end ..." and curly-brace after that?
     - multiple oosvars? (x.sum, y.count)
     - both? missing leading "name." implies _. or some such ... or, single outrecs with single attrs.
     - output some/all of them at the end, conditionally. not "print" but something like that.

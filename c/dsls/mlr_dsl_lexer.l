@@ -5,18 +5,7 @@
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
-//"emit" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_GATE);
-//	return MLR_DSL_GATE;
-//}
-//"begin" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BEGIN);
-//	return MLR_DSL_GATE;
-//}
-//"end" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_END);
-//	return MLR_DSL_GATE;
-//}
+// xxx SREC_ASSIGNMENT or OOSREC_ASSIGNMENT; confusing (and irrelevant) labels here
 
 %}
 
@@ -31,7 +20,7 @@
 }
 
 "=" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_ASSIGNMENT);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT);
 	return MLR_DSL_ASSIGN;
 }
 
@@ -197,7 +186,7 @@
 	// Note: the parser depends on the at-sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME);
-	return MLR_DSL_BRACKETED_FIELD_NAME;
+	return MLR_DSL_BRACKETED_OOSVAR_NAME;
 }
 
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {

@@ -6,19 +6,20 @@
 #define MLR_DSL_AST_H
 #include "sllv.h"
 
-#define MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL   0xaa00 // string     or number
-#define MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL  0xaa55 // true/false
-#define MLR_DSL_AST_NODE_TYPE_REGEXI           0xaaaa
-#define MLR_DSL_AST_NODE_TYPE_FIELD_NAME       0xbbbb
-#define MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME      0xbb44
-#define MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME    0xcccc
-#define MLR_DSL_AST_NODE_TYPE_OPERATOR         0xdd77
-#define MLR_DSL_AST_NODE_TYPE_ASSIGNMENT       0xdddd
-#define MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE 0xeeee
-#define MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY    0xffff
-#define MLR_DSL_AST_NODE_TYPE_FILTER           0xcc00
-#define MLR_DSL_AST_NODE_TYPE_GATE             0xcc33
-#define MLR_DSL_AST_NODE_TYPE_EMIT             0xcc66
+#define MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL    0xaa00 // string     or number
+#define MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL   0xaa55 // true/false
+#define MLR_DSL_AST_NODE_TYPE_REGEXI            0xaaaa
+#define MLR_DSL_AST_NODE_TYPE_FIELD_NAME        0xbbbb
+#define MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME       0xbb44
+#define MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME     0xcccc
+#define MLR_DSL_AST_NODE_TYPE_OPERATOR          0xdd77
+#define MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT   0xdd33
+#define MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT 0xdddd
+#define MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE  0xeeee
+#define MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY     0xffff
+#define MLR_DSL_AST_NODE_TYPE_FILTER            0xcc00
+#define MLR_DSL_AST_NODE_TYPE_GATE              0xcc33
+#define MLR_DSL_AST_NODE_TYPE_EMIT              0xcc66
 
 typedef struct _mlr_dsl_ast_node_t {
 	char*   text;

@@ -122,8 +122,32 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
-		if (past->type == MLR_DSL_AST_NODE_TYPE_ASSIGNMENT) {
-			// Assignment statement
+		if (past->type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
+			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
+				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			}
+
+			mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+			if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
+				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			} else if (pleft->pchildren != NULL) {
+				fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				exit(1);
+			}
+
+			char* output_field_name = pleft->text;
+			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
+			pstate->pevaluators[i] = pevaluator;
+			pstate->output_field_names[i] = output_field_name;
+
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 					MLR_GLOBALS.argv0, __FILE__, __LINE__);
@@ -270,7 +294,22 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		char* output_field_name = pstate->output_field_names[i];
 		int node_type = pstate->node_types[i];
 
-		if (node_type == MLR_DSL_AST_NODE_TYPE_ASSIGNMENT) {
+		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+			*pval = val;
+			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
+			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need to do
+			// lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing throwaway
+			// number-to-string formatting -- it's better to do it once at the end; (2) having the string values doubly
+			// owned by the typed overlay and the lrec would result in double frees, or awkward bookkeeping. However,
+			// the NR variable evaluator reads prec->field_count, so we need to put something here. And putting
+			// something statically allocated minimizes copying/freeing.
+			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;

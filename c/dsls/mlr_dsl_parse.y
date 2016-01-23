@@ -43,11 +43,24 @@ mlr_dsl_body ::= mlr_dsl_statements.                // For scan-from-string
 mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
-mlr_dsl_statement ::= mlr_dsl_assignment.
+mlr_dsl_statement ::= mlr_dsl_srec_assignment.
+mlr_dsl_statement ::= mlr_dsl_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_bare_boolean.
 mlr_dsl_statement ::= mlr_dsl_record_filter.
 mlr_dsl_statement ::= mlr_dsl_expression_gate.
 mlr_dsl_statement ::= mlr_dsl_emit.
+
+// begin srec_assignment
+// begin bare_boolean
+// begin filter
+// begin gate
+// begin emit
+//
+// end srec_assignment
+// end bare_boolean
+// end filter
+// end gate
+// end emit
 
 // ================================================================
 // In the grammar provided to the user, field names are of the form "$x".  But
@@ -55,16 +68,15 @@ mlr_dsl_statement ::= mlr_dsl_emit.
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-mlr_dsl_assignment(A)  ::= MLR_DSL_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
+mlr_dsl_srec_assignment(A)  ::= MLR_DSL_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	// Replace "$field.name" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_ASSIGNMENT, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
 	sllv_add(pasts, A);
 }
-
-mlr_dsl_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
+mlr_dsl_srec_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -72,7 +84,27 @@ mlr_dsl_assignment(A)  ::= MLR_DSL_BRACKETED_FIELD_NAME(B) MLR_DSL_ASSIGN(O) mlr
 	if (len > 0)
 		no_dollar_name[len-1] = 0;
 	B = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_ASSIGNMENT, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
+	sllv_add(pasts, A);
+}
+
+mlr_dsl_oosvar_assignment(A)  ::= MLR_DSL_OOSVAR_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
+	// Replace "$field.name" with just "field.name"
+	char* at_name = B->text;
+	char* no_at_name = &at_name[1];
+	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+	sllv_add(pasts, A);
+}
+mlr_dsl_oosvar_assignment(A)  ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
+	// Replace "${field.name}" with just "field.name"
+	char* at_name = B->text;
+	char* no_at_name = &at_name[2];
+	int len = strlen(no_at_name);
+	if (len > 0)
+		no_at_name[len-1] = 0;
+	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 	sllv_add(pasts, A);
 }
 
