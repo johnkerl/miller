@@ -34,6 +34,7 @@ libmapping_la_SOURCES=	\
 			mapper_top.c \
 			mapper_uniq.c \
 			mappers.h \
+			mlr_dsl_cst.h \
 			stats1_accumulators.c \
 			stats1_accumulators.h
 libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
