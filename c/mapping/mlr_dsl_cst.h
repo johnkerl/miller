@@ -1,6 +1,7 @@
 #ifndef MLR_DSL_CST_H
 #define MLR_DSL_CST_H
 
+#include "containers/mlr_dsl_ast.h"
 #include "lrec_evaluators.h"
 
 // ================================================================
@@ -33,32 +34,28 @@
 // Further, these statements are organized into three groups:
 //
 // * begin: executed once, before the first input record is read.
-//
 // * main : executed for each input record.
-//
 // * end :  executed once, after the last input record is read.
-
 // ================================================================
 
-// begin list of:
-// main  list of:
-// end   list of:
-//
-// * node type
-// * list of:
-//   o output field name
-//   o evaluator
-//   o is_oosvar
-
-xypedef struct _mlr_dsl_cst_statement_item_t {
+typedef struct _mlr_dsl_cst_statement_item_t {
 	lrec_evaluator_t* pevaluator;
 	char* output_field_name;
 	int is_oosvar;
 } mlr_dsl_cst_statement_item_t;
 
-//typedef struct _mlr_dsl_cst_statement_t {
-//	int ast_statement_type;
-//	sllv_t* pstatement_items;
-//} mlr_dsl_cst_statement_t;
+typedef struct _mlr_dsl_cst_statement_t {
+	int ast_node_type;
+	sllv_t* pitems;
+} mlr_dsl_cst_statement_t;
+
+typedef struct _mlr_dsl_cst_t {
+	sllv_t* pbegin_statements;
+	sllv_t* pmain_statements;
+	sllv_t* pend_statements;
+} mlr_dsl_cst_t;
+
+mlr_dsl_cst_t* cst_alloc(sllv_t* pasts, int type_inferencing);
+void           cst_free(mlr_dsl_cst_t* pcst);
 
 #endif // MLR_DSL_CST_H
