@@ -22,6 +22,9 @@ TOP OF LIST
     !! # comments: replace with spaces from # to EOL/EOS, whichever comes first?
     !  begin{}/end{} into the grammar
     !  accumulate begin/end/main statements within the parser
+    !  re-valgrind continuously
+    !  xxxes
+    !  filter is also gating. it should not.
 
   o initial sketch: there are two lrecs:
     k one starts with "@" and is out-of-stream.

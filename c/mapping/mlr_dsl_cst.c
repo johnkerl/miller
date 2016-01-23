@@ -55,9 +55,9 @@ mlr_dsl_cst_t* cst_alloc(sllv_t* pasts, int type_inferencing) {
 
 		mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc(past, type_inferencing);
 
-		if (pstatement->ast_node_type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
 			sllv_add(pcst->pbegin_statements, pstatement);
-		} else if (pstatement->ast_node_type == MLR_DSL_AST_NODE_TYPE_END) {
+		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
 			sllv_add(pcst->pend_statements, pstatement);
 		} else {
 			sllv_add(pcst->pmain_statements, pstatement);
@@ -85,11 +85,12 @@ void cst_free(mlr_dsl_cst_t* pcst) {
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->ast_node_type = past->type;
-	pstatement->pitems = sllv_alloc();
 
 	if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN || past->type == MLR_DSL_AST_NODE_TYPE_END)
 		past = past->pchildren->phead->pvvalue;
+
+	pstatement->ast_node_type = past->type;
+	pstatement->pitems = sllv_alloc();
 
 	if (past->type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 		if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
