@@ -230,7 +230,9 @@ EXPERIMENTAL_READER_SRCS = \
 # User-make: creates the executable and runs unit & regression tests
 # This is the default target for anyone pulling the repo and trying to
 # build it to be able to use it. It just needs flex and the C compiler.
-top: mlr tests
+#top: mlr tests
+# xxx temp:
+top: mlr mlrg tests
 
 install: mlr tests
 	cp mlr $(INSTALLDIR)

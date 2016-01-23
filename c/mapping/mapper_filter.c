@@ -90,7 +90,8 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 
 	sllv_t* pasts = mlr_dsl_parse(mlr_dsl_expression);
 	if (pasts == NULL) {
-		mapper_filter_usage(stderr, argv[0], verb);
+		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
+			argv[0], verb, mlr_dsl_expression);
 		return NULL;
 	}
 	if (pasts->length != 1) {

@@ -57,6 +57,7 @@ TOP OF LIST
     - sigil syntax w/ @? or just sigil-free? (@sum vs. sum ...)
     ? implement $0 now
     ? make the oosvars lrecs? lrec-with-typed-overlay? new string-to-mlrval LHM?
+    - work harder on tolerating final semicolon
 
   o mlr put '
       begin {

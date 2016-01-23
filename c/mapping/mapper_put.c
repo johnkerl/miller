@@ -11,6 +11,8 @@ typedef struct _mapper_put_state_t {
 	ap_state_t* pargp;
 	sllv_t* pasts;
 
+	int at_begin;
+
 	// xxx maybe transpose these from separate arrays to arrays of structs.
 
 	int num_begin_evaluators;
@@ -41,6 +43,22 @@ static void      mapper_put_free(mapper_t* pmapper);
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
+
+static void foo(
+	lrec_t* pinrec,
+	lhmsv_t* ptyped_overlay,
+	lrec_t* poosvars,
+	lhmsv_t* poosvars_typed_overlay,
+	string_array_t* pregex_captures,
+	context_t* pctx,
+	int num_evaluators,
+	lrec_evaluator_t** pevaluators,
+	char** output_field_names,
+	int*   node_types,
+	int*   is_oosvars,
+	int*   pemit_rec,
+	sllv_t* poutrecs
+);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_put_setup = {
@@ -114,7 +132,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	// Linked list of mlr_dsl_ast_node_t*.
 	sllv_t* pasts = mlr_dsl_parse(mlr_dsl_expression);
 	if (pasts == NULL) {
-		mapper_put_usage(stderr, argv[0], verb);
+		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
+			argv[0], verb, mlr_dsl_expression);
 		return NULL;
 	}
 
@@ -133,6 +152,8 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp = pargp;
 	pstate->pasts = pasts;
+
+	pstate->at_begin = TRUE;
 
 	pstate->num_begin_evaluators = 0;
 	pstate->num_main_evaluators  = 0;
@@ -175,14 +196,16 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 		int*   is_oosvars = NULL;
 		int    i = 0;
 
-		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+		int orig_type = past->type;
+
+		if (orig_type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
 			pevaluators        = pstate->pbegin_evaluators;
 			output_field_names = pstate->begin_output_field_names;
 			node_types         = pstate->begin_node_types;
 			is_oosvars         = pstate->begin_is_oosvars;
 			i                  = bi;
 			past = past->pchildren->phead->pvvalue;
-		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
+		} else if (orig_type == MLR_DSL_AST_NODE_TYPE_END) {
 			pevaluators        = pstate->pend_evaluators;
 			output_field_names = pstate->end_output_field_names;
 			node_types         = pstate->end_node_types;
@@ -279,9 +302,9 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			output_field_names[i] = NULL;
 		}
 
-		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
+		if (orig_type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
 			bi++;
-		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
+		} else if (orig_type == MLR_DSL_AST_NODE_TYPE_END) {
 			ei++;
 		} else {
 			mi++;
@@ -382,96 +405,42 @@ static void mapper_put_free(mapper_t* pmapper) {
 //   etc. does not need to be done.
 
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec == NULL) // End of input stream
-		return sllv_single(NULL);
-
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
-	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+
 	string_array_t* pregex_captures = string_array_alloc(0);
 	sllv_t* poutrecs = sllv_alloc();
 
-	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
-	// string values).
-	int emit_rec = TRUE;
-	for (int i = 0; i < pstate->num_main_evaluators; i++) {
-		lrec_evaluator_t* pevaluator = pstate->pmain_evaluators[i];
-		char* output_field_name = pstate->main_output_field_names[i];
-		int node_type = pstate->main_node_types[i];
+	if (pstate->at_begin) {
+		int emit_rec = TRUE;
 
-		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
-			*pval = val;
-			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
-			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need to do
-			// lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing throwaway
-			// number-to-string formatting -- it's better to do it once at the end; (2) having the string values doubly
-			// owned by the typed overlay and the lrec would result in double frees, or awkward bookkeeping. However,
-			// the NR variable evaluator reads prec->field_count, so we need to put something here. And putting
-			// something statically allocated minimizes copying/freeing.
-			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+		foo(NULL, NULL, pstate->poosvars, pstate->poosvars_typed_overlay, pregex_captures, pctx,
+			pstate->num_begin_evaluators, pstate->pbegin_evaluators, pstate->begin_output_field_names,
+			pstate->begin_node_types, pstate->begin_is_oosvars,
+			&emit_rec, poutrecs);
 
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
-			*pval = val;
-			lhmsv_put(pstate->poosvars_typed_overlay, output_field_name, pval, NO_FREE);
-			lrec_put(pstate->poosvars, output_field_name, "bug", NO_FREE);
-
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			if (val.type != MT_NULL) {
-				mv_set_boolean_strict(&val);
-				if (!val.u.boolv) {
-					emit_rec = FALSE;
-					break;
-				}
-			}
-
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			if (val.type == MT_NULL)
-				break;
-			mv_set_boolean_strict(&val);
-			if (!val.u.boolv) {
-				break;
-			}
-
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			lrec_t* pemit_rec = lrec_unbacked_alloc();
-
-			if (val.type == MT_STRING) {
-				// Ownership transfer from mv_t to lrec.
-				lrec_put(pemit_rec, output_field_name, val.u.strv, val.free_flags);
-			} else {
-				char free_flags = NO_FREE;
-				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(pemit_rec, output_field_name, string, free_flags);
-			}
-
-			sllv_add(poutrecs, pemit_rec);
-
-		} else { // Bare-boolean statement
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pstate->poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
-			if (val.type != MT_NULL)
-				mv_set_boolean_strict(&val);
-		}
+		pstate->at_begin = FALSE;
 	}
+
+	if (pinrec == NULL) { // End of input stream
+		int emit_rec = TRUE;
+
+		foo(NULL, NULL, pstate->poosvars, pstate->poosvars_typed_overlay, pregex_captures, pctx,
+			pstate->num_end_evaluators, pstate->pend_evaluators, pstate->end_output_field_names,
+			pstate->end_node_types, pstate->end_is_oosvars,
+			&emit_rec, poutrecs);
+
+		string_array_free(pregex_captures);
+		sllv_add(poutrecs, NULL);
+		return poutrecs;
+	}
+
+	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	int emit_rec = TRUE;
+
+	foo(pinrec, ptyped_overlay, pstate->poosvars, pstate->poosvars_typed_overlay, pregex_captures, pctx,
+		pstate->num_main_evaluators, pstate->pmain_evaluators, pstate->main_output_field_names,
+		pstate->main_node_types, pstate->main_is_oosvars,
+		&emit_rec, poutrecs);
 
 	if (emit_rec) {
 		// Write the output fields from the typed overlay back to the lrec.
@@ -500,4 +469,105 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		lrec_free(pinrec);
 	}
 	return poutrecs;
+}
+
+// ----------------------------------------------------------------
+static void foo(
+	lrec_t* pinrec,
+	lhmsv_t* ptyped_overlay,
+	lrec_t* poosvars,
+	lhmsv_t* poosvars_typed_overlay,
+	string_array_t* pregex_captures,
+	context_t* pctx,
+	int num_evaluators,
+	lrec_evaluator_t** pevaluators,
+	char** output_field_names,
+	int*   node_types,
+	int*   is_oosvars,
+	int*   pemit_rec,
+	sllv_t* poutrecs
+) {
+
+	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
+	// string values).
+	*pemit_rec = TRUE;
+	for (int i = 0; i < num_evaluators; i++) {
+		lrec_evaluator_t* pevaluator = pevaluators[i];
+		char* output_field_name = output_field_names[i];
+		int node_type = node_types[i];
+
+		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+			*pval = val;
+			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
+			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need to do
+			// lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing throwaway
+			// number-to-string formatting -- it's better to do it once at the end; (2) having the string values doubly
+			// owned by the typed overlay and the lrec would result in double frees, or awkward bookkeeping. However,
+			// the NR variable evaluator reads prec->field_count, so we need to put something here. And putting
+			// something statically allocated minimizes copying/freeing.
+			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+			*pval = val;
+			lhmsv_put(poosvars_typed_overlay, output_field_name, pval, NO_FREE);
+			lrec_put(poosvars, output_field_name, "bug", NO_FREE);
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			if (val.type != MT_NULL) {
+				mv_set_boolean_strict(&val);
+				if (!val.u.boolv) {
+					*pemit_rec = FALSE;
+					break;
+				}
+			}
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			if (val.type == MT_NULL)
+				break;
+			mv_set_boolean_strict(&val);
+			if (!val.u.boolv) {
+				break;
+			}
+
+		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			lrec_t* pemit_rec = lrec_unbacked_alloc();
+
+			if (val.type == MT_STRING) {
+				// Ownership transfer from mv_t to lrec.
+				lrec_put(pemit_rec, output_field_name, val.u.strv, val.free_flags);
+			} else {
+				char free_flags = NO_FREE;
+				char* string = mv_format_val(&val, &free_flags);
+				lrec_put(pemit_rec, output_field_name, string, free_flags);
+			}
+
+			sllv_add(poutrecs, pemit_rec);
+
+		} else { // Bare-boolean statement
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				poosvars, poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
+			if (val.type != MT_NULL)
+				mv_set_boolean_strict(&val);
+		}
+	}
 }
