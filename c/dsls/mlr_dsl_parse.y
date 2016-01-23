@@ -121,13 +121,12 @@ mlr_dsl_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(pasts, A);
 }
+
+// xxx bracketed name too ...
 mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) MLR_DSL_OOSVAR_NAME(B). {
 	// Replace "@{field.name}" with just "field.name"
 	char* at_name = B->text;
-	char* no_at_name = &at_name[2];
-	int len = strlen(no_at_name);
-	if (len > 0)
-		no_at_name[len-1] = 0;
+	char* no_at_name = &at_name[1];
 	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
 	sllv_add(pasts, A);

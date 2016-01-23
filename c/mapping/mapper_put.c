@@ -13,6 +13,11 @@ typedef struct _mapper_put_state_t {
 	int num_evaluators;
 	char** output_field_names;
 	int*   node_types;
+	int*   is_oosvars;
+
+	lrec_t* poosvars;
+	lhmsv_t* poosvars_typed_overlay;
+
 	lrec_evaluator_t** pevaluators;
 } mapper_put_state_t;
 
@@ -116,12 +121,15 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 	pstate->num_evaluators = pasts->length;
 	pstate->output_field_names = mlr_malloc_or_die(pasts->length * sizeof(char*));
 	pstate->node_types  = mlr_malloc_or_die(pasts->length * sizeof(int));
+	pstate->is_oosvars  = mlr_malloc_or_die(pasts->length * sizeof(int));
 	pstate->pevaluators = mlr_malloc_or_die(pasts->length * sizeof(lrec_evaluator_t*));
 
 	int i = 0;
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 
+		pstate->node_types[i] = past->type;
+		pstate->is_oosvars[i] = FALSE;
 		if (past->type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 			if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -143,8 +151,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			}
 
 			char* output_field_name = pleft->text;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
+			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
 			pstate->output_field_names[i] = output_field_name;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
@@ -157,7 +164,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 			mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 
-			if (pleft->type != MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
+			if (pleft->type != MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME) {
 				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 					MLR_GLOBALS.argv0, __FILE__, __LINE__);
 				exit(1);
@@ -168,20 +175,18 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 			}
 
 			char* output_field_name = pleft->text;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
+			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pright, type_inferencing);
 			pstate->output_field_names[i] = output_field_name;
+			pstate->is_oosvars[i] = TRUE;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
+			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
 			pstate->output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_GATE) {
 			mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
+			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(pnode, type_inferencing);
 			pstate->output_field_names[i] = NULL;
 
 		} else if (past->type == MLR_DSL_AST_NODE_TYPE_EMIT) {
@@ -200,12 +205,12 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 
 		} else {
 			// Bare-boolean statement
-			lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
-			pstate->pevaluators[i] = pevaluator;
+			pstate->pevaluators[i] = lrec_evaluator_alloc_from_ast(past, type_inferencing);
 			pstate->output_field_names[i] = NULL;
 		}
-		pstate->node_types[i] = past->type;
 	}
+	pstate->poosvars = lrec_unbacked_alloc();
+	pstate->poosvars_typed_overlay = lhmsv_alloc();
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -232,6 +237,10 @@ static void mapper_put_free(mapper_t* pmapper) {
 		mlr_dsl_ast_node_free(past);
 	}
 	sllv_free(pstate->pasts);
+	lrec_free(pstate->poosvars);
+	for (lhmsve_t* pe = pstate->poosvars_typed_overlay->phead; pe != NULL; pe = pe->pnext)
+		mv_free(pe->pvvalue);
+	lhmsv_free(pstate->poosvars_typed_overlay);
 
 	ap_free(pstate->pargp);
 
@@ -295,7 +304,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		int node_type = pstate->node_types[i];
 
 		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
@@ -310,22 +321,18 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
-			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
-			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need to do
-			// lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing throwaway
-			// number-to-string formatting -- it's better to do it once at the end; (2) having the string values doubly
-			// owned by the typed overlay and the lrec would result in double frees, or awkward bookkeeping. However,
-			// the NR variable evaluator reads prec->field_count, so we need to put something here. And putting
-			// something statically allocated minimizes copying/freeing.
-			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+			lhmsv_put(pstate->poosvars_typed_overlay, output_field_name, pval, NO_FREE);
+			lrec_put(pstate->poosvars, output_field_name, "bug", NO_FREE);
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
 				if (!val.u.boolv) {
@@ -335,7 +342,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			}
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
@@ -344,17 +353,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			}
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
-
-			// xxx needs DSL work on name-capture:
-			// * "emit sum" => sum=3.7 or what have you
-			// * "emit 3.7" => name = what??
-			//
-			// ? grammar split out
-			//     "emit {oosvar_name}" or
-			//     "emit({name}, {value})"
-			// ?
-
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			lrec_t* pemit_rec = lrec_unbacked_alloc();
 
 			if (val.type == MT_STRING) {
@@ -369,7 +370,9 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			sllv_add(poutrecs, pemit_rec);
 
 		} else { // Bare-boolean statement
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
+				pstate->poosvars, pstate->poosvars_typed_overlay,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
 		}
