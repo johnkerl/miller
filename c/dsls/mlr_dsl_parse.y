@@ -39,9 +39,9 @@
 	fprintf(stderr, "Syntax error!\n");
 }
 
-mlr_dsl_body ::= mlr_dsl_statements.                // For scan-from-string
-
 // ----------------------------------------------------------------
+mlr_dsl_body       ::= mlr_dsl_statements.
+
 mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
@@ -113,12 +113,7 @@ mlr_dsl_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	sllv_add(pasts, A);
 }
 
-// xxx bracketed name too ...
-mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) MLR_DSL_OOSVAR_NAME(B). {
-	// Replace "@{field.name}" with just "field.name"
-	char* at_name = B->text;
-	char* no_at_name = &at_name[1];
-	B = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_EMIT, B);
 	sllv_add(pasts, A);
 }
