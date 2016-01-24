@@ -20,8 +20,6 @@
 #define MLR_DSL_AST_NODE_TYPE_FILTER            0xcc00
 #define MLR_DSL_AST_NODE_TYPE_GATE              0xcc33
 #define MLR_DSL_AST_NODE_TYPE_EMIT              0xcc66
-#define MLR_DSL_AST_NODE_TYPE_BEGIN             0xff22
-#define MLR_DSL_AST_NODE_TYPE_END               0xff44
 
 typedef struct _mlr_dsl_ast_t {
 	sllv_t* pbegin_statements;

@@ -37,11 +37,11 @@
 	return MLR_DSL_EMIT;
 }
 "begin" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_BEGIN);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MLR_DSL_BEGIN;
 }
 "end" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_END);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MLR_DSL_END;
 }
 

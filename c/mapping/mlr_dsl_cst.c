@@ -84,9 +84,6 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
-	if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN || past->type == MLR_DSL_AST_NODE_TYPE_END)
-		past = past->pchildren->phead->pvvalue;
-
 	pstatement->ast_node_type = past->type;
 	pstatement->pitems = sllv_alloc();
 

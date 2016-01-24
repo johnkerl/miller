@@ -92,50 +92,46 @@ mlr_dsl_main_emit(A) ::= mlr_dsl_emit(B). {
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_begin_oosvar_assignment(A)  ::= MLR_DSL_BEGIN(X) mlr_dsl_oosvar_assignment(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
+mlr_dsl_begin_oosvar_assignment(A)  ::= MLR_DSL_BEGIN mlr_dsl_oosvar_assignment(B). {
+	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_bare_boolean(A) ::= MLR_DSL_BEGIN(X) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
+mlr_dsl_begin_bare_boolean(A) ::= MLR_DSL_BEGIN mlr_dsl_ternary(B). {
+	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_filter(A) ::= MLR_DSL_BEGIN(X) MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	B = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
+mlr_dsl_begin_filter(A) ::= MLR_DSL_BEGIN MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_gate(A) ::= MLR_DSL_BEGIN(X) MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	B = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
+mlr_dsl_begin_gate(A) ::= MLR_DSL_BEGIN MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_emit(A) ::= MLR_DSL_BEGIN(X) mlr_dsl_emit(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_BEGIN, B);
+mlr_dsl_begin_emit(A) ::= MLR_DSL_BEGIN mlr_dsl_emit(B). {
+	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_end_oosvar_assignment(A)  ::= MLR_DSL_END(X) mlr_dsl_oosvar_assignment(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_END, B);
+mlr_dsl_end_oosvar_assignment(A)  ::= MLR_DSL_END mlr_dsl_oosvar_assignment(B). {
+	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_bare_boolean(A) ::= MLR_DSL_END(X) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_END, B);
+mlr_dsl_end_bare_boolean(A) ::= MLR_DSL_END mlr_dsl_ternary(B). {
+	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_filter(A) ::= MLR_DSL_END(X) MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	B = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_END, B);
+mlr_dsl_end_filter(A) ::= MLR_DSL_END MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_gate(A) ::= MLR_DSL_END(X) MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	B = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_END, B);
+mlr_dsl_end_gate(A) ::= MLR_DSL_END MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_emit(A) ::= MLR_DSL_END(X) mlr_dsl_emit(B). {
-	A = mlr_dsl_ast_node_alloc_unary(X->text, MLR_DSL_AST_NODE_TYPE_END, B);
+mlr_dsl_end_emit(A) ::= MLR_DSL_END mlr_dsl_emit(B). {
+	A = B;
 	sllv_add(past->pend_statements, A);
 }
 

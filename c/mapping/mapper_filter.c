@@ -88,7 +88,6 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	mlr_dsl_expression = argv[(*pargi)++];
 
-	// xxx temp iterate
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
 
 	// For just dev-testing the parser, you can do
