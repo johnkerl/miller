@@ -42,10 +42,10 @@
 // ----------------------------------------------------------------
 mlr_dsl_body       ::= mlr_dsl_statements.
 
-mlr_dsl_statements ::= .
 mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
+mlr_dsl_statement ::= .
 mlr_dsl_statement ::= mlr_dsl_srec_assignment.
 mlr_dsl_statement ::= mlr_dsl_top_level_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_bare_boolean.
