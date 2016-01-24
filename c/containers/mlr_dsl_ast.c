@@ -3,6 +3,15 @@
 #include "containers/mlr_dsl_ast.h"
 
 // ----------------------------------------------------------------
+mlr_dsl_ast_root_t* mlr_dsl_ast_root_alloc() {
+	mlr_dsl_ast_root_t* proot = mlr_malloc_or_die(sizeof(mlr_dsl_ast_root_t));
+	proot->pbegin_statements = sllv_alloc();
+	proot->pmain_statements  = sllv_alloc();
+	proot->pend_statements   = sllv_alloc();
+	return proot;
+}
+
+// ----------------------------------------------------------------
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type) {
 	mlr_dsl_ast_node_t* pnode = (mlr_dsl_ast_node_t*)mlr_malloc_or_die(
 		sizeof(mlr_dsl_ast_node_t));
@@ -119,6 +128,20 @@ char* mlr_dsl_ast_node_describe_type(int type) {
 	case MLR_DSL_AST_NODE_TYPE_END:               return "end";               break;
 	default: return "???";
 	}
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_ast_root_free_statement_list(sllv_t* plist) {
+	for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
+		mlr_dsl_ast_node_free(pe->pvvalue);
+	sllv_free(plist);
+}
+
+void mlr_dsl_ast_root_free(mlr_dsl_ast_root_t* proot) {
+	mlr_dsl_ast_root_free_statement_list(proot->pbegin_statements);
+	mlr_dsl_ast_root_free_statement_list(proot->pmain_statements);
+	mlr_dsl_ast_root_free_statement_list(proot->pend_statements);
+	free(proot);
 }
 
 // ----------------------------------------------------------------

@@ -23,26 +23,33 @@
 #define MLR_DSL_AST_NODE_TYPE_BEGIN             0xff22
 #define MLR_DSL_AST_NODE_TYPE_END               0xff44
 
+typedef struct _mlr_dsl_ast_root_t {
+	sllv_t* pbegin_statements;
+	sllv_t* pmain_statements;
+	sllv_t* pend_statements;
+} mlr_dsl_ast_root_t;
+
 typedef struct _mlr_dsl_ast_node_t {
 	char*   text;
 	int     type;
 	sllv_t* pchildren;
 } mlr_dsl_ast_node_t;
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type);
+mlr_dsl_ast_root_t* mlr_dsl_ast_root_alloc();
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, int type);
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
-	mlr_dsl_ast_node_t* pa);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type, mlr_dsl_ast_node_t* pa);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc);
+
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
 
 // See comments in mlr_dsl_parse.y for this seemingly awkward syntax wherein
 // we change the function name after having set it up. This is a consequence of
@@ -56,5 +63,7 @@ void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
 char* mlr_dsl_ast_node_describe_type(int type);
 
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
+
+void mlr_dsl_ast_root_free(mlr_dsl_ast_root_t* proot);
 
 #endif // MLR_DSL_AST_H
