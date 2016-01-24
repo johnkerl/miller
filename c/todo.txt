@@ -16,29 +16,32 @@ TOP OF LIST
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
+  o .y hospitality annotations :)
+  o mlr -f ish @ cover x 2
+
   o next up:
     !! begin{}/end{} into the grammar
     !! accumulate begin/end/main statements within the parser itself; root-noded AST ...
-
-    !! work harder on tolerating final semicolon
-    !! comments: replace with spaces from # to EOL/EOS, whichever comes first
+    !! make the oosrec overlay-only. the underlying lrec is just baggage here.
     !! filter is also gating. it should not.
+
+    ! work harder on tolerating final semicolon
+    ! comments: replace with spaces from # to EOL/EOS, whichever comes first
     !  re-valgrind continuously
     !  xxxes
-    !  try making the oosrec overlay-only. the underlying lrec is just baggage here.
 
-    ! define/test behavior for null-valued filter/gate
+    - define/test behavior for null-valued filter/gate
     - disallow assignment-to-keyword (use a hashmap).
 
   o initial sketch: there are two lrecs: with$ and with$; in-stream & out-of-stream.
     - this is fine for experimenting.
     ! QUESTION: how far does this get me?? I think I need two-level (oosrecs) in order to put
       things like "stats1 -g foo" firmly into userspace.
-    - next: x.sum, y.count, $x["sum"], $y["count"]; maybe deeper levels? arbitrarily deep??
-    - want @x = $0 kinds of record-from-record assignments
-    ? implement $0 now?
-    ? want $0 = @x kinds of record-from-record assignments?!?
-    - experiments: what userspace data structures would be needed for:
+    ? next: x.sum, y.count, $x["sum"], $y["count"]; maybe deeper levels? arbitrarily deep??
+      ? implement $0 now?
+      ? want $0 = @x kinds of record-from-record assignments?!?
+      ? are multi-level hashmaps enough? lists too?!?
+    - experiments: what userspace data structures (and maybe new functions) would be needed for:
       > bootstrap?
       > count-distinct?
       > cut?
@@ -50,18 +53,12 @@ TOP OF LIST
       > histogram?
       > (rename? reorder?)
       > sample, w/ & w/o -g?
-      > stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max
-      > stats2 linregs,r2,corr,cov
-      > step
-        - delta
-        - from-first
-        - ratio
-        - rsum
-        - counter
-        - ewma
-      > tail
-      > top
-      > uniq
+      > stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max?
+      > stats2 linregs,r2,corr,cov?
+      > step delta,from-first,ratio,rsum,counter,ewma?
+      > tail?
+      > top?
+      > uniq?
 
   o DSL more:
     - people will ask for an unset/clear syntax
@@ -74,15 +71,17 @@ TOP OF LIST
 
     $ time mlr stats1 -a mean -f x ../data/big.dkvp
     x_mean=0.499567
-    real    0m1.486s
-    real    0m1.500s
-    real    0m1.637s
+    real    0m1.486s 0m1.500s 0m1.637s
 
     $ time mlr put 'begin @x_count=0;begin @x_sum=0.0;@x_sum = @x_sum+$x;@x_count=@x_count+1; filter false;end @x_mean=@x_sum/@x_count; end emit @x_mean'  ../data/big.dkvp
     x_mean=0.499567
-    real    0m2.262s
-    real    0m2.371s
-    real    0m2.356s
+    real    0m2.262s 0m2.371s 0m2.356s
+
+    mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' then step -a ewma -d 0.1 -f x ../data/big.dkvp
+    time mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' ../data/big.dkvp > /dev/null
+    real  0m3.976s 0m3.971s 0m3.944s
+    time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
+    real  0m3.250s 0m3.283s 0m3.300s
 
 ----------------------------------------------------------------
 
