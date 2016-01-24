@@ -41,7 +41,7 @@ TOP OF LIST
       ? implement $0 now?
       ? want $0 = @x kinds of record-from-record assignments?!?
       ? are multi-level hashmaps enough? lists too?!?
-    - experiments: what userspace data structures (and maybe new functions) would be needed for:
+    - experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
       > bootstrap?
       > count-distinct?
       > cut?

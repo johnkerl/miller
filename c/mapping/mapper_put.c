@@ -344,12 +344,14 @@ static void evaluate_statements(
 				char* output_field_name = pitem->output_field_name;
 				lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
+				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
+				// bypass that and just hashmap-get keyed by output_field_name here.
 				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
 					poosvars, poosvars_typed_overlay,
 					pregex_captures, pctx, pevaluator->pvstate);
 
 				if (val.type == MT_STRING) {
-					// Ownership transfer from mv_t to lrec.
+					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
 					lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
 				} else {
 					char free_flags = NO_FREE;
