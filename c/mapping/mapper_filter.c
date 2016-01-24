@@ -89,6 +89,11 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	mlr_dsl_expression = argv[(*pargi)++];
 
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
+	if (past == NULL) {
+		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
+			argv[0], verb, mlr_dsl_expression);
+		return NULL;
+	}
 
 	// For just dev-testing the parser, you can do
 	//   mlr filter -v 'expression goes here' /dev/null
@@ -96,21 +101,23 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_print(past);
 	}
 
-	sllv_t* pasts = past->pmain_statements;
-	if (pasts == NULL) {
-		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
-			argv[0], verb, mlr_dsl_expression);
+	// xxx keep this, or support begin/end here. needs olh/mld doc in either case.
+	if (past->pbegin_statements->length != 0) {
+		fprintf(stderr, "%s %s: begin-statements are unsupported.\n", argv[0], verb);
 		return NULL;
 	}
-	// xxx disallow begin/end here too; or support them. needs olh/mld doc in either case.
-	if (pasts->length != 1) {
+	if (past->pmain_statements->length != 1) {
 		fprintf(stderr, "%s %s: multiple expressions are unsupported.\n", argv[0], verb);
 		return NULL;
 	}
-	mlr_dsl_ast_node_t* past1 = sllv_pop(pasts);
-	sllv_free(pasts);
+	if (past->pend_statements->length != 0) {
+		fprintf(stderr, "%s %s: end-statements are unsupported.\n", argv[0], verb);
+		return NULL;
+	}
+	mlr_dsl_ast_node_t* psubtree = sllv_pop(past->pmain_statements);
+	mlr_dsl_ast_free(past);
 
-	return mapper_filter_alloc(pstate, past1, type_inferencing, do_exclude);
+	return mapper_filter_alloc(pstate, psubtree, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------
