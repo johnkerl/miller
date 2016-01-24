@@ -22,7 +22,6 @@ TOP OF LIST
   o next up:
     !! begin{}/end{} into the grammar
     !! accumulate begin/end/main statements within the parser itself; root-noded AST ...
-    !! make the oosrec overlay-only. the underlying lrec is just baggage here.
     !! filter is also gating. it should not.
 
     ! work harder on tolerating final semicolon

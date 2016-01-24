@@ -13,21 +13,19 @@ typedef struct _mapper_put_state_t {
 	sllv_t*        pasts;
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
-	lrec_t*        poosvars;
-	lhmsv_t*       poosvars_typed_overlay;
+	lhmsv_t*       poosvars;
 } mapper_put_state_t;
 
-static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_put_free(mapper_t* pmapper);
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
+static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_put_free(mapper_t* pmapper);
 
 static void evaluate_statements(
 	lrec_t*         pinrec,
 	lhmsv_t*        ptyped_overlay,
-	lrec_t*         poosvars,
-	lhmsv_t*        poosvars_typed_overlay,
+	lhmsv_t*        poosvars,
 	string_array_t* pregex_captures,
 	context_t*      pctx,
 	sllv_t*         pcst_statements,
@@ -125,12 +123,11 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
-	pstate->pargp                  = pargp;
-	pstate->pasts                  = pasts;
-	pstate->pcst                   = cst_alloc(pasts, type_inferencing);
-	pstate->at_begin               = TRUE;
-	pstate->poosvars               = lrec_unbacked_alloc();
-	pstate->poosvars_typed_overlay = lhmsv_alloc();
+	pstate->pargp    = pargp;
+	pstate->pasts    = pasts;
+	pstate->pcst     = cst_alloc(pasts, type_inferencing);
+	pstate->at_begin = TRUE;
+	pstate->poosvars = lhmsv_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -149,10 +146,9 @@ static void mapper_put_free(mapper_t* pmapper) {
 	}
 	sllv_free(pstate->pasts);
 	cst_free(pstate->pcst);
-	lrec_free(pstate->poosvars);
-	for (lhmsve_t* pe = pstate->poosvars_typed_overlay->phead; pe != NULL; pe = pe->pnext)
+	for (lhmsve_t* pe = pstate->poosvars->phead; pe != NULL; pe = pe->pnext)
 		mv_free(pe->pvvalue);
-	lhmsv_free(pstate->poosvars_typed_overlay);
+	lhmsv_free(pstate->poosvars);
 	ap_free(pstate->pargp);
 
 	free(pstate);
@@ -205,14 +201,14 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-		evaluate_statements(NULL, NULL, pstate->poosvars, pstate->poosvars_typed_overlay,
+		evaluate_statements(NULL, NULL, pstate->poosvars,
 			pregex_captures, pctx, pstate->pcst->pbegin_statements,
 			&emit_rec, poutrecs);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		evaluate_statements(NULL, NULL, pstate->poosvars, pstate->poosvars_typed_overlay,
+		evaluate_statements(NULL, NULL, pstate->poosvars,
 			pregex_captures, pctx, pstate->pcst->pend_statements,
 			&emit_rec, poutrecs);
 
@@ -223,7 +219,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
-	evaluate_statements(pinrec, ptyped_overlay, pstate->poosvars, pstate->poosvars_typed_overlay,
+	evaluate_statements(pinrec, ptyped_overlay, pstate->poosvars,
 		pregex_captures, pctx, pstate->pcst->pmain_statements,
 		&emit_rec, poutrecs);
 
@@ -260,8 +256,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 static void evaluate_statements(
 	lrec_t*         pinrec,
 	lhmsv_t*        ptyped_overlay,
-	lrec_t*         poosvars,
-	lhmsv_t*        poosvars_typed_overlay,
+	lhmsv_t*        poosvars,
 	string_array_t* pregex_captures,
 	context_t*      pctx,
 	sllv_t*         pcst_statements,
@@ -286,24 +281,22 @@ static void evaluate_statements(
 			int is_oosvar = pitem->is_oosvar;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				poosvars, poosvars_typed_overlay,
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
 				pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
-			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
-			// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
-			// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
-			// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
-			// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
-			// here. And putting something statically allocated minimizes copying/freeing.
 			if (is_oosvar) {
-				lhmsv_put(poosvars_typed_overlay, output_field_name, pval, NO_FREE);
-				lrec_put(poosvars, output_field_name, "bug", NO_FREE);
+				lhmsv_put(poosvars, output_field_name, pval, NO_FREE);
 			} else {
+				// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+				// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+				// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
+				// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
+				// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
+				// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
+				// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
+				// here. And putting something statically allocated minimizes copying/freeing.
 				lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
 				lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 			}
@@ -312,9 +305,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				poosvars, poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
 				if (!val.u.boolv) {
@@ -327,9 +318,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				poosvars, poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
@@ -346,9 +335,7 @@ static void evaluate_statements(
 
 				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
 				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-					poosvars, poosvars_typed_overlay,
-					pregex_captures, pctx, pevaluator->pvstate);
+				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
 
 				if (val.type == MT_STRING) {
 					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
@@ -365,9 +352,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-				poosvars, poosvars_typed_overlay,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
 		}
