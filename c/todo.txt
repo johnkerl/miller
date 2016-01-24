@@ -20,9 +20,7 @@ TOP OF LIST
   o mlr -f ish @ cover x 2
 
   o next up:
-    !! begin{}/end{} into the grammar
-       - renmae ast_root to ast
-    !! accumulate begin/end/main statements within the parser itself; root-noded AST ...
+    !! curly-braced begin{}/end{} into the grammar
     !! filter is also gating. it should not.
 
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
