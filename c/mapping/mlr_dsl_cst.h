@@ -55,7 +55,7 @@ typedef struct _mlr_dsl_cst_t {
 	sllv_t* pend_statements;
 } mlr_dsl_cst_t;
 
-mlr_dsl_cst_t* cst_alloc(sllv_t* pasts, int type_inferencing);
-void           cst_free(mlr_dsl_cst_t* pcst);
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
+void           mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 #endif // MLR_DSL_CST_H

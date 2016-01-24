@@ -2,6 +2,7 @@
 #include "lib/mlrutil.h"
 #include "mlr_dsl_cst.h"
 
+static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
@@ -44,30 +45,27 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 //
 // So our job here at present is to loop through the per-statement ASTs, splitting them out by begin/main/end.
 
-mlr_dsl_cst_t* cst_alloc(sllv_t* pasts, int type_inferencing) {
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
-	pcst->pbegin_statements = sllv_alloc();
-	pcst->pmain_statements  = sllv_alloc();
-	pcst->pend_statements   = sllv_alloc();
 
-	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* past = pe->pvvalue;
-
-		mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc(past, type_inferencing);
-
-		if (past->type == MLR_DSL_AST_NODE_TYPE_BEGIN) {
-			sllv_add(pcst->pbegin_statements, pstatement);
-		} else if (past->type == MLR_DSL_AST_NODE_TYPE_END) {
-			sllv_add(pcst->pend_statements, pstatement);
-		} else {
-			sllv_add(pcst->pmain_statements, pstatement);
-		}
-	}
+	pcst->pbegin_statements = mlr_dsl_cst_alloc_from_statement_list(past->pbegin_statements, type_inferencing);
+	pcst->pmain_statements  = mlr_dsl_cst_alloc_from_statement_list(past->pmain_statements,  type_inferencing);
+	pcst->pend_statements   = mlr_dsl_cst_alloc_from_statement_list(past->pend_statements,   type_inferencing);
 
 	return pcst;
 }
 
-void cst_free(mlr_dsl_cst_t* pcst) {
+static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing) {
+	sllv_t* pstatements = sllv_alloc();
+	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* past = pe->pvvalue;
+		mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc(past, type_inferencing);
+		sllv_add(pstatements, pstatement);
+	}
+	return pstatements;
+}
+
+void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
 	for (sllve_t* pe = pcst->pbegin_statements->phead; pe != NULL; pe = pe->pnext)

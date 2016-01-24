@@ -84,10 +84,10 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
 	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
-	int   print_asts = FALSE;
+	int   print_ast = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate,      "-v", &print_asts);
+	ap_define_true_flag(pstate,      "-v", &print_ast);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 
@@ -103,10 +103,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	mlr_dsl_expression = argv[(*pargi)++];
 
 	// Linked list of mlr_dsl_ast_node_t*.
-	// xxx temp iterate
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
-	sllv_t* pasts = past->pmain_statements;
-	if (pasts == NULL) {
+	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, mlr_dsl_expression);
 		return NULL;
@@ -114,10 +112,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 
 	// For just dev-testing the parser, you can do
 	//   mlr put -v 'expression goes here' /dev/null
-	if (print_asts) {
-		for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext)
-			mlr_dsl_ast_node_print(pe->pvvalue);
-	}
+	if (print_ast)
+		mlr_dsl_ast_print(past);
 
 	return mapper_put_alloc(pstate, past, type_inferencing);
 }
@@ -127,9 +123,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp    = pargp;
 	pstate->past     = past;
-	// xxx temp iterate
-	sllv_t* pasts = past->pmain_statements;
-	pstate->pcst     = cst_alloc(pasts, type_inferencing);
+	pstate->pcst     = mlr_dsl_cst_alloc(past, type_inferencing);
 	pstate->at_begin = TRUE;
 	pstate->poosvars = lhmsv_alloc();
 
@@ -144,15 +138,9 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
-	// xxx temp iterate
+	mlr_dsl_cst_free(pstate->pcst);
+	mlr_dsl_ast_free(pstate->past);
 
-//	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_ast_node_t* past = pe->pvvalue;
-//		mlr_dsl_ast_node_free(past);
-//	}
-//	sllv_free(pstate->pasts);
-
-	cst_free(pstate->pcst);
 	for (lhmsve_t* pe = pstate->poosvars->phead; pe != NULL; pe = pe->pnext)
 		mv_free(pe->pvvalue);
 	lhmsv_free(pstate->poosvars);
@@ -312,7 +300,8 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
 				if (!val.u.boolv) {
@@ -325,7 +314,8 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
@@ -342,7 +332,8 @@ static void evaluate_statements(
 
 				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
 				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
+				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+					pregex_captures, pctx, pevaluator->pvstate);
 
 				if (val.type == MT_STRING) {
 					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
@@ -359,7 +350,8 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars, pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
 		}

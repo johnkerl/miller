@@ -64,12 +64,12 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	char* verb = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
-	int   print_asts = FALSE;
+	int   print_ast = FALSE;
 	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
 	int   do_exclude = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate,      "-v", &print_asts);
+	ap_define_true_flag(pstate,      "-v", &print_ast);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 	ap_define_true_flag(pstate,      "-x", &do_exclude);
@@ -90,24 +90,26 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 
 	// xxx temp iterate
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
+
+	// For just dev-testing the parser, you can do
+	//   mlr filter -v 'expression goes here' /dev/null
+	if (print_ast) {
+		mlr_dsl_ast_print(past);
+	}
+
 	sllv_t* pasts = past->pmain_statements;
 	if (pasts == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, mlr_dsl_expression);
 		return NULL;
 	}
+	// xxx disallow begin/end here too; or support them. needs olh/mld doc in either case.
 	if (pasts->length != 1) {
 		fprintf(stderr, "%s %s: multiple expressions are unsupported.\n", argv[0], verb);
 		return NULL;
 	}
 	mlr_dsl_ast_node_t* past1 = sllv_pop(pasts);
 	sllv_free(pasts);
-
-	// For just dev-testing the parser, you can do
-	//   mlr filter -v 'expression goes here' /dev/null
-	if (print_asts) {
-		mlr_dsl_ast_node_print(past1);
-	}
 
 	return mapper_filter_alloc(pstate, past1, type_inferencing, do_exclude);
 }

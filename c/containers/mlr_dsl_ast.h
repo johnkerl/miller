@@ -59,6 +59,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 	mlr_dsl_ast_node_t* pa, char* name);
 
+void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
 char* mlr_dsl_ast_node_describe_type(int type);
 
