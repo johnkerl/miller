@@ -338,7 +338,7 @@ static void evaluate_statements(
 			}
 
 		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
-			lrec_t* pemit_rec = lrec_unbacked_alloc();
+			lrec_t* prec_to_emit = lrec_unbacked_alloc();
 			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
 				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
 				char* output_field_name = pitem->output_field_name;
@@ -350,14 +350,14 @@ static void evaluate_statements(
 
 				if (val.type == MT_STRING) {
 					// Ownership transfer from mv_t to lrec.
-					lrec_put(pemit_rec, output_field_name, val.u.strv, val.free_flags);
+					lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
 				} else {
 					char free_flags = NO_FREE;
 					char* string = mv_format_val(&val, &free_flags);
-					lrec_put(pemit_rec, output_field_name, string, free_flags);
+					lrec_put(prec_to_emit, output_field_name, string, free_flags);
 				}
 			}
-			sllv_add(poutrecs, pemit_rec);
+			sllv_add(poutrecs, prec_to_emit);
 
 		} else { // Bare-boolean statement
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
