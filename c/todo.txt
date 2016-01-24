@@ -24,7 +24,6 @@ TOP OF LIST
     !! accumulate begin/end/main statements within the parser itself; root-noded AST ...
     !! filter is also gating. it should not.
 
-    ! work harder on tolerating final semicolon
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
     !  re-valgrind continuously
     !  xxxes

@@ -42,6 +42,7 @@
 // ----------------------------------------------------------------
 mlr_dsl_body       ::= mlr_dsl_statements.
 
+mlr_dsl_statements ::= .
 mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
