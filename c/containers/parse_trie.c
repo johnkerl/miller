@@ -10,7 +10,7 @@ static void parse_trie_add_string_aux(parse_trie_node_t* pnode, char* string, in
 // ----------------------------------------------------------------
 parse_trie_t* parse_trie_alloc() {
 	parse_trie_t* ptrie = mlr_malloc_or_die(sizeof(parse_trie_t));
-	ptrie->proot = parse_trie_node_alloc(0);
+	ptrie->past = parse_trie_node_alloc(0);
 	ptrie->maxlen = 0;
 	return ptrie;
 }
@@ -37,14 +37,14 @@ static void parse_trie_free_node_descendants(parse_trie_node_t* pnode) {
 }
 
 void parse_trie_free(parse_trie_t* ptrie) {
-	parse_trie_free_node_descendants(ptrie->proot);
-	free(ptrie->proot);
+	parse_trie_free_node_descendants(ptrie->past);
+	free(ptrie->past);
 	free(ptrie);
 }
 
 // ----------------------------------------------------------------
 void parse_trie_print(parse_trie_t* ptrie) {
-	parse_trie_node_t* pnode = ptrie->proot;
+	parse_trie_node_t* pnode = ptrie->past;
 	printf("PARSE TRIE DUMP START\n");
 	if (pnode != NULL) {
 		parse_trie_print_aux(pnode, 0);
@@ -70,7 +70,7 @@ static void parse_trie_print_aux(parse_trie_node_t* pnode, int depth) {
 // ----------------------------------------------------------------
 void parse_trie_add_string(parse_trie_t* ptrie, char* string, int stridx) {
 	int len = strlen(string);
-	parse_trie_add_string_aux(ptrie->proot, string, stridx, strlen(string));
+	parse_trie_add_string_aux(ptrie->past, string, stridx, strlen(string));
 	if (len > ptrie->maxlen)
 		ptrie->maxlen = len;
 }

@@ -88,7 +88,9 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	mlr_dsl_expression = argv[(*pargi)++];
 
-	sllv_t* pasts = mlr_dsl_parse(mlr_dsl_expression);
+	// xxx temp iterate
+	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
+	sllv_t* pasts = past->pmain_statements;
 	if (pasts == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, mlr_dsl_expression);
@@ -98,16 +100,16 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		fprintf(stderr, "%s %s: multiple expressions are unsupported.\n", argv[0], verb);
 		return NULL;
 	}
-	mlr_dsl_ast_node_t* past = sllv_pop(pasts);
+	mlr_dsl_ast_node_t* past1 = sllv_pop(pasts);
 	sllv_free(pasts);
 
 	// For just dev-testing the parser, you can do
 	//   mlr filter -v 'expression goes here' /dev/null
 	if (print_asts) {
-		mlr_dsl_ast_node_print(past);
+		mlr_dsl_ast_node_print(past1);
 	}
 
-	return mapper_filter_alloc(pstate, past, type_inferencing, do_exclude);
+	return mapper_filter_alloc(pstate, past1, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------

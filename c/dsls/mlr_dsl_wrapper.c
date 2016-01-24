@@ -17,7 +17,7 @@ int mlr_dsl_lemon_parser_parse_token(
 	void *pvparser,              /* The parser */
 	int yymajor,                 /* The major token code number */
 	mlr_dsl_ast_node_t* yyminor, /* The value for the token */
-	sllv_t* pasts);              /* Optional %extra_argument parameter */
+	mlr_dsl_ast_t* past);        /* Optional %extra_argument parameter */
 void mlr_dsl_lemon_parser_free(
 	void *pvparser,             /* The parser to be deleted */
 	void (*freeProc)(void*));   /* Function used to reclaim memory */
@@ -27,14 +27,14 @@ void mlr_dsl_lemon_parser_free(
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
 // Returns linked list of mlr_dsl_ast_node_t*.
-static sllv_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast_node_t** ppnode) {
+static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast_node_t** ppnode) {
 	int lex_code;
 	int parse_code;
-	sllv_t* pasts = sllv_alloc();
+	mlr_dsl_ast_t* past = mlr_dsl_ast_alloc();
 	do {
 		lex_code = mlr_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;
-		parse_code = mlr_dsl_lemon_parser_parse_token(pvparser, lex_code, plexed_node, pasts);
+		parse_code = mlr_dsl_lemon_parser_parse_token(pvparser, lex_code, plexed_node, past);
 		if (parse_code == 0)
 			return NULL;
 	} while (lex_code > 0);
@@ -42,16 +42,16 @@ static sllv_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast
 		fprintf(stderr, "The scanner encountered an error.\n");
 		return NULL;
 	}
-	parse_code = mlr_dsl_lemon_parser_parse_token(pvparser, 0, NULL, pasts);
+	parse_code = mlr_dsl_lemon_parser_parse_token(pvparser, 0, NULL, past);
 
 	if (parse_code == 0)
 		return NULL;
-	return pasts;
+	return past;
 }
 
 // ----------------------------------------------------------------
 // Returns linked list of mlr_dsl_ast_node_t*.
-sllv_t* mlr_dsl_parse(char* string) {
+mlr_dsl_ast_t* mlr_dsl_parse(char* string) {
 	mlr_dsl_ast_node_t* pnode = NULL;
 	yyscan_t scanner;
 	mlr_dsl_lexer_lex_init_extra(&pnode, &scanner);
@@ -65,7 +65,7 @@ sllv_t* mlr_dsl_parse(char* string) {
 		mlr_dsl_lexer__switch_to_buffer (buf, scanner);
 	}
 
-	sllv_t* pasts = mlr_dsl_parse_inner(scanner, pvparser, &pnode);
+	mlr_dsl_ast_t* past = mlr_dsl_parse_inner(scanner, pvparser, &pnode);
 
 	if (buf != NULL)
 		mlr_dsl_lexer__delete_buffer(buf, scanner);
@@ -73,7 +73,7 @@ sllv_t* mlr_dsl_parse(char* string) {
 	mlr_dsl_lexer_lex_destroy(scanner);
 	mlr_dsl_lemon_parser_free(pvparser, free);
 
-	return pasts;
+	return past;
 }
 
 // ----------------------------------------------------------------

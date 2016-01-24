@@ -17,7 +17,7 @@ typedef struct _parse_trie_node_t {
 	int  strlen; // length of string stored ending here; -1 if not end of string.
 } parse_trie_node_t;
 typedef struct _parse_trie_t {
-	parse_trie_node_t* proot;
+	parse_trie_node_t* past;
 	int maxlen;
 } parse_trie_t;
 
@@ -51,7 +51,7 @@ void parse_trie_add_string(parse_trie_t* ptrie, char* string, int stridx);
 static inline int parse_trie_ring_match(parse_trie_t* ptrie, char* buf, int sob, int buflen, int mask,
 	int* pstridx, int* pmatchlen)
 {
-	parse_trie_node_t* pnode = ptrie->proot;
+	parse_trie_node_t* pnode = ptrie->past;
 	parse_trie_node_t* pnext;
 	parse_trie_node_t* pterm = NULL;
 	for (int i = 0; i < buflen; i++) {
@@ -74,7 +74,7 @@ static inline int parse_trie_ring_match(parse_trie_t* ptrie, char* buf, int sob,
 }
 
 static inline int parse_trie_match(parse_trie_t* ptrie, char* p, char* e, int* pstridx, int* pmatchlen) {
-	parse_trie_node_t* pnode = ptrie->proot;
+	parse_trie_node_t* pnode = ptrie->past;
 	parse_trie_node_t* pnext;
 	parse_trie_node_t* pterm = NULL;
 	for ( ; p < e; p++) {

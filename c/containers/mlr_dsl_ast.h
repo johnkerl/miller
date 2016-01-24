@@ -23,11 +23,11 @@
 #define MLR_DSL_AST_NODE_TYPE_BEGIN             0xff22
 #define MLR_DSL_AST_NODE_TYPE_END               0xff44
 
-typedef struct _mlr_dsl_ast_root_t {
+typedef struct _mlr_dsl_ast_t {
 	sllv_t* pbegin_statements;
 	sllv_t* pmain_statements;
 	sllv_t* pend_statements;
-} mlr_dsl_ast_root_t;
+} mlr_dsl_ast_t;
 
 typedef struct _mlr_dsl_ast_node_t {
 	char*   text;
@@ -35,7 +35,7 @@ typedef struct _mlr_dsl_ast_node_t {
 	sllv_t* pchildren;
 } mlr_dsl_ast_node_t;
 
-mlr_dsl_ast_root_t* mlr_dsl_ast_root_alloc();
+mlr_dsl_ast_t* mlr_dsl_ast_alloc();
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type);
 
@@ -64,6 +64,6 @@ char* mlr_dsl_ast_node_describe_type(int type);
 
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
 
-void mlr_dsl_ast_root_free(mlr_dsl_ast_root_t* proot);
+void mlr_dsl_ast_free(mlr_dsl_ast_t* past);
 
 #endif // MLR_DSL_AST_H

@@ -21,6 +21,7 @@ TOP OF LIST
 
   o next up:
     !! begin{}/end{} into the grammar
+       - renmae ast_root to ast
     !! accumulate begin/end/main statements within the parser itself; root-noded AST ...
     !! filter is also gating. it should not.
 

@@ -10,13 +10,13 @@
 
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
-	sllv_t*        pasts;
+	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
 	lhmsv_t*       poosvars;
 } mapper_put_state_t;
 
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -103,7 +103,9 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	mlr_dsl_expression = argv[(*pargi)++];
 
 	// Linked list of mlr_dsl_ast_node_t*.
-	sllv_t* pasts = mlr_dsl_parse(mlr_dsl_expression);
+	// xxx temp iterate
+	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
+	sllv_t* pasts = past->pmain_statements;
 	if (pasts == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, mlr_dsl_expression);
@@ -117,14 +119,16 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 			mlr_dsl_ast_node_print(pe->pvvalue);
 	}
 
-	return mapper_put_alloc(pstate, pasts, type_inferencing);
+	return mapper_put_alloc(pstate, past, type_inferencing);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inferencing) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp    = pargp;
-	pstate->pasts    = pasts;
+	pstate->past     = past;
+	// xxx temp iterate
+	sllv_t* pasts = past->pmain_statements;
 	pstate->pcst     = cst_alloc(pasts, type_inferencing);
 	pstate->at_begin = TRUE;
 	pstate->poosvars = lhmsv_alloc();
@@ -140,11 +144,14 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, sllv_t* pasts, int type_inf
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
-	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* past = pe->pvvalue;
-		mlr_dsl_ast_node_free(past);
-	}
-	sllv_free(pstate->pasts);
+	// xxx temp iterate
+
+//	for (sllve_t* pe = pstate->pasts->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_ast_node_t* past = pe->pvvalue;
+//		mlr_dsl_ast_node_free(past);
+//	}
+//	sllv_free(pstate->pasts);
+
 	cst_free(pstate->pcst);
 	for (lhmsve_t* pe = pstate->poosvars->phead; pe != NULL; pe = pe->pnext)
 		mv_free(pe->pvvalue);
