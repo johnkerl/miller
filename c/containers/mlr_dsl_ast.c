@@ -88,15 +88,15 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 
 // ----------------------------------------------------------------
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
-	//printf("AST BEGIN STATEMENTS (%d):\n", past->pbegin_statements->length);
+	printf("AST BEGIN STATEMENTS (%d):\n", past->pbegin_statements->length);
 	for (sllve_t* pe = past->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
 
-	//printf("AST MAIN  STATEMENTS (%d):\n", past->pmain_statements->length);
+	printf("AST MAIN  STATEMENTS (%d):\n", past->pmain_statements->length);
 	for (sllve_t* pe = past->pmain_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
 
-	//xxx printf("AST END   STATEMENTS (%d):\n", past->pend_statements->length);
+	printf("AST END   STATEMENTS (%d):\n", past->pend_statements->length);
 	for (sllve_t* pe = past->pend_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
 }
