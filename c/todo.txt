@@ -22,16 +22,11 @@ TOP OF LIST
   o mlr -f ish @ cover x 2
 
   o next up:
-    !! curly-braced begin{}/end{} into the grammar
-    !! filter is also gating. it should not.
-    ! record-filter/expr-gate -> filter/gate everywhere, incl. lower/uppercase
-
+    ! filter is also gating. it should not.
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
-    !  re-valgrind continuously
-    !  xxxes
-
+    ! re-valgrind continuously
+    ! xxxes
     - define/test behavior for null-valued filter/gate
-    - disallow assignment-to-keyword (use a hashmap).
 
   o initial sketch: there are two lrecs: with$ and with$; in-stream & out-of-stream.
     - this is fine for experimenting.
@@ -63,11 +58,10 @@ TOP OF LIST
   o DSL more:
     - people will ask for an unset/clear syntax
     - people will ask for +=, -=, etc.
-    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
-      implementing the present
+    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while implementing the present
     - replace "null" with "absent" and "uninit"?
-    - awk-style pattern { action } ? are if-statements enough?
-    - move assignments into the CST, and all that ensues (e.g. $x=@a=7).
+    - implement awk-style pattern { action } -- ? are if-statements enough?
+    - move assignments into the CST, and all the changes that ensue (e.g. $x=@a=7).
 
   o perf notes:
 
