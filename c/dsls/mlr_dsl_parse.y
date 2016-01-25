@@ -9,11 +9,11 @@
 #include "../containers/sllv.h"
 
 // ================================================================
-// CST: See the *.y files
 // AST:
 // * parens, commas, semis, line endings, whitespace are all stripped away
 // * variable names and literal values remain as leaf nodes of the AST
 // * = + - * / ** {function names} remain as non-leaf nodes of the AST
+// CST: See the mlr_dsl_cst.c
 // ================================================================
 
 }
@@ -48,31 +48,61 @@ mlr_dsl_statement ::= .
 mlr_dsl_statement ::= mlr_dsl_main_srec_assignment.
 mlr_dsl_statement ::= mlr_dsl_main_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_main_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_main_record_filter.
-mlr_dsl_statement ::= mlr_dsl_main_expression_gate.
+mlr_dsl_statement ::= mlr_dsl_main_filter.
+mlr_dsl_statement ::= mlr_dsl_main_gate.
 mlr_dsl_statement ::= mlr_dsl_main_emit.
 
-mlr_dsl_statement   ::= mlr_dsl_begin_block.
-mlr_dsl_statement   ::= mlr_dsl_end_block.
-
-// E.g. 'begin emit @count', rather than 'end { emit @count }'.
+// E.g. 'begin { emit @count }'
+mlr_dsl_statement ::= mlr_dsl_begin_block.
+// E.g. 'begin emit @count'
 mlr_dsl_statement ::= mlr_dsl_begin_solo_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_begin_solo_bare_boolean.
 mlr_dsl_statement ::= mlr_dsl_begin_solo_filter.
 mlr_dsl_statement ::= mlr_dsl_begin_solo_gate.
 mlr_dsl_statement ::= mlr_dsl_begin_solo_emit.
 
-// E.g. 'end emit @count', rather than 'end { emit @count }'.
+// E.g. 'end { emit @count }'
+mlr_dsl_statement ::= mlr_dsl_end_block.
+// E.g. 'end emit @count'
 mlr_dsl_statement ::= mlr_dsl_end_solo_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_end_solo_bare_boolean.
 mlr_dsl_statement ::= mlr_dsl_end_solo_filter.
 mlr_dsl_statement ::= mlr_dsl_end_solo_gate.
 mlr_dsl_statement ::= mlr_dsl_end_solo_emit.
 
-mlr_dsl_begin_block ::= MLR_DSL_BEGIN MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
-mlr_dsl_end_block   ::= MLR_DSL_END   MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
+// ----------------------------------------------------------------
+// This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
+
+mlr_dsl_begin_block ::= MLR_DSL_BEGIN MLR_DSL_LEFT_BRACE mlr_dsl_begin_block_statements MLR_DSL_RIGHT_BRACE.
+
+mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement.
+mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement MLR_DSL_SEMICOLON mlr_dsl_begin_block_statements.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+mlr_dsl_begin_block_statement ::= .
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_oosvar_assignment.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_bare_boolean.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_filter.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_gate.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_emit.
+
+mlr_dsl_end_block ::= MLR_DSL_END MLR_DSL_LEFT_BRACE mlr_dsl_end_block_statements MLR_DSL_RIGHT_BRACE.
+
+mlr_dsl_end_block_statements ::= mlr_dsl_end_block_statement.
+mlr_dsl_end_block_statements ::= mlr_dsl_end_block_statement MLR_DSL_SEMICOLON mlr_dsl_end_block_statements.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+mlr_dsl_end_block_statement ::= .
+mlr_dsl_end_block_statement ::= mlr_dsl_end_block_oosvar_assignment.
+mlr_dsl_end_block_statement ::= mlr_dsl_end_block_bare_boolean.
+mlr_dsl_end_block_statement ::= mlr_dsl_end_block_filter.
+mlr_dsl_end_block_statement ::= mlr_dsl_end_block_gate.
+mlr_dsl_end_block_statement ::= mlr_dsl_end_block_emit.
+
 
 // ================================================================
+// These are top-level; they update the AST top-level statement-lists.
+
 mlr_dsl_main_srec_assignment(A)  ::= mlr_dsl_field_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
 	sllv_add(past->pmain_statements, A);
@@ -85,11 +115,11 @@ mlr_dsl_main_bare_boolean(A) ::= mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_record_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+mlr_dsl_main_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_expression_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+mlr_dsl_main_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pmain_statements, A);
 }
@@ -99,6 +129,8 @@ mlr_dsl_main_emit(A) ::= mlr_dsl_emit(B). {
 }
 
 // ----------------------------------------------------------------
+// These are top-level; they update the AST top-level statement-lists.
+
 mlr_dsl_begin_solo_oosvar_assignment(A)  ::= MLR_DSL_BEGIN mlr_dsl_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
@@ -120,7 +152,30 @@ mlr_dsl_begin_solo_emit(A) ::= MLR_DSL_BEGIN mlr_dsl_emit(B). {
 	sllv_add(past->pbegin_statements, A);
 }
 
+mlr_dsl_begin_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
+mlr_dsl_begin_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
+mlr_dsl_begin_block_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+	sllv_add(past->pbegin_statements, A);
+}
+mlr_dsl_begin_block_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+	sllv_add(past->pbegin_statements, A);
+}
+mlr_dsl_begin_block_emit(A) ::= mlr_dsl_emit(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
+
 // ----------------------------------------------------------------
+// These are top-level; they update the AST top-level statement-lists.
+
 mlr_dsl_end_solo_oosvar_assignment(A)  ::= MLR_DSL_END mlr_dsl_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
@@ -138,6 +193,27 @@ mlr_dsl_end_solo_gate(A) ::= MLR_DSL_END MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	sllv_add(past->pend_statements, A);
 }
 mlr_dsl_end_solo_emit(A) ::= MLR_DSL_END mlr_dsl_emit(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
+
+mlr_dsl_end_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
+mlr_dsl_end_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
+mlr_dsl_end_block_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+	sllv_add(past->pend_statements, A);
+}
+mlr_dsl_end_block_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+	sllv_add(past->pend_statements, A);
+}
+mlr_dsl_end_block_emit(A) ::= mlr_dsl_emit(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }

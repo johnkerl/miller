@@ -24,6 +24,7 @@ TOP OF LIST
   o next up:
     !! curly-braced begin{}/end{} into the grammar
     !! filter is also gating. it should not.
+    ! record-filter/expr-gate -> filter/gate everywhere, incl. lower/uppercase
 
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
     !  re-valgrind continuously
