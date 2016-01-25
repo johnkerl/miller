@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "../lib/mlr_globals.h"
 #include "../containers/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
 
@@ -29,14 +30,11 @@
 //%token_destructor {token_destructor($$);}
 
 %parse_accept {
-	//printf("End of parse.\n");
-	//printf("End of parse: past=%p\n", past->past);
-	//mlr_dsl_ast_node_print(past->past);
-	//printf("End of parse: tree end\n");
 }
 
+// The caller is expected to provide more context.
 %syntax_error {
-	fprintf(stderr, "Syntax error!\n");
+	fprintf(stderr, "%s: syntax error.\n", MLR_GLOBALS.argv0);
 }
 
 // ================================================================
@@ -45,7 +43,9 @@ mlr_dsl_body       ::= mlr_dsl_statements.
 mlr_dsl_statements ::= mlr_dsl_statement.
 mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
 
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 mlr_dsl_statement ::= .
+
 mlr_dsl_statement ::= mlr_dsl_main_srec_assignment.
 mlr_dsl_statement ::= mlr_dsl_main_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_main_bare_boolean.
@@ -55,21 +55,23 @@ mlr_dsl_statement ::= mlr_dsl_main_emit.
 
 mlr_dsl_statement   ::= mlr_dsl_begin_block.
 mlr_dsl_statement   ::= mlr_dsl_end_block.
-// xxx iterating here ... not done yet.
+
+// E.g. 'begin emit @count', rather than 'end { emit @count }'.
+mlr_dsl_statement ::= mlr_dsl_begin_solo_oosvar_assignment.
+mlr_dsl_statement ::= mlr_dsl_begin_solo_bare_boolean.
+mlr_dsl_statement ::= mlr_dsl_begin_solo_filter.
+mlr_dsl_statement ::= mlr_dsl_begin_solo_gate.
+mlr_dsl_statement ::= mlr_dsl_begin_solo_emit.
+
+// E.g. 'end emit @count', rather than 'end { emit @count }'.
+mlr_dsl_statement ::= mlr_dsl_end_solo_oosvar_assignment.
+mlr_dsl_statement ::= mlr_dsl_end_solo_bare_boolean.
+mlr_dsl_statement ::= mlr_dsl_end_solo_filter.
+mlr_dsl_statement ::= mlr_dsl_end_solo_gate.
+mlr_dsl_statement ::= mlr_dsl_end_solo_emit.
+
 mlr_dsl_begin_block ::= MLR_DSL_BEGIN MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
 mlr_dsl_end_block   ::= MLR_DSL_END   MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
-
-mlr_dsl_statement ::= mlr_dsl_begin_oosvar_assignment.
-mlr_dsl_statement ::= mlr_dsl_begin_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_begin_filter.
-mlr_dsl_statement ::= mlr_dsl_begin_gate.
-mlr_dsl_statement ::= mlr_dsl_begin_emit.
-
-mlr_dsl_statement ::= mlr_dsl_end_oosvar_assignment.
-mlr_dsl_statement ::= mlr_dsl_end_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_end_filter.
-mlr_dsl_statement ::= mlr_dsl_end_gate.
-mlr_dsl_statement ::= mlr_dsl_end_emit.
 
 // ================================================================
 mlr_dsl_main_srec_assignment(A)  ::= mlr_dsl_field_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
@@ -98,45 +100,45 @@ mlr_dsl_main_emit(A) ::= mlr_dsl_emit(B). {
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_begin_oosvar_assignment(A)  ::= MLR_DSL_BEGIN mlr_dsl_oosvar_assignment(B). {
+mlr_dsl_begin_solo_oosvar_assignment(A)  ::= MLR_DSL_BEGIN mlr_dsl_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_bare_boolean(A) ::= MLR_DSL_BEGIN mlr_dsl_ternary(B). {
+mlr_dsl_begin_solo_bare_boolean(A) ::= MLR_DSL_BEGIN mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_filter(A) ::= MLR_DSL_BEGIN MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+mlr_dsl_begin_solo_filter(A) ::= MLR_DSL_BEGIN MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_gate(A) ::= MLR_DSL_BEGIN MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+mlr_dsl_begin_solo_gate(A) ::= MLR_DSL_BEGIN MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_emit(A) ::= MLR_DSL_BEGIN mlr_dsl_emit(B). {
+mlr_dsl_begin_solo_emit(A) ::= MLR_DSL_BEGIN mlr_dsl_emit(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_end_oosvar_assignment(A)  ::= MLR_DSL_END mlr_dsl_oosvar_assignment(B). {
+mlr_dsl_end_solo_oosvar_assignment(A)  ::= MLR_DSL_END mlr_dsl_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_bare_boolean(A) ::= MLR_DSL_END mlr_dsl_ternary(B). {
+mlr_dsl_end_solo_bare_boolean(A) ::= MLR_DSL_END mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_filter(A) ::= MLR_DSL_END MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
+mlr_dsl_end_solo_filter(A) ::= MLR_DSL_END MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_gate(A) ::= MLR_DSL_END MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
+mlr_dsl_end_solo_gate(A) ::= MLR_DSL_END MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_emit(A) ::= MLR_DSL_END mlr_dsl_emit(B). {
+mlr_dsl_end_solo_emit(A) ::= MLR_DSL_END mlr_dsl_emit(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
