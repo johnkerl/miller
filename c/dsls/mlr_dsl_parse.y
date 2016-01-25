@@ -53,6 +53,12 @@ mlr_dsl_statement ::= mlr_dsl_main_record_filter.
 mlr_dsl_statement ::= mlr_dsl_main_expression_gate.
 mlr_dsl_statement ::= mlr_dsl_main_emit.
 
+mlr_dsl_statement   ::= mlr_dsl_begin_block.
+mlr_dsl_statement   ::= mlr_dsl_end_block.
+// xxx iterating here ... not done yet.
+mlr_dsl_begin_block ::= MLR_DSL_BEGIN MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
+mlr_dsl_end_block   ::= MLR_DSL_END   MLR_DSL_LEFT_BRACE mlr_dsl_statements MLR_DSL_RIGHT_BRACE.
+
 mlr_dsl_statement ::= mlr_dsl_begin_oosvar_assignment.
 mlr_dsl_statement ::= mlr_dsl_begin_bare_boolean.
 mlr_dsl_statement ::= mlr_dsl_begin_filter.

@@ -13,6 +13,8 @@ TOP OF LIST
 
 * boolean-short-circuit UT w/ regex-captures
 
+* int-preserving exponentiation operator -- ?
+
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
