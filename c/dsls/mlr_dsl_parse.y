@@ -429,7 +429,7 @@ mlr_dsl_field_name(A) ::= MLR_DSL_FIELD_NAME(B). {
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
-mlr_dsl_field_name(A) ::= MLR_DSL_BRACKETED_FIELD_NAME(B). {
+mlr_dsl_field_name(A) ::= MLR_DSL_BRACED_FIELD_NAME(B). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -447,7 +447,7 @@ mlr_dsl_oosvar_name(A) ::= MLR_DSL_OOSVAR_NAME(B). {
 	char* no_at_name = &at_name[1];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B). {
+mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACED_OOSVAR_NAME(B). {
 	// Replace "@{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
@@ -465,7 +465,7 @@ mlr_dsl_moosvar_name(A) ::= MLR_DSL_MOOSVAR_NAME(B). {
 	char* no_at_name = &at_name[2];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-mlr_dsl_moosvar_name(A) ::= MLR_DSL_BRACKETED_MOOSVAR_NAME(B). {
+mlr_dsl_moosvar_name(A) ::= MLR_DSL_BRACED_MOOSVAR_NAME(B). {
 	// Replace "@%{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[3];

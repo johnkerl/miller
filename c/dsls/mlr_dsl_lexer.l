@@ -186,7 +186,7 @@
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_FIELD_NAME);
-	return MLR_DSL_BRACKETED_FIELD_NAME;
+	return MLR_DSL_BRACED_FIELD_NAME;
 }
 
 @[a-zA-Z_0-9]+ {
@@ -199,7 +199,7 @@
 	// Note: the parser depends on the at-sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME);
-	return MLR_DSL_BRACKETED_OOSVAR_NAME;
+	return MLR_DSL_BRACED_OOSVAR_NAME;
 }
 
 @@[a-zA-Z_0-9]+ {
@@ -214,7 +214,15 @@
 	// Note: the parser depends on the percent-sign being here. If this is changed,
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_MOOSVAR_NAME);
-	return MLR_DSL_BRACKETED_MOOSVAR_NAME;
+	return MLR_DSL_BRACED_MOOSVAR_NAME;
+//"\[" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
+//	return MLR_DSL_LEFT_BRACKET;
+//}
+//"\]" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
+//	return MLR_DSL_RIGHT_BRACKET;
+//}
 }
 
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
