@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "../lib/mlr_globals.h"
 #include "../containers/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
 
@@ -34,7 +33,7 @@
 
 // The caller is expected to provide more context.
 %syntax_error {
-	fprintf(stderr, "%s: syntax error.\n", MLR_GLOBALS.argv0);
+	fprintf(stderr, "mlr DSL: syntax error.\n");
 }
 
 // ================================================================

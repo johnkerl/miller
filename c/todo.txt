@@ -65,6 +65,8 @@ TOP OF LIST
     - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
       implementing the present
     - replace "null" with "absent" and "uninit"?
+    - awk-style pattern { action } ? are if-statements enough?
+    - move assignments into the CST, and all that ensues (e.g. $x=@a=7).
 
   o perf notes:
 
@@ -90,6 +92,8 @@ TOP OF LIST
   - & to the FAQ
 
 * interpolated percentiles
+
+* awk-style ifs=="" -> split per-character? only makes sense for nidx
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
