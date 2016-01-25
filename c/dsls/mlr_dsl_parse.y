@@ -81,6 +81,7 @@ mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement MLR_DSL_SEMICOL
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 mlr_dsl_begin_block_statement ::= .
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_oosvar_assignment.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_moosvar_assignment.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_bare_boolean.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_filter.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_gate.
@@ -156,6 +157,14 @@ mlr_dsl_begin_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
+// xxx the @@ moosvars are just temporary. Later I hope to merge this into the oosvars.
+// oosvars work just fine; multi-level hashmaps (moosvars) don't *yet*.
+// so having @ for the former and @@ for the latter allows me to separate the working stuff
+// from the experimental.
+mlr_dsl_begin_block_moosvar_assignment(A)  ::= mlr_dsl_moosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
 mlr_dsl_begin_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
@@ -221,6 +230,9 @@ mlr_dsl_end_block_emit(A) ::= mlr_dsl_emit(B). {
 // ----------------------------------------------------------------
 mlr_dsl_oosvar_assignment(A)  ::= mlr_dsl_oosvar_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+}
+mlr_dsl_moosvar_assignment(A)  ::= mlr_dsl_moosvar_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
 }
 
 // ----------------------------------------------------------------
@@ -413,8 +425,6 @@ mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_field_name(B). {
 	A = B;
 }
 mlr_dsl_field_name(A) ::= MLR_DSL_FIELD_NAME(B). {
-	// not:
-	// A = B;
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
@@ -433,16 +443,32 @@ mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_oosvar_name(B). {
 	A = B;
 }
 mlr_dsl_oosvar_name(A) ::= MLR_DSL_OOSVAR_NAME(B). {
-	// not:
-	// A = B;
 	char* at_name = B->text;
 	char* no_at_name = &at_name[1];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
 mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACKETED_OOSVAR_NAME(B). {
-	// Replace "${field.name}" with just "field.name"
+	// Replace "@{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
+	int len = strlen(no_at_name);
+	if (len > 0)
+		no_at_name[len-1] = 0;
+	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+}
+
+mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_moosvar_name(B). {
+	A = B;
+}
+mlr_dsl_moosvar_name(A) ::= MLR_DSL_MOOSVAR_NAME(B). {
+	char* at_name = B->text;
+	char* no_at_name = &at_name[2];
+	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+}
+mlr_dsl_moosvar_name(A) ::= MLR_DSL_BRACKETED_MOOSVAR_NAME(B). {
+	// Replace "@%{field.name}" with just "field.name"
+	char* at_name = B->text;
+	char* no_at_name = &at_name[3];
 	int len = strlen(no_at_name);
 	if (len > 0)
 		no_at_name[len-1] = 0;

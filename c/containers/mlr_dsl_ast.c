@@ -125,20 +125,22 @@ void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode) {
 // ----------------------------------------------------------------
 char* mlr_dsl_ast_node_describe_type(int type) {
 	switch(type) {
-	case MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL:    return "strnum_literal";    break;
-	case MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL:   return "boolean_literal";   break;
-	case MLR_DSL_AST_NODE_TYPE_REGEXI:            return "regexi";            break;
-	case MLR_DSL_AST_NODE_TYPE_FIELD_NAME:        return "field_name";        break;
-	case MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME:       return "oosvar_name";       break;
-	case MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME:     return "function_name";     break;
-	case MLR_DSL_AST_NODE_TYPE_OPERATOR:          return "operator";          break;
-	case MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT:   return "srec_assignment";   break;
-	case MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT: return "oosvar_assignment"; break;
-	case MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE:  return "context_variable";  break;
-	case MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY:     return "stripped_away";     break;
-	case MLR_DSL_AST_NODE_TYPE_FILTER:            return "filter";            break;
-	case MLR_DSL_AST_NODE_TYPE_GATE:              return "gate";              break;
-	case MLR_DSL_AST_NODE_TYPE_EMIT:              return "emit";              break;
+	case MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL:     return "strnum_literal";    break;
+	case MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL:    return "boolean_literal";   break;
+	case MLR_DSL_AST_NODE_TYPE_REGEXI:             return "regexi";            break;
+	case MLR_DSL_AST_NODE_TYPE_FIELD_NAME:         return "field_name";        break;
+	case MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME:        return "oosvar_name";       break;
+	case MLR_DSL_AST_NODE_TYPE_MOOSVAR_NAME:       return "moosvar_name";      break;
+	case MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME:      return "function_name";     break;
+	case MLR_DSL_AST_NODE_TYPE_OPERATOR:           return "operator";          break;
+	case MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT:    return "srec_assignment";   break;
+	case MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:  return "oosvar_assignment"; break;
+	case MLR_DSL_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT: return "moosvar_assignment"; break;
+	case MLR_DSL_AST_NODE_TYPE_CONTEXT_VARIABLE:   return "context_variable";  break;
+	case MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY:      return "stripped_away";     break;
+	case MLR_DSL_AST_NODE_TYPE_FILTER:             return "filter";            break;
+	case MLR_DSL_AST_NODE_TYPE_GATE:               return "gate";              break;
+	case MLR_DSL_AST_NODE_TYPE_EMIT:               return "emit";              break;
 	default: return "???";
 	}
 }

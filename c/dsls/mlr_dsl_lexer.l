@@ -4,9 +4,6 @@
 #include "mlr_dsl_parse.h"
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
-
-// xxx SREC_ASSIGNMENT or OOSREC_ASSIGNMENT; confusing (and irrelevant) labels here
-
 %}
 
 %option reentrant
@@ -203,6 +200,21 @@
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME);
 	return MLR_DSL_BRACKETED_OOSVAR_NAME;
+}
+
+@@[a-zA-Z_0-9]+ {
+	// xxx moosvars are just temporary
+	// Note: the parser depends on the percent-sign being here. If this is changed,
+	// that needs to be changed as well.
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_MOOSVAR_NAME);
+	return MLR_DSL_MOOSVAR_NAME;
+}
+@@\{([^\}]|\\.)*\} {
+	// xxx moosvars are just temporary
+	// Note: the parser depends on the percent-sign being here. If this is changed,
+	// that needs to be changed as well.
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_MOOSVAR_NAME);
+	return MLR_DSL_BRACKETED_MOOSVAR_NAME;
 }
 
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
