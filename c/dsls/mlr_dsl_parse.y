@@ -13,7 +13,7 @@
 // * parens, commas, semis, line endings, whitespace are all stripped away
 // * variable names and literal values remain as leaf nodes of the AST
 // * = + - * / ** {function names} remain as non-leaf nodes of the AST
-// CST: See the mlr_dsl_cst.c
+// CST: See the md_cst.c
 // ================================================================
 
 }
@@ -37,95 +37,95 @@
 }
 
 // ================================================================
-mlr_dsl_body       ::= mlr_dsl_statements.
+md_body       ::= md_statements.
 
-mlr_dsl_statements ::= mlr_dsl_statement.
-mlr_dsl_statements ::= mlr_dsl_statement MLR_DSL_SEMICOLON mlr_dsl_statements.
+md_statements ::= md_statement.
+md_statements ::= md_statement MD_TOKEN_SEMICOLON md_statements.
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-mlr_dsl_statement ::= .
+md_statement ::= .
 
-mlr_dsl_statement ::= mlr_dsl_main_srec_assignment.
-mlr_dsl_statement ::= mlr_dsl_main_oosvar_assignment.
-mlr_dsl_statement ::= mlr_dsl_main_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_main_filter.
-mlr_dsl_statement ::= mlr_dsl_main_gate.
-mlr_dsl_statement ::= mlr_dsl_main_emit.
+md_statement ::= md_main_srec_assignment.
+md_statement ::= md_main_oosvar_assignment.
+md_statement ::= md_main_bare_boolean.
+md_statement ::= md_main_filter.
+md_statement ::= md_main_gate.
+md_statement ::= md_main_emit.
 
 // E.g. 'begin { emit @count }'
-mlr_dsl_statement ::= mlr_dsl_begin_block.
+md_statement ::= md_begin_block.
 // E.g. 'begin emit @count'
-mlr_dsl_statement ::= mlr_dsl_begin_solo_oosvar_assignment.
-mlr_dsl_statement ::= mlr_dsl_begin_solo_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_begin_solo_filter.
-mlr_dsl_statement ::= mlr_dsl_begin_solo_gate.
-mlr_dsl_statement ::= mlr_dsl_begin_solo_emit.
+md_statement ::= md_begin_solo_oosvar_assignment.
+md_statement ::= md_begin_solo_bare_boolean.
+md_statement ::= md_begin_solo_filter.
+md_statement ::= md_begin_solo_gate.
+md_statement ::= md_begin_solo_emit.
 
 // E.g. 'end { emit @count }'
-mlr_dsl_statement ::= mlr_dsl_end_block.
+md_statement ::= md_end_block.
 // E.g. 'end emit @count'
-mlr_dsl_statement ::= mlr_dsl_end_solo_oosvar_assignment.
-mlr_dsl_statement ::= mlr_dsl_end_solo_bare_boolean.
-mlr_dsl_statement ::= mlr_dsl_end_solo_filter.
-mlr_dsl_statement ::= mlr_dsl_end_solo_gate.
-mlr_dsl_statement ::= mlr_dsl_end_solo_emit.
+md_statement ::= md_end_solo_oosvar_assignment.
+md_statement ::= md_end_solo_bare_boolean.
+md_statement ::= md_end_solo_filter.
+md_statement ::= md_end_solo_gate.
+md_statement ::= md_end_solo_emit.
 
 // ----------------------------------------------------------------
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
 
-mlr_dsl_begin_block ::= MLR_DSL_BEGIN MLR_DSL_LEFT_BRACE mlr_dsl_begin_block_statements MLR_DSL_RIGHT_BRACE.
+md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LEFT_BRACE md_begin_block_statements MD_TOKEN_RIGHT_BRACE.
 
-mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement.
-mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement MLR_DSL_SEMICOLON mlr_dsl_begin_block_statements.
-
-// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-mlr_dsl_begin_block_statement ::= .
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_oosvar_assignment.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_moosvar_assignment.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_moosvar_temp.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_bare_boolean.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_filter.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_gate.
-mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_emit.
-
-mlr_dsl_end_block ::= MLR_DSL_END MLR_DSL_LEFT_BRACE mlr_dsl_end_block_statements MLR_DSL_RIGHT_BRACE.
-
-mlr_dsl_end_block_statements ::= mlr_dsl_end_block_statement.
-mlr_dsl_end_block_statements ::= mlr_dsl_end_block_statement MLR_DSL_SEMICOLON mlr_dsl_end_block_statements.
+md_begin_block_statements ::= md_begin_block_statement.
+md_begin_block_statements ::= md_begin_block_statement MD_TOKEN_SEMICOLON md_begin_block_statements.
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-mlr_dsl_end_block_statement ::= .
-mlr_dsl_end_block_statement ::= mlr_dsl_end_block_oosvar_assignment.
-mlr_dsl_end_block_statement ::= mlr_dsl_end_block_bare_boolean.
-mlr_dsl_end_block_statement ::= mlr_dsl_end_block_filter.
-mlr_dsl_end_block_statement ::= mlr_dsl_end_block_gate.
-mlr_dsl_end_block_statement ::= mlr_dsl_end_block_emit.
+md_begin_block_statement ::= .
+md_begin_block_statement ::= md_begin_block_oosvar_assignment.
+md_begin_block_statement ::= md_begin_block_moosvar_assignment.
+md_begin_block_statement ::= md_begin_block_moosvar_temp.
+md_begin_block_statement ::= md_begin_block_bare_boolean.
+md_begin_block_statement ::= md_begin_block_filter.
+md_begin_block_statement ::= md_begin_block_gate.
+md_begin_block_statement ::= md_begin_block_emit.
+
+md_end_block ::= MD_TOKEN_END MD_TOKEN_LEFT_BRACE md_end_block_statements MD_TOKEN_RIGHT_BRACE.
+
+md_end_block_statements ::= md_end_block_statement.
+md_end_block_statements ::= md_end_block_statement MD_TOKEN_SEMICOLON md_end_block_statements.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+md_end_block_statement ::= .
+md_end_block_statement ::= md_end_block_oosvar_assignment.
+md_end_block_statement ::= md_end_block_bare_boolean.
+md_end_block_statement ::= md_end_block_filter.
+md_end_block_statement ::= md_end_block_gate.
+md_end_block_statement ::= md_end_block_emit.
 
 
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
 
-mlr_dsl_main_srec_assignment(A)  ::= mlr_dsl_field_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
+md_main_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_oosvar_assignment(A) ::= mlr_dsl_oosvar_assignment(B). {
+md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+md_main_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+md_main_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pmain_statements, A);
 }
-mlr_dsl_main_emit(A) ::= mlr_dsl_emit(B). {
+md_main_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
@@ -133,28 +133,28 @@ mlr_dsl_main_emit(A) ::= mlr_dsl_emit(B). {
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
 
-mlr_dsl_begin_solo_oosvar_assignment(A)  ::= MLR_DSL_BEGIN mlr_dsl_oosvar_assignment(B). {
+md_begin_solo_oosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_solo_bare_boolean(A) ::= MLR_DSL_BEGIN mlr_dsl_ternary(B). {
+md_begin_solo_bare_boolean(A) ::= MD_TOKEN_BEGIN md_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_solo_filter(A) ::= MLR_DSL_BEGIN MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+md_begin_solo_filter(A) ::= MD_TOKEN_BEGIN MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_solo_gate(A) ::= MLR_DSL_BEGIN MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+md_begin_solo_gate(A) ::= MD_TOKEN_BEGIN MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_solo_emit(A) ::= MLR_DSL_BEGIN mlr_dsl_emit(B). {
+md_begin_solo_emit(A) ::= MD_TOKEN_BEGIN md_emit(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
 
-mlr_dsl_begin_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
+md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
@@ -162,36 +162,36 @@ mlr_dsl_begin_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
 // oosvars work just fine; multi-level hashmaps (moosvars) don't *yet*.
 // so having @ for the former and @@ for the latter allows me to separate the working stuff
 // from the experimental.
-mlr_dsl_begin_block_moosvar_assignment(A)  ::= mlr_dsl_moosvar_assignment(B). {
+md_begin_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
 
-mlr_dsl_begin_block_moosvar_temp(A) ::= mlr_dsl_begin_block_moosvar_temp2(B). {
+md_begin_block_moosvar_temp(A) ::= md_begin_block_moosvar_temp2(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_block_moosvar_temp2(A) ::= mlr_dsl_moosvar_name(B) MLR_DSL_LEFT_BRACKET mlr_dsl_ternary(C) MLR_DSL_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MLR_DSL_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
+md_begin_block_moosvar_temp2(A) ::= md_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
 }
-mlr_dsl_begin_block_moosvar_temp2(A) ::= mlr_dsl_begin_block_moosvar_temp2(B) MLR_DSL_LEFT_BRACKET mlr_dsl_ternary(C) MLR_DSL_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MLR_DSL_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
+md_begin_block_moosvar_temp2(A) ::= md_begin_block_moosvar_temp2(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
 }
 
 
-mlr_dsl_begin_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+md_begin_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_block_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_block_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+md_begin_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pbegin_statements, A);
 }
-mlr_dsl_begin_block_emit(A) ::= mlr_dsl_emit(B). {
+md_begin_block_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
@@ -199,54 +199,54 @@ mlr_dsl_begin_block_emit(A) ::= mlr_dsl_emit(B). {
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
 
-mlr_dsl_end_solo_oosvar_assignment(A)  ::= MLR_DSL_END mlr_dsl_oosvar_assignment(B). {
+md_end_solo_oosvar_assignment(A)  ::= MD_TOKEN_END md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_solo_bare_boolean(A) ::= MLR_DSL_END mlr_dsl_ternary(B). {
+md_end_solo_bare_boolean(A) ::= MD_TOKEN_END md_ternary(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_solo_filter(A) ::= MLR_DSL_END MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+md_end_solo_filter(A) ::= MD_TOKEN_END MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_solo_gate(A) ::= MLR_DSL_END MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+md_end_solo_gate(A) ::= MD_TOKEN_END MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_solo_emit(A) ::= MLR_DSL_END mlr_dsl_emit(B). {
+md_end_solo_emit(A) ::= MD_TOKEN_END md_emit(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
 
-mlr_dsl_end_block_oosvar_assignment(A)  ::= mlr_dsl_oosvar_assignment(B). {
+md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
+md_end_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_block_filter(A) ::= MLR_DSL_FILTER(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_FILTER, B);
+md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_block_gate(A) ::= MLR_DSL_GATE(O) mlr_dsl_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_GATE, B);
+md_end_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
 	sllv_add(past->pend_statements, A);
 }
-mlr_dsl_end_block_emit(A) ::= mlr_dsl_emit(B). {
+md_end_block_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_oosvar_assignment(A)  ::= mlr_dsl_oosvar_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
-mlr_dsl_moosvar_assignment(A)  ::= mlr_dsl_moosvar_name(B) MLR_DSL_ASSIGN(O) mlr_dsl_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
+md_moosvar_assignment(A)  ::= md_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
 }
 
 // ----------------------------------------------------------------
@@ -256,176 +256,176 @@ mlr_dsl_moosvar_assignment(A)  ::= mlr_dsl_moosvar_name(B) MLR_DSL_ASSIGN(O) mlr
 // * On the "@b" we append the next argument to get "temp @a,@b".
 // * On the "@c" we append the next argument to get "temp @a,@b,@c".
 // * On the "emit" we change the name to get "emit @a,@b,@c".
-mlr_dsl_emit(A) ::= MLR_DSL_EMIT(O) mlr_dsl_emit_args(B). {
+md_emit(A) ::= MD_TOKEN_EMIT(O) md_emit_args(B). {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // Need to invalidate "emit $a," -- use some non-empty-args expr.
-mlr_dsl_emit_args(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("temp", MLR_DSL_AST_NODE_TYPE_EMIT);
+md_emit_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMIT);
 }
-mlr_dsl_emit_args(A) ::= mlr_dsl_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MLR_DSL_AST_NODE_TYPE_EMIT, B);
+md_emit_args(A) ::= md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
-mlr_dsl_emit_args(A) ::= mlr_dsl_emit_args(B) MLR_DSL_COMMA mlr_dsl_oosvar_name(C). {
+md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 // ================================================================
-mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B) MLR_DSL_QUESTION_MARK mlr_dsl_ternary(C) MLR_DSL_COLON mlr_dsl_ternary(D). {
-	A = mlr_dsl_ast_node_alloc_ternary("? :", MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C, D);
+md_ternary(A) ::= md_logical_or_term(B) MD_TOKEN_QUESTION_MARK md_ternary(C) MD_TOKEN_COLON md_ternary(D). {
+	A = mlr_dsl_ast_node_alloc_ternary("? :", MD_AST_NODE_TYPE_OPERATOR, B, C, D);
 }
 
-mlr_dsl_ternary(A) ::= mlr_dsl_logical_or_term(B). {
+md_ternary(A) ::= md_logical_or_term(B). {
 	A = B;
 }
 
 // ================================================================
-mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_xor_term(B). {
+md_logical_or_term(A) ::= md_logical_xor_term(B). {
 	A = B;
 }
-mlr_dsl_logical_or_term(A) ::= mlr_dsl_logical_or_term(B) MLR_DSL_LOGICAL_OR(O) mlr_dsl_logical_xor_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_logical_or_term(A) ::= md_logical_or_term(B) MD_TOKEN_LOGICAL_OR(O) md_logical_xor_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_logical_xor_term(A) ::= mlr_dsl_logical_and_term(B). {
+md_logical_xor_term(A) ::= md_logical_and_term(B). {
 	A = B;
 }
-mlr_dsl_logical_xor_term(A) ::= mlr_dsl_logical_xor_term(B) MLR_DSL_LOGICAL_XOR(O) mlr_dsl_logical_and_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_logical_xor_term(A) ::= md_logical_xor_term(B) MD_TOKEN_LOGICAL_XOR(O) md_logical_and_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_logical_and_term(A) ::= mlr_dsl_eqne_term(B). {
+md_logical_and_term(A) ::= md_eqne_term(B). {
 	A = B;
 }
-mlr_dsl_logical_and_term(A) ::= mlr_dsl_logical_and_term(B) MLR_DSL_LOGICAL_AND(O) mlr_dsl_eqne_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_logical_and_term(A) ::= md_logical_and_term(B) MD_TOKEN_LOGICAL_AND(O) md_eqne_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_eqne_term(A) ::= mlr_dsl_cmp_term(B). {
+md_eqne_term(A) ::= md_cmp_term(B). {
 	A = B;
 }
-mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_MATCHES(O) mlr_dsl_cmp_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_eqne_term(A) ::= md_eqne_term(B) MD_TOKEN_MATCHES(O) md_cmp_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_DOES_NOT_MATCH(O) mlr_dsl_cmp_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_eqne_term(A) ::= md_eqne_term(B) MD_TOKEN_DOES_NOT_MATCH(O) md_cmp_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_EQ(O) mlr_dsl_cmp_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_eqne_term(A) ::= md_eqne_term(B) MD_TOKEN_EQ(O) md_cmp_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_eqne_term(A) ::= mlr_dsl_eqne_term(B) MLR_DSL_NE(O) mlr_dsl_cmp_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_eqne_term(A) ::= md_eqne_term(B) MD_TOKEN_NE(O) md_cmp_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_cmp_term(A) ::= mlr_dsl_bitwise_or_term(B). {
+md_cmp_term(A) ::= md_bitwise_or_term(B). {
 	A = B;
 }
-mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_GT(O) mlr_dsl_bitwise_or_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_cmp_term(A) ::= md_cmp_term(B) MD_TOKEN_GT(O) md_bitwise_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_GE(O) mlr_dsl_bitwise_or_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_cmp_term(A) ::= md_cmp_term(B) MD_TOKEN_GE(O) md_bitwise_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_LT(O) mlr_dsl_bitwise_or_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_cmp_term(A) ::= md_cmp_term(B) MD_TOKEN_LT(O) md_bitwise_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_cmp_term(A) ::= mlr_dsl_cmp_term(B) MLR_DSL_LE(O) mlr_dsl_bitwise_or_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_cmp_term(A) ::= md_cmp_term(B) MD_TOKEN_LE(O) md_bitwise_or_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_bitwise_or_term(A) ::= mlr_dsl_bitwise_xor_term(B). {
+md_bitwise_or_term(A) ::= md_bitwise_xor_term(B). {
 	A = B;
 }
-mlr_dsl_bitwise_or_term(A) ::= mlr_dsl_bitwise_or_term(B) MLR_DSL_BITWISE_OR(O) mlr_dsl_bitwise_xor_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_bitwise_or_term(A) ::= md_bitwise_or_term(B) MD_TOKEN_BITWISE_OR(O) md_bitwise_xor_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_bitwise_xor_term(A) ::= mlr_dsl_bitwise_and_term(B). {
+md_bitwise_xor_term(A) ::= md_bitwise_and_term(B). {
 	A = B;
 }
-mlr_dsl_bitwise_xor_term(A) ::= mlr_dsl_bitwise_xor_term(B) MLR_DSL_BITWISE_XOR(O) mlr_dsl_bitwise_and_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_bitwise_xor_term(A) ::= md_bitwise_xor_term(B) MD_TOKEN_BITWISE_XOR(O) md_bitwise_and_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_bitwise_and_term(A) ::= mlr_dsl_bitwise_shift_term(B). {
+md_bitwise_and_term(A) ::= md_bitwise_shift_term(B). {
 	A = B;
 }
-mlr_dsl_bitwise_and_term(A) ::= mlr_dsl_bitwise_and_term(B) MLR_DSL_BITWISE_AND(O) mlr_dsl_bitwise_shift_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_bitwise_and_term(A) ::= md_bitwise_and_term(B) MD_TOKEN_BITWISE_AND(O) md_bitwise_shift_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_addsubdot_term(B). {
+md_bitwise_shift_term(A) ::= md_addsubdot_term(B). {
 	A = B;
 }
-mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_bitwise_shift_term(B) MLR_DSL_BITWISE_LSH(O) mlr_dsl_addsubdot_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_bitwise_shift_term(A) ::= md_bitwise_shift_term(B) MD_TOKEN_BITWISE_LSH(O) md_addsubdot_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_bitwise_shift_term(A) ::= mlr_dsl_bitwise_shift_term(B) MLR_DSL_BITWISE_RSH(O) mlr_dsl_addsubdot_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_bitwise_shift_term(A) ::= md_bitwise_shift_term(B) MD_TOKEN_BITWISE_RSH(O) md_addsubdot_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_addsubdot_term(A) ::= mlr_dsl_muldiv_term(B). {
+md_addsubdot_term(A) ::= md_muldiv_term(B). {
 	A = B;
 }
-mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_PLUS(O) mlr_dsl_muldiv_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_PLUS(O) md_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_MINUS(O) mlr_dsl_muldiv_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_MINUS(O) md_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_addsubdot_term(A) ::= mlr_dsl_addsubdot_term(B) MLR_DSL_DOT(O) mlr_dsl_muldiv_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_DOT(O) md_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_muldiv_term(A) ::= mlr_dsl_unary_bitwise_op_term(B). {
+md_muldiv_term(A) ::= md_unary_bitwise_op_term(B). {
 	A = B;
 }
-mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_TIMES(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_TIMES(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_DIVIDE(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_DIVIDE(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_INT_DIVIDE(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_INT_DIVIDE(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
-mlr_dsl_muldiv_term(A) ::= mlr_dsl_muldiv_term(B) MLR_DSL_MOD(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_MOD(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_unary_bitwise_op_term(A) ::= mlr_dsl_pow_term(B). {
+md_unary_bitwise_op_term(A) ::= md_pow_term(B). {
 	A = B;
 }
-mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_PLUS(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_PLUS(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
-mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_MINUS(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_MINUS(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
-mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_LOGICAL_NOT(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_LOGICAL_NOT(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
-mlr_dsl_unary_bitwise_op_term(A) ::= MLR_DSL_BITWISE_NOT(O) mlr_dsl_unary_bitwise_op_term(C). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, C);
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_BITWISE_NOT(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B). {
+md_pow_term(A) ::= md_atom_or_fcn(B). {
 	A = B;
 }
-mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B) MLR_DSL_POW(O) mlr_dsl_pow_term(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MLR_DSL_AST_NODE_TYPE_OPERATOR, B, C);
+md_pow_term(A) ::= md_atom_or_fcn(B) MD_TOKEN_POW(O) md_pow_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
 
@@ -435,15 +435,15 @@ mlr_dsl_pow_term(A) ::= mlr_dsl_atom_or_fcn(B) MLR_DSL_POW(O) mlr_dsl_pow_term(C
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_field_name(B). {
+md_atom_or_fcn(A) ::= md_field_name(B). {
 	A = B;
 }
-mlr_dsl_field_name(A) ::= MLR_DSL_FIELD_NAME(B). {
+md_field_name(A) ::= MD_TOKEN_FIELD_NAME(B). {
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[1];
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
-mlr_dsl_field_name(A) ::= MLR_DSL_BRACED_FIELD_NAME(B). {
+md_field_name(A) ::= MD_TOKEN_BRACED_FIELD_NAME(B). {
 	// Replace "${field.name}" with just "field.name"
 	char* dollar_name = B->text;
 	char* no_dollar_name = &dollar_name[2];
@@ -453,15 +453,15 @@ mlr_dsl_field_name(A) ::= MLR_DSL_BRACED_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 
-mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_oosvar_name(B). {
+md_atom_or_fcn(A) ::= md_oosvar_name(B). {
 	A = B;
 }
-mlr_dsl_oosvar_name(A) ::= MLR_DSL_OOSVAR_NAME(B). {
+md_oosvar_name(A) ::= MD_TOKEN_OOSVAR_NAME(B). {
 	char* at_name = B->text;
 	char* no_at_name = &at_name[1];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACED_OOSVAR_NAME(B). {
+md_oosvar_name(A) ::= MD_TOKEN_BRACED_OOSVAR_NAME(B). {
 	// Replace "@{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
@@ -471,15 +471,15 @@ mlr_dsl_oosvar_name(A) ::= MLR_DSL_BRACED_OOSVAR_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
 
-mlr_dsl_atom_or_fcn(A) ::= mlr_dsl_moosvar_name(B). {
+md_atom_or_fcn(A) ::= md_moosvar_name(B). {
 	A = B;
 }
-mlr_dsl_moosvar_name(A) ::= MLR_DSL_MOOSVAR_NAME(B). {
+md_moosvar_name(A) ::= MD_TOKEN_MOOSVAR_NAME(B). {
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-mlr_dsl_moosvar_name(A) ::= MLR_DSL_BRACED_MOOSVAR_NAME(B). {
+md_moosvar_name(A) ::= MD_TOKEN_BRACED_MOOSVAR_NAME(B). {
 	// Replace "@%{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[3];
@@ -489,24 +489,24 @@ mlr_dsl_moosvar_name(A) ::= MLR_DSL_BRACED_MOOSVAR_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_NUMBER(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_NUMBER(B). {
 	A = B;
 }
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_TRUE(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_TRUE(B). {
 	A = B;
 }
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FALSE(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_FALSE(B). {
 	A = B;
 }
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_STRING(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_REGEXI(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_REGEXI(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);
@@ -514,11 +514,11 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_REGEXI(B). {
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_CONTEXT_VARIABLE(B). {
+md_atom_or_fcn(A) ::= MD_TOKEN_CONTEXT_VARIABLE(B). {
 	A = B;
 }
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_LPAREN mlr_dsl_logical_or_term(B) MLR_DSL_RPAREN. {
+md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_logical_or_term(B) MD_TOKEN_RPAREN. {
 	A = B;
 }
 
@@ -529,17 +529,17 @@ mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_LPAREN mlr_dsl_logical_or_term(B) MLR_DSL_RPA
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-mlr_dsl_atom_or_fcn(A) ::= MLR_DSL_FCN_NAME(O) MLR_DSL_LPAREN mlr_dsl_fcn_args(B) MLR_DSL_RPAREN. {
+md_atom_or_fcn(A) ::= MD_TOKEN_FCN_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
-mlr_dsl_fcn_args(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME);
+md_fcn_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
 }
 
-mlr_dsl_fcn_args(A) ::= mlr_dsl_logical_or_term(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MLR_DSL_AST_NODE_TYPE_FUNCTION_NAME, B);
+md_fcn_args(A) ::= md_logical_or_term(B). {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
 }
-mlr_dsl_fcn_args(A) ::= mlr_dsl_fcn_args(B) MLR_DSL_COMMA mlr_dsl_logical_or_term(C). {
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_logical_or_term(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }

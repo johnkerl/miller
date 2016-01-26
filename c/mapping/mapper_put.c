@@ -270,7 +270,7 @@ static void evaluate_statements(
 
 		int node_type = pstatement->ast_node_type;
 
-		if (node_type == MLR_DSL_AST_NODE_TYPE_SREC_ASSIGNMENT || node_type == MLR_DSL_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
+		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT || node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			char* output_field_name = pitem->output_field_name;
 			int is_oosvar = pitem->is_oosvar;
@@ -296,7 +296,7 @@ static void evaluate_statements(
 				lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 			}
 
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_FILTER) {
+		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
@@ -310,7 +310,7 @@ static void evaluate_statements(
 				}
 			}
 
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_GATE) {
+		} else if (node_type == MD_AST_NODE_TYPE_GATE) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
@@ -323,7 +323,7 @@ static void evaluate_statements(
 				break;
 			}
 
-		} else if (node_type == MLR_DSL_AST_NODE_TYPE_EMIT) {
+		} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
 			lrec_t* prec_to_emit = lrec_unbacked_alloc();
 			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
 				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
