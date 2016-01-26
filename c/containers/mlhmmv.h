@@ -19,30 +19,43 @@
 #include "containers/mlrval.h"
 #include "containers/sllv.h"
 
-//// ----------------------------------------------------------------
-//typedef struct _mlhmmve_t {
-//	int     ideal_index;
-//	mv_t*   pvalue;
-//	struct _mlhmmve_t *pprev;
-//	struct _mlhmmve_t *pnext;
-//} mlhmmve_t;
-//
-//typedef unsigned char mlhmmve_state_t;
+#define MLHMMV_VALUE_TYPE_TERMINAL     0xabcd
+#define MLHMMV_VALUE_TYPE_NON_TERMINAL 0xfedc
+
+struct _mlhmmv_level_t; // forward reference
+
+// ----------------------------------------------------------------
+typedef struct _mlhmmv_value_t {
+	int type;
+	union {
+		mv_t mlrval;
+		struct _mlhmmv_level_t* pnext_level;
+	} u;
+} mlhmmv_value_t;
+
+typedef struct _mlhmmv_entry_t {
+	int     ideal_index;
+	mv_t    key;
+	struct _mlhmmv_entry_t *pprev;
+	struct _mlhmmv_entry_t *pnext;
+} mlhmmv_entry_t;
+
+typedef unsigned char mlhmmv_entry_state_t;
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_level_t {
-//	int              num_occupied;
-//	int              num_freed;
-//	int              array_length;
-//	mlhmmv_level_t*  entries;
-//	mlhmmv_state_t*  states;
-//	mlhmmv_level_t*  phead;
-//	mlhmmv_level_t*  ptail;
+	int                   num_occupied;
+	int                   num_freed;
+	int                   array_length;
+	mlhmmv_entry_t*       entries;
+	mlhmmv_entry_state_t* states;
+	mlhmmv_entry_t*       phead;
+	mlhmmv_entry_t*       ptail;
 } mlhmmv_level_t;
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_t {
-//	mlhmmv_level_t* proot_level;
+	mlhmmv_level_t* proot_level;
 } mlhmmv_t;
 
 mlhmmv_t* mlhmmv_alloc();
