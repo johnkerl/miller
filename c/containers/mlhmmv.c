@@ -140,11 +140,13 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 //}
 
 // ----------------------------------------------------------------
-void mlhmmv_put(mlhmmv_t* pmap, sllv_t* pmkeys, mv_t* pvalue) {
+void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmkeys, mv_t* pvalue) {
+}
+
+// level-put material:
 //	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 //		mlhmmv_enlarge(pmap);
 //	return mlhmmv_put_no_enlarge(pmap, key, pvvalue, free_flags);
-}
 
 //static void* mlhmmv_put_no_enlarge(mlhmmv_t* pmap, slls_t* key, void* pvvalue, char free_flags) {
 //	int index = mlhmmv_find_index_for_key(pmap, key);
@@ -191,7 +193,7 @@ void mlhmmv_put(mlhmmv_t* pmap, sllv_t* pmkeys, mv_t* pvalue) {
 //}
 
 // ----------------------------------------------------------------
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllv_t* pmvkeys) {
+mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	int index = mlhmmv_find_index_for_key(pmap, key);
 //	mlhmmv_entry_t* pe = &pmap->entries[index];
 //
@@ -207,7 +209,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllv_t* pmvkeys) {
 }
 
 // ----------------------------------------------------------------
-int mlhmmv_has_keys(mlhmmv_t* pmap, sllv_t* pmvkeys) {
+int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	int index = mlhmmv_find_index_for_key(pmap, key);
 //
 //	if (pmap->states[index] == OCCUPIED)
@@ -306,3 +308,11 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllv_t* pmvkeys) {
 //			pe->ideal_index, key_string, value_string);
 //	}
 //}
+
+// ----------------------------------------------------------------
+mlhmmv_value_t* mlhmmv_value_from_mv(mv_t* pmv) {
+	mlhmmv_value_t* pvalue = mlr_malloc_or_die(sizeof(mlhmmv_value_t));
+	pvalue->type = MLHMMV_VALUE_TYPE_TERMINAL;
+	pvalue->u.mlrval = mv_copy(pmv);
+	return pvalue;
+}

@@ -13,6 +13,18 @@ int assertions_failed = 0;
 static char* test_stub() {
 	mu_assert_lf(0 == 0);
 
+	mlhmmv_t* pmap = mlhmmv_alloc();
+
+	mv_t key = mv_from_int(3LL);
+	sllmv_t* pmkeys = sllmv_single(&key);
+	mv_t value = mv_from_int(4LL);
+
+	mlhmmv_put(pmap, pmkeys, &value);
+
+	sllmv_free(pmkeys);
+
+	mlhmmv_free(pmap);
+
 	return NULL;
 }
 

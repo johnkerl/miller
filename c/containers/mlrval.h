@@ -149,6 +149,12 @@ static inline mv_t mv_copy(mv_t* pval) {
 	}
 }
 
+static inline mv_t* mv_alloc_copy(mv_t* pold) {
+	mv_t* pnew = mlr_malloc_or_die(sizeof(mv_t));
+	*pnew = mv_copy(pold);
+	return pnew;
+}
+
 // ----------------------------------------------------------------
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;

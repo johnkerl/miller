@@ -140,7 +140,7 @@ TEST_MLHMMV_SRCS = \
   lib/mlrutil.c \
   lib/mlr_globals.c \
   containers/mlhmmv.c \
-  containers/sllv.c \
+  containers/sllmv.c \
   unit_test/test_mlhmmv.c
 
 TEST_MLRUTIL_SRCS = \

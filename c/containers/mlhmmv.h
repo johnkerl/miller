@@ -17,7 +17,7 @@
 #define MLHMMV_H
 
 #include "containers/mlrval.h"
-#include "containers/sllv.h"
+#include "containers/sllmv.h"
 
 #define MLHMMV_VALUE_TYPE_TERMINAL     0xabcd
 #define MLHMMV_VALUE_TYPE_NON_TERMINAL 0xfedc
@@ -61,9 +61,11 @@ typedef struct _mlhmmv_t {
 mlhmmv_t* mlhmmv_alloc();
 void  mlhmmv_free(mlhmmv_t* pmap);
 // pmkeys is a list of mlhmmv_value_t
-void  mlhmmv_put(mlhmmv_t* pmap, sllv_t* pmvkeys, mv_t* pvalue);
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllv_t* pmvkeys);
-int   mlhmmv_has_keys(mlhmmv_t* pmap, sllv_t* pmvkeys);
+void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue);
+mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+int   mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+
+mlhmmv_value_t* mlhmmv_value_from_mv(mv_t* pmv);
 
 //// Unit-test hook
 //int mlhmmv_check_counts(mlhmmv_t* pmap);

@@ -12,6 +12,7 @@ test-peek-file-reader
 test-parse-trie
 test-lrec
 test-multiple-containers
+test-mlhmmv
 test-lrec-evaluators
 test_lrec_evaluators
 test-join-bucket-keeper
@@ -69,6 +70,7 @@ test_lrec
 test_mlrutil
 test_mlrregex
 test_multiple_containers
+test_mlhmmv
 test_parse_trie
 test_peek_file_reader
 test_string_builder

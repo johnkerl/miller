@@ -41,6 +41,8 @@ libcontainers_la_SOURCES=	\
 			slls.h \
 			sllv.c \
 			sllv.h \
+			sllmv.c \
+			sllmv.h \
 			top_keeper.c \
 			top_keeper.h
 libcontainers_la_LIBADD=	\
