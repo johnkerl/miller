@@ -70,4 +70,7 @@ mlhmmv_value_t* mlhmmv_value_from_mv(mv_t* pmv);
 //// Unit-test hook
 //int mlhmmv_check_counts(mlhmmv_t* pmap);
 
+void mlhmmv_print(mlhmmv_t* pmap);
+
+
 #endif // MLHMMV_H

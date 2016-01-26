@@ -11,8 +11,6 @@ int assertions_failed = 0;
 
 // ----------------------------------------------------------------
 static char* test_stub() {
-	mu_assert_lf(0 == 0);
-
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
 	mv_t key = mv_from_int(3LL);
@@ -21,8 +19,13 @@ static char* test_stub() {
 
 	mlhmmv_put(pmap, pmkeys, &value);
 
-	sllmv_free(pmkeys);
+	int ret = mlhmmv_has_keys(pmap, pmkeys);
+	mu_assert_lf(ret == FALSE); // xxx stub
 
+	mv_t* pback = mlhmmv_get(pmap, pmkeys);
+	mu_assert_lf(pback == NULL); // xxx stub
+
+	sllmv_free(pmkeys);
 	mlhmmv_free(pmap);
 
 	return NULL;

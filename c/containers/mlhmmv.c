@@ -23,6 +23,8 @@ static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
+static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmkeys, mv_t* pvalue);
+
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
 #ifndef INITIAL_ARRAY_LENGTH
@@ -43,8 +45,8 @@ static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 #define EMPTY    0xce
 
 //// ----------------------------------------------------------------
-//static void* mlhmmv_put_no_enlarge(mlhmmv_t* pmap, slls_t* key, void* pvvalue, char free_flags);
-//static void mlhmmv_enlarge(mlhmmv_t* pmap);
+//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmkeys, mv_t* pvalue);
+//static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
 mlhmmv_t* mlhmmv_alloc() {
 	mlhmmv_t* pmap = mlr_malloc_or_die(sizeof(mlhmmv_t));
@@ -141,44 +143,46 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 
 // ----------------------------------------------------------------
 void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmkeys, mv_t* pvalue) {
+	mlhmmv_put_aux(pmap->proot_level, pmkeys->phead, pvalue);
+}
+static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmkeys, mv_t* pvalue) {
+//	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length*LOAD_FACTOR))
+//		mlhmmv_level_enlarge(pmap);
+//	mlhmmv_level_put_no_enlarge(pmap, key, pvvalue, free_flags);
 }
 
-// level-put material:
-//	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
-//		mlhmmv_enlarge(pmap);
-//	return mlhmmv_put_no_enlarge(pmap, key, pvvalue, free_flags);
 
-//static void* mlhmmv_put_no_enlarge(mlhmmv_t* pmap, slls_t* key, void* pvvalue, char free_flags) {
-//	int index = mlhmmv_find_index_for_key(pmap, key);
-//	mlhmmv_entry_t* pe = &pmap->entries[index];
+//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmkeys, mv_t* pvalue);
+//	int index = mlhmmv_find_index_for_key(plevel, key);
+//	mlhmmv_entry_t* pe = &plevel->entries[index];
 //
-//	if (pmap->states[index] == OCCUPIED) {
+//	if (plevel->states[index] == OCCUPIED) {
 //		// Existing key found in chain; put value.
 //		if (slls_equals(pe->key, key)) {
 //			pe->pvvalue = pvvalue;
 //			return pvvalue;
 //		}
 //	}
-//	else if (pmap->states[index] == EMPTY) {
+//	else if (plevel->states[index] == EMPTY) {
 //		// End of chain.
-//		pe->ideal_index = mlr_canonical_mod(slls_hash_func(key), pmap->array_length);
+//		pe->ideal_index = mlr_canonical_mod(slls_hash_func(key), plevel->array_length);
 //		pe->key = key;
 //		pe->free_flags = free_flags;
 //		pe->pvvalue = pvvalue;
-//		pmap->states[index] = OCCUPIED;
+//		plevel->states[index] = OCCUPIED;
 //
-//		if (pmap->phead == NULL) {
+//		if (plevel->phead == NULL) {
 //			pe->pprev   = NULL;
 //			pe->pnext   = NULL;
-//			pmap->phead = pe;
-//			pmap->ptail = pe;
+//			plevel->phead = pe;
+//			plevel->ptail = pe;
 //		} else {
-//			pe->pprev   = pmap->ptail;
+//			pe->pprev   = plevel->ptail;
 //			pe->pnext   = NULL;
-//			pmap->ptail->pnext = pe;
-//			pmap->ptail = pe;
+//			plevel->ptail->pnext = pe;
+//			plevel->ptail = pe;
 //		}
-//		pmap->num_occupied++;
+//		plevel->num_occupied++;
 //		return pvvalue;
 //	}
 //	else {
@@ -194,19 +198,20 @@ void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmkeys, mv_t* pvalue) {
 
 // ----------------------------------------------------------------
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	return NULL; // xxx stub
+}
 //	int index = mlhmmv_find_index_for_key(pmap, key);
 //	mlhmmv_entry_t* pe = &pmap->entries[index];
 //
 //	if (pmap->states[index] == OCCUPIED)
 //		return pe->pvvalue;
 //	else if (pmap->states[index] == EMPTY)
-		return NULL;
+//		return NULL;
 //	else {
 //		fprintf(stderr, "%s: mlhmmv_find_index_for_key did not find end of chain\n",
 //			MLR_GLOBALS.argv0);
 //		exit(1);
 //	}
-}
 
 // ----------------------------------------------------------------
 int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
@@ -222,21 +227,17 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	}
 }
 
-//// ----------------------------------------------------------------
-//int mlhmmv_size(mlhmmv_t* pmap) {
-//	return pmap->num_occupied;
-//}
+// ----------------------------------------------------------------
+//static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
+//	mlhmmv_entry_t*       old_entries = plevel->entries;
+//	mlhmmv_entry_state_t* old_states  = plevel->states;
+//	mlhmmv_entry_t*       old_head    = plevel->phead;
 //
-//// ----------------------------------------------------------------
-//static void mlhmmv_enlarge(mlhmmv_t* pmap) {
-//	mlhmmv_entry_t*       old_entries = pmap->entries;
-//	mlhmmv_entry_state_t* old_states  = pmap->states;
-//	mlhmmv_entry_t*       old_head    = pmap->phead;
-//
-//	mlhmmv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
+//	mlhmmv_level_init(plevel, plevel->array_length*ENLARGEMENT_FACTOR);
 //
 //	for (mlhmmv_entry_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-//		mlhmmv_put_no_enlarge(pmap, pe->key, pe->pvvalue, pe->free_flags);
+//		// xxx need no-copy logic here ...
+//		mlhmmv_level_put_no_enlarge(plevel, pe->key, pe->pvvalue, pe->free_flags);
 //	}
 //	free(old_entries);
 //	free(old_states);
@@ -276,8 +277,8 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	default:       return "?????";    break;
 //	}
 //}
-//
-//void mlhmmv_print(mlhmmv_t* pmap) {
+
+void mlhmmv_print(mlhmmv_t* pmap) {
 //	for (int index = 0; index < pmap->array_length; index++) {
 //		mlhmmv_entry_t* pe = &pmap->entries[index];
 //
@@ -307,7 +308,7 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //			pe->pprev, pe, pe->pnext,
 //			pe->ideal_index, key_string, value_string);
 //	}
-//}
+}
 
 // ----------------------------------------------------------------
 mlhmmv_value_t* mlhmmv_value_from_mv(mv_t* pmv) {
