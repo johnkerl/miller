@@ -1413,9 +1413,9 @@ mv_t lrec_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, lhms
 	lrec_evaluator_oosvar_name_state_t* pstate = pvstate;
 	mv_t* pval = lhmsv_get(poosvars, pstate->oosvar_name);
 	if (pval != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy a value here to feed
+		// into that. Otherwise the typed-overlay map in mapper_put would have its contents freed out from underneath it
+		// by the evaluator functions.
 		return mv_copy(pval);
 	} else {
 		return MV_NULL;
@@ -1429,7 +1429,7 @@ static void lrec_evaluator_oosvar_name_free(lrec_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name, int type_inferencing) {
+lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 	lrec_evaluator_oosvar_name_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_oosvar_name_state_t));
 	pstate->oosvar_name = mlr_strdup_or_die(oosvar_name);
 
@@ -2114,7 +2114,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		if (pnode->type == MLR_DSL_AST_NODE_TYPE_FIELD_NAME) {
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_OOSVAR_NAME) {
-			return lrec_evaluator_alloc_from_oosvar_name(pnode->text, type_inferencing);
+			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MLR_DSL_AST_NODE_TYPE_BOOLEAN_LITERAL) {

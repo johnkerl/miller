@@ -25,6 +25,8 @@ libcontainers_la_SOURCES=	\
 			lrec.h \
 			mixutil.c \
 			mixutil.h \
+			mlhmmv.c \
+			mlhmmv.h \
 			mlr_dsl_ast.c \
 			mlr_dsl_ast.h \
 			mlrval.c \

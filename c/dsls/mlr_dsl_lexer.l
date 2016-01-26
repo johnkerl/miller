@@ -215,14 +215,14 @@
 	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_MOOSVAR_NAME);
 	return MLR_DSL_BRACED_MOOSVAR_NAME;
-//"\[" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return MLR_DSL_LEFT_BRACKET;
-//}
-//"\]" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return MLR_DSL_RIGHT_BRACKET;
-//}
+}
+"\[" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MLR_DSL_LEFT_BRACKET;
+}
+"\]" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MLR_DSL_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MLR_DSL_RIGHT_BRACKET;
 }
 
 [0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {

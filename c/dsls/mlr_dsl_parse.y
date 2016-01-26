@@ -82,6 +82,7 @@ mlr_dsl_begin_block_statements ::= mlr_dsl_begin_block_statement MLR_DSL_SEMICOL
 mlr_dsl_begin_block_statement ::= .
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_oosvar_assignment.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_moosvar_assignment.
+mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_moosvar_temp.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_bare_boolean.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_filter.
 mlr_dsl_begin_block_statement ::= mlr_dsl_begin_block_gate.
@@ -165,6 +166,19 @@ mlr_dsl_begin_block_moosvar_assignment(A)  ::= mlr_dsl_moosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
+
+mlr_dsl_begin_block_moosvar_temp(A) ::= mlr_dsl_begin_block_moosvar_temp2(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
+mlr_dsl_begin_block_moosvar_temp2(A) ::= mlr_dsl_moosvar_name(B) MLR_DSL_LEFT_BRACKET mlr_dsl_ternary(C) MLR_DSL_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MLR_DSL_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
+}
+mlr_dsl_begin_block_moosvar_temp2(A) ::= mlr_dsl_begin_block_moosvar_temp2(B) MLR_DSL_LEFT_BRACKET mlr_dsl_ternary(C) MLR_DSL_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MLR_DSL_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
+}
+
+
 mlr_dsl_begin_block_bare_boolean(A) ::= mlr_dsl_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
