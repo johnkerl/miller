@@ -23,7 +23,7 @@ static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
-static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmkeys, mv_t* pvalue);
+static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue);
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
@@ -45,7 +45,7 @@ static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmkeys, mv_t* pvalu
 #define EMPTY    0xce
 
 //// ----------------------------------------------------------------
-//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmkeys, mv_t* pvalue);
+//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmvkeys, mv_t* pvalue);
 //static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
 mlhmmv_t* mlhmmv_alloc() {
@@ -142,17 +142,17 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 //}
 
 // ----------------------------------------------------------------
-void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmkeys, mv_t* pvalue) {
-	mlhmmv_put_aux(pmap->proot_level, pmkeys->phead, pvalue);
+void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue) {
+	mlhmmv_put_aux(pmap->proot_level, pmvkeys->phead, pvalue);
 }
-static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmkeys, mv_t* pvalue) {
+static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue) {
 //	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length*LOAD_FACTOR))
 //		mlhmmv_level_enlarge(pmap);
 //	mlhmmv_level_put_no_enlarge(pmap, key, pvvalue, free_flags);
 }
 
 
-//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmkeys, mv_t* pvalue);
+//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmvkeys, mv_t* pvalue);
 //	int index = mlhmmv_find_index_for_key(plevel, key);
 //	mlhmmv_entry_t* pe = &plevel->entries[index];
 //

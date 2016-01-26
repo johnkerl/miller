@@ -14,18 +14,18 @@ static char* test_stub() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
 	mv_t key = mv_from_int(3LL);
-	sllmv_t* pmkeys = sllmv_single(&key);
+	sllmv_t* pmvkeys = sllmv_single(&key);
 	mv_t value = mv_from_int(4LL);
 
-	mlhmmv_put(pmap, pmkeys, &value);
+	mlhmmv_put(pmap, pmvkeys, &value);
 
-	int ret = mlhmmv_has_keys(pmap, pmkeys);
+	int ret = mlhmmv_has_keys(pmap, pmvkeys);
 	mu_assert_lf(ret == FALSE); // xxx stub
 
-	mv_t* pback = mlhmmv_get(pmap, pmkeys);
+	mv_t* pback = mlhmmv_get(pmap, pmvkeys);
 	mu_assert_lf(pback == NULL); // xxx stub
 
-	sllmv_free(pmkeys);
+	sllmv_free(pmvkeys);
 	mlhmmv_free(pmap);
 
 	return NULL;

@@ -60,7 +60,7 @@ typedef struct _mlhmmv_t {
 
 mlhmmv_t* mlhmmv_alloc();
 void  mlhmmv_free(mlhmmv_t* pmap);
-// pmkeys is a list of mlhmmv_value_t
+// pmvkeys is a list of mlhmmv_value_t
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue);
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 int   mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys);
