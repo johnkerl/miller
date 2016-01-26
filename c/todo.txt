@@ -15,11 +15,21 @@ TOP OF LIST
 
 * int-preserving exponentiation operator -- ?
 
+* mlr -f ish @ cover x 2
+
+* centos:
+  https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
+  https://lists.centos.org/pipermail/centos/2012-September/129227.html
+  http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
+* redhat?
+  https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
+  https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
+  https://fedoraproject.org/wiki/Package_Review_Process
+
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
   o .y hospitality annotations :)
-  o mlr -f ish @ cover x 2
 
   o next up:
     ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
@@ -289,6 +299,8 @@ https://help.github.com/articles/github-flavored-markdown/
 
 shell: mlr put '$z=$x+$y'
 lldb:  run put "\$z=\$x+\$y"
+
+http://include-what-you-use.org/
 
 ================================================================
 git remote add upstream https://github.com/Homebrew/homebrew
