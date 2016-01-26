@@ -136,6 +136,13 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   input/lrec_reader_stdio_xtab.c \
   unit_test/test_multiple_containers.c
 
+TEST_MLHMMV_SRCS = \
+  lib/mlrutil.c \
+  lib/mlr_globals.c \
+  containers/mlhmmv.c \
+  containers/sllv.c \
+  unit_test/test_mlhmmv.c
+
 TEST_MLRUTIL_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
@@ -312,6 +319,9 @@ test-lrec: .always
 
 test-multiple-containers: .always
 	$(CCDEBUG) $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers -lm
+
+test-mlhmmv: .always
+	$(CCDEBUG) $(TEST_MLHMMV_SRCS) -o test-mlhmmv -lm
 
 test-mlrutil: .always
 	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) -o test-mlrutil

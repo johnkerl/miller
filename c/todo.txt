@@ -26,6 +26,8 @@ TOP OF LIST
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
 
+* option for: print to stderr NR if NR%N==0 for user-specified N
+
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 

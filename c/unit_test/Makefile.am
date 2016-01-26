@@ -7,6 +7,7 @@ check_PROGRAMS = 	test_mlrutil \
 			test_peek_file_reader \
 			test_parse_trie \
 			test_lrec \
+			test_mlhmmv \
 			test_multiple_containers \
 			test_string_builder \
 			test_lrec_evaluators \
@@ -47,6 +48,9 @@ test_parse_trie_LDADD=            ${all_ldadd}
 
 test_lrec_CFLAGS=                 -std=gnu99 -g ${AM_CFLAGS}
 test_lrec_LDADD=                  ${all_ldadd}
+
+test_mlhmmv_CFLAGS=               -std=gnu99 -g ${AM_CFLAGS}
+test_mlhmmv_LDADD=                ${all_ldadd}
 
 test_multiple_containers_CFLAGS=  -std=gnu99 -g ${AM_CFLAGS}
 test_multiple_containers_LDADD=   ${all_ldadd}
