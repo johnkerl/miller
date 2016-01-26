@@ -27,7 +27,6 @@ TOP OF LIST
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
     ! re-valgrind continuously
     ! xxxes
-    ! shorten/rid the MLR_DSL_/mlr_dsl_ prefixes. just taking up horizontal screen space.
     - define/test behavior for null-valued filter/gate
 
   o initial sketch: there are two lrecs: with$ and with$; in-stream & out-of-stream.
