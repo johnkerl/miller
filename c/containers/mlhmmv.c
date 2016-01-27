@@ -95,7 +95,7 @@ void mlhmmv_free(mlhmmv_t* pmap) {
 
 static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-		if (pe->level_value.is_terminal) {
+		if (!pe->level_value.is_terminal) {
 			mlhmmv_level_free(pe->level_value.u.pnext_level);
 		}
 		mv_free(&pe->key);
@@ -206,47 +206,57 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_level_v
 }
 
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue) {
-//	int index = mlhmmv_level_find_index_for_key(plevel, key);
-//	mlhmmv_level_entry_t* pe = &plevel->entries[index];
-//
-//	if (plevel->states[index] == OCCUPIED) {
-//		// Existing key found in chain; put value.
-//		if (slls_equals(pe->key, key)) {
-//			pe->pvalue = pvalue;
-//			return pvalue;
-//		}
-//	}
-//	else if (plevel->states[index] == EMPTY) {
-//		// End of chain.
-//		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(key), plevel->array_length);
-//		pe->key = key;
-//		// For the put API, we copy data passed in. But for internal enlarges, we just need to move pointers around.
-//		pe->pvalue = do_copy ? mv_alloc_copy(pvalue) : pvalue;
-//		plevel->states[index] = OCCUPIED;
-//
-//		if (plevel->phead == NULL) {
-//			pe->pprev   = NULL;
-//			pe->pnext   = NULL;
-//			plevel->phead = pe;
-//			plevel->ptail = pe;
-//		} else {
-//			pe->pprev   = plevel->ptail;
-//			pe->pnext   = NULL;
-//			plevel->ptail->pnext = pe;
-//			plevel->ptail = pe;
-//		}
-//		plevel->num_occupied++;
-//		return pvalue;
-//	}
-//	else {
-//		fprintf(stderr, "mlhmmv_level_find_index_for_key did not find end of chain\n");
-//		exit(1);
-//	}
-//	// This one is to appease a compiler warning about control reaching the end
-//	// of a non-void function
-//	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-//		MLR_GLOBALS.argv0, __FILE__, __LINE__);
-//	exit(1);
+	mv_t* pkey = pmvkeys->pvalue;
+	int index = mlhmmv_level_find_index_for_key(plevel, pkey);
+	mlhmmv_level_entry_t* pe = &plevel->entries[index];
+
+	if (plevel->states[index] == OCCUPIED) {
+		// Existing key found in chain; put value.
+		if (mlhmmv_key_equals(&pe->key, pkey)) {
+			// xxx pe->pvalue = pvalue;
+			// xxx free old!
+			// xxx or recurse
+			// xxx stub
+			pe->level_value.is_terminal = TRUE;
+			pe->level_value.u.mlrval = mv_from_int(888);
+			return;
+		}
+	} else if (plevel->states[index] == EMPTY) {
+		// End of chain.
+		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(pkey), plevel->array_length);
+		pe->key = *pkey;
+		// For the put API, we copy data passed in. But for internal enlarges, we just need to move pointers around.
+		// xxx or recurse
+		// xxx maybe alloc new level
+		//pe->plevel_value = mv_alloc_copy(pvalue);
+		// xxx stub
+		pe->level_value.is_terminal = TRUE;
+		pe->level_value.u.mlrval = mv_from_int(999);
+		plevel->states[index] = OCCUPIED;
+
+		if (plevel->phead == NULL) {
+			pe->pprev   = NULL;
+			pe->pnext   = NULL;
+			plevel->phead = pe;
+			plevel->ptail = pe;
+		} else {
+			pe->pprev   = plevel->ptail;
+			pe->pnext   = NULL;
+			plevel->ptail->pnext = pe;
+			plevel->ptail = pe;
+		}
+		plevel->num_occupied++;
+		return;
+	}
+	else {
+		fprintf(stderr, "mlhmmv_level_find_index_for_key did not find end of chain\n");
+		exit(1);
+	}
+	// This one is to appease a compiler warning about control reaching the end
+	// of a non-void function
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
+	exit(1);
 }
 
 // ----------------------------------------------------------------
@@ -325,7 +335,7 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 //}
 
 void mlhmmv_print(mlhmmv_t* pmap) {
-	mlhmmv_level_print(pmap->proot_level, 0);
+	mlhmmv_level_print(pmap->proot_level, 1);
 }
 
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
@@ -345,7 +355,7 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 
 		if (pe->level_value.is_terminal) {
 			char* level_value_string = mv_alloc_format_val(&pe->level_value.u.mlrval);
-			printf("%s =>", level_value_string);
+			printf(" %s\n", level_value_string);
 			free(level_value_string);
 		} else {
 			printf(" {\n");
@@ -361,10 +371,10 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 // ----------------------------------------------------------------
 typedef int mv_typed_hash_func_t(mv_t* pa);
 
-static int mv_string_hash_func(mv_t* pa) {
+static int mv_int_hash_func(mv_t* pa) {
 	return pa->u.intv;
 }
-static int mv_int_hash_func(mv_t* pa) {
+static int mv_string_hash_func(mv_t* pa) {
 	return mlr_string_hash_func(pa->u.strv);
 }
 static int mv_other_hash_func(mv_t* pa) {
