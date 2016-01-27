@@ -215,7 +215,7 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		return;
 	}
 	else {
-		fprintf(stderr, "mlhmmv_level_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 	// This one is to appease a compiler warning about control reaching the end
@@ -271,7 +271,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 		return;
 	}
 	else {
-		fprintf(stderr, "mlhmmv_level_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 	// This one is to appease a compiler warning about control reaching the end
@@ -293,8 +293,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	else if (pmap->states[index] == EMPTY)
 //		return NULL;
 //	else {
-//		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n",
-//			MLR_GLOBALS.argv0);
+//		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 //		exit(1);
 //	}
 
@@ -307,7 +306,7 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 //	else {
-//		fprintf(stderr, "mlhmmv_level_find_index_for_key did not find end of chain\n");
+//		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 //		exit(1);
 //	}
 }

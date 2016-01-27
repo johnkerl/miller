@@ -178,7 +178,7 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char fre
 		}
 		pmap->num_occupied++;
 	} else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -193,7 +193,7 @@ char* lhmss_get(lhmss_t* pmap, char* key) {
 	} else if (pmap->states[index] == EMPTY) {
 		return NULL;
 	} else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -207,7 +207,7 @@ int lhmss_has_key(lhmss_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }

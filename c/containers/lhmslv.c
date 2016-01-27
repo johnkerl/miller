@@ -165,7 +165,7 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, c
 		return pvvalue;
 	}
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 	// This one is to appease a compiler warning about control reaching the end
@@ -185,8 +185,7 @@ void* lhmslv_get(lhmslv_t* pmap, slls_t* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n",
-			MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -200,7 +199,7 @@ int lhmslv_has_key(lhmslv_t* pmap, slls_t* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmslv_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }

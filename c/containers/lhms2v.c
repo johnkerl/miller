@@ -171,13 +171,13 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 		return pvvalue;
 	}
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhms2v_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 	// This one is to appease a compiler warning about control reaching the end
 	// of a non-void function
-	fprintf(stderr, "Miller: internal coding error detected in file %s at line %d.\n",
-		__FILE__, __LINE__);
+	fprintf(stderr, "%s: Miller: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
 
@@ -191,7 +191,7 @@ void* lhms2v_get(lhms2v_t* pmap, char* key1, char* key2) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhms2v_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -205,7 +205,7 @@ int lhms2v_has_key(lhms2v_t* pmap, char* key1, char* key2) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhms2v_find_index_for_key did not find end of chain\n");
+		fprintf(stderr, "%s: lhms2v_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }

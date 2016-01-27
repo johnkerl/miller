@@ -172,7 +172,7 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_
 		pmap->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmsi_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -187,7 +187,7 @@ long long lhmsi_get(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return -999; // caller must do lhmsi_has_key to check validity
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmsi_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -201,7 +201,7 @@ lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmsi_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
@@ -215,7 +215,7 @@ int lhmsi_has_key(lhmsi_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "lhmsi_find_index_for_key did not find end of chain.\n");
+		fprintf(stderr, "%s: lhmsi_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
