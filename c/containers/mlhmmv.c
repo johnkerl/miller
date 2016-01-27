@@ -11,10 +11,10 @@
 // * http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 // ================================================================
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
@@ -23,16 +23,16 @@ static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* pkey);
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key);
 
-static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue);
-static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue);
+static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
-static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_level_value_t* plevel_value);
+static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value);
 
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth);
 
-static int mlhmmv_hash_func(mv_t* pkey);
+static int mlhmmv_hash_func(mv_t* plevel_key);
 static int mlhmmv_key_equals(mv_t* pa, mv_t* pb);
 
 // ----------------------------------------------------------------
@@ -49,9 +49,9 @@ static int mlhmmv_key_equals(mv_t* pa, mv_t* pb);
 #define ENLARGEMENT_FACTOR   2
 #endif
 
-#define OCCUPIED 0xa4
-#define DELETED  0xb8
-#define EMPTY    0xce
+#define OCCUPIED             0xa4
+#define DELETED              0xb8
+#define EMPTY                0xce
 
 // ----------------------------------------------------------------
 mlhmmv_t* mlhmmv_alloc() {
@@ -98,7 +98,7 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 		if (!pe->level_value.is_terminal) {
 			mlhmmv_level_free(pe->level_value.u.pnext_level);
 		}
-		mv_free(&pe->key);
+		mv_free(&pe->level_key);
 	}
 	free(plevel->entries);
 	free(plevel->states);
@@ -113,17 +113,17 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* pkey) {
-	int hash = mlhmmv_hash_func(pkey);
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+	int hash = mlhmmv_hash_func(plevel_key);
 	int index = mlr_canonical_mod(hash, plevel->array_length);
 	int num_tries = 0;
 
 	while (TRUE) {
 		mlhmmv_level_entry_t* pe = &plevel->entries[index];
 		if (plevel->states[index] == OCCUPIED) {
-			mv_t* ekey = &pe->key;
+			mv_t* ekey = &pe->level_key;
 			// Existing key found in chain.
-			if (mlhmmv_key_equals(pkey, ekey))
+			if (mlhmmv_key_equals(plevel_key, ekey))
 				return index;
 		} else if (plevel->states[index] == EMPTY) {
 			return index;
@@ -149,58 +149,54 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* pkey) {
 
 // ----------------------------------------------------------------
 // Example: keys = ["a", 2, "c"] and value = 4.
-void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue) {
-	mlhmmv_level_put(pmap->proot_level, pmvkeys->phead, pvalue);
+void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
+	mlhmmv_level_put(pmap->proot_level, pmvkeys->phead, pterminal_value);
 }
 // Example on recursive calls:
 // * level = map, keys = ["a", 2, "c"] , value = 4.
 // * level = map["a"], keys = [2, "c"] , value = 4.
 // * level = map["a"][2], keys = ["c"] , value = 4.
-static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue) {
+static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
-	mlhmmv_level_put_no_enlarge(plevel, pmvkeys, pvalue);
+	mlhmmv_level_put_no_enlarge(plevel, prest_keys, pterminal_value);
 }
 
-static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue) {
-	mv_t* pkey = pmvkeys->pvalue;
-	int index = mlhmmv_level_find_index_for_key(plevel, pkey);
+static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
+	mv_t* plevel_key = prest_keys->pvalue;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key);
 	mlhmmv_level_entry_t* pe = &plevel->entries[index];
 
 	if (plevel->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (mlhmmv_key_equals(&pe->key, pkey)) {
+		if (mlhmmv_key_equals(&pe->level_key, plevel_key)) {
 			if (pe->level_value.is_terminal)
 				mv_free(&pe->level_value.u.mlrval);
 			else
 				// xxx no, not always
 				mlhmmv_level_free(pe->level_value.u.pnext_level);
-			if (pmvkeys->pnext == NULL) {
+			if (prest_keys->pnext == NULL) {
 				pe->level_value.is_terminal = TRUE;
-				pe->level_value.u.mlrval = *pvalue;
+				pe->level_value.u.mlrval = *pterminal_value;
 			} else {
 				pe->level_value.is_terminal = FALSE;
 				pe->level_value.u.pnext_level = mlhmmv_level_alloc();
-				mlhmmv_level_put(pe->level_value.u.pnext_level, pmvkeys->pnext, pvalue);
+				mlhmmv_level_put(pe->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 			}
-			// xxx pe->pvalue = pvalue;
-			// xxx free old!
-			// xxx or recurse
-			// xxx stub
 			return;
 		}
 	} else if (plevel->states[index] == EMPTY) {
 		// End of chain.
-		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(pkey), plevel->array_length);
-		pe->key = *pkey;
+		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(plevel_key), plevel->array_length);
+		pe->level_key = *plevel_key;
 
-		if (pmvkeys->pnext == NULL) {
+		if (prest_keys->pnext == NULL) {
 			pe->level_value.is_terminal = TRUE;
-			pe->level_value.u.mlrval = *pvalue;
+			pe->level_value.u.mlrval = *pterminal_value;
 		} else {
 			pe->level_value.is_terminal = FALSE;
 			pe->level_value.u.pnext_level = mlhmmv_level_alloc();
-			mlhmmv_level_put(pe->level_value.u.pnext_level, pmvkeys->pnext, pvalue);
+			mlhmmv_level_put(pe->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 		plevel->states[index] = OCCUPIED;
 
@@ -229,20 +225,20 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkey
 	exit(1);
 }
 
-static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_level_value_t* plevel_value) {
-	int index = mlhmmv_level_find_index_for_key(plevel, pkey);
+static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value) {
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key);
 	mlhmmv_level_entry_t* pe = &plevel->entries[index];
 
 	if (plevel->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (mlhmmv_key_equals(&pe->key, pkey)) {
+		if (mlhmmv_key_equals(&pe->level_key, plevel_key)) {
 			pe->level_value = *plevel_value;
 			return;
 		}
 	} else if (plevel->states[index] == EMPTY) {
 		// End of chain.
-		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(pkey), plevel->array_length);
-		pe->key = *pkey;
+		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(plevel_key), plevel->array_length);
+		pe->level_key = *plevel_key;
 		// For the put API, we copy data passed in. But for internal enlarges, we just need to move pointers around.
 		pe->level_value = *plevel_value;
 		plevel->states[index] = OCCUPIED;
@@ -276,7 +272,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_level_v
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	return NULL; // xxx stub
 }
-//	int index = mlhmmv_level_find_index_for_key(plevel, key);
+//	int index = mlhmmv_level_find_index_for_key(plevel, level_key);
 //	mlhmmv_level_entry_t* pe = &pmap->entries[index];
 //
 //	if (pmap->states[index] == OCCUPIED)
@@ -291,7 +287,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 
 // ----------------------------------------------------------------
 int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-//	int index = mlhmmv_level_find_index_for_key(plevel, key);
+//	int index = mlhmmv_level_find_index_for_key(plevel, level_key);
 //
 //	if (pmap->states[index] == OCCUPIED)
 //		return TRUE;
@@ -316,7 +312,7 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	mlhmmv_level_init(plevel, plevel->array_length*ENLARGEMENT_FACTOR);
 
 	for (mlhmmv_level_entry_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		mlhmmv_level_move(plevel, &pe->key, &pe->level_value);
+		mlhmmv_level_move(plevel, &pe->level_key, &pe->level_value);
 	}
 	free(old_entries);
 	free(old_states);
@@ -338,7 +334,7 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 
 		for (int i = 0; i <= depth; i++)
 			printf("%s", leader);
-		char* level_key_string = mv_alloc_format_val(&pe->key);
+		char* level_key_string = mv_alloc_format_val(&pe->level_key);
 		printf("%s =>", level_key_string);
 		free(level_key_string);
 

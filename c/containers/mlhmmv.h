@@ -32,7 +32,7 @@ typedef struct _mlhmmv_level_value_t {
 
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
-	mv_t    key;
+	mv_t    level_key;
 	mlhmmv_level_value_t level_value; // terminal mlrval, or another hashmap
 	struct _mlhmmv_level_entry_t *pprev;
 	struct _mlhmmv_level_entry_t *pnext;
@@ -59,7 +59,7 @@ typedef struct _mlhmmv_t {
 mlhmmv_t* mlhmmv_alloc();
 void  mlhmmv_free(mlhmmv_t* pmap);
 // pmvkeys is a list of mlhmmv_level_value_t
-void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue);
+void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 int   mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
