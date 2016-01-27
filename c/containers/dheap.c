@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "containers/dheap.h"
 
 // ----------------------------------------------------------------

@@ -120,7 +120,7 @@ static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"Coding error:  table full even after enlargement.\n");
+				"%s: internal coding error: table full even after enlargement.\n", MLR_GLOBALS.argv0);
 			exit(1);
 		}
 

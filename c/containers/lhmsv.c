@@ -114,8 +114,7 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"%s: internal coding error: table full even after enlargement.\n",
-				MLR_GLOBALS.argv0);
+				"%s: internal coding error: table full even after enlargement.\n", MLR_GLOBALS.argv0);
 			exit(1);
 		}
 
