@@ -138,7 +138,11 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
 
 TEST_MLHMMV_SRCS = \
   lib/mlrutil.c \
+  lib/string_builder.c \
+  lib/string_array.c \
+  lib/mlrregex.c \
   lib/mlr_globals.c \
+  containers/mlrval.c \
   containers/mlhmmv.c \
   containers/sllmv.c \
   unit_test/test_mlhmmv.c

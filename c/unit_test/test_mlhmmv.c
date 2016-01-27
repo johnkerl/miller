@@ -13,11 +13,17 @@ int assertions_failed = 0;
 static char* test_stub() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
+	printf("----------------------------------------------------------------\n");
+	printf("empty map:\n");
+	mlhmmv_print(pmap);
+
 	mv_t key = mv_from_int(3LL);
 	sllmv_t* pmvkeys = sllmv_single(&key);
 	mv_t value = mv_from_int(4LL);
 
 	mlhmmv_put(pmap, pmvkeys, &value);
+	printf("map:\n");
+	mlhmmv_print(pmap);
 
 	int ret = mlhmmv_has_keys(pmap, pmvkeys);
 	mu_assert_lf(ret == FALSE); // xxx stub

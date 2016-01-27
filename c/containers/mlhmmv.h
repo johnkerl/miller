@@ -19,38 +19,36 @@
 #include "containers/mlrval.h"
 #include "containers/sllmv.h"
 
-#define MLHMMV_VALUE_TYPE_TERMINAL     0xabcd
-#define MLHMMV_VALUE_TYPE_NON_TERMINAL 0xfedc
-
 struct _mlhmmv_level_t; // forward reference
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_value_t {
-	int type;
+	int is_terminal;
 	union {
 		mv_t mlrval;
 		struct _mlhmmv_level_t* pnext_level;
 	} u;
 } mlhmmv_value_t;
 
-typedef struct _mlhmmv_entry_t {
+typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
 	mv_t    key;
-	struct _mlhmmv_entry_t *pprev;
-	struct _mlhmmv_entry_t *pnext;
-} mlhmmv_entry_t;
+	mlhmmv_value_t level_value; // terminal mlrval, or another hashmap
+	struct _mlhmmv_level_entry_t *pprev;
+	struct _mlhmmv_level_entry_t *pnext;
+} mlhmmv_level_entry_t;
 
-typedef unsigned char mlhmmv_entry_state_t;
+typedef unsigned char mlhmmv_level_entry_state_t;
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_level_t {
-	int                   num_occupied;
-	int                   num_freed;
-	int                   array_length;
-	mlhmmv_entry_t*       entries;
-	mlhmmv_entry_state_t* states;
-	mlhmmv_entry_t*       phead;
-	mlhmmv_entry_t*       ptail;
+	int                         num_occupied;
+	int                         num_freed;
+	int                         array_length;
+	mlhmmv_level_entry_t*       entries;
+	mlhmmv_level_entry_state_t* states;
+	mlhmmv_level_entry_t*       phead;
+	mlhmmv_level_entry_t*       ptail;
 } mlhmmv_level_t;
 
 // ----------------------------------------------------------------
@@ -64,8 +62,6 @@ void  mlhmmv_free(mlhmmv_t* pmap);
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue);
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 int   mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys);
-
-mlhmmv_value_t* mlhmmv_value_from_mv(mv_t* pmv);
 
 //// Unit-test hook
 //int mlhmmv_check_counts(mlhmmv_t* pmap);
