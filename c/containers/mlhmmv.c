@@ -353,9 +353,8 @@ void mlhmmv_print(mlhmmv_t* pmap) {
 
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 	static char* leader = "  ";
-	for (int i = 0; i < depth; i++)
-		printf("%s", leader);
-	printf("{\n");
+	if (depth == 0)
+		printf("{\n");
 	for (int index = 0; index < plevel->array_length; index++) {
 		if (plevel->states[index] != OCCUPIED)
 			continue;
@@ -373,7 +372,7 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 			printf(" %s\n", level_value_string);
 			free(level_value_string);
 		} else {
-			printf("\n");
+			printf(" {\n");
 			mlhmmv_level_print(pe->level_value.u.pnext_level, depth + 1);
 		}
 	}
