@@ -21,6 +21,11 @@ static char* test_stub() {
 	sllmv_t* pmvkeys1 = sllmv_single(&key1);
 	mv_t value1 = mv_from_int(4LL);
 
+	printf("keys1:  ");
+	sllmv_print(pmvkeys1);
+	char* string = mv_alloc_format_val(&value1);
+	printf("value1: %s\n", string);
+	free(string);
 	mlhmmv_put(pmap, pmvkeys1, &value1);
 	printf("map:\n");
 	mlhmmv_print(pmap);
@@ -37,6 +42,11 @@ static char* test_stub() {
 	sllmv_t* pmvkeys2 = sllmv_double(&key2a, &key2b);
 	mv_t value2 = mv_from_int(7LL);
 
+	printf("keys2:  ");
+	sllmv_print(pmvkeys2);
+	string = mv_alloc_format_val(&value2);
+	printf("value2: %s\n", string);
+	free(string);
 	mlhmmv_put(pmap, pmvkeys2, &value2);
 	printf("map:\n");
 	mlhmmv_print(pmap);
@@ -54,6 +64,11 @@ static char* test_stub() {
 	sllmv_t* pmvkeys3 = sllmv_triple(&key3a, &key3b, &key3c);
 	mv_t value3 = mv_from_int(17LL);
 
+	printf("keys3:  ");
+	sllmv_print(pmvkeys3);
+	string = mv_alloc_format_val(&value3);
+	printf("value3: %s\n", string);
+	free(string);
 	mlhmmv_put(pmap, pmvkeys3, &value3);
 	printf("map:\n");
 	mlhmmv_print(pmap);

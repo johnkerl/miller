@@ -65,3 +65,17 @@ sllmv_t* sllmv_triple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3) {
 	sllmv_add(psllmv, pvalue3);
 	return psllmv;
 }
+
+// ----------------------------------------------------------------
+void sllmv_print(sllmv_t* plist) {
+	printf("[");
+	for (sllmve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
+		mv_t* pmv = pe->pvalue;
+		char* string = mv_alloc_format_val(pmv);
+		if (pe != plist->phead)
+			printf(", ");
+		printf("%s", string);
+		free(string);
+	}
+	printf("]\n");
+}

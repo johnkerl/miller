@@ -27,5 +27,7 @@ sllmv_t* sllmv_single(mv_t* pvalue);
 sllmv_t* sllmv_double(mv_t* pvalue1, mv_t* pvalue2);
 sllmv_t* sllmv_triple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3);
 
+void sllmv_print(sllmv_t* plist);
+
 #endif // SLLMV_H
 
