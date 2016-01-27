@@ -33,8 +33,9 @@ TOP OF LIST
 
   o .y hospitality annotations :)
 
-  o next up:
-    ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
+  ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
+
+  o next up after that:
     ! filter is also gating. it should not.
     ! comments: replace with spaces from # to EOL/EOS, whichever comes first
     ! re-valgrind continuously

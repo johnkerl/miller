@@ -24,6 +24,8 @@ static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue);
+static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue, int do_copy);
+static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
@@ -44,10 +46,7 @@ static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pval
 #define DELETED  0xb8
 #define EMPTY    0xce
 
-//// ----------------------------------------------------------------
-//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmvkeys, mv_t* pvalue);
-//static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
-
+// ----------------------------------------------------------------
 mlhmmv_t* mlhmmv_alloc() {
 	mlhmmv_t* pmap = mlr_malloc_or_die(sizeof(mlhmmv_t));
 	pmap->proot_level = mlhmmv_level_alloc();
@@ -107,7 +106,7 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 //// Used by get() and remove().
 //// Returns >0 for where the key is *or* should go (end of chain).
 //static int mlhmmv_find_index_for_key(mlhmmv_t* pmap, slls_t* key) {
-//	int hash = slls_hash_func(key);
+//	int hash = mlhmmv_hash_func(key);
 //	int index = mlr_canonical_mod(hash, pmap->array_length);
 //	int num_tries = 0;
 //
@@ -146,29 +145,29 @@ void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pvalue) {
 	mlhmmv_put_aux(pmap->proot_level, pmvkeys->phead, pvalue);
 }
 static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue) {
-//	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length*LOAD_FACTOR))
-//		mlhmmv_level_enlarge(pmap);
-//	mlhmmv_level_put_no_enlarge(pmap, key, pvvalue, free_flags);
+	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
+		mlhmmv_level_enlarge(plevel);
+	mlhmmv_level_put_no_enlarge(plevel, pmvkeys, pvalue, TRUE);
 }
 
 
-//static void mlhmmv_level_put_no_enlarge(mlhmmv_t* plevel, sllmve__t* pmvkeys, mv_t* pvalue);
+static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pvalue, int do_copy) {
 //	int index = mlhmmv_find_index_for_key(plevel, key);
 //	mlhmmv_entry_t* pe = &plevel->entries[index];
 //
 //	if (plevel->states[index] == OCCUPIED) {
 //		// Existing key found in chain; put value.
 //		if (slls_equals(pe->key, key)) {
-//			pe->pvvalue = pvvalue;
-//			return pvvalue;
+//			pe->pvalue = pvalue;
+//			return pvalue;
 //		}
 //	}
 //	else if (plevel->states[index] == EMPTY) {
 //		// End of chain.
-//		pe->ideal_index = mlr_canonical_mod(slls_hash_func(key), plevel->array_length);
+//		pe->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(key), plevel->array_length);
 //		pe->key = key;
-//		pe->free_flags = free_flags;
-//		pe->pvvalue = pvvalue;
+//		// For the put API, we copy data passed in. But for internal enlarges, we just need to move pointers around.
+//		pe->pvalue = do_copy ? mv_alloc_copy(pvalue) : pvalue;
 //		plevel->states[index] = OCCUPIED;
 //
 //		if (plevel->phead == NULL) {
@@ -183,7 +182,7 @@ static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pval
 //			plevel->ptail = pe;
 //		}
 //		plevel->num_occupied++;
-//		return pvvalue;
+//		return pvalue;
 //	}
 //	else {
 //		fprintf(stderr, "mlhmmv_find_index_for_key did not find end of chain\n");
@@ -194,7 +193,7 @@ static void mlhmmv_put_aux(mlhmmv_level_t* plevel, sllmve_t* pmvkeys, mv_t* pval
 //	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 //		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 //	exit(1);
-//}
+}
 
 // ----------------------------------------------------------------
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
@@ -204,7 +203,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	mlhmmv_entry_t* pe = &pmap->entries[index];
 //
 //	if (pmap->states[index] == OCCUPIED)
-//		return pe->pvvalue;
+//		return pe->pvalue;
 //	else if (pmap->states[index] == EMPTY)
 //		return NULL;
 //	else {
@@ -228,7 +227,7 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 }
 
 // ----------------------------------------------------------------
-//static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
+static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 //	mlhmmv_entry_t*       old_entries = plevel->entries;
 //	mlhmmv_entry_state_t* old_states  = plevel->states;
 //	mlhmmv_entry_t*       old_head    = plevel->phead;
@@ -236,13 +235,12 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	mlhmmv_level_init(plevel, plevel->array_length*ENLARGEMENT_FACTOR);
 //
 //	for (mlhmmv_entry_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-//		// xxx need no-copy logic here ...
-//		mlhmmv_level_put_no_enlarge(plevel, pe->key, pe->pvvalue, pe->free_flags);
+//		mlhmmv_level_put_no_enlarge(plevel, pe->key, pe->pvalue, FALSE);
 //	}
 //	free(old_entries);
 //	free(old_states);
-//}
-//
+}
+
 //// ----------------------------------------------------------------
 //int mlhmmv_check_counts(mlhmmv_t* pmap) {
 //	int nocc = 0;
@@ -286,11 +284,11 @@ void mlhmmv_print(mlhmmv_t* pmap) {
 //			pe->key == NULL ? "null" :
 //			slls_join(pe->key, ",");
 //		const char* value_string = (pe == NULL) ? "none" :
-//			pe->pvvalue == NULL ? "null" :
-//			pe->pvvalue;
+//			pe->pvalue == NULL ? "null" :
+//			pe->pvalue;
 //
 //		printf(
-//		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | pvvalue: %12s |\n",
+//		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | pvalue: %12s |\n",
 //			get_state_name(pmap->states[index]), index, pe->ideal_index, key_string, value_string);
 //	}
 //	printf("+\n");
@@ -301,10 +299,10 @@ void mlhmmv_print(mlhmmv_t* pmap) {
 //			pe->key == NULL ? "null" :
 //			slls_join(pe->key, ",");
 //		const char* value_string = (pe == NULL) ? "none" :
-//			pe->pvvalue == NULL ? "null" :
-//			pe->pvvalue;
+//			pe->pvalue == NULL ? "null" :
+//			pe->pvalue;
 //		printf(
-//		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | pvvalue: %12s |\n",
+//		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | pvalue: %12s |\n",
 //			pe->pprev, pe, pe->pnext,
 //			pe->ideal_index, key_string, value_string);
 //	}
