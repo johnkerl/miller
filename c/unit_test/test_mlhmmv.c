@@ -48,6 +48,23 @@ static char* test_stub() {
 	mu_assert_lf(pback == NULL); // xxx stub
 
 
+	mv_t key3a = mv_from_int(0LL);
+	mv_t key3b = mv_from_string("fghij", NO_FREE);
+	mv_t key3c = mv_from_int(0LL);
+	sllmv_t* pmvkeys3 = sllmv_triple(&key3a, &key3b, &key3c);
+	mv_t value3 = mv_from_int(17LL);
+
+	mlhmmv_put(pmap, pmvkeys3, &value3);
+	printf("map:\n");
+	mlhmmv_print(pmap);
+
+	ret = mlhmmv_has_keys(pmap, pmvkeys3);
+	mu_assert_lf(ret == FALSE); // xxx stub
+
+	pback = mlhmmv_get(pmap, pmvkeys3);
+	mu_assert_lf(pback == NULL); // xxx stub
+
+
 	sllmv_free(pmvkeys1);
 	mlhmmv_free(pmap);
 
