@@ -153,9 +153,9 @@ void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
 	mlhmmv_level_put(pmap->proot_level, pmvkeys->phead, pterminal_value);
 }
 // Example on recursive calls:
-// * level = map, keys = ["a", 2, "c"] , value = 4.
-// * level = map["a"], keys = [2, "c"] , value = 4.
-// * level = map["a"][2], keys = ["c"] , value = 4.
+// * level = map, rest_keys = ["a", 2, "c"] , terminal value = 4.
+// * level = map["a"], rest_keys = [2, "c"] , terminal value = 4.
+// * level = map["a"][2], rest_keys = ["c"] , terminal value = 4.
 static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
@@ -224,6 +224,19 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		MLR_GLOBALS.argv0, __FILE__, __LINE__);
 	exit(1);
 }
+
+// ----------------------------------------------------------------
+// This is done only on map-level enlargement.
+// Example:
+// * level = map["a"], rest_keys = [2, "c"] ,   terminal_value = 4.
+//                     rest_keys = ["e", "f"] , terminal_value = 7.
+//                     rest_keys = [6] ,        terminal_value = "g".
+//
+// which is to say for the purposes of this routine
+//
+// * level = map["a"], level_key = 2,   level_value = non-terminal ["c"] => terminal_value = 4.
+//                     level_key = "e", level_value = non-terminal ["f"] => terminal_value = 7.
+//                     level_key = 6,   level_value = terminal_value = "g".
 
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value) {
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key);
@@ -300,10 +313,17 @@ int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 }
 
 // ----------------------------------------------------------------
-// Example on recursive calls:
-// * level = map["a"], keys = [2, "c"] , value = 4.
-//                     keys = ["e", "f"] , value = 5.
-//                     keys = [6] , value = 7.
+// Example:
+// * level = map["a"], rest_keys = [2, "c"] ,   terminal_value = 4.
+//                     rest_keys = ["e", "f"] , terminal_value = 7.
+//                     rest_keys = [6] ,        terminal_value = "g".
+//
+// which is to say for the purposes of this routine
+//
+// * level = map["a"], level_key = 2,   level_value = non-terminal ["c"] => terminal_value = 4.
+//                     level_key = "e", level_value = non-terminal ["f"] => terminal_value = 7.
+//                     level_key = 6,   level_value = terminal_value = "g".
+
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	mlhmmv_level_entry_t*       old_entries = plevel->entries;
 	mlhmmv_level_entry_state_t* old_states  = plevel->states;
