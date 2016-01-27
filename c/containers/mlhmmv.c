@@ -322,31 +322,6 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	free(old_states);
 }
 
-//// ----------------------------------------------------------------
-//int mlhmmv_check_counts(mlhmmv_t* pmap) {
-//	int nocc = 0;
-//	int ndel = 0;
-//	for (int index = 0; index < pmap->array_length; index++) {
-//		if (pmap->states[index] == OCCUPIED)
-//			nocc++;
-//		else if (pmap->states[index] == DELETED)
-//			ndel++;
-//	}
-//	if (nocc != pmap->num_occupied) {
-//		fprintf(stderr,
-//			"occupancy-count mismatch:  actual %d != cached  %d\n",
-//				nocc, pmap->num_occupied);
-//		return FALSE;
-//	}
-//	if (ndel != pmap->num_freed) {
-//		fprintf(stderr,
-//			"freed-count mismatch:  actual %d != cached  %d\n",
-//				ndel, pmap->num_freed);
-//		return FALSE;
-//	}
-//	return TRUE;
-//}
-
 void mlhmmv_print(mlhmmv_t* pmap) {
 	mlhmmv_level_print(pmap->proot_level, 0);
 }
@@ -419,7 +394,3 @@ static int mlhmmv_key_equals(mv_t* pa, mv_t* pb) {
 		return (pb->type == MT_STRING) ? streq(pa->u.strv, pb->u.strv) : FALSE;
 	}
 }
-// 3 => 4
-// abcde, -6 => 7
-// 0, fghij, 0 -> 17
-
