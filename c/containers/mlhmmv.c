@@ -337,12 +337,28 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	free(old_states);
 }
 
+// ----------------------------------------------------------------
+// Example output:
+//
+// {
+//   0 => {
+//     fghij => {
+//       0 => 17
+//     }
+//   }
+//   3 => 4
+//   abcde => {
+//     -6 => 7
+//   }
+// }
+
 void mlhmmv_print(mlhmmv_t* pmap) {
 	mlhmmv_level_print(pmap->proot_level, 0);
 }
 
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 	static char* leader = "  ";
+	// Top-level opening brace on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
 		printf("{\n");
 	for (int index = 0; index < plevel->array_length; index++) {
