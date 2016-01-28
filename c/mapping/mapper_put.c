@@ -295,8 +295,35 @@ static void evaluate_statements(
 				lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
 				lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 			}
+
 		} else if (node_type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
 			// xxx temp stub
+
+		} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
+			lrec_t* prec_to_emit = lrec_unbacked_alloc();
+			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
+				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
+				char* output_field_name = pitem->output_field_name;
+				lrec_evaluator_t* pevaluator = pitem->pevaluator;
+
+				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
+				// bypass that and just hashmap-get keyed by output_field_name here.
+				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+					pregex_captures, pctx, pevaluator->pvstate);
+
+				if (val.type == MT_STRING) {
+					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
+					lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
+				} else {
+					char free_flags = NO_FREE;
+					char* string = mv_format_val(&val, &free_flags);
+					lrec_put(prec_to_emit, output_field_name, string, free_flags);
+				}
+			}
+			sllv_add(poutrecs, prec_to_emit);
+
+		} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
+			// xxx stub
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
@@ -324,29 +351,6 @@ static void evaluate_statements(
 			if (!val.u.boolv) {
 				break;
 			}
-
-		} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
-			lrec_t* prec_to_emit = lrec_unbacked_alloc();
-			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
-				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
-				char* output_field_name = pitem->output_field_name;
-				lrec_evaluator_t* pevaluator = pitem->pevaluator;
-
-				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
-				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-					pregex_captures, pctx, pevaluator->pvstate);
-
-				if (val.type == MT_STRING) {
-					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-					lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
-				} else {
-					char free_flags = NO_FREE;
-					char* string = mv_format_val(&val, &free_flags);
-					lrec_put(prec_to_emit, output_field_name, string, free_flags);
-				}
-			}
-			sllv_add(poutrecs, prec_to_emit);
 
 		} else { // Bare-boolean statement
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;

@@ -23,6 +23,7 @@
 #define MD_AST_NODE_TYPE_FILTER             0xdadd
 #define MD_AST_NODE_TYPE_GATE               0xdaee
 #define MD_AST_NODE_TYPE_EMIT               0xdaff
+#define MD_AST_NODE_TYPE_DUMP               0xddff
 
 typedef struct _mlr_dsl_ast_t {
 	sllv_t* pbegin_statements;

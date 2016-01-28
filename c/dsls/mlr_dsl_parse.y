@@ -52,6 +52,7 @@ md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_gate.
 md_statement ::= md_main_emit.
+md_statement ::= md_main_dump.
 
 // E.g. 'begin { emit @count }'
 md_statement ::= md_begin_block.
@@ -62,6 +63,7 @@ md_statement ::= md_begin_solo_bare_boolean.
 md_statement ::= md_begin_solo_filter.
 md_statement ::= md_begin_solo_gate.
 md_statement ::= md_begin_solo_emit.
+md_statement ::= md_begin_solo_dump.
 
 // E.g. 'end { emit @count }'
 md_statement ::= md_end_block.
@@ -72,6 +74,7 @@ md_statement ::= md_end_solo_bare_boolean.
 md_statement ::= md_end_solo_filter.
 md_statement ::= md_end_solo_gate.
 md_statement ::= md_end_solo_emit.
+md_statement ::= md_end_solo_dump.
 
 // ----------------------------------------------------------------
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
@@ -89,6 +92,7 @@ md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
 md_begin_block_statement ::= md_begin_block_gate.
 md_begin_block_statement ::= md_begin_block_emit.
+md_begin_block_statement ::= md_begin_block_dump.
 
 md_end_block ::= MD_TOKEN_END MD_TOKEN_LEFT_BRACE md_end_block_statements MD_TOKEN_RIGHT_BRACE.
 
@@ -103,6 +107,7 @@ md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
 md_end_block_statement ::= md_end_block_gate.
 md_end_block_statement ::= md_end_block_emit.
+md_end_block_statement ::= md_end_block_dump.
 
 
 // ================================================================
@@ -136,6 +141,10 @@ md_main_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
+md_main_dump(A) ::= md_dump(B). {
+	A = B;
+	sllv_add(past->pmain_statements, A);
+}
 
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
@@ -164,6 +173,10 @@ md_begin_solo_emit(A) ::= MD_TOKEN_BEGIN md_emit(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
+md_begin_solo_dump(A) ::= MD_TOKEN_BEGIN md_dump(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
 
 md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
@@ -187,6 +200,10 @@ md_begin_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
 	sllv_add(past->pbegin_statements, A);
 }
 md_begin_block_emit(A) ::= md_emit(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
+md_begin_block_dump(A) ::= md_dump(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
@@ -218,6 +235,10 @@ md_end_solo_emit(A) ::= MD_TOKEN_END md_emit(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
+md_end_solo_dump(A) ::= MD_TOKEN_END md_dump(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
 
 md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
@@ -240,6 +261,10 @@ md_end_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
 	sllv_add(past->pend_statements, A);
 }
 md_end_block_emit(A) ::= md_emit(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
+md_end_block_dump(A) ::= md_dump(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
@@ -274,6 +299,12 @@ md_emit_args(A) ::= md_oosvar_name(B). {
 }
 md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
+// Temporary dev/debug hook for moosvars
+md_dump(A) ::= MD_TOKEN_DUMP(O). {
+	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_DUMP);
 }
 
 // ================================================================
