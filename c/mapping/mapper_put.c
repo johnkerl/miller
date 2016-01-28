@@ -3,6 +3,8 @@
 #include "cli/argparse.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
+#include "containers/lhmsv.h"
+#include "containers/mlhmmv.h"
 #include "mapping/mappers.h"
 #include "mapping/lrec_evaluators.h"
 #include "dsls/mlr_dsl_wrapper.h"
@@ -14,6 +16,7 @@ typedef struct _mapper_put_state_t {
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
 	lhmsv_t*       poosvars;
+	mlhmmv_t*      pmoosvars;
 } mapper_put_state_t;
 
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
@@ -23,14 +26,14 @@ static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 static void      mapper_put_free(mapper_t* pmapper);
 
 static void evaluate_statements(
-	lrec_t*         pinrec,
-	lhmsv_t*        ptyped_overlay,
-	lhmsv_t*        poosvars,
-	string_array_t* pregex_captures,
-	context_t*      pctx,
-	sllv_t*         pcst_statements,
-	int*            pemit_rec,
-	sllv_t*         poutrecs
+	lrec_t*             pinrec,
+	lhmsv_t*            ptyped_overlay,
+	string_array_t*     pregex_captures,
+	mapper_put_state_t* pstate,
+	context_t*          pctx,
+	sllv_t*             pcst_statements,
+	int*                pemit_rec,
+	sllv_t*             poutrecs
 );
 
 // ----------------------------------------------------------------
@@ -121,11 +124,12 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
-	pstate->pargp    = pargp;
-	pstate->past     = past;
-	pstate->pcst     = mlr_dsl_cst_alloc(past, type_inferencing);
-	pstate->at_begin = TRUE;
-	pstate->poosvars = lhmsv_alloc();
+	pstate->pargp     = pargp;
+	pstate->past      = past;
+	pstate->pcst      = mlr_dsl_cst_alloc(past, type_inferencing);
+	pstate->at_begin  = TRUE;
+	pstate->poosvars  = lhmsv_alloc();
+	pstate->pmoosvars = mlhmmv_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -144,6 +148,9 @@ static void mapper_put_free(mapper_t* pmapper) {
 	for (lhmsve_t* pe = pstate->poosvars->phead; pe != NULL; pe = pe->pnext)
 		mv_free(pe->pvvalue);
 	lhmsv_free(pstate->poosvars);
+
+	mlhmmv_free(pstate->pmoosvars);
+
 	ap_free(pstate->pargp);
 
 	free(pstate);
@@ -196,16 +203,14 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-		evaluate_statements(NULL, NULL, pstate->poosvars,
-			pregex_captures, pctx, pstate->pcst->pbegin_statements,
-			&emit_rec, poutrecs);
+		evaluate_statements(NULL, NULL, pregex_captures, pstate, pctx,
+			pstate->pcst->pbegin_statements, &emit_rec, poutrecs);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		evaluate_statements(NULL, NULL, pstate->poosvars,
-			pregex_captures, pctx, pstate->pcst->pend_statements,
-			&emit_rec, poutrecs);
+		evaluate_statements(NULL, NULL, pregex_captures, pstate, pctx,
+			pstate->pcst->pend_statements, &emit_rec, poutrecs);
 
 		string_array_free(pregex_captures);
 		sllv_add(poutrecs, NULL);
@@ -214,9 +219,8 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
-	evaluate_statements(pinrec, ptyped_overlay, pstate->poosvars,
-		pregex_captures, pctx, pstate->pcst->pmain_statements,
-		&emit_rec, poutrecs);
+	evaluate_statements(pinrec, ptyped_overlay, pregex_captures, pstate, pctx,
+		pstate->pcst->pmain_statements, &emit_rec, poutrecs);
 
 	if (emit_rec) {
 		// Write the output fields from the typed overlay back to the lrec.
@@ -249,14 +253,15 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 // ----------------------------------------------------------------
 static void evaluate_statements(
-	lrec_t*         pinrec,
-	lhmsv_t*        ptyped_overlay,
-	lhmsv_t*        poosvars,
-	string_array_t* pregex_captures,
-	context_t*      pctx,
-	sllv_t*         pcst_statements,
-	int*            pemit_rec,
-	sllv_t*         poutrecs
+	lrec_t*             pinrec,
+	lhmsv_t*            ptyped_overlay,
+	string_array_t*     pregex_captures,
+	mapper_put_state_t* pstate,
+	context_t*          pctx,
+	sllv_t*             pcst_statements,
+	int*                pemit_rec,
+	sllv_t*             poutrecs
+
 ) {
 
 	// xxx move some/all of this into mlr_dsl_cst.c -- ?
@@ -276,13 +281,13 @@ static void evaluate_statements(
 			int lhs_type = pitem->lhs_type;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, pevaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
 			if (lhs_type == MLR_DSL_CST_LHS_TYPE_OOSVAR) {
-				lhmsv_put(poosvars, output_field_name, pval, NO_FREE);
+				lhmsv_put(pstate->poosvars, output_field_name, pval, NO_FREE);
 			} else {
 				// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
 				// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
@@ -308,7 +313,7 @@ static void evaluate_statements(
 
 				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
 				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 					pregex_captures, pctx, pevaluator->pvstate);
 
 				if (val.type == MT_STRING) {
@@ -323,13 +328,13 @@ static void evaluate_statements(
 			sllv_add(poutrecs, prec_to_emit);
 
 		} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
-			// xxx stub
+			mlhmmv_print(pstate->pmoosvars);
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
@@ -343,7 +348,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
@@ -356,7 +361,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, pevaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
