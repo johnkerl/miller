@@ -26,10 +26,10 @@
 //   such as a=3,b=4.
 //
 // This means that as of the present, the CSTs are just list of left-hand sides and right-hand sides.  The left-hand
-// side is an output field name, with an is-oosvar flag. For filter/gate/bare-boolean these are unused; for assignments
-// and emits, the output field names are used. The right-hand sides are lrec-evaluators which take an input record and
-// oosvar-map, and produce a mlrval which can be assigned. Additionally, for all but emit, there is a single LHS name
-// and single RHS lrec-evaluator per statement.
+// side is an output field name, with an LHS-type flag (srec or oosvar). For filter/gate/bare-boolean these are unused;
+// for assignments and emits, the output field names are used. The right-hand sides are lrec-evaluators which take an
+// input record and oosvar-map, and produce a mlrval which can be assigned. Additionally, for all but emit, there is a
+// single LHS name and single RHS lrec-evaluator per statement.
 //
 // Further, these statements are organized into three groups:
 //
@@ -38,12 +38,18 @@
 // * end :  executed once, after the last input record is read.
 // ================================================================
 
+#define MLR_DSL_CST_LHS_TYPE_SREC    0xdc55
+#define MLR_DSL_CST_LHS_TYPE_OOSVAR  0xdc00
+#define MLR_DSL_CST_LHS_TYPE_MOOSVAR 0xdcaa
+
 typedef struct _mlr_dsl_cst_statement_item_t {
-	char* output_field_name;      // LHS
-	// xxx sllmv_t* pmoosvar_level_keys
-	int is_oosvar;                // LHS
-	// xxx need an enum here.
-	lrec_evaluator_t* pevaluator; // RHS
+	// LHS:
+	char* output_field_name;
+	// xxx list of evaluators which must evaluate to sllmv ...
+	int lhs_type;
+
+	// RHS:
+	lrec_evaluator_t* pevaluator;
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {

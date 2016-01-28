@@ -7,7 +7,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char* output_field_name, int is_oosvar, lrec_evaluator_t* pevaluator);
+	char* output_field_name, int lhs_type, lrec_evaluator_t* pevaluator);
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
 // ----------------------------------------------------------------
@@ -109,7 +109,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pleft->text,
-			FALSE,
+			MLR_DSL_CST_LHS_TYPE_SREC,
 			lrec_evaluator_alloc_from_ast(pright, type_inferencing)));
 
 	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
@@ -134,7 +134,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pleft->text,
-			TRUE,
+			MLR_DSL_CST_LHS_TYPE_OOSVAR,
 			lrec_evaluator_alloc_from_ast(pright, type_inferencing)));
 
 	} else if (past->type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
@@ -143,14 +143,14 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
-			TRUE,
+			MLR_DSL_CST_LHS_TYPE_OOSVAR,
 			lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
 
 	} else if (past->type == MD_AST_NODE_TYPE_GATE) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
-			TRUE,
+			MLR_DSL_CST_LHS_TYPE_OOSVAR,
 			lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
 
 	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
@@ -159,14 +159,14 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 			sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				pnode->text,
-				TRUE,
+				MLR_DSL_CST_LHS_TYPE_OOSVAR,
 				lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
 		}
 
 	} else { // Bare-boolean statement
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
-			TRUE,
+			MLR_DSL_CST_LHS_TYPE_OOSVAR, // xxx wtf
 			lrec_evaluator_alloc_from_ast(past, type_inferencing)));
 	}
 
@@ -182,12 +182,12 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char* output_field_name, int is_oosvar, lrec_evaluator_t* pevaluator)
+	char* output_field_name, int lhs_type, lrec_evaluator_t* pevaluator)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->output_field_name = output_field_name == NULL ? NULL : mlr_strdup_or_die(output_field_name);
 	pitem->pevaluator = pevaluator;
-	pitem->is_oosvar = is_oosvar;
+	pitem->lhs_type = lhs_type;
 	return pitem;
 }
 

@@ -273,7 +273,7 @@ static void evaluate_statements(
 		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT || node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			char* output_field_name = pitem->output_field_name;
-			int is_oosvar = pitem->is_oosvar;
+			int lhs_type = pitem->lhs_type;
 			lrec_evaluator_t* pevaluator = pitem->pevaluator;
 
 			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
@@ -281,7 +281,7 @@ static void evaluate_statements(
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
-			if (is_oosvar) {
+			if (lhs_type == MLR_DSL_CST_LHS_TYPE_OOSVAR) {
 				lhmsv_put(poosvars, output_field_name, pval, NO_FREE);
 			} else {
 				// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
