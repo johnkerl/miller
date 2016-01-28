@@ -47,6 +47,7 @@ md_statement ::= .
 
 md_statement ::= md_main_srec_assignment.
 md_statement ::= md_main_oosvar_assignment.
+md_statement ::= md_main_moosvar_assignment.
 md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_gate.
@@ -56,6 +57,7 @@ md_statement ::= md_main_emit.
 md_statement ::= md_begin_block.
 // E.g. 'begin emit @count'
 md_statement ::= md_begin_solo_oosvar_assignment.
+md_statement ::= md_begin_solo_moosvar_assignment.
 md_statement ::= md_begin_solo_bare_boolean.
 md_statement ::= md_begin_solo_filter.
 md_statement ::= md_begin_solo_gate.
@@ -65,6 +67,7 @@ md_statement ::= md_begin_solo_emit.
 md_statement ::= md_end_block.
 // E.g. 'end emit @count'
 md_statement ::= md_end_solo_oosvar_assignment.
+md_statement ::= md_end_solo_moosvar_assignment.
 md_statement ::= md_end_solo_bare_boolean.
 md_statement ::= md_end_solo_filter.
 md_statement ::= md_end_solo_gate.
@@ -96,7 +99,7 @@ md_end_block_statements ::= md_end_block_statement MD_TOKEN_SEMICOLON md_end_blo
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_end_block_statement ::= .
 md_end_block_statement ::= md_end_block_oosvar_assignment.
-//md_end_block_statement ::= md_end_block_moosvar_assignment.
+md_end_block_statement ::= md_end_block_moosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
 md_end_block_statement ::= md_end_block_gate.
@@ -111,6 +114,10 @@ md_main_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C
 	sllv_add(past->pmain_statements, A);
 }
 md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pmain_statements, A);
+}
+md_main_moosvar_assignment(A) ::= md_moosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
@@ -138,6 +145,10 @@ md_begin_solo_oosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_oosvar_assignment(B). 
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
+md_begin_solo_moosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_moosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pbegin_statements, A);
+}
 md_begin_solo_bare_boolean(A) ::= MD_TOKEN_BEGIN md_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
@@ -159,10 +170,6 @@ md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
-// xxx the @@ moosvars are just temporary. Later I hope to merge this into the oosvars.
-// oosvars work just fine; multi-level hashmaps (moosvars) don't *yet*.
-// so having @ for the former and @@ for the latter allows me to separate the working stuff
-// from the experimental.
 md_begin_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
@@ -204,6 +211,10 @@ md_end_solo_oosvar_assignment(A)  ::= MD_TOKEN_END md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
+md_end_solo_moosvar_assignment(A)  ::= MD_TOKEN_END md_moosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
 md_end_solo_bare_boolean(A) ::= MD_TOKEN_END md_ternary(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
@@ -222,6 +233,10 @@ md_end_solo_emit(A) ::= MD_TOKEN_END md_emit(B). {
 }
 
 md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
+	A = B;
+	sllv_add(past->pend_statements, A);
+}
+md_end_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
