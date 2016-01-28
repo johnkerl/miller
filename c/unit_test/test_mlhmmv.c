@@ -37,7 +37,6 @@ static char* test_no_overlap() {
 	mlhmmv_put(pmap, pmvkeys1, &value1);
 	printf("map:\n");
 	mlhmmv_print(pmap);
-
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys1), &value1));
 
 	sllmv_t* pmvkeys2 = sllmv_double(smv("abcde"), imv(-6));
@@ -49,9 +48,7 @@ static char* test_no_overlap() {
 	mlhmmv_put(pmap, pmvkeys2, &value2);
 	printf("map:\n");
 	mlhmmv_print(pmap);
-
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys2), &value2));
-
 
 	sllmv_t* pmvkeys3 = sllmv_triple(imv(0), smv("fghij"), imv(0));
 	mv_t value3 = mv_from_int(0LL);
@@ -62,13 +59,10 @@ static char* test_no_overlap() {
 	mlhmmv_put(pmap, pmvkeys3, &value3);
 	printf("map:\n");
 	mlhmmv_print(pmap);
-
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys3), &value3));
-
 
 	sllmv_free(pmvkeys1);
 	mlhmmv_free(pmap);
-
 	return NULL;
 }
 
@@ -76,43 +70,87 @@ static char* test_no_overlap() {
 static char* test_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-//	printf("----------------------------------------------------------------\n");
-//	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(4));
-//	mlhmmv_print(pmap);
-//	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(5));
-//	mlhmmv_print(pmap);
+	printf("----------------------------------------------------------------\n");
+	sllmv_t* pmvkeys = sllmv_single(imv(3));
+	mv_t* ptermval = imv(4);
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
 
-//	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(6));
-//	mlhmmv_print(pmap);
-//	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(7));
-//	mlhmmv_print(pmap);
+	ptermval = imv(5);
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
 
-//	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("y")), smv("z"));
-//	mlhmmv_print(pmap);
-//	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("z")), smv("y"));
-//	mlhmmv_print(pmap);
+	pmvkeys = sllmv_double(imv(3), smv("x"));
+	ptermval = imv(6);
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	ptermval = imv(7);
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_triple(imv(3), imv(9), smv("y"));
+	ptermval = smv("z");
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_triple(imv(3), imv(9), smv("z"));
+	ptermval = smv("y");
+	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_print(pmap);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
 
 	mlhmmv_free(pmap);
 	return NULL;
 }
 
 // ----------------------------------------------------------------
-// xxx test just stdouting all of this. that would be plenty.
 static char* test_resize() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-//	printf("----------------------------------------------------------------\n");
-//	for (int i = 0; i < 32; i++)
-//		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
-//	mlhmmv_print(pmap);
+	printf("----------------------------------------------------------------\n");
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
+	mlhmmv_print(pmap);
+	printf("\n");
 
-//	for (int i = 0; i < 32; i++)
-//		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
-//	mlhmmv_print(pmap);
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
+	mlhmmv_print(pmap);
+	printf("\n");
 
-//	for (int i = 0; i < 32; i++)
-//		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
-//	mlhmmv_print(pmap);
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
+	mlhmmv_print(pmap);
+
+	sllmv_t* pmvkeys = sllmv_single(imv(2));
+	mv_t* ptermval = imv(-2);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_double(smv("a"), imv(9));
+	ptermval = imv(-9);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_double(smv("a"), imv(31));
+	ptermval = imv(-31);
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_triple(imv(0), imv(0), smv("b"));
+	ptermval = smv("term");
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_triple(imv(100), imv(1), smv("b"));
+	ptermval = smv("term");
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
+
+	pmvkeys = sllmv_triple(imv(1700), imv(1), smv("b"));
+	ptermval = smv("term");
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys), ptermval));
 
 	mlhmmv_free(pmap);
 	return NULL;
