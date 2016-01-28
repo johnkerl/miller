@@ -11907,6 +11907,43 @@ mean
 
 
 ================================================================
+DSL EXPERIMENTAL MOOSVARS
+
+mlr put -v begin{ @@a = @@b[1] }; $c = @@d; @@e[$i][2+$j][3] = $4; end @@f[@@g[5][@@h]] = 6 /dev/null
+AST BEGIN STATEMENTS (1):
+= (moosvar_assignment):
+    a (moosvar_name).
+    [] (moosvar_level_key):
+        b (moosvar_name).
+        1 (strnum_literal).
+AST MAIN STATEMENTS (2):
+= (srec_assignment):
+    c (field_name).
+    d (moosvar_name).
+= (moosvar_assignment):
+    [] (moosvar_level_key):
+        [] (moosvar_level_key):
+            [] (moosvar_level_key):
+                e (moosvar_name).
+                i (field_name).
+            + (operator):
+                2 (strnum_literal).
+                j (field_name).
+        3 (strnum_literal).
+    4 (field_name).
+AST END STATEMENTS (1):
+= (moosvar_assignment):
+    [] (moosvar_level_key):
+        f (moosvar_name).
+        [] (moosvar_level_key):
+            [] (moosvar_level_key):
+                g (moosvar_name).
+                5 (strnum_literal).
+            h (moosvar_name).
+    6 (strnum_literal).
+
+
+================================================================
 CHAINING
 
 mlr cat then cat ./reg_test/input/short
