@@ -39,9 +39,11 @@
 // ================================================================
 
 typedef struct _mlr_dsl_cst_statement_item_t {
-	char* output_field_name;
-	int is_oosvar;
-	lrec_evaluator_t* pevaluator;
+	char* output_field_name;      // LHS
+	// xxx sllmv_t* pmoosvar_level_keys
+	int is_oosvar;                // LHS
+	// xxx need an enum here.
+	lrec_evaluator_t* pevaluator; // RHS
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {
