@@ -21,7 +21,7 @@ static mv_t* imv(long long intv) {
 }
 
 // ----------------------------------------------------------------
-static char* test_stub() {
+static char* test_no_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
 	printf("----------------------------------------------------------------\n");
@@ -76,9 +76,56 @@ static char* test_stub() {
 	return NULL;
 }
 
+// ----------------------------------------------------------------
+static char* test_overlap() {
+	mlhmmv_t* pmap = mlhmmv_alloc();
+
+	printf("----------------------------------------------------------------\n");
+	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(4));
+	mlhmmv_print(pmap);
+	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(5));
+	mlhmmv_print(pmap);
+
+	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(6));
+	mlhmmv_print(pmap);
+	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(7));
+	mlhmmv_print(pmap);
+
+	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("y")), smv("z"));
+	mlhmmv_print(pmap);
+	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("z")), smv("y"));
+	mlhmmv_print(pmap);
+
+	mlhmmv_free(pmap);
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_resize() {
+	mlhmmv_t* pmap = mlhmmv_alloc();
+
+	printf("----------------------------------------------------------------\n");
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
+	mlhmmv_print(pmap);
+
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
+	mlhmmv_print(pmap);
+
+	for (int i = 0; i < 32; i++)
+		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
+	mlhmmv_print(pmap);
+
+	mlhmmv_free(pmap);
+	return NULL;
+}
+
 // ================================================================
 static char * run_all_tests() {
-	mu_run_test(test_stub);
+	mu_run_test(test_no_overlap);
+	mu_run_test(test_overlap);
+	mu_run_test(test_resize);
 	return 0;
 }
 
