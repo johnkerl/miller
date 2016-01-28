@@ -1,8 +1,7 @@
 // ================================================================
 // Array-only (open addressing) multi-level hash map, with linear probing for collisions.
-// All keys, and terminal-level values, are mlrvals.
-//
-// xxx note about all data being copied, none pointer-reffed with free-flags?
+// All keys, and terminal-level values, are mlrvals. All data passed into the put method
+// are copied; no pointers in this data structure reference anything external.
 //
 // Notes:
 // * null key is not supported.
@@ -68,10 +67,13 @@ void  mlhmmv_free(mlhmmv_t* pmap);
 // pmvkeys is a list of mlhmmv_level_value_t
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
-// If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the return
-// value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
+// If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
+// return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
 // MLHMMV_ERROR_KEYLIST_TOO_SHALLOW, or MLHMMV_ERROR_NONE if the keylist matches
 // map depth but the entry is not found.
+//
+// Note: this returns a pointer to the map's data, not to a copy.
+// The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 void mlhmmv_print(mlhmmv_t* pmap);

@@ -278,7 +278,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
-		// xxx or treat this as an exceptional condition
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
