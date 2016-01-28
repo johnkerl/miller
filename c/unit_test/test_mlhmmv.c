@@ -38,8 +38,7 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_get(pmap, pmvkeys1) == NULL); // xxx stub
-
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys1), &value1));
 
 	sllmv_t* pmvkeys2 = sllmv_double(smv("abcde"), imv(-6));
 	mv_t value2 = mv_from_int(7);
@@ -51,7 +50,7 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_get(pmap, pmvkeys2) == NULL); // xxx stub
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys2), &value2));
 
 
 	sllmv_t* pmvkeys3 = sllmv_triple(imv(0), smv("fghij"), imv(0));
@@ -64,7 +63,7 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_get(pmap, pmvkeys3) == NULL); // xxx stub
+	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys3), &value3));
 
 
 	sllmv_free(pmvkeys1);
@@ -77,21 +76,21 @@ static char* test_no_overlap() {
 static char* test_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-	printf("----------------------------------------------------------------\n");
-	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(4));
-	mlhmmv_print(pmap);
-	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(5));
-	mlhmmv_print(pmap);
+//	printf("----------------------------------------------------------------\n");
+//	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(4));
+//	mlhmmv_print(pmap);
+//	mlhmmv_put(pmap, sllmv_single(imv(3)), imv(5));
+//	mlhmmv_print(pmap);
 
-	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(6));
-	mlhmmv_print(pmap);
-	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(7));
-	mlhmmv_print(pmap);
+//	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(6));
+//	mlhmmv_print(pmap);
+//	mlhmmv_put(pmap, sllmv_double(imv(3), smv("x")), imv(7));
+//	mlhmmv_print(pmap);
 
-	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("y")), smv("z"));
-	mlhmmv_print(pmap);
-	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("z")), smv("y"));
-	mlhmmv_print(pmap);
+//	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("y")), smv("z"));
+//	mlhmmv_print(pmap);
+//	mlhmmv_put(pmap, sllmv_triple(imv(3), imv(9), smv("z")), smv("y"));
+//	mlhmmv_print(pmap);
 
 	mlhmmv_free(pmap);
 	return NULL;
@@ -102,18 +101,18 @@ static char* test_overlap() {
 static char* test_resize() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-	printf("----------------------------------------------------------------\n");
-	for (int i = 0; i < 32; i++)
-		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
-	mlhmmv_print(pmap);
+//	printf("----------------------------------------------------------------\n");
+//	for (int i = 0; i < 32; i++)
+//		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
+//	mlhmmv_print(pmap);
 
-	for (int i = 0; i < 32; i++)
-		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
-	mlhmmv_print(pmap);
+//	for (int i = 0; i < 32; i++)
+//		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
+//	mlhmmv_print(pmap);
 
-	for (int i = 0; i < 32; i++)
-		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
-	mlhmmv_print(pmap);
+//	for (int i = 0; i < 32; i++)
+//		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
+//	mlhmmv_print(pmap);
 
 	mlhmmv_free(pmap);
 	return NULL;

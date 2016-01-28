@@ -378,6 +378,9 @@ mv_t ge_op_func(mv_t* pval1, mv_t* pval2);
 mv_t lt_op_func(mv_t* pval1, mv_t* pval2);
 mv_t le_op_func(mv_t* pval1, mv_t* pval2);
 
+// Assumes inputs are MT_STRING or MT_INT. Nominally intended for mlhmmv which uses only string/int mlrvals.
+int mv_equals_si(mv_t* pa, mv_t* pb);
+
 // For non-DSL comparison of mlrvals:
 int mv_i_nn_eq(mv_t* pval1, mv_t* pval2);
 int mv_i_nn_ne(mv_t* pval1, mv_t* pval2);

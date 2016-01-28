@@ -30,10 +30,11 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value);
 
+static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* pmap, sllmve_t* prest_keys);
+
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth);
 
 static int mlhmmv_hash_func(mv_t* plevel_key);
-static int mlhmmv_key_equals(mv_t* pa, mv_t* pb);
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
@@ -124,7 +125,7 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 		if (plevel->states[index] == OCCUPIED) {
 			mv_t* ekey = &pentry->level_key;
 			// Existing key found in chain.
-			if (mlhmmv_key_equals(plevel_key, ekey))
+			if (mv_equals_si(plevel_key, ekey))
 				return index;
 		} else if (plevel->states[index] == EMPTY) {
 			return index;
@@ -246,7 +247,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 
 	if (plevel->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) {
+		if (mv_equals_si(&pentry->level_key, plevel_key)) {
 			pentry->level_value = *plevel_value;
 			return;
 		}
@@ -285,19 +286,114 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 
 // ----------------------------------------------------------------
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-	return NULL; // xxx stub
+	sllmve_t* prest_keys = pmvkeys->phead;
+	if (prest_keys == NULL) {
+		// xxx or treat this as an exceptional condition
+		return NULL;
+	}
+	mlhmmv_level_t* plevel = pmap->proot_level;
+	mlhmmv_level_value_t* plevel_value = mlhmmv_level_get(plevel, prest_keys);
+	while (prest_keys->pnext != NULL) {
+		if (plevel_value == NULL) {
+			return NULL;
+		}
+		if (plevel_value->is_terminal) {
+			// xxx but this could be a data-dependent error.
+			fprintf(stderr, "%s: coding error detected at line %d of file %s\n",
+				MLR_GLOBALS.argv0, __LINE__, __FILE__);
+			exit(1);
+		}
+		plevel = plevel_value->u.pnext_level;
+		prest_keys = prest_keys->pnext;
+		plevel_value = mlhmmv_level_get(plevel, prest_keys);
+	}
+	if (!plevel_value->is_terminal) {
+		// xxx but this could be a data-dependent error.
+		fprintf(stderr, "%s: coding error detected at line %d of file %s\n",
+			MLR_GLOBALS.argv0, __LINE__, __FILE__);
+		exit(1);
+	}
+	return &plevel_value->u.mlrval;
 }
-//	int index = mlhmmv_level_find_index_for_key(plevel, level_key);
-//	mlhmmv_level_entry_t* pentry = &pmap->entries[index];
+
+static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
+	mv_t* plevel_key = prest_keys->pvalue;
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (plevel->states[index] == OCCUPIED)
+		return &pentry->level_value;
+	else if (plevel->states[index] == EMPTY)
+		return NULL;
+	else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		exit(1);
+	}
+}
+
+//static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
+//	mv_t* plevel_key = prest_keys->pvalue;
+//	int ideal_index = 0;
+//	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+//	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
 //
-//	if (pmap->states[index] == OCCUPIED)
-//		return pentry->pvalue;
-//	else if (pmap->states[index] == EMPTY)
-//		return NULL;
-//	else {
+//	if (plevel->states[index] == EMPTY) { // End of chain.
+//		pentry->ideal_index = ideal_index;
+//		pentry->level_key = *plevel_key;
+//
+//		if (prest_keys->pnext == NULL) {
+//			pentry->level_value.is_terminal = TRUE;
+//			pentry->level_value.u.mlrval = *pterminal_value;
+//		} else {
+//			pentry->level_value.is_terminal = FALSE;
+//			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+//		}
+//		plevel->states[index] = OCCUPIED;
+//
+//		if (plevel->phead == NULL) { // First entry at this level
+//			pentry->pprev = NULL;
+//			pentry->pnext = NULL;
+//			plevel->phead = pentry;
+//			plevel->ptail = pentry;
+//		} else {                     // Subsequent entry at this level
+//			pentry->pprev = plevel->ptail;
+//			pentry->pnext = NULL;
+//			plevel->ptail->pnext = pentry;
+//			plevel->ptail = pentry;
+//		}
+//
+//		plevel->num_occupied++;
+//		if (prest_keys->pnext != NULL) {
+//			// RECURSE
+//			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+//		}
+//
+//	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
+//		if (prest_keys->pnext == NULL) { // Place the terminal at this level
+//			if (pentry->level_value.is_terminal) {
+//				mv_free(&pentry->level_value.u.mlrval);
+//			} else {
+//				mlhmmv_level_free(pentry->level_value.u.pnext_level);
+//			}
+//			pentry->level_value.is_terminal = TRUE;
+//			pentry->level_value.u.mlrval = *pterminal_value;
+//
+//		} else { // The terminal will be placed at a deeper level
+//			if (pentry->level_value.is_terminal) {
+//				mv_free(&pentry->level_value.u.mlrval);
+//				pentry->level_value.is_terminal = FALSE;
+//				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+//			}
+//			// RECURSE
+//			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+//		}
+//
+//	} else {
 //		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 //		exit(1);
 //	}
+//}
 
 // ----------------------------------------------------------------
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
@@ -364,12 +460,4 @@ static int mlhmmv_hash_func(mv_t* pa) {
 	return (pa->type == MT_INT)
 		?  pa->u.intv
 		: mlr_string_hash_func(pa->u.strv);
-}
-
-static int mlhmmv_key_equals(mv_t* pa, mv_t* pb) {
-	if (pa->type == MT_INT) {
-		return (pb->type == MT_INT) ? pa->u.intv == pb->u.intv : FALSE;
-	} else {
-		return (pb->type == MT_STRING) ? streq(pa->u.strv, pb->u.strv) : FALSE;
-	}
 }

@@ -10,12 +10,12 @@ TOP OF LIST
 * implement \0 after all? the regex lib provides it, after all.
   - UT
   - mld:ref:regex update
-
 * boolean-short-circuit UT w/ regex-captures
+* mlr -f ish @ cover x 2
+! update filter/gate @ mld:ref:put
+! make a release w/ filter/gate after mld update!
 
 * int-preserving exponentiation operator -- ?
-
-* mlr -f ish @ cover x 2
 
 * centos:
   https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
@@ -40,8 +40,6 @@ TOP OF LIST
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
     * Release-specific docs at http://johnkerl.org/miller/doc/release-docs.html match release-specific code
       at https://github.com/johnkerl/miller/tags. 
-
-  !! update filter/gate @ mld:ref:put
 
   o next up after that:
     ! filter is also gating. it should not.

@@ -1928,6 +1928,15 @@ mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type]
 mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
+int mv_equals_si(mv_t* pa, mv_t* pb) {
+	if (pa->type == MT_INT) {
+		return (pb->type == MT_INT) ? pa->u.intv == pb->u.intv : FALSE;
+	} else {
+		return (pb->type == MT_STRING) ? streq(pa->u.strv, pb->u.strv) : FALSE;
+	}
+}
+
+// ----------------------------------------------------------------
 static int eq_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv == pb->u.intv; }
 static int ne_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv != pb->u.intv; }
 static int gt_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv >  pb->u.intv; }
