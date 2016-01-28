@@ -182,12 +182,12 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		}
 		plevel->states[index] = OCCUPIED;
 
-		if (plevel->phead == NULL) {
+		if (plevel->phead == NULL) { // First entry at this level
 			pentry->pprev = NULL;
 			pentry->pnext = NULL;
 			plevel->phead = pentry;
 			plevel->ptail = pentry;
-		} else {
+		} else {                     // Subsequent entry at this level
 			pentry->pprev = plevel->ptail;
 			pentry->pnext = NULL;
 			plevel->ptail->pnext = pentry;
@@ -200,31 +200,27 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 
-	} else if (plevel->states[index] == OCCUPIED) {
-		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) { // Existing key found in chain
-
-			if (prest_keys->pnext == NULL) { // Place the terminal at this level
-				if (pentry->level_value.is_terminal) {
-					mv_free(&pentry->level_value.u.mlrval);
-				} else {
-					mlhmmv_level_free(pentry->level_value.u.pnext_level);
-				}
-				pentry->level_value.is_terminal = TRUE;
-				pentry->level_value.u.mlrval = *pterminal_value;
-
-			} else { // The terminal will be placed at a deeper level
-				if (pentry->level_value.is_terminal) {
-					mv_free(&pentry->level_value.u.mlrval);
-					pentry->level_value.is_terminal = FALSE;
-					pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
-				}
-				// RECURSE
-				mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
+		if (prest_keys->pnext == NULL) { // Place the terminal at this level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.u.pnext_level);
 			}
+			pentry->level_value.is_terminal = TRUE;
+			pentry->level_value.u.mlrval = *pterminal_value;
+
+		} else { // The terminal will be placed at a deeper level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+				pentry->level_value.is_terminal = FALSE;
+				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+			}
+			// RECURSE
+			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 
-	}
-	else {
+	} else {
 		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}

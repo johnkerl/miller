@@ -150,15 +150,14 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char fre
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (streq(pe->key, key)) {
-			if (pe->free_flags & FREE_ENTRY_VALUE)
-				free(pe->value);
-			pe->value = value;
-			if (free_flags & FREE_ENTRY_VALUE)
-				pe->free_flags |= FREE_ENTRY_VALUE;
-			else
-				pe->free_flags &= ~FREE_ENTRY_VALUE;
-		}
+		if (pe->free_flags & FREE_ENTRY_VALUE)
+			free(pe->value);
+		pe->value = value;
+		if (free_flags & FREE_ENTRY_VALUE)
+			pe->free_flags |= FREE_ENTRY_VALUE;
+		else
+			pe->free_flags &= ~FREE_ENTRY_VALUE;
+
 	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = ideal_index;
@@ -179,6 +178,7 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char fre
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
+
 	} else {
 		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);

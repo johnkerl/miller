@@ -144,10 +144,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (streq(pe->key1, key1) && streq(pe->key2, key2)) {
-			pe->pvvalue = pvvalue;
-			return pvvalue;
-		}
+		pe->pvvalue = pvvalue;
 	}
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
@@ -170,17 +167,12 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
-		return pvvalue;
 	}
 	else {
 		fprintf(stderr, "%s: lhms2v_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
-	// This one is to appease a compiler warning about control reaching the end
-	// of a non-void function
-	fprintf(stderr, "%s: Miller: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
-	exit(1);
+	return pvvalue;
 }
 
 // ----------------------------------------------------------------

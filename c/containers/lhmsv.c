@@ -142,11 +142,9 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char f
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (streq(pe->key, key)) {
-			pe->pvvalue = pvvalue;
-		}
-	}
-	else if (pmap->states[index] == EMPTY) {
+		pe->pvvalue = pvvalue;
+
+	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = ideal_index;
 		pe->key = key;
@@ -166,8 +164,8 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char f
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
-	}
-	else {
+
+	} else {
 		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}

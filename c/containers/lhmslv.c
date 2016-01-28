@@ -139,12 +139,9 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, c
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (slls_equals(pe->key, key)) {
-			pe->pvvalue = pvvalue;
-			return pvvalue;
-		}
-	}
-	else if (pmap->states[index] == EMPTY) {
+		pe->pvvalue = pvvalue;
+
+	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = ideal_index;
 		pe->key = key;
@@ -164,17 +161,13 @@ static void* lhmslv_put_no_enlarge(lhmslv_t* pmap, slls_t* key, void* pvvalue, c
 			pmap->ptail = pe;
 		}
 		pmap->num_occupied++;
-		return pvvalue;
-	}
-	else {
+
+	} else {
 		fprintf(stderr, "%s: lhmslv_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
-	// This one is to appease a compiler warning about control reaching the end
-	// of a non-void function
-	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
-	exit(1);
+
+	return pvvalue;
 }
 
 // ----------------------------------------------------------------
