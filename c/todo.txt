@@ -36,6 +36,8 @@ TOP OF LIST
   o .y hospitality annotations :)
 
   ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
+    - UT key-list too deep/shallow
+
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
     * Release-specific docs at http://johnkerl.org/miller/doc/release-docs.html match release-specific code

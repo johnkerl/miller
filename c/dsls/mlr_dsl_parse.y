@@ -96,6 +96,7 @@ md_end_block_statements ::= md_end_block_statement MD_TOKEN_SEMICOLON md_end_blo
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_end_block_statement ::= .
 md_end_block_statement ::= md_end_block_oosvar_assignment.
+//md_end_block_statement ::= md_end_block_moosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
 md_end_block_statement ::= md_end_block_gate.

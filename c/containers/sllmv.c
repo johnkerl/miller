@@ -66,6 +66,15 @@ sllmv_t* sllmv_triple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3) {
 	return psllmv;
 }
 
+sllmv_t* sllmv_quadruple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, mv_t* pvalue4) {
+	sllmv_t* psllmv = sllmv_alloc();
+	sllmv_add(psllmv, pvalue1);
+	sllmv_add(psllmv, pvalue2);
+	sllmv_add(psllmv, pvalue3);
+	sllmv_add(psllmv, pvalue4);
+	return psllmv;
+}
+
 // ----------------------------------------------------------------
 void sllmv_print(sllmv_t* plist) {
 	printf("[");

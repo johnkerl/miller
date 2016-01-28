@@ -19,6 +19,13 @@
 #include "containers/mlrval.h"
 #include "containers/sllmv.h"
 
+#define MLHMMV_ERROR_NONE                0x0000
+#define MLHMMV_ERROR_KEYLIST_TOO_DEEP    0xdeef
+#define MLHMMV_ERROR_KEYLIST_TOO_SHALLOW 0x58a1
+
+// This is made visible here in the API so the unit-tester can be sure to exercise the resize logic.
+#define MLHMMV_INITIAL_ARRAY_LENGTH 16
+
 struct _mlhmmv_level_t; // forward reference
 
 // ----------------------------------------------------------------
@@ -60,12 +67,13 @@ mlhmmv_t* mlhmmv_alloc();
 void  mlhmmv_free(mlhmmv_t* pmap);
 // pmvkeys is a list of mlhmmv_level_value_t
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
-//// Unit-test hook
-//int mlhmmv_check_counts(mlhmmv_t* pmap);
+// If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the return
+// value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
+// MLHMMV_ERROR_KEYLIST_TOO_SHALLOW, or MLHMMV_ERROR_NONE if the keylist matches
+// map depth but the entry is not found.
+mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 void mlhmmv_print(mlhmmv_t* pmap);
-
 
 #endif // MLHMMV_H

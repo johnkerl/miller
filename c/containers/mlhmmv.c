@@ -38,9 +38,6 @@ static int mlhmmv_hash_func(mv_t* plevel_key);
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
-#ifndef INITIAL_ARRAY_LENGTH
-#define INITIAL_ARRAY_LENGTH 16
-#endif
 
 #ifndef LOAD_FACTOR
 #define LOAD_FACTOR          0.7
@@ -63,7 +60,7 @@ mlhmmv_t* mlhmmv_alloc() {
 
 static mlhmmv_level_t* mlhmmv_level_alloc() {
 	mlhmmv_level_t* plevel = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
-	mlhmmv_level_init(plevel, INITIAL_ARRAY_LENGTH);
+	mlhmmv_level_init(plevel, MLHMMV_INITIAL_ARRAY_LENGTH);
 	return plevel;
 }
 
@@ -285,7 +282,8 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 }
 
 // ----------------------------------------------------------------
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
+	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		// xxx or treat this as an exceptional condition
@@ -298,20 +296,19 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 			return NULL;
 		}
 		if (plevel_value->is_terminal) {
-			// xxx but this could be a data-dependent error.
-			fprintf(stderr, "%s: coding error detected at line %d of file %s\n",
-				MLR_GLOBALS.argv0, __LINE__, __FILE__);
-			exit(1);
+			*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
+			return NULL;
 		}
 		plevel = plevel_value->u.pnext_level;
 		prest_keys = prest_keys->pnext;
 		plevel_value = mlhmmv_level_get(plevel, prest_keys);
 	}
+	if (plevel_value == NULL) {
+		return NULL;
+	}
 	if (!plevel_value->is_terminal) {
-		// xxx but this could be a data-dependent error.
-		fprintf(stderr, "%s: coding error detected at line %d of file %s\n",
-			MLR_GLOBALS.argv0, __LINE__, __FILE__);
-		exit(1);
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
+		return NULL;
 	}
 	return &plevel_value->u.mlrval;
 }
@@ -331,69 +328,6 @@ static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* plevel, sllmve_t* 
 		exit(1);
 	}
 }
-
-//static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
-//	mv_t* plevel_key = prest_keys->pvalue;
-//	int ideal_index = 0;
-//	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
-//	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
-//
-//	if (plevel->states[index] == EMPTY) { // End of chain.
-//		pentry->ideal_index = ideal_index;
-//		pentry->level_key = *plevel_key;
-//
-//		if (prest_keys->pnext == NULL) {
-//			pentry->level_value.is_terminal = TRUE;
-//			pentry->level_value.u.mlrval = *pterminal_value;
-//		} else {
-//			pentry->level_value.is_terminal = FALSE;
-//			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
-//		}
-//		plevel->states[index] = OCCUPIED;
-//
-//		if (plevel->phead == NULL) { // First entry at this level
-//			pentry->pprev = NULL;
-//			pentry->pnext = NULL;
-//			plevel->phead = pentry;
-//			plevel->ptail = pentry;
-//		} else {                     // Subsequent entry at this level
-//			pentry->pprev = plevel->ptail;
-//			pentry->pnext = NULL;
-//			plevel->ptail->pnext = pentry;
-//			plevel->ptail = pentry;
-//		}
-//
-//		plevel->num_occupied++;
-//		if (prest_keys->pnext != NULL) {
-//			// RECURSE
-//			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
-//		}
-//
-//	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
-//		if (prest_keys->pnext == NULL) { // Place the terminal at this level
-//			if (pentry->level_value.is_terminal) {
-//				mv_free(&pentry->level_value.u.mlrval);
-//			} else {
-//				mlhmmv_level_free(pentry->level_value.u.pnext_level);
-//			}
-//			pentry->level_value.is_terminal = TRUE;
-//			pentry->level_value.u.mlrval = *pterminal_value;
-//
-//		} else { // The terminal will be placed at a deeper level
-//			if (pentry->level_value.is_terminal) {
-//				mv_free(&pentry->level_value.u.mlrval);
-//				pentry->level_value.is_terminal = FALSE;
-//				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
-//			}
-//			// RECURSE
-//			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
-//		}
-//
-//	} else {
-//		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
-//		exit(1);
-//	}
-//}
 
 // ----------------------------------------------------------------
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
