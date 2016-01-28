@@ -23,7 +23,7 @@ static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key);
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
 
 static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
@@ -113,9 +113,10 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {
 	int hash = mlhmmv_hash_func(plevel_key);
 	int index = mlr_canonical_mod(hash, plevel->array_length);
+	*pideal_index = index;
 	int num_tries = 0;
 
 	while (TRUE) {
@@ -164,36 +165,12 @@ static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t*
 
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	mv_t* plevel_key = prest_keys->pvalue;
-	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key);
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
 
-	if (plevel->states[index] == OCCUPIED) {
-		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) { // Existing key found in chain
-
-			if (prest_keys->pnext == NULL) { // Place the terminal at this level
-				if (pentry->level_value.is_terminal) {
-					mv_free(&pentry->level_value.u.mlrval);
-				} else {
-					mlhmmv_level_free(pentry->level_value.u.pnext_level);
-				}
-				pentry->level_value.is_terminal = TRUE;
-				pentry->level_value.u.mlrval = *pterminal_value;
-
-			} else { // The terminal will be placed at a deeper level
-				if (pentry->level_value.is_terminal) {
-					mv_free(&pentry->level_value.u.mlrval);
-					pentry->level_value.is_terminal = FALSE;
-					pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
-				}
-				// RECURSE
-				mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
-			}
-			return; // xxx clean up the organization of return-statements here
-			// xxx make sllmve_t pmv -> mv !
-		}
-
-	} else if (plevel->states[index] == EMPTY) { // End of chain.
-		pentry->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(plevel_key), plevel->array_length);
+	if (plevel->states[index] == EMPTY) { // End of chain.
+		pentry->ideal_index = ideal_index;
 		pentry->level_key = *plevel_key;
 
 		if (prest_keys->pnext == NULL) {
@@ -222,17 +199,35 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 			// RECURSE
 			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
-		return;
+
+	} else if (plevel->states[index] == OCCUPIED) {
+		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) { // Existing key found in chain
+
+			if (prest_keys->pnext == NULL) { // Place the terminal at this level
+				if (pentry->level_value.is_terminal) {
+					mv_free(&pentry->level_value.u.mlrval);
+				} else {
+					mlhmmv_level_free(pentry->level_value.u.pnext_level);
+				}
+				pentry->level_value.is_terminal = TRUE;
+				pentry->level_value.u.mlrval = *pterminal_value;
+
+			} else { // The terminal will be placed at a deeper level
+				if (pentry->level_value.is_terminal) {
+					mv_free(&pentry->level_value.u.mlrval);
+					pentry->level_value.is_terminal = FALSE;
+					pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+				}
+				// RECURSE
+				mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+			}
+		}
+
 	}
 	else {
 		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
-	// This one is to appease a compiler warning about control reaching the end
-	// of a non-void function
-	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
-	exit(1);
 }
 
 // ----------------------------------------------------------------
@@ -249,7 +244,8 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 //                     level_key = 6,   level_value = terminal_value = "g".
 
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value) {
-	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key);
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
 
 	if (plevel->states[index] == OCCUPIED) {
@@ -260,7 +256,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 		}
 	} else if (plevel->states[index] == EMPTY) {
 		// End of chain.
-		pentry->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(plevel_key), plevel->array_length);
+		pentry->ideal_index = ideal_index;
 		pentry->level_key = *plevel_key;
 		// For the put API, we copy data passed in. But for internal enlarges, we just need to move pointers around.
 		pentry->level_value = *plevel_value;
