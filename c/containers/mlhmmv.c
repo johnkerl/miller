@@ -300,31 +300,6 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //	}
 
 // ----------------------------------------------------------------
-int mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-//	int index = mlhmmv_level_find_index_for_key(plevel, level_key);
-//
-//	if (pmap->states[index] == OCCUPIED)
-//		return TRUE;
-//	else if (pmap->states[index] == EMPTY)
-		return FALSE;
-//	else {
-//		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
-//		exit(1);
-//	}
-}
-
-// ----------------------------------------------------------------
-// Example:
-// * level = map["a"], rest_keys = [2, "c"] ,   terminal_value = 4.
-//                     rest_keys = ["e", "f"] , terminal_value = 7.
-//                     rest_keys = [6] ,        terminal_value = "g".
-//
-// which is to say for the purposes of this routine
-//
-// * level = map["a"], level_key = 2,   level_value = non-terminal ["c"] => terminal_value = 4.
-//                     level_key = "e", level_value = non-terminal ["f"] => terminal_value = 7.
-//                     level_key = 6,   level_value = terminal_value = "g".
-
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	mlhmmv_level_entry_t*       old_entries = plevel->entries;
 	mlhmmv_level_entry_state_t* old_states  = plevel->states;
@@ -360,7 +335,7 @@ void mlhmmv_print(mlhmmv_t* pmap) {
 
 static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 	static char* leader = "  ";
-	// Top-level opening brace on a line by itself; subsequents on the same line after the level key.
+	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
 		printf("{\n");
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
@@ -385,34 +360,10 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 }
 
 // ----------------------------------------------------------------
-typedef int mv_typed_hash_func_t(mv_t* pa);
-
-static int mv_int_hash_func(mv_t* pa) {
-	return pa->u.intv;
-}
-static int mv_string_hash_func(mv_t* pa) {
-	return mlr_string_hash_func(pa->u.strv);
-}
-static int mv_other_hash_func(mv_t* pa) {
-	fprintf(stderr, "%s: mlhmmv: cannot hash %s, only %s or %s.\n",
-		MLR_GLOBALS.argv0,
-		mt_describe_type(pa->type),
-		mt_describe_type(MT_STRING),
-		mt_describe_type(MT_INT));
-	exit(1);
-}
-
-static mv_typed_hash_func_t* hash_func_dispositions[MT_MAX] = {
-	/*NULL*/   mv_other_hash_func,
-	/*ERROR*/  mv_other_hash_func,
-	/*BOOL*/   mv_other_hash_func,
-	/*FLOAT*/  mv_other_hash_func,
-	/*INT*/    mv_int_hash_func,
-	/*STRING*/ mv_string_hash_func,
-};
-
 static int mlhmmv_hash_func(mv_t* pa) {
-	return (hash_func_dispositions[pa->type])(pa);
+	return (pa->type == MT_INT)
+		?  pa->u.intv
+		: mlr_string_hash_func(pa->u.strv);
 }
 
 static int mlhmmv_key_equals(mv_t* pa, mv_t* pb) {

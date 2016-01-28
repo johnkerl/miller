@@ -38,7 +38,6 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys1) == FALSE); // xxx stub
 	mu_assert_lf(mlhmmv_get(pmap, pmvkeys1) == NULL); // xxx stub
 
 
@@ -52,7 +51,6 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys2) == FALSE); // xxx stub
 	mu_assert_lf(mlhmmv_get(pmap, pmvkeys2) == NULL); // xxx stub
 
 
@@ -66,7 +64,6 @@ static char* test_no_overlap() {
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys3) == FALSE); // xxx stub
 	mu_assert_lf(mlhmmv_get(pmap, pmvkeys3) == NULL); // xxx stub
 
 
@@ -101,6 +98,7 @@ static char* test_overlap() {
 }
 
 // ----------------------------------------------------------------
+// xxx test just stdouting all of this. that would be plenty.
 static char* test_resize() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 

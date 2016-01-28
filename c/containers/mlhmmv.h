@@ -61,7 +61,6 @@ void  mlhmmv_free(mlhmmv_t* pmap);
 // pmvkeys is a list of mlhmmv_level_value_t
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys);
-int   mlhmmv_has_keys(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 //// Unit-test hook
 //int mlhmmv_check_counts(mlhmmv_t* pmap);
