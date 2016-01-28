@@ -85,7 +85,6 @@ md_begin_block_statements ::= md_begin_block_statement MD_TOKEN_SEMICOLON md_beg
 md_begin_block_statement ::= .
 md_begin_block_statement ::= md_begin_block_oosvar_assignment.
 md_begin_block_statement ::= md_begin_block_moosvar_assignment.
-md_begin_block_statement ::= md_begin_block_moosvar_temp.
 md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
 md_begin_block_statement ::= md_begin_block_gate.
@@ -175,18 +174,6 @@ md_begin_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
 	sllv_add(past->pbegin_statements, A);
 }
 
-md_begin_block_moosvar_temp(A) ::= md_begin_block_moosvar_temp2(B). {
-	A = B;
-	sllv_add(past->pbegin_statements, A);
-}
-md_begin_block_moosvar_temp2(A) ::= md_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
-}
-md_begin_block_moosvar_temp2(A) ::= md_begin_block_moosvar_temp2(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_INDEX, B, C);
-}
-
-
 md_begin_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
@@ -261,7 +248,7 @@ md_end_block_emit(A) ::= md_emit(B). {
 md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
-md_moosvar_assignment(A)  ::= md_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+md_moosvar_assignment(A)  ::= md_keyed_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
 }
 
@@ -487,9 +474,20 @@ md_oosvar_name(A) ::= MD_TOKEN_BRACED_OOSVAR_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
 
-md_atom_or_fcn(A) ::= md_moosvar_name(B). {
+md_atom_or_fcn(A) ::= md_keyed_moosvar_name(B). {
 	A = B;
 }
+
+//md_keyed_moosvar_name(A) ::= md_moosvar_name(B). {
+	//A = B;
+//}
+md_keyed_moosvar_name(A) ::= md_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY, B, C);
+}
+md_keyed_moosvar_name(A) ::= md_keyed_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY, B, C);
+}
+
 md_moosvar_name(A) ::= MD_TOKEN_MOOSVAR_NAME(B). {
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];
