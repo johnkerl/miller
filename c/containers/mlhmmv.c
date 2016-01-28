@@ -168,26 +168,31 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
 
 	if (plevel->states[index] == OCCUPIED) {
-		// Existing key found in chain; put value.
-		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) {
-			if (pentry->level_value.is_terminal)
-				mv_free(&pentry->level_value.u.mlrval);
-			else
-				// xxx no, not always
-				mlhmmv_level_free(pentry->level_value.u.pnext_level);
-			if (prest_keys->pnext == NULL) {
+		if (mlhmmv_key_equals(&pentry->level_key, plevel_key)) { // Existing key found in chain
+
+			if (prest_keys->pnext == NULL) { // Place the terminal at this level
+				if (pentry->level_value.is_terminal) {
+					mv_free(&pentry->level_value.u.mlrval);
+				} else {
+					mlhmmv_level_free(pentry->level_value.u.pnext_level);
+				}
 				pentry->level_value.is_terminal = TRUE;
 				pentry->level_value.u.mlrval = *pterminal_value;
-			} else {
-				pentry->level_value.is_terminal = FALSE;
-				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+
+			} else { // The terminal will be placed at a deeper level
+				if (pentry->level_value.is_terminal) {
+					mv_free(&pentry->level_value.u.mlrval);
+					pentry->level_value.is_terminal = FALSE;
+					pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+				}
+				// RECURSE
 				mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 			}
-			return;
+			return; // xxx clean up the organization of return-statements here
 			// xxx make sllmve_t pmv -> mv !
 		}
-	} else if (plevel->states[index] == EMPTY) {
-		// End of chain.
+
+	} else if (plevel->states[index] == EMPTY) { // End of chain.
 		pentry->ideal_index = mlr_canonical_mod(mlhmmv_hash_func(plevel_key), plevel->array_length);
 		pentry->level_key = *plevel_key;
 
@@ -197,22 +202,26 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		} else {
 			pentry->level_value.is_terminal = FALSE;
 			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
-			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 		plevel->states[index] = OCCUPIED;
 
 		if (plevel->phead == NULL) {
-			pentry->pprev   = NULL;
-			pentry->pnext   = NULL;
+			pentry->pprev = NULL;
+			pentry->pnext = NULL;
 			plevel->phead = pentry;
 			plevel->ptail = pentry;
 		} else {
-			pentry->pprev   = plevel->ptail;
-			pentry->pnext   = NULL;
+			pentry->pprev = plevel->ptail;
+			pentry->pnext = NULL;
 			plevel->ptail->pnext = pentry;
 			plevel->ptail = pentry;
 		}
+
 		plevel->num_occupied++;
+		if (prest_keys->pnext != NULL) {
+			// RECURSE
+			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+		}
 		return;
 	}
 	else {
@@ -362,12 +371,7 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 	// Top-level opening brace on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
 		printf("{\n");
-	for (int index = 0; index < plevel->array_length; index++) {
-		if (plevel->states[index] != OCCUPIED)
-			continue;
-
-		mlhmmv_level_entry_t* pentry = &plevel->entries[index];
-
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 		for (int i = 0; i <= depth; i++)
 			printf("%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);

@@ -60,9 +60,9 @@ static char* test_stub() {
 
 	mv_t key3a = mv_from_int(0LL);
 	mv_t key3b = mv_from_string("fghij", NO_FREE);
-	mv_t key3c = mv_from_int(0LL);
+	mv_t key3c = mv_from_int(14LL);
 	sllmv_t* pmvkeys3 = sllmv_triple(&key3a, &key3b, &key3c);
-	mv_t value3 = mv_from_int(17LL);
+	mv_t value3 = mv_from_int(0LL);
 
 	printf("keys3:  ");
 	sllmv_print(pmvkeys3);
