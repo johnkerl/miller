@@ -9,6 +9,17 @@ int tests_failed      = 0;
 int assertions_run    = 0;
 int assertions_failed = 0;
 
+static mv_t* smv(char* strv) {
+	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
+	*pmv = mv_from_string(strv, NO_FREE);
+	return pmv;
+}
+static mv_t* imv(long long intv) {
+	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
+	*pmv = mv_from_int(intv);
+	return pmv;
+}
+
 // ----------------------------------------------------------------
 static char* test_stub() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
@@ -17,67 +28,46 @@ static char* test_stub() {
 	printf("empty map:\n");
 	mlhmmv_print(pmap);
 
-	mv_t key1 = mv_from_int(3LL);
-	sllmv_t* pmvkeys1 = sllmv_single(&key1);
+	sllmv_t* pmvkeys1 = sllmv_single(imv(3));
 	mv_t value1 = mv_from_int(4LL);
-
+	printf("\n");
 	printf("keys1:  ");
 	sllmv_print(pmvkeys1);
-	char* string = mv_alloc_format_val(&value1);
-	printf("value1: %s\n", string);
-	free(string);
+	printf("value1: %s\n", mv_alloc_format_val(&value1));
 	mlhmmv_put(pmap, pmvkeys1, &value1);
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	int ret = mlhmmv_has_keys(pmap, pmvkeys1);
-	mu_assert_lf(ret == FALSE); // xxx stub
-
-	mv_t* pback = mlhmmv_get(pmap, pmvkeys1);
-	mu_assert_lf(pback == NULL); // xxx stub
+	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys1) == FALSE); // xxx stub
+	mu_assert_lf(mlhmmv_get(pmap, pmvkeys1) == NULL); // xxx stub
 
 
-	mv_t key2a = mv_from_string("abcde", NO_FREE);
-	mv_t key2b = mv_from_int(-6LL);
-	sllmv_t* pmvkeys2 = sllmv_double(&key2a, &key2b);
-	mv_t value2 = mv_from_int(7LL);
-
+	sllmv_t* pmvkeys2 = sllmv_double(smv("abcde"), imv(-6));
+	mv_t value2 = mv_from_int(7);
+	printf("\n");
 	printf("keys2:  ");
 	sllmv_print(pmvkeys2);
-	string = mv_alloc_format_val(&value2);
-	printf("value2: %s\n", string);
-	free(string);
+	printf("value2: %s\n", mv_alloc_format_val(&value2));
 	mlhmmv_put(pmap, pmvkeys2, &value2);
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	ret = mlhmmv_has_keys(pmap, pmvkeys2);
-	mu_assert_lf(ret == FALSE); // xxx stub
-
-	pback = mlhmmv_get(pmap, pmvkeys2);
-	mu_assert_lf(pback == NULL); // xxx stub
+	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys2) == FALSE); // xxx stub
+	mu_assert_lf(mlhmmv_get(pmap, pmvkeys2) == NULL); // xxx stub
 
 
-	mv_t key3a = mv_from_int(0LL);
-	mv_t key3b = mv_from_string("fghij", NO_FREE);
-	mv_t key3c = mv_from_int(14LL);
-	sllmv_t* pmvkeys3 = sllmv_triple(&key3a, &key3b, &key3c);
+	sllmv_t* pmvkeys3 = sllmv_triple(imv(0), smv("fghij"), imv(0));
 	mv_t value3 = mv_from_int(0LL);
-
+	printf("\n");
 	printf("keys3:  ");
 	sllmv_print(pmvkeys3);
-	string = mv_alloc_format_val(&value3);
-	printf("value3: %s\n", string);
-	free(string);
+	printf("value3: %s\n", mv_alloc_format_val(&value3));
 	mlhmmv_put(pmap, pmvkeys3, &value3);
 	printf("map:\n");
 	mlhmmv_print(pmap);
 
-	ret = mlhmmv_has_keys(pmap, pmvkeys3);
-	mu_assert_lf(ret == FALSE); // xxx stub
-
-	pback = mlhmmv_get(pmap, pmvkeys3);
-	mu_assert_lf(pback == NULL); // xxx stub
+	mu_assert_lf(mlhmmv_has_keys(pmap, pmvkeys3) == FALSE); // xxx stub
+	mu_assert_lf(mlhmmv_get(pmap, pmvkeys3) == NULL); // xxx stub
 
 
 	sllmv_free(pmvkeys1);
