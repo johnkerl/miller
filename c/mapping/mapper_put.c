@@ -295,6 +295,8 @@ static void evaluate_statements(
 				lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
 				lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 			}
+		} else if (node_type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
+			// xxx temp stub
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;

@@ -2115,6 +2115,10 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return lrec_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
+		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
+			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
+		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
+			return lrec_evaluator_alloc_from_NR(); // xxx temp stub
 		} else if (pnode->type == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_LITERAL) {
@@ -2131,7 +2135,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d: node type %s\n",
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
 				MLR_GLOBALS.argv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
 			exit(1);
 		}

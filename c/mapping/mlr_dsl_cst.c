@@ -137,6 +137,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			TRUE,
 			lrec_evaluator_alloc_from_ast(pright, type_inferencing)));
 
+	} else if (past->type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
+		// xxx stub
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(

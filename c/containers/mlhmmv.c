@@ -244,10 +244,8 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 
 	if (plevel->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
-		if (mv_equals_si(&pentry->level_key, plevel_key)) {
-			pentry->level_value = *plevel_value;
-			return;
-		}
+		pentry->level_value = *plevel_value;
+
 	} else if (plevel->states[index] == EMPTY) {
 		// End of chain.
 		pentry->ideal_index = ideal_index;
@@ -268,17 +266,11 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 			plevel->ptail = pentry;
 		}
 		plevel->num_occupied++;
-		return;
 	}
 	else {
 		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
-	// This one is to appease a compiler warning about control reaching the end
-	// of a non-void function
-	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
-	exit(1);
 }
 
 // ----------------------------------------------------------------
