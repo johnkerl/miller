@@ -71,9 +71,10 @@ void hss_free(hss_t* pset) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int hss_find_index_for_key(hss_t* pset, char* key) {
+static int hss_find_index_for_key(hss_t* pset, char* key, int* pideal_index) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pset->array_length);
+	*pideal_index = index;
 	int num_tries = 0;
 
 	while (TRUE) {
@@ -113,7 +114,8 @@ void hss_add(hss_t* pset, char* key) {
 	if ((pset->num_occupied + pset->num_freed) >= (pset->array_length*LOAD_FACTOR))
 		hss_enlarge(pset);
 
-	int index = hss_find_index_for_key(pset, key);
+	int ideal_index = 0;
+	int index = hss_find_index_for_key(pset, key, &ideal_index);
 	hsse_t* pe = &pset->array[index];
 
 	if (pe->state == OCCUPIED) {
@@ -124,7 +126,7 @@ void hss_add(hss_t* pset, char* key) {
 		// End of chain.
 		pe->key = key;
 		pe->state = OCCUPIED;
-		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pset->array_length);
+		pe->ideal_index = ideal_index;
 		pset->num_occupied++;
 	}
 	else {
@@ -149,7 +151,8 @@ static void hss_enlarge(hss_t* pset) {
 
 // ----------------------------------------------------------------
 int hss_has(hss_t* pset, char* key) {
-	int index = hss_find_index_for_key(pset, key);
+	int ideal_index = 0;
+	int index = hss_find_index_for_key(pset, key, &ideal_index);
 	hsse_t* pe = &pset->array[index];
 
 	if (pe->state == OCCUPIED)
@@ -164,7 +167,8 @@ int hss_has(hss_t* pset, char* key) {
 
 // ----------------------------------------------------------------
 void hss_remove(hss_t* pset, char* key) {
-	int index = hss_find_index_for_key(pset, key);
+	int ideal_index = 0;
+	int index = hss_find_index_for_key(pset, key, &ideal_index);
 	hsse_t* pe = &pset->array[index];
 	if (pe->state == OCCUPIED) {
 		pe->key          = NULL;

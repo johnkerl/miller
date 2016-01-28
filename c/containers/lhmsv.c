@@ -92,9 +92,10 @@ void lhmsv_free(lhmsv_t* pmap) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key) {
+static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key, int* pideal_index) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
+	*pideal_index = index;
 	int num_tries = 0;
 
 	while (TRUE) {
@@ -135,7 +136,8 @@ void lhmsv_put(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags) {
 }
 
 static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags) {
-	int index = lhmsv_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsv_find_index_for_key(pmap, key, &ideal_index);
 	lhmsve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
@@ -146,7 +148,7 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char f
 	}
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
-		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
+		pe->ideal_index = ideal_index;
 		pe->key = key;
 		pe->pvvalue = pvvalue;
 		pe->free_flags = free_flags;
@@ -173,7 +175,8 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char f
 
 // ----------------------------------------------------------------
 void* lhmsv_get(lhmsv_t* pmap, char* key) {
-	int index = lhmsv_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsv_find_index_for_key(pmap, key, &ideal_index);
 	lhmsve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
@@ -188,7 +191,8 @@ void* lhmsv_get(lhmsv_t* pmap, char* key) {
 
 // ----------------------------------------------------------------
 int  lhmsv_has_key(lhmsv_t* pmap, char* key) {
-	int index = lhmsv_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsv_find_index_for_key(pmap, key, &ideal_index);
 
 	if (pmap->states[index] == OCCUPIED)
 		return TRUE;

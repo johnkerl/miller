@@ -92,9 +92,10 @@ void lhms2v_free(lhms2v_t* pmap) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2) {
+static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2, int* pideal_index) {
 	int hash = mlr_string_pair_hash_func(key1, key2);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
+	*pideal_index = index;
 	int num_tries = 0;
 	int done = 0;
 
@@ -137,7 +138,8 @@ void* lhms2v_put(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue, char fre
 }
 
 static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void* pvvalue, char free_flags) {
-	int index = lhms2v_find_index_for_key(pmap, key1, key2);
+	int ideal_index = 0;
+	int index = lhms2v_find_index_for_key(pmap, key1, key2, &ideal_index);
 	lhms2ve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
@@ -149,7 +151,7 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 	}
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
-		pe->ideal_index = mlr_canonical_mod(mlr_string_pair_hash_func(key1, key2), pmap->array_length);
+		pe->ideal_index = ideal_index;
 		pe->key1 = key1;
 		pe->key2 = key2;
 		pe->pvvalue = pvvalue;
@@ -183,7 +185,8 @@ static void* lhms2v_put_no_enlarge(lhms2v_t* pmap, char* key1, char* key2, void*
 
 // ----------------------------------------------------------------
 void* lhms2v_get(lhms2v_t* pmap, char* key1, char* key2) {
-	int index = lhms2v_find_index_for_key(pmap, key1, key2);
+	int ideal_index = 0;
+	int index = lhms2v_find_index_for_key(pmap, key1, key2, &ideal_index);
 	lhms2ve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
@@ -198,7 +201,8 @@ void* lhms2v_get(lhms2v_t* pmap, char* key1, char* key2) {
 
 // ----------------------------------------------------------------
 int lhms2v_has_key(lhms2v_t* pmap, char* key1, char* key2) {
-	int index = lhms2v_find_index_for_key(pmap, key1, key2);
+	int ideal_index = 0;
+	int index = lhms2v_find_index_for_key(pmap, key1, key2, &ideal_index);
 
 	if (pmap->states[index] == OCCUPIED)
 		return TRUE;

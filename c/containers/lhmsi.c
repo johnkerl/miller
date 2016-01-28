@@ -98,9 +98,10 @@ void lhmsi_free(lhmsi_t* pmap) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >0 for where the key is *or* should go (end of chain).
-static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key) {
+static int lhmsi_find_index_for_key(lhmsi_t* pmap, char* key, int* pideal_index) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
+	*pideal_index = index;
 	int num_tries = 0;
 
 	while (TRUE) {
@@ -141,7 +142,8 @@ void lhmsi_put(lhmsi_t* pmap, char* key, int value, char free_flags) {
 }
 
 static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_flags) {
-	int index = lhmsi_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
 	lhmsie_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
@@ -152,7 +154,7 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_
 	}
 	else if (pmap->states[index] == EMPTY) {
 		// End of chain.
-		pe->ideal_index = mlr_canonical_mod(mlr_string_hash_func(key), pmap->array_length);
+		pe->ideal_index = ideal_index;
 		pe->key = key;
 		pe->value = value;
 		pe->free_flags = free_flags;
@@ -179,7 +181,8 @@ static void lhmsi_put_no_enlarge(lhmsi_t* pmap, char* key, int value, char free_
 
 // ----------------------------------------------------------------
 long long lhmsi_get(lhmsi_t* pmap, char* key) {
-	int index = lhmsi_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
 	lhmsie_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
@@ -193,7 +196,8 @@ long long lhmsi_get(lhmsi_t* pmap, char* key) {
 }
 
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
-	int index = lhmsi_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
 	lhmsie_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED)
@@ -208,7 +212,8 @@ lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
 
 // ----------------------------------------------------------------
 int lhmsi_has_key(lhmsi_t* pmap, char* key) {
-	int index = lhmsi_find_index_for_key(pmap, key);
+	int ideal_index = 0;
+	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
 
 	if (pmap->states[index] == OCCUPIED)
 		return TRUE;
