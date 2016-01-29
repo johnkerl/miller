@@ -2160,8 +2160,6 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
 		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
 			return lrec_evaluator_alloc_from_moosvar_name(pnode->text);
-		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
-			return lrec_evaluator_alloc_from_NR(); // xxx temp stub
 		} else if (pnode->type == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return lrec_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_LITERAL) {
@@ -2176,8 +2174,6 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			exit(1);
 		}
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
-		return lrec_evaluator_alloc_from_moosvar_name(pnode->text);
 	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
 		return lrec_evaluator_alloc_from_NR(); // xxx temp stub
 

@@ -326,7 +326,7 @@ test-peek-file-reader: .always
 	$(CCDEBUG) $(TEST_PEEK_FILE_READER_SRCS) -o test-peek-file-reader
 
 test-lrec: .always
-	$(CCDEBUG) $(TEST_LREC_SRCS) -o test-lrec
+	$(CCDEBUG) $(TEST_LREC_SRCS) -o test-lrec -lm
 
 test-multiple-containers: .always
 	$(CCDEBUG) $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers -lm
