@@ -32,7 +32,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 
 static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* pmap, sllmve_t* prest_keys);
 
-static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth);
+static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_comma);
 
 static int mlhmmv_hash_func(mv_t* plevel_key);
 
@@ -341,22 +341,22 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 // Example output:
 //
 // {
-//   0 => {
-//     fghij => {
-//       0 => 17
+//   0: {
+//     "fghij": {
+//       0: 17
 //     }
 //   }
-//   3 => 4
-//   abcde => {
-//     -6 => 7
+//   3: 4
+//   "abcde": {
+//     -6: 7
 //   }
 // }
 
 void mlhmmv_print(mlhmmv_t* pmap) {
-	mlhmmv_level_print(pmap->proot_level, 0);
+	mlhmmv_level_print(pmap->proot_level, 0, FALSE);
 }
 
-static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
+static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_comma) {
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
@@ -384,12 +384,15 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 				printf("\n");
 		} else {
 			printf(" {\n");
-			mlhmmv_level_print(pentry->level_value.u.pnext_level, depth + 1);
+			mlhmmv_level_print(pentry->level_value.u.pnext_level, depth + 1, pentry->pnext != NULL);
 		}
 	}
 	for (int i = 0; i < depth; i++)
 		printf("%s", leader);
-	printf("}\n");
+	if (do_final_comma)
+		printf("},\n");
+	else
+		printf("}\n");
 }
 
 // ----------------------------------------------------------------
