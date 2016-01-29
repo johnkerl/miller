@@ -226,11 +226,19 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
 		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-			sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				MLR_DSL_CST_LHS_TYPE_OOSVAR,
-				pnode->text,
-				NULL,
-				lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
+				sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					MLR_DSL_CST_LHS_TYPE_MOOSVAR,
+					pnode->text,
+					NULL,
+					lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			} else {
+				sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					MLR_DSL_CST_LHS_TYPE_OOSVAR,
+					pnode->text,
+					NULL,
+					lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			}
 		}
 
 	} else if (past->type == MD_AST_NODE_TYPE_DUMP) {

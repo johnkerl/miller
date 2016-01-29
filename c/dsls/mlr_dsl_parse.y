@@ -287,6 +287,7 @@ md_moosvar_assignment(A)  ::= md_keyed_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ter
 // * On the "@b" we append the next argument to get "temp @a,@b".
 // * On the "@c" we append the next argument to get "temp @a,@b,@c".
 // * On the "emit" we change the name to get "emit @a,@b,@c".
+
 md_emit(A) ::= MD_TOKEN_EMIT(O) md_emit_args(B). {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
@@ -294,10 +295,18 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) md_emit_args(B). {
 md_emit_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMIT);
 }
+
 md_emit_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+md_emit_args(A) ::= md_moosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
+}
+md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_moosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
