@@ -37,6 +37,8 @@ TOP OF LIST
 
   o .y hospitality annotations :)
 
+  ! cut down on parameter-marshalling in lrec-evaluators
+
   ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
     k UT key-list too deep/shallow
     - rename 'lrec_evaluators' since they are now (much) more than that.

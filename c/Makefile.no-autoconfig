@@ -80,8 +80,11 @@ TEST_PEEK_FILE_READER_SRCS = \
 
 TEST_LREC_SRCS = \
   lib/mlrutil.c \
+  lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
+  lib/string_array.c \
+  containers/mlrval.c \
   containers/lrec.c \
   containers/header_keeper.c \
   containers/sllv.c \
@@ -89,6 +92,7 @@ TEST_LREC_SRCS = \
   containers/rslls.c \
   containers/lhmsv.c \
   containers/lhmslv.c \
+  containers/mlhmmv.c \
   input/line_readers.c \
   input/file_reader_mmap.c \
   input/file_reader_stdio.c \
@@ -182,12 +186,14 @@ TEST_LREC_EVALUATORS_SRCS = \
   lib/mlrmath.c \
   lib/string_builder.c \
   lib/string_array.c \
+  containers/mlrval.c \
   containers/mlr_dsl_ast.c \
   containers/sllv.c \
   containers/slls.c \
+  containers/sllmv.c \
   containers/lrec.c \
   containers/lhmsv.c \
-  containers/mlrval.c \
+  containers/mlhmmv.c \
   mapping/lrec_evaluators.c \
   unit_test/test_lrec_evaluators.c
 

@@ -156,14 +156,14 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		if (pleft->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
 			sllv_add(pmoosvar_lhs_keylist_evaluators,
-				lrec_evaluator_alloc_from_moosvar_name(pleft->text));
+				// xxx need a version with no regex-captures.
+				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pleft->text), TYPE_INFER_STRING_ONLY));
 		} else {
 
 			mlr_dsl_ast_node_t* pnode = pleft;
 			while (TRUE) {
-				// kerl@kerl-mbp[s139j1d1][c]$ cat zgo
-				// mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
-				// kerl@kerl-mbp[s0j1d1][c]$ sh zgo
+				// Example AST:
+				// % mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
 				// AST BEGIN STATEMENTS (1):
 				// = (moosvar_assignment):
 				//     [] (moosvar_level_key):
@@ -176,19 +176,20 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				//             3 (field_name).
 				//         4 (oosvar_name).
 				//     5 (strnum_literal).
+				//
+				// Here past is the =; pright is the 5; pleft is the string of bracket references
+				// ending at the moosvar name.
 
+				// xxx rename pfoo
 				if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
 					mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
-					mlr_dsl_ast_node_print(pnode);
-					mlr_dsl_ast_node_print(pfoo);
 					sllv_add(pmoosvar_lhs_keylist_evaluators,
 						lrec_evaluator_alloc_from_ast(pfoo, type_inferencing));
 				} else {
-					mlr_dsl_ast_node_print(pnode);
 					sllv_add(pmoosvar_lhs_keylist_evaluators,
-						lrec_evaluator_alloc_from_moosvar_name(pnode->text));
+						// xxx big comment here. this is confusing.
+						lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
 				}
-
 				if (pnode->pchildren == NULL)
 					break;
 				pnode = pnode->pchildren->phead->pvvalue;
@@ -197,7 +198,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			// map, and the lowest is the moosvar name.
 			sllv_reverse(pmoosvar_lhs_keylist_evaluators);
 			// xxx just make an sllv_add_at_head function
-
 		}
 
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(

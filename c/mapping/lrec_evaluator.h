@@ -4,6 +4,7 @@
 #include "lib/context.h"
 #include "containers/lrec.h"
 #include "containers/lhmsv.h"
+#include "containers/mlhmmv.h"
 #include "containers/mlrval.h"
 #include "lib/string_array.h"
 
@@ -33,7 +34,7 @@ struct _lrec_evaluator_t; // forward reference for method declarations
 // See also the comments above mapper_put.c for more information.
 
 typedef mv_t lrec_evaluator_process_func_t(
-	lrec_t* prec, lhmsv_t* ptyped_overlay, lhmsv_t* poosvars,
+	lrec_t* prec, lhmsv_t* ptyped_overlay, lhmsv_t* poosvars, mlhmmv_t* pmoosvars,
 	string_array_t* pregex_captures, context_t* pctx, void* pvstate);
 
 typedef void lrec_evaluator_free_func_t(struct _lrec_evaluator_t*);

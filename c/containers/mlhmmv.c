@@ -161,6 +161,7 @@ static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t*
 	mlhmmv_level_put_no_enlarge(plevel, prest_keys, pterminal_value);
 }
 
+// xxx needs checking here that type is string or int -- incl. MT_NULL.
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	mv_t* plevel_key = prest_keys->pvalue;
 	int ideal_index = 0;
@@ -169,11 +170,11 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 
 	if (plevel->states[index] == EMPTY) { // End of chain.
 		pentry->ideal_index = ideal_index;
-		pentry->level_key = *plevel_key;
+		pentry->level_key = mv_copy(plevel_key);
 
 		if (prest_keys->pnext == NULL) {
 			pentry->level_value.is_terminal = TRUE;
-			pentry->level_value.u.mlrval = *pterminal_value;
+			pentry->level_value.u.mlrval = mv_copy(pterminal_value);
 		} else {
 			pentry->level_value.is_terminal = FALSE;
 			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
@@ -206,7 +207,7 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 				mlhmmv_level_free(pentry->level_value.u.pnext_level);
 			}
 			pentry->level_value.is_terminal = TRUE;
-			pentry->level_value.u.mlrval = *pterminal_value;
+			pentry->level_value.u.mlrval = mv_copy(pterminal_value);
 
 		} else { // The terminal will be placed at a deeper level
 			if (pentry->level_value.is_terminal) {
