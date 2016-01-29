@@ -32,7 +32,9 @@ TOP OF LIST
 
 * shuffle? similar to bootstrap & sample.
 
-* https://github.com/udp/json-parser; http://www.json.org/ C section
+* JSON I/O:
+  - input: https://github.com/udp/json-parser ? ; http://www.json.org/ C section
+  - output: mlr native json output is trivial & just do it.
 
 ----------------------------------------------------------------
 !! oosvars/begin/end:
@@ -44,7 +46,7 @@ TOP OF LIST
   ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
     k UT key-list too deep/shallow
     - rename 'lrec_evaluators' since they are now (much) more than that.
-    - begin/end rhs with srec $'s: segv
+    - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
 
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
