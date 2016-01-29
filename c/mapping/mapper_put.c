@@ -142,14 +142,14 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
-	mlr_dsl_cst_free(pstate->pcst);
-	mlr_dsl_ast_free(pstate->past);
-
 	for (lhmsve_t* pe = pstate->poosvars->phead; pe != NULL; pe = pe->pnext)
 		mv_free(pe->pvvalue);
 	lhmsv_free(pstate->poosvars);
 
 	mlhmmv_free(pstate->pmoosvars);
+
+	mlr_dsl_cst_free(pstate->pcst);
+	mlr_dsl_ast_free(pstate->past);
 
 	ap_free(pstate->pargp);
 
@@ -277,12 +277,12 @@ static void evaluate_statements(
 
 		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT || node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			char* output_field_name = pitem->output_field_name;
 			int lhs_type = pitem->lhs_type;
-			lrec_evaluator_t* pevaluator = pitem->pevaluator;
+			char* output_field_name = pitem->output_field_name;
+			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+				pregex_captures, pctx, prhs_evaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
@@ -304,17 +304,30 @@ static void evaluate_statements(
 		} else if (node_type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
 			// xxx temp stub
 
+			// lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			// xxx need to cut down on this parameter-marshalling ...
+			//mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+			//	/*pstate->pmoosvars,*/ pregex_captures, pctx, prhs_evaluator->pvstate);
+
+			// sllmv_t* pmvkeys = sllmv_alloc();
+			// loop over the list of lhs keylist lrec-evaluators
+			// invoke the evaluator and sllmv_append the result
+			// xxx make a put-no-copy-terminal??
+			// mlhmmv_put(pstate->pmoosvars, pmvkeys, &rhs_value) {
+
+			// sllmv_free(pmvkeys);
+
 		} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
 			lrec_t* prec_to_emit = lrec_unbacked_alloc();
 			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
 				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
 				char* output_field_name = pitem->output_field_name;
-				lrec_evaluator_t* pevaluator = pitem->pevaluator;
+				lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
 				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-					pregex_captures, pctx, pevaluator->pvstate);
+				mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+					pregex_captures, pctx, prhs_evaluator->pvstate);
 
 				if (val.type == MT_STRING) {
 					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
@@ -332,10 +345,10 @@ static void evaluate_statements(
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = pitem->pevaluator;
+			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
 				if (!val.u.boolv) {
@@ -346,10 +359,10 @@ static void evaluate_statements(
 
 		} else if (node_type == MD_AST_NODE_TYPE_GATE) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = pitem->pevaluator;
+			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
@@ -359,10 +372,10 @@ static void evaluate_statements(
 
 		} else { // Bare-boolean statement
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* pevaluator = pitem->pevaluator;
+			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, pevaluator->pvstate);
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
 		}

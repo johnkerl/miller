@@ -9,6 +9,7 @@
 #define TYPE_INFER_STRING_ONLY      0xce0a
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing);
+lrec_evaluator_t* lrec_evaluator_alloc_from_moosvar_name(char* moosvar_name);
 void lrec_evaluator_list_functions(FILE* output_stream, char* leader);
 // Pass function_name == NULL to get usage for all functions:
 void lrec_evaluator_function_usage(FILE* output_stream, char* function_name);

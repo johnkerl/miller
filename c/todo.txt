@@ -30,13 +30,16 @@ TOP OF LIST
 
 * look into 'perf'
 
+* shuffle? similar to bootstrap & sample.
+
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
   o .y hospitality annotations :)
 
   ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
-    - UT key-list too deep/shallow
+    k UT key-list too deep/shallow
+    - rename 'lrec_evaluators' since they are now (much) more than that.
 
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.

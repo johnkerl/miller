@@ -1443,6 +1443,49 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 }
 
 // ================================================================
+typedef struct _lrec_evaluator_moosvar_name_state_t {
+	char* moosvar_name;
+} lrec_evaluator_moosvar_name_state_t;
+
+mv_t lrec_evaluator_moosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, lhmsv_t* poosvars,
+	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_moosvar_name_state_t* pstate = pvstate;
+	// xxx lhmslv ...
+	// xxx check for depth ...
+	//mv_t* pval = lhmsv_get(pmoosvars, pstate->moosvar_name);
+	mv_t* pval = lhmsv_get(poosvars, pstate->moosvar_name);
+	if (pval != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy a value here to feed
+		// into that. Otherwise the typed-overlay map in mapper_put would have its contents freed out from underneath it
+		// by the evaluator functions.
+		return mv_copy(pval);
+	} else {
+		return MV_NULL;
+	}
+}
+
+static void lrec_evaluator_moosvar_name_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_moosvar_name_state_t* pstate = pevaluator->pvstate;
+	// xxx double free?!?!?! free(pstate->moosvar_name);
+	free(pstate);
+	free(pevaluator);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_moosvar_name(char* moosvar_name) {
+	lrec_evaluator_moosvar_name_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_moosvar_name_state_t));
+	pstate->moosvar_name = mlr_strdup_or_die(moosvar_name);
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = NULL;
+	pevaluator->pprocess_func = lrec_evaluator_moosvar_name_func;
+	pevaluator->pfree_func = lrec_evaluator_moosvar_name_free;
+
+	return pevaluator;
+}
+
+// ================================================================
 typedef struct _lrec_evaluator_strnum_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_strnum_literal_state_t;
@@ -2116,7 +2159,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
 		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
-			return lrec_evaluator_alloc_from_oosvar_name(pnode->text);
+			return lrec_evaluator_alloc_from_moosvar_name(pnode->text);
 		} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
 			return lrec_evaluator_alloc_from_NR(); // xxx temp stub
 		} else if (pnode->type == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
@@ -2132,6 +2175,10 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 				MLR_GLOBALS.argv0, __FILE__, __LINE__);
 			exit(1);
 		}
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
+		return lrec_evaluator_alloc_from_NR(); // xxx temp stub
+
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
@@ -2215,8 +2262,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 }
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
-	lrec_evaluator_t* pevaluator = lrec_evaluator_alloc_from_ast_aux(pnode, type_inferencing, FUNCTION_LOOKUP_TABLE);
-	return pevaluator;
+	return lrec_evaluator_alloc_from_ast_aux(pnode, type_inferencing, FUNCTION_LOOKUP_TABLE);
 }
 
 // ================================================================
