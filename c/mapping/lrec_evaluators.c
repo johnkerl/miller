@@ -1486,6 +1486,110 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_moosvar_name(char* moosvar_name) {
 }
 
 // ================================================================
+// xxx adapt to RHS example
+//
+// Example AST:
+// % mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
+// AST BEGIN STATEMENTS (1):
+// = (moosvar_assignment):
+//     [] (moosvar_level_key):
+//         [] (moosvar_level_key):
+//             [] (moosvar_level_key):
+//                 [] (moosvar_level_key):
+//                     x (moosvar_name).
+//                     1 (strnum_literal).
+//                 2 (strnum_literal).
+//             3 (field_name).
+//         4 (oosvar_name).
+//     5 (strnum_literal).
+//
+// Here past is the =; pright is the 5; pleft is the string of bracket references
+// ending at the moosvar name.
+
+typedef struct _lrec_evaluator_moosvar_level_keys_state_t {
+	sllv_t* pmoosvar_rhs_keylist_evaluators;
+} lrec_evaluator_moosvar_level_keys_state_t;
+
+mv_t lrec_evaluator_moosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay, lhmsv_t* poosvars, mlhmmv_t* pmoosvars,
+	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_moosvar_level_keys_state_t* pstate = pvstate;
+
+	sllmv_t* pmvkeys = sllmv_alloc();
+	int ok = TRUE;
+	for (sllve_t* pe = pstate->pmoosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
+		mv_t mvkey = pmvkey_evaluator->pprocess_func(prec, ptyped_overlay, poosvars,
+			pmoosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
+		if (mv_is_null(&mvkey)) {
+			ok = FALSE;
+			break;
+		}
+		// xxx make this no-copy, or a no-copy variant ... some such.
+		sllmv_add(pmvkeys, &mvkey);
+		mv_free(&mvkey);
+	}
+
+	// xxx move this null-check into mlhmmv.c?
+	mv_t rv = MV_NULL;
+	if (ok) {
+		int error = 0;
+		mv_t* pval = mlhmmv_get(pmoosvars, pmvkeys, &error);
+		if (pval != NULL)
+			rv = *pval;
+	}
+
+	sllmv_free(pmvkeys);
+	return rv;
+}
+
+static void lrec_evaluator_moosvar_level_keys_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_moosvar_level_keys_state_t* pstate = pevaluator->pvstate;
+	for (sllve_t* pe = pstate->pmoosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		lrec_evaluator_t* pevaluator = pe->pvvalue;
+		pevaluator->pfree_func(pevaluator);
+	}
+	free(pstate);
+	free(pevaluator);
+}
+
+// xxx temp!
+lrec_evaluator_t* lrec_evaluator_alloc_from_moosvar_level_keys(mlr_dsl_ast_node_t* past) {
+	lrec_evaluator_moosvar_level_keys_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_moosvar_level_keys_state_t));
+
+	sllv_t* pmoosvar_rhs_keylist_evaluators = sllv_alloc();
+	mlr_dsl_ast_node_t* pnode = past;
+	while (TRUE) {
+		// xxx rename pfoo
+		if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
+			mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
+			sllv_add(pmoosvar_rhs_keylist_evaluators,
+				lrec_evaluator_alloc_from_ast(pfoo, TYPE_INFER_STRING_FLOAT_INT));
+		} else {
+			sllv_add(pmoosvar_rhs_keylist_evaluators,
+				// xxx big comment here. this is confusing.
+				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
+		}
+		if (pnode->pchildren == NULL)
+				break;
+		pnode = pnode->pchildren->phead->pvvalue;
+	}
+	// Bracket operators come in from the right. So the highest AST node is the rightmost
+	// map, and the lowest is the moosvar name.
+	sllv_reverse(pmoosvar_rhs_keylist_evaluators);
+	// xxx just make an sllv_add_at_head function
+	pstate->pmoosvar_rhs_keylist_evaluators = pmoosvar_rhs_keylist_evaluators;
+
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = NULL;
+	pevaluator->pprocess_func = lrec_evaluator_moosvar_level_keys_func;
+	pevaluator->pfree_func = lrec_evaluator_moosvar_level_keys_free;
+
+	return pevaluator;
+}
+
+// ================================================================
 typedef struct _lrec_evaluator_strnum_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_strnum_literal_state_t;
@@ -2175,7 +2279,7 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		}
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
-		return lrec_evaluator_alloc_from_NR(); // xxx temp stub
+		return lrec_evaluator_alloc_from_moosvar_level_keys(pnode);
 
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)

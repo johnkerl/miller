@@ -315,7 +315,6 @@ static void evaluate_statements(
 					pstate->pmoosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
 				if (mv_is_null(&mvkey)) {
 					ok = FALSE;
-					printf("xxx temp stub NOT OK\n");
 					break;
 				}
 				// xxx make this no-copy, or a no-copy variant ... some such.
