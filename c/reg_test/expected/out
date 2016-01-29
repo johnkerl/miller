@@ -11941,6 +11941,44 @@ AST END STATEMENTS (1):
                 5 (strnum_literal).
             h (moosvar_name).
     6 (strnum_literal).
+[] (moosvar_level_key):
+    [] (moosvar_level_key):
+        [] (moosvar_level_key):
+            e (moosvar_name).
+            i (field_name).
+        + (operator):
+            2 (strnum_literal).
+            j (field_name).
+    3 (strnum_literal).
+3 (strnum_literal).
+[] (moosvar_level_key):
+    [] (moosvar_level_key):
+        e (moosvar_name).
+        i (field_name).
+    + (operator):
+        2 (strnum_literal).
+        j (field_name).
++ (operator):
+    2 (strnum_literal).
+    j (field_name).
+[] (moosvar_level_key):
+    e (moosvar_name).
+    i (field_name).
+i (field_name).
+e (moosvar_name).
+[] (moosvar_level_key):
+    f (moosvar_name).
+    [] (moosvar_level_key):
+        [] (moosvar_level_key):
+            g (moosvar_name).
+            5 (strnum_literal).
+        h (moosvar_name).
+[] (moosvar_level_key):
+    [] (moosvar_level_key):
+        g (moosvar_name).
+        5 (strnum_literal).
+    h (moosvar_name).
+f (moosvar_name).
 
 
 ================================================================

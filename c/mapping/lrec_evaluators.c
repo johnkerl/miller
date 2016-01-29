@@ -1467,7 +1467,6 @@ mv_t lrec_evaluator_moosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, lhm
 
 static void lrec_evaluator_moosvar_name_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_moosvar_name_state_t* pstate = pevaluator->pvstate;
-	// xxx double free?!?!?! free(pstate->moosvar_name);
 	free(pstate);
 	free(pevaluator);
 }
@@ -2176,7 +2175,9 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			exit(1);
 		}
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
+	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
+		return lrec_evaluator_alloc_from_moosvar_name(pnode->text);
+	} else if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
 		return lrec_evaluator_alloc_from_NR(); // xxx temp stub
 
 	} else { // operator/function

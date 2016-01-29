@@ -261,7 +261,6 @@ static void evaluate_statements(
 	sllv_t*             pcst_statements,
 	int*                pemit_rec,
 	sllv_t*             poutrecs
-
 ) {
 
 	// xxx move some/all of this into mlr_dsl_cst.c -- ?

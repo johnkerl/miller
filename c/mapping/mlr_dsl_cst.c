@@ -159,55 +159,44 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				lrec_evaluator_alloc_from_moosvar_name(pleft->text));
 		} else {
 
-//			mlr_dsl_ast_node_t* pnode = pleft;
-//			printf("\n");
-//			printf("BEGIN WTFC\n");
-//			while (TRUE) {
-//				// kerl@kerl-mbp[s139j1d1][c]$ cat zgo
-//				// mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
-//				// kerl@kerl-mbp[s0j1d1][c]$ sh zgo
-//				// AST BEGIN STATEMENTS (1):
-//				// = (moosvar_assignment):
-//				//     [] (moosvar_level_key):
-//				//         [] (moosvar_level_key):
-//				//             [] (moosvar_level_key):
-//				//                 [] (moosvar_level_key):
-//				//                     x (moosvar_name).
-//				//                     1 (strnum_literal).
-//				//                 2 (strnum_literal).
-//				//             3 (field_name).
-//				//         4 (oosvar_name).
-//				//     5 (strnum_literal).
-//
-//				if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
-//					mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
-//					printf("MVKEY %s\n", mlr_dsl_ast_node_describe_type(pfoo->type));
-//					printf("--B1\n");
-//					mlr_dsl_ast_node_print(pnode);
-//					printf("--B2\n");
-//					mlr_dsl_ast_node_print(pfoo);
-//					printf("--B3\n");
-//					sllv_add(pmoosvar_lhs_keylist_evaluators,
-//						lrec_evaluator_alloc_from_ast(pfoo, type_inferencing));
-//				} else {
-//					printf("MOOSVAR NAME [%s]\n", pnode->text);
-//					printf("--B4\n");
-//					mlr_dsl_ast_node_print(pnode);
-//					printf("--B5\n");
-//					sllv_add(pmoosvar_lhs_keylist_evaluators,
-//						lrec_evaluator_alloc_from_moosvar_name(pnode->text));
-//				}
-//
-//				if (pnode->pchildren == NULL)
-//					break;
-//				pnode = pnode->pchildren->phead->pvvalue;
-//			}
-//			printf("END WTFC\n");
-//			printf("\n");
-//			// Bracket operators come in from the right. So the highest AST node is the rightmost
-//			// map, and the lowest is the moosvar name.
-//			sllv_reverse(pmoosvar_lhs_keylist_evaluators);
-//			// xxx just make an sllv_add_at_head function
+			mlr_dsl_ast_node_t* pnode = pleft;
+			while (TRUE) {
+				// kerl@kerl-mbp[s139j1d1][c]$ cat zgo
+				// mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
+				// kerl@kerl-mbp[s0j1d1][c]$ sh zgo
+				// AST BEGIN STATEMENTS (1):
+				// = (moosvar_assignment):
+				//     [] (moosvar_level_key):
+				//         [] (moosvar_level_key):
+				//             [] (moosvar_level_key):
+				//                 [] (moosvar_level_key):
+				//                     x (moosvar_name).
+				//                     1 (strnum_literal).
+				//                 2 (strnum_literal).
+				//             3 (field_name).
+				//         4 (oosvar_name).
+				//     5 (strnum_literal).
+
+				if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY) {
+					mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
+					mlr_dsl_ast_node_print(pnode);
+					mlr_dsl_ast_node_print(pfoo);
+					sllv_add(pmoosvar_lhs_keylist_evaluators,
+						lrec_evaluator_alloc_from_ast(pfoo, type_inferencing));
+				} else {
+					mlr_dsl_ast_node_print(pnode);
+					sllv_add(pmoosvar_lhs_keylist_evaluators,
+						lrec_evaluator_alloc_from_moosvar_name(pnode->text));
+				}
+
+				if (pnode->pchildren == NULL)
+					break;
+				pnode = pnode->pchildren->phead->pvvalue;
+			}
+			// Bracket operators come in from the right. So the highest AST node is the rightmost
+			// map, and the lowest is the moosvar name.
+			sllv_reverse(pmoosvar_lhs_keylist_evaluators);
+			// xxx just make an sllv_add_at_head function
 
 		}
 
@@ -288,7 +277,7 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 	if (pitem->pmoosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pitem->pmoosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			lrec_evaluator_t* pevaluator = pe->pvvalue;
-			pevaluator->pfree_func(pevaluator->pvstate);
+			pevaluator->pfree_func(pevaluator);
 		}
 		sllv_free(pitem->pmoosvar_lhs_keylist_evaluators);
 	}
