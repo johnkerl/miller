@@ -365,13 +365,23 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth) {
 		for (int i = 0; i <= depth; i++)
 			printf("%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-		printf("%s =>", level_key_string);
+		if (pentry->level_key.type == MT_STRING)
+				printf("\"%s\": ", level_key_string);
+		else
+			printf("%s: ", level_key_string);
 		free(level_key_string);
 
 		if (pentry->level_value.is_terminal) {
 			char* level_value_string = mv_alloc_format_val(&pentry->level_value.u.mlrval);
-			printf(" %s\n", level_value_string);
+			if (pentry->level_value.u.mlrval.type == MT_STRING)
+				printf(" \"%s\"", level_value_string);
+			else
+				printf(" %s", level_value_string);
 			free(level_value_string);
+			if (pentry->pnext != NULL)
+				printf(",\n");
+			else
+				printf("\n");
 		} else {
 			printf(" {\n");
 			mlhmmv_level_print(pentry->level_value.u.pnext_level, depth + 1);
