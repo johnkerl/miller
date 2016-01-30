@@ -213,7 +213,7 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_wh
 		char* value_field_name = pa->value;
 		regex_t* pvalue_field_regex = mlr_malloc_or_die(sizeof(regex_t));
 		regcomp_or_die(pvalue_field_regex, value_field_name, 0);
-		sllv_add(pstate->pvalue_field_regexes, pvalue_field_regex);
+		sllv_append(pstate->pvalue_field_regexes, pvalue_field_regex);
 	}
 	pstate->output_field_basename = output_field_basename;
 	pstate->allow_int_float       = allow_int_float;

@@ -1523,10 +1523,10 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 		// xxx rename pfoo
 		if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 			mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
-			sllv_add(poosvar_rhs_keylist_evaluators,
+			sllv_append(poosvar_rhs_keylist_evaluators,
 				lrec_evaluator_alloc_from_ast(pfoo, TYPE_INFER_STRING_FLOAT_INT));
 		} else {
-			sllv_add(poosvar_rhs_keylist_evaluators,
+			sllv_append(poosvar_rhs_keylist_evaluators,
 				// xxx big comment here. this is confusing.
 				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
 		}
@@ -1537,7 +1537,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 	// Bracket operators come in from the right. So the highest AST node is the rightmost
 	// map, and the lowest is the oosvar name.
 	sllv_reverse(poosvar_rhs_keylist_evaluators);
-	// xxx just make an sllv_add_at_head function
+	// xxx just make an sllv_append_at_head function
 	pstate->poosvar_rhs_keylist_evaluators = poosvar_rhs_keylist_evaluators;
 
 	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));

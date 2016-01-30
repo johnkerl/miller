@@ -136,12 +136,12 @@ static sllv_t* mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		for (lhmslve_t* pa = pstate->pbuckets_by_group->phead; pa != NULL; pa = pa->pnext) {
 			sample_bucket_t* pbucket = pa->pvvalue;
 			for (int i = 0; i < pbucket->nused; i++) {
-				sllv_add(poutrecs, pbucket->plrecs[i]);
+				sllv_append(poutrecs, pbucket->plrecs[i]);
 				pbucket->plrecs[i] = NULL;
 			}
 			pbucket->nused = 0;
 		}
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }

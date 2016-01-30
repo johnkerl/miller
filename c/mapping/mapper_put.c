@@ -205,7 +205,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			pstate->pcst->pend_statements, &emit_rec, poutrecs);
 
 		string_array_free(pregex_captures);
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 
@@ -236,7 +236,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	string_array_free(pregex_captures);
 
 	if (emit_rec) {
-		sllv_add(poutrecs, pinrec);
+		sllv_append(poutrecs, pinrec);
 	} else {
 		lrec_free(pinrec);
 	}
@@ -336,7 +336,7 @@ static void evaluate_statements(
 					lrec_put(prec_to_emit, output_field_name, string, free_flags);
 				}
 			}
-			sllv_add(poutrecs, prec_to_emit);
+			sllv_append(poutrecs, prec_to_emit);
 
 		} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
 			mlhmmv_print(pstate->poosvars);

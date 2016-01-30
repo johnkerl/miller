@@ -78,7 +78,7 @@ static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* 
 		pstate->num_blocks_written++;
 	}
 	if (prec != NULL) {
-		sllv_add(pstate->precords, prec);
+		sllv_append(pstate->precords, prec);
 		if (pstate->pprev_keys == NULL)
 			pstate->pprev_keys = mlr_copy_keys_from_record(prec);
 	}

@@ -48,7 +48,7 @@ void rslls_free(rslls_t* plist) {
 }
 
 // ----------------------------------------------------------------
-static inline void rslls_add(rslls_t* plist, char* value, char free_flag) {
+static inline void rslls_append(rslls_t* plist, char* value, char free_flag) {
 	if (plist->ptail == NULL) {
 		// First add on new list
 		rsllse_t* pnode = mlr_malloc_or_die(sizeof(rsllse_t));
@@ -75,11 +75,11 @@ static inline void rslls_add(rslls_t* plist, char* value, char free_flag) {
 	plist->length++;
 }
 
-void rslls_add_with_free(rslls_t* plist, char* value) {
-	rslls_add(plist, value, FREE_ENTRY_VALUE);
+void rslls_append_with_free(rslls_t* plist, char* value) {
+	rslls_append(plist, value, FREE_ENTRY_VALUE);
 }
-void rslls_add_no_free(rslls_t* plist, char* value) {
-	rslls_add(plist, value, 0);
+void rslls_append_no_free(rslls_t* plist, char* value) {
+	rslls_append(plist, value, 0);
 }
 
 void rslls_print(rslls_t* plist) {

@@ -887,7 +887,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		if (pmapper == NULL) {
 			exit(1);
 		}
-		sllv_add(popts->pmapper_list, pmapper);
+		sllv_append(popts->pmapper_list, pmapper);
 
 		if (argi >= argc || !streq(argv[argi], "then"))
 			break;

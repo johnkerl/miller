@@ -182,7 +182,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 			}
 			// Transfer pointer-free responsibility from the rslls to the
 			// header fields in the header keeper
-			slls_add(pheader_fields, pe->value, pe->free_flag);
+			slls_append(pheader_fields, pe->value, pe->free_flag);
 			pe->free_flag = 0;
 		}
 		rslls_reset(pstate->pfields);
@@ -242,7 +242,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 #endif
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -252,11 +252,11 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						exit(1);
 						break;
 					case IFS_STRIDX: // end of field
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -303,16 +303,16 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
-						rslls_add_with_free(pfields, sb_finish(psb));
+						rslls_append_with_free(pfields, sb_finish(psb));
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;

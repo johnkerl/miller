@@ -110,31 +110,31 @@ md_end_block_statement ::= md_end_block_dump.
 
 md_main_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
 	A = B;
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_emit(A) ::= md_emit(B). {
 	A = B;
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 md_main_dump(A) ::= md_dump(B). {
 	A = B;
-	sllv_add(past->pmain_statements, A);
+	sllv_append(past->pmain_statements, A);
 }
 
 // ----------------------------------------------------------------
@@ -142,53 +142,53 @@ md_main_dump(A) ::= md_dump(B). {
 
 md_begin_solo_oosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_oosvar_assignment(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_solo_bare_boolean(A) ::= MD_TOKEN_BEGIN md_ternary(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_solo_filter(A) ::= MD_TOKEN_BEGIN MD_TOKEN_FILTER(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_solo_gate(A) ::= MD_TOKEN_BEGIN MD_TOKEN_GATE(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_solo_emit(A) ::= MD_TOKEN_BEGIN md_emit(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_solo_dump(A) ::= MD_TOKEN_BEGIN md_dump(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 
 md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 
 md_begin_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_emit(A) ::= md_emit(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_dump(A) ::= md_dump(B). {
 	A = B;
-	sllv_add(past->pbegin_statements, A);
+	sllv_append(past->pbegin_statements, A);
 }
 
 // ----------------------------------------------------------------
@@ -196,52 +196,52 @@ md_begin_block_dump(A) ::= md_dump(B). {
 
 md_end_solo_oosvar_assignment(A)  ::= MD_TOKEN_END md_oosvar_assignment(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_solo_bare_boolean(A) ::= MD_TOKEN_END md_ternary(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_solo_filter(A) ::= MD_TOKEN_END MD_TOKEN_FILTER(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_solo_gate(A) ::= MD_TOKEN_END MD_TOKEN_GATE(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_solo_emit(A) ::= MD_TOKEN_END md_emit(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_solo_dump(A) ::= MD_TOKEN_END md_dump(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 
 md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_block_emit(A) ::= md_emit(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 md_end_block_dump(A) ::= md_dump(B). {
 	A = B;
-	sllv_add(past->pend_statements, A);
+	sllv_append(past->pend_statements, A);
 }
 
 // ----------------------------------------------------------------

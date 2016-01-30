@@ -241,7 +241,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 		} else if (*p == ifs) {
 			*p = 0;
 
-			slls_add_no_free(pheader_names, header_name);
+			slls_append_no_free(pheader_names, header_name);
 
 			p++;
 			if (allow_repeat_ifs) {
@@ -258,7 +258,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 	} else if (p == osol) {
 		// OK
 	} else {
-		slls_add_no_free(pheader_names, header_name);
+		slls_append_no_free(pheader_names, header_name);
 	}
 
 	return pheader_names;
@@ -297,7 +297,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 
-			slls_add_no_free(pheader_names, header_name);
+			slls_append_no_free(pheader_names, header_name);
 
 			p += ifslen;
 			if (allow_repeat_ifs) {
@@ -314,7 +314,7 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 	} else if (p == osol) {
 		// OK
 	} else {
-		slls_add_no_free(pheader_names, header_name);
+		slls_append_no_free(pheader_names, header_name);
 	}
 
 	return pheader_names;

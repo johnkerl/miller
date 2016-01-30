@@ -310,7 +310,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		}
 		// pleft_records are not caller-owned; we don't free them.
 		sllv_free(pbucket_left_unpaired);
-		sllv_add(pout_recs, NULL);
+		sllv_append(pout_recs, NULL);
 		return pout_recs;
 	}
 
@@ -331,7 +331,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	if (pstate->popts->emit_right_unpairables) {
 		if (pleft_records == NULL || pleft_records->length == 0) {
-			sllv_add(pout_recs, pright_rec);
+			sllv_append(pout_recs, pright_rec);
 			produced_right = TRUE;
 		}
 	}
@@ -374,7 +374,7 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 				}
 			}
 			sllv_transfer(poutrecs, pstate->pleft_unpaired_records);
-			sllv_add(poutrecs, NULL);
+			sllv_append(poutrecs, NULL);
 			return poutrecs;
 		} else {
 			while (pstate->pleft_unpaired_records->phead) {
@@ -464,7 +464,7 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 			}
 		}
 
-		sllv_add(pout_recs, pout_rec);
+		sllv_append(pout_recs, pout_rec);
 	}
 }
 
@@ -529,13 +529,13 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 				pbucket->pleft_field_values = slls_copy(pleft_field_values);
 				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket,
 					FREE_ENTRY_KEY);
-				sllv_add(pbucket->precords, pleft_rec);
+				sllv_append(pbucket->precords, pleft_rec);
 			} else { // Previously seen key-field-value: append record to bucket
-				sllv_add(pbucket->precords, pleft_rec);
+				sllv_append(pbucket->precords, pleft_rec);
 			}
 			slls_free(pleft_field_values);
 		} else {
-			sllv_add(pstate->pleft_unpaired_records, pleft_rec);
+			sllv_append(pstate->pleft_unpaired_records, pleft_rec);
 		}
 	}
 

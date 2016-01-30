@@ -220,12 +220,12 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 			lrec_put(poutrec, mlr_strdup_or_die(count_field_name), value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
 
-		sllv_add(poutrecs, poutrec);
+		sllv_append(poutrecs, poutrec);
 	}
 
 	lhmss_free(pcount_field_names);
 
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
 
@@ -324,9 +324,9 @@ static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
 			lrec_put(poutrec, mlr_strdup_or_die(count_field_name), value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
 
-		sllv_add(poutrecs, poutrec);
+		sllv_append(poutrecs, poutrec);
 	}
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 
 	lhmss_free(pcount_field_names);
 	return poutrecs;

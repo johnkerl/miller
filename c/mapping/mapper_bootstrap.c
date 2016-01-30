@@ -91,7 +91,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 	mapper_bootstrap_state_t* pstate = pvstate;
 	if (pinrec != NULL) { // Not end of input stream: consume an input record.
 		// The caller will free the outrecs
-		sllv_add(pstate->records, pinrec);
+		sllv_append(pstate->records, pinrec);
 		return NULL;
 	}
 
@@ -112,7 +112,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 	int nin = pstate->records->length;
 	int nout = (pstate->nout == NOUT_EQUALS_NIN) ? nin : pstate->nout;
 	if (nin == 0) {
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 
@@ -137,7 +137,7 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 		} else { // First output of this record; remember it.
 			used_flags[index] = TRUE;
 		}
-		sllv_add(poutrecs, prec);
+		sllv_append(poutrecs, prec);
 	}
 
 	// Free non-output records
@@ -150,6 +150,6 @@ static sllv_t* mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* p
 	free(record_array);
 
 	// Null-terminate the output list to signify end of stream.
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }

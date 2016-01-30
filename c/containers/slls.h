@@ -25,9 +25,9 @@ slls_t* slls_copy(slls_t* pold);
 void    slls_free(slls_t* plist);
 slls_t* slls_single_with_free(char* value);
 slls_t* slls_single_no_free(char* value);
-void    slls_add_with_free(slls_t* plist, char* value);
-void    slls_add_no_free(slls_t* plist, char* value);
-void    slls_add(slls_t* plist, char* value, char free_flag);
+void    slls_append_with_free(slls_t* plist, char* value);
+void    slls_append_no_free(slls_t* plist, char* value);
+void    slls_append(slls_t* plist, char* value, char free_flag);
 int     slls_equals(slls_t* pa, slls_t* pb);
 slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs);
 

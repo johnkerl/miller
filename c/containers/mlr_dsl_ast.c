@@ -41,7 +41,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
 	pnode->pchildren = sllv_alloc();
-	sllv_add(pnode->pchildren, pa);
+	sllv_append(pnode->pchildren, pa);
 	return pnode;
 }
 
@@ -51,8 +51,8 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
 	pnode->pchildren = sllv_alloc();
-	sllv_add(pnode->pchildren, pa);
-	sllv_add(pnode->pchildren, pb);
+	sllv_append(pnode->pchildren, pa);
+	sllv_append(pnode->pchildren, pb);
 	return pnode;
 }
 
@@ -62,9 +62,9 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
 	pnode->pchildren = sllv_alloc();
-	sllv_add(pnode->pchildren, pa);
-	sllv_add(pnode->pchildren, pb);
-	sllv_add(pnode->pchildren, pc);
+	sllv_append(pnode->pchildren, pa);
+	sllv_append(pnode->pchildren, pb);
+	sllv_append(pnode->pchildren, pc);
 	return pnode;
 }
 
@@ -74,7 +74,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
 {
 	if (pa->pchildren == NULL)
 		pa->pchildren = sllv_alloc();
-	sllv_add(pa->pchildren, pb);
+	sllv_append(pa->pchildren, pb);
 	return pa;
 }
 

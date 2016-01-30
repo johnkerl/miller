@@ -63,12 +63,12 @@ static sllv_t* mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	mapper_tac_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		// The caller will free the outrecs
-		sllv_add(pstate->records, pinrec);
+		sllv_append(pstate->records, pinrec);
 		return NULL;
 	}
 	else {
 		sllv_reverse(pstate->records);
-		sllv_add(pstate->records, NULL);
+		sllv_append(pstate->records, NULL);
 		sllv_t* retval = pstate->records;
 		pstate->records = sllv_alloc();
 		return retval;

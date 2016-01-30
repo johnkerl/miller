@@ -165,7 +165,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 			}
 			// Transfer pointer-free responsibility from the rslls to the
 			// header fields in the header keeper
-			slls_add(pheader_fields, pe->value, pe->free_flag);
+			slls_append(pheader_fields, pe->value, pe->free_flag);
 			pe->free_flag = 0;
 		}
 		rslls_reset(pstate->pfields);
@@ -220,13 +220,13 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					switch(stridx) {
 					case IFS_STRIDX: // end of field
 						*e = 0;
-						rslls_add_no_free(pfields, p);
+						rslls_append_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
 						*e = 0;
-						rslls_add_no_free(pfields, p);
+						rslls_append_no_free(pfields, p);
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -249,7 +249,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					// our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking
 					// at EOF is one byte past the page and that will segv us.
 				    char* copy = mlr_alloc_string_from_char_range(p, phandle->eof - p);
-					rslls_add_with_free(pfields, copy);
+					rslls_append_with_free(pfields, copy);
 					p = e + matchlen;
 					field_done  = TRUE;
 					record_done = TRUE;
@@ -281,18 +281,18 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					case DQUOTE_IFS_STRIDX: // end of field
 						*e = 0;
 						if (contiguous)
-							rslls_add_no_free(pfields, p);
+							rslls_append_no_free(pfields, p);
 						else
-							rslls_add_with_free(pfields, sb_finish(psb));
+							rslls_append_with_free(pfields, sb_finish(psb));
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
 						*e = 0;
 						if (contiguous)
-							rslls_add_no_free(pfields, p);
+							rslls_append_no_free(pfields, p);
 						else
-							rslls_add_with_free(pfields, sb_finish(psb));
+							rslls_append_with_free(pfields, sb_finish(psb));
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;

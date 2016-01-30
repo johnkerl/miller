@@ -30,12 +30,12 @@ void sllv_free(sllv_t* plist) {
 // ----------------------------------------------------------------
 sllv_t* sllv_single(void* pvvalue) {
 	sllv_t* psllv = sllv_alloc();
-	sllv_add(psllv, pvvalue);
+	sllv_append(psllv, pvvalue);
 	return psllv;
 }
 
 // ----------------------------------------------------------------
-void sllv_add(sllv_t* plist, void* pvvalue) {
+void sllv_append(sllv_t* plist, void* pvvalue) {
 	sllve_t* pnode = mlr_malloc_or_die(sizeof(sllve_t));
 	pnode->pvvalue = pvvalue;
 	if (plist->ptail == NULL) {
@@ -46,6 +46,21 @@ void sllv_add(sllv_t* plist, void* pvvalue) {
 		pnode->pnext = NULL;
 		plist->ptail->pnext = pnode;
 		plist->ptail = pnode;
+	}
+	plist->length++;
+}
+
+// ----------------------------------------------------------------
+void sllv_prepend(sllv_t* plist, void* pvvalue) {
+	sllve_t* pnode = mlr_malloc_or_die(sizeof(sllve_t));
+	pnode->pvvalue = pvvalue;
+	if (plist->ptail == NULL) {
+		pnode->pnext = NULL;
+		plist->phead = pnode;
+		plist->ptail = pnode;
+	} else {
+		pnode->pnext = plist->phead;
+		plist->phead = pnode;
 	}
 	plist->length++;
 }

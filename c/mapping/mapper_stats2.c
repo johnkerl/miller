@@ -304,7 +304,7 @@ static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_
 			group_to_records = sllv_alloc();
 			lhmslv_put(pstate->record_groups, slls_copy(pgroup_by_field_values), group_to_records, FREE_ENTRY_KEY);
 		}
-		sllv_add(group_to_records, pinrec);
+		sllv_append(group_to_records, pinrec);
 	}
 
 	// for [["x","y"]]
@@ -394,9 +394,9 @@ static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* pstate) {
 			}
 		}
 
-		sllv_add(poutrecs, poutrec);
+		sllv_append(poutrecs, poutrec);
 	}
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
 
@@ -444,10 +444,10 @@ static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* pstate) {
 				}
 			}
 
-			sllv_add(poutrecs, prec);
+			sllv_append(poutrecs, prec);
 		}
 	}
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
 

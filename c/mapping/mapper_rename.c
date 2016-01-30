@@ -116,7 +116,7 @@ static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, in
 			regex_pair_t* ppair = mlr_malloc_or_die(sizeof(regex_pair_t));
 			regcomp_or_die_quoted(&ppair->regex, regex_string, 0);
 			ppair->replacement = replacement;
-			sllv_add(pstate->pregex_pairs, ppair);
+			sllv_append(pstate->pregex_pairs, ppair);
 		}
 
 		pstate->psb     = sb_alloc(RENAME_SB_ALLOC_LENGTH);

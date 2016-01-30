@@ -70,35 +70,35 @@ void ap_free(ap_state_t* pstate) {
 
 // ----------------------------------------------------------------
 void ap_define_true_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, TRUE, pintval, 1));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, TRUE, pintval, 1));
 }
 
 void ap_define_false_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, FALSE, pintval, 1));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, FALSE, pintval, 1));
 }
 
 void ap_define_int_value_flag(ap_state_t* pstate, char* flag_name, int intval, int* pintval) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, intval, pintval, 1));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_VALUE_FLAG, intval, pintval, 1));
 }
 
 void ap_define_int_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_FLAG, 0, pintval, 2));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_FLAG, 0, pintval, 2));
 }
 
 void ap_define_float_flag(ap_state_t* pstate, char* flag_name, double* pdoubleval) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_DOUBLE_FLAG, 0, pdoubleval, 2));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_DOUBLE_FLAG, 0, pdoubleval, 2));
 }
 
 void ap_define_string_flag(ap_state_t* pstate, char* flag_name, char** pstring) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_FLAG, 0, pstring, 2));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_FLAG, 0, pstring, 2));
 }
 
 void ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pplist) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_LIST_FLAG, 0, pplist, 2));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_LIST_FLAG, 0, pplist, 2));
 }
 
 void ap_define_string_array_flag(ap_state_t* pstate, char* flag_name, string_array_t** pparray) {
-	sllv_add(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_ARRAY_FLAG, 0, pparray, 2));
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_ARRAY_FLAG, 0, pparray, 2));
 }
 
 // ----------------------------------------------------------------

@@ -76,11 +76,11 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 		sllv_t* plist = lhmslv_get(pstate->precords_by_key_field_names, pkey_field_names);
 		if (plist == NULL) {
 			plist = sllv_alloc();
-			sllv_add(plist, pinrec);
+			sllv_append(plist, pinrec);
 			lhmslv_put(pstate->precords_by_key_field_names, slls_copy(pkey_field_names), plist,
 				FREE_ENTRY_KEY);
 		} else {
-			sllv_add(plist, pinrec);
+			sllv_append(plist, pinrec);
 		}
 		slls_free(pkey_field_names);
 		return NULL;
@@ -90,7 +90,7 @@ static sllv_t* mapper_group_like_process(lrec_t* pinrec, context_t* pctx, void* 
 			sllv_t* plist = pe->pvvalue;
 			sllv_transfer(poutput, plist);
 		}
-		sllv_add(poutput, NULL);
+		sllv_append(poutput, NULL);
 		return poutput;
 	}
 }

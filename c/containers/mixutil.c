@@ -11,7 +11,7 @@
 slls_t* mlr_reference_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-		slls_add_no_free(plist, pe->key);
+		slls_append_no_free(plist, pe->key);
 	}
 	return plist;
 }
@@ -19,7 +19,7 @@ slls_t* mlr_reference_keys_from_record(lrec_t* prec) {
 slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-		slls_add_with_free(plist, mlr_strdup_or_die(pe->key));
+		slls_append_with_free(plist, mlr_strdup_or_die(pe->key));
 	}
 	return plist;
 }
@@ -38,7 +38,7 @@ slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselecte
 			slls_free(pvalue_list);
 			return NULL;
 		} else {
-			slls_add_no_free(pvalue_list, value);
+			slls_append_no_free(pvalue_list, value);
 		}
 	}
 	return pvalue_list;

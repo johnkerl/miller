@@ -208,7 +208,7 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 	mapper_bar_state_t* pstate = (mapper_bar_state_t*)pvstate;
 
 	if (pinrec != NULL) { // not end of stream
-		sllv_add(pstate->precords, pinrec);
+		sllv_append(pstate->precords, pinrec);
 		return NULL;
 	}
 
@@ -272,6 +272,6 @@ static sllv_t* mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pv
 	}
 
 	sb_free(psb);
-	sllv_add(pstate->precords, NULL);
+	sllv_append(pstate->precords, NULL);
 	return pstate->precords;
 }

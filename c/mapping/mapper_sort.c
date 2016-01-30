@@ -157,8 +157,8 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
 		slls_t* pnames_for_flag = slls_from_line(value, ',', FALSE);
 		// E.g. with "-nr a,b,c", replicate the "-nr" flag three times.
 		for (sllse_t* pe = pnames_for_flag->phead; pe != NULL; pe = pe->pnext) {
-			slls_add_no_free(pnames, pe->value);
-			slls_add_no_free(pflags, flag);
+			slls_append_no_free(pnames, pe->value);
+			slls_append_no_free(pflags, flag);
 		}
 		slls_free(pnames_for_flag);
 	}
@@ -252,7 +252,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		// Consume another input record.
 		slls_t* pkey_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pkey_field_names);
 		if (pkey_field_values == NULL) {
-			sllv_add(pstate->precords_missing_sort_keys, pinrec);
+			sllv_append(pstate->precords_missing_sort_keys, pinrec);
 		} else {
 			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
 			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
@@ -260,11 +260,11 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
 				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 				pbucket->precords = sllv_alloc();
-				sllv_add(pbucket->precords, pinrec);
+				sllv_append(pbucket->precords, pinrec);
 				lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket,
 					FREE_ENTRY_KEY);
 			} else { // Previously seen key-field-value: append record to bucket
-				sllv_add(pbucket->precords, pinrec);
+				sllv_append(pbucket->precords, pinrec);
 			}
 			slls_free(pkey_field_values);
 		}
@@ -278,7 +278,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			sllv_free(pbucket->precords);
 		}
 		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
-		sllv_add(poutput, NULL);
+		sllv_append(poutput, NULL);
 		return poutput;
 	} else {
 		// End of input stream: sort bucket labels
@@ -308,7 +308,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		}
 		sllv_transfer(poutput, pstate->precords_missing_sort_keys);
 		free(pbucket_array);
-		sllv_add(poutput, NULL); // Signal end of output-record stream.
+		sllv_append(poutput, NULL); // Signal end of output-record stream.
 		return poutput;
 	}
 }

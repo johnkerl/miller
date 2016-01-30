@@ -267,10 +267,10 @@ static char* test_lrec_xtab_api() {
 	char* line_3 = mlr_strdup_or_die("y 4");
 	char* line_4 = mlr_strdup_or_die("z  5");
 	slls_t* pxtab_lines = slls_alloc();
-	slls_add_with_free(pxtab_lines, line_1);
-	slls_add_with_free(pxtab_lines, line_2);
-	slls_add_with_free(pxtab_lines, line_3);
-	slls_add_with_free(pxtab_lines, line_4);
+	slls_append_with_free(pxtab_lines, line_1);
+	slls_append_with_free(pxtab_lines, line_2);
+	slls_append_with_free(pxtab_lines, line_3);
+	slls_append_with_free(pxtab_lines, line_4);
 
 	lrec_t* prec = lrec_parse_stdio_xtab_single_ips(pxtab_lines, ' ', TRUE);
 	mu_assert_lf(prec->field_count == 4);

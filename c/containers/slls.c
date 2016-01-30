@@ -16,7 +16,7 @@ slls_t* slls_alloc() {
 slls_t* slls_copy(slls_t* pold) {
 	slls_t* pnew = slls_alloc();
 	for (sllse_t* pe = pold->phead; pe != NULL; pe = pe->pnext)
-		slls_add_with_free(pnew, mlr_strdup_or_die(pe->value));
+		slls_append_with_free(pnew, mlr_strdup_or_die(pe->value));
 	return pnew;
 }
 
@@ -41,19 +41,19 @@ void slls_free(slls_t* plist) {
 // ----------------------------------------------------------------
 slls_t* slls_single_with_free(char* value) {
 	slls_t* pslls = slls_alloc();
-	slls_add_with_free(pslls, value);
+	slls_append_with_free(pslls, value);
 	return pslls;
 }
 
 // ----------------------------------------------------------------
 slls_t* slls_single_no_free(char* value) {
 	slls_t* pslls = slls_alloc();
-	slls_add_no_free(pslls, value);
+	slls_append_no_free(pslls, value);
 	return pslls;
 }
 
 // ----------------------------------------------------------------
-void slls_add(slls_t* plist, char* value, char free_flag) {
+void slls_append(slls_t* plist, char* value, char free_flag) {
 	sllse_t* pnode = mlr_malloc_or_die(sizeof(sllse_t));
 	pnode->value = value;
 	pnode->free_flag = free_flag;
@@ -70,11 +70,11 @@ void slls_add(slls_t* plist, char* value, char free_flag) {
 	plist->length++;
 }
 
-void slls_add_with_free(slls_t* plist, char* value) {
-	slls_add(plist, value, FREE_ENTRY_VALUE);
+void slls_append_with_free(slls_t* plist, char* value) {
+	slls_append(plist, value, FREE_ENTRY_VALUE);
 }
-void slls_add_no_free(slls_t* plist, char* value) {
-	slls_add(plist, value, 0);
+void slls_append_no_free(slls_t* plist, char* value) {
+	slls_append(plist, value, 0);
 }
 
 // ----------------------------------------------------------------
@@ -105,11 +105,11 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
-			slls_add_no_free(plist, start);
+			slls_append_no_free(plist, start);
 			start = p;
 		}
 	}
-	slls_add_no_free(plist, start);
+	slls_append_no_free(plist, start);
 
 	return plist;
 }

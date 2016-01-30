@@ -63,7 +63,7 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 	for (sllve_t* pe = pasts->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* past = pe->pvvalue;
 		mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc(past, type_inferencing);
-		sllv_add(pstatements, pstatement);
+		sllv_append(pstatements, pstatement);
 	}
 	return pstatements;
 }
@@ -110,7 +110,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			exit(1);
 		}
 
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			MLR_DSL_CST_LHS_TYPE_SREC,
 			pleft->text,
 			NULL,
@@ -129,7 +129,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		}
 
 		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
-			sllv_add(poosvar_lhs_keylist_evaluators,
+			sllv_append(poosvar_lhs_keylist_evaluators,
 				// xxx need a version with no regex-captures.
 				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pleft->text), TYPE_INFER_STRING_ONLY));
 		} else {
@@ -155,12 +155,14 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				// ending at the oosvar name.
 
 				// xxx rename pfoo
+				// Bracket operators come in from the right. So the highest AST node is the rightmost map, and the
+				// lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
 				if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 					mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
-					sllv_add(poosvar_lhs_keylist_evaluators,
+					sllv_prepend(poosvar_lhs_keylist_evaluators,
 						lrec_evaluator_alloc_from_ast(pfoo, type_inferencing));
 				} else {
-					sllv_add(poosvar_lhs_keylist_evaluators,
+					sllv_prepend(poosvar_lhs_keylist_evaluators,
 						// xxx big comment here. this is confusing.
 						lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
 				}
@@ -168,13 +170,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 					break;
 				pnode = pnode->pchildren->phead->pvvalue;
 			}
-			// Bracket operators come in from the right. So the highest AST node is the rightmost
-			// map, and the lowest is the oosvar name.
-			sllv_reverse(poosvar_lhs_keylist_evaluators);
-			// xxx just make an sllv_add_at_head function
 		}
 
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			MLR_DSL_CST_LHS_TYPE_OOSVAR,
 			NULL,
 			poosvar_lhs_keylist_evaluators,
@@ -182,7 +180,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
@@ -190,7 +188,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 	} else if (past->type == MD_AST_NODE_TYPE_GATE) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
@@ -200,7 +198,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
 		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-			sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				MLR_DSL_CST_LHS_TYPE_OOSVAR,
 				pnode->text,
 				NULL,
@@ -211,7 +209,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// No arguments: the node-type alone suffices for the caller to be able to execute this.
 
 	} else { // Bare-boolean statement
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,

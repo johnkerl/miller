@@ -24,27 +24,27 @@ static sllv_t* make_records_empty() {
 // ----------------------------------------------------------------
 static sllv_t* make_records_113335() {
 	sllv_t* precords = sllv_alloc();
-	sllv_add(precords, lrec_literal_2("l","1", "b","10"));
-	sllv_add(precords, lrec_literal_2("l","1", "b","11"));
-	sllv_add(precords, lrec_literal_2("l","3", "b","12"));
-	sllv_add(precords, lrec_literal_2("l","3", "b","13"));
-	sllv_add(precords, lrec_literal_2("l","3", "b","14"));
-	sllv_add(precords, lrec_literal_2("l","5", "b","15"));
+	sllv_append(precords, lrec_literal_2("l","1", "b","10"));
+	sllv_append(precords, lrec_literal_2("l","1", "b","11"));
+	sllv_append(precords, lrec_literal_2("l","3", "b","12"));
+	sllv_append(precords, lrec_literal_2("l","3", "b","13"));
+	sllv_append(precords, lrec_literal_2("l","3", "b","14"));
+	sllv_append(precords, lrec_literal_2("l","5", "b","15"));
 	return precords;
 }
 
 // ----------------------------------------------------------------
 static sllv_t* make_records_het() {
 	sllv_t* precords = sllv_alloc();
-	sllv_add(precords, lrec_literal_2("x","100", "b","10"));
-	sllv_add(precords, lrec_literal_2("l","1",   "b","11"));
-	sllv_add(precords, lrec_literal_2("l","1",   "b","12"));
-	sllv_add(precords, lrec_literal_2("x","200", "b","13"));
-	sllv_add(precords, lrec_literal_2("l","3",   "b","14"));
-	sllv_add(precords, lrec_literal_2("l","3",   "b","15"));
-	sllv_add(precords, lrec_literal_2("x","300", "b","16"));
-	sllv_add(precords, lrec_literal_2("l","5",   "b","17"));
-	sllv_add(precords, lrec_literal_2("l","5",   "b","18"));
+	sllv_append(precords, lrec_literal_2("x","100", "b","10"));
+	sllv_append(precords, lrec_literal_2("l","1",   "b","11"));
+	sllv_append(precords, lrec_literal_2("l","1",   "b","12"));
+	sllv_append(precords, lrec_literal_2("x","200", "b","13"));
+	sllv_append(precords, lrec_literal_2("l","3",   "b","14"));
+	sllv_append(precords, lrec_literal_2("l","3",   "b","15"));
+	sllv_append(precords, lrec_literal_2("x","300", "b","16"));
+	sllv_append(precords, lrec_literal_2("l","5",   "b","17"));
+	sllv_append(precords, lrec_literal_2("l","5",   "b","18"));
 
 	return precords;
 }
@@ -56,7 +56,7 @@ static void set_up(
 	lrec_reader_t** ppreader)
 {
 	slls_t* pleft_field_names = slls_alloc();
-	slls_add_no_free(pleft_field_names, "l");
+	slls_append_no_free(pleft_field_names, "l");
 
 	lrec_reader_t* preader = lrec_reader_in_memory_alloc(precords);
 	printf("left records:\n");

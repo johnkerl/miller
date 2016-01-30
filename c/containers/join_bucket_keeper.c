@@ -274,7 +274,7 @@ static void join_bucket_keeper_initial_fill(join_bucket_keeper_t* pkeeper,
 		} else {
 			if (*pprecords_left_unpaired == NULL)
 				*pprecords_left_unpaired = sllv_alloc();
-			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+			sllv_append(*pprecords_left_unpaired, pkeeper->prec_peek);
 		}
 	}
 
@@ -299,7 +299,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** ppre
 
 	pkeeper->pbucket->pleft_field_values = slls_copy(pleft_field_values);
 	slls_free(pleft_field_values);
-	sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+	sllv_append(pkeeper->pbucket->precords, pkeeper->prec_peek);
 	pkeeper->pbucket->was_paired = FALSE;
 	pkeeper->prec_peek = NULL;
 	while (TRUE) {
@@ -320,12 +320,12 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** ppre
 			if (cmp != 0) {
 				break;
 			}
-			sllv_add(pkeeper->pbucket->precords, pkeeper->prec_peek);
+			sllv_append(pkeeper->pbucket->precords, pkeeper->prec_peek);
 
 		} else {
 			if (*pprecords_left_unpaired == NULL)
 				*pprecords_left_unpaired = sllv_alloc();
-			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+			sllv_append(*pprecords_left_unpaired, pkeeper->prec_peek);
 		}
 		pkeeper->prec_peek = NULL;
 	}
@@ -381,7 +381,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 			*pprecords_left_unpaired = sllv_alloc();
 
 		while (TRUE) {
-			sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+			sllv_append(*pprecords_left_unpaired, pkeeper->prec_peek);
 			pkeeper->prec_peek = NULL;
 
 			while (TRUE) {
@@ -396,7 +396,7 @@ static void join_bucket_keeper_advance_to(join_bucket_keeper_t* pkeeper, slls_t*
 				} else {
 					if (*pprecords_left_unpaired == NULL)
 						*pprecords_left_unpaired = sllv_alloc();
-					sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+					sllv_append(*pprecords_left_unpaired, pkeeper->prec_peek);
 				}
 			}
 
@@ -438,7 +438,7 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 	}
 	// 2. Peek-record, if any
 	if (pkeeper->prec_peek != NULL) {
-		sllv_add(*pprecords_left_unpaired, pkeeper->prec_peek);
+		sllv_append(*pprecords_left_unpaired, pkeeper->prec_peek);
 		pkeeper->prec_peek = NULL;
 	}
 	// 3. Remainder of left input stream
@@ -447,7 +447,7 @@ static void join_bucket_keeper_drain(join_bucket_keeper_t* pkeeper, slls_t* prig
 			pkeeper->pvhandle, pkeeper->pctx);
 		if (prec == NULL)
 			break;
-		sllv_add(*pprecords_left_unpaired, prec);
+		sllv_append(*pprecords_left_unpaired, prec);
 	}
 
 	pkeeper->pbucket->precords = NULL;

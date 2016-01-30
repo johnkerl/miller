@@ -204,14 +204,14 @@ slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_rep
 				while (*p == ifs)
 					p++;
 			}
-			slls_add_no_free(plist, start);
+			slls_append_no_free(plist, start);
 			start = p;
 		}
 	}
 	if (allow_repeat_ifs && *start == 0) {
 		; // OK
 	} else {
-		slls_add_no_free(plist, start);
+		slls_append_no_free(plist, start);
 	}
 
 	return plist;
@@ -236,14 +236,14 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 				while (streqn(p, ifs, ifslen))
 					p += ifslen;
 			}
-			slls_add_no_free(plist, start);
+			slls_append_no_free(plist, start);
 			start = p;
 		}
 	}
 	if (allow_repeat_ifs && *start == 0) {
 		; // OK
 	} else {
-		slls_add_no_free(plist, start);
+		slls_append_no_free(plist, start);
 	}
 
 	return plist;

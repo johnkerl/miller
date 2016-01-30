@@ -60,9 +60,9 @@ static char* test_slls() {
 static char* test_rslls() {
 
 	rslls_t* pa = rslls_alloc();
-	rslls_add_no_free(pa, "a");
-	rslls_add_no_free(pa, "b");
-	rslls_add_no_free(pa, "c");
+	rslls_append_no_free(pa, "a");
+	rslls_append_no_free(pa, "b");
+	rslls_append_no_free(pa, "c");
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 3);
@@ -82,7 +82,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_add_no_free(pa, "d");
+	rslls_append_no_free(pa, "d");
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 1);
@@ -92,7 +92,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_add_no_free(pa, "e");
+	rslls_append_no_free(pa, "e");
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 2);
@@ -102,7 +102,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_add_no_free(pa, "f");
+	rslls_append_no_free(pa, "f");
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 3);
@@ -112,7 +112,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "f")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_add_no_free(pa, "g");
+	rslls_append_no_free(pa, "g");
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 4);
@@ -132,9 +132,9 @@ static char* test_rslls() {
 static char* test_sllv() {
 
 	sllv_t* pa = sllv_alloc();
-	sllv_add(pa, "a");
-	sllv_add(pa, "b");
-	sllv_add(pa, "c");
+	sllv_append(pa, "a");
+	sllv_append(pa, "b");
+	sllv_append(pa, "c");
 	mu_assert_lf(pa->length == 3);
 
 	sllve_t* pe = pa->phead;
@@ -145,8 +145,8 @@ static char* test_sllv() {
 	mu_assert_lf(pe == NULL);
 
 	sllv_t* pb = sllv_alloc();
-	sllv_add(pb, "d");
-	sllv_add(pb, "e");
+	sllv_append(pb, "d");
+	sllv_append(pb, "e");
 	mu_assert_lf(pb->length == 2);
 
 	pe = pb->phead;
@@ -171,6 +171,19 @@ static char* test_sllv() {
 	mu_assert_lf(pe == NULL);
 
 	sllv_free(pb);
+
+	pa = sllv_alloc();
+	sllv_prepend(pa, "a");
+	sllv_prepend(pa, "b");
+	sllv_prepend(pa, "c");
+	mu_assert_lf(pa->length == 3);
+
+	pe = pa->phead;
+
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->pvvalue, "a")); pe = pe->pnext;
+	mu_assert_lf(pe == NULL);
 
 	return NULL;
 }
@@ -436,10 +449,10 @@ static char* test_lhms2v() {
 // ----------------------------------------------------------------
 static char* test_lhmslv() {
 
-	slls_t* aw = slls_alloc(); slls_add_no_free(aw, "a"); slls_add_no_free(aw, "w");
-	slls_t* ax = slls_alloc(); slls_add_no_free(ax, "a"); slls_add_no_free(ax, "x");
-	slls_t* ay = slls_alloc(); slls_add_no_free(ay, "a"); slls_add_no_free(ay, "y");
-	slls_t* bz = slls_alloc(); slls_add_no_free(bz, "b"); slls_add_no_free(bz, "z");
+	slls_t* aw = slls_alloc(); slls_append_no_free(aw, "a"); slls_append_no_free(aw, "w");
+	slls_t* ax = slls_alloc(); slls_append_no_free(ax, "a"); slls_append_no_free(ax, "x");
+	slls_t* ay = slls_alloc(); slls_append_no_free(ay, "a"); slls_append_no_free(ay, "y");
+	slls_t* bz = slls_alloc(); slls_append_no_free(bz, "b"); slls_append_no_free(bz, "z");
 
 	lhmslv_t *pmap = lhmslv_alloc();
 	mu_assert_lf(pmap->num_occupied == 0);

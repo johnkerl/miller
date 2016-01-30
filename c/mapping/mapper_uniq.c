@@ -179,9 +179,9 @@ static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* 
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		int count = pstate->pcounts_by_group->num_occupied;
 		lrec_put(poutrec, "count", mlr_alloc_string_from_int(count), FREE_ENTRY_VALUE);
-		sllv_add(poutrecs, poutrec);
+		sllv_append(poutrecs, poutrec);
 
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }
@@ -222,9 +222,9 @@ static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, 
 				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
 			}
 
-			sllv_add(poutrecs, poutrec);
+			sllv_append(poutrecs, poutrec);
 		}
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }

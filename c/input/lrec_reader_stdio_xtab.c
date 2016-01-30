@@ -83,7 +83,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
 			}
 		} else {
-			slls_add_with_free(pxtab_lines, line);
+			slls_append_with_free(pxtab_lines, line);
 		}
 	}
 }

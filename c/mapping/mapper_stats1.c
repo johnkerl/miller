@@ -341,9 +341,9 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 				mapper_stats1_emit(pstate, poutrec, value_field_name, stats1_acc_name, acc_field_to_acc_state);
 			}
 		}
-		sllv_add(poutrecs, poutrec);
+		sllv_append(poutrecs, poutrec);
 	}
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
 

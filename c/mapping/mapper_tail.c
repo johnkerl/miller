@@ -109,7 +109,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 				lrec_t* porec = sllv_pop(precord_list_for_group);
 				lrec_free(porec);
 			}
-			sllv_add(precord_list_for_group, pinrec);
+			sllv_append(precord_list_for_group, pinrec);
 		} else {
 			lrec_free(pinrec);
 		}
@@ -122,7 +122,7 @@ static sllv_t* mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			sllv_t* precord_list_for_group = pa->pvvalue;
 			sllv_transfer(poutrecs, precord_list_for_group);
 		}
-		sllv_add(poutrecs, NULL);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }

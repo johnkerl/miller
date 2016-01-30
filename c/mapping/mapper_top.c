@@ -235,7 +235,7 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 			for (lhmsve_t* pd = group_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 				top_keeper_t* ptop_keeper_for_group = pd->pvvalue;
 				for (int i = 0;  i < ptop_keeper_for_group->size; i++) {
-					sllv_add(poutrecs, ptop_keeper_for_group->top_precords[i]);
+					sllv_append(poutrecs, ptop_keeper_for_group->top_precords[i]);
 					ptop_keeper_for_group->top_precords[i] = NULL;
 				}
 			}
@@ -271,11 +271,11 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
 					}
 				}
-				sllv_add(poutrecs, poutrec);
+				sllv_append(poutrecs, poutrec);
 			}
 		}
 	}
 
-	sllv_add(poutrecs, NULL);
+	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
