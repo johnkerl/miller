@@ -158,7 +158,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	sllv_t* rv = NULL;
 
-	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, NULL, NULL, pctx, pstate->pevaluator->pvstate);
+	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, NULL, pctx, pstate->pevaluator->pvstate);
 	if (val.type == MT_NULL) {
 		lrec_free(pinrec);
 	} else {

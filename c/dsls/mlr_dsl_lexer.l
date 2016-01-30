@@ -196,28 +196,10 @@
 @[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the at-sign being here. If this is changed,
 	// that needs to be changed as well.
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OOSVAR_NAME);
-	return MD_TOKEN_OOSVAR_NAME;
-}
-@\{([^\}]|\\.)*\} {
-	// Note: the parser depends on the at-sign being here. If this is changed,
-	// that needs to be changed as well.
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OOSVAR_NAME);
-	return MD_TOKEN_BRACED_OOSVAR_NAME;
-}
-
-@@[a-zA-Z_0-9]+ {
-	// xxx the @@ moosvars are just temporary. Later I hope to merge this into the oosvars.
-	// oosvars work just fine; multi-level hashmaps (moosvars) don't *yet*.
-	// so having @ for the former and @@ for the latter allows me to separate the working stuff
-	// from the experimental.
-
-	// Note: the parser depends on the percent-sign being here. If this is changed,
-	// that needs to be changed as well.
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_MOOSVAR_NAME);
 	return MD_TOKEN_MOOSVAR_NAME;
 }
-@@\{([^\}]|\\.)*\} {
+@\{([^\}]|\\.)*\} {
 	// xxx moosvars are just temporary
 	// Note: the parser depends on the percent-sign being here. If this is changed,
 	// that needs to be changed as well.

@@ -1088,12 +1088,12 @@ run_mlr --opprint put -v 'end{@mean=@sum/@count; emit @mean}; begin {@count=0; @
 announce DSL EXPERIMENTAL MOOSVARS
 # These will be merged with oosvars once they're working.
 
-run_mlr put -v 'begin{ @@a = @@b[1] }; $c = @@d; @@e[$i][2+$j][3] = $4; end @@f[@@g[5][@@h]] = 6' /dev/null
+run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end @f[@g[5][@h]] = 6' /dev/null
 
-run_mlr put '@@y[$a]=$y; end dump' $indir/abixy
+run_mlr put '@y[$a]=$y; end dump' $indir/abixy
 
 run_mlr stats1 -a sum -f y -g a $indir/abixy
-run_mlr put '@@y_sum[$a] = $y; end dump' $indir/abixy
+run_mlr put '@y_sum[$a] = $y; end dump' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING

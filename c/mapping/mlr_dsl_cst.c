@@ -116,32 +116,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL,
 			lrec_evaluator_alloc_from_ast(pright, type_inferencing)));
 
-	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-		if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		}
-
-		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
-		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
-
-		if (pleft->type != MD_AST_NODE_TYPE_OOSVAR_NAME) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		} else if (pleft->pchildren != NULL) {
-			fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
-			exit(1);
-		}
-
-		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-			MLR_DSL_CST_LHS_TYPE_OOSVAR,
-			pleft->text,
-			NULL,
-			lrec_evaluator_alloc_from_ast(pright, type_inferencing)));
-
 	} else if (past->type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
 		sllv_t* pmoosvar_lhs_keylist_evaluators = sllv_alloc();
 
@@ -209,7 +183,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-			MLR_DSL_CST_LHS_TYPE_OOSVAR,
+			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
 			lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
@@ -217,7 +191,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	} else if (past->type == MD_AST_NODE_TYPE_GATE) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-			MLR_DSL_CST_LHS_TYPE_OOSVAR,
+			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
 			lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
@@ -226,19 +200,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
 		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-			if (pnode->type == MD_AST_NODE_TYPE_MOOSVAR_NAME) {
-				sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-					MLR_DSL_CST_LHS_TYPE_MOOSVAR,
-					pnode->text,
-					NULL,
-					lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
-			} else {
-				sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-					MLR_DSL_CST_LHS_TYPE_OOSVAR,
-					pnode->text,
-					NULL,
-					lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
-			}
+			sllv_add(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				MLR_DSL_CST_LHS_TYPE_MOOSVAR,
+				pnode->text,
+				NULL,
+				lrec_evaluator_alloc_from_ast(pnode, type_inferencing)));
 		}
 
 	} else if (past->type == MD_AST_NODE_TYPE_DUMP) {
