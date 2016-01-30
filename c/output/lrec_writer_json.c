@@ -2,8 +2,6 @@
 #include "lib/mlrutil.h"
 #include "output/lrec_writers.h"
 
-// xxx under construction
-
 typedef struct _lrec_writer_json_state_t {
 	unsigned long long counter;
 

@@ -166,8 +166,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
-// xxx double-check this comment after reg_test/run
-// Slot 0 is the entire input string.
+// Slot 0 is the entire matched input string.
 // Slots 1 and up are substring matches for parenthesized capture expressions (if any).
 // Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and match_count = 2.
 // Slot 2 has rm_so == -1.
