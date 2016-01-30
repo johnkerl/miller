@@ -172,7 +172,7 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
                       --xvright   Right-justifies values for XTAB format.
 
   --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
-                                  maps: {...}{...}, or [,{...},{...}].
+                                  maps: {...}{...} or [{...},{...}].
                       --jvstack   Put one key-value pair per line for JSON
                                   output.
                       --jlistwrap Wrap JSON output in outermost [ ].
