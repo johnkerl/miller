@@ -43,10 +43,11 @@ TOP OF LIST
 
   ! cut down on parameter-marshalling in lrec-evaluators
 
-  ! moosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
+  ! oosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
     k UT key-list too deep/shallow
     - rename 'lrec_evaluators' since they are now (much) more than that.
     - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
+    ! next up: work on emit to handle multi-level oosvars
 
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
@@ -61,13 +62,9 @@ TOP OF LIST
     - define/test behavior for null-valued filter/gate
 
   o initial sketch: there are two lrecs: with$ and with$; in-stream & out-of-stream.
-    - this is fine for experimenting.
-    ! QUESTION: how far does this get me?? I think I need two-level (oosrecs) in order to put
-      things like "stats1 -g foo" firmly into userspace.
     ? next: x.sum, y.count, $x["sum"], $y["count"]; maybe deeper levels? arbitrarily deep??
       ? implement $0 now?
       ? want $0 = @x kinds of record-from-record assignments?!?
-      ? are multi-level hashmaps enough? lists too?!?
     - experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
       > bootstrap?
       > count-distinct?
