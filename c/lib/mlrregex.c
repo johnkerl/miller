@@ -78,7 +78,7 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
 	int* pmatched, int *pall_captured)
 {
-	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
+	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match \0
 	regmatch_t matches[nmatchmax];
 	if (pall_captured)
 		*pall_captured = TRUE;
@@ -136,7 +136,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		char* p = replacement;
 		int len1 = psb->used_length;
 		while (*p) {
-			if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
+			if (p[0] == '\\' && isdigit(p[1])) {
 				int idx = p[1] - '0';
 				regmatch_t* pmatch = &matches[idx];
 				if (pmatch->rm_so == -1) {
@@ -166,9 +166,10 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
+// xxx double-check this comment after reg_test/run
 // Slot 0 is the entire input string.
 // Slots 1 and up are substring matches for parenthesized capture expressions (if any).
-// Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and n = 1.
+// Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and match_count = 2.
 // Slot 2 has rm_so == -1.
 // (If all allocated slots have matches then there is no slot with -1's.)
 
@@ -178,25 +179,31 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 // matches[1].rm_so =  1, matches[1].rm_eo =  4
 // matches[2].rm_so = -1, matches[2].rm_eo = -1
 //
-// pregex_captures_1_up->length = 2
-// pregex_captures_1_up->strings[0] = NULL
-// pregex_captures_1_up->strings[1] = "bcd"
+// pregex_captures->length = 2
+// pregex_captures->strings[0] = "abcde"
+// pregex_captures->strings[1] = "bcd"
 
-void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regmatch_t matches[], int nmatchmax) {
-
-	int n = nmatchmax - 1;
+// xxx cmt post-cond re no match ...
+void save_regex_captures(string_array_t** ppregex_captures, char* input, regmatch_t matches[], int nmatchmax) {
+	int match_count = nmatchmax; // In fully occupied case, there will be no slots with -1's
 	for (int i = 0; i < nmatchmax; i++) {
 		if (matches[i].rm_so == -1) {
-			n = i - 1;
+			match_count = i;
 			break;
 		}
 	}
-	string_array_realloc(pregex_captures_1_up, n+1); // n+1 since slot 0 of this 1-up array is unused
-	for (int i = 1; i <= n; i++) {
-		int len = matches[i].rm_eo - matches[i].rm_so;
-		pregex_captures_1_up->strings[i] = mlr_alloc_string_from_char_range(&input[matches[i].rm_so], len);
+	if (*ppregex_captures != NULL)
+		string_array_realloc(*ppregex_captures, match_count);
+	else
+		*ppregex_captures = string_array_alloc(match_count);
+	string_array_t* pregex_captures = *ppregex_captures;
+	if (match_count >= 1) {
+		for (int i = 0; i < match_count; i++) {
+			int len = matches[i].rm_eo - matches[i].rm_so;
+			pregex_captures->strings[i] = mlr_alloc_string_from_char_range(&input[matches[i].rm_so], len);
+		}
+		pregex_captures->strings_need_freeing = TRUE;
 	}
-	pregex_captures_1_up->strings_need_freeing = TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -204,31 +211,27 @@ void copy_regex_captures(string_array_t* pregex_captures_1_up, char* input, regm
 // Input "abcde"
 // Regex "a(.*)e"
 //
-// pregex_captures_1_up->length = 2
-// pregex_captures_1_up->strings[0] = NULL
-// pregex_captures_1_up->strings[1] = "bcd"
+// pregex_captures->length = 2
+// pregex_captures->strings[0] = "abcde"
+// pregex_captures->strings[1] = "bcd"
 //
 // "\1" should be replaced with "bcd".
 // "\2" through "\9" should be replaced with "".
 
-char* interpolate_regex_captures(char* input, string_array_t* pregex_captures_1_up, int* pwas_allocated) {
+// xxx cmt pre-cond pregexcapts non-null
+
+char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
 	*pwas_allocated = FALSE;
-	// See comments in mapper_put.c. The pregex_captures_1_up is for mapper_filter which doesn't do regex-captures (so
-	// this function should exit quickly). The length == 0 case is a trick as described in mapper_put.c which, for mlr
-	// put, allows us to quickly short-circuit out of the potentially time-consuming function in cases when we know
-	// there are no regex-captures to interpolate.
-	if (pregex_captures_1_up == NULL || pregex_captures_1_up->length == 0)
-		return input;
 
 	string_builder_t* psb = sb_alloc(32);
 
 	char* p = input;
 	while (*p) {
-		if (p[0] == '\\' && isdigit(p[1]) && p[1] != '0') {
+		if (p[0] == '\\' && isdigit(p[1])) {
 			*pwas_allocated = TRUE;
 			int idx = p[1] - '0';
-			if (idx < pregex_captures_1_up->length)
-				sb_append_string(psb, pregex_captures_1_up->strings[idx]);
+			if (idx < pregex_captures->length)
+				sb_append_string(psb, pregex_captures->strings[idx]);
 			p += 2;
 		} else {
 			sb_append_char(psb, *p);

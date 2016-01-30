@@ -2034,7 +2034,7 @@ int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type]
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
-mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures) {
+mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures) {
 	char* s1 = pval1->u.strv;
 	char* s2 = pval2->u.strv;
 
@@ -2047,8 +2047,8 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_ca
 	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatchmax];
 	if (regmatch_or_die(&regex, sstr, nmatchmax, matches)) {
-		if (pregex_captures != NULL)
-			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatchmax);
+		if (ppregex_captures != NULL)
+			save_regex_captures(ppregex_captures, pval1->u.strv, matches, nmatchmax);
 		regfree(&regex);
 		mv_free(pval1);
 		mv_free(pval2);
@@ -2061,35 +2061,39 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_ca
 	}
 }
 
-mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures) {
-	mv_t rv = matches_no_precomp_func(pval1, pval2, pregex_captures);
+mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures) {
+	mv_t rv = matches_no_precomp_func(pval1, pval2, ppregex_captures);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }
 
 // ----------------------------------------------------------------
 // arg2 is a string, compiled to regex only once at alloc time
-mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
+mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures) {
 	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatchmax];
 	if (regmatch_or_die(pregex, pval1->u.strv, nmatchmax, matches)) {
-		if (pregex_captures != NULL)
-			copy_regex_captures(pregex_captures, pval1->u.strv, matches, nmatchmax);
+		if (ppregex_captures != NULL)
+			save_regex_captures(ppregex_captures, pval1->u.strv, matches, nmatchmax);
 		mv_free(pval1);
 		return mv_from_true();
 	} else {
-		// See comments in mapper_put.c. Setting this 1-up array to length 1 (i.e. zero matches) signals to the
-		// lrec-evaluator's from-literal function that we are in a regex-match context and there are no matches to
+		// See comments in mapper_put.c. Setting this array to length 0 (i.e. zero matches) signals to the
+		// lrec-evaluator's from-literal function that we *are* in a regex-match context but there are *no* matches to
 		// be interpolated.
-		if (pregex_captures != NULL)
-			string_array_realloc(pregex_captures, 1);
+		if (ppregex_captures != NULL) {
+			if (*ppregex_captures != NULL)
+				string_array_realloc(*ppregex_captures, 0);
+			else
+				*ppregex_captures = string_array_alloc(0);
+		}
 		mv_free(pval1);
 		return mv_from_false();
 	}
 }
 
-mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures) {
-	mv_t rv = matches_precomp_func(pval1, pregex, psb, pregex_captures);
+mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures) {
+	mv_t rv = matches_precomp_func(pval1, pregex, psb, ppregex_captures);
 	rv.u.boolv = !rv.u.boolv;
 	return rv;
 }

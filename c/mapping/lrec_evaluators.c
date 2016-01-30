@@ -39,10 +39,10 @@ typedef struct _lrec_evaluator_b_b_state_t {
 } lrec_evaluator_b_b_state_t;
 
 mv_t lrec_evaluator_b_b_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_b_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_BOOL)
@@ -79,18 +79,18 @@ typedef struct _lrec_evaluator_b_bb_state_t {
 // This is different from most of the lrec-evaluator functions in that it does short-circuiting:
 // since is logical AND, the LHS is not evaluated if the RHS is false.
 mv_t lrec_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_BOOL)
 		return MV_ERROR;
 	if (val1.u.boolv == FALSE)
 		return val1;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_BOOL)
 		return MV_ERROR;
@@ -101,18 +101,18 @@ mv_t lrec_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 // This is different from most of the lrec-evaluator functions in that it does short-circuiting:
 // since is logical OR, the LHS is not evaluated if the RHS is true.
 mv_t lrec_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_BOOL)
 		return MV_ERROR;
 	if (val1.u.boolv == TRUE)
 		return val1;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_BOOL)
 		return MV_ERROR;
@@ -121,16 +121,16 @@ mv_t lrec_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t
 }
 
 mv_t lrec_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_BOOL)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_BOOL)
 		return MV_ERROR;
@@ -191,7 +191,7 @@ typedef struct _lrec_evaluator_x_z_state_t {
 } lrec_evaluator_x_z_state_t;
 
 mv_t lrec_evaluator_x_z_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_z_state_t* pstate = pvstate;
 
@@ -220,10 +220,10 @@ typedef struct _lrec_evaluator_f_f_state_t {
 } lrec_evaluator_f_f_state_t;
 
 mv_t lrec_evaluator_f_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_f_f_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
@@ -259,11 +259,11 @@ typedef struct _lrec_evaluator_x_n_state_t {
 } lrec_evaluator_x_n_state_t;
 
 mv_t lrec_evaluator_x_n_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_n_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
@@ -296,10 +296,10 @@ typedef struct _lrec_evaluator_i_i_state_t {
 } lrec_evaluator_i_i_state_t;
 
 mv_t lrec_evaluator_i_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_i_i_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
@@ -334,14 +334,14 @@ typedef struct _lrec_evaluator_f_ff_state_t {
 } lrec_evaluator_f_ff_state_t;
 
 mv_t lrec_evaluator_f_ff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_f_ff_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
@@ -379,11 +379,11 @@ typedef struct _lrec_evaluator_n_nn_state_t {
 } lrec_evaluator_n_nn_state_t;
 
 mv_t lrec_evaluator_n_nn_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_n_nn_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 
 	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
@@ -429,14 +429,14 @@ typedef struct _lrec_evaluator_n_nn_nullable_state_t {
 } lrec_evaluator_n_nn_nullable_state_t;
 
 mv_t lrec_evaluator_n_nn_nullable_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_n_nn_nullable_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_number_nullable(&val1);
 	ERROR_OUT(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_number_nullable(&val2);
 	ERROR_OUT(val2);
 
@@ -475,18 +475,18 @@ typedef struct _lrec_evaluator_f_fff_state_t {
 } lrec_evaluator_f_fff_state_t;
 
 mv_t lrec_evaluator_f_fff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_f_fff_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT(val2);
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	mv_set_float_nullable(&val3);
 	NULL_OR_ERROR_OUT(val3);
 
@@ -526,17 +526,17 @@ typedef struct _lrec_evaluator_i_ii_state_t {
 } lrec_evaluator_i_ii_state_t;
 
 mv_t lrec_evaluator_i_ii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_i_ii_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	mv_set_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	mv_set_int_nullable(&val2);
 	NULL_OUT(val2);
@@ -578,24 +578,24 @@ typedef struct _lrec_evaluator_i_iii_state_t {
 } lrec_evaluator_i_iii_state_t;
 
 mv_t lrec_evaluator_i_iii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_i_iii_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	mv_set_int_nullable(&val1);
 	NULL_OUT(val1);
 	if (val1.type != MT_INT)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	mv_set_int_nullable(&val2);
 	NULL_OUT(val2);
 	if (val2.type != MT_INT)
 		return MV_ERROR;
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
 	mv_set_int_nullable(&val3);
 	NULL_OUT(val3);
@@ -638,16 +638,16 @@ typedef struct _lrec_evaluator_ternop_state_t {
 } lrec_evaluator_ternop_state_t;
 
 mv_t lrec_evaluator_ternop_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_ternop_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	mv_set_boolean_strict(&val1);
 
 	return val1.u.boolv
-		? pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate)
-		: pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg3->pvstate);
+		? pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate)
+		: pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 }
 static void lrec_evaluator_ternop_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_ternop_state_t* pstate = pevaluator->pvstate;
@@ -680,10 +680,10 @@ typedef struct _lrec_evaluator_s_s_state_t {
 } lrec_evaluator_s_s_state_t;
 
 mv_t lrec_evaluator_s_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_s_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
@@ -717,10 +717,10 @@ typedef struct _lrec_evaluator_s_f_state_t {
 } lrec_evaluator_s_f_state_t;
 
 mv_t lrec_evaluator_s_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_s_f_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
@@ -754,10 +754,10 @@ typedef struct _lrec_evaluator_s_i_state_t {
 } lrec_evaluator_s_i_state_t;
 
 mv_t lrec_evaluator_s_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_s_i_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
@@ -791,10 +791,10 @@ typedef struct _lrec_evaluator_f_s_state_t {
 } lrec_evaluator_f_s_state_t;
 
 mv_t lrec_evaluator_f_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_f_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
@@ -828,10 +828,10 @@ typedef struct _lrec_evaluator_i_s_state_t {
 } lrec_evaluator_i_s_state_t;
 
 mv_t lrec_evaluator_i_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_i_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
@@ -865,10 +865,10 @@ typedef struct _lrec_evaluator_x_x_state_t {
 } lrec_evaluator_x_x_state_t;
 
 mv_t lrec_evaluator_x_x_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 
 	return pstate->pfunc(&val1);
@@ -901,11 +901,11 @@ typedef struct _lrec_evaluator_b_xx_state_t {
 } lrec_evaluator_b_xx_state_t;
 
 mv_t lrec_evaluator_b_xx_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_b_xx_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	return pstate->pfunc(&val1, &val2);
 }
 static void lrec_evaluator_b_xx_free(lrec_evaluator_t* pevaluator) {
@@ -940,14 +940,14 @@ typedef struct _lrec_evaluator_x_ns_state_t {
 } lrec_evaluator_x_ns_state_t;
 
 mv_t lrec_evaluator_x_ns_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_ns_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_STRING) {
 		mv_free(&val1);
@@ -988,15 +988,15 @@ typedef struct _lrec_evaluator_x_ss_state_t {
 } lrec_evaluator_x_ss_state_t;
 
 mv_t lrec_evaluator_x_ss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_ss_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_STRING)
 		return MV_ERROR;
@@ -1035,20 +1035,20 @@ typedef struct _lrec_evaluator_x_ssc_state_t {
 } lrec_evaluator_x_ssc_state_t;
 
 mv_t lrec_evaluator_x_ssc_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_ssc_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_STRING)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &val2, pregex_captures);
+	return pstate->pfunc(&val1, &val2, ppregex_captures);
 }
 static void lrec_evaluator_x_ssc_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_x_ssc_state_t* pstate = pevaluator->pvstate;
@@ -1083,15 +1083,15 @@ typedef struct _lrec_evaluator_x_sr_state_t {
 } lrec_evaluator_x_sr_state_t;
 
 mv_t lrec_evaluator_x_sr_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_sr_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, pregex_captures);
+	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, ppregex_captures);
 }
 static void lrec_evaluator_x_sr_free(lrec_evaluator_t* pevaluator) {
 	lrec_evaluator_x_sr_state_t* pstate = pevaluator->pvstate;
@@ -1129,12 +1129,12 @@ typedef struct _lrec_evaluator_s_xs_state_t {
 } lrec_evaluator_s_xs_state_t;
 
 mv_t lrec_evaluator_s_xs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_s_xs_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_STRING)
 		return MV_ERROR;
@@ -1174,22 +1174,22 @@ typedef struct _lrec_evaluator_s_sss_state_t {
 } lrec_evaluator_s_sss_state_t;
 
 mv_t lrec_evaluator_s_sss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_s_sss_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	NULL_OR_ERROR_OUT(val2);
 	if (val2.type != MT_STRING) {
 		mv_free(&val1);
 		return MV_ERROR;
 	}
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
 	if (val3.type != MT_STRING) {
 		mv_free(&val1);
@@ -1235,16 +1235,16 @@ typedef struct _lrec_evaluator_x_srs_state_t {
 } lrec_evaluator_x_srs_state_t;
 
 mv_t lrec_evaluator_x_srs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_x_srs_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	NULL_OR_ERROR_OUT(val1);
 	if (val1.type != MT_STRING)
 		return MV_ERROR;
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	NULL_OR_ERROR_OUT(val3);
 	if (val3.type != MT_STRING) {
 		mv_free(&val1);
@@ -1291,7 +1291,7 @@ typedef struct _lrec_evaluator_field_name_state_t {
 } lrec_evaluator_field_name_state_t;
 
 mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
@@ -1313,7 +1313,7 @@ mv_t lrec_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_ov
 }
 
 mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
@@ -1340,7 +1340,7 @@ mv_t lrec_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_o
 }
 
 mv_t lrec_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate) {
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate) {
 	lrec_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in lrec_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
@@ -1408,7 +1408,7 @@ typedef struct _lrec_evaluator_oosvar_name_state_t {
 } lrec_evaluator_oosvar_name_state_t;
 
 mv_t lrec_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_oosvar_name_state_t* pstate = pvstate;
 	int error = 0;
@@ -1471,7 +1471,7 @@ typedef struct _lrec_evaluator_oosvar_level_keys_state_t {
 } lrec_evaluator_oosvar_level_keys_state_t;
 
 mv_t lrec_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_oosvar_level_keys_state_t* pstate = pvstate;
 
@@ -1480,7 +1480,7 @@ mv_t lrec_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 	for (sllve_t* pe = pstate->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 		mv_t mvkey = pmvkey_evaluator->pprocess_func(prec, ptyped_overlay,
-			poosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
+			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
 		if (mv_is_null(&mvkey)) {
 			ok = FALSE;
 			break;
@@ -1552,24 +1552,27 @@ typedef struct _lrec_evaluator_strnum_literal_state_t {
 } lrec_evaluator_strnum_literal_state_t;
 
 mv_t lrec_evaluator_non_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_strnum_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
 
 mv_t lrec_evaluator_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_strnum_literal_state_t* pstate = pvstate;
-
 	char* input = pstate->literal.u.strv;
-	int was_allocated = FALSE;
-	char *output = interpolate_regex_captures(input, pregex_captures, &was_allocated);
-	if (was_allocated) {
-		return mv_from_string_with_free(output);
+
+	if (ppregex_captures == NULL || *ppregex_captures == NULL) {
+		return mv_from_string_no_free(input);
 	} else {
-		return mv_from_string_no_free(output);
+		int was_allocated = FALSE;
+		char* output = interpolate_regex_captures(input, *ppregex_captures, &was_allocated);
+		if (was_allocated)
+			return mv_from_string_with_free(output);
+		else
+			return mv_from_string_no_free(output);
 	}
 }
 static void lrec_evaluator_strnum_literal_free(lrec_evaluator_t* pevaluator) {
@@ -1638,7 +1641,7 @@ typedef struct _lrec_evaluator_boolean_literal_state_t {
 } lrec_evaluator_boolean_literal_state_t;
 
 mv_t lrec_evaluator_boolean_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	lrec_evaluator_boolean_literal_state_t* pstate = pvstate;
 	return pstate->literal;
@@ -1673,7 +1676,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_boolean_literal(char* string) {
 
 // ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_int(prec->field_count);
 }
@@ -1690,7 +1693,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NF() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_NR_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_int(pctx->nr);
 }
@@ -1707,7 +1710,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_NR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FNR_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_int(pctx->fnr);
 }
@@ -1724,7 +1727,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FNR() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENAME_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_string_no_free(pctx->filename);
 }
@@ -1742,7 +1745,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENAME() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_FILENUM_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_int(pctx->filenum);
 }
@@ -1759,7 +1762,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_FILENUM() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_PI_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_float(M_PI);
 }
@@ -1776,7 +1779,7 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_PI() {
 
 // ----------------------------------------------------------------
 mv_t lrec_evaluator_E_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t* pregex_captures, context_t* pctx, void* pvstate)
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
 	return mv_from_float(M_E);
 }
@@ -2348,23 +2351,23 @@ static char * test1() {
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 
-	mv_t val = pnr->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pnr->pvstate);
+	mv_t val = pnr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pnr->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 888);
 
-	val = pfnr->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pfnr->pvstate);
+	val = pfnr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfnr->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 999);
 
-	val = pfilename->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pfilename->pvstate);
+	val = pfilename->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfilename->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "filename-goes-here"));
 
-	val = pfilenum->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pfilenum->pvstate);
+	val = pfilenum->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfilenum->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 123);
@@ -2392,31 +2395,31 @@ static char * test2() {
 	lrec_put(prec, "s", "abc", NO_FREE);
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
-	mv_t val = ps->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, ps->pvstate);
+	mv_t val = ps->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ps->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abc"));
 
-	val = pdef->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pdef->pvstate);
+	val = pdef->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pdef->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "def"));
 
-	val = pdot->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pdot->pvstate);
+	val = pdot->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pdot->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
-	val = ptolower->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, ptolower->pvstate);
+	val = ptolower->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptolower->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
-	val = ptoupper->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, ptoupper->pvstate);
+	val = ptoupper->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptoupper->pvstate);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
@@ -2454,12 +2457,12 @@ static char * test3() {
 	string_array_t* pregex_captures = NULL;
 	lrec_put(prec, "x", "4.5", NO_FREE);
 
-	mv_t valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, p2->pvstate);
-	mv_t valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, p4->pvstate);
-	mv_t valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, px->pvstate);
-	mv_t valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, pregex_captures, pctx, px2->pvstate);
-	mv_t valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, pregex_captures, pctx, plogx->pvstate);
-	mv_t valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, p2logx->pvstate);
+	mv_t valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p2->pvstate);
+	mv_t valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p4->pvstate);
+	mv_t valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, px->pvstate);
+	mv_t valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, &pregex_captures, pctx, px2->pvstate);
+	mv_t valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, &pregex_captures, pctx, plogx->pvstate);
+	mv_t valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, p2logx->pvstate);
 
 	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
 	printf("newval 2        = %s\n", mv_describe_val(valp2));
@@ -2486,17 +2489,17 @@ static char * test3() {
 
 	mlr_dsl_ast_node_print(p2logxnode);
 	printf("newval AST      = %s\n",
-		mv_describe_val(pastr->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, pastr->pvstate)));
+		mv_describe_val(pastr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pastr->pvstate)));
 	printf("\n");
 
 	lrec_rename(prec, "x", "y", FALSE);
 
-	valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, p2->pvstate);
-	valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, p4->pvstate);
-	valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, pregex_captures, pctx, px->pvstate);
-	valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, pregex_captures, pctx, px2->pvstate);
-	valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, pregex_captures, pctx, plogx->pvstate);
-	valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, pregex_captures, pctx, p2logx->pvstate);
+	valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p2->pvstate);
+	valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p4->pvstate);
+	valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, px->pvstate);
+	valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, &pregex_captures, pctx, px2->pvstate);
+	valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, &pregex_captures, pctx, plogx->pvstate);
+	valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, p2logx->pvstate);
 
 	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
 	printf("newval 2        = %s\n", mv_describe_val(valp2));

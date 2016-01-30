@@ -6,14 +6,16 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+* relcut
 * \0
 * json output x 2
 * tabular-json input
-* multilevel emit
+* spec & impl for multilevel emit
 
 ----------------------------------------------------------------
 * implement \0 after all? the regex lib provides it, after all.
   - UT
+  - rid of '1-up' and 'unused' etc logic
   - mld:ref:regex update
 * boolean-short-circuit UT w/ regex-captures
 * mlr -f ish @ cover x 2

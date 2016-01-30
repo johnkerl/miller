@@ -27,7 +27,7 @@ static void      mapper_put_free(mapper_t* pmapper);
 static void evaluate_statements(
 	lrec_t*             pinrec,
 	lhmsv_t*            ptyped_overlay,
-	string_array_t*     pregex_captures,
+	string_array_t**    ppregex_captures,
 	mapper_put_state_t* pstate,
 	context_t*          pctx,
 	sllv_t*             pcst_statements,
@@ -179,7 +179,6 @@ static void mapper_put_free(mapper_t* pmapper) {
 // * It is allocated here with length 0.
 // * It is passed by reference to the lrec-evaluator tree. In particular, the matches and does-not-match functions
 //   (which implement the =~ and !=~ operators) resize it and populate it.
-// * For simplicity, it is a 1-up array: so \1, \2, \3 are at array indices 1, 2, 3.
 // * If the matches/does-not-match functions are entered, even with no matches, the regex-captures string-array
 //   will be resized to have length at least 1: length 1 for 0 matches, length 2 for 1 match, etc. since
 //   the array is indexed 1-up.
@@ -187,21 +186,23 @@ static void mapper_put_free(mapper_t* pmapper) {
 //   check to see if the regex-captures array has length 0 and thereby know that a time-consuming scan for \1, \2, \3,
 //   etc. does not need to be done.
 
+// xxx change comment
+
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 
-	string_array_t* pregex_captures = string_array_alloc(0);
+	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 	sllv_t* poutrecs = sllv_alloc();
 	int emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-		evaluate_statements(NULL, NULL, pregex_captures, pstate, pctx,
+		evaluate_statements(NULL, NULL, &pregex_captures, pstate, pctx,
 			pstate->pcst->pbegin_statements, &emit_rec, poutrecs);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		evaluate_statements(NULL, NULL, pregex_captures, pstate, pctx,
+		evaluate_statements(NULL, NULL, &pregex_captures, pstate, pctx,
 			pstate->pcst->pend_statements, &emit_rec, poutrecs);
 
 		string_array_free(pregex_captures);
@@ -211,7 +212,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
-	evaluate_statements(pinrec, ptyped_overlay, pregex_captures, pstate, pctx,
+	evaluate_statements(pinrec, ptyped_overlay, &pregex_captures, pstate, pctx,
 		pstate->pcst->pmain_statements, &emit_rec, poutrecs);
 
 	if (emit_rec) {
@@ -247,7 +248,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 static void evaluate_statements(
 	lrec_t*             pinrec,
 	lhmsv_t*            ptyped_overlay,
-	string_array_t*     pregex_captures,
+	string_array_t**    ppregex_captures,
 	mapper_put_state_t* pstate,
 	context_t*          pctx,
 	sllv_t*             pcst_statements,
@@ -270,7 +271,7 @@ static void evaluate_statements(
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, prhs_evaluator->pvstate);
+				ppregex_captures, pctx, prhs_evaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
@@ -290,14 +291,14 @@ static void evaluate_statements(
 
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 			mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->poosvars, pregex_captures, pctx, prhs_evaluator->pvstate);
+				pstate->poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
 			sllmv_t* pmvkeys = sllmv_alloc();
 			int ok = TRUE;
 			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 				lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-					pstate->poosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
+					pstate->poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
 				if (mv_is_null(&mvkey)) {
 					ok = FALSE;
 					break;
@@ -323,7 +324,7 @@ static void evaluate_statements(
 				// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
 				// that and just hashmap-get keyed by output_field_name here.
 				mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-					pregex_captures, pctx, prhs_evaluator->pvstate);
+					ppregex_captures, pctx, prhs_evaluator->pvstate);
 
 				if (val.type == MT_STRING) {
 					// Ownership transfer from (newly created) mlrval to (newly created) lrec.
@@ -344,7 +345,7 @@ static void evaluate_statements(
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, prhs_evaluator->pvstate);
+				ppregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
 				if (!val.u.boolv) {
@@ -358,7 +359,7 @@ static void evaluate_statements(
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, prhs_evaluator->pvstate);
+				ppregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
 			mv_set_boolean_strict(&val);
@@ -371,7 +372,7 @@ static void evaluate_statements(
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
-				pregex_captures, pctx, prhs_evaluator->pvstate);
+				ppregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
 		}

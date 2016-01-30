@@ -3952,9 +3952,9 @@ mlr filter '$a =~ "(..)_(....)'
 </pre>
 </div>
 
-<li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>.
-The substring <tt>\0</tt> is ignored for regex-capture substitution, and
-<tt>\15</tt> is treated as <tt>\1</tt> followed by an unrelated <tt>5</tt>.
+<li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>, while
+<tt>\0</tt> is the entire match string; <tt>\15</tt> is treated as <tt>\1</tt>
+followed by an unrelated <tt>5</tt>.
 </ul>
     </div>
   </td>

@@ -193,8 +193,8 @@ mv_t mv_scan_number_or_die(char* string);
 typedef mv_t mv_zary_func_t();
 typedef mv_t mv_unary_func_t(mv_t* pval1);
 typedef mv_t mv_binary_func_t(mv_t* pval1, mv_t* pval2);
-typedef mv_t mv_binary_arg3_capture_func_t(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures);
-typedef mv_t mv_binary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures);
+typedef mv_t mv_binary_arg3_capture_func_t(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures);
+typedef mv_t mv_binary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures);
 typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 
@@ -364,11 +364,11 @@ mv_t i_s_strlen_func(mv_t* pval1);
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call
-mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures);
-mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t* pregex_captures);
+mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures);
+mv_t does_not_match_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures);
 // arg2 is a string, compiled to regex only once at alloc time
-mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures);
-mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t* pregex_captures);
+mv_t matches_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures);
+mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures);
 
 // For filter/put DSL:
 mv_t eq_op_func(mv_t* pval1, mv_t* pval2);
