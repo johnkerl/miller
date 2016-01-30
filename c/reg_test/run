@@ -1444,14 +1444,14 @@ run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x
 # ================================================================
 announce JSON OUTPUT
 
-run_mlr --ojson                            cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvtemp                   cat $indir/json-output-options.dkvp
-run_mlr --ojson --jotemp                   cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvtemp --jotemp          cat $indir/json-output-options.dkvp
-run_mlr --ojson                   --jqtemp cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvtemp          --jqtemp cat $indir/json-output-options.dkvp
-run_mlr --ojson --jotemp          --jqtemp cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvtemp --jotemp --jqtemp cat $indir/json-output-options.dkvp
+run_mlr --ojson                                     cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack                           cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap             cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap             cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jquoteall cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jquoteall cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any

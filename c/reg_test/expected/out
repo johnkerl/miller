@@ -14164,7 +14164,7 @@ mlr --ojson cat ./reg_test/input/json-output-options.dkvp
 { "d": 4 }
 { "e": 5, "f": 6 }
 
-mlr --ojson --jvtemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack cat ./reg_test/input/json-output-options.dkvp
 {
   "a": 1,
   "b": "x",
@@ -14178,14 +14178,14 @@ mlr --ojson --jvtemp cat ./reg_test/input/json-output-options.dkvp
   "f": 6
 }
 
-mlr --ojson --jotemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap cat ./reg_test/input/json-output-options.dkvp
 [
 { "a": 1, "b": "x", "c": 3 }
 ,{ "d": 4 }
 ,{ "e": 5, "f": 6 }
 ]
 
-mlr --ojson --jvtemp --jotemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
 [
 {
   "a": 1,
@@ -14201,12 +14201,12 @@ mlr --ojson --jvtemp --jotemp cat ./reg_test/input/json-output-options.dkvp
 }
 ]
 
-mlr --ojson --jqtemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jquoteall cat ./reg_test/input/json-output-options.dkvp
 { "a": "1", "b": "x", "c": "3" }
 { "d": "4" }
 { "e": "5", "f": "6" }
 
-mlr --ojson --jvtemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jquoteall cat ./reg_test/input/json-output-options.dkvp
 {
   "a": "1",
   "b": "x",
@@ -14220,14 +14220,14 @@ mlr --ojson --jvtemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
   "f": "6"
 }
 
-mlr --ojson --jotemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkvp
 [
 { "a": "1", "b": "x", "c": "3" }
 ,{ "d": "4" }
 ,{ "e": "5", "f": "6" }
 ]
 
-mlr --ojson --jvtemp --jotemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkvp
 [
 {
   "a": "1",

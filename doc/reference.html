@@ -363,23 +363,37 @@ Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
 Data-format options, for input, output, or both:
-  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g "a=1,b=2"
-                                        (default)
-  --inidx   --onidx   --nidx            Implicitly-integer-indexed fields
-                                        (Unix-toolkit style)
-  --icsv    --ocsv    --csv             Comma-separated value (or tab-separated
-                                        with --fs tab, etc.)
-  --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no
-                                        output until all input is in)
-  --ixtab   --oxtab   --xtab --xvright  Pretty-printed vertical-tabular
-  The --right option right-justifies all fields for PPRINT output format.
-  The --xvright option right-justifies values for XTAB format.
+  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+                                  (this is Miller's default format).
+
+  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
+                                  (Unix-toolkit style).
+
+  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
+                                  with --fs tab, etc.)
+
+  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
+                                  output until all input is in).
+                      --right     Right-justifies all fields for PPRINT output.
+
+  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+                      --xvright   Right-justifies values for XTAB format.
+
+  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+                                  maps: {...}{...}, or [,{...},{...}].
+                      --jvstack   Put one key-value pair per line for JSON
+                                  output.
+                      --jlistwrap Wrap JSON output in outermost [ ].
+                      --jquoteall Quote map keys in JSON output, even if they're
+                                  numeric.
+  NOTE: --json and --ijson are currently under construction, but --ojson works.
+
   -p is a keystroke-saver for --nidx --fs space --repifs
 
   Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
   DKVP-formatted input and pretty-printed output.
 
-  Please use "mlr --csv --rs lf" for for native Un*x (linefeed-terminated) CSV files.
+  PLEASE USE "mlr --csv --rs lf" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.
 
 Compressed-data options:
   --prepipe {command} This allows Miller to handle compressed inputs. You can do
@@ -421,6 +435,8 @@ Separator options, for input, output, or both:
   * CSV is intended to handle RFC-4180-compliant data. In particular, this means
     it uses CRLF line-terminators by default. You can use "--csv --rs lf" for
     Linux-native CSV files.
+  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
+    changing these.
   * You can specify separators in any of the following ways, shown by example:
     - Type them out, quoting as necessary for shell escapes, e.g.
       "--fs '|' --ips :"
@@ -430,6 +446,7 @@ Separator options, for input, output, or both:
   * Default separators by format:
       File format  RS       FS       PS
       dkvp         \n       ,        =
+      json         (N/A)    (N/A)    (N/A)
       nidx         \n       space    (N/A)
       csv          \r\n     ,        (N/A)
       csvlite      \n       ,        (N/A)

@@ -299,23 +299,37 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 }
 
 static void main_usage_data_format_options(FILE* o, char* argv0) {
-	fprintf(o, "  --idkvp   --odkvp   --dkvp            Delimited key-value pairs, e.g \"a=1,b=2\"\n");
-	fprintf(o, "                                        (default)\n");
-	fprintf(o, "  --inidx   --onidx   --nidx            Implicitly-integer-indexed fields\n");
-	fprintf(o, "                                        (Unix-toolkit style)\n");
-	fprintf(o, "  --icsv    --ocsv    --csv             Comma-separated value (or tab-separated\n");
-	fprintf(o, "                                        with --fs tab, etc.)\n");
-	fprintf(o, "  --ipprint --opprint --pprint --right  Pretty-printed tabular (produces no\n");
-	fprintf(o, "                                        output until all input is in)\n");
-	fprintf(o, "  --ixtab   --oxtab   --xtab --xvright  Pretty-printed vertical-tabular\n");
-	fprintf(o, "  The --right option right-justifies all fields for PPRINT output format.\n");
-	fprintf(o, "  The --xvright option right-justifies values for XTAB format.\n");
+	fprintf(o, "  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g \"a=1,b=2\"\n");
+	fprintf(o, "                                  (this is Miller's default format).\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields\n");
+	fprintf(o, "                                  (Unix-toolkit style).\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated\n");
+	fprintf(o, "                                  with --fs tab, etc.)\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
+	fprintf(o, "                                  output until all input is in).\n");
+	fprintf(o, "                      --right     Right-justifies all fields for PPRINT output.\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.\n");
+	fprintf(o, "                      --xvright   Right-justifies values for XTAB format.\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level\n");
+	fprintf(o, "                                  maps: {...}{...}, or [,{...},{...}].\n");
+	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
+	fprintf(o, "                                  output.\n");
+	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
+	fprintf(o, "                      --jquoteall Quote map keys in JSON output, even if they're\n");
+	fprintf(o, "                                  numeric.\n");
+	fprintf(o, "  NOTE: --json and --ijson are currently under construction, but --ojson works.\n");
+	fprintf(o, "\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
 	fprintf(o, "\n");
-	fprintf(o, "  Please use \"%s --csv --rs lf\" for for native Un*x (linefeed-terminated) CSV files.\n",
+	fprintf(o, "  PLEASE USE \"%s --csv --rs lf\" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.\n",
 		argv0);
 }
 
@@ -361,6 +375,8 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data. In particular, this means\n");
 	fprintf(o, "    it uses CRLF line-terminators by default. You can use \"--csv --rs lf\" for\n");
 	fprintf(o, "    Linux-native CSV files.\n");
+	fprintf(o, "  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow\n");
+	fprintf(o, "    changing these.\n");
 	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
 	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g.\n");
 	fprintf(o, "      \"--fs '|' --ips :\"\n");
@@ -711,11 +727,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--xvright")) {
 			popts->right_justify_xtab_value = TRUE;
 
-		} else if (streq(argv[argi], "--jvtemp")) {
+		} else if (streq(argv[argi], "--jvstack")) {
 			popts->stack_json_output_vertically = TRUE;
-		} else if (streq(argv[argi], "--jotemp")) {
+		} else if (streq(argv[argi], "--jlistwrap")) {
 			popts->wrap_json_output_in_outer_list = TRUE;
-		} else if (streq(argv[argi], "--jqtemp")) {
+		} else if (streq(argv[argi], "--jquoteall")) {
 			popts->quote_json_values_always = TRUE;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
