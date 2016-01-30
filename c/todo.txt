@@ -6,6 +6,11 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+* \0
+* json output x 2
+* tabular-json input
+* multilevel emit
+
 ----------------------------------------------------------------
 * implement \0 after all? the regex lib provides it, after all.
   - UT
@@ -91,7 +96,7 @@ TOP OF LIST
     - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while implementing the present
     - replace "null" with "absent" and "uninit"?
     - implement awk-style pattern { action } -- ? are if-statements enough?
-    - move assignments into the CST, and all the changes that ensue (e.g. $x=@a=7).
+    ? move assignments into the CST, and all the changes that ensue (e.g. $x=@a=7).
 
   o perf notes:
 
