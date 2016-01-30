@@ -50,14 +50,24 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 				fputs(",", output_stream);
 		}
 
-		fputs("{ ", output_stream);
+		if (pstate->stack_vertically) {
+			fputs("{\n  ", output_stream);
+		} else {
+			fputs("{ ", output_stream);
+		}
 		int nf = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			if (nf > 0)
-				fputs(", ", output_stream);
+			if (nf > 0) {
+				if (pstate->stack_vertically)
+					fputs(",\n  ", output_stream);
+				else
+					fputs(", ", output_stream);
+			}
+
 			fputs("\"", output_stream);
 			fputs(pe->key, output_stream);
 			fputs("\"", output_stream);
+
 			if (pstate->quote_json_values_always) {
 				fputs(": \"", output_stream);
 				fputs(pe->value, output_stream);
@@ -75,7 +85,11 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 			}
 			nf++;
 		}
-		fputs(" }\n", output_stream);
+		if (pstate->stack_vertically) {
+			fputs("\n}\n", output_stream);
+		} else {
+			fputs(" }\n", output_stream);
+		}
 
 		pstate->counter++;
 		lrec_free(prec); // end of baton-pass
