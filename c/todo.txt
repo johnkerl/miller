@@ -43,11 +43,12 @@ TOP OF LIST
 
   ! cut down on parameter-marshalling in lrec-evaluators
 
-  ! oosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
+  k oosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
     k UT key-list too deep/shallow
-    - rename 'lrec_evaluators' since they are now (much) more than that.
-    - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
-    ! next up: work on emit to handle multi-level oosvars
+  - rename 'lrec_evaluators' since they are now (much) more than that.
+  - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
+
+  ! next up: work on emit to handle multi-level oosvars
 
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
