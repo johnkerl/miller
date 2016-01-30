@@ -6,17 +6,14 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+* xxxes before relcut
 * relcut
-* \0
 * json output x 2
 * tabular-json input
 * spec & impl for multilevel emit
 
 ----------------------------------------------------------------
-* implement \0 after all? the regex lib provides it, after all.
-  - UT
-  - rid of '1-up' and 'unused' etc logic
-  - mld:ref:regex update
+* \0 example into mld:ref:regex
 * boolean-short-circuit UT w/ regex-captures
 * mlr -f ish @ cover x 2
 ! update filter/gate @ mld:ref:put
@@ -48,7 +45,8 @@ TOP OF LIST
 
   o .y hospitality annotations :)
 
-  ! cut down on parameter-marshalling in lrec-evaluators
+  ? cut down on parameter-marshalling in lrec-evaluators?
+    at the *immediate* expense of opacity through 2K lines of code.
 
   k oosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
     k UT key-list too deep/shallow
