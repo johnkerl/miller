@@ -28,6 +28,10 @@ typedef struct _cli_opts_t {
 
 	int   right_justify_xtab_value;
 
+	int   stack_json_output_vertically;
+	int   wrap_json_output_in_outer_list;
+	int   quote_json_values_always;
+
 	char* ofmt;
 	int   oquoting;
 

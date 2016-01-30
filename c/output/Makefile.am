@@ -4,6 +4,7 @@ liboutput_la_SOURCES=	\
 			lrec_writer_csv.c \
 			lrec_writer_csvlite.c \
 			lrec_writer_dkvp.c \
+			lrec_writer_json.c \
 			lrec_writer_nidx.c \
 			lrec_writer_pprint.c \
 			lrec_writer_xtab.c \

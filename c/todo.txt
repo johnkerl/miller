@@ -39,6 +39,8 @@ TOP OF LIST
 * JSON I/O:
   - input: https://github.com/udp/json-parser ? ; http://www.json.org/ C section
   - output: mlr-native json output is trivial & just do it.
+  - cover x 2
+  - define 'tabular JSON' by example @ mld
 
 ----------------------------------------------------------------
 !! oosvars/begin/end:
