@@ -69,6 +69,7 @@ EXTRA_DIST=	\
 		join-het.dkvp \
 		joina.dkvp \
 		joinb.dkvp \
+		json-output-options.dkvp \
 		logi.dkvp \
 		merge-fields-abxy.dkvp \
 		merge-fields-in-out.csv \

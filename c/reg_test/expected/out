@@ -14155,3 +14155,91 @@ x 0.676537984365847889
 a zee
 i 4
 
+
+================================================================
+JSON OUTPUT
+
+mlr --ojson cat ./reg_test/input/json-output-options.dkvp
+{ "a": 1, "b": "x", "c": 3 }
+{ "d": 4 }
+{ "e": 5, "f": 6 }
+
+mlr --ojson --jvtemp cat ./reg_test/input/json-output-options.dkvp
+{
+  "a": 1,
+  "b": "x",
+  "c": 3
+}
+{
+  "d": 4
+}
+{
+  "e": 5,
+  "f": 6
+}
+
+mlr --ojson --jotemp cat ./reg_test/input/json-output-options.dkvp
+[
+{ "a": 1, "b": "x", "c": 3 }
+,{ "d": 4 }
+,{ "e": 5, "f": 6 }
+]
+
+mlr --ojson --jvtemp --jotemp cat ./reg_test/input/json-output-options.dkvp
+[
+{
+  "a": 1,
+  "b": "x",
+  "c": 3
+}
+,{
+  "d": 4
+}
+,{
+  "e": 5,
+  "f": 6
+}
+]
+
+mlr --ojson --jqtemp cat ./reg_test/input/json-output-options.dkvp
+{ "a": "1", "b": "x", "c": "3" }
+{ "d": "4" }
+{ "e": "5", "f": "6" }
+
+mlr --ojson --jvtemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+{
+  "a": "1",
+  "b": "x",
+  "c": "3"
+}
+{
+  "d": "4"
+}
+{
+  "e": "5",
+  "f": "6"
+}
+
+mlr --ojson --jotemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+[
+{ "a": "1", "b": "x", "c": "3" }
+,{ "d": "4" }
+,{ "e": "5", "f": "6" }
+]
+
+mlr --ojson --jvtemp --jotemp --jqtemp cat ./reg_test/input/json-output-options.dkvp
+[
+{
+  "a": "1",
+  "b": "x",
+  "c": "3"
+}
+,{
+  "d": "4"
+}
+,{
+  "e": "5",
+  "f": "6"
+}
+]
+

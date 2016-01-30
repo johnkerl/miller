@@ -1442,6 +1442,18 @@ run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f
 run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
 
 # ================================================================
+announce JSON OUTPUT
+
+run_mlr --ojson                            cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvtemp                   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jotemp                   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvtemp --jotemp          cat $indir/json-output-options.dkvp
+run_mlr --ojson                   --jqtemp cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvtemp          --jqtemp cat $indir/json-output-options.dkvp
+run_mlr --ojson --jotemp          --jqtemp cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvtemp --jotemp --jqtemp cat $indir/json-output-options.dkvp
+
+# ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
 # may vary. Nonetheless for debugging it's crucial that we echo out each

@@ -11,6 +11,7 @@ TOP OF LIST
 * json output x 2
 * tabular-json input
 * spec & impl for multilevel emit
+* bare-boolean with block
 
 ----------------------------------------------------------------
 * \0 example into mld:ref:regex
@@ -39,6 +40,7 @@ TOP OF LIST
 * JSON I/O:
   - input: https://github.com/udp/json-parser ? ; http://www.json.org/ C section
   - output: mlr-native json output is trivial & just do it.
+    ! turn the iffing into precomputed separtor strings
   - cover x 2
   - define 'tabular JSON' by example @ mld
 
