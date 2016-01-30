@@ -11909,22 +11909,22 @@ mean
 ================================================================
 DSL EXPERIMENTAL MOOSVARS
 
-mlr put -v begin{ @@a = @@b[1] }; $c = @@d; @@e[$i][2+$j][3] = $4; end @@f[@@g[5][@@h]] = 6 /dev/null
+mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end @f[@g[5][@h]] = 6 /dev/null
 AST BEGIN STATEMENTS (1):
-= (moosvar_assignment):
-    a (moosvar_name).
-    [] (moosvar_level_key):
-        b (moosvar_name).
+= (oosvar_assignment):
+    a (oosvar_name).
+    [] (oosvar_level_key):
+        b (oosvar_name).
         1 (strnum_literal).
 AST MAIN STATEMENTS (2):
 = (srec_assignment):
     c (field_name).
-    d (moosvar_name).
-= (moosvar_assignment):
-    [] (moosvar_level_key):
-        [] (moosvar_level_key):
-            [] (moosvar_level_key):
-                e (moosvar_name).
+    d (oosvar_name).
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        [] (oosvar_level_key):
+            [] (oosvar_level_key):
+                e (oosvar_name).
                 i (field_name).
             + (operator):
                 2 (strnum_literal).
@@ -11932,17 +11932,17 @@ AST MAIN STATEMENTS (2):
         3 (strnum_literal).
     4 (field_name).
 AST END STATEMENTS (1):
-= (moosvar_assignment):
-    [] (moosvar_level_key):
-        f (moosvar_name).
-        [] (moosvar_level_key):
-            [] (moosvar_level_key):
-                g (moosvar_name).
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        f (oosvar_name).
+        [] (oosvar_level_key):
+            [] (oosvar_level_key):
+                g (oosvar_name).
                 5 (strnum_literal).
-            h (moosvar_name).
+            h (oosvar_name).
     6 (strnum_literal).
 
-mlr put @@y[$a]=$y; end dump ./reg_test/input/abixy
+mlr put @y[$a]=$y; end dump ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -11970,7 +11970,7 @@ a=wye,y_sum=1.201943
 a=zee,y_sum=1.469403
 a=hat,y_sum=0.749551
 
-mlr put @@y_sum[$a] = $y; end dump ./reg_test/input/abixy
+mlr put @y_sum[$a] = $y; end dump ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776

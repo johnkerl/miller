@@ -40,13 +40,13 @@
 
 #define MLR_DSL_CST_LHS_TYPE_NONE    0xdc33
 #define MLR_DSL_CST_LHS_TYPE_SREC    0xdc55
-#define MLR_DSL_CST_LHS_TYPE_MOOSVAR 0xdcaa
+#define MLR_DSL_CST_LHS_TYPE_OOSVAR 0xdcaa
 
 typedef struct _mlr_dsl_cst_statement_item_t {
 	// LHS:
 	int lhs_type;
 	char* output_field_name;
-	sllv_t* pmoosvar_lhs_keylist_evaluators;
+	sllv_t* poosvar_lhs_keylist_evaluators;
 
 	// RHS:
 	lrec_evaluator_t* prhs_evaluator;

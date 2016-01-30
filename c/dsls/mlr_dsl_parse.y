@@ -46,7 +46,7 @@ md_statements ::= md_statement MD_TOKEN_SEMICOLON md_statements.
 md_statement ::= .
 
 md_statement ::= md_main_srec_assignment.
-md_statement ::= md_main_moosvar_assignment.
+md_statement ::= md_main_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_gate.
@@ -56,7 +56,7 @@ md_statement ::= md_main_dump.
 // E.g. 'begin { emit @count }'
 md_statement ::= md_begin_block.
 // E.g. 'begin emit @count'
-md_statement ::= md_begin_solo_moosvar_assignment.
+md_statement ::= md_begin_solo_oosvar_assignment.
 md_statement ::= md_begin_solo_bare_boolean.
 md_statement ::= md_begin_solo_filter.
 md_statement ::= md_begin_solo_gate.
@@ -66,7 +66,7 @@ md_statement ::= md_begin_solo_dump.
 // E.g. 'end { emit @count }'
 md_statement ::= md_end_block.
 // E.g. 'end emit @count'
-md_statement ::= md_end_solo_moosvar_assignment.
+md_statement ::= md_end_solo_oosvar_assignment.
 md_statement ::= md_end_solo_bare_boolean.
 md_statement ::= md_end_solo_filter.
 md_statement ::= md_end_solo_gate.
@@ -83,7 +83,7 @@ md_begin_block_statements ::= md_begin_block_statement MD_TOKEN_SEMICOLON md_beg
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_begin_block_statement ::= .
-md_begin_block_statement ::= md_begin_block_moosvar_assignment.
+md_begin_block_statement ::= md_begin_block_oosvar_assignment.
 md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
 md_begin_block_statement ::= md_begin_block_gate.
@@ -97,7 +97,7 @@ md_end_block_statements ::= md_end_block_statement MD_TOKEN_SEMICOLON md_end_blo
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_end_block_statement ::= .
-md_end_block_statement ::= md_end_block_moosvar_assignment.
+md_end_block_statement ::= md_end_block_oosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
 md_end_block_statement ::= md_end_block_gate.
@@ -112,7 +112,7 @@ md_main_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
 	sllv_add(past->pmain_statements, A);
 }
-md_main_moosvar_assignment(A) ::= md_moosvar_assignment(B). {
+md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pmain_statements, A);
 }
@@ -140,7 +140,7 @@ md_main_dump(A) ::= md_dump(B). {
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
 
-md_begin_solo_moosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_moosvar_assignment(B). {
+md_begin_solo_oosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
@@ -165,7 +165,7 @@ md_begin_solo_dump(A) ::= MD_TOKEN_BEGIN md_dump(B). {
 	sllv_add(past->pbegin_statements, A);
 }
 
-md_begin_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
+md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pbegin_statements, A);
 }
@@ -194,7 +194,7 @@ md_begin_block_dump(A) ::= md_dump(B). {
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
 
-md_end_solo_moosvar_assignment(A)  ::= MD_TOKEN_END md_moosvar_assignment(B). {
+md_end_solo_oosvar_assignment(A)  ::= MD_TOKEN_END md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
@@ -219,7 +219,7 @@ md_end_solo_dump(A) ::= MD_TOKEN_END md_dump(B). {
 	sllv_add(past->pend_statements, A);
 }
 
-md_end_block_moosvar_assignment(A)  ::= md_moosvar_assignment(B). {
+md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_add(past->pend_statements, A);
 }
@@ -245,11 +245,11 @@ md_end_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
-md_moosvar_assignment(A)  ::= md_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
+md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
-md_moosvar_assignment(A)  ::= md_keyed_moosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT, B, C);
+md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
 
 // ----------------------------------------------------------------
@@ -268,15 +268,15 @@ md_emit_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMIT);
 }
 
-md_emit_args(A) ::= md_moosvar_name(B). {
+md_emit_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
-md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_moosvar_name(C). {
+md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 // ----------------------------------------------------------------
-// Dev/debug hook for moosvars
+// Dev/debug hook for oosvars
 md_dump(A) ::= MD_TOKEN_DUMP(O). {
 	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_DUMP);
 }
@@ -464,26 +464,26 @@ md_field_name(A) ::= MD_TOKEN_BRACED_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 
-md_atom_or_fcn(A) ::= md_keyed_moosvar_name(B). {
+md_atom_or_fcn(A) ::= md_keyed_oosvar_name(B). {
 	A = B;
 }
-md_atom_or_fcn(A) ::= md_moosvar_name(B). {
+md_atom_or_fcn(A) ::= md_oosvar_name(B). {
 	A = B;
 }
 
-md_keyed_moosvar_name(A) ::= md_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY, B, C);
+md_keyed_oosvar_name(A) ::= md_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
 }
-md_keyed_moosvar_name(A) ::= md_keyed_moosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_MOOSVAR_LEVEL_KEY, B, C);
+md_keyed_oosvar_name(A) ::= md_keyed_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
 }
 
-md_moosvar_name(A) ::= MD_TOKEN_MOOSVAR_NAME(B). {
+md_oosvar_name(A) ::= MD_TOKEN_OOSVAR_NAME(B). {
 	char* at_name = B->text;
 	char* no_at_name = &at_name[1];
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
 }
-md_moosvar_name(A) ::= MD_TOKEN_BRACED_MOOSVAR_NAME(B). {
+md_oosvar_name(A) ::= MD_TOKEN_BRACED_OOSVAR_NAME(B). {
 	// Replace "@%{field.name}" with just "field.name"
 	char* at_name = B->text;
 	char* no_at_name = &at_name[2];

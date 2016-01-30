@@ -15,7 +15,7 @@ typedef struct _mapper_put_state_t {
 	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
-	mlhmmv_t*      pmoosvars;
+	mlhmmv_t*      poosvars;
 } mapper_put_state_t;
 
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
@@ -127,7 +127,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 	pstate->past      = past;
 	pstate->pcst      = mlr_dsl_cst_alloc(past, type_inferencing);
 	pstate->at_begin  = TRUE;
-	pstate->pmoosvars = mlhmmv_alloc();
+	pstate->poosvars = mlhmmv_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -140,7 +140,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
-	mlhmmv_free(pstate->pmoosvars);
+	mlhmmv_free(pstate->poosvars);
 	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
@@ -271,7 +271,7 @@ static void evaluate_statements(
 			char* output_field_name = pitem->output_field_name;
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->pmoosvars,
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, prhs_evaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
@@ -287,19 +287,19 @@ static void evaluate_statements(
 			lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 
-		} else if (node_type == MD_AST_NODE_TYPE_MOOSVAR_ASSIGNMENT) {
+		} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 			mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
-				pstate->pmoosvars, pregex_captures, pctx, prhs_evaluator->pvstate);
+				pstate->poosvars, pregex_captures, pctx, prhs_evaluator->pvstate);
 
 			sllmv_t* pmvkeys = sllmv_alloc();
 			int ok = TRUE;
-			for (sllve_t* pe = pitem->pmoosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 				lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-					pstate->pmoosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
+					pstate->poosvars, pregex_captures, pctx, pmvkey_evaluator->pvstate);
 				if (mv_is_null(&mvkey)) {
 					ok = FALSE;
 					break;
@@ -311,7 +311,7 @@ static void evaluate_statements(
 
 			// xxx move this null-check into mlhmmv.c?
 			if (ok)
-				mlhmmv_put(pstate->pmoosvars, pmvkeys, &rhs_value);
+				mlhmmv_put(pstate->poosvars, pmvkeys, &rhs_value);
 
 			sllmv_free(pmvkeys);
 
@@ -324,7 +324,7 @@ static void evaluate_statements(
 
 				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
 				// bypass that and just hashmap-get keyed by output_field_name here.
-				mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->pmoosvars,
+				mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 					pregex_captures, pctx, prhs_evaluator->pvstate);
 
 				if (val.type == MT_STRING) {
@@ -339,13 +339,13 @@ static void evaluate_statements(
 			sllv_add(poutrecs, prec_to_emit);
 
 		} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
-			mlhmmv_print(pstate->pmoosvars);
+			mlhmmv_print(pstate->poosvars);
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->pmoosvars,
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL) {
 				mv_set_boolean_strict(&val);
@@ -359,7 +359,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->pmoosvars,
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type == MT_NULL)
 				break;
@@ -372,7 +372,7 @@ static void evaluate_statements(
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->pmoosvars,
+			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				pregex_captures, pctx, prhs_evaluator->pvstate);
 			if (val.type != MT_NULL)
 				mv_set_boolean_strict(&val);
