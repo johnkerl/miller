@@ -9,7 +9,6 @@
 #define TYPE_INFER_STRING_ONLY      0xce0a
 
 lrec_evaluator_t* lrec_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing);
-lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name); // xxx still need this external?
 lrec_evaluator_t* lrec_evaluator_alloc_from_strnum_literal(char* string, int type_inferencing);
 
 void lrec_evaluator_list_functions(FILE* output_stream, char* leader);

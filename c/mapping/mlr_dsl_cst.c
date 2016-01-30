@@ -154,13 +154,12 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				// Here past is the =; pright is the 5; pleft is the string of bracket references
 				// ending at the oosvar name.
 
-				// xxx rename pfoo
 				// Bracket operators come in from the right. So the highest AST node is the rightmost map, and the
 				// lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
 				if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-					mlr_dsl_ast_node_t* pfoo = pnode->pchildren->phead->pnext->pvvalue;
+					mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						lrec_evaluator_alloc_from_ast(pfoo, type_inferencing));
+						lrec_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 				} else {
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
 						// xxx big comment here. this is confusing.

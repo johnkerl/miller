@@ -255,8 +255,6 @@ static void evaluate_statements(
 	sllv_t*             poutrecs
 ) {
 
-	// xxx move some/all of this into mlr_dsl_cst.c -- ?
-
 	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
 	*pemit_rec = TRUE;
@@ -322,8 +320,8 @@ static void evaluate_statements(
 				char* output_field_name = pitem->output_field_name;
 				lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-				// xxx this is overkill ... the grammar allows only for oosvar names as args to emit.  so we could
-				// bypass that and just hashmap-get keyed by output_field_name here.
+				// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
+				// that and just hashmap-get keyed by output_field_name here.
 				mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 					pregex_captures, pctx, prhs_evaluator->pvstate);
 
