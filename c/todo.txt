@@ -8,10 +8,9 @@ TOP OF LIST
 
 * xxxes before relcut
 * relcut
-* json output x 2
 * tabular-json input
 * spec & impl for multilevel emit
-* bare-boolean with block
+* bare-boolean with block. still experimental. if-else down the road perhaps ...
 
 ----------------------------------------------------------------
 * \0 example into mld:ref:regex
@@ -121,9 +120,6 @@ TOP OF LIST
 ----------------------------------------------------------------
 
 * cat/cut langcomps (w/ gh links) -> perf page
-
-* json-flat-to-dkvp filter (python ...)
-  - & to the FAQ
 
 * interpolated percentiles
 

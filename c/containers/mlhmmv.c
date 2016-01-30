@@ -338,17 +338,16 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 }
 
 // ----------------------------------------------------------------
-// Example output:
-//
+// This is simply JSON. Example output:
 // {
-//   0: {
-//     "fghij": {
-//       0: 17
+//   "0":  {
+//     "fghij":  {
+//       "0":  17
 //     }
-//   }
-//   3: 4
-//   "abcde": {
-//     -6: 7
+//   },
+//   "3":  4,
+//   "abcde":  {
+//     "-6":  7
 //   }
 // }
 
@@ -369,7 +368,6 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_c
 		free(level_key_string);
 
 		if (pentry->level_value.is_terminal) {
-			// xxx make json mval alloc-formatters
 			char* level_value_string = mv_alloc_format_val(&pentry->level_value.u.mlrval);
 			if (pentry->level_value.u.mlrval.type == MT_STRING)
 				printf(" \"%s\"", level_value_string);
