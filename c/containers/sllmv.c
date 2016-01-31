@@ -18,7 +18,7 @@ void sllmv_free(sllmv_t* plist) {
 	while (pnode != NULL) {
 		sllmve_t* pdel = pnode;
 		pnode = pnode->pnext;
-		mv_free(pdel->pvalue);
+		mv_free(&pdel->value);
 		free(pdel);
 	}
 	plist->phead  = NULL;
@@ -29,9 +29,13 @@ void sllmv_free(sllmv_t* plist) {
 }
 
 // ----------------------------------------------------------------
+// Mlrvals are small structs and we do struct assignment from argument
+// to list storage. For all but string mlrvals, this is a copy.
+// For string mlrvals, it is pointer assignment without string duplication.
+// This is intentional (for performance); callees are advised.
 void sllmv_add(sllmv_t* plist, mv_t* pvalue) {
 	sllmve_t* pnode = mlr_malloc_or_die(sizeof(sllmve_t));
-	pnode->pvalue = mv_alloc_copy(pvalue);
+	pnode->value = *pvalue; // struct assignment
 	if (plist->ptail == NULL) {
 		pnode->pnext = NULL;
 		plist->phead = pnode;
@@ -79,8 +83,7 @@ sllmv_t* sllmv_quadruple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, mv_t* pval
 void sllmv_print(sllmv_t* plist) {
 	printf("[");
 	for (sllmve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
-		mv_t* pmv = pe->pvalue;
-		char* string = mv_alloc_format_val(pmv);
+		char* string = mv_alloc_format_val(&pe->value);
 		if (pe != plist->phead)
 			printf(", ");
 		printf("%s", string);

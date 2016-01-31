@@ -1,6 +1,6 @@
 // ================================================================
 // Singly-linked list of mlrval, with tail for append.
-// Everything is copied; nothing is referenced.
+// Strings inside mlrvals are referenced, not copied.
 // ================================================================
 
 #ifndef SLLMV_H
@@ -9,7 +9,7 @@
 #include "mlrval.h"
 
 typedef struct _sllmve_t {
-	mv_t* pvalue;
+	mv_t value;
 	struct _sllmve_t *pnext;
 } sllmve_t;
 

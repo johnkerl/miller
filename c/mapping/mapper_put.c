@@ -314,9 +314,8 @@ static void evaluate_statements(
 					keys_ok = FALSE;
 					break;
 				}
-				// xxx make this no-copy, or a no-copy variant ... some such.
+				// Don't free the mlrval since its memory will be managed by the sllmv.
 				sllmv_add(pmvkeys, &mvkey);
-				mv_free(&mvkey);
 			}
 
 			if (keys_ok)

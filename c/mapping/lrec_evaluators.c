@@ -1466,9 +1466,8 @@ mv_t lrec_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 			keys_ok = FALSE;
 			break;
 		}
-		// xxx make this no-copy, or a no-copy variant ... some such.
+		// Don't free the mlrval since its memory will be managed by the sllmv.
 		sllmv_add(pmvkeys, &mvkey);
-		mv_free(&mvkey);
 	}
 
 	mv_t rv = MV_NULL;

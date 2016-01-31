@@ -162,7 +162,7 @@ static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t*
 }
 
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
-	mv_t* plevel_key = prest_keys->pvalue;
+	mv_t* plevel_key = &prest_keys->value;
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
@@ -306,7 +306,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 }
 
 static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
-	mv_t* plevel_key = prest_keys->pvalue;
+	mv_t* plevel_key = &prest_keys->value;
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];

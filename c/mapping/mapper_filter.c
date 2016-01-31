@@ -101,9 +101,8 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_print(past);
 	}
 
-	// xxx keep this, or support begin/end here. needs olh/mld doc in either case.
 	if (past->pbegin_statements->length != 0) {
-		fprintf(stderr, "%s %s: begin-statements are unsupported.\n", argv[0], verb);
+		fprintf(stderr, "%s %s: begin-statements are unsupported. Please use filter inside put.\n", argv[0], verb);
 		return NULL;
 	}
 	if (past->pmain_statements->length != 1) {
@@ -111,7 +110,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 	if (past->pend_statements->length != 0) {
-		fprintf(stderr, "%s %s: end-statements are unsupported.\n", argv[0], verb);
+		fprintf(stderr, "%s %s: end-statements are unsupported. Please use filter inside put.\n", argv[0], verb);
 		return NULL;
 	}
 	mlr_dsl_ast_node_t* psubtree = sllv_pop(past->pmain_statements);
