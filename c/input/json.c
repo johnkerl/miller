@@ -209,12 +209,20 @@ static const long
 	flag_line_comment     = 1 << 13,
 	flag_block_comment    = 1 << 14;
 
+// ================================================================
+json_value_t * json_parse(const json_char * json, size_t length, char* error_buf) {
+	json_settings_t settings = { 0 };
+	json_char* prename_me = 0;
+	return json_parse_ex(json, length, error_buf, &prename_me, &settings);
+}
+
 // ----------------------------------------------------------------
 json_value_t * json_parse_ex(
-	json_settings_t * settings,
 	const json_char * json,
 	size_t length,
-	char * error_buf)
+	char * error_buf,
+	json_char** pprename_me,
+	json_settings_t* settings)
 {
 	json_char error [JSON_ERROR_MAX];
 	const json_char * end;
@@ -223,6 +231,7 @@ json_value_t * json_parse_ex(
 	long flags;
 	long num_digits = 0, num_e = 0;
 	json_int_t num_fraction = 0;
+	*pprename_me = NULL;
 
 	// Skip UTF-8 BOM
 	if (length >= 3 && ((unsigned char) json [0]) == 0xEF
@@ -262,7 +271,8 @@ json_value_t * json_parse_ex(
 		state.cur_line = 1;
 
 		for (state.ptr = json ;; ++state.ptr) {
-			json_char b = (state.ptr == end ? 0 : *state.ptr);
+			json_char* pb = (json_char*)((state.ptr == end) ? NULL : state.ptr);
+			json_char   b = (state.ptr == end) ? 0 : *state.ptr;
 
 			if (flags & flag_string) {
 				if (!b) {
@@ -407,7 +417,7 @@ json_value_t * json_parse_ex(
 				}
 			}
 
-			if (state.settings.settings & JSON_ENABLE_COMMENTS) {
+			if (state.settings.setting_flags & JSON_ENABLE_COMMENTS) {
 				if (flags & (flag_line_comment | flag_block_comment)) {
 					if (flags & flag_line_comment) {
 						if (b == '\r' || b == '\n' || !b) {
@@ -461,6 +471,10 @@ json_value_t * json_parse_ex(
 			if (flags & flag_done) {
 				if (!b)
 					break;
+				if (state.settings.setting_flags & JSON_ENABLE_SEQUENTIAL_OBJECTS) {
+					*pprename_me = pb + 1;
+					break;
+				}
 
 				switch (b) {
 					WHITESPACE:
@@ -608,7 +622,7 @@ json_value_t * json_parse_ex(
 									flags |= flag_num_negative;
 									continue;
 								} else {
-									sprintf(error, "%d:%d: Unexpected %c when seeking value", LINE_AND_COL, b);
+									sprintf(error, "%d:%d: Unexpected `%c` when seeking value", LINE_AND_COL, b);
 									goto e_failed;
 								}
 						};
@@ -834,12 +848,6 @@ e_failed:
 		json_value_free_ex(&state.settings, root);
 
 	return 0;
-}
-
-// ----------------------------------------------------------------
-json_value_t * json_parse(const json_char * json, size_t length, char* error_buf) {
-	json_settings_t settings = { 0 };
-	return json_parse_ex(&settings, json, length, error_buf);
 }
 
 // ----------------------------------------------------------------

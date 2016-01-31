@@ -76,6 +76,9 @@ static void process_array(json_value_t* value, int depth) {
 	}
 }
 
+// xxx Miller top-levels will be JSON "object" (i.e. Miller hashmap)
+// or JSON "array" (i.e. Miller list of hashmap). In the latter case
+// all second-level objects must be objects.
 static void process_value(json_value_t* value, int depth) {
 	if (value == NULL) {
 		return;
@@ -153,23 +156,45 @@ int notmain(int argc, char** argv) {
 	}
 	fclose(fp);
 
-	//printf("%s\n", file_contents);
-	//printf("--------------------------------\n\n");
 	json_char error_buf[JSON_ERROR_MAX];
 
 	json = (json_char*)file_contents;
 
-	value = json_parse(json,file_size, error_buf);
+	json_settings_t settings = {
+		.setting_flags = JSON_ENABLE_SEQUENTIAL_OBJECTS,
+		.max_memory = 0
+	};
+	json_char* prename_me = json;
+	int length = file_size;
 
-	if (value == NULL) {
-		fprintf(stderr, "Unable to parse data: %s\n", error_buf);
-		free(file_contents);
-		exit(1);
+	while (1) {
+
+		//printf("--------------------------------\n\n");
+		//printf("[%s]\n", prename_me);
+		//printf("--------------------------------\n\n");
+		value = json_parse_ex(prename_me, length, error_buf, &prename_me, &settings);
+
+		if (value == NULL) {
+			fprintf(stderr, "Unable to parse data: \"%s\"\n", error_buf);
+			free(file_contents);
+			exit(1);
+		}
+
+		process_value(value, 0);
+
+		json_value_free(value);
+
+		if (prename_me == NULL)
+			break;
+		if (*prename_me == 0)
+			break;
+		//printf("\n");
+		//printf("PAGE\n");
+		//printf("\n");
+		length -= (prename_me - json);
+		json = prename_me;
 	}
 
-	process_value(value, 0);
-
-	json_value_free(value);
 	free(file_contents);
 	return 0;
 }

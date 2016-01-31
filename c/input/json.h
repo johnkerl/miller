@@ -45,22 +45,19 @@
 #include <stdlib.h>
 
 // ----------------------------------------------------------------
+#define JSON_ENABLE_COMMENTS           0x01
+#define JSON_ENABLE_SEQUENTIAL_OBJECTS 0x02
+
 typedef struct {
+	int setting_flags;
 	unsigned long max_memory;
-	int settings;
 
 	// Custom allocator support (leave null to use malloc/free)
-
 	void * (* mem_alloc) (size_t, int zero, void * user_data);
 	void (* mem_free) (void *, void * user_data);
-
 	void * user_data;  /* will be passed to mem_alloc and mem_free */
-
 	size_t value_extra;  /* how much extra space to allocate for values? */
-
 } json_settings_t;
-
-#define JSON_ENABLE_COMMENTS  0x01
 
 typedef enum {
 	json_none,
@@ -128,10 +125,11 @@ json_value_t * json_parse(
 	char*  error_buf);
 
 json_value_t * json_parse_ex(
-	json_settings_t * settings,
 	const json_char * json,
 	size_t length,
-	char * error);
+	char * error_buf,
+	json_char** pprename_me,
+	json_settings_t * settings);
 
 void json_value_free(json_value_t *);
 
