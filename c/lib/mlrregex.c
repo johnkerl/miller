@@ -214,10 +214,9 @@ void save_regex_captures(string_array_t** ppregex_captures, char* input, regmatc
 // pregex_captures->strings[0] = "abcde"
 // pregex_captures->strings[1] = "bcd"
 //
+// "\0" should be replaced with "abcde".
 // "\1" should be replaced with "bcd".
 // "\2" through "\9" should be replaced with "".
-
-// xxx cmt pre-cond pregexcapts non-null
 
 char* interpolate_regex_captures(char* input, string_array_t* pregex_captures, int* pwas_allocated) {
 	*pwas_allocated = FALSE;

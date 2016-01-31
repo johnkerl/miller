@@ -35,10 +35,10 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 
 // The regex library gives us an array of match pointers into the input string. This function strdups them
 // out into separate storage, to implement "\0", "\1", "\2", etc. regex-captures for the =~ and !=~ operators.
-// xxx cmt
+// If the regex-captures array is null, it is allocated; otherwise it is resized. If the input regex does not
+// match the regex, then the regex-captures array will be non-null but will have length 0.
 void save_regex_captures(string_array_t** ppregex_captures, char* input, regmatch_t matches[], int nmatchmax);
 
-// xxx update cmt
 // Given an array of regex-captures and an input string, interpolates the matches. E.g. if capture 1 is "abc"
 // and capture 2 is "def" and the input is "hello \1 goodbye \2", then the output is a newly allocated string
 // with value "hello abc goodbye def".  The was-allocated flag is an output flag: if true upon return, there was

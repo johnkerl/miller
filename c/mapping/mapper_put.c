@@ -25,10 +25,10 @@ static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 static void      mapper_put_free(mapper_t* pmapper);
 
 static void evaluate_statements(
+	mapper_put_state_t* pstate,
 	lrec_t*             pinrec,
 	lhmsv_t*            ptyped_overlay,
 	string_array_t**    ppregex_captures,
-	mapper_put_state_t* pstate,
 	context_t*          pctx,
 	sllv_t*             pcst_statements,
 	int*                pemit_rec,
@@ -176,17 +176,24 @@ static void mapper_put_free(mapper_t* pmapper) {
 // produces a record with left=abc and right=def.
 //
 // There is an important trick here with the length of the string-array:
-// * It is allocated here with length 0.
+// * It is set here to null.
 // * It is passed by reference to the lrec-evaluator tree. In particular, the matches and does-not-match functions
-//   (which implement the =~ and !=~ operators) resize it and populate it.
+//   (which implement the =~ and !=~ operators) allocate it (or resize it, as necessary) and populate it.
 // * If the matches/does-not-match functions are entered, even with no matches, the regex-captures string-array
-//   will be resized to have length at least 1: length 1 for 0 matches, length 2 for 1 match, etc. since
-//   the array is indexed 1-up.
+//   will be resized to have length 0.
 // * When the lrec-evaluator's from-literal function is invoked, the interpolate_regex_captures function can quickly
-//   check to see if the regex-captures array has length 0 and thereby know that a time-consuming scan for \1, \2, \3,
-//   etc. does not need to be done.
-
-// xxx change comment
+//   check to see if the regex-captures array is null and thereby know that a time-consuming scan for \1, \2, \3, etc.
+//   does not need to be done. On the other hand, if the regex-captures array is non-null and has length
+//   zero, then \0 .. \9 should all be replaced with the empty string.
+//
+// ----------------------------------------------------------------
+// The oosvars multi-level hashmap contains out-of-stream variables which can be written/read/output
+// in begin{}/end{} blocks, and/or per record.
+//
+// ----------------------------------------------------------------
+// The context_t contains information about record-number, file-number, file-name, etc. from
+// which the current stream-record was obtained.
+// ----------------------------------------------------------------
 
 static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
@@ -196,13 +203,13 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-		evaluate_statements(NULL, NULL, &pregex_captures, pstate, pctx,
+		evaluate_statements(pstate, NULL, NULL, &pregex_captures, pctx,
 			pstate->pcst->pbegin_statements, &emit_rec, poutrecs);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		evaluate_statements(NULL, NULL, &pregex_captures, pstate, pctx,
+		evaluate_statements(pstate, NULL, NULL, &pregex_captures, pctx,
 			pstate->pcst->pend_statements, &emit_rec, poutrecs);
 
 		string_array_free(pregex_captures);
@@ -212,7 +219,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
-	evaluate_statements(pinrec, ptyped_overlay, &pregex_captures, pstate, pctx,
+	evaluate_statements(pstate, pinrec, ptyped_overlay, &pregex_captures, pctx,
 		pstate->pcst->pmain_statements, &emit_rec, poutrecs);
 
 	if (emit_rec) {
@@ -246,10 +253,10 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 // ----------------------------------------------------------------
 static void evaluate_statements(
+	mapper_put_state_t* pstate,
 	lrec_t*             pinrec,
 	lhmsv_t*            ptyped_overlay,
 	string_array_t**    ppregex_captures,
-	mapper_put_state_t* pstate,
 	context_t*          pctx,
 	sllv_t*             pcst_statements,
 	int*                pemit_rec,
