@@ -42,14 +42,15 @@
 //
 // USAGE: ./test_json <json_file>
 
+// ================================================================
 static void print_depth_shift(int depth) {
 	int j;
-	for (j=0; j < depth; j++) {
+	for (j = 0; j < depth; j++) {
 		printf(" ");
 	}
 }
 
-static void process_value(json_value_t* value, int depth);
+static void process_value_aux(json_value_t* value, int depth);
 
 static void process_object(json_value_t* value, int depth) {
 	int length, x;
@@ -60,7 +61,7 @@ static void process_object(json_value_t* value, int depth) {
 	for (x = 0; x < length; x++) {
 		print_depth_shift(depth);
 		printf("object[%d].name = %s\n", x, value->u.object.values[x].name);
-		process_value(value->u.object.values[x].value, depth+1);
+		process_value_aux(value->u.object.values[x].value, depth+1);
 	}
 }
 
@@ -72,14 +73,14 @@ static void process_array(json_value_t* value, int depth) {
 	length = value->u.array.length;
 	printf("array\n");
 	for (x = 0; x < length; x++) {
-		process_value(value->u.array.values[x], depth);
+		process_value_aux(value->u.array.values[x], depth);
 	}
 }
 
 // xxx Miller top-levels will be JSON "object" (i.e. Miller hashmap)
 // or JSON "array" (i.e. Miller list of hashmap). In the latter case
 // all second-level objects must be objects.
-static void process_value(json_value_t* value, int depth) {
+static void process_value_aux(json_value_t* value, int depth) {
 	if (value == NULL) {
 		return;
 	}
@@ -112,6 +113,9 @@ static void process_value(json_value_t* value, int depth) {
 			printf("null\n");
 			break;
 	}
+}
+static void process_value(json_value_t* value) {
+	process_value_aux(value, 0);
 }
 
 // ================================================================
@@ -180,7 +184,7 @@ int notmain(int argc, char** argv) {
 			exit(1);
 		}
 
-		process_value(value, 0);
+		process_value(value);
 
 		json_value_free(value);
 

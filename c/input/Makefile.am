@@ -9,15 +9,17 @@ libinput_la_SOURCES=	\
 			line_readers.c \
 			line_readers.h \
 			lrec_reader.h \
-			lrec_reader_mmap_csv.c \
-			lrec_reader_stdio_csv.c \
 			lrec_reader_in_memory.c \
+			lrec_reader_mmap_csv.c \
 			lrec_reader_mmap_csvlite.c \
 			lrec_reader_mmap_dkvp.c \
+			lrec_reader_mmap_json.c \
 			lrec_reader_mmap_nidx.c \
 			lrec_reader_mmap_xtab.c \
+			lrec_reader_stdio_csv.c \
 			lrec_reader_stdio_csvlite.c \
 			lrec_reader_stdio_dkvp.c \
+			lrec_reader_stdio_json.c \
 			lrec_reader_stdio_nidx.c \
 			lrec_reader_stdio_xtab.c \
 			lrec_readers.c \
@@ -27,6 +29,7 @@ libinput_la_SOURCES=	\
 			peek_file_reader.h \
 			stdio_byte_reader.c \
 			string_byte_reader.c
+
 libinput_la_LIBADD=	../lib/libmlr.la
 libinput_la_CPPFLAGS=	-I${srcdir}/../
 
