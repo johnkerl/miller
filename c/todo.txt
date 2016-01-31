@@ -4,16 +4,27 @@ BUGFIXES
 :D
 
 ================================================================
-TOP OF LIST
+TOP-OF-LIST SUMMARY
 
+* JSON input
+* parameterized emit
+* pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+
+* doc items
+* xxxes
+* valgrinds
+
+----------------------------------------------------------------
 * relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
   o still under development:
-    - (oosvars)
-    - (begin/end)
-    - (JSON input)
+    - JSON input
+    - pattern-action
   o big:
-    - JSON output
-    - filter/gate/bare-boolean
+    - oosvars -- but pending parameterized emit
+    - begin/end -- but pending parameterized emit
+    - JSON output -- but pending JSON input
+    - filter/gate/bare-boolean -- but pending pattern-action
+  o medium:
     - ternary operator
     - regex captures
   o small:
@@ -22,19 +33,7 @@ TOP OF LIST
     - boolean literals
     - typed overlay
 
-* tabular-json input
-* spec & impl for multilevel emit
-* bare-boolean with block. still experimental. if-else down the road perhaps ...
-
 ----------------------------------------------------------------
-* \0 example into mld:ref:regex
-* boolean-short-circuit UT w/ regex-captures
-* mlr -f ish @ cover x 2
-! update filter/gate @ mld:ref:put
-! make a release w/ filter/gate after mld update!
-
-* int-preserving exponentiation operator -- ?
-
 * centos:
   https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
   https://lists.centos.org/pipermail/centos/2012-September/129227.html
@@ -44,83 +43,69 @@ TOP OF LIST
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
 
-* option for: print to stderr NR if NR%N==0 for user-specified N
-
-* look into 'perf'
-
-* shuffle? similar to bootstrap & sample.
+----------------------------------------------------------------
+TOP-OF-LIST DETAILS
 
 * JSON I/O:
   - input: https://github.com/udp/json-parser ? ; http://www.json.org/ C section
-  - output: mlr-native json output is trivial & just do it.
-    ! turn the iffing into precomputed separtor strings
+  k output: mlr-native json output is trivial & just do it.
   - cover x 2
   - define 'tabular JSON' by example @ mld
 
-* linreg in terms of stats only ... check py book
-
-----------------------------------------------------------------
-!! oosvars/begin/end:
-
+* doc:
+  o \0 example into mld:ref:regex
+  o boolean-short-circuit UT w/ regex-captures
+  o mlr -f ish @ cover x 2
+  o update filter/gate @ mld:ref:put
+  o "Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
+    Release-specific docs at http://johnkerl.org/miller/doc/release-docs.html match release-specific code
+      at https://github.com/johnkerl/miller/tags. "
   o .y hospitality annotations :)
 
-  ! $ cat /dev/null | mlr put 'begin @x[0.3]=4'
-    Segmentation fault: 11
-    $ cat /dev/null | mlr put 'begin @x[true]=4'
-    Segmentation fault: 11
-    -> double-keys are out of the question. but maybe support boolean keys? or to-string of them ...
+* multilevel emit: spec & impl
+
+* pattern-action (bare-boolean with block) still experimental. if-else down the road perhaps ...
+
+* oosvars/begin/end:
 
   ? cut down on parameter-marshalling in lrec-evaluators?
     at the *immediate* expense of opacity through 2K lines of code.
 
-  k oosvars: get a grip on the [] operator in the grammar, as lvals and rvals.
-    k UT key-list too deep/shallow
-  - rename 'lrec_evaluators' since they are now (much) more than that.
-  - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
+  o rename 'lrec_evaluators' since they are now (much) more than that.
+  o begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
 
-  ! work on emit to handle multi-level oosvars
+  o filter is also gating. it should not.
+  o comments: replace with spaces from # to EOL/EOS, whichever comes first
+  o define/test behavior for null-valued filter/gate
 
-  ! put @ cover.md:
-    * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.
-    * Release-specific docs at http://johnkerl.org/miller/doc/release-docs.html match release-specific code
-      at https://github.com/johnkerl/miller/tags. 
+  o $0?
+    - want $0 = @x kinds of record-from-record assignments?!?
 
-  o next up after that:
-    ! filter is also gating. it should not.
-    ! comments: replace with spaces from # to EOL/EOS, whichever comes first
-    ! re-valgrind continuously
-    ! xxxes
-    - define/test behavior for null-valued filter/gate
-
-  o initial sketch: there are two lrecs: with$ and with$; in-stream & out-of-stream.
-    ? next: x.sum, y.count, $x["sum"], $y["count"]; maybe deeper levels? arbitrarily deep??
-      ? implement $0 now?
-      ? want $0 = @x kinds of record-from-record assignments?!?
-    - experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
-      > bootstrap?
-      > count-distinct?
-      > cut?
-      > decimate? easy now with NR%10 if not -g; what about with -g?
-      > group-by?
-      > group-like?
-      > having-fields?
-      > head?
-      > histogram?
-      > (rename? reorder?)
-      > sample, w/ & w/o -g?
-      > stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max?
-      > stats2 linregs,r2,corr,cov?
-      > step delta,from-first,ratio,rsum,counter,ewma?
-      > tail?
-      > top?
-      > uniq?
+  o experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
+    - bootstrap?
+    - count-distinct?
+    - cut?
+    - decimate? easy now with NR%10 if not -g; what about with -g?
+    - group-by?
+    - group-like?
+    - having-fields?
+    - head?
+    - histogram?
+    - (rename? reorder?)
+    - sample, w/ & w/o -g?
+    - stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max?
+    - stats2 linregs,r2,corr,cov?
+    - step delta,from-first,ratio,rsum,counter,ewma?
+    - tail?
+    > top?
+    - uniq?
 
   o DSL more:
     - people will ask for an unset/clear syntax
     - people will ask for +=, -=, etc.
-    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while implementing the present
+    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
+      implementing the present
     - replace "null" with "absent" and "uninit"?
-    - implement awk-style pattern { action } -- ? are if-statements enough?
     ? move assignments into the CST, and all the changes that ensue (e.g. $x=@a=7).
 
   o perf notes:
@@ -141,11 +126,13 @@ TOP OF LIST
 
 ----------------------------------------------------------------
 
+* shuffle? similar to bootstrap & sample.
+* look into 'perf'
+* linreg in terms of stats only ... check py book
+* option for: print to stderr NR if NR%N==0 for user-specified N
 * cat/cut langcomps (w/ gh links) -> perf page
 
 * interpolated percentiles
-
-* awk-style ifs=="" -> split per-character? only makes sense for nidx
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
