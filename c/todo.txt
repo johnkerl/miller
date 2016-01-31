@@ -48,6 +48,12 @@ TOP OF LIST
 
   o .y hospitality annotations :)
 
+  ! $ cat /dev/null | mlr put 'begin @x[0.3]=4'
+    Segmentation fault: 11
+    $ cat /dev/null | mlr put 'begin @x[true]=4'
+    Segmentation fault: 11
+    -> double-keys are out of the question. but maybe support boolean keys? or to-string of them ...
+
   ? cut down on parameter-marshalling in lrec-evaluators?
     at the *immediate* expense of opacity through 2K lines of code.
 
@@ -56,7 +62,7 @@ TOP OF LIST
   - rename 'lrec_evaluators' since they are now (much) more than that.
   - begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
 
-  ! next up: work on emit to handle multi-level oosvars
+  ! work on emit to handle multi-level oosvars
 
   ! put @ cover.md:
     * Head docs at http://johnkerl.org/miller/doc/index.html match head code at https://github.com/johnkerl/miller.

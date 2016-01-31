@@ -1527,8 +1527,10 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 			sllv_prepend(poosvar_rhs_keylist_evaluators,
 				lrec_evaluator_alloc_from_ast(pkeynode, TYPE_INFER_STRING_FLOAT_INT));
 		} else {
+			// Oosvar expressions are of the form '@name[$index1][@index2+3][4]["five"].  The first one (name) is
+			// special: syntactically, it's outside the brackets, although that issue is for the parser to handle.
+			// Here it's special since it's always a string, never an expression that evaluates to string.
 			sllv_prepend(poosvar_rhs_keylist_evaluators,
-				// xxx big comment here. this is confusing.
 				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
 		}
 		if (pnode->pchildren == NULL)
