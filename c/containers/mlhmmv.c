@@ -161,7 +161,6 @@ static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t*
 	mlhmmv_level_put_no_enlarge(plevel, prest_keys, pterminal_value);
 }
 
-// xxx needs checking here that type is string or int -- incl. MT_NULL.
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	mv_t* plevel_key = prest_keys->pvalue;
 	int ideal_index = 0;
@@ -392,8 +391,31 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_c
 }
 
 // ----------------------------------------------------------------
+typedef int mlhmmv_typed_hash_func(mv_t* pa);
+
+static int mlhmmv_string_hash_func(mv_t* pa) {
+	return mlr_string_hash_func(pa->u.strv);
+}
+static int mlhmmv_int_hash_func(mv_t* pa) {
+	return pa->u.intv;
+}
+static int mlhmmv_other_hash_func(mv_t* pa) {
+	fprintf(stderr, "%s: @-variable keys must be of type %s or %s; got %s.\n",
+		MLR_GLOBALS.argv0,
+		mt_describe_type(MT_STRING),
+		mt_describe_type(MT_INT),
+		mt_describe_type(pa->type));
+	exit(1);
+}
+static mlhmmv_typed_hash_func* mlhmmv_hash_func_dispositions[MT_MAX] = {
+	/*NULL*/   mlhmmv_other_hash_func,
+	/*ERROR*/  mlhmmv_other_hash_func,
+	/*BOOL*/   mlhmmv_other_hash_func,
+	/*FLOAT*/  mlhmmv_other_hash_func,
+	/*INT*/    mlhmmv_int_hash_func,
+	/*STRING*/ mlhmmv_string_hash_func,
+};
+
 static int mlhmmv_hash_func(mv_t* pa) {
-	return (pa->type == MT_INT)
-		?  pa->u.intv
-		: mlr_string_hash_func(pa->u.strv);
+	return mlhmmv_hash_func_dispositions[pa->type](pa);
 }
