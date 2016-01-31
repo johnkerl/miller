@@ -255,13 +255,13 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 		plevel->states[index] = OCCUPIED;
 
 		if (plevel->phead == NULL) {
-			pentry->pprev   = NULL;
-			pentry->pnext   = NULL;
+			pentry->pprev = NULL;
+			pentry->pnext = NULL;
 			plevel->phead = pentry;
 			plevel->ptail = pentry;
 		} else {
-			pentry->pprev   = plevel->ptail;
-			pentry->pnext   = NULL;
+			pentry->pprev = plevel->ptail;
+			pentry->pnext = NULL;
 			plevel->ptail->pnext = pentry;
 			plevel->ptail = pentry;
 		}

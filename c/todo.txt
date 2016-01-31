@@ -6,8 +6,22 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-* xxxes before relcut
-* relcut
+* relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
+  o still under development:
+    - (oosvars)
+    - (begin/end)
+    - (JSON input)
+  o big:
+    - JSON output
+    - filter/gate/bare-boolean
+    - ternary operator
+    - regex captures
+  o small:
+    - final semicolon
+    - mmap-page-boundary bugfix
+    - boolean literals
+    - typed overlay
+
 * tabular-json input
 * spec & impl for multilevel emit
 * bare-boolean with block. still experimental. if-else down the road perhaps ...
