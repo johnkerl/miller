@@ -181,8 +181,10 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 // pregex_captures->length = 2
 // pregex_captures->strings[0] = "abcde"
 // pregex_captures->strings[1] = "bcd"
+//
+// Note that even if there is no match, a non-null zero-length regex-captures array is returned (by reference).
+// This is important: see the comments in mapper_put for details.
 
-// xxx cmt post-cond re no match ...
 void save_regex_captures(string_array_t** ppregex_captures, char* input, regmatch_t matches[], int nmatchmax) {
 	int match_count = nmatchmax; // In fully occupied case, there will be no slots with -1's
 	for (int i = 0; i < nmatchmax; i++) {

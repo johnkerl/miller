@@ -176,11 +176,15 @@ static void mapper_put_free(mapper_t* pmapper) {
 // produces a record with left=abc and right=def.
 //
 // There is an important trick here with the length of the string-array:
+//
 // * It is set here to null.
+//
 // * It is passed by reference to the lrec-evaluator tree. In particular, the matches and does-not-match functions
 //   (which implement the =~ and !=~ operators) allocate it (or resize it, as necessary) and populate it.
+//
 // * If the matches/does-not-match functions are entered, even with no matches, the regex-captures string-array
 //   will be resized to have length 0.
+//
 // * When the lrec-evaluator's from-literal function is invoked, the interpolate_regex_captures function can quickly
 //   check to see if the regex-captures array is null and thereby know that a time-consuming scan for \1, \2, \3, etc.
 //   does not need to be done. On the other hand, if the regex-captures array is non-null and has length
@@ -301,13 +305,13 @@ static void evaluate_statements(
 				pstate->poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
 			sllmv_t* pmvkeys = sllmv_alloc();
-			int ok = TRUE;
+			int keys_ok = TRUE;
 			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 				lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
 					pstate->poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
 				if (mv_is_null(&mvkey)) {
-					ok = FALSE;
+					keys_ok = FALSE;
 					break;
 				}
 				// xxx make this no-copy, or a no-copy variant ... some such.
@@ -315,8 +319,7 @@ static void evaluate_statements(
 				mv_free(&mvkey);
 			}
 
-			// xxx move this null-check into mlhmmv.c?
-			if (ok)
+			if (keys_ok)
 				mlhmmv_put(pstate->poosvars, pmvkeys, &rhs_value);
 
 			sllmv_free(pmvkeys);

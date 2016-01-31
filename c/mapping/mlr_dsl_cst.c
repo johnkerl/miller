@@ -131,14 +131,13 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			sllv_append(poosvar_lhs_keylist_evaluators,
 				// xxx need a version with no regex-captures.
-				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pleft->text), TYPE_INFER_STRING_ONLY));
+				lrec_evaluator_alloc_from_string(mlr_strdup_or_die(pleft->text)));
 		} else {
 
 			mlr_dsl_ast_node_t* pnode = pleft;
 			while (TRUE) {
 				// Example AST:
-				// % mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
-				// AST BEGIN STATEMENTS (1):
+				// % mlr put -v '@x[1]["2"][$3][@4]=5' /dev/null
 				// = (oosvar_assignment):
 				//     [] (oosvar_level_key):
 				//         [] (oosvar_level_key):
@@ -166,8 +165,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 					// parser to handle. Here, it's special since it's always a string, never an expression that
 					// evaluates to string.
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						lrec_evaluator_alloc_from_strnum_literal(
-							mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
+						lrec_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
 				}
 				if (pnode->pchildren == NULL)
 					break;

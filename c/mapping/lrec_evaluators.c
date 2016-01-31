@@ -1429,7 +1429,8 @@ static void lrec_evaluator_oosvar_name_free(lrec_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-// xxx comment!!
+// This is used for evaluating @-variables that don't have brackets: e.g. @x vs. @x[$1].
+// See comments above lrec_evaluator_alloc_from_oosvar_level_keys for more information.
 lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 	lrec_evaluator_oosvar_name_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_oosvar_name_state_t));
 	mv_t mv_name = mv_from_string(oosvar_name, NO_FREE);
@@ -1446,26 +1447,6 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 }
 
 // ================================================================
-// xxx adapt to RHS example
-//
-// Example AST:
-// % mlr put -v 'begin{@@x[1]["2"][$3][@4]=5}' /dev/null
-// AST BEGIN STATEMENTS (1):
-// = (oosvar_assignment):
-//     [] (oosvar_level_key):
-//         [] (oosvar_level_key):
-//             [] (oosvar_level_key):
-//                 [] (oosvar_level_key):
-//                     x (oosvar_name).
-//                     1 (strnum_literal).
-//                 2 (strnum_literal).
-//             3 (field_name).
-//         4 (oosvar_name).
-//     5 (strnum_literal).
-//
-// Here past is the =; pright is the 5; pleft is the string of bracket references
-// ending at the oosvar name.
-
 typedef struct _lrec_evaluator_oosvar_level_keys_state_t {
 	sllv_t* poosvar_rhs_keylist_evaluators;
 } lrec_evaluator_oosvar_level_keys_state_t;
@@ -1476,13 +1457,13 @@ mv_t lrec_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 	lrec_evaluator_oosvar_level_keys_state_t* pstate = pvstate;
 
 	sllmv_t* pmvkeys = sllmv_alloc();
-	int ok = TRUE;
+	int keys_ok = TRUE;
 	for (sllve_t* pe = pstate->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 		mv_t mvkey = pmvkey_evaluator->pprocess_func(prec, ptyped_overlay,
 			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
 		if (mv_is_null(&mvkey)) {
-			ok = FALSE;
+			keys_ok = FALSE;
 			break;
 		}
 		// xxx make this no-copy, or a no-copy variant ... some such.
@@ -1490,9 +1471,8 @@ mv_t lrec_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 		mv_free(&mvkey);
 	}
 
-	// xxx move this null-check into mlhmmv.c?
 	mv_t rv = MV_NULL;
-	if (ok) {
+	if (keys_ok) {
 		int error = 0;
 		mv_t* pval = mlhmmv_get(poosvars, pmvkeys, &error);
 		if (pval != NULL)
@@ -1513,9 +1493,34 @@ static void lrec_evaluator_oosvar_level_keys_free(lrec_evaluator_t* pevaluator) 
 	free(pevaluator);
 }
 
-// xxx needs a comment, like in the LHS logic
+// ----------------------------------------------------------------
+// Example AST:
+//
+// $ mlr put -v '$y = @x[1]["two"][$3+4][@5]' /dev/null
+// = (srec_assignment):
+//     y (field_name).
+//     [] (oosvar_level_key):
+//         [] (oosvar_level_key):
+//             [] (oosvar_level_key):
+//                 [] (oosvar_level_key):
+//                     x (oosvar_name).
+//                     1 (strnum_literal).
+//                 two (strnum_literal).
+//             + (operator):
+//                 3 (field_name).
+//                 4 (strnum_literal).
+//         5 (oosvar_name).
+//
+// Here past is the =; pright is the 5; pleft is the string of bracket references
+// ending at the oosvar name.
+//
+// The job of this allocator is to set up a linked list of evaluators, with the first position for the oosvar name,
+// and the rest for each of the bracketed expressions.  This is used for when there *are* brackets; see
+// lrec_evaluator_alloc_from_oosvar_name for when there are no brackets.
+
 lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t* past) {
-	lrec_evaluator_oosvar_level_keys_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_oosvar_level_keys_state_t));
+	lrec_evaluator_oosvar_level_keys_state_t* pstate = mlr_malloc_or_die(
+		sizeof(lrec_evaluator_oosvar_level_keys_state_t));
 
 	sllv_t* poosvar_rhs_keylist_evaluators = sllv_alloc();
 	mlr_dsl_ast_node_t* pnode = past;
@@ -1530,8 +1535,9 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 			// Oosvar expressions are of the form '@name[$index1][@index2+3][4]["five"].  The first one (name) is
 			// special: syntactically, it's outside the brackets, although that issue is for the parser to handle.
 			// Here it's special since it's always a string, never an expression that evaluates to string.
+			// Yet for the mlhmmv the first key isn't special.
 			sllv_prepend(poosvar_rhs_keylist_evaluators,
-				lrec_evaluator_alloc_from_strnum_literal(mlr_strdup_or_die(pnode->text), TYPE_INFER_STRING_ONLY));
+				lrec_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
 		}
 		if (pnode->pchildren == NULL)
 				break;
@@ -1549,6 +1555,13 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 }
 
 // ================================================================
+// This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
+// or '$x = "left_\1". The values are subject to replacement with regex captures. See comments
+// in mapper_put for more information.
+//
+// Compare lrec_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
+// oosvar names on expression left-hand sides (outside of this file).
+
 typedef struct _lrec_evaluator_strnum_literal_state_t {
 	mv_t literal;
 } lrec_evaluator_strnum_literal_state_t;
@@ -1632,6 +1645,39 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_strnum_literal(char* string, int typ
 		}
 	}
 	pevaluator->pfree_func = lrec_evaluator_strnum_literal_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+// This is intended only for oosvar names on expression left-hand sides (outside of this file).
+// Compare lrec_evaluator_alloc_from_strnum_literal.
+
+typedef struct _lrec_evaluator_string_state_t {
+	char* string;
+} lrec_evaluator_string_state_t;
+
+mv_t lrec_evaluator_string_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_string_state_t* pstate = pvstate;
+	return mv_from_string_no_free(pstate->string);
+}
+static void lrec_evaluator_string_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_string_state_t* pstate = pevaluator->pvstate;
+	free(pstate->string);
+	free(pstate);
+	free(pevaluator);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_string(char* string) {
+	lrec_evaluator_string_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_string_state_t));
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+
+	pstate->string            = mlr_strdup_or_die(string);
+	pevaluator->pprocess_func = lrec_evaluator_string_func;
+	pevaluator->pfree_func    = lrec_evaluator_string_free;
 
 	pevaluator->pvstate = pstate;
 	return pevaluator;

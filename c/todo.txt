@@ -43,6 +43,8 @@ TOP OF LIST
   - cover x 2
   - define 'tabular JSON' by example @ mld
 
+* linreg in terms of stats only ... check py book
+
 ----------------------------------------------------------------
 !! oosvars/begin/end:
 
