@@ -134,13 +134,13 @@ int notmain(int argc, char** argv) {
 	}
 	filename = argv[1];
 
-	if ( stat(filename, &filestatus) != 0) {
+	if (stat(filename, &filestatus) != 0) {
 		fprintf(stderr, "File %s not found\n", filename);
 		return 1;
 	}
 	file_size = filestatus.st_size;
 	file_contents = (char*)malloc(filestatus.st_size);
-	if ( file_contents == NULL) {
+	if (file_contents == NULL) {
 		fprintf(stderr, "Memory error: unable to allocate %d bytes\n", file_size);
 		return 1;
 	}
@@ -152,7 +152,7 @@ int notmain(int argc, char** argv) {
 		free(file_contents);
 		return 1;
 	}
-	if ( fread(file_contents, file_size, 1, fp) != 1 ) {
+	if (fread(file_contents, file_size, 1, fp) != 1 ) {
 		fprintf(stderr, "Unable t read content of %s\n", filename);
 		fclose(fp);
 		free(file_contents);

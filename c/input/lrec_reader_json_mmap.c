@@ -1,6 +1,6 @@
 // mmap: easy pointer math
-// stdio from file: stat, alloc, read
-// stdio from stdin: realloc w/ page-size fread
+// stdio from file: stat, alloc, read. libify this.
+// stdio from stdin: realloc w/ page-size fread. libify this.
 
 // note @ mlr -h: no streaing for JSON input. No records are processed until EOF is seen.
 
