@@ -109,7 +109,7 @@ static int new_value(
 			*root = value;
 
 		switch (value->type) {
-			case json_array:
+			case JSON_ARRAY:
 				if (value->u.array.length == 0)
 					break;
 
@@ -122,7 +122,7 @@ static int new_value(
 				value->u.array.length = 0;
 				break;
 
-			case json_object:
+			case JSON_OBJECT:
 				if (value->u.object.length == 0)
 					break;
 
@@ -139,7 +139,7 @@ static int new_value(
 				value->u.object.length = 0;
 				break;
 
-			case json_string:
+			case JSON_STRING:
 				if (! (value->u.string.ptr = (json_char *) json_alloc
 					(state, (value->u.string.length + 1) * sizeof (json_char), 0)) )
 				{
@@ -386,12 +386,12 @@ json_value_t * json_parse_ex(
 					string = 0;
 
 					switch (top->type) {
-						case json_string:
+						case JSON_STRING:
 							top->u.string.length = string_length;
 							flags |= flag_next;
 							break;
 
-						case json_object:
+						case JSON_OBJECT:
 
 							if (state.first_pass) {
 								(*(json_char **) &top->u.object.values) += string_length + 1;
@@ -442,7 +442,7 @@ json_value_t * json_parse_ex(
 						continue;
 					}
 				} else if (b == '/') {
-					if (! (flags & (flag_seek_value | flag_done)) && top->type != json_object) {
+					if (! (flags & (flag_seek_value | flag_done)) && top->type != JSON_OBJECT) {
 						sprintf(error, "%d:%d: Comment not allowed here", LINE_AND_COL);
 						goto e_failed;
 					}
@@ -492,7 +492,7 @@ json_value_t * json_parse_ex(
 						continue;
 
 					case ']':
-						if (top && top->type == json_array) {
+						if (top && top->type == JSON_ARRAY) {
 							flags = (flags & ~ (flag_need_comma | flag_seek_value)) | flag_next;
 						} else {
 							sprintf (error, "%d:%d: Unexpected ]", LINE_AND_COL);
@@ -526,18 +526,18 @@ json_value_t * json_parse_ex(
 
 						switch (b) {
 							case '{':
-								if (!new_value(&state, &top, &root, &alloc, json_object))
+								if (!new_value(&state, &top, &root, &alloc, JSON_OBJECT))
 									goto e_alloc_failure;
 								continue;
 
 							case '[':
-								if (!new_value(&state, &top, &root, &alloc, json_array))
+								if (!new_value(&state, &top, &root, &alloc, JSON_ARRAY))
 									goto e_alloc_failure;
 								flags |= flag_seek_value;
 								continue;
 
 							case '"':
-								if (!new_value(&state, &top, &root, &alloc, json_string))
+								if (!new_value(&state, &top, &root, &alloc, JSON_STRING))
 									goto e_alloc_failure;
 								flags |= flag_string;
 								string = top->u.string.ptr;
@@ -551,7 +551,7 @@ json_value_t * json_parse_ex(
 									goto e_unknown_value;
 								}
 
-								if (!new_value(&state, &top, &root, &alloc, json_boolean))
+								if (!new_value(&state, &top, &root, &alloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
 								top->u.boolean = 1;
@@ -568,7 +568,7 @@ json_value_t * json_parse_ex(
 									goto e_unknown_value;
 								}
 
-								if (!new_value(&state, &top, &root, &alloc, json_boolean))
+								if (!new_value(&state, &top, &root, &alloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
 								flags |= flag_next;
@@ -581,7 +581,7 @@ json_value_t * json_parse_ex(
 									goto e_unknown_value;
 								}
 
-								if (!new_value(&state, &top, &root, &alloc, json_null))
+								if (!new_value(&state, &top, &root, &alloc, JSON_NULL))
 									goto e_alloc_failure;
 
 								flags |= flag_next;
@@ -589,7 +589,7 @@ json_value_t * json_parse_ex(
 
 							default:
 								if (isdigit (b) || b == '-') {
-									if (!new_value(&state, &top, &root, &alloc, json_integer))
+									if (!new_value(&state, &top, &root, &alloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
 									if (!state.first_pass) {
@@ -629,7 +629,7 @@ json_value_t * json_parse_ex(
 				};
 			} else {
 				switch (top->type) {
-				case json_object:
+				case JSON_OBJECT:
 
 					switch (b) {
 						WHITESPACE:
@@ -665,12 +665,12 @@ json_value_t * json_parse_ex(
 
 					break;
 
-				case json_integer:
-				case json_double:
+				case JSON_INTEGER:
+				case JSON_DOUBLE:
 					if (isdigit(b)) {
 						++num_digits;
 
-						if (top->type == json_integer || flags & flag_num_e) {
+						if (top->type == JSON_INTEGER || flags & flag_num_e) {
 							if (! (flags & flag_num_e)) {
 								if (flags & flag_num_zero) {
 									sprintf(error, "%d:%d: Unexpected `0` before `%c`", LINE_AND_COL, b);
@@ -702,13 +702,13 @@ json_value_t * json_parse_ex(
 
 							continue;
 						}
-					} else if (b == '.' && top->type == json_integer) {
+					} else if (b == '.' && top->type == JSON_INTEGER) {
 						if (!num_digits) {
 							sprintf (error, "%d:%d: Expected digit before `.`", LINE_AND_COL);
 							goto e_failed;
 						}
 
-						top->type = json_double;
+						top->type = JSON_DOUBLE;
 						top->u.dbl = (double) top->u.integer;
 
 						num_digits = 0;
@@ -716,7 +716,7 @@ json_value_t * json_parse_ex(
 					}
 
 					if (! (flags & flag_num_e)) {
-						if (top->type == json_double) {
+						if (top->type == JSON_DOUBLE) {
 							if (!num_digits) {
 								sprintf(error, "%d:%d: Expected digit after `.`", LINE_AND_COL);
 								goto e_failed;
@@ -728,8 +728,8 @@ json_value_t * json_parse_ex(
 						if (b == 'e' || b == 'E') {
 							flags |= flag_num_e;
 
-							if (top->type == json_integer) {
-								top->type = json_double;
+							if (top->type == JSON_INTEGER) {
+								top->type = JSON_DOUBLE;
 								top->u.dbl = (double) top->u.integer;
 							}
 
@@ -748,7 +748,7 @@ json_value_t * json_parse_ex(
 					}
 
 					if (flags & flag_num_negative) {
-						if (top->type == json_integer)
+						if (top->type == JSON_INTEGER)
 							top->u.integer = - top->u.integer;
 						else
 							top->u.dbl = - top->u.dbl;
@@ -777,18 +777,18 @@ json_value_t * json_parse_ex(
 					continue;
 				}
 
-				if (top->parent->type == json_array)
+				if (top->parent->type == JSON_ARRAY)
 					flags |= flag_seek_value;
 
 				if (!state.first_pass) {
 					json_value_t * parent = top->parent;
 
 					switch (parent->type) {
-						case json_object:
+						case JSON_OBJECT:
 							parent->u.object.values[parent->u.object.length].value = top;
 							break;
 
-						case json_array:
+						case JSON_ARRAY:
 							parent->u.array.values[parent->u.array.length] = top;
 							break;
 
@@ -861,7 +861,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * value) {
 
 	while (value) {
 		switch (value->type) {
-			case json_array:
+			case JSON_ARRAY:
 
 				if (!value->u.array.length) {
 					settings->mem_free(value->u.array.values, settings->user_data);
@@ -871,7 +871,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * value) {
 				value = value->u.array.values [--value->u.array.length];
 				continue;
 
-			case json_object:
+			case JSON_OBJECT:
 				if (!value->u.object.length) {
 					settings->mem_free(value->u.object.values, settings->user_data);
 					break;
@@ -880,7 +880,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * value) {
 				value = value->u.object.values [--value->u.object.length].value;
 				continue;
 
-			case json_string:
+			case JSON_STRING:
 				settings->mem_free(value->u.string.ptr, settings->user_data);
 				break;
 

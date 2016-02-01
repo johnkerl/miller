@@ -43,6 +43,8 @@ TOP-OF-LIST SUMMARY
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
 
+? archlinux link from cover?
+
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
 
@@ -53,6 +55,17 @@ TOP-OF-LIST DETAILS
   - define 'tabular JSON' by example @ mld
   ? flatten/unflatten option? "." syntax?
   ? or support multi-level lrecs??
+
+  ! lnx fixme:
+    input/json.c: In function ‘new_value’:
+    input/json.c:137: error: dereferencing type-punned pointer will break strict-aliasing rules
+    input/json.c: In function ‘json_parse_ex’:
+    input/json.c:397: error: dereferencing type-punned pointer will break strict-aliasing rules
+    input/json.c:405: error: dereferencing type-punned pointer will break strict-aliasing rules
+
+    http://cellperformance.beyond3d.com/articles/2006/06/understanding-strict-aliasing.html
+
+? env vars??
 
 * doc:
   o \0 example into mld:ref:regex
@@ -127,6 +140,8 @@ TOP-OF-LIST DETAILS
     real  0m3.250s 0m3.283s 0m3.300s
 
 ----------------------------------------------------------------
+
+* use enums throughout
 
 * shuffle? similar to bootstrap & sample.
 * look into 'perf'

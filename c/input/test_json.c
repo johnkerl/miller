@@ -84,32 +84,32 @@ static void process_value_aux(json_value_t* value, int depth) {
 	if (value == NULL) {
 		return;
 	}
-	if (value->type != json_object) {
+	if (value->type != JSON_OBJECT) {
 		print_depth_shift(depth);
 	}
 	switch (value->type) {
-		case json_none:
+		case JSON_NONE:
 			printf("none\n");
 			break;
-		case json_object:
+		case JSON_OBJECT:
 			process_object(value, depth+1);
 			break;
-		case json_array:
+		case JSON_ARRAY:
 			process_array(value, depth+1);
 			break;
-		case json_integer:
+		case JSON_INTEGER:
 			printf("int: %10" PRId64 "\n", value->u.integer);
 			break;
-		case json_double:
+		case JSON_DOUBLE:
 			printf("double: %f\n", value->u.dbl);
 			break;
-		case json_string:
+		case JSON_STRING:
 			printf("string: %s\n", value->u.string.ptr);
 			break;
-		case json_boolean:
+		case JSON_BOOLEAN:
 			printf("bool: %d\n", value->u.boolean);
 			break;
-		case json_null:
+		case JSON_NULL:
 			printf("null\n");
 			break;
 	}

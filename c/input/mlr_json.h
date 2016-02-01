@@ -18,12 +18,12 @@ void transfer_objects(json_value_t* ptop_level_json, sllv_t* pobjects);
 
 		// xxx
 		//switch(parsed_top_level_json->type) {
-		//case json_array:
+		//case JSON_ARRAY:
 		//	for each {
 		//		validate & add it
 		//	}
 		//	break;
-		//case json_object:
+		//case JSON_OBJECT:
 		//	validate & add it
 		//	break;
 		//default:

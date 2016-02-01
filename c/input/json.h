@@ -61,15 +61,14 @@ typedef struct {
 } json_settings_t;
 
 typedef enum {
-	json_none,
-	json_object,
-	json_array,
-	json_integer,
-	json_double,
-	json_string,
-	json_boolean,
-	json_null
-
+	JSON_NONE,
+	JSON_OBJECT,
+	JSON_ARRAY,
+	JSON_INTEGER,
+	JSON_DOUBLE,
+	JSON_STRING,
+	JSON_BOOLEAN,
+	JSON_NULL
 } json_type_t;
 
 extern const struct _json_value_t json_value_none;
