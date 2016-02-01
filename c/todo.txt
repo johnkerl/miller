@@ -51,7 +51,8 @@ TOP-OF-LIST DETAILS
   k output: mlr-native json output is trivial & just do it.
   - cover x 2
   - define 'tabular JSON' by example @ mld
-  ? flatten/unflatten option?
+  ? flatten/unflatten option? "." syntax?
+  ? or support multi-level lrecs??
 
 * doc:
   o \0 example into mld:ref:regex

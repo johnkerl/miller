@@ -1,7 +1,5 @@
 #include "mlr_json.h"
 
-
-
 // ----------------------------------------------------------------
 // xxx transfer func:
 // input: top-level json value

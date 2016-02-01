@@ -102,19 +102,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 		// xxx stub
 		sllv_append(pstate->parsed_json_objects, parsed_top_level_json);
-		// xxx
-		//switch(parsed_top_level_json->type) {
-		//case json_array:
-		//	for each {
-		//		validate & add it
-		//	}
-		//	break;
-		//case json_object:
-		//	validate & add it
-		//	break;
-		//default:
-		//	break;
-		//}
 
 		if (item_start == NULL)
 			break;
@@ -126,13 +113,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	}
 
 }
-
-// ----------------------------------------------------------------
-// xxx transfer func:
-// input: top-level json value
-// input: current sllv of object
-// output: appended sllv
-// json value will be freedo, or transferred to the sllv
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
