@@ -8,6 +8,8 @@ libinput_la_SOURCES=	\
 			file_reader_stdio.h \
 			json.c \
 			json.h \
+			mlr_json.c \
+			mlr_json.h \
 			line_readers.c \
 			line_readers.h \
 			lrec_reader.h \

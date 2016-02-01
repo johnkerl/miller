@@ -47,11 +47,11 @@ TOP-OF-LIST SUMMARY
 TOP-OF-LIST DETAILS
 
 * JSON I/O:
-  ! acknowledgement to mld
-  - input: https://github.com/udp/json-parser ? ; http://www.json.org/ C section
+  ! acknowledgement to mld: https://github.com/udp/json-parser
   k output: mlr-native json output is trivial & just do it.
   - cover x 2
   - define 'tabular JSON' by example @ mld
+  ? flatten/unflatten option?
 
 * doc:
   o \0 example into mld:ref:regex

@@ -25,8 +25,6 @@
 #include "input/json.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
-	// xxx cmt why both lists
-	sllv_t* parsed_top_level_jsons;
 	sllv_t* parsed_json_objects;
 	int num_records;
 	int record_index;
@@ -41,9 +39,9 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
-	pstate->parsed_top_level_jsons = NULL;
-	pstate->num_records            = 0;
-	pstate->record_index           = 0;
+	pstate->parsed_json_objects = NULL;
+	pstate->num_records         = 0;
+	pstate->record_index        = 0;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -57,11 +55,11 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 
 static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 	lrec_reader_mmap_json_state_t* pstate = preader->pvstate;
-	for (sllve_t* pe = pstate->parsed_top_level_jsons->phead; pe != NULL; pe = pe->pnext) {
-		json_value_t* parsed_top_level_json = pe->pvvalue;
-		json_value_free(parsed_top_level_json);
+	for (sllve_t* pe = pstate->parsed_json_objects->phead; pe != NULL; pe = pe->pnext) {
+		json_value_t* parsed_json_object = pe->pvvalue;
+		json_value_free(parsed_json_object);
 	}
-	sllv_free(pstate->parsed_top_level_jsons);
+	sllv_free(pstate->parsed_json_objects);
 	free(pstate);
 	free(preader);
 }
@@ -79,15 +77,15 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		.max_memory = 0
 	};
 
-	if (pstate->parsed_top_level_jsons != NULL) {
-		for (sllve_t* pe = pstate->parsed_top_level_jsons->phead; pe != NULL; pe = pe->pnext) {
-			json_value_t* parsed_top_level_json = pe->pvvalue;
-			json_value_free(parsed_top_level_json);
+	if (pstate->parsed_json_objects != NULL) {
+		for (sllve_t* pe = pstate->parsed_json_objects->phead; pe != NULL; pe = pe->pnext) {
+			json_value_t* parsed_json_object = pe->pvvalue;
+			json_value_free(parsed_json_object);
 		}
 		// xxx make an sllv_free_with_callback & use it throughout
-		sllv_free(pstate->parsed_top_level_jsons);
+		sllv_free(pstate->parsed_json_objects);
 	}
-	pstate->parsed_top_level_jsons = sllv_alloc();
+	pstate->parsed_json_objects = sllv_alloc();
 
 	// xxx comment support missing outer [], as jq does.
 
@@ -102,7 +100,8 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			exit(1);
 		}
 
-		sllv_append(pstate->parsed_top_level_jsons, parsed_top_level_json);
+		// xxx stub
+		sllv_append(pstate->parsed_json_objects, parsed_top_level_json);
 		// xxx
 		//switch(parsed_top_level_json->type) {
 		//case json_array:
@@ -127,6 +126,13 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	}
 
 }
+
+// ----------------------------------------------------------------
+// xxx transfer func:
+// input: top-level json value
+// input: current sllv of object
+// output: appended sllv
+// json value will be freedo, or transferred to the sllv
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
