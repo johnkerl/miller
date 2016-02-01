@@ -103,6 +103,19 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		}
 
 		sllv_append(pstate->parsed_top_level_jsons, parsed_top_level_json);
+		// xxx
+		//switch(parsed_top_level_json->type) {
+		//case json_array:
+		//	for each {
+		//		validate & add it
+		//	}
+		//	break;
+		//case json_object:
+		//	validate & add it
+		//	break;
+		//default:
+		//	break;
+		//}
 
 		if (item_start == NULL)
 			break;
