@@ -104,6 +104,8 @@ TEST_LREC_SRCS = \
   input/lrec_reader_stdio_nidx.c \
   input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
+  input/lrec_reader_mmap_json.c \
+  input/lrec_reader_stdio_json.c \
   unit_test/test_lrec.c
 
 TEST_MULTIPLE_CONTAINERS_SRCS = \
@@ -138,6 +140,8 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   input/lrec_reader_stdio_nidx.c \
   input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
+  input/lrec_reader_mmap_json.c \
+  input/lrec_reader_stdio_json.c \
   unit_test/test_multiple_containers.c
 
 TEST_MLHMMV_SRCS = \
@@ -227,6 +231,8 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   input/lrec_reader_stdio_nidx.c \
   input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
+  input/lrec_reader_mmap_json.c \
+  input/lrec_reader_stdio_json.c \
   input/file_reader_mmap.c \
   input/file_reader_stdio.c \
   input/peek_file_reader.c \

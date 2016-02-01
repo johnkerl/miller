@@ -31,6 +31,11 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 			return lrec_reader_mmap_xtab_alloc(ifs, ips, allow_repeat_ips);
 		else
 			return lrec_reader_stdio_xtab_alloc(ifs, ips, allow_repeat_ips);
+	} else if (streq(fmtdesc, "json")) {
+		if (use_mmap)
+			return lrec_reader_mmap_json_alloc();
+		else
+			return NULL; // xxx stub
 	} else {
 		return NULL;
 	}

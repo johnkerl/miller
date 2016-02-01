@@ -746,6 +746,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp";
 		} else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp";
 
+		} else if (streq(argv[argi], "--json"))     { popts->ifile_fmt = popts->ofile_fmt = "json";
+		} else if (streq(argv[argi], "--ijson"))    { popts->ifile_fmt = "json";
 		} else if (streq(argv[argi], "--ojson"))    { popts->ofile_fmt = "json";
 
 		} else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx";
