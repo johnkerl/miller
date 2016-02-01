@@ -42,8 +42,6 @@ int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_read
 			ctx.filenum++;
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
-			// Start-of-file hook, e.g. expecting CSV headers on input.
-			plrec_reader->psof_func(plrec_reader->pvstate);
 			ok = do_file_chained(prepipe, *pfilename, &ctx, plrec_reader, pmapper_list,
 				plrec_writer, output_stream) && ok;
 		}
@@ -64,6 +62,9 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
 {
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
+
+	// Start-of-file hook, e.g. expecting CSV headers on input.
+	plrec_reader->psof_func(plrec_reader->pvstate);
 
 	while (1) {
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);

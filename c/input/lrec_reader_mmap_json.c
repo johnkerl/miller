@@ -22,8 +22,12 @@
 #include "lib/mlrutil.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
+#include "input/json.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
+	json_value_t* parsed_json;
+	int num_records;
+	int record_index;
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -35,6 +39,8 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
+	pstate->num_records         = 0;
+	pstate->record_index        = 0;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -47,11 +53,16 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 }
 
 static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
-	free(preader->pvstate);
+	lrec_reader_mmap_json_state_t* pstate = preader->pvstate;
+	json_value_free(pstate->parsed_json);
+	pstate->parsed_json = NULL;
+	free(pstate);
 	free(preader);
 }
 
+// xxx cmt non-streaming; ingest-all here.
 static void lrec_reader_mmap_json_sof(void* pvstate) {
+// xxx parse
 }
 
 // ----------------------------------------------------------------
