@@ -344,7 +344,7 @@ test-mlhmmv: .always
 	$(CCDEBUG) $(TEST_MLHMMV_SRCS) -o test-mlhmmv -lm
 
 test-mlrutil: .always
-	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) -o test-mlrutil
+	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) -o test-mlrutil -lm
 
 test-mlrregex: .always
 	$(CCDEBUG) $(TEST_MLRREGEX_SRCS) -o test-mlrregex
@@ -359,7 +359,7 @@ test-lrec-evaluators: .always
 	$(CCDEBUG) $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
 
 test-join-bucket-keeper: .always
-	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper
+	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper -lm
 
 # ----------------------------------------------------------------
 # Standalone mains
