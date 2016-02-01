@@ -12,7 +12,7 @@ typedef struct _lrec_reader_in_memory_state_t {
 } lrec_reader_in_memory_state_t;
 
 static void    lrec_reader_in_memory_free(lrec_reader_t* preader);
-static void    lrec_reader_in_memory_sof(void* pvstate);
+static void    lrec_reader_in_memory_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_in_memory_process(void* pvstate, void* pvhandle, context_t* pctx);
 static void*   lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* filename);
 static void    lrec_reader_in_memory_vclose(void* pvstate, void* pvhandle, char* prepipe);
@@ -42,7 +42,7 @@ static void lrec_reader_in_memory_free(lrec_reader_t* preader) {
 }
 
 // No-op for stateless readers such as this one.
-static void lrec_reader_in_memory_sof(void* pvstate) {
+static void lrec_reader_in_memory_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------

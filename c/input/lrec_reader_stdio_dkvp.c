@@ -17,7 +17,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 } lrec_reader_stdio_dkvp_state_t;
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
-static void    lrec_reader_stdio_dkvp_sof(void* pvstate);
+static void    lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
@@ -60,7 +60,7 @@ static void lrec_reader_stdio_dkvp_free(lrec_reader_t* preader) {
 }
 
 // No-op for stateless readers such as this one.
-static void lrec_reader_stdio_dkvp_sof(void* pvstate) {
+static void lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------

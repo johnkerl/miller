@@ -64,7 +64,7 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
 
 	// Start-of-file hook, e.g. expecting CSV headers on input.
-	plrec_reader->psof_func(plrec_reader->pvstate);
+	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
 
 	while (1) {
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);

@@ -505,7 +505,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->prepipe,
 		pstate->popts->left_file_name);
-	plrec_reader->psof_func(plrec_reader->pvstate);
+	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->popts->left_file_name };
 	context_t* pctx = &ctx;

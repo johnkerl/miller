@@ -12,7 +12,7 @@ struct _lrec_reader_t; // forward reference for method declarations
 typedef void*   lrec_reader_open_func_t(void* pvstate, char* prepipe, char* filename);
 typedef void    lrec_reader_close_func_t(void* pvstate, void* pvhandle, char* prepipe);
 typedef lrec_t* lrec_reader_process_func_t(void* pvstate, void* pvhandle, context_t* pctx);
-typedef void    lrec_reader_sof_func_t(void* pvstate);
+typedef void    lrec_reader_sof_func_t(void* pvstate, void* pvhandle);
 typedef void    lrec_reader_free_func_t(struct _lrec_reader_t* preader);
 
 typedef struct _lrec_reader_t {

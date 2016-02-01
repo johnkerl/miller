@@ -168,7 +168,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(
 	join_bucket_keeper_t* pkeeper = mlr_malloc_or_die(sizeof(join_bucket_keeper_t));
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, left_file_name);
-	plrec_reader->psof_func(plrec_reader->pvstate);
+	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
 
 	context_t* pctx = mlr_malloc_or_die(sizeof(context_t));
 	context_init(pctx, left_file_name);

@@ -13,7 +13,7 @@ typedef struct _lrec_reader_stdio_nidx_state_t {
 } lrec_reader_stdio_nidx_state_t;
 
 static void    lrec_reader_stdio_nidx_free(lrec_reader_t* preader);
-static void    lrec_reader_stdio_nidx_sof(void* pvstate);
+static void    lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
@@ -54,7 +54,7 @@ static void lrec_reader_stdio_nidx_free(lrec_reader_t* preader) {
 }
 
 // No-op for stateless readers such as this one.
-static void lrec_reader_stdio_nidx_sof(void* pvstate) {
+static void lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------

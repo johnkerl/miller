@@ -31,7 +31,7 @@ typedef struct _lrec_reader_mmap_json_state_t {
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
-static void    lrec_reader_mmap_json_sof(void* pvstate);
+static void    lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
@@ -61,8 +61,8 @@ static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 }
 
 // xxx cmt non-streaming; ingest-all here.
-static void lrec_reader_mmap_json_sof(void* pvstate) {
-// xxx parse
+static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
+
 }
 
 // ----------------------------------------------------------------
