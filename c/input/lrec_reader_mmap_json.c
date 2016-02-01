@@ -25,7 +25,9 @@
 #include "input/json.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
-	json_value_t* parsed_json;
+	// xxx cmt why both lists
+	sllv_t* parsed_top_level_jsons;
+	sllv_t* parsed_json_objects;
 	int num_records;
 	int record_index;
 } lrec_reader_mmap_json_state_t;
@@ -39,8 +41,9 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
-	pstate->num_records         = 0;
-	pstate->record_index        = 0;
+	pstate->parsed_top_level_jsons = NULL;
+	pstate->num_records            = 0;
+	pstate->record_index           = 0;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -54,14 +57,61 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int 
 
 static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 	lrec_reader_mmap_json_state_t* pstate = preader->pvstate;
-	json_value_free(pstate->parsed_json);
-	pstate->parsed_json = NULL;
+	for (sllve_t* pe = pstate->parsed_top_level_jsons->phead; pe != NULL; pe = pe->pnext) {
+		json_value_t* parsed_top_level_json = pe->pvvalue;
+		json_value_free(parsed_top_level_json);
+	}
+	sllv_free(pstate->parsed_top_level_jsons);
 	free(pstate);
 	free(preader);
 }
 
 // xxx cmt non-streaming; ingest-all here.
+// xxx need an eof hook too!! or .... free on successive sofs, then on free ...
 static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
+	lrec_reader_mmap_json_state_t* pstate = pvstate;
+	file_reader_mmap_state_t* phandle = pvhandle;
+	json_char* json_input = (json_char*)phandle->sol;
+	json_value_t* parsed_top_level_json;
+	json_char error_buf[JSON_ERROR_MAX];
+	json_settings_t settings = {
+		.setting_flags = JSON_ENABLE_SEQUENTIAL_OBJECTS,
+		.max_memory = 0
+	};
+
+	if (pstate->parsed_top_level_jsons != NULL) {
+		for (sllve_t* pe = pstate->parsed_top_level_jsons->phead; pe != NULL; pe = pe->pnext) {
+			json_value_t* parsed_top_level_json = pe->pvvalue;
+			json_value_free(parsed_top_level_json);
+		}
+		// xxx make an sllv_free_with_callback & use it throughout
+		sllv_free(pstate->parsed_top_level_jsons);
+	}
+	pstate->parsed_top_level_jsons = sllv_alloc();
+
+	// xxx comment support missing outer [], as jq does.
+
+	json_char* item_start = json_input;
+	int length = phandle->eof - phandle->sol;;
+
+	while (TRUE) {
+		parsed_top_level_json = json_parse_ex(item_start, length, error_buf, &item_start, &settings);
+
+		if (parsed_top_level_json == NULL) {
+			fprintf(stderr, "Unable to parse JSON data: %s\n", error_buf);
+			exit(1);
+		}
+
+		sllv_append(pstate->parsed_top_level_jsons, parsed_top_level_json);
+
+		if (item_start == NULL)
+			break;
+		if (*item_start == 0)
+			break;
+		length -= (item_start - json_input);
+		json_input = item_start;
+
+	}
 
 }
 

@@ -46,6 +46,7 @@
 
 // ----------------------------------------------------------------
 #define JSON_ENABLE_COMMENTS           0x01
+// xxx comment
 #define JSON_ENABLE_SEQUENTIAL_OBJECTS 0x02
 
 typedef struct {
