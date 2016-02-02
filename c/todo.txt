@@ -9,6 +9,7 @@ TOP-OF-LIST SUMMARY
 * JSON input: many important subtasks remaining
 * parameterized emit
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+! freebsd: research into flexv9 compatibility
 
 * doc items
 * xxxes
