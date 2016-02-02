@@ -105,8 +105,9 @@ lrec_t* validate_millerable_object(json_value_t* pjson) {
 		json_value_t* pvalue = pobject_entry->pvalue;
 		if (pvalue->type == JSON_ARRAY || pvalue->type == JSON_OBJECT) {
 			fprintf(stderr,
-				"%s: found nested non-object (type %s). This is valid but unmillerable JSON.\n",
+				"%s: found nested non-terminal (type %s). This is valid but unmillerable JSON.\n",
 				MLR_GLOBALS.argv0, json_describe_type(pvalue->type));
+			exit(1);
 		}
 
 	}
