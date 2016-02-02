@@ -53,7 +53,10 @@ TOP-OF-LIST DETAILS
   k output: mlr-native json output is trivial & just do it.
   - cover x 2
   - define 'tabular JSON' by example @ mld
-  ? flatten/unflatten option? "." syntax?
+  ? flatten/unflatten option? ":" syntax?
+    - programmable allow-this-on-input flag
+    - programmable allow-this-on-output flag
+    - programmable flatten-separator
   ? or support multi-level lrecs??
 
   ! lnx fixme:

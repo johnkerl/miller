@@ -51,6 +51,8 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter) {
 static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_writer_json_state_t* pstate = pvstate;
 
+	// xxx split on ":" ... convert to mlhmmv & just use that?!?!??
+
 	if (prec != NULL) { // not end of record stream
 
 		if (pstate->counter == 0)
