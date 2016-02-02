@@ -900,3 +900,18 @@ void json_value_free(json_value_t * value) {
 	settings.mem_free = default_free;
 	json_value_free_ex(&settings, value);
 }
+
+// ----------------------------------------------------------------
+char* json_describe_type(json_type_t type) {
+	switch(type) {
+	case JSON_NONE:    return "JSON_NONE";    break;
+	case JSON_OBJECT:  return "JSON_OBJECT";  break;
+	case JSON_ARRAY:   return "JSON_ARRAY";   break;
+	case JSON_INTEGER: return "JSON_INTEGER"; break;
+	case JSON_DOUBLE:  return "JSON_DOUBLE";  break;
+	case JSON_STRING:  return "JSON_STRING";  break;
+	case JSON_BOOLEAN: return "JSON_BOOLEAN"; break;
+	case JSON_NULL:    return "JSON_NULL";    break;
+	default:           return "???";          break;
+	}
+}

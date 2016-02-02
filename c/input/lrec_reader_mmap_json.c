@@ -23,8 +23,11 @@
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 #include "input/json.h"
+// xxx to mlr_json_adapter or some such
+#include "input/mlr_json.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
+	// xxx just have a list of top-level objects and a list of lrecs?
 	sllv_t* parsed_json_objects;
 	int num_records;
 	int record_index;
@@ -101,7 +104,9 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		}
 
 		// xxx stub
-		sllv_append(pstate->parsed_json_objects, parsed_top_level_json);
+		//sllv_append(pstate->parsed_json_objects, parsed_top_level_json);
+		// xxx swap arg order
+		transfer_objects(parsed_top_level_json, pstate->parsed_json_objects);
 
 		if (item_start == NULL)
 			break;

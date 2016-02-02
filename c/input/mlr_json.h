@@ -14,7 +14,7 @@
 // output: appended sllv
 // json value will be freed, or transferred to the sllv
 
-void transfer_objects(json_value_t* ptop_level_json, sllv_t* pobjects);
+int transfer_objects(json_value_t* ptop_level_json, sllv_t* pobjects);
 
 		// xxx
 		//switch(parsed_top_level_json->type) {

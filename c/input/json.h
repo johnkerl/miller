@@ -26,6 +26,8 @@
 // SUCH DAMAGE.
 // ================================================================
 
+// xxx rename to json_parser.c/h
+
 #ifndef _JSON_H
 #define _JSON_H
 
@@ -138,5 +140,7 @@ void json_value_free(json_value_t *);
 void json_value_free_ex(
 	json_settings_t * settings,
 	json_value_t *);
+
+char* json_describe_type(json_type_t type);
 
 #endif // _JSON_H
