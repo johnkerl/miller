@@ -5,6 +5,7 @@
 // xxx validate func: return lrec or null.
 // xxx mem-mgmt semantics
 static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep);
+static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep);
 
 // ----------------------------------------------------------------
 // xxx transfer func:
@@ -64,11 +65,13 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 		json_object_entry_t* pobject_entry = &pjson->u.object.values[i];
 		char* key = (char*)pobject_entry->name;
 		char* lrec_value = NULL;
+		char* prefix = NULL;
 		char free_flags = NO_FREE;
 
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		switch (pjson_value->type) {
 
+		// xxx move this to populate_from...
 		case JSON_NONE:
 			lrec_put(prec, key, "", NO_FREE);
 			break;
@@ -84,11 +87,10 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			lrec_put(prec, key, lrec_value, NO_FREE);
 			break;
 		case JSON_OBJECT:
-			// xxx not yet
-			fprintf(stderr,
-				"%s: found nested JSON object. This is valid but unmillerable JSON.\n",
-				MLR_GLOBALS.argv0);
-			exit(1);
+			// xxx could be made more efficient ... the strlen is in the json_value_t.
+			prefix = mlr_paste_2_strings(key, flatten_sep);
+			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep);
+			free(prefix);
 			break;
 		case JSON_ARRAY:
 			fprintf(stderr,
@@ -112,4 +114,63 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 
 	}
 	return prec; // xxx temp
+}
+
+// ----------------------------------------------------------------
+// xxx comment
+// xxx pre-cond
+// xxx post-cond
+static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep) {
+	int n = pjson_object->u.object.length;
+	for (int i = 0; i < n; i++) {
+		json_object_entry_t* pobject_entry = &pjson_object->u.object.values[i];
+		char* json_key = (char*)pobject_entry->name;
+		json_value_t* pjson_value = pobject_entry->pvalue;
+		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
+		char* lrec_value = NULL;
+		char* prefix = NULL;
+		char free_flags = NO_FREE;
+
+		switch (pjson_value->type) {
+		case JSON_NONE:
+			lrec_put(prec, lrec_key, "", NO_FREE);
+			break;
+		case JSON_NULL:
+			lrec_put(prec, lrec_key, "", NO_FREE);
+			break;
+		case JSON_STRING:
+			lrec_value = pjson_value->u.string.ptr;
+			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
+			break;
+		case JSON_BOOLEAN:
+			lrec_value = pjson_value->u.boolean ? "true" : "false";
+			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
+			break;
+		case JSON_OBJECT:
+			// xxx could be made more efficient ... the strlen is in the json_value_t.
+			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep);
+			free(prefix);
+			break;
+		case JSON_ARRAY:
+			fprintf(stderr,
+				"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
+				MLR_GLOBALS.argv0);
+			break;
+		case JSON_INTEGER:
+			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer);
+			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			break;
+		case JSON_DOUBLE:
+			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl, MLR_GLOBALS.ofmt);
+			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			break;
+		default:
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+			break;
+		}
+
+	}
 }
