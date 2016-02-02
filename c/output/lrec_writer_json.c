@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <string.h>
 #include "lib/mlrutil.h"
+#include "containers/mlhmmv.h"
 #include "output/lrec_writers.h"
 
 typedef struct _lrec_writer_json_state_t {
@@ -8,10 +10,8 @@ typedef struct _lrec_writer_json_state_t {
 	int quote_json_values_always;
 	char* before_records_at_start_of_stream;
 	char* between_records_after_start_of_stream;
-	char* left_curly_at_start_of_record;
-	char* between_fields;
-	char* right_curly_at_end_of_record;
 	char* after_records_at_end_of_stream;
+	int stack_vertically;
 
 } lrec_writer_json_state_t;
 
@@ -28,12 +28,10 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	pstate->quote_json_values_always = quote_json_values_always;
 	pstate->counter = 0;
 
-	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n"   : "";
-	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","     : "";
-	pstate->left_curly_at_start_of_record         = stack_vertically               ? "{\n  " : "{ ";
-	pstate->between_fields                        = stack_vertically               ? ",\n  " : ", ";
-	pstate->right_curly_at_end_of_record          = stack_vertically               ? "\n}\n" : " }\n";
-	pstate->after_records_at_end_of_stream        = wrap_json_output_in_outer_list ? "]\n"   : "";
+	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";
+	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
+	pstate->after_records_at_end_of_stream        = wrap_json_output_in_outer_list ? "]\n" : "";
+	pstate->stack_vertically                      = stack_vertically;
 
 	plrec_writer->pvstate       = (void*)pstate;
 	plrec_writer->pprocess_func = lrec_writer_json_process;
@@ -50,48 +48,35 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter) {
 // ----------------------------------------------------------------
 static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
 	lrec_writer_json_state_t* pstate = pvstate;
-
-	// xxx split on ":" ... convert to mlhmmv & just use that?!?!??
-
 	if (prec != NULL) { // not end of record stream
-
-		if (pstate->counter == 0)
-			fputs(pstate->before_records_at_start_of_stream, output_stream);
+		if (pstate->counter++ == 0)
+			printf("%s", pstate->before_records_at_start_of_stream);
 		else
-			fputs(pstate->between_records_after_start_of_stream, output_stream);
+			printf("%s", pstate->between_records_after_start_of_stream);
+		mlhmmv_t* pmap = mlhmmv_alloc();
 
-		fputs(pstate->left_curly_at_start_of_record, output_stream);
+		char* flatten_sep = ":"; // xxx temp; needs to be parameterized
 
-		int nf = 0;
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			if (nf > 0)
-				fputs(pstate->between_fields, output_stream);
+			char* lkey = pe->key;
+			char* lvalue = pe->value;
 
-			fputs("\"", output_stream);
-			fputs(pe->key, output_stream);
-			fputs("\"", output_stream);
-
-			if (pstate->quote_json_values_always) {
-				fputs(": \"", output_stream);
-				fputs(pe->value, output_stream);
-				fputs("\"", output_stream);
-			} else {
-				double unused;
-				if (mlr_try_float_from_string(pe->value, &unused)) {
-					fputs(": ", output_stream);
-					fputs(pe->value, output_stream);
-				} else {
-					fputs(": \"", output_stream);
-					fputs(pe->value, output_stream);
-					fputs("\"", output_stream);
-				}
+			sllmv_t* pmvkeys = sllmv_alloc();
+			for (char* piece = strtok(lkey, flatten_sep); piece != NULL; piece = strtok(NULL, flatten_sep)) {
+				mv_t mvkey = mv_from_string(piece, NO_FREE);
+				sllmv_add(pmvkeys, &mvkey);
 			}
-			nf++;
+			mv_t mvval = mv_from_string(lvalue, NO_FREE);
+			mlhmmv_put(pmap, pmvkeys, &mvval);
+			sllmv_free(pmvkeys);
 		}
-		fputs(pstate->right_curly_at_end_of_record, output_stream);
 
-		pstate->counter++;
-		lrec_free(prec); // end of baton-pass
+		if (pstate->stack_vertically)
+			mlhmmv_print_stacked(pmap, pstate->quote_json_values_always);
+		else
+			mlhmmv_print_single_line(pmap, pstate->quote_json_values_always);
+
+		mlhmmv_free(pmap);
 
 	} else { // end of record stream
 		fputs(pstate->after_records_at_end_of_stream, output_stream);

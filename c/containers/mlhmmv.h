@@ -76,7 +76,7 @@ void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-void mlhmmv_print_stacked(mlhmmv_t* pmap);
-void mlhmmv_print_single_line(mlhmmv_t* pmap);
+void mlhmmv_print_stacked(mlhmmv_t* pmap, int quote_values_always);
+void mlhmmv_print_single_line(mlhmmv_t* pmap, int quote_values_always);
 
 #endif // MLHMMV_H
