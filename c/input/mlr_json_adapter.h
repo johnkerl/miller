@@ -8,10 +8,11 @@
 
 
 // ----------------------------------------------------------------
-// input: current sllv of lrec
+// xxx fix cmt:
+// input: current sllv of lrecs
 // input: top-level json value
 // output: appended sllv
-// xxx mem-mgmt semantics
+// xxx define pointer-ownership ... the sllv should not free the strings.
 
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep);
 

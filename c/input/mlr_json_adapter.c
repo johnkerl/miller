@@ -2,21 +2,10 @@
 #include "lib/mlrutil.h"
 #include "input/mlr_json_adapter.h"
 
-// xxx validate func: return lrec or null.
-// xxx mem-mgmt semantics
 static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep);
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep);
 
 // ----------------------------------------------------------------
-// xxx transfer func:
-// input: top-level json value
-// input: current sllv of object
-// output: appended sllv
-// json value will be freed, or transferred to the sllv
-// xxx define work done here: *not* recursing into JSON objects. just ascertaining that they *are* JSON objects.
-// xxx define pointer-ownership ... the sllv should not free the strings.
-// xxx why not make lrecs right here -- want to be able to produce data up to the bad point (or not ...)
-
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep) {
 	if (ptop_level_json->type == JSON_ARRAY) {
 		int n = ptop_level_json->u.array.length;
@@ -44,21 +33,13 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 	return TRUE;
 }
 
-// JSON_NONE
-// JSON_OBJECT
-// JSON_ARRAY
-// JSON_INTEGER
-// JSON_DOUBLE
-// JSON_STRING
-// JSON_BOOLEAN
-// JSON_NULL
-
 // ----------------------------------------------------------------
-// xxx validate func: return object or null.
-// xxx rename
+// Returns NULL if the JSON object is not millerable, else returns a new lrec with string pointers
+// backed by the JSON object.
+//
+// Precondition: the JSON value is assumed to have already been checked to be of type JSON_OBJECT.
 
 lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
-	// xxx redundantly assert this is of type JSON_OBJECT? or just note as precondition?
 	lrec_t* prec = lrec_unbacked_alloc();
 	int n = pjson->u.array.length;
 	for (int i = 0; i < n; i++) {
@@ -71,7 +52,6 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		switch (pjson_value->type) {
 
-		// xxx move this to populate_from...
 		case JSON_NONE:
 			lrec_put(prec, key, "", NO_FREE);
 			break;
@@ -87,7 +67,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			lrec_put(prec, key, lrec_value, NO_FREE);
 			break;
 		case JSON_OBJECT:
-			// xxx could be made more efficient ... the strlen is in the json_value_t.
+			// This could be made more efficient ... the string length is in the json_value_t.
 			prefix = mlr_paste_2_strings(key, flatten_sep);
 			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep);
 			free(prefix);
@@ -113,13 +93,13 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 		}
 
 	}
-	return prec; // xxx temp
+	return prec;
 }
 
 // ----------------------------------------------------------------
-// xxx comment
-// xxx pre-cond
-// xxx post-cond
+// Example: the JSON object has { "a": { "b" : 1, "c" : 2 } }. Then we add "a:b" => "1" and "a:c" => "2"
+// to the lrec.
+
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep) {
 	int n = pjson_object->u.object.length;
 	for (int i = 0; i < n; i++) {
@@ -147,7 +127,6 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
 			break;
 		case JSON_OBJECT:
-			// xxx could be made more efficient ... the strlen is in the json_value_t.
 			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
 			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep);
 			free(prefix);
