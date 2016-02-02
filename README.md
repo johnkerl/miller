@@ -5,6 +5,7 @@
 [![Distros](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Distros](https://img.shields.io/badge/distros-debian-c70036.svg)](https://buildd.debian.org/status/package.php?p=miller)
 [![Distros](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
+[![Distros](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
 [![Distros](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew/search?utf8=%E2%9C%93&q=miller)
 
 With Miller, you get to use named fields without needing to count positional
