@@ -61,7 +61,7 @@ static void process_object(json_value_t* value, int depth) {
 	for (x = 0; x < length; x++) {
 		print_depth_shift(depth);
 		printf("object[%d].name = %s\n", x, value->u.object.values[x].name);
-		process_value_aux(value->u.object.values[x].value, depth+1);
+		process_value_aux(value->u.object.values[x].pvalue, depth+1);
 	}
 }
 
@@ -100,6 +100,7 @@ static void process_value_aux(json_value_t* value, int depth) {
 		case JSON_INTEGER:
 			printf("int: %10" PRId64 "\n", value->u.integer);
 			break;
+		// xxx modify the parse to preserve strings. no reason to be discarding digits just on the read operation.
 		case JSON_DOUBLE:
 			printf("double: %f\n", value->u.dbl);
 			break;

@@ -785,7 +785,7 @@ json_value_t * json_parse_ex(
 
 					switch (parent->type) {
 						case JSON_OBJECT:
-							parent->u.object.values[parent->u.object.length].value = top;
+							parent->u.object.values[parent->u.object.length].pvalue = top;
 							break;
 
 						case JSON_ARRAY:
@@ -851,54 +851,54 @@ e_failed:
 }
 
 // ----------------------------------------------------------------
-void json_value_free_ex(json_settings_t * settings, json_value_t * value) {
+void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 	json_value_t * cur_value;
 
-	if (!value)
+	if (!pvalue)
 		return;
 
-	value->parent = 0;
+	pvalue->parent = 0;
 
-	while (value) {
-		switch (value->type) {
+	while (pvalue) {
+		switch (pvalue->type) {
 			case JSON_ARRAY:
 
-				if (!value->u.array.length) {
-					settings->mem_free(value->u.array.values, settings->user_data);
+				if (!pvalue->u.array.length) {
+					settings->mem_free(pvalue->u.array.values, settings->user_data);
 					break;
 				}
 
-				value = value->u.array.values [--value->u.array.length];
+				pvalue = pvalue->u.array.values [--pvalue->u.array.length];
 				continue;
 
 			case JSON_OBJECT:
-				if (!value->u.object.length) {
-					settings->mem_free(value->u.object.values, settings->user_data);
+				if (!pvalue->u.object.length) {
+					settings->mem_free(pvalue->u.object.values, settings->user_data);
 					break;
 				}
 
-				value = value->u.object.values [--value->u.object.length].value;
+				pvalue = pvalue->u.object.values [--pvalue->u.object.length].pvalue;
 				continue;
 
 			case JSON_STRING:
-				settings->mem_free(value->u.string.ptr, settings->user_data);
+				settings->mem_free(pvalue->u.string.ptr, settings->user_data);
 				break;
 
 			default:
 				break;
 		};
 
-		cur_value = value;
-		value = value->parent;
+		cur_value = pvalue;
+		pvalue = pvalue->parent;
 		settings->mem_free(cur_value, settings->user_data);
 	}
 }
 
 // ----------------------------------------------------------------
-void json_value_free(json_value_t * value) {
+void json_value_free(json_value_t * pvalue) {
 	json_settings_t settings = { 0 };
 	settings.mem_free = default_free;
-	json_value_free_ex(&settings, value);
+	json_value_free_ex(&settings, pvalue);
 }
 
 // ----------------------------------------------------------------

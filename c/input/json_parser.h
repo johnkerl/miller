@@ -76,7 +76,7 @@ extern const struct _json_value_t json_value_none;
 typedef struct _json_object_entry_t {
 	 json_char * name;
 	 unsigned int name_length;
-	 struct _json_value_t * value;
+	 struct _json_value_t * pvalue;
 } json_object_entry_t;
 
 typedef struct _json_value_t {
