@@ -6,7 +6,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* JSON input
+* JSON input: many important subtasks remaining
 * parameterized emit
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
@@ -43,7 +43,13 @@ TOP-OF-LIST SUMMARY
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
 
+* freebsd!
+  http://comments.gmane.org/gmane.os.freebsd.devel.ports/128624
+  https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=206785
+
 ? archlinux link from cover?
+
+!! xref to ffe !!
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
