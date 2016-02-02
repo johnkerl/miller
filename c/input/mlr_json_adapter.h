@@ -1,9 +1,9 @@
 // Transfers data from the JSON parser to Miller records
 
-#ifndef MLR_JSON_H
-#define MLR_JSON_H
+#ifndef MLR_JSON_ADAPTER_H
+#define MLR_JSON_ADAPTER_H
 
-#include "input/json.h"
+#include "input/json_parser.h"
 #include "containers/lrec.h"
 
 
@@ -35,5 +35,4 @@ int transfer_objects(json_value_t* ptop_level_json, sllv_t* pobjects);
 
 json_value_t* validate_millerable_object(json_value_t* pjson);
 
-
-#endif // MLR_JSON_H
+#endif // MLR_JSON_ADAPTER_H

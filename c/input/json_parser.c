@@ -26,7 +26,7 @@
 // SUCH DAMAGE.
 // ================================================================
 
-#include "json.h"
+#include "json_parser.h"
 
 const struct _json_value_t json_value_none;
 

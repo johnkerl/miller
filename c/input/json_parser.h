@@ -26,10 +26,8 @@
 // SUCH DAMAGE.
 // ================================================================
 
-// xxx rename to json_parser.c/h
-
-#ifndef _JSON_H
-#define _JSON_H
+#ifndef JSON_PARSER_H
+#define JSON_PARSER_H
 
 #ifndef json_char
 	#define json_char char
@@ -143,4 +141,4 @@ void json_value_free_ex(
 
 char* json_describe_type(json_type_t type);
 
-#endif // _JSON_H
+#endif // JSON_PARSER_H

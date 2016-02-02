@@ -22,9 +22,8 @@
 #include "lib/mlrutil.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
-#include "input/json.h"
-// xxx to mlr_json_adapter or some such
-#include "input/mlr_json.h"
+#include "input/json_parser.h"
+#include "input/mlr_json_adapter.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
 	// xxx just have a list of top-level objects and a list of lrecs?

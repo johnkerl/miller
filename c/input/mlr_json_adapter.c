@@ -1,6 +1,6 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "input/mlr_json.h"
+#include "input/mlr_json_adapter.h"
 
 // ----------------------------------------------------------------
 // xxx transfer func:
@@ -39,20 +39,6 @@ int transfer_objects(json_value_t* ptop_level_json, sllv_t* pobjects) {
 	}
 	return TRUE;
 }
-
-		// xxx
-		//switch(parsed_top_level_json->type) {
-		//case JSON_ARRAY:
-		//	for each {
-		//		validate & add it
-		//	}
-		//	break;
-		//case JSON_OBJECT:
-		//	validate & add it
-		//	break;
-		//default:
-		//	break;
-		//}
 
 // JSON_NONE
 // JSON_OBJECT

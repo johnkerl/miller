@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-#include "json.h"
+#include "json_parser.h"
 
 // Test for json.c
 //
