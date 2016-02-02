@@ -380,6 +380,8 @@ static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 				double unused;
 				if (mlr_try_float_from_string(level_value_string, &unused))
 					printf("%s", level_value_string);
+				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
+					printf("%s", level_value_string);
 				else
 					printf("\"%s\"", level_value_string);
 			} else {
@@ -430,6 +432,8 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
 				double unused;
 				if (mlr_try_float_from_string(level_value_string, &unused))
+					printf("%s", level_value_string);
+				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
 					printf("%s", level_value_string);
 				else
 					printf("\"%s\"", level_value_string);
