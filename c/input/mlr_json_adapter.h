@@ -13,6 +13,6 @@
 // output: appended sllv
 // xxx mem-mgmt semantics
 
-int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json);
+int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep);
 
 #endif // MLR_JSON_ADAPTER_H
