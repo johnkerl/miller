@@ -347,7 +347,7 @@ static void evaluate_statements(
 			sllv_append(poutrecs, prec_to_emit);
 
 		} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
-			mlhmmv_print(pstate->poosvars);
+			mlhmmv_print_stacked(pstate->poosvars);
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;

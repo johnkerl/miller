@@ -32,7 +32,8 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 
 static mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* pmap, sllmve_t* prest_keys);
 
-static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_comma);
+static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth, int do_final_comma);
+static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth, int do_final_comma);
 
 static int mlhmmv_hash_func(mv_t* plevel_key);
 
@@ -350,11 +351,11 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 //   }
 // }
 
-void mlhmmv_print(mlhmmv_t* pmap) {
-	mlhmmv_level_print(pmap->proot_level, 0, FALSE);
+void mlhmmv_print_stacked(mlhmmv_t* pmap) {
+	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE);
 }
 
-static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_comma) {
+static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth, int do_final_comma) {
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
@@ -379,7 +380,7 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_c
 				printf("\n");
 		} else {
 			printf(" {\n");
-			mlhmmv_level_print(pentry->level_value.u.pnext_level, depth + 1, pentry->pnext != NULL);
+			mlhmmv_level_print_stacked(pentry->level_value.u.pnext_level, depth + 1, pentry->pnext != NULL);
 		}
 	}
 	for (int i = 0; i < depth; i++)
@@ -388,6 +389,41 @@ static void mlhmmv_level_print(mlhmmv_level_t* plevel, int depth, int do_final_c
 		printf("},\n");
 	else
 		printf("}\n");
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_print_single_line(mlhmmv_t* pmap) {
+	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE);
+	printf("\n");
+}
+
+static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth, int do_final_comma) {
+	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
+	if (depth == 0)
+		printf("{");
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
+			printf("\"%s\": ", level_key_string);
+		free(level_key_string);
+
+		if (pentry->level_value.is_terminal) {
+			char* level_value_string = mv_alloc_format_val(&pentry->level_value.u.mlrval);
+			if (pentry->level_value.u.mlrval.type == MT_STRING)
+				printf("\"%s\"", level_value_string);
+			else
+				printf("%s", level_value_string);
+			free(level_value_string);
+			if (pentry->pnext != NULL)
+				printf(", ");
+		} else {
+			printf("{");
+			mlhmmv_level_print_single_line(pentry->level_value.u.pnext_level, depth + 1, pentry->pnext != NULL);
+		}
+	}
+	if (do_final_comma)
+		printf("},");
+	else
+		printf("}");
 }
 
 // ----------------------------------------------------------------

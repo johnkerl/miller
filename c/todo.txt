@@ -58,6 +58,7 @@ TOP-OF-LIST DETAILS
     - programmable allow-this-on-output flag
     - programmable flatten-separator
   ? or support multi-level lrecs??
+  o hp re :)
 
   ! lnx fixme:
     input/json.c: In function ‘new_value’:
