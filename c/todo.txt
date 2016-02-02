@@ -50,6 +50,7 @@ TOP-OF-LIST DETAILS
 
 * JSON I/O:
   ! acknowledgement to mld: https://github.com/udp/json-parser
+  ! stdio version. & prefer stremable version with fgetc rather than pointer-math.
   k output: mlr-native json output is trivial & just do it.
   - cover x 2
   - define 'tabular JSON' by example @ mld

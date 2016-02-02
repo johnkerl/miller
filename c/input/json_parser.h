@@ -46,7 +46,26 @@
 
 // ----------------------------------------------------------------
 #define JSON_ENABLE_COMMENTS           0x01
-// xxx comment
+
+// This enables us to handle input of the form
+//
+//   { "a" : 1 }
+//   { "b" : 2 }
+//   { "c" : 3 }
+//
+// in addition to
+//
+// [
+//   { "a" : 1 }
+//   { "b" : 2 }
+//   { "c" : 3 }
+// ]
+//
+// This is in line with what jq can handle. In this case, json_parse will return
+// once for each top-level item and will give us back a pointer to the start of
+// the rest of the input stream, so we can call json_parse on the rest until it is
+// all exhausted.
+
 #define JSON_ENABLE_SEQUENTIAL_OBJECTS 0x02
 
 typedef struct {

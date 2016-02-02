@@ -26,8 +26,10 @@
 #include "input/mlr_json_adapter.h"
 
 typedef struct _lrec_reader_mmap_json_state_t {
-	// xxx just have a list of top-level objects and a list of lrecs?
-	// xxx cmt re 3 layers of backing
+	// The list of top-level JSON objects is backed by the file contents. The records are in turn
+	// backed by the top-level JSON objects. This means the latter should not be freed while
+	// the records are in used. (This is done to reduce data copies, for performance: we can
+	// manipulate pointers to strings rather than copying strings.)
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	// xxx parameterize
@@ -79,8 +81,14 @@ static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 	free(preader);
 }
 
-// xxx cmt non-streaming; ingest-all here.
-// xxx need an eof hook too!! or .... free on successive sofs, then on free ...
+// The mmap-JSON lrec-reader is non-streaming: we ingest all records here in the start-of-file hook.
+// Then in the process method we pop one lrec off the list at a time, until they are all exhausted.
+// This is in contrast to other Miller lrec-readers.
+//
+// It would be possible to extend the streaming framework to also have an end-of-file hook
+// which we could use here to free parsed-JSON data. However, we simply leverage the start-of-file
+// hook for the *next* file (if any) or the free method (if not): these free parsed-JSON structures
+// from the previous file (if any).
 static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	lrec_reader_mmap_json_state_t* pstate = pvstate;
 	file_reader_mmap_state_t* phandle = pvhandle;
@@ -112,7 +120,24 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	pstate->ptop_level_json_objects = sllv_alloc();
 	pstate->precords = sllv_alloc();
 
-	// xxx comment support missing outer [], as jq does.
+	// This enables us to handle input of the form
+	//
+	//   { "a" : 1 }
+	//   { "b" : 2 }
+	//   { "c" : 3 }
+	//
+	// in addition to
+	//
+	// [
+	//   { "a" : 1 }
+	//   { "b" : 2 }
+	//   { "c" : 3 }
+	// ]
+	//
+	// This is in line with what jq can handle. In this case, json_parse will return
+	// once for each top-level item and will give us back a pointer to the start of
+	// the rest of the input stream, so we can call json_parse on the rest until it is
+	// all exhausted.
 
 	json_char* item_start = json_input;
 	int length = phandle->eof - phandle->sol;;
@@ -125,9 +150,8 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			exit(1);
 		}
 
-		// xxx stub
-		//sllv_append(pstate->parsed_json_objects, parsed_top_level_json);
-		// xxx swap arg order
+		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
+		// efficiency) so it's important we not free the latter until our free method.
 		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->flatten_sep);
 
 		if (item_start == NULL)
