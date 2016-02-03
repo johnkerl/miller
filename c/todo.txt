@@ -6,12 +6,17 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+!!! type-punning error !!!
+
 * JSON input: many important subtasks remaining
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
+* make placeholder tasks ... even some retroactives ...
+
 ! freebsd: research into flexv9 compatibility
 * reshape
+* explode & any other komosas from feature-request task
 
 * doc items
 * xxxes
