@@ -7,14 +7,15 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 * JSON input: many important subtasks remaining
-* parameterized emit
+* parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+
 ! freebsd: research into flexv9 compatibility
+* reshape
 
 * doc items
 * xxxes
 * valgrinds
-* reshape
 
 ----------------------------------------------------------------
 * relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
@@ -51,11 +52,18 @@ TOP-OF-LIST SUMMARY
   https://www.freebsd.org/doc/en_US.ISO8859-1/books/porters-handbook/port-upgrading.html
 
 ? archlinux link from cover?
+  https://aur.archlinux.org/packages/miller-git/
+? prolinux?
+  http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..20427.100
 
 !! xref to ffe !!
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
+
+* reshape:
+  - mlr reshape --wide-to-long -i X,Y,Z (or regex ...) -o item,price
+  - mlr reshape --long-to-wide -i stock,price
 
 * JSON I/O:
   ! acknowledgement to mld: https://github.com/udp/json-parser
@@ -69,6 +77,13 @@ TOP-OF-LIST DETAILS
     - programmable flatten-separator
   ? or support multi-level lrecs??
   o hp re :)
+
+  o bug:
+
+    $ mlr --jlistwrap --jvstack --json cat ~/bak/bmx/bookmarks-2016-02-02.json 
+    mlr: found array item within JSON object. This is valid but unmillerable JSON.
+    ]
+
 
   ! lnx fixme:
     input/json.c: In function ‘new_value’:

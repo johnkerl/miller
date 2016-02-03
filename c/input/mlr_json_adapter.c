@@ -17,13 +17,17 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 					MLR_GLOBALS.argv0, json_describe_type(ptop_level_json->type));
 				return FALSE;
 			}
-			sllv_append(precords, validate_millerable_object(pnext_level_json, flatten_sep));
+			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep);
+			if (prec == NULL)
+				return FALSE;
+			sllv_append(precords, prec);
 		}
-		// xxx free the pointer-array?!? put this logic as a method inside json.c/h.
 		ptop_level_json->u.array.length = 0;
 	} else if (ptop_level_json->type == JSON_OBJECT) {
-		sllv_append(precords, validate_millerable_object(ptop_level_json, flatten_sep));
-		return TRUE;
+		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep);
+		if (prec == NULL)
+			return FALSE;
+		sllv_append(precords, prec);
 	} else {
 		fprintf(stderr,
 			"%s: found non-terminal (type %s) at top level. This is valid but unmillerable JSON.\n",
@@ -76,6 +80,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			fprintf(stderr,
 				"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
 				MLR_GLOBALS.argv0);
+			return NULL;
 			break;
 		case JSON_INTEGER:
 			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer);
