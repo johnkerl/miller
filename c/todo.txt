@@ -51,11 +51,6 @@ TOP-OF-LIST SUMMARY
   https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=206785
   https://www.freebsd.org/doc/en_US.ISO8859-1/books/porters-handbook/port-upgrading.html
 
-? archlinux link from cover?
-  https://aur.archlinux.org/packages/miller-git/
-? prolinux?
-  http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..20427.100
-
 !! xref to ffe !!
 
 ----------------------------------------------------------------
