@@ -48,9 +48,13 @@ typedef struct _mapper_reshape_state_t {
 	// for long-to-wide:
 	char* split_out_key_field_name;
 	char* split_out_value_field_name;
-	lhmslv_t* other_keys_to_other_values_to_pairs;
-
+	lhmslv_t* other_keys_to_other_values_to_buckets;
 } mapper_reshape_state_t;
+
+typedef struct _reshape_bucket_t {
+	lrec_t* prepresentative;
+	lhmss_t* pairs;
+} reshape_bucket_t;
 
 static void      mapper_reshape_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv);
@@ -66,6 +70,9 @@ static void      mapper_reshape_free(mapper_t* pmapper);
 static sllv_t*   mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+
+static reshape_bucket_t* reshape_bucket_alloc(lrec_t* prepresentative);
+static void reshape_bucket_free(reshape_bucket_t* pbucket);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_reshape_setup = {
@@ -175,10 +182,10 @@ static mapper_t* mapper_reshape_alloc(
 			pmapper->pprocess_func = mapper_reshape_wide_to_long_no_regex_process;
 		else
 			pmapper->pprocess_func = mapper_reshape_wide_to_long_regex_process;
-		pstate->other_keys_to_other_values_to_pairs = NULL;
+		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
 		pmapper->pprocess_func = mapper_reshape_long_to_wide_regex_process;
-		pstate->other_keys_to_other_values_to_pairs = lhmslv_alloc();
+		pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	}
 
 	pmapper->pfree_func = mapper_reshape_free;
@@ -198,8 +205,17 @@ static void mapper_reshape_free(mapper_t* pmapper) {
 		sllv_free(pstate->input_field_regexes);
 	}
 
-	lhmslv_free(pstate->other_keys_to_other_values_to_pairs);
-	// xxx 3-level free
+	if (pstate->other_keys_to_other_values_to_buckets != NULL) {
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_buckets = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
+				reshape_bucket_t* pbucket = pf->pvvalue;
+				reshape_bucket_free(pbucket);
+			}
+			lhmslv_free(other_values_to_buckets);
+		}
+		lhmslv_free(pstate->other_keys_to_other_values_to_buckets);
+	}
 
 	ap_free(pstate->pargp);
 	free(pstate);
@@ -289,40 +305,23 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 		// xxx cmt three-level map ...
 
 		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
-		lhmslv_t* other_values_to_pairs = lhmslv_get(pstate->other_keys_to_other_values_to_pairs, other_keys);
-		if (other_values_to_pairs == NULL) {
-			other_values_to_pairs = lhmslv_alloc();
-			lhmslv_put(pstate->other_keys_to_other_values_to_pairs,
-				slls_copy(other_keys), other_values_to_pairs, FREE_ENTRY_KEY);
+		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
+		if (other_values_to_buckets == NULL) {
+			other_values_to_buckets = lhmslv_alloc();
+			lhmslv_put(pstate->other_keys_to_other_values_to_buckets,
+				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
 		}
 
 		slls_t* other_values = mlr_reference_all_values_from_record(pinrec);
-		lhmss_t* pairs = lhmslv_get(other_values_to_pairs, other_values);
-		if (pairs == NULL) {
-			pairs = lhmss_alloc();
-			lhmslv_put(other_values_to_pairs, slls_copy(other_values), pairs, FREE_ENTRY_KEY);
+		reshape_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
+		if (pbucket == NULL) {
+			pbucket = reshape_bucket_alloc(pinrec);
+			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
+		} else {
+			lrec_free(pinrec);
 		}
-		// xxx need the record in here too, on first hit ...
-		// xxx else lrec_free(pinrec)
-		lhmss_put(pairs, split_out_key_field_value, split_out_value_field_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-
-// LONG:
-//          time  item       price
-// 1  2009-01-01     X  0.65473572
-// 2  2009-01-02     X -0.89248112
-// 3  2009-01-03     X  0.98012375
-// 6  2009-01-01     Y  2.45206093
-// 7  2009-01-02     Y  0.21547134
-// 8  2009-01-03     Y  1.31792866
-// 11 2009-01-01     Z -1.46570942
-// 12 2009-01-02     Z -2.05357735
-// 13 2009-01-03     Z  4.64248357
-
-// WIDE:
-//          time           X          Y           Z
-// 1  2009-01-01  0.65473572  2.4520609 -1.46570942
-// 2  2009-01-02 -0.89248112  0.2154713 -2.05357735
-// 3  2009-01-03  0.98012375  1.3179287  4.64248357
+		lhmss_put(pbucket->pairs, split_out_key_field_value, split_out_value_field_value,
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 
 		slls_free(other_values);
 		slls_free(other_keys);
@@ -332,13 +331,13 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 	} else { // end of input stream
 		sllv_t* poutrecs = sllv_alloc();
 
-		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_pairs->phead; pe != NULL; pe = pe->pnext) {
-			lhmslv_t* other_values_to_pairs = pe->pvvalue;
-			for (lhmslve_t* pf = other_values_to_pairs->phead; pf != NULL; pf = pf->pnext) {
-				lhmss_t* pairs = pf->pvvalue;
-				lrec_t* poutrec = lrec_unbacked_alloc();
-				// xxx copy in other k/v's from the bucket-representative lrec
-				for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext) {
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_buckets = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
+				reshape_bucket_t* pbucket = pf->pvvalue;
+				lrec_t* poutrec = pbucket->prepresentative;
+				pbucket->prepresentative = NULL; // ownership transfer
+				for (lhmsse_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
 					// Strings in these lrecs are backed by out multi-level hashmaps which aren't freed by our free
 					// method until shutdown time (in particular, after all outrecs are emitted).
 					lrec_put(poutrec, pg->key, pg->value, NO_FREE);
@@ -350,64 +349,17 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
-
-
 }
 
-// xxx clean up:
-
-// typedef struct _bucket_t {
-//  typed_sort_key_t* typed_sort_keys;
-//  sllv_t*           precords;
-// } bucket_t;
-
-//  lhmslv_t* pbuckets_by_key_field_values;
-
-//  pstate->pbuckets_by_key_field_values = lhmslv_alloc();
-
-//  // lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
-//  for (lhmslve_t* pa = pstate->pbuckets_by_key_field_values->phead; pa != NULL; pa = pa->pnext) {
-//      bucket_t* pbucket = pa->pvvalue;
-//      free(pbucket->typed_sort_keys);
-//      free(pbucket);
-//      // precords freed in emitter
-//  }
-//  lhmslv_free(pstate->pbuckets_by_key_field_values);
-
-// // ----------------------------------------------------------------
-// static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//  mapper_sort_state_t* pstate = pvstate;
-//  if (pinrec != NULL) {
-//      // Consume another input record.
-//      slls_t* pkey_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pkey_field_names);
-//      if (pkey_field_values == NULL) {
-//          sllv_append(pstate->precords_missing_sort_keys, pinrec);
-//      } else {
-//          bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_values, pkey_field_values);
-//          if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
-//              slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
-//              bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
-//              pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
-//              pbucket->precords = sllv_alloc();
-//              sllv_append(pbucket->precords, pinrec);
-//              lhmslv_put(pstate->pbuckets_by_key_field_values, pkey_field_values_copy, pbucket,
-//                  FREE_ENTRY_KEY);
-//          } else { // Previously seen key-field-value: append record to bucket
-//              sllv_append(pbucket->precords, pinrec);
-//          }
-//          slls_free(pkey_field_values);
-//      }
-//      return NULL;
-
-//  } else if (!pstate->do_sort) {
-//      // End of input stream: do output for group-by
-//      sllv_t* poutput = sllv_alloc();
-//      for (lhmslve_t* pe = pstate->pbuckets_by_key_field_values->phead; pe != NULL; pe = pe->pnext) {
-//          bucket_t* pbucket = pe->pvvalue;
-//          sllv_transfer(poutput, pbucket->precords);
-//          sllv_free(pbucket->precords);
-//      }
-//      sllv_transfer(poutput, pstate->precords_missing_sort_keys);
-//      sllv_append(poutput, NULL);
-//      return poutput;
-//  }
+// ----------------------------------------------------------------
+static reshape_bucket_t* reshape_bucket_alloc(lrec_t* prepresentative) {
+	reshape_bucket_t* pbucket = mlr_malloc_or_die(sizeof(reshape_bucket_t));
+	pbucket->prepresentative = prepresentative;
+	pbucket->pairs = lhmss_alloc();
+	return pbucket;
+}
+static void reshape_bucket_free(reshape_bucket_t* pbucket) {
+	lrec_free(pbucket->prepresentative);
+	lhmss_free(pbucket->pairs);
+	free(pbucket);
+}

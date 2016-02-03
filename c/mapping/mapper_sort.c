@@ -72,10 +72,10 @@ typedef struct _typed_sort_key_t {
 	} u;
 } typed_sort_key_t;
 
-typedef struct _bucket_t {
+typedef struct _sort_bucket_t {
 	typed_sort_key_t* typed_sort_keys;
 	sllv_t*           precords;
-} bucket_t;
+} sort_bucket_t;
 
 // ----------------------------------------------------------------
 static void      mapper_sort_usage(FILE* o, char* argv0, char* verb);
@@ -233,7 +233,7 @@ static void mapper_sort_free(mapper_t* pmapper) {
 		slls_free(pstate->pkey_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pa = pstate->pbuckets_by_key_field_values->phead; pa != NULL; pa = pa->pnext) {
-		bucket_t* pbucket = pa->pvvalue;
+		sort_bucket_t* pbucket = pa->pvvalue;
 		free(pbucket->typed_sort_keys);
 		free(pbucket);
 		// precords freed in emitter
@@ -254,10 +254,10 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		if (pkey_field_values == NULL) {
 			sllv_append(pstate->precords_missing_sort_keys, pinrec);
 		} else {
-			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_values, pkey_field_values);
+			sort_bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_values, pkey_field_values);
 			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 				slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
-				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
+				sort_bucket_t* pbucket = mlr_malloc_or_die(sizeof(sort_bucket_t));
 				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 				pbucket->precords = sllv_alloc();
 				sllv_append(pbucket->precords, pinrec);
@@ -273,7 +273,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		// End of input stream: do output for group-by
 		sllv_t* poutput = sllv_alloc();
 		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_values->phead; pe != NULL; pe = pe->pnext) {
-			bucket_t* pbucket = pe->pvvalue;
+			sort_bucket_t* pbucket = pe->pvvalue;
 			sllv_transfer(poutput, pbucket->precords);
 			sllv_free(pbucket->precords);
 		}
@@ -283,7 +283,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	} else {
 		// End of input stream: sort bucket labels
 		int num_buckets = pstate->pbuckets_by_key_field_values->num_occupied;
-		bucket_t** pbucket_array = mlr_malloc_or_die(num_buckets * sizeof(bucket_t*));
+		sort_bucket_t** pbucket_array = mlr_malloc_or_die(num_buckets * sizeof(sort_bucket_t*));
 
 		// Copy bucket-pointers to an array for qsort
 		int i = 0;
@@ -294,7 +294,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		pcmp_sort_params  = pstate->sort_params;
 		cmp_params_length = pstate->pkey_field_names->length;
 
-		qsort(pbucket_array, num_buckets, sizeof(bucket_t*), pbucket_comparator);
+		qsort(pbucket_array, num_buckets, sizeof(sort_bucket_t*), pbucket_comparator);
 
 		pcmp_sort_params  = NULL;
 		cmp_params_length = 0;
@@ -314,9 +314,9 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 }
 
 static int pbucket_comparator(const void* pva, const void* pvb) {
-	// We are sorting an array of bucket_t*.
-	const bucket_t** pba = (const bucket_t**)pva;
-	const bucket_t** pbb = (const bucket_t**)pvb;
+	// We are sorting an array of sort_bucket_t*.
+	const sort_bucket_t** pba = (const sort_bucket_t**)pva;
+	const sort_bucket_t** pbb = (const sort_bucket_t**)pvb;
 	typed_sort_key_t* akeys = (*pba)->typed_sort_keys;
 	typed_sort_key_t* bkeys = (*pbb)->typed_sort_keys;
 	for (int i = 0; i < cmp_params_length; i++) {
