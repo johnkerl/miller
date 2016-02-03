@@ -24,6 +24,14 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 	return plist;
 }
 
+slls_t* mlr_reference_all_values_from_record(lrec_t* prec) {
+	slls_t* plist = slls_alloc();
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		slls_append_no_free(plist, pe->value);
+	}
+	return plist;
+}
+
 // ----------------------------------------------------------------
 // Makes a list with values pointing into the lrec's values. slls_free() will
 // respect that and not corrupt the lrec. However, the slls values will be

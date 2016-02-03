@@ -13,6 +13,8 @@
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
 slls_t* mlr_reference_keys_from_record(lrec_t* prec);
+// xxx rename this
+slls_t* mlr_reference_all_values_from_record(lrec_t* prec);
 
 // Copies data; no referencing concerns.
 slls_t* mlr_copy_keys_from_record(lrec_t* prec);
@@ -21,6 +23,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 // respect that and not corrupt the lrec. However, the slls values will be
 // invalid after the lrec is freed.
 slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselected_field_names);
+// xxx rename this
 void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
 	string_array_t* pvalues);
 int record_has_all_keys(lrec_t* prec, slls_t* pselected_field_names);

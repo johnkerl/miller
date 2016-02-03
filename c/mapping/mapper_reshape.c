@@ -3,6 +3,8 @@
 #include "lib/string_builder.h"
 #include "containers/lhmss.h"
 #include "containers/sllv.h"
+#include "containers/lhmslv.h"
+#include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
@@ -46,6 +48,7 @@ typedef struct _mapper_reshape_state_t {
 	// for long-to-wide:
 	char* split_out_key_field_name;
 	char* split_out_value_field_name;
+	lhmslv_t* other_keys_to_other_values_to_pairs;
 
 } mapper_reshape_state_t;
 
@@ -172,8 +175,10 @@ static mapper_t* mapper_reshape_alloc(
 			pmapper->pprocess_func = mapper_reshape_wide_to_long_no_regex_process;
 		else
 			pmapper->pprocess_func = mapper_reshape_wide_to_long_regex_process;
+		pstate->other_keys_to_other_values_to_pairs = NULL;
 	} else {
 		pmapper->pprocess_func = mapper_reshape_long_to_wide_regex_process;
+		pstate->other_keys_to_other_values_to_pairs = lhmslv_alloc();
 	}
 
 	pmapper->pfree_func = mapper_reshape_free;
@@ -192,6 +197,10 @@ static void mapper_reshape_free(mapper_t* pmapper) {
 		}
 		sllv_free(pstate->input_field_regexes);
 	}
+
+	lhmslv_free(pstate->other_keys_to_other_values_to_pairs);
+	// xxx 3-level free
+
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -277,21 +286,66 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 		lrec_remove(pinrec, pstate->split_out_key_field_name);
 		lrec_remove(pinrec, pstate->split_out_value_field_name);
 
-		// xxx for *all* remaining fields: bucket as in group-by, mapping from other-field-names to kf/vf
-		// multi-level hashmap: lhmslv other-field-names -> lhmslv other-field-values -> sllv of pair of (k,v)
+		// xxx cmt three-level map ...
 
-		// xxx stub
-		return sllv_single(pinrec);
+		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
+		lhmslv_t* other_values_to_pairs = lhmslv_get(pstate->other_keys_to_other_values_to_pairs, other_keys);
+		if (other_values_to_pairs == NULL) {
+			other_values_to_pairs = lhmslv_alloc();
+			lhmslv_put(pstate->other_keys_to_other_values_to_pairs,
+				slls_copy(other_keys), other_values_to_pairs, FREE_ENTRY_KEY);
+		}
+
+		slls_t* other_values = mlr_reference_all_values_from_record(pinrec);
+		lhmss_t* pairs = lhmslv_get(other_values_to_pairs, other_values);
+		if (pairs == NULL) {
+			pairs = lhmss_alloc();
+			lhmslv_put(other_values_to_pairs, slls_copy(other_values), pairs, FREE_ENTRY_KEY);
+		}
+		// xxx need the record in here too, on first hit ...
+		// xxx else lrec_free(pinrec)
+		lhmss_put(pairs, split_out_key_field_value, split_out_value_field_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+
+// LONG:
+//          time  item       price
+// 1  2009-01-01     X  0.65473572
+// 2  2009-01-02     X -0.89248112
+// 3  2009-01-03     X  0.98012375
+// 6  2009-01-01     Y  2.45206093
+// 7  2009-01-02     Y  0.21547134
+// 8  2009-01-03     Y  1.31792866
+// 11 2009-01-01     Z -1.46570942
+// 12 2009-01-02     Z -2.05357735
+// 13 2009-01-03     Z  4.64248357
+
+// WIDE:
+//          time           X          Y           Z
+// 1  2009-01-01  0.65473572  2.4520609 -1.46570942
+// 2  2009-01-02 -0.89248112  0.2154713 -2.05357735
+// 3  2009-01-03  0.98012375  1.3179287  4.64248357
+
+		slls_free(other_values);
+		slls_free(other_keys);
+
+		return NULL;
 
 	} else { // end of input stream
 		sllv_t* poutrecs = sllv_alloc();
 
-		// xxx
-		// for each bucket:
-		//   lrec-copy the bucket-representative lrec to poutrec
-		//   for each kf/vf:
-		//     lrec-put the two new fields
-		//   sllv_append(poutrecs, poutrec);
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_pairs->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_pairs = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_pairs->phead; pf != NULL; pf = pf->pnext) {
+				lhmss_t* pairs = pf->pvvalue;
+				lrec_t* poutrec = lrec_unbacked_alloc();
+				// xxx copy in other k/v's from the bucket-representative lrec
+				for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext) {
+					// Strings in these lrecs are backed by out multi-level hashmaps which aren't freed by our free
+					// method until shutdown time (in particular, after all outrecs are emitted).
+					lrec_put(poutrec, pg->key, pg->value, NO_FREE);
+				}
+				sllv_append(poutrecs, poutrec);
+			}
+		}
 
 		sllv_append(poutrecs, NULL);
 		return poutrecs;
@@ -299,6 +353,8 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 
 
 }
+
+// xxx clean up:
 
 // typedef struct _bucket_t {
 //  typed_sort_key_t* typed_sort_keys;
