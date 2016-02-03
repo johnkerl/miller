@@ -63,9 +63,12 @@ typedef struct _regex_pair_t {
 
 typedef struct _mapper_reshape_state_t {
 	ap_state_t* pargp;
-	//lhmss_t* pold_to_new;
-	//sllv_t*  pregex_pairs;
-	//string_builder_t* psb;
+
+	// for wide-to-long:
+	slls_t* input_field_names;
+	sllv_t* input_field_regexes;
+	char* output_key_field_name;
+	char* output_value_field_name;
 } mapper_reshape_state_t;
 
 static void      mapper_reshape_usage(FILE* o, char* argv0, char* verb);
@@ -196,35 +199,73 @@ static void mapper_reshape_free(mapper_t* pmapper) {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return sllv_single(NULL);
+	if (pinrec != NULL)
+		return sllv_single(NULL);
+
+	mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
+
+	sllv_t* poutrecs = sllv_alloc();
+	lhmss_t* pairs = lhmss_alloc();
+	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
+		char* key = pe->value;
+		char* value = lrec_get(pinrec, key);
+		if (value != NULL)
+			lhmss_put(pairs, key, value, NO_FREE);
+	}
+
+	// Unset the lrec keys after iterating over them, rather than during
+	for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext)
+		lrec_remove(pinrec, pf->key);
+
+	for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
+		lrec_t* poutrec = lrec_copy(pinrec);
+		lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+	}
+
+	lhmss_free(pairs);
+	return poutrecs;
 }
 
 static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return sllv_single(NULL);
+	if (pinrec != NULL)
+		return sllv_single(NULL);
+
+	mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
+
+	sllv_t* poutrecs = sllv_alloc();
+	lhmss_t* pairs = lhmss_alloc();
+
+	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pf = pstate->input_field_regexes->phead; pf != NULL; pf = pf->pnext) {
+			regex_t* pregex = pf->pvvalue;
+			if (regmatch_or_die(pregex, pe->key, 0, NULL)) {
+				lhmss_put(pairs, pe->key, pe->value, NO_FREE);
+				break;
+			}
+		}
+	}
+
+	// Unset the lrec keys after iterating over them, rather than during
+	for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext)
+		lrec_remove(pinrec, pg->key);
+
+	for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext) {
+		lrec_t* poutrec = lrec_copy(pinrec);
+		lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pg->key), FREE_ENTRY_VALUE);
+		lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pg->value), FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+	}
+
+	lhmss_free(pairs);
+
+	return poutrecs;
 }
 
 static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return sllv_single(NULL);
+	return sllv_single(NULL); // xxx stub
 }
-
-
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_reshape_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	if (pinrec != NULL) {
-//		mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
-//		for (lhmsse_t* pe = pstate->pold_to_new->phead; pe != NULL; pe = pe->pnext) {
-//			char* old_name = pe->key;
-//			char* new_name = pe->value;
-//			if (lrec_get(pinrec, old_name) != NULL) {
-//				lrec_rename(pinrec, old_name, new_name, FALSE);
-//			}
-//		}
-//		return sllv_single(pinrec);
-//	}
-//	else {
-//		return sllv_single(NULL);
-//	}
-//}
 
 //static sllv_t* mapper_reshape_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 //	if (pinrec != NULL) {
