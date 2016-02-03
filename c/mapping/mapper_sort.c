@@ -60,7 +60,7 @@ typedef struct _mapper_sort_state_t {
 	int*    sort_params;      // Lexical/numeric; ascending/descending
 	int do_sort;              // If false, just do group-by
 	// Sort state: buckets of like records.
-	lhmslv_t* pbuckets_by_key_field_names;
+	lhmslv_t* pbuckets_by_key_field_values;
 	sllv_t*   precords_missing_sort_keys;
 } mapper_sort_state_t;
 
@@ -213,11 +213,11 @@ static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, i
 
 	mapper_sort_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_sort_state_t));
 
-	pstate->pkey_field_names            = pkey_field_names;
-	pstate->sort_params                 = sort_params;
-	pstate->pbuckets_by_key_field_names = lhmslv_alloc();
-	pstate->precords_missing_sort_keys  = sllv_alloc();
-	pstate->do_sort                     = do_sort;
+	pstate->pkey_field_names             = pkey_field_names;
+	pstate->sort_params                  = sort_params;
+	pstate->pbuckets_by_key_field_values = lhmslv_alloc();
+	pstate->precords_missing_sort_keys   = sllv_alloc();
+	pstate->do_sort                      = do_sort;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_sort_process;
@@ -232,13 +232,13 @@ static void mapper_sort_free(mapper_t* pmapper) {
 	if (pstate->pkey_field_names != NULL)
 		slls_free(pstate->pkey_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
-	for (lhmslve_t* pa = pstate->pbuckets_by_key_field_names->phead; pa != NULL; pa = pa->pnext) {
+	for (lhmslve_t* pa = pstate->pbuckets_by_key_field_values->phead; pa != NULL; pa = pa->pnext) {
 		bucket_t* pbucket = pa->pvvalue;
 		free(pbucket->typed_sort_keys);
 		free(pbucket);
 		// precords freed in emitter
 	}
-	lhmslv_free(pstate->pbuckets_by_key_field_names);
+	lhmslv_free(pstate->pbuckets_by_key_field_values);
 	sllv_free(pstate->precords_missing_sort_keys);
 	free(pstate->sort_params);
 	free(pstate);
@@ -254,14 +254,14 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		if (pkey_field_values == NULL) {
 			sllv_append(pstate->precords_missing_sort_keys, pinrec);
 		} else {
-			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_names, pkey_field_values);
+			bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_values, pkey_field_values);
 			if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
 				slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
 				bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
 				pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
 				pbucket->precords = sllv_alloc();
 				sllv_append(pbucket->precords, pinrec);
-				lhmslv_put(pstate->pbuckets_by_key_field_names, pkey_field_values_copy, pbucket,
+				lhmslv_put(pstate->pbuckets_by_key_field_values, pkey_field_values_copy, pbucket,
 					FREE_ENTRY_KEY);
 			} else { // Previously seen key-field-value: append record to bucket
 				sllv_append(pbucket->precords, pinrec);
@@ -272,7 +272,7 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	} else if (!pstate->do_sort) {
 		// End of input stream: do output for group-by
 		sllv_t* poutput = sllv_alloc();
-		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext) {
+		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_values->phead; pe != NULL; pe = pe->pnext) {
 			bucket_t* pbucket = pe->pvvalue;
 			sllv_transfer(poutput, pbucket->precords);
 			sllv_free(pbucket->precords);
@@ -282,12 +282,12 @@ static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		return poutput;
 	} else {
 		// End of input stream: sort bucket labels
-		int num_buckets = pstate->pbuckets_by_key_field_names->num_occupied;
+		int num_buckets = pstate->pbuckets_by_key_field_values->num_occupied;
 		bucket_t** pbucket_array = mlr_malloc_or_die(num_buckets * sizeof(bucket_t*));
 
 		// Copy bucket-pointers to an array for qsort
 		int i = 0;
-		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_names->phead; pe != NULL; pe = pe->pnext, i++) {
+		for (lhmslve_t* pe = pstate->pbuckets_by_key_field_values->phead; pe != NULL; pe = pe->pnext, i++) {
 			pbucket_array[i] = pe->pvvalue;
 		}
 
