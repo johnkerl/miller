@@ -56,11 +56,6 @@
 
 #define RENAME_SB_ALLOC_LENGTH 16
 
-typedef struct _regex_pair_t {
-	//regex_t regex;
-	//char*   replacement;
-} regex_pair_t;
-
 typedef struct _mapper_reshape_state_t {
 	ap_state_t* pargp;
 
@@ -110,35 +105,22 @@ static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
-//	int do_regexes = FALSE;
+	slls_t* input_field_names         = NULL;
+	slls_t* input_field_regex_strings = NULL;
+	slls_t* output_field_names        = NULL;
 
-//	char* verb = argv[(*pargi)++];
+	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
-//	ap_define_true_flag(pstate, "-r", &do_regexes);
-//
-//	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-//		mapper_reshape_usage(stderr, argv[0], verb);
-//		return NULL;
-//	}
-//
-//	if ((argc - *pargi) < 1) {
-//		mapper_reshape_usage(stderr, argv[0], verb);
-//		return NULL;
-//	}
-//
-//	slls_t* pnames = slls_from_line(argv[*pargi], ',', FALSE);
-//	if ((pnames->length % 2) != 0) {
-//		mapper_reshape_usage(stderr, argv[0], verb);
-//		return NULL;
-//	}
-//	lhmss_t* pold_to_new = lhmss_alloc();
-//	for (sllse_t* pe = pnames->phead; pe != NULL; pe = pe->pnext->pnext) {
-//		lhmss_put(pold_to_new, mlr_strdup_or_die(pe->value), mlr_strdup_or_die(pe->pnext->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-//	}
-//	slls_free(pnames);
+	ap_define_string_list_flag(pstate, "-i", &input_field_names);
+	ap_define_string_list_flag(pstate, "-r", &input_field_regex_strings);
+	ap_define_string_list_flag(pstate, "-o", &output_field_names);
 
-	*pargi += 1;
+	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		mapper_reshape_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
 	return mapper_reshape_alloc(pstate/*, pold_to_new, do_regexes*/);
 }
 
@@ -266,29 +248,3 @@ static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context
 static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	return sllv_single(NULL); // xxx stub
 }
-
-//static sllv_t* mapper_reshape_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	if (pinrec != NULL) {
-//		mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
-//
-//		for (sllve_t* pe = pstate->pregex_pairs->phead; pe != NULL; pe = pe->pnext) {
-//			regex_pair_t* ppair = pe->pvvalue;
-//			regex_t* pregex = &ppair->regex;
-//			char* replacement = ppair->replacement;
-//			for (lrece_t* pf = pinrec->phead; pf != NULL; pf = pf->pnext) {
-//				int matched = FALSE;
-//				int all_captured = FALSE;
-//				char* old_name = pf->key;
-//				char* new_name = regex_sub(old_name, pregex, pstate->psb, replacement, &matched,
-//					&all_captured);
-//				if (matched)
-//					lrec_rename(pinrec, old_name, new_name, TRUE);
-//			}
-//		}
-//
-//		return sllv_single(pinrec);
-//	}
-//	else {
-//		return sllv_single(NULL);
-//	}
-//}
