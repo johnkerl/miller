@@ -278,6 +278,7 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 		lrec_remove(pinrec, pstate->split_out_value_field_name);
 
 		// xxx for *all* remaining fields: bucket as in group-by, mapping from other-field-names to kf/vf
+		// multi-level hashmap: lhmslv other-field-names -> lhmslv other-field-values -> sllv of pair of (k,v)
 
 		// xxx stub
 		return sllv_single(pinrec);
