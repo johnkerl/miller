@@ -265,19 +265,92 @@ static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	// for input records:
-	//   if kf/vf are not present:
-	//     emit the record as -is & return
-	//   remove the kf & vf from pinrec
-	//   for *all* remaining fields: bucket as in group-by, mapping from other-field-names to kf/vf
-	//
-	// at end of stream;
-	// for each bucket:
-	//   lrec-copy the bucket-representative lrec to poutrec
-	//   for each kf/vf:
-	//     lrec-put the two new fields
-	//   sllv_append(poutrecs, poutrec);
-	// sllv_append(poutrecs, NULL);
-	// return poutrecs;
-	return sllv_single(NULL); // xxx stub
+	mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
+
+	if (pinrec != NULL) { // Not end of input stream
+		char* split_out_key_field_value   = lrec_get(pinrec, pstate->split_out_key_field_name);
+		char* split_out_value_field_value = lrec_get(pinrec, pstate-> split_out_value_field_name);
+		if (split_out_key_field_value == NULL || split_out_value_field_value == NULL)
+			return sllv_single(pinrec);
+		split_out_key_field_value   = mlr_strdup_or_die(split_out_key_field_value);
+		split_out_value_field_value = mlr_strdup_or_die(split_out_value_field_value);
+		lrec_remove(pinrec, pstate->split_out_key_field_name);
+		lrec_remove(pinrec, pstate->split_out_value_field_name);
+
+		// xxx for *all* remaining fields: bucket as in group-by, mapping from other-field-names to kf/vf
+
+		// xxx stub
+		return sllv_single(pinrec);
+
+	} else { // end of input stream
+		sllv_t* poutrecs = sllv_alloc();
+
+		// xxx
+		// for each bucket:
+		//   lrec-copy the bucket-representative lrec to poutrec
+		//   for each kf/vf:
+		//     lrec-put the two new fields
+		//   sllv_append(poutrecs, poutrec);
+
+		sllv_append(poutrecs, NULL);
+		return poutrecs;
+	}
+
+
 }
+
+// typedef struct _bucket_t {
+//  typed_sort_key_t* typed_sort_keys;
+//  sllv_t*           precords;
+// } bucket_t;
+
+//  lhmslv_t* pbuckets_by_key_field_values;
+
+//  pstate->pbuckets_by_key_field_values = lhmslv_alloc();
+
+//  // lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
+//  for (lhmslve_t* pa = pstate->pbuckets_by_key_field_values->phead; pa != NULL; pa = pa->pnext) {
+//      bucket_t* pbucket = pa->pvvalue;
+//      free(pbucket->typed_sort_keys);
+//      free(pbucket);
+//      // precords freed in emitter
+//  }
+//  lhmslv_free(pstate->pbuckets_by_key_field_values);
+
+// // ----------------------------------------------------------------
+// static sllv_t* mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+//  mapper_sort_state_t* pstate = pvstate;
+//  if (pinrec != NULL) {
+//      // Consume another input record.
+//      slls_t* pkey_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pkey_field_names);
+//      if (pkey_field_values == NULL) {
+//          sllv_append(pstate->precords_missing_sort_keys, pinrec);
+//      } else {
+//          bucket_t* pbucket = lhmslv_get(pstate->pbuckets_by_key_field_values, pkey_field_values);
+//          if (pbucket == NULL) { // New key-field-value: new bucket and hash-map entry
+//              slls_t* pkey_field_values_copy = slls_copy(pkey_field_values);
+//              bucket_t* pbucket = mlr_malloc_or_die(sizeof(bucket_t));
+//              pbucket->typed_sort_keys = parse_sort_keys(pkey_field_values_copy, pstate->sort_params, pctx);
+//              pbucket->precords = sllv_alloc();
+//              sllv_append(pbucket->precords, pinrec);
+//              lhmslv_put(pstate->pbuckets_by_key_field_values, pkey_field_values_copy, pbucket,
+//                  FREE_ENTRY_KEY);
+//          } else { // Previously seen key-field-value: append record to bucket
+//              sllv_append(pbucket->precords, pinrec);
+//          }
+//          slls_free(pkey_field_values);
+//      }
+//      return NULL;
+
+//  } else if (!pstate->do_sort) {
+//      // End of input stream: do output for group-by
+//      sllv_t* poutput = sllv_alloc();
+//      for (lhmslve_t* pe = pstate->pbuckets_by_key_field_values->phead; pe != NULL; pe = pe->pnext) {
+//          bucket_t* pbucket = pe->pvvalue;
+//          sllv_transfer(poutput, pbucket->precords);
+//          sllv_free(pbucket->precords);
+//      }
+//      sllv_transfer(poutput, pstate->precords_missing_sort_keys);
+//      sllv_append(poutput, NULL);
+//      return poutput;
+//  }
