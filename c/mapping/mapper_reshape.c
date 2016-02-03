@@ -33,8 +33,17 @@
 // 14 2009-01-04     Z -0.25237774
 // 15 2009-01-05     Z  0.09719105
 
-// mlr reshape --wide-to-long -i X,Y,Z (or regex ...) -o item,price
+// mlr reshape --wide-to-long -i X,Y,Z   -o item,price
+// mlr reshape --wide-to-long -r '[XYZ]' -o item,price
+// * slls_t* input_field_names
+// * slls_t* input_field_regexes`
+// * char* output_key_field_name
+// * char* output_value_field_name
+
 // mlr reshape --long-to-wide -i item,price
+// * char* input_key_field_name
+// * char* input_value_field_name
+
 // ================================================================
 
 #define RENAME_SB_ALLOC_LENGTH 16

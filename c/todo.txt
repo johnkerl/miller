@@ -64,6 +64,7 @@ TOP-OF-LIST DETAILS
 * reshape:
   - mlr reshape --wide-to-long -i X,Y,Z (or regex ...) -o item,price
   - mlr reshape --long-to-wide -i stock,price
+  - mld:ref:reshape
 
 * JSON I/O:
   ! acknowledgement to mld: https://github.com/udp/json-parser
