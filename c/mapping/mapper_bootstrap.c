@@ -12,11 +12,11 @@ typedef struct _mapper_bootstrap_state_t {
 	sllv_t* records;
 } mapper_bootstrap_state_t;
 
-static sllv_t*   mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_bootstrap_free(mapper_t* pmapper);
-static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp);
 static void      mapper_bootstrap_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_bootstrap_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp);
+static void      mapper_bootstrap_free(mapper_t* pmapper);
+static sllv_t*   mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_bootstrap_setup = {

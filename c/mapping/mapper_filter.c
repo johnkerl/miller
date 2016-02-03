@@ -13,12 +13,12 @@ typedef struct _mapper_filter_state_t {
 	int do_exclude;
 } mapper_filter_state_t;
 
-static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_filter_free(mapper_t* pmapper);
-static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past,
-	int type_inferencing, int do_exclude);
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past,
+	int type_inferencing, int do_exclude);
+static void      mapper_filter_free(mapper_t* pmapper);
+static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_filter_setup = {

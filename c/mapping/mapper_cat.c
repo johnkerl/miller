@@ -11,12 +11,12 @@ typedef struct _mapper_cat_state_t {
 
 #define DEFAULT_COUNTER_FIELD_NAME "n"
 
-static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_cat_free(mapper_t* pmapper);
-static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name);
 static void      mapper_cat_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name);
+static void      mapper_cat_free(mapper_t* pmapper);
+static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_cat_setup = {

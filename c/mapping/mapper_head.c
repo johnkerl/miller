@@ -17,11 +17,11 @@ typedef struct _mapper_head_state_t {
 	lhmslv_t* precord_lists_by_group;
 } mapper_head_state_t;
 
-static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_head_free(mapper_t* pmapper);
-static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
 static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
+static void      mapper_head_free(mapper_t* pmapper);
+static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_head_setup = {

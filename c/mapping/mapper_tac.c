@@ -7,11 +7,11 @@ typedef struct _mapper_tac_state_t {
 	sllv_t* records;
 } mapper_tac_state_t;
 
-static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_tac_free(mapper_t* pmapper);
-static mapper_t* mapper_tac_alloc();
 static void      mapper_tac_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_tac_alloc();
+static void      mapper_tac_free(mapper_t* pmapper);
+static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_tac_setup = {

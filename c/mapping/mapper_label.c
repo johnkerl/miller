@@ -7,11 +7,11 @@ typedef struct _mapper_label_state_t {
 	slls_t* pnames;
 } mapper_label_state_t;
 
-static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_label_free(mapper_t* pmapper);
-static mapper_t* mapper_label_alloc(slls_t* pnames);
 static void      mapper_label_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_label_alloc(slls_t* pnames);
+static void      mapper_label_free(mapper_t* pmapper);
+static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_label_setup = {

@@ -83,8 +83,8 @@ static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
 static void      mapper_group_by_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort);
-static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_sort_free(mapper_t* pmapper);
+static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_params, context_t* pctx);
 

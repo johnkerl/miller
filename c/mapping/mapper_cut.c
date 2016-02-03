@@ -17,13 +17,13 @@ typedef struct _mapper_cut_state_t {
 	int      do_complement;
 } mapper_cut_state_t;
 
-static sllv_t*   mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_cut_free(mapper_t* pmapper);
-static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
-	int do_arg_order, int do_complement, int do_regexes);
 static void      mapper_cut_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
+	int do_arg_order, int do_complement, int do_regexes);
+static void      mapper_cut_free(mapper_t* pmapper);
+static sllv_t*   mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_cut_setup = {

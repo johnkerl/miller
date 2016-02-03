@@ -8,11 +8,11 @@ typedef struct _mapper_regularize_state_t {
 	lhmslv_t* psorted_to_original;
 } mapper_regularize_state_t;
 
-static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_regularize_free(mapper_t* pmapper);
-static mapper_t* mapper_regularize_alloc();
 static void      mapper_regularize_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_regularize_alloc();
+static void      mapper_regularize_free(mapper_t* pmapper);
+static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_regularize_setup = {

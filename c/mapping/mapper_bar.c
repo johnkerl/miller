@@ -19,14 +19,14 @@ typedef struct _mapper_bar_state_t {
 	sllv_t* precords; // only for auto mode
 } mapper_bar_state_t;
 
-static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_bar_free(mapper_t* pmapper);
+static void      mapper_bar_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto);
-static void      mapper_bar_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
+static void      mapper_bar_free(mapper_t* pmapper);
+static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 #define DEFAULT_FILL_CHAR  '*'
 #define DEFAULT_OOB_CHAR   '#'

@@ -18,11 +18,11 @@ typedef struct _mapper_put_state_t {
 	mlhmmv_t*      poosvars;
 } mapper_put_state_t;
 
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
-static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
 static void      mapper_put_free(mapper_t* pmapper);
+static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static void evaluate_statements(
 	mapper_put_state_t* pstate,
