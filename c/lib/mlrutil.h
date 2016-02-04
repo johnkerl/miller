@@ -125,4 +125,9 @@ int power_of_two_ceil(int n);
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
 char* mlr_unbackslash(char* input);
 
+// The caller should free the return value.
+char* read_file_into_memory(char* filename);
+// The caller should free the return value.
+char* read_stdin_into_memory();
+
 #endif // MLRUTIL_H

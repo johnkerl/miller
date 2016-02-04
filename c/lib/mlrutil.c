@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <sys/time.h>
+#include <sys/stat.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 
@@ -421,4 +422,40 @@ char* mlr_unbackslash(char* input) {
 	*po = 0;
 
 	return output;
+}
+
+// ----------------------------------------------------------------
+char* read_file_into_memory(char* filename) {
+	struct stat statbuf;
+	if (stat(filename, &statbuf) < 0) {
+		perror("stat");
+		fprintf(stderr, "%s: could not stat \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		exit(1);
+	}
+	char* buffer = mlr_malloc_or_die(statbuf.st_size + 1);
+
+	FILE* fp = fopen(filename, "r");
+	if (fp == NULL) {
+		perror("fopen");
+		fprintf(stderr, "%s: could not fopen \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		free(buffer);
+		return NULL;
+	}
+
+	int rc = fread(buffer, statbuf.st_size, 1, fp);
+	if (rc != 1) {
+		fprintf(stderr, "Unable t read content of %s\n", filename);
+		perror("fread");
+		fprintf(stderr, "%s: could not fread \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		fclose(fp);
+		free(buffer);
+		return NULL;
+	}
+	fclose(fp);
+	buffer[statbuf.st_size] = 0;
+	return buffer;
+}
+
+char* read_stdin_into_memory() {
+	return NULL; // xxx stub
 }

@@ -329,7 +329,7 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                                  e.g. '{\"a\":{\"b\":3}}' becomes a:b => 3 for\n");
 	fprintf(o, "                                  non-JSON formats. Defaults to %s.\n",
 		DEFAULT_JSON_FLATTEN_SEPARATOR);
-	// xxx fix this cmt
+	// xxx fix this cmt once lrec_reader_stdio_json is complete
 	fprintf(o, "  NOTE: --json and --ijson are currently under construction, but --ojson works.\n");
 	fprintf(o, "\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
