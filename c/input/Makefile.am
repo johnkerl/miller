@@ -6,6 +6,8 @@ libinput_la_SOURCES=	\
 			file_reader_mmap.h \
 			file_reader_stdio.c \
 			file_reader_stdio.h \
+			file_ingestor_stdio.c \
+			file_ingestor_stdio.h \
 			json_parser.c \
 			json_parser.h \
 			mlr_json_adapter.c \
