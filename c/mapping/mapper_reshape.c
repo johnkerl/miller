@@ -293,11 +293,16 @@ static sllv_t* mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, cont
 	for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext)
 		lrec_remove(pinrec, pf->key);
 
-	for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
-		lrec_t* poutrec = lrec_copy(pinrec);
-		lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
-		lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
-		sllv_append(poutrecs, poutrec);
+	if (pairs->num_occupied == 0) {
+		sllv_append(poutrecs, pinrec);
+	} else {
+		for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
+			lrec_t* poutrec = lrec_copy(pinrec);
+			lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
+			lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, poutrec);
+		}
+		lrec_free(pinrec);
 	}
 
 	lhmss_free(pairs);
@@ -328,11 +333,16 @@ static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context
 	for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext)
 		lrec_remove(pinrec, pg->key);
 
-	for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext) {
-		lrec_t* poutrec = lrec_copy(pinrec);
-		lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pg->key), FREE_ENTRY_VALUE);
-		lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pg->value), FREE_ENTRY_VALUE);
-		sllv_append(poutrecs, poutrec);
+	if (pairs->num_occupied == 0) {
+		sllv_append(poutrecs, pinrec);
+	} else {
+		for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
+			lrec_t* poutrec = lrec_copy(pinrec);
+			lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
+			lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, poutrec);
+		}
+		lrec_free(pinrec);
 	}
 
 	lhmss_free(pairs);
@@ -353,8 +363,6 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 		split_out_value_field_value = mlr_strdup_or_die(split_out_value_field_value);
 		lrec_remove(pinrec, pstate->split_out_key_field_name);
 		lrec_remove(pinrec, pstate->split_out_value_field_name);
-
-		// xxx cmt three-level map ...
 
 		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
 		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
