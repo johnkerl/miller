@@ -24,7 +24,7 @@ slls_t* mlr_copy_keys_from_record(lrec_t* prec) {
 	return plist;
 }
 
-slls_t* mlr_reference_all_values_from_record(lrec_t* prec) {
+slls_t* mlr_reference_values_from_record(lrec_t* prec) {
 	slls_t* plist = slls_alloc();
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		slls_append_no_free(plist, pe->value);
@@ -56,7 +56,7 @@ slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselecte
 // string_array_free() will respect that and not corrupt the lrec. However,
 // the array's values will be invalid after the lrec is freed.
 
-void mlr_reference_values_from_record(lrec_t* prec, string_array_t* pselected_field_names,
+void mlr_reference_values_from_record_into_string_array(lrec_t* prec, string_array_t* pselected_field_names,
 	string_array_t* pvalues)
 {
 	if (pselected_field_names->length != pvalues->length) {

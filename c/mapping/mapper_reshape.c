@@ -372,7 +372,7 @@ static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context
 				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
 		}
 
-		slls_t* other_values = mlr_reference_all_values_from_record(pinrec);
+		slls_t* other_values = mlr_reference_values_from_record(pinrec);
 		reshape_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
 		if (pbucket == NULL) {
 			pbucket = reshape_bucket_alloc(pinrec);
