@@ -126,15 +126,15 @@ static int new_value(
 				if (value->u.object.length == 0)
 					break;
 
-				values_size = sizeof(*value->u.object.values) * value->u.object.length;
+				values_size = sizeof(*value->u.object.p.values) * value->u.object.length;
 
-				if (! (value->u.object.values = (json_object_entry_t *) json_alloc
-						(state, values_size + ((unsigned long) value->u.object.values), 0)) )
+				if (! (value->u.object.p.values = (json_object_entry_t *) json_alloc
+						(state, values_size + ((unsigned long) value->u.object.p.values), 0)) )
 				{
 					return 0;
 				}
 
-				value->_reserved.object_mem = (*(char **) &value->u.object.values) + values_size;
+				value->_reserved.p.pobject_mem = (*(char **) &value->u.object.p.mem) + values_size; // xxx pun
 
 				value->u.object.length = 0;
 				break;
@@ -394,15 +394,14 @@ json_value_t * json_parse_ex(
 						case JSON_OBJECT:
 
 							if (state.first_pass) {
-								(*(json_char **) &top->u.object.values) += string_length + 1;
+								(*(json_char **) &top->u.object.p.mem) += string_length + 1; // xxx pun
 							} else {
-								top->u.object.values [top->u.object.length].name
-									= (json_char *) top->_reserved.object_mem;
+								top->u.object.p.values [top->u.object.length].name
+									= (json_char *) top->_reserved.p.pobject_mem;
 
-								top->u.object.values [top->u.object.length].name_length
-									= string_length;
+								top->u.object.p.values [top->u.object.length].name_length = string_length;
 
-								(*(json_char **) &top->_reserved.object_mem) += string_length + 1;
+								(*(json_char **) &top->_reserved.p.pobject_mem) += string_length + 1; // xxx pun
 							}
 
 							flags |= flag_seek_value | flag_need_colon;
@@ -643,7 +642,7 @@ json_value_t * json_parse_ex(
 
 							flags |= flag_string;
 
-							string = (json_char *) top->_reserved.object_mem;
+							string = (json_char *) top->_reserved.p.pobject_mem;
 							string_length = 0;
 
 							break;
@@ -785,7 +784,7 @@ json_value_t * json_parse_ex(
 
 					switch (parent->type) {
 						case JSON_OBJECT:
-							parent->u.object.values[parent->u.object.length].pvalue = top;
+							parent->u.object.p.values[parent->u.object.length].pvalue = top;
 							break;
 
 						case JSON_ARRAY:
@@ -873,11 +872,11 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 
 			case JSON_OBJECT:
 				if (!pvalue->u.object.length) {
-					settings->mem_free(pvalue->u.object.values, settings->user_data);
+					settings->mem_free(pvalue->u.object.p.values, settings->user_data);
 					break;
 				}
 
-				pvalue = pvalue->u.object.values [--pvalue->u.object.length].pvalue;
+				pvalue = pvalue->u.object.p.values [--pvalue->u.object.length].pvalue;
 				continue;
 
 			case JSON_STRING:

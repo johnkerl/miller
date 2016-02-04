@@ -115,7 +115,10 @@ typedef struct _json_value_t {
 
 		struct {
 			unsigned int length;
-			json_object_entry_t * values;
+			union {
+				json_object_entry_t * values;
+				char* mem;
+			} p;
 		} object;
 
 		struct {
@@ -127,7 +130,10 @@ typedef struct _json_value_t {
 
 	union {
 		struct _json_value_t * next_alloc;
-		void * object_mem;
+		union {
+			void * pvobject_mem;
+			char * pobject_mem;
+		} p;
 	} _reserved;
 
 	#ifdef JSON_TRACK_SOURCE

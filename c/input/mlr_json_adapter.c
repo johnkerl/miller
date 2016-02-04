@@ -47,7 +47,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 	lrec_t* prec = lrec_unbacked_alloc();
 	int n = pjson->u.array.length;
 	for (int i = 0; i < n; i++) {
-		json_object_entry_t* pobject_entry = &pjson->u.object.values[i];
+		json_object_entry_t* pobject_entry = &pjson->u.object.p.values[i];
 		char* key = (char*)pobject_entry->name;
 		char* lrec_value = NULL;
 		char* prefix = NULL;
@@ -108,7 +108,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep) {
 	int n = pjson_object->u.object.length;
 	for (int i = 0; i < n; i++) {
-		json_object_entry_t* pobject_entry = &pjson_object->u.object.values[i];
+		json_object_entry_t* pobject_entry = &pjson_object->u.object.p.values[i];
 		char* json_key = (char*)pobject_entry->name;
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
