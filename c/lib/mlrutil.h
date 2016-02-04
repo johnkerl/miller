@@ -128,6 +128,6 @@ char* mlr_unbackslash(char* input);
 // The caller should free the return value.
 char* read_file_into_memory(char* filename);
 // The caller should free the return value.
-char* read_stdin_into_memory();
+char* read_fp_into_memory(FILE* fp);
 
 #endif // MLRUTIL_H

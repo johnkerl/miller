@@ -456,6 +456,6 @@ char* read_file_into_memory(char* filename) {
 	return buffer;
 }
 
-char* read_stdin_into_memory() {
+char* read_fp_into_memory(FILE* fp) {
 	return NULL; // xxx stub
 }
