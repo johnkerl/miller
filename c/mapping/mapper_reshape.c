@@ -89,9 +89,14 @@ static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  -r {input field regexes} -o {key-field name,value-field name}\n");
 	fprintf(o, "  These pivot/reshape the input data such that the input fields are removed\n");
 	fprintf(o, "  and separate records are emitted for each key/value pair.\n");
+	fprintf(o, "  Note: this works with tail -f and produces output records for each input\n");
+	fprintf(o, "  record seen.\n");
 	fprintf(o, "Long-to-wide options:\n");
 	fprintf(o, "  -s {key-field name,value-field name}\n");
 	fprintf(o, "  These pivot/reshape the input data to undo the wide-to-long operation.\n");
+	fprintf(o, "  Note: this does not work with tail -f; it produces output records only after\n");
+	fprintf(o, "  all input records have been read.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "\n");
 	fprintf(o, "  Input file \"wide.txt\":\n");
@@ -119,6 +124,13 @@ static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    2009-01-03 Y    1.3179287\n");
 	fprintf(o, "\n");
 	fprintf(o, "  Input file \"long.txt\":\n");
+	fprintf(o, "    time       item value\n");
+	fprintf(o, "    2009-01-01 X    0.65473572\n");
+	fprintf(o, "    2009-01-01 Y    2.4520609\n");
+	fprintf(o, "    2009-01-02 X    -0.89248112\n");
+	fprintf(o, "    2009-01-02 Y    0.2154713\n");
+	fprintf(o, "    2009-01-03 X    0.98012375\n");
+	fprintf(o, "    2009-01-03 Y    1.3179287\n");
 	fprintf(o, "\n");
 	fprintf(o, "  %s --pprint %s -s item,value long.txt\n", argv0, verb);
 	fprintf(o, "    time       X           Y\n");
