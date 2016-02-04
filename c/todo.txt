@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-!!! type-punning error !!!
-
 * JSON input: many important subtasks remaining
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
@@ -79,16 +77,6 @@ TOP-OF-LIST DETAILS
     $ mlr --jlistwrap --jvstack --json cat ~/bak/bmx/bookmarks-2016-02-02.json 
     mlr: found array item within JSON object. This is valid but unmillerable JSON.
     ]
-
-
-  ! lnx fixme:
-    input/json.c: In function ‘new_value’:
-    input/json.c:137: error: dereferencing type-punned pointer will break strict-aliasing rules
-    input/json.c: In function ‘json_parse_ex’:
-    input/json.c:397: error: dereferencing type-punned pointer will break strict-aliasing rules
-    input/json.c:405: error: dereferencing type-punned pointer will break strict-aliasing rules
-
-    http://cellperformance.beyond3d.com/articles/2006/06/understanding-strict-aliasing.html
 
 ? env vars??
 
