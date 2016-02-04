@@ -95,8 +95,8 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.nidx \
 		regex.dkvp \
 		regularize.dkvp \
-		reg_test/input/reshape-long.tbl \
-		reg_test/input/reshape-wide.tbl \
+		reshape-long.tbl \
+		reshape-wide.tbl \
 		rfc-csv \
 		scinot.dkvp \
 		scinot1.dkvp \
