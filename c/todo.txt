@@ -15,7 +15,6 @@ TOP-OF-LIST SUMMARY
 * make placeholder tasks ... even some retroactives ...
 
 ! freebsd: research into flexv9 compatibility
-* reshape
 * explode & any other komosas from feature-request task
 
 * doc items
@@ -32,6 +31,7 @@ TOP-OF-LIST SUMMARY
     - begin/end -- but pending parameterized emit
     - JSON output -- but pending JSON input
     - filter/gate/bare-boolean -- but pending pattern-action
+    - reshape -- good to go i think
   o medium:
     - ternary operator
     - regex captures
@@ -60,11 +60,6 @@ TOP-OF-LIST SUMMARY
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
-
-* reshape:
-  - mlr reshape --wide-to-long -i X,Y,Z (or regex ...) -o item,price
-  - mlr reshape --long-to-wide -i stock,price
-  - mld:ref:reshape
 
 * JSON I/O:
   ! acknowledgement to mld: https://github.com/udp/json-parser
