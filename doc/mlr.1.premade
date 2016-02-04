@@ -179,6 +179,9 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
                       --jlistwrap Wrap JSON output in outermost [ ].
                       --jquoteall Quote map keys in JSON output, even if they're
                                   numeric.
+              --jflatsep {string} Separator for flattening multi-level JSON keys,
+                                  e.g. '{"a":{"b":3}}' becomes a:b => 3 for
+                                  non-JSON formats. Defaults to :.
   NOTE: --json and --ijson are currently under construction, but --ojson works.
 
   -p is a keystroke-saver for --nidx --fs space --repifs

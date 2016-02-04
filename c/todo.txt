@@ -14,6 +14,7 @@ TOP-OF-LIST SUMMARY
 
 ! freebsd: research into flexv9 compatibility
 * explode & any other komosas from feature-request task
+* rename-all w/ regex-captures? e.g. de-spacifying field names etc.
 
 * doc items
 * xxxes
