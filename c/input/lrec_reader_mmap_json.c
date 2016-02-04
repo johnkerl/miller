@@ -137,7 +137,7 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	// all exhausted.
 
 	json_char* item_start = json_input;
-	int length = phandle->eof - phandle->sol;;
+	int length = phandle->eof - phandle->sol;
 
 	while (TRUE) {
 		parsed_top_level_json = json_parse_ex(item_start, length, error_buf, &item_start, &settings);

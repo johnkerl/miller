@@ -126,7 +126,7 @@ int power_of_two_ceil(int n);
 char* mlr_unbackslash(char* input);
 
 // The caller should free the return value.
-char* read_file_into_memory(char* filename);
+char* read_file_into_memory(char* filename, size_t* psize);
 // The caller should free the return value.
 char* read_fp_into_memory(FILE* fp);
 

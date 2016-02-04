@@ -14,6 +14,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips);
+lrec_reader_t* lrec_reader_stdio_json_alloc(char* json_flatten_separator);
 
 lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header);

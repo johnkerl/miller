@@ -12,10 +12,11 @@
 // ----------------------------------------------------------------
 void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 	char* file_contents_buffer = NULL;
+	size_t file_size = 0;
 
 	if (prepipe == NULL) {
 		if (!streq(filename, "-")) {
-			file_contents_buffer = read_file_into_memory(filename);
+			file_contents_buffer = read_file_into_memory(filename, &file_size);
 			if (file_contents_buffer == NULL) {
 				perror(filename);
 				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
@@ -45,7 +46,10 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 //		free(command);
 
 	}
-	return file_contents_buffer;
+	file_ingestor_stdio_state_t* pstate = mlr_malloc_or_die(sizeof(file_ingestor_stdio_state_t));
+	pstate->sof = file_contents_buffer;
+	pstate->eof = &file_contents_buffer[file_size];
+	return pstate;
 }
 
 // ----------------------------------------------------------------

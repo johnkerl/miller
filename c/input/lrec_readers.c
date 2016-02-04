@@ -35,8 +35,7 @@ lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* 
 		if (use_mmap)
 			return lrec_reader_mmap_json_alloc(json_flatten_separator);
 		else
-			fprintf(stderr, "The JSON stdio reader is not yet implemented.\n");
-			return NULL; // xxx stub
+			return lrec_reader_stdio_json_alloc(json_flatten_separator);
 	} else {
 		return NULL;
 	}

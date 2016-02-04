@@ -96,6 +96,7 @@ TEST_LREC_SRCS = \
   input/line_readers.c \
   input/file_reader_mmap.c \
   input/file_reader_stdio.c \
+  input/file_ingestor_stdio.c \
   input/lrec_reader_mmap_csvlite.c \
   input/lrec_reader_stdio_csvlite.c \
   input/lrec_reader_mmap_dkvp.c \
@@ -134,6 +135,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   input/line_readers.c \
   input/file_reader_mmap.c \
   input/file_reader_stdio.c \
+  input/file_ingestor_stdio.c \
   input/lrec_reader_mmap_csvlite.c \
   input/lrec_reader_stdio_csvlite.c \
   input/lrec_reader_mmap_dkvp.c \
@@ -241,6 +243,7 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   input/json_parser.c \
   input/file_reader_mmap.c \
   input/file_reader_stdio.c \
+  input/file_ingestor_stdio.c \
   input/peek_file_reader.c \
   unit_test/test_join_bucket_keeper.c
 

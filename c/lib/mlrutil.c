@@ -425,7 +425,7 @@ char* mlr_unbackslash(char* input) {
 }
 
 // ----------------------------------------------------------------
-char* read_file_into_memory(char* filename) {
+char* read_file_into_memory(char* filename, size_t* psize) {
 	struct stat statbuf;
 	if (stat(filename, &statbuf) < 0) {
 		perror("stat");
@@ -453,6 +453,7 @@ char* read_file_into_memory(char* filename) {
 	}
 	fclose(fp);
 	buffer[statbuf.st_size] = 0;
+	*psize = statbuf.st_size;
 	return buffer;
 }
 
