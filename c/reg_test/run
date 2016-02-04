@@ -327,6 +327,19 @@ run_mlr --odkvp join --prepipe cat -u -j a -f $indir/join-het.dkvp $indir/abixy-
 run_mlr --prepipe cat --odkvp join --prepipe cat -u -j a -f $indir/join-het.dkvp $indir/abixy-het
 
 # ----------------------------------------------------------------
+announce RESHAPE
+
+run_mlr --pprint reshape -i X,Y,Z   -o item,price $indir/reshape-wide.tbl
+run_mlr --pprint reshape -i X,Z     -o item,price $indir/reshape-wide.tbl
+run_mlr --pprint reshape -r '[A-Z]' -o item,price $indir/reshape-wide.tbl
+run_mlr --pprint reshape -r '[XZ]'  -o item,price $indir/reshape-wide.tbl
+
+run_mlr --pprint reshape -s item,price $indir/reshape-long.tbl
+
+run_mlr --pprint reshape -i X,Y,Z -o item,price then reshape -s item,price $indir/reshape-wide.tbl
+run_mlr --pprint reshape -s item,price then reshape -i X,Y,Z -o item,price $indir/reshape-long.tbl
+
+# ----------------------------------------------------------------
 announce STATS
 
 run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
@@ -1087,10 +1100,6 @@ run_mlr put -v '@a=$a; @b=$b; @c=$x; end emit @a, @b, @c' $indir/abixy
 
 run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' $indir/abixy
 run_mlr --opprint put -v 'end{@mean=@sum/@count; emit @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy
-
-# ----------------------------------------------------------------
-announce DSL EXPERIMENTAL MOOSVARS
-# These will be merged with oosvars once they're working.
 
 run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end @f[@g[5][@h]] = 6' /dev/null
 
