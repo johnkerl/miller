@@ -38,6 +38,7 @@ typedef struct _mapper_join_opts_t {
 	int      use_implicit_csv_header;
 	char*    ifile_fmt;
 	int      use_mmap_for_read;
+	char*    json_flatten_separator;
 } mapper_join_opts_t;
 
 typedef struct _mapper_join_state_t {
@@ -142,6 +143,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
 	popts->use_implicit_csv_header = OPTION_UNSPECIFIED;
 	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
+	popts->json_flatten_separator = NULL;
 
 	char* verb = argv[(*pargi)++];
 
@@ -167,6 +169,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "--implicit-csv-header", &popts->use_implicit_csv_header);
 	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
 	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
+	ap_define_string_flag(pstate,      "--jflatsep", &popts->json_flatten_separator);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_join_usage(stderr, argv[0], verb);
@@ -291,6 +294,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 			popts->ips,
 			popts->allow_repeat_ips,
 			popts->use_implicit_csv_header,
+			popts->json_flatten_separator,
 			popts->pleft_join_field_names);
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
@@ -493,6 +497,8 @@ static void merge_options(mapper_join_opts_t* popts) {
 		popts->use_implicit_csv_header = MLR_GLOBALS.popts->use_implicit_csv_header;
 	if (popts->use_mmap_for_read == OPTION_UNSPECIFIED)
 		popts->use_mmap_for_read = MLR_GLOBALS.popts->use_mmap_for_read;
+	if (popts->json_flatten_separator == NULL)
+		popts->json_flatten_separator = MLR_GLOBALS.popts->json_flatten_separator;
 }
 
 static void ingest_left_file(mapper_join_state_t* pstate) {
@@ -501,7 +507,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
-		popts->use_implicit_csv_header);
+		popts->use_implicit_csv_header, popts->json_flatten_separator);
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->prepipe,
 		pstate->popts->left_file_name);

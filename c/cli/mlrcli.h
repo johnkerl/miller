@@ -31,6 +31,7 @@ typedef struct _cli_opts_t {
 	int   stack_json_output_vertically;
 	int   wrap_json_output_in_outer_list;
 	int   quote_json_values_always;
+	char* json_flatten_separator;
 
 	char* ofmt;
 	int   oquoting;

@@ -6,6 +6,7 @@
 
 typedef struct _lrec_writer_json_state_t {
 	unsigned long long counter;
+	char* json_flatten_separator;
 
 	int quote_json_values_always;
 	char* before_records_at_start_of_stream;
@@ -20,13 +21,14 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int quote_json_values_always)
+	int quote_json_values_always, char* json_flatten_separator)
 {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_json_state_t));
 	pstate->quote_json_values_always = quote_json_values_always;
 	pstate->counter = 0;
+	pstate->json_flatten_separator = json_flatten_separator;
 
 	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";
 	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
@@ -55,14 +57,14 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 			printf("%s", pstate->between_records_after_start_of_stream);
 		mlhmmv_t* pmap = mlhmmv_alloc();
 
-		char* flatten_sep = ":"; // xxx temp; needs to be parameterized
+		char* sep = pstate->json_flatten_separator;
 
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 			char* lkey = pe->key;
 			char* lvalue = pe->value;
 
 			sllmv_t* pmvkeys = sllmv_alloc();
-			for (char* piece = strtok(lkey, flatten_sep); piece != NULL; piece = strtok(NULL, flatten_sep)) {
+			for (char* piece = strtok(lkey, sep); piece != NULL; piece = strtok(NULL, sep)) {
 				mv_t mvkey = mv_from_string(piece, NO_FREE);
 				sllmv_add(pmvkeys, &mvkey);
 			}

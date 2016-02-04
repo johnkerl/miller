@@ -134,7 +134,7 @@ static int new_value(
 					return 0;
 				}
 
-				value->_reserved.p.pobject_mem = (*(char **) &value->u.object.p.mem) + values_size; // xxx pun
+				value->_reserved.p.pobject_mem = (*(char **) &value->u.object.p.mem) + values_size;
 
 				value->u.object.length = 0;
 				break;
@@ -394,14 +394,14 @@ json_value_t * json_parse_ex(
 						case JSON_OBJECT:
 
 							if (state.first_pass) {
-								(*(json_char **) &top->u.object.p.mem) += string_length + 1; // xxx pun
+								(*(json_char **) &top->u.object.p.mem) += string_length + 1;
 							} else {
 								top->u.object.p.values [top->u.object.length].name
 									= (json_char *) top->_reserved.p.pobject_mem;
 
 								top->u.object.p.values [top->u.object.length].name_length = string_length;
 
-								(*(json_char **) &top->_reserved.p.pobject_mem) += string_length + 1; // xxx pun
+								(*(json_char **) &top->_reserved.p.pobject_mem) += string_length + 1;
 							}
 
 							flags |= flag_seek_value | flag_need_colon;

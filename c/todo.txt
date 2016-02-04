@@ -62,7 +62,7 @@ TOP-OF-LIST DETAILS
 * JSON I/O:
   ! acknowledgement to mld: https://github.com/udp/json-parser
   ! stdio version. & prefer stremable version with fgetc rather than pointer-math.
-  k output: mlr-native json output is trivial & just do it.
+  - on output, check 1st if mlhmmv is necessary? or just always?
   - cover x 2
   - define 'tabular JSON' by example @ mld
   ? flatten/unflatten option? ":" syntax?
@@ -71,6 +71,7 @@ TOP-OF-LIST DETAILS
     - programmable flatten-separator
   ? or support multi-level lrecs??
   o hp re :)
+  ! JSON/join UT. both/left/right json cases.
 
   o bug:
 
@@ -291,6 +292,7 @@ COOKBOOK/FAQ/ETC.:
 
 ? wiki quickselect ?
 
+* sllv_free option with callback for void-star-payload free; likewise other void-star-payload containers
 * double-check for off-by-one buflen in cline/sline
 * hash-collision ifdef instrumentation -> maybe find a better hash function out there
 * pprint join?

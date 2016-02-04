@@ -197,6 +197,8 @@ static char* rebackslash(char* sep) {
 
 #define DEFAULT_OQUOTING QUOTE_MINIMAL
 
+#define DEFAULT_JSON_FLATTEN_SEPARATOR ":"
+
 // ----------------------------------------------------------------
 // The main_usage() function is split out into subroutines in support of the
 // manpage autogenerator.
@@ -323,6 +325,11 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
 	fprintf(o, "                      --jquoteall Quote map keys in JSON output, even if they're\n");
 	fprintf(o, "                                  numeric.\n");
+	fprintf(o, "              --jflatsep {string} Separator for flattening multi-level JSON keys,\n");
+	fprintf(o, "                                  e.g. '{\"a\":{\"b\":3}}' becomes a:b => 3 for\n");
+	fprintf(o, "                                  non-JSON formats. Defaults to %s.\n",
+		DEFAULT_JSON_FLATTEN_SEPARATOR);
+	// xxx fix this cmt
 	fprintf(o, "  NOTE: --json and --ijson are currently under construction, but --ojson works.\n");
 	fprintf(o, "\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
@@ -561,10 +568,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ors               = NULL;
 	popts->ofs               = NULL;
 	popts->ops               = NULL;
+
 	popts->right_justify_xtab_value       = FALSE;
 	popts->stack_json_output_vertically   = FALSE;
 	popts->wrap_json_output_in_outer_list = FALSE;
 	popts->quote_json_values_always       = FALSE;
+	popts->json_flatten_separator         = DEFAULT_JSON_FLATTEN_SEPARATOR;
 
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
@@ -734,6 +743,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->wrap_json_output_in_outer_list = TRUE;
 		} else if (streq(argv[argi], "--jquoteall")) {
 			popts->quote_json_values_always = TRUE;
+		} else if (streq(argv[argi], "--jflatsep")) {
+			check_arg_count(argv, argi, argc, 2);
+			popts->json_flatten_separator = argv[argi+1];
+			argi++;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
 		} else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";
@@ -881,7 +894,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 	else if (streq(popts->ofile_fmt, "json"))
 		popts->plrec_writer = lrec_writer_json_alloc(popts->stack_json_output_vertically,
-			popts->wrap_json_output_in_outer_list, popts->quote_json_values_always);
+			popts->wrap_json_output_in_outer_list, popts->quote_json_values_always, popts->json_flatten_separator);
 	else if (streq(popts->ofile_fmt, "csv"))
 		popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting,
 			popts->headerless_csv_output);
@@ -942,7 +955,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
-		popts->use_implicit_csv_header);
+		popts->use_implicit_csv_header, popts->json_flatten_separator);
 	if (popts->plrec_reader == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);

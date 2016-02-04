@@ -7,7 +7,7 @@
 
 // Factory method.  fmtdesc: "dkvp", "nidx", "csv", "csvlite", "nidx", "xtab".
 lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* ifs, int allow_repeat_ifs,
-	char* ips, int allow_repeat_ips, int use_implicit_csv_header);
+	char* ips, int allow_repeat_ips, int use_implicit_csv_header, char* json_flatten_separator);
 
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header);
@@ -20,7 +20,7 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips);
-lrec_reader_t* lrec_reader_mmap_json_alloc();
+lrec_reader_t* lrec_reader_mmap_json_alloc(char* json_flatten_separator);
 
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords);
 

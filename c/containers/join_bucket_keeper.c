@@ -150,10 +150,11 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* ips,
 	int   allow_repeat_ips,
 	int   use_implicit_csv_header,
+	char* json_flatten_separator,
 	slls_t* pleft_field_names
 ) {
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(input_file_format, use_mmap_for_read,
-		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips, use_implicit_csv_header);
+		irs, ifs, allow_repeat_ifs, ips, allow_repeat_ips, use_implicit_csv_header, json_flatten_separator);
 
 	return join_bucket_keeper_alloc_from_reader(plrec_reader, prepipe, left_file_name, pleft_field_names);
 }

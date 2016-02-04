@@ -45,6 +45,7 @@ join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* ips,
 	int   allow_repeat_ips,
 	int   use_implicit_csv_header,
+	char* json_flatten_separator,
 	slls_t* pleft_field_names);
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(

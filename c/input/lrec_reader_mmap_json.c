@@ -32,8 +32,7 @@ typedef struct _lrec_reader_mmap_json_state_t {
 	// manipulate pointers to strings rather than copying strings.)
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
-	// xxx parameterize
-	char* flatten_sep;
+	char* json_flatten_separator;
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -41,13 +40,13 @@ static void    lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_json_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
+lrec_reader_t* lrec_reader_mmap_json_alloc(char* json_flatten_separator) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
 	pstate->ptop_level_json_objects = NULL;
 	pstate->precords                = NULL;
-	pstate->flatten_sep             = ":";
+	pstate->json_flatten_separator  = json_flatten_separator;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -100,8 +99,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		.max_memory = 0
 	};
 
-	// xxx make an sllv_free_with_callback & use it throughout
-
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
 			json_value_t* top_level_json_object = pe->pvvalue;
@@ -152,7 +149,7 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
-		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->flatten_sep);
+		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->json_flatten_separator);
 
 		if (item_start == NULL)
 			break;
