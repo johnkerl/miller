@@ -97,6 +97,8 @@ EXTRA_DIST=	\
 		regularize.dkvp \
 		reshape-long.tbl \
 		reshape-wide.tbl \
+		reshape-long-ragged.dkvp \
+		reshape-wide-ragged.dkvp \
 		rfc-csv \
 		scinot.dkvp \
 		scinot1.dkvp \
