@@ -83,8 +83,48 @@ mapper_setup_t mapper_reshape_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", argv0, verb);
-	fprintf(o, "xxx under construction\n");
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Wide-to-long options:\n");
+	fprintf(o, "  -i {input field names}   -o {key-field name,value-field name}\n");
+	fprintf(o, "  -r {input field regexes} -o {key-field name,value-field name}\n");
+	fprintf(o, "  These pivot/reshape the input data such that the input fields are removed\n");
+	fprintf(o, "  and separate records are emitted for each key/value pair.\n");
+	fprintf(o, "Long-to-wide options:\n");
+	fprintf(o, "  -s {key-field name,value-field name}\n");
+	fprintf(o, "  These pivot/reshape the input data to undo the wide-to-long operation.\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "\n");
+	fprintf(o, "  Input file \"wide.txt\":\n");
+	fprintf(o, "    time       X           Y\n");
+	fprintf(o, "    2009-01-01 0.65473572  2.4520609\n");
+	fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n");
+	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
+	fprintf(o, "\n");
+	fprintf(o, "  %s --pprint %s -i X,Y -o item,value wide.txt\n", argv0, verb);
+	fprintf(o, "    time       item value\n");
+	fprintf(o, "    2009-01-01 X    0.65473572\n");
+	fprintf(o, "    2009-01-01 Y    2.4520609\n");
+	fprintf(o, "    2009-01-02 X    -0.89248112\n");
+	fprintf(o, "    2009-01-02 Y    0.2154713\n");
+	fprintf(o, "    2009-01-03 X    0.98012375\n");
+	fprintf(o, "    2009-01-03 Y    1.3179287\n");
+	fprintf(o, "\n");
+	fprintf(o, "  %s --pprint %s -r '[A-Z]' -o item,value wide.txt\n", argv0, verb);
+	fprintf(o, "    time       item value\n");
+	fprintf(o, "    2009-01-01 X    0.65473572\n");
+	fprintf(o, "    2009-01-01 Y    2.4520609\n");
+	fprintf(o, "    2009-01-02 X    -0.89248112\n");
+	fprintf(o, "    2009-01-02 Y    0.2154713\n");
+	fprintf(o, "    2009-01-03 X    0.98012375\n");
+	fprintf(o, "    2009-01-03 Y    1.3179287\n");
+	fprintf(o, "\n");
+	fprintf(o, "  Input file \"long.txt\":\n");
+	fprintf(o, "\n");
+	fprintf(o, "  %s --pprint %s -s item,value long.txt\n", argv0, verb);
+	fprintf(o, "    time       X           Y\n");
+	fprintf(o, "    2009-01-01 0.65473572  2.4520609\n");
+	fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n");
+	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
 }
 
 static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
