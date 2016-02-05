@@ -69,7 +69,7 @@ static mapper_t* mapper_reshape_alloc(
 static void      mapper_reshape_free(mapper_t* pmapper);
 static sllv_t*   mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_reshape_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static reshape_bucket_t* reshape_bucket_alloc(lrec_t* prepresentative);
 static void reshape_bucket_free(reshape_bucket_t* pbucket);
@@ -237,7 +237,7 @@ static mapper_t* mapper_reshape_alloc(
 			pmapper->pprocess_func = mapper_reshape_wide_to_long_regex_process;
 		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
-		pmapper->pprocess_func = mapper_reshape_long_to_wide_regex_process;
+		pmapper->pprocess_func = mapper_reshape_long_to_wide_process;
 		pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	}
 
@@ -366,7 +366,7 @@ static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_reshape_long_to_wide_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_reshape_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
 
 	if (pinrec != NULL) { // Not end of input stream
