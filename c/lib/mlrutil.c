@@ -457,32 +457,32 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 	return buffer;
 }
 
+// ----------------------------------------------------------------
 #define INITIAL_ALLOC_SIZE 16384
 #define BLOCK_SIZE 16384
 char* read_fp_into_memory(FILE* fp, size_t* psize) {
-//	size_t file_size = 0;
-//	size_t alloc_size = INITIAL_ALLOC_SIZE;
-//	char* buffer = mlr_malloc_or_die(alloc_size);
-//
-//	while (TRUE) {
-//		// xxx realloc_check ...
-//		if (file_size + BLOCK_SIZE > alloc_size) {
-//			buffer = mlr_realloc_or_die(xxx);
-//		}
-//		size_t block_num_bytes_read = fread(&buffer[file_size], 1, BLOCK_SIZE, fp);
-//		if (block_num_bytes_read = 0) {
-//			if (feof(fp))
-//				break;
-//			perror("fread");
-//			fprintf(stderr, "%s: could not fread \"%s\"\n", MLR_GLOBALS.argv0, filename);
-//			free(buffer);
-//			*psize = 0;
-//			return NULL;
-//		} else {
-//		}
-//	}
-//
-//	*psize = file_size;
-//	return buffer;
-	return NULL; // xxx stub
+	size_t file_size = 0;
+	size_t alloc_size = INITIAL_ALLOC_SIZE;
+	char* buffer = mlr_malloc_or_die(alloc_size);
+
+	while (TRUE) {
+		if (file_size + BLOCK_SIZE > alloc_size) {
+			alloc_size *= 2;
+			buffer = mlr_realloc_or_die(buffer, alloc_size);
+		}
+		size_t block_num_bytes_read = fread(&buffer[file_size], 1, BLOCK_SIZE, fp);
+		if (block_num_bytes_read == 0) {
+			if (feof(fp))
+				break;
+			perror("fread");
+			fprintf(stderr, "%s: stdio/popen fread failed\n", MLR_GLOBALS.argv0);
+			free(buffer);
+			*psize = 0;
+			return NULL;
+		}
+		file_size += block_num_bytes_read;
+	}
+
+	*psize = file_size;
+	return buffer;
 }
