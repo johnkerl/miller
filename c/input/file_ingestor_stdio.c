@@ -15,36 +15,38 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 	size_t file_size = 0;
 
 	if (prepipe == NULL) {
-		if (!streq(filename, "-")) {
-			file_contents_buffer = read_file_into_memory(filename, &file_size);
+		if (streq(filename, "-")) {
+			file_contents_buffer = read_fp_into_memory(stdin, &file_size);
 			if (file_contents_buffer == NULL) {
-				perror(filename);
-				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+				fprintf(stderr, "%s: Couldn't open standard input for read.\n", MLR_GLOBALS.argv0);
 				exit(1);
 			}
 		} else {
-			// xxx finish this ...
-			fprintf(stderr, "xxx unimpl1\n");
+			file_contents_buffer = read_file_into_memory(filename, &file_size);
+			if (file_contents_buffer == NULL) {
+				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+				exit(1);
+			}
+		}
+
+	} else {
+		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(filename) + 1);
+		if (streq(filename, "-"))
+			sprintf(command, "%s", prepipe);
+		else
+			sprintf(command, "%s < %s", prepipe, filename);
+		FILE* input_stream = popen(command, "r");
+		if (input_stream == NULL) {
+			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.argv0, command);
+			perror(command);
 			exit(1);
 		}
-	} else {
-			// xxx finish this ...
-			fprintf(stderr, "xxx unimpl2\n");
+		file_contents_buffer = read_fp_into_memory(input_stream, &file_size);
+		if (file_contents_buffer == NULL) {
+			fprintf(stderr, "%s: Couldn't open popen for read: \"%s\".\n", MLR_GLOBALS.argv0, command);
 			exit(1);
-
-//		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(filename) + 1);
-//		if (streq(filename, "-"))
-//			sprintf(command, "%s", prepipe);
-//		else
-//			sprintf(command, "%s < %s", prepipe, filename);
-//		input_stream = popen(command, "r");
-//		if (input_stream == NULL) {
-//			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.argv0, command);
-//			perror(command);
-//			exit(1);
-//		}
-//		free(command);
-
+		}
+		free(command);
 	}
 	file_ingestor_stdio_state_t* pstate = mlr_malloc_or_die(sizeof(file_ingestor_stdio_state_t));
 	pstate->sof = file_contents_buffer;

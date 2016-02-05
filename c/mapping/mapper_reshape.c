@@ -178,8 +178,8 @@ static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
 			mapper_reshape_usage(stderr, argv[0], verb);
 			return NULL;
 		}
-		output_key_field_name   = output_field_names->phead->value;;
-		output_value_field_name = output_field_names->phead->pnext->value;;
+		output_key_field_name   = mlr_strdup_or_die(output_field_names->phead->value);
+		output_value_field_name = mlr_strdup_or_die(output_field_names->phead->pnext->value);
 
 	} else {
 		// long to wide
@@ -187,8 +187,9 @@ static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
 			mapper_reshape_usage(stderr, argv[0], verb);
 			return NULL;
 		}
-		split_out_key_field_name   = split_out_field_names->phead->value;;
-		split_out_value_field_name = split_out_field_names->phead->pnext->value;;
+		split_out_key_field_name   = mlr_strdup_or_die(split_out_field_names->phead->value);
+		split_out_value_field_name = mlr_strdup_or_die(split_out_field_names->phead->pnext->value);
+		slls_free(split_out_field_names);
 	}
 
 	return mapper_reshape_alloc(pstate, input_field_names, input_field_regex_strings,
@@ -248,7 +249,15 @@ static mapper_t* mapper_reshape_alloc(
 
 static void mapper_reshape_free(mapper_t* pmapper) {
 	mapper_reshape_state_t* pstate = pmapper->pvstate;
+
 	slls_free(pstate->input_field_names);
+
+	free(pstate->output_key_field_name);
+	free(pstate->output_value_field_name);
+
+	free(pstate->split_out_key_field_name);
+	free(pstate->split_out_value_field_name);
+
 	if (pstate->input_field_regexes != NULL) {
 		for (sllve_t* pe = pstate->input_field_regexes->phead; pe != NULL; pe = pe->pnext) {
 			regex_t* pregex = pe->pvvalue;
