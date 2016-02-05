@@ -143,13 +143,16 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		parsed_top_level_json = json_parse_ex(item_start, length, error_buf, &item_start, &settings);
 
 		if (parsed_top_level_json == NULL) {
-			fprintf(stderr, "Unable to parse JSON data: %s\n", error_buf);
+			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", error_buf, MLR_GLOBALS.argv0);
 			exit(1);
 		}
 
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
-		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->json_flatten_separator);
+		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->json_flatten_separator)) {
+			fprintf(stderr, "%s: Unable to parse JSON data.\n", MLR_GLOBALS.argv0);
+			exit(1);
+		}
 
 		if (item_start == NULL)
 			break;

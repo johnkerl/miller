@@ -294,8 +294,9 @@ static sllv_t* mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, cont
 	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* key = pe->value;
 		char* value = lrec_get(pinrec, key);
-		if (value != NULL)
-			lhmss_put(pairs, key, value, NO_FREE);
+		if (value != NULL) {
+			lhmss_put(pairs, mlr_strdup_or_die(key), mlr_strdup_or_die(value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		}
 	}
 
 	// Unset the lrec keys after iterating over them, rather than during
@@ -332,7 +333,8 @@ static sllv_t* mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context
 		for (sllve_t* pf = pstate->input_field_regexes->phead; pf != NULL; pf = pf->pnext) {
 			regex_t* pregex = pf->pvvalue;
 			if (regmatch_or_die(pregex, pe->key, 0, NULL)) {
-				lhmss_put(pairs, pe->key, pe->value, NO_FREE);
+				lhmss_put(pairs, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 				break;
 			}
 		}

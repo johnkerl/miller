@@ -61,8 +61,12 @@ TOP-OF-LIST SUMMARY
 TOP-OF-LIST DETAILS
 
 * JSON I/O:
+  ! string-preservation for doubles !
+  ! UT !
+  ! mlr --json reshape -i x,y -o item,value rec.json
+
   ! acknowledgement to mld: https://github.com/udp/json-parser
-  ! stdio version. & prefer stremable version with fgetc rather than pointer-math.
+  o wishlist: streamable version with fgetc rather than pointer-math.
   - on output, check 1st if mlhmmv is necessary? or just always?
   - cover x 2
   - define 'tabular JSON' by example @ mld
@@ -70,15 +74,8 @@ TOP-OF-LIST DETAILS
     - programmable allow-this-on-input flag
     - programmable allow-this-on-output flag
     - programmable flatten-separator
-  ? or support multi-level lrecs??
   o hp re :)
   ! JSON/join UT. both/left/right json cases.
-
-  o bug:
-
-    $ mlr --jlistwrap --jvstack --json cat ~/bak/bmx/bookmarks-2016-02-02.json 
-    mlr: found array item within JSON object. This is valid but unmillerable JSON.
-    ]
 
 ? env vars??
 
