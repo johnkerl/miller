@@ -65,7 +65,6 @@ TOP-OF-LIST DETAILS
   ! UT !
   ! mlr --json reshape -i x,y -o item,value rec.json
 
-  ! acknowledgement to mld: https://github.com/udp/json-parser
   o wishlist: streamable version with fgetc rather than pointer-math.
   - on output, check 1st if mlhmmv is necessary? or just always?
   - cover x 2
