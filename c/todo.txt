@@ -63,7 +63,8 @@ TOP-OF-LIST DETAILS
 * JSON I/O:
   ! string-preservation for doubles !
   ! UT !
-  ! mlr --json reshape -i x,y -o item,value rec.json
+    > mlr --json reshape -i x,y -o item,value rec.json
+  ! mld x several; also mlr -h output example
 
   o wishlist: streamable version with fgetc rather than pointer-math.
   - on output, check 1st if mlhmmv is necessary? or just always?

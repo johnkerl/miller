@@ -169,6 +169,22 @@ $ mlr --usage-data-format-examples
   | 4,5,6               | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
   +---------------------+
 
+  Tabular JSON: nested objects are supported, but arrays within them are not:
+  +---------------------+
+  | {                   |
+  |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  |  "bat": 2,          |
+  |  "cog": 3           |
+  | }                   |
+  | {                   |
+  |   "dish": {         | Record 2: "dish:egg" =&gt; "7", "dish:flint" =&gt; "8", "garlic" =&gt; ""
+  |     "egg": 7,       |
+  |     "flint": 8      |
+  |   },                |
+  |   "garlic": ""      |
+  | }                   |
+  +---------------------+
+
   PPRINT: pretty-printed tabular
   +---------------------+
   | apple bat cog       |
