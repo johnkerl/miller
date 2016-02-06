@@ -90,21 +90,11 @@ TOP-OF-LIST DETAILS
 
 * JSON I/O:
   ! string-preservation for doubles !
-  ! jlistwrap default
+  ! doc this : wishlist: streamable version with fgetc rather than pointer-math.
   ! UT !
     > mlr --json reshape -i x,y -o item,value rec.json
-  ! mld x several; also mlr -h output example
-
-  o wishlist: streamable version with fgetc rather than pointer-math.
-  - on output, check 1st if mlhmmv is necessary? or just always?
-  - cover x 2
-  - define 'tabular JSON' by example @ mld
-  ? flatten/unflatten option? ":" syntax?
-    - programmable allow-this-on-input flag
-    - programmable allow-this-on-output flag
-    - programmable flatten-separator
-  o hp re :)
-  ! JSON/join UT. both/left/right json cases.
+    > JSON/join UT. both/left/right json cases.
+  - cmd mlhmmv @ writer ...
 
 ? env vars??
 
