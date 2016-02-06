@@ -135,7 +135,8 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-index.html BY poki -->
 <center><table border=1 width="60%"><tr><td><center>
 <b>
-Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.
+Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV
+and tabular JSON.
 </b>
 </center> </td></tr></table></center>
 
@@ -150,7 +151,7 @@ positional indices. For example:
 % mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
 % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*
+% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 </pre>
@@ -168,7 +169,8 @@ including but not limited to the familiar CSV.  (Miller can handle
 <p/> Features:
 <ul>
 
-<li> I/O formats including <b>tabular pretty-printing</b> and <b>positionally indexed</b> (Unix-toolkit style)
+<li> I/O formats including <b>tabular pretty-printing</b> and <b>positionally
+indexed</b> (Unix-toolkit style)
 
 <li> <b>Conversion</b> between formats
 

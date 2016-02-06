@@ -17,7 +17,7 @@ def main
   print make_top
 
   print make_section('NAME', [
-    "Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV."
+    "Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
   ])
 
   print make_section('SYNOPSIS', [
@@ -29,7 +29,7 @@ def main
 on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
-familiar CSV.  (Miller can handle positionally-indexed data as a special
+familiar CSV and JSON.  (Miller can handle positionally-indexed data as a special
 case.) This manpage documents #{`mlr --version`.chomp}."""
   ])
 

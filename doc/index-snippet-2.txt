@@ -3,6 +3,6 @@
 % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
 % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*
+% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*

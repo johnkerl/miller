@@ -1,4 +1,4 @@
-**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV.**
+**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV and tabular JSON.**
 
 [![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller) [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
 
@@ -19,7 +19,7 @@ indices.  Examples:
 % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
 % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*
+% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 ```
@@ -29,7 +29,7 @@ should have done.  It operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
 the latter is the array, then Miller's natural data structure is the
 insertion-ordered hash map.  This encompasses a **variety of data formats**,
-including but not limited to the familiar **CSV**.  (Miller can handle
+including but not limited to the familiar **CSV** and **JSON**.  (Miller can handle
 **positionally-indexed data** as a special case.)
 
 Features:

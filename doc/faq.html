@@ -491,14 +491,17 @@ z=3
 <p/>However, a tool like Miller which handles non-recursive data is never going
 to be able to handle full XML/JSON semantics &mdash; only a small subset.  If
 tabular data represented in XML/JSON/etc are sufficiently well-structured, it
-may be easy to grep/sed out the data into a simpler text form &mdash; but this
-is a general text-processing problem.
+may be easy to grep/sed out the data into a simpler text form &mdash; this is a
+general text-processing problem.
 
-<p/>My preference is to keep Miller doing what it does well, and to leave XML
-to XML tools such as <tt>xmllint</tt> and JSON to JSON tools such as
-<tt>jq</tt> or <tt>recs</tt>. Putting (necessarily) limited support for these
-file formats into Miller seems like a slippery slope wherein inadequate
-solutions would be delivered for an inherently unattainable goal.
+<p/>Miller does support tabular data represented in JSON: please see
+<a href="file-formats.html">File formats</a>.  See als <a
+href="http://stedolan.github.io/jq/">jq</a> for a truly powerful, JSON-specific
+tool.
+
+<p/>For XML, my suggestion is to use a tool like
+<a href="http://ff-extractor.sourceforge.net/">ff-extractor</a> to do format
+conversion.
     </div>
   </td>
 

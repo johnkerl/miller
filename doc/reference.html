@@ -322,7 +322,7 @@ Data-format examples:
   | 4,5,6               | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
   +---------------------+
 
-  Tabular JSON: nested objects are supported, but arrays within them are not:
+  Tabular JSON: nested objects are supported, although arrays within them are not:
   +---------------------+
   | {                   |
   |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
@@ -686,6 +686,7 @@ x=,y=3,a=3,b=3
   --csvlite --icsvlite --ocsvlite
   --pprint  --ipprint  --ppprint  --right
   --xtab    --ixtab    --oxtab
+  --json    --ijson    --ojson
 </pre>
 
 <p/> These are as discussed in <a href="file-formats.html">File formats</a>, with the exception of <tt>--right</tt>

@@ -60,7 +60,9 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 		char* sep = pstate->json_flatten_separator;
 
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			char* lkey = pe->key;
+			// strdup since strtok is destructive and CSV/PPRINT header fields
+			// are shared across multiple records
+			char* lkey = mlr_strdup_or_die(pe->key);
 			char* lvalue = pe->value;
 
 			sllmv_t* pmvkeys = sllmv_alloc();
@@ -71,6 +73,7 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 			mv_t mvval = mv_from_string(lvalue, NO_FREE);
 			mlhmmv_put(pmap, pmvkeys, &mvval);
 			sllmv_free(pmvkeys);
+			free(lkey);
 		}
 
 		if (pstate->stack_vertically)

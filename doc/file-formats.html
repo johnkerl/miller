@@ -139,6 +139,10 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#DKVP:_Key-value_pairs">DKVP: Key-value pairs</a><br/>
 &bull;&nbsp;<a href="#NIDX:_Index-numbered_(toolkit_style)">NIDX: Index-numbered (toolkit style)</a><br/>
 &bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
+&bull;&nbsp;<a href="#Tabular_JSON">Tabular JSON</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Single-level_JSON_objects">Single-level JSON objects</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Nested_JSON_objects">Nested JSON objects</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formatting_JSON_options">Formatting JSON options</a><br/>
 &bull;&nbsp;<a href="#PPRINT:_Pretty-printed_tabular">PPRINT: Pretty-printed tabular</a><br/>
 &bull;&nbsp;<a href="#XTAB:_Vertical_tabular">XTAB: Vertical tabular</a><br/>
 </div>
@@ -169,7 +173,7 @@ $ mlr --usage-data-format-examples
   | 4,5,6               | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
   +---------------------+
 
-  Tabular JSON: nested objects are supported, but arrays within them are not:
+  Tabular JSON: nested objects are supported, although arrays within them are not:
   +---------------------+
   | {                   |
   |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
@@ -425,6 +429,137 @@ e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 <tt>--headerless-csv-output</tt> flag for output.
 
 </ul>
+
+<a id="Tabular_JSON"/><h1>Tabular JSON</h1>
+
+<p/>JSON is a format which supports arbitrarily deep nesting of
+&ldquo;objects&rdquo; (hashmaps) and &ldquo;arrays&rdquo; (lists), while Miller
+is a tool for handling <boldmaroon>tabular data</boldmaroon> only. This means
+Miller cannot (and should not) handle arbitrary JSON. (Check out <a
+href="http://stedolan.github.io/jq/">jq</a>.)
+
+<p/>Nonetheless, some tabular data are representable in JSON and Miller can handle this.
+
+<a id="Single-level_JSON_objects"/><h2>Single-level JSON objects</h2>
+
+An <boldmaroon>array of single-level objects</boldmaroon> is, quite simply,
+<boldmaroon>a table:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json head -n 2 data/json-example-1.json
+{ "color": "yellow", "shape": "triangle", "flag": 1, "i": 11, "u": 0.632170, "v": 0.988721, "w": 0.436498, "x": 5.798188 }
+{ "color": "red", "shape": "square", "flag": 1, "i": 15, "u": 0.219668, "v": 0.001257, "w": 0.792778, "x": 2.944117 }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
+{
+  "color": "yellow",
+  "u": 0.632170,
+  "v": 0.988721
+}
+{
+  "color": "red",
+  "u": 0.219668,
+  "v": 0.001257
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
+shape    u_mean   u_stddev u_count
+triangle 0.583995 0.131184 3
+square   0.409355 0.365428 4
+circle   0.366013 0.209094 3
+</pre>
+</div>
+<p/>
+
+<a id="Nested_JSON_objects"/><h2>Nested JSON objects</h2>
+
+<p/>Additionally, Miller can <boldmaroon>tabularize nested objects by concatentating keys:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json --jvstack head -n 2 data/json-example-2.json
+{
+  "flag": 1,
+  "i": 11,
+  "attributes": {
+    "color": "yellow",
+    "shape": "triangle"
+  },
+  "values": {
+    "u": 0.632170,
+    "v": 0.988721,
+    "w": 0.436498,
+    "x": 5.798188
+  }
+}
+{
+  "flag": 1,
+  "i": 15,
+  "attributes": {
+    "color": "red",
+    "shape": "square"
+  },
+  "values": {
+    "u": 0.219668,
+    "v": 0.001257,
+    "w": 0.792778,
+    "x": 2.944117
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint head -n 4 data/json-example-2.json
+flag i  attributes:color attributes:shape values:u values:v values:w values:x
+1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
+1    15 red              square           0.219668 0.001257 0.792778 2.944117
+1    16 red              circle           0.209017 0.290052 0.138103 5.065034
+0    48 red              square           0.956274 0.746720 0.775542 7.117831
+</pre>
+</div>
+<p/>
+
+<a id="Formatting_JSON_options"/><h2>Formatting JSON options</h2>
+
+<p/>JSON isn&rsquo;t a parameterized format, so <tt>RS</tt>, <tt>FS</tt>,
+<tt>PS</tt> aren&rsquo;t specifiable. Nonetheless, you can do the following:
+
+<ul>
+
+<li/>Use <tt>--jvstack</tt> to pretty-print JSON objects with multi-line
+(vertically stacked) spacing. By defaulty, each Miller record (JSON object) is
+one per line.
+
+<li/>Use <tt>--jlistwrap</tt> to print the sequence of JSON objects wrapped in
+an outermost <tt>[</tt> and <tt>]</tt>. By default, these aren't printed.
+
+<li/>Use <tt>--jquoteall</tt> to double-quote all object values. By default,
+integers, floating-point numbers, and booleans <tt>true</tt> and <tt>false</tt>
+are not double-quoted when they appear as JSON-object keys.
+
+<li/>Use <tt>--jflatsep yourstringhere</tt> to specify the string used for
+key concatenation: this defaults to a single colon.
+
+</ul>
+
+<p/>Again, please see <a href="http://stedolan.github.io/jq/">jq</a> for a
+truly powerful, JSON-specific tool.
 
 <a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare

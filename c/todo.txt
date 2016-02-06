@@ -1,7 +1,35 @@
 ================================================================
 BUGFIXES
 
-:D
+
+$ mlr --icsvlite --jvstack --ojson cat whynot.csv 
+{
+  "a": {
+    "x": 1,
+    "y": 2
+  },
+  "b": 3
+}
+{
+  "a": 5,
+  "b": 6
+}
+
+$ mlr --idkvp --jvstack --ojson cat whynot.dkvp
+{
+  "a": {
+    "x": 1,
+    "y": 2
+  },
+  "b": 3
+}
+{
+  "a": {
+    "x": 4,
+    "y": 5
+  },
+  "b": 6
+}
 
 ================================================================
 TOP-OF-LIST SUMMARY
@@ -62,6 +90,7 @@ TOP-OF-LIST DETAILS
 
 * JSON I/O:
   ! string-preservation for doubles !
+  ! jlistwrap default
   ! UT !
     > mlr --json reshape -i x,y -o item,value rec.json
   ! mld x several; also mlr -h output example

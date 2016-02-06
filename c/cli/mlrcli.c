@@ -283,7 +283,7 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 		"  | 4,5,6               | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
 		"  +---------------------+\n"
 		"\n"
-		"  Tabular JSON: nested objects are supported, but arrays within them are not:\n"
+		"  Tabular JSON: nested objects are supported, although arrays within them are not:\n"
 		"  +---------------------+\n"
 		"  | {                   |\n"
 		"  |  \"apple\": 1,        | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
