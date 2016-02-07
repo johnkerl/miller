@@ -19,6 +19,7 @@ TOP-OF-LIST SUMMARY
 * doc items
 * xxxes
 * valgrinds
+* dev page re releases, valgrinds, distros, etc
 
 ----------------------------------------------------------------
 * relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
@@ -62,11 +63,14 @@ TOP-OF-LIST DETAILS
 
 * JSON I/O:
   ! string-preservation for doubles !
+  ! n.b. colon-inside! not just for I/O.
   ! doc this : wishlist: streamable version with fgetc rather than pointer-math.
+    > no tail -f!
   ! UT !
     > mlr --json reshape -i x,y -o item,value rec.json
     > JSON/join UT. both/left/right json cases.
   - cmd mlhmmv @ writer ...
+  - unbackslash @ jflatsep
 
 ? env vars??
 
