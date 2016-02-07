@@ -10,11 +10,8 @@ TOP-OF-LIST SUMMARY
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
-* make placeholder tasks ... even some retroactives ...
-
-! freebsd: research into flexv9 compatibility
 * explode & any other komosas from feature-request task
-* rename-all w/ regex-captures? e.g. de-spacifying field names etc.
+* rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 
 * doc items
 * xxxes
@@ -50,13 +47,7 @@ TOP-OF-LIST SUMMARY
   https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
-
-* freebsd!
-  http://comments.gmane.org/gmane.os.freebsd.devel.ports/128624
-  https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=206785
-  https://www.freebsd.org/doc/en_US.ISO8859-1/books/porters-handbook/port-upgrading.html
-
-!! xref to ffe !!
+  https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
