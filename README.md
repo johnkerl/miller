@@ -5,7 +5,7 @@
 [![Distros](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Distros](https://img.shields.io/badge/distros-debian-c70036.svg)](https://buildd.debian.org/status/package.php?p=miller)
 [![Distros](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
-[![Distros](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/) <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
+[![Distros](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/)
 [![Distros](https://img.shields.io/badge/distros-prolinux-3a679d.svg)](http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..20427.100)
 [![Distros](https://img.shields.io/badge/distros-archlinux-1792d0.svg)](https://aur.archlinux.org/packages/miller-git)
 [![Distros](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew/search?utf8=%E2%9C%93&q=miller)
@@ -81,3 +81,5 @@ Documentation:
 * Build information including dependencies: http://johnkerl.org/miller/doc/build.html
 * Notes about issue-labeling in the Github repo: https://github.com/johnkerl/miller/wiki/Issue-labeling
 * See [here] (https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
+
+<!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
