@@ -6,7 +6,7 @@ License: BSD2
 Group: Applications/Text
 Source: https://github.com/johnkerl/miller/releases/download/v%{version}/%{name}-%{version}.tar.gz
 URL: http://johnkerl.org/miller/doc
-Distribution: Fedora Project
+Buildroot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: flex >= 2.5.35
 
 %description
@@ -17,7 +17,7 @@ streams data where possible so its memory requirements stay small. It works
 well with pipes and can feed "tail -f".
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 %build
 %configure
@@ -27,22 +27,20 @@ make
 make check
 
 %install
-make install
-make clean
+rm -rf ${RPM_BUILD_ROOT}
+make install DESTDIR="$RPM_BUILD_ROOT"
 
 %clean
-make clean
+rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(755, root, root, -)
 %{_bindir}/mlr
 %defattr(644, root, root, -)
-%{_mandir}/man1/mlr.1
-%attr(644, root, root) 
-%license LICENSE.txt
-
+%{_mandir}/man1/mlr.1.gz
+%defattr(-,root,root)
 %doc README.md
 
 %changelog
 * Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com>
-- Initial RedHat/Fedoraa submission of Miller
+- Initial spec-file submission for Miller
