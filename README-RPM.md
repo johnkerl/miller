@@ -89,7 +89,10 @@ Preparing...                ########################################### [100%]
 ```
 /usr/bin/mlr --version
 Miller 3.3.2
+
+man -M /usr/share/man mlr
 ```
+and check the version in the DESCRIPTION section.
 
 ### Some handy references
 
