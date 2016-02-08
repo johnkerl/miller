@@ -78,22 +78,22 @@ static void default_free(void * ptr, void * user_data) {
 }
 
 // ----------------------------------------------------------------
-static void * json_alloc(json_state * state, unsigned long size, int zero) {
-	if ((state->ulong_max - state->used_memory) < size)
+static void * json_alloc(json_state * pstate, unsigned long size, int zero) {
+	if ((pstate->ulong_max - pstate->used_memory) < size)
 		return 0;
 
-	if (state->settings.max_memory
-			&& (state->used_memory += size) > state->settings.max_memory)
+	if (pstate->settings.max_memory
+			&& (pstate->used_memory += size) > pstate->settings.max_memory)
 	{
 		return 0;
 	}
 
-	return state->settings.mem_alloc(size, zero, state->settings.user_data);
+	return pstate->settings.mem_alloc(size, zero, pstate->settings.user_data);
 }
 
 // ----------------------------------------------------------------
 static int new_value(
-	json_state * state,
+	json_state * pstate,
 	json_value_t ** top, json_value_t ** root,
 	json_value_t ** alloc,
 	json_type_t type)
@@ -101,7 +101,7 @@ static int new_value(
 	json_value_t * value;
 	int values_size;
 
-	if (!state->first_pass) {
+	if (!pstate->first_pass) {
 		value = *top = *alloc;
 		*alloc = (*alloc)->_reserved.next_alloc;
 
@@ -114,7 +114,7 @@ static int new_value(
 					break;
 
 				if (! (value->u.array.values = (json_value_t **) json_alloc
-					(state, value->u.array.length * sizeof(json_value_t *), 0)) )
+					(pstate, value->u.array.length * sizeof(json_value_t *), 0)) )
 				{
 					return 0;
 				}
@@ -129,7 +129,7 @@ static int new_value(
 				values_size = sizeof(*value->u.object.p.values) * value->u.object.length;
 
 				if (! (value->u.object.p.values = (json_object_entry_t *) json_alloc
-						(state, values_size + ((unsigned long) value->u.object.p.values), 0)) )
+						(pstate, values_size + ((unsigned long) value->u.object.p.values), 0)) )
 				{
 					return 0;
 				}
@@ -141,7 +141,7 @@ static int new_value(
 
 			case JSON_STRING:
 				if (! (value->u.string.ptr = (json_char *) json_alloc
-					(state, (value->u.string.length + 1) * sizeof (json_char), 0)) )
+					(pstate, (value->u.string.length + 1) * sizeof (json_char), 0)) )
 				{
 					return 0;
 				}
@@ -157,7 +157,7 @@ static int new_value(
 	}
 
 	if (! (value = (json_value_t *) json_alloc
-			(state, sizeof (json_value_t) + state->settings.value_extra, 1)))
+			(pstate, sizeof (json_value_t) + pstate->settings.value_extra, 1)))
 	{
 		return 0;
 	}
@@ -169,8 +169,8 @@ static int new_value(
 	value->parent = *top;
 
 	#ifdef JSON_TRACK_SOURCE
-		value->line = state->cur_line;
-		value->col = state->cur_col;
+		value->line = pstate->cur_line;
+		value->col = pstate->cur_col;
 	#endif
 
 	if (*alloc)
