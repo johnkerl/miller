@@ -14299,7 +14299,42 @@ i 4
 
 
 ================================================================
-JSON OUTPUT
+JSON I/O
+
+mlr --ijson --opprint cat ./reg_test/input/small-non-nested.json
+a   b   i  x        y
+pan pan 1  0.346790 0.726803
+eks pan 2  0.758680 0.522151
+wye wye 3  0.204603 0.338319
+eks wye 4  0.381399 0.134189
+wye pan 5  0.573289 0.863624
+zee pan 6  0.527126 0.493221
+eks zee 7  0.611784 0.187885
+zee wye 8  0.598554 0.976181
+hat wye 9  0.031442 0.749551
+pan wye 10 0.502626 0.952618
+
+mlr --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json
+a   b   i  x        y
+pan pan 1  0.346790 0.726803
+eks pan 2  0.758680 0.522151
+wye wye 3  0.204603 0.338319
+eks wye 4  0.381399 0.134189
+wye pan 5  0.573289 0.863624
+zee pan 6  0.527126 0.493221
+eks zee 7  0.611784 0.187885
+zee wye 8  0.598554 0.976181
+hat wye 9  0.031442 0.749551
+pan wye 10 0.502626 0.952618
+
+mlr --ijson --oxtab cat ./reg_test/input/small-nested.json
+z:pan:1 0.726803
+z:pan:0 0.952618
+z:eks:0 0.134189
+z:eks:1 0.187885
+z:wye:1 0.863624
+z:zee:0 0.976181
+z:hat:1 0.749551
 
 mlr --ojson cat ./reg_test/input/json-output-options.dkvp
 { "a": 1, "b": "x", "c": 3 }
