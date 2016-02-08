@@ -6,7 +6,11 @@ Grab `mlr.spec` and go to town.
 
 
 ### One-time setup
-Change `3.3.2` to desired version:
+Change `3.3.2` to desired version. Release-package example:
+
+https://github.com/johnkerl/miller/releases/download/v3.3.2/mlr-3.3.2.tar.gz
+
+
 ```
 cd
 mkdir ~/rpmbuild
