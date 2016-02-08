@@ -18,6 +18,11 @@ cp /your/path/to/mlr-3.3.2.tar.gz ~/rpmbuild/SOURCES
 cd ~/rpmbuild/SPECS
 ```
 
+You may need to do
+```
+sudo yum install rpmbuild
+```
+
 ### Linting
 If you have changed the `mlr.spec` file:
 ```
@@ -25,7 +30,7 @@ rpmlint mlr.spec
 ```
 You may need to do
 ```
-sudo yum install rpmbuild rpmlint
+sudo yum install rpmlint
 ```
 
 ### Build source-RPM only
@@ -40,6 +45,7 @@ mlr-3.3.2.tar.gz
 mlr.spec
 ```
 
+```
 rpm -qpi ../SRPMS/mlr-3.3.2-1.el6.src.rpm
 Name        : mlr                          Relocations: (not relocatable)
 Version     : 3.3.2                             Vendor: (none)
@@ -56,6 +62,7 @@ processed with functions equivalent to sed, awk, cut, join, sort etc. It can
 convert between formats, preserves headers when sorting or reversing, and
 streams data where possible so its memory requirements stay small. It works
 well with pipes and can feed "tail -f".
+```
 
 ### Build source and binary RPMs
 
