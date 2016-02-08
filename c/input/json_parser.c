@@ -53,7 +53,7 @@ static unsigned char hex_value(json_char c) {
 }
 
 // ----------------------------------------------------------------
-typedef struct {
+typedef struct _json_state_{
 	unsigned long used_memory;
 
 	unsigned int uint_max;
@@ -65,7 +65,7 @@ typedef struct {
 	const json_char * ptr;
 	unsigned int cur_line, cur_col;
 
-} json_state;
+} json_parser_state_t;
 
 // ----------------------------------------------------------------
 static void * default_alloc(size_t size, int zero, void * user_data) {
@@ -78,7 +78,7 @@ static void default_free(void * ptr, void * user_data) {
 }
 
 // ----------------------------------------------------------------
-static void * json_alloc(json_state * pstate, unsigned long size, int zero) {
+static void * json_alloc(json_parser_state_t * pstate, unsigned long size, int zero) {
 	if ((pstate->ulong_max - pstate->used_memory) < size)
 		return 0;
 
@@ -93,7 +93,7 @@ static void * json_alloc(json_state * pstate, unsigned long size, int zero) {
 
 // ----------------------------------------------------------------
 static int new_value(
-	json_state * pstate,
+	json_parser_state_t * pstate,
 	json_value_t ** top, json_value_t ** root,
 	json_value_t ** alloc,
 	json_type_t type)
@@ -227,7 +227,7 @@ json_value_t * json_parse_ex(
 	json_char error [JSON_ERROR_MAX];
 	const json_char * end;
 	json_value_t * top, * root, * alloc = 0;
-	json_state state = { 0 };
+	json_parser_state_t state = { 0 };
 	long flags;
 	long num_digits = 0, num_e = 0;
 	json_int_t num_fraction = 0;
