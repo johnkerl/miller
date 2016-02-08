@@ -49,16 +49,20 @@ RPM build errors:
     %defattr doesn't define directory mode so file mode defined in %defattr is used for directory: /home/kerl/rpmbuild/BUILDROOT/mlr-3.3.2-1.el6.x86_64/usr/share/doc/mlr-3.3.2
 
 ----------------------------------------------------------------
+http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
+http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html
+http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
+
+https://github.com/bonzini/grep/blob/master/grep.spec
+
 * centos:
   https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
   https://lists.centos.org/pipermail/centos/2012-September/129227.html
-  http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
 
 * fedora:
   https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
   https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
   https://fedoraproject.org/wiki/Package_Review_Process
   https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
-  http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
   https://fedoraproject.org/wiki/How_to_create_an_RPM_package
   https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
