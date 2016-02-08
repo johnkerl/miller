@@ -81,10 +81,10 @@ EXTRA_DIST=	\
 		multi-sep.csv \
 		multi-sep.dkvp \
 		near-ovf.dkvp \
-		nullvals.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
 		null-vs-empty.dkvp \
+		nullvals.dkvp \
 		ofmt.dat \
 		page-aligned-final-ifs.dkvp \
 		page-aligned-final-irs.dkvp \
@@ -95,10 +95,10 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.nidx \
 		regex.dkvp \
 		regularize.dkvp \
-		reshape-long.tbl \
-		reshape-wide.tbl \
 		reshape-long-ragged.dkvp \
+		reshape-long.tbl \
 		reshape-wide-ragged.dkvp \
+		reshape-wide.tbl \
 		rfc-csv \
 		scinot.dkvp \
 		scinot1.dkvp \
@@ -106,6 +106,9 @@ EXTRA_DIST=	\
 		sec2xhms \
 		short \
 		small \
+		small-nested.json \
+		small-non-nested-wrapped.json \
+		small-non-nested.json \
 		sort-het.dkvp \
 		space-pad.dkvp \
 		space-pad.nidx \

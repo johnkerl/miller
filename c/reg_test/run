@@ -1458,7 +1458,11 @@ run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f
 run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
 
 # ================================================================
-announce JSON OUTPUT
+announce JSON I/O
+
+run_mlr --ijson --opprint cat $indir/small-non-nested.json
+run_mlr --ijson --opprint cat $indir/small-non-nested-wrapped.json
+run_mlr --ijson --oxtab   cat $indir/small-nested.json
 
 run_mlr --ojson                                     cat $indir/json-output-options.dkvp
 run_mlr --ojson --jvstack                           cat $indir/json-output-options.dkvp
