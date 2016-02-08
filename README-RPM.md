@@ -1,17 +1,44 @@
-----------------------------------------------------------------
-Have ~/rpmbuild/SPECS and put miller.spec there
-Have ~/rpmbuild/SOURCES and put mlr-3.3.2.tar.gz there
+## Instructions to make Miller source/binary RPMs for the RPM-experienced
+
+Grab `mlr.spec` and go to town.
+
+## Instructions to make Miller source/binary RPMs for the RPM-inexperienced
+
+
+### One-time setup
+Change `3.3.2` to desired version:
+```
+cd
+mkdir ~/rpmbuild
+mkdir ~/rpmbuild/SPECS
+mkdir ~/rpmbuild/SOURCES
+cp /your/path/to/miller/clone/mlr.spec ~/rpmbuild/SPECS
+cp /your/path/to/mlr-3.3.2.tar.gz ~/rpmbuild/SOURCES
+
 cd ~/rpmbuild/SPECS
+```
 
-rpmlint miller.spec
+### Linting
+If you have changed the `mlr.spec` file:
+```
+rpmlint mlr.spec
+```
+You may need to do
+```
+sudo yum install rpmbuild rpmlint
+```
 
+### Build source-RPM only
+```
 rpmbuild -bs miller.spec
-Wrote: /home/kerl/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
-kerl@dev037[s0j0d1][pwd:SPECS]$ v ../SPECS/
+Wrote: /your/home/dir/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
+```
 
+```
 rpm -qpl ../SRPMS/mlr-3.3.2-1.el6.src.rpm
 mlr-3.3.2.tar.gz
 mlr.spec
+```
 
 rpm -qpi ../SRPMS/mlr-3.3.2-1.el6.src.rpm
 Name        : mlr                          Relocations: (not relocatable)
@@ -30,36 +57,36 @@ convert between formats, preserves headers when sorting or reversing, and
 streams data where possible so its memory requirements stay small. It works
 well with pipes and can feed "tail -f".
 
-----------------------------------------------------------------
-rpmbuild -ba miller.spec
+### Build source and binary RPMs
 
+```
+rpmbuild -ba mlr.spec
+```
+
+```
 rpm -qpl ../RPMS/x86_64//mlr-3.3.2-1.el6.x86_64.rpm
 /usr/bin/mlr
 /usr/share/man/man1/mlr.1.gz
+```
 
+```
 sudo rpm -ivh ../RPMS/x86_64/mlr-3.3.2-1.el6.x86_64.rpm 
 Preparing...                ########################################### [100%]
    1:mlr                    ########################################### [100%]
+```
 
+```
 /usr/bin/mlr --version
 Miller 3.3.2
+```
 
-----------------------------------------------------------------
-http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
-http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html
-http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
-http://www.tldp.org/LDP/solrhe/Securing-Optimizing-Linux-RH-Edition-v1.3/chap3sec20.html
+### Some handy references
 
-https://github.com/bonzini/grep/blob/master/grep.spec
-
-* centos:
-  https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
-  https://lists.centos.org/pipermail/centos/2012-September/129227.html
-
-* fedora:
-  https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
-  https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
-  https://fedoraproject.org/wiki/Package_Review_Process
-  https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
-  https://fedoraproject.org/wiki/How_to_create_an_RPM_package
-  https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
+* https://github.com/bonzini/grep/blob/master/grep.spec
+* http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
+* http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html
+* http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
+* http://www.tldp.org/LDP/solrhe/Securing-Optimizing-Linux-RH-Edition-v1.3/chap3sec20.html
+* https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
+* https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+* https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package

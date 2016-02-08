@@ -341,6 +341,13 @@ lldb:  run put "\$z=\$x+\$y"
 
 http://include-what-you-use.org/
 
+----------------------------------------------------------------
+https://lists.centos.org/pipermail/centos/2012-September/129227.html
+https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
+https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
+https://fedoraproject.org/wiki/Package_Review_Process
+https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
+
 ================================================================
 git remote add upstream https://github.com/Homebrew/homebrew
 git fetch upstream
