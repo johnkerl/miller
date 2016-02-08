@@ -1,0 +1,64 @@
+----------------------------------------------------------------
+Have ~/rpmbuild/SPECS and put miller.spec there
+Have ~/rpmbuild/SOURCES and put mlr-3.3.2.tar.gz there
+cd ~/rpmbuild/SPECS
+
+rpmlint miller.spec
+
+rpmbuild -bs miller.spec
+Wrote: /home/kerl/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
+kerl@dev037[s0j0d1][pwd:SPECS]$ v ../SPECS/
+
+rpm -qpl ../SRPMS/mlr-3.3.2-1.el6.src.rpm
+miller.spec
+mlr-3.3.2.tar.gz
+
+rpm -qpi ../SRPMS/mlr-3.3.2-1.el6.src.rpm
+Name        : mlr                          Relocations: (not relocatable)
+Version     : 3.3.2                             Vendor: John Kerl
+Release     : 1.el6                         Build Date: Sun 07 Feb 2016 07:32:38 PM EST
+Install Date: (not installed)               Build Host: host.name.goes.here
+Group       : Applications/Text             Source RPM: (none)
+Size        : 774311                           License: BSD2
+Signature   : (none)
+Packager    : John Kerl <kerl.john.r@gmail.com>
+URL         : http://johnkerl.org/miller/doc
+Summary     : Name-indexed data processing tool
+Description :
+Miller (mlr) allows name-indexed data such as CSV and JSON files to be
+processed with functions equivalent to sed, awk, cut, join, sort etc. It can
+convert between formats, preserves headers when sorting or reversing, and
+streams data where possible so its memory requirements stay small. It works
+well with pipes and can feed "tail -f".
+
+----------------------------------------------------------------
+sudo chmod 0777 /usr/bin
+sudo chmod 0777 /usr/share/man/man1
+
+rpmbuild -ba miller.spec
+
+sudo chmod 0755 /usr/bin
+sudo chmod 0755 /usr/share/man/man1
+
+----------------------------------------------------------------
+RPM build errors:
+    File not found: /home/kerl/rpmbuild/BUILDROOT/mlr-3.3.2-1.el6.x86_64/usr/bin/mlr
+    File not found: /home/kerl/rpmbuild/BUILDROOT/mlr-3.3.2-1.el6.x86_64/usr/share/man/man1/mlr.1
+    File must begin with "/": BSD2
+    File must begin with "/": LICENSE.txt
+    %defattr doesn't define directory mode so file mode defined in %defattr is used for directory: /home/kerl/rpmbuild/BUILDROOT/mlr-3.3.2-1.el6.x86_64/usr/share/doc/mlr-3.3.2
+
+----------------------------------------------------------------
+* centos:
+  https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
+  https://lists.centos.org/pipermail/centos/2012-September/129227.html
+  http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
+
+* fedora:
+  https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
+  https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
+  https://fedoraproject.org/wiki/Package_Review_Process
+  https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
+  http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
+  https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+  https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
