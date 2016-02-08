@@ -342,6 +342,8 @@ lldb:  run put "\$z=\$x+\$y"
 http://include-what-you-use.org/
 
 ----------------------------------------------------------------
+https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
 https://lists.centos.org/pipermail/centos/2012-September/129227.html
 https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
 https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group

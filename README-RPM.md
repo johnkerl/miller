@@ -101,6 +101,4 @@ and check the version in the DESCRIPTION section.
 * http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html
 * http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
 * http://www.tldp.org/LDP/solrhe/Securing-Optimizing-Linux-RH-Edition-v1.3/chap3sec20.html
-* https://wiki.centos.org/HowTos/Packages/ContributeYourRPMs
-* https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 * https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
