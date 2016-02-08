@@ -4,7 +4,7 @@ Version: 3.3.2
 Release: 1%{?dist}
 License: BSD2
 Group: Applications/Text
-Source: https://github.com/johnkerl/miller/releases/download/v3.3.2/mlr-3.3.2.tar.gz
+Source: https://github.com/johnkerl/miller/releases/download/v%{version}/%{name}-%{version}.tar.gz
 URL: http://johnkerl.org/miller/doc
 Distribution: Fedora Project
 BuildRequires: flex >= 2.5.35
