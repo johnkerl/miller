@@ -9,6 +9,7 @@ TOP-OF-LIST SUMMARY
 * JSON input: many important subtasks remaining
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+* rh/fedora/centos
 
 * explode & any other komosas from feature-request task
 * rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
