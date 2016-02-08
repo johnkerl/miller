@@ -33,10 +33,22 @@ well with pipes and can feed "tail -f".
 ----------------------------------------------------------------
 rpmbuild -ba miller.spec
 
+rpm -qpl ../RPMS/x86_64//mlr-3.3.2-1.el6.x86_64.rpm
+/usr/bin/mlr
+/usr/share/man/man1/mlr.1.gz
+
+sudo rpm -ivh ../RPMS/x86_64/mlr-3.3.2-1.el6.x86_64.rpm 
+Preparing...                ########################################### [100%]
+   1:mlr                    ########################################### [100%]
+
+/usr/bin/mlr --version
+Miller 3.3.2
+
 ----------------------------------------------------------------
 http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
 http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html
 http://www.tldp.org/HOWTO/RPM-HOWTO/build.html
+http://www.tldp.org/LDP/solrhe/Securing-Optimizing-Linux-RH-Edition-v1.3/chap3sec20.html
 
 https://github.com/bonzini/grep/blob/master/grep.spec
 
