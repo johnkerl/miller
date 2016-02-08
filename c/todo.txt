@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 * rh/fedora/centos
+  - 3.3.2 w/ patch-file for manpage
 
 * explode & any other komosas from feature-request task
 * rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
@@ -50,7 +51,7 @@ TOP-OF-LIST DETAILS
   ! UT !
     > mlr --json reshape -i x,y -o item,value rec.json
     > JSON/join UT. both/left/right json cases.
-  - cmd mlhmmv @ writer ...
+  - cmt mlhmmv @ writer ...
   - unbackslash @ jflatsep
 
 ? env vars??
