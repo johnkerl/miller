@@ -606,8 +606,7 @@ json_value_t * json_parse_ex(
 									}
 
 									flags &= ~ (flag_num_negative | flag_num_e |
-													 flag_num_e_got_sign | flag_num_e_negative |
-														 flag_num_zero);
+													 flag_num_e_got_sign | flag_num_e_negative | flag_num_zero);
 
 									num_digits = 0;
 									num_fraction = 0;

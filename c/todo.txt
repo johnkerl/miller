@@ -6,14 +6,12 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* JSON input: many important subtasks remaining
+! JSON input: many important subtasks remaining
+! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
-* rh/fedora/centos
-  - 3.3.2 w/ patch-file for manpage
 
 * explode & any other komosas from feature-request task
-* rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 
 * doc items
 * xxxes
@@ -127,6 +125,9 @@ TOP-OF-LIST DETAILS
     real  0m3.976s 0m3.971s 0m3.944s
     time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
     real  0m3.250s 0m3.283s 0m3.300s
+
+DOC:
+* rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 
 ----------------------------------------------------------------
 
