@@ -15,10 +15,11 @@ html: .always
 	poki
 man: .always
 	mkman.rb > mlr.1.premade
+	cp mlr.1.premade mlr.1
 install: man
-	cp mlr.1.premade $(INSTALLDIR)/mlr.1
+	cp mlr.1 $(INSTALLDIR)/mlr.1
 installhome: man
-	cp mlr.1.premade $(INSTALLHOME)/mlr.1
+	cp mlr.1 $(INSTALLHOME)/mlr.1
 
 .always:
 	@true
