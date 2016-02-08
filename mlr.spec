@@ -39,7 +39,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(644, root, root, -)
 %{_mandir}/man1/mlr.1.gz
 %defattr(-,root,root)
-%doc README.md
 
 %changelog
 * Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com>
