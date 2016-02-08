@@ -34,7 +34,8 @@ make clean
 make clean
 
 %files
-%attr(755, root, root) %{_bindir}/mlr
+%defattr(755, root, root, -)
+%{_bindir}/mlr
 %defattr(644, root, root, -)
 %{_mandir}/man1/mlr.1
 %attr(644, root, root) 
