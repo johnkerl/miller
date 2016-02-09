@@ -351,6 +351,7 @@ https://fedoraproject.org/wiki/Join_the_package_collection_maintainers
 https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
 https://fedoraproject.org/wiki/Package_Review_Process
 https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
+http://wiki.networksecuritytoolkit.org/nstwiki/index.php/HowTo_Create_A_Patch_File_For_A_RPM
 
 ================================================================
 git remote add upstream https://github.com/Homebrew/homebrew
