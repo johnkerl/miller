@@ -386,18 +386,18 @@ same-schema CSV files to have the same header:
 POKI_RUN_COMMAND{{mlr cat -h}}HERE
 
 <table><tr><td>
-POKI_RUN_COMMAND{{cat a.csv}}HERE
+POKI_RUN_COMMAND{{cat data/a.csv}}HERE
 </td> <td>
-POKI_RUN_COMMAND{{cat b.csv}}HERE
+POKI_RUN_COMMAND{{cat data/b.csv}}HERE
 </td> <td>
-POKI_RUN_COMMAND{{mlr --csv cat a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
 </td></tr></table>
 
 <table><tr><td>
 </td> <td>
-POKI_RUN_COMMAND{{mlr --icsv --oxtab cat a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --oxtab cat data/a.csv data/b.csv}}HERE
 </td> <td>
-POKI_RUN_COMMAND{{mlr --csv cat -n a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv cat -n data/a.csv data/b.csv}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
@@ -906,14 +906,14 @@ requires Miller to retain all input records in memory before any output records
 are produced.
 
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat a.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/a.csv}}HERE
 </td><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/b.csv}}HERE
 </td><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint tac a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint tac data/a.csv data/b.csv}}HERE
 </td></tr></table>
 <table><tr><td>
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->

@@ -6,16 +6,16 @@ Miller respects CSV headers. If you do <tt>mlr --csv cat *.csv</tt> then the hea
 
 <table><tr>
 <td>
-POKI_RUN_COMMAND{{cat a.csv}}HERE
+POKI_RUN_COMMAND{{cat data/a.csv}}HERE
 </td>
 <td>
-POKI_RUN_COMMAND{{cat b.csv}}HERE
+POKI_RUN_COMMAND{{cat data/b.csv}}HERE
 </td>
 <td>
-POKI_RUN_COMMAND{{mlr --csv cat a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
 </td>
 <td>
-POKI_RUN_COMMAND{{mlr --csv sort -nr b a.csv b.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv sort -nr b data/a.csv data/b.csv}}HERE
 </td>
 </tr></table>
 
