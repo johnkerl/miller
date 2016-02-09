@@ -1,26 +1,26 @@
 # Use the `file` command to see if there are CR/LF terminators (in this case,
 # there are not):
-$ file colours.csv 
-colours.csv: UTF-8 Unicode text
+$ file data/colours.csv 
+data/colours.csv: UTF-8 Unicode text
 
 # Look at the file to find names of fields
-$ cat colours.csv 
+$ cat data/colours.csv 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
 masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 
 # Try (unsuccessfully) to extract a few fields:
-$ mlr --csv cut -f KEY,PL,RO colours.csv 
+$ mlr --csv cut -f KEY,PL,RO data/colours.csv 
 (no output)
 
 # Use LF record separator (--rs lf) since the file doesn't have CR/LF line
 # endings -- but still unsuccessfully:
-$ mlr --csv --rs lf cut -f KEY,PL,RO colours.csv 
+$ mlr --csv --rs lf cut -f KEY,PL,RO data/colours.csv 
 (only blank lines appear)
 
 # Use XTAB output format to get a sharper picture of where records/fields
 # are being split:
-$ mlr --icsv --irs lf --oxtab cat colours.csv 
+$ mlr --icsv --irs lf --oxtab cat data/colours.csv 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
@@ -30,7 +30,7 @@ KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Mu
 # subsequent line is being treated as a single field value. This is because
 # the default field separator is a comma but we have semicolons here.
 # Use XTAB again with different field separator (--fs semicolon):
-$ mlr --icsv --irs lf --ifs semicolon --oxtab cat colours.csv 
+$ mlr --icsv --irs lf --ifs semicolon --oxtab cat data/colours.csv 
 KEY masterdata_colourcode_1
 DE  Weiß
 EN  White
@@ -56,7 +56,7 @@ RO  Negru
 TR  Siyah
 
 # Using the new field-separator, retry the cut:
-$ mlr --csv --rs lf --fs semicolon cut -f KEY,PL,RO colours.csv 
+$ mlr --csv --rs lf --fs semicolon cut -f KEY,PL,RO data/colours.csv 
 KEY;PL;RO
 masterdata_colourcode_1;Biały;Alb
 masterdata_colourcode_2;Czarny;Negru
