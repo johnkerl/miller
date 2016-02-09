@@ -67,7 +67,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			lrec_put(prec, key, lrec_value, NO_FREE);
 			break;
 		case JSON_BOOLEAN:
-			lrec_value = pjson_value->u.boolean ? "true" : "false";
+			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
 			lrec_put(prec, key, lrec_value, NO_FREE);
 			break;
 		case JSON_OBJECT:
@@ -83,11 +83,11 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			return NULL;
 			break;
 		case JSON_INTEGER:
-			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer);
+			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer.nval);
 			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
 		case JSON_DOUBLE:
-			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl, MLR_GLOBALS.ofmt);
+			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt);
 			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
 		default:
@@ -128,7 +128,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
 			break;
 		case JSON_BOOLEAN:
-			lrec_value = pjson_value->u.boolean ? "true" : "false";
+			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
 			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
 			break;
 		case JSON_OBJECT:
@@ -142,11 +142,11 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 				MLR_GLOBALS.argv0);
 			break;
 		case JSON_INTEGER:
-			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer);
+			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer.nval);
 			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
 		case JSON_DOUBLE:
-			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl, MLR_GLOBALS.ofmt);
+			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt);
 			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
 		default:

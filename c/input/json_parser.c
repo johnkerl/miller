@@ -553,7 +553,8 @@ json_value_t * json_parse_ex(
 								if (!new_value(&state, &top, &root, &alloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
-								top->u.boolean = 1;
+								// xxx
+								top->u.boolean.nval = 1;
 
 								flags |= flag_next;
 								break;
@@ -683,7 +684,8 @@ json_value_t * json_parse_ex(
 								continue;
 							}
 
-							top->u.integer = (top->u.integer * 10) + (b - '0');
+							// xxx
+							top->u.integer.nval = (top->u.integer.nval * 10) + (b - '0');
 							continue;
 						}
 
@@ -707,7 +709,8 @@ json_value_t * json_parse_ex(
 						}
 
 						top->type = JSON_DOUBLE;
-						top->u.dbl = (double) top->u.integer;
+						// xxx
+						top->u.dbl.nval = (double) top->u.integer.nval;
 
 						num_digits = 0;
 						continue;
@@ -720,7 +723,7 @@ json_value_t * json_parse_ex(
 								goto e_failed;
 							}
 
-							top->u.dbl += ((double) num_fraction) / (pow(10.0, (double) num_digits));
+							top->u.dbl.nval += ((double) num_fraction) / (pow(10.0, (double) num_digits));
 						}
 
 						if (b == 'e' || b == 'E') {
@@ -728,7 +731,7 @@ json_value_t * json_parse_ex(
 
 							if (top->type == JSON_INTEGER) {
 								top->type = JSON_DOUBLE;
-								top->u.dbl = (double) top->u.integer;
+								top->u.dbl.nval = (double) top->u.integer.nval;
 							}
 
 							num_digits = 0;
@@ -742,14 +745,15 @@ json_value_t * json_parse_ex(
 							goto e_failed;
 						}
 
-						top->u.dbl *= pow(10.0, (double) (flags & flag_num_e_negative ? - num_e : num_e));
+						top->u.dbl.nval *= pow(10.0, (double) (flags & flag_num_e_negative ? - num_e : num_e));
 					}
 
 					if (flags & flag_num_negative) {
+						// xxx
 						if (top->type == JSON_INTEGER)
-							top->u.integer = - top->u.integer;
+							top->u.integer.nval = - top->u.integer.nval;
 						else
-							top->u.dbl = - top->u.dbl;
+							top->u.dbl.nval = - top->u.dbl.nval;
 					}
 
 					flags |= flag_next | flag_reproc;

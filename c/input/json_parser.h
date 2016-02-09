@@ -104,9 +104,20 @@ typedef struct _json_value_t {
 	json_type_t type;
 
 	union {
-		int boolean;
-		json_int_t integer;
-		double dbl;
+		// For Miller we want floating-point numbers to be preserved as-is, with however many decimal places the user's
+		// input has, until/unless we do any math which modifies values.
+		struct {
+			int nval;
+			char* sval; // xxx be sure to free in free method
+		} boolean;
+		struct {
+			json_int_t nval;
+			char* sval;
+		} integer;
+		struct {
+			double nval;
+			char* sval;
+		} dbl;
 
 		struct {
 			unsigned int length;
