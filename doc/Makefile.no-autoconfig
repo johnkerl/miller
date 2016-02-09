@@ -5,7 +5,7 @@
 # http://johnkerl.org/miller/doc/build.html#Without_using_autoconfig
 # ================================================================
 
-all: html mkman
+all: html manpage
 
 # Respective MANPATH entries would include /usr/local/share/man or $HOME/man
 INSTALLDIR=/usr/local/share/man/man1
@@ -13,11 +13,11 @@ INSTALLHOME=$(HOME)/man/man1
 
 html: .always
 	poki
-mkman: .always
+manpage: .always
 	mkman.rb > mlr.1
-install: mkman
+install: manpage
 	cp mlr.1 $(INSTALLDIR)/mlr.1
-installhome: mkman
+installhome: manpage
 	cp mlr.1 $(INSTALLHOME)/mlr.1
 
 .always:
