@@ -71,12 +71,6 @@
 typedef struct {
 	int setting_flags;
 	unsigned long max_memory;
-
-	// Custom allocator support (leave null to use malloc/free)
-	void * (* mem_alloc) (size_t, int zero, void * user_data);
-	void (* mem_free) (void *, void * user_data);
-	void * user_data;  /* will be passed to mem_alloc and mem_free */
-	size_t value_extra;  /* how much extra space to allocate for values? */
 } json_settings_t;
 
 typedef enum {

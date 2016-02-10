@@ -68,13 +68,9 @@ typedef struct _json_state_{
 } json_parser_state_t;
 
 // ----------------------------------------------------------------
-static void * default_alloc(size_t size, int zero, void * user_data) {
+static void * default_alloc(size_t size, int zero) {
+	// xxx port
 	return zero ? calloc(1, size) : malloc(size);
-}
-
-// ----------------------------------------------------------------
-static void default_free(void * ptr, void * user_data) {
-	free(ptr);
 }
 
 // ----------------------------------------------------------------
@@ -88,7 +84,7 @@ static void * json_alloc(json_parser_state_t * pstate, unsigned long size, int z
 		return 0;
 	}
 
-	return pstate->settings.mem_alloc(size, zero, pstate->settings.user_data);
+	return default_alloc(size, zero);
 }
 
 // ----------------------------------------------------------------
@@ -157,9 +153,7 @@ static int new_value(
 		return 1;
 	}
 
-	if (! (value = (json_value_t *) json_alloc
-			(pstate, sizeof (json_value_t) + pstate->settings.value_extra, 1)))
-	{
+	if (! (value = (json_value_t *) json_alloc(pstate, sizeof (json_value_t), 1))) {
 		return 0;
 	}
 
@@ -247,12 +241,6 @@ json_value_t * json_parse_ex(
 	end = (json + length);
 
 	memcpy(&state.settings, settings, sizeof(json_settings_t));
-
-	if (!state.settings.mem_alloc)
-		state.settings.mem_alloc = default_alloc;
-
-	if (!state.settings.mem_free)
-		state.settings.mem_free = default_free;
 
 	memset(&state.uint_max, 0xFF, sizeof(state.uint_max));
 	memset(&state.ulong_max, 0xFF, sizeof(state.ulong_max));
@@ -844,7 +832,7 @@ e_failed:
 
 	while (palloc) {
 		ptop = palloc->_reserved.next_alloc;
-		state.settings.mem_free(palloc, state.settings.user_data);
+		free(palloc);
 		palloc = ptop;
 	}
 
@@ -868,7 +856,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 			case JSON_ARRAY:
 
 				if (!pvalue->u.array.length) {
-					settings->mem_free(pvalue->u.array.values, settings->user_data);
+					free(pvalue->u.array.values);
 					break;
 				}
 
@@ -877,7 +865,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 
 			case JSON_OBJECT:
 				if (!pvalue->u.object.length) {
-					settings->mem_free(pvalue->u.object.p.values, settings->user_data);
+					free(pvalue->u.object.p.values);
 					break;
 				}
 
@@ -885,7 +873,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 				continue;
 
 			case JSON_STRING:
-				settings->mem_free(pvalue->u.string.ptr, settings->user_data);
+				free(pvalue->u.string.ptr);
 				break;
 
 			default:
@@ -894,14 +882,13 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 
 		cur_value = pvalue;
 		pvalue = pvalue->parent;
-		settings->mem_free(cur_value, settings->user_data);
+		free(cur_value);
 	}
 }
 
 // ----------------------------------------------------------------
 void json_value_free(json_value_t * pvalue) {
 	json_settings_t settings = { 0 };
-	settings.mem_free = default_free;
 	json_value_free_ex(&settings, pvalue);
 }
 
