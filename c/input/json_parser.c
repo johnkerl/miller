@@ -583,6 +583,8 @@ json_value_t * json_parse(
 												b = 0;
 												break;
 											}
+											// xxx temp. needs json_value restructure w/ single sval&length.
+											integer_sval_add(&state, ptop, b);
 
 											b = *state.ptr;
 										}
@@ -855,6 +857,14 @@ e_failed:
 		json_value_free(proot);
 
 	return 0;
+}
+
+json_value_t * json_parse_for_unit_test(
+	const json_char * json,
+	json_char** ppend_of_item)
+{
+	json_char error_buf[JSON_ERROR_MAX];
+	return json_parse(json, strlen(json), error_buf, ppend_of_item);
 }
 
 // ----------------------------------------------------------------

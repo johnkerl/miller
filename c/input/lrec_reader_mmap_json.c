@@ -1,9 +1,10 @@
 // ================================================================
+// xxx clean up these comments
 // mmap: easy pointer math
 // stdio from file: stat, alloc, read. libify this.
 // stdio from stdin: realloc w/ page-size fread. libify this.
 
-// note @ mlr -h: no streaing for JSON input. No records are processed until EOF is seen.
+// note @ mlr -h: no streaming for JSON input. No records are processed until EOF is seen.
 
 // paginated:
 //   json parse || error msg

@@ -148,6 +148,10 @@ json_value_t * json_parse(
 	char * error_buf,
 	json_char** ppend_of_item);
 
+json_value_t * json_parse_for_unit_test(
+	const json_char * json,
+	json_char** ppend_of_item);
+
 void json_value_free(json_value_t *);
 
 char* json_describe_type(json_type_t type);
