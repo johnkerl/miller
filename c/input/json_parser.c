@@ -148,7 +148,7 @@ static int new_value(
 
 			default:
 				break;
-		};
+		}
 
 		return 1;
 	}
@@ -353,7 +353,7 @@ json_value_t * json_parse_ex(
 
 						default:
 							STRING_ADD(b);
-					};
+					}
 
 					continue;
 				}
@@ -394,7 +394,7 @@ json_value_t * json_parse_ex(
 
 						default:
 							break;
-					};
+					}
 				} else {
 					STRING_ADD(b);
 					continue;
@@ -416,7 +416,7 @@ json_value_t * json_parse_ex(
 					default:
 						sprintf(error, "%d:%d: Trailing text: `%c`", state.cur_line, state.cur_col, b);
 						goto e_failed;
-				};
+				}
 			}
 
 			if (flags & FLAG_SEEK_VALUE) {
@@ -559,8 +559,8 @@ json_value_t * json_parse_ex(
 									sprintf(error, "%d:%d: Unexpected `%c` when seeking value", LINE_AND_COL, b);
 									goto e_failed;
 								}
-						};
-				};
+						}
+				}
 			} else {
 				switch (ptop->type) {
 				case JSON_OBJECT:
@@ -595,7 +595,7 @@ json_value_t * json_parse_ex(
 						default:
 							sprintf(error, "%d:%d: Unexpected `%c` in object", LINE_AND_COL, b);
 							goto e_failed;
-					};
+					}
 
 					break;
 
@@ -696,7 +696,7 @@ json_value_t * json_parse_ex(
 
 				default:
 					break;
-				};
+				}
 			}
 
 			if (flags & FLAG_REPROC) {
@@ -731,7 +731,7 @@ json_value_t * json_parse_ex(
 
 						default:
 							break;
-					};
+					}
 				}
 
 				if ((++ptop->parent->u.array.length) > state.uint_max)
@@ -824,7 +824,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 			// xxx sval frees
 			default:
 				break;
-		};
+		}
 
 		cur_value = pvalue;
 		pvalue = pvalue->parent;
