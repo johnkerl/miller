@@ -200,9 +200,7 @@ static const long
 	FLAG_NUM_ZERO         = 1 << 9,
 	FLAG_NUM_E            = 1 << 10,
 	FLAG_NUM_E_GOT_SIGN   = 1 << 11,
-	FLAG_NUM_E_NEGATIVE   = 1 << 12,
-	FLAG_LINE_COMMENT     = 1 << 13,
-	FLAG_BLOCK_COMMENT    = 1 << 14;
+	FLAG_NUM_E_NEGATIVE   = 1 << 12;
 
 // ================================================================
 json_value_t * json_parse(const json_char * json, size_t length, char* error_buf) {
@@ -402,57 +400,6 @@ json_value_t * json_parse_ex(
 				} else {
 					STRING_ADD(b);
 					continue;
-				}
-			}
-
-			if (state.settings.setting_flags & JSON_ENABLE_COMMENTS) {
-				if (flags & (FLAG_LINE_COMMENT | FLAG_BLOCK_COMMENT)) {
-					if (flags & FLAG_LINE_COMMENT) {
-						if (b == '\r' || b == '\n' || !b) {
-							flags &= ~ FLAG_LINE_COMMENT;
-							--state.ptr;  /* so null can be reproc'd */
-						}
-
-						continue;
-					}
-
-					if (flags & FLAG_BLOCK_COMMENT) {
-						if (!b) {
-							sprintf(error, "%d:%d: Unexpected EOF in block comment", LINE_AND_COL);
-							goto e_failed;
-						}
-
-						if (b == '*' && state.ptr < (end - 1) && state.ptr [1] == '/') {
-							flags &= ~ FLAG_BLOCK_COMMENT;
-							++state.ptr;  /* skip closing sequence */
-						}
-
-						continue;
-					}
-				} else if (b == '/') {
-					if (! (flags & (FLAG_SEEK_VALUE | FLAG_DONE)) && ptop->type != JSON_OBJECT) {
-						sprintf(error, "%d:%d: Comment not allowed here", LINE_AND_COL);
-						goto e_failed;
-					}
-
-					if (++state.ptr == end) {
-						sprintf(error, "%d:%d: EOF unexpected", LINE_AND_COL);
-						goto e_failed;
-					}
-
-					switch (b = *state.ptr) {
-						case '/':
-							flags |= FLAG_LINE_COMMENT;
-							continue;
-
-						case '*':
-							flags |= FLAG_BLOCK_COMMENT;
-							continue;
-
-						default:
-							sprintf(error, "%d:%d: Unexpected `%c` in comment opening sequence", LINE_AND_COL, b);
-							goto e_failed;
-					};
 				}
 			}
 

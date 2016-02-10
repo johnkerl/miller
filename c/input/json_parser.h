@@ -45,8 +45,6 @@
 #include <stdlib.h>
 
 // ----------------------------------------------------------------
-#define JSON_ENABLE_COMMENTS           0x01
-
 // This enables us to handle input of the form
 //
 //   { "a" : 1 }
