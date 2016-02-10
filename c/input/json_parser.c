@@ -576,6 +576,7 @@ json_value_t * json_parse(
 									if (!new_value(&state, &ptop, &proot, &palloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
+									// xxx pick up from here
 									if (!state.first_pass) {
 										while (isdigit(b) || b == '+' || b == '-' || b == 'e' || b == 'E' || b == '.') {
 											if ((++state.ptr) == end) {
