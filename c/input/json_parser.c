@@ -26,6 +26,7 @@
 // SUCH DAMAGE.
 // ================================================================
 
+#include "lib/mlrutil.h"
 #include "json_parser.h"
 
 const struct _json_value_t json_value_none;
@@ -68,8 +69,10 @@ typedef struct _json_state_{
 
 // ----------------------------------------------------------------
 static void * default_alloc(size_t size, int zero) {
-	// xxx mlrize
-	return zero ? calloc(1, size) : malloc(size);
+	void* ptr = mlr_malloc_or_die(size);
+	if (zero)
+		memset(ptr, 0, size);
+	return ptr;
 }
 
 // ----------------------------------------------------------------
