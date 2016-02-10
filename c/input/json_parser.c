@@ -69,7 +69,7 @@ typedef struct _json_state_{
 
 // ----------------------------------------------------------------
 static void * default_alloc(size_t size, int zero) {
-	// xxx port
+	// xxx mlrize
 	return zero ? calloc(1, size) : malloc(size);
 }
 
@@ -95,55 +95,55 @@ static int new_value(
 	json_value_t ** palloc,
 	json_type_t type)
 {
-	json_value_t * value;
+	json_value_t * pvalue;
 	int values_size;
 
 	if (!pstate->first_pass) {
-		value = *ptop = *palloc;
+		pvalue = *ptop = *palloc;
 		*palloc = (*palloc)->_reserved.next_alloc;
 
 		if (!*proot)
-			*proot = value;
+			*proot = pvalue;
 
-		switch (value->type) {
+		switch (pvalue->type) {
 			case JSON_ARRAY:
-				if (value->u.array.length == 0)
+				if (pvalue->u.array.length == 0)
 					break;
 
-				if (! (value->u.array.values = (json_value_t **) json_alloc
-					(pstate, value->u.array.length * sizeof(json_value_t *), 0)) )
+				if (! (pvalue->u.array.values = (json_value_t **) json_alloc
+					(pstate, pvalue->u.array.length * sizeof(json_value_t *), 0)) )
 				{
 					return 0;
 				}
 
-				value->u.array.length = 0;
+				pvalue->u.array.length = 0;
 				break;
 
 			case JSON_OBJECT:
-				if (value->u.object.length == 0)
+				if (pvalue->u.object.length == 0)
 					break;
 
-				values_size = sizeof(*value->u.object.p.values) * value->u.object.length;
+				values_size = sizeof(*pvalue->u.object.p.values) * pvalue->u.object.length;
 
-				if (! (value->u.object.p.values = (json_object_entry_t *) json_alloc
-						(pstate, values_size + ((unsigned long) value->u.object.p.values), 0)) )
+				if (! (pvalue->u.object.p.values = (json_object_entry_t *) json_alloc
+						(pstate, values_size + ((unsigned long) pvalue->u.object.p.values), 0)) )
 				{
 					return 0;
 				}
 
-				value->_reserved.p.pobject_mem = (*(char **) &value->u.object.p.mem) + values_size;
+				pvalue->_reserved.p.pobject_mem = (*(char **) &pvalue->u.object.p.mem) + values_size;
 
-				value->u.object.length = 0;
+				pvalue->u.object.length = 0;
 				break;
 
 			case JSON_STRING:
-				if (! (value->u.string.ptr = (json_char *) json_alloc
-					(pstate, (value->u.string.length + 1) * sizeof (json_char), 0)) )
+				if (! (pvalue->u.string.ptr = (json_char *) json_alloc
+					(pstate, (pvalue->u.string.length + 1) * sizeof (json_char), 0)) )
 				{
 					return 0;
 				}
 
-				value->u.string.length = 0;
+				pvalue->u.string.length = 0;
 				break;
 
 			default:
@@ -153,25 +153,23 @@ static int new_value(
 		return 1;
 	}
 
-	if (! (value = (json_value_t *) json_alloc(pstate, sizeof (json_value_t), 1))) {
+	if (! (pvalue = (json_value_t *) json_alloc(pstate, sizeof (json_value_t), 1))) {
 		return 0;
 	}
 
 	if (!*proot)
-		*proot = value;
+		*proot = pvalue;
 
-	value->type = type;
-	value->parent = *ptop;
+	pvalue->type = type;
+	pvalue->parent = *ptop;
 
-	#ifdef JSON_TRACK_SOURCE
-		value->line = pstate->cur_line;
-		value->col = pstate->cur_col;
-	#endif
+	pvalue->line = pstate->cur_line;
+	pvalue->col = pstate->cur_col;
 
 	if (*palloc)
-		(*palloc)->_reserved.next_alloc = value;
+		(*palloc)->_reserved.next_alloc = pvalue;
 
-	*palloc = *ptop = value;
+	*palloc = *ptop = pvalue;
 
 	return 1;
 }
@@ -823,6 +821,7 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 				free(pvalue->u.string.ptr);
 				break;
 
+			// xxx sval frees
 			default:
 				break;
 		};

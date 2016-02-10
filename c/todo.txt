@@ -51,6 +51,7 @@ TOP-OF-LIST DETAILS
     > JSON/join UT. both/left/right json cases.
   - cmt mlhmmv @ writer ...
   - unbackslash @ jflatsep
+  - use track-source feature
 
 ? env vars??
 

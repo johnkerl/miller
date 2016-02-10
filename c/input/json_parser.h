@@ -139,10 +139,8 @@ typedef struct _json_value_t {
 		} p;
 	} _reserved;
 
-	#ifdef JSON_TRACK_SOURCE
-		// Location of the value in the source JSON
-		unsigned int line, col;
-	#endif
+	// Location of the value in the source JSON
+	unsigned int line, col;
 
 } json_value_t;
 
