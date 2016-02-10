@@ -198,6 +198,8 @@ static const long
 	flag_need_comma       = 1 << 2,
 	flag_seek_value       = 1 << 3,
 	flag_escaped          = 1 << 4,
+	// xxx rename to flag_in_string
+	// xxx upcase all these ...
 	flag_string           = 1 << 5,
 	flag_need_colon       = 1 << 6,
 	flag_done             = 1 << 7,
@@ -589,6 +591,7 @@ json_value_t * json_parse_ex(
 
 							default:
 								if (isdigit (b) || b == '-') {
+									// xxx end
 									if (!new_value(&state, &top, &root, &alloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
@@ -712,6 +715,7 @@ json_value_t * json_parse_ex(
 						// xxx
 						top->u.dbl.nval = (double) top->u.integer.nval;
 
+						// xxx start??
 						num_digits = 0;
 						continue;
 					}
@@ -734,6 +738,7 @@ json_value_t * json_parse_ex(
 								top->u.dbl.nval = (double) top->u.integer.nval;
 							}
 
+							// xxx start??
 							num_digits = 0;
 							flags &= ~ flag_num_zero;
 
