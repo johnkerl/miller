@@ -75,7 +75,7 @@ typedef struct _json_value_t {
 		struct {
 			int nval;
 			unsigned int length;
-			char* sval; // xxx be sure to free in free method
+			char* sval;
 		} boolean;
 		struct {
 			json_int_t nval;
