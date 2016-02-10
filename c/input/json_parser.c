@@ -199,24 +199,38 @@ static int new_value(
 	do { if (!state.first_pass) string[string_length] = b;  ++string_length; } while (0);
 
 
-#define BOOLEAN_SVAL_ADD(b)  \
-	do { if (!state.first_pass) ptop->u.boolean.sval[ptop->u.boolean.length++] = b; } while (0);
+static inline void boolean_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
+	if (!pstate->first_pass) {
+		ptop->u.boolean.sval[ptop->u.boolean.length++] = b;
+	}
+}
+static inline void integer_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
+	if (!pstate->first_pass) {
+		ptop->u.integer.sval[ptop->u.integer.length++] = b;
+	}
+}
+static inline void dbl_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
+	if (!pstate->first_pass) {
+		ptop->u.dbl.sval[ptop->u.dbl.length++] = b;
+	}
+}
 
-#define INTEGER_SVAL_ADD(b)  \
-	do { if (!state.first_pass) ptop->u.integer.sval[ptop->u.integer.length++] = b; } while (0);
 
-#define DOUBLE_SVAL_ADD(b)  \
-	do { if (!state.first_pass) ptop->u.dbl.sval[ptop->u.dbl.length++] = b; } while (0);
-
-
-#define BOOLEAN_SVAL_END()  \
-	do { if (!state.first_pass) ptop->u.boolean.sval[ptop->u.boolean.length] = 0; } while (0);
-
-#define INTEGER_SVAL_END()  \
-	do { if (!state.first_pass) ptop->u.integer.sval[ptop->u.integer.length] = 0; } while (0);
-
-#define DOUBLE_SVAL_END()  \
-	do { if (!state.first_pass) ptop->u.dbl.sval[ptop->u.dbl.length] = 0; } while (0);
+static inline void boolean_sval_end(json_parser_state_t* pstate, json_value_t* ptop) {
+	if (!pstate->first_pass) {
+		ptop->u.boolean.sval[ptop->u.boolean.length] = 0;
+	}
+}
+static inline void integer_sval_end(json_parser_state_t* pstate, json_value_t* ptop) {
+	if (!pstate->first_pass) {
+		ptop->u.integer.sval[ptop->u.integer.length] = 0;
+	}
+}
+static inline void dbl_sval_end(json_parser_state_t* pstate, json_value_t* ptop) {
+	if (!pstate->first_pass) {
+		ptop->u.dbl.sval[ptop->u.dbl.length] = 0;
+	}
+}
 
 
 #define LINE_AND_COL \
@@ -513,10 +527,10 @@ json_value_t * json_parse(
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
-								BOOLEAN_SVAL_ADD('t');
-								BOOLEAN_SVAL_ADD('r');
-								BOOLEAN_SVAL_ADD('u');
-								BOOLEAN_SVAL_ADD('e');
+								boolean_sval_add(&state, ptop, 't');
+								boolean_sval_add(&state, ptop, 'r');
+								boolean_sval_add(&state, ptop, 'u');
+								boolean_sval_add(&state, ptop, 'e');
 								ptop->u.boolean.nval = 1;
 
 								flags |= FLAG_NEXT;
@@ -533,11 +547,11 @@ json_value_t * json_parse(
 
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
-								BOOLEAN_SVAL_ADD('f');
-								BOOLEAN_SVAL_ADD('a');
-								BOOLEAN_SVAL_ADD('l');
-								BOOLEAN_SVAL_ADD('s');
-								BOOLEAN_SVAL_ADD('e');
+								boolean_sval_add(&state, ptop, 'f');
+								boolean_sval_add(&state, ptop, 'a');
+								boolean_sval_add(&state, ptop, 'l');
+								boolean_sval_add(&state, ptop, 's');
+								boolean_sval_add(&state, ptop, 'e');
 								ptop->u.boolean.nval = 0;
 
 								flags |= FLAG_NEXT;
@@ -654,12 +668,12 @@ json_value_t * json_parse(
 								continue;
 							}
 
-							INTEGER_SVAL_ADD(b);
+							integer_sval_add(&state, ptop, b);
 							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0'); // xxx focus point
 							continue;
 						}
 
-						INTEGER_SVAL_ADD(b);
+						integer_sval_add(&state, ptop, b);
 						num_fraction = (num_fraction * 10) + (b - '0');
 						continue;
 					}
@@ -683,7 +697,7 @@ json_value_t * json_parse(
 						ptop->u.dbl.nval = (double) ptop->u.integer.nval;
 						ptop->u.dbl.length = ptop->u.integer.length;
 						ptop->u.dbl.sval = ptop->u.integer.sval;
-						DOUBLE_SVAL_ADD(b);
+						dbl_sval_add(&state, ptop, b);
 
 						num_digits = 0;
 						continue;
@@ -707,7 +721,7 @@ json_value_t * json_parse(
 								ptop->u.dbl.nval = (double) ptop->u.integer.nval;
 								ptop->u.dbl.length = ptop->u.integer.length;
 								ptop->u.dbl.sval = ptop->u.integer.sval;
-								DOUBLE_SVAL_ADD(b);
+								dbl_sval_add(&state, ptop, b);
 							}
 
 							num_digits = 0;
@@ -733,13 +747,13 @@ json_value_t * json_parse(
 
 					switch (ptop->type) {
 					case JSON_BOOLEAN:
-						BOOLEAN_SVAL_END();
+						boolean_sval_end(&state, ptop);
 						break;
 					case JSON_INTEGER:
-						INTEGER_SVAL_END();
+						integer_sval_end(&state, ptop);
 						break;
 					case JSON_DOUBLE:
-						DOUBLE_SVAL_END();
+						dbl_sval_end(&state, ptop);
 						break;
 					default:
 						break;

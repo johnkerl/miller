@@ -62,14 +62,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 		case JSON_NULL:
 			lrec_put(prec, key, "", NO_FREE);
 			break;
-		case JSON_STRING:
-			lrec_value = pjson_value->u.string.ptr;
-			lrec_put(prec, key, lrec_value, NO_FREE);
-			break;
-		case JSON_BOOLEAN:
-			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
-			lrec_put(prec, key, lrec_value, NO_FREE);
-			break;
+
 		case JSON_OBJECT:
 			// This could be made more efficient ... the string length is in the json_value_t.
 			prefix = mlr_paste_2_strings(key, flatten_sep);
@@ -82,11 +75,24 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 				MLR_GLOBALS.argv0);
 			return NULL;
 			break;
+
+		case JSON_STRING:
+			lrec_value = pjson_value->u.string.ptr;
+			lrec_put(prec, key, lrec_value, NO_FREE);
+			break;
+
+		case JSON_BOOLEAN:
+			//printf("XXXB [%s]\n", pjson_value->u.boolean.sval);
+			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
+			lrec_put(prec, key, lrec_value, NO_FREE);
+			break;
 		case JSON_INTEGER:
+			//printf("XXXI [%s]\n", pjson_value->u.integer.sval);
 			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer.nval);
 			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
 		case JSON_DOUBLE:
+			//printf("XXXD [%s]\n", pjson_value->u.dbl.sval);
 			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt);
 			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
 			break;
