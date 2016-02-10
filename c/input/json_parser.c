@@ -259,7 +259,7 @@ json_value_t * json_parse(
 		json_char * string = 0;
 		unsigned int string_length = 0;
 		//json_char * sval = 0;
-		unsigned int sval_length = 0;
+		//unsigned int sval_length = 0;
 
 		ptop = proot = 0;
 		flags = FLAG_SEEK_VALUE;
@@ -497,7 +497,7 @@ json_value_t * json_parse(
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
-								ptop->u.boolean.length++; // xxx ++ by whut
+								ptop->u.boolean.length = 4;
 								ptop->u.boolean.nval = 1;
 
 								flags |= FLAG_NEXT;
@@ -514,6 +514,8 @@ json_value_t * json_parse(
 
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
+								ptop->u.boolean.length = 5;
+								ptop->u.boolean.nval = 0;
 
 								flags |= FLAG_NEXT;
 								break;
@@ -533,14 +535,12 @@ json_value_t * json_parse(
 
 							default:
 								if (isdigit (b) || b == '-') {
-									// Start of new number
+									// Start of new number // xxx focus point
 									if (!new_value(&state, &ptop, &proot, &palloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
 									if (!state.first_pass) {
-										sval_length = 0;
 										while (isdigit(b) || b == '+' || b == '-' || b == 'e' || b == 'E' || b == '.') {
-											sval_length++;
 											if ((++state.ptr) == end) {
 												b = 0;
 												break;
@@ -632,11 +632,12 @@ json_value_t * json_parse(
 							}
 
 							ptop->u.integer.length++;
-							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0');
+							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0'); // xxx focus point
 							continue;
 						}
 
 						num_fraction = (num_fraction * 10) + (b - '0');
+						ptop->u.integer.length++;
 						continue;
 					}
 
@@ -672,7 +673,6 @@ json_value_t * json_parse(
 								goto e_failed;
 							}
 
-							ptop->u.dbl.length++;
 							ptop->u.dbl.nval += ((double) num_fraction) / (pow(10.0, (double) num_digits));
 						}
 
@@ -699,7 +699,6 @@ json_value_t * json_parse(
 						}
 
 						ptop->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_NEGATIVE ? - num_e : num_e));
-						ptop->u.dbl.length++;
 					}
 
 					if (flags & FLAG_NUM_NEGATIVE) {
@@ -710,7 +709,7 @@ json_value_t * json_parse(
 					}
 
 					flags |= FLAG_NEXT | FLAG_REPROC;
-					break;
+					break; // xxx focus point
 
 				default:
 					break;
