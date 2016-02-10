@@ -258,8 +258,8 @@ json_value_t * json_parse(
 		unsigned char uc_b1, uc_b2, uc_b3, uc_b4;
 		json_char * string = 0;
 		unsigned int string_length = 0;
-		// xxx json_char * sval = 0;
-		// xxx unsigned int sval_length = 0;
+		//json_char * sval = 0;
+		unsigned int sval_length = 0;
 
 		ptop = proot = 0;
 		flags = FLAG_SEEK_VALUE;
@@ -497,7 +497,7 @@ json_value_t * json_parse(
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
-								// xxx
+								ptop->u.boolean.length++; // xxx ++ by whut
 								ptop->u.boolean.nval = 1;
 
 								flags |= FLAG_NEXT;
@@ -533,12 +533,14 @@ json_value_t * json_parse(
 
 							default:
 								if (isdigit (b) || b == '-') {
-									// xxx start
+									// Start of new number
 									if (!new_value(&state, &ptop, &proot, &palloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
 									if (!state.first_pass) {
+										sval_length = 0;
 										while (isdigit(b) || b == '+' || b == '-' || b == 'e' || b == 'E' || b == '.') {
+											sval_length++;
 											if ((++state.ptr) == end) {
 												b = 0;
 												break;
@@ -629,7 +631,7 @@ json_value_t * json_parse(
 								continue;
 							}
 
-							// xxx
+							ptop->u.integer.length++;
 							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0');
 							continue;
 						}
@@ -654,8 +656,10 @@ json_value_t * json_parse(
 						}
 
 						ptop->type = JSON_DOUBLE;
-						// xxx
 						ptop->u.dbl.nval = (double) ptop->u.integer.nval;
+						ptop->u.dbl.length = ptop->u.integer.length;
+						ptop->u.dbl.sval = ptop->u.integer.sval;
+						ptop->u.dbl.length++;
 
 						num_digits = 0;
 						continue;
@@ -668,6 +672,7 @@ json_value_t * json_parse(
 								goto e_failed;
 							}
 
+							ptop->u.dbl.length++;
 							ptop->u.dbl.nval += ((double) num_fraction) / (pow(10.0, (double) num_digits));
 						}
 
@@ -677,6 +682,9 @@ json_value_t * json_parse(
 							if (ptop->type == JSON_INTEGER) {
 								ptop->type = JSON_DOUBLE;
 								ptop->u.dbl.nval = (double) ptop->u.integer.nval;
+								ptop->u.dbl.length = ptop->u.integer.length;
+								ptop->u.dbl.sval = ptop->u.integer.sval;
+								ptop->u.dbl.length++;
 							}
 
 							num_digits = 0;
@@ -691,10 +699,10 @@ json_value_t * json_parse(
 						}
 
 						ptop->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_NEGATIVE ? - num_e : num_e));
+						ptop->u.dbl.length++;
 					}
 
 					if (flags & FLAG_NUM_NEGATIVE) {
-						// xxx
 						if (ptop->type == JSON_INTEGER)
 							ptop->u.integer.nval = - ptop->u.integer.nval;
 						else
