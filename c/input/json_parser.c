@@ -198,16 +198,14 @@ static const long
 	FLAG_NEED_COMMA       = 1 << 2,
 	FLAG_SEEK_VALUE       = 1 << 3,
 	FLAG_ESCAPED          = 1 << 4,
-	// xxx rename to flag_in_string
-	// xxx upcase all these ...
 	FLAG_STRING           = 1 << 5,
 	FLAG_NEED_COLON       = 1 << 6,
 	FLAG_DONE             = 1 << 7,
 	FLAG_NUM_NEGATIVE     = 1 << 8,
 	FLAG_NUM_ZERO         = 1 << 9,
 	FLAG_NUM_E            = 1 << 10,
-	FLAG_NUM_E_got_sign   = 1 << 11,
-	FLAG_NUM_E_negative   = 1 << 12,
+	FLAG_NUM_E_GOT_SIGN   = 1 << 11,
+	FLAG_NUM_E_NEGATIVE   = 1 << 12,
 	FLAG_LINE_COMMENT     = 1 << 13,
 	FLAG_BLOCK_COMMENT    = 1 << 14;
 
@@ -610,7 +608,7 @@ json_value_t * json_parse_ex(
 									}
 
 									flags &= ~ (FLAG_NUM_NEGATIVE | FLAG_NUM_E |
-													 FLAG_NUM_E_got_sign | FLAG_NUM_E_negative | FLAG_NUM_ZERO);
+													 FLAG_NUM_E_GOT_SIGN | FLAG_NUM_E_NEGATIVE | FLAG_NUM_ZERO);
 
 									num_digits = 0;
 									num_fraction = 0;
@@ -682,7 +680,7 @@ json_value_t * json_parse_ex(
 								if (num_digits == 1 && b == '0')
 									flags |= FLAG_NUM_ZERO;
 							} else {
-								flags |= FLAG_NUM_E_got_sign;
+								flags |= FLAG_NUM_E_GOT_SIGN;
 								num_e = (num_e * 10) + (b - '0');
 								continue;
 							}
@@ -697,11 +695,11 @@ json_value_t * json_parse_ex(
 					}
 
 					if (b == '+' || b == '-') {
-						if ( (flags & FLAG_NUM_E) && !(flags & FLAG_NUM_E_got_sign)) {
-							flags |= FLAG_NUM_E_got_sign;
+						if ( (flags & FLAG_NUM_E) && !(flags & FLAG_NUM_E_GOT_SIGN)) {
+							flags |= FLAG_NUM_E_GOT_SIGN;
 
 							if (b == '-')
-								flags |= FLAG_NUM_E_negative;
+								flags |= FLAG_NUM_E_NEGATIVE;
 
 							continue;
 						}
@@ -748,7 +746,7 @@ json_value_t * json_parse_ex(
 							goto e_failed;
 						}
 
-						top->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_negative ? - num_e : num_e));
+						top->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_NEGATIVE ? - num_e : num_e));
 					}
 
 					if (flags & FLAG_NUM_NEGATIVE) {
