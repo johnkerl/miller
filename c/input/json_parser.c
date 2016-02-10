@@ -102,30 +102,24 @@ static int new_value(
 			case JSON_ARRAY:
 				if (pvalue->u.array.length == 0)
 					break;
-
 				if (! (pvalue->u.array.values = (json_value_t **) json_alloc
 					(pstate, pvalue->u.array.length * sizeof(json_value_t *), 0)) )
 				{
 					return 0;
 				}
-
 				pvalue->u.array.length = 0;
 				break;
 
 			case JSON_OBJECT:
 				if (pvalue->u.object.length == 0)
 					break;
-
 				values_size = sizeof(*pvalue->u.object.p.values) * pvalue->u.object.length;
-
 				if (! (pvalue->u.object.p.values = (json_object_entry_t *) json_alloc
 						(pstate, values_size + ((unsigned long) pvalue->u.object.p.values), 0)) )
 				{
 					return 0;
 				}
-
 				pvalue->_reserved.p.pobject_mem = (*(char **) &pvalue->u.object.p.mem) + values_size;
-
 				pvalue->u.object.length = 0;
 				break;
 
@@ -135,8 +129,34 @@ static int new_value(
 				{
 					return 0;
 				}
-
 				pvalue->u.string.length = 0;
+				break;
+
+			case JSON_BOOLEAN:
+				if (! (pvalue->u.boolean.sval = (json_char *) json_alloc
+					(pstate, (pvalue->u.boolean.length + 1) * sizeof (json_char), 0)) )
+				{
+					return 0;
+				}
+				pvalue->u.boolean.length = 0;
+				break;
+
+			case JSON_INTEGER:
+				if (! (pvalue->u.integer.sval = (json_char *) json_alloc
+					(pstate, (pvalue->u.integer.length + 1) * sizeof (json_char), 0)) )
+				{
+					return 0;
+				}
+				pvalue->u.integer.length = 0;
+				break;
+
+			case JSON_DOUBLE:
+				if (! (pvalue->u.dbl.sval = (json_char *) json_alloc
+					(pstate, (pvalue->u.dbl.length + 1) * sizeof (json_char), 0)) )
+				{
+					return 0;
+				}
+				pvalue->u.dbl.length = 0;
 				break;
 
 			default:
@@ -173,7 +193,10 @@ static int new_value(
 	case ' ': case '\t': case '\r'
 
 #define STRING_ADD(b)  \
-	do { if (!state.first_pass) string [string_length] = b;  ++string_length; } while (0);
+	do { if (!state.first_pass) string[string_length] = b;  ++string_length; } while (0);
+
+#define SVAL_ADD(b)  \
+	do { if (!state.first_pass) sval[sval_length] = b;  ++sval_length; } while (0);
 
 #define LINE_AND_COL \
 	state.cur_line, state.cur_col
@@ -184,7 +207,7 @@ static const long
 	FLAG_NEED_COMMA       = 1 << 2,
 	FLAG_SEEK_VALUE       = 1 << 3,
 	FLAG_ESCAPED          = 1 << 4,
-	FLAG_STRING           = 1 << 5,
+	FLAG_IN_STRING        = 1 << 5,
 	FLAG_NEED_COLON       = 1 << 6,
 	FLAG_DONE             = 1 << 7,
 	FLAG_NUM_NEGATIVE     = 1 << 8,
@@ -200,7 +223,7 @@ json_value_t * json_parse(
 	char * error_buf,
 	json_char** ppend_of_item)
 {
-	json_char error [JSON_ERROR_MAX];
+	json_char error[JSON_ERROR_MAX];
 	const json_char * end;
 	json_value_t * ptop, * proot, * palloc = 0;
 	json_parser_state_t state = { 0 };
@@ -210,9 +233,9 @@ json_value_t * json_parse(
 	*ppend_of_item = NULL;
 
 	// Skip UTF-8 BOM
-	if (length >= 3 && ((unsigned char) json [0]) == 0xEF
-					&& ((unsigned char) json [1]) == 0xBB
-					&& ((unsigned char) json [2]) == 0xBF)
+	if (length >= 3 && ((unsigned char) json[0]) == 0xEF
+					&& ((unsigned char) json[1]) == 0xBB
+					&& ((unsigned char) json[2]) == 0xBF)
 	{
 		json += 3;
 		length -= 3;
@@ -232,6 +255,8 @@ json_value_t * json_parse(
 		unsigned char uc_b1, uc_b2, uc_b3, uc_b4;
 		json_char * string = 0;
 		unsigned int string_length = 0;
+		// xxx json_char * sval = 0;
+		// xxx unsigned int sval_length = 0;
 
 		ptop = proot = 0;
 		flags = FLAG_SEEK_VALUE;
@@ -242,7 +267,7 @@ json_value_t * json_parse(
 			json_char* pb = (json_char*)((state.ptr == end) ? NULL : state.ptr);
 			json_char   b = (state.ptr == end) ? 0 : *state.ptr;
 
-			if (flags & FLAG_STRING) {
+			if (flags & FLAG_IN_STRING) {
 				if (!b) {
 					sprintf(error, "Unexpected EOF in string (at %d:%d)", LINE_AND_COL);
 					goto e_failed;
@@ -305,8 +330,8 @@ json_value_t * json_parse(
 								if (state.first_pass) {
 									string_length += 2;
 								} else {
-									string [string_length ++] = 0xC0 | (uchar >> 6);
-									string [string_length ++] = 0x80 | (uchar & 0x3F);
+									string[string_length ++] = 0xC0 | (uchar >> 6);
+									string[string_length ++] = 0x80 | (uchar & 0x3F);
 								}
 
 								break;
@@ -316,9 +341,9 @@ json_value_t * json_parse(
 								if (state.first_pass) {
 									string_length += 3;
 								} else {
-									string [string_length ++] = 0xE0 | (uchar >> 12);
-									string [string_length ++] = 0x80 | ((uchar >> 6) & 0x3F);
-									string [string_length ++] = 0x80 | (uchar & 0x3F);
+									string[string_length ++] = 0xE0 | (uchar >> 12);
+									string[string_length ++] = 0x80 | ((uchar >> 6) & 0x3F);
+									string[string_length ++] = 0x80 | (uchar & 0x3F);
 								}
 
 								break;
@@ -326,10 +351,10 @@ json_value_t * json_parse(
 
 						  if (state.first_pass) {
 							  string_length += 4;
-						  } else {  string [string_length ++] = 0xF0 | (uchar >> 18);
-							  string [string_length ++] = 0x80 | ((uchar >> 12) & 0x3F);
-							  string [string_length ++] = 0x80 | ((uchar >> 6) & 0x3F);
-							  string [string_length ++] = 0x80 | (uchar & 0x3F);
+						  } else {  string[string_length ++] = 0xF0 | (uchar >> 18);
+							  string[string_length ++] = 0x80 | ((uchar >> 12) & 0x3F);
+							  string[string_length ++] = 0x80 | ((uchar >> 6) & 0x3F);
+							  string[string_length ++] = 0x80 | (uchar & 0x3F);
 						  }
 
 						  break;
@@ -348,9 +373,9 @@ json_value_t * json_parse(
 
 				if (b == '"') {
 					if (!state.first_pass)
-						string [string_length] = 0;
+						string[string_length] = 0;
 
-					flags &= ~ FLAG_STRING;
+					flags &= ~ FLAG_IN_STRING;
 					string = 0;
 
 					switch (ptop->type) {
@@ -364,10 +389,10 @@ json_value_t * json_parse(
 							if (state.first_pass) {
 								(*(json_char **) &ptop->u.object.p.mem) += string_length + 1;
 							} else {
-								ptop->u.object.p.values [ptop->u.object.length].name
+								ptop->u.object.p.values[ptop->u.object.length].name
 									= (json_char *) ptop->_reserved.p.pobject_mem;
 
-								ptop->u.object.p.values [ptop->u.object.length].name_length = string_length;
+								ptop->u.object.p.values[ptop->u.object.length].name_length = string_length;
 
 								(*(json_char **) &ptop->_reserved.p.pobject_mem) += string_length + 1;
 							}
@@ -454,7 +479,7 @@ json_value_t * json_parse(
 							case '"':
 								if (!new_value(&state, &ptop, &proot, &palloc, JSON_STRING))
 									goto e_alloc_failure;
-								flags |= FLAG_STRING;
+								flags |= FLAG_IN_STRING;
 								string = ptop->u.string.ptr;
 								string_length = 0;
 								continue;
@@ -557,7 +582,7 @@ json_value_t * json_parse(
 								goto e_failed;
 							}
 
-							flags |= FLAG_STRING;
+							flags |= FLAG_IN_STRING;
 
 							string = (json_char *) ptop->_reserved.p.pobject_mem;
 							string_length = 0;
@@ -787,7 +812,7 @@ void json_value_free(json_value_t * pvalue) {
 					break;
 				}
 
-				pvalue = pvalue->u.array.values [--pvalue->u.array.length];
+				pvalue = pvalue->u.array.values[--pvalue->u.array.length];
 				continue;
 
 			case JSON_OBJECT:
@@ -796,14 +821,25 @@ void json_value_free(json_value_t * pvalue) {
 					break;
 				}
 
-				pvalue = pvalue->u.object.p.values [--pvalue->u.object.length].pvalue;
+				pvalue = pvalue->u.object.p.values[--pvalue->u.object.length].pvalue;
 				continue;
 
 			case JSON_STRING:
 				free(pvalue->u.string.ptr);
 				break;
 
-			// xxx sval frees
+			case JSON_BOOLEAN:
+				free(pvalue->u.boolean.sval);
+				break;
+
+			case JSON_INTEGER:
+				free(pvalue->u.integer.sval);
+				break;
+
+			case JSON_DOUBLE:
+				free(pvalue->u.dbl.sval);
+				break;
+
 			default:
 				break;
 		}
