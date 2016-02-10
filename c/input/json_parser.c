@@ -193,23 +193,23 @@ static int new_value(
 	state.cur_line, state.cur_col
 
 static const long
-	flag_next             = 1 << 0,
-	flag_reproc           = 1 << 1,
-	flag_need_comma       = 1 << 2,
-	flag_seek_value       = 1 << 3,
-	flag_escaped          = 1 << 4,
+	FLAG_NEXT             = 1 << 0,
+	FLAG_REPROC           = 1 << 1,
+	FLAG_NEED_COMMA       = 1 << 2,
+	FLAG_SEEK_VALUE       = 1 << 3,
+	FLAG_ESCAPED          = 1 << 4,
 	// xxx rename to flag_in_string
 	// xxx upcase all these ...
-	flag_string           = 1 << 5,
-	flag_need_colon       = 1 << 6,
-	flag_done             = 1 << 7,
-	flag_num_negative     = 1 << 8,
-	flag_num_zero         = 1 << 9,
-	flag_num_e            = 1 << 10,
-	flag_num_e_got_sign   = 1 << 11,
-	flag_num_e_negative   = 1 << 12,
-	flag_line_comment     = 1 << 13,
-	flag_block_comment    = 1 << 14;
+	FLAG_STRING           = 1 << 5,
+	FLAG_NEED_COLON       = 1 << 6,
+	FLAG_DONE             = 1 << 7,
+	FLAG_NUM_NEGATIVE     = 1 << 8,
+	FLAG_NUM_ZERO         = 1 << 9,
+	FLAG_NUM_E            = 1 << 10,
+	FLAG_NUM_E_got_sign   = 1 << 11,
+	FLAG_NUM_E_negative   = 1 << 12,
+	FLAG_LINE_COMMENT     = 1 << 13,
+	FLAG_BLOCK_COMMENT    = 1 << 14;
 
 // ================================================================
 json_value_t * json_parse(const json_char * json, size_t length, char* error_buf) {
@@ -268,7 +268,7 @@ json_value_t * json_parse_ex(
 		unsigned int string_length = 0;
 
 		top = root = 0;
-		flags = flag_seek_value;
+		flags = FLAG_SEEK_VALUE;
 
 		state.cur_line = 1;
 
@@ -276,7 +276,7 @@ json_value_t * json_parse_ex(
 			json_char* pb = (json_char*)((state.ptr == end) ? NULL : state.ptr);
 			json_char   b = (state.ptr == end) ? 0 : *state.ptr;
 
-			if (flags & flag_string) {
+			if (flags & FLAG_STRING) {
 				if (!b) {
 					sprintf(error, "Unexpected EOF in string (at %d:%d)", LINE_AND_COL);
 					goto e_failed;
@@ -285,8 +285,8 @@ json_value_t * json_parse_ex(
 				if (string_length > state.uint_max)
 					goto e_overflow;
 
-				if (flags & flag_escaped) {
-					flags &= ~ flag_escaped;
+				if (flags & FLAG_ESCAPED) {
+					flags &= ~ FLAG_ESCAPED;
 
 					switch (b) {
 						case 'b':  STRING_ADD('\b');  break;
@@ -369,14 +369,14 @@ json_value_t * json_parse_ex(
 						  break;
 
 						default:
-							STRING_ADD (b);
+							STRING_ADD(b);
 					};
 
 					continue;
 				}
 
 				if (b == '\\') {
-					flags |= flag_escaped;
+					flags |= FLAG_ESCAPED;
 					continue;
 				}
 
@@ -384,13 +384,13 @@ json_value_t * json_parse_ex(
 					if (!state.first_pass)
 						string [string_length] = 0;
 
-					flags &= ~ flag_string;
+					flags &= ~ FLAG_STRING;
 					string = 0;
 
 					switch (top->type) {
 						case JSON_STRING:
 							top->u.string.length = string_length;
-							flags |= flag_next;
+							flags |= FLAG_NEXT;
 							break;
 
 						case JSON_OBJECT:
@@ -406,7 +406,7 @@ json_value_t * json_parse_ex(
 								(*(json_char **) &top->_reserved.p.pobject_mem) += string_length + 1;
 							}
 
-							flags |= flag_seek_value | flag_need_colon;
+							flags |= FLAG_SEEK_VALUE | FLAG_NEED_COLON;
 							continue;
 
 						default:
@@ -419,31 +419,31 @@ json_value_t * json_parse_ex(
 			}
 
 			if (state.settings.setting_flags & JSON_ENABLE_COMMENTS) {
-				if (flags & (flag_line_comment | flag_block_comment)) {
-					if (flags & flag_line_comment) {
+				if (flags & (FLAG_LINE_COMMENT | FLAG_BLOCK_COMMENT)) {
+					if (flags & FLAG_LINE_COMMENT) {
 						if (b == '\r' || b == '\n' || !b) {
-							flags &= ~ flag_line_comment;
+							flags &= ~ FLAG_LINE_COMMENT;
 							--state.ptr;  /* so null can be reproc'd */
 						}
 
 						continue;
 					}
 
-					if (flags & flag_block_comment) {
+					if (flags & FLAG_BLOCK_COMMENT) {
 						if (!b) {
 							sprintf(error, "%d:%d: Unexpected EOF in block comment", LINE_AND_COL);
 							goto e_failed;
 						}
 
 						if (b == '*' && state.ptr < (end - 1) && state.ptr [1] == '/') {
-							flags &= ~ flag_block_comment;
+							flags &= ~ FLAG_BLOCK_COMMENT;
 							++state.ptr;  /* skip closing sequence */
 						}
 
 						continue;
 					}
 				} else if (b == '/') {
-					if (! (flags & (flag_seek_value | flag_done)) && top->type != JSON_OBJECT) {
+					if (! (flags & (FLAG_SEEK_VALUE | FLAG_DONE)) && top->type != JSON_OBJECT) {
 						sprintf(error, "%d:%d: Comment not allowed here", LINE_AND_COL);
 						goto e_failed;
 					}
@@ -455,11 +455,11 @@ json_value_t * json_parse_ex(
 
 					switch (b = *state.ptr) {
 						case '/':
-							flags |= flag_line_comment;
+							flags |= FLAG_LINE_COMMENT;
 							continue;
 
 						case '*':
-							flags |= flag_block_comment;
+							flags |= FLAG_BLOCK_COMMENT;
 							continue;
 
 						default:
@@ -469,7 +469,7 @@ json_value_t * json_parse_ex(
 				}
 			}
 
-			if (flags & flag_done) {
+			if (flags & FLAG_DONE) {
 				if (!b)
 					break;
 				if (state.settings.setting_flags & JSON_ENABLE_SEQUENTIAL_OBJECTS) {
@@ -487,14 +487,14 @@ json_value_t * json_parse_ex(
 				};
 			}
 
-			if (flags & flag_seek_value) {
+			if (flags & FLAG_SEEK_VALUE) {
 				switch (b) {
 					WHITESPACE:
 						continue;
 
 					case ']':
 						if (top && top->type == JSON_ARRAY) {
-							flags = (flags & ~ (flag_need_comma | flag_seek_value)) | flag_next;
+							flags = (flags & ~ (FLAG_NEED_COMMA | FLAG_SEEK_VALUE)) | FLAG_NEXT;
 						} else {
 							sprintf (error, "%d:%d: Unexpected ]", LINE_AND_COL);
 							goto e_failed;
@@ -503,9 +503,9 @@ json_value_t * json_parse_ex(
 						break;
 
 					default:
-						if (flags & flag_need_comma) {
+						if (flags & FLAG_NEED_COMMA) {
 							if (b == ',') {
-								flags &= ~ flag_need_comma;
+								flags &= ~ FLAG_NEED_COMMA;
 								continue;
 							} else {
 								sprintf(error, "%d:%d: Expected , before %c", state.cur_line, state.cur_col, b);
@@ -513,9 +513,9 @@ json_value_t * json_parse_ex(
 							}
 						}
 
-						if (flags & flag_need_colon) {
+						if (flags & FLAG_NEED_COLON) {
 							if (b == ':') {
-								flags &= ~ flag_need_colon;
+								flags &= ~ FLAG_NEED_COLON;
 								continue;
 							} else {
 								sprintf(error, "%d:%d: Expected : before %c", state.cur_line, state.cur_col, b);
@@ -523,7 +523,7 @@ json_value_t * json_parse_ex(
 							}
 						}
 
-						flags &= ~ flag_seek_value;
+						flags &= ~ FLAG_SEEK_VALUE;
 
 						switch (b) {
 							case '{':
@@ -534,13 +534,13 @@ json_value_t * json_parse_ex(
 							case '[':
 								if (!new_value(&state, &top, &root, &alloc, JSON_ARRAY))
 									goto e_alloc_failure;
-								flags |= flag_seek_value;
+								flags |= FLAG_SEEK_VALUE;
 								continue;
 
 							case '"':
 								if (!new_value(&state, &top, &root, &alloc, JSON_STRING))
 									goto e_alloc_failure;
-								flags |= flag_string;
+								flags |= FLAG_STRING;
 								string = top->u.string.ptr;
 								string_length = 0;
 								continue;
@@ -558,7 +558,7 @@ json_value_t * json_parse_ex(
 								// xxx
 								top->u.boolean.nval = 1;
 
-								flags |= flag_next;
+								flags |= FLAG_NEXT;
 								break;
 
 							case 'f':
@@ -573,7 +573,7 @@ json_value_t * json_parse_ex(
 								if (!new_value(&state, &top, &root, &alloc, JSON_BOOLEAN))
 									goto e_alloc_failure;
 
-								flags |= flag_next;
+								flags |= FLAG_NEXT;
 								break;
 
 							case 'n':
@@ -586,12 +586,12 @@ json_value_t * json_parse_ex(
 								if (!new_value(&state, &top, &root, &alloc, JSON_NULL))
 									goto e_alloc_failure;
 
-								flags |= flag_next;
+								flags |= FLAG_NEXT;
 								break;
 
 							default:
 								if (isdigit (b) || b == '-') {
-									// xxx end
+									// xxx start
 									if (!new_value(&state, &top, &root, &alloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
@@ -605,23 +605,23 @@ json_value_t * json_parse_ex(
 											b = *state.ptr;
 										}
 
-										flags |= flag_next | flag_reproc;
+										flags |= FLAG_NEXT | FLAG_REPROC;
 										break;
 									}
 
-									flags &= ~ (flag_num_negative | flag_num_e |
-													 flag_num_e_got_sign | flag_num_e_negative | flag_num_zero);
+									flags &= ~ (FLAG_NUM_NEGATIVE | FLAG_NUM_E |
+													 FLAG_NUM_E_got_sign | FLAG_NUM_E_negative | FLAG_NUM_ZERO);
 
 									num_digits = 0;
 									num_fraction = 0;
 									num_e = 0;
 
 									if (b != '-') {
-										flags |= flag_reproc;
+										flags |= FLAG_REPROC;
 										break;
 									}
 
-									flags |= flag_num_negative;
+									flags |= FLAG_NUM_NEGATIVE;
 									continue;
 								} else {
 									sprintf(error, "%d:%d: Unexpected `%c` when seeking value", LINE_AND_COL, b);
@@ -638,12 +638,12 @@ json_value_t * json_parse_ex(
 							continue;
 
 						case '"':
-							if (flags & flag_need_comma) {
+							if (flags & FLAG_NEED_COMMA) {
 								sprintf(error, "%d:%d: Expected , before \"", LINE_AND_COL);
 								goto e_failed;
 							}
 
-							flags |= flag_string;
+							flags |= FLAG_STRING;
 
 							string = (json_char *) top->_reserved.p.pobject_mem;
 							string_length = 0;
@@ -651,12 +651,12 @@ json_value_t * json_parse_ex(
 							break;
 
 						case '}':
-							flags = (flags & ~ flag_need_comma) | flag_next;
+							flags = (flags & ~ FLAG_NEED_COMMA) | FLAG_NEXT;
 							break;
 
 						case ',':
-							if (flags & flag_need_comma) {
-								flags &= ~ flag_need_comma;
+							if (flags & FLAG_NEED_COMMA) {
+								flags &= ~ FLAG_NEED_COMMA;
 								break;
 							}
 
@@ -672,17 +672,17 @@ json_value_t * json_parse_ex(
 					if (isdigit(b)) {
 						++num_digits;
 
-						if (top->type == JSON_INTEGER || flags & flag_num_e) {
-							if (! (flags & flag_num_e)) {
-								if (flags & flag_num_zero) {
+						if (top->type == JSON_INTEGER || flags & FLAG_NUM_E) {
+							if (! (flags & FLAG_NUM_E)) {
+								if (flags & FLAG_NUM_ZERO) {
 									sprintf(error, "%d:%d: Unexpected `0` before `%c`", LINE_AND_COL, b);
 									goto e_failed;
 								}
 
 								if (num_digits == 1 && b == '0')
-									flags |= flag_num_zero;
+									flags |= FLAG_NUM_ZERO;
 							} else {
-								flags |= flag_num_e_got_sign;
+								flags |= FLAG_NUM_E_got_sign;
 								num_e = (num_e * 10) + (b - '0');
 								continue;
 							}
@@ -697,11 +697,11 @@ json_value_t * json_parse_ex(
 					}
 
 					if (b == '+' || b == '-') {
-						if ( (flags & flag_num_e) && !(flags & flag_num_e_got_sign)) {
-							flags |= flag_num_e_got_sign;
+						if ( (flags & FLAG_NUM_E) && !(flags & FLAG_NUM_E_got_sign)) {
+							flags |= FLAG_NUM_E_got_sign;
 
 							if (b == '-')
-								flags |= flag_num_e_negative;
+								flags |= FLAG_NUM_E_negative;
 
 							continue;
 						}
@@ -715,12 +715,11 @@ json_value_t * json_parse_ex(
 						// xxx
 						top->u.dbl.nval = (double) top->u.integer.nval;
 
-						// xxx start??
 						num_digits = 0;
 						continue;
 					}
 
-					if (! (flags & flag_num_e)) {
+					if (! (flags & FLAG_NUM_E)) {
 						if (top->type == JSON_DOUBLE) {
 							if (!num_digits) {
 								sprintf(error, "%d:%d: Expected digit after `.`", LINE_AND_COL);
@@ -731,16 +730,15 @@ json_value_t * json_parse_ex(
 						}
 
 						if (b == 'e' || b == 'E') {
-							flags |= flag_num_e;
+							flags |= FLAG_NUM_E;
 
 							if (top->type == JSON_INTEGER) {
 								top->type = JSON_DOUBLE;
 								top->u.dbl.nval = (double) top->u.integer.nval;
 							}
 
-							// xxx start??
 							num_digits = 0;
-							flags &= ~ flag_num_zero;
+							flags &= ~ FLAG_NUM_ZERO;
 
 							continue;
 						}
@@ -750,10 +748,10 @@ json_value_t * json_parse_ex(
 							goto e_failed;
 						}
 
-						top->u.dbl.nval *= pow(10.0, (double) (flags & flag_num_e_negative ? - num_e : num_e));
+						top->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_negative ? - num_e : num_e));
 					}
 
-					if (flags & flag_num_negative) {
+					if (flags & FLAG_NUM_NEGATIVE) {
 						// xxx
 						if (top->type == JSON_INTEGER)
 							top->u.integer.nval = - top->u.integer.nval;
@@ -761,7 +759,7 @@ json_value_t * json_parse_ex(
 							top->u.dbl.nval = - top->u.dbl.nval;
 					}
 
-					flags |= flag_next | flag_reproc;
+					flags |= FLAG_NEXT | FLAG_REPROC;
 					break;
 
 				default:
@@ -769,23 +767,23 @@ json_value_t * json_parse_ex(
 				};
 			}
 
-			if (flags & flag_reproc) {
-				flags &= ~ flag_reproc;
+			if (flags & FLAG_REPROC) {
+				flags &= ~ FLAG_REPROC;
 				--state.ptr;
 			}
 
-			if (flags & flag_next) {
-				flags = (flags & ~ flag_next) | flag_need_comma;
+			if (flags & FLAG_NEXT) {
+				flags = (flags & ~ FLAG_NEXT) | FLAG_NEED_COMMA;
 
 				if (!top->parent) {
 					/* root value done */
 
-					flags |= flag_done;
+					flags |= FLAG_DONE;
 					continue;
 				}
 
 				if (top->parent->type == JSON_ARRAY)
-					flags |= flag_seek_value;
+					flags |= FLAG_SEEK_VALUE;
 
 				if (!state.first_pass) {
 					json_value_t * parent = top->parent;
