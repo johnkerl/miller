@@ -45,32 +45,6 @@
 #include <stdlib.h>
 
 // ----------------------------------------------------------------
-// This enables us to handle input of the form
-//
-//   { "a" : 1 }
-//   { "b" : 2 }
-//   { "c" : 3 }
-//
-// in addition to
-//
-// [
-//   { "a" : 1 }
-//   { "b" : 2 }
-//   { "c" : 3 }
-// ]
-//
-// This is in line with what jq can handle. In this case, json_parse will return
-// once for each top-level item and will give us back a pointer to the start of
-// the rest of the input stream, so we can call json_parse on the rest until it is
-// all exhausted.
-
-#define JSON_ENABLE_SEQUENTIAL_OBJECTS 0x02
-
-typedef struct {
-	int setting_flags;
-	unsigned long max_memory;
-} json_settings_t;
-
 typedef enum {
 	JSON_NONE,
 	JSON_OBJECT,
@@ -148,25 +122,33 @@ typedef struct _json_value_t {
 } json_value_t;
 
 #define JSON_ERROR_MAX 128
+
+// The end-of-item returned pointer enables us to handle input of the form
+//
+//   { "a" : 1 }
+//   { "b" : 2 }
+//   { "c" : 3 }
+//
+// in addition to
+//
+// [
+//   { "a" : 1 }
+//   { "b" : 2 }
+//   { "c" : 3 }
+// ]
+//
+// This is in line with what jq can handle. In this case, json_parse will return
+// once for each top-level item and will give us back a pointer to the start of
+// the rest of the input stream, so we can call json_parse on the rest until it is
+// all exhausted.
+
 json_value_t * json_parse(
 	const json_char * json,
 	size_t length,
-	char*  error_buf);
-
-json_value_t * json_parse_ex(
-	const json_char * json,
-	size_t length,
 	char * error_buf,
-	json_char** pprename_me,
-	json_settings_t * settings);
+	json_char** ppend_of_item);
 
 void json_value_free(json_value_t *);
-
-// Not usually necessary, unless you used a custom mem_alloc and now want to
-// use a custom mem_free.
-void json_value_free_ex(
-	json_settings_t * settings,
-	json_value_t *);
 
 char* json_describe_type(json_type_t type);
 

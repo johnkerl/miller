@@ -59,7 +59,6 @@ typedef struct _json_state_{
 	unsigned int uint_max;
 	unsigned long ulong_max;
 
-	json_settings_t settings;
 	int first_pass;
 
 	const json_char * ptr;
@@ -77,12 +76,6 @@ static void * default_alloc(size_t size, int zero) {
 static void * json_alloc(json_parser_state_t * pstate, unsigned long size, int zero) {
 	if ((pstate->ulong_max - pstate->used_memory) < size)
 		return 0;
-
-	if (pstate->settings.max_memory
-			&& (pstate->used_memory += size) > pstate->settings.max_memory)
-	{
-		return 0;
-	}
 
 	return default_alloc(size, zero);
 }
@@ -201,19 +194,11 @@ static const long
 	FLAG_NUM_E_NEGATIVE   = 1 << 12;
 
 // ================================================================
-json_value_t * json_parse(const json_char * json, size_t length, char* error_buf) {
-	json_settings_t settings = { 0 };
-	json_char* prename_me = 0;
-	return json_parse_ex(json, length, error_buf, &prename_me, &settings);
-}
-
-// ----------------------------------------------------------------
-json_value_t * json_parse_ex(
+json_value_t * json_parse(
 	const json_char * json,
 	size_t length,
 	char * error_buf,
-	json_char** pprename_me,
-	json_settings_t* settings)
+	json_char** ppend_of_item)
 {
 	json_char error [JSON_ERROR_MAX];
 	const json_char * end;
@@ -222,7 +207,7 @@ json_value_t * json_parse_ex(
 	long flags;
 	long num_digits = 0, num_e = 0;
 	json_int_t num_fraction = 0;
-	*pprename_me = NULL; // xxx rename
+	*ppend_of_item = NULL;
 
 	// Skip UTF-8 BOM
 	if (length >= 3 && ((unsigned char) json [0]) == 0xEF
@@ -235,8 +220,6 @@ json_value_t * json_parse_ex(
 
 	error[0] = '\0';
 	end = (json + length);
-
-	memcpy(&state.settings, settings, sizeof(json_settings_t));
 
 	memset(&state.uint_max, 0xFF, sizeof(state.uint_max));
 	memset(&state.ulong_max, 0xFF, sizeof(state.ulong_max));
@@ -404,10 +387,9 @@ json_value_t * json_parse_ex(
 			if (flags & FLAG_DONE) {
 				if (!b)
 					break;
-				if (state.settings.setting_flags & JSON_ENABLE_SEQUENTIAL_OBJECTS) {
-					*pprename_me = pb + 1;
-					break;
-				}
+
+				*ppend_of_item = pb + 1;
+				break;
 
 				switch (b) {
 					WHITESPACE:
@@ -782,13 +764,13 @@ e_failed:
 	}
 
 	if (!state.first_pass)
-		json_value_free_ex(&state.settings, proot);
+		json_value_free(proot);
 
 	return 0;
 }
 
 // ----------------------------------------------------------------
-void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
+void json_value_free(json_value_t * pvalue) {
 	json_value_t * cur_value;
 
 	if (!pvalue)
@@ -830,12 +812,6 @@ void json_value_free_ex(json_settings_t * settings, json_value_t * pvalue) {
 		pvalue = pvalue->parent;
 		free(cur_value);
 	}
-}
-
-// ----------------------------------------------------------------
-void json_value_free(json_value_t * pvalue) {
-	json_settings_t settings = { 0 };
-	json_value_free_ex(&settings, pvalue);
 }
 
 // ----------------------------------------------------------------

@@ -52,6 +52,7 @@ TOP-OF-LIST DETAILS
   - cmt mlhmmv @ writer ...
   - unbackslash @ jflatsep
   - use track-source feature
+  - in-mem UTs
 
 ? env vars??
 

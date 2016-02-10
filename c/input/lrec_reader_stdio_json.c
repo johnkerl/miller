@@ -83,10 +83,6 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	json_char* json_input = (json_char*)phandle->sof;
 	json_value_t* parsed_top_level_json;
 	json_char error_buf[JSON_ERROR_MAX];
-	json_settings_t settings = {
-		.setting_flags = JSON_ENABLE_SEQUENTIAL_OBJECTS,
-		.max_memory = 0
-	};
 
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
@@ -129,7 +125,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	int length = phandle->eof - phandle->sof;
 
 	while (TRUE) {
-		parsed_top_level_json = json_parse_ex(item_start, length, error_buf, &item_start, &settings);
+		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 
 		if (parsed_top_level_json == NULL) {
 			fprintf(stderr, "Unable to parse JSON data: %s\n", error_buf);
