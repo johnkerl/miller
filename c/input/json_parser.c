@@ -543,7 +543,6 @@ json_value_t * json_parse(
 								boolean_sval_add(&state, ptop, 'u');
 								boolean_sval_add(&state, ptop, 'e');
 								boolean_sval_end(&state, ptop);
-								ptop->u.boolean.nval = 1;
 
 								flags |= FLAG_NEXT;
 								break;
@@ -565,7 +564,6 @@ json_value_t * json_parse(
 								boolean_sval_add(&state, ptop, 's');
 								boolean_sval_add(&state, ptop, 'e');
 								boolean_sval_end(&state, ptop);
-								ptop->u.boolean.nval = 0;
 
 								flags |= FLAG_NEXT;
 								break;
@@ -706,7 +704,6 @@ json_value_t * json_parse(
 							}
 
 							integer_sval_add(&state, ptop, b);
-							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0');
 							continue;
 						}
 
@@ -731,7 +728,6 @@ json_value_t * json_parse(
 						}
 
 						ptop->type = JSON_DOUBLE;
-						ptop->u.dbl.nval = (double) ptop->u.integer.nval;
 						ptop->u.dbl.length = ptop->u.integer.length;
 						ptop->u.dbl.sval = ptop->u.integer.sval;
 						dbl_sval_add(&state, ptop, b);
@@ -746,8 +742,6 @@ json_value_t * json_parse(
 								sprintf(error, "%d:%d: Expected digit after `.`", LINE_AND_COL);
 								goto e_failed;
 							}
-
-							ptop->u.dbl.nval += ((double) num_fraction) / (pow(10.0, (double) num_digits));
 						}
 
 						if (b == 'e' || b == 'E') {
@@ -755,7 +749,6 @@ json_value_t * json_parse(
 
 							if (ptop->type == JSON_INTEGER) {
 								ptop->type = JSON_DOUBLE;
-								ptop->u.dbl.nval = (double) ptop->u.integer.nval;
 								ptop->u.dbl.length = ptop->u.integer.length;
 								ptop->u.dbl.sval = ptop->u.integer.sval;
 								dbl_sval_add(&state, ptop, b);
@@ -771,15 +764,6 @@ json_value_t * json_parse(
 							sprintf(error, "%d:%d: Expected digit after `e`", LINE_AND_COL);
 							goto e_failed;
 						}
-
-						ptop->u.dbl.nval *= pow(10.0, (double) (flags & FLAG_NUM_E_NEGATIVE ? - num_e : num_e));
-					}
-
-					if (flags & FLAG_NUM_NEGATIVE) {
-						if (ptop->type == JSON_INTEGER)
-							ptop->u.integer.nval = - ptop->u.integer.nval;
-						else
-							ptop->u.dbl.nval = - ptop->u.dbl.nval;
 					}
 
 					flags |= FLAG_NEXT | FLAG_REPROC;
@@ -981,12 +965,10 @@ static void json_print_non_recursive_aux(json_value_t* pvalue, int depth) {
 		printf(",length=%d", pvalue->u.object.length);
 		break;
     case JSON_INTEGER:
-		printf(",nval=%lld", (long long)pvalue->u.integer.nval);
 		printf(",length=%d", pvalue->u.integer.length);
 		printf(",sval=\"%s\"", pvalue->u.integer.sval);
 		break;
     case JSON_DOUBLE:
-		printf(",nval=%le", pvalue->u.dbl.nval);
 		printf(",length=%d", pvalue->u.dbl.length);
 		printf(",sval=\"%s\"", pvalue->u.dbl.sval);
 		break;
@@ -995,7 +977,6 @@ static void json_print_non_recursive_aux(json_value_t* pvalue, int depth) {
 		printf(",ptr=\"%s\"", pvalue->u.string.ptr);
 		break;
     case JSON_BOOLEAN:
-		printf(",nval=%d", pvalue->u.boolean.nval);
 		printf(",length=%d", pvalue->u.boolean.length);
 		printf(",sval=\"%s\"", pvalue->u.boolean.sval);
 		break;

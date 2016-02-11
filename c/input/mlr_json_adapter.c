@@ -79,15 +79,12 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			break;
 
 		case JSON_BOOLEAN:
-			//lrec_put(prec, key, pjson_value->u.boolean.nval ? "true" : "false", NO_FREE);
 			lrec_put(prec, key, pjson_value->u.boolean.sval, NO_FREE);
 			break;
 		case JSON_INTEGER:
-			//lrec_put(prec, key, mlr_alloc_string_from_ll(pjson_value->u.integer.nval), FREE_ENTRY_VALUE);
 			lrec_put(prec, key, pjson_value->u.integer.sval, NO_FREE);
 			break;
 		case JSON_DOUBLE:
-			//lrec_put(prec, key, mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE);
 			lrec_put(prec, key, pjson_value->u.dbl.sval, NO_FREE);
 			break;
 		default:
@@ -112,9 +109,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 		char* json_key = (char*)pobject_entry->name;
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
-		char* lrec_value = NULL;
 		char* prefix = NULL;
-		char free_flags = NO_FREE;
 
 		switch (pjson_value->type) {
 		case JSON_NONE:
@@ -124,12 +119,10 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			lrec_put(prec, lrec_key, "", NO_FREE);
 			break;
 		case JSON_STRING:
-			lrec_value = pjson_value->u.string.ptr;
-			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
+			lrec_put(prec, lrec_key, pjson_value->u.string.ptr, NO_FREE);
 			break;
 		case JSON_BOOLEAN:
-			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
-			lrec_put(prec, lrec_key, lrec_value, NO_FREE);
+			lrec_put(prec, lrec_key, pjson_value->u.boolean.sval, NO_FREE);
 			break;
 		case JSON_OBJECT:
 			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
@@ -142,12 +135,10 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 				MLR_GLOBALS.argv0);
 			break;
 		case JSON_INTEGER:
-			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer.nval);
-			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			lrec_put(prec, lrec_key, pjson_value->u.integer.sval, NO_FREE);
 			break;
 		case JSON_DOUBLE:
-			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt);
-			lrec_put(prec, lrec_key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			lrec_put(prec, lrec_key, pjson_value->u.dbl.sval, NO_FREE);
 			break;
 		default:
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",

@@ -85,19 +85,16 @@ typedef struct _json_value_t {
 		// For Miller we want floating-point numbers to be preserved as-is, with however many decimal places
 		// the user's input does or does not have, until/unless we do any math which modifies values.
 		struct {
-			int nval;
 			unsigned int length;
 			char* sval;
 		} boolean;
 
 		struct {
-			json_int_t nval;
 			unsigned int length;
 			char* sval;
 		} integer;
 
 		struct {
-			double nval;
 			unsigned int length;
 			char* sval;
 		} dbl;
