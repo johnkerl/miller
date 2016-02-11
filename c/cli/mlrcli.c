@@ -759,7 +759,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->quote_json_values_always = TRUE;
 		} else if (streq(argv[argi], "--jflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->json_flatten_separator = argv[argi+1];
+			popts->json_flatten_separator = sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";

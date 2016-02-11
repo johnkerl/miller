@@ -42,17 +42,14 @@ TOP-OF-LIST SUMMARY
 TOP-OF-LIST DETAILS
 
 * JSON I/O:
-  ! string-preservation for doubles !
-  ! n.b. colon-inside! not just for I/O.
-  ! doc this : wishlist: streamable version with fgetc rather than pointer-math.
-    > no tail -f!
-  ! UT !
-    > mlr --json reshape -i x,y -o item,value rec.json
-    > JSON/join UT. both/left/right json cases.
-  - cmt mlhmmv @ writer ...
-  - unbackslash @ jflatsep
-  - use track-source feature
-  - in-mem UTs
+  - code: leading 0/-0 as needed. & cmt why.
+  - code: use track-source feature
+  - UT: mlr --json reshape -i x,y -o item,value rec.json
+  - UT: JSON/join. both/left/right json cases.
+  - UT: more in-mem
+  - cmt: mlhmmv @ writer ...
+  - doc: n.b. colon-inside! not just for I/O.
+  - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
 ? env vars??
 
