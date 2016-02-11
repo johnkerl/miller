@@ -572,19 +572,32 @@ json_value_t * json_parse(
 
 							default:
 								if (isdigit (b) || b == '-') {
-									// Start of new number // xxx focus point
+									// Start of new number
 									if (!new_value(&state, &ptop, &proot, &palloc, JSON_INTEGER))
 										goto e_alloc_failure;
 
-									// xxx pick up from here
 									if (!state.first_pass) {
 										while (isdigit(b) || b == '+' || b == '-' || b == 'e' || b == 'E' || b == '.') {
+											integer_sval_add(&state, ptop, b);
 											if ((++state.ptr) == end) {
+
+												switch (ptop->type) {
+												case JSON_BOOLEAN:
+													boolean_sval_end(&state, ptop);
+													break;
+												case JSON_INTEGER:
+													integer_sval_end(&state, ptop);
+													break;
+												case JSON_DOUBLE:
+													dbl_sval_end(&state, ptop);
+													break;
+												default:
+													break;
+												}
+
 												b = 0;
 												break;
 											}
-											// xxx temp. needs json_value restructure w/ single sval&length.
-											integer_sval_add(&state, ptop, b);
 
 											b = *state.ptr;
 										}
@@ -672,7 +685,7 @@ json_value_t * json_parse(
 							}
 
 							integer_sval_add(&state, ptop, b);
-							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0'); // xxx focus point
+							ptop->u.integer.nval = (ptop->u.integer.nval * 10) + (b - '0');
 							continue;
 						}
 
@@ -748,23 +761,8 @@ json_value_t * json_parse(
 							ptop->u.dbl.nval = - ptop->u.dbl.nval;
 					}
 
-					switch (ptop->type) {
-					case JSON_BOOLEAN:
-						boolean_sval_end(&state, ptop);
-						break;
-					case JSON_INTEGER:
-						integer_sval_end(&state, ptop);
-						break;
-					case JSON_DOUBLE:
-						dbl_sval_end(&state, ptop);
-						break;
-					default:
-						break;
-					}
-
-					// xxx end
 					flags |= FLAG_NEXT | FLAG_REPROC;
-					break; // xxx focus point
+					break;
 
 				default:
 					break;
@@ -936,4 +934,80 @@ char* json_describe_type(json_type_t type) {
 	case JSON_NULL:    return "JSON_NULL";    break;
 	default:           return "???";          break;
 	}
+}
+
+// ----------------------------------------------------------------
+const char* leader = "  ";
+static void leader_print(int depth) {
+	for (int i = 0; i < depth; i++)
+		printf("%s", leader);
+}
+
+static void json_print_non_recursive_aux(json_value_t* pvalue, int depth) {
+	leader_print(depth);
+	if (pvalue == NULL) {
+		printf("pvalue=NULL\n");
+		return;
+	}
+	printf("type=%s", json_describe_type(pvalue->type));
+	switch(pvalue->type) {
+    case JSON_NONE:
+		break;
+    case JSON_OBJECT:
+		printf(",length=%d", pvalue->u.object.length);
+		break;
+    case JSON_ARRAY:
+		printf(",length=%d", pvalue->u.object.length);
+		break;
+    case JSON_INTEGER:
+		printf(",nval=%lld", pvalue->u.integer.nval);
+		printf(",length=%d", pvalue->u.integer.length);
+		printf(",sval=\"%s\"", pvalue->u.integer.sval);
+		break;
+    case JSON_DOUBLE:
+		printf(",nval=%le", pvalue->u.dbl.nval);
+		printf(",length=%d", pvalue->u.dbl.length);
+		printf(",sval=\"%s\"", pvalue->u.dbl.sval);
+		break;
+    case JSON_STRING:
+		printf(",length=%d", pvalue->u.string.length);
+		printf(",ptr=\"%s\"", pvalue->u.string.ptr);
+		break;
+    case JSON_BOOLEAN:
+		printf(",nval=%d", pvalue->u.boolean.nval);
+		printf(",length=%d", pvalue->u.boolean.length);
+		printf(",sval=\"%s\"", pvalue->u.boolean.sval);
+		break;
+    case JSON_NULL:
+		break;
+	}
+	printf("\n");
+}
+
+static void json_print_recursive_aux(json_value_t* pvalue, int depth) {
+	json_print_non_recursive_aux(pvalue, depth);
+	if (pvalue == NULL)
+		return;
+	if (pvalue->type == JSON_OBJECT) {
+		for (int i = 0; i < pvalue->u.object.length; i++) {
+			leader_print(depth+1);
+			printf("key=\"%s\"\n", pvalue->u.object.p.values[i].name);
+			json_print_recursive_aux(pvalue->u.object.p.values[i].pvalue, depth+1);
+		}
+	} else if (pvalue->type == JSON_ARRAY) {
+		for (int i = 0; i < pvalue->u.array.length; i++) {
+			leader_print(depth+1);
+			printf("index=%d\n", i);
+			json_print_recursive_aux(pvalue->u.array.values[i], depth+1);
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+void json_print_non_recursive(json_value_t* pvalue) {
+	json_print_non_recursive_aux(pvalue, 0);
+}
+
+void json_print_recursive(json_value_t* pvalue) {
+	json_print_recursive_aux(pvalue, 0);
 }

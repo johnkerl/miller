@@ -70,6 +70,18 @@ typedef struct _json_value_t {
 	json_type_t type;
 
 	union {
+		struct {
+			unsigned int length;
+			union {
+				json_object_entry_t * values;
+				char* mem;
+			} p;
+		} object;
+		struct {
+			unsigned int length;
+			struct _json_value_t ** values;
+		} array;
+
 		// For Miller we want floating-point numbers to be preserved as-is, with however many decimal places
 		// the user's input does or does not have, until/unless we do any math which modifies values.
 		struct {
@@ -77,11 +89,13 @@ typedef struct _json_value_t {
 			unsigned int length;
 			char* sval;
 		} boolean;
+
 		struct {
 			json_int_t nval;
 			unsigned int length;
 			char* sval;
 		} integer;
+
 		struct {
 			double nval;
 			unsigned int length;
@@ -92,19 +106,6 @@ typedef struct _json_value_t {
 			unsigned int length;
 			json_char * ptr; /* null-terminated */
 		} string;
-
-		struct {
-			unsigned int length;
-			union {
-				json_object_entry_t * values;
-				char* mem;
-			} p;
-		} object;
-
-		struct {
-			unsigned int length;
-			struct _json_value_t ** values;
-		} array;
 
 	} u;
 
@@ -155,5 +156,8 @@ json_value_t * json_parse_for_unit_test(
 void json_value_free(json_value_t *);
 
 char* json_describe_type(json_type_t type);
+
+void json_print_non_recursive(json_value_t* pvalue);
+void json_print_recursive(json_value_t* pvalue);
 
 #endif // JSON_PARSER_H
