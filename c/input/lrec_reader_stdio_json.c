@@ -128,7 +128,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 
 		if (parsed_top_level_json == NULL) {
-			fprintf(stderr, "Unable to parse JSON data: %s\n", error_buf);
+			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.argv0, error_buf);
 			exit(1);
 		}
 

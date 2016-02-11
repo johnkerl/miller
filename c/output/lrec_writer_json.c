@@ -55,6 +55,9 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 			printf("%s", pstate->before_records_at_start_of_stream);
 		else
 			printf("%s", pstate->between_records_after_start_of_stream);
+
+		// Use the mlhmmv printer since it naturally handles Miller-to-JSON key deconcatenation:
+		// e.g. 'a:x=1,a:y=2' maps to '{"a":{"x":1,"y":2}}'.
 		mlhmmv_t* pmap = mlhmmv_alloc();
 
 		char* sep = pstate->json_flatten_separator;

@@ -242,7 +242,6 @@ static inline void dbl_sval_end(json_parser_state_t* pstate, json_value_t* ptop)
 	}
 }
 
-
 #define LINE_AND_COL \
 	state.cur_line, state.cur_col
 
@@ -312,7 +311,8 @@ json_value_t * json_parse(
 
 			if (flags & FLAG_IN_STRING) {
 				if (!b) {
-					sprintf(error, "Unexpected EOF in string (at %d:%d)", LINE_AND_COL);
+					sprintf(error, "Unexpected EOF in string at line %d column %d.",
+						LINE_AND_COL);
 					goto e_failed;
 				}
 
@@ -336,7 +336,8 @@ json_value_t * json_parse(
 								(uc_b3 = hex_value (*++state.ptr)) == 0xFF ||
 								(uc_b4 = hex_value (*++state.ptr)) == 0xFF)
 						  {
-								sprintf(error, "Invalid character value `%c` (at %d:%d)", b, LINE_AND_COL);
+								sprintf(error, "Invalid character value `%c` at line %d column %d.",
+									b, LINE_AND_COL);
 								goto e_failed;
 						  }
 
@@ -353,8 +354,9 @@ json_value_t * json_parse(
 									 (uc_b3 = hex_value (*++state.ptr)) == 0xFF ||
 									 (uc_b4 = hex_value (*++state.ptr)) == 0xFF)
 								{
-									 sprintf(error, "Invalid character value `%c` (at %d:%d)", b, LINE_AND_COL);
-									 goto e_failed;
+									sprintf(error, "Invalid character value `%c` at line %d column %d.",
+										b, LINE_AND_COL);
+									goto e_failed;
 								}
 
 								uc_b1 = (uc_b1 << 4) | uc_b2;
@@ -464,7 +466,7 @@ json_value_t * json_parse(
 						continue;
 
 					default:
-						sprintf(error, "%d:%d: Trailing text: `%c`", state.cur_line, state.cur_col, b);
+						sprintf(error, "Line %d column %d: Trailing text: `%c`", state.cur_line, state.cur_col, b);
 						goto e_failed;
 				}
 			}
@@ -478,7 +480,8 @@ json_value_t * json_parse(
 						if (ptop && ptop->type == JSON_ARRAY) {
 							flags = (flags & ~ (FLAG_NEED_COMMA | FLAG_SEEK_VALUE)) | FLAG_NEXT;
 						} else {
-							sprintf (error, "%d:%d: Unexpected ]", LINE_AND_COL);
+							sprintf (error, "Line %d column %d: Unexpected ]",
+								LINE_AND_COL);
 							goto e_failed;
 						}
 
@@ -490,7 +493,8 @@ json_value_t * json_parse(
 								flags &= ~ FLAG_NEED_COMMA;
 								continue;
 							} else {
-								sprintf(error, "%d:%d: Expected , before %c", state.cur_line, state.cur_col, b);
+								sprintf(error, "Line %d column %d: Expected , before %c",
+									state.cur_line, state.cur_col, b);
 								goto e_failed;
 							}
 						}
@@ -500,7 +504,8 @@ json_value_t * json_parse(
 								flags &= ~ FLAG_NEED_COLON;
 								continue;
 							} else {
-								sprintf(error, "%d:%d: Expected : before %c", state.cur_line, state.cur_col, b);
+								sprintf(error, "Line %d column %d: Expected : before %c",
+									state.cur_line, state.cur_col, b);
 								goto e_failed;
 							}
 						}
@@ -639,7 +644,8 @@ json_value_t * json_parse(
 									flags |= FLAG_NUM_NEGATIVE;
 									continue;
 								} else {
-									sprintf(error, "%d:%d: Unexpected `%c` when seeking value", LINE_AND_COL, b);
+									sprintf(error, "Line %d column %d: Unexpected `%c` when seeking value",
+										LINE_AND_COL, b);
 									goto e_failed;
 								}
 						}
@@ -654,7 +660,7 @@ json_value_t * json_parse(
 
 						case '"':
 							if (flags & FLAG_NEED_COMMA) {
-								sprintf(error, "%d:%d: Expected , before \"", LINE_AND_COL);
+								sprintf(error, "Line %d column %d: Expected , before \"", LINE_AND_COL);
 								goto e_failed;
 							}
 
@@ -676,7 +682,7 @@ json_value_t * json_parse(
 							}
 
 						default:
-							sprintf(error, "%d:%d: Unexpected `%c` in object", LINE_AND_COL, b);
+							sprintf(error, "Line %d column %d: Unexpected `%c` in object", LINE_AND_COL, b);
 							goto e_failed;
 					}
 
@@ -690,7 +696,7 @@ json_value_t * json_parse(
 						if (ptop->type == JSON_INTEGER || flags & FLAG_NUM_E) {
 							if (! (flags & FLAG_NUM_E)) {
 								if (flags & FLAG_NUM_ZERO) {
-									sprintf(error, "%d:%d: Unexpected `0` before `%c`", LINE_AND_COL, b);
+									sprintf(error, "Line %d column %d: Unexpected `0` before `%c`", LINE_AND_COL, b);
 									goto e_failed;
 								}
 
@@ -722,7 +728,7 @@ json_value_t * json_parse(
 						}
 					} else if (b == '.' && ptop->type == JSON_INTEGER) {
 						if (!num_digits) {
-							sprintf (error, "%d:%d: Expected digit before `.`", LINE_AND_COL);
+							sprintf (error, "Line %d column %d: Expected digit before `.`", LINE_AND_COL);
 							goto e_failed;
 						}
 
@@ -738,7 +744,7 @@ json_value_t * json_parse(
 					if (! (flags & FLAG_NUM_E)) {
 						if (ptop->type == JSON_DOUBLE) {
 							if (!num_digits) {
-								sprintf(error, "%d:%d: Expected digit after `.`", LINE_AND_COL);
+								sprintf(error, "Line %d column %d: Expected digit after `.`", LINE_AND_COL);
 								goto e_failed;
 							}
 						}
@@ -760,7 +766,7 @@ json_value_t * json_parse(
 						}
 					} else {
 						if (!num_digits) {
-							sprintf(error, "%d:%d: Expected digit after `e`", LINE_AND_COL);
+							sprintf(error, "Line %d column %d: Expected digit after `e`", LINE_AND_COL);
 							goto e_failed;
 						}
 					}
@@ -824,7 +830,7 @@ json_value_t * json_parse(
 
 e_unknown_value:
 
-	sprintf(error, "%d:%d: Unknown value", LINE_AND_COL);
+	sprintf(error, "Line %d column %d: Unknown value", LINE_AND_COL);
 	goto e_failed;
 
 e_alloc_failure:
@@ -834,7 +840,7 @@ e_alloc_failure:
 
 e_overflow:
 
-	sprintf(error, "%d:%d: Too long (caught overflow)", LINE_AND_COL);
+	sprintf(error, "Line %d column %d: Too long (caught overflow)", LINE_AND_COL);
 	goto e_failed;
 
 e_failed:

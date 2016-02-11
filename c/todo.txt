@@ -43,12 +43,10 @@ TOP-OF-LIST SUMMARY
 TOP-OF-LIST DETAILS
 
 * JSON I/O:
-  - code: leading 0/-0 as needed. & cmt why.
   - code: use track-source feature
   - UT: mlr --json reshape -i x,y -o item,value rec.json
   - UT: JSON/join. both/left/right json cases.
   - UT: more in-mem
-  - cmt: mlhmmv @ writer ...
   - doc: n.b. colon-inside! not just for I/O.
   - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
