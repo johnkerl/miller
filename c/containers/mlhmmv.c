@@ -353,6 +353,8 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 //   }
 // }
 
+// xxx rename to have 'json' in the method name
+
 void mlhmmv_print_stacked(mlhmmv_t* pmap, int quote_values_always) {
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always);
 }
@@ -378,6 +380,7 @@ static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 				printf("\"%s\"", level_value_string);
 			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
 				double unused;
+				// xxx insert leading '0' if starts with '.'; insert leading '-0' if starts with '-.'.
 				if (mlr_try_float_from_string(level_value_string, &unused))
 					printf("%s", level_value_string);
 				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))

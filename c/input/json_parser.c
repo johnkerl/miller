@@ -203,7 +203,6 @@ static int new_value(
 // 1. Modify the data structure so sval & length are shared between boolean, integer, & double.
 // 2. Just append a byte-range (start to end pointer) rather than making repeated per-character calls
 //    to these functions.
-// 3. get rid of all the pow10 stuff, and the nvals entirely.
 static inline void boolean_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
 	if (!pstate->first_pass) {
 		ptop->u.boolean.sval[ptop->u.boolean.length++] = b;
