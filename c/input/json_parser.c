@@ -207,16 +207,22 @@ static int new_value(
 static inline void boolean_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
 	if (!pstate->first_pass) {
 		ptop->u.boolean.sval[ptop->u.boolean.length++] = b;
+	} else {
+		ptop->u.boolean.length++;
 	}
 }
 static inline void integer_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
 	if (!pstate->first_pass) {
 		ptop->u.integer.sval[ptop->u.integer.length++] = b;
+	} else {
+		ptop->u.integer.length++;
 	}
 }
 static inline void dbl_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
 	if (!pstate->first_pass) {
 		ptop->u.dbl.sval[ptop->u.dbl.length++] = b;
+	} else {
+		ptop->u.dbl.length++;
 	}
 }
 

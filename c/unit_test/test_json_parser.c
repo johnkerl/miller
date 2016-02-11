@@ -24,18 +24,26 @@ static char * test_numbers_only() {
 	json_value_t* pvalue = json_parse_for_unit_test(input, &end);
 	mu_assert_lf(pvalue != NULL);
 	mu_assert_lf(pvalue->type == JSON_INTEGER);
-	json_print_non_recursive(pvalue);
-	// xxx make a dump-node method: non-recursive version
-	// xxx make an argv-option :)
-
+	json_print_recursive(pvalue);
 	return 0;
 }
 
-// xxx rm file ...
+// ----------------------------------------------------------------
+static char * test_array() {
+	json_char* input = "[ 1238139939387114097,  1213418874328430463 ]";
+	json_char* end   = NULL;
+	json_value_t* pvalue = json_parse_for_unit_test(input, &end);
+	mu_assert_lf(pvalue != NULL);
+	mu_assert_lf(pvalue->type == JSON_ARRAY);
+	// xxx more
+	json_print_recursive(pvalue);
+	return 0;
+}
 
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_numbers_only);
+	mu_run_test(test_array);
 	return 0;
 }
 
