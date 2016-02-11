@@ -199,6 +199,11 @@ static int new_value(
 	do { if (!state.first_pass) string[string_length] = b;  ++string_length; } while (0);
 
 
+// xxx to do:
+// 1. Modify the data structure so sval & length are shared between boolean, integer, & double.
+// 2. Just append a byte-range (start to end pointer) rather than making repeated per-character calls
+//    to these functions.
+// 3. get rid of all the pow10 stuff, and the nvals entirely.
 static inline void boolean_sval_add(json_parser_state_t* pstate, json_value_t* ptop, char b) {
 	if (!pstate->first_pass) {
 		ptop->u.boolean.sval[ptop->u.boolean.length++] = b;
@@ -531,6 +536,7 @@ json_value_t * json_parse(
 								boolean_sval_add(&state, ptop, 'r');
 								boolean_sval_add(&state, ptop, 'u');
 								boolean_sval_add(&state, ptop, 'e');
+								boolean_sval_end(&state, ptop);
 								ptop->u.boolean.nval = 1;
 
 								flags |= FLAG_NEXT;
@@ -552,6 +558,7 @@ json_value_t * json_parse(
 								boolean_sval_add(&state, ptop, 'l');
 								boolean_sval_add(&state, ptop, 's');
 								boolean_sval_add(&state, ptop, 'e');
+								boolean_sval_end(&state, ptop);
 								ptop->u.boolean.nval = 0;
 
 								flags |= FLAG_NEXT;
@@ -578,13 +585,21 @@ json_value_t * json_parse(
 
 									if (!state.first_pass) {
 										while (isdigit(b) || b == '+' || b == '-' || b == 'e' || b == 'E' || b == '.') {
-											integer_sval_add(&state, ptop, b);
+
+											switch (ptop->type) {
+											case JSON_INTEGER:
+												integer_sval_add(&state, ptop, b);
+												break;
+											case JSON_DOUBLE:
+												dbl_sval_add(&state, ptop, b);
+												break;
+											default:
+												break;
+											}
+
 											if ((++state.ptr) == end) {
 
 												switch (ptop->type) {
-												case JSON_BOOLEAN:
-													boolean_sval_end(&state, ptop);
-													break;
 												case JSON_INTEGER:
 													integer_sval_end(&state, ptop);
 													break;
@@ -960,7 +975,7 @@ static void json_print_non_recursive_aux(json_value_t* pvalue, int depth) {
 		printf(",length=%d", pvalue->u.object.length);
 		break;
     case JSON_INTEGER:
-		printf(",nval=%lld", pvalue->u.integer.nval);
+		printf(",nval=%lld", (long long)pvalue->u.integer.nval);
 		printf(",length=%d", pvalue->u.integer.length);
 		printf(",sval=\"%s\"", pvalue->u.integer.sval);
 		break;

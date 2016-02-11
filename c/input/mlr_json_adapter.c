@@ -49,9 +49,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 	for (int i = 0; i < n; i++) {
 		json_object_entry_t* pobject_entry = &pjson->u.object.p.values[i];
 		char* key = (char*)pobject_entry->name;
-		char* lrec_value = NULL;
 		char* prefix = NULL;
-		char free_flags = NO_FREE;
 
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		switch (pjson_value->type) {
@@ -77,24 +75,20 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			break;
 
 		case JSON_STRING:
-			lrec_value = pjson_value->u.string.ptr;
-			lrec_put(prec, key, lrec_value, NO_FREE);
+			lrec_put(prec, key, pjson_value->u.string.ptr, NO_FREE);
 			break;
 
 		case JSON_BOOLEAN:
-			//printf("XXXB [%s]\n", pjson_value->u.boolean.sval);
-			lrec_value = pjson_value->u.boolean.nval ? "true" : "false";
-			lrec_put(prec, key, lrec_value, NO_FREE);
+			lrec_put(prec, key, pjson_value->u.boolean.nval ? "true" : "false", NO_FREE);
+			//lrec_put(prec, key, pjson_value->u.boolean.sval, NO_FREE);
 			break;
 		case JSON_INTEGER:
-			//printf("XXXI [%s]\n", pjson_value->u.integer.sval);
-			lrec_value = mlr_alloc_string_from_ll(pjson_value->u.integer.nval);
-			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			lrec_put(prec, key, mlr_alloc_string_from_ll(pjson_value->u.integer.nval), FREE_ENTRY_VALUE);
+			//lrec_put(prec, key, pjson_value->u.integer.sval, NO_FREE);
 			break;
 		case JSON_DOUBLE:
-			//printf("XXXD [%s]\n", pjson_value->u.dbl.sval);
-			lrec_value = mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt);
-			lrec_put(prec, key, lrec_value, free_flags | FREE_ENTRY_VALUE);
+			lrec_put(prec, key, mlr_alloc_string_from_double(pjson_value->u.dbl.nval, MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE);
+			//lrec_put(prec, key, pjson_value->u.dbl.sval, NO_FREE);
 			break;
 		default:
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
