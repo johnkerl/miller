@@ -37,6 +37,8 @@ static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always);
 
+static void json_decimal_print(char* s);
+
 static int mlhmmv_hash_func(mv_t* plevel_key);
 
 // ----------------------------------------------------------------
@@ -355,7 +357,7 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 
 // xxx rename to have 'json' in the method name
 
-void mlhmmv_print_stacked(mlhmmv_t* pmap, int quote_values_always) {
+void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always) {
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always);
 }
 
@@ -380,9 +382,8 @@ static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 				printf("\"%s\"", level_value_string);
 			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
 				double unused;
-				// xxx insert leading '0' if starts with '.'; insert leading '-0' if starts with '-.'.
 				if (mlr_try_float_from_string(level_value_string, &unused))
-					printf("%s", level_value_string);
+					json_decimal_print(level_value_string);
 				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
 					printf("%s", level_value_string);
 				else
@@ -411,7 +412,7 @@ static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 }
 
 // ----------------------------------------------------------------
-void mlhmmv_print_single_line(mlhmmv_t* pmap, int quote_values_always) {
+void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always) {
 	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE, quote_values_always);
 	printf("\n");
 }
@@ -435,7 +436,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
 				double unused;
 				if (mlr_try_float_from_string(level_value_string, &unused))
-					printf("%s", level_value_string);
+					json_decimal_print(level_value_string);
 				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
 					printf("%s", level_value_string);
 				else
@@ -457,6 +458,21 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		printf(" },");
 	else
 		printf(" }");
+}
+
+// ----------------------------------------------------------------
+// 0.123 is valid JSON; .123 is not. Meanwhile is a format-converter tool so if there is
+// perfectly legitimate CSV/DKVP/etc. data to be JSON-formatted, we make it JSON-compliant.
+//
+// Precondition: the caller has already checked that the string represents a number.
+static void json_decimal_print(char* s) {
+	if (s[0] == '.') {
+		printf("0%s", s);
+	} else if (s[0] == '-' && s[1] == '.') {
+		printf("-0.%s", &s[2]);
+	} else {
+		printf("%s", s);
+	}
 }
 
 // ----------------------------------------------------------------

@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+* valgrinds
 
 * explode & any other komosas from feature-request task
 
