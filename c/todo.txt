@@ -20,7 +20,7 @@ TOP-OF-LIST SUMMARY
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
 * doc items
-* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller.
+* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * dev page re releases, valgrinds, distros, etc
 
@@ -42,6 +42,7 @@ TOP-OF-LIST SUMMARY
     - mmap-page-boundary bugfix
     - boolean literals
     - typed overlay
+    - \0
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
