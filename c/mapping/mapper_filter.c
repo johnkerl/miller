@@ -45,7 +45,8 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
-	fprintf(o, "NF NR FNR FILENUM FILENAME PI E.\n");
+	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
+	fprintf(o, "variables; the environment-variable name may be an expression, e.g. a field value.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);

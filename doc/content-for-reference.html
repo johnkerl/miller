@@ -456,7 +456,8 @@ as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
 <p/>The <tt>filter</tt> command supports the same built-in variables as for <a
 href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
 <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>, as well as
-the mathematical constants <tt>PI</tt> and <tt>E</tt>. This selects the 2nd
+the mathematical constants <tt>PI</tt> and <tt>E</tt>.
+This selects the 2nd
 record from each matching file:
 
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
@@ -669,7 +670,7 @@ have special characters such as <tt>.</tt> then you can use braces, e.g.
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
-<tt>E</tt>.
+<tt>E</tt>.  The <tt>ENV[...]</tt> syntax is from Ruby.
 
 <h3>Expression formatting for put</h3>
 
