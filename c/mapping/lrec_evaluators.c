@@ -1748,16 +1748,19 @@ mv_t lrec_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 	if (mv_is_null(&mvname)) {
 		return MV_NULL;
 	}
-
-	// xxx string strict ...
-
-	char* value = getenv(mvname.u.strv);
-	if (value == NULL) {
+	char free_flags;
+	char* strname = mv_format_val(&mvname, &free_flags);
+	char* strvalue = getenv(strname);
+	if (strvalue == NULL) {
 		mv_free(&mvname);
+		if (free_flags & FREE_ENTRY_VALUE)
+			free(strname);
 		return MV_NULL;
 	}
-	mv_t rv = mv_from_string(value, NO_FREE);
+	mv_t rv = mv_from_string(strvalue, NO_FREE);
 	mv_free(&mvname);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(strname);
 	return rv;
 }
 

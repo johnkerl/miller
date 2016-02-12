@@ -7,7 +7,7 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 * JSON input: UT/doc items
-* env vars: UT
+* env vars: UT; OLH ~ PI/E/etc.
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
