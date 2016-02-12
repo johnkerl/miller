@@ -449,8 +449,8 @@ An <boldmaroon>array of single-level objects</boldmaroon> is, quite simply,
 <div class="pokipanel">
 <pre>
 $ mlr --json head -n 2 data/json-example-1.json
-{ "color": "yellow", "shape": "triangle", "flag": 1, "i": 11, "u": 0.632170, "v": 0.988721, "w": 0.436498, "x": 5.798188 }
-{ "color": "red", "shape": "square", "flag": 1, "i": 15, "u": 0.219668, "v": 0.001257, "w": 0.792778, "x": 2.944117 }
+{ "color": "yellow", "shape": "triangle", "flag": 1, "i": 11, "u": 0.6321695890307647, "v": 0.9887207810889004, "w": 0.4364983936735774, "x": 5.7981881667050565 }
+{ "color": "red", "shape": "square", "flag": 1, "i": 15, "u": 0.21966833570651523, "v": 0.001257332190235938, "w": 0.7927778364718627, "x": 2.944117399716207 }
 </pre>
 </div>
 <p/>
@@ -460,13 +460,13 @@ $ mlr --json head -n 2 data/json-example-1.json
 $ mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
 {
   "color": "yellow",
-  "u": 0.632170,
-  "v": 0.988721
+  "u": 0.6321695890307647,
+  "v": 0.9887207810889004
 }
 {
   "color": "red",
-  "u": 0.219668,
-  "v": 0.001257
+  "u": 0.21966833570651523,
+  "v": 0.001257332190235938
 }
 </pre>
 </div>
