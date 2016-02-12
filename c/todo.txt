@@ -9,32 +9,34 @@ TOP-OF-LIST SUMMARY
 * JSON input: UT/doc items
 * env vars: UT; OLH ~ PI/E/etc.
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
-* parameterized emit: needs spec & impl
-* pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
-* valgrinds
-* in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
+? make a 3.3.3 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
+  -> or maybe ok: due to semantic versioning i can break gate in a 4.0.0 with a clear conscience.
 
 * explode & any other komosas from feature-request task. and x 2: wolen/komosa by-record/by-field.
+* valgrinds
+* xxxes
+
+* parameterized emit: needs spec & impl
+* pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
 * doc items
-* xxxes
-* valgrinds
+* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller.
+* in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * dev page re releases, valgrinds, distros, etc
 
 ----------------------------------------------------------------
 * relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
-  o still under development:
-    - JSON input
-    - pattern-action
   o big:
     - oosvars -- but pending parameterized emit
     - begin/end -- but pending parameterized emit
-    - JSON output -- but pending JSON input
     - filter/gate/bare-boolean -- but pending pattern-action
-    - reshape -- good to go i think
+    - pattern-action -- still under development:
+    - JSON I/O -- OK
+    - reshape -- OK
   o medium:
     - ternary operator
     - regex captures
+    - ENV
   o small:
     - final semicolon
     - mmap-page-boundary bugfix
@@ -51,7 +53,10 @@ TOP-OF-LIST DETAILS
   - doc: n.b. colon-inside! not just for I/O.
   - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
-? env vars??
+* env vars:
+  - UT cases
+  - mld alongside PI/E
+  - olh alongside PI/E
 
 * doc:
   o \0 example into mld:ref:regex
