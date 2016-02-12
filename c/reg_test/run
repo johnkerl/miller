@@ -745,6 +745,13 @@ run_mlr --csvlite filter 'true  ^^ false' $indir/b.csv
 run_mlr --csvlite filter 'false ^^ true'  $indir/b.csv
 run_mlr --csvlite filter 'false ^^ false' $indir/b.csv
 
+export X=97
+export Y=98
+run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
+export X=
+export Y=
+run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
+
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 

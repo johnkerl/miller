@@ -8595,6 +8595,16 @@ d,e,f
 
 mlr --csvlite filter false ^^ false ./reg_test/input/b.csv
 
+mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
+name=X,x=97,y=97
+name=Y,x=97,y=98
+x=97,y=
+
+mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
+name=X,x=,y=
+name=Y,x=,y=
+x=,y=
+
 
 ================================================================
 DSL NULL/EMPTY HANDLING

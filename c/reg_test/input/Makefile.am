@@ -22,6 +22,7 @@ EXTRA_DIST=	\
 		double-ps.dkvp \
 		e.csv \
 		e.pprint \
+		env-var.dkvp \
 		f.csv \
 		f.pprint \
 		from-first.csv \
