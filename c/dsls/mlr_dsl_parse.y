@@ -521,6 +521,9 @@ md_atom_or_fcn(A) ::= MD_TOKEN_REGEXI(B). {
 md_atom_or_fcn(A) ::= MD_TOKEN_CONTEXT_VARIABLE(B). {
 	A = B;
 }
+md_atom_or_fcn(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
+}
 
 md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_logical_or_term(B) MD_TOKEN_RPAREN. {
 	A = B;

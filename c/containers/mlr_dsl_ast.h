@@ -19,9 +19,10 @@
 #define MD_AST_NODE_TYPE_CONTEXT_VARIABLE  0xdaaa
 #define MD_AST_NODE_TYPE_STRIPPED_AWAY     0xdabb
 #define MD_AST_NODE_TYPE_FILTER            0xdacc
-#define MD_AST_NODE_TYPE_GATE              0xdadd
-#define MD_AST_NODE_TYPE_EMIT              0xdaee
-#define MD_AST_NODE_TYPE_DUMP              0xdaff
+#define MD_AST_NODE_TYPE_GATE              0xdac5
+#define MD_AST_NODE_TYPE_EMIT              0xdadd
+#define MD_AST_NODE_TYPE_DUMP              0xdaee
+#define MD_AST_NODE_TYPE_ENV               0xdaff
 
 typedef struct _mlr_dsl_ast_t {
 	sllv_t* pbegin_statements;

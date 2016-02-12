@@ -1722,6 +1722,67 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_boolean_literal(char* string) {
 }
 
 // ================================================================
+// Example:
+// $ mlr put -v '$y=ENV["X"]' ...
+// AST BEGIN STATEMENTS (0):
+// AST MAIN STATEMENTS (1):
+// = (srec_assignment):
+//     y (field_name).
+//     env (env):
+//         ENV (env).
+//         X (strnum_literal).
+// AST END STATEMENTS (0):
+
+// ================================================================
+typedef struct _lrec_evaluator_environment_state_t {
+	lrec_evaluator_t* pname_evaluator;
+} lrec_evaluator_environment_state_t;
+
+mv_t lrec_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
+{
+	lrec_evaluator_environment_state_t* pstate = pvstate;
+
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(prec, ptyped_overlay,
+		poosvars, ppregex_captures, pctx, pstate->pname_evaluator->pvstate);
+	if (mv_is_null(&mvname)) {
+		return MV_NULL;
+	}
+
+	// xxx string strict ...
+
+	char* value = getenv(mvname.u.strv);
+	if (value == NULL) {
+		mv_free(&mvname);
+		return MV_NULL;
+	}
+	mv_t rv = mv_from_string(value, NO_FREE);
+	mv_free(&mvname);
+	return rv;
+}
+
+static void lrec_evaluator_environment_free(lrec_evaluator_t* pevaluator) {
+	lrec_evaluator_environment_state_t* pstate = pevaluator->pvstate;
+	pstate->pname_evaluator->pfree_func(pstate->pname_evaluator);
+	free(pstate);
+	free(pevaluator);
+}
+
+lrec_evaluator_t* lrec_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+	lrec_evaluator_environment_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_evaluator_environment_state_t));
+	lrec_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(lrec_evaluator_t));
+
+	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pnext->pvvalue;
+
+	pstate->pname_evaluator = lrec_evaluator_alloc_from_ast(pnamenode, type_inferencing);
+	pevaluator->pprocess_func = lrec_evaluator_environment_func;
+	pevaluator->pfree_func = lrec_evaluator_environment_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
+
+// ================================================================
 mv_t lrec_evaluator_NF_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
 	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
 {
@@ -2285,6 +2346,9 @@ static lrec_evaluator_t* lrec_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 		return lrec_evaluator_alloc_from_oosvar_level_keys(pnode);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
+		return lrec_evaluator_alloc_from_environment(pnode, type_inferencing);
 
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)

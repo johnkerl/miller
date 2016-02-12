@@ -280,6 +280,10 @@ false {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }
+"ENV" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ENV);
+	return MD_TOKEN_ENV;
+}
 
 [a-zA-Z_][a-zA-Z_0-9]+ {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FUNCTION_NAME);
