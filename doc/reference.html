@@ -2895,3 +2895,1172 @@ circle   red
 $ mlr stats2 --help
 Usage: mlr stats2 [options]
 Computes bivariate statistics for one or more given field-name pairs,
+accumulated across the input record stream.
+-a {linreg-ols,corr,...}  Names of accumulators: one or more of:
+  linreg-pca   Linear regression using principal component analysis
+  linreg-ols   Linear regression using ordinary least squares
+  r2           Quality metric for linreg-ols (linreg-pca emits its own)
+  logireg      Logistic regression
+  corr         Sample correlation
+  cov          Sample covariance
+  covx         Sample-covariance matrix
+-f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
+               There must be an even number of names.
+-g {e,f,g}     Optional group-by-field names.
+-v             Print additional output for linreg-pca.
+-s             Print iterative stats. Useful in tail -f contexts (in which
+               case please avoid pprint-format output since end of input
+               stream will never be seen).
+--fit          Rather than printing regression parameters, applies them to
+               the input data to compute new fit fields. All input records are
+               held in memory until end of input stream. Has effect only for
+               linreg-ols, linreg-pca, and logireg.
+Only one of -s or --fit may be used.
+Example: mlr stats2 -a linreg-pca -f x,y
+Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
+Example: mlr stats2 -a corr -f x,y
+</pre>
+</div>
+<p/>
+
+These are simple bivariate statistics on one or more pairs of number-valued
+fields, optionally categorized by one or more fields.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
+x_y_cov    0.000043
+x_y_corr   0.000504
+y_y_cov    0.084611
+y_y_corr   1.000000
+x2_xy_cov  0.041884
+x2_xy_corr 0.630174
+x2_y2_cov  -0.000310
+x2_y2_corr -0.003425
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
+a   x_y_ols_m x_y_ols_b x_y_ols_n x_y_r2   y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2   xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_r2
+pan 0.017026  0.500403  2081      0.000287 1.000000  0.000000  2081      1.000000 0.878132    0.119082    2081        0.417498
+eks 0.040780  0.481402  1965      0.001646 1.000000  0.000000  1965      1.000000 0.897873    0.107341    1965        0.455632
+wye -0.039153 0.525510  1966      0.001505 1.000000  0.000000  1966      1.000000 0.853832    0.126745    1966        0.389917
+zee 0.002781  0.504307  2047      0.000008 1.000000  0.000000  2047      1.000000 0.852444    0.124017    2047        0.393566
+hat -0.018621 0.517901  1941      0.000352 1.000000  0.000000  1941      1.000000 0.841230    0.135573    1941        0.368794
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
+fields of the <tt>data/medium</tt> dataset are just independent uniformly
+distributed on the unit interval. Here we remove half the data and fit a line to it.
+
+<p/>
+<div class="pokipanel">
+<pre>
+
+# Prepare input data:
+mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)' data/medium &gt; data/medium-squares
+
+# Do a linear regression and examine coefficients:
+mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares
+x_y_pca_m=1.014419
+x_y_pca_b=0.000308
+x_y_pca_quality=0.861354
+
+# Option 1 to apply the regression coefficients and produce a linear fit:
+#   Set x_y_pca_m and x_y_pca_b as shell variables:
+eval $(mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares)
+#   In addition to x and y, make a new yfit which is the line fit, then plot
+#   using your favorite tool:
+mlr --onidx put '$yfit='$x_y_pca_m'*$x+'$x_y_pca_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-pca example' -xmin 0 -xmax 1 -ymin 0 -ymax 1
+
+# Option 2 to apply the regression coefficients and produce a linear fit: use --fit option
+mlr --onidx stats2 -a linreg-pca --fit -f x,y then cut -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-pca example' -xmin 0 -xmax 1 -ymin 0 -ymax 1
+
+</pre>
+</div>
+<p/>
+
+<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+plotting; here&rsquo;s a screenshot.
+
+<center>
+<img src="data/linreg-example.jpg"/>
+</center>
+
+<p/> (Thanks Drew Kunas for a good conversation about PCA!)
+
+<p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
+Input data comes from a log file, with number of work units left to do in the
+<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+labeled by the <tt>color</tt> field:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 10 data/multicountdown.dat
+upsec=0.002,color=green,count=1203
+upsec=0.083,color=red,count=3817
+upsec=0.188,color=red,count=3801
+upsec=0.395,color=blue,count=2697
+upsec=0.526,color=purple,count=953
+upsec=0.671,color=blue,count=2684
+upsec=0.899,color=purple,count=926
+upsec=0.912,color=red,count=3798
+upsec=1.093,color=blue,count=2662
+upsec=1.327,color=purple,count=917
+</pre>
+</div>
+<p/>
+
+We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
+time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
+color                   green
+upsec_count_pca_m       -32.756917
+upsec_count_pca_b       1213.722730
+upsec_count_pca_n       24
+upsec_count_pca_quality 0.999984
+donesec                 37.052410
+
+color                   red
+upsec_count_pca_m       -37.367646
+upsec_count_pca_b       3810.133400
+upsec_count_pca_n       30
+upsec_count_pca_quality 0.999989
+donesec                 101.963431
+
+color                   blue
+upsec_count_pca_m       -29.231212
+upsec_count_pca_b       2698.932820
+upsec_count_pca_n       25
+upsec_count_pca_quality 0.999959
+donesec                 92.330514
+
+color                   purple
+upsec_count_pca_m       -39.030097
+upsec_count_pca_b       979.988341
+upsec_count_pca_n       21
+upsec_count_pca_quality 0.999991
+donesec                 25.108529
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="step"/><h2>step</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr step --help
+Usage: mlr step [options]
+Computes values dependent on the previous record, optionally grouped
+by category.
+
+Options:
+-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
+  delta    Compute differences in field(s) between successive records
+  from-first Compute differences in field(s) from first record
+  ratio    Compute ratios in field(s) between successive records
+  rsum     Compute running sums of field(s) between successive records
+  counter  Count instances of field(s) between successive records
+  ewma     Exponentially weighted moving average over successive records
+-f {a,b,c} Value-field names on which to compute statistics
+-g {d,e,f} Optional group-by-field names
+-F         Computes integerable things (e.g. counter) in floating point.
+-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
+           smoothing), near under under 1 is light smoothing, near over 0 is
+           heavy smoothing. Multiple weights may be specified, e.g.
+           "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
+           is "-d 0.5".
+-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
+           the -d values. If supplied, the number of -o values must be the same
+           as the number of -d values.
+
+Examples:
+  mlr step -a rsum -f request_size
+  mlr step -a delta -f request_size -g hostname
+  mlr step -a ewma -d 0.1,0.9 -f x,y
+  mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
+  mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
+
+Please see http://johnkerl.org/miller/doc/reference.html#filter or
+https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+for more information on EWMA.
+</pre>
+</div>
+<p/>
+
+Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
+<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
+<tt>step</tt> command is intermediate: it allows the option of adding fields
+which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta,rsum,counter -f x data/medium | head -15
+a   b   i     x                      y                      x_delta   x_rsum      x_counter
+pan pan 1     0.3467901443380824     0.7268028627434533     0         0.346790    1
+eks pan 2     0.7586799647899636     0.5221511083334797     0.411890  1.105470    2
+wye wye 3     0.20460330576630303    0.33831852551664776    -0.554077 1.310073    3
+eks wye 4     0.38139939387114097    0.13418874328430463    0.176796  1.691473    4
+wye pan 5     0.5732889198020006     0.8636244699032729     0.191890  2.264762    5
+zee pan 6     0.5271261600918548     0.49322128674835697    -0.046163 2.791888    6
+eks zee 7     0.6117840605678454     0.1878849191181694     0.084658  3.403672    7
+zee wye 8     0.5985540091064224     0.976181385699006      -0.013230 4.002226    8
+hat wye 9     0.03144187646093577    0.7495507603507059     -0.567112 4.033668    9
+pan wye 10    0.5026260055412137     0.9526183602969864     0.471184  4.536294    10
+pan pan 11    0.7930488423451967     0.6505816637259333     0.290423  5.329343    11
+zee pan 12    0.3676141320555616     0.23614420670296965    -0.425435 5.696957    12
+eks pan 13    0.4915175580479536     0.7709126592971468     0.123903  6.188474    13
+eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  6.709213    14
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta,rsum,counter -f x -g a data/medium | head -15
+a   b   i     x                      y                      x_delta   x_rsum      x_counter
+pan pan 1     0.3467901443380824     0.7268028627434533     0         0.346790    1
+eks pan 2     0.7586799647899636     0.5221511083334797     0         0.758680    1
+wye wye 3     0.20460330576630303    0.33831852551664776    0         0.204603    1
+eks wye 4     0.38139939387114097    0.13418874328430463    -0.377281 1.140079    2
+wye pan 5     0.5732889198020006     0.8636244699032729     0.368686  0.777892    2
+zee pan 6     0.5271261600918548     0.49322128674835697    0         0.527126    1
+eks zee 7     0.6117840605678454     0.1878849191181694     0.230385  1.751863    3
+zee wye 8     0.5985540091064224     0.976181385699006      0.071428  1.125680    2
+hat wye 9     0.03144187646093577    0.7495507603507059     0         0.031442    1
+pan wye 10    0.5026260055412137     0.9526183602969864     0.155836  0.849416    2
+pan pan 11    0.7930488423451967     0.6505816637259333     0.290423  1.642465    3
+zee pan 12    0.3676141320555616     0.23614420670296965    -0.230940 1.493294    3
+eks pan 13    0.4915175580479536     0.7709126592971468     -0.120267 2.243381    4
+eks zee 14    0.5207382318405251     0.34141681118811673    0.029221  2.764119    5
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a ewma -f x -d 0.1,0.9 ../doc/data/medium | head -15
+a   b   i     x                      y                      x_ewma_0.1 x_ewma_0.9
+pan pan 1     0.3467901443380824     0.7268028627434533     0.346790   0.346790
+eks pan 2     0.7586799647899636     0.5221511083334797     0.387979   0.717491
+wye wye 3     0.20460330576630303    0.33831852551664776    0.369642   0.255892
+eks wye 4     0.38139939387114097    0.13418874328430463    0.370817   0.368849
+wye pan 5     0.5732889198020006     0.8636244699032729     0.391064   0.552845
+zee pan 6     0.5271261600918548     0.49322128674835697    0.404671   0.529698
+eks zee 7     0.6117840605678454     0.1878849191181694     0.425382   0.603575
+zee wye 8     0.5985540091064224     0.976181385699006      0.442699   0.599056
+hat wye 9     0.03144187646093577    0.7495507603507059     0.401573   0.088203
+pan wye 10    0.5026260055412137     0.9526183602969864     0.411679   0.461184
+pan pan 11    0.7930488423451967     0.6505816637259333     0.449816   0.759862
+zee pan 12    0.3676141320555616     0.23614420670296965    0.441596   0.406839
+eks pan 13    0.4915175580479536     0.7709126592971468     0.446588   0.483050
+eks zee 14    0.5207382318405251     0.34141681118811673    0.454003   0.516969
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough ../doc/data/medium | head -15
+a   b   i     x                      y                      x_ewma_smooth x_ewma_rough
+pan pan 1     0.3467901443380824     0.7268028627434533     0.346790      0.346790
+eks pan 2     0.7586799647899636     0.5221511083334797     0.387979      0.717491
+wye wye 3     0.20460330576630303    0.33831852551664776    0.369642      0.255892
+eks wye 4     0.38139939387114097    0.13418874328430463    0.370817      0.368849
+wye pan 5     0.5732889198020006     0.8636244699032729     0.391064      0.552845
+zee pan 6     0.5271261600918548     0.49322128674835697    0.404671      0.529698
+eks zee 7     0.6117840605678454     0.1878849191181694     0.425382      0.603575
+zee wye 8     0.5985540091064224     0.976181385699006      0.442699      0.599056
+hat wye 9     0.03144187646093577    0.7495507603507059     0.401573      0.088203
+pan wye 10    0.5026260055412137     0.9526183602969864     0.411679      0.461184
+pan pan 11    0.7930488423451967     0.6505816637259333     0.449816      0.759862
+zee pan 12    0.3676141320555616     0.23614420670296965    0.441596      0.406839
+eks pan 13    0.4915175580479536     0.7709126592971468     0.446588      0.483050
+eks zee 14    0.5207382318405251     0.34141681118811673    0.454003      0.516969
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+Example deriving uptime-delta from system uptime:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ each 10 uptime | mlr -p step -a delta -f 11
+...
+20:08 up 36 days, 10:38, 5 users, load averages: 1.42 1.62 1.73 0.000000
+20:08 up 36 days, 10:38, 5 users, load averages: 1.55 1.64 1.74 0.020000
+20:08 up 36 days, 10:38, 7 users, load averages: 1.58 1.65 1.74 0.010000
+20:08 up 36 days, 10:38, 9 users, load averages: 1.78 1.69 1.76 0.040000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.12 1.76 1.78 0.070000
+20:08 up 36 days, 10:39, 9 users, load averages: 2.51 1.85 1.81 0.090000
+20:08 up 36 days, 10:39, 8 users, load averages: 2.79 1.92 1.83 0.070000
+20:08 up 36 days, 10:39, 4 users, load averages: 2.64 1.90 1.83 -0.020000
+
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="tac"/><h2>tac</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr tac --help
+Usage: mlr tac
+Prints records in reverse order from the order in which they were encountered.
+</pre>
+</div>
+<p/>
+
+<p/>Prints the records in the input stream in reverse order. Note: this
+requires Miller to retain all input records in memory before any output records
+are produced.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint cat data/a.csv
+a b c
+1 2 3
+4 5 6
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint cat data/b.csv
+a b c
+7 8 9
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint tac data/a.csv data/b.csv
+a b c
+7 8 9
+4 5 6
+1 2 3
+</pre>
+</div>
+<p/>
+</td></tr></table>
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
+a b c filename
+7 8 9 data/b.csv
+4 5 6 data/a.csv
+1 2 3 data/a.csv
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<a id="tail"/><h2>tail</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr tail --help
+Usage: mlr tail [options]
+-n {count}    Tail count to print; default 10
+-g {a,b,c}    Optional group-by-field names for tail counts
+Passes through the last n records, optionally by category.
+</pre>
+</div>
+<p/>
+
+<p/> Prints the last <i>n</i> records in the input stream, optionally by category.
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint tail -n 4 data/colored-shapes.dkvp
+color  shape    flag i     u                    v                   w                   x
+blue   square   1    99974 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
+blue   triangle 0    99976 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
+yellow triangle 0    99990 0.3839424618160777   0.55952913620132    0.5113763011485609  4.307973891915119
+yellow circle   1    99994 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
+color  shape    flag i     u                  v                   w                   x
+yellow triangle 0    99990 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
+blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
+yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<a id="top"/><h2>top</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr top --help
+Usage: mlr top [options]
+-f {a,b,c}    Value-field names for top counts.
+-g {d,e,f}    Optional group-by-field names for top counts.
+-n {count}    How many records to print per category; default 1.
+-a            Print all fields for top-value records; default is
+              to print only value and group-by fields. Requires a single
+              value-field name only.
+--min         Print top smallest values; default is top largest values.
+-F            Keep top values as floats even if they look like integers.
+Prints the n records with smallest/largest values at specified fields,
+optionally by category.
+</pre>
+</div>
+<p/>
+
+Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint top -n 4 -f x data/medium
+top_idx x_top
+1       0.999953
+2       0.999823
+3       0.999733
+4       0.999563
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+a   top_idx x_top
+eks 1       0.998811
+eks 2       0.998534
+hat 1       0.999953
+hat 2       0.999733
+pan 1       0.999403
+pan 2       0.999044
+wye 1       0.999823
+wye 2       0.999264
+zee 1       0.999490
+zee 2       0.999438
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<a id="uniq"/><h2>uniq</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr uniq --help
+Usage: mlr uniq [options]
+-g {d,e,f}    Group-by-field names for uniq counts.
+-c            Show repeat counts in addition to unique values.
+-n            Show only the number of distinct values.
+Prints distinct values for specified field names. With -c, same as
+count-distinct. For uniq, -f is a synonym for -g.
+</pre>
+</div>
+<p/>
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ wc -l data/colored-shapes.dkvp
+   10078 data/colored-shapes.dkvp
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr uniq -g color,shape data/colored-shapes.dkvp
+color=yellow,shape=triangle
+color=red,shape=square
+color=red,shape=circle
+color=purple,shape=triangle
+color=yellow,shape=circle
+color=purple,shape=square
+color=yellow,shape=square
+color=red,shape=triangle
+color=green,shape=triangle
+color=green,shape=square
+color=blue,shape=circle
+color=blue,shape=triangle
+color=purple,shape=circle
+color=blue,shape=square
+color=green,shape=circle
+color=orange,shape=triangle
+color=orange,shape=square
+color=orange,shape=circle
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
+color  shape    count
+blue   circle   384
+blue   square   589
+blue   triangle 497
+green  circle   287
+green  square   454
+green  triangle 368
+orange circle   68
+orange square   128
+orange triangle 107
+purple circle   289
+purple square   481
+purple triangle 372
+red    circle   1207
+red    square   1874
+red    triangle 1560
+yellow circle   356
+yellow square   589
+yellow triangle 468
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
+count
+18
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<!-- ================================================================ -->
+<a id="then-chaining"/><h1>then-chaining</h1>
+
+<p/>
+In accord with the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
+Miller. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
+</pre>
+</div>
+<p/>
+
+<p/>
+You can, if you like, instead simply chain commands together using the
+<tt>then</tt> keyword:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
+</pre>
+</div>
+<p/>
+
+Here&rsquo;s a performance comparison:
+
+<p/>
+<div class="pokipanel">
+<pre>
+% cat piped.sh
+mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
+
+% time sh piped.sh
+real 0m2.828s
+user 0m3.183s
+sys  0m0.137s
+
+
+% cat chained.sh
+mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
+
+% time sh chained.sh
+real 0m2.082s
+user 0m1.933s
+sys  0m0.137s
+</pre>
+</div>
+<p/>
+
+There are two reasons to use then-chaining: one is for performance, although I
+don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
+redundant string-parsing and string-formatting at each pipeline step: instead
+input records are parsed once, they are fed through each pipeline stage in
+memory, and then output records are formatted once. On the other hand, Miller
+is single-threaded, while modern systems are usually multi-processor, and when
+streaming-data programs operate through pipes, each one can use a CPU.  Rest
+assured you get the same results either way.
+
+<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
+have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
+pipeline stage.
+
+<!-- ================================================================ -->
+<a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-all-functions
++ (class=arithmetic #args=2): Addition.
+
++ (class=arithmetic #args=1): Unary plus.
+
+- (class=arithmetic #args=2): Subtraction.
+
+- (class=arithmetic #args=1): Unary minus.
+
+* (class=arithmetic #args=2): Multiplication.
+
+/ (class=arithmetic #args=2): Division.
+
+// (class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
+
+% (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
+
+** (class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
+operator.
+
+| (class=arithmetic #args=2): Bitwise OR.
+
+^ (class=arithmetic #args=2): Bitwise XOR.
+
+&amp; (class=arithmetic #args=2): Bitwise AND.
+
+~ (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.
+
+&lt;&lt; (class=arithmetic #args=2): Bitwise left-shift.
+
+&gt;&gt; (class=arithmetic #args=2): Bitwise right-shift.
+
+== (class=boolean #args=2): String/numeric equality. Mixing number and string
+results in string compare.
+
+!= (class=boolean #args=2): String/numeric inequality. Mixing number and string
+results in string compare.
+
+=~ (class=boolean #args=2): String (left-hand side) matches regex (right-hand
+side), e.g. '$name =~ "^a.*b$"'.
+
+!=~ (class=boolean #args=2): String (left-hand side) does not match regex
+(right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+&gt; (class=boolean #args=2): String/numeric greater-than. Mixing number and string
+results in string compare.
+
+&gt;= (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
+and string results in string compare.
+
+&lt; (class=boolean #args=2): String/numeric less-than. Mixing number and string
+results in string compare.
+
+&lt;= (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
+and string results in string compare.
+
+&amp;&amp; (class=boolean #args=2): Logical AND.
+
+|| (class=boolean #args=2): Logical OR.
+
+^^ (class=boolean #args=2): Logical XOR.
+
+! (class=boolean #args=1): Logical negation.
+
+? : (class=boolean #args=3): Ternary operator.
+
+isnull (class=conversion #args=1): True if argument is null, false otherwise
+
+isnotnull (class=conversion #args=1): False if argument is null, true otherwise.
+
+boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
+
+float (class=conversion #args=1): Convert int/float/bool/string to float.
+
+fmtnum (class=conversion #args=2): Convert int/float/bool to string using
+printf-style format string, e.g. "%06lld".
+
+hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+
+int (class=conversion #args=1): Convert int/float/bool/string to int.
+
+string (class=conversion #args=1): Convert int/float/bool/string to string.
+
+. (class=string #args=2): String concatenation.
+
+gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
+(replace all).
+
+strlen (class=string #args=1): String length.
+
+sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
+(replace once).
+
+tolower (class=string #args=1): Convert string to lowercase.
+
+toupper (class=string #args=1): Convert string to uppercase.
+
+abs (class=math #args=1): Absolute value.
+
+acos (class=math #args=1): Inverse trigonometric cosine.
+
+acosh (class=math #args=1): Inverse hyperbolic cosine.
+
+asin (class=math #args=1): Inverse trigonometric sine.
+
+asinh (class=math #args=1): Inverse hyperbolic sine.
+
+atan (class=math #args=1): One-argument arctangent.
+
+atan2 (class=math #args=2): Two-argument arctangent.
+
+atanh (class=math #args=1): Inverse hyperbolic tangent.
+
+cbrt (class=math #args=1): Cube root.
+
+ceil (class=math #args=1): Ceiling: nearest integer at or above.
+
+cos (class=math #args=1): Trigonometric cosine.
+
+cosh (class=math #args=1): Hyperbolic cosine.
+
+erf (class=math #args=1): Error function.
+
+erfc (class=math #args=1): Complementary error function.
+
+exp (class=math #args=1): Exponential function e**x.
+
+expm1 (class=math #args=1): e**x - 1.
+
+floor (class=math #args=1): Floor: nearest integer at or below.
+
+invqnorm (class=math #args=1): Inverse of normal cumulative distribution
+function. Note that invqorm(urand()) is normally distributed.
+
+log (class=math #args=1): Natural (base-e) logarithm.
+
+log10 (class=math #args=1): Base-10 logarithm.
+
+log1p (class=math #args=1): log(1-x).
+
+logifit (class=math #args=3): Given m and b from logistic regression, compute
+fit: $yhat=logifit($x,$m,$b).
+
+madd (class=math #args=3): a + b mod m (integers)
+
+max (class=math #args=2): max of two numbers; null loses
+
+mexp (class=math #args=3): a ** b mod m (integers)
+
+min (class=math #args=2): min of two numbers; null loses
+
+mmul (class=math #args=3): a * b mod m (integers)
+
+msub (class=math #args=3): a - b mod m (integers)
+
+pow (class=math #args=2): Exponentiation; same as **.
+
+qnorm (class=math #args=1): Normal cumulative distribution function.
+
+round (class=math #args=1): Round to nearest integer.
+
+roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m
+
+sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
+negative input.
+
+sin (class=math #args=1): Trigonometric sine.
+
+sinh (class=math #args=1): Hyperbolic sine.
+
+sqrt (class=math #args=1): Square root.
+
+tan (class=math #args=1): Trigonometric tangent.
+
+tanh (class=math #args=1): Hyperbolic tangent.
+
+urand (class=math #args=0): Floating-point numbers on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.
+
+urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
+inclusive.
+
+urandint (class=math #args=2): Integer uniformly distributed between inclusive
+integer endpoints.
+
+dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
+dhms2fsec("5d18h53m20.250000s") = 500000.250000
+
+dhms2sec (class=time #args=1): Recovers integer seconds as in
+dhms2sec("5d18h53m20s") = 500000
+
+fsec2dhms (class=time #args=1): Formats floating-point seconds as in
+fsec2dhms(500000.25) = "5d18h53m20.250000s"
+
+fsec2hms (class=time #args=1): Formats floating-point seconds as in
+fsec2hms(5000.25) = "01:23:20.250000"
+
+gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
+the epoch.
+
+hms2fsec (class=time #args=1): Recovers floating-point seconds as in
+hms2fsec("01:23:20.250000") = 5000.250000
+
+hms2sec (class=time #args=1): Recovers integer seconds as in
+hms2sec("01:23:20") = 5000
+
+sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
+= "5d18h53m20s"
+
+sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
+as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+
+sec2hms (class=time #args=1): Formats integer seconds as in
+sec2hms(5000) = "01:23:20"
+
+strftime (class=time #args=2): Formats seconds since epoch (integer part)
+as timestamp, e.g.
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
+
+strptime (class=time #args=2): Parses timestamp as integer seconds since epoch,
+e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
+
+systime (class=time #args=0): Floating-point seconds since the epoch,
+e.g. 1440768801.748936.
+
+To set the seed for urand, you may specify decimal or hexadecimal 32-bit
+numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
+Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)
+along with the mathematical constants PI and E.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Operator_precedence"/><h1>Operator precedence</h1>
+
+<p/>Operators are listed in order of decreasing precedence, highest first.
+
+<p/>
+<div class="pokipanel">
+<pre>
+Operators              Associativity
+---------              -------------
+()                     left to right
+**                     right to left
+! ~ unary+ unary- &amp;    right to left
+binary* / // %         left to right
+binary+ binary- .      left to right
+&lt;&lt; &gt;&gt;                  left to right
+&amp;                      left to right
+^                      left to right
+|                      left to right
+&lt; &lt;= &gt; &gt;=              left to right
+== != =~ !=~           left to right
+&amp;&amp;                     left to right
+^^                     left to right
+||                     left to right
+? :                    right to left
+=                      N/A for Miller (there is no $a=$b=$c)
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Operator_and_function_semantics"/><h1>Operator and function semantics</h1>
+
+<ul>
+
+<li/> Functions are in general pass-throughs straight to the system-standard C
+library.
+
+<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
+multi-argument functions which return null if any of their inputs are null: for
+<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
+is returned.
+
+<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
+<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
+<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
+C.
+
+<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
+
+<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
+<tt>!=~</tt> are similar to those in Ruby and Perl.
+
+</ul>
+
+<!-- ================================================================ -->
+<a id="Arithmetic"/><h1>Arithmetic</h1>
+
+<a id="Input_scanning"/><h2>Input scanning</h2>
+
+<p/>Numbers in Miller are double-precision float or 64-bit signed integers.
+Anything scannable as int, e.g <tt>123</tt> or <tt>0xabcd</tt>, is treated as
+an integer; otherwise, input scannable as float (<tt>4.56</tt> or <tt>8e9</tt>)
+is treated as float; everything else is a string.
+
+<p/>If you want all numbers to be treated as floats, then you may use
+<tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
+$b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
+<tt>mlr filter -F</tt> and <tt>mlr put -F</tt> which forces all numeric input,
+whether from expression literals or field values, to float. Likewise <tt>mlr
+stats1 -F</tt> and <tt>mlr step -F</tt> force integerable accumulators (such as
+<tt>count</tt>) to be done in floating-point.
+
+<a id="Conversion_by_math_routines"/><h2>Conversion by math routines</h2>
+
+<p/>For most math functions, integers are cast to float on input, and produce
+float output: e.g. <tt>exp(0) = 1.0</tt> rather than <tt>1</tt>.  The
+following, however, produce integer output if their inputs are integers:
+<tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt> <tt>abs</tt>
+<tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt> <tt>round</tt>
+<tt>roundm</tt> <tt>sgn</tt>. As well, <tt>stats1 -a min</tt>, <tt>stats1 -a
+max</tt>, <tt>stats1 -a sum</tt>, <tt>step -a delta</tt>, and <tt>step -a
+rsum</tt> produce integer output if their inputs are integers.
+
+<a id="Conversion_by_arithmetic_operators"/><h2>Conversion by arithmetic operators</h2>
+
+<p/>The sum, difference, and product of integers is again integer, except for
+when that would overflow a 64-bit integer at which point Miller converts the
+result to float.
+
+<p/>The short of it is that Miller does this transparently for you so you
+needn&rsquo;t think about it.
+
+<p/>Implementation details of this, for the interested: integer adds and
+subtracts overflow by at most one bit so it suffices to check sign-changes.
+Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers,
+converting only to float precisely when the result is less than -2<sup>63</sup>
+or greater than 2<sup>63</sup>-1.  Multiplies, on the other hand, can overflow
+by a word size and a sign-change technique does not suffice to detect overflow.
+Instead Miller tests whether the floating-point product exceeds the
+representable integer range. Now, 64-bit integers have 64-bit precision while
+IEEE-doubles have only 52-bit mantissas &mdash; so, there are 53 bits including
+implicit leading one.  The following experiment explicitly demonstrates the
+resolution at this range:
+
+<div class=pokipanel>
+<pre>
+   64-bit integer     64-bit integer     Casted to double           Back to 64-bit
+       in hex           in decimal                                    integer
+0x7ffffffffffff9ff 9223372036854774271 9223372036854773760.000000 0x7ffffffffffff800
+0x7ffffffffffffa00 9223372036854774272 9223372036854773760.000000 0x7ffffffffffff800
+0x7ffffffffffffbff 9223372036854774783 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffc00 9223372036854774784 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffdff 9223372036854775295 9223372036854774784.000000 0x7ffffffffffffc00
+0x7ffffffffffffe00 9223372036854775296 9223372036854775808.000000 0x8000000000000000
+0x7ffffffffffffffe 9223372036854775806 9223372036854775808.000000 0x8000000000000000
+0x7fffffffffffffff 9223372036854775807 9223372036854775808.000000 0x8000000000000000
+</pre>
+</div>
+
+<p/>That is, one cannot check an integer product to see if it is precisely
+greater than 2<sup>63</sup>-1 or less than -2<sup>63</sup> using either integer
+arithmetic (it may have already overflowed) or using double-precision (due to
+granularity).  Instead Miller checks for overflow in 64-bit integer
+multiplication by seeing whether the absolute value of the double-precision
+product exceeds the largest representable IEEE double less than 2<sup>63</sup>,
+which we see from the listing above is 9223372036854774784. (An alternative
+would be to do all integer multiplies using handcrafted multi-word 128-bit
+arithmetic.  This approach is not taken.)
+
+<a id="Pythonic_division"/><h2>Pythonic division</h2>
+
+<p/>Division and remainder are
+<a href="http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html">
+pythonic</a>:
+  <ul>
+  <li/> Quotient of integers is floating-point: <tt>7/2</tt> is <tt>3.5</tt>.
+  <li/> Integer division is done with <tt>//</tt>: <tt>7/2</tt> is <tt>3</tt>.
+    This rounds toward the negative.
+  <li/> Remainders are non-negative.
+  </ul>
+
+<!-- ================================================================ -->
+<a id="Regular_expressions"/><h1>Regular expressions</h1>
+
+<p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
+
+<ul>
+
+<li/> In <tt>mlr filter</tt> with <tt>=~</tt> or <tt>!=~</tt>, e.g. <tt>mlr
+filter '$url =~ "http.*com"'</tt>
+
+<li/> In <tt>mlr put</tt> with <tt>sub</tt> or <tt>gsub</tt>, e.g. <tt>mlr put
+'$url = sub($url, "http.*com", "")'</tt>
+
+<li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
+--any-matching '^sda[0-9]'</tt>
+
+<li/> In <tt>mlr cut</tt>, e.g. <tt>mlr cut -r -f '^status$,^sda[0-9]'</tt>
+
+<li/> In <tt>mlr rename</tt>, e.g. <tt>mlr rename -r '^(sda[0-9]).*$,dev/\1'</tt>
+
+<li/> In <tt>mlr grep</tt>, e.g. <tt>mlr --csv grep 00188555487 myfiles*.csv</tt>
+
+</ul>
+
+<p/>Points demonstrated by the above examples:
+
+<ul>
+
+<li/> There are no implicit start-of-string or end-of-string anchors; please
+use <tt>^</tt> and/or <tt>$</tt> explicitly.
+
+<li/> Miller regexes are wrapped with double quotes rather than slashes.
+
+<li/> The <tt>i</tt> after the ending double quote indicates a case-insensitive
+regex.
+
+<li/> Capture groups are wrapped with <tt>(...)</tt> rather than
+<tt>\(...\)</tt>; use <tt>\(</tt> and <tt>\)</tt> to match against parentheses.
+
+</ul>
+
+<p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
+literal (the normal case), it is precompiled at process start and reused
+thereafter, which is efficient. If the regular expression is a more complex
+expression, including string concatenation using <tt>.</tt>, or a column name
+(in which case you can take regular expressions from input data!), then regexes
+are compiled on each record which works but is less efficient. As well, in this
+case there is no way to specify case-insensitive matching.
+
+<p/>Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bill,regex=^b[ou]ll$
+name=bull,regex=^b[ou]ll$
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter '$name =~ $regex' data/regex-in-data.dat
+name=jane,regex=^j.*e$
+name=bull,regex=^b[ou]ll$
+</pre>
+</div>
+<p/>
+
+<a id="Regex_captures"/><h2>Regex captures</h2>
+
+<p/>Regex captures of the form <tt>\1</tt>, <tt>\2</tt>, etc. are supported as follows:
+<ul>
+
+<li/> Captures have in-function context for <tt>sub</tt> and <tt>gsub</tt>.
+For example, the first <tt>\1,\2</tt> pair belong to the first <tt>sub</tt> and
+the second <tt>\1,\2</tt> pair belong to the second <tt>sub</tt>:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")'
+</pre>
+</div>
+
+<li/> Captures endure for the entirety of a <tt>put</tt> for the <tt>=~</tt>
+and <tt>!=~</tt> operators. For example, here the <tt>\1,\2</tt> are set by the
+<tt>=~</tt> operator and are used by both subsequent assignment statements:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'
+</pre>
+</div>
+
+<li/>The captures are not retained across multiple puts. For example, here the
+<tt>\1,\2</tt> won&rsquo;t be expanded from the regex capture:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'
+</pre>
+</div>
+
+<li/> Captures are ignored in <tt>filter</tt> for the <tt>=~</tt> and
+<tt>!=~</tt> operators. For example, there is no mechanism provided to refer to
+the first <tt>(..)</tt> as <tt>\1</tt> or to the second <tt>(....)</tt> as
+<tt>\2</tt> in the following filter statement:
+
+<p/>
+<div class=pokipanel>
+<pre>
+mlr filter '$a =~ "(..)_(....)'
+</pre>
+</div>
+
+<li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>, while
+<tt>\0</tt> is the entire match string; <tt>\15</tt> is treated as <tt>\1</tt>
+followed by an unrelated <tt>5</tt>.
+</ul>
+    </div>
+  </td>
+
+</table>
+</body>
+</html>
