@@ -10,7 +10,7 @@ TOP-OF-LIST SUMMARY
 * env vars: UT; OLH ~ PI/E/etc.
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 ? make a 3.3.3 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
-  -> or maybe ok: due to semantic versioning i can break gate in a 4.0.0 with a clear conscience.
+  -> or maybe ok: due to semantic versioning i can break gate in a 4.0.0 with a clear conscience. mk clear @ dox.
 
 * explode & any other komosas from feature-request task. and x 2: wolen/komosa by-record/by-field.
 * valgrinds
