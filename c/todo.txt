@@ -7,14 +7,14 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 * JSON input: UT/doc items
-* env vars
+* env vars: UT
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 * valgrinds
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 
-* explode & any other komosas from feature-request task
+* explode & any other komosas from feature-request task. and x 2: wolen/komosa by-record/by-field.
 
 * doc items
 * xxxes
