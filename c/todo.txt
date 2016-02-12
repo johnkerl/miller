@@ -7,7 +7,6 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 * JSON input: UT/doc items
-* env vars: OLH ~ PI/E/etc.
 
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 ? make a 3.3.3 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
