@@ -54,7 +54,6 @@ TOP-OF-LIST DETAILS
   - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
 * doc:
-  o \0 example into mld:ref:regex
   o boolean-short-circuit UT w/ regex-captures
   o mlr -f ish @ cover x 2
   o update filter/gate @ mld:ref:put

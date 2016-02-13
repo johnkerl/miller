@@ -1196,8 +1196,8 @@ POKI_RUN_COMMAND{{mlr filter '$name =~ $regex' data/regex-in-data.dat}}HERE
 
 <h2>Regex captures</h2>
 
-<p/>Regex captures of the form <tt>\1</tt>, <tt>\2</tt>, etc. are supported as follows:
-<ul>
+<p/>Regex captures of the form <tt>\0</tt> through <tt>\9</tt> are supported as
+follows: <ul>
 
 <li/> Captures have in-function context for <tt>sub</tt> and <tt>gsub</tt>.
 For example, the first <tt>\1,\2</tt> pair belong to the first <tt>sub</tt> and
