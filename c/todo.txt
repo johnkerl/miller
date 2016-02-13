@@ -11,6 +11,7 @@ TOP-OF-LIST SUMMARY
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * dev page re releases, valgrinds, distros, etc
+* enums
 
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
 ? make a 3.3.3 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?

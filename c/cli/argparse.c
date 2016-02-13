@@ -3,19 +3,21 @@
 #include "cli/argparse.h"
 
 // ================================================================
-#define AP_INT_VALUE_FLAG    0xf6
-#define AP_INT_FLAG          0xe7
-#define AP_DOUBLE_FLAG       0xc9
-#define AP_STRING_FLAG       0xba
-#define AP_STRING_LIST_FLAG  0xab
-#define AP_STRING_ARRAY_FLAG 0x9c
+typedef enum _ap_flag_t {
+	AP_INT_VALUE_FLAG,
+	AP_INT_FLAG,
+	AP_DOUBLE_FLAG,
+	AP_STRING_FLAG,
+	AP_STRING_LIST_FLAG,
+	AP_STRING_ARRAY_FLAG
+} ap_flag_t;
 
 typedef struct _ap_flag_def_t {
-	char* flag_name;
-	int   type;
-	int   intval;
-	void* pval;
-	int   count; // 1 for bool flags; 2 for the rest
+	char*     flag_name;
+	ap_flag_t type;
+	int       intval;
+	void*     pval;
+	int       count; // 1 for bool flags; 2 for the rest
 } ap_flag_def_t;
 
 static ap_flag_def_t* ap_find(ap_state_t* pstate, char* flag_name) {
@@ -27,7 +29,7 @@ static ap_flag_def_t* ap_find(ap_state_t* pstate, char* flag_name) {
 	return NULL;
 }
 
-static ap_flag_def_t* ap_flag_def_alloc(char* flag_name, int ap_type, int intval, void* pval, int count) {
+static ap_flag_def_t* ap_flag_def_alloc(char* flag_name, ap_flag_t ap_type, int intval, void* pval, int count) {
 	ap_flag_def_t* pdef = mlr_malloc_or_die(sizeof(ap_flag_def_t));
 	pdef->flag_name = flag_name;
 	pdef->type      = ap_type;
