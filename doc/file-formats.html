@@ -143,6 +143,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Single-level_JSON_objects">Single-level JSON objects</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Nested_JSON_objects">Nested JSON objects</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formatting_JSON_options">Formatting JSON options</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#JSON_non-streaming">JSON non-streaming</a><br/>
 &bull;&nbsp;<a href="#PPRINT:_Pretty-printed_tabular">PPRINT: Pretty-printed tabular</a><br/>
 &bull;&nbsp;<a href="#XTAB:_Vertical_tabular">XTAB: Vertical tabular</a><br/>
 </div>
@@ -438,7 +439,7 @@ is a tool for handling <boldmaroon>tabular data</boldmaroon> only. This means
 Miller cannot (and should not) handle arbitrary JSON. (Check out <a
 href="http://stedolan.github.io/jq/">jq</a>.)
 
-<p/>Nonetheless, some tabular data are representable in JSON and Miller can handle this.
+<p/>But if you have tabular data represented in JSON then Miller can handle that for you.
 
 <a id="Single-level_JSON_objects"/><h2>Single-level JSON objects</h2>
 
@@ -535,6 +536,32 @@ flag i  attributes:color attributes:shape values:u values:v values:w values:x
 </div>
 <p/>
 
+<p/>Note in particular that as far as Miller&rsquo;s <tt>put</tt> and <tt>filter</tt>, as well as other
+I/O formats, are concerned, these are simply field names with colons in them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
+{
+  "flag": 1,
+  "i": 11,
+  "attributes": {
+    "color": "yellow",
+    "shape": "triangle"
+  },
+  "values": {
+    "u": 0.632170,
+    "v": 0.988721,
+    "w": 0.436498,
+    "x": 5.798188,
+    "uv": 0.625040
+  }
+}
+</pre>
+</div>
+<p/>
+
 <a id="Formatting_JSON_options"/><h2>Formatting JSON options</h2>
 
 <p/>JSON isn&rsquo;t a parameterized format, so <tt>RS</tt>, <tt>FS</tt>,
@@ -560,6 +587,12 @@ key concatenation: this defaults to a single colon.
 
 <p/>Again, please see <a href="http://stedolan.github.io/jq/">jq</a> for a
 truly powerful, JSON-specific tool.
+
+<a id="JSON_non-streaming"/><h2>JSON non-streaming</h2>
+
+<p/>The JSON parser does not return until all input is parsed: in particular
+this means that, unlike for other file formats, Miller does not (at present)
+handle JSON files in <tt>tail -f</tt> contexts.
 
 <a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare

@@ -3,6 +3,50 @@ BUGFIXES
 
 :D
 
+cat a.d
+x=1,a=2
+x=2,a=3
+x=3,a=4
+x=4,a=5
+
+cat b.d
+x=1,b=20
+x=2,b=30
+x=3,b=40
+x=4,b=50
+
+$ mlr join -j x -f a.d b.d
+x=1,a=2,b=20
+x=2,a=3,b=30
+x=3,a=4,b=40
+x=4,a=5,b=50
+
+$ mlr --csvlite join -j x -f a.c b.c
+x,a,b
+1,2,20
+2,3,30
+3,4,40
+4,5,50
+
+$ mlr --json join -j x -f a.j b.j
+{ "x": 2, "a": 3, "b": 30 }
+{ "x": 3, "a": 4, "b": 40 }
+{ "x": 4, "a": 5, "b": 50 }
+
+(lldb) run --icsvlite --ocsvlite join -u --ur -i dkvp     -j x -f a.d b.v
+Process 993 stopped
+* thread #1: tid = 0x2a760b, 0x0000000100042be9 mlrg`merge_options(popts=0x0000000100103370) + 89 at mapper_join.c:488, queue = 'com.apple.main-thread', stop reason = step over
+    frame #0: 0x0000000100042be9 mlrg`merge_options(popts=0x0000000100103370) + 89 at mapper_join.c:488
+   485      popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
+   486    if (popts->irs               == NULL)
+   487      popts->irs = MLR_GLOBALS.popts->irs;
+-> 488    if (popts->ifs               == NULL)
+   489      popts->ifs = MLR_GLOBALS.popts->ifs;
+   490    if (popts->ips               == NULL)
+   491      popts->ips = MLR_GLOBALS.popts->ips;
+(lldb) p MLR_GLOBALS.popts->ips
+(char *) $21 = 0x000000010005c5b9 "(N/A)"
+
 ================================================================
 TOP-OF-LIST SUMMARY
 
@@ -47,11 +91,7 @@ TOP-OF-LIST SUMMARY
 TOP-OF-LIST DETAILS
 
 * JSON I/O:
-  - UT: mlr --json reshape -i x,y -o item,value rec.json
   - UT: JSON/join. both/left/right json cases.
-  - UT: more in-mem
-  - doc: n.b. colon-inside! not just for I/O.
-  - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
 * multilevel emit: spec & impl
 

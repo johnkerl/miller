@@ -137,7 +137,7 @@ static int new_value(
 
 			case JSON_BOOLEAN:
 				if (! (pvalue->u.boolean.sval = (json_char *) json_alloc
-					(pstate, (pvalue->u.boolean.length + 1) * sizeof (json_char), 0)) )
+					(pstate, (pvalue->u.boolean.length + 1) * sizeof (json_char), 1)) )
 				{
 					return 0;
 				}
@@ -146,7 +146,7 @@ static int new_value(
 
 			case JSON_INTEGER:
 				if (! (pvalue->u.integer.sval = (json_char *) json_alloc
-					(pstate, (pvalue->u.integer.length + 1) * sizeof (json_char), 0)) )
+					(pstate, (pvalue->u.integer.length + 1) * sizeof (json_char), 1)) )
 				{
 					return 0;
 				}
@@ -155,7 +155,7 @@ static int new_value(
 
 			case JSON_DOUBLE:
 				if (! (pvalue->u.dbl.sval = (json_char *) json_alloc
-					(pstate, (pvalue->u.dbl.length + 1) * sizeof (json_char), 0)) )
+					(pstate, (pvalue->u.dbl.length + 1) * sizeof (json_char), 1)) )
 				{
 					return 0;
 				}
