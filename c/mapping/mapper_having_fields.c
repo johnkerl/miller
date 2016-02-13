@@ -8,12 +8,15 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-#define HAVING_FIELDS_AT_LEAST     0x4a
-#define HAVING_FIELDS_WHICH_ARE    0x5b
-#define HAVING_FIELDS_AT_MOST      0x6c
-#define HAVING_ALL_FIELDS_MATCHING 0x7d
-#define HAVING_ANY_FIELDS_MATCHING 0x8e
-#define HAVING_NO_FIELDS_MATCHING  0x9f
+typedef enum _criterion_t {
+	HAVING_FIELDS_UNSPECIFIED,
+	HAVING_FIELDS_AT_LEAST,
+	HAVING_FIELDS_WHICH_ARE,
+	HAVING_FIELDS_AT_MOST,
+	HAVING_ALL_FIELDS_MATCHING,
+	HAVING_ANY_FIELDS_MATCHING,
+	HAVING_NO_FIELDS_MATCHING
+} criterion_t;
 
 typedef struct _mapper_having_fields_state_t {
 	slls_t* pfield_names;
@@ -24,7 +27,7 @@ typedef struct _mapper_having_fields_state_t {
 static void      mapper_having_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv);
 
-static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, int criterion);
+static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, criterion_t criterion);
 static void      mapper_having_fields_free(mapper_t* pmapper);
 
 static sllv_t*   mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -62,9 +65,9 @@ static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* pfield_names  = NULL;
-	char*   regex_string  = NULL;
-	int     criterion     = FALSE;
+	slls_t*     pfield_names = NULL;
+	char*       regex_string = NULL;
+	criterion_t criterion    = HAVING_FIELDS_UNSPECIFIED;
 
 	char* verb = argv[(*pargi)++];
 
@@ -137,7 +140,7 @@ static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** arg
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, int criterion) {
+static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, criterion_t criterion) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_having_fields_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_having_fields_state_t));
