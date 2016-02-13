@@ -8595,6 +8595,11 @@ d,e,f
 
 mlr --csvlite filter false ^^ false ./reg_test/input/b.csv
 
+mlr put gate $x==2 && $a =~ "....."; $y=4 ./reg_test/input/short-circuit.dkvp
+x=1,a="hello"
+x=2,a="there",y=4
+x=3,a="world"
+
 mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
 name=X,x=97,y=97
 name=Y,x=97,y=98

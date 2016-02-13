@@ -106,6 +106,7 @@ EXTRA_DIST=	\
 		sec2gmt \
 		sec2xhms \
 		short \
+		short-circuit.dkvp \
 		small \
 		small-nested.json \
 		small-non-nested-wrapped.json \

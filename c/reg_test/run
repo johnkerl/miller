@@ -745,6 +745,9 @@ run_mlr --csvlite filter 'true  ^^ false' $indir/b.csv
 run_mlr --csvlite filter 'false ^^ true'  $indir/b.csv
 run_mlr --csvlite filter 'false ^^ false' $indir/b.csv
 
+# This tests boolean short-circuiting
+run_mlr put 'gate $x==2 && $a =~ "....."; $y=4'  $indir/short-circuit.dkvp
+
 export X=97
 export Y=98
 run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
