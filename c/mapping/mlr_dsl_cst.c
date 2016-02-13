@@ -7,7 +7,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	int lhs_type,
+	mlr_dsl_cst_lhs_type_t lhs_type,
 	char* output_field_name,
 	sllv_t* poosvar_lhs_keylist_evaluators,
 	lrec_evaluator_t* prhs_evaluator);
@@ -228,7 +228,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	int lhs_type,
+	mlr_dsl_cst_lhs_type_t lhs_type,
 	char* output_field_name,
 	sllv_t* poosvar_lhs_keylist_evaluators,
 	lrec_evaluator_t* prhs_evaluator)
