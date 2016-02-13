@@ -1292,7 +1292,7 @@ Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-variables; the environment-variable name may be an expression, e.g. a field value.
+variables. The environment-variable name may be an expression, e.g. a field value.
 
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
@@ -2115,7 +2115,7 @@ Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-variables; the environment-variable name may be an expression, e.g. a field value.
+variables. The environment-variable name may be an expression, e.g. a field value.
 
 Examples:
   Assignment only:
@@ -2215,6 +2215,8 @@ mlr --opprint put '
 <p/>
 
 <a id="Gating_assignments_by_boolean_expressions_for_put"/><h3>Gating assignments by boolean expressions for put</h3>
+
+<p/>Note: The <tt>gate</tt> feature will change significantly in an upcoming Miller 4.0.0 release.
 
 <p/>Boolean expressions may be used as gates for subsequent semicolon-separated
 expressions within the same <tt>put</tt>. This can be used to allow assignments

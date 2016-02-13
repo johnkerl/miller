@@ -53,11 +53,6 @@ TOP-OF-LIST DETAILS
   - doc: n.b. colon-inside! not just for I/O.
   - doc: wishlist: streamable version with fgetc rather than pointer-math. esp.: no tail -f!
 
-* doc:
-  o boolean-short-circuit UT w/ regex-captures
-  o mlr -f ish @ cover x 2
-  o update filter/gate @ mld:ref:put
-
 * multilevel emit: spec & impl
 
 * pattern-action (bare-boolean with block) still experimental. if-else down the road perhaps ...
