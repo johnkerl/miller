@@ -17,10 +17,12 @@
 #include "mapping/mappers.h"
 #include "mapping/stats1_accumulators.h"
 
-#define MERGE_BY_NAME_LIST  0xef01
-#define MERGE_BY_NAME_REGEX 0xef02
-#define MERGE_BY_COLLAPSING 0xef03
-#define MERGE_UNSPECIFIED   0xef04
+typedef enum _merge_by_t {
+	MERGE_BY_NAME_LIST,
+	MERGE_BY_NAME_REGEX,
+	MERGE_BY_COLLAPSING,
+	MERGE_UNSPECIFIED
+} merge_by_t;
 
 #define SB_ALLOC_LENGTH 32
 
@@ -54,7 +56,7 @@ typedef struct _mapper_merge_fields_state_t {
 // ----------------------------------------------------------------
 static void      mapper_merge_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_which,
+static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_t do_which,
 	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int keep_input_fields);
 static void      mapper_merge_fields_free(mapper_t* pmapper);
 static sllv_t*   mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -101,12 +103,12 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t* paccumulator_names    = NULL;
-	slls_t* pvalue_field_names    = NULL;
-	char*   output_field_basename = NULL;
-	int     allow_int_float       = TRUE;
-	int     keep_input_fields     = FALSE;
-	int     do_which              = MERGE_UNSPECIFIED;
+	slls_t*    paccumulator_names    = NULL;
+	slls_t*    pvalue_field_names    = NULL;
+	char*      output_field_basename = NULL;
+	int        allow_int_float       = TRUE;
+	int        keep_input_fields     = FALSE;
+	merge_by_t do_which              = MERGE_UNSPECIFIED;
 
 	char* verb = argv[(*pargi)++];
 
@@ -199,7 +201,7 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, int do_which,
+static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_t do_which,
 	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int keep_input_fields)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
