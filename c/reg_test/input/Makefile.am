@@ -78,6 +78,12 @@ EXTRA_DIST=	\
 		missings.dkvp \
 		mixed-types.xtab \
 		modarith.dat \
+		multi-format-join-a.csv \
+		multi-format-join-a.dkvp \
+		multi-format-join-a.json \
+		multi-format-join-b.csv \
+		multi-format-join-b.dkvp \
+		multi-format-join-b.json \
 		multi-ips.dkvp \
 		multi-sep.csv \
 		multi-sep.dkvp \

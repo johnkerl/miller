@@ -1,68 +1,24 @@
 ================================================================
 BUGFIXES
 
-:D
-
-cat a.d
-x=1,a=2
-x=2,a=3
-x=3,a=4
-x=4,a=5
-
-cat b.d
-x=1,b=20
-x=2,b=30
-x=3,b=40
-x=4,b=50
-
-$ mlr join -j x -f a.d b.d
-x=1,a=2,b=20
-x=2,a=3,b=30
-x=3,a=4,b=40
-x=4,a=5,b=50
-
-$ mlr --csvlite join -j x -f a.c b.c
-x,a,b
-1,2,20
-2,3,30
-3,4,40
-4,5,50
-
-$ mlr --json join -j x -f a.j b.j
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
-
-(lldb) run --icsvlite --ocsvlite join -u --ur -i dkvp     -j x -f a.d b.v
-Process 993 stopped
-* thread #1: tid = 0x2a760b, 0x0000000100042be9 mlrg`merge_options(popts=0x0000000100103370) + 89 at mapper_join.c:488, queue = 'com.apple.main-thread', stop reason = step over
-    frame #0: 0x0000000100042be9 mlrg`merge_options(popts=0x0000000100103370) + 89 at mapper_join.c:488
-   485      popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
-   486    if (popts->irs               == NULL)
-   487      popts->irs = MLR_GLOBALS.popts->irs;
--> 488    if (popts->ifs               == NULL)
-   489      popts->ifs = MLR_GLOBALS.popts->ifs;
-   490    if (popts->ips               == NULL)
-   491      popts->ips = MLR_GLOBALS.popts->ips;
+mlr --icsvlite --ocsvlite join -u --ur -i dkvp -j x -f a.d b.v
 (lldb) p MLR_GLOBALS.popts->ips
 (char *) $21 = 0x000000010005c5b9 "(N/A)"
 
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* JSON input: UT/doc items
-* doc items
+* multi-format join: fix default ixses
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * dev page re releases, valgrinds, distros, etc
-
-! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
-? make a 3.4.0 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
-  -> or maybe ok: due to semantic versioning i can break gate in a 4.0.0 with a clear conscience. mk clear @ dox.
-
-* explode & any other komosas/wolens from feature-request task.
 * valgrinds
 * xxxes
+
+! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
+? make a 3.4.0 w/ all but oosvar/begin-end/pattern-action (gate is transitional)
+
+* explode & any other komosas/wolens from feature-request task.
 
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
@@ -89,9 +45,6 @@ TOP-OF-LIST SUMMARY
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
-
-* JSON I/O:
-  - UT: JSON/join. both/left/right json cases.
 
 * multilevel emit: spec & impl
 
