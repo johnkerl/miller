@@ -32,7 +32,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, int oquoting, int headerless_csv_output) {
+lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, int headerless_csv_output) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_csv_state_t));

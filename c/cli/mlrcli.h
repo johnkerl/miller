@@ -6,6 +6,7 @@
 #define MLRCLI_H
 
 #include "containers/sllv.h"
+#include "cli/quoting.h"
 #include "input/lrec_reader.h"
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
@@ -34,7 +35,7 @@ typedef struct _cli_opts_t {
 	char* json_flatten_separator;
 
 	char* ofmt;
-	int   oquoting;
+	quoting_t oquoting;
 
 	lrec_reader_t* plrec_reader;
 	sllv_t*        pmapper_list;
