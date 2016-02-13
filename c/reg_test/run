@@ -346,6 +346,8 @@ run_mlr reshape -r '[XZ]'  -o item,price $indir/reshape-wide-ragged.dkvp
 
 run_mlr reshape -s item,price $indir/reshape-long-ragged.dkvp
 
+run_mlr --json reshape -i x,y -o item,value $indir/small-non-nested.json
+
 # ----------------------------------------------------------------
 announce STATS
 

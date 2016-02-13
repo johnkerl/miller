@@ -13,7 +13,7 @@ TOP-OF-LIST SUMMARY
 * dev page re releases, valgrinds, distros, etc
 
 ! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
-? make a 3.3.3 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
+? make a 3.4.0 w/ all but oosvar/begin-end/pattern-action? what to do about filter/gate which is transitional?
   -> or maybe ok: due to semantic versioning i can break gate in a 4.0.0 with a clear conscience. mk clear @ dox.
 
 * explode & any other komosas/wolens from feature-request task.
@@ -24,7 +24,7 @@ TOP-OF-LIST SUMMARY
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
 ----------------------------------------------------------------
-* relcut? from 3.3.2 to 94e4ae870680b7dcd517b3916f12fb4d6c2266ca:
+* relcut material since 3.3.2:
   o big:
     - oosvars -- but pending parameterized emit
     - begin/end -- but pending parameterized emit
