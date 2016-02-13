@@ -17,10 +17,12 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-#define DO_CORR       0x11
-#define DO_COV        0x22
-#define DO_COVX       0x33
-#define DO_LINREG_PCA 0x44
+typedef enum _bivar_measure_t {
+	DO_CORR,
+	DO_COV,
+	DO_COVX,
+	DO_LINREG_PCA
+} bivar_measure_t;
 
 // ----------------------------------------------------------------
 struct _stats2_acc_t; // forward reference for method definitions
@@ -70,7 +72,7 @@ static stats2_acc_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* val
 static stats2_acc_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
 static stats2_acc_t* stats2_r2_alloc        (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
 static stats2_acc_t* stats2_logireg_alloc   (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
-static stats2_acc_t* stats2_corr_cov_alloc  (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_which, int do_verbose);
+static stats2_acc_t* stats2_corr_cov_alloc  (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, bivar_measure_t do_which, int do_verbose);
 static stats2_acc_t* stats2_corr_alloc      (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
 static stats2_acc_t* stats2_cov_alloc       (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
 static stats2_acc_t* stats2_covx_alloc      (char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose);
@@ -752,7 +754,7 @@ typedef struct _stats2_corr_cov_state_t {
 	double sumx2;
 	double sumxy;
 	double sumy2;
-	int    do_which;
+	bivar_measure_t do_which;
 	int    do_verbose;
 
 	char*  covx_00_output_field_name;
@@ -938,7 +940,9 @@ static void stats2_corr_cov_free(stats2_acc_t* pstats2_acc) {
 	free(pstats2_acc);
 }
 
-static stats2_acc_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_which, int do_verbose) {
+static stats2_acc_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name,
+	bivar_measure_t do_which, int do_verbose)
+{
 	stats2_acc_t* pstats2_acc = mlr_malloc_or_die(sizeof(stats2_acc_t));
 	stats2_corr_cov_state_t* pstate = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t));
 	pstate->count      = 0LL;
