@@ -1932,19 +1932,22 @@ lrec_evaluator_t* lrec_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
-typedef struct _function_lookup_t {
-	int   function_class;
-	char* function_name;
-	int   arity;
-	char* usage_string;
-} function_lookup_t;
 
-#define FUNC_CLASS_ARITHMETIC 0xa0
-#define FUNC_CLASS_MATH       0xa1
-#define FUNC_CLASS_BOOLEAN    0xa2
-#define FUNC_CLASS_STRING     0xa3
-#define FUNC_CLASS_CONVERSION 0xa4
-#define FUNC_CLASS_TIME       0xa5
+typedef enum _func_class_t {
+	FUNC_CLASS_ARITHMETIC,
+	FUNC_CLASS_MATH,
+	FUNC_CLASS_BOOLEAN,
+	FUNC_CLASS_STRING,
+	FUNC_CLASS_CONVERSION,
+	FUNC_CLASS_TIME
+} func_class_t;
+
+typedef struct _function_lookup_t {
+	func_class_t function_class;
+	char*        function_name;
+	int          arity;
+	char*        usage_string;
+} function_lookup_t;
 
 static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
@@ -2054,11 +2057,15 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{  0, NULL,      -1 , NULL}, // table terminator
 };
 
-#define ARITY_CHECK_PASS    0xbb
-#define ARITY_CHECK_FAIL    0xbc
-#define ARITY_CHECK_NO_SUCH 0xbd
+typedef enum _arity_check_t {
+	ARITY_CHECK_PASS,
+	ARITY_CHECK_FAIL,
+	ARITY_CHECK_NO_SUCH
+} arity_check_t;
 
-static int check_arity(function_lookup_t lookup_table[], char* function_name, int user_provided_arity, int *parity) {
+static arity_check_t check_arity(function_lookup_t lookup_table[], char* function_name,
+	int user_provided_arity, int *parity)
+{
 	*parity = -1;
 	int found_function_name = FALSE;
 	for (int i = 0; ; i++) {
@@ -2084,7 +2091,7 @@ static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* 
 	int user_provided_arity)
 {
 	int arity = -1;
-	int result = check_arity(fcn_lookup_table, function_name, user_provided_arity, &arity);
+	arity_check_t result = check_arity(fcn_lookup_table, function_name, user_provided_arity, &arity);
 	if (result == ARITY_CHECK_NO_SUCH) {
 		fprintf(stderr, "Function name \"%s\" not found.\n", function_name);
 		exit(1);
@@ -2104,7 +2111,7 @@ static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* 
 	}
 }
 
-static char* function_class_to_desc(int function_class) {
+static char* function_class_to_desc(func_class_t function_class) {
 	switch(function_class) {
 	case FUNC_CLASS_ARITHMETIC: return "arithmetic"; break;
 	case FUNC_CLASS_MATH:       return "math";       break;
