@@ -8,6 +8,14 @@
 // These are used by mlr stats1 as well as mlr merge-fields.
 
 // ----------------------------------------------------------------
+// Types of second-order cumulant
+typedef enum _cumulant2o_t {
+	DO_STDDEV,
+	DO_VAR,
+	DO_MEANEB,
+} cumulant2o_t;
+
+// ----------------------------------------------------------------
 struct _stats1_acc_t; // forward reference for method definitions
 typedef void stats1_dingest_func_t(void* pvstate, double val);
 typedef void stats1_ningest_func_t(void* pvstate, mv_t* pval);
@@ -38,7 +46,7 @@ stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stat
 stats1_acc_t* stats1_mode_alloc              (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_sum_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_mean_alloc              (char* value_field_name, char* stats1_acc_name, int allow_int_float);
-stats1_acc_t* stats1_stddev_var_meaneb_alloc (char* value_field_name, char* stats1_acc_name, int do_which);
+stats1_acc_t* stats1_stddev_var_meaneb_alloc (char* value_field_name, char* stats1_acc_name, cumulant2o_t do_which);
 stats1_acc_t* stats1_stddev_alloc            (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_var_alloc               (char* value_field_name, char* stats1_acc_name, int allow_int_float);
 stats1_acc_t* stats1_meaneb_alloc            (char* value_field_name, char* stats1_acc_name, int allow_int_float);

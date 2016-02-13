@@ -13,10 +13,6 @@
 #include "containers/mlrval.h"
 #include "mapping/stats1_accumulators.h"
 
-#define DO_STDDEV 0xc1
-#define DO_VAR    0xc2
-#define DO_MEANEB 0xc3
-
 // ----------------------------------------------------------------
 static int is_percentile_acc_name(char* stats1_acc_name) {
 	double percentile;
@@ -263,7 +259,7 @@ typedef struct _stats1_stddev_var_meaneb_state_t {
 	unsigned long long count;
 	double sumx;
 	double sumx2;
-	int    do_which;
+	cumulant2o_t  do_which;
 	char* output_field_name;
 } stats1_stddev_var_meaneb_state_t;
 static void stats1_stddev_var_meaneb_dingest(void* pvstate, double val) {
@@ -300,7 +296,7 @@ static void stats1_stddev_var_meaneb_free(stats1_acc_t* pstats1_acc) {
 	free(pstats1_acc);
 }
 
-stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_acc_name, int do_which) {
+stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats1_acc_name, cumulant2o_t do_which) {
 	stats1_acc_t* pstats1_acc = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_stddev_var_meaneb_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_stddev_var_meaneb_state_t));
 	pstate->count              = 0LL;
