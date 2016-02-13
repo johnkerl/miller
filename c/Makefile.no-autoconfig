@@ -247,12 +247,6 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   input/peek_file_reader.c \
   unit_test/test_join_bucket_keeper.c
 
-TEST_JSON_PARSER_SRCS = \
-  lib/mlrutil.c \
-  lib/mlr_globals.c \
-  input/json_parser.c \
-  unit_test/test_json_parser.c
-
 EXPERIMENTAL_READER_SRCS = \
   lib/mlrutil.c \
   lib/mlrregex.c \
@@ -372,9 +366,6 @@ test-lrec-evaluators: .always
 
 test-join-bucket-keeper: .always
 	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper -lm
-
-test-json-parser: .always
-	$(CCDEBUG) $(TEST_JSON_PARSER_SRCS) -o test-json-parser -lm
 
 # ----------------------------------------------------------------
 # Standalone mains
