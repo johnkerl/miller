@@ -53,7 +53,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {
-	int ast_node_type;
+	mlr_dsl_ast_node_type_t ast_node_type;
 	sllv_t* pitems;
 } mlr_dsl_cst_statement_t;
 

@@ -275,7 +275,7 @@ static void evaluate_statements(
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 
-		int node_type = pstatement->ast_node_type;
+		mlr_dsl_ast_node_type_t node_type = pstatement->ast_node_type;
 
 		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;

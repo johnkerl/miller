@@ -12,7 +12,7 @@ mlr_dsl_ast_t* mlr_dsl_ast_alloc() {
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type) {
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t type) {
 	mlr_dsl_ast_node_t* pnode = (mlr_dsl_ast_node_t*)mlr_malloc_or_die(
 		sizeof(mlr_dsl_ast_node_t));
 	pnode->text = mlr_strdup_or_die(text);
@@ -28,7 +28,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother) {
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, int type)
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, mlr_dsl_ast_node_type_t type)
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
 	pnode->pchildren = sllv_alloc();
@@ -36,7 +36,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, int type)
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa)
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
@@ -46,7 +46,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type,
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb)
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
@@ -57,7 +57,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc)
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
@@ -123,7 +123,7 @@ void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode) {
 }
 
 // ----------------------------------------------------------------
-char* mlr_dsl_ast_node_describe_type(int type) {
+char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	switch(type) {
 	case MD_AST_NODE_TYPE_STRNUM_LITERAL:     return "strnum_literal";     break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:    return "boolean_literal";    break;

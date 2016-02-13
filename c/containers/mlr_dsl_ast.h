@@ -6,23 +6,25 @@
 #define MLR_DSL_AST_H
 #include "sllv.h"
 
-#define MD_AST_NODE_TYPE_STRNUM_LITERAL    0xda00
-#define MD_AST_NODE_TYPE_BOOLEAN_LITERAL   0xda11
-#define MD_AST_NODE_TYPE_REGEXI            0xda22
-#define MD_AST_NODE_TYPE_FIELD_NAME        0xda33
-#define MD_AST_NODE_TYPE_OOSVAR_NAME       0xda44
-#define MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY  0xda55
-#define MD_AST_NODE_TYPE_FUNCTION_NAME     0xda66
-#define MD_AST_NODE_TYPE_OPERATOR          0xda77
-#define MD_AST_NODE_TYPE_SREC_ASSIGNMENT   0xda88
-#define MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT 0xda99
-#define MD_AST_NODE_TYPE_CONTEXT_VARIABLE  0xdaaa
-#define MD_AST_NODE_TYPE_STRIPPED_AWAY     0xdabb
-#define MD_AST_NODE_TYPE_FILTER            0xdacc
-#define MD_AST_NODE_TYPE_GATE              0xdac5
-#define MD_AST_NODE_TYPE_EMIT              0xdadd
-#define MD_AST_NODE_TYPE_DUMP              0xdaee
-#define MD_AST_NODE_TYPE_ENV               0xdaff
+typedef enum _mlr_dsl_ast_node_type_t {
+	MD_AST_NODE_TYPE_STRNUM_LITERAL,
+	MD_AST_NODE_TYPE_BOOLEAN_LITERAL,
+	MD_AST_NODE_TYPE_REGEXI,
+	MD_AST_NODE_TYPE_FIELD_NAME,
+	MD_AST_NODE_TYPE_OOSVAR_NAME,
+	MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY,
+	MD_AST_NODE_TYPE_FUNCTION_NAME,
+	MD_AST_NODE_TYPE_OPERATOR,
+	MD_AST_NODE_TYPE_SREC_ASSIGNMENT,
+	MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT,
+	MD_AST_NODE_TYPE_CONTEXT_VARIABLE,
+	MD_AST_NODE_TYPE_STRIPPED_AWAY,
+	MD_AST_NODE_TYPE_FILTER,
+	MD_AST_NODE_TYPE_GATE,
+	MD_AST_NODE_TYPE_EMIT,
+	MD_AST_NODE_TYPE_DUMP,
+	MD_AST_NODE_TYPE_ENV
+} mlr_dsl_ast_node_type_t;
 
 typedef struct _mlr_dsl_ast_t {
 	sllv_t* pbegin_statements;
@@ -31,23 +33,23 @@ typedef struct _mlr_dsl_ast_t {
 } mlr_dsl_ast_t;
 
 typedef struct _mlr_dsl_ast_node_t {
-	char*   text;
-	int     type;
-	sllv_t* pchildren;
+	char*                   text;
+	mlr_dsl_ast_node_type_t type;
+	sllv_t*                 pchildren;
 } mlr_dsl_ast_node_t;
 
 mlr_dsl_ast_t* mlr_dsl_ast_alloc();
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, int type);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t type);
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, int type);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, mlr_dsl_ast_node_type_t type);
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, int type, mlr_dsl_ast_node_t* pa);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_unary(char* text, mlr_dsl_ast_node_type_t type, mlr_dsl_ast_node_t* pa);
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, int type,
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, int type,
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
@@ -62,7 +64,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
-char* mlr_dsl_ast_node_describe_type(int type);
+char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type);
 
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
 
