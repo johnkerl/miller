@@ -76,7 +76,7 @@ verb name:
 * prefer explode -u ... but yuck
 * maybe reshape --yet-more-args-here ... double-yuck.
 * maybe renest -- ? bleah
-?? k-v explode/implode in addition to value-only explode? and, 
+?? k-v explode/implode in addition to value-only explode/implode?
 
 ----------------------------------------------------------------
 wolen:
