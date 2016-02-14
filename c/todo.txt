@@ -32,8 +32,6 @@ TOP-OF-LIST SUMMARY
 EXPLODE/UNNEST/ETC:
 
 ----------------------------------------------------------------
-mlr explode-values:
-
   TSV:
 
     x y
@@ -41,7 +39,7 @@ mlr explode-values:
     2 d,e,f
     3 g,h
 
-  mlr unnest --fs comma -f y would produce
+  mlr unnest --fs comma -f y
 
     x y
     1 a
@@ -52,8 +50,6 @@ mlr explode-values:
     3 h
 
 ----------------------------------------------------------------
-mlr explode-pairs:
-
   TSV:
 
     x y
@@ -67,6 +63,7 @@ mlr explode-pairs:
     x=2,s=d,t=e,u=f
     x=3,u=g,v=h
 
+----------------------------------------------------------------
   likewise
 
     timestamp here some prefixes follow, StatsType=datareporter,field1=2,field3=4
@@ -74,10 +71,18 @@ mlr explode-pairs:
     field1=2,field3=4
 
 ----------------------------------------------------------------
+verb name:
+* implode ?!? don't want explode/implode asymmetric with reshape --this --that
+* prefer explode -u ... but yuck
+* maybe reshape --yet-more-args-here ... double-yuck.
+* maybe renest -- ? bleah
+?? k-v explode/implode in addition to value-only explode? and, 
+
+----------------------------------------------------------------
 wolen:
 
   Being able to deal with replicates in both directions would be really useful.
-  Here's a real world example I was working on today, which contains two different measures of association between pairs of
+  Here's a real-world example I was working on today, which contains two different measures of association between pairs of
   genetic markers (rs*):
 
     rs10       rs2237570,0.3,-0.72;rs117465896,0.75,-0.88
