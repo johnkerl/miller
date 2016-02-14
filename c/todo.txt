@@ -7,15 +7,18 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
-* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
-* in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
-* valgrinds
-* xxxes
 
 * explode & any other komosas/wolens from feature-request task.
 
 * parameterized emit: needs spec & impl
+
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+
+* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
+* doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
+* in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
+* valgrinds
+* xxxes
 
 ----------------------------------------------------------------
 * relcut material since 3.4.0:
@@ -24,14 +27,43 @@ TOP-OF-LIST SUMMARY
   - filter/gate/bare-boolean -- pending pattern-action
   - pattern-action -- still under development
 
-----------------------------------------------------------------
+================================================================
 TOP-OF-LIST DETAILS
 
 ----------------------------------------------------------------
 * multilevel emit: spec & impl
+  o DSL needs work:
+    explicit initialization OK:
+    mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' ../data/small
+    implicit initialization not OK -- null-ops math not OK here:
+    kerl@kerl-mbp[s0j0d1][[c]$ mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
+  o replace "null" with "empty", "absent", and "uninit"?
 
+    - echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
+    - echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
+    - echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT  key not present
+
+    - echo x=1,y=2 | mlr put '@s = @s + $y   # @s is MT_UNINIT on first record, then MT_INT on second
+    - echo x=1,y=  | mlr put '@s = @s + $y   # MT_
+    - echo x=1,y=  | mlr put '@s = @s + $u   # MT_
+
+    - evaluator-from-field-name produces empty/absent
+    - evaluator-from-oosvar     produces uninit
+
+    - isnull/isnotnull functions: true for empty or absent or uninit?
+    - disposition matrices will all need new row/column ...
+
+  o keep current emit @x and emit @x,@y,@z?
+    - these are fine for single-level oosvars.
+    - how to define them for multi-level oosvars?
+  o partial-keying syntax: emit(@v, "group", "sum") -- ?
+    - how to handle when the oosvar is shallower than the keying-spec?
+    - how to handle when the oosvar is deeper than the keying-spec?
+
+----------------------------------------------------------------
 * pattern-action (bare-boolean with block) still experimental. if-else down the road perhaps ...
 
+----------------------------------------------------------------
 * oosvars/begin/end:
 
   ? cut down on parameter-marshalling in lrec-evaluators?
@@ -89,9 +121,6 @@ TOP-OF-LIST DETAILS
     real  0m3.976s 0m3.971s 0m3.944s
     time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
     real  0m3.250s 0m3.283s 0m3.300s
-
-DOC:
-* rename-all w/ regex-captures? e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 
 ----------------------------------------------------------------
 
