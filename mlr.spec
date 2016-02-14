@@ -41,7 +41,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(-,root,root)
 
 %changelog
-* Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com>
-- Initial spec-file submission for Miller
 * Sun Feb 14 2016 John Kerl <kerl.john.r@gmail.com>
 - 3.4.0 release
+* Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com>
+- Initial spec-file submission for Miller

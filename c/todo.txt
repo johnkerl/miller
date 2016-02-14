@@ -20,29 +20,32 @@ TOP-OF-LIST SUMMARY
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
-----------------------------------------------------------------
-* relcut material since 3.3.2:
-  o big:
-    - oosvars -- but pending parameterized emit
-    - begin/end -- but pending parameterized emit
-    - filter/gate/bare-boolean -- but pending pattern-action
-    - pattern-action -- still under development:
-    - JSON I/O -- OK
-    - reshape -- OK
-  o medium:
-    - ternary operator
-    - regex captures
-    - ENV
-  o small:
-    - final semicolon
-    - mmap-page-boundary bugfix
-    - boolean literals
-    - typed overlay
-    - \0
-    - mixed-format-join bugfix
+================================================================
+* relcut material since 3.4.0:
+  - oosvars -- pending parameterized emit
+  - begin/end -- pending parameterized emit
+  - filter/gate/bare-boolean -- pending pattern-action
+  - pattern-action -- still under development
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
+
+* release:
+  - configure.ac, c/mlrvers.h, mlr.spec
+  - macbakes
+  - commit & push
+  - jko push for docs
+  - build box: autoreconf -fiv, ./configure, make distcheck
+  - build box: make srpm
+  - pull back mlr-3.4.0.tar.gz and srpm
+  - pull back mlr.arch binaries from whatever buildboxes
+  - write the release notes
+  - attach mlr-3.4.0.tar.gz & binaries & srpm
+
+  xxx brew
+  xxx others
+
+  - configure.ac, c/mlrvers.h back with -dev suffixes
 
 * multilevel emit: spec & impl
 
