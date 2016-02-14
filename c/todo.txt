@@ -9,8 +9,9 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.4.0
 
 * explode/unnest/etc
-* tri-split null
+* shuffle? similar to bootstrap & sample. just use knuth algo.
 
+* tri-split null
 * parameterized emit: needs spec & impl. prereq: tri-split null.
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
@@ -20,7 +21,7 @@ TOP-OF-LIST SUMMARY
 * valgrinds
 * xxxes
 
-----------------------------------------------------------------
+================================================================
 * relcut material since 3.4.0:
   - oosvars -- pending parameterized emit
   - begin/end -- pending parameterized emit
@@ -28,10 +29,10 @@ TOP-OF-LIST SUMMARY
   - pattern-action -- still under development
 
 ================================================================
-TOP-OF-LIST DETAILS
+EXPLODE/UNNEST/ETC:
 
 ----------------------------------------------------------------
-* explode/unnest/etc
+mlr explode-values:
 
   TSV:
 
@@ -49,6 +50,9 @@ TOP-OF-LIST DETAILS
     2 f
     3 g
     3 h
+
+----------------------------------------------------------------
+mlr explode-pairs:
 
   TSV:
 
@@ -69,6 +73,9 @@ TOP-OF-LIST DETAILS
 
     field1=2,field3=4
 
+----------------------------------------------------------------
+wolen:
+
   Being able to deal with replicates in both directions would be really useful.
   Here's a real world example I was working on today, which contains two different measures of association between pairs of
   genetic markers (rs*):
@@ -79,7 +86,7 @@ TOP-OF-LIST DETAILS
 
   There are two fields, tab-delimited. Records in the second field provide the association results for all markers
   relevant to the marker in the first field. Converting this format into a "long" format requires two operators. First,
-  the unnesting step I described above, which spreads the semicolon-separated replicates across new records:
+  the unnesting step I described above, which spreads the semicolon-separated replicates across new records (explode-values):
 
     rs10       rs2237570,0.3,-0.72
     rs10       rs117465896,0.75,-0.88
@@ -97,8 +104,8 @@ TOP-OF-LIST DETAILS
     rs10041592 rs79177551  0.2  0.85
     rs10033329 rs4835294   0.2  0.46
 
-----------------------------------------------------------------
-* tri-split null
+================================================================
+TRI-SPLIT NULL
 
   o explicit initialization OK:
 
@@ -108,8 +115,8 @@ TOP-OF-LIST DETAILS
 
     mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
 
-----------------------------------------------------------------
-* multilevel emit: spec & impl
+================================================================
+MULTILEVEL EMIT: SPEC & IMPL
 
   o DSL needs work 1st: tri-split null
 
@@ -138,11 +145,11 @@ TOP-OF-LIST DETAILS
     - how to handle when the oosvar is shallower than the keying-spec?
     - how to handle when the oosvar is deeper than the keying-spec?
 
-----------------------------------------------------------------
-* pattern-action (bare-boolean with block) still experimental. if-else down the road perhaps ...
+================================================================
+PATTERN-ACTION (BARE-BOOLEAN WITH BLOCK) STILL EXPERIMENTAL. IF-ELSE DOWN THE ROAD PERHAPS ...
 
-----------------------------------------------------------------
-* oosvars/begin/end:
+================================================================
+OOSVARS/BEGIN/END:
 
   ? cut down on parameter-marshalling in lrec-evaluators?
     at the *immediate* expense of opacity through 2K lines of code.
@@ -200,9 +207,7 @@ TOP-OF-LIST DETAILS
     time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
     real  0m3.250s 0m3.283s 0m3.300s
 
-----------------------------------------------------------------
-
-* shuffle? similar to bootstrap & sample.
+================================================================
 * look into 'perf'
 * linreg in terms of stats only ... check py book
 * option for: print to stderr NR if NR%N==0 for user-specified N
