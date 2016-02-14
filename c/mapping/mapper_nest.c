@@ -36,7 +36,7 @@
 // 15 2009-01-05     Z  0.09719105
 
 // ================================================================
-typedef struct _mapper_explode_state_t {
+typedef struct _mapper_nest_state_t {
 	ap_state_t* pargp;
 
 	// for wide-to-long:
@@ -49,16 +49,16 @@ typedef struct _mapper_explode_state_t {
 	char* split_out_key_field_name;
 	char* split_out_value_field_name;
 	lhmslv_t* other_keys_to_other_values_to_buckets;
-} mapper_explode_state_t;
+} mapper_nest_state_t;
 
-typedef struct _explode_bucket_t {
+typedef struct _nest_bucket_t {
 	lrec_t* prepresentative;
 	lhmss_t* pairs;
-} explode_bucket_t;
+} nest_bucket_t;
 
-static void      mapper_explode_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_explode_alloc(
+static void      mapper_nest_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_nest_alloc(
 	ap_state_t* pargp,
 	slls_t* input_field_names,
 	slls_t* input_field_regex_strings,
@@ -66,35 +66,35 @@ static mapper_t* mapper_explode_alloc(
 	char*   output_value_field_name,
 	char*   split_out_key_field_name,
 	char*   split_out_value_field_name);
-static void      mapper_explode_free(mapper_t* pmapper);
-static sllv_t*   mapper_explode_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_explode_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_explode_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static void      mapper_nest_free(mapper_t* pmapper);
+static sllv_t*   mapper_nest_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_nest_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_nest_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
-static explode_bucket_t* explode_bucket_alloc(lrec_t* prepresentative);
-static void explode_bucket_free(explode_bucket_t* pbucket);
+static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
+static void nest_bucket_free(nest_bucket_t* pbucket);
 
 // ----------------------------------------------------------------
-mapper_setup_t mapper_explode_setup = {
-	.verb = "explode",
-	.pusage_func = mapper_explode_usage,
-	.pparse_func = mapper_explode_parse_cli
+mapper_setup_t mapper_nest_setup = {
+	.verb = "nest",
+	.pusage_func = mapper_nest_usage,
+	.pparse_func = mapper_nest_parse_cli
 };
 
 // ----------------------------------------------------------------
-static void mapper_explode_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
 	fprintf(o, "Wide-to-long options:\n");
-	fprintf(o, "  -i {input field names}   -o {key-field name,value-field name}\n");
-	fprintf(o, "  -r {input field regexes} -o {key-field name,value-field name}\n");
-	fprintf(o, "  These pivot/explode the input data such that the input fields are removed\n");
+	fprintf(o, "  -i {input field names}\n");
+	fprintf(o, "  -r {input field regexes}\n");
+	fprintf(o, "  These pivot/nest the input data such that the input fields are removed\n");
 	fprintf(o, "  and separate records are emitted for each key/value pair.\n");
 	fprintf(o, "  Note: this works with tail -f and produces output records for each input\n");
 	fprintf(o, "  record seen.\n");
 	fprintf(o, "Long-to-wide options:\n");
 	fprintf(o, "  -s {key-field name,value-field name}\n");
-	fprintf(o, "  These pivot/explode the input data to undo the wide-to-long operation.\n");
+	fprintf(o, "  These pivot/nest the input data to undo the wide-to-long operation.\n");
 	fprintf(o, "  Note: this does not work with tail -f; it produces output records only after\n");
 	fprintf(o, "  all input records have been read.\n");
 	fprintf(o, "\n");
@@ -140,7 +140,7 @@ static void mapper_explode_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
 }
 
-static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* input_field_names         = NULL;
 	slls_t* input_field_regex_strings = NULL;
 	slls_t* output_field_names        = NULL;
@@ -155,7 +155,7 @@ static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate, "-s", &split_out_field_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_explode_usage(stderr, argv[0], verb);
+		mapper_nest_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
@@ -167,16 +167,16 @@ static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv) {
 	if (split_out_field_names == NULL) {
 		// wide to long
 		if (input_field_names == NULL && input_field_regex_strings == NULL) {
-			mapper_explode_usage(stderr, argv[0], verb);
+			mapper_nest_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 
 		if (output_field_names == NULL) {
-			mapper_explode_usage(stderr, argv[0], verb);
+			mapper_nest_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		if (output_field_names->length != 2) {
-			mapper_explode_usage(stderr, argv[0], verb);
+			mapper_nest_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		output_key_field_name   = mlr_strdup_or_die(output_field_names->phead->value);
@@ -185,7 +185,7 @@ static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv) {
 	} else {
 		// long to wide
 		if (split_out_field_names->length != 2) {
-			mapper_explode_usage(stderr, argv[0], verb);
+			mapper_nest_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		split_out_key_field_name   = mlr_strdup_or_die(split_out_field_names->phead->value);
@@ -193,13 +193,13 @@ static mapper_t* mapper_explode_parse_cli(int* pargi, int argc, char** argv) {
 		slls_free(split_out_field_names);
 	}
 
-	return mapper_explode_alloc(pstate, input_field_names, input_field_regex_strings,
+	return mapper_nest_alloc(pstate, input_field_names, input_field_regex_strings,
 		output_key_field_name, output_value_field_name,
 		split_out_key_field_name, split_out_value_field_name);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_explode_alloc(
+static mapper_t* mapper_nest_alloc(
 	ap_state_t* pargp,
 	slls_t* input_field_names,
 	slls_t* input_field_regex_strings,
@@ -210,7 +210,7 @@ static mapper_t* mapper_explode_alloc(
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	mapper_explode_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_explode_state_t));
+	mapper_nest_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_nest_state_t));
 
 	pstate->pargp                      = pargp;
 	pstate->input_field_names          = input_field_names;
@@ -233,23 +233,23 @@ static mapper_t* mapper_explode_alloc(
 
 	if (split_out_key_field_name == NULL) {
 		if (pstate->input_field_regexes == NULL)
-			pmapper->pprocess_func = mapper_explode_wide_to_long_no_regex_process;
+			pmapper->pprocess_func = mapper_nest_wide_to_long_no_regex_process;
 		else
-			pmapper->pprocess_func = mapper_explode_wide_to_long_regex_process;
+			pmapper->pprocess_func = mapper_nest_wide_to_long_regex_process;
 		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
-		pmapper->pprocess_func = mapper_explode_long_to_wide_process;
+		pmapper->pprocess_func = mapper_nest_long_to_wide_process;
 		pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	}
 
-	pmapper->pfree_func = mapper_explode_free;
+	pmapper->pfree_func = mapper_nest_free;
 
 	pmapper->pvstate = (void*)pstate;
 	return pmapper;
 }
 
-static void mapper_explode_free(mapper_t* pmapper) {
-	mapper_explode_state_t* pstate = pmapper->pvstate;
+static void mapper_nest_free(mapper_t* pmapper) {
+	mapper_nest_state_t* pstate = pmapper->pvstate;
 
 	slls_free(pstate->input_field_names);
 
@@ -271,8 +271,8 @@ static void mapper_explode_free(mapper_t* pmapper) {
 		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
 			lhmslv_t* other_values_to_buckets = pe->pvvalue;
 			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
-				explode_bucket_t* pbucket = pf->pvvalue;
-				explode_bucket_free(pbucket);
+				nest_bucket_t* pbucket = pf->pvvalue;
+				nest_bucket_free(pbucket);
 			}
 			lhmslv_free(other_values_to_buckets);
 		}
@@ -285,10 +285,10 @@ static void mapper_explode_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_explode_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_nest_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
-	mapper_explode_state_t* pstate = (mapper_explode_state_t*)pvstate;
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
 	sllv_t* poutrecs = sllv_alloc();
 	lhmss_t* pairs = lhmss_alloc();
@@ -324,11 +324,11 @@ static sllv_t* mapper_explode_wide_to_long_no_regex_process(lrec_t* pinrec, cont
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_explode_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_nest_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
 
-	mapper_explode_state_t* pstate = (mapper_explode_state_t*)pvstate;
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
 	sllv_t* poutrecs = sllv_alloc();
 	lhmss_t* pairs = lhmss_alloc();
@@ -367,8 +367,8 @@ static sllv_t* mapper_explode_wide_to_long_regex_process(lrec_t* pinrec, context
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_explode_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_explode_state_t* pstate = (mapper_explode_state_t*)pvstate;
+static sllv_t* mapper_nest_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
 	if (pinrec != NULL) { // Not end of input stream
 		char* split_out_key_field_value   = lrec_get(pinrec, pstate->split_out_key_field_name);
@@ -389,9 +389,9 @@ static sllv_t* mapper_explode_long_to_wide_process(lrec_t* pinrec, context_t* pc
 		}
 
 		slls_t* other_values = mlr_reference_values_from_record(pinrec);
-		explode_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
+		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
 		if (pbucket == NULL) {
-			pbucket = explode_bucket_alloc(pinrec);
+			pbucket = nest_bucket_alloc(pinrec);
 			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
 		} else {
 			lrec_free(pinrec);
@@ -410,7 +410,7 @@ static sllv_t* mapper_explode_long_to_wide_process(lrec_t* pinrec, context_t* pc
 		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
 			lhmslv_t* other_values_to_buckets = pe->pvvalue;
 			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
-				explode_bucket_t* pbucket = pf->pvvalue;
+				nest_bucket_t* pbucket = pf->pvvalue;
 				lrec_t* poutrec = pbucket->prepresentative;
 				pbucket->prepresentative = NULL; // ownership transfer
 				for (lhmsse_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
@@ -428,13 +428,13 @@ static sllv_t* mapper_explode_long_to_wide_process(lrec_t* pinrec, context_t* pc
 }
 
 // ----------------------------------------------------------------
-static explode_bucket_t* explode_bucket_alloc(lrec_t* prepresentative) {
-	explode_bucket_t* pbucket = mlr_malloc_or_die(sizeof(explode_bucket_t));
+static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative) {
+	nest_bucket_t* pbucket = mlr_malloc_or_die(sizeof(nest_bucket_t));
 	pbucket->prepresentative = prepresentative;
 	pbucket->pairs = lhmss_alloc();
 	return pbucket;
 }
-static void explode_bucket_free(explode_bucket_t* pbucket) {
+static void nest_bucket_free(nest_bucket_t* pbucket) {
 	lrec_free(pbucket->prepresentative);
 	lhmss_free(pbucket->pairs);
 	free(pbucket);

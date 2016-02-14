@@ -10,7 +10,6 @@ libmapping_la_SOURCES=	\
 			mapper_check.c \
 			mapper_cut.c \
 			mapper_decimate.c \
-			mapper_explode.c \
 			mapper_filter.c \
 			mapper_grep.c \
 			mapper_group_like.c \
@@ -20,6 +19,7 @@ libmapping_la_SOURCES=	\
 			mapper_join.c \
 			mapper_label.c \
 			mapper_merge_fields.c \
+			mapper_nest.c \
 			mapper_put.c \
 			mapper_regularize.c \
 			mapper_rename.c \

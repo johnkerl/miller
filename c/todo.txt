@@ -9,6 +9,7 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.4.0
 
 ! nest --explode/--implode
+? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
 ? shuffle? similar to bootstrap & sample. just use knuth algo.
 
 * tri-split null
@@ -30,6 +31,61 @@ TOP-OF-LIST SUMMARY
 
 ================================================================
 EXPLODE/UNNEST/ETC:
+
+----------------------------------------------------------------
+explode across records by value (forward):
+implode across records by value (reverse):
+  mlr nest
+    --explode / --implode
+    --values
+    --records
+    --nested-fs semicolon
+
+  x=a;b;c,y=d
+
+  x=a,y=d
+  x=b,y=d
+  x=c,y=d
+
+explode across fields by value (forward):
+implode across fields by value (reverse):
+  mlr nest
+    --explode / --implode
+    --values
+    --fields
+    --nested-fs semicolon
+
+  x=a;b;c,y=d
+
+  x_1=a,x_2=b,x_3=cy=d
+
+explode across records by key-value (forward):
+implode across records by key-value (reverse):
+  mlr nest
+    --explode / --implode
+    --pairs
+    --records
+    --nested-ps colon
+    --nested-fs semicolon
+
+  x=a:1;b:2;c:3,y=d
+
+  a=1,y=d
+  b=2,y=d
+  c=3,y=d
+
+explode across fields by key-value (forward):
+implode across fields by key-value (reverse):
+  mlr nest
+    --explode / --implode
+    --pairs
+    --fields
+    --nested-ps colon
+    --nested-fs semicolon
+
+  x=a:1;b:2;c:3,y=d
+
+  a=1,b=2,c=3,y=d
 
 ----------------------------------------------------------------
   TSV:
@@ -108,62 +164,6 @@ wolen:
     rs10041592 rs1729036   0.24 1
     rs10041592 rs79177551  0.2  0.85
     rs10033329 rs4835294   0.2  0.46
-
-----------------------------------------------------------------
-
-explode across records by value (forward):
-implode across records by value (reverse):
-  mlr nest
-    --explode / --implode
-    --values
-    --records
-    --nested-fs semicolon
-
-  x=a;b;c,y=d
-
-  x=a,y=d
-  x=b,y=d
-  x=c,y=d
-
-explode across fields by value (forward):
-implode across fields by value (reverse):
-  mlr nest
-    --explode / --implode
-    --values
-    --fields
-    --nested-fs semicolon
-
-  x=a;b;c,y=d
-
-  x_1=a,x_2=b,x_3=cy=d
-
-explode across records by key-value (forward):
-implode across records by key-value (reverse):
-  mlr nest
-    --explode / --implode
-    --pairs
-    --records
-    --nested-ps colon
-    --nested-fs semicolon
-
-  x=a:1;b:2;c:3,y=d
-
-  a=1,y=d
-  b=2,y=d
-  c=3,y=d
-
-explode across fields by key-value (forward):
-implode across fields by key-value (reverse):
-  mlr nest
-    --explode / --implode
-    --pairs
-    --fields
-    --nested-ps colon
-    --nested-fs semicolon
-
-  x=a:1;b:2;c:3,y=d
-
-  a=1,b=2,c=3,y=d
 
 ================================================================
 TRI-SPLIT NULL
