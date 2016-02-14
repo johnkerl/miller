@@ -1,5 +1,10 @@
 POKI_PUT_TOC_HERE
 
+<h1>Miller license</h1>
+
+<p/>Two-clause BSD license <a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
+https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
+
 <h1>Prebuilt executables</h1>
 
 <p/> Please see <a href="https://github.com/johnkerl/miller/releases">
@@ -162,7 +167,66 @@ copyright</a>.
 <li/> The <a href="https://github.com/udp/json-parser">udp JSON parser</a>, with BSD2 license.
 </ul>
 
-<h1>Miller license</h1>
+<h1>Creating a new release: for developers</h1>
 
-<p/>Two-clause BSD license <a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
-https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
+<p/>At present I&rsquo;m the primary developer so this is just my checklist for making new releases.
+
+
+<p/>In this example I am using version 3.4.0; of course that will change for subsequent revisions.
+<ul>
+
+<li>Update version found in <tt>mlr --version</tt> and <tt>man mlr</tt>:
+  <ul>
+  <li/> Edit <tt>configure.ac</tt>, <tt>c/mlrvers.h</tt>, and <tt>mlr.spec</tt>
+    from <tt>3.3.2-dev</tt> to <tt>3.4.0</tt>.
+  <li/> <tt>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
+    make -C doc -f Makefile.no-autoconfig all installhome</tt>
+  <li/> Commit and push.
+  <li/> ISP upload so <a href="http://johnkerl.org/miller/doc/index.html">http://johnkerl.org/miller/doc/index.html</a>
+    will have updated head-docs.
+  </ul>
+
+<li>Create the release tarball and SRPM:
+  <ul>
+  <li/> On buildbox: <tt>autoreconf -fiv &amp;&amp; ./configure &amp;&amp; make distcheck</tt>
+  <li/> On buildbox: make SRPM as in <a href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">
+    https://github.com/johnkerl/miller/blob/master/README-RPM.md</a>
+  <li/> Pull back release tarball <tt>mlr-3.4.0.tar.gz</tt> and SRPM <tt>mlr-3.4.0-1.el6.src.rpm</tt> from buildbox,
+    and <tt>mlr.arch</tt> binaries from whatever buildboxes.
+  </ul>
+
+<li/>Create the Github release tag:
+  <ul>
+  <li/> Write the release notes
+  <li/> Attach the release tarball, SRPM, and binaries
+  <li/> Publish the release
+  </ul>
+
+<li/>Create the release-specific docs:
+  <ul>
+  <li/> Pull the Github-generated source <tt>.tgz</tt> from Github to ISP
+    miller-releases directory and unpack and <tt>cd</tt> into it.
+  <li/> <tt>cd</tt> into <tt>doc</tt> subdir. Edit <tt>template.html</tt>&rsquo;s <tt>titleinbody</tt> tag from
+    <tt>Miller</tt> to <tt>Miller 3.4.0</tt> and poki-build.
+  <li/> ISP upload
+  <li/> Back in the Github repo, edit <tt>doc/content-for-release-docs.html</tt> to include new release, poki-build,
+    push/commit, and ISP upload.
+  </ul>
+
+<li/>Notify:
+  <ul>
+  <li/> Social-media updates.
+  <li/> Submit <tt>brew</tt> pull request; notify any other distros which don&rsquo;t appear to have autoupdated
+    since the previous release.
+  </ul>
+
+<li/>Afterwork:
+  <ul>
+  <li> Edit <tt>configure.ac</tt> and <tt>c/mlrvers.h</tt> to change version from <tt>3.4.0</tt> to
+    <tt>3.4.0-dev</tt>.
+  <li/> <tt>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
+    make -C doc -f Makefile.no-autoconfig all installhome</tt>
+  <li> Commit and push.
+  </ul>
+
+</ul>
