@@ -30,6 +30,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_count_distinct_setup,
 	&mapper_cut_setup,
 	&mapper_decimate_setup,
+	&mapper_explode_setup,
 	&mapper_filter_setup,
 	&mapper_grep_setup,
 	&mapper_group_by_setup,
