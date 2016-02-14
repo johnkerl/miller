@@ -10,7 +10,9 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv copySwiftV1MangledName \
   | mgrepv 'LEAK SUMMARY' \
   | mgrepv 'HEAP SUMMARY' \
-  | mgrepv 'UNKNOWN fcntl' \
+  | grep -v 'UNKNOWN fcntl' \
+  | grep -v 'UNKNOWN host message' \
+  | grep -v 'UNKNOWN task message' \
   | grep -v 'ERROR SUMMARY' \
   | grep -v 'Memcheck,' \
   | grep -v 'Copyright' \

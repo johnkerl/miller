@@ -1,9 +1,7 @@
 ================================================================
 BUGFIXES
 
-mlr --icsvlite --ocsvlite join -u --ur -i dkvp -j x -f a.d b.v
-(lldb) p MLR_GLOBALS.popts->ips
-(char *) $21 = 0x000000010005c5b9 "(N/A)"
+:D
 
 ================================================================
 TOP-OF-LIST SUMMARY
@@ -14,8 +12,8 @@ TOP-OF-LIST SUMMARY
 * valgrinds
 * xxxes
 
-! rh/fedora/centos mlr-3.3.2: after patch-file for manpage
-? make a 3.4.0 w/ all but oosvar/begin-end/pattern-action (gate is transitional)
+* 3.4.0
+* rh/fedora/centos mlr-3.4.0
 
 * explode & any other komosas/wolens from feature-request task.
 
