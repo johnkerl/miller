@@ -8,7 +8,6 @@ mlr --icsvlite --ocsvlite join -u --ur -i dkvp -j x -f a.d b.v
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* multi-format join: fix default ixses
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * dev page re releases, valgrinds, distros, etc
@@ -42,6 +41,7 @@ TOP-OF-LIST SUMMARY
     - boolean literals
     - typed overlay
     - \0
+    - mixed-format-join bugfix
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
@@ -135,7 +135,6 @@ DOC:
 * debian screenshot
 * lrec_evaluators cleanup re strict, redundant statements, etc.
 * ruby @ optextdep @ mld; poki+mkman
-! mixed-format joins ... make UT cases
 * comma-number -- using locale?
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
   - needs refactor for lrec_reader_alloc callsite
@@ -268,7 +267,6 @@ UT/REG
 * ut all mathlib funcs
 * ut int/float/string
 * ut roundm
-* ut join with mixed-format/separator (left vs. right)
 * ut join with left/right-prefix
 
 ================================================================

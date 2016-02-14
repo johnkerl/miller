@@ -479,20 +479,58 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 // some of the information needed to construct an lrec_reader is available on
 // the command line before the mapper-allocators are called, some is not
 // available until after.  Hence our obtaining these flags after mapper-alloc.)
+//
+// Mainly this just takes the main-opts flag whenever the join-opts flag was not
+// specified by the user. But it's a bit more complex when main and join input
+// formats are different. Example: main input format is CSV, for which IPS is
+// "(N/A)", and join input format is DKVP. Then we should not use "(N/A)"
+// for DKVP IPS. However if main input format were DKVP with IPS set to ":",
+// then we should take that.
+//
+// The logic is:
+//
+// * If the join input format was unspecified, take all unspecified values from
+//   main opts.
+//
+// * If the join input format was specified and is the same as main input
+//   format, take unspecified values from main opts.
+//
+// * If the join input format was specified and is not the same as main input
+//   format, take unspecified values from defaults for the join input format.
 
 static void merge_options(mapper_join_opts_t* popts) {
-	if (popts->input_file_format == NULL)
+	if (popts->input_file_format == NULL) {
 		popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
-	if (popts->irs               == NULL)
-		popts->irs = MLR_GLOBALS.popts->irs;
-	if (popts->ifs               == NULL)
-		popts->ifs = MLR_GLOBALS.popts->ifs;
-	if (popts->ips               == NULL)
-		popts->ips = MLR_GLOBALS.popts->ips;
-	if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
-		popts->allow_repeat_ifs = MLR_GLOBALS.popts->allow_repeat_ifs;
-	if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
-		popts->allow_repeat_ips = MLR_GLOBALS.popts->allow_repeat_ips;
+	}
+
+	if (streq(popts->input_file_format, MLR_GLOBALS.popts->ifile_fmt)) {
+
+		if (popts->irs == NULL)
+			popts->irs = MLR_GLOBALS.popts->irs;
+		if (popts->ifs == NULL)
+			popts->ifs = MLR_GLOBALS.popts->ifs;
+		if (popts->ips == NULL)
+			popts->ips = MLR_GLOBALS.popts->ips;
+		if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
+			popts->allow_repeat_ifs = MLR_GLOBALS.popts->allow_repeat_ifs;
+		if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
+			popts->allow_repeat_ips = MLR_GLOBALS.popts->allow_repeat_ips;
+
+	} else {
+
+		if (popts->irs == NULL)
+			popts->irs = lhmss_get(get_default_rses(), popts->input_file_format);
+		if (popts->ifs == NULL)
+			popts->ifs = lhmss_get(get_default_fses(), popts->input_file_format);
+		if (popts->ips == NULL)
+			popts->ips = lhmss_get(get_default_pses(), popts->input_file_format);
+		if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
+			popts->allow_repeat_ifs = lhmsi_get(get_default_repeat_ifses(), popts->input_file_format);
+		if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
+			popts->allow_repeat_ips = lhmsi_get(get_default_repeat_ipses(), popts->input_file_format);
+
+	}
+
 	if (popts->use_implicit_csv_header == OPTION_UNSPECIFIED)
 		popts->use_implicit_csv_header = MLR_GLOBALS.popts->use_implicit_csv_header;
 	if (popts->use_mmap_for_read == OPTION_UNSPECIFIED)
@@ -501,6 +539,7 @@ static void merge_options(mapper_join_opts_t* popts) {
 		popts->json_flatten_separator = MLR_GLOBALS.popts->json_flatten_separator;
 }
 
+// ----------------------------------------------------------------
 static void ingest_left_file(mapper_join_state_t* pstate) {
 	mapper_join_opts_t* popts = pstate->popts;
 	merge_options(popts);

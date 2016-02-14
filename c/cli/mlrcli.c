@@ -97,7 +97,7 @@ static lhmss_t* singleton_default_pses = NULL;
 static lhmsi_t* singleton_default_repeat_ifses = NULL;
 static lhmsi_t* singleton_default_repeat_ipses = NULL;
 
-static lhmss_t* get_default_rses() {
+lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
 		lhmss_put(singleton_default_rses, "dkvp",    "\n",    NO_FREE);
@@ -111,7 +111,7 @@ static lhmss_t* get_default_rses() {
 	return singleton_default_rses;
 }
 
-static lhmss_t* get_default_fses() {
+lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
 		lhmss_put(singleton_default_fses, "dkvp",    ",",     NO_FREE);
@@ -125,7 +125,7 @@ static lhmss_t* get_default_fses() {
 	return singleton_default_fses;
 }
 
-static lhmss_t* get_default_pses() {
+lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
 		lhmss_put(singleton_default_pses, "dkvp",    "=",     NO_FREE);
@@ -139,7 +139,7 @@ static lhmss_t* get_default_pses() {
 	return singleton_default_pses;
 }
 
-static lhmsi_t* get_default_repeat_ifses() {
+lhmsi_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
 		singleton_default_repeat_ifses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE, NO_FREE);
@@ -153,7 +153,7 @@ static lhmsi_t* get_default_repeat_ifses() {
 	return singleton_default_repeat_ifses;
 }
 
-static lhmsi_t* get_default_repeat_ipses() {
+lhmsi_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
 		singleton_default_repeat_ipses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE, NO_FREE);

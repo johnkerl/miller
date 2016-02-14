@@ -7,6 +7,8 @@
 
 #include "containers/sllv.h"
 #include "cli/quoting.h"
+#include "containers/lhmsi.h"
+#include "containers/lhmss.h"
 #include "input/lrec_reader.h"
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
@@ -51,5 +53,12 @@ typedef struct _cli_opts_t {
 
 cli_opts_t* parse_command_line(int argc, char** argv);
 void cli_opts_free(cli_opts_t* popts);
+
+// Needed by mapper_join:
+lhmsi_t* get_default_repeat_ifses();
+lhmsi_t* get_default_repeat_ipses();
+lhmss_t* get_default_fses();
+lhmss_t* get_default_pses();
+lhmss_t* get_default_rses();
 
 #endif // MLRCLI_H
