@@ -28,8 +28,6 @@ TOP-OF-LIST SUMMARY
   - pattern-action -- still under development
 
 ----------------------------------------------------------------
-TOP-OF-LIST DETAILS
-
 * release guide:
   - configure.ac, c/mlrvers.h, mlr.spec
   - macbakes
@@ -42,14 +40,18 @@ TOP-OF-LIST DETAILS
   - write the release notes
   - attach mlr-3.4.0.tar.gz & binaries & srpm
   - publish the release
-  - social-media updates
-  - submit brew pull request; notify any other distros
   - pull source.tgz from github to ISP miller-releases dir & unpack
   - cd into doc subdir; edit template.html titleinbody tag from Miller to Miller 3.4.0 and poki-build
   - ISP upload
   - back in gh repo edit doc/content-for-release-docs.html to include new release & poki & git push/commit & ISP upload
+  - social-media updates
+  - submit brew pull request; notify any other distros
   - configure.ac, c/mlrvers.h back to -dev suffixes
 
+----------------------------------------------------------------
+TOP-OF-LIST DETAILS
+
+----------------------------------------------------------------
 * multilevel emit: spec & impl
 
 * pattern-action (bare-boolean with block) still experimental. if-else down the road perhaps ...
