@@ -8,7 +8,7 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* explode & any other komosas/wolens from feature-request task.
+* explode/unnest/etc
 * tri-split null
 
 * parameterized emit: needs spec & impl. prereq: tri-split null.
@@ -29,6 +29,73 @@ TOP-OF-LIST SUMMARY
 
 ================================================================
 TOP-OF-LIST DETAILS
+
+----------------------------------------------------------------
+* explode/unnest/etc
+
+  TSV:
+
+    x y
+    1 a
+    2 d,e,f
+    3 g,h
+
+  mlr unnest --fs comma -f y would produce
+
+    x y
+    1 a
+    2 d
+    2 e
+    2 f
+    3 g
+    3 h
+
+  TSV:
+
+    x y
+    1 a
+    2 s=d,t=e,u=f
+    3 u=g,v=h
+
+  maps to
+
+    x=1,y=a
+    x=2,s=d,t=e,u=f
+    x=3,u=g,v=h
+
+  likewise
+
+    timestamp here some prefixes follow, StatsType=datareporter,field1=2,field3=4
+
+    field1=2,field3=4
+
+  Being able to deal with replicates in both directions would be really useful.
+  Here's a real world example I was working on today, which contains two different measures of association between pairs of
+  genetic markers (rs*):
+
+    rs10       rs2237570,0.3,-0.72;rs117465896,0.75,-0.88
+    rs10041592 rs1628466,0.21,0.92;rs1729036,0.24,1;rs79177551,0.2,0.85
+    rs10033329 rs4835294,0.2,0.46
+
+  There are two fields, tab-delimited. Records in the second field provide the association results for all markers
+  relevant to the marker in the first field. Converting this format into a "long" format requires two operators. First,
+  the unnesting step I described above, which spreads the semicolon-separated replicates across new records:
+
+    rs10       rs2237570,0.3,-0.72
+    rs10       rs117465896,0.75,-0.88
+    rs10041592 rs1628466,0.21,0.92
+    rs10041592 rs1729036,0.24,1
+    rs10041592 rs79177551,0.2,0.85
+    rs10033329 rs4835294,0.2,0.46
+
+  followed by a separating step (as described by @komosa) to spread the comma-separated replicates across new fields:
+
+    rs10       rs2237570   0.3  -0.72
+    rs10       rs117465896 0.75 -0.88
+    rs10041592 rs1628466   0.21 0.92
+    rs10041592 rs1729036   0.24 1
+    rs10041592 rs79177551  0.2  0.85
+    rs10033329 rs4835294   0.2  0.46
 
 ----------------------------------------------------------------
 * tri-split null
