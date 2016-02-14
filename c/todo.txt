@@ -6,47 +6,23 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+* rh/fedora/centos mlr-3.4.0
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
-* dev page re releases, valgrinds, distros, etc
 * valgrinds
 * xxxes
-
-* 3.4.0
-* rh/fedora/centos mlr-3.4.0
 
 * explode & any other komosas/wolens from feature-request task.
 
 * parameterized emit: needs spec & impl
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
-================================================================
+----------------------------------------------------------------
 * relcut material since 3.4.0:
   - oosvars -- pending parameterized emit
   - begin/end -- pending parameterized emit
   - filter/gate/bare-boolean -- pending pattern-action
   - pattern-action -- still under development
-
-----------------------------------------------------------------
-* release guide:
-  - configure.ac, c/mlrvers.h, mlr.spec
-  - macbakes
-  - commit & push
-  - jko push for docs
-  - build box: autoreconf -fiv, ./configure, make distcheck
-  - build box: make srpm
-  - pull back mlr-3.4.0.tar.gz and srpm
-  - pull back mlr.arch binaries from whatever buildboxes
-  - write the release notes
-  - attach mlr-3.4.0.tar.gz & binaries & srpm
-  - publish the release
-  - pull source.tgz from github to ISP miller-releases dir & unpack
-  - cd into doc subdir; edit template.html titleinbody tag from Miller to Miller 3.4.0 and poki-build
-  - ISP upload
-  - back in gh repo edit doc/content-for-release-docs.html to include new release & poki & git push/commit & ISP upload
-  - social-media updates
-  - submit brew pull request; notify any other distros
-  - configure.ac, c/mlrvers.h back to -dev suffixes
 
 ----------------------------------------------------------------
 TOP-OF-LIST DETAILS
@@ -349,11 +325,12 @@ git diff HEAD^2 HEAD
 git remote add upstream https://github.com/Homebrew/homebrew
 git fetch upstream
 git rebase upstream/master
-git checkout -r miller-3.2.2
-shasum -a 256 ../mlr-3.2.2.tar.gz
+git checkout -b miller-3.4.0
+shasum -a 256 ../mlr-3.4.0.tar.gz
 git add ...
-git commit -m 'miller 3.2.2'
-git push --all
+git commit -m 'miller 3.4.0'
+git push -u origin miller-3.4.0
+submit the pull request
 
 ----------------------------------------------------------------
 Squash commits by:
