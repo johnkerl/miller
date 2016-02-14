@@ -41,11 +41,10 @@ TOP-OF-LIST DETAILS
   - pull back mlr.arch binaries from whatever buildboxes
   - write the release notes
   - attach mlr-3.4.0.tar.gz & binaries & srpm
-
-  xxx brew
-  xxx others
-
-  - configure.ac, c/mlrvers.h back with -dev suffixes
+  - publish the release
+  - social-media updates
+  - submit brew pull request; notify any other distros
+  - configure.ac, c/mlrvers.h back to -dev suffixes
 
 * multilevel emit: spec & impl
 
