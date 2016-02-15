@@ -2944,6 +2944,44 @@ mlr --json reshape -i x,y -o item,value ./reg_test/input/small-non-nested.json
 
 
 ================================================================
+NEST
+
+mlr cat ./reg_test/input/nest-explode.dkvp
+x=a:1;b:2;c:3,y=d:40
+x=,y=d:50
+u=,y=d:60
+x=a:4;b:5,y=d:70
+
+mlr nest --explode --pairs --across-fields -f x ./reg_test/input/nest-explode.dkvp
+y=d:40,a=1,b=2,c=3
+y=d:50
+u=,y=d:60
+y=d:70,a=4,b=5
+
+mlr nest --explode --pairs --across-records -f x ./reg_test/input/nest-explode.dkvp
+y=d:40,a=1
+y=d:40,b=2
+y=d:40,c=3
+u=,y=d:60
+y=d:70,a=4
+y=d:70,b=5
+
+mlr nest --explode --values --across-fields -f x ./reg_test/input/nest-explode.dkvp
+y=d:40,x_1=a:1,x_2=b:2,x_3=c:3
+y=d:50
+u=,y=d:60
+y=d:70,x_1=a:4,x_2=b:5
+
+mlr nest --explode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
+x=a:1,y=d:40
+x=b:2,y=d:40
+x=c:3,y=d:40
+u=,y=d:60
+x=a:4,y=d:70
+x=b:5,y=d:70
+
+
+================================================================
 STATS
 
 mlr --opprint stats1 -a mean,sum,count,min,max,mode -f i,x,y ./reg_test/input/abixy
