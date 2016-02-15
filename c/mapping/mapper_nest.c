@@ -290,7 +290,6 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 	*pfree_flags &= ~FREE_ENTRY_VALUE;
 	lrec_remove(pinrec, pstate->field_name);
 
-	// xxx lrec_remove after ownership-transfer of value to us
 	sllv_t* poutrecs = sllv_alloc();
 	char* sep = pstate->nested_fs;
 	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
@@ -351,7 +350,35 @@ static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_
 static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
-	return NULL; // xxx stub
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* pfree_flags = NULL;
+	char free_flags = 0;
+	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
+	free_flags = *pfree_flags;
+	*pfree_flags &= ~FREE_ENTRY_VALUE;
+	lrec_remove(pinrec, pstate->field_name);
+
+	char* sep = pstate->nested_fs;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
+		char* found_sep = strstr(piece, pstate->nested_ps);
+		if (found_sep != NULL) { // there is a pair
+			*found_sep = 0;
+			lrec_put(pinrec, mlr_strdup_or_die(piece), mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		} else { // there is not a pair
+			lrec_put(pinrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		}
+	}
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(field_value);
+	return sllv_single(pinrec);
 }
 
 // ----------------------------------------------------------------

@@ -412,6 +412,16 @@ run_mlr reshape -s item,price $indir/reshape-long-ragged.dkvp
 run_mlr --json reshape -i x,y -o item,value $indir/small-non-nested.json
 
 # ----------------------------------------------------------------
+announce NEST
+
+run_mlr cat $indir/nest-explode.dkvp
+
+run_mlr nest --explode --pairs  --across-fields  -f x $indir/nest-explode.dkvp
+run_mlr nest --explode --pairs  --across-records -f x $indir/nest-explode.dkvp
+run_mlr nest --explode --values --across-fields  -f x $indir/nest-explode.dkvp
+run_mlr nest --explode --values --across-records -f x $indir/nest-explode.dkvp
+
+# ----------------------------------------------------------------
 announce STATS
 
 run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
