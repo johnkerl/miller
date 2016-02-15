@@ -10,7 +10,8 @@ TOP-OF-LIST SUMMARY
 
 ! nest --explode/--implode
 ? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
-? shuffle? similar to bootstrap & sample. just use knuth algo.
+* shuffle: similar to bootstrap & sample. just use knuth algo.
+! 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
 * tri-split null
 * parameterized emit: needs spec & impl. prereq: tri-split null.
@@ -30,16 +31,22 @@ TOP-OF-LIST SUMMARY
   - pattern-action -- still under development
 
 ================================================================
+SHUFFLE
+
+seq -f %f 1 100000 | mlr --inidx shuffle then count-distinct -f 1 then stats1 -a min,max -f count
+count_min=1,count_max=1
+
+================================================================
 EXPLODE/UNNEST/ETC:
 
 ----------------------------------------------------------------
 explode across records by value (forward):
-implode across records by value (reverse):
   mlr nest
-    --explode / --implode
+    --explode
     --values
-    --records
+    --across-records
     --nested-fs semicolon
+    -f x
 
   x=a;b;c,y=d
 
@@ -47,24 +54,51 @@ implode across records by value (reverse):
   x=b,y=d
   x=c,y=d
 
-explode across fields by value (forward):
-implode across fields by value (reverse):
+implode across records by value (reverse):
   mlr nest
-    --explode / --implode
+    --implode
     --values
-    --fields
+    --across-records
     --nested-fs semicolon
+    -f x
+
+  x=a,y=d
+  x=b,y=d
+  x=c,y=d
+
+  x=a;b;c,y=d
+
+----------------------------------------------------------------
+explode across fields by value (forward):
+  mlr nest
+    --explode
+    --values
+    --across-fields
+    --nested-fs semicolon
+    -f x
 
   x=a;b;c,y=d
 
   x_1=a,x_2=b,x_3=cy=d
 
-explode across records by key-value (forward):
-implode across records by key-value (reverse):
+implode across fields by value (reverse):
   mlr nest
-    --explode / --implode
+    --implode
+    --values
+    --across-fields
+    --nested-fs semicolon
+    -f x
+
+  x_1=a,x_2=b,x_3=cy=d
+
+  x=a;b;c,y=d
+
+----------------------------------------------------------------
+explode across records by key-value (forward):
+  mlr nest
+    --explode
     --pairs
-    --records
+    --across-records
     --nested-ps colon
     --nested-fs semicolon
 
@@ -74,18 +108,44 @@ implode across records by key-value (reverse):
   b=2,y=d
   c=3,y=d
 
-explode across fields by key-value (forward):
-implode across fields by key-value (reverse):
+implode across records by key-value (reverse):
   mlr nest
-    --explode / --implode
+    --implode
     --pairs
-    --fields
+    --across-records
+    --nested-ps colon
+    --nested-fs semicolon
+
+  a=1,y=d
+  b=2,y=d
+  c=3,y=d
+
+  x=a:1;b:2;c:3,y=d
+
+----------------------------------------------------------------
+explode across fields by key-value (forward):
+  mlr nest
+    --explode
+    --pairs
+    --across-fields
     --nested-ps colon
     --nested-fs semicolon
 
   x=a:1;b:2;c:3,y=d
 
   a=1,b=2,c=3,y=d
+
+implode across fields by key-value (reverse):
+  mlr nest
+    --implode
+    --pairs
+    --across-fields
+    --nested-ps colon
+    --nested-fs semicolon
+
+  a=1,b=2,c=3,y=d
+
+  x=a:1;b:2;c:3,y=d
 
 ----------------------------------------------------------------
   TSV:

@@ -39,6 +39,12 @@
 typedef struct _mapper_nest_state_t {
 	ap_state_t* pargp;
 
+	// -e/-i/--explode/--implode: required: -- via process func
+	// --values/--pairs: required:
+	// --fields/--records: streaming & non
+	// --nested-fs: required
+	// --nested-fp: required
+
 	// for wide-to-long:
 	slls_t* input_field_names;
 	sllv_t* input_field_regexes;

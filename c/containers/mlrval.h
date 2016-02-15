@@ -293,6 +293,7 @@ static inline mv_t f_fff_logifit_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	return mv_from_float(1.0 / (1.0 + exp(-m*x-b)));
 }
 
+// xxx libify
 static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
 	long long a = pval1->u.intv;
 	long long b = pval2->u.intv;
