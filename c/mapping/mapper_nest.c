@@ -152,8 +152,8 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_false_flag(pstate,  "--implode",        &do_explode);
 	ap_define_true_flag(pstate,   "--pairs",          &do_pairs);
 	ap_define_false_flag(pstate,  "--values",         &do_pairs);
-	ap_define_true_flag(pstate,   "--across-fields",  &do_pairs);
-	ap_define_false_flag(pstate,  "--across-records", &do_pairs);
+	ap_define_true_flag(pstate,   "--across-fields",  &do_across_fields);
+	ap_define_false_flag(pstate,  "--across-records", &do_across_fields);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_nest_usage(stderr, argv[0], verb);
@@ -242,51 +242,21 @@ static void mapper_nest_free(mapper_t* pmapper) {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* field_value = lrec_get(pinrec, pstate->field_name);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	sllv_t* poutrecs = sllv_alloc();
+	// strtok & loop over
+	lrec_remove(pinrec, pstate->field_name);
+	return poutrecs;
 }
 
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_nest_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	if (pinrec == NULL) // End of input stream
-//		return sllv_single(NULL);
-//	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-//
-//	sllv_t* poutrecs = sllv_alloc();
 //	lhmss_t* pairs = lhmss_alloc();
 //	char* pfree_flags = NULL;
 //	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
@@ -314,11 +284,66 @@ static sllv_t* mapper_nest_implode_pairs_across_fields(lrec_t* pinrec, context_t
 //		}
 //		lrec_free(pinrec);
 //	}
-//
-//	lhmss_free(pairs);
-//	return poutrecs;
-//}
-//
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* field_value = lrec_get(pinrec, pstate->field_name);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	char* sep = pstate->nested_fs;
+	int i = 1;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+		char  istring_free_flags;
+		char* istring = make_nidx_key(i, &istring_free_flags);
+		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
+		if (istring_free_flags & FREE_ENTRY_KEY)
+			free(istring);
+		lrec_put(pinrec, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	}
+	lrec_remove(pinrec, pstate->field_name);
+	return sllv_single(pinrec);;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	return NULL; // xxx stub
+}
+
 //// ----------------------------------------------------------------
 //static sllv_t* mapper_nest_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 //	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
