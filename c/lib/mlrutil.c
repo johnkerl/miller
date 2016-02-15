@@ -368,6 +368,8 @@ static int is_backslash_hex(char* input, int* pcode) {
 }
 
 char* mlr_unbackslash(char* input) {
+	// Do the strdup even if there's nothing to expand, so the caller can unconditionally
+	// free what we return.
 	char* output = mlr_strdup_or_die(input);
 	char* pi = input;
 	char* po = output;

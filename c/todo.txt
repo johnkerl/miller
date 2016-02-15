@@ -8,9 +8,9 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-! nest --explode/--implode
+! nest x 8
 ? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
-* shuffle: similar to bootstrap & sample. just use knuth algo.
+* shuffle: needs UT & mld:ref:shuffle
 ! 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
 * tri-split null

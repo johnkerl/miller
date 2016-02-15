@@ -41,6 +41,7 @@ typedef struct _mapper_nest_state_t {
 	char* field_name;
 	char* nested_fs;
 	char* nested_ps;
+	int   nested_ps_length;
 
 	lhmslv_t* other_values_to_buckets;
 } mapper_nest_state_t;
@@ -191,8 +192,9 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 
 	pstate->pargp      = pargp;
 	pstate->field_name = field_name;
-	pstate->nested_fs  = nested_fs;
-	pstate->nested_ps  = nested_ps;
+	pstate->nested_fs  = mlr_unbackslash(nested_fs);
+	pstate->nested_ps  = mlr_unbackslash(nested_ps);
+	pstate->nested_ps_length = strlen(pstate->nested_ps);
 
 	if (do_explode) {
 		if (do_pairs) {
@@ -235,6 +237,8 @@ static void mapper_nest_free(mapper_t* pmapper) {
 		lhmslv_free(pstate->other_values_to_buckets);
 	}
 
+	free(pstate->nested_fs);
+	free(pstate->nested_ps);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -272,7 +276,40 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
-	return NULL; // xxx stub
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* pfree_flags = NULL;
+	char free_flags = 0;
+	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
+	free_flags = *pfree_flags;
+	*pfree_flags &= ~FREE_ENTRY_VALUE;
+	lrec_remove(pinrec, pstate->field_name);
+
+	// xxx lrec_remove after ownership-transfer of value to us
+	sllv_t* poutrecs = sllv_alloc();
+	char* sep = pstate->nested_fs;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
+		lrec_t* poutrec = lrec_copy(pinrec);
+		char* found_sep = strstr(piece, pstate->nested_ps);
+		if (found_sep != NULL) { // there is a pair
+			*found_sep = 0;
+			lrec_put(poutrec, mlr_strdup_or_die(piece), mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		} else { // there is not a pair
+			lrec_put(poutrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		}
+		sllv_append(poutrecs, poutrec);
+	}
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(field_value);
+	lrec_free(pinrec);
+	return poutrecs;
 }
 
 // ----------------------------------------------------------------
