@@ -16,7 +16,7 @@ typedef struct _mapper_nest_state_t {
 	char* nested_ps;
 	int   nested_ps_length;
 
-	lhmslv_t* other_values_to_buckets;
+	lhmslv_t* other_keys_to_other_values_to_buckets;
 } mapper_nest_state_t;
 
 typedef struct _nest_bucket_t {
@@ -54,58 +54,13 @@ mapper_setup_t mapper_nest_setup = {
 static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "Wide-to-long options:\n");
-	fprintf(o, "  -i {input field names}\n");
-	fprintf(o, "  These pivot/nest the input data such that the input fields are removed\n");
-	fprintf(o, "  and separate records are emitted for each key/value pair.\n");
-	fprintf(o, "  Note: this works with tail -f and produces output records for each input\n");
-	fprintf(o, "  record seen.\n");
-	fprintf(o, "Long-to-wide options:\n");
-	fprintf(o, "  -s {key-field name,value-field name}\n");
-	fprintf(o, "  These pivot/nest the input data to undo the wide-to-long operation.\n");
-	fprintf(o, "  Note: this does not work with tail -f; it produces output records only after\n");
-	fprintf(o, "  all input records have been read.\n");
-	fprintf(o, "\n");
-	fprintf(o, "Examples:\n");
-	fprintf(o, "\n");
-	fprintf(o, "  Input file \"wide.txt\":\n");
-	fprintf(o, "    time       X           Y\n");
-	fprintf(o, "    2009-01-01 0.65473572  2.4520609\n");
-	fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n");
-	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
-	fprintf(o, "\n");
-	fprintf(o, "  %s --pprint %s -i X,Y -o item,value wide.txt\n", argv0, verb);
-	fprintf(o, "    time       item value\n");
-	fprintf(o, "    2009-01-01 X    0.65473572\n");
-	fprintf(o, "    2009-01-01 Y    2.4520609\n");
-	fprintf(o, "    2009-01-02 X    -0.89248112\n");
-	fprintf(o, "    2009-01-02 Y    0.2154713\n");
-	fprintf(o, "    2009-01-03 X    0.98012375\n");
-	fprintf(o, "    2009-01-03 Y    1.3179287\n");
-	fprintf(o, "\n");
-	fprintf(o, "  %s --pprint %s -r '[A-Z]' -o item,value wide.txt\n", argv0, verb);
-	fprintf(o, "    time       item value\n");
-	fprintf(o, "    2009-01-01 X    0.65473572\n");
-	fprintf(o, "    2009-01-01 Y    2.4520609\n");
-	fprintf(o, "    2009-01-02 X    -0.89248112\n");
-	fprintf(o, "    2009-01-02 Y    0.2154713\n");
-	fprintf(o, "    2009-01-03 X    0.98012375\n");
-	fprintf(o, "    2009-01-03 Y    1.3179287\n");
-	fprintf(o, "\n");
-	fprintf(o, "  Input file \"long.txt\":\n");
-	fprintf(o, "    time       item value\n");
-	fprintf(o, "    2009-01-01 X    0.65473572\n");
-	fprintf(o, "    2009-01-01 Y    2.4520609\n");
-	fprintf(o, "    2009-01-02 X    -0.89248112\n");
-	fprintf(o, "    2009-01-02 Y    0.2154713\n");
-	fprintf(o, "    2009-01-03 X    0.98012375\n");
-	fprintf(o, "    2009-01-03 Y    1.3179287\n");
-	fprintf(o, "\n");
-	fprintf(o, "  %s --pprint %s -s item,value long.txt\n", argv0, verb);
-	fprintf(o, "    time       X           Y\n");
-	fprintf(o, "    2009-01-01 0.65473572  2.4520609\n");
-	fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n");
-	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
 }
 
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
@@ -179,7 +134,7 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 				? mapper_nest_explode_values_across_fields
 				: mapper_nest_explode_values_across_records;
 		}
-		pstate->other_values_to_buckets = NULL;
+		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
 		if (do_pairs) {
 			pmapper->pprocess_func = do_across_fields
@@ -190,7 +145,7 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 				? mapper_nest_implode_values_across_fields
 				: mapper_nest_implode_values_across_records;
 		}
-		pstate->other_values_to_buckets = lhmslv_alloc();
+		pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	}
 
 	pmapper->pfree_func = mapper_nest_free;
@@ -202,12 +157,16 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 static void mapper_nest_free(mapper_t* pmapper) {
 	mapper_nest_state_t* pstate = pmapper->pvstate;
 
-	if (pstate->other_values_to_buckets != NULL) {
-		for (lhmslve_t* pf = pstate->other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
-			nest_bucket_t* pbucket = pf->pvvalue;
-			nest_bucket_free(pbucket);
+	if (pstate->other_keys_to_other_values_to_buckets != NULL) {
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_buckets = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
+				nest_bucket_t* pbucket = pf->pvvalue;
+				nest_bucket_free(pbucket);
+			}
+			lhmslv_free(other_values_to_buckets);
 		}
-		lhmslv_free(pstate->other_values_to_buckets);
+		lhmslv_free(pstate->other_keys_to_other_values_to_buckets);
 	}
 
 	free(pstate->nested_fs);

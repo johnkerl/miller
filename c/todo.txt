@@ -37,11 +37,13 @@ seq -f %f 1 100000 | mlr --inidx shuffle then count-distinct -f 1 then stats1 -a
 count_min=1,count_max=1
 
 ================================================================
-EXPLODE/UNNEST/ETC:
+NEST:
 
 ! UT cases varying fs/ps
 ! valgrinds
+! usage examples
 ! xxxes
+! mld:ref:nest
 
 ----------------------------------------------------------------
 mlr nest
