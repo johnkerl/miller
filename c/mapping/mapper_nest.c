@@ -252,38 +252,16 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 	}
 
 	sllv_t* poutrecs = sllv_alloc();
-	// strtok & loop over
-	lrec_remove(pinrec, pstate->field_name);
+	char* sep = pstate->nested_fs;
+	int i = 1;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+		lrec_t* poutrec = lrec_copy(pinrec);
+		lrec_put(poutrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+	}
+	lrec_free(pinrec);
 	return poutrecs;
 }
-
-//	lhmss_t* pairs = lhmss_alloc();
-//	char* pfree_flags = NULL;
-//	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
-//		char* key = pe->value;
-//		char* value = lrec_get_ext(pinrec, key, &pfree_flags);
-//		if (value != NULL) {
-//			// Ownership-transfer of the about-to-be-freed key-value pairs from lrec to lhmss
-//			lhmss_put(pairs, key, value, *pfree_flags);
-//			*pfree_flags = NO_FREE;
-//		}
-//	}
-//
-//	// Unset the lrec keys after iterating over them, rather than during
-//	for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext)
-//		lrec_remove(pinrec, pf->key);
-//
-//	if (pairs->num_occupied == 0) {
-//		sllv_append(poutrecs, pinrec);
-//	} else {
-//		for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
-//			lrec_t* poutrec = lrec_copy(pinrec);
-//			lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
-//			lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
-//			sllv_append(poutrecs, poutrec);
-//		}
-//		lrec_free(pinrec);
-//	}
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
