@@ -1,5 +1,4 @@
 #include "lib/mlrutil.h"
-#include "lib/mlrregex.h"
 #include "lib/string_builder.h"
 #include "containers/lhmss.h"
 #include "containers/sllv.h"
@@ -39,15 +38,8 @@
 typedef struct _mapper_nest_state_t {
 	ap_state_t* pargp;
 
-	// -e/-i/--explode/--implode: required: -- via process func
-	// --values/--pairs: required:
-	// --fields/--records: streaming & non
-	// --nested-fs: required
-	// --nested-fp: required
-
 	// for wide-to-long:
 	slls_t* input_field_names;
-	sllv_t* input_field_regexes;
 	char* output_key_field_name;
 	char* output_value_field_name;
 
@@ -67,14 +59,12 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_nest_alloc(
 	ap_state_t* pargp,
 	slls_t* input_field_names,
-	slls_t* input_field_regex_strings,
 	char*   output_key_field_name,
 	char*   output_value_field_name,
 	char*   split_out_key_field_name,
 	char*   split_out_value_field_name);
 static void      mapper_nest_free(mapper_t* pmapper);
 static sllv_t*   mapper_nest_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_nest_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_nest_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
@@ -93,7 +83,6 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
 	fprintf(o, "Wide-to-long options:\n");
 	fprintf(o, "  -i {input field names}\n");
-	fprintf(o, "  -r {input field regexes}\n");
 	fprintf(o, "  These pivot/nest the input data such that the input fields are removed\n");
 	fprintf(o, "  and separate records are emitted for each key/value pair.\n");
 	fprintf(o, "  Note: this works with tail -f and produces output records for each input\n");
@@ -148,7 +137,6 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t* input_field_names         = NULL;
-	slls_t* input_field_regex_strings = NULL;
 	slls_t* output_field_names        = NULL;
 	slls_t* split_out_field_names     = NULL;
 
@@ -156,7 +144,6 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-i", &input_field_names);
-	ap_define_string_list_flag(pstate, "-r", &input_field_regex_strings);
 	ap_define_string_list_flag(pstate, "-o", &output_field_names);
 	ap_define_string_list_flag(pstate, "-s", &split_out_field_names);
 
@@ -172,7 +159,7 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 
 	if (split_out_field_names == NULL) {
 		// wide to long
-		if (input_field_names == NULL && input_field_regex_strings == NULL) {
+		if (input_field_names == NULL) {
 			mapper_nest_usage(stderr, argv[0], verb);
 			return NULL;
 		}
@@ -199,7 +186,7 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 		slls_free(split_out_field_names);
 	}
 
-	return mapper_nest_alloc(pstate, input_field_names, input_field_regex_strings,
+	return mapper_nest_alloc(pstate, input_field_names,
 		output_key_field_name, output_value_field_name,
 		split_out_key_field_name, split_out_value_field_name);
 }
@@ -208,7 +195,6 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 static mapper_t* mapper_nest_alloc(
 	ap_state_t* pargp,
 	slls_t* input_field_names,
-	slls_t* input_field_regex_strings,
 	char*   output_key_field_name,
 	char*   output_value_field_name,
 	char*   split_out_key_field_name,
@@ -225,23 +211,8 @@ static mapper_t* mapper_nest_alloc(
 	pstate->split_out_key_field_name   = split_out_key_field_name;
 	pstate->split_out_value_field_name = split_out_value_field_name;
 
-	if (input_field_regex_strings == NULL) {
-		pstate->input_field_regexes = NULL;
-	} else {
-		pstate->input_field_regexes = sllv_alloc();
-		for (sllse_t* pe = input_field_regex_strings->phead; pe != NULL; pe = pe->pnext) {
-			regex_t* pregex = mlr_malloc_or_die(sizeof(regex_t));
-			regcomp_or_die(pregex, pe->value, 0);
-			sllv_append(pstate->input_field_regexes, pregex);
-		}
-		slls_free(input_field_regex_strings);
-	}
-
 	if (split_out_key_field_name == NULL) {
-		if (pstate->input_field_regexes == NULL)
-			pmapper->pprocess_func = mapper_nest_wide_to_long_no_regex_process;
-		else
-			pmapper->pprocess_func = mapper_nest_wide_to_long_regex_process;
+		pmapper->pprocess_func = mapper_nest_wide_to_long_no_regex_process;
 		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
 		pmapper->pprocess_func = mapper_nest_long_to_wide_process;
@@ -264,14 +235,6 @@ static void mapper_nest_free(mapper_t* pmapper) {
 
 	free(pstate->split_out_key_field_name);
 	free(pstate->split_out_value_field_name);
-
-	if (pstate->input_field_regexes != NULL) {
-		for (sllve_t* pe = pstate->input_field_regexes->phead; pe != NULL; pe = pe->pnext) {
-			regex_t* pregex = pe->pvvalue;
-			regfree(pregex);
-		}
-		sllv_free(pstate->input_field_regexes);
-	}
 
 	if (pstate->other_keys_to_other_values_to_buckets != NULL) {
 		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
@@ -326,49 +289,6 @@ static sllv_t* mapper_nest_wide_to_long_no_regex_process(lrec_t* pinrec, context
 	}
 
 	lhmss_free(pairs);
-	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec == NULL) // End of input stream
-		return sllv_single(NULL);
-
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	sllv_t* poutrecs = sllv_alloc();
-	lhmss_t* pairs = lhmss_alloc();
-
-	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		for (sllve_t* pf = pstate->input_field_regexes->phead; pf != NULL; pf = pf->pnext) {
-			regex_t* pregex = pf->pvvalue;
-			if (regmatch_or_die(pregex, pe->key, 0, NULL)) {
-				// Ownership-transfer of the about-to-be-freed key-value pairs from lrec to lhmss
-				lhmss_put(pairs, pe->key, pe->value, pe->free_flags);
-				pe->free_flags = NO_FREE;
-				break;
-			}
-		}
-	}
-
-	// Unset the lrec keys after iterating over them, rather than during
-	for (lhmsse_t* pg = pairs->phead; pg != NULL; pg = pg->pnext)
-		lrec_remove(pinrec, pg->key);
-
-	if (pairs->num_occupied == 0) {
-		sllv_append(poutrecs, pinrec);
-	} else {
-		for (lhmsse_t* pf = pairs->phead; pf != NULL; pf = pf->pnext) {
-			lrec_t* poutrec = lrec_copy(pinrec);
-			lrec_put(poutrec, pstate->output_key_field_name, mlr_strdup_or_die(pf->key), FREE_ENTRY_VALUE);
-			lrec_put(poutrec, pstate->output_value_field_name, mlr_strdup_or_die(pf->value), FREE_ENTRY_VALUE);
-			sllv_append(poutrecs, poutrec);
-		}
-		lrec_free(pinrec);
-	}
-
-	lhmss_free(pairs);
-
 	return poutrecs;
 }
 

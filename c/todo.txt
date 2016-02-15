@@ -40,13 +40,12 @@ count_min=1,count_max=1
 EXPLODE/UNNEST/ETC:
 
 ----------------------------------------------------------------
-explode across records by value (forward):
-  mlr nest
-    --explode
-    --values
-    --across-records
-    --nested-fs semicolon
-    -f x
+mlr nest
+  --explode
+  --values
+  --across-records
+  --nested-fs semicolon
+  -f x
 
   x=a;b;c,y=d
 
@@ -54,13 +53,12 @@ explode across records by value (forward):
   x=b,y=d
   x=c,y=d
 
-implode across records by value (reverse):
-  mlr nest
-    --implode
-    --values
-    --across-records
-    --nested-fs semicolon
-    -f x
+mlr nest
+  --implode
+  --values
+  --across-records
+  --nested-fs semicolon
+  -f x
 
   x=a,y=d
   x=b,y=d
@@ -69,38 +67,36 @@ implode across records by value (reverse):
   x=a;b;c,y=d
 
 ----------------------------------------------------------------
-explode across fields by value (forward):
-  mlr nest
-    --explode
-    --values
-    --across-fields
-    --nested-fs semicolon
-    -f x
+mlr nest
+  --explode
+  --values
+  --across-fields
+  --nested-fs semicolon
+  -f x
 
   x=a;b;c,y=d
 
   x_1=a,x_2=b,x_3=cy=d
 
-implode across fields by value (reverse):
-  mlr nest
-    --implode
-    --values
-    --across-fields
-    --nested-fs semicolon
-    -f x
+mlr nest
+  --implode
+  --values
+  --across-fields
+  --nested-fs semicolon
+  -f x
 
   x_1=a,x_2=b,x_3=cy=d
 
   x=a;b;c,y=d
 
 ----------------------------------------------------------------
-explode across records by key-value (forward):
-  mlr nest
-    --explode
-    --pairs
-    --across-records
-    --nested-ps colon
-    --nested-fs semicolon
+mlr nest
+  --explode
+  --pairs
+  --across-records
+  --nested-ps colon
+  --nested-fs semicolon
+  -f x
 
   x=a:1;b:2;c:3,y=d
 
@@ -108,13 +104,13 @@ explode across records by key-value (forward):
   b=2,y=d
   c=3,y=d
 
-implode across records by key-value (reverse):
-  mlr nest
-    --implode
-    --pairs
-    --across-records
-    --nested-ps colon
-    --nested-fs semicolon
+mlr nest
+  --implode
+  --pairs
+  --across-records
+  --nested-ps colon
+  --nested-fs semicolon
+  -f x
 
   a=1,y=d
   b=2,y=d
@@ -123,25 +119,25 @@ implode across records by key-value (reverse):
   x=a:1;b:2;c:3,y=d
 
 ----------------------------------------------------------------
-explode across fields by key-value (forward):
-  mlr nest
-    --explode
-    --pairs
-    --across-fields
-    --nested-ps colon
-    --nested-fs semicolon
+mlr nest
+  --explode
+  --pairs
+  --across-fields
+  --nested-ps colon
+  --nested-fs semicolon
+  -f x
 
   x=a:1;b:2;c:3,y=d
 
   a=1,b=2,c=3,y=d
 
-implode across fields by key-value (reverse):
-  mlr nest
-    --implode
-    --pairs
-    --across-fields
-    --nested-ps colon
-    --nested-fs semicolon
+mlr nest
+  --implode
+  --pairs
+  --across-fields
+  --nested-ps colon
+  --nested-fs semicolon
+  -f x
 
   a=1,b=2,c=3,y=d
 
