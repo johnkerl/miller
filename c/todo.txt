@@ -44,6 +44,7 @@ NEST:
 ! usage examples
 ! xxxes
 ! mld:ref:nest
+! xxx error if global ifs == nested_fs ?
 
 ----------------------------------------------------------------
 mlr nest

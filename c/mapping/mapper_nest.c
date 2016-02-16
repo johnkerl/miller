@@ -8,6 +8,8 @@
 #include "cli/argparse.h"
 
 // ================================================================
+#define SB_ALLOC_LENGTH 128
+
 typedef struct _mapper_nest_state_t {
 	ap_state_t* pargp;
 
@@ -17,11 +19,12 @@ typedef struct _mapper_nest_state_t {
 	int   nested_ps_length;
 
 	lhmslv_t* other_keys_to_other_values_to_buckets;
+	string_builder_t* psb;
 } mapper_nest_state_t;
 
 typedef struct _nest_bucket_t {
 	lrec_t*  prepresentative;
-	lhmss_t* pairs;
+	sllv_t* pairs;
 } nest_bucket_t;
 
 static void      mapper_nest_usage(FILE* o, char* argv0, char* verb);
@@ -40,7 +43,7 @@ static sllv_t* mapper_nest_implode_pairs_across_records  (lrec_t* pinrec, contex
 static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 
-//static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
+static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
 static void nest_bucket_free(nest_bucket_t* pbucket);
 
 // ----------------------------------------------------------------
@@ -134,7 +137,6 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 				? mapper_nest_explode_values_across_fields
 				: mapper_nest_explode_values_across_records;
 		}
-		pstate->other_keys_to_other_values_to_buckets = NULL;
 	} else {
 		if (do_pairs) {
 			pmapper->pprocess_func = do_across_fields
@@ -145,8 +147,9 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 				? mapper_nest_implode_values_across_fields
 				: mapper_nest_implode_values_across_records;
 		}
-		pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	}
+	pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
+	pstate->psb = sb_alloc(SB_ALLOC_LENGTH);
 
 	pmapper->pfree_func = mapper_nest_free;
 
@@ -200,8 +203,77 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 }
 
 // ----------------------------------------------------------------
+// mlr nest --explode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
+// x=a:1,y=d:40
+// x=b:2,y=d:40
+// x=c:3,y=d:40
+// u=,y=d:60
+// x=a:4,y=d:70
+// x=b:5,y=d:70
+
 static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	if (pinrec != NULL) { // Not end of input stream
+		char* pfree_flags = NULL;
+		char free_flags = 0;
+		char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+		if (field_value == NULL)
+			return sllv_single(pinrec);
+
+		// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
+		free_flags = *pfree_flags;
+		*pfree_flags &= ~FREE_ENTRY_VALUE;
+		lrec_remove(pinrec, pstate->field_name);
+
+		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
+		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
+		if (other_values_to_buckets == NULL) {
+			other_values_to_buckets = lhmslv_alloc();
+			lhmslv_put(pstate->other_keys_to_other_values_to_buckets,
+				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
+		}
+
+		slls_t* other_values = mlr_reference_values_from_record(pinrec);
+		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
+		if (pbucket == NULL) {
+			pbucket = nest_bucket_alloc(pinrec);
+			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
+		} else {
+			lrec_free(pinrec);
+		}
+		lrec_t* pair = lrec_unbacked_alloc();
+		lrec_put(pair, pstate->field_name, mlr_strdup_or_die(field_value), FREE_ENTRY_VALUE);
+		sllv_append(pbucket->pairs, pair);
+
+		slls_free(other_values);
+		slls_free(other_keys);
+
+		return NULL;
+
+	} else { // end of input stream
+		sllv_t* poutrecs = sllv_alloc();
+
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_buckets = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
+				nest_bucket_t* pbucket = pf->pvvalue;
+				lrec_t* poutrec = pbucket->prepresentative;
+				pbucket->prepresentative = NULL; // ownership transfer
+				for (sllve_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
+					lrec_t* pr = pg->pvvalue;
+					sb_append_string(pstate->psb, pr->phead->value);
+					if (pg->pnext != NULL)
+						sb_append_string(pstate->psb, pstate->nested_fs);
+				}
+				lrec_put(poutrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, poutrec);
+			}
+		}
+
+		sllv_append(poutrecs, NULL);
+		return poutrecs;
+	}
 }
 
 // ----------------------------------------------------------------
@@ -318,76 +390,19 @@ static sllv_t* mapper_nest_implode_pairs_across_fields(lrec_t* pinrec, context_t
 	return NULL; // xxx stub
 }
 
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_nest_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-//
-//	if (pinrec != NULL) { // Not end of input stream
-//		char* split_out_key_field_value   = lrec_get(pinrec, pstate->split_out_key_field_name);
-//		char* split_out_value_field_value = lrec_get(pinrec, pstate-> split_out_value_field_name);
-//		if (split_out_key_field_value == NULL || split_out_value_field_value == NULL)
-//			return sllv_single(pinrec);
-//		split_out_key_field_value   = mlr_strdup_or_die(split_out_key_field_value);
-//		split_out_value_field_value = mlr_strdup_or_die(split_out_value_field_value);
-//		lrec_remove(pinrec, pstate->split_out_key_field_name);
-//		lrec_remove(pinrec, pstate->split_out_value_field_name);
-//
-//		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
-//		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
-//		if (other_values_to_buckets == NULL) {
-//			other_values_to_buckets = lhmslv_alloc();
-//			lhmslv_put(pstate->other_keys_to_other_values_to_buckets,
-//				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
-//		}
-//
-//		slls_t* other_values = mlr_reference_values_from_record(pinrec);
-//		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
-//		if (pbucket == NULL) {
-//			pbucket = nest_bucket_alloc(pinrec);
-//			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
-//		} else {
-//			lrec_free(pinrec);
-//		}
-//		lhmss_put(pbucket->pairs, split_out_key_field_value, split_out_value_field_value,
-//			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-//
-//		slls_free(other_values);
-//		slls_free(other_keys);
-//
-//		return NULL;
-//
-//	} else { // end of input stream
-//		sllv_t* poutrecs = sllv_alloc();
-//
-//		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
-//			lhmslv_t* other_values_to_buckets = pe->pvvalue;
-//			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
-//				nest_bucket_t* pbucket = pf->pvvalue;
-//				lrec_t* poutrec = pbucket->prepresentative;
-//				pbucket->prepresentative = NULL; // ownership transfer
-//				for (lhmsse_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
-//					// Strings in these lrecs are backed by out multi-level hashmaps which aren't freed by our free
-//					// method until shutdown time (in particular, after all outrecs are emitted).
-//					lrec_put(poutrec, pg->key, pg->value, NO_FREE);
-//				}
-//				sllv_append(poutrecs, poutrec);
-//			}
-//		}
-//
-//		sllv_append(poutrecs, NULL);
-//		return poutrecs;
-//	}
-//}
-
 // ----------------------------------------------------------------
-//static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative) {
-//	nest_bucket_t* pbucket = mlr_malloc_or_die(sizeof(nest_bucket_t));
-//	pbucket->prepresentative = prepresentative;
-//	pbucket->pairs = lhmss_alloc();
-//	return pbucket;
-//}
+static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative) {
+	nest_bucket_t* pbucket = mlr_malloc_or_die(sizeof(nest_bucket_t));
+	pbucket->prepresentative = prepresentative;
+	pbucket->pairs = sllv_alloc();
+	return pbucket;
+}
 static void nest_bucket_free(nest_bucket_t* pbucket) {
 	lrec_free(pbucket->prepresentative);
-	lhmss_free(pbucket->pairs);
+	for (sllve_t* pe = pbucket->pairs->phead; pe != NULL; pe = pe->pnext) {
+		lrec_t* pair = pe->pvvalue;
+		lrec_free(pair);
+	}
+	sllv_free(pbucket->pairs);
 	free(pbucket);
 }

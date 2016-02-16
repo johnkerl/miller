@@ -413,7 +413,7 @@ static sllv_t* mapper_reshape_long_to_wide_process(lrec_t* pinrec, context_t* pc
 				lrec_t* poutrec = pbucket->prepresentative;
 				pbucket->prepresentative = NULL; // ownership transfer
 				for (lhmsse_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
-					// Strings in these lrecs are backed by out multi-level hashmaps which aren't freed by our free
+					// Strings in these lrecs are backed by our multi-level hashmaps which aren't freed by our free
 					// method until shutdown time (in particular, after all outrecs are emitted).
 					lrec_put(poutrec, pg->key, pg->value, NO_FREE);
 				}
