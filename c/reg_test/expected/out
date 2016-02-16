@@ -2980,6 +2980,17 @@ u=100,y=d:60
 x=a:4,y=d:70
 x=b:5,y=d:70
 
+mlr nest --explode --pairs --across-fields -f x then nest --implode --pairs --across-fields -f x ./reg_test/input/nest-explode.dkvp
+
+mlr nest --explode --pairs --across-records -f x then nest --implode --pairs --across-records -f x ./reg_test/input/nest-explode.dkvp
+
+mlr nest --explode --values --across-fields -f x then nest --implode --values --across-fields -f x ./reg_test/input/nest-explode.dkvp
+
+mlr nest --explode --values --across-records -f x then nest --implode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
+u=100,y=d:60
+y=d:40,x=a:1;b:2;c:3
+y=d:70,x=a:4;b:5
+
 
 ================================================================
 STATS
