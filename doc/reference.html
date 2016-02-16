@@ -165,6 +165,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#join">join</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#merge-fields">merge-fields</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nest">nest</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_put">Field names for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
@@ -176,6 +177,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reshape">reshape</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sample">sample</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmt">sec2gmt</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#shuffle">shuffle</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats1">stats1</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats2">stats2</a><br/>
@@ -364,9 +366,9 @@ Help options:
 
 Verbs:
    bar bootstrap cat check count-distinct cut decimate filter grep group-by
-   group-like having-fields head histogram join label merge-fields put
-   regularize rename reorder reshape sample sec2gmt sort stats1 stats2 step tac
-   tail top uniq
+   group-like having-fields head histogram join label merge-fields nest put
+   regularize rename reorder reshape sample shuffle sec2gmt sort stats1 stats2
+   step tac tail top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
@@ -2088,6 +2090,60 @@ a_in a_out b_in b_out a_sum b_sum
 <p/>
 
 <!-- ================================================================ -->
+<a id="nest"/><h2>nest</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr nest -h
+Usage: mlr nest [options]
+Explodes specified field values into separate fields/records, or reverses this.
+Options:
+  --explode,--implode   One is required.
+  --values,--pairs      One is required.
+  --across-records,--across-fields One is required.
+  -f {field name}       Required.
+  --nested-fs {string}  Defaults to ";". Field separator for nested values.
+  --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
+
+Examples:
+
+  mlr nest --explode --values --across-records -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "x=a,y=d"
+    "x=b,y=d"
+    "x=c,y=d"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --values --across-fields -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "y=d,x_1=a,x_2=b,x_3=c"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --pairs --across-records -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "y=d,a=1"
+    "y=d,b=2"
+    "y=d,c=3"
+
+  mlr nest --explode --pairs --across-fields -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "y=d,a=a,b=2,c=3"
+
+Notes:
+* With --pairs, --implode doesn't make sense since the original field name has
+  been lost.
+* The combination "--implode --values --across-records" is non-streaming:
+  no output records are produced until all input records have been read. In
+  particular, this means it won't work in tail -f contexts. But all other flag
+  combinations result in streaming (tail -f friendly) data processing.
+* It's up to you to ensure that the nested-fs is distinct from your data's IFS:
+  e.g. by default the former is semicolon and the latter is comma.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="put"/><h2>put</h2>
 
 <p/>
@@ -2640,6 +2696,20 @@ the sec2gmt function:
   mlr sec2gmt time1,time2
 is the same as
   mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="shuffle"/><h2>shuffle</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr shuffle -h
+Usage: mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read.
 </pre>
 </div>
 <p/>

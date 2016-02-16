@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-02-14
+.\"      Date: 2016-02-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-02-14" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-02-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,9 +144,9 @@ output separator to the given value.
 .\}
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
- group-like having-fields head histogram join label merge-fields put regularize
- rename reorder reshape sample sec2gmt sort stats1 stats2 step tac tail top
- uniq
+ group-like having-fields head histogram join label merge-fields nest put
+ regularize rename reorder reshape sample shuffle sec2gmt sort stats1 stats2
+ step tac tail top uniq
 .fi
 .if n \{\
 .RE
@@ -689,6 +689,57 @@ Example: mlr merge-fields -a sum,count -c in_,out_
 .fi
 .if n \{\
 .RE
+.SS "nest"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr nest [options]
+Explodes specified field values into separate fields/records, or reverses this.
+Options:
+  --explode,--implode   One is required.
+  --values,--pairs      One is required.
+  --across-records,--across-fields One is required.
+  -f {field name}       Required.
+  --nested-fs {string}  Defaults to ";". Field separator for nested values.
+  --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
+
+Examples:
+
+  mlr nest --explode --values --across-records -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "x=a,y=d"
+    "x=b,y=d"
+    "x=c,y=d"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --values --across-fields -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "y=d,x_1=a,x_2=b,x_3=c"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --pairs --across-records -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "y=d,a=1"
+    "y=d,b=2"
+    "y=d,c=3"
+
+  mlr nest --explode --pairs --across-fields -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "y=d,a=a,b=2,c=3"
+
+Notes:
+* With --pairs, --implode doesn't make sense since the original field name has
+  been lost.
+* The combination "--implode --values --across-records" is non-streaming:
+  no output records are produced until all input records have been read. In
+  particular, this means it won't work in tail -f contexts. But all other flag
+  combinations result in streaming (tail -f friendly) data processing.
+* It's up to you to ensure that the nested-fs is distinct from your data's IFS:
+  e.g. by default the former is semicolon and the latter is comma.
+.fi
+.if n \{\
+.RE
 .SS "put"
 .if n \{\
 .RS 0
@@ -861,6 +912,17 @@ Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
 -k {count}    Required: number of records to output, total, or by group if using -g.
 -g {a,b,c}    Optional: group-by-field names for samples.
+.fi
+.if n \{\
+.RE
+.SS "shuffle"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read.
 .fi
 .if n \{\
 .RE

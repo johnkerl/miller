@@ -33,8 +33,9 @@ mapper_setup_t mapper_shuffle_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_shuffle_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-- xxx under construction --\n");
+	fprintf(o, "Usage: %s %s {no options}\n", argv0, verb);
+	fprintf(o, "Outputs records randomly permuted. No output records are produced until\n");
+	fprintf(o, "all input records are read.\n");
 }
 
 static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv) {

@@ -57,13 +57,53 @@ mapper_setup_t mapper_nest_setup = {
 // ----------------------------------------------------------------
 static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp --pairs --implode is not well-defined --\n");
+	fprintf(o, "Explodes specified field values into separate fields/records, or reverses this.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "  --explode,--implode   One is required.\n");
+	fprintf(o, "  --values,--pairs      One is required.\n");
+	fprintf(o, "  --across-records,--across-fields One is required.\n");
+	fprintf(o, "  -f {field name}       Required.\n");
+	fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n");
+	fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n");
+
+	fprintf(o, "\n");
+	fprintf(o, "Examples:\n");
+
+	fprintf(o, "\n");
+	fprintf(o, "  %s %s --explode --values --across-records -f x\n", argv0, verb);
+	fprintf(o, "  with input record \"x=a;b;c,y=d\" produces output records\n");
+	fprintf(o, "    \"x=a,y=d\"\n");
+	fprintf(o, "    \"x=b,y=d\"\n");
+	fprintf(o, "    \"x=c,y=d\"\n");
+	fprintf(o, "  Use --implode to do the reverse.\n");
+
+	fprintf(o, "\n");
+	fprintf(o, "  %s %s --explode --values --across-fields -f x\n", argv0, verb);
+	fprintf(o, "  with input record \"x=a;b;c,y=d\" produces output records\n");
+	fprintf(o, "    \"y=d,x_1=a,x_2=b,x_3=c\"\n");
+	fprintf(o, "  Use --implode to do the reverse.\n");
+
+	fprintf(o, "\n");
+	fprintf(o, "  %s %s --explode --pairs --across-records -f x\n", argv0, verb);
+	fprintf(o, "  with input record \"x=a:1;b:2;c:3,y=d\" produces output records\n");
+	fprintf(o, "    \"y=d,a=1\"\n");
+	fprintf(o, "    \"y=d,b=2\"\n");
+	fprintf(o, "    \"y=d,c=3\"\n");
+
+	fprintf(o, "\n");
+	fprintf(o, "  %s %s --explode --pairs --across-fields -f x\n", argv0, verb);
+	fprintf(o, "  with input record \"x=a:1;b:2;c:3,y=d\" produces output records\n");
+	fprintf(o, "    \"y=d,a=a,b=2,c=3\"\n");
+	fprintf(o, "\n");
+	fprintf(o, "Notes:\n");
+	fprintf(o, "* With --pairs, --implode doesn't make sense since the original field name has\n");
+	fprintf(o, "  been lost.\n");
+	fprintf(o, "* The combination \"--implode --values --across-records\" is non-streaming:\n");
+	fprintf(o, "  no output records are produced until all input records have been read. In\n");
+	fprintf(o, "  particular, this means it won't work in tail -f contexts. But all other flag\n");
+	fprintf(o, "  combinations result in streaming (tail -f friendly) data processing.\n");
+	fprintf(o, "* It's up to you to ensure that the nested-fs is distinct from your data's IFS:\n");
+	fprintf(o, "  e.g. by default the former is semicolon and the latter is comma.\n");
 }
 
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
