@@ -246,6 +246,8 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 		lrec_put(pair, pstate->field_name, mlr_strdup_or_die(field_value), FREE_ENTRY_VALUE);
 		sllv_append(pbucket->pairs, pair);
 
+		if (free_flags & FREE_ENTRY_VALUE)
+			free(field_value);
 		slls_free(other_values);
 		slls_free(other_keys);
 
