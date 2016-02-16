@@ -1,3 +1,4 @@
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/mlrregex.h"
 #include "lib/string_builder.h"
@@ -40,8 +41,6 @@ static sllv_t* mapper_nest_explode_pairs_across_fields   (lrec_t* pinrec, contex
 static sllv_t* mapper_nest_explode_pairs_across_records  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_pairs_across_fields   (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_pairs_across_records  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -64,8 +63,7 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
 	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
-	fprintf(o, "-- xxx temp in-progress copy from reshape --\n");
+	fprintf(o, "-- xxx temp --pairs --implode is not well-defined --\n");
 }
 
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
@@ -110,6 +108,10 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 		mapper_nest_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+	if (do_pairs == TRUE && do_explode == FALSE) {
+		mapper_nest_usage(stderr, argv[0], verb);
+		return NULL;
+	}
 
 	return mapper_nest_alloc(pstate, field_name, nested_fs, nested_ps, do_explode, do_pairs, do_across_fields);
 }
@@ -141,9 +143,10 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 		}
 	} else {
 		if (do_pairs) {
-			pmapper->pprocess_func = do_across_fields
-				? mapper_nest_implode_pairs_across_fields
-				: mapper_nest_implode_pairs_across_records;
+			// Should have been caught in CLI-parser.
+			fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
 		} else {
 			pmapper->pprocess_func = do_across_fields
 				? mapper_nest_implode_values_across_fields
@@ -317,11 +320,6 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
-}
-
-// ----------------------------------------------------------------
 static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
@@ -409,11 +407,6 @@ static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(field_value);
 	return sllv_single(pinrec);
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
 }
 
 // ----------------------------------------------------------------
