@@ -1,4 +1,5 @@
 #include "lib/mlrutil.h"
+#include "lib/mlrregex.h"
 #include "lib/string_builder.h"
 #include "containers/lhmss.h"
 #include "containers/sllv.h"
@@ -20,6 +21,7 @@ typedef struct _mapper_nest_state_t {
 
 	lhmslv_t* other_keys_to_other_values_to_buckets;
 	string_builder_t* psb;
+	regex_t regex;
 } mapper_nest_state_t;
 
 typedef struct _nest_bucket_t {
@@ -150,6 +152,10 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 	}
 	pstate->other_keys_to_other_values_to_buckets = lhmslv_alloc();
 	pstate->psb = sb_alloc(SB_ALLOC_LENGTH);
+	char* pattern = mlr_malloc_or_die(strlen(field_name) + 12);
+	sprintf(pattern, "^%s_[0-9]+$", field_name);
+	regcomp_or_die(&pstate->regex, pattern, REG_NOSUB);
+	free(pattern);
 
 	pmapper->pfree_func = mapper_nest_free;
 
@@ -174,6 +180,7 @@ static void mapper_nest_free(mapper_t* pmapper) {
 
 	free(pstate->nested_fs);
 	free(pstate->nested_ps);
+	regfree(&pstate->regex);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -203,14 +210,6 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 }
 
 // ----------------------------------------------------------------
-// mlr nest --explode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
-// x=a:1,y=d:40
-// x=b:2,y=d:40
-// x=c:3,y=d:40
-// u=,y=d:60
-// x=a:4,y=d:70
-// x=b:5,y=d:70
-
 static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
@@ -349,7 +348,32 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	return NULL; // xxx stub
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	if (pinrec == NULL) // end of input stream
+		return sllv_single(NULL);
+
+	int field_count = 0;
+	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
+		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
+			if (field_count > 0)
+				sb_append_string(pstate->psb, pstate->nested_fs);
+			sb_append_string(pstate->psb, pe->value);
+			field_count++;
+
+			lrece_t* pnext = pe->pnext;
+			lrec_unlink_and_free(pinrec, pe);
+			pe = pnext;
+
+		} else {
+			pe = pe->pnext;
+		}
+	}
+
+	if (field_count > 0)
+		lrec_put(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+
+	return sllv_single(pinrec);
 }
 
 // ----------------------------------------------------------------

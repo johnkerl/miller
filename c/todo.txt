@@ -22,6 +22,7 @@ TOP-OF-LIST SUMMARY
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 * valgrinds
 * xxxes
+* lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid double-searching.
 
 ================================================================
 * relcut material since 3.4.0:
