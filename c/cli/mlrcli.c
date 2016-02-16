@@ -84,10 +84,11 @@ static lhmss_t* get_desc_to_chars_map() {
 	}
 	return singleton_pdesc_to_chars_map;
 }
-static char* sep_from_arg(char* arg, char* argv0) {
+// Always strdup so the caller can unconditionally free our return value
+char* cli_sep_from_arg(char* arg, char* argv0) {
 	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
 	if (chars != NULL) // E.g. crlf
-		return chars;
+		return mlr_strdup_or_die(chars);
 	else // E.g. '\r\n'
 		return mlr_unbackslash(arg);
 }
@@ -697,30 +698,30 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
-			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ors = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->irs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--ors")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ors = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
 		} else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
-			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ifs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--ofs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--repifs")) {
 			popts->allow_repeat_ifs = TRUE;
@@ -738,16 +739,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
-			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ips = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 		} else if (streq(argv[argi], "--ops")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
 		} else if (streq(argv[argi], "--xvright")) {
@@ -761,7 +762,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->quote_json_values_always = TRUE;
 		} else if (streq(argv[argi], "--jflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->json_flatten_separator = sep_from_arg(argv[argi+1], argv[0]);
+			popts->json_flatten_separator = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";

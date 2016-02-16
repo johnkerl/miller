@@ -32,7 +32,7 @@ typedef struct _nest_bucket_t {
 
 static void      mapper_nest_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
+static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	char* field_name, char* nested_fs, char* nested_ps,
 	int do_explode, int do_pairs, int do_across_fields);
 static void    mapper_nest_free(mapper_t* pmapper);
@@ -153,11 +153,11 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	return mapper_nest_alloc(pstate, field_name, nested_fs, nested_ps, do_explode, do_pairs, do_across_fields);
+	return mapper_nest_alloc(pstate, argv[0], field_name, nested_fs, nested_ps, do_explode, do_pairs, do_across_fields);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
+static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	char* field_name, char* nested_fs, char* nested_ps,
 	int do_explode, int do_pairs, int do_across_fields)
 {
@@ -167,8 +167,8 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 
 	pstate->pargp      = pargp;
 	pstate->field_name = field_name;
-	pstate->nested_fs  = mlr_unbackslash(nested_fs);
-	pstate->nested_ps  = mlr_unbackslash(nested_ps);
+	pstate->nested_fs  = cli_sep_from_arg(nested_fs, argv0);
+	pstate->nested_ps  = cli_sep_from_arg(nested_ps, argv0);
 	pstate->nested_ps_length = strlen(pstate->nested_ps);
 
 	if (do_explode) {
@@ -185,7 +185,7 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp,
 		if (do_pairs) {
 			// Should have been caught in CLI-parser.
 			fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				argv0, __FILE__, __LINE__);
 			exit(1);
 		} else {
 			pmapper->pprocess_func = do_across_fields

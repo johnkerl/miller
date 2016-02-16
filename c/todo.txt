@@ -1,7 +1,9 @@
 ================================================================
 BUGFIXES
 
-:D
+! ok/not:
+  mlr --csvlite --fs tab nest --explode --values --across-records -f color --nested-fs '|'  ccc
+  mlr --csvlite --fs tab nest --explode --values --across-records -f color --nested-fs pipe ccc
 
 ================================================================
 TOP-OF-LIST SUMMARY
