@@ -43,11 +43,8 @@ NEST:
 
 ! UT cases varying fs/ps
 ! valgrinds
-! usage examples
 ! xxxes
-! mld:ref:nest
-! xxx error if global ifs == nested_fs ?
-! lrec_insert -- ?
+! lrec_insert -- ? try to preserve order.
 
 ----------------------------------------------------------------
 mlr nest
