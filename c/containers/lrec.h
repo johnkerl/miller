@@ -118,9 +118,15 @@ void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
 void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);
+
 // This returns a pointer to the lrec's free-flags so that the caller can do ownership-transfer
 // of about-to-be-removed key-value pairs.
 char* lrec_get_pff(lrec_t* prec, char* key, char** ppfree_flags);
+
+// This returns a pointer to the entry so the caller can update it directly without needing
+// to do another field-scan on subsequent lrec_put etc. This is a performance optimization;
+// it also allows mlr nest --explode to do explode-in-place rather than explode-at-end.
+char* lrec_get_ext(lrec_t* prec, char* key, lrece_t** ppentry);
 
 void  lrec_remove(lrec_t* prec, char* key);
 void  lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freeing);

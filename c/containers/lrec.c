@@ -154,6 +154,17 @@ char* lrec_get_pff(lrec_t* prec, char* key, char** ppfree_flags) {
 	}
 }
 
+char* lrec_get_ext(lrec_t* prec, char* key, lrece_t** ppentry) {
+	lrece_t* pe = lrec_find_entry(prec, key);
+	if (pe != NULL) {
+		*ppentry = pe;
+		return pe->value;
+	} else {
+		*ppentry = NULL;;
+		return NULL;
+	}
+}
+
 // ----------------------------------------------------------------
 void lrec_remove(lrec_t* prec, char* key) {
 	lrece_t* pe = lrec_find_entry(prec, key);
