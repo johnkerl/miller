@@ -231,12 +231,15 @@ static void mapper_nest_free(mapper_t* pmapper) {
 	free(pmapper);
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
 	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
+	// xxx get_ext w/ lrece_t*
+	// xxx insert after
+	// xxx unlink
 	char* field_value = lrec_get(pinrec, pstate->field_name);
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
@@ -316,7 +319,7 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 	if (pinrec != NULL) { // Not end of input stream
 		char* pfree_flags = NULL;
 		char free_flags = 0;
-		char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+		char* field_value = lrec_get_pff(pinrec, pstate->field_name, &pfree_flags);
 		if (field_value == NULL)
 			return sllv_single(pinrec);
 
@@ -385,7 +388,7 @@ static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t
 
 	char* pfree_flags = NULL;
 	char free_flags = 0;
-	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+	char* field_value = lrec_get_pff(pinrec, pstate->field_name, &pfree_flags);
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
 	}
@@ -420,7 +423,7 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 
 	char* pfree_flags = NULL;
 	char free_flags = 0;
-	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+	char* field_value = lrec_get_pff(pinrec, pstate->field_name, &pfree_flags);
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
 	}

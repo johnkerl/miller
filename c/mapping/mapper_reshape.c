@@ -294,7 +294,7 @@ static sllv_t* mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, cont
 	char* pfree_flags = NULL;
 	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* key = pe->value;
-		char* value = lrec_get_ext(pinrec, key, &pfree_flags);
+		char* value = lrec_get_pff(pinrec, key, &pfree_flags);
 		if (value != NULL) {
 			// Ownership-transfer of the about-to-be-freed key-value pairs from lrec to lhmss
 			lhmss_put(pairs, key, value, *pfree_flags);

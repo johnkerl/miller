@@ -143,7 +143,7 @@ char* lrec_get(lrec_t* prec, char* key) {
 	}
 }
 
-char* lrec_get_ext(lrec_t* prec, char* key, char** ppfree_flags) {
+char* lrec_get_pff(lrec_t* prec, char* key, char** ppfree_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 	if (pe != NULL) {
 		*ppfree_flags = &pe->free_flags;
