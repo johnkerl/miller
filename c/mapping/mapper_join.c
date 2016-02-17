@@ -116,6 +116,8 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  --repips\n");
 	fprintf(o, "  --use-mmap\n");
 	fprintf(o, "  --no-mmap\n");
+	fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
+		argv0);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including examples.\n");
 }

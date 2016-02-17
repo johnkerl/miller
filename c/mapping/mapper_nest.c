@@ -65,6 +65,8 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  -f {field name}       Required.\n");
 	fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n");
 	fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n");
+	fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
+		argv0);
 
 	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
