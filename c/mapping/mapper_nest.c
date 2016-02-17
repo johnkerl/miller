@@ -37,12 +37,12 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	int do_explode, int do_pairs, int do_across_fields);
 static void    mapper_nest_free(mapper_t* pmapper);
 
+static sllv_t* mapper_nest_explode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_nest_explode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_pairs_across_fields   (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_pairs_across_records  (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_explode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_explode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
 static void nest_bucket_free(nest_bucket_t* pbucket);
@@ -232,6 +232,61 @@ static void mapper_nest_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
+static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* field_value = lrec_get(pinrec, pstate->field_name);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	char* sep = pstate->nested_fs;
+	int i = 1;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+		char  istring_free_flags;
+		char* istring = make_nidx_key(i, &istring_free_flags);
+		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
+		if (istring_free_flags & FREE_ENTRY_KEY)
+			free(istring);
+		lrec_put(pinrec, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	}
+	lrec_remove(pinrec, pstate->field_name);
+	return sllv_single(pinrec);;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	if (pinrec == NULL) // end of input stream
+		return sllv_single(NULL);
+
+	int field_count = 0;
+	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
+		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
+			if (field_count > 0)
+				sb_append_string(pstate->psb, pstate->nested_fs);
+			sb_append_string(pstate->psb, pe->value);
+			field_count++;
+
+			lrece_t* pnext = pe->pnext;
+			lrec_unlink_and_free(pinrec, pe);
+			pe = pnext;
+
+		} else {
+			pe = pe->pnext;
+		}
+	}
+
+	if (field_count > 0)
+		lrec_put(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+
+	return sllv_single(pinrec);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
@@ -323,6 +378,41 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 }
 
 // ----------------------------------------------------------------
+static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	if (pinrec == NULL) // End of input stream
+		return sllv_single(NULL);
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	char* pfree_flags = NULL;
+	char free_flags = 0;
+	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
+	if (field_value == NULL) {
+		return sllv_single(pinrec);
+	}
+
+	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
+	free_flags = *pfree_flags;
+	*pfree_flags &= ~FREE_ENTRY_VALUE;
+	lrec_remove(pinrec, pstate->field_name);
+
+	char* sep = pstate->nested_fs;
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
+		char* found_sep = strstr(piece, pstate->nested_ps);
+		if (found_sep != NULL) { // there is a pair
+			*found_sep = 0;
+			lrec_put(pinrec, mlr_strdup_or_die(piece), mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		} else { // there is not a pair
+			lrec_put(pinrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		}
+	}
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(field_value);
+	return sllv_single(pinrec);
+}
+
+// ----------------------------------------------------------------
 static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
@@ -359,96 +449,6 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 		free(field_value);
 	lrec_free(pinrec);
 	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec == NULL) // End of input stream
-		return sllv_single(NULL);
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	char* field_value = lrec_get(pinrec, pstate->field_name);
-	if (field_value == NULL) {
-		return sllv_single(pinrec);
-	}
-
-	char* sep = pstate->nested_fs;
-	int i = 1;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
-		char  istring_free_flags;
-		char* istring = make_nidx_key(i, &istring_free_flags);
-		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
-		if (istring_free_flags & FREE_ENTRY_KEY)
-			free(istring);
-		lrec_put(pinrec, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-	}
-	lrec_remove(pinrec, pstate->field_name);
-	return sllv_single(pinrec);;
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	if (pinrec == NULL) // end of input stream
-		return sllv_single(NULL);
-
-	int field_count = 0;
-	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
-		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
-			if (field_count > 0)
-				sb_append_string(pstate->psb, pstate->nested_fs);
-			sb_append_string(pstate->psb, pe->value);
-			field_count++;
-
-			lrece_t* pnext = pe->pnext;
-			lrec_unlink_and_free(pinrec, pe);
-			pe = pnext;
-
-		} else {
-			pe = pe->pnext;
-		}
-	}
-
-	if (field_count > 0)
-		lrec_put(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
-
-	return sllv_single(pinrec);
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	if (pinrec == NULL) // End of input stream
-		return sllv_single(NULL);
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	char* pfree_flags = NULL;
-	char free_flags = 0;
-	char* field_value = lrec_get_ext(pinrec, pstate->field_name, &pfree_flags);
-	if (field_value == NULL) {
-		return sllv_single(pinrec);
-	}
-
-	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
-	free_flags = *pfree_flags;
-	*pfree_flags &= ~FREE_ENTRY_VALUE;
-	lrec_remove(pinrec, pstate->field_name);
-
-	char* sep = pstate->nested_fs;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
-		char* found_sep = strstr(piece, pstate->nested_ps);
-		if (found_sep != NULL) { // there is a pair
-			*found_sep = 0;
-			lrec_put(pinrec, mlr_strdup_or_die(piece), mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
-				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
-		} else { // there is not a pair
-			lrec_put(pinrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
-		}
-	}
-
-	if (free_flags & FREE_ENTRY_VALUE)
-		free(field_value);
-	return sllv_single(pinrec);
 }
 
 // ----------------------------------------------------------------
