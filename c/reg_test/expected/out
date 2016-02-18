@@ -2959,10 +2959,10 @@ u=100,y=d:60
 x_1=a:4,x_2=b:5,y=d:70
 
 mlr nest --explode --values --across-fields -f x then nest --implode --values --across-fields -f x ./reg_test/input/nest-explode.dkvp
-y=d:40,x=a:1;b:2;c:3
+x=a:1;b:2;c:3,y=d:40
 y=d:50
 u=100,y=d:60
-y=d:70,x=a:4;b:5
+x=a:4;b:5,y=d:70
 
 mlr nest --explode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
 x=a:1,y=d:40

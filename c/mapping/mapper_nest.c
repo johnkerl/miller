@@ -366,8 +366,6 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 	} else { // end of input stream
 		sllv_t* poutrecs = sllv_alloc();
 
-		// xxx keep reference to last-deleted so we can insert before ?!?
-
 		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
 			lhmslv_t* other_values_to_buckets = pe->pvvalue;
 			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
