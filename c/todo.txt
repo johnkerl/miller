@@ -8,7 +8,6 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-! nest x 8
 ? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
 * shuffle: needs UT & mld:ref:shuffle
 ! 64-bit lengths for containers. test with 5-billion-integer-seq data.
@@ -36,41 +35,6 @@ TOP-OF-LIST SUMMARY
   - pattern-action -- still under development
   - nest
   - shuffle
-
-================================================================
-NEST:
-
-! UT cases varying fs/ps
-
-wolen:
-
-  Being able to deal with replicates in both directions would be really useful.
-  Here's a real-world example I was working on today, which contains two different measures of association between pairs of
-  genetic markers (rs*):
-
-    rs10       rs2237570,0.3,-0.72;rs117465896,0.75,-0.88
-    rs10041592 rs1628466,0.21,0.92;rs1729036,0.24,1;rs79177551,0.2,0.85
-    rs10033329 rs4835294,0.2,0.46
-
-  There are two fields, tab-delimited. Records in the second field provide the association results for all markers
-  relevant to the marker in the first field. Converting this format into a "long" format requires two operators. First,
-  the unnesting step I described above, which spreads the semicolon-separated replicates across new records (explode-values):
-
-    rs10       rs2237570,0.3,-0.72
-    rs10       rs117465896,0.75,-0.88
-    rs10041592 rs1628466,0.21,0.92
-    rs10041592 rs1729036,0.24,1
-    rs10041592 rs79177551,0.2,0.85
-    rs10033329 rs4835294,0.2,0.46
-
-  followed by a separating step (as described by @komosa) to spread the comma-separated replicates across new fields:
-
-    rs10       rs2237570   0.3  -0.72
-    rs10       rs117465896 0.75 -0.88
-    rs10041592 rs1628466   0.21 0.92
-    rs10041592 rs1729036   0.24 1
-    rs10041592 rs79177551  0.2  0.85
-    rs10033329 rs4835294   0.2  0.46
 
 ================================================================
 TRI-SPLIT NULL
