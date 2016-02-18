@@ -45,6 +45,16 @@ TRI-SPLIT NULL
     mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
 
 ================================================================
+64-BIT CONTAINER SIZES
+
+k sllv
+* slls
+* rslls
+* sllmv
+* dvector & stats1/2 ...
+* top_keeper
+
+================================================================
 MULTILEVEL EMIT: SPEC & IMPL
 
   o DSL needs work 1st: tri-split null

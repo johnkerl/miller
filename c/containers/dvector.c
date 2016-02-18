@@ -4,8 +4,8 @@
 #include "containers/dvector.h"
 
 // ----------------------------------------------------------------
-dvector_t* dvector_alloc(int initial_capacity) {
-	int capacity = initial_capacity;
+dvector_t* dvector_alloc(unsigned long long initial_capacity) {
+	unsigned long long capacity = initial_capacity;
 	dvector_t* pdvector = mlr_malloc_or_die(sizeof(dvector_t));
 	pdvector->data     = mlr_malloc_or_die(capacity*sizeof(double));
 	pdvector->size     = 0;
@@ -26,7 +26,7 @@ void dvector_free(dvector_t* pdvector) {
 
 void dvector_append(dvector_t* pdvector, double value) {
 	if (pdvector->size >= pdvector->capacity) {
-		pdvector->capacity = (int)(pdvector->capacity * 2);
+		pdvector->capacity = (unsigned long long)(pdvector->capacity * 2);
 		pdvector->data = (double*)mlr_realloc_or_die(pdvector->data,
 			pdvector->capacity*sizeof(double));
 	}
