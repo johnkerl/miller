@@ -325,18 +325,14 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
 	if (pinrec != NULL) { // Not end of input stream
-		char* pfree_flags = NULL;
-		char free_flags = 0;
-		char* field_value = lrec_get_pff(pinrec, pstate->field_name, &pfree_flags);
+		lrece_t* px = NULL;
+		char* field_value = lrec_get_ext(pinrec, pstate->field_name, &px);
 		if (field_value == NULL)
 			return sllv_single(pinrec);
+		char* field_value_copy = mlr_strdup_or_die(field_value);
 
-		// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
-		free_flags = *pfree_flags;
-		*pfree_flags &= ~FREE_ENTRY_VALUE;
-		lrec_remove(pinrec, pstate->field_name);
-
-		slls_t* other_keys = mlr_reference_keys_from_record(pinrec);
+		// Don't lrec_remove pstate->field_name so we can implode in-place at the end.
+		slls_t* other_keys = mlr_reference_keys_from_record_except(pinrec, px);
 		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
 		if (other_values_to_buckets == NULL) {
 			other_values_to_buckets = lhmslv_alloc();
@@ -344,7 +340,7 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
 		}
 
-		slls_t* other_values = mlr_reference_values_from_record(pinrec);
+		slls_t* other_values = mlr_reference_values_from_record_except(pinrec, px);
 		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
 		if (pbucket == NULL) {
 			pbucket = nest_bucket_alloc(pinrec);
@@ -353,11 +349,9 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 			lrec_free(pinrec);
 		}
 		lrec_t* pair = lrec_unbacked_alloc();
-		lrec_put(pair, pstate->field_name, mlr_strdup_or_die(field_value), FREE_ENTRY_VALUE);
+		lrec_put(pair, pstate->field_name, field_value_copy, FREE_ENTRY_VALUE);
 		sllv_append(pbucket->pairs, pair);
 
-		if (free_flags & FREE_ENTRY_VALUE)
-			free(field_value);
 		slls_free(other_values);
 		slls_free(other_keys);
 
@@ -378,6 +372,7 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 					if (pg->pnext != NULL)
 						sb_append_string(pstate->psb, pstate->nested_fs);
 				}
+				// pstate->field_name was already present so we'll overwrite it in-place here.
 				lrec_put(poutrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
 				sllv_append(poutrecs, poutrec);
 			}

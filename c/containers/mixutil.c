@@ -32,6 +32,24 @@ slls_t* mlr_reference_values_from_record(lrec_t* prec) {
 	return plist;
 }
 
+slls_t* mlr_reference_keys_from_record_except(lrec_t* prec, lrece_t* px) {
+	slls_t* plist = slls_alloc();
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		if (pe != px)
+			slls_append_no_free(plist, pe->key);
+	}
+	return plist;
+}
+
+slls_t* mlr_reference_values_from_record_except(lrec_t* prec, lrece_t* px) {
+	slls_t* plist = slls_alloc();
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		if (pe != px)
+			slls_append_no_free(plist, pe->value);
+	}
+	return plist;
+}
+
 // ----------------------------------------------------------------
 // Makes a list with values pointing into the lrec's values. slls_free() will
 // respect that and not corrupt the lrec. However, the slls values will be

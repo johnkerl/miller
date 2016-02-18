@@ -16,6 +16,9 @@ slls_t* mlr_reference_keys_from_record(lrec_t* prec);
 // However, the slls values will be invalid after the lrec is freed.
 slls_t* mlr_reference_values_from_record(lrec_t* prec);
 
+slls_t* mlr_reference_keys_from_record_except(lrec_t* prec, lrece_t* px);
+slls_t* mlr_reference_values_from_record_except(lrec_t* prec, lrece_t* px);
+
 // Copies data; no referencing concerns.
 slls_t* mlr_copy_keys_from_record(lrec_t* prec);
 
