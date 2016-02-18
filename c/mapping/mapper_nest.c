@@ -266,6 +266,7 @@ static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_
 	if (pinrec == NULL) // end of input stream
 		return sllv_single(NULL);
 
+	lrece_t* pprev = NULL;
 	int field_count = 0;
 	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
 		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
@@ -274,7 +275,9 @@ static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_
 			sb_append_string(pstate->psb, pe->value);
 			field_count++;
 
-			// xxx keep reference to last-deleted so we can insert before ...
+			// Keep the location so we can implode in-place.
+			if (pprev == NULL)
+				pprev = pe->pprev;
 			lrece_t* pnext = pe->pnext;
 			lrec_unlink_and_free(pinrec, pe);
 			pe = pnext;
@@ -284,8 +287,12 @@ static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_
 		}
 	}
 
-	if (field_count > 0)
-		lrec_put(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+	if (field_count > 0) {
+		if (pprev == NULL) // No record before the unlinked one, i.e. list-head.
+			lrec_prepend(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+		else
+			lrec_put_after(pinrec, pprev, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+	}
 
 	return sllv_single(pinrec);
 }
