@@ -9,10 +9,11 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.4.0
 
 * tri-split null
-* parameterized emit: needs spec & impl. prereq: tri-split null.
-* pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+w parameterized emit: needs spec & impl. prereq: tri-split null.
+* move LHS into lrec_evaluators and rename the file.
+w pattern-action: prereq: LHS merge.
 
-! 64-bit lengths for containers. test with 5-billion-integer-seq data.
+* 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
 ! screencaps for README.md & cover !
 ? call for use-cases? (go first.)
