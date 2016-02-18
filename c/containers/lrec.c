@@ -133,6 +133,41 @@ void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 	}
 }
 
+void lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free_flags) {
+	lrece_t* pe = lrec_find_entry(prec, key);
+
+	if (pe != NULL) { // Overwrite
+		if (pe->free_flags & FREE_ENTRY_VALUE) {
+			free(pe->value);
+		}
+		pe->value = value;
+		pe->free_flags &= ~FREE_ENTRY_VALUE;
+		if (free_flags & FREE_ENTRY_VALUE)
+			pe->free_flags |= FREE_ENTRY_VALUE;
+	} else { // Insert after specified entry
+		pe = mlr_malloc_or_die(sizeof(lrece_t));
+		pe->key         = key;
+		pe->value       = value;
+		pe->free_flags  = free_flags;
+
+		if (pd->pnext == NULL) { // Append at end of list
+			pd->pnext = pe;
+			pe->pprev = pd;
+			pe->pnext = NULL;
+			prec->ptail = pe;
+
+		} else {
+			lrece_t* pf = pd->pnext;
+			pd->pnext = pe;
+			pf->pprev = pe;
+			pe->pprev = pd;
+			pe->pnext = pf;
+		}
+
+		prec->field_count++;
+	}
+}
+
 // ----------------------------------------------------------------
 char* lrec_get(lrec_t* prec, char* key) {
 	lrece_t* pe = lrec_find_entry(prec, key);

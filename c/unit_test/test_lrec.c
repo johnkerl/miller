@@ -307,6 +307,100 @@ static char* test_lrec_xtab_api() {
 	return NULL;
 }
 
+// ----------------------------------------------------------------
+static char* test_lrec_put_after() {
+	printf("TEST_LREC_PUT_AFTER ENTER\n");
+
+	lrec_t* prec = lrec_literal_1("a", "1");
+	lrece_t* pe = NULL;
+
+	printf("BEFORE: "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 1);
+	char* value = lrec_get_ext(prec, "nosuch", &pe);
+	mu_assert_lf(value == NULL);
+	mu_assert_lf(pe == NULL);
+
+	value = lrec_get_ext(prec, "a", &pe);
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(pe != NULL);
+	mu_assert_lf(streq(value, "1"));
+	lrec_put_after(prec, pe, "a", "2", NO_FREE);
+	printf("AFTER : "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 1);
+	value = lrec_get_ext(prec, "a", &pe);
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(pe != NULL);
+	mu_assert_lf(streq(value, "2"));
+	lrec_free(prec);
+
+	prec = lrec_literal_1("a", "1");
+	printf("BEFORE: "); lrec_print(prec);
+	value = lrec_get_ext(prec, "a", &pe);
+	mu_assert_lf(pe != NULL);
+	mu_assert_lf(streq(value, "1"));
+
+	lrec_put_after(prec, pe, "b", "3", NO_FREE);
+	printf("AFTER : "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 2);
+	value = lrec_get(prec, "a");
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(streq(value, "1"));
+	value = lrec_get(prec, "b");
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(streq(value, "3"));
+	mu_assert_lf(streq(prec->phead->key, "a"));
+	mu_assert_lf(streq(prec->phead->pnext->key, "b"));
+	mu_assert_lf(streq(prec->phead->value, "1"));
+	mu_assert_lf(streq(prec->phead->pnext->value, "3"));
+	mu_assert_lf(prec->phead->pnext->pnext == NULL);
+	lrec_free(prec);
+
+
+	prec = lrec_literal_2("a", "1", "b", "2");
+	printf("BEFORE: "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 2);
+	value = lrec_get_ext(prec, "a", &pe);
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(pe != NULL);
+	mu_assert_lf(streq(value, "1"));
+
+	lrec_put_after(prec, pe, "z", "9", NO_FREE);
+	printf("AFTER : "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 3);
+	mu_assert_lf(streq(prec->phead->key, "a"));
+	mu_assert_lf(streq(prec->phead->pnext->key, "z"));
+	mu_assert_lf(streq(prec->phead->pnext->pnext->key, "b"));
+	mu_assert_lf(streq(prec->phead->value, "1"));
+	mu_assert_lf(streq(prec->phead->pnext->value, "9"));
+	mu_assert_lf(streq(prec->phead->pnext->pnext->value, "2"));
+	mu_assert_lf(prec->phead->pnext->pnext->pnext == NULL);
+	lrec_free(prec);
+
+
+	prec = lrec_literal_2("a", "1", "b", "2");
+	printf("BEFORE: "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 2);
+	value = lrec_get_ext(prec, "b", &pe);
+	mu_assert_lf(value != NULL);
+	mu_assert_lf(pe != NULL);
+	mu_assert_lf(streq(value, "2"));
+
+	lrec_put_after(prec, pe, "z", "9", NO_FREE);
+	printf("AFTER : "); lrec_print(prec);
+	mu_assert_lf(prec->field_count == 3);
+	mu_assert_lf(streq(prec->phead->key, "a"));
+	mu_assert_lf(streq(prec->phead->pnext->key, "b"));
+	mu_assert_lf(streq(prec->phead->pnext->pnext->key, "z"));
+	mu_assert_lf(streq(prec->phead->value, "1"));
+	mu_assert_lf(streq(prec->phead->pnext->value, "2"));
+	mu_assert_lf(streq(prec->phead->pnext->pnext->value, "9"));
+	mu_assert_lf(prec->phead->pnext->pnext->pnext == NULL);
+	lrec_free(prec);
+
+	printf("TEST_LREC_PUT_AFTER EXIT\n");
+	return NULL;
+}
+
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_lrec_unbacked_api);
@@ -315,6 +409,7 @@ static char * run_all_tests() {
 	mu_run_test(test_lrec_csv_api);
 	mu_run_test(test_lrec_csv_api_disjoint_allocs);
 	mu_run_test(test_lrec_xtab_api);
+	mu_run_test(test_lrec_put_after);
 	return 0;
 }
 

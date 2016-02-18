@@ -1,9 +1,7 @@
 ================================================================
 BUGFIXES
 
-! ok/not:
-  mlr --csvlite --fs tab nest --explode --values --across-records -f color --nested-fs '|'  ccc
-  mlr --csvlite --fs tab nest --explode --values --across-records -f color --nested-fs pipe ccc
+:D
 
 ================================================================
 TOP-OF-LIST SUMMARY
@@ -18,6 +16,8 @@ TOP-OF-LIST SUMMARY
 * tri-split null
 * parameterized emit: needs spec & impl. prereq: tri-split null.
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
+
+! screencaps !
 
 ? call for use-cases? (go first.)
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
@@ -41,10 +41,11 @@ TOP-OF-LIST SUMMARY
 NEST:
 
 ! UT cases varying fs/ps
+! lrec_insert -- try to preserve order.
+  ! UT per se
+! try wolendata
 ! valgrinds
 ! xxxes
-! lrec_insert -- try to preserve order.
-! try wolendata
 
 wolen:
 

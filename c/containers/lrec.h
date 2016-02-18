@@ -115,7 +115,10 @@ lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 //   o The respective free_flag(s) should not be set and the caller should
 //     free the memory (else, there will be a memory leak).
 void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
+// Like lrec_put: if key is present, modify value. But if not, add new field at start of record, not at end.
 void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
+// Like lrec_put: if key is present, modify value. But if not, add new field after specified entry, not at end.
+void  lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);
 
