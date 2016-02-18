@@ -89,6 +89,7 @@ EXTRA_DIST=	\
 		multi-sep.dkvp \
 		near-ovf.dkvp \
 		nest-explode.dkvp \
+		nest-explode-vary-fs-ps.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
 		null-vs-empty.dkvp \

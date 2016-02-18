@@ -41,11 +41,6 @@ TOP-OF-LIST SUMMARY
 NEST:
 
 ! UT cases varying fs/ps
-! lrec_insert -- try to preserve order.
-  ! UT per se
-! try wolendata
-! valgrinds
-! xxxes
 
 wolen:
 
