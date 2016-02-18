@@ -330,7 +330,7 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	}
 
 	if (pstate->popts->emit_left_unpairables) {
-		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length >= 0) {
+		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length > 0) {
 			sllv_transfer(pout_recs, pbucket_left_unpaired);
 		}
 	}

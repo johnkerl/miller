@@ -8,15 +8,13 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
-! 64-bit lengths for containers. test with 5-billion-integer-seq data.
-
 * tri-split null
 * parameterized emit: needs spec & impl. prereq: tri-split null.
 * pattern-action: note that breaks the simple LHS/RHS partition I've enjoyed up until now
 
-! screencaps for README.md & cover !
+! 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
+! screencaps for README.md & cover !
 ? call for use-cases? (go first.)
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
@@ -169,13 +167,7 @@ OOSVARS/BEGIN/END:
 * join: final sllv_free in destructor (lo-pri)
 * anim ref https://github.com/edi9999/path-extractor
 
-* packaging/currency:
-  k brew
-  ~ netbsd
-  k debian
-  ? redhat ?
-  ? centos ?
-  ? other ?
+? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
 
 * flight misc: .screenrc -> dotfiles; more dotfile currency
 * cump -> one-offs

@@ -13,7 +13,7 @@ typedef struct _sllve_t {
 typedef struct _sllv_t {
 	sllve_t *phead;
 	sllve_t *ptail;
-	int length;
+	unsigned long long length;
 } sllv_t;
 
 sllv_t* sllv_alloc();

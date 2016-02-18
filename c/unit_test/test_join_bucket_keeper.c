@@ -90,25 +90,25 @@ static int list_is_null(sllv_t* plist, char* desc, char* rval) {
 		printf("%-8s is null with rval=\"%s\"; ok\n", desc, rval);
 		return TRUE;
 	} else {
-		printf("%-8s should be null with rval=\"%s\" and is not (length=%d):\n",
+		printf("%-8s should be null with rval=\"%s\" and is not (length=%llu):\n",
 			desc, rval, plist->length);
 		lrec_print_list_with_prefix(plist, "  ");
 		return FALSE;
 	}
 }
 
-static int list_has_length(sllv_t* plist, int length, char* desc, char* rval) {
+static int list_has_length(sllv_t* plist, unsigned long long length, char* desc, char* rval) {
 	if (plist == NULL) {
 		printf("%-8s is null with rval=\"%s\" and should not be\n", desc, rval);
 		return FALSE;
 	}
 
 	if (plist->length == length) {
-		printf("%-8s length=%d with rval=\"%s\"; ok:\n", desc, length, rval);
+		printf("%-8s length=%llu with rval=\"%s\"; ok:\n", desc, length, rval);
 		lrec_print_list_with_prefix(plist, "  ");
 		return TRUE;
 	} else {
-		printf("%-8s length=%d with rval=\"%s\" but should be %d:\n", desc, plist->length, rval, length);
+		printf("%-8s length=%llu with rval=\"%s\" but should be %llu:\n", desc, plist->length, rval, length);
 		lrec_print_list_with_prefix(plist, "  ");
 		return FALSE;
 	}

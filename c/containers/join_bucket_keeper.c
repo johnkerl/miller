@@ -497,7 +497,7 @@ void join_bucket_print(join_bucket_t* pbucket, char* indent) {
 		printf("%s  precords:\n", indent);
 		printf("%s    (null)\n", indent);
 	} else {
-		printf("%s  precords (length=%d):\n", indent, pbucket->precords->length);
+		printf("%s  precords (length=%llu):\n", indent, pbucket->precords->length);
 		lrec_print_list_with_prefix(pbucket->precords, "      ");
 	}
 	printf("%s  was_paired = %d\n", indent, pbucket->was_paired);
