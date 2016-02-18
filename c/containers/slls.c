@@ -117,7 +117,7 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 // ----------------------------------------------------------------
 // This is inefficient and intended only for debug use.
 char* slls_join(slls_t* plist, char* ofs) {
-	int len = 0;
+	unsigned long long len = 0;
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
 		len += strlen(pe->value) + 1; // include space for ofs and null-terminator
 	char* output = mlr_malloc_or_die(len);
@@ -136,7 +136,7 @@ void slls_print(slls_t* plist) {
 	if (plist == NULL) {
 		printf("NULL");
 	} else {
-		int i = 0;
+		unsigned long long i = 0;
 		for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext, i++) {
 			if (i > 0)
 				printf(",");
@@ -212,7 +212,7 @@ void slls_sort(slls_t* plist) {
 	if (plist->length < 2)
 		return;
 
-	int i;
+	unsigned long long i;
 	sllse_t* pe;
 
 	// Copy to array

@@ -359,7 +359,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 	context_t* pctx)
 {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
-		fprintf(stderr, "%s: Header/data length mismatch (%d != %d) at file \"%s\" line %lld.\n",
+		fprintf(stderr, "%s: Header/data length mismatch (%llu != %llu) at file \"%s\" line %lld.\n",
 			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
 			pctx->filename, pstate->ilno);
 		exit(1);

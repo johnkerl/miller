@@ -19,7 +19,7 @@
 //
 // an rslls iteration must also check length:
 //
-//   int i = 0;
+//   unsigned long long i = 0;
 //   for (rsllse_t* pe = plist->phead; i < plist->length && pe != NULL; pe = pe->pnext, i++) {
 //     ...
 //   }
@@ -41,7 +41,7 @@ typedef struct _rsllse_t {
 typedef struct _rslls_t {
 	rsllse_t *phead;
 	rsllse_t *ptail;
-	int      length;
+	unsigned long long length;
 } rslls_t;
 
 rslls_t* rslls_alloc();

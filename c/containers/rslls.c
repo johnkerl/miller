@@ -86,7 +86,7 @@ void rslls_print(rslls_t* plist) {
 	if (plist == NULL) {
 		printf("NULL");
 	} else {
-		int i = 0;
+		unsigned long long i = 0;
 		for (rsllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext, i++) {
 			if (i > 0)
 				printf(",");
