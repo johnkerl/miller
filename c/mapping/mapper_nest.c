@@ -425,37 +425,32 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 		return sllv_single(NULL);
 	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
 
-	char* pfree_flags = NULL;
-	char free_flags = 0;
-	char* field_value = lrec_get_pff(pinrec, pstate->field_name, &pfree_flags);
+	char* field_value = lrec_get(pinrec, pstate->field_name);
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
 	}
 
-	// xxx expand-in-place
-
-	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
-	free_flags = *pfree_flags;
-	*pfree_flags &= ~FREE_ENTRY_VALUE;
-	lrec_remove(pinrec, pstate->field_name);
-
 	sllv_t* poutrecs = sllv_alloc();
 	char* sep = pstate->nested_fs;
 	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
-		lrec_t* poutrec = lrec_copy(pinrec);
 		char* found_sep = strstr(piece, pstate->nested_ps);
+		lrec_t* poutrec = lrec_copy(pinrec);
+		lrece_t* pe = NULL;
+		(void)lrec_get_ext(poutrec, pstate->field_name, &pe);
+		// Put the new field where the old one was -- unless there's already a field with the new
+		// name in which case replace its value.
 		if (found_sep != NULL) { // there is a pair
 			*found_sep = 0;
-			lrec_put(poutrec, mlr_strdup_or_die(piece), mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
+			lrec_put_after(poutrec, pe, mlr_strdup_or_die(piece),
+				mlr_strdup_or_die(found_sep + pstate->nested_ps_length),
 				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 		} else { // there is not a pair
-			lrec_put(poutrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+			lrec_put_after(poutrec, pe, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
 		}
+		lrec_unlink_and_free(poutrec, pe);
 		sllv_append(poutrecs, poutrec);
 	}
 
-	if (free_flags & FREE_ENTRY_VALUE)
-		free(field_value);
 	lrec_free(pinrec);
 	return poutrecs;
 }

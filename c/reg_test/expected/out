@@ -2984,12 +2984,12 @@ u=100,y=d:60
 y=d:70,a=4,b=5
 
 mlr nest --explode --pairs --across-records -f x ./reg_test/input/nest-explode.dkvp
-y=d:40,a=1
-y=d:40,b=2
-y=d:40,c=3
+a=1,y=d:40
+b=2,y=d:40
+c=3,y=d:40
 u=100,y=d:60
-y=d:70,a=4
-y=d:70,b=5
+a=4,y=d:70
+b=5,y=d:70
 
 
 ================================================================
