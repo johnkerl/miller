@@ -133,7 +133,7 @@ void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 	}
 }
 
-void lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free_flags) {
+lrece_t* lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
 	if (pe != NULL) { // Overwrite
@@ -166,6 +166,7 @@ void lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free
 
 		prec->field_count++;
 	}
+	return pe;
 }
 
 // ----------------------------------------------------------------

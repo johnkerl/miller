@@ -242,6 +242,7 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
 	}
+	lrece_t* porig = pentry;
 
 	char* sep = pstate->nested_fs;
 	int i = 1;
@@ -251,10 +252,9 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
 		if (istring_free_flags & FREE_ENTRY_KEY)
 			free(istring);
-		lrec_put(pinrec, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		// xxx insert after if it doesn't already exit
+		pentry = lrec_put_after(pinrec, pentry, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
-	lrec_unlink_and_free(pinrec, pentry);
+	lrec_unlink_and_free(pinrec, porig);
 	return sllv_single(pinrec);;
 }
 
