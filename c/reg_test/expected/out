@@ -2978,10 +2978,10 @@ y=d:40,x=a:1;b:2;c:3
 y=d:70,x=a:4;b:5
 
 mlr nest --explode --pairs --across-fields -f x ./reg_test/input/nest-explode.dkvp
-y=d:40,a=1,b=2,c=3
+a=1,b=2,c=3,y=d:40
 y=d:50
 u=100,y=d:60
-y=d:70,a=4,b=5
+a=4,b=5,y=d:70
 
 mlr nest --explode --pairs --across-records -f x ./reg_test/input/nest-explode.dkvp
 a=1,y=d:40

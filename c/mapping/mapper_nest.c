@@ -82,20 +82,21 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "\n");
 	fprintf(o, "  %s %s --explode --values --across-fields -f x\n", argv0, verb);
 	fprintf(o, "  with input record \"x=a;b;c,y=d\" produces output records\n");
-	fprintf(o, "    \"y=d,x_1=a,x_2=b,x_3=c\"\n");
+	fprintf(o, "    \"x_1=a,x_2=b,x_3=c,y=d\"\n");
 	fprintf(o, "  Use --implode to do the reverse.\n");
 
 	fprintf(o, "\n");
 	fprintf(o, "  %s %s --explode --pairs --across-records -f x\n", argv0, verb);
 	fprintf(o, "  with input record \"x=a:1;b:2;c:3,y=d\" produces output records\n");
-	fprintf(o, "    \"y=d,a=1\"\n");
-	fprintf(o, "    \"y=d,b=2\"\n");
-	fprintf(o, "    \"y=d,c=3\"\n");
+	fprintf(o, "    \"a=1,y=d\"\n");
+	fprintf(o, "    \"b=2,y=d\"\n");
+	fprintf(o, "    \"c=3,y=d\"\n");
 
 	fprintf(o, "\n");
 	fprintf(o, "  %s %s --explode --pairs --across-fields -f x\n", argv0, verb);
 	fprintf(o, "  with input record \"x=a:1;b:2;c:3,y=d\" produces output records\n");
-	fprintf(o, "    \"y=d,a=a,b=2,c=3\"\n");
+	fprintf(o, "    \"a=1,b=2,c=3,y=d\"\n");
+
 	fprintf(o, "\n");
 	fprintf(o, "Notes:\n");
 	fprintf(o, "* With --pairs, --implode doesn't make sense since the original field name has\n");

@@ -2119,18 +2119,18 @@ Examples:
 
   mlr nest --explode --values --across-fields -f x
   with input record "x=a;b;c,y=d" produces output records
-    "y=d,x_1=a,x_2=b,x_3=c"
+    "x_1=a,x_2=b,x_3=c,y=d"
   Use --implode to do the reverse.
 
   mlr nest --explode --pairs --across-records -f x
   with input record "x=a:1;b:2;c:3,y=d" produces output records
-    "y=d,a=1"
-    "y=d,b=2"
-    "y=d,c=3"
+    "a=1,y=d"
+    "b=2,y=d"
+    "c=3,y=d"
 
   mlr nest --explode --pairs --across-fields -f x
   with input record "x=a:1;b:2;c:3,y=d" produces output records
-    "y=d,a=a,b=2,c=3"
+    "a=1,b=2,c=3,y=d"
 
 Notes:
 * With --pairs, --implode doesn't make sense since the original field name has
