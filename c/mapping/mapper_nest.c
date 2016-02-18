@@ -273,6 +273,7 @@ static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_
 			sb_append_string(pstate->psb, pe->value);
 			field_count++;
 
+			// xxx keep reference to last-deleted so we can insert before ...
 			lrece_t* pnext = pe->pnext;
 			lrec_unlink_and_free(pinrec, pe);
 			pe = pnext;
@@ -357,6 +358,8 @@ static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context
 	} else { // end of input stream
 		sllv_t* poutrecs = sllv_alloc();
 
+		// xxx keep reference to last-deleted so we can insert before ?!?
+
 		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
 			lhmslv_t* other_values_to_buckets = pe->pvvalue;
 			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
@@ -397,6 +400,8 @@ static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t
 	*pfree_flags &= ~FREE_ENTRY_VALUE;
 	lrec_remove(pinrec, pstate->field_name);
 
+	// xxx expand-in-place
+
 	char* sep = pstate->nested_fs;
 	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
 		char* found_sep = strstr(piece, pstate->nested_ps);
@@ -426,6 +431,8 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 	if (field_value == NULL) {
 		return sllv_single(pinrec);
 	}
+
+	// xxx expand-in-place
 
 	// Retain the field_value, and responsibility for freeing it; then, remove it from the input record.
 	free_flags = *pfree_flags;
