@@ -1,15 +1,6 @@
-#ifndef RVAL_EVALUATOR_H
-#define RVAL_EVALUATOR_H
-
-#include "lib/context.h"
-#include "containers/lrec.h"
-#include "containers/lhmsv.h"
-#include "containers/mlhmmv.h"
-#include "containers/mlrval.h"
-#include "lib/string_array.h"
-
-struct _rval_evaluator_t; // forward reference for method declarations
-
+// ================================================================
+// These evaluate right-hand-side values (rvals) and return mlrvals (mv_t).
+//
 // Record state is in three parts here:
 //
 // * The lrec is read for input fields; output fields are written to the typed-overlay map. It is up to the
@@ -31,7 +22,20 @@ struct _rval_evaluator_t; // forward reference for method declarations
 //
 //   o It is up to mapper_put to write "left"=>"abc" and "right"=>"def" into the lrec.
 //
-// See also the comments above mapper_put.c for more information.
+// See also the comments above mapper_put.c for more information about left-hand sides (lvals).
+// ================================================================
+
+#ifndef RVAL_EVALUATOR_H
+#define RVAL_EVALUATOR_H
+
+#include "lib/context.h"
+#include "containers/lrec.h"
+#include "containers/lhmsv.h"
+#include "containers/mlhmmv.h"
+#include "containers/mlrval.h"
+#include "lib/string_array.h"
+
+struct _rval_evaluator_t; // forward reference for method declarations
 
 typedef mv_t rval_evaluator_process_func_t(
 	lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,

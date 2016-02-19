@@ -12,6 +12,8 @@
 // ================================================================
 // NOTES:
 //
+// * Code here evaluates right-hand-side values (rvals) and return mlrvals (mv_t).
+//
 // * This is used by mlr filter and mlr put.
 //
 // * Unlike most files in Miller which are read top-down (with sufficient
@@ -1932,7 +1934,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
-
 typedef enum _func_class_t {
 	FUNC_CLASS_ARITHMETIC,
 	FUNC_CLASS_MATH,
