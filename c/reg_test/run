@@ -1196,27 +1196,27 @@ run_mlr --opprint put '$y = gsub($x, "A"i,   "")'   $indir/gsub.dat
 # ----------------------------------------------------------------
 announce DSL EXPERIMENTAL OOSVARS
 
-run_mlr --opprint put -v 'begin @ox=0; $d=$x-@ox; @ox=$x' $indir/abixy
-run_mlr --opprint put -v 'begin @ox="no"; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
+run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
+run_mlr --opprint put -v 'begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
 run_mlr --opprint put -v '$d=$x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
-run_mlr --opprint put -v 'begin @ox="no"; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
-run_mlr --opprint put -v 'begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum' $indir/abixy
-run_mlr --opprint put -v 'begin @a=0; begin @b=0; begin @c=0; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i' $indir/abixy
+run_mlr --opprint put -v 'begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
+run_mlr --opprint put -v 'begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum' $indir/abixy
+run_mlr --opprint put -v 'begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i' $indir/abixy
 run_mlr --opprint put -v 'begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i' $indir/abixy
-run_mlr --opprint put -v 'begin @ox=0; $d=$x-@ox; @ox=$x' $indir/abixy
+run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
 
 run_mlr put -v '@a=$a; @b=$b; @c=$x; end {emit @a; emit @b; emit @c}' $indir/abixy
-run_mlr put -v '@a=$a; @b=$b; @c=$x; end emit @a, @b, @c' $indir/abixy
+run_mlr put -v '@a=$a; @b=$b; @c=$x; end{emit @a, @b, @c}' $indir/abixy
 
 run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' $indir/abixy
 run_mlr --opprint put -v 'end{@mean=@sum/@count; emit @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy
 
-run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end @f[@g[5][@h]] = 6' /dev/null
+run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}' /dev/null
 
-run_mlr put '@y[$a]=$y; end dump' $indir/abixy
+run_mlr put '@y[$a]=$y; end{dump}' $indir/abixy
 
 run_mlr stats1 -a sum -f y -g a $indir/abixy
-run_mlr put '@y_sum[$a] = $y; end dump' $indir/abixy
+run_mlr put '@y_sum[$a] = $y; end{dump}' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING

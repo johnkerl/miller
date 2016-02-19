@@ -55,25 +55,12 @@ md_statement ::= md_main_dump.
 
 // E.g. 'begin { emit @count }'
 md_statement ::= md_begin_block.
-// E.g. 'begin emit @count'
-md_statement ::= md_begin_solo_oosvar_assignment.
-md_statement ::= md_begin_solo_bare_boolean.
-md_statement ::= md_begin_solo_filter.
-md_statement ::= md_begin_solo_gate.
-md_statement ::= md_begin_solo_emit.
-md_statement ::= md_begin_solo_dump.
 
+// e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
 md_statement ::= md_conditional_block.
 
 // E.g. 'end { emit @count }'
 md_statement ::= md_end_block.
-// E.g. 'end emit @count'
-md_statement ::= md_end_solo_oosvar_assignment.
-md_statement ::= md_end_solo_bare_boolean.
-md_statement ::= md_end_solo_filter.
-md_statement ::= md_end_solo_gate.
-md_statement ::= md_end_solo_emit.
-md_statement ::= md_end_solo_dump.
 
 // ----------------------------------------------------------------
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
@@ -159,31 +146,6 @@ md_main_dump(A) ::= md_dump(B). {
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
 
-md_begin_solo_oosvar_assignment(A)  ::= MD_TOKEN_BEGIN md_oosvar_assignment(B). {
-	A = B;
-	sllv_append(past->pbegin_statements, A);
-}
-md_begin_solo_bare_boolean(A) ::= MD_TOKEN_BEGIN md_ternary(B). {
-	A = B;
-	sllv_append(past->pbegin_statements, A);
-}
-md_begin_solo_filter(A) ::= MD_TOKEN_BEGIN MD_TOKEN_FILTER(O) md_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_append(past->pbegin_statements, A);
-}
-md_begin_solo_gate(A) ::= MD_TOKEN_BEGIN MD_TOKEN_GATE(O) md_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_append(past->pbegin_statements, A);
-}
-md_begin_solo_emit(A) ::= MD_TOKEN_BEGIN md_emit(B). {
-	A = B;
-	sllv_append(past->pbegin_statements, A);
-}
-md_begin_solo_dump(A) ::= MD_TOKEN_BEGIN md_dump(B). {
-	A = B;
-	sllv_append(past->pbegin_statements, A);
-}
-
 md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
@@ -237,31 +199,6 @@ md_conditional_block_dump(A) ::= md_dump(B). {
 
 // ----------------------------------------------------------------
 // These are top-level; they update the AST top-level statement-lists.
-
-md_end_solo_oosvar_assignment(A)  ::= MD_TOKEN_END md_oosvar_assignment(B). {
-	A = B;
-	sllv_append(past->pend_statements, A);
-}
-md_end_solo_bare_boolean(A) ::= MD_TOKEN_END md_ternary(B). {
-	A = B;
-	sllv_append(past->pend_statements, A);
-}
-md_end_solo_filter(A) ::= MD_TOKEN_END MD_TOKEN_FILTER(O) md_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_append(past->pend_statements, A);
-}
-md_end_solo_gate(A) ::= MD_TOKEN_END MD_TOKEN_GATE(O) md_ternary(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
-	sllv_append(past->pend_statements, A);
-}
-md_end_solo_emit(A) ::= MD_TOKEN_END md_emit(B). {
-	A = B;
-	sllv_append(past->pend_statements, A);
-}
-md_end_solo_dump(A) ::= MD_TOKEN_END md_dump(B). {
-	A = B;
-	sllv_append(past->pend_statements, A);
-}
 
 md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
