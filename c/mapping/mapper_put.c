@@ -377,7 +377,10 @@ static void evaluate_statements(
 				break;
 			}
 
-		} else { // Bare-boolean statement
+		} else if (node_type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
+			// xxx temp
+
+		} else { // Bare-boolean statement, or error.
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
