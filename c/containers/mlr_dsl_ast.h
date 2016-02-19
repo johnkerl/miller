@@ -6,6 +6,7 @@
 #define MLR_DSL_AST_H
 #include "sllv.h"
 
+// ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_STRNUM_LITERAL,
 	MD_AST_NODE_TYPE_BOOLEAN_LITERAL,
@@ -19,6 +20,7 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT,
 	MD_AST_NODE_TYPE_CONTEXT_VARIABLE,
 	MD_AST_NODE_TYPE_STRIPPED_AWAY,
+	MD_AST_NODE_TYPE_CONDITIONAL_BLOCK,
 	MD_AST_NODE_TYPE_FILTER,
 	MD_AST_NODE_TYPE_GATE,
 	MD_AST_NODE_TYPE_EMIT,
@@ -38,6 +40,7 @@ typedef struct _mlr_dsl_ast_node_t {
 	sllv_t*                 pchildren;
 } mlr_dsl_ast_node_t;
 
+// ----------------------------------------------------------------
 mlr_dsl_ast_t* mlr_dsl_ast_alloc();
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t type);

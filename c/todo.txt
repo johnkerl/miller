@@ -39,6 +39,11 @@ w parameterized emit: needs spec & impl. prereq: tri-split null.
   - shuffle
 
 ================================================================
+PATTERN-ACTION AST
+
+* xxxes
+
+================================================================
 TRI-SPLIT NULL
 
   o explicit initialization OK:

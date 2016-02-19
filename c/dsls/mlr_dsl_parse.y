@@ -53,16 +53,11 @@ md_statement ::= md_main_gate.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
-// E.g. 'begin { emit @count }'
-md_statement ::= md_begin_block.
+md_statement ::= md_begin_block.       // E.g. 'begin { emit @count }'
+md_statement ::= md_conditional_block. // e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
+md_statement ::= md_end_block.         // E.g. 'end { emit @count }'
 
-// e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
-md_statement ::= md_conditional_block.
-
-// E.g. 'end { emit @count }'
-md_statement ::= md_end_block.
-
-// ----------------------------------------------------------------
+// ================================================================
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
 
 md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LEFT_BRACE md_begin_block_statements MD_TOKEN_RIGHT_BRACE.
@@ -79,21 +74,7 @@ md_begin_block_statement ::= md_begin_block_gate.
 md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
 
-
-md_conditional_block ::= md_ternary MD_TOKEN_LEFT_BRACE md_conditional_block_statements MD_TOKEN_RIGHT_BRACE.
-// xxx capture that!
-
-md_conditional_block_statements ::= md_conditional_block_statement.
-md_conditional_block_statements ::= md_conditional_block_statement MD_TOKEN_SEMICOLON md_conditional_block_statements.
-
-// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-md_conditional_block_statement ::= .
-md_conditional_block_statement ::= md_conditional_block_srec_assignment.
-md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
-md_conditional_block_statement ::= md_conditional_block_emit.
-md_conditional_block_statement ::= md_conditional_block_dump.
-
-
+// ----------------------------------------------------------------
 md_end_block ::= MD_TOKEN_END MD_TOKEN_LEFT_BRACE md_end_block_statements MD_TOKEN_RIGHT_BRACE.
 
 md_end_block_statements ::= md_end_block_statement.
@@ -108,6 +89,34 @@ md_end_block_statement ::= md_end_block_gate.
 md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
+// ----------------------------------------------------------------
+md_conditional_block(A) ::= md_ternary(B) MD_TOKEN_LEFT_BRACE md_conditional_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
+	A = mlr_dsl_ast_node_alloc_binary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
+	sllv_append(past->pmain_statements, A);
+}
+
+// Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
+// then "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally "$x>0 {$a=1;$b=2;$c=3}". So:
+// * On the "$a=1" we make a sub-AST called "conditional $a=1".
+// * On the "$b=2" we append the next argument to get "conditional $a=1,$b=2".
+// * On the "$c=3" we append the next argument to get "conditional $a=1,$b=2,$c=3".
+// * On the "$x>0" we attach the conditional expression.
+md_conditional_block_statements(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
+}
+md_conditional_block_statements(A) ::= md_conditional_block_statement(B). {
+	A = mlr_dsl_ast_node_alloc_unary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+}
+md_conditional_block_statements(A) ::= md_conditional_block_statement(B) MD_TOKEN_SEMICOLON md_conditional_block_statements(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+//md_conditional_block_statement ::= .
+md_conditional_block_statement ::= md_conditional_block_srec_assignment.
+md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
+md_conditional_block_statement ::= md_conditional_block_emit.
+md_conditional_block_statement ::= md_conditional_block_dump.
 
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
@@ -170,6 +179,7 @@ md_begin_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
+// xxx encapsulate this doubly-used RHS
 md_conditional_block_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN md_ternary. {
 	A = B;
 	//sllv_append(past->pconditional_statements, A);
@@ -238,7 +248,6 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) md_emit_args(B). {
 md_emit_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMIT);
 }
-
 md_emit_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
@@ -514,7 +523,6 @@ md_atom_or_fcn(A) ::= MD_TOKEN_FCN_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOK
 md_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
 }
-
 md_fcn_args(A) ::= md_logical_or_term(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
 }
