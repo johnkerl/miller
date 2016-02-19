@@ -8,10 +8,14 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* tri-split null
-w parameterized emit: needs spec & impl. prereq: tri-split null.
+* pattern-action @ AST: do it now
+* require {} for begin/end
 * move LHS into lrec_evaluators and rename the file.
-w pattern-action: prereq: LHS merge.
+w pattern-action @ CST: prereq: LHS merge.
+
+* tri-split null
+* after tri-split-null, RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
+w parameterized emit: needs spec & impl. prereq: tri-split null.
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 

@@ -63,6 +63,8 @@ md_statement ::= md_begin_solo_gate.
 md_statement ::= md_begin_solo_emit.
 md_statement ::= md_begin_solo_dump.
 
+md_statement ::= md_conditional_block.
+
 // E.g. 'end { emit @count }'
 md_statement ::= md_end_block.
 // E.g. 'end emit @count'
@@ -89,6 +91,23 @@ md_begin_block_statement ::= md_begin_block_filter.
 md_begin_block_statement ::= md_begin_block_gate.
 md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
+
+
+md_conditional_block ::= md_ternary MD_TOKEN_LEFT_BRACE md_conditional_block_statements MD_TOKEN_RIGHT_BRACE.
+// xxx capture that!
+
+md_conditional_block_statements ::= md_conditional_block_statement.
+md_conditional_block_statements ::= md_conditional_block_statement MD_TOKEN_SEMICOLON md_conditional_block_statements.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+md_conditional_block_statement ::= .
+md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
+md_conditional_block_statement ::= md_conditional_block_bare_boolean.
+md_conditional_block_statement ::= md_conditional_block_filter.
+md_conditional_block_statement ::= md_conditional_block_gate.
+md_conditional_block_statement ::= md_conditional_block_emit.
+md_conditional_block_statement ::= md_conditional_block_dump.
+
 
 md_end_block ::= MD_TOKEN_END MD_TOKEN_LEFT_BRACE md_end_block_statements MD_TOKEN_RIGHT_BRACE.
 
@@ -169,7 +188,6 @@ md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
-
 md_begin_block_bare_boolean(A) ::= md_ternary(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
@@ -189,6 +207,32 @@ md_begin_block_emit(A) ::= md_emit(B). {
 md_begin_block_dump(A) ::= md_dump(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
+}
+
+// ----------------------------------------------------------------
+md_conditional_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
+	A = B;
+	//sllv_append(past->pconditional_statements, A);
+}
+md_conditional_block_bare_boolean(A) ::= md_ternary(B). {
+	A = B;
+	//sllv_append(past->pconditional_statements, A);
+}
+md_conditional_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	//sllv_append(past->pconditional_statements, A);
+}
+md_conditional_block_gate(A) ::= MD_TOKEN_GATE(O) md_ternary(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_GATE, B);
+	//sllv_append(past->pconditional_statements, A);
+}
+md_conditional_block_emit(A) ::= md_emit(B). {
+	A = B;
+	//sllv_append(past->pconditional_statements, A);
+}
+md_conditional_block_dump(A) ::= md_dump(B). {
+	A = B;
+	//sllv_append(past->pconditional_statements, A);
 }
 
 // ----------------------------------------------------------------
