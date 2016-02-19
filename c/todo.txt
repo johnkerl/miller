@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
 * require {} for begin/end
 * move LHS into lrec_evaluators and rename the file.
 w pattern-action @ CST: prereq: LHS merge.
+* allow begin/end srec assignments in the grammar to allow better error messages than 'syntax error' in the caller
 
 * tri-split null
 * after tri-split-null, RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
