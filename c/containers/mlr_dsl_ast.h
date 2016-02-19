@@ -60,10 +60,9 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
 // See comments in mlr_dsl_parse.y for this seemingly awkward syntax wherein
 // we change the function name after having set it up. This is a consequence of
 // bottom-up DSL parsing.
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
-	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
-mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
-	mlr_dsl_ast_node_t* pa, char* name);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_prepend_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, char* name);
 
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);

@@ -12101,9 +12101,9 @@ ABABBABBBA BBBBBB
 
 
 ================================================================
-DSL EXPERIMENTAL OOSVARS
+DSL OOSVARS
 
-mlr --opprint put -v begin @ox=0; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
+mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     ox (oosvar_name).
@@ -12130,7 +12130,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
-mlr --opprint put -v begin @ox="no"; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
+mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     ox (oosvar_name).
@@ -12186,7 +12186,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put -v begin @ox="no"; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
+mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     ox (oosvar_name).
@@ -12218,7 +12218,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put -v begin @rsum = 0; @rsum = @rsum + $x; $rsum = @rsum ./reg_test/input/abixy
+mlr --opprint put -v begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum ./reg_test/input/abixy
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     rsum (oosvar_name).
@@ -12245,7 +12245,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   4.002226
 hat wye 9  0.03144187646093577 0.7495507603507059  4.033668
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294
 
-mlr --opprint put -v begin @a=0; begin @b=0; begin @c=0; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg_test/input/abixy
+mlr --opprint put -v begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg_test/input/abixy
 AST BEGIN STATEMENTS (3):
 = (oosvar_assignment):
     a (oosvar_name).
@@ -12345,7 +12345,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   5  6  7  18
 hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
-mlr --opprint put -v begin @ox=0; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
+mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     ox (oosvar_name).
@@ -12405,7 +12405,7 @@ a=pan
 b=wye
 c=0.502626
 
-mlr put -v @a=$a; @b=$b; @c=$x; end emit @a, @b, @c ./reg_test/input/abixy
+mlr put -v @a=$a; @b=$b; @c=$x; end{emit @a, @b, @c} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (3):
 = (oosvar_assignment):
@@ -12518,7 +12518,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 mean
 0.453629
 
-mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end @f[@g[5][@h]] = 6 /dev/null
+mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6} /dev/null
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     a (oosvar_name).
@@ -12551,7 +12551,7 @@ AST END STATEMENTS (1):
             h (oosvar_name).
     6 (strnum_literal).
 
-mlr put @y[$a]=$y; end dump ./reg_test/input/abixy
+mlr put @y[$a]=$y; end{dump} ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -12579,7 +12579,7 @@ a=wye,y_sum=1.201943
 a=zee,y_sum=1.469403
 a=hat,y_sum=0.749551
 
-mlr put @y_sum[$a] = $y; end dump ./reg_test/input/abixy
+mlr put @y_sum[$a] = $y; end{dump} ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -12599,6 +12599,167 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
     "hat": 0.749551
   }
 }
+
+
+================================================================
+DSL PATTERN-ACTION BLOCKS
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9} /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    a (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (3):
+= (srec_assignment):
+    e (field_name).
+    2 (strnum_literal).
+cond (conditional_block):
+    || (operator):
+        == (operator):
+            f (field_name).
+            g (field_name).
+        == (operator):
+            h (field_name).
+            i (field_name).
+= (srec_assignment):
+    x (field_name).
+    6 (strnum_literal).
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    z (oosvar_name).
+    9 (strnum_literal).
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9} /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    a (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (3):
+= (srec_assignment):
+    e (field_name).
+    2 (strnum_literal).
+cond (conditional_block):
+    || (operator):
+        == (operator):
+            f (field_name).
+            g (field_name).
+        == (operator):
+            h (field_name).
+            i (field_name).
+    = (srec_assignment):
+        s (field_name).
+        1 (strnum_literal).
+= (srec_assignment):
+    x (field_name).
+    6 (strnum_literal).
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    z (oosvar_name).
+    9 (strnum_literal).
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9} /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    a (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (3):
+= (srec_assignment):
+    e (field_name).
+    2 (strnum_literal).
+cond (conditional_block):
+    || (operator):
+        == (operator):
+            f (field_name).
+            g (field_name).
+        == (operator):
+            h (field_name).
+            i (field_name).
+    = (srec_assignment):
+        s (field_name).
+        1 (strnum_literal).
+    = (srec_assignment):
+        t (field_name).
+        2 (strnum_literal).
+= (srec_assignment):
+    x (field_name).
+    6 (strnum_literal).
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    z (oosvar_name).
+    9 (strnum_literal).
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9} /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    a (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (3):
+= (srec_assignment):
+    e (field_name).
+    2 (strnum_literal).
+cond (conditional_block):
+    || (operator):
+        == (operator):
+            f (field_name).
+            g (field_name).
+        == (operator):
+            h (field_name).
+            i (field_name).
+    = (srec_assignment):
+        s (field_name).
+        1 (strnum_literal).
+    = (srec_assignment):
+        t (field_name).
+        2 (strnum_literal).
+    = (srec_assignment):
+        u (field_name).
+        3 (strnum_literal).
+= (srec_assignment):
+    x (field_name).
+    6 (strnum_literal).
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    z (oosvar_name).
+    9 (strnum_literal).
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v,@w;dump}; $x=6; end{@z=9} /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    a (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (3):
+= (srec_assignment):
+    e (field_name).
+    2 (strnum_literal).
+cond (conditional_block):
+    || (operator):
+        == (operator):
+            f (field_name).
+            g (field_name).
+        == (operator):
+            h (field_name).
+            i (field_name).
+    = (srec_assignment):
+        s (field_name).
+        1 (strnum_literal).
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            t (oosvar_name).
+            . (operator):
+                u (strnum_literal).
+                5 (field_name).
+        2 (strnum_literal).
+    emit (emit):
+        v (oosvar_name).
+        w (oosvar_name).
+    dump (dump):
+= (srec_assignment):
+    x (field_name).
+    6 (strnum_literal).
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    z (oosvar_name).
+    9 (strnum_literal).
 
 
 ================================================================

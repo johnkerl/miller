@@ -1194,7 +1194,7 @@ run_mlr --opprint put '$y = gsub($x, "a"i,   "")'   $indir/gsub.dat
 run_mlr --opprint put '$y = gsub($x, "A"i,   "")'   $indir/gsub.dat
 
 # ----------------------------------------------------------------
-announce DSL EXPERIMENTAL OOSVARS
+announce DSL OOSVARS
 
 run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
 run_mlr --opprint put -v 'begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x $indir/abixy
@@ -1217,6 +1217,15 @@ run_mlr put '@y[$a]=$y; end{dump}' $indir/abixy
 
 run_mlr stats1 -a sum -f y -g a $indir/abixy
 run_mlr put '@y_sum[$a] = $y; end{dump}' $indir/abixy
+
+# ----------------------------------------------------------------
+announce DSL PATTERN-ACTION BLOCKS
+
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9}' /dev/null
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9}' /dev/null
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9}' /dev/null
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9}' /dev/null
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v,@w;dump}; $x=6; end{@z=9}' /dev/null
 
 # ----------------------------------------------------------------
 announce CHAINING

@@ -69,6 +69,15 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_
 }
 
 // ----------------------------------------------------------------
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_prepend_arg(
+	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb)
+{
+	if (pa->pchildren == NULL)
+		pa->pchildren = sllv_alloc();
+	sllv_prepend(pa->pchildren, pb);
+	return pa;
+}
+
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb)
 {
@@ -137,6 +146,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:  return "oosvar_assignment";  break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:   return "context_variable";   break;
 	case MD_AST_NODE_TYPE_STRIPPED_AWAY:      return "stripped_away";      break;
+	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:  return "conditional_block";  break;
 	case MD_AST_NODE_TYPE_FILTER:             return "filter";             break;
 	case MD_AST_NODE_TYPE_GATE:               return "gate";               break;
 	case MD_AST_NODE_TYPE_EMIT:               return "emit";               break;

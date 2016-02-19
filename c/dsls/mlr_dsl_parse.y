@@ -91,28 +91,28 @@ md_end_block_statement ::= md_end_block_dump.
 
 // ----------------------------------------------------------------
 md_conditional_block(A) ::= md_ternary(B) MD_TOKEN_LEFT_BRACE md_conditional_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
-	A = mlr_dsl_ast_node_alloc_binary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
+	A = mlr_dsl_ast_node_prepend_arg(C, B);
 	sllv_append(past->pmain_statements, A);
 }
 
 // Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
 // then "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally "$x>0 {$a=1;$b=2;$c=3}". So:
-// * On the "$a=1" we make a sub-AST called "conditional $a=1".
-// * On the "$b=2" we append the next argument to get "conditional $a=1,$b=2".
-// * On the "$c=3" we append the next argument to get "conditional $a=1,$b=2,$c=3".
-// * On the "$x>0" we attach the conditional expression.
+// * On the "$a=1" we make a sub-AST called "cond" with child $a=1.
+// * On the "$b=2" we append the next argument to get "cond" having children $a=1 and $b=2.
+// * On the "$c=3" we append the next argument to get "cond" having children $a=1, $b=2, and $c=3.
+// * On the "$x>0" we prepend the conditional expression to get "cond" having children $x>0, $a=1, $b=2, and $c=3.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_conditional_block_statements(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
+	A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
 }
 md_conditional_block_statements(A) ::= md_conditional_block_statement(B). {
-	A = mlr_dsl_ast_node_alloc_unary("conditional", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+	A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
 }
-md_conditional_block_statements(A) ::= md_conditional_block_statement(B) MD_TOKEN_SEMICOLON md_conditional_block_statements(C). {
+md_conditional_block_statements(A) ::= md_conditional_block_statements(B) MD_TOKEN_SEMICOLON md_conditional_block_statement(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
-// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-//md_conditional_block_statement ::= .
 md_conditional_block_statement ::= md_conditional_block_srec_assignment.
 md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
 md_conditional_block_statement ::= md_conditional_block_emit.
@@ -121,8 +121,8 @@ md_conditional_block_statement ::= md_conditional_block_dump.
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
 
-md_main_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
+md_main_srec_assignment(A)  ::= md_srec_assignment(B). {
+	A = B;
 	sllv_append(past->pmain_statements, A);
 }
 md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
@@ -179,22 +179,17 @@ md_begin_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
-// xxx encapsulate this doubly-used RHS
-md_conditional_block_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN md_ternary. {
+md_conditional_block_srec_assignment(A) ::= md_srec_assignment(B). {
 	A = B;
-	//sllv_append(past->pconditional_statements, A);
 }
 md_conditional_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
-	//sllv_append(past->pconditional_statements, A);
 }
 md_conditional_block_emit(A) ::= md_emit(B). {
 	A = B;
-	//sllv_append(past->pconditional_statements, A);
 }
 md_conditional_block_dump(A) ::= md_dump(B). {
 	A = B;
-	//sllv_append(past->pconditional_statements, A);
 }
 
 // ----------------------------------------------------------------
@@ -226,6 +221,9 @@ md_end_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
+}
 md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
