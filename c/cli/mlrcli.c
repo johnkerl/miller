@@ -9,7 +9,7 @@
 #include "containers/lhmsi.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
-#include "mapping/lrec_evaluators.h"
+#include "mapping/rval_evaluators.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
 #include "cli/quoting.h"
@@ -260,7 +260,7 @@ static void main_usage_help_options(FILE* o, char* argv0) {
 }
 
 static void main_usage_functions(FILE* o, char* argv0, char* leader) {
-	lrec_evaluator_list_functions(o, leader);
+	rval_evaluator_list_functions(o, leader);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
 }
@@ -637,15 +637,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			list_all_verbs_raw(stdout);
 			exit(0);
 		} else if (streq(argv[argi], "--list-all-functions-raw")) {
-			lrec_evaluator_list_all_functions_raw(stdout);
+			rval_evaluator_list_all_functions_raw(stdout);
 			exit(0);
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
-			lrec_evaluator_function_usage(stdout, NULL);
+			rval_evaluator_function_usage(stdout, NULL);
 			exit(0);
 
 		} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 			check_arg_count(argv, argi, argc, 2);
-			lrec_evaluator_function_usage(stdout, argv[argi+1]);
+			rval_evaluator_function_usage(stdout, argv[argi+1]);
 			exit(0);
 
 		// main-usage subsections, individually accessible for the benefit of

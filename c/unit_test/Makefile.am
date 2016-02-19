@@ -10,7 +10,7 @@ check_PROGRAMS = 	test_mlrutil \
 			test_mlhmmv \
 			test_multiple_containers \
 			test_string_builder \
-			test_lrec_evaluators \
+			test_rval_evaluators \
 			test_join_bucket_keeper
 
 AM_CPPFLAGS=		-I${srcdir}/..
@@ -58,8 +58,8 @@ test_multiple_containers_LDADD=   ${all_ldadd}
 test_string_builder_CFLAGS=       -std=gnu99 -g ${AM_CFLAGS}
 test_string_builder_LDADD=        ${all_ldadd}
 
-test_lrec_evaluators_CFLAGS=      -std=gnu99 -g ${AM_CFLAGS}
-test_lrec_evaluators_LDADD=       ${all_ldadd}
+test_rval_evaluators_CFLAGS=      -std=gnu99 -g ${AM_CFLAGS}
+test_rval_evaluators_LDADD=       ${all_ldadd}
 
 test_join_bucket_keeper_CFLAGS=   -std=gnu99 -g ${AM_CFLAGS}
 test_join_bucket_keeper_LDADD=    ${all_ldadd}

@@ -2,7 +2,7 @@
 #define MLR_DSL_CST_H
 
 #include "containers/mlr_dsl_ast.h"
-#include "lrec_evaluators.h"
+#include "rval_evaluators.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
@@ -51,7 +51,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	sllv_t* poosvar_lhs_keylist_evaluators;
 
 	// RHS:
-	lrec_evaluator_t* prhs_evaluator;
+	rval_evaluator_t* prhs_evaluator;
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {

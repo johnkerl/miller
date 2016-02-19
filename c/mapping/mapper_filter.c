@@ -1,7 +1,7 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "mapping/lrec_evaluators.h"
+#include "mapping/rval_evaluators.h"
 #include "mapping/mappers.h"
 #include "dsls/mlr_dsl_wrapper.h"
 #include "cli/argparse.h"
@@ -9,7 +9,7 @@
 typedef struct _mapper_filter_state_t {
 	ap_state_t* pargp;
 	mlr_dsl_ast_node_t* past;
-	lrec_evaluator_t* pevaluator;
+	rval_evaluator_t* pevaluator;
 	int do_exclude;
 } mapper_filter_state_t;
 
@@ -128,7 +128,7 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past
 
 	pstate->pargp      = pargp;
 	pstate->past       = past;
-	pstate->pevaluator = lrec_evaluator_alloc_from_ast(past, type_inferencing);
+	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, type_inferencing);
 	pstate->do_exclude = do_exclude;
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));

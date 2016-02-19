@@ -1,5 +1,5 @@
-#ifndef LREC_EVALUATOR_H
-#define LREC_EVALUATOR_H
+#ifndef RVAL_EVALUATOR_H
+#define RVAL_EVALUATOR_H
 
 #include "lib/context.h"
 #include "containers/lrec.h"
@@ -8,7 +8,7 @@
 #include "containers/mlrval.h"
 #include "lib/string_array.h"
 
-struct _lrec_evaluator_t; // forward reference for method declarations
+struct _rval_evaluator_t; // forward reference for method declarations
 
 // Record state is in three parts here:
 //
@@ -33,16 +33,16 @@ struct _lrec_evaluator_t; // forward reference for method declarations
 //
 // See also the comments above mapper_put.c for more information.
 
-typedef mv_t lrec_evaluator_process_func_t(
+typedef mv_t rval_evaluator_process_func_t(
 	lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
 	string_array_t** ppregex_captures, context_t* pctx, void* pvstate);
 
-typedef void lrec_evaluator_free_func_t(struct _lrec_evaluator_t*);
+typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
 
-typedef struct _lrec_evaluator_t {
+typedef struct _rval_evaluator_t {
 	void* pvstate;
-	lrec_evaluator_process_func_t* pprocess_func;
-	lrec_evaluator_free_func_t*    pfree_func;
-} lrec_evaluator_t;
+	rval_evaluator_process_func_t* pprocess_func;
+	rval_evaluator_free_func_t*    pfree_func;
+} rval_evaluator_t;
 
-#endif // LREC_EVALUATOR_H
+#endif // RVAL_EVALUATOR_H

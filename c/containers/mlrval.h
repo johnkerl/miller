@@ -14,7 +14,7 @@
 
 // ================================================================
 // MT for Miller type -- highly abbreviated here since these are
-// spelled out a lot in lrec_evaluators.c.
+// spelled out a lot in rval_evaluators.c.
 //
 // ================================================================
 // NOTE: mlrval functions invalidate their arguments. In particular, dynamically

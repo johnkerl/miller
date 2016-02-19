@@ -6,7 +6,7 @@
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
 #include "mapping/mappers.h"
-#include "mapping/lrec_evaluators.h"
+#include "mapping/rval_evaluators.h"
 #include "dsls/mlr_dsl_wrapper.h"
 #include "mlr_dsl_cst.h"
 
@@ -280,14 +280,14 @@ static void evaluate_statements(
 		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			char* output_field_name = pitem->output_field_name;
-			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				ppregex_captures, pctx, prhs_evaluator->pvstate);
 			mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 			*pval = val;
 
-			// The lrec_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+			// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
 			// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
 			// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
 			// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
@@ -301,14 +301,14 @@ static void evaluate_statements(
 		} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 
-			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 			mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
 				pstate->poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
 			sllmv_t* pmvkeys = sllmv_alloc();
 			int keys_ok = TRUE;
 			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-				lrec_evaluator_t* pmvkey_evaluator = pe->pvvalue;
+				rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
 				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
 					pstate->poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
 				if (mv_is_null(&mvkey)) {
@@ -329,7 +329,7 @@ static void evaluate_statements(
 			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
 				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
 				char* output_field_name = pitem->output_field_name;
-				lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+				rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 				// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
 				// that and just hashmap-get keyed by output_field_name here.
@@ -352,7 +352,7 @@ static void evaluate_statements(
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				ppregex_captures, pctx, prhs_evaluator->pvstate);
@@ -366,7 +366,7 @@ static void evaluate_statements(
 
 		} else if (node_type == MD_AST_NODE_TYPE_GATE) {
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				ppregex_captures, pctx, prhs_evaluator->pvstate);
@@ -382,7 +382,7 @@ static void evaluate_statements(
 
 		} else { // Bare-boolean statement, or error.
 			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
-			lrec_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
 				ppregex_captures, pctx, prhs_evaluator->pvstate);

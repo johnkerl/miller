@@ -188,7 +188,7 @@ TEST_PARSE_TRIE_SRCS = \
   containers/parse_trie.c \
   unit_test/test_parse_trie.c
 
-TEST_LREC_EVALUATORS_SRCS = \
+TEST_RVAL_EVALUATORS_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
   lib/mlrregex.c \
@@ -204,8 +204,8 @@ TEST_LREC_EVALUATORS_SRCS = \
   containers/lrec.c \
   containers/lhmsv.c \
   containers/mlhmmv.c \
-  mapping/lrec_evaluators.c \
-  unit_test/test_lrec_evaluators.c
+  mapping/rval_evaluators.c \
+  unit_test/test_rval_evaluators.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
   lib/mlrutil.c \
@@ -303,7 +303,7 @@ mlrp: .always dsls
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-lrec-evaluators test-join-bucket-keeper
+unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-rval-evaluators test-join-bucket-keeper
 	./test-mlrutil
 	./test-mlrregex
 	./test-argparse
@@ -314,7 +314,7 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-
 	./test-multiple-containers
 	./test-mlhmmv
 	./test-string-builder
-	./test-lrec-evaluators
+	./test-rval-evaluators
 	./test-join-bucket-keeper
 	@echo
 	@echo DONE
@@ -361,8 +361,8 @@ test-string-builder: .always
 test-parse-trie: .always
 	$(CCDEBUG) $(TEST_PARSE_TRIE_SRCS) -o test-parse-trie
 
-test-lrec-evaluators: .always
-	$(CCDEBUG) $(TEST_LREC_EVALUATORS_SRCS) -o test-lrec-evaluators -lm
+test-rval-evaluators: .always
+	$(CCDEBUG) $(TEST_RVAL_EVALUATORS_SRCS) -o test-rval-evaluators -lm
 
 test-join-bucket-keeper: .always
 	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper -lm

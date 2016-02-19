@@ -22,8 +22,8 @@
 //   functions and I chose not to write out so many prototypes: they would have
 //   made things less clear by their very volume.
 //
-// * Comparison to lrec_evaluators.c: this file is functions from mlrval(s) to
-//   mlrval; in lrec_evaluators.c we have the higher-level notion of
+// * Comparison to rval_evaluators.c: this file is functions from mlrval(s) to
+//   mlrval; in rval_evaluators.c we have the higher-level notion of
 //   evaluating lrec objects, using mlrval.c to do so.
 //
 // * There are two kinds of functions here: those with _x_ in their names

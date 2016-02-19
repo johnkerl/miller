@@ -7,7 +7,7 @@ test-byte-readers
 test-join-bucket-keeper
 test-json-parser
 test-lrec
-test-lrec-evaluators
+test-rval-evaluators
 test-mlhmmv
 test-mlrregex
 test-mlrutil
@@ -15,7 +15,7 @@ test-multiple-containers
 test-parse-trie
 test-peek-file-reader
 test-string-builder
-test_lrec_evaluators
+test_rval_evaluators
 test_argparse
 test_byte_readers
 test_join_bucket_keeper

@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
-			lrec_evaluator.h \
-			lrec_evaluators.c \
-			lrec_evaluators.h \
+			rval_evaluator.h \
+			rval_evaluators.c \
+			rval_evaluators.h \
 			mapper.h \
 			mapper_bar.c \
 			mapper_bootstrap.c \
@@ -46,7 +46,7 @@ libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
 # TODO: replace the interesting content with unit tests; jettison the rest
 # TODO: Does not build
 #noinst_PROGRAMS=	evl
-#evl_SOURCES=		lrec_evaluators.c
+#evl_SOURCES=		rval_evaluators.c
 #evl_LDADD=		libmapping.la ../containers/libcontainers.la ../lib/libmlr.la
 #evl_CPPFLAGS=		-D__LREC_EVALUATORS_MAIN__ ${AM_CPPFLAGS}
 
