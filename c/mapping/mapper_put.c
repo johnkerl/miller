@@ -13,7 +13,7 @@
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
 	mlr_dsl_ast_t* past;
-	mlr_dsl_cst_old_t* pcst;
+	mlr_dsl_cst_t* pcst;
 	int            at_begin;
 	mlhmmv_t*      poosvars;
 } mapper_put_state_t;
@@ -115,7 +115,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp     = pargp;
 	pstate->past      = past;
-	pstate->pcst      = mlr_dsl_cst_old_alloc(past, type_inferencing);
+	pstate->pcst      = mlr_dsl_cst_alloc(past, type_inferencing);
 	pstate->at_begin  = TRUE;
 	pstate->poosvars = mlhmmv_alloc();
 
@@ -131,7 +131,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
 	mlhmmv_free(pstate->poosvars);
-	mlr_dsl_cst_old_free(pstate->pcst);
+	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
 	ap_free(pstate->pargp);
@@ -213,6 +213,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
+	emit_rec = TRUE;
 	mlr_dsl_cst_evaluate(pstate->pcst->pmain_statements,
 		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs);
 

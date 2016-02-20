@@ -38,35 +38,39 @@
 // * end :  executed once, after the last input record is read.
 // ================================================================
 
-typedef enum _mlr_dsl_cst_old_lhs_type_t {
+typedef enum _mlr_dsl_cst_lhs_type_t {
 	MLR_DSL_CST_LHS_TYPE_NONE,
 	MLR_DSL_CST_LHS_TYPE_SREC,
 	MLR_DSL_CST_LHS_TYPE_OOSVAR
-} mlr_dsl_cst_old_lhs_type_t;
+} mlr_dsl_cst_lhs_type_t;
 
-typedef struct _mlr_dsl_cst_old_statement_item_t {
+typedef struct _mlr_dsl_cst_statement_item_t {
 	// LHS:
-	mlr_dsl_cst_old_lhs_type_t lhs_type;
+	// xxx replace with function-pointer:
+	mlr_dsl_cst_lhs_type_t lhs_type;
 	char* output_field_name;
 	sllv_t* poosvar_lhs_keylist_evaluators;
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;
-} mlr_dsl_cst_old_statement_item_t;
+	//rval_evaluator_t* prhs_or_cond_evaluator; <-- rename
+	//sllv_t*           pcond_statements;
+} mlr_dsl_cst_statement_item_t;
 
-typedef struct _mlr_dsl_cst_old_statement_t {
+typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_ast_node_type_t ast_node_type;
 	sllv_t* pitems;
-} mlr_dsl_cst_old_statement_t;
+} mlr_dsl_cst_statement_t;
 
-typedef struct _mlr_dsl_cst_old_t {
+typedef struct _mlr_dsl_cst_t {
 	sllv_t* pbegin_statements;
 	sllv_t* pmain_statements;
 	sllv_t* pend_statements;
-} mlr_dsl_cst_old_t;
+} mlr_dsl_cst_t;
 
-mlr_dsl_cst_old_t* mlr_dsl_cst_old_alloc(mlr_dsl_ast_t* past, int type_inferencing);
-void mlr_dsl_cst_old_free(mlr_dsl_cst_old_t* pcst);
+// ----------------------------------------------------------------
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
+void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_evaluate(
 	sllv_t*          pcst_statements, // begin/main/end
@@ -76,39 +80,16 @@ void mlr_dsl_cst_evaluate(
 	string_array_t** ppregex_captures,
 	context_t*       pctx,
 	int*             pemit_rec,
-	sllv_t*          poutrecs
-);
+	sllv_t*          poutrecs);
 
-// ----------------------------------------------------------------
-//typedef struct _mlr_dsl_cst_statement_item_t {
-//	// LHS:
-//	mlr_dsl_cst_lhs_type_t lhs_type;
-//	char* output_field_name;
-//	sllv_t* poosvar_lhs_keylist_evaluators;
-//
-//	// RHS:
-//	rval_evaluator_t* prhs_evaluator;
-//} mlr_dsl_cst_statement_item_t;
-//
-//typedef struct _mlr_dsl_cst_statement_t {
-//	mlr_dsl_ast_node_type_t ast_node_type;
-//	sllv_t* pitems;
-//} mlr_dsl_cst_statement_t;
-
-typedef struct _mlr_dsl_cst_node_t {
-	char*             output_field_name;
-	sllv_t*           poosvar_lhs_keylist_evaluators;
-	rval_evaluator_t* prhs_or_cond_evaluator;
-	sllv_t*           pcond_statements;
-} mlr_dsl_cst_node_t;
-
-typedef struct _mlr_dsl_cst_t {
-	sllv_t* pbegin_nodes;
-	sllv_t* pmain_nodes;
-	sllv_t* pend_nodes;
-} mlr_dsl_cst_t;
-
-mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
-void           mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
+int mlr_dsl_cst_node_evaluate(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
 
 #endif // MLR_DSL_CST_H
