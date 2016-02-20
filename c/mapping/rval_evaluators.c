@@ -2361,9 +2361,6 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
-		return rval_evaluator_alloc_from_NR(); // xxx stub
-
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {

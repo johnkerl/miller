@@ -14,40 +14,6 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
 // ----------------------------------------------------------------
-// At present (initial oosvar experimens, January 2016) the begin/main/end are organized as follows:
-//
-// Input:
-//
-//   mlr put 'begin @a = 1; begin @b = 0; @b = $x + @a; end emit @a, @b'
-//
-// i.e. there are separate begin keywords one per statement, rather than
-//
-//   mlr put 'begin { @a = 1; @b = 0}; @b = $x + @a; end { emit @a, @b }'
-//
-// Corresponding list of per-statement ASTs:
-//   begin (begin):
-//       = (oosvar_assignment):
-//           a (oosvar_name).
-//           1 (strnum_literal).
-//   begin (begin):
-//       = (oosvar_assignment):
-//           b (oosvar_name).
-//           0 (strnum_literal).
-//   = (oosvar_assignment):
-//       b (oosvar_name).
-//       + (operator):
-//           x (field_name).
-//           a (oosvar_name).
-//   end (end):
-//       emit (emit):
-//           a (oosvar_name).
-//           b (oosvar_name).
-//
-// (Note that the AST input is a list of per-statement ASTs, rather than a single root-node AST with per-statement child
-// nodes.)
-//
-// So our job here at present is to loop through the per-statement ASTs, splitting them out by begin/main/end.
-
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
 
@@ -177,6 +143,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL,
 			poosvar_lhs_keylist_evaluators,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing)));
+
+	} else if (past->type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
 
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
