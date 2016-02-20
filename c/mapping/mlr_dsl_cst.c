@@ -273,6 +273,217 @@ void mlr_dsl_cst_evaluate(
 }
 
 // ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	char* output_field_name = pitem->output_field_name;
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
+	*pval = val;
+
+	// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+	// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+	// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
+	// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
+	// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
+	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
+	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
+	// here. And putting something statically allocated minimizes copying/freeing.
+	lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
+	lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
+		poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
+
+	sllmv_t* pmvkeys = sllmv_alloc();
+	int keys_ok = TRUE;
+	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
+		mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
+			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
+		if (mv_is_null(&mvkey)) {
+			keys_ok = FALSE;
+			break;
+		}
+		// Don't free the mlrval since its memory will be managed by the sllmv.
+		sllmv_add(pmvkeys, &mvkey);
+	}
+
+	if (keys_ok)
+		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
+
+	sllmv_free(pmvkeys);
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_emit(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	lrec_t* prec_to_emit = lrec_unbacked_alloc();
+	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
+		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
+		char* output_field_name = pitem->output_field_name;
+		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
+		// that and just hashmap-get keyed by output_field_name here.
+		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			ppregex_captures, pctx, prhs_evaluator->pvstate);
+
+		if (val.type == MT_STRING) {
+			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
+			lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(&val, &free_flags);
+			lrec_put(prec_to_emit, output_field_name, string, free_flags);
+		}
+	}
+	sllv_append(poutrecs, prec_to_emit);
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_filter(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	if (val.type != MT_NULL) {
+		mv_set_boolean_strict(&val);
+		*pemit_rec = val.u.boolv;
+		if (!val.u.boolv) {
+			return FALSE;
+		}
+	}
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_gate(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	if (val.type == MT_NULL)
+		return FALSE;
+	mv_set_boolean_strict(&val);
+	if (!val.u.boolv) {
+		return FALSE;
+	}
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_conditional_block(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	if (val.type == MT_NULL)
+		return TRUE;
+	mv_set_boolean_strict(&val);
+	if (val.u.boolv) {
+		mlr_dsl_cst_evaluate(pitem->pcond_statements,
+			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pemit_rec, poutrecs);
+	}
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static int mlr_dsl_cst_node_evaluate_bare_boolean(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	if (val.type != MT_NULL)
+		mv_set_boolean_strict(&val);
+
+	return TRUE; // xxx stub
+}
+
+// ----------------------------------------------------------------
 int mlr_dsl_cst_node_evaluate(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -283,134 +494,42 @@ int mlr_dsl_cst_node_evaluate(
 	int*             pemit_rec,
 	sllv_t*          poutrecs)
 {
-
-	// Do the evaluations, writing typed mlrval output to the typed overlay rather than into the lrec (which holds only
+	// These write typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
 
 	mlr_dsl_ast_node_type_t node_type = pnode->ast_node_type;
 
 	if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-		char* output_field_name = pitem->output_field_name;
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
-		mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
-		*pval = val;
-
-		// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-		// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-		// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
-		// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
-		// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
-		// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
-		// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
-		// here. And putting something statically allocated minimizes copying/freeing.
-		lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
-		lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+		return mlr_dsl_cst_node_evaluate_srec_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-		mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
-			poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
-
-		sllmv_t* pmvkeys = sllmv_alloc();
-		int keys_ok = TRUE;
-		for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
-			mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-				poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
-			if (mv_is_null(&mvkey)) {
-				keys_ok = FALSE;
-				break;
-			}
-			// Don't free the mlrval since its memory will be managed by the sllmv.
-			sllmv_add(pmvkeys, &mvkey);
-		}
-
-		if (keys_ok)
-			mlhmmv_put(poosvars, pmvkeys, &rhs_value);
-
-		sllmv_free(pmvkeys);
+		return mlr_dsl_cst_node_evaluate_oosvar_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
-		lrec_t* prec_to_emit = lrec_unbacked_alloc();
-		for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
-			mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
-			char* output_field_name = pitem->output_field_name;
-			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-			// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-			// that and just hashmap-get keyed by output_field_name here.
-			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-				ppregex_captures, pctx, prhs_evaluator->pvstate);
-
-			if (val.type == MT_STRING) {
-				// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-				lrec_put(prec_to_emit, output_field_name, val.u.strv, val.free_flags);
-			} else {
-				char free_flags = NO_FREE;
-				char* string = mv_format_val(&val, &free_flags);
-				lrec_put(prec_to_emit, output_field_name, string, free_flags);
-			}
-		}
-		sllv_append(poutrecs, prec_to_emit);
+		return mlr_dsl_cst_node_evaluate_emit(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
 		mlhmmv_print_json_stacked(poosvars, FALSE);
+		return TRUE;
 
 	} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
-		if (val.type != MT_NULL) {
-			mv_set_boolean_strict(&val);
-			*pemit_rec = val.u.boolv;
-			if (!val.u.boolv) {
-				return FALSE;
-			}
-		}
+		return mlr_dsl_cst_node_evaluate_filter(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else if (node_type == MD_AST_NODE_TYPE_GATE) {
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
-		if (val.type == MT_NULL)
-			return FALSE;
-		mv_set_boolean_strict(&val);
-		if (!val.u.boolv) {
-			return FALSE;
-		}
+		return mlr_dsl_cst_node_evaluate_gate(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else if (node_type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
-		if (val.type == MT_NULL)
-			return FALSE;
-		mv_set_boolean_strict(&val);
-		if (val.u.boolv) {
-			mlr_dsl_cst_evaluate(pitem->pcond_statements,
-				poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pemit_rec, poutrecs);
-		}
+		return mlr_dsl_cst_node_evaluate_conditional_block(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 
 	} else { // Bare-boolean statement, or error.
-		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
-		if (val.type != MT_NULL)
-			mv_set_boolean_strict(&val);
+		return mlr_dsl_cst_node_evaluate_bare_boolean(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
 	}
 
 	return TRUE;
