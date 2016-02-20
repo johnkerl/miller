@@ -57,6 +57,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	//sllv_t*           pcond_statements;
 } mlr_dsl_cst_statement_item_t;
 
+// xxx rename some things here to make them more clear.
 typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_ast_node_type_t ast_node_type;
 	sllv_t* pitems;
