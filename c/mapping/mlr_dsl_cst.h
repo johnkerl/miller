@@ -39,28 +39,32 @@
 // * end :  executed once, after the last input record is read.
 // ================================================================
 
-typedef enum _mlr_dsl_cst_lhs_type_t {
-	MLR_DSL_CST_LHS_TYPE_NONE,
-	MLR_DSL_CST_LHS_TYPE_SREC,
-	MLR_DSL_CST_LHS_TYPE_OOSVAR
-} mlr_dsl_cst_lhs_type_t;
+struct _mlr_dsl_cst_statement_t;
+
+typedef int mlr_dsl_cst_node_evaluator_func_t(
+	struct _mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
 
 typedef struct _mlr_dsl_cst_statement_item_t {
+	mlr_dsl_cst_node_evaluator_func_t* pevaluator; // xxx move to statement, not statement item.
+
 	// LHS:
-	// xxx replace with function-pointer:
-	mlr_dsl_cst_lhs_type_t lhs_type;
 	char* output_field_name;
 	sllv_t* poosvar_lhs_keylist_evaluators;
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;
-	//rval_evaluator_t* prhs_or_cond_evaluator; <-- rename
 	sllv_t*           pcond_statements;
 } mlr_dsl_cst_statement_item_t;
 
 // xxx rename some things here to make them more clear.
 typedef struct _mlr_dsl_cst_statement_t {
-	mlr_dsl_ast_node_type_t ast_node_type;
 	sllv_t* pitems;
 } mlr_dsl_cst_statement_t;
 
