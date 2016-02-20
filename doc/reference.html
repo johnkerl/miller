@@ -170,7 +170,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_put">Field names for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_put">Expression formatting for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Gating_assignments_by_boolean_expressions_for_put">Gating assignments by boolean expressions for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -2272,14 +2272,11 @@ mlr --opprint put '
 </div>
 <p/>
 
-<a id="Gating_assignments_by_boolean_expressions_for_put"/><h3>Gating assignments by boolean expressions for put</h3>
+<a id="Pattern-action_blocks_for_put"/><h3>Pattern-action blocks for put</h3>
 
-<p/>Note: The <tt>gate</tt> feature will change significantly in an upcoming Miller 4.0.0 release.
-
-<p/>Boolean expressions may be used as gates for subsequent semicolon-separated
-expressions within the same <tt>put</tt>. This can be used to allow assignments
-to be done only when appropriate &mdash; e.g. for math-function domain
-restrictions, regex-matching, and so on:
+<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
+assignments to be done only when appropriate &mdash; e.g. for math-function
+domain restrictions, regex-matching, and so on:
 
 <p/>
 <div class="pokipanel">
@@ -2296,7 +2293,7 @@ x=3
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put 'gate $x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+$ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
 x=-1
 x=0
 x=1,y=0.000000,z=0.000000
@@ -2318,7 +2315,7 @@ a=xyz_789
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put 'gate $a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
 a=abc_123,b=left_abc,c=right_123
 a=some other name
 a=xyz_789,b=left_xyz,c=right_789
@@ -2328,7 +2325,7 @@ a=xyz_789,b=left_xyz,c=right_789
 
 <p/>This produces heteregenous output which Miller, of course, has no problems
 with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But
-if homogeneous output is desired, the <tt>gate</tt> can be omitted.  This
+if homogeneous output is desired, the curly braces can be omitted.  This
 causes <tt>put</tt> to evaluate the boolean expression (along with any side
 effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
 doesn&rsquo;t use it as a criterion for whether subsequent assignments should
