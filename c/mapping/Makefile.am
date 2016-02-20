@@ -1,9 +1,11 @@
 noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
 			rval_evaluator.h \
-			rval_evaluators.c \
 			rval_evaluators.h \
+			rval_evaluators.c \
 			lval_evaluator.h \
+			lval_evaluators.h \
+			lval_evaluators.c \
 			mapper.h \
 			mapper_bar.c \
 			mapper_bootstrap.c \

@@ -2,6 +2,7 @@
 #define MLR_DSL_CST_H
 
 #include "containers/mlr_dsl_ast.h"
+#include "lval_evaluators.h"
 #include "rval_evaluators.h"
 
 // ================================================================
@@ -69,15 +70,6 @@ mlr_dsl_cst_old_t* mlr_dsl_cst_old_alloc(mlr_dsl_ast_t* past, int type_inferenci
 void           mlr_dsl_cst_old_free(mlr_dsl_cst_old_t* pcst);
 
 // ----------------------------------------------------------------
-typedef mv_t lval_evaluator_process_func_t(
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	mlhmmv_t*        poosvars,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs);
-
 //typedef struct _mlr_dsl_cst_statement_item_t {
 //	// LHS:
 //	mlr_dsl_cst_lhs_type_t lhs_type;
