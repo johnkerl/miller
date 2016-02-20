@@ -8,10 +8,7 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* pattern-action @ AST: do it now
-* require {} for begin/end
-* move LHS into lrec_evaluators and rename the file.
-w pattern-action @ CST: prereq: LHS merge.
+* pattern-action @ CST
 * allow begin/end srec assignments in the grammar to allow better error messages than 'syntax error' in the caller
 
 * tri-split null
