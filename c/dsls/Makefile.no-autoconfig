@@ -14,12 +14,13 @@ CFLAGS=-I.. -O3
 top: mlr_dsl_lexer.o mlr_dsl_parse.o mlr_dsl_wrapper.o
 
 # ----------------------------------------------------------------
-mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h
+mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h \
+../lib/mlrutil.h ../containers/mlr_dsl_ast.h ../containers/sllv.h
 	$(CC) -Wall $(CFLAGS) -c -std=gnu99 mlr_dsl_wrapper.c
 
 mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
 	$(CC) $(CFLAGS) -c -std=gnu99 mlr_dsl_parse.c
-mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon
+mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast.h ../containers/sllv.h
 	./lemon mlr_dsl_parse.y
 	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
 	sed \
@@ -42,7 +43,7 @@ mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon
 
 mlr_dsl_lexer.o: mlr_dsl_lexer.c mlr_dsl_lexer.h mlr_dsl_parse.h
 	$(CC) $(CFLAGS) -c -std=gnu99 mlr_dsl_lexer.c
-mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l
+mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l ../containers/mlr_dsl_ast.h
 	flex --prefix=mlr_dsl_lexer_ --outfile=mlr_dsl_lexer.c --header-file=mlr_dsl_lexer.h mlr_dsl_lexer.l
 
 # ----------------------------------------------------------------
