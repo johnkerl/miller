@@ -35,11 +35,10 @@ mapper_setup_t mapper_put_setup = {
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
 	fprintf(o, "Adds/updates specified field(s). Expressions are semicolon-separated and must\n");
-	fprintf(o, "either be assignments, or evaluate to boolean.  Each expression is evaluated in\n");
-	fprintf(o, "turn from left to right. Assignment expressions are applied to the current\n");
-	fprintf(o, "record; once a boolean expression evaluates to false, the record is emitted\n");
-	fprintf(o, "with all changes up to that point and remaining expressions to the right are\n");
-	fprintf(o, "not evaluated.\n");
+	fprintf(o, "either be assignments, or evaluate to boolean.  Booleans with following\n");
+	fprintf(o, "statements in curly braces control whether those statements are executed;\n");
+	fprintf(o, "booleans without following curly braces do nothing except side effects (e.g.\n");
+	fprintf(o, "regex-captures into \\1, \\2, etc.).\n");
 	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
@@ -57,15 +56,15 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
-	fprintf(o, "  Assignment only:\n");
 	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
+	fprintf(o, "  %s %s '$x>0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x > 0.0\n", argv0, verb);
+	fprintf(o, "  %s %s '$x>0.0;  $y=log10($x); $z=sqrt($y)'   # does all three statements\n", argv0, verb);
+	fprintf(o, "  %s %s '$a =~ \"([a-z]+)_([0-9]+);  $b = \"left_\\1\"; $c = \"right_\\2\"'\n", argv0, verb);
+	fprintf(o, "  %s %s '$a =~ \"([a-z]+)_([0-9]+) { $b = \"left_\\1\"; $c = \"right_\\2\" }'\n", argv0, verb);
 	fprintf(o, "  %s %s '$filename = FILENAME'\n", argv0, verb);
 	fprintf(o, "  %s %s '$colored_shape = $color . \"_\" . $shape'\n", argv0, verb);
 	fprintf(o, "  %s %s '$y = cos($theta); $z = atan2($y, $x)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$name = sub($name, \"http.*com\"i, \"\")'\n", argv0, verb);
-	fprintf(o, "  Mixed assignment/boolean:\n");
-	fprintf(o, "  %s %s '$x > 0.0; $y = log10($x); $z = sqrt($y)'\n", argv0, verb);
-	fprintf(o, "  %s %s '$y = log10($x); 1.1 < $y && $y < 7.0; $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);

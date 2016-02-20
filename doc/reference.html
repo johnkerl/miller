@@ -2154,11 +2154,10 @@ Notes:
 $ mlr put --help
 Usage: mlr put [options] {expression}
 Adds/updates specified field(s). Expressions are semicolon-separated and must
-either be assignments, or evaluate to boolean.  Each expression is evaluated in
-turn from left to right. Assignment expressions are applied to the current
-record; once a boolean expression evaluates to false, the record is emitted
-with all changes up to that point and remaining expressions to the right are
-not evaluated.
+either be assignments, or evaluate to boolean.  Booleans with following
+statements in curly braces control whether those statements are executed;
+booleans without following curly braces do nothing except side effects (e.g.
+regex-captures into \1, \2, etc.).
 
 Options:
 -v: First prints the AST (abstract syntax tree) for the expression, which gives
@@ -2176,15 +2175,15 @@ NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
 variables. The environment-variable name may be an expression, e.g. a field value.
 
 Examples:
-  Assignment only:
   mlr put '$y = log10($x); $z = sqrt($y)'
+  mlr put '$x&gt;0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x &gt; 0.0
+  mlr put '$x&gt;0.0;  $y=log10($x); $z=sqrt($y)'   # does all three statements
+  mlr put '$a =~ "([a-z]+)_([0-9]+);  $b = "left_\1"; $c = "right_\2"'
+  mlr put '$a =~ "([a-z]+)_([0-9]+) { $b = "left_\1"; $c = "right_\2" }'
   mlr put '$filename = FILENAME'
   mlr put '$colored_shape = $color . "_" . $shape'
   mlr put '$y = cos($theta); $z = atan2($y, $x)'
   mlr put '$name = sub($name, "http.*com"i, "")'
-  Mixed assignment/boolean:
-  mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)'
-  mlr put '$y = log10($x); 1.1 &lt; $y &amp;&amp; $y &lt; 7.0; $z = sqrt($y)'
 
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f".
