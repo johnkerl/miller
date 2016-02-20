@@ -13,7 +13,7 @@
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
 	mlr_dsl_ast_t* past;
-	mlr_dsl_cst_t* pcst;
+	mlr_dsl_cst_old_t* pcst;
 	int            at_begin;
 	mlhmmv_t*      poosvars;
 } mapper_put_state_t;
@@ -126,7 +126,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ty
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp     = pargp;
 	pstate->past      = past;
-	pstate->pcst      = mlr_dsl_cst_alloc(past, type_inferencing);
+	pstate->pcst      = mlr_dsl_cst_old_alloc(past, type_inferencing);
 	pstate->at_begin  = TRUE;
 	pstate->poosvars = mlhmmv_alloc();
 
@@ -142,7 +142,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
 	mlhmmv_free(pstate->poosvars);
-	mlr_dsl_cst_free(pstate->pcst);
+	mlr_dsl_cst_old_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
 	ap_free(pstate->pargp);
@@ -273,12 +273,12 @@ static void evaluate_statements(
 	*pemit_rec = TRUE;
 
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		mlr_dsl_cst_old_statement_t* pstatement = pe->pvvalue;
 
 		mlr_dsl_ast_node_type_t node_type = pstatement->ast_node_type;
 
 		if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
-			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
+			mlr_dsl_cst_old_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			char* output_field_name = pitem->output_field_name;
 			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
@@ -299,7 +299,7 @@ static void evaluate_statements(
 			lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 
 		} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
+			mlr_dsl_cst_old_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 
 			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 			mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
@@ -327,7 +327,7 @@ static void evaluate_statements(
 		} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
 			lrec_t* prec_to_emit = lrec_unbacked_alloc();
 			for (sllve_t* pf = pstatement->pitems->phead; pf != NULL; pf = pf->pnext) {
-				mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
+				mlr_dsl_cst_old_statement_item_t* pitem = pf->pvvalue;
 				char* output_field_name = pitem->output_field_name;
 				rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
@@ -351,7 +351,7 @@ static void evaluate_statements(
 			mlhmmv_print_json_stacked(pstate->poosvars, FALSE);
 
 		} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
-			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
+			mlr_dsl_cst_old_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
@@ -365,7 +365,7 @@ static void evaluate_statements(
 			}
 
 		} else if (node_type == MD_AST_NODE_TYPE_GATE) {
-			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
+			mlr_dsl_cst_old_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
@@ -381,7 +381,7 @@ static void evaluate_statements(
 			// xxx temp
 
 		} else { // Bare-boolean statement, or error.
-			mlr_dsl_cst_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
+			mlr_dsl_cst_old_statement_item_t* pitem = pstatement->pitems->phead->pvvalue;
 			rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 			mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
