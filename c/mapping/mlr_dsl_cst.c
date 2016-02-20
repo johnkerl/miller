@@ -8,9 +8,11 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	mlr_dsl_cst_lhs_type_t lhs_type,
-	char* output_field_name,
-	sllv_t* poosvar_lhs_keylist_evaluators,
-	rval_evaluator_t* prhs_evaluator);
+	char*                  output_field_name,
+	sllv_t*                poosvar_lhs_keylist_evaluators,
+	rval_evaluator_t*      prhs_evaluator,
+	sllv_t*                pcond_statements);
+
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
 // ----------------------------------------------------------------
@@ -80,7 +82,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			MLR_DSL_CST_LHS_TYPE_SREC,
 			pleft->text,
 			NULL,
-			rval_evaluator_alloc_from_ast(pright, type_inferencing)));
+			rval_evaluator_alloc_from_ast(pright, type_inferencing),
+			NULL));
 
 	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
 		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
@@ -98,7 +101,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			sllv_append(poosvar_lhs_keylist_evaluators,
 				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pleft->text)));
 		} else {
-
 			mlr_dsl_ast_node_t* pnode = pleft;
 			while (TRUE) {
 				// Example AST:
@@ -142,9 +144,27 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			MLR_DSL_CST_LHS_TYPE_OOSVAR,
 			NULL,
 			poosvar_lhs_keylist_evaluators,
-			rval_evaluator_alloc_from_ast(pright, type_inferencing)));
+			rval_evaluator_alloc_from_ast(pright, type_inferencing),
+			NULL));
 
 	} else if (past->type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
+		// First child node is the AST for the boolean expression. Remaining child nodes are statements
+		// to be executed if it evaluates to true.
+		mlr_dsl_ast_node_t* pfirst  = past->pchildren->phead->pvvalue;
+		sllv_t* pcond_statements = sllv_alloc();
+
+		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+			mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing);
+			sllv_append(pcond_statements, pstatement);
+		}
+
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+			MLR_DSL_CST_LHS_TYPE_NONE,
+			NULL,
+			NULL,
+			rval_evaluator_alloc_from_ast(pfirst, type_inferencing),
+			pcond_statements));
 
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
@@ -152,7 +172,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
-			rval_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			rval_evaluator_alloc_from_ast(pnode, type_inferencing),
+			NULL));
 
 	} else if (past->type == MD_AST_NODE_TYPE_GATE) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
@@ -160,7 +181,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
-			rval_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			rval_evaluator_alloc_from_ast(pnode, type_inferencing),
+			NULL));
 
 	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
 		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
@@ -170,7 +192,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				MLR_DSL_CST_LHS_TYPE_OOSVAR,
 				pnode->text,
 				NULL,
-				rval_evaluator_alloc_from_ast(pnode, type_inferencing)));
+				rval_evaluator_alloc_from_ast(pnode, type_inferencing),
+				NULL));
 		}
 
 	} else if (past->type == MD_AST_NODE_TYPE_DUMP) {
@@ -181,7 +204,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			MLR_DSL_CST_LHS_TYPE_NONE,
 			NULL,
 			NULL,
-			rval_evaluator_alloc_from_ast(past, type_inferencing)));
+			rval_evaluator_alloc_from_ast(past, type_inferencing),
+			NULL));
 	}
 
 	return pstatement;
@@ -197,15 +221,17 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	mlr_dsl_cst_lhs_type_t lhs_type,
-	char* output_field_name,
-	sllv_t* poosvar_lhs_keylist_evaluators,
-	rval_evaluator_t* prhs_evaluator)
+	char*                  output_field_name,
+	sllv_t*                poosvar_lhs_keylist_evaluators,
+	rval_evaluator_t*      prhs_evaluator,
+	sllv_t*                pcond_statements)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->lhs_type = lhs_type;
 	pitem->output_field_name = output_field_name == NULL ? NULL : mlr_strdup_or_die(output_field_name);
 	pitem->poosvar_lhs_keylist_evaluators = poosvar_lhs_keylist_evaluators;
 	pitem->prhs_evaluator = prhs_evaluator;
+	pitem->pcond_statements = pcond_statements;
 	return pitem;
 }
 
@@ -364,12 +390,18 @@ int mlr_dsl_cst_node_evaluate(
 		}
 
 	} else if (node_type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
-		// xxx temp
+		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
-		// xxx evaluate rhs.
-		// if true: recurse
-		//mlr_dsl_cst_evaluate(pnode->pcond_statements,
-			//poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pemit_rec, poutrecs);
+		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			ppregex_captures, pctx, prhs_evaluator->pvstate);
+		if (val.type == MT_NULL)
+			return FALSE;
+		mv_set_boolean_strict(&val);
+		if (val.u.boolv) {
+			mlr_dsl_cst_evaluate(pitem->pcond_statements,
+				poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pemit_rec, poutrecs);
+		}
 
 	} else { // Bare-boolean statement, or error.
 		mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;

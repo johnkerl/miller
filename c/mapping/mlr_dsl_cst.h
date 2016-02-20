@@ -55,7 +55,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;
 	//rval_evaluator_t* prhs_or_cond_evaluator; <-- rename
-	//sllv_t*           pcond_statements;
+	sllv_t*           pcond_statements;
 } mlr_dsl_cst_statement_item_t;
 
 // xxx rename some things here to make them more clear.
