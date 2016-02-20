@@ -9002,7 +9002,7 @@ d,e,f
 
 mlr --csvlite filter false ^^ false ./reg_test/input/b.csv
 
-mlr put gate $x==2 && $a =~ "....."; $y=4 ./reg_test/input/short-circuit.dkvp
+mlr put $x==2 && $a =~ "....." { $y=4 } ./reg_test/input/short-circuit.dkvp
 x=1,a="hello"
 x=2,a="there",y=4
 x=3,a="world"
@@ -11156,7 +11156,7 @@ abcdefghij   abcde -  -  -  -  -  -  -  -  -
 abcdefghijk  abcde -  -  -  -  -  -  -  -  -
 abcdefghijkl abcde -  -  -  -  -  -  -  -  -
 
-mlr --opprint put gate   $FIELD =~ "....."; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put        $FIELD =~ "....." {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11345,7 +11345,7 @@ abcdefghij   abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghij a  b  c  d  e  f  g  h  i
 
-mlr --opprint put gate $FIELD =~ "(.)";                            $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)"                            {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 
@@ -11363,7 +11363,7 @@ abcdefghij   a  a  -  -  -  -  -  -  -  -
 abcdefghijk  a  a  -  -  -  -  -  -  -  -
 abcdefghijkl a  a  -  -  -  -  -  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)";                         $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)"                         {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11381,7 +11381,7 @@ abcdefghij   ab a  b  -  -  -  -  -  -  -
 abcdefghijk  ab a  b  -  -  -  -  -  -  -
 abcdefghijkl ab a  b  -  -  -  -  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)";                      $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)"                      {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11399,7 +11399,7 @@ abcdefghij   abc a  b  c  -  -  -  -  -  -
 abcdefghijk  abc a  b  c  -  -  -  -  -  -
 abcdefghijkl abc a  b  c  -  -  -  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)";                   $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)"                   {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11417,7 +11417,7 @@ abcdefghij   abcd a  b  c  d  -  -  -  -  -
 abcdefghijk  abcd a  b  c  d  -  -  -  -  -
 abcdefghijkl abcd a  b  c  d  -  -  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)";                $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)"                {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11435,7 +11435,7 @@ abcdefghij   abcde a  b  c  d  e  -  -  -  -
 abcdefghijk  abcde a  b  c  d  e  -  -  -  -
 abcdefghijkl abcde a  b  c  d  e  -  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)"             {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11453,7 +11453,7 @@ abcdefghij   abcdef a  b  c  d  e  f  -  -  -
 abcdefghijk  abcdef a  b  c  d  e  f  -  -  -
 abcdefghijkl abcdef a  b  c  d  e  f  -  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)"          {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11471,7 +11471,7 @@ abcdefghij   abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijk  abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijkl abcdefg a  b  c  d  e  f  g  -  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)"       {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11489,7 +11489,7 @@ abcdefghij   abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijk  abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijkl abcdefgh a  b  c  d  e  f  g  h  -
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)"    {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11507,7 +11507,7 @@ abcdefghij   abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghi a  b  c  d  e  f  g  h  i
 
-mlr --opprint put gate $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)" {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -11632,7 +11632,7 @@ abcdefghijkl abcdefghij a  b  c  d  e  f  g  h  i
 
 
 ================================================================
-DSL FILTER/GATE
+DSL FILTER/PATTERN-ACTION
 
 mlr --opprint put          $x > 0.5;  $z = "flag" ./reg_test/input/abixy
 a   b   i  x                   y                   z
@@ -11669,7 +11669,7 @@ eks zee 7  0.6117840605678454 0.1878849191181694  flag
 zee wye 8  0.5985540091064224 0.976181385699006   flag
 pan wye 10 0.5026260055412137 0.9526183602969864  flag
 
-mlr --opprint put gate     $x > 0.5;  $z = "flag" ./reg_test/input/abixy
+mlr --opprint put          $x > 0.5  {$z = "flag"} ./reg_test/input/abixy
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 
@@ -11699,7 +11699,7 @@ wye wye 3 0.20460330576630303 0.33831852551664776 flag
 eks wye 4 0.38139939387114097 0.13418874328430463 flag
 hat wye 9 0.03144187646093577 0.7495507603507059  flag
 
-mlr --opprint put gate   !($x > 0.5); $z = "flag" ./reg_test/input/abixy
+mlr --opprint put        !($x > 0.5) {$z = "flag"} ./reg_test/input/abixy
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 flag
 

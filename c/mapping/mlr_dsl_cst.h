@@ -8,8 +8,7 @@
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
 //
-// At present (January 2016) the grammar for 'mlr put' is flat: there is no looping or branching (other than the ternary
-// operator, and the gate statement).  Statements are of the form:
+// Statements are of the form:
 //
 // * Assignment to oosvar (out-of-stream variables, prefixed with @ sigil)
 //
@@ -17,7 +16,8 @@
 //
 // * filter statements: if false, do not pass the current record from the input stream to the output stream
 //
-// * gate statements: if false, stop executing further statements
+// * pattern-action statements: boolean expression with curly-braced statements which are executed only
+//   when the boolean evaluates to true.
 //
 // * bare-boolean statements: no-ops unless they have side effects: namely, the matches/does-not-match
 //   operators =~ and !=~ setting regex captures \1, \2, etc.
@@ -27,7 +27,7 @@
 //   such as a=3,b=4.
 //
 // This means that as of the present, the CSTs are just list of left-hand sides and right-hand sides.  The left-hand
-// side is an output field name, with an LHS-type flag (srec or oosvar). For filter/gate/bare-boolean these are unused;
+// side is an output field name, with an LHS-type flag (srec or oosvar). For filter/bare-boolean these are unused;
 // for assignments and emits, the output field names are used. The right-hand sides are lrec-evaluators which take an
 // input record and oosvar-map, and produce a mlrval which can be assigned. Additionally, for all but emit, there is a
 // single LHS name and single RHS lrec-evaluator per statement.
@@ -41,7 +41,7 @@
 
 struct _mlr_dsl_cst_statement_t;
 
-typedef int mlr_dsl_cst_node_evaluator_func_t(
+typedef void mlr_dsl_cst_node_evaluator_func_t(
 	struct _mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -59,6 +59,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;
+
 	sllv_t*           pcond_statements;
 } mlr_dsl_cst_statement_item_t;
 
