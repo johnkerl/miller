@@ -15,6 +15,77 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
+static int mlr_dsl_cst_node_evaluate_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_emit(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_filter(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_gate(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_conditional_block(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+static int mlr_dsl_cst_node_evaluate_bare_boolean(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs);
+
+
 // ----------------------------------------------------------------
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
@@ -273,6 +344,58 @@ void mlr_dsl_cst_evaluate(
 }
 
 // ----------------------------------------------------------------
+int mlr_dsl_cst_node_evaluate(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pemit_rec,
+	sllv_t*          poutrecs)
+{
+	// These write typed mlrval output to the typed overlay rather than into the lrec (which holds only
+	// string values).
+
+	mlr_dsl_ast_node_type_t node_type = pnode->ast_node_type;
+
+	if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
+		return mlr_dsl_cst_node_evaluate_srec_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
+		return mlr_dsl_cst_node_evaluate_oosvar_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
+		return mlr_dsl_cst_node_evaluate_emit(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
+		mlhmmv_print_json_stacked(poosvars, FALSE);
+		return TRUE;
+
+	} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
+		return mlr_dsl_cst_node_evaluate_filter(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else if (node_type == MD_AST_NODE_TYPE_GATE) {
+		return mlr_dsl_cst_node_evaluate_gate(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else if (node_type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
+		return mlr_dsl_cst_node_evaluate_conditional_block(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+
+	} else { // Bare-boolean statement, or error.
+		return mlr_dsl_cst_node_evaluate_bare_boolean(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
+			pctx, pemit_rec, poutrecs);
+	}
+
+	return TRUE;
+}
+
+// ----------------------------------------------------------------
 static int mlr_dsl_cst_node_evaluate_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -481,56 +604,4 @@ static int mlr_dsl_cst_node_evaluate_bare_boolean(
 		mv_set_boolean_strict(&val);
 
 	return TRUE; // xxx stub
-}
-
-// ----------------------------------------------------------------
-int mlr_dsl_cst_node_evaluate(
-	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pemit_rec,
-	sllv_t*          poutrecs)
-{
-	// These write typed mlrval output to the typed overlay rather than into the lrec (which holds only
-	// string values).
-
-	mlr_dsl_ast_node_type_t node_type = pnode->ast_node_type;
-
-	if (node_type == MD_AST_NODE_TYPE_SREC_ASSIGNMENT) {
-		return mlr_dsl_cst_node_evaluate_srec_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else if (node_type == MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT) {
-		return mlr_dsl_cst_node_evaluate_oosvar_assignment(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else if (node_type == MD_AST_NODE_TYPE_EMIT) {
-		return mlr_dsl_cst_node_evaluate_emit(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else if (node_type == MD_AST_NODE_TYPE_DUMP) {
-		mlhmmv_print_json_stacked(poosvars, FALSE);
-		return TRUE;
-
-	} else if (node_type == MD_AST_NODE_TYPE_FILTER) {
-		return mlr_dsl_cst_node_evaluate_filter(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else if (node_type == MD_AST_NODE_TYPE_GATE) {
-		return mlr_dsl_cst_node_evaluate_gate(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else if (node_type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
-		return mlr_dsl_cst_node_evaluate_conditional_block(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-
-	} else { // Bare-boolean statement, or error.
-		return mlr_dsl_cst_node_evaluate_bare_boolean(pnode, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pemit_rec, poutrecs);
-	}
-
-	return TRUE;
 }
