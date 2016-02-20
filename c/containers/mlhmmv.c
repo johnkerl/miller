@@ -355,8 +355,6 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 //   }
 // }
 
-// xxx rename to have 'json' in the method name
-
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always) {
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always);
 }

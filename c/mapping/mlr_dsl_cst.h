@@ -51,9 +51,8 @@ typedef int mlr_dsl_cst_node_evaluator_func_t(
 	int*             pemit_rec,
 	sllv_t*          poutrecs);
 
+// Most statements have one item, except multi-oosvar emit.
 typedef struct _mlr_dsl_cst_statement_item_t {
-	mlr_dsl_cst_node_evaluator_func_t* pevaluator; // xxx move to statement, not statement item.
-
 	// LHS:
 	char* output_field_name;
 	sllv_t* poosvar_lhs_keylist_evaluators;
@@ -63,8 +62,8 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	sllv_t*           pcond_statements;
 } mlr_dsl_cst_statement_item_t;
 
-// xxx rename some things here to make them more clear.
 typedef struct _mlr_dsl_cst_statement_t {
+	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
 	sllv_t* pitems;
 } mlr_dsl_cst_statement_t;
 
@@ -80,16 +79,6 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_evaluate(
 	sllv_t*          pcst_statements, // begin/main/end
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pemit_rec,
-	sllv_t*          poutrecs);
-
-int mlr_dsl_cst_node_evaluate(
-	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
 	lhmsv_t*         ptyped_overlay,
