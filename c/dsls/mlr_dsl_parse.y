@@ -237,8 +237,16 @@ md_emit_args(A) ::= md_oosvar_name(B). {
 md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
+
 // xxx very temporary -- just for experimenting.
-md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA MD_TOKEN_STRING(C). {
+md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_LPAREN md_oosvar_name(B) MD_TOKEN_COMMA md_emit_args2(C) MD_TOKEN_RPAREN. {
+	B = mlr_dsl_ast_node_prepend_arg(C, B);
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+md_emit_args2(A) ::= md_string(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
+}
+md_emit_args2(A) ::= md_emit_args2(B) MD_TOKEN_COMMA md_string(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
