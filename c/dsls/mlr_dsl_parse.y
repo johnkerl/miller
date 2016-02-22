@@ -244,7 +244,7 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_LPAREN md_oosvar_name(B) MD_TOKEN_COMMA
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 md_emit_args2(A) ::= md_string(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT2TEMP, B);
 }
 md_emit_args2(A) ::= md_emit_args2(B) MD_TOKEN_COMMA md_string(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
