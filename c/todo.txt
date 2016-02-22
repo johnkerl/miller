@@ -8,13 +8,11 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* pattern-action UTs
-* x gate at mlc/mld
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 
-* tri-split null
-* after tri-split-null, RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
-w parameterized emit: needs spec & impl. prereq: tri-split null.
+* rethink filter ...
+* tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
+w then parameterized emit (spec & impl)
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
