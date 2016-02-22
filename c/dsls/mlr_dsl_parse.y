@@ -52,7 +52,7 @@ md_statement ::= md_main_filter.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
-md_statement ::= md_begin_block.       // E.g. 'begin { emit @count }'
+md_statement ::= md_begin_block.       // E.g. 'begin { @count = 0 }'
 md_statement ::= md_conditional_block. // e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
 md_statement ::= md_end_block.         // E.g. 'end { emit @count }'
 
@@ -235,6 +235,10 @@ md_emit_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+// xxx very temporary -- just for experimenting.
+md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA MD_TOKEN_STRING(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
@@ -466,14 +470,21 @@ md_atom_or_fcn(A) ::= MD_TOKEN_FALSE(B). {
 	A = B;
 }
 
-md_atom_or_fcn(A) ::= MD_TOKEN_STRING(B). {
+md_atom_or_fcn(A) ::= md_string(B). {
+	A = B;
+}
+md_atom_or_fcn(A) ::= md_regexi(B). {
+	A = B;
+}
+
+md_string(A) ::= MD_TOKEN_STRING(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);
 	stripped[len-2] = 0;
 	A = mlr_dsl_ast_node_alloc(stripped, B->type);
 }
-md_atom_or_fcn(A) ::= MD_TOKEN_REGEXI(B). {
+md_regexi(A) ::= MD_TOKEN_REGEXI(B). {
 	char* input = B->text;
 	char* stripped = &input[1];
 	int len = strlen(input);

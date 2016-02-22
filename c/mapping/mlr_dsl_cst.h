@@ -48,7 +48,7 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 	lhmsv_t*         ptyped_overlay,
 	string_array_t** ppregex_captures,
 	context_t*       pctx,
-	int*             pemit_rec,
+	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
 // Most statements have one item, except multi-oosvar emit.
@@ -85,7 +85,7 @@ void mlr_dsl_cst_evaluate(
 	lhmsv_t*         ptyped_overlay,
 	string_array_t** ppregex_captures,
 	context_t*       pctx,
-	int*             pemit_rec,
+	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
 #endif // MLR_DSL_CST_H
