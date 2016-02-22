@@ -10,7 +10,7 @@ TOP-OF-LIST SUMMARY
 
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 
-* rethink filter ...
+? rethink filter ... ?
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
 w then parameterized emit (spec & impl)
 
@@ -18,6 +18,7 @@ w then parameterized emit (spec & impl)
 
 ! screencaps for README.md & cover !
 ? call for use-cases? (go first.)
+* olh xrefs between reshape & nest; between sample, bootstrap, & shuffle.
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
