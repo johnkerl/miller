@@ -44,6 +44,16 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_emit2temp(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_dump(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -217,6 +227,39 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
 
+	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
+		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
+		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				pnode->text,
+				NULL,
+				rval_evaluator_alloc_from_ast(pnode, type_inferencing),
+				NULL));
+		}
+
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
+
+	} else if (past->type == MD_AST_NODE_TYPE_EMIT2TEMP) {
+		// First argument is oosvar name. Remainings evaluate to string,
+		// e.g. 'emit(@sums, "color", "shape")'.
+		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
+
+		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
+		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(poosvar_lhs_keylist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+		}
+
+		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+			pnamenode->text,
+			poosvar_lhs_keylist_evaluators,
+			NULL,
+			NULL));
+
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit2temp;
+
 	} else if (past->type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
 		// First child node is the AST for the boolean expression. Remaining child nodes are statements
 		// to be executed if it evaluates to true.
@@ -246,32 +289,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL));
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_filter;
-
-	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
-		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
-		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				pnode->text,
-				NULL,
-				rval_evaluator_alloc_from_ast(pnode, type_inferencing),
-				NULL));
-		}
-
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
-
-	} else if (past->type == MD_AST_NODE_TYPE_EMIT2TEMP) {
-		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
-		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				pnode->text,
-				NULL,
-				rval_evaluator_alloc_from_ast(pnode, type_inferencing),
-				NULL));
-		}
-
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
 
 	} else if (past->type == MD_AST_NODE_TYPE_DUMP) {
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
@@ -456,6 +473,28 @@ static void mlr_dsl_cst_node_evaluate_emit(
 		}
 	}
 	sllv_append(poutrecs, prec_to_emit);
+}
+
+// ----------------------------------------------------------------
+// xxx subsume 1-level oosvar multi-emit items into lhs-key-list evaluators & get rid of items-list entirely?
+
+static void mlr_dsl_cst_node_evaluate_emit2temp(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+	// xxx get oosvar base-level
+	// xxx early-out if null
+	// xxx recurse over keylist
+	// xxx handle too-short, too-long, just-right cases
+
+	// xxx too-short: don't recurse in the first place
+
 }
 
 // ----------------------------------------------------------------

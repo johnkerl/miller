@@ -87,7 +87,7 @@ md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
 // ----------------------------------------------------------------
-md_conditional_block(A) ::= md_ternary(B) MD_TOKEN_LEFT_BRACE md_conditional_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
+md_conditional_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_conditional_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
 	A = mlr_dsl_ast_node_prepend_arg(C, B);
 	sllv_append(past->pmain_statements, A);
 }
@@ -126,11 +126,11 @@ md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
 }
-md_main_bare_boolean(A) ::= md_ternary(B). {
+md_main_bare_boolean(A) ::= md_rhs(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
 }
-md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pmain_statements, A);
 }
@@ -150,11 +150,11 @@ md_begin_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
-md_begin_block_bare_boolean(A) ::= md_ternary(B). {
+md_begin_block_bare_boolean(A) ::= md_rhs(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
-md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pbegin_statements, A);
 }
@@ -188,11 +188,11 @@ md_end_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pend_statements, A);
 }
-md_end_block_bare_boolean(A) ::= md_ternary(B). {
+md_end_block_bare_boolean(A) ::= md_rhs(B). {
 	A = B;
 	sllv_append(past->pend_statements, A);
 }
-md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_ternary(B). {
+md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pend_statements, A);
 }
@@ -206,13 +206,13 @@ md_end_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
-md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
 }
-md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
-md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_ternary(C). {
+md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
 
@@ -243,10 +243,10 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_LPAREN md_oosvar_name(B) MD_TOKEN_COMMA
 	B = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
-md_emit_args2(A) ::= md_string(B). {
+md_emit_args2(A) ::= md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT2TEMP, B);
 }
-md_emit_args2(A) ::= md_emit_args2(B) MD_TOKEN_COMMA md_string(C). {
+md_emit_args2(A) ::= md_emit_args2(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
@@ -257,6 +257,12 @@ md_dump(A) ::= MD_TOKEN_DUMP(O). {
 }
 
 // ================================================================
+// Begin RHS precedence chain
+
+md_rhs(A) ::= md_ternary(B). {
+	A = B;
+}
+
 md_ternary(A) ::= md_logical_or_term(B) MD_TOKEN_QUESTION_MARK md_ternary(C) MD_TOKEN_COLON md_ternary(D). {
 	A = mlr_dsl_ast_node_alloc_ternary("? :", MD_AST_NODE_TYPE_OPERATOR, B, C, D);
 }
@@ -446,10 +452,10 @@ md_atom_or_fcn(A) ::= md_oosvar_name(B). {
 	A = B;
 }
 
-md_keyed_oosvar_name(A) ::= md_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+md_keyed_oosvar_name(A) ::= md_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
 }
-md_keyed_oosvar_name(A) ::= md_keyed_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+md_keyed_oosvar_name(A) ::= md_keyed_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
 }
 
@@ -503,7 +509,7 @@ md_regexi(A) ::= MD_TOKEN_REGEXI(B). {
 md_atom_or_fcn(A) ::= MD_TOKEN_CONTEXT_VARIABLE(B). {
 	A = B;
 }
-md_atom_or_fcn(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_ternary(C) MD_TOKEN_RIGHT_BRACKET. {
+md_atom_or_fcn(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 }
 
