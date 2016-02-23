@@ -10,12 +10,12 @@ TOP-OF-LIST SUMMARY
 
 * pencil out the tri-split-null cases 1st.
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
+? @x = $0 ?
+? $0 = @x ?
 * parameterized emit neatens
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 * += et al. UTs
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
-? @x = $0 ?
-? $0 = @x ?
 ? unset/clear ... ?
 ? rethink filter ... ?
 
