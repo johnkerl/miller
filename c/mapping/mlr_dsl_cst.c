@@ -538,14 +538,13 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 	mv_free(&mv0);
 }
 
-// $ mlr --ojson put '@sum[$a]=$x; filter false; end{dump}' ../data/small | mlr --ijson --oxtab cat
-// sum:pan 0.502626
-// sum:eks 0.611784
-// sum:wye 0.573289
-// sum:zee 0.598554
-// sum:hat 0.031442
-
-// $ mlr --ojson put '@sum[$a][$b]=$x; filter false; end{dump}' ../data/small | mlr --ijson --oxtab cat
+// ----------------------------------------------------------------
+// cat ../data/small | mlr put '
+//   @sum[$a][$b]=$x;
+//   filter false;
+//   end{dump}
+// '  | mlr --ijson --oxtab cat
+//
 // sum:pan:pan 0.346790
 // sum:pan:wye 0.502626
 // sum:eks:pan 0.758680
@@ -556,6 +555,64 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 // sum:zee:pan 0.527126
 // sum:zee:wye 0.598554
 // sum:hat:wye 0.031442
+
+// ----------------------------------------------------------------
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit(@sum);
+//   } '
+//
+// sum:pan:pan=0.346790
+// sum:pan:wye=0.502626
+// sum:eks:pan=0.758680
+// sum:eks:wye=0.381399
+// sum:eks:zee=0.611784
+// sum:wye:wye=0.204603
+// sum:wye:pan=0.573289
+// sum:zee:pan=0.527126
+// sum:zee:wye=0.598554
+// sum:hat:wye=0.031442
+
+// ----------------------------------------------------------------
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit(@sum,"a");
+//   } '
+//
+// a=pan,sum:pan=0.346790
+// a=pan,sum:wye=0.502626
+// a=eks,sum:pan=0.758680
+// a=eks,sum:wye=0.381399
+// a=eks,sum:zee=0.611784
+// a=wye,sum:wye=0.204603
+// a=wye,sum:pan=0.573289
+// a=zee,sum:pan=0.527126
+// a=zee,sum:wye=0.598554
+// a=hat,sum:wye=0.031442
+
+// ----------------------------------------------------------------
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit(@sum,"a","b");
+//   } '
+//
+// a=pan,b=pan,sum=0.346790
+// a=pan,b=wye,sum=0.502626
+// a=eks,b=pan,sum=0.758680
+// a=eks,b=wye,sum=0.381399
+// a=eks,b=zee,sum=0.611784
+// a=wye,b=wye,sum=0.204603
+// a=wye,b=pan,sum=0.573289
+// a=zee,b=pan,sum=0.527126
+// a=zee,b=wye,sum=0.598554
+// a=hat,b=wye,sum=0.031442
+// ----------------------------------------------------------------
 
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
