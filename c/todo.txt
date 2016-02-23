@@ -14,6 +14,7 @@ TOP-OF-LIST SUMMARY
 * parameterized emit neatens
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
 * += et al.: do node-copy & expand right in the parser.
+? unset/clear ... ?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -49,11 +50,6 @@ PARAMETERIZED EMIT
 * mld section, w/ olh brief example & xref to it.
 
 ================================================================
-PATTERN-ACTION AST
-
-* xxxes
-
-================================================================
 TRI-SPLIT NULL
 
   o explicit initialization OK:
@@ -75,9 +71,7 @@ k sllv
 * top_keeper
 
 ================================================================
-MULTILEVEL EMIT: SPEC & IMPL
-
-  o DSL needs work 1st: tri-split null
+TRI-SPLIT NULL
 
   o replace "null" with "empty", "absent", and "uninit"?
 
@@ -96,34 +90,17 @@ MULTILEVEL EMIT: SPEC & IMPL
     - isnull/isnotnull functions: true for any of empty or absent or uninit
     - it will be syntactically ok to do '$x = @u' in which case field value can be uninit. serialize to "".
 
-  o keep current emit @x and emit @x,@y,@z?
-    - these are fine for single-level oosvars.
-    - how to define them for multi-level oosvars?
-
-  o partial-keying syntax: emit(@v, "group", "sum") -- ?
-    - how to handle when the oosvar is shallower than the keying-spec?
-    - how to handle when the oosvar is deeper than the keying-spec?
-
 ================================================================
-PATTERN-ACTION (BARE-BOOLEAN WITH BLOCK) STILL EXPERIMENTAL. IF-ELSE DOWN THE ROAD PERHAPS ...
+OOSVARS:
 
-================================================================
-OOSVARS/BEGIN/END:
-
-  ? cut down on parameter-marshalling in lrec-evaluators?
-    at the *immediate* expense of opacity through 2K lines of code.
-
-  o rename 'lrec_evaluators' since they are now (much) more than that.
-  o begin/end rhs with srec $'s: segv. traverse those in the CST allocator & die early.
-
-  o filter is also gating. it should not.
-  o comments: replace with spaces from # to EOL/EOS, whichever comes first
   o define/test behavior for null-valued filter/gate
 
   o $0?
     - want $0 = @x kinds of record-from-record assignments?!?
 
   o experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
+  o check for functionality -- this is my best chance to do a full-featuredness check for oosvars & emit
+  o also do timing comparisons
     - bootstrap?
     - count-distinct?
     - cut?
@@ -147,8 +124,6 @@ OOSVARS/BEGIN/END:
     - people will ask for +=, -=, etc.
     - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
       implementing the present
-    - replace "null" with "absent" and "uninit"?
-    ? move assignments into the CST, and all the changes that ensue (e.g. $x=@a=7).
 
   o perf notes:
 
@@ -174,6 +149,7 @@ OOSVARS/BEGIN/END:
 
 * interpolated percentiles
 
+? DSL comments: replace with spaces from # to EOL/EOS, whichever comes first
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
