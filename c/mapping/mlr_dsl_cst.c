@@ -61,6 +61,12 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	lrec_t*         poutrec,
 	sllv_t*         poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_emit2temp_flatten(
+	mlhmmv_level_t* plevel,
+	char*           prefix,
+	lrec_t*         poutrec,
+	sllv_t*         poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_dump(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -506,7 +512,6 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 		mv_free(&mv0);
 		return;
 	}
-	////fprintf(stderr, "\n");
 
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
@@ -518,7 +523,6 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 			keys_ok = FALSE;
 			break;
 		}
-		////fprintf(stderr, "MVKEY [%s]\n", mv_alloc_format_val(&mvkey));
 		// Don't free the mlrval since its memory will be managed by the sllmv.
 		sllmv_add(pmvkeys, &mvkey);
 	}
@@ -553,6 +557,9 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 // sum:zee:wye 0.598554
 // sum:hat:wye 0.031442
 
+// xxx temp
+#define TEMP_FLATTEN_SEP ":"
+
 // xxx handle too-short, too-long, just-right cases
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
@@ -561,22 +568,15 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	lrec_t*         poutrec,
 	sllv_t*         poutrecs)
 {
-	////fprintf(stderr, "-- RECURSE\n");
 	if (prestnames == NULL) {
-		lrec_t* pnextrec = lrec_copy(poutrec);
-		lrec_put(pnextrec, "foo", "bar", NO_FREE);
-		sllv_append(poutrecs, pnextrec); // xxx temp
-		////fprintf(stderr, "NULL RESTKEYS\n");
+		mlr_dsl_cst_node_evaluate_emit2temp_flatten(plevel, oosvar_name, poutrec, poutrecs);
 	} else {
-		////fprintf(stderr, "NAME [%s]\n", mv_alloc_format_val(&prestnames->value));
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-			////fprintf(stderr, "LKEY [%s]\n", mv_alloc_format_val(&pe->level_key));
 			lrec_t* pnextrec = lrec_copy(poutrec);
 			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
 				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
 			if (plevel_value->is_terminal) {
-				////fprintf(stderr, "IS TERMINAL: [%s]\n", mv_alloc_format_val(&plevel_value->u.mlrval));
 				lrec_put(pnextrec, oosvar_name,
 					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
 				sllv_append(poutrecs, pnextrec); // xxx temp
@@ -586,6 +586,29 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 					prestnames->pnext, pnextrec, poutrecs);
 				lrec_free(pnextrec);
 			}
+		}
+	}
+}
+
+static void mlr_dsl_cst_node_evaluate_emit2temp_flatten(
+	mlhmmv_level_t* plevel,
+	char*           prefix,
+	lrec_t*         poutrec,
+	sllv_t*         poutrecs)
+{
+	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+		mlhmmv_level_value_t* plevel_value = &pe->level_value;
+		lrec_t* pnextrec = lrec_copy(poutrec);
+		char* foo = mv_alloc_format_val(&pe->level_key);
+		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
+		free(foo);
+		if (plevel_value->is_terminal) {
+			lrec_put(pnextrec, name,
+				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, pnextrec);
+		} else {
+			mlr_dsl_cst_node_evaluate_emit2temp_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
+			lrec_free(pnextrec);
 		}
 	}
 }
