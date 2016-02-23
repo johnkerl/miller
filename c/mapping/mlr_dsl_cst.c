@@ -57,6 +57,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
 	sllmve_t*       prestkeys,
+	lrec_t*         poutrec,
 	sllv_t*         poutrecs);
 
 static void mlr_dsl_cst_node_evaluate_dump(
@@ -476,6 +477,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 			char* string = mv_format_val(&val, &free_flags);
 			lrec_put(prec_to_emit, output_field_name, string, free_flags);
 		}
+
 	}
 	sllv_append(poutrecs, prec_to_emit);
 }
@@ -503,6 +505,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 		mv_free(&mv0);
 		return;
 	}
+	fprintf(stderr, "\n");
 
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
@@ -514,12 +517,15 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 			keys_ok = FALSE;
 			break;
 		}
+		fprintf(stderr, "MVKEY [%s]\n", mv_alloc_format_val(&mvkey));
 		// Don't free the mlrval since its memory will be managed by the sllmv.
 		sllmv_add(pmvkeys, &mvkey);
 	}
 
 	if (keys_ok) {
-		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pmvkeys->phead, poutrecs);
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pmvkeys->phead, poutrec, poutrecs);
+		lrec_free(poutrec);
 	}
 
 	sllmv_free(pmvkeys);
@@ -529,16 +535,33 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
 	sllmve_t*       prestkeys,
+	lrec_t*         poutrec,
 	sllv_t*         poutrecs)
 {
-	//if (plevel_value->is_terminal) {
-	//}
-	// xxx need just-next-level getter
-	// xxx plevel_value->is_terminal ...
-}
+	fprintf(stderr, "-- RECURSE\n");
+	if (prestkeys == NULL) {
+		lrec_t* pnextrec = lrec_copy(poutrec);
+		sllv_append(poutrecs, pnextrec); // xxx temp
+		fprintf(stderr, "NULL RESTKEYS\n");
+	} else {
+		fprintf(stderr, "MKEY [%s]\n", mv_alloc_format_val(&prestkeys->value));
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			lrec_t* pnextrec = lrec_copy(poutrec);
+			fprintf(stderr, "LKEY [%s]\n", mv_alloc_format_val(&pe->level_key));
+			mlhmmv_level_value_t* plevel_value = &pe->level_value;
+			if (plevel_value->is_terminal) {
+				fprintf(stderr, "IS TERMINAL: [%s]\n", mv_alloc_format_val(&plevel_value->u.mlrval));
+			} else {
+				lrec_put(pnextrec, mv_alloc_format_val(&prestkeys->value),
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 
-				// xxx check terminality of keylist: short/right/long
-				// xxx move this to the aux? it'll probably be duplicate code.
+				mlr_dsl_cst_node_evaluate_emit2temp_aux(pe->level_value.u.pnext_level, prestkeys->pnext,
+					pnextrec, poutrecs);
+			}
+			lrec_free(pnextrec);
+		}
+	}
+}
 
 				// xxx recurse over remaining keylist
 				// xxx handle too-short, too-long, just-right cases
