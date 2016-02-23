@@ -12,8 +12,8 @@ TOP-OF-LIST SUMMARY
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
 * parameterized emit neatens
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
-* += et al.: do node-copy & expand right in the parser.
-* double-check by re-implementing as many mappers as possible using ossvars + emit
+* += et al. UTs
+* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 ? @x = $0 ?
 ? $0 = @x ?
 ? unset/clear ... ?
