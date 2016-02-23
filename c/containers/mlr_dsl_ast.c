@@ -28,6 +28,19 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother) {
 }
 
 // ----------------------------------------------------------------
+mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pother) {
+	mlr_dsl_ast_node_t* pnew = mlr_dsl_ast_node_copy(pother);
+	if (pother->pchildren != NULL) {
+		pnew->pchildren = sllv_alloc();
+		for (sllve_t* pe = pother->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			sllv_append(pnew->pchildren, mlr_dsl_ast_tree_copy(pchild));
+		}
+	}
+	return pnew;
+}
+
+// ----------------------------------------------------------------
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_zary(char* text, mlr_dsl_ast_node_type_t type)
 {
 	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);

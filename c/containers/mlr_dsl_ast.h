@@ -56,6 +56,8 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
+// These are so the parser can expand '$x += 1' to '$x = $x + 1', etc.
+mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pother);
 
 // See comments in mlr_dsl_parse.y for this seemingly awkward syntax wherein
 // we change the function name after having set it up. This is a consequence of
