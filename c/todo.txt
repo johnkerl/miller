@@ -11,8 +11,9 @@ TOP-OF-LIST SUMMARY
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 
 ? rethink filter ... ?
+* parameterized emit neatens
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
-w then parameterized emit (spec & impl)
+* += et al.: do node-copy & expand right in the parser.
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -35,6 +36,17 @@ w then parameterized emit (spec & impl)
   - pattern-action -- still under development
   - nest
   - shuffle
+
+================================================================
+PARAMETERIZED EMIT
+
+* evolve & extend the UTs
+* handle too-short, too-long, just-right cases
+* rename functions
+* rename variables as needed for clarity
+* needs significant comment-by-example
+* emit w/ and w/o parentheses in the grammar -- try to get just one
+* mld section, w/ olh brief example & xref to it.
 
 ================================================================
 PATTERN-ACTION AST

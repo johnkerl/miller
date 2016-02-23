@@ -617,7 +617,6 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
 
-// xxx handle too-short, too-long, just-right cases
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
 	char*           oosvar_name,
@@ -636,7 +635,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 			if (plevel_value->is_terminal) {
 				lrec_put(pnextrec, oosvar_name,
 					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
-				sllv_append(poutrecs, pnextrec); // xxx temp
+				sllv_append(poutrecs, pnextrec);
 			} else {
 
 				mlr_dsl_cst_node_evaluate_emit2temp_aux(pe->level_value.u.pnext_level, oosvar_name,
