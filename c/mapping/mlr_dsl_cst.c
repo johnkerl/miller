@@ -54,6 +54,11 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
+	mlhmmv_level_t* plevel,
+	sllmve_t*       prestkeys,
+	sllv_t*         poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_dump(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -488,14 +493,59 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
-	// xxx get oosvar base-level
-	// xxx early-out if null
-	// xxx recurse over keylist
-	// xxx handle too-short, too-long, just-right cases
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 
-	// xxx too-short: don't recurse in the first place
+	// xxx alloc once & keep in item struct. or not. no huge impact (and, zero-copy).
+	mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
 
+	mlhmmv_level_value_t* proot_value = mlhmmv_level_get(poosvars->proot_level, &mv0);
+	if (proot_value == NULL) {
+		mv_free(&mv0);
+		return;
+	}
+
+	sllmv_t* pmvkeys = sllmv_alloc();
+	int keys_ok = TRUE;
+	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
+		mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
+			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
+		if (mv_is_null(&mvkey)) {
+			keys_ok = FALSE;
+			break;
+		}
+		// Don't free the mlrval since its memory will be managed by the sllmv.
+		sllmv_add(pmvkeys, &mvkey);
+	}
+
+	if (keys_ok) {
+		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pmvkeys->phead, poutrecs);
+	}
+
+	sllmv_free(pmvkeys);
+	mv_free(&mv0);
 }
+
+static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
+	mlhmmv_level_t* plevel,
+	sllmve_t*       prestkeys,
+	sllv_t*         poutrecs)
+{
+	//if (plevel_value->is_terminal) {
+	//}
+	// xxx need just-next-level getter
+	// xxx plevel_value->is_terminal ...
+}
+
+				// xxx check terminality of keylist: short/right/long
+				// xxx move this to the aux? it'll probably be duplicate code.
+
+				// xxx recurse over remaining keylist
+				// xxx handle too-short, too-long, just-right cases
+
+				// xxx too-short: don't recurse in the first place
+				// xxx just-right: emit mlrvals w/ key-value fields
+				// xxx too-long: flatten?? or silent-out?
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_evaluate_dump(
