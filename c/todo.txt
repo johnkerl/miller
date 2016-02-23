@@ -13,8 +13,11 @@ TOP-OF-LIST SUMMARY
 * parameterized emit neatens
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 * += et al.: do node-copy & expand right in the parser.
-? rethink filter ... ?
+* mapper-impl tests
+? @x = $0 ?
+? $0 = @x ?
 ? unset/clear ... ?
+? rethink filter ... ?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -28,6 +31,8 @@ TOP-OF-LIST SUMMARY
 * xxxes
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid double-searching.
 * dsls deps still not quite right?
+* faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
+* faqent why dollar signs in the DSL at all
 
 ================================================================
 * relcut material since 3.4.0:
@@ -158,9 +163,7 @@ OOSVARS:
 
 * mld re cross-record stuff is limited to stats1/2 and step
   o this will change with begin/end and oosvars
-* faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 * tbin/ok -> cookbook
-* faqent why dollar signs in the DSL at all
 * debian screenshot
 * lrec_evaluators cleanup re strict, redundant statements, etc.
 * ruby @ optextdep @ mld; poki+mkman
@@ -183,7 +186,7 @@ NARRATIVE INTRO:
 * sql example
 * logging example
 * csv example
-* what do these have in common?
+* "what do these have in common?"
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
