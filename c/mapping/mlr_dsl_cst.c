@@ -56,7 +56,8 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
-	sllmve_t*       prestkeys,
+	char*           oosvar_name,
+	sllmve_t*       prestnames,
 	lrec_t*         poutrec,
 	sllv_t*         poutrecs);
 
@@ -505,7 +506,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 		mv_free(&mv0);
 		return;
 	}
-	fprintf(stderr, "\n");
+	////fprintf(stderr, "\n");
 
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
@@ -517,14 +518,15 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 			keys_ok = FALSE;
 			break;
 		}
-		fprintf(stderr, "MVKEY [%s]\n", mv_alloc_format_val(&mvkey));
+		////fprintf(stderr, "MVKEY [%s]\n", mv_alloc_format_val(&mvkey));
 		// Don't free the mlrval since its memory will be managed by the sllmv.
 		sllmv_add(pmvkeys, &mvkey);
 	}
 
 	if (keys_ok) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pmvkeys->phead, poutrec, poutrecs);
+		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pitem->output_field_name,
+			pmvkeys->phead, poutrec, poutrecs);
 		lrec_free(poutrec);
 	}
 
@@ -532,43 +534,61 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 	mv_free(&mv0);
 }
 
+// $ mlr --ojson put '@sum[$a]=$x; filter false; end{dump}' ../data/small | mlr --ijson --oxtab cat
+// sum:pan 0.502626
+// sum:eks 0.611784
+// sum:wye 0.573289
+// sum:zee 0.598554
+// sum:hat 0.031442
+
+// $ mlr --ojson put '@sum[$a][$b]=$x; filter false; end{dump}' ../data/small | mlr --ijson --oxtab cat
+// sum:pan:pan 0.346790
+// sum:pan:wye 0.502626
+// sum:eks:pan 0.758680
+// sum:eks:wye 0.381399
+// sum:eks:zee 0.611784
+// sum:wye:wye 0.204603
+// sum:wye:pan 0.573289
+// sum:zee:pan 0.527126
+// sum:zee:wye 0.598554
+// sum:hat:wye 0.031442
+
+// xxx handle too-short, too-long, just-right cases
 static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	mlhmmv_level_t* plevel,
-	sllmve_t*       prestkeys,
+	char*           oosvar_name,
+	sllmve_t*       prestnames,
 	lrec_t*         poutrec,
 	sllv_t*         poutrecs)
 {
-	fprintf(stderr, "-- RECURSE\n");
-	if (prestkeys == NULL) {
+	////fprintf(stderr, "-- RECURSE\n");
+	if (prestnames == NULL) {
 		lrec_t* pnextrec = lrec_copy(poutrec);
+		lrec_put(pnextrec, "foo", "bar", NO_FREE);
 		sllv_append(poutrecs, pnextrec); // xxx temp
-		fprintf(stderr, "NULL RESTKEYS\n");
+		////fprintf(stderr, "NULL RESTKEYS\n");
 	} else {
-		fprintf(stderr, "MKEY [%s]\n", mv_alloc_format_val(&prestkeys->value));
+		////fprintf(stderr, "NAME [%s]\n", mv_alloc_format_val(&prestnames->value));
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			////fprintf(stderr, "LKEY [%s]\n", mv_alloc_format_val(&pe->level_key));
 			lrec_t* pnextrec = lrec_copy(poutrec);
-			fprintf(stderr, "LKEY [%s]\n", mv_alloc_format_val(&pe->level_key));
+			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
+				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
 			if (plevel_value->is_terminal) {
-				fprintf(stderr, "IS TERMINAL: [%s]\n", mv_alloc_format_val(&plevel_value->u.mlrval));
+				////fprintf(stderr, "IS TERMINAL: [%s]\n", mv_alloc_format_val(&plevel_value->u.mlrval));
+				lrec_put(pnextrec, oosvar_name,
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, pnextrec); // xxx temp
 			} else {
-				lrec_put(pnextrec, mv_alloc_format_val(&prestkeys->value),
-					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 
-				mlr_dsl_cst_node_evaluate_emit2temp_aux(pe->level_value.u.pnext_level, prestkeys->pnext,
-					pnextrec, poutrecs);
+				mlr_dsl_cst_node_evaluate_emit2temp_aux(pe->level_value.u.pnext_level, oosvar_name,
+					prestnames->pnext, pnextrec, poutrecs);
+				lrec_free(pnextrec);
 			}
-			lrec_free(pnextrec);
 		}
 	}
 }
-
-				// xxx recurse over remaining keylist
-				// xxx handle too-short, too-long, just-right cases
-
-				// xxx too-short: don't recurse in the first place
-				// xxx just-right: emit mlrvals w/ key-value fields
-				// xxx too-long: flatten?? or silent-out?
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_evaluate_dump(
