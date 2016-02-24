@@ -45,6 +45,21 @@ typedef int mv_i_nn_comparator_func_t(mv_t* pa, mv_t* pb);
 typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
 
 // ----------------------------------------------------------------
+mv_t MV_ABSENT = {
+	.type = MT_ABSENT,
+	.free_flags = NO_FREE,
+	.u.intv = 0
+};
+mv_t MV_EMPTY = {
+	.type = MT_EMPTY,
+	.free_flags = NO_FREE,
+	.u.intv = 0
+};
+mv_t MV_UNINIT = {
+	.type = MT_UNINIT,
+	.free_flags = NO_FREE,
+	.u.intv = 0
+};
 mv_t MV_NULL = {
 	.type = MT_NULL,
 	.free_flags = NO_FREE,
@@ -59,19 +74,25 @@ mv_t MV_ERROR = {
 // ----------------------------------------------------------------
 char* mt_describe_type(int type) {
 	switch (type) {
+	case MT_ABSENT: return "MT_ABSENT"; break;
+	case MT_EMPTY:  return "MT_EMPTY";  break;
+	case MT_UNINIT: return "MT_UNINIT"; break;
 	case MT_NULL:   return "MT_NULL";   break;
 	case MT_ERROR:  return "MT_ERROR";  break;
 	case MT_BOOL:   return "MT_BOOL";   break;
 	case MT_FLOAT:  return "MT_FLOAT";  break;
 	case MT_INT:    return "MT_INT";    break;
 	case MT_STRING: return "MT_STRING"; break;
-	default:        return "???";      break;
+	default:        return "???";       break;
 	}
 }
 
 // The caller should free the return value
 char* mv_alloc_format_val(mv_t* pval) {
 	switch(pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		return mlr_strdup_or_die("");
 		break;
@@ -100,6 +121,9 @@ char* mv_alloc_format_val(mv_t* pval) {
 char* mv_format_val(mv_t* pval, char* pfree_flags) {
 	char* rv = NULL;
 	switch(pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		*pfree_flags = NO_FREE;
 		rv = "";
@@ -157,6 +181,9 @@ void mv_set_float_strict(mv_t* pval) {
 	double fltv = 0.0;
 	mv_t nval = MV_ERROR;
 	switch (pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		break;
 	case MT_ERROR:
@@ -192,6 +219,9 @@ void mv_set_float_nullable(mv_t* pval) {
 	double fltv = 0.0;
 	mv_t nval = MV_ERROR;
 	switch (pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		break;
 	case MT_ERROR:
@@ -229,6 +259,9 @@ void mv_set_int_nullable(mv_t* pval) {
 	long long intv = 0LL;
 	mv_t nval = MV_ERROR;
 	switch (pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		break;
 	case MT_ERROR:
@@ -265,6 +298,9 @@ void mv_set_int_nullable(mv_t* pval) {
 void mv_set_number_nullable(mv_t* pval) {
 	mv_t nval = MV_NULL;
 	switch (pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+	case MT_UNINIT:
 	case MT_NULL:
 		break;
 	case MT_ERROR:
