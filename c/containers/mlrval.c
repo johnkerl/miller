@@ -926,7 +926,7 @@ static mv_t plus_n_ii(mv_t* pa, mv_t* pb) {
 }
 
 static mv_binary_func_t* plus_dispositions[MT_MAX][MT_MAX] = {
-	//         ABSENT EMPTY UNINIT        ERROR      BOOL       FLOAT      INT        STRING
+	//         ABSENT      EMPTY      UNINIT     ERROR      BOOL       FLOAT      INT        STRING
 	/*ABSENT*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*EMPTY*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*UNINIT*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
@@ -982,7 +982,7 @@ static mv_t minus_n_ii(mv_t* pa, mv_t* pb) {
 }
 
 static mv_binary_func_t* minus_dispositions[MT_MAX][MT_MAX] = {
-	//         ABSENT EMPTY UNINIT        ERROR      BOOL       FLOAT      INT        STRING
+	//         ABSENT       EMPTY       UNINIT      ERROR       BOOL        FLOAT       INT         STRING
 	/*ABSENT*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*EMPTY*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*UNINIT*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
@@ -1223,7 +1223,7 @@ static mv_t upos_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t upos_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t upos_n_f(mv_t* pa) {
 	return mv_from_float(pa->u.fltv);
@@ -1250,7 +1250,7 @@ static mv_t uneg_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t uneg_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t uneg_n_f(mv_t* pa) {
 	return mv_from_float(-pa->u.fltv);
@@ -1277,7 +1277,7 @@ static mv_t abs_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t abs_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t abs_n_f(mv_t* pa) {
 	return mv_from_float(fabs(pa->u.fltv));
@@ -1304,7 +1304,7 @@ static mv_t ceil_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t ceil_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t ceil_n_f(mv_t* pa) {
 	return mv_from_float(ceil(pa->u.fltv));
@@ -1331,7 +1331,7 @@ static mv_t floor_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t floor_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t floor_n_f(mv_t* pa) {
 	return mv_from_float(floor(pa->u.fltv));
@@ -1358,7 +1358,7 @@ static mv_t round_e_x(mv_t* pa) {
 	return MV_ERROR;
 }
 static mv_t round_u_x(mv_t* pa) {
-	return mv_from_int(0);
+	return MV_ERROR;
 }
 static mv_t round_n_f(mv_t* pa) {
 	return mv_from_float(round(pa->u.fltv));
@@ -1469,8 +1469,8 @@ static mv_t min_z_zz(mv_t* pa, mv_t* pb) {
 }
 
 static mv_binary_func_t* min_dispositions[MT_MAX][MT_MAX] = {
-	//         ABSENT     EMPTY     UNINIT    ERROR     BOOL      FLOAT      INT STRING
-	// xxx temp
+	//         ABSENT     EMPTY     UNINIT    ERROR     BOOL      FLOAT     INT       STRING
+	//         xxx        temp
 	/*ABSENT*/ {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
 	/*EMPTY*/  {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
 	/*UNINIT*/ {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
@@ -1533,8 +1533,8 @@ static mv_t max_z_zz(mv_t* pa, mv_t* pb) {
 }
 
 static mv_binary_func_t* max_dispositions[MT_MAX][MT_MAX] = {
-	//         ABSENT     EMPTY     UNINIT    ERROR     BOOL      FLOAT      INT STRING
-	// xxx temp
+	//         ABSENT     EMPTY     UNINIT    ERROR     BOOL      FLOAT     INT       STRING
+	//         xxx        temp
 	/*ABSENT*/ {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
 	/*EMPTY*/  {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
 	/*UNINIT*/ {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
@@ -2239,6 +2239,7 @@ static mv_i_cncn_comparator_func_t* mv_comparator_dispositions[MT_MAX][MT_MAX] =
 	/*INT*/    {NULL, NULL, NULL,  NULL, NULL, mv_if_comparator, mv_ii_comparator, NULL},
 	/*STRING*/ {NULL, NULL, NULL,  NULL, NULL, NULL,             NULL,             NULL},
 };
+
 int mv_nn_comparator(const void* pva, const void* pvb) {
 	const mv_t* pa = pva;
 	const mv_t* pb = pvb;

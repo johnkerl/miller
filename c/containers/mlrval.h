@@ -64,11 +64,13 @@
 
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So, if the numeric values are changed, all the matrices must be as well.
-// xxx temp ordering
-#define MT_ABSENT   0 // no such key, e.g. $z in 'x=,y=2'
-#define MT_EMPTY    1 // empty value, e.g. $x in 'x=,y=2'
-#define MT_UNINIT   2 // uninitialized, e.g. first access to '@sum[$group]'
+
+// Three kinds of null:
+#define MT_ABSENT   0 // No such key, e.g. $z in 'x=,y=2'
+#define MT_EMPTY    1 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_UNINIT   2 // Uninitialized, e.g. first access to '@sum[$group]'
 #define MT_NULL_MAX MT_UNINIT
+
 #define MT_ERROR    3 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_BOOL     4
 #define MT_FLOAT    5
