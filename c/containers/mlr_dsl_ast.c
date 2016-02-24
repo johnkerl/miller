@@ -28,11 +28,11 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother) {
 }
 
 // ----------------------------------------------------------------
-mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pother) {
-	mlr_dsl_ast_node_t* pnew = mlr_dsl_ast_node_copy(pother);
-	if (pother->pchildren != NULL) {
+mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pold) {
+	mlr_dsl_ast_node_t* pnew = mlr_dsl_ast_node_copy(pold);
+	if (pold->pchildren != NULL) {
 		pnew->pchildren = sllv_alloc();
-		for (sllve_t* pe = pother->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pe = pold->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 			sllv_append(pnew->pchildren, mlr_dsl_ast_tree_copy(pchild));
 		}

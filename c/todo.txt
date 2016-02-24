@@ -8,7 +8,6 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* pencil out the tri-split-null cases 1st.
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
 ? @x = $0 ?  $0 = @x ?
 * parameterized-emit neatens
@@ -46,11 +45,6 @@ TOP-OF-LIST SUMMARY
   - shuffle
 
 ================================================================
-+= ET AL.
-
-* to mld:ref
-
-================================================================
 PARAMETERIZED EMIT
 
 * evolve & extend the UTs
@@ -62,32 +56,35 @@ PARAMETERIZED EMIT
 * mld section, w/ olh brief example & xref to it.
 
 ================================================================
-TRI-SPLIT NULL
+TRI-SPLIT NULL, AND += ET AL.
 
-  o explicit initialization OK:
+* fix ast-tree-copy for oosvar-level-keys
+* implement all appropriate u*/*u dispositions
+* UTs
+* to mld:ref
 
-    mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' ../data/small
+* explicit initialization OK:
 
-  o implicit initialization not OK -- null-ops math not OK here:
+  mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' ../data/small
 
-    mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
+* implicit initialization not OK -- null-ops math not OK here:
 
-  o replace "null" with "empty", "absent", and "uninit"?
+  mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
 
-    - echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
-    - echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
-    - echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
+* replace "null" with "empty", "absent", and "uninit"?
 
-    - echo x=1,y=2 | mlr put '@s = @s + $y   # @s is MT_UNINIT on first record, then MT_INT on second
-    - echo x=1,y=  | mlr put '@s = @s + $y   # MT_
-    - echo x=1,y=  | mlr put '@s = @s + $u   # MT_
+  - echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
+  - echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
+  - echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
 
-    - evaluator-from-field-name produces empty/absent
-    - evaluator-from-oosvar     produces uninit
+  - echo x=1,y=2 | mlr put '@s = @s + $y   # @s is MT_UNINIT on first record, then MT_INT on second
+  - echo x=1,y=  | mlr put '@s = @s + $y   # MT_
+  - echo x=1,y=  | mlr put '@s = @s + $u   # MT_
 
-    - disposition matrices will all need new row/column ...
-    - isnull/isnotnull functions: true for any of empty or absent or uninit
-    - it will be syntactically ok to do '$x = @u' in which case field value can be uninit. serialize to "".
+  - evaluator-from-field-name produces empty/absent
+  - evaluator-from-oosvar     produces uninit
+
+  - it will be syntactically ok to do '$x = @u' in which case field value can be uninit. serialize to "".
 
 ================================================================
 64-BIT CONTAINER SIZES

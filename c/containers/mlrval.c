@@ -887,6 +887,21 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 static mv_t plus_e_xx(mv_t* pa, mv_t* pb) {
 	return MV_ERROR;
 }
+static mv_t plus_f_uf(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t plus_f_fu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t plus_i_ui(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t plus_i_iu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t plus_i_uu(mv_t* pa, mv_t* pb) {
+	return mv_from_int(0LL);
+}
 static mv_t plus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -929,11 +944,11 @@ static mv_binary_func_t* plus_dispositions[MT_MAX][MT_MAX] = {
 	//         ABSENT      EMPTY      UNINIT     ERROR      BOOL       FLOAT      INT        STRING
 	/*ABSENT*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*EMPTY*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
-	/*UNINIT*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
+	/*UNINIT*/ {plus_e_xx, plus_e_xx, plus_i_uu, plus_e_xx, plus_e_xx, plus_f_uf, plus_i_ui, plus_e_xx},
 	/*ERROR*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*BOOL*/   {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
-	/*FLOAT*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
-	/*INT*/    {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_f_if, plus_n_ii, plus_e_xx},
+	/*FLOAT*/  {plus_e_xx, plus_e_xx, plus_f_fu, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
+	/*INT*/    {plus_e_xx, plus_e_xx, plus_i_iu, plus_e_xx, plus_e_xx, plus_f_if, plus_n_ii, plus_e_xx},
 	/*STRING*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 };
 
@@ -942,6 +957,21 @@ mv_t n_nn_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1-
 // ----------------------------------------------------------------
 static mv_t minus_e_xx(mv_t* pa, mv_t* pb) {
 	return MV_ERROR;
+}
+static mv_t minus_f_uf(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t minus_f_fu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t minus_i_ui(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t minus_i_iu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t minus_i_uu(mv_t* pa, mv_t* pb) {
+	return mv_from_int(0LL);
 }
 static mv_t minus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
@@ -985,11 +1015,11 @@ static mv_binary_func_t* minus_dispositions[MT_MAX][MT_MAX] = {
 	//         ABSENT       EMPTY       UNINIT      ERROR       BOOL        FLOAT       INT         STRING
 	/*ABSENT*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*EMPTY*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
-	/*UNINIT*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+	/*UNINIT*/ {minus_e_xx, minus_e_xx, minus_i_uu, minus_e_xx, minus_e_xx, minus_f_uf, minus_i_ui, minus_e_xx},
 	/*ERROR*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 	/*BOOL*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
-	/*FLOAT*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_f_ff, minus_f_fi, minus_e_xx},
-	/*INT*/    {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_f_if, minus_n_ii, minus_e_xx},
+	/*FLOAT*/  {minus_e_xx, minus_e_xx, minus_f_fu, minus_e_xx, minus_e_xx, minus_f_ff, minus_f_fi, minus_e_xx},
+	/*INT*/    {minus_e_xx, minus_e_xx, minus_i_iu, minus_e_xx, minus_e_xx, minus_f_if, minus_n_ii, minus_e_xx},
 	/*STRING*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 };
 
