@@ -1306,7 +1306,7 @@ mv_t rval_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_ov
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
-			return MV_NULL;
+			return MV_EMPTY;
 		} else {
 			// string points into AST memory and is valid as long as the AST is.
 			return mv_from_string_no_free(string);
@@ -1328,7 +1328,7 @@ mv_t rval_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_o
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
-			return MV_NULL;
+			return MV_EMPTY;
 		} else {
 			double fltv;
 			if (mlr_try_float_from_string(string, &fltv)) {
@@ -1354,7 +1354,7 @@ mv_t rval_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyp
 	} else {
 		char* string = lrec_get(prec, pstate->field_name);
 		if (string == NULL) {
-			return MV_NULL;
+			return MV_EMPTY;
 		} else {
 			long long intv;
 			double fltv;
@@ -1421,7 +1421,7 @@ mv_t rval_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 		// by the evaluator functions.
 		return mv_copy(pval);
 	} else {
-		return MV_NULL;
+		return MV_UNINIT;
 	}
 }
 
@@ -1472,7 +1472,7 @@ mv_t rval_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 		sllmv_add(pmvkeys, &mvkey);
 	}
 
-	mv_t rv = MV_NULL;
+	mv_t rv = MV_UNINIT;
 	if (keys_ok) {
 		int error = 0;
 		mv_t* pval = mlhmmv_get(poosvars, pmvkeys, &error);
@@ -1603,7 +1603,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int typ
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
 	if (string == NULL) {
-		pstate->literal = MV_NULL;
+		pstate->literal = MV_ABSENT;
 		pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
 	} else {
 		long long intv;
@@ -1748,7 +1748,7 @@ mv_t rval_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 	mv_t mvname = pstate->pname_evaluator->pprocess_func(prec, ptyped_overlay,
 		poosvars, ppregex_captures, pctx, pstate->pname_evaluator->pvstate);
 	if (mv_is_null(&mvname)) {
-		return MV_NULL;
+		return MV_ABSENT;
 	}
 	char free_flags;
 	char* strname = mv_format_val(&mvname, &free_flags);
@@ -1757,7 +1757,7 @@ mv_t rval_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 		mv_free(&mvname);
 		if (free_flags & FREE_ENTRY_VALUE)
 			free(strname);
-		return MV_NULL;
+		return MV_EMPTY;
 	}
 	mv_t rv = mv_from_string(strvalue, NO_FREE);
 	mv_free(&mvname);
@@ -2646,10 +2646,10 @@ static char * test3() {
 
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);
-	mu_assert_lf(valpx.type     == MT_NULL);
-	mu_assert_lf(valpx2.type    == MT_NULL);
-	mu_assert_lf(valplogx.type  == MT_NULL);
-	mu_assert_lf(valp2logx.type == MT_NULL);
+	mu_assert_lf(valpx.type     == MT_EMPTY);
+	mu_assert_lf(valpx2.type    == MT_EMPTY);
+	mu_assert_lf(valplogx.type  == MT_EMPTY);
+	mu_assert_lf(valp2logx.type == MT_EMPTY);
 
 	mu_assert_lf(valp2.u.fltv     == 2.0);
 	mu_assert_lf(valp4.u.fltv     == 4.0);

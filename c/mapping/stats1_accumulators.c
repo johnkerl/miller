@@ -472,7 +472,7 @@ static void stats1_min_free(stats1_acc_t* pstats1_acc) {
 stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
-	pstate->min                = mv_from_null();
+	pstate->min                = MV_ABSENT;
 	pstate->output_field_name  = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1_acc->pvstate       = (void*)pstate;
@@ -518,7 +518,7 @@ static void stats1_max_free(stats1_acc_t* pstats1_acc) {
 stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
-	pstate->max                = mv_from_null();
+	pstate->max                = MV_ABSENT;
 	pstate->output_field_name  = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1_acc->pvstate       = (void*)pstate;

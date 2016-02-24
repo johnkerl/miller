@@ -272,7 +272,7 @@ static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		int have_dval = FALSE;
 		int have_nval = FALSE;
 		double value_field_dval = -999.0;
-		mv_t   value_field_nval = mv_from_null();
+		mv_t   value_field_nval = MV_ABSENT;
 
 		lhmsv_t* pacc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
 		if (pacc_field_to_acc_state == NULL) {
@@ -369,7 +369,7 @@ static void step_delta_free(step_t* pstep) {
 static step_t* step_delta_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
-	pstate->prev = mv_from_null();
+	pstate->prev = MV_ABSENT;
 	pstate->allow_int_float = allow_int_float;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
 	pstep->pvstate        = (void*)pstate;
@@ -411,7 +411,7 @@ static void step_from_first_free(step_t* pstep) {
 static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
 	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
 	step_from_first_state_t* pstate = mlr_malloc_or_die(sizeof(step_from_first_state_t));
-	pstate->first = mv_from_null();
+	pstate->first = MV_ABSENT;
 	pstate->allow_int_float = allow_int_float;
 	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_from_first");
 	pstep->pvstate        = (void*)pstate;

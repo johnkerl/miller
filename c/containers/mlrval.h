@@ -65,16 +65,16 @@
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So, if the numeric values are changed, all the matrices must be as well.
 // xxx temp ordering
-#define MT_ABSENT 7 // no such key, e.g. $z in 'x=,y=2'
-#define MT_EMPTY  8 // empty value, e.g. $x in 'x=,y=2'
-#define MT_UNINIT 9 // uninitialized, e.g. first access to '@sum[$group]'
-#define MT_NULL   0 // E.g. field name not present in input record -- not a problem.
-#define MT_ERROR  1 // E.g. error encountered in one eval & it propagates up the AST.
-#define MT_BOOL   2
-#define MT_FLOAT  3
-#define MT_INT    4
-#define MT_STRING 5
-#define MT_MAX    6
+#define MT_ABSENT   0 // no such key, e.g. $z in 'x=,y=2'
+#define MT_EMPTY    1 // empty value, e.g. $x in 'x=,y=2'
+#define MT_UNINIT   2 // uninitialized, e.g. first access to '@sum[$group]'
+#define MT_NULL_MAX MT_UNINIT
+#define MT_ERROR    3 // E.g. error encountered in one eval & it propagates up the AST.
+#define MT_BOOL     4
+#define MT_FLOAT    5
+#define MT_INT      6
+#define MT_STRING   7
+#define MT_MAX      8
 
 #define MV_SB_ALLOC_LENGTH 32
 
@@ -92,19 +92,21 @@ typedef struct _mv_t {
 } mv_t;
 
 // ----------------------------------------------------------------
-extern mv_t MV_NULL;
+extern mv_t MV_ABSENT;
+extern mv_t MV_EMPTY;
+extern mv_t MV_UNINIT;
 extern mv_t MV_ERROR;
 
 #define NULL_OR_ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
 		return MV_ERROR; \
-	if ((val).type == MT_NULL) \
-		return MV_NULL; \
+	if ((val).type <= MT_NULL_MAX) \
+		return val; \
 }
 
 #define NULL_OUT(val) { \
-	if ((val).type == MT_NULL) \
-		return MV_NULL; \
+	if ((val).type <= MT_NULL_MAX) \
+		return val; \
 }
 #define ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
@@ -128,10 +130,6 @@ static inline mv_t mv_from_true() {
 }
 static inline mv_t mv_from_false() {
 	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = FALSE};
-}
-
-static inline mv_t mv_from_null() {
-	return (mv_t) {.type = MT_NULL, .free_flags = NO_FREE, .u.intv = 0LL};
 }
 
 static inline mv_t mv_from_string_with_free(char* s) {
@@ -165,7 +163,10 @@ static inline int mv_is_numeric(mv_t* pval) {
 }
 
 static inline int mv_is_null(mv_t* pval) {
-	return pval->type == MT_NULL;
+	return pval->type <= MT_NULL_MAX;
+}
+static inline int mv_is_non_null(mv_t* pval) {
+	return pval->type > MT_NULL_MAX;
 }
 
 // ----------------------------------------------------------------

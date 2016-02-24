@@ -271,7 +271,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		int have_dval = FALSE;
 		int have_nval = FALSE;
 		double value_field_dval = -999.0;
-		mv_t   value_field_nval = mv_from_null();
+		mv_t   value_field_nval = MV_ABSENT;
 
 		// There isn't a one-to-one mapping between user-specified stats1_names
 		// and internal stats1_acc_t's. Here in the ingestor we feed each datum

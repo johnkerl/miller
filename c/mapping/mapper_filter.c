@@ -159,7 +159,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	sllv_t* rv = NULL;
 
 	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, NULL, pctx, pstate->pevaluator->pvstate);
-	if (val.type == MT_NULL) {
+	if (mv_is_null(&val)) {
 		lrec_free(pinrec);
 	} else {
 		mv_set_boolean_strict(&val);
