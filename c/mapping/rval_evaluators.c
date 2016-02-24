@@ -374,6 +374,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
 }
 
 // ----------------------------------------------------------------
+// xxx rename n_nn for these since they take full disposition matrices
 typedef struct _rval_evaluator_n_nn_state_t {
 	mv_binary_func_t* pfunc;
 	rval_evaluator_t* parg1;
@@ -387,12 +388,7 @@ mv_t rval_evaluator_n_nn_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 
-	mv_set_number_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
-
-	mv_set_number_nullable(&val2);
-	NULL_OR_ERROR_OUT(val2);
-
+	// nullities handled by full disposition matrices
 	return pstate->pfunc(&val1, &val2);
 }
 static void rval_evaluator_n_nn_free(rval_evaluator_t* pevaluator) {
