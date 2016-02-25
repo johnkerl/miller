@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 
 * tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
 ? @x = $0 ?  $0 = @x ?
+* parameterized-emit () vs. no-() unification
 * parameterized-emit neatens
 * += et al. UTs
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
@@ -58,8 +59,16 @@ PARAMETERIZED EMIT
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
 
-* fix ast-tree-copy for oosvar-level-keys
 * implement all appropriate u*/*u dispositions
+* void -> u.strv = "", & comment liberally
+* be sure all 'z' are for zary rather than null
+* split rval_evaluators into >= 2 files
+* isnotnull: rid of 2nd half of
+    mv_t rv = mv_from_bool(mv_is_non_null(pval1) && !(pval1->type == MT_STRING && *pval1->u.strv == 0)); 
+  & elsewhere. make sure emptyval -> MT_VOID everywhere.
+  make sure "" . "" is MT_VOID.
+  -> all 's' functions need v-check :^/
+
 * UTs
 * to mld:ref
 

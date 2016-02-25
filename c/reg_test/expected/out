@@ -9085,6 +9085,12 @@ b - 6 -
 b - - -
 
 mlr --opprint filter isnull($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
 
 mlr --opprint filter isnotnull($x) ./reg_test/input/nullvals.dkvp
 a x y z
@@ -9128,11 +9134,11 @@ b - - - true
 
 mlr --opprint put $f=isnull($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
-b 1 2 - -
-b 3 4 - -
-b 5 - - -
-b - 6 - -
-b - - - -
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
 
 mlr --opprint put $f=isnotnull($x) ./reg_test/input/nullvals.dkvp
 a x y z f
@@ -9160,11 +9166,11 @@ b - - - false
 
 mlr --opprint put $f=isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
-b 1 2 - -
-b 3 4 - -
-b 5 - - -
-b - 6 - -
-b - - - -
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
 
 
 ================================================================

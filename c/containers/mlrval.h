@@ -60,14 +60,45 @@
 // There is also some use of mlrvals in mixed float/int handling inside various
 // mappers (e.g. stats1). There the use is much simpler: accumulation of
 // numeric quantities, ultimately formatted as a string for output.
+//
 // ================================================================
+//
+// Many functions here use the naming convention x_yz_name or x_:
+//
+// * The first letter indicates return type.
+//
+// * The letters between the underscores indicate argument types, and their count indicates arity.
+//
+// * The following abbreviations apply:
+//   o a: MT_ABSENT
+//   o v: MT_VOID
+//   o u: MT_UNINIT
+//   o e: MT_ERROR
+//   o b: MT_BOOL
+//   o f: MT_FLOAT
+//   o i: MT_INT
+//   o s: MT_STRING
+//   o r: regular expression
+//   o n: Numeric, i.e. MT_INT or MT_FLOAT
+//   o x: any of the above.
+//   o z: used for zero-argument functions, e.g. f_z_urand takes no arguments and returns MT_FLOAT.
+//
+// * If a function takes arguments of type x then that indicates it has a disposition vector/matrix
+//   (or switch statements, or if-else statements) allowing it to handle various types.
+//
+// * If it takes arguments of type n then that indicates it is up to the caller to pass only numeric types.
+//
+// * If it takes arguments of type s then that indicates it is up to the caller to pass only strings.
+//
+// ================================================================
+
 
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So, if the numeric values are changed, all the matrices must be as well.
 
 // Three kinds of null:
 #define MT_ABSENT   0 // No such key, e.g. $z in 'x=,y=2'
-#define MT_EMPTY    1 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_VOID     1 // Empty value, e.g. $x in 'x=,y=2'
 #define MT_UNINIT   2 // Uninitialized, e.g. first access to '@sum[$group]'
 #define MT_NULL_MAX MT_UNINIT
 
@@ -76,7 +107,7 @@
 #define MT_FLOAT    5
 #define MT_INT      6
 #define MT_STRING   7
-#define MT_MAX      8
+#define MT_DIM      8
 
 #define MV_SB_ALLOC_LENGTH 32
 
@@ -94,14 +125,9 @@ typedef struct _mv_t {
 } mv_t;
 
 // ----------------------------------------------------------------
-extern mv_t MV_ABSENT;
-extern mv_t MV_EMPTY;
-extern mv_t MV_UNINIT;
-extern mv_t MV_ERROR;
-
 #define NULL_OR_ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
-		return MV_ERROR; \
+		return val; \
 	if ((val).type <= MT_NULL_MAX) \
 		return val; \
 }
@@ -112,10 +138,12 @@ extern mv_t MV_ERROR;
 }
 #define ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
-		return MV_ERROR; \
+		return val; \
 }
 
 // ----------------------------------------------------------------
+// CONSTRUCTORS
+
 static inline mv_t mv_from_float(double d) {
 	return (mv_t) {.type = MT_FLOAT, .free_flags = NO_FREE, .u.fltv = d};
 }
@@ -144,7 +172,11 @@ static inline mv_t mv_from_string(char* s, unsigned char free_flags) {
 	return (mv_t) {.type = MT_STRING, .free_flags = free_flags, .u.strv = s};
 }
 
-// ----------------------------------------------------------------
+static inline mv_t mv_absent() { return (mv_t) {.type = MT_ABSENT, .free_flags = NO_FREE, .u.intv = 0}; }
+static inline mv_t mv_void()   { return (mv_t) {.type = MT_VOID,   .free_flags = NO_FREE, .u.strv = ""}; }
+static inline mv_t mv_uninit() { return (mv_t) {.type = MT_UNINIT, .free_flags = NO_FREE, .u.intv = 0}; }
+static inline mv_t mv_error()  { return (mv_t) {.type = MT_ERROR,  .free_flags = NO_FREE, .u.intv = 0}; }
+
 static inline mv_t mv_copy(mv_t* pval) {
 	if (pval->type == MT_STRING) {
 		return mv_from_string_with_free(mlr_strdup_or_die(pval->u.strv));
@@ -160,18 +192,8 @@ static inline mv_t* mv_alloc_copy(mv_t* pold) {
 }
 
 // ----------------------------------------------------------------
-static inline int mv_is_numeric(mv_t* pval) {
-	return pval->type == MT_INT || pval->type == MT_FLOAT;
-}
+// DESTRUCTOR
 
-static inline int mv_is_null(mv_t* pval) {
-	return pval->type <= MT_NULL_MAX;
-}
-static inline int mv_is_non_null(mv_t* pval) {
-	return pval->type > MT_NULL_MAX;
-}
-
-// ----------------------------------------------------------------
 static inline void mv_free(mv_t* pval) {
 	if ((pval->type) == MT_STRING && (pval->free_flags & FREE_ENTRY_VALUE)) {
 		free(pval->u.strv);
@@ -180,16 +202,31 @@ static inline void mv_free(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// TYPE-TESTERS
+
+static inline int mv_is_numeric(mv_t* pval) {
+	return pval->type == MT_INT || pval->type == MT_FLOAT;
+}
+static inline int mv_is_null(mv_t* pval) {
+	return pval->type <= MT_NULL_MAX;
+}
+static inline int mv_is_non_null(mv_t* pval) {
+	return pval->type > MT_NULL_MAX;
+}
+
+// ----------------------------------------------------------------
+// AUXILIARY METHODS
+
 char* mt_describe_type(int type);
 
 char* mt_describe_type(int type);
 char* mv_alloc_format_val(mv_t* pval);
 char* mv_format_val(mv_t* pval, char* pfree_flags);
 char* mv_describe_val(mv_t val);
-void mv_set_boolean_strict(mv_t* pval);
-void mv_set_float_strict(mv_t* pval);
-void mv_set_float_nullable(mv_t* pval);
-void mv_set_int_nullable(mv_t* pval);
+void  mv_set_boolean_strict(mv_t* pval);
+void  mv_set_float_strict(mv_t* pval);
+void  mv_set_float_nullable(mv_t* pval);
+void  mv_set_int_nullable(mv_t* pval);
 
 // int or float:
 void mv_set_number_nullable(mv_t* pval);
@@ -197,6 +234,8 @@ mv_t mv_scan_number_nullable(char* string);
 mv_t mv_scan_number_or_die(char* string);
 
 // ----------------------------------------------------------------
+// FUNCTION-OF-MLRVAL TYPES
+
 typedef mv_t mv_zary_func_t();
 typedef mv_t mv_unary_func_t(mv_t* pval1);
 typedef mv_t mv_binary_func_t(mv_t* pval1, mv_t* pval2);
@@ -206,6 +245,8 @@ typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 
 // ----------------------------------------------------------------
+// FUNCTIONS OF MLRVALS
+
 static inline mv_t b_b_not_func(mv_t* pval1) {
 	return mv_from_bool(!pval1->u.boolv);
 }
@@ -260,24 +301,24 @@ static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_float(pow(pval1->u.fltv, pval2->u.fltv));
 }
 
-mv_t n_nn_plus_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_minus_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_times_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_divide_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_int_divide_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_mod_func(mv_t* pval1, mv_t* pval2);
-mv_t n_n_upos_func(mv_t* pval1);
-mv_t n_n_uneg_func(mv_t* pval1);
+mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_minus_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_times_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_divide_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2);
+mv_t x_x_upos_func(mv_t* pval1);
+mv_t x_x_uneg_func(mv_t* pval1);
 
-mv_t n_n_abs_func(mv_t* pval1);
-mv_t n_n_ceil_func(mv_t* pval1);
-mv_t n_n_floor_func(mv_t* pval1);
-mv_t n_n_round_func(mv_t* pval1);
-mv_t n_n_sgn_func(mv_t* pval1);
+mv_t x_x_abs_func(mv_t* pval1);
+mv_t x_x_ceil_func(mv_t* pval1);
+mv_t x_x_floor_func(mv_t* pval1);
+mv_t x_x_round_func(mv_t* pval1);
+mv_t x_x_sgn_func(mv_t* pval1);
 
-mv_t n_nn_min_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_max_func(mv_t* pval1, mv_t* pval2);
-mv_t n_nn_roundm_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_roundm_func(mv_t* pval1, mv_t* pval2);
 
 mv_t b_x_isnull_func(mv_t* pval1);
 mv_t b_x_isnotnull_func(mv_t* pval1);

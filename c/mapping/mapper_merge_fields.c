@@ -275,7 +275,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		int have_dval = FALSE;
 		int have_nval = FALSE;
 		double value_field_dval = -999.0;
-		mv_t   value_field_nval = MV_ABSENT;
+		mv_t   value_field_nval = mv_absent();
 
 		for (lhmsve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
 			stats1_acc_t* pacc = pc->pvvalue;
@@ -342,7 +342,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 					int have_dval = FALSE;
 					int have_nval = FALSE;
 					double value_field_dval = -999.0;
-					mv_t   value_field_nval = MV_ABSENT;
+					mv_t   value_field_nval = mv_absent();
 
 					if (*value_field_sval != 0) { // Key present with null value
 						for (lhmsve_t* pd = paccs->phead; pd != NULL; pd = pd->pnext) {
@@ -441,7 +441,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 							int have_dval = FALSE;
 							int have_nval = FALSE;
 							double value_field_dval = -999.0;
-							mv_t   value_field_nval = MV_ABSENT;
+							mv_t   value_field_nval = mv_absent();
 
 							if (pacc->pdingest_func != NULL) {
 								if (!have_dval) {

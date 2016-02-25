@@ -487,7 +487,7 @@ static int mlhmmv_other_hash_func(mv_t* pa) {
 		mt_describe_type(pa->type));
 	exit(1);
 }
-static mlhmmv_typed_hash_func* mlhmmv_hash_func_dispositions[MT_MAX] = {
+static mlhmmv_typed_hash_func* mlhmmv_hash_func_dispositions[MT_DIM] = {
 	/*ABSENT*/ mlhmmv_other_hash_func,
 	/*EMPTY*/  mlhmmv_other_hash_func,
 	/*UNINIT*/ mlhmmv_other_hash_func,

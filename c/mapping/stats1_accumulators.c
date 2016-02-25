@@ -76,7 +76,7 @@ typedef struct _stats1_count_state_t {
 
 static void stats1_count_singest(void* pvstate, char* val) {
 	stats1_count_state_t* pstate = pvstate;
-	pstate->counter = n_nn_plus_func(&pstate->counter, &pstate->one);
+	pstate->counter = x_xx_plus_func(&pstate->counter, &pstate->one);
 
 }
 static void stats1_count_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
@@ -172,7 +172,7 @@ typedef struct _stats1_sum_state_t {
 } stats1_sum_state_t;
 static void stats1_sum_ningest(void* pvstate, mv_t* pval) {
 	stats1_sum_state_t* pstate = pvstate;
-	pstate->sum = n_nn_plus_func(&pstate->sum, pval);
+	pstate->sum = x_xx_plus_func(&pstate->sum, pval);
 }
 static void stats1_sum_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_sum_state_t* pstate = pvstate;
@@ -445,7 +445,7 @@ typedef struct _stats1_min_state_t {
 } stats1_min_state_t;
 static void stats1_min_ningest(void* pvstate, mv_t* pval) {
 	stats1_min_state_t* pstate = pvstate;
-	pstate->min = n_nn_min_func(&pstate->min, pval);
+	pstate->min = x_xx_min_func(&pstate->min, pval);
 }
 static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
@@ -472,7 +472,7 @@ static void stats1_min_free(stats1_acc_t* pstats1_acc) {
 stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
-	pstate->min                = MV_ABSENT;
+	pstate->min                = mv_absent();
 	pstate->output_field_name  = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1_acc->pvstate       = (void*)pstate;
@@ -491,7 +491,7 @@ typedef struct _stats1_max_state_t {
 } stats1_max_state_t;
 static void stats1_max_ningest(void* pvstate, mv_t* pval) {
 	stats1_max_state_t* pstate = pvstate;
-	pstate->max = n_nn_max_func(&pstate->max, pval);
+	pstate->max = x_xx_max_func(&pstate->max, pval);
 }
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
@@ -518,7 +518,7 @@ static void stats1_max_free(stats1_acc_t* pstats1_acc) {
 stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float) {
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
-	pstate->max                = MV_ABSENT;
+	pstate->max                = mv_absent();
 	pstate->output_field_name  = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1_acc->pvstate       = (void*)pstate;

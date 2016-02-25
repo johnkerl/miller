@@ -109,7 +109,7 @@ static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names,
 	pstate->show_full_records     = show_full_records;
 	pstate->allow_int_float       = allow_int_float;
 	pstate->top_count             = top_count;
-	pstate->pmaybe_sign_flipper   = do_max ? n_n_upos_func : n_n_uneg_func;
+	pstate->pmaybe_sign_flipper   = do_max ? x_x_upos_func : x_x_uneg_func;
 	pstate->groups                = lhmslv_alloc();
 
 	pmapper->pvstate       = pstate;
