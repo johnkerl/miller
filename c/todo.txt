@@ -61,6 +61,7 @@ TRI-SPLIT NULL, AND += ET AL.
 
 * implement all appropriate u*/*u dispositions
 * void -> u.strv = "", & comment liberally
+* NULL_OUT -> NUMERICAL_NULL vs. STRING_NULL.
 * be sure all 'z' are for zary rather than null
 * split rval_evaluators into >= 2 files
 * isnotnull: rid of 2nd half of
