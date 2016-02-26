@@ -46,7 +46,7 @@ mv_t rval_evaluator_b_b_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 	rval_evaluator_b_b_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL)
 		return mv_error();
 
@@ -86,14 +86,14 @@ mv_t rval_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL)
 		return mv_error();
 	if (val1.u.boolv == FALSE)
 		return val1;
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_BOOL)
 		return mv_error();
 
@@ -108,14 +108,14 @@ mv_t rval_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL)
 		return mv_error();
 	if (val1.u.boolv == TRUE)
 		return val1;
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_BOOL)
 		return mv_error();
 
@@ -128,12 +128,12 @@ mv_t rval_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_BOOL)
 		return mv_error();
 
@@ -228,7 +228,7 @@ mv_t rval_evaluator_f_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_float_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_FLOAT)
 		return mv_error();
 
@@ -267,7 +267,7 @@ mv_t rval_evaluator_x_n_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_number_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	return pstate->pfunc(&val1);
 }
@@ -304,7 +304,7 @@ mv_t rval_evaluator_i_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_int_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	return pstate->pfunc(&val1);
 }
@@ -341,11 +341,11 @@ mv_t rval_evaluator_f_ff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	rval_evaluator_f_ff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_float_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_float_nullable(&val2);
-	NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 
 	return pstate->pfunc(&val1, &val2);
 }
@@ -475,15 +475,15 @@ mv_t rval_evaluator_f_fff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* 
 	rval_evaluator_f_fff_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_float_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_float_nullable(&val2);
-	NULL_OR_ERROR_OUT(val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	mv_set_float_nullable(&val3);
-	NULL_OR_ERROR_OUT(val3);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val3);
 
 	return pstate->pfunc(&val1, &val2, &val3);
 }
@@ -526,13 +526,13 @@ mv_t rval_evaluator_i_ii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	rval_evaluator_i_ii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_int_nullable(&val1);
-	NULL_OUT(val1);
+	NULL_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_INT)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_int_nullable(&val2);
-	NULL_OUT(val2);
+	NULL_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_INT)
 		return mv_error();
 
@@ -576,19 +576,19 @@ mv_t rval_evaluator_i_iii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* 
 	rval_evaluator_i_iii_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_int_nullable(&val1);
-	NULL_OUT(val1);
+	NULL_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_INT)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
 	mv_set_int_nullable(&val2);
-	NULL_OUT(val2);
+	NULL_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_INT)
 		return mv_error();
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
 	mv_set_int_nullable(&val3);
-	NULL_OUT(val3);
+	NULL_OUT_FOR_NUMBERS(val3);
 	if (val3.type != MT_INT)
 		return mv_error();
 
@@ -632,7 +632,7 @@ mv_t rval_evaluator_ternop_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t*
 {
 	rval_evaluator_ternop_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	mv_set_boolean_strict(&val1);
 
 	return val1.u.boolv
@@ -674,8 +674,8 @@ mv_t rval_evaluator_s_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 {
 	rval_evaluator_s_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	return pstate->pfunc(&val1);
@@ -713,7 +713,7 @@ mv_t rval_evaluator_s_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_float_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	return pstate->pfunc(&val1);
 }
@@ -750,7 +750,7 @@ mv_t rval_evaluator_s_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
 	mv_set_int_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	return pstate->pfunc(&val1);
 }
@@ -785,8 +785,8 @@ mv_t rval_evaluator_f_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 {
 	rval_evaluator_f_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	return pstate->pfunc(&val1);
@@ -822,8 +822,8 @@ mv_t rval_evaluator_i_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* po
 {
 	rval_evaluator_i_s_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	return pstate->pfunc(&val1);
@@ -896,11 +896,11 @@ mv_t rval_evaluator_x_ns_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	rval_evaluator_x_ns_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_set_number_nullable(&val1);
-	NULL_OR_ERROR_OUT(val1);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING) {
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
+	if (val2.type != MT_STRING && val2.type != MT_VOID) {
 		mv_free(&val1);
 		return mv_error();
 	}
@@ -943,13 +943,13 @@ mv_t rval_evaluator_x_ss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 {
 	rval_evaluator_x_ss_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
+	if (val2.type != MT_STRING && val2.type != MT_VOID)
 		return mv_error();
 
 	return pstate->pfunc(&val1, &val2);
@@ -990,13 +990,13 @@ mv_t rval_evaluator_x_ssc_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* 
 {
 	rval_evaluator_x_ssc_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
+	if (val2.type != MT_STRING && val2.type != MT_VOID)
 		return mv_error();
 	return pstate->pfunc(&val1, &val2, ppregex_captures);
 }
@@ -1038,18 +1038,7 @@ mv_t rval_evaluator_x_sr_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	rval_evaluator_x_sr_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 
-	// xxx temp
-	//NULL_OR_ERROR_OUT(val1);
-	//if (val1.type != MT_STRING)
-		//return mv_error();
-
-	if (val1.type == MT_ERROR)
-		return val1;
-	if (val1.type == MT_ABSENT)
-		return val1;
-	if (val1.type == MT_UNINIT)
-		return val1;
-
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
@@ -1096,8 +1085,8 @@ mv_t rval_evaluator_s_xs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* p
 	rval_evaluator_s_xs_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
+	if (val2.type != MT_STRING && val2.type != MT_VOID)
 		return mv_error();
 
 	return pstate->pfunc(&val1, &val2);
@@ -1139,20 +1128,20 @@ mv_t rval_evaluator_s_sss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* 
 {
 	rval_evaluator_s_sss_state_t* pstate = pvstate;
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID)
 		return mv_error();
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT(val2);
-	if (val2.type != MT_STRING) {
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
+	if (val2.type != MT_STRING && val2.type != MT_VOID) {
 		mv_free(&val1);
 		return mv_error();
 	}
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
-	NULL_OR_ERROR_OUT(val3);
-	if (val3.type != MT_STRING) {
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val3);
+	if (val3.type != MT_STRING && val3.type != MT_VOID) {
 		mv_free(&val1);
 		mv_free(&val2);
 		return mv_error();
@@ -1201,13 +1190,13 @@ mv_t rval_evaluator_x_srs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* 
 	rval_evaluator_x_srs_state_t* pstate = pvstate;
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT(val1);
-	if (val1.type != MT_STRING)
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (val1.type != MT_STRING && val1.type != MT_VOID) // xxx make a macro for this
 		return mv_error();
 
 	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures, pctx, pstate->parg3->pvstate);
-	NULL_OR_ERROR_OUT(val3);
-	if (val3.type != MT_STRING) {
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val3);
+	if (val3.type != MT_STRING && val3.type != MT_VOID) {
 		mv_free(&val1);
 		return mv_error();
 	}

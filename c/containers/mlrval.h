@@ -97,6 +97,8 @@
 // So, if the numeric values are changed, all the matrices must be as well.
 
 // Three kinds of null:
+// Note void is an acceptable string (empty string) but not an acceptable number.
+// Void-valued mlrvals have u.strv = "".
 #define MT_ABSENT   0 // No such key, e.g. $z in 'x=,y=2'
 #define MT_VOID     1 // Empty value, e.g. $x in 'x=,y=2'
 #define MT_UNINIT   2 // Uninitialized, e.g. first access to '@sum[$group]'
@@ -115,27 +117,41 @@
 
 typedef struct _mv_t {
 	union {
-		int        boolv;
-		double     fltv;
-		long long  intv;
-		char*      strv;
+		int        boolv; // MT_BOOL
+		double     fltv;  // MT_FLOAT
+		long long  intv;  // MT_INT, and == 0 for MT_ABSENT, MT_UNINIT, MT_ERROR
+		char*      strv;  // MT_STRING and MT_VOID
 	} u;
 	unsigned char type;
 	unsigned char free_flags;
 } mv_t;
 
 // ----------------------------------------------------------------
-#define NULL_OR_ERROR_OUT(val) { \
-	if ((val).type == MT_ERROR) \
+#define NULL_OUT_FOR_STRINGS(val) { \
+	if ((val).type == MT_ABSENT || (val).type == MT_UNINIT) \
 		return val; \
-	if ((val).type <= MT_NULL_MAX) \
+}
+// xxx reorder MT indices, and all dispos, to mave absent then uninit then void.
+// then, macros for MT_NULL_MAX_FOR_{STRINGS,NUMBERS}.
+// xxx also put MT_ERROR at 0 so all of these are one single equality check.
+#define NULL_OR_ERROR_OUT_FOR_STRINGS(val) { \
+	if ((val).type == MT_ABSENT || (val).type == MT_UNINIT) \
+		return val; \
+	if ((val).type == MT_ERROR) \
 		return val; \
 }
 
-#define NULL_OUT(val) { \
+#define NULL_OUT_FOR_NUMBERS(val) { \
 	if ((val).type <= MT_NULL_MAX) \
 		return val; \
 }
+#define NULL_OR_ERROR_OUT_FOR_NUMBERS(val) { \
+	if ((val).type <= MT_NULL_MAX) \
+		return val; \
+	if ((val).type == MT_ERROR) \
+		return val; \
+}
+
 #define ERROR_OUT(val) { \
 	if ((val).type == MT_ERROR) \
 		return val; \
