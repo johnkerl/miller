@@ -205,6 +205,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/lhmsv.c \
   containers/mlhmmv.c \
   mapping/rval_evaluators.c \
+  mapping/rval_func_evaluators.c \
   unit_test/test_rval_evaluators.c
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \

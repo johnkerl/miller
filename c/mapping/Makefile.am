@@ -3,6 +3,7 @@ libmapping_la_SOURCES=	\
 			rval_evaluator.h \
 			rval_evaluators.h \
 			rval_evaluators.c \
+			rval_func_evaluators.c \
 			mapper.h \
 			mapper_bar.c \
 			mapper_bootstrap.c \
