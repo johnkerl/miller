@@ -61,6 +61,7 @@ TRI-SPLIT NULL, AND += ET AL.
 
 * implement all appropriate ux/xu dispositions
 * be sure all 'z' are for zary rather than null
+* recheck all numerics of void
 
 * UTs
 * to mld:ref
