@@ -936,6 +936,9 @@ static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
+static mv_t minus_v_xx(mv_t* pa, mv_t* pb) {
+	return mv_void();
+}
 static mv_t minus_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
@@ -995,12 +998,12 @@ static mv_t minus_n_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* minus_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR        ABSENT      UNINIT      VOID        STRING      INT         FLOAT       BOOL
 	/*ERROR*/  {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
-	/*ABSENT*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
-	/*UNINIT*/ {minus_e_xx, minus_e_xx, minus_i_uu, minus_e_xx, minus_e_xx, minus_i_ui, minus_f_uf, minus_e_xx},
-	/*VOID*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
+	/*ABSENT*/ {minus_e_xx, minus_v_xx, minus_v_xx, minus_v_xx, minus_e_xx, minus_v_xx, minus_v_xx, minus_e_xx},
+	/*UNINIT*/ {minus_e_xx, minus_v_xx, minus_i_uu, minus_v_xx, minus_e_xx, minus_i_ui, minus_f_uf, minus_e_xx},
+	/*VOID*/   {minus_e_xx, minus_v_xx, minus_v_xx, minus_v_xx, minus_e_xx, minus_v_xx, minus_v_xx, minus_e_xx},
 	/*STRING*/ {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
-	/*INT*/    {minus_e_xx, minus_e_xx, minus_i_iu, minus_e_xx, minus_e_xx, minus_n_ii, minus_f_if, minus_e_xx},
-	/*FLOAT*/  {minus_e_xx, minus_e_xx, minus_f_fu, minus_e_xx, minus_e_xx, minus_f_fi, minus_f_ff, minus_e_xx},
+	/*INT*/    {minus_e_xx, minus_v_xx, minus_i_iu, minus_v_xx, minus_e_xx, minus_n_ii, minus_f_if, minus_e_xx},
+	/*FLOAT*/  {minus_e_xx, minus_v_xx, minus_f_fu, minus_v_xx, minus_e_xx, minus_f_fi, minus_f_ff, minus_e_xx},
 	/*BOOL*/   {minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx, minus_e_xx},
 };
 
