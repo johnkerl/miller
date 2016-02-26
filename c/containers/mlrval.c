@@ -1240,9 +1240,28 @@ mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2) {
 }
 
 // ----------------------------------------------------------------
+static mv_t mod_v_xx(mv_t* pa, mv_t* pb) {
+	return mv_void();
+}
 static mv_t mod_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
+static mv_t mod_f_uf(mv_t* pa, mv_t* pb) {
+    return mv_from_float(0.0);
+}
+static mv_t mod_f_fu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+static mv_t mod_i_ui(mv_t* pa, mv_t* pb) {
+    return mv_from_int(0LL);
+}
+static mv_t mod_i_iu(mv_t* pa, mv_t* pb) {
+    return *pa;
+}
+static mv_t mod_i_uu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1278,12 +1297,12 @@ static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* mod_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR      ABSENT    UNINIT    VOID      STRING    INT       FLOAT     BOOL
 	/*ERROR*/  {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
-	/*ABSENT*/ {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
-	/*UNINIT*/ {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
-	/*VOID*/   {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
+	/*ABSENT*/ {mod_e_xx, mod_v_xx, mod_v_xx, mod_v_xx, mod_e_xx, mod_v_xx, mod_v_xx, mod_e_xx},
+	/*UNINIT*/ {mod_e_xx, mod_v_xx, mod_i_uu, mod_v_xx, mod_e_xx, mod_i_ui, mod_f_uf, mod_e_xx},
+	/*VOID*/   {mod_e_xx, mod_v_xx, mod_v_xx, mod_v_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
 	/*STRING*/ {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
-	/*INT*/    {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_i_ii, mod_f_if, mod_e_xx},
-	/*FLOAT*/  {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_f_fi, mod_f_ff, mod_e_xx},
+	/*INT*/    {mod_e_xx, mod_v_xx, mod_i_iu, mod_v_xx, mod_e_xx, mod_i_ii, mod_f_if, mod_e_xx},
+	/*FLOAT*/  {mod_e_xx, mod_v_xx, mod_f_fu, mod_v_xx, mod_e_xx, mod_f_fi, mod_f_ff, mod_e_xx},
 	/*BOOL*/   {mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx, mod_e_xx},
 };
 
