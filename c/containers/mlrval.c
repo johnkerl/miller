@@ -860,8 +860,6 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-// xxx do for all dispos: plus is first
-// xxx rename
 static mv_t plus_v_xx(mv_t* pa, mv_t* pb) {
 	return mv_void();
 }
@@ -883,6 +881,7 @@ static mv_t plus_i_iu(mv_t* pa, mv_t* pb) {
 static mv_t plus_i_uu(mv_t* pa, mv_t* pb) {
 	return mv_from_int(0LL);
 }
+
 static mv_t plus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -957,6 +956,7 @@ static mv_t minus_i_iu(mv_t* pa, mv_t* pb) {
 static mv_t minus_i_uu(mv_t* pa, mv_t* pb) {
 	return mv_from_int(0LL);
 }
+
 static mv_t minus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1010,9 +1010,28 @@ static mv_binary_func_t* minus_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_minus_func(mv_t* pval1, mv_t* pval2) { return (minus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
+static mv_t times_v_xx(mv_t* pa, mv_t* pb) {
+	return mv_void();
+}
 static mv_t times_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
+static mv_t times_f_uf(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t times_f_fu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t times_i_ui(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t times_i_iu(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t times_i_uu(mv_t* pa, mv_t* pb) {
+	return mv_from_int(1LL);
+}
+
 static mv_t times_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1069,12 +1088,12 @@ static mv_t times_n_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* times_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR        ABSENT      UNINIT      VOID        STRING      INT         FLOAT       BOOL
 	/*ERROR*/  {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
-	/*ABSENT*/ {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
-	/*UNINIT*/ {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
-	/*VOID*/   {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
+	/*ABSENT*/ {times_e_xx, times_v_xx, times_v_xx, times_v_xx, times_e_xx, times_v_xx, times_v_xx, times_e_xx},
+	/*UNINIT*/ {times_e_xx, times_v_xx, times_i_uu, times_v_xx, times_e_xx, times_i_ui, times_f_uf, times_e_xx},
+	/*VOID*/   {times_e_xx, times_v_xx, times_v_xx, times_v_xx, times_e_xx, times_v_xx, times_v_xx, times_e_xx},
 	/*STRING*/ {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
-	/*INT*/    {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_n_ii, times_f_if, times_e_xx},
-	/*FLOAT*/  {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_f_fi, times_f_ff, times_e_xx},
+	/*INT*/    {times_e_xx, times_v_xx, times_i_iu, times_v_xx, times_e_xx, times_n_ii, times_f_if, times_e_xx},
+	/*FLOAT*/  {times_e_xx, times_v_xx, times_f_fu, times_v_xx, times_e_xx, times_f_fi, times_f_ff, times_e_xx},
 	/*BOOL*/   {times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx, times_e_xx},
 };
 
