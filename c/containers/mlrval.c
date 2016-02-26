@@ -510,6 +510,12 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	return mv_from_string_with_free(string);
 }
 
+mv_t i_s_strlen_func(mv_t* pval1) {
+	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
+	mv_free(pval1);
+	return rv;
+}
+
 // ----------------------------------------------------------------
 #define NZBUFLEN 63
 
@@ -647,7 +653,6 @@ static void split_ull_to_dhms(long long u, long long* pd, long long* ph, long lo
 	*ps = s;
 }
 
-// ----------------------------------------------------------------
 mv_t s_i_sec2hms_func(mv_t* pval1) {
 	long long u = pval1->u.intv;
 	long long h, m, s;
@@ -855,16 +860,9 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-mv_t i_s_strlen_func(mv_t* pval1) {
-	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
-	mv_free(pval1);
-	return rv;
-}
-
-// ----------------------------------------------------------------
 // xxx do for all dispos: plus is first
 // xxx rename
-static mv_t plus_y_zz(mv_t* pa, mv_t* pb) {
+static mv_t plus_v_xx(mv_t* pa, mv_t* pb) {
 	return mv_void();
 }
 static mv_t plus_e_xx(mv_t* pa, mv_t* pb) {
@@ -925,13 +923,13 @@ static mv_t plus_n_ii(mv_t* pa, mv_t* pb) {
 
 static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
 	//         ABSENT      VOID       UNINIT     ERROR      BOOL       FLOAT      INT        STRING
-	/*ABSENT*/ {plus_y_zz, plus_y_zz, plus_y_zz, plus_e_xx, plus_e_xx, plus_y_zz, plus_y_zz, plus_e_xx},
-	/*VOID*/   {plus_y_zz, plus_y_zz, plus_y_zz, plus_e_xx, plus_e_xx, plus_y_zz, plus_y_zz, plus_e_xx},
-	/*UNINIT*/ {plus_y_zz, plus_y_zz, plus_i_uu, plus_e_xx, plus_e_xx, plus_f_uf, plus_i_ui, plus_e_xx},
+	/*ABSENT*/ {plus_v_xx, plus_v_xx, plus_v_xx, plus_e_xx, plus_e_xx, plus_v_xx, plus_v_xx, plus_e_xx},
+	/*VOID*/   {plus_v_xx, plus_v_xx, plus_v_xx, plus_e_xx, plus_e_xx, plus_v_xx, plus_v_xx, plus_e_xx},
+	/*UNINIT*/ {plus_v_xx, plus_v_xx, plus_i_uu, plus_e_xx, plus_e_xx, plus_f_uf, plus_i_ui, plus_e_xx},
 	/*ERROR*/  {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 	/*BOOL*/   {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
-	/*FLOAT*/  {plus_y_zz, plus_y_zz, plus_f_fu, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
-	/*INT*/    {plus_y_zz, plus_y_zz, plus_i_iu, plus_e_xx, plus_e_xx, plus_f_if, plus_n_ii, plus_e_xx},
+	/*FLOAT*/  {plus_v_xx, plus_v_xx, plus_f_fu, plus_e_xx, plus_e_xx, plus_f_ff, plus_f_fi, plus_e_xx},
+	/*INT*/    {plus_v_xx, plus_v_xx, plus_i_iu, plus_e_xx, plus_e_xx, plus_f_if, plus_n_ii, plus_e_xx},
 	/*STRING*/ {plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx, plus_e_xx},
 };
 

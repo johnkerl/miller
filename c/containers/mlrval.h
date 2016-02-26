@@ -403,6 +403,7 @@ mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 // ----------------------------------------------------------------
 mv_t s_s_tolower_func(mv_t* pval1);
 mv_t s_s_toupper_func(mv_t* pval1);
+mv_t i_s_strlen_func(mv_t* pval1);
 
 mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2);
 
@@ -427,8 +428,6 @@ mv_t i_s_dhms2sec_func(mv_t* pval1);
 mv_t f_s_dhms2fsec_func(mv_t* pval1);
 
 mv_t time_string_from_seconds(mv_t* psec, char* format);
-
-mv_t i_s_strlen_func(mv_t* pval1);
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call
