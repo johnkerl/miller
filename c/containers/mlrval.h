@@ -205,10 +205,10 @@ static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }
 static inline int mv_is_null(mv_t* pval) {
-	return pval->type <= MT_VOID;
+	return MT_ERROR < pval->type && pval->type <= MT_VOID;
 }
 static inline int mv_is_non_null(mv_t* pval) {
-	return pval->type > MT_VOID;
+	return MT_ERROR < pval->type && pval->type > MT_VOID;
 }
 
 // ----------------------------------------------------------------
