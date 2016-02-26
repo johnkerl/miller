@@ -488,14 +488,14 @@ static int mlhmmv_other_hash_func(mv_t* pa) {
 	exit(1);
 }
 static mlhmmv_typed_hash_func* mlhmmv_hash_func_dispositions[MT_DIM] = {
-	/*ABSENT*/ mlhmmv_other_hash_func,
-	/*EMPTY*/  mlhmmv_other_hash_func,
-	/*UNINIT*/ mlhmmv_other_hash_func,
 	/*ERROR*/  mlhmmv_other_hash_func,
-	/*BOOL*/   mlhmmv_other_hash_func,
-	/*FLOAT*/  mlhmmv_other_hash_func,
-	/*INT*/    mlhmmv_int_hash_func,
+	/*ABSENT*/ mlhmmv_other_hash_func,
+	/*UNINIT*/ mlhmmv_other_hash_func,
+	/*VOID*/   mlhmmv_other_hash_func,
 	/*STRING*/ mlhmmv_string_hash_func,
+	/*INT*/    mlhmmv_int_hash_func,
+	/*FLOAT*/  mlhmmv_other_hash_func,
+	/*BOOL*/   mlhmmv_other_hash_func,
 };
 
 static int mlhmmv_hash_func(mv_t* pa) {

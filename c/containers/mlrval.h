@@ -96,19 +96,17 @@
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So, if the numeric values are changed, all the matrices must be as well.
 
-// Three kinds of null:
+// Three kinds of null: absent, uninit, void.
 // Note void is an acceptable string (empty string) but not an acceptable number.
 // Void-valued mlrvals have u.strv = "".
-#define MT_ABSENT   0 // No such key, e.g. $z in 'x=,y=2'
-#define MT_VOID     1 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_ERROR    0 // E.g. error encountered in one eval & it propagates up the AST.
+#define MT_ABSENT   1 // No such key, e.g. $z in 'x=,y=2'
 #define MT_UNINIT   2 // Uninitialized, e.g. first access to '@sum[$group]'
-#define MT_NULL_MAX MT_UNINIT
-
-#define MT_ERROR    3 // E.g. error encountered in one eval & it propagates up the AST.
-#define MT_BOOL     4
-#define MT_FLOAT    5
-#define MT_INT      6
-#define MT_STRING   7
+#define MT_VOID     3 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_STRING   4
+#define MT_INT      5
+#define MT_FLOAT    6
+#define MT_BOOL     7
 #define MT_DIM      8
 
 #define MV_SB_ALLOC_LENGTH 32
@@ -117,43 +115,23 @@
 
 typedef struct _mv_t {
 	union {
-		int        boolv; // MT_BOOL
-		double     fltv;  // MT_FLOAT
-		long long  intv;  // MT_INT, and == 0 for MT_ABSENT, MT_UNINIT, MT_ERROR
 		char*      strv;  // MT_STRING and MT_VOID
+		long long  intv;  // MT_INT, and == 0 for MT_ABSENT, MT_UNINIT, MT_ERROR
+		double     fltv;  // MT_FLOAT
+		int        boolv; // MT_BOOL
 	} u;
 	unsigned char type;
 	unsigned char free_flags;
 } mv_t;
 
 // ----------------------------------------------------------------
-#define NULL_OUT_FOR_STRINGS(val) { \
-	if ((val).type == MT_ABSENT || (val).type == MT_UNINIT) \
-		return val; \
-}
-// xxx reorder MT indices, and all dispos, to mave absent then uninit then void.
-// then, macros for MT_NULL_MAX_FOR_{STRINGS,NUMBERS}.
-// xxx also put MT_ERROR at 0 so all of these are one single equality check.
 #define NULL_OR_ERROR_OUT_FOR_STRINGS(val) { \
-	if ((val).type == MT_ABSENT || (val).type == MT_UNINIT) \
-		return val; \
-	if ((val).type == MT_ERROR) \
+	if ((val).type < MT_VOID) \
 		return val; \
 }
 
-#define NULL_OUT_FOR_NUMBERS(val) { \
-	if ((val).type <= MT_NULL_MAX) \
-		return val; \
-}
 #define NULL_OR_ERROR_OUT_FOR_NUMBERS(val) { \
-	if ((val).type <= MT_NULL_MAX) \
-		return val; \
-	if ((val).type == MT_ERROR) \
-		return val; \
-}
-
-#define ERROR_OUT(val) { \
-	if ((val).type == MT_ERROR) \
+	if ((val).type <= MT_VOID) \
 		return val; \
 }
 
@@ -227,10 +205,10 @@ static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }
 static inline int mv_is_null(mv_t* pval) {
-	return pval->type <= MT_NULL_MAX;
+	return pval->type <= MT_VOID;
 }
 static inline int mv_is_non_null(mv_t* pval) {
-	return pval->type > MT_NULL_MAX;
+	return pval->type > MT_VOID;
 }
 
 // ----------------------------------------------------------------
