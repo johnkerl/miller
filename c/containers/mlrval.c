@@ -1101,15 +1101,29 @@ mv_t x_xx_times_func(mv_t* pval1, mv_t* pval2) { return (times_dispositions[pval
 
 // ----------------------------------------------------------------
 // xxx pick up from here tomorrow
-static mv_t divide_a_xx(mv_t* pa, mv_t* pb) {
-	return mv_absent();
-}
 static mv_t divide_v_xx(mv_t* pa, mv_t* pb) {
 	return mv_void();
 }
 static mv_t divide_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
+
+static mv_t divide_f_uf(mv_t* pa, mv_t* pb) {
+    return mv_from_float(0.0);
+}
+static mv_t divide_f_fu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+static mv_t divide_i_ui(mv_t* pa, mv_t* pb) {
+    return mv_from_int(0LL);
+}
+static mv_t divide_i_iu(mv_t* pa, mv_t* pb) {
+    return *pa;
+}
+static mv_t divide_i_uu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+
 static mv_t divide_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1140,12 +1154,12 @@ static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* divide_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR         ABSENT       UNINIT       VOID         STRING       INT          FLOAT        BOOL
 	/*ERROR*/  {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
-	/*ABSENT*/ {divide_e_xx, divide_a_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
-	/*UNINIT*/ {divide_e_xx, divide_v_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
+	/*ABSENT*/ {divide_e_xx, divide_v_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_v_xx, divide_v_xx, divide_e_xx},
+	/*UNINIT*/ {divide_e_xx, divide_v_xx, divide_i_uu, divide_v_xx, divide_e_xx, divide_i_ui, divide_f_uf, divide_e_xx},
 	/*VOID*/   {divide_e_xx, divide_v_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
 	/*STRING*/ {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
-	/*INT*/    {divide_e_xx, divide_e_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_i_ii, divide_f_if, divide_e_xx},
-	/*FLOAT*/  {divide_e_xx, divide_e_xx, divide_v_xx, divide_v_xx, divide_e_xx, divide_f_fi, divide_f_ff, divide_e_xx},
+	/*INT*/    {divide_e_xx, divide_v_xx, divide_i_iu, divide_v_xx, divide_e_xx, divide_i_ii, divide_f_if, divide_e_xx},
+	/*FLOAT*/  {divide_e_xx, divide_v_xx, divide_f_fu, divide_v_xx, divide_e_xx, divide_f_fi, divide_f_ff, divide_e_xx},
 	/*BOOL*/   {divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx, divide_e_xx},
 };
 
