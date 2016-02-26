@@ -1100,6 +1100,7 @@ static mv_binary_func_t* times_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_times_func(mv_t* pval1, mv_t* pval2) { return (times_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
+// xxx pick up from here tomorrow
 static mv_t divide_a_xx(mv_t* pa, mv_t* pb) {
 	return mv_absent();
 }
