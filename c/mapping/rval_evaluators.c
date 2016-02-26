@@ -1384,7 +1384,10 @@ mv_t rval_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy a value here to feed
 		// into that. Otherwise the typed-overlay map in mapper_put would have its contents freed out from underneath it
 		// by the evaluator functions.
-		return mv_copy(pval);
+		if (pval->type == MT_STRING && *pval->u.strv == 0)
+			return mv_void();
+		else
+			return mv_copy(pval);
 	} else {
 		return mv_uninit();
 	}
@@ -1441,8 +1444,12 @@ mv_t rval_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 	if (keys_ok) {
 		int error = 0;
 		mv_t* pval = mlhmmv_get(poosvars, pmvkeys, &error);
-		if (pval != NULL)
-			rv = *pval;
+		if (pval != NULL) {
+			if (pval->type == MT_STRING && *pval->u.strv == 0)
+				rv = mv_void();
+			else
+				rv = *pval;
+		}
 	}
 
 	sllmv_free(pmvkeys);
