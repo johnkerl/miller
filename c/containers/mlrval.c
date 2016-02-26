@@ -38,8 +38,6 @@
 // See also important notes at the top of mlrval.h.
 // ================================================================
 
-// xxx m_mm etc.
-
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *ptm);
 
@@ -864,7 +862,8 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-// xxx do for all dispos
+// xxx do for all dispos: plus is first
+// xxx rename
 static mv_t plus_y_zz(mv_t* pa, mv_t* pb) {
 	return mv_void();
 }
@@ -1487,13 +1486,14 @@ static mv_t min_i_zi(mv_t* pa, mv_t* pb) {
 	return mv_from_int(pb->u.intv);
 }
 
+// xxx rename z's
 static mv_t min_z_zz(mv_t* pa, mv_t* pb) {
 	return mv_void(); // xxx
 }
 
+//         xxx        temp
 static mv_binary_func_t* min_dispositions[MT_DIM][MT_DIM] = {
 	//         ABSENT     VOID      UNINIT    ERROR     BOOL      FLOAT     INT       STRING
-	//         xxx        temp
 	/*ABSENT*/ {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
 	/*VOID*/   {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
 	/*UNINIT*/ {min_z_zz, min_z_zz, min_z_zz, min_e_xx, min_e_xx, min_f_zf, min_i_zi, min_e_xx},
@@ -1555,9 +1555,9 @@ static mv_t max_z_zz(mv_t* pa, mv_t* pb) {
 	return mv_void(); // xxx
 }
 
+//         xxx        temp
 static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
 	//         ABSENT     VOID      UNINIT    ERROR     BOOL      FLOAT     INT       STRING
-	//         xxx        temp
 	/*ABSENT*/ {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
 	/*VOID*/   {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
 	/*UNINIT*/ {max_z_zz, max_z_zz, max_z_zz, max_e_xx, max_e_xx, max_f_zf, max_i_zi, max_e_xx},
