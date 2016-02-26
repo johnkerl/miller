@@ -220,6 +220,9 @@ static inline void mv_free(mv_t* pval) {
 // ----------------------------------------------------------------
 // TYPE-TESTERS
 
+static inline int mv_is_string_or_void(mv_t* pval) {
+	return pval->type == MT_STRING || pval->type == MT_VOID;
+}
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }
