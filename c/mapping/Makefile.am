@@ -2,7 +2,7 @@ noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
 			rval_evaluator.h \
 			rval_evaluators.h \
-			rval_evaluators.c \
+			rval_expr_evaluators.c \
 			rval_func_evaluators.c \
 			mapper.h \
 			mapper_bar.c \

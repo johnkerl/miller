@@ -204,7 +204,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/lrec.c \
   containers/lhmsv.c \
   containers/mlhmmv.c \
-  mapping/rval_evaluators.c \
+  mapping/rval_expr_evaluators.c \
   mapping/rval_func_evaluators.c \
   unit_test/test_rval_evaluators.c
 
