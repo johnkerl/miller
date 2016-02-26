@@ -1314,24 +1314,27 @@ mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2) {
 static mv_t upos_e_x(mv_t* pa) {
 	return mv_error();
 }
-static mv_t upos_u_x(mv_t* pa) {
-	return mv_error();
+static mv_t upos_v_x(mv_t* pa) {
+	return mv_void();
 }
-static mv_t upos_n_f(mv_t* pa) {
-	return mv_from_float(pa->u.fltv);
+static mv_t upos_i_x(mv_t* pa) {
+	return mv_from_int(0LL);
 }
-static mv_t upos_n_i(mv_t* pa) {
+static mv_t upos_i_i(mv_t* pa) {
 	return mv_from_int(pa->u.intv);
+}
+static mv_t upos_f_f(mv_t* pa) {
+	return mv_from_float(pa->u.fltv);
 }
 
 static mv_unary_func_t* upos_dispositions[MT_DIM] = {
 	/*ERROR*/  upos_e_x,
-	/*ABSENT*/ upos_e_x,
-	/*UNINIT*/ upos_u_x,
-	/*VOID*/   upos_e_x,
+	/*ABSENT*/ upos_v_x,
+	/*UNINIT*/ upos_i_x,
+	/*VOID*/   upos_v_x,
 	/*STRING*/ upos_e_x,
-	/*INT*/    upos_n_i,
-	/*FLOAT*/  upos_n_f,
+	/*INT*/    upos_i_i,
+	/*FLOAT*/  upos_f_f,
 	/*BOOL*/   upos_e_x,
 };
 
@@ -1341,30 +1344,34 @@ mv_t x_x_upos_func(mv_t* pval1) { return (upos_dispositions[pval1->type])(pval1)
 static mv_t uneg_e_x(mv_t* pa) {
 	return mv_error();
 }
-static mv_t uneg_u_x(mv_t* pa) {
-	return mv_error();
+static mv_t uneg_v_x(mv_t* pa) {
+	return mv_void();
 }
-static mv_t uneg_n_f(mv_t* pa) {
-	return mv_from_float(-pa->u.fltv);
+static mv_t uneg_i_x(mv_t* pa) {
+	return mv_from_int(0LL);
 }
-static mv_t uneg_n_i(mv_t* pa) {
+static mv_t uneg_i_i(mv_t* pa) {
 	return mv_from_int(-pa->u.intv);
 }
+static mv_t uneg_f_f(mv_t* pa) {
+	return mv_from_float(-pa->u.fltv);
+}
 
-static mv_unary_func_t* uneg_dispositions[MT_DIM] = {
+static mv_unary_func_t* uneg_disnegitions[MT_DIM] = {
 	/*ERROR*/  uneg_e_x,
-	/*ABSENT*/ uneg_e_x,
-	/*UNINIT*/ uneg_u_x,
-	/*VOID*/   uneg_e_x,
+	/*ABSENT*/ uneg_v_x,
+	/*UNINIT*/ uneg_i_x,
+	/*VOID*/   uneg_v_x,
 	/*STRING*/ uneg_e_x,
-	/*INT*/    uneg_n_i,
-	/*FLOAT*/  uneg_n_f,
+	/*INT*/    uneg_i_i,
+	/*FLOAT*/  uneg_f_f,
 	/*BOOL*/   uneg_e_x,
 };
 
-mv_t x_x_uneg_func(mv_t* pval1) { return (uneg_dispositions[pval1->type])(pval1); }
+mv_t x_x_uneg_func(mv_t* pval1) { return (uneg_disnegitions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+// xxx pick up from here
 static mv_t abs_e_x(mv_t* pa) {
 	return mv_error();
 }
