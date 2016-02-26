@@ -1107,7 +1107,6 @@ static mv_t divide_v_xx(mv_t* pa, mv_t* pb) {
 static mv_t divide_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
-
 static mv_t divide_f_uf(mv_t* pa, mv_t* pb) {
     return mv_from_float(0.0);
 }
@@ -1172,6 +1171,22 @@ static mv_t idiv_v_xx(mv_t* pa, mv_t* pb) {
 static mv_t idiv_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
+static mv_t idiv_f_uf(mv_t* pa, mv_t* pb) {
+    return mv_from_float(0.0);
+}
+static mv_t idiv_f_fu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+static mv_t idiv_i_ui(mv_t* pa, mv_t* pb) {
+    return mv_from_int(0LL);
+}
+static mv_t idiv_i_iu(mv_t* pa, mv_t* pb) {
+    return *pa;
+}
+static mv_t idiv_i_uu(mv_t* pa, mv_t* pb) {
+    return mv_void();
+}
+
 static mv_t idiv_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1210,14 +1225,15 @@ static mv_t idiv_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* idiv_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR       ABSENT     UNINIT     VOID       STRING     INT        FLOAT      BOOL
 	/*ERROR*/  {idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
-	/*ABSENT*/ {idiv_e_xx, idiv_e_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
-	/*UNINIT*/ {idiv_e_xx, idiv_e_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
-	/*VOID*/   {idiv_e_xx, idiv_e_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
+	/*ABSENT*/ {idiv_e_xx, idiv_v_xx, idiv_v_xx, idiv_v_xx, idiv_e_xx, idiv_v_xx, idiv_v_xx, idiv_e_xx},
+	/*UNINIT*/ {idiv_e_xx, idiv_v_xx, idiv_i_uu, idiv_v_xx, idiv_e_xx, idiv_i_ui, idiv_f_uf, idiv_e_xx},
+	/*VOID*/   {idiv_e_xx, idiv_v_xx, idiv_v_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
 	/*STRING*/ {idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
-	/*INT*/    {idiv_e_xx, idiv_e_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_i_ii, idiv_f_if, idiv_e_xx},
-	/*FLOAT*/  {idiv_e_xx, idiv_e_xx, idiv_v_xx, idiv_e_xx, idiv_e_xx, idiv_f_fi, idiv_f_ff, idiv_e_xx},
+	/*INT*/    {idiv_e_xx, idiv_v_xx, idiv_i_iu, idiv_v_xx, idiv_e_xx, idiv_i_ii, idiv_f_if, idiv_e_xx},
+	/*FLOAT*/  {idiv_e_xx, idiv_v_xx, idiv_f_fu, idiv_v_xx, idiv_e_xx, idiv_f_fi, idiv_f_ff, idiv_e_xx},
 	/*BOOL*/   {idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx, idiv_e_xx},
 };
+
 
 mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2) {
 	return (idiv_dispositions[pval1->type][pval2->type])(pval1,pval2);
