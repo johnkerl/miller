@@ -1251,13 +1251,13 @@ run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w
 # ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
-run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum; }'         $indir/abixy
-run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum,"a"; }'     $indir/abixy
-run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum,"a","b"; }' $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emit @sum; }'         $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emit @sum,"a"; }'     $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emit @sum,"a","b"; }' $indir/abixy
 
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum; }'         $indir/abixy
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum,"a"; }'     $indir/abixy
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum,"a","b"; }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum; }'         $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a"; }'     $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a","b"; }' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING

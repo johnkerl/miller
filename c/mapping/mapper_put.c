@@ -16,11 +16,12 @@ typedef struct _mapper_put_state_t {
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
 	mlhmmv_t*      poosvars;
+	int            outer_filter;
 } mapper_put_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int outer_filter, int type_inferencing);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -44,6 +45,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
+	fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
+	fprintf(o, "    all desired output is in begin and/or end blocks.\n");
 	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
 	fprintf(o, "    inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
@@ -72,13 +75,15 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
-	char* verb = argv[(*pargi)++];
+	char* verb               = argv[(*pargi)++];
 	char* mlr_dsl_expression = NULL;
-	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
-	int   print_ast = FALSE;
+	int   outer_filter       = TRUE;
+	int   type_inferencing   = TYPE_INFER_STRING_FLOAT_INT;
+	int   print_ast          = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate,      "-v", &print_ast);
+	ap_define_false_flag(pstate,     "-q", &outer_filter);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 
@@ -106,17 +111,18 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	if (print_ast)
 		mlr_dsl_ast_print(past);
 
-	return mapper_put_alloc(pstate, past, type_inferencing);
+	return mapper_put_alloc(pstate, past, outer_filter, type_inferencing);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int type_inferencing) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int outer_filter, int type_inferencing) {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
-	pstate->pargp     = pargp;
-	pstate->past      = past;
-	pstate->pcst      = mlr_dsl_cst_alloc(past, type_inferencing);
-	pstate->at_begin  = TRUE;
-	pstate->poosvars = mlhmmv_alloc();
+	pstate->pargp        = pargp;
+	pstate->past         = past;
+	pstate->pcst         = mlr_dsl_cst_alloc(past, type_inferencing);
+	pstate->at_begin     = TRUE;
+	pstate->outer_filter = outer_filter;
+	pstate->poosvars     = mlhmmv_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -216,7 +222,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	mlr_dsl_cst_evaluate(pstate->pcst->pmain_statements,
 		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs);
 
-	if (emit_rec) {
+	if (emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.
 		for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
