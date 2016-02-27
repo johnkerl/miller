@@ -8,8 +8,6 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-! fix emit w/ 1st-level
-! put -q & olh & mld:ref:put
 * tri-split null UTs
 * += et al. UTs
 * parameterized-emit UTs
