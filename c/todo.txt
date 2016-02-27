@@ -12,7 +12,7 @@ TOP-OF-LIST SUMMARY
 * += et al. UTs
 * parameterized-emit UTs
 * parameterized-emit code-neatens
-! unset/clear? for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
+! unset/clear for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 ! valgrinds
 ! xxxes
@@ -44,6 +44,11 @@ TOP-OF-LIST SUMMARY
   - filter
   - nest
   - shuffle
+
+================================================================
+UNSET
+
+* multi-unset
 
 ================================================================
 PARAMETERIZED EMIT

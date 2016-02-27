@@ -49,6 +49,7 @@ md_statement ::= md_main_srec_assignment.
 md_statement ::= md_main_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
+md_statement ::= md_main_unset.
 md_statement ::= md_main_emitf.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
@@ -70,6 +71,7 @@ md_begin_block_statement ::= .
 md_begin_block_statement ::= md_begin_block_oosvar_assignment.
 md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
+md_begin_block_statement ::= md_begin_block_unset.
 md_begin_block_statement ::= md_begin_block_emitf.
 md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
@@ -85,6 +87,7 @@ md_end_block_statement ::= .
 md_end_block_statement ::= md_end_block_oosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
+md_end_block_statement ::= md_end_block_unset.
 md_end_block_statement ::= md_end_block_emitf.
 md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
@@ -138,6 +141,10 @@ md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pmain_statements, A);
 }
+md_main_unset(A) ::= md_unset(B). {
+	A = B;
+	sllv_append(past->pmain_statements, A);
+}
 md_main_emitf(A) ::= md_emitf(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
@@ -164,6 +171,10 @@ md_begin_block_bare_boolean(A) ::= md_rhs(B). {
 }
 md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pbegin_statements, A);
+}
+md_begin_block_unset(A) ::= md_unset(B). {
+	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_emitf(A) ::= md_emitf(B). {
@@ -209,6 +220,10 @@ md_end_block_bare_boolean(A) ::= md_rhs(B). {
 }
 md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pend_statements, A);
+}
+md_end_block_unset(A) ::= md_unset(B). {
+	A = B;
 	sllv_append(past->pend_statements, A);
 }
 md_end_block_emitf(A) ::= md_emitf(B). {
@@ -430,6 +445,17 @@ md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_MOD_EQUALS md_rhs(
 md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_POW_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
+// ----------------------------------------------------------------
+md_unset(A) ::= MD_TOKEN_UNSET(O) md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
+}
+md_unset(A) ::= MD_TOKEN_UNSET(O) md_keyed_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
+}
+md_unset(A) ::= MD_TOKEN_UNSET(O) md_field_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
 }
 
 // ----------------------------------------------------------------
