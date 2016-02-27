@@ -8,14 +8,15 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* tri-split null. then RT @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
-? @x = $0 ?  $0 = @x ?
-* parameterized-emit () vs. no-() unification
-* parameterized-emit neatens
+* tri-split null UTs
 * += et al. UTs
-? unset/clear? for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
+! parameterized-emit () vs. no-() unification
+* parameterized-emit neatens
+! unset/clear? for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
+
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
+? @x = $0 ?  $0 = @x ?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -62,6 +63,9 @@ TRI-SPLIT NULL, AND += ET AL.
 * to mld:ref
 
 ! UTs
+
+----------------------------------------------------------------
+@sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
 
 ----------------------------------------------------------------
   mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
