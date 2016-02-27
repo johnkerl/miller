@@ -1259,6 +1259,50 @@ run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum; }'         $indir/abixy
 run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a"; }'     $indir/abixy
 run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a","b"; }' $indir/abixy
 
+run_mlr put -q '@v = $a;        end {emitf @v }' $indir/abixy
+run_mlr put -q '@v = $i;        end {emitf @v }' $indir/abixy
+run_mlr put -q '@v = $x;        end {emitf @v }' $indir/abixy
+run_mlr put -q '@v = $nonesuch; end {emitf @v }' $indir/abixy
+
+run_mlr put -q '@v = $a;        end {emit @v }' $indir/abixy
+run_mlr put -q '@v = $i;        end {emit @v }' $indir/abixy
+run_mlr put -q '@v = $x;        end {emit @v }' $indir/abixy
+run_mlr put -q '@v = $nonesuch; end {emit @v }' $indir/abixy
+
+run_mlr put -q '@sum += $i;        end {emitf @sum }' $indir/abixy
+run_mlr put -q '@sum += $x;        end {emitf @sum }' $indir/abixy
+run_mlr put -q '@sum += $nonesuch; end {emitf @sum }' $indir/abixy
+
+run_mlr put -q '@sum += $i;        end {emit  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $x;        end {emit  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $nonesuch; end {emit  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $i;        end {emit  @sum, "extra" }' $indir/abixy
+run_mlr put -q '@sum += $x;        end {emit  @sum, "extra" }' $indir/abixy
+run_mlr put -q '@sum += $nonesuch; end {emit  @sum, "extra" }' $indir/abixy
+
+run_mlr put -q '@sum[$a] += $i;        end {emit  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emit  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $i;        end {emit  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emit  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $i;        end {emit  @sum, "a", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emit  @sum, "a", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum, "a", "extra" }' $indir/abixy
+
+run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }' $indir/abixy
+
 # ----------------------------------------------------------------
 announce CHAINING
 
