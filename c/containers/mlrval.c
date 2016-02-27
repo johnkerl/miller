@@ -10,32 +10,7 @@
 #include "containers/mlrval.h"
 
 // ================================================================
-// NOTES:
-//
-// * This is used by mlr filter and mlr put, as well as by other
-//   verbs which do integer-preservation logic (i.e. they produce
-//   integer output given integer input).
-//
-// * Unlike most files in Miller which are read top-down (with sufficient
-//   static prototypes at the top of the file to keep the compiler happy),
-//   please read this one from the bottom up. There are very many short
-//   functions and I chose not to write out so many prototypes: they would have
-//   made things less clear by their very volume.
-//
-// * Comparison to rval_evaluators.c: this file is functions from mlrval(s) to
-//   mlrval; in rval_evaluators.c we have the higher-level notion of
-//   evaluating lrec objects, using mlrval.c to do so.
-//
-// * There are two kinds of functions here: those with _x_ in their names
-//   which accept various types of mlrval, with disposition-matrices in
-//   mlrval.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
-//   string) which either type-check or type-coerce their arguments, invoking
-//   type-specific functions in mlrval.c.  Those with _n_ take int or float
-//   and also use disposition matrices.  In all cases it's the job of
-//   the calling routines to invoke functions here with mlrvals of the correct
-//   type(s).
-//
-// See also important notes at the top of mlrval.h.
+// See important notes at the top of mlrval.h.
 // ================================================================
 
 // For some Linux distros, in spite of including time.h:

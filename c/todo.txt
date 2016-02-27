@@ -59,12 +59,14 @@ PARAMETERIZED EMIT
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
 
-* recheck all numerics of void
+! UTs
+  - 
+  mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
+  mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
+  mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
 
-* UTs
 * to mld:ref
 
-* explicit initialization OK:
 
   mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' ../data/small
 
