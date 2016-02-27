@@ -1370,9 +1370,11 @@ static mv_unary_func_t* uneg_disnegitions[MT_DIM] = {
 mv_t x_x_uneg_func(mv_t* pval1) { return (uneg_disnegitions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-// xxx pick up from here
 static mv_t abs_e_x(mv_t* pa) {
 	return mv_error();
+}
+static mv_t abs_v_x(mv_t* pa) {
+	return mv_void();
 }
 static mv_t abs_n_f(mv_t* pa) {
 	return mv_from_float(fabs(pa->u.fltv));
@@ -1383,7 +1385,7 @@ static mv_t abs_n_i(mv_t* pa) {
 
 static mv_unary_func_t* abs_dispositions[MT_DIM] = {
 	/*ERROR*/  abs_e_x,
-	/*ABSENT*/ abs_e_x,
+	/*ABSENT*/ abs_v_x,
 	/*UNINIT*/ abs_e_x,
 	/*VOID*/   abs_e_x,
 	/*STRING*/ abs_e_x,
@@ -1398,6 +1400,9 @@ mv_t x_x_abs_func(mv_t* pval1) { return (abs_dispositions[pval1->type])(pval1); 
 static mv_t ceil_e_x(mv_t* pa) {
 	return mv_error();
 }
+static mv_t ceil_v_x(mv_t* pa) {
+	return mv_void();
+}
 static mv_t ceil_n_f(mv_t* pa) {
 	return mv_from_float(ceil(pa->u.fltv));
 }
@@ -1407,7 +1412,7 @@ static mv_t ceil_n_i(mv_t* pa) {
 
 static mv_unary_func_t* ceil_dispositions[MT_DIM] = {
 	/*ERROR*/  ceil_e_x,
-	/*ABSENT*/ ceil_e_x,
+	/*ABSENT*/ ceil_v_x,
 	/*UNINIT*/ ceil_e_x,
 	/*VOID*/   ceil_e_x,
 	/*STRING*/ ceil_e_x,
@@ -1422,6 +1427,9 @@ mv_t x_x_ceil_func(mv_t* pval1) { return (ceil_dispositions[pval1->type])(pval1)
 static mv_t floor_e_x(mv_t* pa) {
 	return mv_error();
 }
+static mv_t floor_v_x(mv_t* pa) {
+	return mv_void();
+}
 static mv_t floor_n_f(mv_t* pa) {
 	return mv_from_float(floor(pa->u.fltv));
 }
@@ -1431,7 +1439,7 @@ static mv_t floor_n_i(mv_t* pa) {
 
 static mv_unary_func_t* floor_dispositions[MT_DIM] = {
 	/*ERROR*/  floor_e_x,
-	/*ABSENT*/ floor_e_x,
+	/*ABSENT*/ floor_v_x,
 	/*UNINIT*/ floor_e_x,
 	/*VOID*/   floor_e_x,
 	/*STRING*/ floor_e_x,
@@ -1446,6 +1454,9 @@ mv_t x_x_floor_func(mv_t* pval1) { return (floor_dispositions[pval1->type])(pval
 static mv_t round_e_x(mv_t* pa) {
 	return mv_error();
 }
+static mv_t round_v_x(mv_t* pa) {
+	return mv_void();
+}
 static mv_t round_n_f(mv_t* pa) {
 	return mv_from_float(round(pa->u.fltv));
 }
@@ -1455,7 +1466,7 @@ static mv_t round_n_i(mv_t* pa) {
 
 static mv_unary_func_t* round_dispositions[MT_DIM] = {
 	/*ERROR*/  round_e_x,
-	/*ABSENT*/ round_e_x,
+	/*ABSENT*/ round_v_x,
 	/*UNINIT*/ round_e_x,
 	/*VOID*/   round_e_x,
 	/*STRING*/ round_e_x,
@@ -1491,6 +1502,7 @@ static mv_t roundm_i_ii(mv_t* pa, mv_t* pb) {
 	return mv_from_int((x / m) * m);
 }
 
+// xxx
 static mv_binary_func_t* roundm_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR         ABSENT       UNINIT       VOID         STRING       INT          FLOAT        BOOL
 	/*ERROR*/  {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
@@ -1551,7 +1563,7 @@ static mv_t min_i_vi(mv_t* pa, mv_t* pb) {
 }
 
 static mv_t min_v_xx(mv_t* pa, mv_t* pb) {
-	return mv_void(); // xxx
+	return mv_void();
 }
 
 static mv_binary_func_t* min_dispositions[MT_DIM][MT_DIM] = {
@@ -1635,6 +1647,9 @@ mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) { return (max_dispositions[pval1->t
 static mv_t sgn_e_x(mv_t* pa) {
 	return mv_error();
 }
+static mv_t sgn_v_x(mv_t* pa) {
+	return mv_void();
+}
 static mv_t sgn_n_f(mv_t* pa) {
 	if (pa->u.fltv > 0.0)
 		return mv_from_float(1.0);
@@ -1652,7 +1667,7 @@ static mv_t sgn_n_i(mv_t* pa) {
 
 static mv_unary_func_t* sgn_dispositions[MT_DIM] = {
 	/*ERROR*/  sgn_e_x,
-	/*ABSENT*/ sgn_e_x,
+	/*ABSENT*/ sgn_v_x,
 	/*UNINIT*/ sgn_e_x,
 	/*VOID*/   sgn_e_x,
 	/*STRING*/ sgn_e_x,
@@ -1742,7 +1757,7 @@ mv_t b_x_isnotnull_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-static mv_t boolean_v_x(mv_t* pa) { return mv_void(); } // xxx
+static mv_t boolean_v_x(mv_t* pa) { return mv_void(); }
 static mv_t boolean_e_x(mv_t* pa) { return mv_error(); }
 static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
 static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }
@@ -1763,7 +1778,7 @@ static mv_unary_func_t* boolean_dispositions[MT_DIM] = {
 mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-static mv_t string_v_x(mv_t* pa) { return mv_void(); } // xxx
+static mv_t string_v_x(mv_t* pa) { return mv_void(); }
 static mv_t string_e_x(mv_t* pa) { return mv_error(); }
 static mv_t string_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"true":"false"); }
 static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }
@@ -1788,7 +1803,7 @@ static mv_unary_func_t* string_dispositions[MT_DIM] = {
 mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-static mv_t hexfmt_v_x(mv_t* pa) { return mv_void(); } // xxx
+static mv_t hexfmt_v_x(mv_t* pa) { return mv_void(); }
 static mv_t hexfmt_e_x(mv_t* pa) { return mv_error(); }
 static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t hexfmt_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)); }
@@ -1813,7 +1828,7 @@ static mv_unary_func_t* hexfmt_dispositions[MT_DIM] = {
 mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return mv_void(); } // xxx
+static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return mv_void(); }
 static mv_t fmtnum_e_es(mv_t* pa, mv_t* pfmt) { return mv_error(); }
 static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
@@ -1842,7 +1857,7 @@ static mv_binary_func_t* fmtnum_dispositions[MT_DIM] = {
 mv_t s_xs_fmtnum_func(mv_t* pval1, mv_t* pval2) { return (fmtnum_dispositions[pval1->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
-static mv_t op_v_xx(mv_t* pa, mv_t* pb) { return mv_void(); } // xxx
+static mv_t op_v_xx(mv_t* pa, mv_t* pb) { return mv_void(); }
 static mv_t op_e_xx(mv_t* pa, mv_t* pb) { return mv_error(); }
 
 static  mv_t eq_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv == pb->u.intv); }
