@@ -8,15 +8,14 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* tri-split null. then RT @sum[$group] = @sum[$group] + $value etc. be sure $nosuch sums to MT_ABSENT.
+* tri-split null. then RT @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
 ? @x = $0 ?  $0 = @x ?
 * parameterized-emit () vs. no-() unification
 * parameterized-emit neatens
 * += et al. UTs
+? unset/clear? for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
-? unset/clear ... ?
-? rethink filter ... ?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -52,7 +51,8 @@ PARAMETERIZED EMIT
 * handle too-short, too-long, just-right cases
 * rename functions
 * rename variables as needed for clarity
-* needs significant comment-by-example
+* rename 'temp' functions
+* needs significant comment-by-example in the code
 * emit w/ and w/o parentheses in the grammar -- try to get just one
 * mld section, w/ olh brief example & xref to it.
 
@@ -62,13 +62,15 @@ TRI-SPLIT NULL, AND += ET AL.
 * to mld:ref
 
 ! UTs
-  - 
+
+----------------------------------------------------------------
   mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
   mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
   mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
 
   mlr put '$nonesuch = @nonesuch' ../data/small
 
+----------------------------------------------------------------
   echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
   echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
   echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
@@ -85,13 +87,22 @@ x=1,y=2
 x=1,y=
 x=1,y=
 
-  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x)'  # $y is MT_INT
-  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
-  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
+----------------------------------------------------------------
+  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
 
-  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
-  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
-  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
+  echo x=1,y=2 | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+
+x=MT_INT,y=MT_INT,z=MT_INT
+x=MT_INT,y=MT_VOID,z=MT_VOID
+x=MT_INT,y=MT_VOID,z=MT_VOID
+
+x=MT_INT,y=MT_INT,z=MT_ABSENT
+x=MT_INT,y=MT_VOID,z=MT_ABSENT
+x=MT_INT,y=MT_VOID,z=MT_ABSENT
 
 ================================================================
 64-BIT CONTAINER SIZES
@@ -131,12 +142,6 @@ OOSVARS:
     - tail?
     > top?
     - uniq?
-
-  o DSL more:
-    - people will ask for an unset/clear syntax
-    - people will ask for +=, -=, etc.
-    - if / else ... not yet (if ever) but think carefully about how not to break the (possible) future while
-      implementing the present
 
   o perf notes:
 
