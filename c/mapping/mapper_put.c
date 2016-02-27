@@ -243,7 +243,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	if (emit_rec) {
+	if (emit_rec && pstate->outer_filter) {
 		sllv_append(poutrecs, pinrec);
 	} else {
 		lrec_free(pinrec);
