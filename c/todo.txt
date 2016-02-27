@@ -9,12 +9,15 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.4.0
 
 ! fix emit w/ 1st-level
+! put -q & olh & mld:ref:put
 * tri-split null UTs
 * += et al. UTs
 * parameterized-emit UTs
 * parameterized-emit code-neatens
 ! unset/clear? for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
+! valgrinds
+! xxxes
 
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 ? @x = $0 ?  $0 = @x ?
@@ -27,8 +30,6 @@ TOP-OF-LIST SUMMARY
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
 * doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
-* valgrinds
-* xxxes
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid double-searching.
 * dsls deps still not quite right?
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
@@ -58,9 +59,14 @@ PARAMETERIZED EMIT
 * emit w/ and w/o parentheses in the grammar -- try to get just one
 * mld section, w/ olh brief example & xref to it.
 
-1st one segv:
-mlr put -v '@a=$a; @b=$b; @c=$x; end {emit  @a; emit  @b; emit  @c}' ./reg_test/input/abixy
-mlr put -v '@a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c}' ./reg_test/input/abixy
+mlr put -v '@a=$a; end {emitf @a }' ./reg_test/input/abixy
+mlr put -v '@a=$a; end {emit  @a }' ./reg_test/input/abixy
+mlr put -v '@b=$b; end {emit  @b }' ./reg_test/input/abixy
+mlr put -v '@c=$x; end {emit  @c }' ./reg_test/input/abixy
+mlr put -v '@a=$a;@b=$b;       end {emit  @a; emit  @b}'           ./reg_test/input/abixy
+mlr put -v '@a=$a;@c=$x;       end {emit  @a; emit  @c}'           ./reg_test/input/abixy # segv
+mlr put -v '@a=$a;@b=$b;@c=$x; end {emit  @a; emit  @b; emit  @c}' ./reg_test/input/abixy # segv
+mlr put -v '@a=$a;@b=$b;@c=$x; end {emitf @a; emitf @b; emitf @c}' ./reg_test/input/abixy
 
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
@@ -112,6 +118,80 @@ x=MT_INT,y=MT_VOID,z=MT_VOID
 x=MT_INT,y=MT_INT,z=MT_ABSENT
 x=MT_INT,y=MT_VOID,z=MT_ABSENT
 x=MT_INT,y=MT_VOID,z=MT_ABSENT
+
+----------------------------------------------------------------
+
+// cat ../data/small | mlr put '
+//   @sum[$a][$b]=$x;
+//   filter false;
+//   end{dump}
+// '  | mlr --ijson --oxtab cat
+//
+// sum:pan:pan 0.346790
+// sum:pan:wye 0.502626
+// sum:eks:pan 0.758680
+// sum:eks:wye 0.381399
+// sum:eks:zee 0.611784
+// sum:wye:wye 0.204603
+// sum:wye:pan 0.573289
+// sum:zee:pan 0.527126
+// sum:zee:wye 0.598554
+// sum:hat:wye 0.031442
+
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit @sum;
+//   } '
+//
+// sum:pan:pan=0.346790
+// sum:pan:wye=0.502626
+// sum:eks:pan=0.758680
+// sum:eks:wye=0.381399
+// sum:eks:zee=0.611784
+// sum:wye:wye=0.204603
+// sum:wye:pan=0.573289
+// sum:zee:pan=0.527126
+// sum:zee:wye=0.598554
+// sum:hat:wye=0.031442
+
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit @sum,"a";
+//   } '
+//
+// a=pan,sum:pan=0.346790
+// a=pan,sum:wye=0.502626
+// a=eks,sum:pan=0.758680
+// a=eks,sum:wye=0.381399
+// a=eks,sum:zee=0.611784
+// a=wye,sum:wye=0.204603
+// a=wye,sum:pan=0.573289
+// a=zee,sum:pan=0.527126
+// a=zee,sum:wye=0.598554
+// a=hat,sum:wye=0.031442
+
+// cat ../data/small | mlr put '
+//   @sum[$a][$b] = $x;
+//   filter false;
+//   end{
+//     emit @sum,"a","b";
+//   } '
+//
+// a=pan,b=pan,sum=0.346790
+// a=pan,b=wye,sum=0.502626
+// a=eks,b=pan,sum=0.758680
+// a=eks,b=wye,sum=0.381399
+// a=eks,b=zee,sum=0.611784
+// a=wye,b=wye,sum=0.204603
+// a=wye,b=pan,sum=0.573289
+// a=zee,b=pan,sum=0.527126
+// a=zee,b=wye,sum=0.598554
+// a=hat,b=wye,sum=0.031442
+
 
 ================================================================
 64-BIT CONTAINER SIZES

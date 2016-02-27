@@ -376,7 +376,6 @@ void mlr_dsl_cst_evaluate(
 {
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-
 		pstatement->pevaluator(pstatement, poosvars, pinrec, ptyped_overlay, ppregex_captures,
 			pctx, pshould_emit_rec, poutrecs);
 	}
@@ -510,7 +509,6 @@ static void mlr_dsl_cst_node_evaluate_emit(
 		mv_free(&mv0);
 		return;
 	}
-
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
 	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -527,90 +525,20 @@ static void mlr_dsl_cst_node_evaluate_emit(
 
 	if (keys_ok) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		mlr_dsl_cst_node_evaluate_emit_aux(proot_value->u.pnext_level, pitem->output_field_name,
-			pmvkeys->phead, poutrec, poutrecs);
-		lrec_free(poutrec);
+		if (proot_value->is_terminal) {
+			lrec_put(poutrec, pitem->output_field_name,
+				mv_alloc_format_val(&proot_value->u.mlrval), FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, poutrec);
+		} else {
+			mlr_dsl_cst_node_evaluate_emit_aux(proot_value->u.pnext_level, pitem->output_field_name,
+				pmvkeys->phead, poutrec, poutrecs);
+			lrec_free(poutrec);
+		}
 	}
 
 	sllmv_free(pmvkeys);
 	mv_free(&mv0);
 }
-
-// ----------------------------------------------------------------
-// cat ../data/small | mlr put '
-//   @sum[$a][$b]=$x;
-//   filter false;
-//   end{dump}
-// '  | mlr --ijson --oxtab cat
-//
-// sum:pan:pan 0.346790
-// sum:pan:wye 0.502626
-// sum:eks:pan 0.758680
-// sum:eks:wye 0.381399
-// sum:eks:zee 0.611784
-// sum:wye:wye 0.204603
-// sum:wye:pan 0.573289
-// sum:zee:pan 0.527126
-// sum:zee:wye 0.598554
-// sum:hat:wye 0.031442
-
-// ----------------------------------------------------------------
-// cat ../data/small | mlr put '
-//   @sum[$a][$b] = $x;
-//   filter false;
-//   end{
-//     emit @sum;
-//   } '
-//
-// sum:pan:pan=0.346790
-// sum:pan:wye=0.502626
-// sum:eks:pan=0.758680
-// sum:eks:wye=0.381399
-// sum:eks:zee=0.611784
-// sum:wye:wye=0.204603
-// sum:wye:pan=0.573289
-// sum:zee:pan=0.527126
-// sum:zee:wye=0.598554
-// sum:hat:wye=0.031442
-
-// ----------------------------------------------------------------
-// cat ../data/small | mlr put '
-//   @sum[$a][$b] = $x;
-//   filter false;
-//   end{
-//     emit @sum,"a";
-//   } '
-//
-// a=pan,sum:pan=0.346790
-// a=pan,sum:wye=0.502626
-// a=eks,sum:pan=0.758680
-// a=eks,sum:wye=0.381399
-// a=eks,sum:zee=0.611784
-// a=wye,sum:wye=0.204603
-// a=wye,sum:pan=0.573289
-// a=zee,sum:pan=0.527126
-// a=zee,sum:wye=0.598554
-// a=hat,sum:wye=0.031442
-
-// ----------------------------------------------------------------
-// cat ../data/small | mlr put '
-//   @sum[$a][$b] = $x;
-//   filter false;
-//   end{
-//     emit @sum,"a","b";
-//   } '
-//
-// a=pan,b=pan,sum=0.346790
-// a=pan,b=wye,sum=0.502626
-// a=eks,b=pan,sum=0.758680
-// a=eks,b=wye,sum=0.381399
-// a=eks,b=zee,sum=0.611784
-// a=wye,b=wye,sum=0.204603
-// a=wye,b=pan,sum=0.573289
-// a=zee,b=pan,sum=0.527126
-// a=zee,b=wye,sum=0.598554
-// a=hat,b=wye,sum=0.031442
-// ----------------------------------------------------------------
 
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
