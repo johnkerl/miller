@@ -69,7 +69,9 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "hexfmt",    1, "Convert int to string, e.g. 255 to \"0xff\"."},
 	{FUNC_CLASS_CONVERSION, "int",       1, "Convert int/float/bool/string to int."},
 	{FUNC_CLASS_CONVERSION, "string",    1, "Convert int/float/bool/string to string."},
-	{FUNC_CLASS_CONVERSION, "typeof",    1, "Convert argument to type of argument (e.g. MT_STRING). For debug."},
+	{FUNC_CLASS_CONVERSION, "typeof",    1,
+		"Convert argument to type of argument (e.g.\n"
+		"MT_STRING). For debug."},
 
 	{FUNC_CLASS_STRING, ".",        2, "String concatenation."},
 	{FUNC_CLASS_STRING, "gsub",     3, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
