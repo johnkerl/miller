@@ -1226,11 +1226,11 @@ run_mlr --opprint put -v 'begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a
 run_mlr --opprint put -v 'begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i' $indir/abixy
 run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
 
-run_mlr put -v '@a=$a; @b=$b; @c=$x; end {emit @a; emit @b; emit @c}' $indir/abixy
-run_mlr put -v '@a=$a; @b=$b; @c=$x; end{emit @a, @b, @c}' $indir/abixy
+run_mlr put -v '@a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c}' $indir/abixy
+run_mlr put -v '@a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c}' $indir/abixy
 
-run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' $indir/abixy
-run_mlr --opprint put -v 'end{@mean=@sum/@count; emit @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy
+run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}' $indir/abixy
+run_mlr --opprint put -v 'end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy
 
 run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}' /dev/null
 
@@ -1246,18 +1246,18 @@ run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z
 run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9}' /dev/null
 run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9}' /dev/null
 run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9}' /dev/null
-run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v,@w;dump}; $x=6; end{@z=9}' /dev/null
+run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9}' /dev/null
 
 # ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
-run_mlr put '@sum[$a] = $x; filter false; end{ emit(@sum); }'         $indir/abixy
-run_mlr put '@sum[$a] = $x; filter false; end{ emit(@sum,"a"); }'     $indir/abixy
-run_mlr put '@sum[$a] = $x; filter false; end{ emit(@sum,"a","b"); }' $indir/abixy
+run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum; }'         $indir/abixy
+run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum,"a"; }'     $indir/abixy
+run_mlr put '@sum[$a] = $x; filter false; end{ emit @sum,"a","b"; }' $indir/abixy
 
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit(@sum); }'         $indir/abixy
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit(@sum,"a"); }'     $indir/abixy
-run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit(@sum,"a","b"); }' $indir/abixy
+run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum; }'         $indir/abixy
+run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum,"a"; }'     $indir/abixy
+run_mlr put '@sum[$a][$b] = $x; filter false; end{ emit @sum,"a","b"; }' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING

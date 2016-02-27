@@ -34,6 +34,16 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_emitf(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_emit(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -44,24 +54,14 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
-static void mlr_dsl_cst_node_evaluate_emit2temp(
-	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs);
-
-static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
+static void mlr_dsl_cst_node_evaluate_emit_aux(
 	mlhmmv_level_t* plevel,
 	char*           oosvar_name,
 	sllmve_t*       prestnames,
 	lrec_t*         poutrec,
 	sllv_t*         poutrecs);
 
-static void mlr_dsl_cst_node_evaluate_emit2temp_flatten(
+static void mlr_dsl_cst_node_evaluate_emit_flatten(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	lrec_t*         poutrec,
@@ -240,8 +240,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
 
-	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
-		// Loop over oosvar names to emit in e.g. 'emit @a, @b, @c'.
+	} else if (past->type == MD_AST_NODE_TYPE_EMITF) {
+		// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
 		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
@@ -251,11 +251,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				NULL));
 		}
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emitf;
 
-	} else if (past->type == MD_AST_NODE_TYPE_EMIT2TEMP) {
+	} else if (past->type == MD_AST_NODE_TYPE_EMIT) {
 		// First argument is oosvar name. Remainings evaluate to string,
-		// e.g. 'emit(@sums, "color", "shape")'.
+		// e.g. 'emit @sums, "color", "shape"'.
 		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
 
 		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
@@ -271,7 +271,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL,
 			NULL));
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit2temp;
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
 
 	} else if (past->type == MD_AST_NODE_TYPE_CONDITIONAL_BLOCK) {
 		// First child node is the AST for the boolean expression. Remaining child nodes are statements
@@ -455,7 +455,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_cst_node_evaluate_emit(
+static void mlr_dsl_cst_node_evaluate_emitf(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -490,9 +490,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 }
 
 // ----------------------------------------------------------------
-// xxx subsume 1-level oosvar multi-emit items into lhs-key-list evaluators & get rid of items-list entirely?
-
-static void mlr_dsl_cst_node_evaluate_emit2temp(
+static void mlr_dsl_cst_node_evaluate_emit(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -529,7 +527,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 
 	if (keys_ok) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		mlr_dsl_cst_node_evaluate_emit2temp_aux(proot_value->u.pnext_level, pitem->output_field_name,
+		mlr_dsl_cst_node_evaluate_emit_aux(proot_value->u.pnext_level, pitem->output_field_name,
 			pmvkeys->phead, poutrec, poutrecs);
 		lrec_free(poutrec);
 	}
@@ -561,7 +559,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 //   @sum[$a][$b] = $x;
 //   filter false;
 //   end{
-//     emit(@sum);
+//     emit @sum;
 //   } '
 //
 // sum:pan:pan=0.346790
@@ -580,7 +578,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 //   @sum[$a][$b] = $x;
 //   filter false;
 //   end{
-//     emit(@sum,"a");
+//     emit @sum,"a";
 //   } '
 //
 // a=pan,sum:pan=0.346790
@@ -599,7 +597,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 //   @sum[$a][$b] = $x;
 //   filter false;
 //   end{
-//     emit(@sum,"a","b");
+//     emit @sum,"a","b";
 //   } '
 //
 // a=pan,b=pan,sum=0.346790
@@ -617,7 +615,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp(
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
 
-static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
+static void mlr_dsl_cst_node_evaluate_emit_aux(
 	mlhmmv_level_t* plevel,
 	char*           oosvar_name,
 	sllmve_t*       prestnames,
@@ -625,7 +623,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	sllv_t*         poutrecs)
 {
 	if (prestnames == NULL) {
-		mlr_dsl_cst_node_evaluate_emit2temp_flatten(plevel, oosvar_name, poutrec, poutrecs);
+		mlr_dsl_cst_node_evaluate_emit_flatten(plevel, oosvar_name, poutrec, poutrecs);
 	} else {
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* pnextrec = lrec_copy(poutrec);
@@ -638,7 +636,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 				sllv_append(poutrecs, pnextrec);
 			} else {
 
-				mlr_dsl_cst_node_evaluate_emit2temp_aux(pe->level_value.u.pnext_level, oosvar_name,
+				mlr_dsl_cst_node_evaluate_emit_aux(pe->level_value.u.pnext_level, oosvar_name,
 					prestnames->pnext, pnextrec, poutrecs);
 				lrec_free(pnextrec);
 			}
@@ -646,7 +644,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_aux(
 	}
 }
 
-static void mlr_dsl_cst_node_evaluate_emit2temp_flatten(
+static void mlr_dsl_cst_node_evaluate_emit_flatten(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	lrec_t*         poutrec,
@@ -663,7 +661,7 @@ static void mlr_dsl_cst_node_evaluate_emit2temp_flatten(
 				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			sllv_append(poutrecs, pnextrec);
 		} else {
-			mlr_dsl_cst_node_evaluate_emit2temp_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
+			mlr_dsl_cst_node_evaluate_emit_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
 			lrec_free(pnextrec);
 		}
 	}

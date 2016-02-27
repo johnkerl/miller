@@ -57,6 +57,10 @@ PARAMETERIZED EMIT
 * emit w/ and w/o parentheses in the grammar -- try to get just one
 * mld section, w/ olh brief example & xref to it.
 
+1st one segv:
+mlr put -v '@a=$a; @b=$b; @c=$x; end {emit  @a; emit  @b; emit  @c}' ./reg_test/input/abixy
+mlr put -v '@a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c}' ./reg_test/input/abixy
+
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
 

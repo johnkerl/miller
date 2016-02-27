@@ -12378,7 +12378,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
-mlr put -v @a=$a; @b=$b; @c=$x; end {emit @a; emit @b; emit @c} ./reg_test/input/abixy
+mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (3):
 = (oosvar_assignment):
@@ -12391,11 +12391,11 @@ AST MAIN STATEMENTS (3):
     c (oosvar_name).
     x (field_name).
 AST END STATEMENTS (3):
-emit (emit):
+emitf (emitf):
     a (oosvar_name).
-emit (emit):
+emitf (emitf):
     b (oosvar_name).
-emit (emit):
+emitf (emitf):
     c (oosvar_name).
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -12411,7 +12411,7 @@ a=pan
 b=wye
 c=0.502626
 
-mlr put -v @a=$a; @b=$b; @c=$x; end{emit @a, @b, @c} ./reg_test/input/abixy
+mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (3):
 = (oosvar_assignment):
@@ -12424,7 +12424,7 @@ AST MAIN STATEMENTS (3):
     c (oosvar_name).
     x (field_name).
 AST END STATEMENTS (1):
-emit (emit):
+emitf (emitf):
     a (oosvar_name).
     b (oosvar_name).
     c (oosvar_name).
@@ -12440,7 +12440,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=pan,b=wye,c=0.502626
 
-mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean} ./reg_test/input/abixy
+mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (2):
 = (oosvar_assignment):
     count (oosvar_name).
@@ -12465,7 +12465,7 @@ AST END STATEMENTS (2):
     / (operator):
         sum (oosvar_name).
         count (oosvar_name).
-emit (emit):
+emitf (emitf):
     mean (oosvar_name).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
@@ -12482,7 +12482,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 mean
 0.453629
 
-mlr --opprint put -v end{@mean=@sum/@count; emit @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg_test/input/abixy
+mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (2):
 = (oosvar_assignment):
     count (oosvar_name).
@@ -12507,7 +12507,7 @@ AST END STATEMENTS (2):
     / (operator):
         sum (oosvar_name).
         count (oosvar_name).
-emit (emit):
+emitf (emitf):
     mean (oosvar_name).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
@@ -12728,7 +12728,7 @@ AST END STATEMENTS (1):
     z (oosvar_name).
     9 (strnum_literal).
 
-mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v,@w;dump}; $x=6; end{@z=9} /dev/null
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9} /dev/null
 AST BEGIN STATEMENTS (1):
 = (oosvar_assignment):
     a (oosvar_name).
@@ -12755,7 +12755,7 @@ cond (conditional_block):
                 u (strnum_literal).
                 5 (field_name).
         2 (strnum_literal).
-    emit (emit):
+    emitf (emitf):
         v (oosvar_name).
         w (oosvar_name).
     dump (dump):
@@ -12771,28 +12771,28 @@ AST END STATEMENTS (1):
 ================================================================
 PARAMETERIZED EMIT
 
-mlr put @sum[$a] = $x; filter false; end{ emit(@sum); } ./reg_test/input/abixy
+mlr put @sum[$a] = $x; filter false; end{ emit @sum; } ./reg_test/input/abixy
 sum:pan=0.502626
 sum:eks=0.611784
 sum:wye=0.573289
 sum:zee=0.598554
 sum:hat=0.031442
 
-mlr put @sum[$a] = $x; filter false; end{ emit(@sum,"a"); } ./reg_test/input/abixy
+mlr put @sum[$a] = $x; filter false; end{ emit @sum,"a"; } ./reg_test/input/abixy
 a=pan,sum=0.502626
 a=eks,sum=0.611784
 a=wye,sum=0.573289
 a=zee,sum=0.598554
 a=hat,sum=0.031442
 
-mlr put @sum[$a] = $x; filter false; end{ emit(@sum,"a","b"); } ./reg_test/input/abixy
+mlr put @sum[$a] = $x; filter false; end{ emit @sum,"a","b"; } ./reg_test/input/abixy
 a=pan,sum=0.502626
 a=eks,sum=0.611784
 a=wye,sum=0.573289
 a=zee,sum=0.598554
 a=hat,sum=0.031442
 
-mlr put @sum[$a][$b] = $x; filter false; end{ emit(@sum); } ./reg_test/input/abixy
+mlr put @sum[$a][$b] = $x; filter false; end{ emit @sum; } ./reg_test/input/abixy
 sum:pan:pan=0.346790
 sum:pan:wye=0.502626
 sum:eks:pan=0.758680
@@ -12804,7 +12804,7 @@ sum:zee:pan=0.527126
 sum:zee:wye=0.598554
 sum:hat:wye=0.031442
 
-mlr put @sum[$a][$b] = $x; filter false; end{ emit(@sum,"a"); } ./reg_test/input/abixy
+mlr put @sum[$a][$b] = $x; filter false; end{ emit @sum,"a"; } ./reg_test/input/abixy
 a=pan,sum:pan=0.346790
 a=pan,sum:wye=0.502626
 a=eks,sum:pan=0.758680
@@ -12816,7 +12816,7 @@ a=zee,sum:pan=0.527126
 a=zee,sum:wye=0.598554
 a=hat,sum:wye=0.031442
 
-mlr put @sum[$a][$b] = $x; filter false; end{ emit(@sum,"a","b"); } ./reg_test/input/abixy
+mlr put @sum[$a][$b] = $x; filter false; end{ emit @sum,"a","b"; } ./reg_test/input/abixy
 a=pan,b=pan,sum=0.346790
 a=pan,b=wye,sum=0.502626
 a=eks,b=pan,sum=0.758680

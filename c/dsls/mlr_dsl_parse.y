@@ -49,6 +49,7 @@ md_statement ::= md_main_srec_assignment.
 md_statement ::= md_main_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
+md_statement ::= md_main_emitf.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
@@ -69,6 +70,7 @@ md_begin_block_statement ::= .
 md_begin_block_statement ::= md_begin_block_oosvar_assignment.
 md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
+md_begin_block_statement ::= md_begin_block_emitf.
 md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
 
@@ -83,6 +85,7 @@ md_end_block_statement ::= .
 md_end_block_statement ::= md_end_block_oosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
+md_end_block_statement ::= md_end_block_emitf.
 md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
@@ -112,6 +115,7 @@ md_conditional_block_statements(A) ::= md_conditional_block_statements(B) MD_TOK
 
 md_conditional_block_statement ::= md_conditional_block_srec_assignment.
 md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
+md_conditional_block_statement ::= md_conditional_block_emitf.
 md_conditional_block_statement ::= md_conditional_block_emit.
 md_conditional_block_statement ::= md_conditional_block_dump.
 
@@ -132,6 +136,10 @@ md_main_bare_boolean(A) ::= md_rhs(B). {
 }
 md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pmain_statements, A);
+}
+md_main_emitf(A) ::= md_emitf(B). {
+	A = B;
 	sllv_append(past->pmain_statements, A);
 }
 md_main_emit(A) ::= md_emit(B). {
@@ -158,6 +166,10 @@ md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pbegin_statements, A);
 }
+md_begin_block_emitf(A) ::= md_emitf(B). {
+	A = B;
+	sllv_append(past->pbegin_statements, A);
+}
 md_begin_block_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
@@ -172,6 +184,9 @@ md_conditional_block_srec_assignment(A) ::= md_srec_assignment(B). {
 	A = B;
 }
 md_conditional_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
+	A = B;
+}
+md_conditional_block_emitf(A) ::= md_emitf(B). {
 	A = B;
 }
 md_conditional_block_emit(A) ::= md_emit(B). {
@@ -194,6 +209,10 @@ md_end_block_bare_boolean(A) ::= md_rhs(B). {
 }
 md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pend_statements, A);
+}
+md_end_block_emitf(A) ::= md_emitf(B). {
+	A = B;
 	sllv_append(past->pend_statements, A);
 }
 md_end_block_emit(A) ::= md_emit(B). {
@@ -414,39 +433,38 @@ md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_POW_EQUALS md_rhs(
 }
 
 // ----------------------------------------------------------------
-// Given "emit @a,@b,@c": since this is a bottom-up parser, we get first the "@a",
+// Given "emitf @a,@b,@c": since this is a bottom-up parser, we get first the "@a",
 // then "@a,@b", then "@a,@b,@c", then finally "emit @a,@b,@c". So:
 // * On the "@a" we make a sub-AST called "temp @a" (although we could call it "emit").
 // * On the "@b" we append the next argument to get "temp @a,@b".
 // * On the "@c" we append the next argument to get "temp @a,@b,@c".
 // * On the "emit" we change the name to get "emit @a,@b,@c".
 
-md_emit(A) ::= MD_TOKEN_EMIT(O) md_emit_args(B). {
+md_emitf(A) ::= MD_TOKEN_EMITF(O) md_emitf_args(B). {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
-// Need to invalidate "emit $a," -- use some non-empty-args expr.
-md_emit_args(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMIT);
+// Need to invalidate "emit @a," -- use some non-empty-args expr.
+md_emitf_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_EMITF);
 }
-md_emit_args(A) ::= md_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
+md_emitf_args(A) ::= md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMITF, B);
 }
-md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
+md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
-// xxx very temporary -- just for experimenting.
-md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_LPAREN md_oosvar_name(B) MD_TOKEN_RPAREN. {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT2TEMP, B);
+md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B);
 }
-md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_LPAREN md_oosvar_name(B) MD_TOKEN_COMMA md_emit_args2(C) MD_TOKEN_RPAREN. {
+md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_name(B) MD_TOKEN_COMMA md_emit_args(C). {
 	B = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
-md_emit_args2(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT2TEMP, B);
+md_emit_args(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
 }
-md_emit_args2(A) ::= md_emit_args2(B) MD_TOKEN_COMMA md_rhs(C). {
+md_emit_args(A) ::= md_emit_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
