@@ -59,35 +59,39 @@ PARAMETERIZED EMIT
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
 
+* to mld:ref
+
 ! UTs
   - 
   mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
   mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
   mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
 
-* to mld:ref
+  mlr put '$nonesuch = @nonesuch' ../data/small
 
+  echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
+  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
+  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
 
-  mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emit @mean}' ../data/small
+  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
+  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
+  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
 
-* implicit initialization not OK -- null-ops math not OK here:
+x=1,y=2,z=3
+x=1,y=,z=
+x=1,y=,z=
 
-  mlr --opprint put '@sum[$a]=@sum[$a]+$x; filter false; end{dump}' ../data/small
+x=1,y=2
+x=1,y=
+x=1,y=
 
-* replace "null" with "empty", "absent", and "uninit"?
+  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x)'  # $y is MT_INT
+  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
+  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
 
-  - echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
-  - echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
-  - echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
-
-  - echo x=1,y=2 | mlr put '@s = @s + $y   # @s is MT_UNINIT on first record, then MT_INT on second
-  - echo x=1,y=  | mlr put '@s = @s + $y   # MT_
-  - echo x=1,y=  | mlr put '@s = @s + $u   # MT_
-
-  - evaluator-from-field-name produces empty/absent
-  - evaluator-from-oosvar     produces uninit
-
-  - it will be syntactically ok to do '$x = @u' in which case field value can be uninit. serialize to "".
+  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
+  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
+  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
 
 ================================================================
 64-BIT CONTAINER SIZES

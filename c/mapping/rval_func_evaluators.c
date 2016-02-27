@@ -69,6 +69,7 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "hexfmt",    1, "Convert int to string, e.g. 255 to \"0xff\"."},
 	{FUNC_CLASS_CONVERSION, "int",       1, "Convert int/float/bool/string to int."},
 	{FUNC_CLASS_CONVERSION, "string",    1, "Convert int/float/bool/string to string."},
+	{FUNC_CLASS_CONVERSION, "typeof",    1, "Convert argument to type of argument (e.g. string). For debug."},
 
 	{FUNC_CLASS_STRING, ".",        2, "String concatenation."},
 	{FUNC_CLASS_STRING, "gsub",     3, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
@@ -348,6 +349,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 	} else if (streq(fnnm, "sqrt"))      { return rval_evaluator_alloc_from_f_f_func(f_f_sqrt_func,      parg1);
 	} else if (streq(fnnm, "string"))    { return rval_evaluator_alloc_from_x_x_func(s_x_string_func,    parg1);
 	} else if (streq(fnnm, "strlen"))    { return rval_evaluator_alloc_from_i_s_func(i_s_strlen_func,    parg1);
+	} else if (streq(fnnm, "typeof"))    { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,    parg1);
 	} else if (streq(fnnm, "tan"))       { return rval_evaluator_alloc_from_f_f_func(f_f_tan_func,       parg1);
 	} else if (streq(fnnm, "tanh"))      { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,      parg1);
 	} else if (streq(fnnm, "tolower"))   { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,   parg1);

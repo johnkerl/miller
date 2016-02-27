@@ -491,6 +491,12 @@ mv_t i_s_strlen_func(mv_t* pval1) {
 	return rv;
 }
 
+mv_t s_x_typeof_func(mv_t* pval1) {
+	mv_t rv = mv_from_string(mt_describe_type(pval1->type), NO_FREE);
+	mv_free(pval1);
+	return rv;
+}
+
 // ----------------------------------------------------------------
 #define NZBUFLEN 63
 
