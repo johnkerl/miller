@@ -1386,8 +1386,8 @@ static mv_t abs_n_i(mv_t* pa) {
 static mv_unary_func_t* abs_dispositions[MT_DIM] = {
 	/*ERROR*/  abs_e_x,
 	/*ABSENT*/ abs_v_x,
-	/*UNINIT*/ abs_e_x,
-	/*VOID*/   abs_e_x,
+	/*UNINIT*/ abs_v_x,
+	/*VOID*/   abs_v_x,
 	/*STRING*/ abs_e_x,
 	/*INT*/    abs_n_i,
 	/*FLOAT*/  abs_n_f,
@@ -1413,8 +1413,8 @@ static mv_t ceil_n_i(mv_t* pa) {
 static mv_unary_func_t* ceil_dispositions[MT_DIM] = {
 	/*ERROR*/  ceil_e_x,
 	/*ABSENT*/ ceil_v_x,
-	/*UNINIT*/ ceil_e_x,
-	/*VOID*/   ceil_e_x,
+	/*UNINIT*/ ceil_v_x,
+	/*VOID*/   ceil_v_x,
 	/*STRING*/ ceil_e_x,
 	/*INT*/    ceil_n_i,
 	/*FLOAT*/  ceil_n_f,
@@ -1440,8 +1440,8 @@ static mv_t floor_n_i(mv_t* pa) {
 static mv_unary_func_t* floor_dispositions[MT_DIM] = {
 	/*ERROR*/  floor_e_x,
 	/*ABSENT*/ floor_v_x,
-	/*UNINIT*/ floor_e_x,
-	/*VOID*/   floor_e_x,
+	/*UNINIT*/ floor_v_x,
+	/*VOID*/   floor_v_x,
 	/*STRING*/ floor_e_x,
 	/*INT*/    floor_n_i,
 	/*FLOAT*/  floor_n_f,
@@ -1467,8 +1467,8 @@ static mv_t round_n_i(mv_t* pa) {
 static mv_unary_func_t* round_dispositions[MT_DIM] = {
 	/*ERROR*/  round_e_x,
 	/*ABSENT*/ round_v_x,
-	/*UNINIT*/ round_e_x,
-	/*VOID*/   round_e_x,
+	/*UNINIT*/ round_v_x,
+	/*VOID*/   round_v_x,
 	/*STRING*/ round_e_x,
 	/*INT*/    round_n_i,
 	/*FLOAT*/  round_n_f,
@@ -1480,6 +1480,9 @@ mv_t x_x_round_func(mv_t* pval1) { return (round_dispositions[pval1->type])(pval
 // ----------------------------------------------------------------
 static mv_t roundm_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
+}
+static mv_t roundm_v_xx(mv_t* pa, mv_t* pb) {
+	return mv_void();
 }
 static mv_t roundm_f_ff(mv_t* pa, mv_t* pb) {
 	double x = pa->u.fltv;
@@ -1502,13 +1505,12 @@ static mv_t roundm_i_ii(mv_t* pa, mv_t* pb) {
 	return mv_from_int((x / m) * m);
 }
 
-// xxx
 static mv_binary_func_t* roundm_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR         ABSENT       UNINIT       VOID         STRING       INT          FLOAT        BOOL
 	/*ERROR*/  {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
-	/*ABSENT*/ {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
-	/*UNINIT*/ {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
-	/*VOID*/   {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*ABSENT*/ {roundm_e_xx, roundm_v_xx, roundm_v_xx, roundm_v_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*UNINIT*/ {roundm_e_xx, roundm_v_xx, roundm_v_xx, roundm_v_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
+	/*VOID*/   {roundm_e_xx, roundm_v_xx, roundm_v_xx, roundm_v_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
 	/*STRING*/ {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx},
 	/*INT*/    {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_i_ii, roundm_f_if, roundm_e_xx},
 	/*FLOAT*/  {roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_e_xx, roundm_f_fi, roundm_f_ff, roundm_e_xx},
@@ -1668,8 +1670,8 @@ static mv_t sgn_n_i(mv_t* pa) {
 static mv_unary_func_t* sgn_dispositions[MT_DIM] = {
 	/*ERROR*/  sgn_e_x,
 	/*ABSENT*/ sgn_v_x,
-	/*UNINIT*/ sgn_e_x,
-	/*VOID*/   sgn_e_x,
+	/*UNINIT*/ sgn_v_x,
+	/*VOID*/   sgn_v_x,
 	/*STRING*/ sgn_e_x,
 	/*INT*/    sgn_n_i,
 	/*FLOAT*/  sgn_n_f,
@@ -1680,7 +1682,7 @@ mv_t x_x_sgn_func(mv_t* pval1) { return (sgn_dispositions[pval1->type])(pval1); 
 
 // ----------------------------------------------------------------
 static mv_t int_v_x(mv_t* pa) { return mv_void(); }
-static mv_t int_i_e(mv_t* pa) { return mv_error(); }
+static mv_t int_e_x(mv_t* pa) { return mv_error(); }
 static mv_t int_i_b(mv_t* pa) { return mv_from_int(pa->u.boolv ? 1 : 0); }
 static mv_t int_i_f(mv_t* pa) { return mv_from_int((long long)round(pa->u.fltv)); }
 static mv_t int_i_i(mv_t* pa) { return mv_from_int(pa->u.intv); }
@@ -1699,7 +1701,7 @@ static mv_t int_i_s(mv_t* pa) {
 }
 
 static mv_unary_func_t* int_dispositions[MT_DIM] = {
-	/*ERROR*/  int_i_e,
+	/*ERROR*/  int_e_x,
 	/*ABSENT*/ int_v_x,
 	/*UNINIT*/ int_v_x,
 	/*VOID*/   int_v_x,
@@ -1828,8 +1830,8 @@ static mv_unary_func_t* hexfmt_dispositions[MT_DIM] = {
 mv_t s_x_hexfmt_func(mv_t* pval1) { return (hexfmt_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
-static mv_t fmtnum_s_ns(mv_t* pa, mv_t* pfmt) { return mv_void(); }
-static mv_t fmtnum_e_es(mv_t* pa, mv_t* pfmt) { return mv_error(); }
+static mv_t fmtnum_v_xx(mv_t* pa, mv_t* pfmt) { return mv_void(); }
+static mv_t fmtnum_e_xx(mv_t* pa, mv_t* pfmt) { return mv_error(); }
 static mv_t fmtnum_s_bs(mv_t* pa, mv_t* pfmt) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t fmtnum_s_ds(mv_t* pa, mv_t* pfmt) {
 	mv_t rv = mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, pfmt->u.strv));
@@ -1844,10 +1846,10 @@ static mv_t fmtnum_s_is(mv_t* pa, mv_t* pfmt) {
 static mv_t fmtnum_s_ss(mv_t* pa, mv_t* pfmt) { return mv_error(); }
 
 static mv_binary_func_t* fmtnum_dispositions[MT_DIM] = {
-	/*ERROR*/  fmtnum_e_es,
-	/*ABSENT*/ fmtnum_s_ns,
-	/*UNINIT*/ fmtnum_s_ns,
-	/*VOID*/   fmtnum_s_ns,
+	/*ERROR*/  fmtnum_e_xx,
+	/*ABSENT*/ fmtnum_v_xx,
+	/*UNINIT*/ fmtnum_v_xx,
+	/*VOID*/   fmtnum_v_xx,
 	/*STRING*/ fmtnum_s_ss,
 	/*INT*/    fmtnum_s_is,
 	/*FLOAT*/  fmtnum_s_ds,
