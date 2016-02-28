@@ -16,6 +16,7 @@ TOP-OF-LIST SUMMARY
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 ! valgrinds
 ! xxxes
+* ack hash algo
 
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 ? @x = $0 ?  $0 = @x ?
@@ -52,6 +53,9 @@ UNSET
 
 ================================================================
 PARAMETERIZED EMIT
+
+!! need submaps:
+  mlr put -v 'emit @a["sums"]'
 
 * evolve & extend the UTs
 * handle too-short, too-long, just-right cases
