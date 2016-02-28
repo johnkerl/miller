@@ -277,6 +277,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_l
 }
 
 // ----------------------------------------------------------------
+// xxx use mlhmmv_get_level for most of the work. then check is_terminal.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
@@ -308,6 +309,30 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_value->u.mlrval;
 }
 
+mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	sllmve_t* prest_keys = pmvkeys->phead;
+	if (prest_keys == NULL) {
+		return NULL;
+	}
+	mlhmmv_level_t* plevel = pmap->proot_level;
+	mlhmmv_level_value_t* plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+	while (prest_keys->pnext != NULL) {
+		if (plevel_value == NULL) {
+			return NULL;
+		}
+		if (plevel_value->is_terminal) {
+			return NULL;
+		}
+		plevel = plevel_value->u.pnext_level;
+		prest_keys = prest_keys->pnext;
+		plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+	}
+	if (plevel_value == NULL) {
+		return NULL;
+	}
+	return plevel_value;
+}
+
 mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel_key) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
@@ -321,6 +346,11 @@ mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel
 		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	// xxx stub
 }
 
 // ----------------------------------------------------------------

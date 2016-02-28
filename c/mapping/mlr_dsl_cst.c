@@ -491,6 +491,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
 		poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
+	// xxx libify
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
 	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -525,17 +526,28 @@ static void mlr_dsl_cst_node_evaluate_unset(
 	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
 		if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
-			// oosvar unset
+
+			// xxx libify
+			sllmv_t* pmvkeys = sllmv_alloc();
+			int keys_ok = TRUE;
+			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+				rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
+				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
+					poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
+				if (mv_is_null(&mvkey)) {
+					keys_ok = FALSE;
+					break;
+				}
+				// Don't free the mlrval since its memory will be managed by the sllmv.
+				sllmv_add(pmvkeys, &mvkey);
+			}
+
+			if (keys_ok)
+				mlhmmv_remove(poosvars, pmvkeys);
 		} else {
 			// srec unset
 			lrec_remove(pinrec, pitem->output_field_name);
 		}
-	// xxx loop over items
-	//if poosvar_lhs_keylist_evaluators != NULL {
-	//	// xxx oosvar unset
-	//} else {
-	//	// xxx srec-field unset
-	//}
 	}
 }
 
