@@ -266,6 +266,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 					sllv_alloc(),
 					NULL,
 					NULL));
+			// xxx brief cmts here paralleling emit
 			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 				sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
 				mlr_dsl_ast_node_t* pwalker = pnode;
@@ -521,7 +522,21 @@ static void mlr_dsl_cst_node_evaluate_unset(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
-	// xxx stub
+	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
+		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
+		if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
+			// oosvar unset
+		} else {
+			// srec unset
+			lrec_remove(pinrec, pitem->output_field_name);
+		}
+	// xxx loop over items
+	//if poosvar_lhs_keylist_evaluators != NULL {
+	//	// xxx oosvar unset
+	//} else {
+	//	// xxx srec-field unset
+	//}
+	}
 }
 
 // ----------------------------------------------------------------
