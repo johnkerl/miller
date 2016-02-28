@@ -34,6 +34,16 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_unset(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_emitf(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -239,6 +249,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL));
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
+
+	} else if (past->type == MD_AST_NODE_TYPE_UNSET) {
+		// xxx temp
+
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_unset;
 
 	} else if (past->type == MD_AST_NODE_TYPE_EMITF) {
 		// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
@@ -451,6 +466,20 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
 
 	sllmv_free(pmvkeys);
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_unset(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+	// xxx stub
 }
 
 // ----------------------------------------------------------------
