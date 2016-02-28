@@ -251,7 +251,31 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
 
 	} else if (past->type == MD_AST_NODE_TYPE_UNSET) {
-		// xxx temp
+
+		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+			if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
+				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					pnode->text,
+					NULL,
+					NULL,
+					NULL));
+			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
+				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					pnode->text,
+					NULL, // xxx needs to be poosvar_lhs_keylist_evaluators if keyed
+					NULL,
+					NULL));
+			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					pnode->text,
+					NULL, // xxx needs to be poosvar_lhs_keylist_evaluators if keyed
+					NULL,
+					NULL));
+			} else {
+				// xxx abend
+			}
+		}
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_unset;
 
