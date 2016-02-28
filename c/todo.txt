@@ -55,7 +55,8 @@ UNSET
 PARAMETERIZED EMIT
 
 !! need submaps:
-  mlr put -v 'emit @a["sums"]'
+  o mlr put -v 'emit @a["sums"]'
+  o various-level emit and emitf. only req't for emitf is all args must be single at that level.
 
 * evolve & extend the UTs
 * handle too-short, too-long, just-right cases

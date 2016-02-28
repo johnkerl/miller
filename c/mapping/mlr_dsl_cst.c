@@ -590,7 +590,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	// xxx alloc once & keep in item struct. or not. no huge impact (and, zero-copy).
 	mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
 
-	mlhmmv_level_value_t* proot_value = mlhmmv_level_get(poosvars->proot_level, &mv0);
+	mlhmmv_level_value_t* proot_value = mlhmmv_get_next_level(poosvars->proot_level, &mv0);
 	if (proot_value == NULL) {
 		mv_free(&mv0);
 		return;

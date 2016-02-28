@@ -285,7 +285,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_value_t* plevel_value = mlhmmv_level_get(plevel, &prest_keys->value);
+	mlhmmv_level_value_t* plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
 	while (prest_keys->pnext != NULL) {
 		if (plevel_value == NULL) {
 			return NULL;
@@ -296,7 +296,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 		}
 		plevel = plevel_value->u.pnext_level;
 		prest_keys = prest_keys->pnext;
-		plevel_value = mlhmmv_level_get(plevel, &prest_keys->value);
+		plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
 	}
 	if (plevel_value == NULL) {
 		return NULL;
@@ -308,7 +308,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_value->u.mlrval;
 }
 
-mlhmmv_level_value_t* mlhmmv_level_get(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel_key) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
