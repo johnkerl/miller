@@ -448,14 +448,32 @@ md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_POW_EQUALS md_rhs(
 }
 
 // ----------------------------------------------------------------
-md_unset(A) ::= MD_TOKEN_UNSET(O) md_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
+md_unset(A) ::= MD_TOKEN_UNSET(O) md_unset_args(B). {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
-md_unset(A) ::= MD_TOKEN_UNSET(O) md_keyed_oosvar_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
+// Need to invalidate "emit @a," -- use some non-empty-args expr.
+md_unset_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_UNSET);
 }
-md_unset(A) ::= MD_TOKEN_UNSET(O) md_field_name(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
+
+md_unset_args(A) ::= md_field_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
+md_unset_args(A) ::= md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
+md_unset_args(A) ::= md_keyed_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
+
+md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_field_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_keyed_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 // ----------------------------------------------------------------

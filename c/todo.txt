@@ -8,11 +8,11 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
+! unset/clear for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * tri-split null UTs
 * += et al. UTs
 * parameterized-emit UTs
 * parameterized-emit code-neatens
-! unset/clear for srec as well as oosvar. either rhs="" or remove key. latter since ass't does former. cf. cut -x.
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 ! valgrinds
 ! xxxes
