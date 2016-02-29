@@ -88,4 +88,4 @@ https://github.com/johnkerl/miller/tags.
 
 <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
 
-![Alt text](cover.png?raw=true "Cover Temp")
+![Alt text](cover.jpg?raw=true "Cover Temp")
