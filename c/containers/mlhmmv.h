@@ -77,8 +77,6 @@ void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
-// xxx make static:
-mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 // Made public for the oosvar-emitter.
 mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* pmap, mv_t* plevel_key);

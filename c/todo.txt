@@ -51,6 +51,7 @@ TOP-OF-LIST SUMMARY
 UNSET
 
 * multi-unset
+* unset all
 
 ================================================================
 PARAMETERIZED EMIT

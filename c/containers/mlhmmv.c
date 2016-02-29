@@ -24,6 +24,7 @@ static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
+static mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
@@ -309,7 +310,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_value->u.mlrval;
 }
 
-mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+static mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		return NULL;
@@ -349,8 +350,58 @@ mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel
 }
 
 // ----------------------------------------------------------------
+// xxx cmt re remove from here on down
+
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-	// xxx stub
+	mlhmmv_level_value_t* plevel = mlhmmv_get_level(pmap, pmvkeys);
+	if (plevel == NULL)
+		return;
+
+	// xxx need a get_level_value method!
+
+//	// 1. excise the node and its descendants from the storage tree
+//	if (plevel->is_terminal) {
+//		mv_free(&plevel->u.level_value);
+//	} else {
+//	}
+
+//	// 2. free the memory for the node and its descendants
+//	mlhmmv_level_free(plevel);
+
+//void lhmss_remove(lhmss_t* pmap, char* key) {
+//	int index = lhmss_find_index_for_key(pmap, key);
+//	lhmsse_t* pe = &pmap->entries[index];
+//	if (pmap->states[index] == OCCUPIED) {
+//		pe->ideal_index = -1;
+//		pe->key         = NULL;
+//		pe->value       = NULL;
+//		pmap->states[index] = DELETED;
+//
+//		if (pe == pmap->phead) {
+//			if (pe == pmap->ptail) {
+//				pmap->phead = NULL;
+//				pmap->ptail = NULL;
+//			} else {
+//				pmap->phead = pe->pnext;
+//			}
+//		} else {
+//			pe->pprev->pnext = pe->pnext;
+//			pe->pnext->pprev = pe->pprev;
+//		}
+//
+//		pmap->num_freed++;
+//		pmap->num_occupied--;
+//		return;
+//	}
+//	else if (pmap->states[index] == EMPTY) {
+//		return;
+//	}
+//	else {
+//		fprintf(stderr, "lhmss_find_index_for_key did not find end of chain.\n");
+//		exit(1);
+//	}
+//}
+
 }
 
 // ----------------------------------------------------------------

@@ -607,6 +607,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 		mv_free(&mv0);
 		return;
 	}
+	// xxx libify & findallsuch
 	sllmv_t* pmvkeys = sllmv_alloc();
 	int keys_ok = TRUE;
 	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
