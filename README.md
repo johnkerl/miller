@@ -87,5 +87,3 @@ https://github.com/johnkerl/miller/tags.
 * See [here] (https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
 
 <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
-
-![Alt text](cover.jpg?raw=true "Cover Temp")
