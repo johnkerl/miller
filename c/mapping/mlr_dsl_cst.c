@@ -602,8 +602,8 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	// xxx alloc once & keep in item struct. or not. no huge impact (and, zero-copy).
 	mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
 
-	mlhmmv_level_value_t* proot_value = mlhmmv_get_next_level(poosvars->proot_level, &mv0);
-	if (proot_value == NULL) {
+	mlhmmv_level_entry_t* proot_entry = mlhmmv_get_next_level_entry(poosvars->proot_level, &mv0);
+	if (proot_entry == NULL) {
 		mv_free(&mv0);
 		return;
 	}
@@ -624,12 +624,12 @@ static void mlr_dsl_cst_node_evaluate_emit(
 
 	if (keys_ok) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		if (proot_value->is_terminal) {
+		if (proot_entry->level_value.is_terminal) {
 			lrec_put(poutrec, pitem->output_field_name,
-				mv_alloc_format_val(&proot_value->u.mlrval), FREE_ENTRY_VALUE);
+				mv_alloc_format_val(&proot_entry->level_value.u.mlrval), FREE_ENTRY_VALUE);
 			sllv_append(poutrecs, poutrec);
 		} else {
-			mlr_dsl_cst_node_evaluate_emit_aux(proot_value->u.pnext_level, pitem->output_field_name,
+			mlr_dsl_cst_node_evaluate_emit_aux(proot_entry->level_value.u.pnext_level, pitem->output_field_name,
 				pmvkeys->phead, poutrec, poutrecs);
 			lrec_free(poutrec);
 		}

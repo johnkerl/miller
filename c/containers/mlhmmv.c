@@ -24,7 +24,7 @@ static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
-static mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
@@ -287,60 +287,60 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_value_t* plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
 	while (prest_keys->pnext != NULL) {
-		if (plevel_value == NULL) {
+		if (plevel_entry == NULL) {
 			return NULL;
 		}
-		if (plevel_value->is_terminal) {
+		if (plevel_entry->level_value.is_terminal) {
 			*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
 			return NULL;
 		}
-		plevel = plevel_value->u.pnext_level;
+		plevel = plevel_entry->level_value.u.pnext_level;
 		prest_keys = prest_keys->pnext;
-		plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+		plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.u.pnext_level, &prest_keys->value);
 	}
-	if (plevel_value == NULL) {
+	if (plevel_entry == NULL) {
 		return NULL;
 	}
-	if (!plevel_value->is_terminal) {
+	if (!plevel_entry->level_value.is_terminal) {
 		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
 		return NULL;
 	}
-	return &plevel_value->u.mlrval;
+	return &plevel_entry->level_value.u.mlrval;
 }
 
-static mlhmmv_level_value_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_value_t* plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
 	while (prest_keys->pnext != NULL) {
-		if (plevel_value == NULL) {
+		if (plevel_entry == NULL) {
 			return NULL;
 		}
-		if (plevel_value->is_terminal) {
+		if (plevel_entry->level_value.is_terminal) {
 			return NULL;
 		}
-		plevel = plevel_value->u.pnext_level;
+		plevel = plevel_entry->level_value.u.pnext_level;
 		prest_keys = prest_keys->pnext;
-		plevel_value = mlhmmv_get_next_level(plevel, &prest_keys->value);
+		plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
 	}
-	if (plevel_value == NULL) {
+	if (plevel_entry == NULL) {
 		return NULL;
 	}
-	return plevel_value;
+	return plevel_entry;
 }
 
-mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
 
 	if (plevel->states[index] == OCCUPIED)
-		return &pentry->level_value;
+		return pentry;
 	else if (plevel->states[index] == EMPTY)
 		return NULL;
 	else {
@@ -353,20 +353,11 @@ mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* plevel, mv_t* plevel
 // xxx cmt re remove from here on down
 
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-	mlhmmv_level_value_t* plevel = mlhmmv_get_level(pmap, pmvkeys);
-	if (plevel == NULL)
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_level_entry(pmap, pmvkeys);
+	if (plevel_entry == NULL)
 		return;
 
-	// xxx need a get_level_value method!
-
-//	// 1. excise the node and its descendants from the storage tree
-//	if (plevel->is_terminal) {
-//		mv_free(&plevel->u.level_value);
-//	} else {
-//	}
-
-//	// 2. free the memory for the node and its descendants
-//	mlhmmv_level_free(plevel);
+	// 1. excise the node and its descendants from the storage tree
 
 //void lhmss_remove(lhmss_t* pmap, char* key) {
 //	int index = lhmss_find_index_for_key(pmap, key);
@@ -401,6 +392,13 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 //		exit(1);
 //	}
 //}
+
+	// 2. free the memory for the node and its descendants
+	if (plevel_entry->level_value.is_terminal) {
+		mv_free(&plevel_entry->level_value.u.mlrval);
+	} else {
+		mlhmmv_level_free(plevel_entry->level_value.u.pnext_level);
+	}
 
 }
 

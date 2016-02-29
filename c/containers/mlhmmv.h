@@ -79,7 +79,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 // Made public for the oosvar-emitter.
-mlhmmv_level_value_t* mlhmmv_get_next_level(mlhmmv_level_t* pmap, mv_t* plevel_key);
+mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key);
 
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);
