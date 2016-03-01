@@ -331,6 +331,24 @@ static char* test_mlhmmv_to_lrecs() {
 	// a=zee,b=wye,i=8,sum=0.598554
 	// a=hat,b=wye,i=9,sum=0.031442
 
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"]}' ../data/small
+	// sum:pan:pan:1=0.346790
+	// sum:pan:wye:10=0.502626
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a"}' ../data/small
+	// a=pan,sum:pan:1=0.346790
+	// a=pan,sum:wye:10=0.502626
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a", "b"}' ../data/small
+	// a=pan,b=pan,sum:1=0.346790
+	// a=pan,b=wye,sum:10=0.502626
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a", "b", "i"}' ../data/small
+	// a=pan,b=pan,i=1,sum=0.346790
+	// a=pan,b=wye,i=10,sum=0.502626
+
+
 	// print entire map
 
 	sllv_t* poutrecs = NULL;

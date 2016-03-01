@@ -49,14 +49,7 @@ TOP-OF-LIST SUMMARY
   - shuffle
 
 ================================================================
-UNSET
-
-* multi-unset
-* unset all
-! mlhmmv UT unset + emit (lrec conversion, which libify)
-
-================================================================
-PARAMETERIZED EMIT
+PARAMETERIZED EMIT AND UNSET
 
 !! need submaps:
   o mlr put -v 'emit @a["sums"]'
@@ -70,6 +63,12 @@ PARAMETERIZED EMIT
 * needs significant comment-by-example in the code
 * emit w/ and w/o parentheses in the grammar -- try to get just one
 * mld section, w/ olh brief example & xref to it.
+
+* multi-unset
+* emit all
+* unset all
+* emit UT @ test-mlhmmv
+* unset UT @ test-mlhmmv
 
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
