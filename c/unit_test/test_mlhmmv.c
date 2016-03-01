@@ -395,7 +395,7 @@ static char* test_mlhmmv_to_lrecs() {
 //	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_single(smv("first")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_single(smv("first")), poutrecs);
 	printf("outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -405,7 +405,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_double(smv("first"), smv("second")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_double(smv("first"), smv("second")), poutrecs);
 	printf("outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);

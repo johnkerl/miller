@@ -431,7 +431,7 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
 
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* psubmap_indices, sllmv_t* pnames, sllv_t* poutrecs) {
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	lrec_t* ptemplate = lrec_unbacked_alloc();
 	if (pnames->phead == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d\n",

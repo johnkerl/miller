@@ -85,10 +85,9 @@ void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys);
 mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
 // xxx comment:
-// * partial indices
 // * names
 // * these allocate unbacked lrecs
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* psubmap_indices, sllmv_t* pnames, sllv_t* poutrecs);
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
 
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);
