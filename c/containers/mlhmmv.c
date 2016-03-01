@@ -32,6 +32,10 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value);
 
+static void mlhmmv_to_lrecs_aux(mlhmmv_level_t* plevel, mv_t* pfirstname, sllmve_t* prestnames,
+	lrec_t* ptemplate, sllv_t* poutrecs);
+static void mlhmmv_to_lrecs_aux_flatten(mlhmmv_level_t* plevel, char* prefix, lrec_t* ptemplate, sllv_t* poutrecs);
+
 static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always);
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
@@ -421,6 +425,74 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	}
 	free(old_entries);
 	free(old_states);
+}
+
+// ----------------------------------------------------------------
+// xxx temp
+#define TEMP_FLATTEN_SEP ":"
+
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* psubmap_indices, sllmv_t* pnames, sllv_t* poutrecs) {
+	lrec_t* ptemplate = lrec_unbacked_alloc();
+	if (pnames->phead == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	mlhmmv_to_lrecs_aux(pmap->proot_level, &pnames->phead->value, pnames->phead->pnext, ptemplate, poutrecs);
+	lrec_free(ptemplate);
+}
+
+static void mlhmmv_to_lrecs_aux(
+	mlhmmv_level_t* plevel,
+	mv_t*           pfirstname,
+	sllmve_t*       prestnames,
+	lrec_t*         ptemplate,
+	sllv_t*         poutrecs)
+{
+	char* oosvar_name = "xxx-stub-oosvar-name";
+	if (prestnames == NULL) {
+		mlhmmv_to_lrecs_aux_flatten(plevel, oosvar_name, ptemplate, poutrecs);
+	} else {
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			lrec_t* pnextrec = lrec_copy(ptemplate);
+			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
+				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			mlhmmv_level_value_t* plevel_value = &pe->level_value;
+			if (plevel_value->is_terminal) {
+				lrec_put(pnextrec, oosvar_name,
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, pnextrec);
+			} else {
+				mlhmmv_to_lrecs_aux(pe->level_value.u.pnext_level,
+					pfirstname, prestnames->pnext, pnextrec, poutrecs);
+				lrec_free(pnextrec);
+			}
+		}
+	}
+}
+
+static void mlhmmv_to_lrecs_aux_flatten(
+	mlhmmv_level_t* plevel,
+	char*           prefix,
+	lrec_t*         ptemplate,
+	sllv_t*         poutrecs)
+{
+	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+		mlhmmv_level_value_t* plevel_value = &pe->level_value;
+		lrec_t* pnextrec = lrec_copy(ptemplate);
+		// xxx rename
+		char* foo = mv_alloc_format_val(&pe->level_key);
+		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
+		free(foo);
+		if (plevel_value->is_terminal) {
+			lrec_put(pnextrec, name,
+				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, pnextrec);
+		} else {
+			mlhmmv_to_lrecs_aux_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
+			lrec_free(pnextrec);
+		}
+	}
 }
 
 // ----------------------------------------------------------------

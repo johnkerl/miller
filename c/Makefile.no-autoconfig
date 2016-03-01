@@ -159,6 +159,9 @@ TEST_MLHMMV_SRCS = \
   containers/mlrval.c \
   containers/mlhmmv.c \
   containers/sllmv.c \
+  containers/sllv.c \
+  containers/slls.c \
+  containers/lrec.c \
   unit_test/test_mlhmmv.c
 
 TEST_MLRUTIL_SRCS = \

@@ -25,7 +25,7 @@ static char* test_no_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 	int error = 0;
 
-	printf("----------------------------------------------------------------\n");
+	printf("================================================================\n");
 	printf("empty map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
 
@@ -72,7 +72,7 @@ static char* test_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 	int error = 0;
 
-	printf("----------------------------------------------------------------\n");
+	printf("================================================================\n");
 	sllmv_t* pmvkeys = sllmv_single(imv(3));
 	mv_t* ptermval = imv(4);
 	mlhmmv_put(pmap, pmvkeys, ptermval);
@@ -116,7 +116,7 @@ static char* test_resize() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 	int error;
 
-	printf("----------------------------------------------------------------\n");
+	printf("================================================================\n");
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
 		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
 	mlhmmv_print_json_stacked(pmap, FALSE);
@@ -164,6 +164,7 @@ static char* test_depth_errors() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 	int error;
 
+	printf("================================================================\n");
 	mlhmmv_put(pmap, sllmv_triple(imv(1), imv(2), imv(3)), imv(4));
 
 	mu_assert_lf(NULL != mlhmmv_get(pmap, sllmv_triple(imv(1), imv(2), imv(3)), &error));
@@ -188,12 +189,224 @@ static char* test_depth_errors() {
 	return NULL;
 }
 
+// ----------------------------------------------------------------
+static char* test_mlhmmv_to_lrecs() {
+	mlhmmv_t* pmap = mlhmmv_alloc();
+
+	printf("================================================================\n");
+	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("s"), smv("x")), imv(1));
+	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("s"), smv("y")), imv(2));
+	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("t"), smv("x")), imv(3));
+	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("t"), smv("y")), imv(4));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("s"), smv("x")), imv(5));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("s"), smv("y")), imv(6));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("t"), smv("x")), imv(7));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("t"), smv("y")), imv(8));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("u"), smv("x")), imv(9));
+	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("u"), smv("y")), imv(10));
+
+	// {
+	//   "a": {
+	//     "s": {
+	//       "x": 1,
+	//       "y": 2
+	//     },
+	//     "t": {
+	//       "x": 3,
+	//       "y": 4
+	//     }
+	//   },
+	//   "b": {
+	//     "s": {
+	//       "x": 5,
+	//       "y": 6
+	//     },
+	//     "t": {
+	//       "x": 7,
+	//       "y": 8
+	//     },
+	//     "u": {
+	//       "x": 9,
+	//       "y": 10
+	//     }
+	//   }
+	// }
+
+	printf("full map:\n");
+	mlhmmv_print_json_stacked(pmap, FALSE);
+	printf("\n");
+
+	// a:s:x=1
+	// a:s:y=2
+	// a:t:x=3
+	// a:t:y=4
+	// b:s:x=5
+	// b:s:y=6
+	// b:t:x=7
+	// b:t:y=8
+	// b:u:x=9
+	// b:u:y=10
+
+	// first=a,s:x=1
+	// first=a,s:y=2
+	// first=a,t:x=3
+	// first=a,t:y=4
+	// first=b,s:x=5
+	// first=b,s:y=6
+	// first=b,t:x=7
+	// first=b,t:y=8
+	// first=b,u:x=9
+	// first=b,u:y=10
+
+	// first=a,second=s,x=1
+	// first=a,second=s,y=2
+	// first=a,second=t,x=3
+	// first=a,second=t,y=4
+	// first=b,second=s,x=5
+	// first=b,second=s,y=6
+	// first=b,second=t,x=7
+	// first=b,second=t,y=8
+	// first=b,second=u,x=9
+	// first=b,second=u,y=10
+
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{dump}' ../data/small | mlr --ijson --oxtab cat
+	// sum:pan:pan:1=0.346790
+	// sum:pan:wye:10=0.502626
+	// sum:eks:pan:2=0.758680
+	// sum:eks:wye:4=0.381399
+	// sum:eks:zee:7=0.611784
+	// sum:wye:wye:3=0.204603
+	// sum:wye:pan:5=0.573289
+	// sum:zee:pan:6=0.527126
+	// sum:zee:wye:8=0.598554
+	// sum:hat:wye:9=0.031442
+
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum}' ../data/small
+	// sum:pan:pan:1=0.346790
+	// sum:pan:wye:10=0.502626
+	// sum:eks:pan:2=0.758680
+	// sum:eks:wye:4=0.381399
+	// sum:eks:zee:7=0.611784
+	// sum:wye:wye:3=0.204603
+	// sum:wye:pan:5=0.573289
+	// sum:zee:pan:6=0.527126
+	// sum:zee:wye:8=0.598554
+	// sum:hat:wye:9=0.031442
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a"}' ../data/small
+	// a=pan,sum:pan:1=0.346790
+	// a=pan,sum:wye:10=0.502626
+	// a=eks,sum:pan:2=0.758680
+	// a=eks,sum:wye:4=0.381399
+	// a=eks,sum:zee:7=0.611784
+	// a=wye,sum:wye:3=0.204603
+	// a=wye,sum:pan:5=0.573289
+	// a=zee,sum:pan:6=0.527126
+	// a=zee,sum:wye:8=0.598554
+	// a=hat,sum:wye:9=0.031442
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a","b"}' ../data/small
+	// a=pan,b=pan,sum:1=0.346790
+	// a=pan,b=wye,sum:10=0.502626
+	// a=eks,b=pan,sum:2=0.758680
+	// a=eks,b=wye,sum:4=0.381399
+	// a=eks,b=zee,sum:7=0.611784
+	// a=wye,b=wye,sum:3=0.204603
+	// a=wye,b=pan,sum:5=0.573289
+	// a=zee,b=pan,sum:6=0.527126
+	// a=zee,b=wye,sum:8=0.598554
+	// a=hat,b=wye,sum:9=0.031442
+
+	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a","b","i"}' ../data/small
+	// a=pan,b=pan,i=1,sum=0.346790
+	// a=pan,b=wye,i=10,sum=0.502626
+	// a=eks,b=pan,i=2,sum=0.758680
+	// a=eks,b=wye,i=4,sum=0.381399
+	// a=eks,b=zee,i=7,sum=0.611784
+	// a=wye,b=wye,i=3,sum=0.204603
+	// a=wye,b=pan,i=5,sum=0.573289
+	// a=zee,b=pan,i=6,sum=0.527126
+	// a=zee,b=wye,i=8,sum=0.598554
+	// a=hat,b=wye,i=9,sum=0.031442
+
+	// print entire map
+
+	sllv_t* poutrecs = NULL;
+//	sllv_t* poutrecs = sllv_alloc();
+//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_alloc(), poutrecs);
+//	printf("outrecs (%lld):\n", poutrecs->length);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_print(pe->pvvalue);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_free(pe->pvvalue);
+//	printf("\n");
+//	sllv_free(poutrecs);
+
+//	poutrecs = sllv_alloc();
+//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_single(smv("first")), poutrecs);
+//	printf("outrecs (%lld):\n", poutrecs->length);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_print(pe->pvvalue);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_free(pe->pvvalue);
+//	printf("\n");
+//	sllv_free(poutrecs);
+
+//	poutrecs = sllv_alloc();
+//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_double(smv("first"), smv("second")), poutrecs);
+//	printf("outrecs (%lld):\n", poutrecs->length);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_print(pe->pvvalue);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_free(pe->pvvalue);
+//	printf("\n");
+//	sllv_free(poutrecs);
+
+	// print @a
+
+//	poutrecs = sllv_alloc();
+//	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_alloc(), poutrecs);
+//	printf("outrecs (%lld):\n", poutrecs->length);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_print(pe->pvvalue);
+//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+//		lrec_free(pe->pvvalue);
+//	printf("\n");
+//	sllv_free(poutrecs);
+
+	poutrecs = sllv_alloc();
+	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_single(smv("first")), poutrecs);
+	printf("outrecs (%lld):\n", poutrecs->length);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_print(pe->pvvalue);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_free(pe->pvvalue);
+	printf("\n");
+	sllv_free(poutrecs);
+
+	poutrecs = sllv_alloc();
+	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_double(smv("first"), smv("second")), poutrecs);
+	printf("outrecs (%lld):\n", poutrecs->length);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_print(pe->pvvalue);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_free(pe->pvvalue);
+	printf("\n");
+	sllv_free(poutrecs);
+
+	mlhmmv_free(pmap);
+	return NULL;
+}
+
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_no_overlap);
 	mu_run_test(test_overlap);
 	mu_run_test(test_resize);
 	mu_run_test(test_depth_errors);
+	mu_run_test(test_mlhmmv_to_lrecs);
 	return 0;
 }
 

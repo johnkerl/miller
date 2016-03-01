@@ -218,8 +218,6 @@ static inline int mv_is_non_null(mv_t* pval) {
 // AUXILIARY METHODS
 
 char* mt_describe_type(int type);
-
-char* mt_describe_type(int type);
 char* mv_alloc_format_val(mv_t* pval);
 char* mv_format_val(mv_t* pval, char* pfree_flags);
 char* mv_describe_val(mv_t val);
