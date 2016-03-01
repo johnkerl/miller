@@ -442,7 +442,13 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_next_level_entry(pmap->proot_level, pfirstname, NULL);
 	if (ptop_entry == NULL) {
+		// xxx temp
 	} else if (ptop_entry->level_value.is_terminal) {
+		// xxx temp
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		lrec_put(poutrec, mv_alloc_format_val(pfirstname),
+			mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
 	} else {
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 		mlhmmv_to_lrecs_aux(ptop_entry->level_value.u.pnext_level, pfirstname, pnames->phead->pnext,
@@ -468,8 +474,8 @@ static void mlhmmv_to_lrecs_aux(
 				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
 			if (plevel_value->is_terminal) {
-				lrec_put(pnextrec, oosvar_name,
-					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
+				lrec_put(pnextrec, mlr_strdup_or_die(oosvar_name),
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 				sllv_append(poutrecs, pnextrec);
 			} else {
 				mlhmmv_to_lrecs_aux(pe->level_value.u.pnext_level,
