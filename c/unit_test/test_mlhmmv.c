@@ -194,80 +194,21 @@ static char* test_mlhmmv_to_lrecs() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
 	printf("================================================================\n");
-	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("s"), smv("x")), imv(1));
-	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("s"), smv("y")), imv(2));
-	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("t"), smv("x")), imv(3));
-	mlhmmv_put(pmap, sllmv_triple(smv("a"), smv("t"), smv("y")), imv(4));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("s"), smv("x")), imv(5));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("s"), smv("y")), imv(6));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("t"), smv("x")), imv(7));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("t"), smv("y")), imv(8));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("u"), smv("x")), imv(9));
-	mlhmmv_put(pmap, sllmv_triple(smv("b"), smv("u"), smv("y")), imv(10));
-
-	// {
-	//   "a": {
-	//     "s": {
-	//       "x": 1,
-	//       "y": 2
-	//     },
-	//     "t": {
-	//       "x": 3,
-	//       "y": 4
-	//     }
-	//   },
-	//   "b": {
-	//     "s": {
-	//       "x": 5,
-	//       "y": 6
-	//     },
-	//     "t": {
-	//       "x": 7,
-	//       "y": 8
-	//     },
-	//     "u": {
-	//       "x": 9,
-	//       "y": 10
-	//     }
-	//   }
-	// }
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("s"), smv("x")), imv(1));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("s"), smv("y")), imv(2));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("t"), smv("x")), imv(3));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("t"), smv("y")), imv(4));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("s"), smv("x")), imv(5));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("s"), smv("y")), imv(6));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("t"), smv("x")), imv(7));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("t"), smv("y")), imv(8));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("u"), smv("x")), imv(9));
+	mlhmmv_put(pmap, sllmv_triple(smv("sum"), smv("u"), smv("y")), imv(10));
+	mlhmmv_put(pmap, sllmv_triple(smv("not"), smv("u"), smv("y")), imv(11));
 
 	printf("full map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	printf("\n");
-
-	// a:s:x=1
-	// a:s:y=2
-	// a:t:x=3
-	// a:t:y=4
-	// b:s:x=5
-	// b:s:y=6
-	// b:t:x=7
-	// b:t:y=8
-	// b:u:x=9
-	// b:u:y=10
-
-	// first=a,s:x=1
-	// first=a,s:y=2
-	// first=a,t:x=3
-	// first=a,t:y=4
-	// first=b,s:x=5
-	// first=b,s:y=6
-	// first=b,t:x=7
-	// first=b,t:y=8
-	// first=b,u:x=9
-	// first=b,u:y=10
-
-	// first=a,second=s,x=1
-	// first=a,second=s,y=2
-	// first=a,second=t,x=3
-	// first=a,second=t,y=4
-	// first=b,second=s,x=5
-	// first=b,second=s,y=6
-	// first=b,second=t,x=7
-	// first=b,second=t,y=8
-	// first=b,second=u,x=9
-	// first=b,second=u,y=10
 
 
 	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{dump}' ../data/small | mlr --ijson --oxtab cat
@@ -332,70 +273,38 @@ static char* test_mlhmmv_to_lrecs() {
 	// a=hat,b=wye,i=9,sum=0.031442
 
 
-	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"]}' ../data/small
-	// sum:pan:pan:1=0.346790
-	// sum:pan:wye:10=0.502626
+	// $ mlr put -q '@sum1[$a][$b][$i]=$x;@sum2=[$a][$b]=$x; end{emit all}' ../data/small
+	// sum1:pan:pan:1=0.346790
+	// sum1:pan:wye:10=0.502626
+	// sum1:eks:pan:2=0.758680
+	// sum1:eks:wye:4=0.381399
+	// sum1:eks:zee:7=0.611784
+	// sum1:wye:wye:3=0.204603
+	// sum1:wye:pan:5=0.573289
+	// sum1:zee:pan:6=0.527126
+	// sum1:zee:wye:8=0.598554
+	// sum1:hat:wye:9=0.031442
+	// sum2:pan:pan:1=0.346790
+	// sum2:pan:wye:10=0.502626
+	// sum2:eks:pan:2=0.758680
+	// sum2:eks:wye:4=0.381399
+	// sum2:eks:zee:7=0.611784
+	// sum2:wye:wye:3=0.204603
+	// sum2:wye:pan:5=0.573289
+	// sum2:zee:pan:6=0.527126
+	// sum2:zee:wye:8=0.598554
+	// sum2:hat:wye:9=0.031442
 
-	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a"}' ../data/small
-	// a=pan,sum:pan:1=0.346790
-	// a=pan,sum:wye:10=0.502626
+	// $ mlr put -q '@sum1[$a][$b][$i]=$x;@sum2=[$a][$b]=$x; end{emit all, "a"}' ../data/small
+	// a=pan,sum1:pan:pan:1=0.346790
+	// a=pan,sum1:pan:wye:10=0.502626
+	// ...
 
-	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a", "b"}' ../data/small
-	// a=pan,b=pan,sum:1=0.346790
-	// a=pan,b=wye,sum:10=0.502626
-
-	// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum["pan"], "a", "b", "i"}' ../data/small
-	// a=pan,b=pan,i=1,sum=0.346790
-	// a=pan,b=wye,i=10,sum=0.502626
-
-
-	// print entire map
 
 	sllv_t* poutrecs = NULL;
-//	sllv_t* poutrecs = sllv_alloc();
-//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_alloc(), poutrecs);
-//	printf("outrecs (%lld):\n", poutrecs->length);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_print(pe->pvvalue);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_free(pe->pvvalue);
-//	printf("\n");
-//	sllv_free(poutrecs);
-
-//	poutrecs = sllv_alloc();
-//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_single(smv("first")), poutrecs);
-//	printf("outrecs (%lld):\n", poutrecs->length);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_print(pe->pvvalue);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_free(pe->pvvalue);
-//	printf("\n");
-//	sllv_free(poutrecs);
-
-//	poutrecs = sllv_alloc();
-//	mlhmmv_to_lrecs(pmap, sllmv_alloc(), sllmv_double(smv("first"), smv("second")), poutrecs);
-//	printf("outrecs (%lld):\n", poutrecs->length);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_print(pe->pvvalue);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_free(pe->pvvalue);
-//	printf("\n");
-//	sllv_free(poutrecs);
-
-	// print @a
-
-//	poutrecs = sllv_alloc();
-//	mlhmmv_to_lrecs(pmap, sllmv_single(smv("a")), sllmv_alloc(), poutrecs);
-//	printf("outrecs (%lld):\n", poutrecs->length);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_print(pe->pvvalue);
-//	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
-//		lrec_free(pe->pvvalue);
-//	printf("\n");
-//	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("first")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_single(smv("sum")), poutrecs);
 	printf("outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -405,7 +314,27 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_double(smv("first"), smv("second")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_double(smv("sum"), smv("first")), poutrecs);
+	printf("outrecs (%lld):\n", poutrecs->length);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_print(pe->pvvalue);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_free(pe->pvvalue);
+	printf("\n");
+	sllv_free(poutrecs);
+
+	poutrecs = sllv_alloc();
+	mlhmmv_to_lrecs(pmap, sllmv_triple(smv("sum"), smv("first"), smv("second")), poutrecs);
+	printf("outrecs (%lld):\n", poutrecs->length);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_print(pe->pvvalue);
+	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
+		lrec_free(pe->pvvalue);
+	printf("\n");
+	sllv_free(poutrecs);
+
+	poutrecs = sllv_alloc();
+	mlhmmv_to_lrecs(pmap, sllmv_quadruple(smv("sum"), smv("first"), smv("second"), smv("third")), poutrecs);
 	printf("outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);

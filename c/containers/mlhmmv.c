@@ -431,15 +431,24 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
 
+// xxx comment copiously @ .h, and interleaved here
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
-	lrec_t* ptemplate = lrec_unbacked_alloc();
 	if (pnames->phead == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	mlhmmv_to_lrecs_aux(pmap->proot_level, &pnames->phead->value, pnames->phead->pnext, ptemplate, poutrecs);
-	lrec_free(ptemplate);
+	mv_t* pfirstname = &pnames->phead->value;
+
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_next_level_entry(pmap->proot_level, pfirstname, NULL);
+	if (ptop_entry == NULL) {
+	} else if (ptop_entry->level_value.is_terminal) {
+	} else {
+		lrec_t* ptemplate = lrec_unbacked_alloc();
+		mlhmmv_to_lrecs_aux(ptop_entry->level_value.u.pnext_level, pfirstname, pnames->phead->pnext,
+			ptemplate, poutrecs);
+		lrec_free(ptemplate);
+	}
 }
 
 static void mlhmmv_to_lrecs_aux(
@@ -449,7 +458,7 @@ static void mlhmmv_to_lrecs_aux(
 	lrec_t*         ptemplate,
 	sllv_t*         poutrecs)
 {
-	char* oosvar_name = "xxx-stub-oosvar-name";
+	char* oosvar_name = mv_alloc_format_val(pfirstname);
 	if (prestnames == NULL) {
 		mlhmmv_to_lrecs_aux_flatten(plevel, oosvar_name, ptemplate, poutrecs);
 	} else {
@@ -469,6 +478,7 @@ static void mlhmmv_to_lrecs_aux(
 			}
 		}
 	}
+	free(oosvar_name);
 }
 
 static void mlhmmv_to_lrecs_aux_flatten(
