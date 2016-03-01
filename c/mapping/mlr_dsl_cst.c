@@ -254,18 +254,24 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+
 			if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
 					NULL,
 					NULL,
 					NULL));
+
 			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
+				sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
+				sllv_prepend(poosvar_lhs_keylist_evaluators,
+					rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
-					sllv_alloc(),
+					poosvar_lhs_keylist_evaluators,
 					NULL,
 					NULL));
+
 			// xxx brief cmts here paralleling emit
 			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 				sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
@@ -491,24 +497,11 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
 		poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
-	// xxx libify
-	sllmv_t* pmvkeys = sllmv_alloc();
-	int keys_ok = TRUE;
-	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
-		mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
-		if (mv_is_null(&mvkey)) {
-			keys_ok = FALSE;
-			break;
-		}
-		// Don't free the mlrval since its memory will be managed by the sllmv.
-		sllmv_add(pmvkeys, &mvkey);
-	}
-
-	if (keys_ok)
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error)
 		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
-
 	sllmv_free(pmvkeys);
 }
 
@@ -527,25 +520,17 @@ static void mlr_dsl_cst_node_evaluate_unset(
 		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
 		if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
 
-			// xxx libify
-			sllmv_t* pmvkeys = sllmv_alloc();
-			int keys_ok = TRUE;
-			for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-				rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
-				mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-					poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
-				if (mv_is_null(&mvkey)) {
-					keys_ok = FALSE;
-					break;
-				}
-				// Don't free the mlrval since its memory will be managed by the sllmv.
-				sllmv_add(pmvkeys, &mvkey);
-			}
+			int all_non_null_or_error = TRUE;
+			sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+				pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+			// xxx wtf
+			mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
 
-			if (keys_ok)
-				mlhmmv_remove(poosvars, pmvkeys);
+			printf("UNSET KEYS: ");sllmv_print(pmvkeys);
+			if (all_non_null_or_error)
+				mlhmmv_remove(poosvars, &mv0, pmvkeys);
+			sllmv_free(pmvkeys);
 		} else {
-			// srec unset
 			lrec_remove(pinrec, pitem->output_field_name);
 		}
 	}
@@ -562,6 +547,8 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
+	// xxx allow deeper keys as well
+
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
@@ -601,28 +588,18 @@ static void mlr_dsl_cst_node_evaluate_emit(
 
 	// xxx alloc once & keep in item struct. or not. no huge impact (and, zero-copy).
 	mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
-
-	mlhmmv_level_entry_t* proot_entry = mlhmmv_get_next_level_entry(poosvars->proot_level, &mv0);
+	// xxx rename: *not* the root.
+	mlhmmv_level_entry_t* proot_entry = mlhmmv_get_next_level_entry(poosvars->proot_level, &mv0, NULL);
 	if (proot_entry == NULL) {
 		mv_free(&mv0);
 		return;
 	}
-	// xxx libify & findallsuch
-	sllmv_t* pmvkeys = sllmv_alloc();
-	int keys_ok = TRUE;
-	for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
-		mv_t mvkey = pmvkey_evaluator->pprocess_func(pinrec, ptyped_overlay,
-			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
-		if (mv_is_null(&mvkey)) {
-			keys_ok = FALSE;
-			break;
-		}
-		// Don't free the mlrval since its memory will be managed by the sllmv.
-		sllmv_add(pmvkeys, &mvkey);
-	}
 
-	if (keys_ok) {
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+	//printf("EMIT KEYS: ");sllmv_print(pmvkeys);
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		if (proot_entry->level_value.is_terminal) {
 			lrec_put(poutrec, pitem->output_field_name,

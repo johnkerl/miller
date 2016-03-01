@@ -115,6 +115,7 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 
 // ----------------------------------------------------------------
 // Used by get() and remove().
+// xxx s.b. >=0? if so fix all comments (lhm*).
 // Returns >0 for where the key is *or* should go (end of chain).
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {
 	int hash = mlhmmv_hash_func(plevel_key);
@@ -288,7 +289,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, NULL);
 	while (prest_keys->pnext != NULL) {
 		if (plevel_entry == NULL) {
 			return NULL;
@@ -299,7 +300,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 		}
 		plevel = plevel_entry->level_value.u.pnext_level;
 		prest_keys = prest_keys->pnext;
-		plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.u.pnext_level, &prest_keys->value);
+		plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.u.pnext_level, &prest_keys->value, NULL);
 	}
 	if (plevel_entry == NULL) {
 		return NULL;
@@ -314,13 +315,14 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys,
 	int* pindex, mlhmmv_level_t** pplevel_up)
 {
-	*pindex = -1;
+	*pplevel_up = pmap->proot_level;
+
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
 	while (prest_keys->pnext != NULL) {
 		if (plevel_entry == NULL) {
 			return NULL;
@@ -328,22 +330,24 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 		if (plevel_entry->level_value.is_terminal) {
 			return NULL;
 		}
+		*pplevel_up = plevel;
 		plevel = plevel_entry->level_value.u.pnext_level;
 		prest_keys = prest_keys->pnext;
-		plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value);
+		plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
 	}
 	if (plevel_entry == NULL) {
 		return NULL;
 	}
-	// xxx assign *pindex
-	// xxx assign pplevel_up
 	return plevel_entry;
 }
 
-mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (pindex != NULL)
+		*pindex = index;
 
 	if (plevel->states[index] == OCCUPIED)
 		return pentry;
@@ -358,9 +362,10 @@ mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* 
 // ----------------------------------------------------------------
 // xxx cmt re remove from here on down
 
-void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys) {
 	int index = -1;
 	mlhmmv_level_t* plevel_up = NULL;
+
 	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_level_entry(pmap, pmvkeys, &index, &plevel_up);
 	if (plevel_entry == NULL)
 		return;

@@ -76,10 +76,10 @@ void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys);
 
 // Made public for the oosvar-emitter.
-mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key);
+mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);

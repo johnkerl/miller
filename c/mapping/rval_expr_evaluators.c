@@ -324,22 +324,12 @@ mv_t rval_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 {
 	rval_evaluator_oosvar_level_keys_state_t* pstate = pvstate;
 
-	sllmv_t* pmvkeys = sllmv_alloc();
-	int keys_ok = TRUE;
-	for (sllve_t* pe = pstate->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pmvkey_evaluator = pe->pvvalue;
-		mv_t mvkey = pmvkey_evaluator->pprocess_func(prec, ptyped_overlay,
-			poosvars, ppregex_captures, pctx, pmvkey_evaluator->pvstate);
-		if (mv_is_null(&mvkey)) {
-			keys_ok = FALSE;
-			break;
-		}
-		// Don't free the mlrval since its memory will be managed by the sllmv.
-		sllmv_add(pmvkeys, &mvkey);
-	}
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->poosvar_rhs_keylist_evaluators,
+		prec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 
 	mv_t rv = mv_uninit();
-	if (keys_ok) {
+	if (all_non_null_or_error) {
 		int error = 0;
 		mv_t* pval = mlhmmv_get(poosvars, pmvkeys, &error);
 		if (pval != NULL) {

@@ -161,4 +161,17 @@ rval_evaluator_t* rval_evaluator_alloc_from_s_sss_func(mv_ternary_func_t* pfunc,
 rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
+// ----------------------------------------------------------------
+// rval_list_evaluators.c
+
+// Nominally for oosvar multikeys.
+sllmv_t* evaluate_list(
+	sllv_t*          pevaluators,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	mlhmmv_t*        poosvars,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pall_non_null_or_error);
+
 #endif // LREC_FEVALUATORS_H

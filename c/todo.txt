@@ -53,6 +53,7 @@ UNSET
 
 * multi-unset
 * unset all
+! mlhmmv UT unset + emit (lrec conversion, which libify)
 
 ================================================================
 PARAMETERIZED EMIT

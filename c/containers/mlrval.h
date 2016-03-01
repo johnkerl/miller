@@ -207,6 +207,9 @@ static inline int mv_is_numeric(mv_t* pval) {
 static inline int mv_is_null(mv_t* pval) {
 	return MT_ERROR < pval->type && pval->type <= MT_VOID;
 }
+static inline int mv_is_null_or_error(mv_t* pval) {
+	return pval->type <= MT_VOID;
+}
 static inline int mv_is_non_null(mv_t* pval) {
 	return MT_ERROR < pval->type && pval->type > MT_VOID;
 }
