@@ -368,8 +368,6 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 // xxx reg_test/run all permutations of s/t/u
 
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
-// echo a=1,b=2,x=3 | mlr put -q '@t[$a]=$x;@s=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
-// echo a=1,b=2,x=3 | mlr put -q '@t[$a]=$x;@u[$a][$b]=$x; @s=$x; end{dump; unset @s      ; dump}' # ok
 
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t      ; dump}' # ok
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t[1]   ; dump}' # <-- not ok
@@ -378,7 +376,10 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @u[1]   ; dump}' # <-- not ok
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}' # <-- not ok
 
-void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+// xxx make this recursive. if e.g. a=>b=>c=>4 and remove c level then all up-nodes are emptied out & should be pruned.
+// so: recurse inward until end of pmvkeys list; then return to each caller whether the current level is now empty.
+
+void mlhmmv_remove_old(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	int index = -1;
 	mlhmmv_level_t* plevel_up = NULL;
 
@@ -387,16 +388,6 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 		return;
 
 	// xxx check plevel_up != NULL
-
-//	printf("XXX BGN\n");
-//	if (plevel_entry->level_value.is_terminal) {
-//		printf("[%s]\n", mv_alloc_format_val(&plevel_entry->level_value.u.mlrval));
-//	} else {
-//		mlhmmv_level_print_stacked(plevel_entry->level_value.u.pnext_level, 0, FALSE, FALSE);
-//	}
-//	printf("XXX PAR\n");
-//	mlhmmv_level_print_stacked(plevel_up, 0, FALSE, FALSE);
-//	printf("XXX END\n");
 
 	// 1. Excise the node and its descendants from the storage tree
 	if (plevel_up->states[index] == OCCUPIED) {
@@ -437,6 +428,36 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	} else {
 		mlhmmv_level_free(plevel_entry->level_value.u.pnext_level);
 	}
+}
+
+// echo s=a,t=b,u=c,x=9 | mlr put -q '@v[$s][$t][$u]=$x; end{dump; unset @v["a"]["b"]; dump;emit @v}'
+
+// restkeys too long: do nothing
+// restkeys just right: remove the terminal mlrval
+// restkeys too short: remove the level and all below
+static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys) {
+	printf("----------------------------------------------------------------\n");
+	printf("REST KEYS: "); sllmve_tail_print(prestkeys);
+	printf("LEVEL: "); mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE);
+	int index = -1;
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prestkeys->value, &index);
+	if (plevel_entry == NULL)
+		return;
+	if (prestkeys->pnext != NULL) {
+		if (plevel_entry->level_value.is_terminal)
+			return;
+		mlhmmv_remove_aux(plevel_entry->level_value.u.pnext_level, prestkeys->pnext);
+	}
+}
+
+void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
+	if (prestkeys == NULL)
+		return;
+	printf("================================================================\n");
+	printf("ROOT REST KEYS: "); sllmv_print(prestkeys);
+	printf("ROOT LEVEL: "); mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, FALSE);
+	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead);
+	printf("================================================================\n");
 }
 
 // ----------------------------------------------------------------

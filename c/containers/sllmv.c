@@ -91,3 +91,16 @@ void sllmv_print(sllmv_t* plist) {
 	}
 	printf("]\n");
 }
+// xxx merge
+void sllmve_tail_print(sllmve_t* pnode) {
+	printf("[");
+	for (sllmve_t* pe = pnode; pe != NULL; pe = pe->pnext) {
+		char* string = mv_alloc_format_val(&pe->value);
+		// xxx if (pe != plist->phead)
+			// printf(", ");
+		printf(" ");
+		printf("%s", string);
+		free(string);
+	}
+	printf("]\n");
+}
