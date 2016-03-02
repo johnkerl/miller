@@ -374,9 +374,12 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 		// Keep recursing until end of restkeys.
 		if (pentry->level_value.is_terminal) // restkeys too long
 			return;
-		int emptied = FALSE;
-		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &emptied);
-		// xxx if emptied, clear out.
+		int descendant_emptied = FALSE;
+		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &descendant_emptied);
+		if (descendant_emptied) {
+			// xxx
+			*pemptied = FALSE;
+		}
 	} else {
 
 		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
