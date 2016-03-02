@@ -435,18 +435,31 @@ void mlhmmv_remove_old(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 // restkeys too long: do nothing
 // restkeys just right: remove the terminal mlrval
 // restkeys too short: remove the level and all below
-static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys) {
+// xxx recurse with parent level in
+// xxx recurse with level-is-now-empty out
+static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied) {
+	*pemptied = FALSE;
 	printf("----------------------------------------------------------------\n");
 	printf("REST KEYS: "); sllmve_tail_print(prestkeys);
 	printf("LEVEL: "); mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE);
-	int index = -1;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prestkeys->value, &index);
-	if (plevel_entry == NULL)
+
+	if (prestkeys == NULL) // restkeys too short // xxx maybe abend
 		return;
-	if (prestkeys->pnext != NULL) {
-		if (plevel_entry->level_value.is_terminal)
+
+	int index = -1;
+	mlhmmv_level_entry_t* pentry = mlhmmv_get_next_level_entry(plevel, &prestkeys->value, &index);
+	if (pentry == NULL)
+		return;
+
+	if (prestkeys->pnext == NULL) {
+		// End of restkeys. Deletion&free logic goes here. set *pemptied if the level was emptied out.
+	} else {
+		// Keep recursing until end of restkeys.
+		if (pentry->level_value.is_terminal) // restkeys too long
 			return;
-		mlhmmv_remove_aux(plevel_entry->level_value.u.pnext_level, prestkeys->pnext);
+		int emptied = FALSE;
+		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &emptied);
+		// xxx if emptied, clear out.
 	}
 }
 
@@ -456,7 +469,9 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 	printf("================================================================\n");
 	printf("ROOT REST KEYS: "); sllmv_print(prestkeys);
 	printf("ROOT LEVEL: "); mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, FALSE);
-	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead);
+
+	int unused = FALSE;
+	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused);
 	printf("================================================================\n");
 }
 
