@@ -78,7 +78,7 @@ void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys);
+void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 // Made public for the oosvar-emitter.
 // xxx make private again after reorg

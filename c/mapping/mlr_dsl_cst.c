@@ -251,7 +251,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 				sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-				sllv_prepend(poosvar_lhs_keylist_evaluators,
+				sllv_append(poosvar_lhs_keylist_evaluators,
 					rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
@@ -512,12 +512,9 @@ static void mlr_dsl_cst_node_evaluate_unset(
 			int all_non_null_or_error = TRUE;
 			sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
 				pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-			// xxx wtf
-			mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
 
-			printf("UNSET KEYS: ");sllmv_print(pmvkeys);
 			if (all_non_null_or_error)
-				mlhmmv_remove(poosvars, &mv0, pmvkeys);
+				mlhmmv_remove(poosvars, pmvkeys);
 			sllmv_free(pmvkeys);
 		} else {
 			lrec_remove(pinrec, pitem->output_field_name);
@@ -536,8 +533,6 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
-	// xxx allow deeper keys as well
-
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;

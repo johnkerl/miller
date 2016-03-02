@@ -316,6 +316,27 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_entry->level_value.u.mlrval;
 }
 
+mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (pindex != NULL)
+		*pindex = index;
+
+	if (plevel->states[index] == OCCUPIED)
+		return pentry;
+	else if (plevel->states[index] == EMPTY)
+		return NULL;
+	else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		exit(1);
+	}
+}
+
+// ----------------------------------------------------------------
+// xxx cmt re remove from here on down
+
 static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys,
 	int* pindex, mlhmmv_level_t** pplevel_up)
 {
@@ -345,28 +366,18 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 	return plevel_entry;
 }
 
-mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
-	int ideal_index = 0;
-	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
-	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+// xxx reg_test/run all permutations of s/t/u
 
-	if (pindex != NULL)
-		*pindex = index;
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
 
-	if (plevel->states[index] == OCCUPIED)
-		return pentry;
-	else if (plevel->states[index] == EMPTY)
-		return NULL;
-	else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
-		exit(1);
-	}
-}
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t      ; dump}' # ok
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t[1]   ; dump}' # <-- not ok
 
-// ----------------------------------------------------------------
-// xxx cmt re remove from here on down
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @u      ; dump}' # ok
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @u[1]   ; dump}' # <-- not ok
+// echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}' # <-- not ok
 
-void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys) {
+void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	int index = -1;
 	mlhmmv_level_t* plevel_up = NULL;
 
@@ -374,8 +385,23 @@ void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys) {
 	if (plevel_entry == NULL)
 		return;
 
+	// xxx check plevel_up != NULL
+
+	printf("XXX BGN\n");
+	if (plevel_entry->level_value.is_terminal) {
+		printf("[%s]\n", mv_alloc_format_val(&plevel_entry->level_value.u.mlrval));
+	} else {
+		mlhmmv_level_print_stacked(plevel_entry->level_value.u.pnext_level, 0, FALSE, FALSE);
+	}
+	printf("XXX PAR\n");
+	mlhmmv_level_print_stacked(plevel_up, 0, FALSE, FALSE);
+	printf("XXX END\n");
+	printf("idx=%d rootlvl=%p levelup=%p level_entry=%p levelup.entries[%d]=%p\n",
+		index, pmap->proot_level, plevel_up, plevel_entry, index, &plevel_up->entries[index]);
+
 	// 1. Excise the node and its descendants from the storage tree
 	if (plevel_up->states[index] == OCCUPIED) {
+		printf("---- %s:%d\n", __FILE__, __LINE__);
 		plevel_entry->ideal_index = -1;
 		plevel_up->states[index] = DELETED;
 
@@ -385,7 +411,11 @@ void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys) {
 				plevel_up->ptail = NULL;
 			} else {
 				plevel_up->phead = plevel_entry->pnext;
+				plevel_entry->pnext->pprev = NULL;
 			}
+		} else if (plevel_entry == plevel_up->ptail) {
+				plevel_up->ptail = plevel_entry->pprev;
+				plevel_entry->pprev->pnext = NULL;
 		} else {
 			plevel_entry->pprev->pnext = plevel_entry->pnext;
 			plevel_entry->pnext->pprev = plevel_entry->pprev;
@@ -396,17 +426,21 @@ void mlhmmv_remove(mlhmmv_t* pmap, mv_t* pname_key, sllmv_t* pmvkeys) {
 		return;
 	}
 	else if (plevel_up->states[index] == EMPTY) {
+		printf("---- %s:%d\n", __FILE__, __LINE__);
 		return;
 	}
 	else {
+		printf("---- %s:%d\n", __FILE__, __LINE__);
 		fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 
 	// 2. Free the memory for the node and its descendants
 	if (plevel_entry->level_value.is_terminal) {
+		printf("---- %s:%d\n", __FILE__, __LINE__);
 		mv_free(&plevel_entry->level_value.u.mlrval);
 	} else {
+		printf("---- %s:%d\n", __FILE__, __LINE__);
 		mlhmmv_level_free(plevel_entry->level_value.u.pnext_level);
 	}
 

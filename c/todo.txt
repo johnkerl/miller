@@ -51,17 +51,9 @@ TOP-OF-LIST SUMMARY
 ================================================================
 PARAMETERIZED EMIT AND UNSET
 
-!! need submaps:
-  o mlr put -v 'emit @a["sums"]'
-  o various-level emit and emitf. only req't for emitf is all args must be single at that level.
-
 * evolve & extend the UTs
-* handle too-short, too-long, just-right cases
-* rename functions
-* rename variables as needed for clarity
-* rename 'temp' functions
-* needs significant comment-by-example in the code
-* emit w/ and w/o parentheses in the grammar -- try to get just one
+  - ut/t-mlhm: assert on sllv of plrec
+* various code neatens & comments
 * mld section, w/ olh brief example & xref to it.
 
 * multi-unset
