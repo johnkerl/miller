@@ -340,13 +340,12 @@ mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* 
 static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys,
 	int* pindex, mlhmmv_level_t** pplevel_up)
 {
-	*pplevel_up = pmap->proot_level;
-
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		return NULL;
 	}
 	mlhmmv_level_t* plevel = pmap->proot_level;
+	*pplevel_up = plevel;
 	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
 	while (prest_keys->pnext != NULL) {
 		if (plevel_entry == NULL) {
@@ -355,8 +354,8 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 		if (plevel_entry->level_value.is_terminal) {
 			return NULL;
 		}
-		*pplevel_up = plevel;
 		plevel = plevel_entry->level_value.u.pnext_level;
+		*pplevel_up = plevel;
 		prest_keys = prest_keys->pnext;
 		plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
 	}
@@ -369,6 +368,8 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 // xxx reg_test/run all permutations of s/t/u
 
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
+// echo a=1,b=2,x=3 | mlr put -q '@t[$a]=$x;@s=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
+// echo a=1,b=2,x=3 | mlr put -q '@t[$a]=$x;@u[$a][$b]=$x; @s=$x; end{dump; unset @s      ; dump}' # ok
 
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t      ; dump}' # ok
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @t[1]   ; dump}' # <-- not ok
@@ -387,21 +388,18 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 
 	// xxx check plevel_up != NULL
 
-	printf("XXX BGN\n");
-	if (plevel_entry->level_value.is_terminal) {
-		printf("[%s]\n", mv_alloc_format_val(&plevel_entry->level_value.u.mlrval));
-	} else {
-		mlhmmv_level_print_stacked(plevel_entry->level_value.u.pnext_level, 0, FALSE, FALSE);
-	}
-	printf("XXX PAR\n");
-	mlhmmv_level_print_stacked(plevel_up, 0, FALSE, FALSE);
-	printf("XXX END\n");
-	printf("idx=%d rootlvl=%p levelup=%p level_entry=%p levelup.entries[%d]=%p\n",
-		index, pmap->proot_level, plevel_up, plevel_entry, index, &plevel_up->entries[index]);
+//	printf("XXX BGN\n");
+//	if (plevel_entry->level_value.is_terminal) {
+//		printf("[%s]\n", mv_alloc_format_val(&plevel_entry->level_value.u.mlrval));
+//	} else {
+//		mlhmmv_level_print_stacked(plevel_entry->level_value.u.pnext_level, 0, FALSE, FALSE);
+//	}
+//	printf("XXX PAR\n");
+//	mlhmmv_level_print_stacked(plevel_up, 0, FALSE, FALSE);
+//	printf("XXX END\n");
 
 	// 1. Excise the node and its descendants from the storage tree
 	if (plevel_up->states[index] == OCCUPIED) {
-		printf("---- %s:%d\n", __FILE__, __LINE__);
 		plevel_entry->ideal_index = -1;
 		plevel_up->states[index] = DELETED;
 
@@ -426,24 +424,19 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 		return;
 	}
 	else if (plevel_up->states[index] == EMPTY) {
-		printf("---- %s:%d\n", __FILE__, __LINE__);
 		return;
 	}
 	else {
-		printf("---- %s:%d\n", __FILE__, __LINE__);
 		fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 
 	// 2. Free the memory for the node and its descendants
 	if (plevel_entry->level_value.is_terminal) {
-		printf("---- %s:%d\n", __FILE__, __LINE__);
 		mv_free(&plevel_entry->level_value.u.mlrval);
 	} else {
-		printf("---- %s:%d\n", __FILE__, __LINE__);
 		mlhmmv_level_free(plevel_entry->level_value.u.pnext_level);
 	}
-
 }
 
 // ----------------------------------------------------------------
