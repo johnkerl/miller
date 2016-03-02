@@ -24,8 +24,6 @@ static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
-static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys,
-	int* pindex, mlhmmv_level_t** pplevel_up);
 
 static void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
@@ -337,34 +335,6 @@ mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* 
 // ----------------------------------------------------------------
 // xxx cmt re remove from here on down
 
-static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmvkeys,
-	int* pindex, mlhmmv_level_t** pplevel_up)
-{
-	sllmve_t* prest_keys = pmvkeys->phead;
-	if (prest_keys == NULL) {
-		return NULL;
-	}
-	mlhmmv_level_t* plevel = pmap->proot_level;
-	*pplevel_up = plevel;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
-	while (prest_keys->pnext != NULL) {
-		if (plevel_entry == NULL) {
-			return NULL;
-		}
-		if (plevel_entry->level_value.is_terminal) {
-			return NULL;
-		}
-		plevel = plevel_entry->level_value.u.pnext_level;
-		*pplevel_up = plevel;
-		prest_keys = prest_keys->pnext;
-		plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, pindex);
-	}
-	if (plevel_entry == NULL) {
-		return NULL;
-	}
-	return plevel_entry;
-}
-
 // xxx reg_test/run all permutations of s/t/u
 
 // echo a=1,b=2,x=3 | mlr put -q '@s=$x; @t[$a]=$x;@u[$a][$b]=$x; end{dump; unset @s      ; dump}' # ok
@@ -378,57 +348,6 @@ static mlhmmv_level_entry_t* mlhmmv_get_level_entry(mlhmmv_t* pmap, sllmv_t* pmv
 
 // xxx make this recursive. if e.g. a=>b=>c=>4 and remove c level then all up-nodes are emptied out & should be pruned.
 // so: recurse inward until end of pmvkeys list; then return to each caller whether the current level is now empty.
-
-void mlhmmv_remove_old(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
-	int index = -1;
-	mlhmmv_level_t* plevel_up = NULL;
-
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_level_entry(pmap, pmvkeys, &index, &plevel_up);
-	if (plevel_entry == NULL)
-		return;
-
-	// xxx check plevel_up != NULL
-
-	// 1. Excise the node and its descendants from the storage tree
-	if (plevel_up->states[index] == OCCUPIED) {
-		plevel_entry->ideal_index = -1;
-		plevel_up->states[index] = DELETED;
-
-		if (plevel_entry == plevel_up->phead) {
-			if (plevel_entry == plevel_up->ptail) {
-				plevel_up->phead = NULL;
-				plevel_up->ptail = NULL;
-			} else {
-				plevel_up->phead = plevel_entry->pnext;
-				plevel_entry->pnext->pprev = NULL;
-			}
-		} else if (plevel_entry == plevel_up->ptail) {
-				plevel_up->ptail = plevel_entry->pprev;
-				plevel_entry->pprev->pnext = NULL;
-		} else {
-			plevel_entry->pprev->pnext = plevel_entry->pnext;
-			plevel_entry->pnext->pprev = plevel_entry->pprev;
-		}
-
-		plevel_up->num_freed++;
-		plevel_up->num_occupied--;
-		return;
-	}
-	else if (plevel_up->states[index] == EMPTY) {
-		return;
-	}
-	else {
-		fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
-		exit(1);
-	}
-
-	// 2. Free the memory for the node and its descendants
-	if (plevel_entry->level_value.is_terminal) {
-		mv_free(&plevel_entry->level_value.u.mlrval);
-	} else {
-		mlhmmv_level_free(plevel_entry->level_value.u.pnext_level);
-	}
-}
 
 // echo s=a,t=b,u=c,x=9 | mlr put -q '@v[$s][$t][$u]=$x; end{dump; unset @v["a"]["b"]; dump;emit @v}'
 
@@ -451,15 +370,54 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 	if (pentry == NULL)
 		return;
 
-	if (prestkeys->pnext == NULL) {
-		// End of restkeys. Deletion&free logic goes here. set *pemptied if the level was emptied out.
-	} else {
+	if (prestkeys->pnext != NULL) {
 		// Keep recursing until end of restkeys.
 		if (pentry->level_value.is_terminal) // restkeys too long
 			return;
 		int emptied = FALSE;
 		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &emptied);
 		// xxx if emptied, clear out.
+	} else {
+
+		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
+
+		// 1. Excise the node and its descendants from the storage tree
+		if (plevel->states[index] == OCCUPIED) {
+			pentry->ideal_index = -1;
+			plevel->states[index] = DELETED;
+
+			if (pentry == plevel->phead) {
+				if (pentry == plevel->ptail) {
+					plevel->phead = NULL;
+					plevel->ptail = NULL;
+					*pemptied = TRUE;
+				} else {
+					plevel->phead = pentry->pnext;
+					pentry->pnext->pprev = NULL;
+				}
+			} else if (pentry == plevel->ptail) {
+					plevel->ptail = pentry->pprev;
+					pentry->pprev->pnext = NULL;
+			} else {
+				pentry->pprev->pnext = pentry->pnext;
+				pentry->pnext->pprev = pentry->pprev;
+			}
+
+			plevel->num_freed++;
+			plevel->num_occupied--;
+		} else if (plevel->states[index] == EMPTY) {
+			return;
+		} else {
+			fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
+			exit(1);
+		}
+
+		// 2. Free the memory for the node and its descendants
+		if (pentry->level_value.is_terminal) {
+			mv_free(&pentry->level_value.u.mlrval);
+		} else {
+			mlhmmv_level_free(pentry->level_value.u.pnext_level);
+		}
 	}
 }
 
