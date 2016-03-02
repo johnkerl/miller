@@ -92,6 +92,7 @@ TEST_LREC_SRCS = \
   containers/rslls.c \
   containers/lhmsv.c \
   containers/lhmslv.c \
+  containers/sllmv.c \
   containers/mlhmmv.c \
   input/line_readers.c \
   input/file_reader_mmap.c \
