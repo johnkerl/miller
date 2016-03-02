@@ -64,19 +64,6 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
-static void mlr_dsl_cst_node_evaluate_emit_aux(
-	mlhmmv_level_t* plevel,
-	char*           oosvar_name,
-	sllmve_t*       prestnames,
-	lrec_t*         poutrec,
-	sllv_t*         poutrecs);
-
-static void mlr_dsl_cst_node_evaluate_emit_flatten(
-	mlhmmv_level_t* plevel,
-	char*           prefix,
-	lrec_t*         poutrec,
-	sllv_t*         poutrecs);
-
 static void mlr_dsl_cst_node_evaluate_dump(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -323,6 +310,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
 
 		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
+		sllv_append(poosvar_lhs_keylist_evaluators,
+			rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnamenode->text)));
 		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
 			sllv_append(poosvar_lhs_keylist_evaluators,
@@ -586,89 +575,15 @@ static void mlr_dsl_cst_node_evaluate_emit(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 
-	// xxx alloc once & keep in item struct. or not. no huge impact (and, zero-copy).
-	mv_t mv0 = mv_from_string_no_free(pitem->output_field_name);
-	// xxx rename: *not* the root.
-	mlhmmv_level_entry_t* proot_entry = mlhmmv_get_next_level_entry(poosvars->proot_level, &mv0, NULL);
-	if (proot_entry == NULL) {
-		mv_free(&mv0);
-		return;
-	}
-
 	int all_non_null_or_error = TRUE;
+	// xxx need output field name in there
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-	//printf("EMIT KEYS: ");sllmv_print(pmvkeys);
-		lrec_t* poutrec = lrec_unbacked_alloc();
-		if (proot_entry->level_value.is_terminal) {
-			lrec_put(poutrec, pitem->output_field_name,
-				mv_alloc_format_val(&proot_entry->level_value.u.mlrval), FREE_ENTRY_VALUE);
-			sllv_append(poutrecs, poutrec);
-		} else {
-			mlr_dsl_cst_node_evaluate_emit_aux(proot_entry->level_value.u.pnext_level, pitem->output_field_name,
-				pmvkeys->phead, poutrec, poutrecs);
-			lrec_free(poutrec);
-		}
+		mlhmmv_to_lrecs(poosvars, pmvkeys, poutrecs);
 	}
 
 	sllmv_free(pmvkeys);
-	mv_free(&mv0);
-}
-
-// xxx temp
-#define TEMP_FLATTEN_SEP ":"
-
-static void mlr_dsl_cst_node_evaluate_emit_aux(
-	mlhmmv_level_t* plevel,
-	char*           oosvar_name,
-	sllmve_t*       prestnames,
-	lrec_t*         poutrec,
-	sllv_t*         poutrecs)
-{
-	if (prestnames == NULL) {
-		mlr_dsl_cst_node_evaluate_emit_flatten(plevel, oosvar_name, poutrec, poutrecs);
-	} else {
-		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* pnextrec = lrec_copy(poutrec);
-			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
-				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			mlhmmv_level_value_t* plevel_value = &pe->level_value;
-			if (plevel_value->is_terminal) {
-				lrec_put(pnextrec, oosvar_name,
-					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_VALUE);
-				sllv_append(poutrecs, pnextrec);
-			} else {
-
-				mlr_dsl_cst_node_evaluate_emit_aux(pe->level_value.u.pnext_level, oosvar_name,
-					prestnames->pnext, pnextrec, poutrecs);
-				lrec_free(pnextrec);
-			}
-		}
-	}
-}
-
-static void mlr_dsl_cst_node_evaluate_emit_flatten(
-	mlhmmv_level_t* plevel,
-	char*           prefix,
-	lrec_t*         poutrec,
-	sllv_t*         poutrecs)
-{
-	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-		mlhmmv_level_value_t* plevel_value = &pe->level_value;
-		lrec_t* pnextrec = lrec_copy(poutrec);
-		char* foo = mv_alloc_format_val(&pe->level_key);
-		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
-		free(foo);
-		if (plevel_value->is_terminal) {
-			lrec_put(pnextrec, name,
-				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			sllv_append(poutrecs, pnextrec);
-		} else {
-			mlr_dsl_cst_node_evaluate_emit_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
-			lrec_free(pnextrec);
-		}
-	}
 }
 
 // ----------------------------------------------------------------
