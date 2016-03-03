@@ -359,9 +359,6 @@ mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* 
 // xxx rm depth
 static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
 	*pemptied = FALSE;
-	//printf("[%d]----------------------------------------------------------------\n", depth);
-	//printf("[%d]REST KEYS: ", depth); sllmve_tail_print(prestkeys);
-	//printf("[%d]LEVEL: ", depth); mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE);
 
 	if (prestkeys == NULL) // restkeys too short // xxx maybe abend
 		return;
@@ -371,38 +368,39 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 	if (pentry == NULL)
 		return;
 
-			//printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
 	if (prestkeys->pnext != NULL) {
-			//printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
 		// Keep recursing until end of restkeys.
 		if (pentry->level_value.is_terminal) // restkeys too long
 			return;
 		int descendant_emptied = FALSE;
-			//printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
-	//printf("[%d]ALEVEL: ", depth); mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE);
 		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &descendant_emptied, depth+1);
-	//printf("[%d]BLEVEL: ", depth); mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE);
-			//printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
 		if (descendant_emptied) {
-			printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
-			printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&pentry->level_key));
 
-//			plevel->num_occupied--;
-//			plevel->num_freed++;
-//			plevel->states[index] = EMPTY;
-//			//pentry->ideal_index = -1;
-//			//pentry->level_key = mv_error();
-//
-//			if (plevel->num_occupied == 0) {
-//				plevel->phead = NULL;
-//				plevel->ptail = NULL;
-//				*pemptied = TRUE;
-//			}
+			plevel->num_occupied--;
+			plevel->num_freed++;
+			plevel->states[index] = DELETED;
+			pentry->ideal_index = -1;
+			pentry->level_key = mv_error();
 
+			if (pentry == plevel->phead) {
+				if (pentry == plevel->ptail) {
+					plevel->phead = NULL;
+					plevel->ptail = NULL;
+					*pemptied = TRUE;
+				} else {
+					plevel->phead = pentry->pnext;
+					pentry->pnext->pprev = NULL;
+				}
+			} else if (pentry == plevel->ptail) {
+					plevel->ptail = pentry->pprev;
+					pentry->pprev->pnext = NULL;
+			} else {
+				pentry->pprev->pnext = pentry->pnext;
+				pentry->pnext->pprev = pentry->pprev;
+			}
 		}
-	} else {
-			//printf("---- [%d] %s:%d [%s]\n", depth, __FILE__, __LINE__, mv_alloc_format_val(&prestkeys->value));
 
+	} else {
 		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
 
 		// 1. Excise the node and its descendants from the storage tree
@@ -441,18 +439,15 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 			mlhmmv_level_free(pentry->level_value.u.pnext_level);
 		}
 	}
+
 }
 
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 	if (prestkeys == NULL)
 		return;
-	//printf("================================================================\n");
-	//printf("ROOT REST KEYS: "); sllmv_print(prestkeys);
-	//printf("ROOT LEVEL: "); mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, FALSE);
 
 	int unused = FALSE;
 	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
-	//printf("================================================================\n");
 }
 
 // ----------------------------------------------------------------
