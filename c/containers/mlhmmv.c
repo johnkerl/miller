@@ -489,10 +489,15 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 // xxx comment copiously @ .h, and interleaved here
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	if (pnames->phead == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
-		exit(1);
+		// emit the entire map as lrecs
+		for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
+			sllmv_t* pname = sllmv_single(&pentry->level_key);
+			mlhmmv_to_lrecs(pmap, pname, poutrecs);
+			//sllmv_free(pname); // xxx fix the free happening when it shouldn't
+		}
+		return;
 	}
+
 	mv_t* pfirstname = &pnames->phead->value;
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_next_level_entry(pmap->proot_level, pfirstname, NULL);

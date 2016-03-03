@@ -11,6 +11,7 @@ sllmv_t* sllmv_alloc() {
 }
 
 // ----------------------------------------------------------------
+// xxx sllmv_add doesn't alloc new but this does mv_free. something not right here.
 void sllmv_free(sllmv_t* plist) {
 	if (plist == NULL)
 		return;

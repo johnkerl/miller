@@ -666,15 +666,9 @@ static void mlr_dsl_cst_node_evaluate_emit_all(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
-printf("BEEP!\n");
-//	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-//	int all_non_null_or_error = TRUE;
-//	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
-//		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-//	if (all_non_null_or_error) {
-//		mlhmmv_to_lrecs(poosvars, pmvkeys, poutrecs);
-//	}
-//	sllmv_free(pmvkeys);
+	sllmv_t* pempty = sllmv_alloc();
+	mlhmmv_to_lrecs(poosvars, pempty, poutrecs);
+	sllmv_free(pempty);
 }
 
 // ----------------------------------------------------------------
