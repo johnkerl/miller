@@ -6,16 +6,50 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
+// xxx this is getting too loaded w/ multiple args. make several variants each w/ fewer args.
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*                  output_field_name,
 	sllv_t*                poosvar_lhs_keylist_evaluators,
 	int                    all_flag,
+	// int lhs_is_full_srec;
 	rval_evaluator_t*      prhs_evaluator,
 	sllv_t*                pcond_statements);
+	//sllv_t* poosvar_rhs_keylist_evaluators;
+	// int rhs_is_full_srec;
 
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
 static void mlr_dsl_cst_node_evaluate_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
+static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
+static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
+static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -259,6 +293,14 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			NULL));
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
+
+	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT) {
+		// xxx
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment;
+
+	} else if (past->type == MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT) {
+		// xxx
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment;
 
 	} else if (past->type == MD_AST_NODE_TYPE_UNSET) {
 
@@ -553,6 +595,30 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	if (all_non_null_or_error)
 		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
 	sllmv_free(pmvkeys);
+}
+
+static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+}
+
+static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
 }
 
 // ----------------------------------------------------------------

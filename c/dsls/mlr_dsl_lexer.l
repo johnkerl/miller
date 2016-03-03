@@ -252,7 +252,7 @@
 	return MD_TOKEN_POW_EQUALS;
 }
 
-\$\$0 {
+\$\* {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_SREC);
 	return MD_TOKEN_FULL_SREC;
 }

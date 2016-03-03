@@ -265,11 +265,11 @@ md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O)
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
 md_oosvar_from_full_srec_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
 
 md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_oosvar_name(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
 }
 md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_keyed_oosvar_name(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
