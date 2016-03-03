@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
+* readme re srec vs lrec
 
 * script-from-file -- easy now
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller

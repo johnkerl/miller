@@ -728,7 +728,6 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 	sllv_t*          poutrecs)
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-	// xxx prhs_keylist_evaluators
 
 	int all_non_null_or_error = TRUE;
 	sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
