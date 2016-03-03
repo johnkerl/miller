@@ -8,7 +8,6 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-! sllmv_add w/ free-flags
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 
@@ -65,6 +64,8 @@ PARAMETERIZED EMIT AND UNSET
 * emit all w/ string args ?
 
 * rename emit restkeys to pullforwardkeys or some such
+
+* cli-parameterize the joinchar (:)
 
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.

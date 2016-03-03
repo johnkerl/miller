@@ -47,6 +47,8 @@ md_statement ::= .
 
 md_statement ::= md_main_srec_assignment.
 md_statement ::= md_main_oosvar_assignment.
+md_statement ::= md_main_oosvar_from_full_srec_assignment.
+md_statement ::= md_main_full_srec_from_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_unset.
@@ -133,6 +135,15 @@ md_main_oosvar_assignment(A) ::= md_oosvar_assignment(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
 }
+md_main_oosvar_from_full_srec_assignment(A) ::= md_oosvar_from_full_srec_assignment(B). {
+	A = B;
+	sllv_append(past->pmain_statements, A);
+}
+md_main_full_srec_from_oosvar_assignment(A) ::= md_full_srec_from_oosvar_assignment(B). {
+	A = B;
+	sllv_append(past->pmain_statements, A);
+}
+
 md_main_bare_boolean(A) ::= md_rhs(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
@@ -248,6 +259,20 @@ md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 }
 md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
+}
+md_oosvar_from_full_srec_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_oosvar_name(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
+}
+md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_keyed_oosvar_name(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
 }
 
 // ----------------------------------------------------------------

@@ -151,12 +151,15 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:    return "boolean_literal";    break;
 	case MD_AST_NODE_TYPE_REGEXI:             return "regexi";             break;
 	case MD_AST_NODE_TYPE_FIELD_NAME:         return "field_name";         break;
+	case MD_AST_NODE_TYPE_FULL_SREC:          return "full_srec";          break;
 	case MD_AST_NODE_TYPE_OOSVAR_NAME:        return "oosvar_name";        break;
 	case MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY:   return "oosvar_level_key";   break;
 	case MD_AST_NODE_TYPE_FUNCTION_NAME:      return "function_name";      break;
 	case MD_AST_NODE_TYPE_OPERATOR:           return "operator";           break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:    return "srec_assignment";    break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:  return "oosvar_assignment";  break;
+	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:  return "oosvar_from_full_srec_assignment";  break;
+	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:  return "full_srec_from_oosvar_assignment";  break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:   return "context_variable";   break;
 	case MD_AST_NODE_TYPE_STRIPPED_AWAY:      return "stripped_away";      break;
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:  return "conditional_block";  break;

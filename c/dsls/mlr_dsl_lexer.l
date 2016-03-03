@@ -252,6 +252,11 @@
 	return MD_TOKEN_POW_EQUALS;
 }
 
+\$\$0 {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_SREC);
+	return MD_TOKEN_FULL_SREC;
+}
+
 \$[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
 	// that needs to be changed as well.
