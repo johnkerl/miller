@@ -130,6 +130,8 @@ EXTRA_DIST=	\
 		truncated.pprint \
 		truncated.xtab \
 		truncated.xtab-crlf \
+		unset1.dkvp \
+		unset4.dkvp \
 		utf8-1.csv \
 		utf8-2.csv \
 		utf8-align.dkvp \

@@ -30,6 +30,8 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value);
 
+static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
+
 static void mlhmmv_to_lrecs_aux(mlhmmv_level_t* plevel, mv_t* pfirstname, sllmve_t* prestnames,
 	lrec_t* ptemplate, sllv_t* poutrecs);
 static void mlhmmv_to_lrecs_aux_flatten(mlhmmv_level_t* plevel, char* prefix, lrec_t* ptemplate, sllv_t* poutrecs);
@@ -314,7 +316,7 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_entry->level_value.u.mlrval;
 }
 
-mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
+static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
@@ -374,8 +376,13 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 			return;
 		int descendant_emptied = FALSE;
 		mlhmmv_remove_aux(pentry->level_value.u.pnext_level, prestkeys->pnext, &descendant_emptied, depth+1);
-		if (descendant_emptied) {
 
+		// If the recursive call emptied the next-level slot, remove it from our level as well. This may continue all
+		// the way back up. Example: the map is '{"a":{"b":{"c":4}}}' and we're asked to remove keylist ["a", "b", "c"].
+		// The recursive call to the terminal will leave '{"a":{"b":{}}}' -- note the '{}'. Then we remove
+		// that to leave '{"a":{}}'. Since this leaves another '{}', passing emptied==TRUE back to our caller
+		// leaves empty top-level map '{}'.
+		if (descendant_emptied) {
 			plevel->num_occupied--;
 			plevel->num_freed++;
 			plevel->states[index] = DELETED;
@@ -408,6 +415,10 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 			fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
 			exit(1);
 		}
+
+		// xxx
+		// echo 'a=1,b=2,x=9' | mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}
+		// still not right.
 
 		pentry->ideal_index = -1;
 		plevel->states[index] = DELETED;

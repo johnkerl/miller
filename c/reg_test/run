@@ -1239,6 +1239,26 @@ run_mlr put '@y[$a]=$y; end{dump}' $indir/abixy
 run_mlr stats1 -a sum -f y -g a $indir/abixy
 run_mlr put '@y_sum[$a] = $y; end{dump}' $indir/abixy
 
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump}' $indir/unset1.dkvp
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump}' $indir/unset1.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump}' $indir/unset1.dkvp
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump}' $indir/unset1.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump}' $indir/unset1.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}' $indir/unset1.dkvp
+
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump}' $indir/unset4.dkvp
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump}' $indir/unset4.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump}' $indir/unset4.dkvp
+
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump}' $indir/unset4.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump}' $indir/unset4.dkvp
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}' $indir/unset4.dkvp
+
 # ----------------------------------------------------------------
 announce DSL PATTERN-ACTION BLOCKS
 
