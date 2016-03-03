@@ -296,6 +296,41 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT) {
 		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
 
+		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+		if (pleft->type != MD_AST_NODE_TYPE_OOSVAR_NAME && pleft->type != MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+		if (pright->type != MD_AST_NODE_TYPE_FULL_SREC) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+
+		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
+			sllv_append(poosvar_lhs_keylist_evaluators,
+				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pleft->text)));
+		} else {
+			// xxx make a private helper method out of this
+			mlr_dsl_ast_node_t* pnode = pleft;
+			while (TRUE) {
+				if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+					mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
+					sllv_prepend(poosvar_lhs_keylist_evaluators,
+						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+				} else {
+					sllv_prepend(poosvar_lhs_keylist_evaluators,
+						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+				}
+				if (pnode->pchildren == NULL)
+					break;
+				pnode = pnode->pchildren->phead->pvvalue;
+			}
+		}
+
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			poosvar_lhs_keylist_evaluators,
@@ -309,13 +344,48 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	} else if (past->type == MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT) {
 		sllv_t* poosvar_rhs_keylist_evaluators = sllv_alloc();
 
+		mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+		if (pleft->type != MD_AST_NODE_TYPE_FULL_SREC) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+		if (pright->type != MD_AST_NODE_TYPE_OOSVAR_NAME && pright->type != MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			exit(1);
+		}
+
+		if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
+			sllv_append(poosvar_rhs_keylist_evaluators,
+				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pright->text)));
+		} else {
+			// xxx make a private helper method out of this
+			mlr_dsl_ast_node_t* pnode = pright;
+			while (TRUE) {
+				if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+					mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
+					sllv_prepend(poosvar_rhs_keylist_evaluators,
+						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+				} else {
+					sllv_prepend(poosvar_rhs_keylist_evaluators,
+						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+				}
+				if (pnode->pchildren == NULL)
+					break;
+				pnode = pnode->pchildren->phead->pvvalue;
+			}
+		}
+
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			NULL,
 			FALSE,
 			NULL,
 			NULL,
-			poosvar_rhs_keylist_evaluators)); // xxx
+			poosvar_rhs_keylist_evaluators));
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment;
 
