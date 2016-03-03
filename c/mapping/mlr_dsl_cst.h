@@ -57,13 +57,13 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	char* output_field_name;
 	sllv_t* poosvar_lhs_keylist_evaluators;
 	int all_flag; // for emit all and unset all
-	// int lhs_is_full_srec;
+	int lhs_is_full_srec;
 
 	// RHS:
-	rval_evaluator_t* prhs_evaluator;      // E.g. for srec assignments
-	sllv_t*           pcond_statements;    // For pattern-action blocks
-	//sllv_t* poosvar_rhs_keylist_evaluators; // For assigning oosvar to full-srec
-	// int rhs_is_full_srec;
+	rval_evaluator_t* prhs_evaluator;                 // E.g. for srec assignments
+	sllv_t*           pcond_statements;               // For pattern-action blocks
+	sllv_t*           poosvar_rhs_keylist_evaluators; // For assigning full srec from oosvar
+	int               rhs_is_full_srec;               // For assigning oosvar from full srec
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {
