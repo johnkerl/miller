@@ -8,11 +8,8 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-* neaten/UT/doc for unset
-* tri-split null UTs
-* += et al. UTs
-* parameterized-emit UTs
-* parameterized-emit code-neatens
+* neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
+* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 
 * script-from-file -- easy now
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
@@ -20,8 +17,7 @@ TOP-OF-LIST SUMMARY
 ! xxxes
 * ack hash algo
 
-* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
-? @x = $0 ?  $0 = @x ?
+? @x = $0; $x[@a] = $0; $0 = @x; $0 = @x[@]
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -115,16 +111,6 @@ x=MT_INT,y=MT_VOID,z=MT_VOID
 x=MT_INT,y=MT_INT,z=MT_ABSENT
 x=MT_INT,y=MT_VOID,z=MT_ABSENT
 x=MT_INT,y=MT_VOID,z=MT_ABSENT
-
-================================================================
-64-BIT CONTAINER SIZES
-
-k sllv
-* slls
-* rslls
-* sllmv
-* dvector & stats1/2 ...
-* top_keeper
 
 ================================================================
 OOSVARS:

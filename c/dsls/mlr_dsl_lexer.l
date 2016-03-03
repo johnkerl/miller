@@ -57,6 +57,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_END;
 }
+"all" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ALL);
+	return MD_TOKEN_ALL;
+}
 
 "?" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);

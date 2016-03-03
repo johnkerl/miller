@@ -26,7 +26,8 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_UNSET,
 	MD_AST_NODE_TYPE_EMITF,
 	MD_AST_NODE_TYPE_EMIT,
-	MD_AST_NODE_TYPE_DUMP
+	MD_AST_NODE_TYPE_DUMP,
+	MD_AST_NODE_TYPE_ALL
 } mlr_dsl_ast_node_type_t;
 
 typedef struct _mlr_dsl_ast_t {
