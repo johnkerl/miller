@@ -17,7 +17,8 @@ TOP-OF-LIST SUMMARY
 ! xxxes
 * ack hash algo
 
-? @x = $0; $x[@a] = $0; $0 = @x; $0 = @x[@]
+? @x = $$0; $x[@a] = $$0; $$0 = @x; $$0 = @x[@]
+? any fcns of $$0 ?!?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
