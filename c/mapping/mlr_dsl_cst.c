@@ -707,6 +707,14 @@ static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* plhskeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error)
+		mlhmmv_assign_from_lrec(poosvars, plhskeys, pinrec);
+	sllmv_free(plhskeys);
 }
 
 static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
@@ -719,6 +727,15 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	// xxx prhs_keylist_evaluators
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error)
+		mlhmmv_assign_to_lrec(poosvars, prhskeys, pinrec);
+	sllmv_free(prhskeys);
 }
 
 // ----------------------------------------------------------------

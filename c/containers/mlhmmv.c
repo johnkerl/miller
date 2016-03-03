@@ -468,6 +468,15 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 }
 
 // ----------------------------------------------------------------
+void mlhmmv_assign_from_lrec(mlhmmv_t* pmap, sllmv_t* pmvkeys, lrec_t* pinrec) {
+	// xxx stub
+}
+
+void mlhmmv_assign_to_lrec(mlhmmv_t* pmap, sllmv_t* pmvkeys, lrec_t* poutrec) {
+	// xxx stub
+}
+
+// ----------------------------------------------------------------
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	mlhmmv_level_entry_t*       old_entries = plevel->entries;
 	mlhmmv_level_entry_state_t* old_states  = plevel->states;

@@ -111,6 +111,9 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 // }
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
+void mlhmmv_assign_from_lrec(mlhmmv_t* pmap, sllmv_t* pmvkeys, lrec_t* pinrec);
+void mlhmmv_assign_to_lrec(mlhmmv_t* pmap, sllmv_t* pmvkeys, lrec_t* poutrec);
+
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs
