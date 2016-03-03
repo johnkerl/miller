@@ -59,8 +59,12 @@ PARAMETERIZED EMIT AND UNSET
 * emit UT @ test-mlhmmv
 * unset UT @ test-mlhmmv
 
-* emit all
-* unset all
+* emit all: UT/doc
+* unset all: UT/doc
+
+* emit all w/ string args ?
+
+* rename emit restkeys to pullforwardkeys or some such
 
 ================================================================
 TRI-SPLIT NULL, AND += ET AL.
