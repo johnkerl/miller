@@ -29,7 +29,7 @@ static char* test_no_overlap() {
 	printf("empty map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
 
-	sllmv_t* pmvkeys1 = sllmv_single(imv(3));
+	sllmv_t* pmvkeys1 = sllmv_single_with_free(imv(3));
 	mv_t value1 = mv_from_int(4LL);
 	printf("\n");
 	printf("keys1:  ");
@@ -40,7 +40,7 @@ static char* test_no_overlap() {
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys1, &error), &value1));
 
-	sllmv_t* pmvkeys2 = sllmv_double(smv("abcde"), imv(-6));
+	sllmv_t* pmvkeys2 = sllmv_double_with_free(smv("abcde"), imv(-6));
 	mv_t value2 = mv_from_int(7);
 	printf("\n");
 	printf("keys2:  ");
@@ -51,7 +51,7 @@ static char* test_no_overlap() {
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys2, &error), &value2));
 
-	sllmv_t* pmvkeys3 = sllmv_triple(imv(0), smv("fghij"), imv(0));
+	sllmv_t* pmvkeys3 = sllmv_triple_with_free(imv(0), smv("fghij"), imv(0));
 	mv_t value3 = mv_from_int(0LL);
 	printf("\n");
 	printf("keys3:  ");
@@ -73,7 +73,7 @@ static char* test_overlap() {
 	int error = 0;
 
 	printf("================================================================\n");
-	sllmv_t* pmvkeys = sllmv_single(imv(3));
+	sllmv_t* pmvkeys = sllmv_single_with_free(imv(3));
 	mv_t* ptermval = imv(4);
 	mlhmmv_put(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
@@ -84,7 +84,7 @@ static char* test_overlap() {
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_double(imv(3), smv("x"));
+	pmvkeys = sllmv_double_with_free(imv(3), smv("x"));
 	ptermval = imv(6);
 	mlhmmv_put(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
@@ -95,13 +95,13 @@ static char* test_overlap() {
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_triple(imv(3), imv(9), smv("y"));
+	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("y"));
 	ptermval = smv("z");
 	mlhmmv_put(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_triple(imv(3), imv(9), smv("z"));
+	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("z"));
 	ptermval = smv("y");
 	mlhmmv_put(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
@@ -118,40 +118,40 @@ static char* test_resize() {
 
 	printf("================================================================\n");
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_single(imv(i)), imv(-i));
+		mlhmmv_put(pmap, sllmv_single_with_free(imv(i)), imv(-i));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_double(smv("a"), imv(i)), imv(-i));
+		mlhmmv_put(pmap, sllmv_double_with_free(smv("a"), imv(i)), imv(-i));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_triple(imv(i*100), imv(i % 4), smv("b")), smv("term"));
+		mlhmmv_put(pmap, sllmv_triple_with_free(imv(i*100), imv(i % 4), smv("b")), smv("term"));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 
-	sllmv_t* pmvkeys = sllmv_single(imv(2));
+	sllmv_t* pmvkeys = sllmv_single_with_free(imv(2));
 	mv_t* ptermval = imv(-2);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_double(smv("a"), imv(9));
+	pmvkeys = sllmv_double_with_free(smv("a"), imv(9));
 	ptermval = imv(-9);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_double(smv("a"), imv(31));
+	pmvkeys = sllmv_double_with_free(smv("a"), imv(31));
 	ptermval = imv(-31);
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_triple(imv(0), imv(0), smv("b"));
+	pmvkeys = sllmv_triple_with_free(imv(0), imv(0), smv("b"));
 	ptermval = smv("term");
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_triple(imv(100), imv(1), smv("b"));
+	pmvkeys = sllmv_triple_with_free(imv(100), imv(1), smv("b"));
 	ptermval = smv("term");
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
-	pmvkeys = sllmv_triple(imv(1700), imv(1), smv("b"));
+	pmvkeys = sllmv_triple_with_free(imv(1700), imv(1), smv("b"));
 	ptermval = smv("term");
 	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
 
@@ -165,24 +165,24 @@ static char* test_depth_errors() {
 	int error;
 
 	printf("================================================================\n");
-	mlhmmv_put(pmap, sllmv_triple(imv(1), imv(2), imv(3)), imv(4));
+	mlhmmv_put(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), imv(4));
 
-	mu_assert_lf(NULL != mlhmmv_get(pmap, sllmv_triple(imv(1), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL != mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple(imv(0), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(0), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple(imv(1), imv(0), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(0), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple(imv(1), imv(2), imv(0)), &error));
+	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(0)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_quadruple(imv(1), imv(2), imv(3), imv(4)), &error));
+	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_quadruple_with_free(imv(1), imv(2), imv(3), imv(4)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_DEEP);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_double(imv(1), imv(2)), &error));
+	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_double_with_free(imv(1), imv(2)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_SHALLOW);
 
 	mlhmmv_free(pmap);
@@ -255,21 +255,21 @@ static char* test_mlhmmv_to_lrecs() {
 	printf("================================================================\n");
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("s"), smv("x")), imv(1));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("s"), smv("y")), imv(2));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("t"), smv("x")), imv(3));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("t"), smv("y")), imv(4));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("s"), smv("x")), imv(5));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("s"), smv("y")), imv(6));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("t"), smv("x")), imv(7));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("t"), smv("y")), imv(8));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("u"), smv("x")), imv(9));
-	mlhmmv_put(pmap, sllmv_triple(smv("triple"), smv("u"), smv("y")), imv(10));
-	mlhmmv_put(pmap, sllmv_triple(smv("not"), smv("u"), smv("y")), imv(11));
-	mlhmmv_put(pmap, sllmv_single(smv("single")), imv(99));
-	mlhmmv_put(pmap, sllmv_double(smv("double"), smv("i")), imv(111));
-	mlhmmv_put(pmap, sllmv_double(smv("double"), smv("j")), imv(112));
-	mlhmmv_put(pmap, sllmv_double(smv("double"), smv("k")), imv(113));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(1));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(2));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(3));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(4));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(5));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(6));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(7));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(8));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("x")), imv(9));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("y")), imv(10));
+	mlhmmv_put(pmap, sllmv_triple_with_free(smv("not"), smv("u"), smv("y")), imv(11));
+	mlhmmv_put(pmap, sllmv_single_with_free(smv("single")), imv(99));
+	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("i")), imv(111));
+	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("j")), imv(112));
+	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("k")), imv(113));
 
 	printf("full map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
@@ -279,7 +279,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("single")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("single")), poutrecs);
 	printf("single-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -289,7 +289,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_double(smv("single"), smv("first")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_double_with_free(smv("single"), smv("first")), poutrecs);
 	printf("single-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -300,7 +300,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("double")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("double")), poutrecs);
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -310,7 +310,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_double(smv("double"), smv("first")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_double_with_free(smv("double"), smv("first")), poutrecs);
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -320,7 +320,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_triple(smv("double"), smv("first"), smv("second")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_triple_with_free(smv("double"), smv("first"), smv("second")), poutrecs);
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -331,7 +331,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single(smv("triple")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("triple")), poutrecs);
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -341,7 +341,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_double(smv("triple"), smv("first")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_double_with_free(smv("triple"), smv("first")), poutrecs);
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -351,7 +351,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_triple(smv("triple"), smv("first"), smv("second")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_triple_with_free(smv("triple"), smv("first"), smv("second")), poutrecs);
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);
@@ -361,7 +361,8 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_quadruple(smv("triple"), smv("first"), smv("second"), smv("third")), poutrecs);
+	mlhmmv_to_lrecs(pmap, sllmv_quadruple_with_free(smv("triple"), smv("first"), smv("second"), smv("third")),
+		poutrecs);
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
 		lrec_print(pe->pvvalue);

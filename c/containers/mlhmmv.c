@@ -491,9 +491,9 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	if (pnames->phead == NULL) {
 		// emit the entire map as lrecs
 		for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
-			sllmv_t* pname = sllmv_single(&pentry->level_key);
+			sllmv_t* pname = sllmv_single_no_free(&pentry->level_key);
 			mlhmmv_to_lrecs(pmap, pname, poutrecs);
-			//sllmv_free(pname); // xxx fix the free happening when it shouldn't
+			sllmv_free(pname);
 		}
 		return;
 	}

@@ -11,7 +11,6 @@ sllmv_t* sllmv_alloc() {
 }
 
 // ----------------------------------------------------------------
-// xxx sllmv_add doesn't alloc new but this does mv_free. something not right here.
 void sllmv_free(sllmv_t* plist) {
 	if (plist == NULL)
 		return;
@@ -19,7 +18,8 @@ void sllmv_free(sllmv_t* plist) {
 	while (pnode != NULL) {
 		sllmve_t* pdel = pnode;
 		pnode = pnode->pnext;
-		mv_free(&pdel->value);
+		if (pdel->free_flags & FREE_ENTRY_VALUE)
+			mv_free(&pdel->value);
 		free(pdel);
 	}
 	plist->phead  = NULL;
@@ -34,10 +34,12 @@ void sllmv_free(sllmv_t* plist) {
 // to list storage. For all but string mlrvals, this is a copy.
 // For string mlrvals, it is pointer assignment without string duplication.
 // This is intentional (for performance); callees are advised.
-void sllmv_add(sllmv_t* plist, mv_t* pvalue) {
+
+static void sllmv_add(sllmv_t* plist, mv_t* pvalue, char free_flags) {
 	sllmve_t* pnode = mlr_malloc_or_die(sizeof(sllmve_t));
 	pnode->value = *pvalue; // struct assignment
 	if (plist->ptail == NULL) {
+		pnode->free_flags = free_flags;
 		pnode->pnext = NULL;
 		plist->phead = pnode;
 		plist->ptail = pnode;
@@ -49,34 +51,48 @@ void sllmv_add(sllmv_t* plist, mv_t* pvalue) {
 	plist->length++;
 }
 
+void sllmv_add_with_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_add(plist, pvalue, FREE_ENTRY_KEY);
+}
+
+void sllmv_add_no_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_add(plist, pvalue, NO_FREE);
+}
+
 // ----------------------------------------------------------------
-sllmv_t* sllmv_single(mv_t* pvalue) {
+sllmv_t* sllmv_single_no_free(mv_t* pvalue) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add(psllmv, pvalue);
+	sllmv_add_no_free(psllmv, pvalue);
 	return psllmv;
 }
 
-sllmv_t* sllmv_double(mv_t* pvalue1, mv_t* pvalue2) {
+sllmv_t* sllmv_single_with_free(mv_t* pvalue) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add(psllmv, pvalue1);
-	sllmv_add(psllmv, pvalue2);
+	sllmv_add_with_free(psllmv, pvalue);
 	return psllmv;
 }
 
-sllmv_t* sllmv_triple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3) {
+sllmv_t* sllmv_double_with_free(mv_t* pvalue1, mv_t* pvalue2) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add(psllmv, pvalue1);
-	sllmv_add(psllmv, pvalue2);
-	sllmv_add(psllmv, pvalue3);
+	sllmv_add_with_free(psllmv, pvalue1);
+	sllmv_add_with_free(psllmv, pvalue2);
 	return psllmv;
 }
 
-sllmv_t* sllmv_quadruple(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, mv_t* pvalue4) {
+sllmv_t* sllmv_triple_with_free(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add(psllmv, pvalue1);
-	sllmv_add(psllmv, pvalue2);
-	sllmv_add(psllmv, pvalue3);
-	sllmv_add(psllmv, pvalue4);
+	sllmv_add_with_free(psllmv, pvalue1);
+	sllmv_add_with_free(psllmv, pvalue2);
+	sllmv_add_with_free(psllmv, pvalue3);
+	return psllmv;
+}
+
+sllmv_t* sllmv_quadruple_with_free(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, mv_t* pvalue4) {
+	sllmv_t* psllmv = sllmv_alloc();
+	sllmv_add_with_free(psllmv, pvalue1);
+	sllmv_add_with_free(psllmv, pvalue2);
+	sllmv_add_with_free(psllmv, pvalue3);
+	sllmv_add_with_free(psllmv, pvalue4);
 	return psllmv;
 }
 

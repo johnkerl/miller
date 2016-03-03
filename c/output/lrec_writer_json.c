@@ -71,7 +71,7 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 			sllmv_t* pmvkeys = sllmv_alloc();
 			for (char* piece = strtok(lkey, sep); piece != NULL; piece = strtok(NULL, sep)) {
 				mv_t mvkey = mv_from_string(piece, NO_FREE);
-				sllmv_add(pmvkeys, &mvkey);
+				sllmv_add_no_free(pmvkeys, &mvkey);
 			}
 			mv_t mvval = mv_from_string(lvalue, NO_FREE);
 			mlhmmv_put(pmap, pmvkeys, &mvval);

@@ -33,7 +33,7 @@ sllmv_t* evaluate_list(
 			break;
 		}
 		// Don't free the mlrval since its memory will be managed by the sllmv.
-		sllmv_add(pmvs, &mv);
+		sllmv_add_with_free(pmvs, &mv);
 	}
 
 	*pall_non_null_or_error = all_non_null_or_error;

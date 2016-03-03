@@ -302,7 +302,7 @@ static void rval_evaluator_oosvar_name_free(rval_evaluator_t* pevaluator) {
 rval_evaluator_t* rval_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 	rval_evaluator_oosvar_name_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_oosvar_name_state_t));
 	mv_t mv_name = mv_from_string(oosvar_name, NO_FREE);
-	pstate->pmvkeys = sllmv_single(&mv_name);
+	pstate->pmvkeys = sllmv_single_no_free(&mv_name);
 	mv_free(&mv_name);
 
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
