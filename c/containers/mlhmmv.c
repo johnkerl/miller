@@ -457,6 +457,12 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 	if (prestkeys == NULL)
 		return;
 
+	if (prestkeys->phead == NULL) {
+		mlhmmv_level_free(pmap->proot_level);
+		pmap->proot_level = mlhmmv_level_alloc();
+		return;
+	}
+
 	int unused = FALSE;
 	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
 }

@@ -78,8 +78,7 @@ void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-// Unset value/submap from a specified level onward. pmvkeys must have length at least 1, i.e.
-// the oosvar name. Example:
+// Unset value/submap from a specified level onward.  Example:
 // {
 //   "a" : {
 //     "x" : 1,
@@ -106,6 +105,9 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 //     "x" : 3,
 //     "y" : 4
 //   },
+// }
+// and with pmvkeys = [] leaves
+// {
 // }
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
