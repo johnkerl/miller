@@ -66,6 +66,46 @@ lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines) {
 }
 
 // ----------------------------------------------------------------
+static void lrec_free_contents(lrec_t* prec) {
+	for (lrece_t* pe = prec->phead; pe != NULL; /*pe = pe->pnext*/) {
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_VALUE)
+			free(pe->value);
+		lrece_t* ope = pe;
+		pe = pe->pnext;
+		free(ope);
+	}
+	prec->pfree_backing_func(prec);
+}
+
+// ----------------------------------------------------------------
+void lrec_clear(lrec_t* prec) {
+	if (prec == NULL)
+		return;
+	lrec_free_contents(prec);
+	memset(prec, 0, sizeof(lrec_t));
+}
+
+// ----------------------------------------------------------------
+void lrec_free(lrec_t* prec) {
+	if (prec == NULL)
+		return;
+	lrec_free_contents(prec);
+	free(prec);
+}
+
+// ----------------------------------------------------------------
+lrec_t* lrec_copy(lrec_t* pinrec) {
+	lrec_t* poutrec = lrec_unbacked_alloc();
+	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+		lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	}
+	return poutrec;
+}
+
+// ----------------------------------------------------------------
 void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 	lrece_t* pe = lrec_find_entry(prec, key);
 
@@ -348,33 +388,6 @@ static void lrec_link_at_tail(lrec_t* prec, lrece_t* pe) {
 		prec->ptail = pe;
 	}
 	prec->field_count++;
-}
-
-// ----------------------------------------------------------------
-lrec_t* lrec_copy(lrec_t* pinrec) {
-	lrec_t* poutrec = lrec_unbacked_alloc();
-	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
-			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-	}
-	return poutrec;
-}
-
-// ----------------------------------------------------------------
-void lrec_free(lrec_t* prec) {
-	if (prec == NULL)
-		return;
-	for (lrece_t* pe = prec->phead; pe != NULL; /*pe = pe->pnext*/) {
-		if (pe->free_flags & FREE_ENTRY_KEY)
-			free(pe->key);
-		if (pe->free_flags & FREE_ENTRY_VALUE)
-			free(pe->value);
-		lrece_t* ope = pe;
-		pe = pe->pnext;
-		free(ope);
-	}
-	prec->pfree_backing_func(prec);
-	free(prec);
 }
 
 // ----------------------------------------------------------------

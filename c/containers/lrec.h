@@ -97,6 +97,10 @@ lrec_t* lrec_csvlite_alloc(char* data_line);
 lrec_t* lrec_csv_alloc(char* data_line);
 lrec_t* lrec_xtab_alloc(slls_t* pxtab_lines);
 
+void lrec_clear(lrec_t* prec);
+void  lrec_free(lrec_t* prec);
+lrec_t* lrec_copy(lrec_t* pinrec);
+
 // The only difference between lrec_put and lrec_prepend is that the latter
 // adds to the end of the record, while the former adds to the beginning.
 //
@@ -141,9 +145,6 @@ void  lrec_move_to_tail(lrec_t* prec, char* key);
 void lrec_unlink(lrec_t* prec, lrece_t* pe);
 // May be used for removing fields from a record while iterating over it:
 void lrec_unlink_and_free(lrec_t* prec, lrece_t* pe);
-
-lrec_t* lrec_copy(lrec_t* pinrec);
-void  lrec_free(lrec_t* prec);
 
 void lrec_print(lrec_t* prec);
 void lrec_dump(lrec_t* prec);

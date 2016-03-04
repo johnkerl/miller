@@ -7,12 +7,12 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char*                  output_field_name,
-	sllv_t*                poosvar_lhs_keylist_evaluators,
-	int                    all_flag,
-	rval_evaluator_t*      prhs_evaluator,
-	sllv_t*                pcond_statements,
-	sllv_t*                poosvar_rhs_keylist_evaluators);
+	char*             output_field_name,
+	sllv_t*           poosvar_lhs_keylist_evaluators,
+	int               all_flag,
+	rval_evaluator_t* prhs_evaluator,
+	sllv_t*           pcond_statements,
+	sllv_t*           poosvar_rhs_keylist_evaluators);
 
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
@@ -586,12 +586,12 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char*                  output_field_name,
-	sllv_t*                poosvar_lhs_keylist_evaluators,
-	int                    all_flag,
-	rval_evaluator_t*      prhs_evaluator,
-	sllv_t*                pcond_statements,
-	sllv_t*                poosvar_rhs_keylist_evaluators)
+	char*             output_field_name,
+	sllv_t*           poosvar_lhs_keylist_evaluators,
+	int               all_flag,
+	rval_evaluator_t* prhs_evaluator,
+	sllv_t*           pcond_statements,
+	sllv_t*           poosvar_rhs_keylist_evaluators)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->output_field_name = output_field_name == NULL ? NULL : mlr_strdup_or_die(output_field_name);
@@ -751,14 +751,15 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 	sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
+		int error = 0;
+		mlhmmv_level_t* plevel = mlhmmv_get_level(poosvars, prhskeys, &error);
+		if (plevel != NULL) {
+			// xxx loop over keys at that level; abend/ignore if values non-terminal.
 
-		// mlhmmv_level_t* plevel = mlhmmv_get_level(poosvars, prhskeys);
-		// if null ...
-		// xxx loop over keys at that level; abend/ignore if values non-terminal.
-
-		// xxx xref to srec_assignment comments re typed_overlay.
-		// lhmsv_put(ptyped_overlay, output_field_name, pval, xxx free-flags);
-		// lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+			// xxx xref to srec_assignment comments re typed_overlay.
+			// lhmsv_put(ptyped_overlay, output_field_name, pval, xxx free-flags);
+			// lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+		}
 
 	}
 	sllmv_free(prhskeys);
