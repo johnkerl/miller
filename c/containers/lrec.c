@@ -85,6 +85,7 @@ void lrec_clear(lrec_t* prec) {
 		return;
 	lrec_free_contents(prec);
 	memset(prec, 0, sizeof(lrec_t));
+	prec->pfree_backing_func = lrec_unbacked_free;
 }
 
 // ----------------------------------------------------------------

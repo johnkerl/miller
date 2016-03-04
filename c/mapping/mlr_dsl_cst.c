@@ -747,6 +747,9 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 
+	lrec_clear(pinrec);
+	// xxx clear the typed overlay too
+
 	int all_non_null_or_error = TRUE;
 	sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
@@ -754,13 +757,18 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 		int error = 0;
 		mlhmmv_level_t* plevel = mlhmmv_get_level(poosvars, prhskeys, &error);
 		if (plevel != NULL) {
-			// xxx loop over keys at that level; abend/ignore if values non-terminal.
+			for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+				if (pentry->level_value.is_terminal) {
+					// xxx else flatten!
+					char* skey = mv_alloc_format_val(&pentry->level_key);
+					mv_t* pval = mv_alloc_copy(&pentry->level_value.u.mlrval);
 
-			// xxx xref to srec_assignment comments re typed_overlay.
-			// lhmsv_put(ptyped_overlay, output_field_name, pval, xxx free-flags);
-			// lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+					// xxx xref to srec_assignment comments re typed_overlay.
+					lhmsv_put(ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
+					lrec_put(pinrec, skey, "bug", FREE_ENTRY_KEY);
+				}
+			}
 		}
-
 	}
 	sllmv_free(prhskeys);
 }
