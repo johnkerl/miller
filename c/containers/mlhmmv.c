@@ -340,8 +340,6 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
 	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
-	// printf("--- %s:%d ", __FILE__, __LINE__); sllmve_tail_print(prest_keys);
-
 
 	if (plevel->states[index] == EMPTY) { // End of chain.
 
