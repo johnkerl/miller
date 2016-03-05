@@ -8,9 +8,9 @@ TOP-OF-LIST SUMMARY
 
 * rh/fedora/centos mlr-3.4.0
 
-! cat -n isn't 1-up?!? fix code or doc.
-
 ! oosvar-to-oosvar assignments with treecopy
+! subselector emits
+
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec
@@ -20,8 +20,6 @@ TOP-OF-LIST SUMMARY
 ! valgrinds
 ! xxxes
 * ack hash algo
-
-? @x = $*; $x[@a] = $*; $* = @x; $* = @x[@]
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -41,7 +39,8 @@ TOP-OF-LIST SUMMARY
   BIG:
   - oosvars
   - begin/end
-  - emit
+  - emit/all
+  - unset/all
   - bare-boolean and pattern-action
   SMALL:
   - filter
@@ -59,6 +58,7 @@ PARAMETERIZED EMIT, UNSET, $*
   note rhs="" vs. remove key. unset is latter since rhs="" does former. cf. cut -x.
 
 * oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
+* $* UTs
 * emit with subselector
 * multi-unset
   - UT
