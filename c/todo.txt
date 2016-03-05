@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 
 ! cat -n isn't 1-up?!? fix code or doc.
 
+! oosvar-to-oosvar assignments with treecopy
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec
@@ -20,7 +21,7 @@ TOP-OF-LIST SUMMARY
 ! xxxes
 * ack hash algo
 
-? @x = $$0; $x[@a] = $$0; $$0 = @x; $$0 = @x[@]
+? @x = $*; $x[@a] = $*; $* = @x; $* = @x[@]
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -46,9 +47,10 @@ TOP-OF-LIST SUMMARY
   - filter
   - nest
   - shuffle
+  - cat -n bugfix
 
 ================================================================
-PARAMETERIZED EMIT AND UNSET
+PARAMETERIZED EMIT, UNSET, $*
 
 * evolve & extend the UTs
   - ut/t-mlhm: assert on sllv of plrec
@@ -56,6 +58,8 @@ PARAMETERIZED EMIT AND UNSET
 * mld section, w/ olh brief example & xref to it.
   note rhs="" vs. remove key. unset is latter since rhs="" does former. cf. cut -x.
 
+* oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
+* emit with subselector
 * multi-unset
   - UT
 * emit UT @ test-mlhmmv
