@@ -714,9 +714,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 
-		int error = 0;
-		// xxx need a get_or_create_level
-		mlhmmv_level_t* plevel = mlhmmv_get_level(poosvars, plhskeys, &error);
+		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(poosvars, plhskeys);
 		if (plevel != NULL) {
 
 			for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
@@ -730,6 +728,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 					mlhmmv_level_put(plevel, &e, &v);
 				}
 			}
+
 		}
 	}
 	sllmv_free(plhskeys);

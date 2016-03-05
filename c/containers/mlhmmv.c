@@ -29,6 +29,9 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_level_value_t* plevel_value);
 
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+
 static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
 static void mlhmmv_to_lrecs_aux(mlhmmv_level_t* plevel, mv_t* pfirstname, sllmve_t* prestnames,
@@ -316,6 +319,89 @@ mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	return &plevel_entry->level_value.u.mlrval;
 }
 
+// ----------------------------------------------------------------
+// xxx remove code duplication
+
+// Example on recursive calls:
+// * level = map, rest_keys = ["a", 2, "c"]
+// * level = map["a"], rest_keys = [2, "c"]
+// * level = map["a"][2], rest_keys = ["c"]
+mlhmmv_level_t* mlhmmv_get_or_create_level(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	return mlhmmv_get_or_create_level_aux(pmap->proot_level, pmvkeys->phead);
+}
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
+	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
+		mlhmmv_level_enlarge(plevel);
+	return mlhmmv_get_or_create_level_aux_no_enlarge(plevel, prest_keys);
+}
+
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
+#if 0
+	mv_t* plevel_key = &prest_keys->value;
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (plevel->states[index] == EMPTY) { // End of chain.
+		pentry->ideal_index = ideal_index;
+		pentry->level_key = mv_copy(plevel_key);
+
+		if (prest_keys->pnext == NULL) {
+			pentry->level_value.is_terminal = TRUE;
+			pentry->level_value.u.mlrval = mv_copy(pterminal_value);
+		} else {
+			pentry->level_value.is_terminal = FALSE;
+			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+		}
+		plevel->states[index] = OCCUPIED;
+
+		if (plevel->phead == NULL) { // First entry at this level
+			pentry->pprev = NULL;
+			pentry->pnext = NULL;
+			plevel->phead = pentry;
+			plevel->ptail = pentry;
+		} else {                     // Subsequent entry at this level
+			pentry->pprev = plevel->ptail;
+			pentry->pnext = NULL;
+			plevel->ptail->pnext = pentry;
+			plevel->ptail = pentry;
+		}
+
+		plevel->num_occupied++;
+		if (prest_keys->pnext != NULL) {
+			// RECURSE
+			mlhmmv_get_or_create_level(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+		}
+
+	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
+		if (prest_keys->pnext == NULL) { // Place the terminal at this level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.u.pnext_level);
+			}
+			pentry->level_value.is_terminal = TRUE;
+			pentry->level_value.u.mlrval = mv_copy(pterminal_value);
+
+		} else { // The terminal will be placed at a deeper level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+				pentry->level_value.is_terminal = FALSE;
+				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+			}
+			// RECURSE
+			mlhmmv_get_or_create_level(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+		}
+
+	} else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		exit(1);
+	}
+#endif
+	return NULL;
+}
+
+// ----------------------------------------------------------------
 // xxx rename to mlhmmv_get_non_terminal
 // xxx factor out a common mlhmmv_get_level?
 mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
