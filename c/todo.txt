@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
+
 * rh/fedora/centos mlr-3.4.0
 
 ! oosvar-to-oosvar assignments with treecopy
@@ -50,6 +52,13 @@ TOP-OF-LIST SUMMARY
 
 ================================================================
 PARAMETERIZED EMIT, UNSET, $*
+
+! vertical vs. horizontal on emit ... do i ever really want vertical?
+  > mlr put -q '@sum[$a][$b] += $x;@count[$a][$b]+= 1;end {emit @sum,"a","b"; emit @count,"a","b"}' ../data/small
+    --> really want sum & count side-by-side here
+  > mlr put -q '@v[NR]=$*; emit @v' ../data/small
+    --> really want # input records = # output records
+
 
 * evolve & extend the UTs
   - ut/t-mlhm: assert on sllv of plrec
