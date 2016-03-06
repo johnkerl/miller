@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
 
 ! oosvar-to-oosvar assignments with treecopy
 ! subselector emits
+! horizontality of emits
 
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
@@ -58,7 +59,6 @@ PARAMETERIZED EMIT, UNSET, $*
     --> really want sum & count side-by-side here
   > mlr put -q '@v[NR]=$*; emit @v' ../data/small
     --> really want # input records = # output records
-
 
 * evolve & extend the UTs
   - ut/t-mlhm: assert on sllv of plrec

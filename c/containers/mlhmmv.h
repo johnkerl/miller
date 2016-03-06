@@ -120,6 +120,8 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 // }
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
+// xxx comment
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs);
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs

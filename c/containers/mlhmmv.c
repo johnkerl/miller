@@ -589,19 +589,18 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 // xxx temp
 #define TEMP_FLATTEN_SEP ":"
 
-// xxx comment copiously @ .h, and interleaved here
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
-	if (pnames->phead == NULL) {
-		// xxx make a separate entry point
-		// emit the entire map as lrecs
-		for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
-			sllmv_t* pname = sllmv_single_no_free(&pentry->level_key);
-			mlhmmv_to_lrecs(pmap, pname, poutrecs);
-			sllmv_free(pname);
-		}
-		return;
+// xxx cmt
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs) {
+	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
+		sllmv_t* pname = sllmv_single_no_free(&pentry->level_key);
+		mlhmmv_to_lrecs(pmap, pname, poutrecs);
+		sllmv_free(pname);
 	}
+}
 
+// xxx comment copiously @ .h, and interleaved here
+// xxx need to split out subselector indices from naming list
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	mv_t* pfirstname = &pnames->phead->value;
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_next_level_entry(pmap->proot_level, pfirstname, NULL);
