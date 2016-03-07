@@ -125,7 +125,7 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs);
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs);
 
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);

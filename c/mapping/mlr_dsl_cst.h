@@ -56,6 +56,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	// LHS:
 	char* output_field_name;
 	sllv_t* poosvar_lhs_keylist_evaluators;
+	sllv_t* poosvar_lhs_namelist_evaluators;
 	int all_flag; // for emit all and unset all
 
 	// RHS:

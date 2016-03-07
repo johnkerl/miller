@@ -9,6 +9,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             output_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
+	sllv_t*           poosvar_lhs_namelist_evaluators,
 	int               all_flag,
 	rval_evaluator_t* prhs_evaluator,
 	sllv_t*           pcond_statements,
@@ -222,6 +223,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pleft->text,
 			NULL,
+			NULL,
 			FALSE,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
@@ -286,6 +288,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			poosvar_lhs_keylist_evaluators,
+			NULL,
 			FALSE,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
@@ -334,6 +337,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			poosvar_lhs_keylist_evaluators,
+			NULL,
 			FALSE,
 			NULL,
 			NULL,
@@ -382,6 +386,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			NULL,
+			NULL,
 			FALSE,
 			NULL,
 			NULL,
@@ -399,6 +404,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
 					NULL,
+					NULL,
 					FALSE,
 					NULL,
 					NULL,
@@ -411,6 +417,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
 					poosvar_lhs_keylist_evaluators,
+					NULL,
 					FALSE,
 					NULL,
 					NULL,
@@ -437,6 +444,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pwalker->text,
 					poosvar_lhs_keylist_evaluators,
+					NULL,
 					FALSE,
 					NULL,
 					NULL,
@@ -444,6 +452,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 			} else if (pnode->type == MD_AST_NODE_TYPE_ALL) {
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+					NULL,
 					NULL,
 					NULL,
 					TRUE,
@@ -468,6 +477,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				pnode->text,
 				NULL,
+				NULL,
 				FALSE,
 				rval_evaluator_alloc_from_ast(pnode, type_inferencing),
 				NULL,
@@ -483,6 +493,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// So if 'all' appears at all, it's the only name.
 		if (pnode->type == MD_AST_NODE_TYPE_ALL) {
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				NULL,
 				NULL,
 				NULL,
 				TRUE,
@@ -501,16 +512,17 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			sllv_append(poosvar_lhs_keylist_evaluators,
 				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnamenode->text)));
 
-
+			sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
 			for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(poosvar_lhs_keylist_evaluators,
+				sllv_append(poosvar_lhs_namelist_evaluators,
 					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 			}
 
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				pnamenode->text,
 				poosvar_lhs_keylist_evaluators,
+				poosvar_lhs_namelist_evaluators,
 				FALSE,
 				NULL,
 				NULL,
@@ -523,6 +535,26 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			// First argument is keyed-oosvar name. Remainings evaluate to string,
 			// e.g. 'emit @sums, "color", "shape"'.
 			mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
+
+			// $ mlr put -q -v 'end{emit @v, "a", "b","c"}' ...
+			// AST END STATEMENTS (1):
+			// emit (emit):
+			//     v (oosvar_name).
+			//     a (strnum_literal).
+			//     b (strnum_literal).
+			//     c (strnum_literal).
+
+			// mlr put -q -v 'end{emit @v[1][2], "a", "b","c"}' ...
+			// AST END STATEMENTS (1):
+			// emit (emit):
+			//     [] (oosvar_level_key):
+			//         [] (oosvar_level_key):
+			//             v (oosvar_name).
+			//             1 (strnum_literal).
+			//         2 (strnum_literal).
+			//     a (strnum_literal).
+			//     b (strnum_literal).
+			//     c (strnum_literal).
 
 			// xxx brief cmts here paralleling emit
 			sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
@@ -542,7 +574,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 				pwalker = pwalker->pchildren->phead->pvvalue;
 			}
 
-			sllv_append(poosvar_lhs_keylist_evaluators,
+			sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
+			sllv_prepend(poosvar_lhs_namelist_evaluators,
 				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnamenode->text)));
 
 			for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
@@ -554,6 +587,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				pnamenode->text,
 				poosvar_lhs_keylist_evaluators,
+				poosvar_lhs_namelist_evaluators,
 				FALSE,
 				NULL,
 				NULL,
@@ -582,6 +616,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			NULL,
+			NULL,
 			FALSE,
 			rval_evaluator_alloc_from_ast(pfirst, type_inferencing),
 			pcond_statements,
@@ -592,6 +627,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	} else if (past->type == MD_AST_NODE_TYPE_FILTER) {
 		mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+			NULL,
 			NULL,
 			NULL,
 			FALSE,
@@ -605,6 +641,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			NULL,
+			NULL,
 			FALSE,
 			NULL,
 			NULL,
@@ -614,6 +651,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 	} else { // Bare-boolean statement
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+			NULL,
 			NULL,
 			NULL,
 			FALSE,
@@ -638,6 +676,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             output_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
+	sllv_t*           poosvar_lhs_namelist_evaluators,
 	int               all_flag,
 	rval_evaluator_t* prhs_evaluator,
 	sllv_t*           pcond_statements,
@@ -645,11 +684,12 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->output_field_name = output_field_name == NULL ? NULL : mlr_strdup_or_die(output_field_name);
-	pitem->poosvar_lhs_keylist_evaluators = poosvar_lhs_keylist_evaluators;
-	pitem->all_flag                       = all_flag;
-	pitem->prhs_evaluator                 = prhs_evaluator;
-	pitem->pcond_statements               = pcond_statements;
-	pitem->poosvar_rhs_keylist_evaluators = poosvar_rhs_keylist_evaluators;
+	pitem->poosvar_lhs_keylist_evaluators  = poosvar_lhs_keylist_evaluators;
+	pitem->poosvar_lhs_namelist_evaluators = poosvar_lhs_namelist_evaluators;
+	pitem->all_flag                        = all_flag;
+	pitem->prhs_evaluator                  = prhs_evaluator;
+	pitem->pcond_statements                = pcond_statements;
+	pitem->poosvar_rhs_keylist_evaluators  = poosvar_rhs_keylist_evaluators;
 	return pitem;
 }
 
@@ -659,6 +699,7 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 	free(pitem->output_field_name);
 	if (pitem->prhs_evaluator != NULL)
 		pitem->prhs_evaluator->pfree_func(pitem->prhs_evaluator);
+
 	if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* pevaluator = pe->pvvalue;
@@ -666,6 +707,15 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 		}
 		sllv_free(pitem->poosvar_lhs_keylist_evaluators);
 	}
+
+	if (pitem->poosvar_lhs_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pitem->poosvar_lhs_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* pevaluator = pe->pvvalue;
+			pevaluator->pfree_func(pevaluator);
+		}
+		sllv_free(pitem->poosvar_lhs_namelist_evaluators);
+	}
+
 	free(pitem);
 }
 
@@ -916,10 +966,13 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_to_lrecs(poosvars, pmvkeys, poutrecs);
+		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs);
 	}
 	sllmv_free(pmvkeys);
+	sllmv_free(pmvnames);
 }
 
 // ----------------------------------------------------------------
