@@ -660,7 +660,24 @@ static void mlhmmv_to_lrecs_aux(
 	lrec_t*         ptemplate,
 	sllv_t*         poutrecs)
 {
-	if (prestnames == NULL) {
+	if (prestnames != NULL) {
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			mlhmmv_level_value_t* plevel_value = &pe->level_value;
+			lrec_t* pnextrec = lrec_copy(ptemplate);
+			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
+				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			if (plevel_value->is_terminal) {
+				lrec_put(pnextrec, mlr_strdup_or_die(prefix),
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, pnextrec);
+			} else {
+				mlhmmv_to_lrecs_aux(pe->level_value.u.pnext_level,
+					prefix, prestnames->pnext, pnextrec, poutrecs);
+				lrec_free(pnextrec);
+			}
+		}
+	} else {
+		// xxx split out vert & horiz auxes
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
 			lrec_t* pnextrec = lrec_copy(ptemplate);
@@ -674,23 +691,6 @@ static void mlhmmv_to_lrecs_aux(
 				sllv_append(poutrecs, pnextrec);
 			} else {
 				mlhmmv_to_lrecs_aux(plevel_value->u.pnext_level, name, NULL, pnextrec, poutrecs);
-				lrec_free(pnextrec);
-			}
-		}
-
-	} else {
-		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* pnextrec = lrec_copy(ptemplate);
-			lrec_put(pnextrec, mv_alloc_format_val(&prestnames->value),
-				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			mlhmmv_level_value_t* plevel_value = &pe->level_value;
-			if (plevel_value->is_terminal) {
-				lrec_put(pnextrec, mlr_strdup_or_die(prefix),
-					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-				sllv_append(poutrecs, pnextrec);
-			} else {
-				mlhmmv_to_lrecs_aux(pe->level_value.u.pnext_level,
-					prefix, prestnames->pnext, pnextrec, poutrecs);
 				lrec_free(pnextrec);
 			}
 		}
