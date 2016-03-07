@@ -9,11 +9,10 @@ TOP-OF-LIST SUMMARY
 ? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
 * rh/fedora/centos mlr-3.4.0
 
-! oosvar-to-oosvar assignments with treecopy
+* \" in string-literal reader ... fix up in the parser or in rval_expr.
+~ oosvar-to-oosvar assignments with treecopy
 ~ subselector emits
 ~ horizontality of emits
-
-* \" in string-literal reader ... fix up in the parser or in rval_expr.
 
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
