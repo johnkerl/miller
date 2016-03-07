@@ -204,6 +204,8 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 }
 
 // ----------------------------------------------------------------
+// xxx split up this function -- too long.
+
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
@@ -295,18 +297,60 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			}
 		}
 
-		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-			NULL,
-			poosvar_lhs_keylist_evaluators,
-			NULL,
-			FALSE,
-			rval_evaluator_alloc_from_ast(pright, type_inferencing),
-			NULL,
-			NULL));
+		int is_oosvar_to_oosvar = FALSE;
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment; // xxx temp
+		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pleft->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pright->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+				is_oosvar_to_oosvar = TRUE;
+			}
+		}
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
+		if (is_oosvar_to_oosvar) {
+			sllv_t* poosvar_rhs_keylist_evaluators = sllv_alloc();
+
+			if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
+				sllv_append(poosvar_rhs_keylist_evaluators,
+					rval_evaluator_alloc_from_string(mlr_strdup_or_die(pright->text)));
+			} else {
+				// xxx make a private helper method out of this
+				mlr_dsl_ast_node_t* pnode = pright;
+				while (TRUE) {
+					if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+						mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
+						sllv_prepend(poosvar_rhs_keylist_evaluators,
+							rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+					} else {
+						sllv_prepend(poosvar_rhs_keylist_evaluators,
+							rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+					}
+					if (pnode->pchildren == NULL)
+						break;
+					pnode = pnode->pchildren->phead->pvvalue;
+				}
+			}
+
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				NULL,
+				poosvar_lhs_keylist_evaluators,
+				NULL,
+				FALSE,
+				rval_evaluator_alloc_from_ast(pright, type_inferencing),
+				NULL,
+				poosvar_rhs_keylist_evaluators));
+			pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment; // xxx temp
+
+		} else {
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				NULL,
+				poosvar_lhs_keylist_evaluators,
+				NULL,
+				FALSE,
+				rval_evaluator_alloc_from_ast(pright, type_inferencing),
+				NULL,
+				NULL));
+			pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
+
+		}
 
 	} else if (past->type == MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT) {
 		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();

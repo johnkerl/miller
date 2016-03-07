@@ -39,6 +39,8 @@ static void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_level_value_t* pvalue);
 
+static mlhmmv_level_value_t mlhmmv_copy_aux(mlhmmv_level_value_t* pvalue);
+
 static void mlhmmv_to_lrecs_aux_vert(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
 	lrec_t* ptemplate, sllv_t* poutrecs);
 static void mlhmmv_to_lrecs_aux_horiz(mlhmmv_level_t* plevel, char* prefix,
@@ -606,36 +608,40 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 // ----------------------------------------------------------------
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 	int error = 0; // xxx remove from API?
-	mlhmmv_level_value_t submap = mlhmmv_copy_from_level(pmap->proot_level, pfromkeys->phead, &error);
-	mlhmmv_put_at_level(pmap, ptokeys, &submap);
+
+	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
+	if (pfromentry != NULL) {
+		mlhmmv_level_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+		mlhmmv_put_at_level(pmap, ptokeys, &submap);
+	}
 }
 
-// xxx need perror here? probably not.
-mlhmmv_level_value_t mlhmmv_copy_from_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
-	mlhmmv_level_entry_t* pentry = mlhmmv_get_entry_at_level(plevel, prestkeys, perror);
-	if (pentry == NULL) {
-		fprintf(stderr,
-			"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.argv0);
-		exit(1);
-
-	} else if (pentry->level_value.is_terminal) {
+static mlhmmv_level_value_t mlhmmv_copy_aux(mlhmmv_level_value_t* pvalue) {
+	if (pvalue->is_terminal) {
 		return (mlhmmv_level_value_t) {
 			.is_terminal = TRUE,
-			.u.mlrval = mv_copy(&pentry->level_value.u.mlrval)
+			.u.mlrval = mv_copy(&pvalue->u.mlrval)
 		};
 
 	} else {
-		mlhmmv_level_t* psrc_level = pentry->level_value.u.pnext_level;
+		mlhmmv_level_t* psrc_level = pvalue->u.pnext_level;
 		mlhmmv_level_t* pdst_level = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
 
-		// xxx stub
+		mlhmmv_level_init(pdst_level, MLHMMV_INITIAL_ARRAY_LENGTH);
+
 		for (
 			mlhmmv_level_entry_t* psubentry = psrc_level->phead;
 			psubentry != NULL;
 			psubentry = psubentry->pnext)
 		{
-			mlhmmv_level_value_t next_value = mlhmmv_copy_from_level(psrc_level, prestkeys->pnext, perror);
-			mlhmmv_level_put_value(pdst_level, prestkeys->pnext, &next_value);
+			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
+			if (psubentry->level_value.is_terminal) {
+				mlhmmv_level_put_value(pdst_level, &e, &psubentry->level_value);
+			} else {
+				mlhmmv_level_value_t next_value = mlhmmv_copy_aux(&psubentry->level_value);
+				mlhmmv_level_put_value(pdst_level, &e, &next_value);
+			}
+
 		}
 
 		return (mlhmmv_level_value_t) {
