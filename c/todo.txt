@@ -58,6 +58,8 @@ PARAMETERIZED EMIT, UNSET, $*
 ! mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
   --> runs out of data and should not
 
+! oosvar-to-oosvar-assignment UT @ u/tm
+
 * mlr put -q '@v[NR]=$*; emit @v' ../data/small
   --> currently has field names v:a,v:x, etc -- think about a simpler option
 

@@ -37,6 +37,16 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
+static void mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
 static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -293,6 +303,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
 			NULL));
+
+		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment; // xxx temp
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_assignment;
 
@@ -793,6 +805,37 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	if (all_non_null_or_error)
 		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
 	sllmv_free(pmvkeys);
+}
+
+// ----------------------------------------------------------------
+// xxx cmt
+static void mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+
+	int lhs_all_non_null_or_error = TRUE;
+	sllmv_t* plhskeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &lhs_all_non_null_or_error);
+
+	if (lhs_all_non_null_or_error) {
+		int rhs_all_non_null_or_error = TRUE;
+		sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
+			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &rhs_all_non_null_or_error);
+		if (rhs_all_non_null_or_error) {
+			mlhmmv_copy(poosvars, plhskeys, prhskeys);
+		}
+		sllmv_free(prhskeys);
+	}
+
+	sllmv_free(plhskeys);
 }
 
 static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
