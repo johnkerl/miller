@@ -606,20 +606,43 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 // ----------------------------------------------------------------
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 	int error = 0; // xxx remove from API?
-	mlhmmv_level_value_t* psubmap = mlhmmv_copy_from_level(pmap->proot_level, pfromkeys->phead, &error);
-	if (psubmap != NULL) {
-		mlhmmv_put_at_level(pmap, ptokeys, psubmap);
-	}
+	mlhmmv_level_value_t submap = mlhmmv_copy_from_level(pmap->proot_level, pfromkeys->phead, &error);
+	mlhmmv_put_at_level(pmap, ptokeys, &submap);
 }
 
 // xxx need perror here? probably not.
-mlhmmv_level_value_t* mlhmmv_copy_from_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
+mlhmmv_level_value_t mlhmmv_copy_from_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
 	mlhmmv_level_entry_t* pentry = mlhmmv_get_entry_at_level(plevel, prestkeys, perror);
-	if (pentry == NULL)
-		return NULL;
+	if (pentry == NULL) {
+		fprintf(stderr,
+			"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.argv0);
+		exit(1);
 
-	// xxx copy-aux
-	return NULL; // xxx stub
+	} else if (pentry->level_value.is_terminal) {
+		return (mlhmmv_level_value_t) {
+			.is_terminal = TRUE,
+			.u.mlrval = mv_copy(&pentry->level_value.u.mlrval)
+		};
+
+	} else {
+		mlhmmv_level_t* psrc_level = pentry->level_value.u.pnext_level;
+		mlhmmv_level_t* pdst_level = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
+
+		// xxx stub
+		for (
+			mlhmmv_level_entry_t* psubentry = psrc_level->phead;
+			psubentry != NULL;
+			psubentry = psubentry->pnext)
+		{
+			mlhmmv_level_value_t next_value = mlhmmv_copy_from_level(psrc_level, prestkeys->pnext, perror);
+			mlhmmv_level_put_value(pdst_level, prestkeys->pnext, &next_value);
+		}
+
+		return (mlhmmv_level_value_t) {
+			.is_terminal = FALSE,
+			.u.pnext_level = pdst_level
+		};
+	}
 }
 
 // xxx rename
