@@ -1324,6 +1324,35 @@ run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b", "extra" }'
 run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }' $indir/abixy
 
 # ----------------------------------------------------------------
+announce OOSVAR-TO-OOSVAR ASSIGNMENT
+
+
+run_mlr put -q '@s    += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
+
+
+run_mlr put -q '@s[1] += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t=@s[1];          end{dump; emit@s; emit @t}' $indir/abixy
+
+run_mlr put -q '@s[1] += $i; @t[3]=@s;          end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t[3]=@s[1];       end{dump; emit@s; emit @t}' $indir/abixy
+
+
+run_mlr put -q '@s[1][2] += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1];          end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1][2];       end{dump; emit@s; emit @t}' $indir/abixy
+
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s;          end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1];       end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emit@s; emit @t}' $indir/abixy
+
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s;       end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emit@s; emit @t}' $indir/abixy
+
+run_mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emit@s,"A","B"; emit @t,"C","D","E"}' $indir/abixy
+
+
+# ----------------------------------------------------------------
 announce CHAINING
 
 run_mlr cat then cat $indir/short
