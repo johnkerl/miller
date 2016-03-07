@@ -7,7 +7,6 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
-
 * rh/fedora/centos mlr-3.4.0
 
 ! oosvar-to-oosvar assignments with treecopy
@@ -46,9 +45,9 @@ TOP-OF-LIST SUMMARY
   - unset/all
   - bare-boolean and pattern-action
   SMALL:
-  - filter
   - nest
   - shuffle
+  - typeof
   - cat -n bugfix
 
 ================================================================
