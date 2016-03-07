@@ -37,7 +37,6 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, m
 
 static void mlhmmv_to_lrecs_aux(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
 	lrec_t* ptemplate, sllv_t* poutrecs);
-static void mlhmmv_to_lrecs_aux_flatten(mlhmmv_level_t* plevel, char* prefix, lrec_t* ptemplate, sllv_t* poutrecs);
 
 static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always);
@@ -662,7 +661,23 @@ static void mlhmmv_to_lrecs_aux(
 	sllv_t*         poutrecs)
 {
 	if (prestnames == NULL) {
-		mlhmmv_to_lrecs_aux_flatten(plevel, prefix, ptemplate, poutrecs);
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			mlhmmv_level_value_t* plevel_value = &pe->level_value;
+			lrec_t* pnextrec = lrec_copy(ptemplate);
+			// xxx rename
+			char* foo = mv_alloc_format_val(&pe->level_key);
+			char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
+			free(foo);
+			if (plevel_value->is_terminal) {
+				lrec_put(pnextrec, name,
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, pnextrec);
+			} else {
+				mlhmmv_to_lrecs_aux(plevel_value->u.pnext_level, name, NULL, pnextrec, poutrecs);
+				lrec_free(pnextrec);
+			}
+		}
+
 	} else {
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* pnextrec = lrec_copy(ptemplate);
@@ -678,30 +693,6 @@ static void mlhmmv_to_lrecs_aux(
 					prefix, prestnames->pnext, pnextrec, poutrecs);
 				lrec_free(pnextrec);
 			}
-		}
-	}
-}
-
-static void mlhmmv_to_lrecs_aux_flatten(
-	mlhmmv_level_t* plevel,
-	char*           prefix,
-	lrec_t*         ptemplate,
-	sllv_t*         poutrecs)
-{
-	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-		mlhmmv_level_value_t* plevel_value = &pe->level_value;
-		lrec_t* pnextrec = lrec_copy(ptemplate);
-		// xxx rename
-		char* foo = mv_alloc_format_val(&pe->level_key);
-		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
-		free(foo);
-		if (plevel_value->is_terminal) {
-			lrec_put(pnextrec, name,
-				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			sllv_append(poutrecs, pnextrec);
-		} else {
-			mlhmmv_to_lrecs_aux_flatten(plevel_value->u.pnext_level, name, pnextrec, poutrecs);
-			lrec_free(pnextrec);
 		}
 	}
 }
