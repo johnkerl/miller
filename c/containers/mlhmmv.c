@@ -602,6 +602,23 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 }
 
 // ----------------------------------------------------------------
+void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
+	int error = 0; // xxx remove from API?
+	mlhmmv_level_value_t* psubmap = mlhmmv_copy_from_level(pmap, pfromkeys, &error);
+	if (psubmap != NULL) {
+		mlhmmv_put_at_level(pmap, ptokeys, psubmap);
+	}
+}
+
+mlhmmv_level_value_t* mlhmmv_copy_from_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
+	return NULL; // xxx stub
+}
+
+void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_level_value_t* pvalue) {
+	// xxx stub
+}
+
+// ----------------------------------------------------------------
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	mlhmmv_level_entry_t*       old_entries = plevel->entries;
 	mlhmmv_level_entry_state_t* old_states  = plevel->states;

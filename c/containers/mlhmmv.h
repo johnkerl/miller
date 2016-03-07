@@ -87,6 +87,12 @@ mlhmmv_level_t* mlhmmv_get_or_create_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 // xxx cmt
 mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
+// xxx cmt
+void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
+// xxx make private?
+mlhmmv_level_value_t* mlhmmv_copy_from_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
+void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_level_value_t* pvalue);
+
 // Unset value/submap from a specified level onward.  Example:
 // {
 //   "a" : {
