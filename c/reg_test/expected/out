@@ -13089,11 +13089,7 @@ AST END STATEMENTS (1):
 PARAMETERIZED EMIT
 
 mlr put -q @sum[$a] = $x; end{ emit @sum; } ./reg_test/input/abixy
-sum:pan=0.502626
-sum:eks=0.611784
-sum:wye=0.573289
-sum:zee=0.598554
-sum:hat=0.031442
+sum:pan=0.502626,sum:eks=0.611784,sum:wye=0.573289,sum:zee=0.598554,sum:hat=0.031442
 
 mlr put -q @sum[$a] = $x; end{ emit @sum,"a"; } ./reg_test/input/abixy
 a=pan,sum=0.502626
@@ -13110,27 +13106,13 @@ a=zee,sum=0.598554
 a=hat,sum=0.031442
 
 mlr put -q @sum[$a][$b] = $x; end{ emit @sum; } ./reg_test/input/abixy
-sum:pan:pan=0.346790
-sum:pan:wye=0.502626
-sum:eks:pan=0.758680
-sum:eks:wye=0.381399
-sum:eks:zee=0.611784
-sum:wye:wye=0.204603
-sum:wye:pan=0.573289
-sum:zee:pan=0.527126
-sum:zee:wye=0.598554
-sum:hat:wye=0.031442
+sum:pan:pan=0.346790,sum:pan:wye=0.502626,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:eks:zee=0.611784,sum:wye:wye=0.204603,sum:wye:pan=0.573289,sum:zee:pan=0.527126,sum:zee:wye=0.598554,sum:hat:wye=0.031442
 
 mlr put -q @sum[$a][$b] = $x; end{ emit @sum,"a"; } ./reg_test/input/abixy
-a=pan,sum:pan=0.346790
-a=pan,sum:wye=0.502626
-a=eks,sum:pan=0.758680
-a=eks,sum:wye=0.381399
-a=eks,sum:zee=0.611784
-a=wye,sum:wye=0.204603
-a=wye,sum:pan=0.573289
-a=zee,sum:pan=0.527126
-a=zee,sum:wye=0.598554
+a=pan,sum:pan=0.346790,sum:wye=0.502626
+a=eks,sum:pan=0.758680,sum:wye=0.381399,sum:zee=0.611784
+a=wye,sum:wye=0.204603,sum:pan=0.573289
+a=zee,sum:pan=0.527126,sum:wye=0.598554
 a=hat,sum:wye=0.031442
 
 mlr put -q @sum[$a][$b] = $x; end{ emit @sum,"a","b"; } ./reg_test/input/abixy
@@ -13197,25 +13179,13 @@ mlr put -q @sum += $nonesuch; end {emit  @sum, "extra" } ./reg_test/input/abixy
 sum=
 
 mlr put -q @sum[$a] += $i;        end {emit  @sum               } ./reg_test/input/abixy
-sum:pan=11
-sum:eks=13
-sum:wye=8
-sum:zee=14
-sum:hat=9
+sum:pan=11,sum:eks=13,sum:wye=8,sum:zee=14,sum:hat=9
 
 mlr put -q @sum[$a] += $x;        end {emit  @sum               } ./reg_test/input/abixy
-sum:pan=0.849416
-sum:eks=1.751863
-sum:wye=0.777892
-sum:zee=1.125680
-sum:hat=0.031442
+sum:pan=0.849416,sum:eks=1.751863,sum:wye=0.777892,sum:zee=1.125680,sum:hat=0.031442
 
 mlr put -q @sum[$a] += $nonesuch; end {emit  @sum               } ./reg_test/input/abixy
-sum:pan=
-sum:eks=
-sum:wye=
-sum:zee=
-sum:hat=
+sum:pan=,sum:eks=,sum:wye=,sum:zee=,sum:hat=
 
 mlr put -q @sum[$a] += $i;        end {emit  @sum, "a"          } ./reg_test/input/abixy
 a=pan,sum=11
@@ -13260,75 +13230,33 @@ a=zee,sum=
 a=hat,sum=
 
 mlr put -q @sum[$a][$b] += $i;        end {emit  @sum                    } ./reg_test/input/abixy
-sum:pan:pan=1
-sum:pan:wye=10
-sum:eks:pan=2
-sum:eks:wye=4
-sum:eks:zee=7
-sum:wye:wye=3
-sum:wye:pan=5
-sum:zee:pan=6
-sum:zee:wye=8
-sum:hat:wye=9
+sum:pan:pan=1,sum:pan:wye=10,sum:eks:pan=2,sum:eks:wye=4,sum:eks:zee=7,sum:wye:wye=3,sum:wye:pan=5,sum:zee:pan=6,sum:zee:wye=8,sum:hat:wye=9
 
 mlr put -q @sum[$a][$b] += $x;        end {emit  @sum                    } ./reg_test/input/abixy
-sum:pan:pan=0.346790
-sum:pan:wye=0.502626
-sum:eks:pan=0.758680
-sum:eks:wye=0.381399
-sum:eks:zee=0.611784
-sum:wye:wye=0.204603
-sum:wye:pan=0.573289
-sum:zee:pan=0.527126
-sum:zee:wye=0.598554
-sum:hat:wye=0.031442
+sum:pan:pan=0.346790,sum:pan:wye=0.502626,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:eks:zee=0.611784,sum:wye:wye=0.204603,sum:wye:pan=0.573289,sum:zee:pan=0.527126,sum:zee:wye=0.598554,sum:hat:wye=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emit  @sum                    } ./reg_test/input/abixy
-sum:pan:pan=
-sum:pan:wye=
-sum:eks:pan=
-sum:eks:wye=
-sum:eks:zee=
-sum:wye:wye=
-sum:wye:pan=
-sum:zee:pan=
-sum:zee:wye=
-sum:hat:wye=
+sum:pan:pan=,sum:pan:wye=,sum:eks:pan=,sum:eks:wye=,sum:eks:zee=,sum:wye:wye=,sum:wye:pan=,sum:zee:pan=,sum:zee:wye=,sum:hat:wye=
 
 mlr put -q @sum[$a][$b] += $i;        end {emit  @sum, "a"               } ./reg_test/input/abixy
-a=pan,sum:pan=1
-a=pan,sum:wye=10
-a=eks,sum:pan=2
-a=eks,sum:wye=4
-a=eks,sum:zee=7
-a=wye,sum:wye=3
-a=wye,sum:pan=5
-a=zee,sum:pan=6
-a=zee,sum:wye=8
+a=pan,sum:pan=1,sum:wye=10
+a=eks,sum:pan=2,sum:wye=4,sum:zee=7
+a=wye,sum:wye=3,sum:pan=5
+a=zee,sum:pan=6,sum:wye=8
 a=hat,sum:wye=9
 
 mlr put -q @sum[$a][$b] += $x;        end {emit  @sum, "a"               } ./reg_test/input/abixy
-a=pan,sum:pan=0.346790
-a=pan,sum:wye=0.502626
-a=eks,sum:pan=0.758680
-a=eks,sum:wye=0.381399
-a=eks,sum:zee=0.611784
-a=wye,sum:wye=0.204603
-a=wye,sum:pan=0.573289
-a=zee,sum:pan=0.527126
-a=zee,sum:wye=0.598554
+a=pan,sum:pan=0.346790,sum:wye=0.502626
+a=eks,sum:pan=0.758680,sum:wye=0.381399,sum:zee=0.611784
+a=wye,sum:wye=0.204603,sum:pan=0.573289
+a=zee,sum:pan=0.527126,sum:wye=0.598554
 a=hat,sum:wye=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emit  @sum, "a"               } ./reg_test/input/abixy
-a=pan,sum:pan=
-a=pan,sum:wye=
-a=eks,sum:pan=
-a=eks,sum:wye=
-a=eks,sum:zee=
-a=wye,sum:wye=
-a=wye,sum:pan=
-a=zee,sum:pan=
-a=zee,sum:wye=
+a=pan,sum:pan=,sum:wye=
+a=eks,sum:pan=,sum:wye=,sum:zee=
+a=wye,sum:wye=,sum:pan=
+a=zee,sum:pan=,sum:wye=
 a=hat,sum:wye=
 
 mlr put -q @sum[$a][$b] += $i;        end {emit  @sum, "a", "b"          } ./reg_test/input/abixy
