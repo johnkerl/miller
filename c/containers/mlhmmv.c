@@ -35,6 +35,10 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 
 static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
+static void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_level_value_t* pvalue);
+static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
+	mlhmmv_level_value_t* pvalue);
+
 static void mlhmmv_to_lrecs_aux_vert(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
 	lrec_t* ptemplate, sllv_t* poutrecs);
 static void mlhmmv_to_lrecs_aux_horiz(mlhmmv_level_t* plevel, char* prefix,
@@ -611,11 +615,87 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 }
 
 mlhmmv_level_value_t* mlhmmv_copy_from_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
+	mlhmmv_level_entry_t* pentry = mlhmmv_get_entry_at_level(pmap, pmvkeys, perror);
+	if (pentry == NULL)
+		return NULL;
+
+	// xxx copy-aux
 	return NULL; // xxx stub
 }
 
 void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_level_value_t* pvalue) {
-	// xxx stub
+	mlhmmv_level_put_value(pmap->proot_level, pmvkeys->phead, pvalue);
+}
+
+// xxx rename
+// xxx merge code-dup
+static void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_level_value_t* pvalue) {
+	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
+		mlhmmv_level_enlarge(plevel);
+	mlhmmv_level_put_value_no_enlarge(plevel, prest_keys, pvalue);
+}
+
+static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
+	mlhmmv_level_value_t* pvalue)
+{
+	mv_t* plevel_key = &prest_keys->value;
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (plevel->states[index] == EMPTY) { // End of chain.
+		pentry->ideal_index = ideal_index;
+		pentry->level_key = mv_copy(plevel_key);
+
+		if (prest_keys->pnext == NULL) {
+			pentry->level_value = *pvalue;
+		} else {
+			pentry->level_value.is_terminal = FALSE;
+			pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+		}
+		plevel->states[index] = OCCUPIED;
+
+		if (plevel->phead == NULL) { // First entry at this level
+			pentry->pprev = NULL;
+			pentry->pnext = NULL;
+			plevel->phead = pentry;
+			plevel->ptail = pentry;
+		} else {                     // Subsequent entry at this level
+			pentry->pprev = plevel->ptail;
+			pentry->pnext = NULL;
+			plevel->ptail->pnext = pentry;
+			plevel->ptail = pentry;
+		}
+
+		plevel->num_occupied++;
+		if (prest_keys->pnext != NULL) {
+			// RECURSE
+			mlhmmv_level_put_value(pentry->level_value.u.pnext_level, prest_keys->pnext, pvalue);
+		}
+
+	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
+		if (prest_keys->pnext == NULL) { // Place the terminal at this level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.u.pnext_level);
+			}
+			pentry->level_value = *pvalue;
+
+		} else { // The terminal will be placed at a deeper level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+				pentry->level_value.is_terminal = FALSE;
+				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
+			}
+			// RECURSE
+			mlhmmv_level_put_value(pentry->level_value.u.pnext_level, prest_keys->pnext, pvalue);
+		}
+
+	} else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		exit(1);
+	}
 }
 
 // ----------------------------------------------------------------
