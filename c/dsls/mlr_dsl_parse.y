@@ -808,7 +808,7 @@ md_regexi(A) ::= MD_TOKEN_REGEXI(B). {
 	char* stripped = &input[1];
 	int len = strlen(input);
 	stripped[len-3] = 0;
-	A = mlr_dsl_ast_node_alloc(stripped, B->type);
+	A = mlr_dsl_ast_node_alloc(mlr_unbackslash(stripped), B->type);
 }
 
 md_atom_or_fcn(A) ::= MD_TOKEN_CONTEXT_VARIABLE(B). {
