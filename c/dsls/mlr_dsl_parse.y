@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "../lib/mlrutil.h"
 #include "../containers/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
 
@@ -800,7 +801,7 @@ md_string(A) ::= MD_TOKEN_STRING(B). {
 	char* stripped = &input[1];
 	int len = strlen(input);
 	stripped[len-2] = 0;
-	A = mlr_dsl_ast_node_alloc(stripped, B->type);
+	A = mlr_dsl_ast_node_alloc(mlr_unbackslash(stripped), B->type);
 }
 md_regexi(A) ::= MD_TOKEN_REGEXI(B). {
 	char* input = B->text;

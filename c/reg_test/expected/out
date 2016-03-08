@@ -11019,7 +11019,7 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (1):
 =~ (operator):
     y (field_name).
-    \".. (strnum_literal).
+    ".. (strnum_literal).
 AST END STATEMENTS (0):
 x=ABCDE,y="GHI"
 
