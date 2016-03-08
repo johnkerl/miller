@@ -49,6 +49,7 @@ TOP-OF-LIST SUMMARY
   SMALL:
   - nest
   - shuffle
+  - \t \" et al. in DSL string literals
   - typeof
   - cat -n bugfix
 
