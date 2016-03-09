@@ -1,0 +1,22 @@
+$ grep -v '^#' /etc/passwd | head -n 2 | \
+  mlr --nidx --fs : --ojson --jvstack --jlistwrap label name,password,uid,gid,gecos,home_dir,shell
+[
+{
+  "name": "nobody",
+  "password": "*",
+  "uid": -2,
+  "gid": -2,
+  "gecos": "Unprivileged User",
+  "home_dir": "/var/empty",
+  "shell": "/usr/bin/false"
+}
+,{
+  "name": "root",
+  "password": "*",
+  "uid": 0,
+  "gid": 0,
+  "gecos": "System Administrator",
+  "home_dir": "/var/root",
+  "shell": "/bin/sh"
+}
+]

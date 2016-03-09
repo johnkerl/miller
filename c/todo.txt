@@ -9,7 +9,6 @@ TOP-OF-LIST SUMMARY
 ? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
 * rh/fedora/centos mlr-3.4.0
 
-* \" in string-literal reader ... fix up in the parser or in rval_expr.
 * basenaming syntax for subselector emits
 ~ oosvar-to-oosvar assignments with treecopy
 ~ subselector emits
