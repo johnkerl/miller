@@ -9,10 +9,6 @@ TOP-OF-LIST SUMMARY
 ? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
 * rh/fedora/centos mlr-3.4.0
 
-* basenaming syntax for subselector emits
-~ oosvar-to-oosvar assignments with treecopy
-~ subselector emits
-~ horizontality of emits
 * cliopt fnm/fnr -> stderr @ some # of records
 
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
@@ -54,12 +50,93 @@ TOP-OF-LIST SUMMARY
   - cat -n bugfix
 
 ================================================================
-PARAMETERIZED EMIT, UNSET, $*
+PRE4
 
-! mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
+----------------------------------------------------------------
+UT:
+* define/test behavior for null-valued filter/gate
+* oosvar-to-oosvar-assignment UT @ u/tm
+* evolve & extend the UTs
+* ut/t-mlhm: assert on contents of sllv of plrec
+* horizontality of emits
+* basenaming syntax for subselector emits
+
+* oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
+* $*
+* emit, multi-emit, emit-all @ test-mlhmmv
+* unset, multi-unset, unset-all @ test-mlhmmv
+* += et al.
+* @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
+
+* tri-split null cases: make sure it's transparent and obvious
+
+* :
+  mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
+  mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
+  mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
+  mlr put '$nonesuch = @nonesuch' ../data/small
+
+  echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
+  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
+  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
+
+  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
+  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
+  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
+
+    x=1,y=2,z=3
+    x=1,y=,z=
+    x=1,y=,z=
+
+    x=1,y=2
+    x=1,y=
+    x=1,y=
+
+  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+
+  echo x=1,y=2 | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+  echo x=1,y=  | mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
+
+    x=MT_INT,y=MT_INT,z=MT_INT
+    x=MT_INT,y=MT_VOID,z=MT_VOID
+    x=MT_INT,y=MT_VOID,z=MT_VOID
+
+    x=MT_INT,y=MT_INT,z=MT_ABSENT
+    x=MT_INT,y=MT_VOID,z=MT_ABSENT
+    x=MT_INT,y=MT_VOID,z=MT_ABSENT
+
+----------------------------------------------------------------
+DOC:
+
+* oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
+* $*
+* emit, multi-emit, emit-all @ test-mlhmmv.  note rhs="" vs. remove key. unset is latter since rhs="" does former.
+  cf cut -x.
+* unset, multi-unset, unset-all @ test-mlhmmv
+* += et al.
+w subselector emits ... after syntax rework
+* horizontality of emits
+
+----------------------------------------------------------------
+HYG:
+
+* xxxes
+* valgrinds
+* cmts
+* neatens
+* renames
+* rename emit restkeys to pullforwardkeys or some such
+
+----------------------------------------------------------------
+FIX:
+
+* basenaming syntax for subselector emits
+
+* mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
   --> runs out of data and should not
-
-! oosvar-to-oosvar-assignment UT @ u/tm
 
 * mlr put -q '@v[NR]=$*; emit @v' ../data/small
   --> currently has field names v:a,v:x, etc -- think about a simpler option
@@ -70,120 +147,56 @@ PARAMETERIZED EMIT, UNSET, $*
   > needs syntax like emit [@u,@v], ["a","b"]
   > needs tree-walker on first ossvar with same-keys on remaining oosvars
 
-* evolve & extend the UTs
-  - ut/t-mlhm: assert on contents of sllv of plrec
-* various code neatens & comments
-* mld section, w/ olh brief example & xref to it.
-  note rhs="" vs. remove key. unset is latter since rhs="" does former. cf. cut -x.
-
-! oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
-* $* UTs
-* UT/doc emit, multi-emit, emit-all @ test-mlhmmv
-* UT/doc unset, multi-unset, unset-all @ test-mlhmmv
-
 * emit all w/ string args ?
-
-* rename emit restkeys to pullforwardkeys or some such
 
 * cli-parameterize the joinchar (:)
 
-================================================================
-TRI-SPLIT NULL, AND += ET AL.
-
-* to mld:ref
-
-! UTs
-
-----------------------------------------------------------------
-@sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
-
-----------------------------------------------------------------
-  mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
-  mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
-  mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
-
-  mlr put '$nonesuch = @nonesuch' ../data/small
-
-----------------------------------------------------------------
-  echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
-  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
-  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
-
-  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
-  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
-  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
-
-x=1,y=2,z=3
-x=1,y=,z=
-x=1,y=,z=
-
-x=1,y=2
-x=1,y=
-x=1,y=
-
-----------------------------------------------------------------
-  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-
-  echo x=1,y=2 | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-
-x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_VOID
-x=MT_INT,y=MT_VOID,z=MT_VOID
-
-x=MT_INT,y=MT_INT,z=MT_ABSENT
-x=MT_INT,y=MT_VOID,z=MT_ABSENT
-x=MT_INT,y=MT_VOID,z=MT_ABSENT
+* do more oosvar experiments before finalizing mlr4
 
 ================================================================
-OOSVARS:
+OOSVAR EXPERIMENTS:
 
-  o define/test behavior for null-valued filter/gate
+* what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
+* check for functionality -- this is my best chance to do a full-featuredness check for oosvars & emit
+* also do timing comparisons
+  - bootstrap?
+  - count-distinct?
+  - cut?
+  - decimate? easy now with NR%10 if not -g; what about with -g?
+  - group-by?
+  - group-like?
+  - having-fields?
+  - head?
+  - histogram?
+  - (rename? reorder?)
+  - sample, w/ & w/o -g?
+  - stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max?
+  - stats2 linregs,r2,corr,cov?
+  - step delta,from-first,ratio,rsum,counter,ewma?
+  - tail?
+  > top?
+  - uniq?
 
-  o $0?
-    - want $0 = @x kinds of record-from-record assignments?!?
+* perf notes:
 
-  o experiments: what userspace data structures (and maybe new functions? keywords/control?) would be needed for:
-  o check for functionality -- this is my best chance to do a full-featuredness check for oosvars & emit
-  o also do timing comparisons
-    - bootstrap?
-    - count-distinct?
-    - cut?
-    - decimate? easy now with NR%10 if not -g; what about with -g?
-    - group-by?
-    - group-like?
-    - having-fields?
-    - head?
-    - histogram?
-    - (rename? reorder?)
-    - sample, w/ & w/o -g?
-    - stats1 count,sum,mean,stddev,var,skew,kurt; mode; min,max?
-    - stats2 linregs,r2,corr,cov?
-    - step delta,from-first,ratio,rsum,counter,ewma?
-    - tail?
-    > top?
-    - uniq?
+  $ time mlr stats1 -a mean -f x ../data/big.dkvp
+  x_mean=0.499567
+  real    0m1.486s 0m1.500s 0m1.637s
 
-  o perf notes:
+  $ time mlr put 'begin @x_count=0;begin @x_sum=0.0;@x_sum = @x_sum+$x;@x_count=@x_count+1; filter false;end @x_mean=@x_sum/@x_count; end emit @x_mean'  ../data/big.dkvp
+  x_mean=0.499567
+  real    0m2.262s 0m2.371s 0m2.356s
 
-    $ time mlr stats1 -a mean -f x ../data/big.dkvp
-    x_mean=0.499567
-    real    0m1.486s 0m1.500s 0m1.637s
-
-    $ time mlr put 'begin @x_count=0;begin @x_sum=0.0;@x_sum = @x_sum+$x;@x_count=@x_count+1; filter false;end @x_mean=@x_sum/@x_count; end emit @x_mean'  ../data/big.dkvp
-    x_mean=0.499567
-    real    0m2.262s 0m2.371s 0m2.356s
-
-    mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' then step -a ewma -d 0.1 -f x ../data/big.dkvp
-    time mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' ../data/big.dkvp > /dev/null
-    real  0m3.976s 0m3.971s 0m3.944s
-    time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
-    real  0m3.250s 0m3.283s 0m3.300s
+  mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' then step -a ewma -d 0.1 -f x ../data/big.dkvp
+  time mlr put 'begin @a=0.1;begin @b=0.9;$e=NR==1?$x:@a*$x+@b*@e;@e=$e' ../data/big.dkvp > /dev/null
+  real  0m3.976s 0m3.971s 0m3.944s
+  time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
+  real  0m3.250s 0m3.283s 0m3.300s
 
 ================================================================
+NON-PRE4
+================================================================
+
 * look into 'perf'
 * linreg in terms of stats only ... check py book
 * option for: print to stderr NR if NR%N==0 for user-specified N

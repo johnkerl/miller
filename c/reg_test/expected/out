@@ -8506,6 +8506,30 @@ AST MAIN STATEMENTS (1):
     true (boolean_literal).
 AST END STATEMENTS (0):
 
+mlr put -v $y += $x + 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (srec_assignment):
+    y (field_name).
+    + (operator):
+        y (field_name).
+        + (operator):
+            x (field_name).
+            3 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v $y += $x * 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (srec_assignment):
+    y (field_name).
+    + (operator):
+        y (field_name).
+        * (operator):
+            x (field_name).
+            3 (strnum_literal).
+AST END STATEMENTS (0):
+
 
 ================================================================
 DSL FUNCTIONAL TESTS

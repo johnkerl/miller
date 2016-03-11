@@ -785,6 +785,9 @@ run_mlr filter -v '        true && false' /dev/null
 run_mlr put    -v 'true && false && true; $x = 3' /dev/null
 run_mlr filter -v '        true && false && true' /dev/null
 
+run_mlr put    -v '$y += $x + 3'  /dev/null
+run_mlr put    -v '$y += $x * 3'  /dev/null
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 
@@ -1325,7 +1328,6 @@ run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }'
 
 # ----------------------------------------------------------------
 announce OOSVAR-TO-OOSVAR ASSIGNMENT
-
 
 run_mlr put -q '@s    += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
 
