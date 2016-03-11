@@ -81,15 +81,10 @@ FIX:
 ----------------------------------------------------------------
 UT:
 * define/test behavior for null-valued filter/gate
-* oosvar-to-oosvar-assignment UT @ u/tm
 * evolve & extend the existing UTs
 * ut/t-mlhm: assert on contents of sllv of plrec
-* horizontality of emits
-w basenaming syntax for subselector emits
+w basenaming syntax for subselector emits (once it exists!)
 
-* $*
-* emit, multi-emit, emit-all @ test-mlhmmv
-* unset, multi-unset, unset-all @ test-mlhmmv
 * @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
 
 * tri-split null cases: make sure it's transparent and obvious

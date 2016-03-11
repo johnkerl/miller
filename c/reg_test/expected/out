@@ -13107,6 +13107,27 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./re
   }
 }
 
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./reg_test/input/unset4.dkvp
+{
+  "s": 9,
+  "t": {
+    "1": 9,
+    "4": 9
+  },
+  "u": {
+    "1": {
+      "2": 9,
+      "3": 9
+    },
+    "4": {
+      "5": 9,
+      "6": 9
+    }
+  }
+}
+{
+}
+
 
 ================================================================
 DSL PATTERN-ACTION BLOCKS
@@ -13514,6 +13535,23 @@ a=wye,b=pan,sum=
 a=zee,b=pan,sum=
 a=zee,b=wye,sum=
 a=hat,b=wye,sum=
+
+mlr --oxtab put -q @sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emit all} ./reg_test/input/abixy-het
+sum:pan:pan 1
+sum:pan:wye 10
+sum:eks:pan 2
+sum:eks:zee 
+sum:wye:pan 5
+sum:zee:pan 6
+sum:zee:wye 8
+
+x 0.204603
+
+v:a   eks
+v:b   zee
+v:iii 7
+v:x   0.6117840605678454
+v:y   0.1878849191181694
 
 
 ================================================================

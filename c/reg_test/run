@@ -1279,6 +1279,8 @@ run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump}
 run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump}' $indir/unset4.dkvp
 run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}' $indir/unset4.dkvp
 
+run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump}' $indir/unset4.dkvp
+
 # ----------------------------------------------------------------
 announce DSL PATTERN-ACTION BLOCKS
 
@@ -1342,6 +1344,8 @@ run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b"          }'
 run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
 run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
 run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }' $indir/abixy
+
+run_mlr --oxtab put -q '@sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emit all}' $indir/abixy-het
 
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
