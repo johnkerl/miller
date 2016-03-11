@@ -13517,7 +13517,222 @@ a=hat,b=wye,sum=
 
 
 ================================================================
-OOSVAR-TO-OOSVAR ASSIGNMENT
+OOSVAR-FROM-SREC ASSIGNMENT
+
+mlr --oxtab put -q @v = $*; end {emit @v } ./reg_test/input/abixy-het
+v:a   pan
+v:b   wye
+v:i   10
+v:x   0.5026260055412137
+v:y   0.9526183602969864
+v:aaa hat
+v:bbb wye
+v:xxx 0.5732889198020006
+v:iii 7
+v:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a] = $*; end {emit @v      } ./reg_test/input/abixy-het
+v:pan:a   pan
+v:pan:b   wye
+v:pan:i   10
+v:pan:x   0.5026260055412137
+v:pan:y   0.9526183602969864
+v:eks:a   eks
+v:eks:b   zee
+v:eks:i   4
+v:eks:x   0.6117840605678454
+v:eks:y   0.1878849191181694
+v:eks:bbb wye
+v:eks:iii 7
+v:wye:a   wye
+v:wye:b   pan
+v:wye:i   5
+v:wye:xxx 0.5732889198020006
+v:wye:y   0.8636244699032729
+v:zee:a   zee
+v:zee:b   wye
+v:zee:i   8
+v:zee:x   0.5985540091064224
+v:zee:y   0.49322128674835697
+v:zee:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a] = $*; end {emit @v, "a" } ./reg_test/input/abixy-het
+a   pan
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
+
+a     eks
+v:a   eks
+v:b   zee
+v:i   4
+v:x   0.6117840605678454
+v:y   0.1878849191181694
+v:bbb wye
+v:iii 7
+
+a     wye
+v:a   wye
+v:b   pan
+v:i   5
+v:xxx 0.5732889198020006
+v:y   0.8636244699032729
+
+a     zee
+v:a   zee
+v:b   wye
+v:i   8
+v:x   0.5985540091064224
+v:y   0.49322128674835697
+v:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emit @v          } ./reg_test/input/abixy-het
+v:pan:pan:a   pan
+v:pan:pan:b   pan
+v:pan:pan:i   1
+v:pan:pan:x   0.3467901443380824
+v:pan:pan:y   0.7268028627434533
+v:pan:wye:a   pan
+v:pan:wye:b   wye
+v:pan:wye:i   10
+v:pan:wye:x   0.5026260055412137
+v:pan:wye:y   0.9526183602969864
+v:eks:pan:a   eks
+v:eks:pan:b   pan
+v:eks:pan:i   2
+v:eks:pan:x   0.7586799647899636
+v:eks:pan:y   0.5221511083334797
+v:eks:zee:a   eks
+v:eks:zee:b   zee
+v:eks:zee:iii 7
+v:eks:zee:x   0.6117840605678454
+v:eks:zee:y   0.1878849191181694
+v:wye:pan:a   wye
+v:wye:pan:b   pan
+v:wye:pan:i   5
+v:wye:pan:xxx 0.5732889198020006
+v:wye:pan:y   0.8636244699032729
+v:zee:pan:a   zee
+v:zee:pan:b   pan
+v:zee:pan:i   6
+v:zee:pan:x   0.5271261600918548
+v:zee:pan:y   0.49322128674835697
+v:zee:wye:a   zee
+v:zee:wye:b   wye
+v:zee:wye:i   8
+v:zee:wye:x   0.5985540091064224
+v:zee:wye:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emit @v, "a"     } ./reg_test/input/abixy-het
+a       pan
+v:pan:a pan
+v:pan:b pan
+v:pan:i 1
+v:pan:x 0.3467901443380824
+v:pan:y 0.7268028627434533
+v:wye:a pan
+v:wye:b wye
+v:wye:i 10
+v:wye:x 0.5026260055412137
+v:wye:y 0.9526183602969864
+
+a         eks
+v:pan:a   eks
+v:pan:b   pan
+v:pan:i   2
+v:pan:x   0.7586799647899636
+v:pan:y   0.5221511083334797
+v:zee:a   eks
+v:zee:b   zee
+v:zee:iii 7
+v:zee:x   0.6117840605678454
+v:zee:y   0.1878849191181694
+
+a         wye
+v:pan:a   wye
+v:pan:b   pan
+v:pan:i   5
+v:pan:xxx 0.5732889198020006
+v:pan:y   0.8636244699032729
+
+a         zee
+v:pan:a   zee
+v:pan:b   pan
+v:pan:i   6
+v:pan:x   0.5271261600918548
+v:pan:y   0.49322128674835697
+v:wye:a   zee
+v:wye:b   wye
+v:wye:i   8
+v:wye:x   0.5985540091064224
+v:wye:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emit @v, "a", "b"} ./reg_test/input/abixy-het
+a   pan
+b   pan
+v:a pan
+v:b pan
+v:i 1
+v:x 0.3467901443380824
+v:y 0.7268028627434533
+
+a   pan
+b   wye
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
+
+a   eks
+b   pan
+v:a eks
+v:b pan
+v:i 2
+v:x 0.7586799647899636
+v:y 0.5221511083334797
+
+a     eks
+b     zee
+v:a   eks
+v:b   zee
+v:iii 7
+v:x   0.6117840605678454
+v:y   0.1878849191181694
+
+a     wye
+b     pan
+v:a   wye
+v:b   pan
+v:i   5
+v:xxx 0.5732889198020006
+v:y   0.8636244699032729
+
+a   zee
+b   pan
+v:a zee
+v:b pan
+v:i 6
+v:x 0.5271261600918548
+v:y 0.49322128674835697
+
+a     zee
+b     wye
+v:a   zee
+v:b   wye
+v:i   8
+v:x   0.5985540091064224
+v:yyy 0.976181385699006
+
+
+================================================================
+SREC-FROM-OOSVAR ASSIGNMENT
+
+
+================================================================
+OOSVAR-FROM-OOSVAR ASSIGNMENT
 
 mlr put -q @s    += $i; @t=@s;             end{dump; emit@s; emit @t} ./reg_test/input/abixy
 {
