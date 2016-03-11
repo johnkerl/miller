@@ -53,15 +53,40 @@ TOP-OF-LIST SUMMARY
 PRE4
 
 ----------------------------------------------------------------
+FIX:
+
+* mlr --oxtab put -q @v = $*; end {emit @v } ./reg_test/input/abixy-het
+  --> has 10 fields -- not desired.
+
+* basenaming syntax for subselector emits
+
+* mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
+  --> runs out of data and should not
+
+* mlr put -q '@v[NR]=$*; emit @v' ../data/small
+  --> currently has field names v:a,v:x, etc -- think about a simpler option
+
+? side-by-side pasting ?
+  > mlr put -q '@sum[$a][$b] += $x;@count[$a][$b]+= 1;end {emit @sum,"a","b"; emit @count,"a","b"}' ../data/small
+    --> really want sum & count side-by-side here
+  > needs syntax like emit [@u,@v], ["a","b"]
+  > needs tree-walker on first ossvar with same-keys on remaining oosvars
+
+* emit all w/ string args ?
+
+* cli-parameterize the joinchar (:)
+
+* do more oosvar experiments before finalizing mlr4
+
+----------------------------------------------------------------
 UT:
 * define/test behavior for null-valued filter/gate
 * oosvar-to-oosvar-assignment UT @ u/tm
-* evolve & extend the UTs
+* evolve & extend the existing UTs
 * ut/t-mlhm: assert on contents of sllv of plrec
 * horizontality of emits
-* basenaming syntax for subselector emits
+w basenaming syntax for subselector emits
 
-* oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
 * $*
 * emit, multi-emit, emit-all @ test-mlhmmv
 * unset, multi-unset, unset-all @ test-mlhmmv
@@ -128,29 +153,6 @@ HYG:
 * neatens
 * renames
 * rename emit restkeys to pullforwardkeys or some such
-
-----------------------------------------------------------------
-FIX:
-
-* basenaming syntax for subselector emits
-
-* mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
-  --> runs out of data and should not
-
-* mlr put -q '@v[NR]=$*; emit @v' ../data/small
-  --> currently has field names v:a,v:x, etc -- think about a simpler option
-
-? side-by-side pasting ?
-  > mlr put -q '@sum[$a][$b] += $x;@count[$a][$b]+= 1;end {emit @sum,"a","b"; emit @count,"a","b"}' ../data/small
-    --> really want sum & count side-by-side here
-  > needs syntax like emit [@u,@v], ["a","b"]
-  > needs tree-walker on first ossvar with same-keys on remaining oosvars
-
-* emit all w/ string args ?
-
-* cli-parameterize the joinchar (:)
-
-* do more oosvar experiments before finalizing mlr4
 
 ================================================================
 OOSVAR EXPERIMENTS:

@@ -1344,7 +1344,22 @@ run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b", "extra" }'
 run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }' $indir/abixy
 
 # ----------------------------------------------------------------
-announce OOSVAR-TO-OOSVAR ASSIGNMENT
+announce OOSVAR-FROM-SREC ASSIGNMENT
+
+run_mlr --oxtab put -q '@v = $*; end {emit @v }' $indir/abixy-het
+
+run_mlr --oxtab put -q '@v[$a] = $*; end {emit @v      }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a] = $*; end {emit @v, "a" }' $indir/abixy-het
+
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v          }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v, "a"     }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v, "a", "b"}' $indir/abixy-het
+
+# ----------------------------------------------------------------
+announce SREC-FROM-OOSVAR ASSIGNMENT
+
+# ----------------------------------------------------------------
+announce OOSVAR-FROM-OOSVAR ASSIGNMENT
 
 run_mlr put -q '@s    += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
 
