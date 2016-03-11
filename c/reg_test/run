@@ -1291,6 +1291,29 @@ run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z
 run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9}' /dev/null
 
 # ----------------------------------------------------------------
+announce TRI-SPLIT NULL
+
+run_mlr put -q '@sum += $x; end{emit @sum}' $indir/abixy-het
+run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy-het
+run_mlr put '$nonesuch = @nonesuch' $indir/abixy-het
+
+run_mlr put '$z = $x + $y' $indir/typeof.dkvp
+run_mlr put '$z = $x + $y' $indir/typeof.dkvp
+run_mlr put '$z = $x + $u' $indir/typeof.dkvp
+
+run_mlr put '@s = @s + $y' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y' $indir/typeof.dkvp
+run_mlr put '@s = @s + $u' $indir/typeof.dkvp
+
+run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+run_mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+
+run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+
+# ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
 run_mlr put -q '@sum[$a] = $x; end{ emit @sum; }'         $indir/abixy

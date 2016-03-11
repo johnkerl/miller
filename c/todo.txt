@@ -43,6 +43,7 @@ TOP-OF-LIST SUMMARY
   - unset/all
   - bare-boolean and pattern-action
   SMALL:
+  - put -q
   - nest
   - shuffle
   - \t \" et al. in DSL string literals
@@ -80,52 +81,41 @@ FIX:
 
 ----------------------------------------------------------------
 UT:
+
 * define/test behavior for null-valued filter/gate
 * evolve & extend the existing UTs
 * ut/t-mlhm: assert on contents of sllv of plrec
 w basenaming syntax for subselector emits (once it exists!)
 
-* @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
+! tri-split-null wrong-looking:
+  $ mlr put -q @sum += $x; end{emit @sum} ./reg_test/input/abixy-het
+  sum=
 
-* tri-split null cases: make sure it's transparent and obvious
+  $ mlr put -q '@sum += $x; @t = typeof(@sum); @u = typeof($x); emitf @t, @u, @sum; end{emit @sum}' ./reg_test/input/abixy-het
+  t=MT_FLOAT,u=MT_FLOAT,sum=0.346790
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.105470
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.310073
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.691473
+  t=MT_VOID,u=MT_ABSENT,sum=
+  t=MT_VOID,u=MT_FLOAT,sum=
+  t=MT_VOID,u=MT_FLOAT,sum=
+  t=MT_VOID,u=MT_FLOAT,sum=
+  t=MT_VOID,u=MT_FLOAT,sum=
+  t=MT_VOID,u=MT_FLOAT,sum=
+  sum=
 
-* :
-  mlr put '@sum += $x; filter false; end{emit @sum}' ../data/small
-  mlr put '@sum += $x; filter false; end{emit(@sum)}' ../data/small
-  mlr put '@sum[$a] += $x; filter false; end{emit(@sum, "a")}' ../data/small
-  mlr put '$nonesuch = @nonesuch' ../data/small
-
-  echo x=1,y=2 | mlr put '$z = $x + $y'  # $y is MT_INT
-  echo x=1,y=  | mlr put '$z = $x + $y'  # $y is MT_EMPTY:  key present but value empty
-  echo x=1,y=  | mlr put '$z = $x + $u'  # $y is MT_ABSENT : key not present
-
-  echo x=1,y=2 | mlr put '@s = @s + $y'  # @s is MT_UNINIT on first record, then MT_INT on second
-  echo x=1,y=  | mlr put '@s = @s + $y'  # MT_
-  echo x=1,y=  | mlr put '@s = @s + $u'  # MT_
-
-    x=1,y=2,z=3
-    x=1,y=,z=
-    x=1,y=,z=
-
-    x=1,y=2
-    x=1,y=
-    x=1,y=
-
-  echo x=1,y=2 | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-
-  echo x=1,y=2 | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-  echo x=1,y=  | mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)'
-
-    x=MT_INT,y=MT_INT,z=MT_INT
-    x=MT_INT,y=MT_VOID,z=MT_VOID
-    x=MT_INT,y=MT_VOID,z=MT_VOID
-
-    x=MT_INT,y=MT_INT,z=MT_ABSENT
-    x=MT_INT,y=MT_VOID,z=MT_ABSENT
-    x=MT_INT,y=MT_VOID,z=MT_ABSENT
+  mlr put -q '@sum += $x; @t = typeof(@sum); @u = typeof($x); emitf @t, @u, @sum; end{emit @sum}' ./reg_test/input/abixy
+  t=MT_FLOAT,u=MT_FLOAT,sum=0.346790
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.105470
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.310073
+  t=MT_FLOAT,u=MT_FLOAT,sum=1.691473
+  t=MT_FLOAT,u=MT_FLOAT,sum=2.264762
+  t=MT_FLOAT,u=MT_FLOAT,sum=2.791888
+  t=MT_FLOAT,u=MT_FLOAT,sum=3.403672
+  t=MT_FLOAT,u=MT_FLOAT,sum=4.002226
+  t=MT_FLOAT,u=MT_FLOAT,sum=4.033668
+  t=MT_FLOAT,u=MT_FLOAT,sum=4.536294
+  sum=4.536294
 
 ----------------------------------------------------------------
 DOC:
@@ -136,8 +126,9 @@ DOC:
   cf cut -x.
 * unset, multi-unset, unset-all @ test-mlhmmv
 * += et al.
-w subselector emits ... after syntax rework
 * horizontality of emits
+w subselector emits ... after syntax rework
+w basenaming syntax for subselector emits (once it exists!)
 
 ----------------------------------------------------------------
 HYG:
@@ -179,7 +170,7 @@ OOSVAR EXPERIMENTS:
   x_mean=0.499567
   real    0m1.486s 0m1.500s 0m1.637s
 
-  $ time mlr put 'begin @x_count=0;begin @x_sum=0.0;@x_sum = @x_sum+$x;@x_count=@x_count+1; filter false;end @x_mean=@x_sum/@x_count; end emit @x_mean'  ../data/big.dkvp
+  $ time mlr put -q 'begin @x_count=0;begin @x_sum=0.0;@x_sum = @x_sum+$x;@x_count=@x_count+1; end @x_mean=@x_sum/@x_count; end emit @x_mean'  ../data/big.dkvp
   x_mean=0.499567
   real    0m2.262s 0m2.371s 0m2.356s
 
