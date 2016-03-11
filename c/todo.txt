@@ -56,13 +56,8 @@ PRE4
 ----------------------------------------------------------------
 FIX:
 
-* mlr --oxtab put -q @v = $*; end {emit @v } ./reg_test/input/abixy-het
-  --> has 10 fields -- not desired.
-
 * mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
   --> runs out of data and should not
-
-* do more oosvar experiments before finalizing mlr4
 
 ! tri-split-null wrong-looking:
   $ mlr put -q @sum += $x; end{emit @sum} ./reg_test/input/abixy-het
@@ -93,6 +88,8 @@ FIX:
   sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.033668
   sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.536294
   sum=4.536294
+
+* do more oosvar experiments before finalizing mlr4
 
 ----------------------------------------------------------------
 IMPLEMENT:

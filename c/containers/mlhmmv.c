@@ -111,20 +111,20 @@ void mlhmmv_free(mlhmmv_t* pmap) {
 }
 
 static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
-	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
-		if (!pentry->level_value.is_terminal) {
-			mlhmmv_level_free(pentry->level_value.u.pnext_level);
-		}
-		mv_free(&pentry->level_key);
-	}
-	free(plevel->entries);
-	free(plevel->states);
-	plevel->entries      = NULL;
-	plevel->num_occupied = 0;
-	plevel->num_freed    = 0;
-	plevel->array_length = 0;
+       for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+               if (!pentry->level_value.is_terminal) {
+                       mlhmmv_level_free(pentry->level_value.u.pnext_level);
+               }
+               mv_free(&pentry->level_key);
+       }
+       free(plevel->entries);
+       free(plevel->states);
+       plevel->entries      = NULL;
+       plevel->num_occupied = 0;
+       plevel->num_freed    = 0;
+       plevel->array_length = 0;
 
-	free(plevel);
+       free(plevel);
 }
 
 // ----------------------------------------------------------------
@@ -603,6 +603,27 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
 
 	int unused = FALSE;
 	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_clear_level(mlhmmv_level_t* plevel) {
+	if (plevel->phead == NULL)
+		return;
+
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		if (pentry->level_value.is_terminal) {
+			mv_free(&pentry->level_value.u.mlrval);
+		} else {
+			mlhmmv_level_free(pentry->level_value.u.pnext_level);
+		}
+		mv_free(&pentry->level_key);
+	}
+	plevel->num_occupied = 0;
+	plevel->num_freed    = 0;
+	plevel->phead        = NULL;
+	plevel->ptail        = NULL;
+
+	memset(plevel->states, EMPTY, plevel->array_length);
 }
 
 // ----------------------------------------------------------------

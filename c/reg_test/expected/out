@@ -13757,16 +13757,11 @@ cond (conditional_block):
 AST END STATEMENTS (0):
 
 mlr --oxtab put -q @v = $*; end {emit @v } ./reg_test/input/abixy-het
-v:a   pan
-v:b   wye
-v:i   10
-v:x   0.5026260055412137
-v:y   0.9526183602969864
-v:aaa hat
-v:bbb wye
-v:xxx 0.5732889198020006
-v:iii 7
-v:yyy 0.976181385699006
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
 
 mlr --oxtab put -q @v[$a] = $*; end {emit @v      } ./reg_test/input/abixy-het
 v:pan:a   pan
@@ -13776,11 +13771,9 @@ v:pan:x   0.5026260055412137
 v:pan:y   0.9526183602969864
 v:eks:a   eks
 v:eks:b   zee
-v:eks:i   4
+v:eks:iii 7
 v:eks:x   0.6117840605678454
 v:eks:y   0.1878849191181694
-v:eks:bbb wye
-v:eks:iii 7
 v:wye:a   wye
 v:wye:b   pan
 v:wye:i   5
@@ -13790,7 +13783,6 @@ v:zee:a   zee
 v:zee:b   wye
 v:zee:i   8
 v:zee:x   0.5985540091064224
-v:zee:y   0.49322128674835697
 v:zee:yyy 0.976181385699006
 
 mlr --oxtab put -q @v[$a] = $*; end {emit @v, "a" } ./reg_test/input/abixy-het
@@ -13804,11 +13796,9 @@ v:y 0.9526183602969864
 a     eks
 v:a   eks
 v:b   zee
-v:i   4
+v:iii 7
 v:x   0.6117840605678454
 v:y   0.1878849191181694
-v:bbb wye
-v:iii 7
 
 a     wye
 v:a   wye
@@ -13822,7 +13812,6 @@ v:a   zee
 v:b   wye
 v:i   8
 v:x   0.5985540091064224
-v:y   0.49322128674835697
 v:yyy 0.976181385699006
 
 mlr --oxtab put -q @v[$a][$b] = $*; end {emit @v          } ./reg_test/input/abixy-het
@@ -14042,10 +14031,10 @@ mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
 1=pan,2=eks,3=,4=eks
 1=pan,2=eks,3=,4=eks,5=wye
 1=pan,2=eks,3=,4=eks,5=wye,6=zee
-1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
-1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
-1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=
-1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=,10=pan
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=,10=pan
 
 
 ================================================================

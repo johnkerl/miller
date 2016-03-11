@@ -902,6 +902,8 @@ static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(poosvars, plhskeys);
 		if (plevel != NULL) {
 
+			mlhmmv_clear_level(plevel);
+
 			for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_level_put will copy
 				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };

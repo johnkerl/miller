@@ -128,6 +128,9 @@ void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_level_value_t*
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 // xxx comment
+void mlhmmv_clear_level(mlhmmv_level_t* plevel);
+
+// xxx comment
 void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs);
 // xxx comment:
 // * names
