@@ -90,7 +90,7 @@ char* cli_sep_from_arg(char* arg, char* argv0) {
 	if (chars != NULL) // E.g. crlf
 		return mlr_strdup_or_die(chars);
 	else // E.g. '\r\n'
-		return mlr_unbackslash(arg);
+		return mlr_alloc_unbackslash(arg);
 }
 
 // ----------------------------------------------------------------

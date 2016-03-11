@@ -13,6 +13,7 @@ TOP-OF-LIST SUMMARY
 ~ oosvar-to-oosvar assignments with treecopy
 ~ subselector emits
 ~ horizontality of emits
+* cliopt fnm/fnr -> stderr @ some # of records
 
 * neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit

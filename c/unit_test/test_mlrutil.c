@@ -132,12 +132,12 @@ static char * test_paste() {
 
 // ----------------------------------------------------------------
 static char * test_unbackslash() {
-	mu_assert_lf(streq(mlr_unbackslash(""), ""));
-	mu_assert_lf(streq(mlr_unbackslash("hello"), "hello"));
-	mu_assert_lf(streq(mlr_unbackslash("\\r\\n"), "\r\n"));
-	mu_assert_lf(streq(mlr_unbackslash("\\t\\\\"), "\t\\"));
-	mu_assert_lf(streq(mlr_unbackslash("[\\132]"), "[Z]"));
-	mu_assert_lf(streq(mlr_unbackslash("[\\x59]"), "[Y]"));
+	mu_assert_lf(streq(mlr_alloc_unbackslash(""), ""));
+	mu_assert_lf(streq(mlr_alloc_unbackslash("hello"), "hello"));
+	mu_assert_lf(streq(mlr_alloc_unbackslash("\\r\\n"), "\r\n"));
+	mu_assert_lf(streq(mlr_alloc_unbackslash("\\t\\\\"), "\t\\"));
+	mu_assert_lf(streq(mlr_alloc_unbackslash("[\\132]"), "[Z]"));
+	mu_assert_lf(streq(mlr_alloc_unbackslash("[\\x59]"), "[Y]"));
 
 	return 0;
 }

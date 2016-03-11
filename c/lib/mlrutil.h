@@ -123,7 +123,7 @@ int power_of_two_ceil(int n);
 
 // The caller should free the return value. Maps two-character sequences such as
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
-char* mlr_unbackslash(char* input);
+char* mlr_alloc_unbackslash(char* input);
 
 // The caller should free the return value.
 char* read_file_into_memory(char* filename, size_t* psize);
