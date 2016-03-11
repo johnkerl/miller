@@ -232,7 +232,7 @@ char* mlr_paste_5_strings(char* s1, char* s2, char* s3, char* s4, char* s5) {
 }
 
 // ----------------------------------------------------------------
-// Found on the web.
+// This is djb2.
 int mlr_string_hash_func(char *str) {
 	unsigned long hash = 5381;
 	int c;
