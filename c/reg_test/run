@@ -1301,6 +1301,9 @@ run_mlr put -q '@sum     += $x; end{emit @sum}'      $indir/abixy-het
 run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy-het
 run_mlr put    '$nonesuch = @nonesuch' $indir/abixy-het
 
+run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' $indir/abixy
+run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' $indir/abixy-het
+
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u' $indir/typeof.dkvp

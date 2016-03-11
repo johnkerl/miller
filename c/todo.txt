@@ -56,36 +56,6 @@ PRE4
 ----------------------------------------------------------------
 FIX:
 
-! tri-split-null wrong-looking:
-  $ mlr put -q @sum += $x; end{emit @sum} ./reg_test/input/abixy-het
-  sum=
-
-  $ mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' ./reg_test/input/abixy-het
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.105470
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.310073
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.691473
-  sumtype=MT_VOID,xtype=MT_ABSENT,sum=
-  sumtype=MT_VOID,xtype=MT_FLOAT,sum=
-  sumtype=MT_VOID,xtype=MT_FLOAT,sum=
-  sumtype=MT_VOID,xtype=MT_FLOAT,sum=
-  sumtype=MT_VOID,xtype=MT_FLOAT,sum=
-  sumtype=MT_VOID,xtype=MT_FLOAT,sum=
-  sum=
-
-  mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' ./reg_test/input/abixy
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.105470
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.310073
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.691473
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.264762
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.791888
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.403672
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.002226
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.033668
-  sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.536294
-  sum=4.536294
-
 * do more oosvar experiments before finalizing mlr4
 
 ----------------------------------------------------------------
