@@ -795,7 +795,6 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* po
 	} else {
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		////printf("OON=[%s]\n", oosvar_name);
 		mlhmmv_to_lrecs_aux_vert(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
 			ptemplate, poutrecs);
 		free(oosvar_name);
@@ -811,7 +810,6 @@ static void mlhmmv_to_lrecs_aux_vert(
 	sllv_t*         poutrecs)
 {
 	if (prestnames != NULL) {
-	////printf("AUX REC\n");
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
 			lrec_t* pnextrec = lrec_copy(ptemplate);
@@ -828,7 +826,6 @@ static void mlhmmv_to_lrecs_aux_vert(
 			}
 		}
 	} else {
-	////printf("AUX 2 HRZ\n");
 		lrec_t* pnextrec = lrec_copy(ptemplate);
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_level_value_t* plevel_value = &pe->level_value;
@@ -861,7 +858,6 @@ static void mlhmmv_to_lrecs_aux_horiz(
 		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
 		free(foo);
 		if (plevel_value->is_terminal) {
-		////printf("PFX=[%s] NAME=[%s] LK=[%s]\n", prefix, name, mv_alloc_format_val(&pe->level_key));
 			lrec_put(poutrec, name,
 				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		} else {
