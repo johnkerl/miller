@@ -65,7 +65,6 @@ UT:
 * $*
 * emit, multi-emit, emit-all @ test-mlhmmv
 * unset, multi-unset, unset-all @ test-mlhmmv
-* += et al.
 * @sum[$group] += $value etc. be sure $nosuch sums to MT_ABSENT.
 
 * tri-split null cases: make sure it's transparent and obvious
