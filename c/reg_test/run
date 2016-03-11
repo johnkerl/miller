@@ -1358,6 +1358,8 @@ run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v, "a", "b"}' $indir/abixy-h
 # ----------------------------------------------------------------
 announce SREC-FROM-OOSVAR ASSIGNMENT
 
+#run_mlr --oxtab put -q 'begin { @v[1] = "nonesuch" }; NR == 3 { @v = $*} ; $* = @v' $indir/abixy-het
+
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-OOSVAR ASSIGNMENT
 

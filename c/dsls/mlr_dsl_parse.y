@@ -58,7 +58,7 @@ md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
 md_statement ::= md_begin_block.       // E.g. 'begin { @count = 0 }'
-md_statement ::= md_conditional_block. // e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
+md_statement ::= md_cond_block. // e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
 md_statement ::= md_end_block.         // E.g. 'end { emit @count }'
 
 // ================================================================
@@ -96,7 +96,7 @@ md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
 // ----------------------------------------------------------------
-md_conditional_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_conditional_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
+md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
 	A = mlr_dsl_ast_node_prepend_arg(C, B);
 	sllv_append(past->pmain_statements, A);
 }
@@ -109,21 +109,21 @@ md_conditional_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_conditional_block_s
 // * On the "$x>0" we prepend the conditional expression to get "cond" having children $x>0, $a=1, $b=2, and $c=3.
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-md_conditional_block_statements(A) ::= . {
+md_cond_block_statements(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
 }
-md_conditional_block_statements(A) ::= md_conditional_block_statement(B). {
+md_cond_block_statements(A) ::= md_cond_block_statement(B). {
 	A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
 }
-md_conditional_block_statements(A) ::= md_conditional_block_statements(B) MD_TOKEN_SEMICOLON md_conditional_block_statement(C). {
+md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON md_cond_block_statement(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
-md_conditional_block_statement ::= md_conditional_block_srec_assignment.
-md_conditional_block_statement ::= md_conditional_block_oosvar_assignment.
-md_conditional_block_statement ::= md_conditional_block_emitf.
-md_conditional_block_statement ::= md_conditional_block_emit.
-md_conditional_block_statement ::= md_conditional_block_dump.
+md_cond_block_statement ::= md_cond_block_srec_assignment.
+md_cond_block_statement ::= md_cond_block_oosvar_assignment.
+md_cond_block_statement ::= md_cond_block_emitf.
+md_cond_block_statement ::= md_cond_block_emit.
+md_cond_block_statement ::= md_cond_block_dump.
 
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
@@ -203,19 +203,19 @@ md_begin_block_dump(A) ::= md_dump(B). {
 }
 
 // ----------------------------------------------------------------
-md_conditional_block_srec_assignment(A) ::= md_srec_assignment(B). {
+md_cond_block_srec_assignment(A) ::= md_srec_assignment(B). {
 	A = B;
 }
-md_conditional_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
+md_cond_block_oosvar_assignment(A)  ::= md_oosvar_assignment(B). {
 	A = B;
 }
-md_conditional_block_emitf(A) ::= md_emitf(B). {
+md_cond_block_emitf(A) ::= md_emitf(B). {
 	A = B;
 }
-md_conditional_block_emit(A) ::= md_emit(B). {
+md_cond_block_emit(A) ::= md_emit(B). {
 	A = B;
 }
-md_conditional_block_dump(A) ::= md_dump(B). {
+md_cond_block_dump(A) ::= md_dump(B). {
 	A = B;
 }
 
