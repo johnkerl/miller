@@ -190,67 +190,6 @@ static char* test_depth_errors() {
 }
 
 // ----------------------------------------------------------------
-// $ mlr put -q '@sum[$a][$b][$i]=$x; end{dump}' ../data/small | mlr --ijson --oxtab cat
-// sum:pan:pan:1=0.346790
-// sum:pan:wye:10=0.502626
-// sum:eks:pan:2=0.758680
-// sum:eks:wye:4=0.381399
-// sum:eks:zee:7=0.611784
-// sum:wye:wye:3=0.204603
-// sum:wye:pan:5=0.573289
-// sum:zee:pan:6=0.527126
-// sum:zee:wye:8=0.598554
-// sum:hat:wye:9=0.031442
-
-
-// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum}' ../data/small
-// sum:pan:pan:1=0.346790
-// sum:pan:wye:10=0.502626
-// sum:eks:pan:2=0.758680
-// sum:eks:wye:4=0.381399
-// sum:eks:zee:7=0.611784
-// sum:wye:wye:3=0.204603
-// sum:wye:pan:5=0.573289
-// sum:zee:pan:6=0.527126
-// sum:zee:wye:8=0.598554
-// sum:hat:wye:9=0.031442
-
-// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a"}' ../data/small
-// a=pan,sum:pan:1=0.346790
-// a=pan,sum:wye:10=0.502626
-// a=eks,sum:pan:2=0.758680
-// a=eks,sum:wye:4=0.381399
-// a=eks,sum:zee:7=0.611784
-// a=wye,sum:wye:3=0.204603
-// a=wye,sum:pan:5=0.573289
-// a=zee,sum:pan:6=0.527126
-// a=zee,sum:wye:8=0.598554
-// a=hat,sum:wye:9=0.031442
-
-// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a","b"}' ../data/small
-// a=pan,b=pan,sum:1=0.346790
-// a=pan,b=wye,sum:10=0.502626
-// a=eks,b=pan,sum:2=0.758680
-// a=eks,b=wye,sum:4=0.381399
-// a=eks,b=zee,sum:7=0.611784
-// a=wye,b=wye,sum:3=0.204603
-// a=wye,b=pan,sum:5=0.573289
-// a=zee,b=pan,sum:6=0.527126
-// a=zee,b=wye,sum:8=0.598554
-// a=hat,b=wye,sum:9=0.031442
-
-// $ mlr put -q '@sum[$a][$b][$i]=$x; end{emit @sum, "a","b","i"}' ../data/small
-// a=pan,b=pan,i=1,sum=0.346790
-// a=pan,b=wye,i=10,sum=0.502626
-// a=eks,b=pan,i=2,sum=0.758680
-// a=eks,b=wye,i=4,sum=0.381399
-// a=eks,b=zee,i=7,sum=0.611784
-// a=wye,b=wye,i=3,sum=0.204603
-// a=wye,b=pan,i=5,sum=0.573289
-// a=zee,b=pan,i=6,sum=0.527126
-// a=zee,b=wye,i=8,sum=0.598554
-// a=hat,b=wye,i=9,sum=0.031442
-
 static char* test_mlhmmv_to_lrecs() {
 	printf("================================================================\n");
 	mlhmmv_t* pmap = mlhmmv_alloc();
