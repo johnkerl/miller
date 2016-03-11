@@ -13291,6 +13291,137 @@ AST END STATEMENTS (1):
 
 
 ================================================================
+TRI-SPLIT NULL
+
+mlr put -q @sum     += $x; end{emit @sum} ./reg_test/input/abixy
+sum=4.536294
+
+mlr put -q @sum[$a] += $x; end{emit @sum, "a"} ./reg_test/input/abixy
+a=pan,sum=0.849416
+a=eks,sum=1.751863
+a=wye,sum=0.777892
+a=zee,sum=1.125680
+a=hat,sum=0.031442
+
+mlr put $nonesuch = @nonesuch ./reg_test/input/abixy
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nonesuch=
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nonesuch=
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nonesuch=
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nonesuch=
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nonesuch=
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nonesuch=
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,nonesuch=
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,nonesuch=
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nonesuch=
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nonesuch=
+
+mlr put -q @sum     += $x; end{emit @sum} ./reg_test/input/abixy-het
+sum=
+
+mlr put -q @sum[$a] += $x; end{emit @sum, "a"} ./reg_test/input/abixy-het
+a=pan,sum=0.849416
+a=eks,sum=1.751863
+a=wye,sum=
+a=zee,sum=1.125680
+
+mlr put $nonesuch = @nonesuch ./reg_test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nonesuch=
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nonesuch=
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nonesuch=
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nonesuch=
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,nonesuch=
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nonesuch=
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,nonesuch=
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,nonesuch=
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nonesuch=
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nonesuch=
+
+mlr put $z = $x + $y ./reg_test/input/typeof.dkvp
+x=1,y=2,z=3
+x=1,y=,z=
+x=,y=2,z=
+x=,y=,z=
+
+mlr put $z = $x + $y ./reg_test/input/typeof.dkvp
+x=1,y=2,z=3
+x=1,y=,z=
+x=,y=2,z=
+x=,y=,z=
+
+mlr put $z = $x + $u ./reg_test/input/typeof.dkvp
+x=1,y=2,z=
+x=1,y=,z=
+x=,y=2,z=
+x=,y=,z=
+
+mlr put @s = @s + $y; emit @s ./reg_test/input/typeof.dkvp
+s=2
+x=1,y=2
+s=
+x=1,y=
+s=
+x=,y=2
+s=
+x=,y=
+
+mlr put @s = @s + $y; emit @s ./reg_test/input/typeof.dkvp
+s=2
+x=1,y=2
+s=
+x=1,y=
+s=
+x=,y=2
+s=
+x=,y=
+
+mlr put @s = @s + $u; emit @s ./reg_test/input/typeof.dkvp
+s=
+x=1,y=2
+s=
+x=1,y=
+s=
+x=,y=2
+s=
+x=,y=
+
+mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_INT
+x=MT_INT,y=MT_VOID,z=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_VOID
+
+mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_INT
+x=MT_INT,y=MT_VOID,z=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_VOID
+
+mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_VOID
+x=MT_INT,y=MT_VOID,z=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_VOID
+
+mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
+x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+
+mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
+x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+
+mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
+x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_VOID
+x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
+x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+
+
+================================================================
 PARAMETERIZED EMIT
 
 mlr put -q @sum[$a] = $x; end{ emit @sum; } ./reg_test/input/abixy

@@ -1293,25 +1293,29 @@ run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w
 # ----------------------------------------------------------------
 announce TRI-SPLIT NULL
 
-run_mlr put -q '@sum += $x; end{emit @sum}' $indir/abixy-het
+run_mlr put -q '@sum     += $x; end{emit @sum}'      $indir/abixy
+run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy
+run_mlr put    '$nonesuch = @nonesuch' $indir/abixy
+
+run_mlr put -q '@sum     += $x; end{emit @sum}'      $indir/abixy-het
 run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy-het
-run_mlr put '$nonesuch = @nonesuch' $indir/abixy-het
+run_mlr put    '$nonesuch = @nonesuch' $indir/abixy-het
 
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u' $indir/typeof.dkvp
 
-run_mlr put '@s = @s + $y' $indir/typeof.dkvp
-run_mlr put '@s = @s + $y' $indir/typeof.dkvp
-run_mlr put '@s = @s + $u' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; emit @s' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; emit @s' $indir/typeof.dkvp
+run_mlr put '@s = @s + $u; emit @s' $indir/typeof.dkvp
 
 run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 
-run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
-run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
-run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
+run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 
 # ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
