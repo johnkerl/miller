@@ -783,6 +783,9 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs) {
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs) {
 	mv_t* pfirstkey = &pkeys->phead->value; // xxx flatten-name needs work
 
+////printf("KEYS  "); sllmv_print(pkeys);
+////printf("NAMES "); sllmv_print(pnames);
+
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
 	if (ptop_entry == NULL) {
 		// xxx temp

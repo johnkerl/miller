@@ -13684,6 +13684,79 @@ v:iii 7
 v:x   0.6117840605678454
 v:y   0.1878849191181694
 
+mlr --opprint put -q @v[NR]=$*; end{emit @v} ./reg_test/input/abixy
+v:1:a v:1:b v:1:i v:1:x              v:1:y              v:2:a v:2:b v:2:i v:2:x              v:2:y              v:3:a v:3:b v:3:i v:3:x               v:3:y               v:4:a v:4:b v:4:i v:4:x               v:4:y               v:5:a v:5:b v:5:i v:5:x              v:5:y              v:6:a v:6:b v:6:i v:6:x              v:6:y               v:7:a v:7:b v:7:i v:7:x              v:7:y              v:8:a v:8:b v:8:i v:8:x              v:8:y             v:9:a v:9:b v:9:i v:9:x               v:9:y              v:10:a v:10:b v:10:i v:10:x             v:10:y
+pan   pan   1     0.3467901443380824 0.7268028627434533 eks   pan   2     0.7586799647899636 0.5221511083334797 wye   wye   3     0.20460330576630303 0.33831852551664776 eks   wye   4     0.38139939387114097 0.13418874328430463 wye   pan   5     0.5732889198020006 0.8636244699032729 zee   pan   6     0.5271261600918548 0.49322128674835697 eks   zee   7     0.6117840605678454 0.1878849191181694 zee   wye   8     0.5985540091064224 0.976181385699006 hat   wye   9     0.03144187646093577 0.7495507603507059 pan    wye    10     0.5026260055412137 0.9526183602969864
+
+mlr --opprint put -q @v[NR]=$*; end{emit @v,"X"} ./reg_test/input/abixy
+X  v:a v:b v:i v:x                 v:y
+1  pan pan 1   0.3467901443380824  0.7268028627434533
+2  eks pan 2   0.7586799647899636  0.5221511083334797
+3  wye wye 3   0.20460330576630303 0.33831852551664776
+4  eks wye 4   0.38139939387114097 0.13418874328430463
+5  wye pan 5   0.5732889198020006  0.8636244699032729
+6  zee pan 6   0.5271261600918548  0.49322128674835697
+7  eks zee 7   0.6117840605678454  0.1878849191181694
+8  zee wye 8   0.5985540091064224  0.976181385699006
+9  hat wye 9   0.03144187646093577 0.7495507603507059
+10 pan wye 10  0.5026260055412137  0.9526183602969864
+
+mlr --opprint put -q @v[NR]=$*; end{emit @v[1]} ./reg_test/input/abixy
+v:a v:b v:i v:x                v:y
+pan pan 1   0.3467901443380824 0.7268028627434533
+
+mlr --opprint put -q @v[NR]=$*; end{emit @v[1],"X"} ./reg_test/input/abixy
+X v
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --opprint put -q @v[NR]=$*; end{emit @v[1],"X","Y"} ./reg_test/input/abixy
+X v
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1]} ./reg_test/input/abixy
+v:1:a v:1:b v:1:i v:1:x              v:1:y
+pan   pan   1     0.3467901443380824 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1],"X"} ./reg_test/input/abixy
+X v:a v:b v:i v:x                v:y
+1 pan pan 1   0.3467901443380824 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1],"X","Y"} ./reg_test/input/abixy
+X Y v
+1 a pan
+1 b pan
+1 i 1
+1 x 0.3467901443380824
+1 y 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1][1]} ./reg_test/input/abixy
+v:a v:b v:i v:x                v:y
+pan pan 1   0.3467901443380824 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1][1],"X"} ./reg_test/input/abixy
+X v
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --opprint put -q @v[NR][NR]=$*; end{emit @v[1][1],"X","Y"} ./reg_test/input/abixy
+X v
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
 
 ================================================================
 OOSVAR-FROM-SREC ASSIGNMENT

@@ -634,7 +634,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 			for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(poosvar_lhs_keylist_evaluators,
+				sllv_append(poosvar_lhs_namelist_evaluators,
 					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 			}
 

@@ -1374,6 +1374,21 @@ run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }'
 
 run_mlr --oxtab put -q '@sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emit all}' $indir/abixy-het
 
+run_mlr --opprint put -q '@v[NR]=$*; end{emit @v}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emit @v,"X"}' $indir/abixy
+
+run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X","Y"}' $indir/abixy
+
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1],"X","Y"}' $indir/abixy
+
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X","Y"}' $indir/abixy
+
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 

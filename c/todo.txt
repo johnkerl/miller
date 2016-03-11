@@ -56,9 +56,6 @@ PRE4
 ----------------------------------------------------------------
 FIX:
 
-* mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}' ../data/small
-  --> runs out of data and should not
-
 ! tri-split-null wrong-looking:
   $ mlr put -q @sum += $x; end{emit @sum} ./reg_test/input/abixy-het
   sum=
