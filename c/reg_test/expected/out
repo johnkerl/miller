@@ -13519,6 +13519,74 @@ a=hat,b=wye,sum=
 ================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
 
+mlr put -v @v     = $* /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_from_full_srec_assignment):
+    v (oosvar_name).
+    $* (full_srec).
+AST END STATEMENTS (0):
+
+mlr put -v @v[1]  = $* /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_from_full_srec_assignment):
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+    $* (full_srec).
+AST END STATEMENTS (0):
+
+mlr put -v @v[$2] = $* /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_from_full_srec_assignment):
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        2 (field_name).
+    $* (full_srec).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {@v     = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_from_full_srec_assignment):
+        v (oosvar_name).
+        $* (full_srec).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {@v[1]  = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_from_full_srec_assignment):
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
+        $* (full_srec).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {@v[$2] = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_from_full_srec_assignment):
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            2 (field_name).
+        $* (full_srec).
+AST END STATEMENTS (0):
+
 mlr --oxtab put -q @v = $*; end {emit @v } ./reg_test/input/abixy-het
 v:a   pan
 v:b   wye
@@ -13730,9 +13798,265 @@ v:yyy 0.976181385699006
 ================================================================
 SREC-FROM-OOSVAR ASSIGNMENT
 
+mlr put -v $* = @v     /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (full_srec_from_oosvar_assignment):
+    $* (full_srec).
+    v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v $* = @v[1]  /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (full_srec_from_oosvar_assignment):
+    $* (full_srec).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v $* = @v[$2] /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (full_srec_from_oosvar_assignment):
+    $* (full_srec).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        2 (field_name).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {$* = @v    } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (full_srec_from_oosvar_assignment):
+        $* (full_srec).
+        v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {$* = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (full_srec_from_oosvar_assignment):
+        $* (full_srec).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 {$* = @v[$2]} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (full_srec_from_oosvar_assignment):
+        $* (full_srec).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            2 (field_name).
+AST END STATEMENTS (0):
+
+mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
+1=pan
+1=pan,2=eks
+1=pan,2=eks,3=
+1=pan,2=eks,3=,4=eks
+1=pan,2=eks,3=,4=eks,5=wye
+1=pan,2=eks,3=,4=eks,5=wye,6=zee
+1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
+1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=
+1=pan,2=eks,3=,4=eks,5=wye,6=zee,7=eks,a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=,10=pan
+
 
 ================================================================
 OOSVAR-FROM-OOSVAR ASSIGNMENT
+
+mlr put -v @u    = @v /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v @u    = @v[1] /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v @u[2] = @v /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v @u[2] = @v[1] /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v begin { @u    = @v } /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    v (oosvar_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr put -v begin { @u    = @v[1] } /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr put -v begin { @u[2] = @v } /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    v (oosvar_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr put -v begin { @u[2] = @v[1] } /dev/null
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 { @u    = @v } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        u (oosvar_name).
+        v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 { @u    = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        u (oosvar_name).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 { @u[2] = @v } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            u (oosvar_name).
+            2 (strnum_literal).
+        v (oosvar_name).
+AST END STATEMENTS (0):
+
+mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    == (operator):
+        NR (context_variable).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            u (oosvar_name).
+            2 (strnum_literal).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr put -v end { @u    = @v } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    v (oosvar_name).
+
+mlr put -v end { @u    = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    u (oosvar_name).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
+
+mlr put -v end { @u[2] = @v } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    v (oosvar_name).
+
+mlr put -v end { @u[2] = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    [] (oosvar_level_key):
+        u (oosvar_name).
+        2 (strnum_literal).
+    [] (oosvar_level_key):
+        v (oosvar_name).
+        1 (strnum_literal).
 
 mlr put -q @s    += $i; @t=@s;             end{dump; emit@s; emit @t} ./reg_test/input/abixy
 {
