@@ -391,8 +391,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	key = pe->value;
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, NO_FREE);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -484,8 +484,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	key = pe->value;
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, NO_FREE);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -565,8 +565,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 	key = make_nidx_key(++idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -642,8 +642,8 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	key = make_nidx_key(++idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character

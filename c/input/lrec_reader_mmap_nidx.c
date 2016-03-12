@@ -150,8 +150,8 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 	key = make_nidx_key(idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -215,8 +215,8 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 	key = make_nidx_key(idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -280,8 +280,8 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phan
 	key = make_nidx_key(idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
@@ -345,8 +345,8 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phand
 	key = make_nidx_key(idx, &free_flags);
 
 	if (saw_rs) {
-        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-        // C string so it's OK to retain a pointer to that.
+		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
+		// C string so it's OK to retain a pointer to that.
 		lrec_put(prec, key, value, free_flags);
 	} else {
 		// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character

@@ -1088,19 +1088,19 @@ static mv_t divide_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
 static mv_t divide_f_uf(mv_t* pa, mv_t* pb) {
-    return mv_from_float(0.0);
+	return mv_from_float(0.0);
 }
 static mv_t divide_f_fu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 static mv_t divide_i_ui(mv_t* pa, mv_t* pb) {
-    return mv_from_int(0LL);
+	return mv_from_int(0LL);
 }
 static mv_t divide_i_iu(mv_t* pa, mv_t* pb) {
-    return *pa;
+	return *pa;
 }
 static mv_t divide_i_uu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 
 static mv_t divide_f_ff(mv_t* pa, mv_t* pb) {
@@ -1152,19 +1152,19 @@ static mv_t idiv_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
 static mv_t idiv_f_uf(mv_t* pa, mv_t* pb) {
-    return mv_from_float(0.0);
+	return mv_from_float(0.0);
 }
 static mv_t idiv_f_fu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 static mv_t idiv_i_ui(mv_t* pa, mv_t* pb) {
-    return mv_from_int(0LL);
+	return mv_from_int(0LL);
 }
 static mv_t idiv_i_iu(mv_t* pa, mv_t* pb) {
-    return *pa;
+	return *pa;
 }
 static mv_t idiv_i_uu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 
 static mv_t idiv_f_ff(mv_t* pa, mv_t* pb) {
@@ -1227,19 +1227,19 @@ static mv_t mod_e_xx(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
 static mv_t mod_f_uf(mv_t* pa, mv_t* pb) {
-    return mv_from_float(0.0);
+	return mv_from_float(0.0);
 }
 static mv_t mod_f_fu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 static mv_t mod_i_ui(mv_t* pa, mv_t* pb) {
-    return mv_from_int(0LL);
+	return mv_from_int(0LL);
 }
 static mv_t mod_i_iu(mv_t* pa, mv_t* pb) {
-    return *pa;
+	return *pa;
 }
 static mv_t mod_i_uu(mv_t* pa, mv_t* pb) {
-    return mv_void();
+	return mv_void();
 }
 
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {

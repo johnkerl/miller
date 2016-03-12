@@ -961,31 +961,31 @@ static void json_print_non_recursive_aux(json_value_t* pvalue, int depth) {
 	}
 	printf("type=%s", json_describe_type(pvalue->type));
 	switch(pvalue->type) {
-    case JSON_NONE:
+	case JSON_NONE:
 		break;
-    case JSON_OBJECT:
+	case JSON_OBJECT:
 		printf(",length=%d", pvalue->u.object.length);
 		break;
-    case JSON_ARRAY:
+	case JSON_ARRAY:
 		printf(",length=%d", pvalue->u.object.length);
 		break;
-    case JSON_INTEGER:
+	case JSON_INTEGER:
 		printf(",length=%d", pvalue->u.integer.length);
 		printf(",sval=\"%s\"", pvalue->u.integer.sval);
 		break;
-    case JSON_DOUBLE:
+	case JSON_DOUBLE:
 		printf(",length=%d", pvalue->u.dbl.length);
 		printf(",sval=\"%s\"", pvalue->u.dbl.sval);
 		break;
-    case JSON_STRING:
+	case JSON_STRING:
 		printf(",length=%d", pvalue->u.string.length);
 		printf(",ptr=\"%s\"", pvalue->u.string.ptr);
 		break;
-    case JSON_BOOLEAN:
+	case JSON_BOOLEAN:
 		printf(",length=%d", pvalue->u.boolean.length);
 		printf(",sval=\"%s\"", pvalue->u.boolean.sval);
 		break;
-    case JSON_NULL:
+	case JSON_NULL:
 		break;
 	}
 	printf("\n");
