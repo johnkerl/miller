@@ -54,29 +54,6 @@ TOP-OF-LIST SUMMARY
 PRE4
 
 ----------------------------------------------------------------
-FIX:
-
-* :
-  mlr filter '@nonesuch' ../data/small
-  Segmentation fault: 11
-  mlr filter '@nonesuch==true' ../data/small
-  Segmentation fault: 11
-
-  mlr filter '$nonesuch==true' ../data/small
-  Expression does not evaluate to boolean: got MT_ERROR.
-  mlr filter '$nonesuch' ../data/small
-  [empty]
-
-  mlr put -q '@v=1; @nonesuch { emit @v}' ../data/small
-  [empty]
-  mlr put -q '@v=1; @nonesuch==true { emit @v}' ../data/small
-  [empty]
-  mlr put -q '@v=1; $nonesuch { emit @v}' ../data/small
-  [empty]
-  mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
-  [empty]
-
-----------------------------------------------------------------
 IMPLEMENT:
 
 * basenaming syntax for subselector emits
@@ -101,6 +78,17 @@ HYG:
 UT:
 
 * define/test behavior for null-valued filter / cond-block
+
+  mlr put 'filter @nonesuch' ../data/small
+  mlr put 'filter @nonesuch==true' ../data/small
+  mlr put 'filter $nonesuch==true' ../data/small
+  mlr put 'filter $nonesuch' ../data/small
+
+  mlr put -q '@v=1; @nonesuch { emit @v}' ../data/small
+  mlr put -q '@v=1; @nonesuch==true { emit @v}' ../data/small
+  mlr put -q '@v=1; $nonesuch { emit @v}' ../data/small
+  mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
+
 * evolve & extend the existing UTs
 w basenaming syntax for subselector emits (once it exists!)
 

@@ -1125,6 +1125,8 @@ static void mlr_dsl_cst_node_evaluate_filter(
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		*pshould_emit_rec = val.u.boolv;
+	} else {
+		*pshould_emit_rec = FALSE;
 	}
 }
 
