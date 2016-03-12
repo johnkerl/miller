@@ -548,10 +548,18 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 		// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 		// So if 'all' appears at all, it's the only name.
 		if (pnode->type == MD_AST_NODE_TYPE_ALL) {
+
+			sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
+			for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(poosvar_lhs_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+			}
+
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				NULL,
 				NULL,
-				NULL,
+				poosvar_lhs_namelist_evaluators,
 				TRUE,
 				NULL,
 				NULL,
@@ -1051,6 +1059,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 	int all_non_null_or_error = TRUE;
+	// xxx need two all-non-null, or nested
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
@@ -1073,7 +1082,14 @@ static void mlr_dsl_cst_node_evaluate_emit_all(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs)
 {
-	mlhmmv_all_to_lrecs(poosvars, poutrecs);
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs);
+	}
+	sllmv_free(pmvnames);
 }
 
 // ----------------------------------------------------------------

@@ -72,13 +72,14 @@ IMPLEMENT:
   > needs syntax like emit [@u,@v], ["a","b"]
   > needs tree-walker on first ossvar with same-keys on remaining oosvars
 
-* emit all w/ string args ?
+* 'emit all' w/ string args ?
 
 * cli-parameterize the joinchar (:)
 
 ----------------------------------------------------------------
 UT:
 
+* name-indexed emit all
 * define/test behavior for null-valued filter / cond-block
 * evolve & extend the existing UTs
 w basenaming syntax for subselector emits (once it exists!)

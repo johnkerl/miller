@@ -768,13 +768,11 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 #define TEMP_FLATTEN_SEP ":"
 
 // xxx cmt
-void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs) {
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
 		sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
-		sllmv_t* pname = sllmv_alloc();
-		mlhmmv_to_lrecs(pmap, pkey, pname, poutrecs);
+		mlhmmv_to_lrecs(pmap, pkey, pnames, poutrecs);
 		sllmv_free(pkey);
-		sllmv_free(pname);
 	}
 }
 

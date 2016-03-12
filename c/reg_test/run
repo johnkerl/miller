@@ -1392,6 +1392,11 @@ run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1]}'         $indir/abix
 run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X"}'     $indir/abixy
 run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X","Y"}' $indir/abixy
 
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all}'                     $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one"}'               $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two"}'         $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two","three"}' $indir/abixy-het
+
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 

@@ -131,7 +131,7 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
 // xxx comment
-void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllv_t* poutrecs);
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs

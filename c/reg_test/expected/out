@@ -13783,6 +13783,26 @@ i 1
 x 0.3467901443380824
 y 0.7268028627434533
 
+mlr put -q @a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all} ./reg_test/input/abixy-het
+a=pan
+b:1=wye
+c:1:2=0.502626
+
+mlr put -q @a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one"} ./reg_test/input/abixy-het
+a=pan
+one=1,b=wye
+one=1,c:2=0.502626
+
+mlr put -q @a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two"} ./reg_test/input/abixy-het
+a=pan
+one=1,b=wye
+one=1,two=2,c=0.502626
+
+mlr put -q @a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two","three"} ./reg_test/input/abixy-het
+a=pan
+one=1,b=wye
+one=1,two=2,c=0.502626
+
 
 ================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
