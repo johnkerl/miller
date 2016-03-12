@@ -111,20 +111,22 @@ void mlhmmv_free(mlhmmv_t* pmap) {
 }
 
 static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
-       for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
-               if (!pentry->level_value.is_terminal) {
-                       mlhmmv_level_free(pentry->level_value.u.pnext_level);
-               }
-               mv_free(&pentry->level_key);
-       }
-       free(plevel->entries);
-       free(plevel->states);
-       plevel->entries      = NULL;
-       plevel->num_occupied = 0;
-       plevel->num_freed    = 0;
-       plevel->array_length = 0;
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		if (pentry->level_value.is_terminal) {
+			mv_free(&pentry->level_value.u.mlrval);
+		} else {
+			mlhmmv_level_free(pentry->level_value.u.pnext_level);
+		}
+		mv_free(&pentry->level_key);
+	}
+	free(plevel->entries);
+	free(plevel->states);
+	plevel->entries      = NULL;
+	plevel->num_occupied = 0;
+	plevel->num_freed    = 0;
+	plevel->array_length = 0;
 
-       free(plevel);
+	free(plevel);
 }
 
 // ----------------------------------------------------------------
