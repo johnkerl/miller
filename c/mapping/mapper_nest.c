@@ -224,6 +224,7 @@ static void mapper_nest_free(mapper_t* pmapper) {
 		lhmslv_free(pstate->other_keys_to_other_values_to_buckets);
 	}
 
+	sb_free(pstate->psb);
 	free(pstate->nested_fs);
 	free(pstate->nested_ps);
 	regfree(&pstate->regex);
