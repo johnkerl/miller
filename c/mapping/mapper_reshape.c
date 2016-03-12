@@ -180,6 +180,7 @@ static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
 		}
 		output_key_field_name   = mlr_strdup_or_die(output_field_names->phead->value);
 		output_value_field_name = mlr_strdup_or_die(output_field_names->phead->pnext->value);
+		slls_free(output_field_names);
 
 	} else {
 		// long to wide

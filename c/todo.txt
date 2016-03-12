@@ -24,6 +24,8 @@ TOP-OF-LIST SUMMARY
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
 ! screencaps for README.md & cover !
+* paragraph filter: mlr --nidx --rs '\n\n' --fs '\001'  filter '($1 =~ "abcde" && $1 =~ "fghji")'
+
 ? call for use-cases? (go first.)
 * olh xrefs between reshape & nest; between sample, bootstrap, & shuffle.
 * doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
