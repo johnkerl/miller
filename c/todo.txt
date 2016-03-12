@@ -62,17 +62,14 @@ FIX:
 IMPLEMENT:
 
 * basenaming syntax for subselector emits
-
-* mlr put -q '@v[NR]=$*; emit @v' ../data/small
-  --> currently has field names v:a,v:x, etc -- think about a simpler option
+  --> currently has field names v:a,v:x, etc -- think about a simpler option:
+  run_mlr put -q '@v[NR]=$*; emit @v' ../data/small
 
 ? side-by-side pasting ?
   > mlr put -q '@sum[$a][$b] += $x;@count[$a][$b]+= 1;end {emit @sum,"a","b"; emit @count,"a","b"}' ../data/small
     --> really want sum & count side-by-side here
   > needs syntax like emit [@u,@v], ["a","b"]
   > needs tree-walker on first ossvar with same-keys on remaining oosvars
-
-* 'emit all' w/ string args ?
 
 * cli-parameterize the joinchar (:)
 
