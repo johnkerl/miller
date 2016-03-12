@@ -11,7 +11,7 @@ TOP-OF-LIST SUMMARY
 
 * cliopt fnm/fnr -> stderr @ some # of records
 
-* neaten/xxxes/valgrind/UT/doc for unset/tri-split-null/+=etal/parameterized emit
+* neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
 
@@ -54,21 +54,48 @@ TOP-OF-LIST SUMMARY
 PRE4
 
 ----------------------------------------------------------------
+FIX:
+
+* :
+  mlr filter '@nonesuch' ../data/small
+  Segmentation fault: 11
+  mlr filter '@nonesuch==true' ../data/small
+  Segmentation fault: 11
+
+  mlr filter '$nonesuch==true' ../data/small
+  Expression does not evaluate to boolean: got MT_ERROR.
+  mlr filter '$nonesuch' ../data/small
+  [empty]
+
+  mlr put -q '@v=1; @nonesuch { emit @v}' ../data/small
+  [empty]
+  mlr put -q '@v=1; @nonesuch==true { emit @v}' ../data/small
+  [empty]
+  mlr put -q '@v=1; $nonesuch { emit @v}' ../data/small
+  [empty]
+  mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
+  [empty]
+
+----------------------------------------------------------------
 IMPLEMENT:
 
 * basenaming syntax for subselector emits
   --> currently has field names v:a,v:x, etc -- think about a simpler option:
   run_mlr put -q '@v[NR]=$*; emit @v' ../data/small
 
-? side-by-side pasting ?
-  > mlr put -q '@sum[$a][$b] += $x;@count[$a][$b]+= 1;end {emit @sum,"a","b"; emit @count,"a","b"}' ../data/small
-    --> really want sum & count side-by-side here
-  > needs syntax like emit [@u,@v], ["a","b"]
-  > needs tree-walker on first ossvar with same-keys on remaining oosvars
-
 * cli-parameterize the joinchar (:)
 
-* do more oosvar experiments before finalizing mlr4
+> do more oosvar experiments before finalizing mlr4
+
+----------------------------------------------------------------
+HYG:
+
+* xxxes
+* valgrinds
+* cmts
+* neatens
+* renames
+* rename emit restkeys to pullforwardkeys or some such
 
 ----------------------------------------------------------------
 UT:
@@ -87,18 +114,11 @@ DOC:
 * unset, multi-unset, unset-all @ test-mlhmmv
 * += et al.
 * horizontality of emits
+* side-by-side pasting:
+  mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
+
 w subselector emits ... after syntax rework
 w basenaming syntax for subselector emits (once it exists!)
-
-----------------------------------------------------------------
-HYG:
-
-* xxxes
-* valgrinds
-* cmts
-* neatens
-* renames
-* rename emit restkeys to pullforwardkeys or some such
 
 ================================================================
 OOSVAR EXPERIMENTS:

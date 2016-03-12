@@ -9,6 +9,7 @@
 typedef struct _mapper_filter_state_t {
 	ap_state_t* pargp;
 	mlr_dsl_ast_node_t* past;
+	mlhmmv_t* poosvars;
 	rval_evaluator_t* pevaluator;
 	int do_exclude;
 } mapper_filter_state_t;
@@ -129,6 +130,7 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, mlr_dsl_ast_node_t* past
 	pstate->pargp      = pargp;
 	pstate->past       = past;
 	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, type_inferencing);
+	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -145,6 +147,7 @@ static void mapper_filter_free(mapper_t* pmapper) {
 	pstate->pevaluator->pfree_func(pstate->pevaluator);
 	ap_free(pstate->pargp);
 	mlr_dsl_ast_node_free(pstate->past);
+	mlhmmv_free(pstate->poosvars);
 	free(pstate);
 	free(pmapper);
 }
@@ -158,7 +161,8 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	sllv_t* rv = NULL;
 
-	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, NULL, NULL, pctx, pstate->pevaluator->pvstate);
+	mv_t val = pstate->pevaluator->pprocess_func(pinrec, ptyped_overlay, pstate->poosvars,
+		NULL, pctx, pstate->pevaluator->pvstate);
 	if (mv_is_null(&val)) {
 		lrec_free(pinrec);
 	} else {
