@@ -263,6 +263,7 @@ static void mapper_reshape_free(mapper_t* pmapper) {
 		for (sllve_t* pe = pstate->input_field_regexes->phead; pe != NULL; pe = pe->pnext) {
 			regex_t* pregex = pe->pvvalue;
 			regfree(pregex);
+			free(pregex);
 		}
 		sllv_free(pstate->input_field_regexes);
 	}
