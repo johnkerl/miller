@@ -845,7 +845,7 @@ static void mlr_dsl_cst_node_evaluate_srec_assignment(
 	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
-	lhmsv_put(ptyped_overlay, output_field_name, pval, NO_FREE);
+	lhmsv_put(ptyped_overlay, output_field_name, pval, FREE_ENTRY_VALUE);
 	lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 }
 
