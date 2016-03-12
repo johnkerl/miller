@@ -759,8 +759,6 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 	if (pitem == NULL)
 		return;
 	free(pitem->output_field_name);
-	if (pitem->prhs_evaluator != NULL)
-		pitem->prhs_evaluator->pfree_func(pitem->prhs_evaluator);
 
 	if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -776,6 +774,23 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 			pevaluator->pfree_func(pevaluator);
 		}
 		sllv_free(pitem->poosvar_lhs_namelist_evaluators);
+	}
+
+	if (pitem->prhs_evaluator != NULL)
+		pitem->prhs_evaluator->pfree_func(pitem->prhs_evaluator);
+
+	if (pitem->poosvar_rhs_keylist_evaluators != NULL) {
+		for (sllve_t* pe = pitem->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* pevaluator = pe->pvvalue;
+			pevaluator->pfree_func(pevaluator);
+		}
+		sllv_free(pitem->poosvar_rhs_keylist_evaluators);
+	}
+
+	if (pitem->pcond_statements != NULL) {
+		for (sllve_t* pe = pitem->pcond_statements->phead; pe != NULL; pe = pe->pnext)
+			cst_statement_free(pe->pvvalue);
+		sllv_free(pitem->pcond_statements);
 	}
 
 	free(pitem);
