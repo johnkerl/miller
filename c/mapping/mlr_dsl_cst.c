@@ -256,7 +256,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			sllv_append(poosvar_lhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pleft->text)));
+				rval_evaluator_alloc_from_string(pleft->text));
 		} else {
 			mlr_dsl_ast_node_t* pnode = pleft;
 			while (TRUE) {
@@ -289,7 +289,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 					// parser to handle. Here, it's special since it's always a string, never an expression that
 					// evaluates to string.
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+						rval_evaluator_alloc_from_string(pnode->text));
 				}
 				if (pnode->pchildren == NULL)
 					break;
@@ -310,7 +310,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 			if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 				sllv_append(poosvar_rhs_keylist_evaluators,
-					rval_evaluator_alloc_from_string(mlr_strdup_or_die(pright->text)));
+					rval_evaluator_alloc_from_string(pright->text));
 			} else {
 				// xxx make a private helper method out of this
 				mlr_dsl_ast_node_t* pnode = pright;
@@ -321,7 +321,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 							rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 					} else {
 						sllv_prepend(poosvar_rhs_keylist_evaluators,
-							rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+							rval_evaluator_alloc_from_string(pnode->text));
 					}
 					if (pnode->pchildren == NULL)
 						break;
@@ -371,7 +371,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			sllv_append(poosvar_lhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pleft->text)));
+				rval_evaluator_alloc_from_string(pleft->text));
 		} else {
 			// xxx make a private helper method out of this
 			mlr_dsl_ast_node_t* pnode = pleft;
@@ -382,7 +382,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 				} else {
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+						rval_evaluator_alloc_from_string(pnode->text));
 				}
 				if (pnode->pchildren == NULL)
 					break;
@@ -420,7 +420,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 		if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 			sllv_append(poosvar_rhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pright->text)));
+				rval_evaluator_alloc_from_string(pright->text));
 		} else {
 			// xxx make a private helper method out of this
 			mlr_dsl_ast_node_t* pnode = pright;
@@ -431,7 +431,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 				} else {
 					sllv_prepend(poosvar_rhs_keylist_evaluators,
-						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+						rval_evaluator_alloc_from_string(pnode->text));
 				}
 				if (pnode->pchildren == NULL)
 					break;
@@ -469,7 +469,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 			} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 				sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
 				sllv_append(poosvar_lhs_keylist_evaluators,
-					rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+					rval_evaluator_alloc_from_string(pnode->text));
 				sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 					pnode->text,
 					poosvar_lhs_keylist_evaluators,
@@ -490,7 +490,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 							rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 					} else {
 						sllv_prepend(poosvar_lhs_keylist_evaluators,
-							rval_evaluator_alloc_from_string(mlr_strdup_or_die(pwalker->text)));
+							rval_evaluator_alloc_from_string(pwalker->text));
 					}
 					if (pwalker->pchildren == NULL)
 						break;
@@ -574,7 +574,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 
 			sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
 			sllv_append(poosvar_lhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnamenode->text)));
+				rval_evaluator_alloc_from_string(pnamenode->text));
 
 			sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
 			for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
@@ -631,7 +631,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 				} else {
 					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						rval_evaluator_alloc_from_string(mlr_strdup_or_die(pwalker->text)));
+						rval_evaluator_alloc_from_string(pwalker->text));
 				}
 				if (pwalker->pchildren == NULL)
 					break;
