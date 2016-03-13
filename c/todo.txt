@@ -20,12 +20,13 @@ TOP-OF-LIST SUMMARY
 ! valgrinds
 ! xxxes
 * ack hash algo
+* mod-n progress to stderr?
+* pipe-viewer-like feature to stderr?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
 ! screencaps for README.md & cover !
 * paragraph filter: mlr --nidx --rs '\n\n' --fs '\001'  filter -x '$1 =~ "slls_from_line" && $1 =~ "mapper_reshape_parse_cli"'
-
 
 ? call for use-cases? (go first.)
 * olh xrefs between reshape & nest; between sample, bootstrap, & shuffle.
