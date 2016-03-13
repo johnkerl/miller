@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.4.0
 
 * cliopt fnm/fnr -> stderr @ some # of records
+* pipe-viewer-like feature to stderr?
 
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
@@ -20,8 +21,6 @@ TOP-OF-LIST SUMMARY
 ! valgrinds
 ! xxxes
 * ack hash algo
-* mod-n progress to stderr?
-* pipe-viewer-like feature to stderr?
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -62,7 +61,10 @@ IMPLEMENT:
 
 * basenaming syntax for subselector emits
   --> currently has field names v:a,v:x, etc -- think about a simpler option:
-  run_mlr put -q '@v[NR]=$*; emit @v' ../data/small
+  run_mlr --opprint put -q '@v[NR]=$*; emit @v, "NR"' $indir/abixy
+  run_mlr --opprint put -q '@v=$*; end{emit @v}' $indir/abixy
+
+* merge emitf and emit
 
 * cli-parameterize the joinchar (:)
 
