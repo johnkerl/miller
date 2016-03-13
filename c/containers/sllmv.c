@@ -38,8 +38,8 @@ void sllmv_free(sllmv_t* plist) {
 static void sllmv_add(sllmv_t* plist, mv_t* pvalue, char free_flags) {
 	sllmve_t* pnode = mlr_malloc_or_die(sizeof(sllmve_t));
 	pnode->value = *pvalue; // struct assignment
+	pnode->free_flags = free_flags;
 	if (plist->ptail == NULL) {
-		pnode->free_flags = free_flags;
 		pnode->pnext = NULL;
 		plist->phead = pnode;
 		plist->ptail = pnode;

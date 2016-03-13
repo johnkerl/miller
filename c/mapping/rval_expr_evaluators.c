@@ -293,6 +293,7 @@ mv_t rval_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 
 static void rval_evaluator_oosvar_name_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_oosvar_name_state_t* pstate = pevaluator->pvstate;
+	sllmv_free(pstate->pmvkeys);
 	free(pstate);
 	free(pevaluator);
 }
@@ -350,6 +351,7 @@ static void rval_evaluator_oosvar_level_keys_free(rval_evaluator_t* pevaluator) 
 		rval_evaluator_t* pevaluator = pe->pvvalue;
 		pevaluator->pfree_func(pevaluator);
 	}
+	sllv_free(pstate->poosvar_rhs_keylist_evaluators);
 	free(pstate);
 	free(pevaluator);
 }
@@ -398,7 +400,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t
 			// Here it's special since it's always a string, never an expression that evaluates to string.
 			// Yet for the mlhmmv the first key isn't special.
 			sllv_prepend(poosvar_rhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(mlr_strdup_or_die(pnode->text)));
+				rval_evaluator_alloc_from_string(pnode->text));
 		}
 		if (pnode->pchildren == NULL)
 				break;
