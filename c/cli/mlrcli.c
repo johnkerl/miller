@@ -455,6 +455,8 @@ static void main_usage_numerical_formatting(FILE* o, char* argv0) {
 static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n");
 	fprintf(o, "                     urand()/urandint()/urand32().\n");
+	fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n");
+	fprintf(o, "                     count to stderr every m input records.\n");
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {
@@ -594,6 +596,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
+
+	popts->nr_progress_mod   = 0LL;
 
 	popts->plrec_reader      = NULL;
 	popts->plrec_writer      = NULL;
@@ -807,6 +811,19 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofmt = argv[argi+1];
+			argi++;
+
+		} else if (streq(argv[argi], "--nr-progress-mod")) {
+			check_arg_count(argv, argi, argc, 2);
+			// xxx into mlr -h
+			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
+				main_usage(stderr, argv[0]);
+				exit(1);
+			}
+			if (popts->nr_progress_mod <= 0) {
+				main_usage(stderr, argv[0]);
+				exit(1);
+			}
 			argi++;
 
 		} else if (streq(argv[argi], "--quote-all"))     { popts->oquoting = QUOTE_ALL;

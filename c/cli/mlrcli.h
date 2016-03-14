@@ -39,6 +39,8 @@ typedef struct _cli_opts_t {
 	char* ofmt;
 	quoting_t oquoting;
 
+	long long nr_progress_mod;
+
 	lrec_reader_t* plrec_reader;
 	sllv_t*        pmapper_list;
 	lrec_writer_t* plrec_writer;

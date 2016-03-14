@@ -11,16 +11,21 @@
 #include "output/lrec_writers.h"
 
 static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
-	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream);
+	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
+	long long nr_progress_mod);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
 static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head, lrec_writer_t* plrec_writer,
 	FILE* output_stream);
 
+typedef void progress_indicator_t(context_t* pctx, long long nr_progress_mod);
+static void null_progress_indicator(context_t* pctx, long long nr_progress_mod);
+static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod);
+
 // ----------------------------------------------------------------
 int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
-	lrec_writer_t* plrec_writer, char* ofmt)
+	lrec_writer_t* plrec_writer, char* ofmt, long long nr_progress_mod)
 {
 	FILE* output_stream = stdout;
 
@@ -36,14 +41,15 @@ int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_read
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
-		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream) && ok;
+		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream,
+			nr_progress_mod) && ok;
 	} else {
 		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
 			ctx.filenum++;
 			ctx.filename = *pfilename;
 			ctx.fnr = 0;
 			ok = do_file_chained(prepipe, *pfilename, &ctx, plrec_reader, pmapper_list,
-				plrec_writer, output_stream) && ok;
+				plrec_writer, output_stream, nr_progress_mod) && ok;
 		}
 	}
 
@@ -59,9 +65,11 @@ int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_read
 
 // ----------------------------------------------------------------
 static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
-	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream)
+	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
+	long long nr_progress_mod)
 {
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
+	progress_indicator_t* pindicator = nr_progress_mod == 0LL ? null_progress_indicator : stderr_progress_indicator;
 
 	// Start-of-file hook, e.g. expecting CSV headers on input.
 	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
@@ -72,6 +80,9 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 			break;
 		pctx->nr++;
 		pctx->fnr++;
+
+		pindicator(pctx, nr_progress_mod);
+
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
@@ -120,4 +131,15 @@ static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_
 
 		return nextrecs;
 	}
+}
+
+// ----------------------------------------------------------------
+static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod) {
+	long long remainder = pctx->nr % nr_progress_mod;
+	if (remainder == 0) {
+		fprintf(stderr, "NR=%lld FNR=%lld FILENAME=%s\n", pctx->nr, pctx->fnr, pctx->filename);
+	}
+}
+
+static void null_progress_indicator(context_t* pctx, long long nr_progress_mod) {
 }

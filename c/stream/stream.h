@@ -8,6 +8,6 @@
 
 // The filenames array must be null-terminated
 int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
-	lrec_writer_t* plrec_writer, char* ofmt);
+	lrec_writer_t* plrec_writer, char* ofmt, long long nr_progress_mod);
 
 #endif // STREAM_H
