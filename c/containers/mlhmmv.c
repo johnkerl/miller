@@ -33,6 +33,9 @@ static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, s
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 
+// xxx reorder
+static void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue);
+
 static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
 static void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
@@ -170,14 +173,14 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 
 // ----------------------------------------------------------------
 // Example: keys = ["a", 2, "c"] and value = 4.
-void mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
-	mlhmmv_level_put(pmap->proot_level, pmvkeys->phead, pterminal_value);
+void mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
+	mlhmmv_put_terminal_from_level(pmap->proot_level, pmvkeys->phead, pterminal_value);
 }
 // Example on recursive calls:
 // * level = map, rest_keys = ["a", 2, "c"] , terminal value = 4.
 // * level = map["a"], rest_keys = [2, "c"] , terminal value = 4.
 // * level = map["a"][2], rest_keys = ["c"] , terminal value = 4.
-void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
+void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	mlhmmv_level_put_no_enlarge(plevel, prest_keys, pterminal_value);
@@ -217,7 +220,7 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		plevel->num_occupied++;
 		if (prest_keys->pnext != NULL) {
 			// RECURSE
-			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+			mlhmmv_put_terminal_from_level(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 
 	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
@@ -237,7 +240,7 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 				pentry->level_value.u.pnext_level = mlhmmv_level_alloc();
 			}
 			// RECURSE
-			mlhmmv_level_put(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
+			mlhmmv_put_terminal_from_level(pentry->level_value.u.pnext_level, prest_keys->pnext, pterminal_value);
 		}
 
 	} else {
@@ -298,7 +301,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_v
 // ----------------------------------------------------------------
 // xxx use mlhmmv_get_level for most of the work. then check is_terminal.
 // xxx rename to mlhmmv_get_terminal
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
+mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {

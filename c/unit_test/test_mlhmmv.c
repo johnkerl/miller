@@ -35,10 +35,10 @@ static char* test_no_overlap() {
 	printf("keys1:  ");
 	sllmv_print(pmvkeys1);
 	printf("value1: %s\n", mv_alloc_format_val(&value1));
-	mlhmmv_put(pmap, pmvkeys1, &value1);
+	mlhmmv_put_terminal(pmap, pmvkeys1, &value1);
 	printf("map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys1, &error), &value1));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys1, &error), &value1));
 
 	sllmv_t* pmvkeys2 = sllmv_double_with_free(smv("abcde"), imv(-6));
 	mv_t value2 = mv_from_int(7);
@@ -46,10 +46,10 @@ static char* test_no_overlap() {
 	printf("keys2:  ");
 	sllmv_print(pmvkeys2);
 	printf("value2: %s\n", mv_alloc_format_val(&value2));
-	mlhmmv_put(pmap, pmvkeys2, &value2);
+	mlhmmv_put_terminal(pmap, pmvkeys2, &value2);
 	printf("map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys2, &error), &value2));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys2, &error), &value2));
 
 	sllmv_t* pmvkeys3 = sllmv_triple_with_free(imv(0), smv("fghij"), imv(0));
 	mv_t value3 = mv_from_int(0LL);
@@ -57,10 +57,10 @@ static char* test_no_overlap() {
 	printf("keys3:  ");
 	sllmv_print(pmvkeys3);
 	printf("value3: %s\n", mv_alloc_format_val(&value3));
-	mlhmmv_put(pmap, pmvkeys3, &value3);
+	mlhmmv_put_terminal(pmap, pmvkeys3, &value3);
 	printf("map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys3, &error), &value3));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys3, &error), &value3));
 
 	sllmv_free(pmvkeys1);
 	mlhmmv_free(pmap);
@@ -75,37 +75,37 @@ static char* test_overlap() {
 	printf("================================================================\n");
 	sllmv_t* pmvkeys = sllmv_single_with_free(imv(3));
 	mv_t* ptermval = imv(4);
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(5);
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(imv(3), smv("x"));
 	ptermval = imv(6);
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(7);
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("y"));
 	ptermval = smv("z");
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("z"));
 	ptermval = smv("y");
-	mlhmmv_put(pmap, pmvkeys, ptermval);
+	mlhmmv_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_print_json_stacked(pmap, FALSE);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	mlhmmv_free(pmap);
 	return NULL;
@@ -118,42 +118,42 @@ static char* test_resize() {
 
 	printf("================================================================\n");
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_single_with_free(imv(i)), imv(-i));
+		mlhmmv_put_terminal(pmap, sllmv_single_with_free(imv(i)), imv(-i));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_double_with_free(smv("a"), imv(i)), imv(-i));
+		mlhmmv_put_terminal(pmap, sllmv_double_with_free(smv("a"), imv(i)), imv(-i));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
-		mlhmmv_put(pmap, sllmv_triple_with_free(imv(i*100), imv(i % 4), smv("b")), smv("term"));
+		mlhmmv_put_terminal(pmap, sllmv_triple_with_free(imv(i*100), imv(i % 4), smv("b")), smv("term"));
 	mlhmmv_print_json_stacked(pmap, FALSE);
 
 	sllmv_t* pmvkeys = sllmv_single_with_free(imv(2));
 	mv_t* ptermval = imv(-2);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(smv("a"), imv(9));
 	ptermval = imv(-9);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(smv("a"), imv(31));
 	ptermval = imv(-31);
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(0), imv(0), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(100), imv(1), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(1700), imv(1), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_get(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_get_terminal(pmap, pmvkeys, &error), ptermval));
 
 	mlhmmv_free(pmap);
 	return NULL;
@@ -165,24 +165,24 @@ static char* test_depth_errors() {
 	int error;
 
 	printf("================================================================\n");
-	mlhmmv_put(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), imv(4));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), imv(4));
 
-	mu_assert_lf(NULL != mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL != mlhmmv_get_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(0), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_get_terminal(pmap, sllmv_triple_with_free(imv(0), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(0), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_get_terminal(pmap, sllmv_triple_with_free(imv(1), imv(0), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(0)), &error));
+	mu_assert_lf(NULL == mlhmmv_get_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(0)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_quadruple_with_free(imv(1), imv(2), imv(3), imv(4)), &error));
+	mu_assert_lf(NULL == mlhmmv_get_terminal(pmap, sllmv_quadruple_with_free(imv(1), imv(2), imv(3), imv(4)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_DEEP);
 
-	mu_assert_lf(NULL == mlhmmv_get(pmap, sllmv_double_with_free(imv(1), imv(2)), &error));
+	mu_assert_lf(NULL == mlhmmv_get_terminal(pmap, sllmv_double_with_free(imv(1), imv(2)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_SHALLOW);
 
 	mlhmmv_free(pmap);
@@ -194,21 +194,21 @@ static char* test_mlhmmv_to_lrecs() {
 	printf("================================================================\n");
 	mlhmmv_t* pmap = mlhmmv_alloc();
 
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(1));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(2));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(3));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(4));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(5));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(6));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(7));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(8));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("x")), imv(9));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("y")), imv(10));
-	mlhmmv_put(pmap, sllmv_triple_with_free(smv("not"), smv("u"), smv("y")), imv(11));
-	mlhmmv_put(pmap, sllmv_single_with_free(smv("single")), imv(99));
-	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("i")), imv(111));
-	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("j")), imv(112));
-	mlhmmv_put(pmap, sllmv_double_with_free(smv("double"), smv("k")), imv(113));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(1));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(2));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(3));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(4));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("x")), imv(5));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("s"), smv("y")), imv(6));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("x")), imv(7));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("t"), smv("y")), imv(8));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("x")), imv(9));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("triple"), smv("u"), smv("y")), imv(10));
+	mlhmmv_put_terminal(pmap, sllmv_triple_with_free(smv("not"), smv("u"), smv("y")), imv(11));
+	mlhmmv_put_terminal(pmap, sllmv_single_with_free(smv("single")), imv(99));
+	mlhmmv_put_terminal(pmap, sllmv_double_with_free(smv("double"), smv("i")), imv(111));
+	mlhmmv_put_terminal(pmap, sllmv_double_with_free(smv("double"), smv("j")), imv(112));
+	mlhmmv_put_terminal(pmap, sllmv_double_with_free(smv("double"), smv("k")), imv(113));
 
 	printf("full map:\n");
 	mlhmmv_print_json_stacked(pmap, FALSE);

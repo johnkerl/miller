@@ -65,12 +65,13 @@ typedef struct _mlhmmv_t {
 } mlhmmv_t;
 
 mlhmmv_t* mlhmmv_alloc();
+
 void  mlhmmv_free(mlhmmv_t* pmap);
-// pmvkeys is a list of mlhmmv_value_t
-void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
+
+void  mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
 // xxx cmt
-void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
@@ -79,7 +80,7 @@ void mlhmmv_level_put(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* ptermi
 //
 // Note: this returns a pointer to the map's data, not to a copy.
 // The caller shouldn't free it, or modify it.
-mv_t* mlhmmv_get(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
+mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 // xxx cmt
 mlhmmv_level_t* mlhmmv_get_or_create_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
@@ -89,9 +90,6 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 // xxx cmt
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
-// xxx make private?
-mlhmmv_value_t mlhmmv_copy_from_level(mlhmmv_level_t* plevel, int* perror);
-void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue);
 
 // Unset value/submap from a specified level onward.  Example:
 // {
@@ -129,13 +127,19 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 // xxx comment
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
-// xxx comment
-void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
+// For 'emit' in the DSL
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs);
 
+// For 'emit all' in the DSL
+// xxx comment:
+// * names
+// * these allocate unbacked lrecs
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
+
+// For 'dump' in the DSL; also used by the lrec-to-JSON writer.
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);
 

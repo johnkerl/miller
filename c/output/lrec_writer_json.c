@@ -74,7 +74,7 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 				sllmv_add_no_free(pmvkeys, &mvkey);
 			}
 			mv_t mvval = mv_from_string(lvalue, NO_FREE);
-			mlhmmv_put(pmap, pmvkeys, &mvval);
+			mlhmmv_put_terminal(pmap, pmvkeys, &mvval);
 			sllmv_free(pmvkeys);
 			free(lkey);
 		}

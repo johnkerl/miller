@@ -870,7 +870,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error)
-		mlhmmv_put(poosvars, pmvkeys, &rhs_value);
+		mlhmmv_put_terminal(poosvars, pmvkeys, &rhs_value);
 	sllmv_free(pmvkeys);
 }
 
@@ -928,14 +928,14 @@ static void mlr_dsl_cst_node_evaluate_oosvar_from_full_srec_assignment(
 			mlhmmv_clear_level(plevel);
 
 			for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_level_put will copy
+				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
 				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 				mv_t* pomv = lhmsv_get(ptyped_overlay, pe->key);
 				if (pomv != NULL) {
-					mlhmmv_level_put(plevel, &e, pomv);
+					mlhmmv_put_terminal_from_level(plevel, &e, pomv);
 				} else {
-					mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_level_put will copy
-					mlhmmv_level_put(plevel, &e, &v);
+					mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+					mlhmmv_put_terminal_from_level(plevel, &e, &v);
 				}
 			}
 

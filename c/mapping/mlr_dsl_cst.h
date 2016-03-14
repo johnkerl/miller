@@ -27,7 +27,7 @@
 // * emit statements: these place oosvar key-value pairs into the output stream.  These can be of the form 'emit @a;
 //   emit @b' which produce separate records such as a=3 and b=4, or of the form 'emit @a, @b' which produce records
 //   such as a=3,b=4. Or, 'emit @a, "x", "y"' in case @a is a nested map in which case the first two map levels
-//   are pulled out and named "x" and "y" in separate records.
+//   are pulled out and named "x" and "y" in separate records. (xxx include example here.)
 //
 // Further, these statements are organized into three groups:
 //
