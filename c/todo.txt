@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
 * cliopt fnm/fnr -> stderr @ some # of records
 * pipe-viewer-like feature to stderr?
 
+! pattern-action @ begin/end !
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
@@ -59,10 +60,13 @@ TOP-OF-LIST SUMMARY
 ----------------------------------------------------------------
 IMPLEMENT:
 
+! pattern-action @ begin/end !
+
 * basenaming syntax for subselector emits
   --> currently has field names v:a,v:x, etc -- think about a simpler option:
-  run_mlr --opprint put -q '@v[NR]=$*; emit @v, "NR"' $indir/abixy
+  run_mlr --opprint put -q '@v[NR]=$*; end{emit @v, "NR"}' $indir/abixy
   run_mlr --opprint put -q '@v=$*; end{emit @v}' $indir/abixy
+  run_mlr --opprint put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy
 
 * merge emitf and emit
 

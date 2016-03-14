@@ -4,17 +4,19 @@
 #include "containers/mlr_dsl_ast.h"
 #include "rval_evaluators.h"
 
-// xxx update this
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
 //
 // Statements are of the form:
 //
-// * Assignment to oosvar (out-of-stream variables, prefixed with @ sigil)
+// * Assignment of mlrval (i.e. result of expression evaluation, e.g. $name or f($x,$y)) to oosvar (out-of-stream
+// variables, prefixed with @ sigil)
 //
 // * Assignment to srec (in-stream records, with field names prefixed with $ sigil)
 //
-// * filter statements: if false, do not pass the current record from the input stream to the output stream
+// * Copying full srec ($* syntax) to/from an oosvar
+//
+// * Oosvar-to-oosvar assignments (recursively if RHS is non-terminal)
 //
 // * pattern-action statements: boolean expression with curly-braced statements which are executed only
 //   when the boolean evaluates to true.
@@ -24,19 +26,17 @@
 //
 // * emit statements: these place oosvar key-value pairs into the output stream.  These can be of the form 'emit @a;
 //   emit @b' which produce separate records such as a=3 and b=4, or of the form 'emit @a, @b' which produce records
-//   such as a=3,b=4.
-//
-// This means that as of the present, the CSTs are just list of left-hand sides and right-hand sides.  The left-hand
-// side is an output field name, with an LHS-type flag (srec or oosvar). For filter/bare-boolean these are unused;
-// for assignments and emits, the output field names are used. The right-hand sides are lrec-evaluators which take an
-// input record and oosvar-map, and produce a mlrval which can be assigned. Additionally, for all but emit, there is a
-// single LHS name and single RHS lrec-evaluator per statement.
+//   such as a=3,b=4. Or, 'emit @a, "x", "y"' in case @a is a nested map in which case the first two map levels
+//   are pulled out and named "x" and "y" in separate records.
 //
 // Further, these statements are organized into three groups:
 //
 // * begin: executed once, before the first input record is read.
 // * main : executed for each input record.
 // * end :  executed once, after the last input record is read.
+//
+// The exceptions being, of course, assignment to/from srec is disallowed for begin/end statements since those occur
+// before/after stream processing, respectively.
 // ================================================================
 
 struct _mlr_dsl_cst_statement_t;
