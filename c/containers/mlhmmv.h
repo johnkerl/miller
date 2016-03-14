@@ -124,7 +124,6 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 // }
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
-// xxx comment
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
 // For 'emit' in the DSL
