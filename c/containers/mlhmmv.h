@@ -30,19 +30,18 @@
 struct _mlhmmv_level_t; // forward reference
 
 // ----------------------------------------------------------------
-// xxx rename to mlhmmv_value_t
-typedef struct _mlhmmv_level_value_t {
+typedef struct _mlhmmv_value_t {
 	int is_terminal;
 	union {
 		mv_t mlrval;
 		struct _mlhmmv_level_t* pnext_level;
 	} u;
-} mlhmmv_level_value_t;
+} mlhmmv_value_t;
 
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
 	mv_t    level_key;
-	mlhmmv_level_value_t level_value; // terminal mlrval, or another hashmap
+	mlhmmv_value_t level_value; // terminal mlrval, or another hashmap
 	struct _mlhmmv_level_entry_t *pprev;
 	struct _mlhmmv_level_entry_t *pnext;
 } mlhmmv_level_entry_t;
@@ -67,7 +66,7 @@ typedef struct _mlhmmv_t {
 
 mlhmmv_t* mlhmmv_alloc();
 void  mlhmmv_free(mlhmmv_t* pmap);
-// pmvkeys is a list of mlhmmv_level_value_t
+// pmvkeys is a list of mlhmmv_value_t
 void  mlhmmv_put(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
 // xxx cmt
@@ -91,8 +90,8 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 // xxx cmt
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 // xxx make private?
-mlhmmv_level_value_t mlhmmv_copy_from_level(mlhmmv_level_t* plevel, int* perror);
-void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_level_value_t* pvalue);
+mlhmmv_value_t mlhmmv_copy_from_level(mlhmmv_level_t* plevel, int* perror);
+void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue);
 
 // Unset value/submap from a specified level onward.  Example:
 // {
