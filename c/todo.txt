@@ -52,6 +52,7 @@ TOP-OF-LIST SUMMARY
   - shuffle
   - \t \" et al. in DSL string literals
   - typeof
+  - --nr-progress-mod
   - cat -n bugfix
 
 ================================================================
