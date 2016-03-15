@@ -70,7 +70,7 @@ void hss_free(hss_t* pset) {
 
 // ----------------------------------------------------------------
 // Used by get() and remove().
-// Returns >0 for where the key is *or* should go (end of chain).
+// Returns >=0 for where the key is *or* should go (end of chain).
 static int hss_find_index_for_key(hss_t* pset, char* key, int* pideal_index) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pset->array_length);

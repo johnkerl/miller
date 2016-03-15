@@ -134,8 +134,7 @@ static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 
 // ----------------------------------------------------------------
 // Used by get() and remove().
-// xxx s.b. >=0? if so fix all comments (lhm*).
-// Returns >0 for where the key is *or* should go (end of chain).
+// Returns >=0 for where the key is *or* should go (end of chain).
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {
 	int hash = mlhmmv_hash_func(plevel_key);
 	int index = mlr_canonical_mod(hash, plevel->array_length);

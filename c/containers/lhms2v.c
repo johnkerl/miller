@@ -91,7 +91,7 @@ void lhms2v_free(lhms2v_t* pmap) {
 
 // ----------------------------------------------------------------
 // Used by get() and remove().
-// Returns >0 for where the key is *or* should go (end of chain).
+// Returns >=0 for where the key is *or* should go (end of chain).
 static int lhms2v_find_index_for_key(lhms2v_t* pmap, char* key1, char* key2, int* pideal_index) {
 	int hash = mlr_string_pair_hash_func(key1, key2);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
