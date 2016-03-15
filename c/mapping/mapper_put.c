@@ -12,6 +12,7 @@
 
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
+	char*          mlr_dsl_expression;
 	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
@@ -21,7 +22,8 @@ typedef struct _mapper_put_state_t {
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int outer_filter, int type_inferencing);
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression, mlr_dsl_ast_t* past,
+	int outer_filter, int type_inferencing);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -75,13 +77,15 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
-	char* verb               = argv[(*pargi)++];
-	char* mlr_dsl_expression = NULL;
-	int   outer_filter       = TRUE;
-	int   type_inferencing   = TYPE_INFER_STRING_FLOAT_INT;
-	int   print_ast          = FALSE;
+	char* verb                = argv[(*pargi)++];
+	char* mlr_dsl_expression  = NULL;
+	char* expression_filename = NULL;
+	int   outer_filter        = TRUE;
+	int   type_inferencing    = TYPE_INFER_STRING_FLOAT_INT;
+	int   print_ast           = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
+	ap_define_string_flag(pstate,    "-f", &expression_filename);
 	ap_define_true_flag(pstate,      "-v", &print_ast);
 	ap_define_false_flag(pstate,     "-q", &outer_filter);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
@@ -92,11 +96,15 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
-	if ((argc - *pargi) < 1) {
-		mapper_put_usage(stderr, argv[0], verb);
-		return NULL;
+	if (expression_filename == NULL) {
+		if ((argc - *pargi) < 1) {
+			mapper_put_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+		mlr_dsl_expression = mlr_strdup_or_die(argv[(*pargi)++]);
+	} else {
+		mlr_dsl_expression = read_file_into_memory(expression_filename, NULL);
 	}
-	mlr_dsl_expression = argv[(*pargi)++];
 
 	// Linked list of mlr_dsl_ast_node_t*.
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression);
@@ -111,13 +119,17 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	if (print_ast)
 		mlr_dsl_ast_print(past);
 
-	return mapper_put_alloc(pstate, past, outer_filter, type_inferencing);
+	return mapper_put_alloc(pstate, mlr_dsl_expression, past, outer_filter, type_inferencing);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int outer_filter, int type_inferencing) {
+static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression, mlr_dsl_ast_t* past,
+	int outer_filter, int type_inferencing)
+{
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp        = pargp;
+	// Retain the string contents along with any in-pointers from the AST/CST
+	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->past         = past;
 	pstate->pcst         = mlr_dsl_cst_alloc(past, type_inferencing);
 	pstate->at_begin     = TRUE;
@@ -135,6 +147,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, mlr_dsl_ast_t* past, int ou
 static void mapper_put_free(mapper_t* pmapper) {
 	mapper_put_state_t* pstate = pmapper->pvstate;
 
+	free(pstate->mlr_dsl_expression);
 	mlhmmv_free(pstate->poosvars);
 	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);

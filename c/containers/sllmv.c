@@ -98,23 +98,16 @@ sllmv_t* sllmv_quadruple_with_free(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, 
 
 // ----------------------------------------------------------------
 void sllmv_print(sllmv_t* plist) {
-	printf("[");
-	for (sllmve_t* pe = plist->phead; pe != NULL; pe = pe->pnext) {
-		char* string = mv_alloc_format_val(&pe->value);
-		if (pe != plist->phead)
-			printf(", ");
-		printf("%s", string);
-		free(string);
-	}
-	printf("]\n");
+	sllmve_tail_print(plist->phead);
 }
-// xxx merge
+
 void sllmve_tail_print(sllmve_t* pnode) {
 	printf("[");
-	for (sllmve_t* pe = pnode; pe != NULL; pe = pe->pnext) {
+	int i = 0;
+	for (sllmve_t* pe = pnode; pe != NULL; pe = pe->pnext, i++) {
 		char* string = mv_alloc_format_val(&pe->value);
-		// xxx if (pe != plist->phead)
-			// printf(", ");
+		if (i > 0)
+			printf(", ");
 		printf(" ");
 		printf("%s", string);
 		free(string);

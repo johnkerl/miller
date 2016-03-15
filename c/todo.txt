@@ -9,9 +9,6 @@ TOP-OF-LIST SUMMARY
 ? make a 3.5.0 with nest, shuffle, & cat -n bugfix?
 * rh/fedora/centos mlr-3.4.0
 
-* cliopt fnm/fnr -> stderr @ some # of records
-* pipe-viewer-like feature to stderr?
-
 ! pattern-action @ begin/end !
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
@@ -21,7 +18,6 @@ TOP-OF-LIST SUMMARY
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 ! valgrinds
 ! xxxes
-* ack hash algo
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -168,6 +164,8 @@ NON-PRE4
 * linreg in terms of stats only ... check py book
 * option for: print to stderr NR if NR%N==0 for user-specified N
 * cat/cut langcomps (w/ gh links) -> perf page
+
+* pipe-viewer-like feature to stderr?
 
 * interpolated percentiles
 

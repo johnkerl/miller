@@ -455,7 +455,8 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 	}
 	fclose(fp);
 	buffer[statbuf.st_size] = 0;
-	*psize = statbuf.st_size;
+	if (psize)
+		*psize = statbuf.st_size;
 	return buffer;
 }
 
