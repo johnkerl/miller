@@ -299,8 +299,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 	pstatement->pitems = sllv_alloc();
 	pstatement->pevaluator = NULL;
 
-	sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 
@@ -310,48 +308,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 		exit(1);
 	}
 
-	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
-		sllv_append(poosvar_lhs_keylist_evaluators,
-			rval_evaluator_alloc_from_string(pleft->text));
-	} else {
-		mlr_dsl_ast_node_t* pnode = pleft;
-		while (TRUE) {
-			// Example AST:
-			// % mlr put -v '@x[1]["2"][$3][@4]=5' /dev/null
-			// = (oosvar_assignment):
-			//     [] (oosvar_level_key):
-			//         [] (oosvar_level_key):
-			//             [] (oosvar_level_key):
-			//                 [] (oosvar_level_key):
-			//                     x (oosvar_name).
-			//                     1 (strnum_literal).
-			//                 2 (strnum_literal).
-			//             3 (field_name).
-			//         4 (oosvar_name).
-			//     5 (strnum_literal).
-			//
-			// Here past is the =; pright is the 5; pleft is the string of bracket references
-			// ending at the oosvar name.
-			//
-			// Bracket operators come in from the right. So the highest AST node is the rightmost map, and the
-			// lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
-			if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-				mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
-				sllv_prepend(poosvar_lhs_keylist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
-			} else {
-				// Oosvar expressions are of the form '@name[$index1][@index2+3][4]["five"].  The first one
-				// (name) is special: syntactically, it's outside the brackets, although that issue is for the
-				// parser to handle. Here, it's special since it's always a string, never an expression that
-				// evaluates to string.
-				sllv_prepend(poosvar_lhs_keylist_evaluators,
-					rval_evaluator_alloc_from_string(pnode->text));
-			}
-			if (pnode->pchildren == NULL)
-				break;
-			pnode = pnode->pchildren->phead->pvvalue;
-		}
-	}
+	sllv_t* poosvar_lhs_keylist_evaluators = allocate_evaluators_from_oosvar_node(pleft, type_inferencing);
 
 	int is_oosvar_to_oosvar = FALSE;
 
@@ -461,57 +418,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 	for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 
-		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
-			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				pnode->text,
-				NULL,
-				NULL,
-				FALSE,
-				NULL,
-				NULL,
-				NULL));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
-			sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-			sllv_append(poosvar_lhs_keylist_evaluators,
-				rval_evaluator_alloc_from_string(pnode->text));
-			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				pnode->text,
-				poosvar_lhs_keylist_evaluators,
-				NULL,
-				FALSE,
-				NULL,
-				NULL,
-				NULL));
-
-		// xxx brief cmts here paralleling emit
-		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-			sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-			mlr_dsl_ast_node_t* pwalker = pnode;
-			while (TRUE) {
-				if (pwalker->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-					mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
-					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
-				} else {
-					sllv_prepend(poosvar_lhs_keylist_evaluators,
-						rval_evaluator_alloc_from_string(pwalker->text));
-				}
-				if (pwalker->pchildren == NULL)
-					break;
-				pwalker = pwalker->pchildren->phead->pvvalue;
-			}
-
-			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-				pwalker->text,
-				poosvar_lhs_keylist_evaluators,
-				NULL,
-				FALSE,
-				NULL,
-				NULL,
-				NULL));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_ALL) {
+		if (pnode->type == MD_AST_NODE_TYPE_ALL) {
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				NULL,
 				NULL,
@@ -523,6 +430,26 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 			// The grammar allows only 'unset all', not 'unset @x, all, $y'.
 			// So if 'all' appears at all, it's the only name.
 			pstatement->pevaluator = mlr_dsl_cst_node_evaluate_unset_all;
+
+		} else if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				pnode->text,
+				NULL,
+				NULL,
+				FALSE,
+				NULL,
+				NULL,
+				NULL));
+
+		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
+				NULL,
+				allocate_evaluators_from_oosvar_node(pnode, type_inferencing),
+				NULL,
+				FALSE,
+				NULL,
+				NULL,
+				NULL));
 
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -1260,7 +1187,6 @@ static sllv_t* allocate_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, i
 	} else {
 		mlr_dsl_ast_node_t* pwalker = pnode;
 		while (TRUE) {
-
 			// Bracket operators come in from the right. So the highest AST node is the rightmost index,
 			// and the lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
 			if (pwalker->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
