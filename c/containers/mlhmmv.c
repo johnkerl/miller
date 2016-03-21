@@ -299,7 +299,6 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_v
 
 // ----------------------------------------------------------------
 // xxx use mlhmmv_get_level for most of the work. then check is_terminal.
-// xxx rename to mlhmmv_get_terminal
 mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
