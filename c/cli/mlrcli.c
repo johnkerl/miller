@@ -815,7 +815,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--nr-progress-mod")) {
 			check_arg_count(argv, argi, argc, 2);
-			// xxx into mlr -h
 			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
 				main_usage(stderr, argv[0]);
 				exit(1);
