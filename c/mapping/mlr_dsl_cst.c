@@ -180,7 +180,7 @@ static void mlr_dsl_cst_node_evaluate_bare_boolean(
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs);
 
-static sllv_t* allocate_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
@@ -308,7 +308,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 		exit(1);
 	}
 
-	sllv_t* poosvar_lhs_keylist_evaluators = allocate_evaluators_from_oosvar_node(pleft, type_inferencing);
+	sllv_t* poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing);
 
 	int is_oosvar_to_oosvar = FALSE;
 
@@ -326,7 +326,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 			FALSE,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
-			allocate_evaluators_from_oosvar_node(pright, type_inferencing)));
+			allocate_keylist_evaluators_from_oosvar_node(pright, type_inferencing)));
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment;
 	} else {
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
@@ -366,7 +366,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_from_full_srec_assign
 
 	sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 		NULL,
-		allocate_evaluators_from_oosvar_node(pleft, type_inferencing),
+		allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing),
 		NULL,
 		FALSE,
 		NULL,
@@ -403,7 +403,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assign
 		FALSE,
 		NULL,
 		NULL,
-		allocate_evaluators_from_oosvar_node(pright, type_inferencing)));
+		allocate_keylist_evaluators_from_oosvar_node(pright, type_inferencing)));
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment;
 	return pstatement;
@@ -444,7 +444,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				NULL,
-				allocate_evaluators_from_oosvar_node(pnode, type_inferencing),
+				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing),
 				NULL,
 				FALSE,
 				NULL,
@@ -842,7 +842,9 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 }
 
 // ----------------------------------------------------------------
-// xxx cmt
+// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
+// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
+
 static void mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -1179,7 +1181,7 @@ static void mlr_dsl_cst_node_evaluate_bare_boolean(
 //     y (field_name).
 
 // pnode is input; pkeylist_evaluators is appended to.
-static sllv_t* allocate_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
 	sllv_t* pkeylist_evaluators = sllv_alloc();
 
 	if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
