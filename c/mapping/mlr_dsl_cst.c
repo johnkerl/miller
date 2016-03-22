@@ -511,14 +511,10 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* pas
 
 		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit_all;
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
-		// First argument is oosvar name. Remainings evaluate to string,
-		// e.g. 'emit @sums, "color", "shape"'.
+	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+		// First argument is oosvar name (e.g. @sums) or keyed ooosvar name (e.g. @sums[$group]). Remainings
+		// evaluate to string, e.g. 'emit @sums, "color", "shape"'.
 		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
-
-		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-		sllv_append(poosvar_lhs_keylist_evaluators,
-			rval_evaluator_alloc_from_string(pnamenode->text));
 
 		sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
 		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
@@ -529,70 +525,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* pas
 
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pnamenode->text,
-			poosvar_lhs_keylist_evaluators,
-			poosvar_lhs_namelist_evaluators,
-			FALSE,
-			NULL,
-			NULL,
-			NULL));
-
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
-
-	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-
-		// First argument is keyed-oosvar name. Remainings evaluate to string,
-		// e.g. 'emit @sums, "color", "shape"'.
-		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
-
-		// $ mlr put -q -v 'end{emit @v, "a", "b","c"}' ...
-		// AST END STATEMENTS (1):
-		// emit (emit):
-		//     v (oosvar_name).
-		//     a (strnum_literal).
-		//     b (strnum_literal).
-		//     c (strnum_literal).
-
-		// mlr put -q -v 'end{emit @v[1][2], "a", "b","c"}' ...
-		// AST END STATEMENTS (1):
-		// emit (emit):
-		//     [] (oosvar_level_key):
-		//         [] (oosvar_level_key):
-		//             v (oosvar_name).
-		//             1 (strnum_literal).
-		//         2 (strnum_literal).
-		//     a (strnum_literal).
-		//     b (strnum_literal).
-		//     c (strnum_literal).
-
-		// xxx brief cmts here paralleling emit
-		sllv_t* poosvar_lhs_keylist_evaluators = sllv_alloc();
-		mlr_dsl_ast_node_t* pwalker = pnode;
-
-		while (TRUE) {
-			if (pwalker->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
-				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
-				sllv_prepend(poosvar_lhs_keylist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
-			} else {
-				sllv_prepend(poosvar_lhs_keylist_evaluators,
-					rval_evaluator_alloc_from_string(pwalker->text));
-			}
-			if (pwalker->pchildren == NULL)
-				break;
-			pwalker = pwalker->pchildren->phead->pvvalue;
-		}
-
-		sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
-
-		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(poosvar_lhs_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
-		}
-
-		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-			pnamenode->text,
-			poosvar_lhs_keylist_evaluators,
+			allocate_keylist_evaluators_from_oosvar_node(pnamenode, type_inferencing),
 			poosvar_lhs_namelist_evaluators,
 			FALSE,
 			NULL,
@@ -1179,6 +1112,24 @@ static void mlr_dsl_cst_node_evaluate_bare_boolean(
 // = (oosvar_assignment):
 //     x (oosvar_name).
 //     y (field_name).
+
+// $ mlr put -q -v 'end{emit @v, "a", "b","c"}' ...
+// emit (emit):
+//     v (oosvar_name).
+//     a (strnum_literal).
+//     b (strnum_literal).
+//     c (strnum_literal).
+
+// mlr put -q -v 'end{emit @v[1][2], "a", "b","c"}' ...
+// emit (emit):
+//     [] (oosvar_level_key):
+//         [] (oosvar_level_key):
+//             v (oosvar_name).
+//             1 (strnum_literal).
+//         2 (strnum_literal).
+//     a (strnum_literal).
+//     b (strnum_literal).
+//     c (strnum_literal).
 
 // pnode is input; pkeylist_evaluators is appended to.
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
