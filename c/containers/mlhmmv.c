@@ -297,28 +297,8 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_v
 }
 
 // ----------------------------------------------------------------
-// xxx use mlhmmv_get_level for most of the work. then check is_terminal.
 mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
-	*perror = MLHMMV_ERROR_NONE;
-	sllmve_t* prest_keys = pmvkeys->phead;
-	if (prest_keys == NULL) {
-		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
-		return NULL;
-	}
-	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, NULL);
-	while (prest_keys->pnext != NULL) {
-		if (plevel_entry == NULL) {
-			return NULL;
-		}
-		if (plevel_entry->level_value.is_terminal) {
-			*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
-			return NULL;
-		}
-		plevel = plevel_entry->level_value.u.pnext_level;
-		prest_keys = prest_keys->pnext;
-		plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.u.pnext_level, &prest_keys->value, NULL);
-	}
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, perror);
 	if (plevel_entry == NULL) {
 		return NULL;
 	}
