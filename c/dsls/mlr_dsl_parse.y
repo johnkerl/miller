@@ -57,9 +57,9 @@ md_statement ::= md_main_emitf.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
-md_statement ::= md_begin_block.       // E.g. 'begin { @count = 0 }'
-md_statement ::= md_cond_block. // e.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
-md_statement ::= md_end_block.         // E.g. 'end { emit @count }'
+md_statement ::= md_begin_block.      // E.g. 'begin { @count = 0 }'
+md_statement ::= md_main_cond_block.  // E.g. '$x > 0 { $y = log10($x); $z = $y ** 2 }'
+md_statement ::= md_end_block.        // E.g. 'end { emit @count }'
 
 // ================================================================
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
@@ -74,6 +74,7 @@ md_begin_block_statement ::= .
 md_begin_block_statement ::= md_begin_block_oosvar_assignment.
 md_begin_block_statement ::= md_begin_block_bare_boolean.
 md_begin_block_statement ::= md_begin_block_filter.
+md_begin_block_statement ::= md_begin_block_cond_block.
 md_begin_block_statement ::= md_begin_block_unset.
 md_begin_block_statement ::= md_begin_block_emitf.
 md_begin_block_statement ::= md_begin_block_emit.
@@ -90,6 +91,7 @@ md_end_block_statement ::= .
 md_end_block_statement ::= md_end_block_oosvar_assignment.
 md_end_block_statement ::= md_end_block_bare_boolean.
 md_end_block_statement ::= md_end_block_filter.
+md_end_block_statement ::= md_end_block_cond_block.
 md_end_block_statement ::= md_end_block_unset.
 md_end_block_statement ::= md_end_block_emitf.
 md_end_block_statement ::= md_end_block_emit.
@@ -98,7 +100,6 @@ md_end_block_statement ::= md_end_block_dump.
 // ----------------------------------------------------------------
 md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
 	A = mlr_dsl_ast_node_prepend_arg(C, B);
-	sllv_append(past->pmain_statements, A);
 }
 
 // Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
@@ -155,6 +156,10 @@ md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pmain_statements, A);
 }
+md_main_cond_block(A) ::= md_cond_block(B). {
+	A = B;
+	sllv_append(past->pmain_statements, A);
+}
 md_main_unset(A) ::= md_unset(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
@@ -185,6 +190,10 @@ md_begin_block_bare_boolean(A) ::= md_rhs(B). {
 }
 md_begin_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pbegin_statements, A);
+}
+md_begin_block_cond_block(A) ::= md_cond_block(B). {
+	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
 md_begin_block_unset(A) ::= md_unset(B). {
@@ -240,6 +249,10 @@ md_end_block_bare_boolean(A) ::= md_rhs(B). {
 }
 md_end_block_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+	sllv_append(past->pend_statements, A);
+}
+md_end_block_cond_block(A) ::= md_cond_block(B). {
+	A = B;
 	sllv_append(past->pend_statements, A);
 }
 md_end_block_unset(A) ::= md_unset(B). {
