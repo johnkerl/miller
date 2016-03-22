@@ -26,14 +26,12 @@ static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
 
 static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_value_t* plevel_value);
 
 static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror);
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 
-// xxx reorder
 static void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue);
 
 static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
@@ -41,6 +39,7 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, m
 static void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
 static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_value_t* pvalue);
+static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
 static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue);
 
@@ -676,7 +675,7 @@ static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
 }
 
 // xxx rename
-void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue) {
+static void mlhmmv_put_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue) {
 	mlhmmv_level_put_value(pmap->proot_level, pmvkeys->phead, pvalue);
 }
 
@@ -831,14 +830,14 @@ static void mlhmmv_to_lrecs_aux_vert(
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_value_t* plevel_value = &pe->level_value;
 			if (plevel_value->is_terminal) {
-				char* foo = mv_alloc_format_val(&pe->level_key);
-				char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
-				free(foo);
+				char* temp = mv_alloc_format_val(&pe->level_key);
+				char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, temp);
+				free(temp);
 				lrec_put(pnextrec, name, mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			} else {
-				char* foo = mv_alloc_format_val(&pe->level_key);
-				char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
-				free(foo);
+				char* temp = mv_alloc_format_val(&pe->level_key);
+				char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, temp);
+				free(temp);
 				mlhmmv_to_lrecs_aux_horiz(plevel_value->u.pnext_level, name, pnextrec);
 			}
 		}
@@ -853,10 +852,9 @@ static void mlhmmv_to_lrecs_aux_horiz(
 {
 	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 		mlhmmv_value_t* plevel_value = &pe->level_value;
-		// xxx rename
-		char* foo = mv_alloc_format_val(&pe->level_key);
-		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, foo);
-		free(foo);
+		char* temp = mv_alloc_format_val(&pe->level_key);
+		char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, temp);
+		free(temp);
 		if (plevel_value->is_terminal) {
 			lrec_put(poutrec, name,
 				mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
