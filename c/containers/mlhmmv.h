@@ -70,9 +70,6 @@ void  mlhmmv_free(mlhmmv_t* pmap);
 
 void  mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
-// xxx cmt
-void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
 // MLHMMV_ERROR_KEYLIST_TOO_SHALLOW, or MLHMMV_ERROR_NONE if the keylist matches
@@ -82,42 +79,33 @@ void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-// xxx cmt
+// These are an optimization for assignment from full srec, e.g. '@records[$key1][$key2] = $*'.
+// Using mlhmmv_get_or_create_level, the CST logic can get or create the @records[$key1][$key2]
+// level of the mlhmmv, then copy values there.
 mlhmmv_level_t* mlhmmv_get_or_create_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
-// xxx cmt
+// This is an assignment for assignment to full srec, e.g. '$* = @records[$key1][$key2]'.
+// The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
+// then copy values from there.
 mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 
-// xxx cmt
+// For oosvar-to-oosvar assignment.
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 
 // Unset value/submap from a specified level onward.  Example:
 // {
-//   "a" : {
-//     "x" : 1,
-//     "y" : 2
-//   },
-//   "b" : {
-//     "x" : 3,
-//     "y" : 4
-//   },
+//   "a" : { "x" : 1, "y" : 2 },
+//   "b" : { "x" : 3, "y" : 4 },
 // }
 // with pmvkeys = ["a"] leaves
 // {
-//   "b" : {
-//     "x" : 3,
-//     "y" : 4
-//   },
+//   "b" : { "x" : 3, "y" : 4 },
 // }
 // but with pmvkeys = ["a", "y"] leaves
 // {
-//   "a" : {
-//     "x" : 1
-//   },
-//   "b" : {
-//     "x" : 3,
-//     "y" : 4
-//   },
+//   "a" : { "x" : 1 },
+//   "b" : { "x" : 3, "y" : 4 },
 // }
 // and with pmvkeys = [] leaves
 // {

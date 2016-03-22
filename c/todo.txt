@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+! sub/gsub nonesuch w/ vers chk !!
+
 ? make a 3.5.0 with nest, shuffle, put/filter -f, cat -n bugfix, etc.? after valgrinds ...
 * rh/fedora/centos mlr-3.4.0
 
