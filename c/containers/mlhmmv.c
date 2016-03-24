@@ -336,8 +336,6 @@ static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, s
 }
 
 // ----------------------------------------------------------------
-// xxx remove code duplication
-
 // Example on recursive calls:
 // * level = map, rest_keys = ["a", 2, "c"]
 // * level = map["a"], rest_keys = [2, "c"]
@@ -405,7 +403,6 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 }
 
 // ----------------------------------------------------------------
-// xxx code dup
 mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	*perror = MLHMMV_ERROR_NONE;
 	sllmve_t* prest_keys = pmvkeys->phead;
@@ -639,7 +636,6 @@ static void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* pres
 	mlhmmv_level_put_value_no_enlarge(plevel, prest_keys, pvalue);
 }
 
-// xxx merge code-dup
 static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_value_t* pvalue)
 {
