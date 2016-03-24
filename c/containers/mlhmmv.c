@@ -453,14 +453,11 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel,
 }
 
 // ----------------------------------------------------------------
-// xxx cmt re remove from here on down
-
-// xxx if e.g. a=>b=>c=>4 and remove c level then all up-nodes are emptied out & should be pruned.
-// so: recurse inward until end of pmvkeys list; then return to each caller whether the current level is now empty.
-
-// restkeys too long: do nothing
-// restkeys just right: remove the terminal mlrval
-// restkeys too short: remove the level and all below
+// Removes entries from a specified level downward, unsetting any maps which become empty as a result.  For example, if
+// e.g. a=>b=>c=>4 and the c level is to be removed, then all up-nodes are emptied out & should be pruned.
+// * If restkeys too long (e.g. 'unset $a["b"]["c"]' with data "a":"b":3): do nothing.
+// * If restkeys just right: (e.g. 'unset $a["b"]' with data "a":"b":3) remove the terminal mlrval.
+// * If restkeys is too short: (e.g. 'unset $a["b"]' with data "a":"b":"c":4): remove the level and all below.
 static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
 	*pemptied = FALSE;
 
@@ -588,7 +585,7 @@ void mlhmmv_clear_level(mlhmmv_level_t* plevel) {
 
 // ----------------------------------------------------------------
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
-	int error = 0; // xxx remove from API?
+	int error = 0;
 
 	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
 	if (pfromentry != NULL) {
@@ -722,10 +719,9 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 }
 
 // ----------------------------------------------------------------
-// xxx temp
+// xxx temp: needs to be parameterized
 #define TEMP_FLATTEN_SEP ":"
 
-// xxx cmt
 void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs) {
 	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
 		sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);

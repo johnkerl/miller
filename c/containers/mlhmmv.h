@@ -93,23 +93,34 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 // For oosvar-to-oosvar assignment.
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 
-// Unset value/submap from a specified level onward.  Example:
-// {
-//   "a" : { "x" : 1, "y" : 2 },
-//   "b" : { "x" : 3, "y" : 4 },
-// }
+// Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
+// Examples:
+//   {
+//     "a" : { "x" : 1, "y" : 2 },
+//     "b" : { "x" : 3, "y" : 4 },
+//   }
 // with pmvkeys = ["a"] leaves
-// {
-//   "b" : { "x" : 3, "y" : 4 },
-// }
+//   {
+//     "b" : { "x" : 3, "y" : 4 },
+//   }
 // but with pmvkeys = ["a", "y"] leaves
-// {
-//   "a" : { "x" : 1 },
-//   "b" : { "x" : 3, "y" : 4 },
-// }
+//   {
+//     "a" : { "x" : 1 },
+//     "b" : { "x" : 3, "y" : 4 },
+//   }
 // and with pmvkeys = [] leaves
-// {
-// }
+//   {
+//   }
+// Now if ["a","x"] is removed from
+//   {
+//     "a" : { "x" : 1 },
+//     "b" : { "x" : 3, "y" : 4 },
+//   }
+// then
+//   {
+//     "b" : { "x" : 3, "y" : 4 },
+//   }
+// is left: unsetting "a":"x" leaves the map at "a" so this is unset as well.
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
