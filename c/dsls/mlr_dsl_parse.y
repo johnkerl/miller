@@ -54,6 +54,7 @@ md_statement ::= md_main_bare_boolean.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_unset.
 md_statement ::= md_main_emitf.
+md_statement ::= md_main_emitn.
 md_statement ::= md_main_emit.
 md_statement ::= md_main_dump.
 
@@ -77,6 +78,7 @@ md_begin_block_statement ::= md_begin_block_filter.
 md_begin_block_statement ::= md_begin_block_cond_block.
 md_begin_block_statement ::= md_begin_block_unset.
 md_begin_block_statement ::= md_begin_block_emitf.
+md_begin_block_statement ::= md_begin_block_emitn.
 md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
 
@@ -94,6 +96,7 @@ md_end_block_statement ::= md_end_block_filter.
 md_end_block_statement ::= md_end_block_cond_block.
 md_end_block_statement ::= md_end_block_unset.
 md_end_block_statement ::= md_end_block_emitf.
+md_end_block_statement ::= md_end_block_emitn.
 md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
@@ -125,6 +128,7 @@ md_cond_block_statement ::= md_cond_block_oosvar_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_from_full_srec_assignment.
 md_cond_block_statement ::= md_cond_block_full_srec_from_oosvar_assignment.
 md_cond_block_statement ::= md_cond_block_emitf.
+md_cond_block_statement ::= md_cond_block_emitn.
 md_cond_block_statement ::= md_cond_block_emit.
 md_cond_block_statement ::= md_cond_block_dump.
 
@@ -168,6 +172,10 @@ md_main_emitf(A) ::= md_emitf(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
 }
+md_main_emitn(A) ::= md_emitn(B). {
+	A = B;
+	sllv_append(past->pmain_statements, A);
+}
 md_main_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
@@ -204,6 +212,10 @@ md_begin_block_emitf(A) ::= md_emitf(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
 }
+md_begin_block_emitn(A) ::= md_emitn(B). {
+	A = B;
+	sllv_append(past->pbegin_statements, A);
+}
 md_begin_block_emit(A) ::= md_emit(B). {
 	A = B;
 	sllv_append(past->pbegin_statements, A);
@@ -227,6 +239,9 @@ md_cond_block_full_srec_from_oosvar_assignment(A) ::= md_full_srec_from_oosvar_a
 	A = B;
 }
 md_cond_block_emitf(A) ::= md_emitf(B). {
+	A = B;
+}
+md_cond_block_emitn(A) ::= md_emitn(B). {
 	A = B;
 }
 md_cond_block_emit(A) ::= md_emit(B). {
@@ -260,6 +275,10 @@ md_end_block_unset(A) ::= md_unset(B). {
 	sllv_append(past->pend_statements, A);
 }
 md_end_block_emitf(A) ::= md_emitf(B). {
+	A = B;
+	sllv_append(past->pend_statements, A);
+}
+md_end_block_emitn(A) ::= md_emitn(B). {
 	A = B;
 	sllv_append(past->pend_statements, A);
 }
@@ -545,6 +564,38 @@ md_emitf_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMITF, B);
 }
 md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_name(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
+md_emitn(A) ::= MD_TOKEN_EMITN(O) MD_TOKEN_ALL(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITN, B);
+}
+md_emitn(A) ::= MD_TOKEN_EMITN(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitn_args(C). {
+	B = mlr_dsl_ast_node_prepend_arg(C, B);
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+
+md_emitn(A) ::= MD_TOKEN_EMITN(O) md_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITN, B);
+}
+md_emitn(A) ::= MD_TOKEN_EMITN(O) md_oosvar_name(B) MD_TOKEN_COMMA md_emitn_args(C). {
+	B = mlr_dsl_ast_node_prepend_arg(C, B);
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+
+md_emitn(A) ::= MD_TOKEN_EMITN(O) md_keyed_oosvar_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITN, B);
+}
+md_emitn(A) ::= MD_TOKEN_EMITN(O) md_keyed_oosvar_name(B) MD_TOKEN_COMMA md_emitn_args(C). {
+	B = mlr_dsl_ast_node_prepend_arg(C, B);
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+
+md_emitn_args(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMITN, B);
+}
+md_emitn_args(A) ::= md_emitn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 

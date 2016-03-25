@@ -982,7 +982,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs);
+		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE); // xxx impl emitp as well ...
 	}
 	sllmv_free(pmvkeys);
 	sllmv_free(pmvnames);
@@ -1004,7 +1004,7 @@ static void mlr_dsl_cst_node_evaluate_emit_all(
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs);
+		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, TRUE);
 	}
 	sllmv_free(pmvnames);
 }

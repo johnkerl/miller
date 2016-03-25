@@ -62,6 +62,8 @@ IMPLEMENT:
   run_mlr --opprint put -q '@v=$*; end{emit @v}' $indir/abixy
   run_mlr --opprint put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy
 
+! emitp all not emit all
+
 * merge emitf and emit
 
 * cli-parameterize the joinchar (:)

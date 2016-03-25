@@ -129,13 +129,13 @@ void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs);
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing);
 
 // For 'emit all' in the DSL
 // xxx comment:
 // * names
 // * these allocate unbacked lrecs
-void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs);
+void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing);
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
