@@ -13,7 +13,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assign
 static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int do_full_prefixing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -111,6 +112,26 @@ static void mlr_dsl_cst_node_evaluate_unset_all(
 	sllv_t*          poutrecs);
 
 static void mlr_dsl_cst_node_evaluate_emitf(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
+static void mlr_dsl_cst_node_evaluate_emitn(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs);
+
+static void mlr_dsl_cst_node_evaluate_emitn_all(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -239,8 +260,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	case MD_AST_NODE_TYPE_EMITF:
 		return cst_statement_alloc_emitf(past, type_inferencing);
 		break;
+	case MD_AST_NODE_TYPE_EMITN:
+		return cst_statement_alloc_emit_or_emitn(past, type_inferencing, FALSE);
+		break;
 	case MD_AST_NODE_TYPE_EMIT:
-		return cst_statement_alloc_emit(past, type_inferencing);
+		return cst_statement_alloc_emit_or_emitn(past, type_inferencing, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
 		return cst_statement_alloc_conditional_block(past, type_inferencing);
@@ -482,7 +506,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int do_full_prefixing)
+{
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 	pstatement->pitems = sllv_alloc();
 	pstatement->pevaluator = NULL;
@@ -509,7 +535,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* pas
 			NULL,
 			NULL));
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit_all;
+		pstatement->pevaluator = do_full_prefixing
+			? mlr_dsl_cst_node_evaluate_emit_all
+			: mlr_dsl_cst_node_evaluate_emitn_all;
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 		// First argument is oosvar name (e.g. @sums) or keyed ooosvar name (e.g. @sums[$group]). Remainings
@@ -532,7 +560,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit(mlr_dsl_ast_node_t* pas
 			NULL,
 			NULL));
 
-		pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emit;
+		pstatement->pevaluator = do_full_prefixing
+			? mlr_dsl_cst_node_evaluate_emit
+			: mlr_dsl_cst_node_evaluate_emitn;
 
 	} else {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -964,6 +994,52 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 }
 
 // ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_emitn(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	int all_non_null_or_error = TRUE;
+	// xxx need two all-non-null, or nested
+	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE);
+	}
+	sllmv_free(pmvkeys);
+	sllmv_free(pmvnames);
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_emitn_all(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs)
+{
+	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, FALSE);
+	}
+	sllmv_free(pmvnames);
+}
+
+// ----------------------------------------------------------------
 static void mlr_dsl_cst_node_evaluate_emit(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -982,7 +1058,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE); // xxx impl emitp as well ...
+		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE);
 	}
 	sllmv_free(pmvkeys);
 	sllmv_free(pmvnames);
