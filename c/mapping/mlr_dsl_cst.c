@@ -1005,17 +1005,19 @@ static void mlr_dsl_cst_node_evaluate_emitn(
 	sllv_t*          poutrecs)
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-	int all_non_null_or_error = TRUE;
-	// xxx need two all-non-null, or nested
+	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE);
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE);
+		}
+		sllmv_free(pmvnames);
 	}
 	sllmv_free(pmvkeys);
-	sllmv_free(pmvnames);
 }
 
 // ----------------------------------------------------------------
@@ -1051,17 +1053,19 @@ static void mlr_dsl_cst_node_evaluate_emit(
 	sllv_t*          poutrecs)
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-	int all_non_null_or_error = TRUE;
-	// xxx need two all-non-null, or nested
+	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-		mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE);
+		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE);
+		}
+		sllmv_free(pmvnames);
 	}
 	sllmv_free(pmvkeys);
-	sllmv_free(pmvnames);
 }
 
 // ----------------------------------------------------------------
