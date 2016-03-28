@@ -774,6 +774,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 				lrec_free(pnextrec);
 			}
 		}
+
 	} else {
 		lrec_t* pnextrec = lrec_copy(ptemplate);
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
@@ -788,11 +789,14 @@ static void mlhmmv_to_lrecs_aux_across_records(
 					name,
 					mv_alloc_format_val(&plevel_value->u.mlrval),
 					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-			} else {
+			} else if (do_full_prefixing) {
 				char* temp = mv_alloc_format_val(&pe->level_key);
 				char* name = mlr_paste_3_strings(prefix, TEMP_FLATTEN_SEP, temp);
 				free(temp);
 				mlhmmv_to_lrecs_aux_within_record(plevel_value->u.pnext_level, name, pnextrec, do_full_prefixing);
+			} else {
+				mlhmmv_to_lrecs_aux_across_records(pe->level_value.u.pnext_level,
+					prefix, NULL, pnextrec, poutrecs, do_full_prefixing);
 			}
 		}
 		sllv_append(poutrecs, pnextrec);
