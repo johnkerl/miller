@@ -1399,6 +1399,78 @@ run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two"}'        
 run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two","three"}' $indir/abixy-het
 
 # ----------------------------------------------------------------
+announce PREFIXED/UNPREFIXED EMIT
+
+run_mlr --oxtab put -q '@sum     += $x; end{dump;emit  @sum     }'  ../data/medium
+run_mlr --oxtab put -q '@sum     += $x; end{dump;emitn @sum     }'  ../data/medium
+
+
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit  @sum     }'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitn @sum     }'  ../data/medium
+
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit  @sum, "a"}'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitn @sum, "a"}'  ../data/medium
+
+
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit  @sum     }'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitn @sum     }'  ../data/medium
+
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit  @sum, "a"}'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitn @sum, "a"}'  ../data/medium
+
+run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emit  @sum, "a", "b"}'  ../data/medium
+run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emitn @sum, "a", "b"}'  ../data/medium
+
+
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum     }'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum     }'  ../data/medium
+
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a"}'  ../data/medium
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a"}'  ../data/medium
+
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b"}'  ../data/medium
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b"}'  ../data/medium
+
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b", "ab"}'  ../data/medium
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b", "ab"}'  ../data/medium
+
+
+
+run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emit  @v}'         ../data/small
+run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emitn @v}'         ../data/small
+
+
+run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit  @v        }' ../data/small
+run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitn @v        }' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit  @v,   "I"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitn @v,   "I"}' ../data/small
+
+
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v        }' ../data/small
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v        }' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v,   "I"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v,   "I"}' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"}' ../data/small
+
+
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v        }' ../data/small
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v        }' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I"}' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"}' ../data/small
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J", "K"}' ../data/small
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J", "K"}' ../data/small
+
+
+# ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 
 run_mlr put -v '@v     = $*' /dev/null
