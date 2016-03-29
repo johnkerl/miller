@@ -13827,1631 +13827,1631 @@ one=1,two=2,c=0.502626
 ================================================================
 PREFIXED/UNPREFIXED EMIT
 
-mlr --oxtab put -q @sum     += $x; end{dump;emit  @sum     } ../data/medium
+mlr --oxtab put -q @sum     += $x; end{dump;emit  @sum     } ./reg_test/input/abixy-wide
 {
-  "sum": 4986.019682
+  "sum": 1009.118181
 }
-sum 4986.019682
+sum 1009.118181
 
-mlr --oxtab put -q @sum     += $x; end{dump;emitn @sum     } ../data/medium
+mlr --oxtab put -q @sum     += $x; end{dump;emitn @sum     } ./reg_test/input/abixy-wide
 {
-  "sum": 4986.019682
+  "sum": 1009.118181
 }
-sum 4986.019682
+sum 1009.118181
 
-mlr --oxtab put -q @sum[$a] += $x; end{dump;emit  @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a] += $x; end{dump;emit  @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": 1044.013582,
-    "eks": 978.487949,
-    "wye": 992.763941,
-    "zee": 1025.107617,
-    "hat": 945.646592
+    "cat": 207.843964,
+    "pan": 191.530740,
+    "wye": 188.110135,
+    "dog": 215.541519,
+    "hat": 206.091824
   }
 }
-sum:pan 1044.013582
-sum:eks 978.487949
-sum:wye 992.763941
-sum:zee 1025.107617
-sum:hat 945.646592
+sum:cat 207.843964
+sum:pan 191.530740
+sum:wye 188.110135
+sum:dog 215.541519
+sum:hat 206.091824
 
-mlr --oxtab put -q @sum[$a] += $x; end{dump;emitn @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a] += $x; end{dump;emitn @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": 1044.013582,
-    "eks": 978.487949,
-    "wye": 992.763941,
-    "zee": 1025.107617,
-    "hat": 945.646592
+    "cat": 207.843964,
+    "pan": 191.530740,
+    "wye": 188.110135,
+    "dog": 215.541519,
+    "hat": 206.091824
   }
 }
-pan 1044.013582
-eks 978.487949
-wye 992.763941
-zee 1025.107617
-hat 945.646592
+cat 207.843964
+pan 191.530740
+wye 188.110135
+dog 215.541519
+hat 206.091824
 
-mlr --oxtab put -q @sum[$a] += $x; end{dump;emit  @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a] += $x; end{dump;emit  @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": 1044.013582,
-    "eks": 978.487949,
-    "wye": 992.763941,
-    "zee": 1025.107617,
-    "hat": 945.646592
+    "cat": 207.843964,
+    "pan": 191.530740,
+    "wye": 188.110135,
+    "dog": 215.541519,
+    "hat": 206.091824
   }
 }
+a   cat
+sum 207.843964
+
 a   pan
-sum 1044.013582
-
-a   eks
-sum 978.487949
+sum 191.530740
 
 a   wye
-sum 992.763941
+sum 188.110135
 
-a   zee
-sum 1025.107617
+a   dog
+sum 215.541519
 
 a   hat
-sum 945.646592
+sum 206.091824
 
-mlr --oxtab put -q @sum[$a] += $x; end{dump;emitn @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a] += $x; end{dump;emitn @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": 1044.013582,
-    "eks": 978.487949,
-    "wye": 992.763941,
-    "zee": 1025.107617,
-    "hat": 945.646592
+    "cat": 207.843964,
+    "pan": 191.530740,
+    "wye": 188.110135,
+    "dog": 215.541519,
+    "hat": 206.091824
   }
 }
-a   pan
-sum 1044.013582
+a   cat
+sum 207.843964
 
-a   eks
-sum 978.487949
+a   pan
+sum 191.530740
 
 a   wye
-sum 992.763941
+sum 188.110135
 
-a   zee
-sum 1025.107617
+a   dog
+sum 215.541519
 
 a   hat
-sum 945.646592
+sum 206.091824
 
-mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emit  @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emit  @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
-sum:pan:pan 219.185129
-sum:pan:wye 198.432931
-sum:pan:eks 216.075228
-sum:pan:hat 205.222776
-sum:pan:zee 205.097518
-sum:eks:pan 179.963030
-sum:eks:wye 196.945286
-sum:eks:zee 176.880365
-sum:eks:eks 215.916097
-sum:eks:hat 208.783171
-sum:wye:wye 185.295850
-sum:wye:pan 195.847900
-sum:wye:hat 212.033183
-sum:wye:zee 194.774048
-sum:wye:eks 204.812961
-sum:zee:pan 202.213804
-sum:zee:wye 233.991394
-sum:zee:eks 190.961778
-sum:zee:zee 206.640635
-sum:zee:hat 191.300006
-sum:hat:wye 208.883010
-sum:hat:zee 196.349450
-sum:hat:eks 189.006793
-sum:hat:hat 182.853532
-sum:hat:pan 168.553807
+sum:cat:pan 42.327158
+sum:cat:hat 43.184410
+sum:cat:dog 39.241473
+sum:cat:wye 45.196775
+sum:cat:cat 37.894148
+sum:pan:wye 40.135300
+sum:pan:pan 36.226334
+sum:pan:hat 35.115869
+sum:pan:dog 37.817560
+sum:pan:cat 42.235677
+sum:wye:cat 40.805723
+sum:wye:hat 41.166697
+sum:wye:dog 40.619547
+sum:wye:wye 32.490973
+sum:wye:pan 33.027196
+sum:dog:hat 43.515162
+sum:dog:pan 45.614011
+sum:dog:dog 43.545956
+sum:dog:wye 37.223795
+sum:dog:cat 45.642595
+sum:hat:hat 48.058897
+sum:hat:wye 34.054270
+sum:hat:pan 42.538758
+sum:hat:cat 44.325655
+sum:hat:dog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emitn @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emitn @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
-pan 219.185129
-wye 198.432931
-eks 216.075228
-hat 205.222776
-zee 205.097518
+pan 42.327158
+hat 43.184410
+dog 39.241473
+wye 45.196775
+cat 37.894148
 
-pan 179.963030
-wye 196.945286
-zee 176.880365
-eks 215.916097
-hat 208.783171
+wye 40.135300
+pan 36.226334
+hat 35.115869
+dog 37.817560
+cat 42.235677
 
-wye 185.295850
-pan 195.847900
-hat 212.033183
-zee 194.774048
-eks 204.812961
+cat 40.805723
+hat 41.166697
+dog 40.619547
+wye 32.490973
+pan 33.027196
 
-pan 202.213804
-wye 233.991394
-eks 190.961778
-zee 206.640635
-hat 191.300006
+hat 43.515162
+pan 45.614011
+dog 43.545956
+wye 37.223795
+cat 45.642595
 
-wye 208.883010
-zee 196.349450
-eks 189.006793
-hat 182.853532
-pan 168.553807
+hat 48.058897
+wye 34.054270
+pan 42.538758
+cat 44.325655
+dog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emit  @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emit  @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
+a       cat
+sum:pan 42.327158
+sum:hat 43.184410
+sum:dog 39.241473
+sum:wye 45.196775
+sum:cat 37.894148
+
 a       pan
-sum:pan 219.185129
-sum:wye 198.432931
-sum:eks 216.075228
-sum:hat 205.222776
-sum:zee 205.097518
-
-a       eks
-sum:pan 179.963030
-sum:wye 196.945286
-sum:zee 176.880365
-sum:eks 215.916097
-sum:hat 208.783171
+sum:wye 40.135300
+sum:pan 36.226334
+sum:hat 35.115869
+sum:dog 37.817560
+sum:cat 42.235677
 
 a       wye
-sum:wye 185.295850
-sum:pan 195.847900
-sum:hat 212.033183
-sum:zee 194.774048
-sum:eks 204.812961
+sum:cat 40.805723
+sum:hat 41.166697
+sum:dog 40.619547
+sum:wye 32.490973
+sum:pan 33.027196
 
-a       zee
-sum:pan 202.213804
-sum:wye 233.991394
-sum:eks 190.961778
-sum:zee 206.640635
-sum:hat 191.300006
+a       dog
+sum:hat 43.515162
+sum:pan 45.614011
+sum:dog 43.545956
+sum:wye 37.223795
+sum:cat 45.642595
 
 a       hat
-sum:wye 208.883010
-sum:zee 196.349450
-sum:eks 189.006793
-sum:hat 182.853532
-sum:pan 168.553807
+sum:hat 48.058897
+sum:wye 34.054270
+sum:pan 42.538758
+sum:cat 44.325655
+sum:dog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emitn @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a][$b] += $x; end{dump;emitn @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
-a   pan
-pan 219.185129
-wye 198.432931
-eks 216.075228
-hat 205.222776
-zee 205.097518
+a   cat
+pan 42.327158
+hat 43.184410
+dog 39.241473
+wye 45.196775
+cat 37.894148
 
-a   eks
-pan 179.963030
-wye 196.945286
-zee 176.880365
-eks 215.916097
-hat 208.783171
+a   pan
+wye 40.135300
+pan 36.226334
+hat 35.115869
+dog 37.817560
+cat 42.235677
 
 a   wye
-wye 185.295850
-pan 195.847900
-hat 212.033183
-zee 194.774048
-eks 204.812961
+cat 40.805723
+hat 41.166697
+dog 40.619547
+wye 32.490973
+pan 33.027196
 
-a   zee
-pan 202.213804
-wye 233.991394
-eks 190.961778
-zee 206.640635
-hat 191.300006
+a   dog
+hat 43.515162
+pan 45.614011
+dog 43.545956
+wye 37.223795
+cat 45.642595
 
 a   hat
-wye 208.883010
-zee 196.349450
-eks 189.006793
-hat 182.853532
-pan 168.553807
+hat 48.058897
+wye 34.054270
+pan 42.538758
+cat 44.325655
+dog 37.114244
 
-mlr --opprint put -q @sum[$a][$b] += $x; end{dump;emit  @sum, "a", "b"} ../data/medium
+mlr --opprint put -q @sum[$a][$b] += $x; end{dump;emit  @sum, "a", "b"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
 a   b   sum
-pan pan 219.185129
-pan wye 198.432931
-pan eks 216.075228
-pan hat 205.222776
-pan zee 205.097518
-eks pan 179.963030
-eks wye 196.945286
-eks zee 176.880365
-eks eks 215.916097
-eks hat 208.783171
-wye wye 185.295850
-wye pan 195.847900
-wye hat 212.033183
-wye zee 194.774048
-wye eks 204.812961
-zee pan 202.213804
-zee wye 233.991394
-zee eks 190.961778
-zee zee 206.640635
-zee hat 191.300006
-hat wye 208.883010
-hat zee 196.349450
-hat eks 189.006793
-hat hat 182.853532
-hat pan 168.553807
+cat pan 42.327158
+cat hat 43.184410
+cat dog 39.241473
+cat wye 45.196775
+cat cat 37.894148
+pan wye 40.135300
+pan pan 36.226334
+pan hat 35.115869
+pan dog 37.817560
+pan cat 42.235677
+wye cat 40.805723
+wye hat 41.166697
+wye dog 40.619547
+wye wye 32.490973
+wye pan 33.027196
+dog hat 43.515162
+dog pan 45.614011
+dog dog 43.545956
+dog wye 37.223795
+dog cat 45.642595
+hat hat 48.058897
+hat wye 34.054270
+hat pan 42.538758
+hat cat 44.325655
+hat dog 37.114244
 
-mlr --opprint put -q @sum[$a][$b] += $x; end{dump;emitn @sum, "a", "b"} ../data/medium
+mlr --opprint put -q @sum[$a][$b] += $x; end{dump;emitn @sum, "a", "b"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
-      "pan": 219.185129,
-      "wye": 198.432931,
-      "eks": 216.075228,
-      "hat": 205.222776,
-      "zee": 205.097518
+    "cat": {
+      "pan": 42.327158,
+      "hat": 43.184410,
+      "dog": 39.241473,
+      "wye": 45.196775,
+      "cat": 37.894148
     },
-    "eks": {
-      "pan": 179.963030,
-      "wye": 196.945286,
-      "zee": 176.880365,
-      "eks": 215.916097,
-      "hat": 208.783171
+    "pan": {
+      "wye": 40.135300,
+      "pan": 36.226334,
+      "hat": 35.115869,
+      "dog": 37.817560,
+      "cat": 42.235677
     },
     "wye": {
-      "wye": 185.295850,
-      "pan": 195.847900,
-      "hat": 212.033183,
-      "zee": 194.774048,
-      "eks": 204.812961
+      "cat": 40.805723,
+      "hat": 41.166697,
+      "dog": 40.619547,
+      "wye": 32.490973,
+      "pan": 33.027196
     },
-    "zee": {
-      "pan": 202.213804,
-      "wye": 233.991394,
-      "eks": 190.961778,
-      "zee": 206.640635,
-      "hat": 191.300006
+    "dog": {
+      "hat": 43.515162,
+      "pan": 45.614011,
+      "dog": 43.545956,
+      "wye": 37.223795,
+      "cat": 45.642595
     },
     "hat": {
-      "wye": 208.883010,
-      "zee": 196.349450,
-      "eks": 189.006793,
-      "hat": 182.853532,
-      "pan": 168.553807
+      "hat": 48.058897,
+      "wye": 34.054270,
+      "pan": 42.538758,
+      "cat": 44.325655,
+      "dog": 37.114244
     }
   }
 }
 a   b   sum
-pan pan 219.185129
-pan wye 198.432931
-pan eks 216.075228
-pan hat 205.222776
-pan zee 205.097518
-eks pan 179.963030
-eks wye 196.945286
-eks zee 176.880365
-eks eks 215.916097
-eks hat 208.783171
-wye wye 185.295850
-wye pan 195.847900
-wye hat 212.033183
-wye zee 194.774048
-wye eks 204.812961
-zee pan 202.213804
-zee wye 233.991394
-zee eks 190.961778
-zee zee 206.640635
-zee hat 191.300006
-hat wye 208.883010
-hat zee 196.349450
-hat eks 189.006793
-hat hat 182.853532
-hat pan 168.553807
+cat pan 42.327158
+cat hat 43.184410
+cat dog 39.241473
+cat wye 45.196775
+cat cat 37.894148
+pan wye 40.135300
+pan pan 36.226334
+pan hat 35.115869
+pan dog 37.817560
+pan cat 42.235677
+wye cat 40.805723
+wye hat 41.166697
+wye dog 40.619547
+wye wye 32.490973
+wye pan 33.027196
+dog hat 43.515162
+dog pan 45.614011
+dog dog 43.545956
+dog wye 37.223795
+dog cat 45.642595
+hat hat 48.058897
+hat wye 34.054270
+hat pan 42.538758
+hat cat 44.325655
+hat dog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
-sum:pan:pan:panpan 219.185129
-sum:pan:wye:panwye 198.432931
-sum:pan:eks:paneks 216.075228
-sum:pan:hat:panhat 205.222776
-sum:pan:zee:panzee 205.097518
-sum:eks:pan:ekspan 179.963030
-sum:eks:wye:ekswye 196.945286
-sum:eks:zee:ekszee 176.880365
-sum:eks:eks:ekseks 215.916097
-sum:eks:hat:ekshat 208.783171
-sum:wye:wye:wyewye 185.295850
-sum:wye:pan:wyepan 195.847900
-sum:wye:hat:wyehat 212.033183
-sum:wye:zee:wyezee 194.774048
-sum:wye:eks:wyeeks 204.812961
-sum:zee:pan:zeepan 202.213804
-sum:zee:wye:zeewye 233.991394
-sum:zee:eks:zeeeks 190.961778
-sum:zee:zee:zeezee 206.640635
-sum:zee:hat:zeehat 191.300006
-sum:hat:wye:hatwye 208.883010
-sum:hat:zee:hatzee 196.349450
-sum:hat:eks:hateks 189.006793
-sum:hat:hat:hathat 182.853532
-sum:hat:pan:hatpan 168.553807
+sum:cat:pan:catpan 42.327158
+sum:cat:hat:cathat 43.184410
+sum:cat:dog:catdog 39.241473
+sum:cat:wye:catwye 45.196775
+sum:cat:cat:catcat 37.894148
+sum:pan:wye:panwye 40.135300
+sum:pan:pan:panpan 36.226334
+sum:pan:hat:panhat 35.115869
+sum:pan:dog:pandog 37.817560
+sum:pan:cat:pancat 42.235677
+sum:wye:cat:wyecat 40.805723
+sum:wye:hat:wyehat 41.166697
+sum:wye:dog:wyedog 40.619547
+sum:wye:wye:wyewye 32.490973
+sum:wye:pan:wyepan 33.027196
+sum:dog:hat:doghat 43.515162
+sum:dog:pan:dogpan 45.614011
+sum:dog:dog:dogdog 43.545956
+sum:dog:wye:dogwye 37.223795
+sum:dog:cat:dogcat 45.642595
+sum:hat:hat:hathat 48.058897
+sum:hat:wye:hatwye 34.054270
+sum:hat:pan:hatpan 42.538758
+sum:hat:cat:hatcat 44.325655
+sum:hat:dog:hatdog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum     } ../data/medium
+mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum     } ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
-panpan 219.185129
+catpan 42.327158
 
-panwye 198.432931
+cathat 43.184410
 
-paneks 216.075228
+catdog 39.241473
 
-panhat 205.222776
+catwye 45.196775
 
-panzee 205.097518
+catcat 37.894148
 
-ekspan 179.963030
+panwye 40.135300
 
-ekswye 196.945286
+panpan 36.226334
 
-ekszee 176.880365
+panhat 35.115869
 
-ekseks 215.916097
+pandog 37.817560
 
-ekshat 208.783171
+pancat 42.235677
 
-wyewye 185.295850
+wyecat 40.805723
 
-wyepan 195.847900
+wyehat 41.166697
 
-wyehat 212.033183
+wyedog 40.619547
 
-wyezee 194.774048
+wyewye 32.490973
 
-wyeeks 204.812961
+wyepan 33.027196
 
-zeepan 202.213804
+doghat 43.515162
 
-zeewye 233.991394
+dogpan 45.614011
 
-zeeeks 190.961778
+dogdog 43.545956
 
-zeezee 206.640635
+dogwye 37.223795
 
-zeehat 191.300006
+dogcat 45.642595
 
-hatwye 208.883010
+hathat 48.058897
 
-hatzee 196.349450
+hatwye 34.054270
 
-hateks 189.006793
+hatpan 42.538758
 
-hathat 182.853532
+hatcat 44.325655
 
-hatpan 168.553807
+hatdog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
+a              cat
+sum:pan:catpan 42.327158
+sum:hat:cathat 43.184410
+sum:dog:catdog 39.241473
+sum:wye:catwye 45.196775
+sum:cat:catcat 37.894148
+
 a              pan
-sum:pan:panpan 219.185129
-sum:wye:panwye 198.432931
-sum:eks:paneks 216.075228
-sum:hat:panhat 205.222776
-sum:zee:panzee 205.097518
-
-a              eks
-sum:pan:ekspan 179.963030
-sum:wye:ekswye 196.945286
-sum:zee:ekszee 176.880365
-sum:eks:ekseks 215.916097
-sum:hat:ekshat 208.783171
+sum:wye:panwye 40.135300
+sum:pan:panpan 36.226334
+sum:hat:panhat 35.115869
+sum:dog:pandog 37.817560
+sum:cat:pancat 42.235677
 
 a              wye
-sum:wye:wyewye 185.295850
-sum:pan:wyepan 195.847900
-sum:hat:wyehat 212.033183
-sum:zee:wyezee 194.774048
-sum:eks:wyeeks 204.812961
+sum:cat:wyecat 40.805723
+sum:hat:wyehat 41.166697
+sum:dog:wyedog 40.619547
+sum:wye:wyewye 32.490973
+sum:pan:wyepan 33.027196
 
-a              zee
-sum:pan:zeepan 202.213804
-sum:wye:zeewye 233.991394
-sum:eks:zeeeks 190.961778
-sum:zee:zeezee 206.640635
-sum:hat:zeehat 191.300006
+a              dog
+sum:hat:doghat 43.515162
+sum:pan:dogpan 45.614011
+sum:dog:dogdog 43.545956
+sum:wye:dogwye 37.223795
+sum:cat:dogcat 45.642595
 
 a              hat
-sum:wye:hatwye 208.883010
-sum:zee:hatzee 196.349450
-sum:eks:hateks 189.006793
-sum:hat:hathat 182.853532
-sum:pan:hatpan 168.553807
+sum:hat:hathat 48.058897
+sum:wye:hatwye 34.054270
+sum:pan:hatpan 42.538758
+sum:cat:hatcat 44.325655
+sum:dog:hatdog 37.114244
 
-mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a"} ../data/medium
+mlr --oxtab put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
-a      pan
-panpan 219.185129
+a      cat
+catpan 42.327158
+
+a      cat
+cathat 43.184410
+
+a      cat
+catdog 39.241473
+
+a      cat
+catwye 45.196775
+
+a      cat
+catcat 37.894148
 
 a      pan
-panwye 198.432931
+panwye 40.135300
 
 a      pan
-paneks 216.075228
+panpan 36.226334
 
 a      pan
-panhat 205.222776
+panhat 35.115869
 
 a      pan
-panzee 205.097518
+pandog 37.817560
 
-a      eks
-ekspan 179.963030
-
-a      eks
-ekswye 196.945286
-
-a      eks
-ekszee 176.880365
-
-a      eks
-ekseks 215.916097
-
-a      eks
-ekshat 208.783171
+a      pan
+pancat 42.235677
 
 a      wye
-wyewye 185.295850
+wyecat 40.805723
 
 a      wye
-wyepan 195.847900
+wyehat 41.166697
 
 a      wye
-wyehat 212.033183
+wyedog 40.619547
 
 a      wye
-wyezee 194.774048
+wyewye 32.490973
 
 a      wye
-wyeeks 204.812961
+wyepan 33.027196
 
-a      zee
-zeepan 202.213804
+a      dog
+doghat 43.515162
 
-a      zee
-zeewye 233.991394
+a      dog
+dogpan 45.614011
 
-a      zee
-zeeeks 190.961778
+a      dog
+dogdog 43.545956
 
-a      zee
-zeezee 206.640635
+a      dog
+dogwye 37.223795
 
-a      zee
-zeehat 191.300006
-
-a      hat
-hatwye 208.883010
+a      dog
+dogcat 45.642595
 
 a      hat
-hatzee 196.349450
+hathat 48.058897
 
 a      hat
-hateks 189.006793
+hatwye 34.054270
 
 a      hat
-hathat 182.853532
+hatpan 42.538758
 
 a      hat
-hatpan 168.553807
+hatcat 44.325655
 
-mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b"} ../data/medium
+a      hat
+hatdog 37.114244
+
+mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
-a   b   sum:panpan
-pan pan 219.185129
+a   b   sum:catpan
+cat pan 42.327158
+
+a   b   sum:cathat
+cat hat 43.184410
+
+a   b   sum:catdog
+cat dog 39.241473
+
+a   b   sum:catwye
+cat wye 45.196775
+
+a   b   sum:catcat
+cat cat 37.894148
 
 a   b   sum:panwye
-pan wye 198.432931
+pan wye 40.135300
 
-a   b   sum:paneks
-pan eks 216.075228
+a   b   sum:panpan
+pan pan 36.226334
 
 a   b   sum:panhat
-pan hat 205.222776
+pan hat 35.115869
 
-a   b   sum:panzee
-pan zee 205.097518
+a   b   sum:pandog
+pan dog 37.817560
 
-a   b   sum:ekspan
-eks pan 179.963030
+a   b   sum:pancat
+pan cat 42.235677
 
-a   b   sum:ekswye
-eks wye 196.945286
-
-a   b   sum:ekszee
-eks zee 176.880365
-
-a   b   sum:ekseks
-eks eks 215.916097
-
-a   b   sum:ekshat
-eks hat 208.783171
-
-a   b   sum:wyewye
-wye wye 185.295850
-
-a   b   sum:wyepan
-wye pan 195.847900
+a   b   sum:wyecat
+wye cat 40.805723
 
 a   b   sum:wyehat
-wye hat 212.033183
+wye hat 41.166697
 
-a   b   sum:wyezee
-wye zee 194.774048
+a   b   sum:wyedog
+wye dog 40.619547
 
-a   b   sum:wyeeks
-wye eks 204.812961
+a   b   sum:wyewye
+wye wye 32.490973
 
-a   b   sum:zeepan
-zee pan 202.213804
+a   b   sum:wyepan
+wye pan 33.027196
 
-a   b   sum:zeewye
-zee wye 233.991394
+a   b   sum:doghat
+dog hat 43.515162
 
-a   b   sum:zeeeks
-zee eks 190.961778
+a   b   sum:dogpan
+dog pan 45.614011
 
-a   b   sum:zeezee
-zee zee 206.640635
+a   b   sum:dogdog
+dog dog 43.545956
 
-a   b   sum:zeehat
-zee hat 191.300006
+a   b   sum:dogwye
+dog wye 37.223795
 
-a   b   sum:hatwye
-hat wye 208.883010
-
-a   b   sum:hatzee
-hat zee 196.349450
-
-a   b   sum:hateks
-hat eks 189.006793
+a   b   sum:dogcat
+dog cat 45.642595
 
 a   b   sum:hathat
-hat hat 182.853532
+hat hat 48.058897
+
+a   b   sum:hatwye
+hat wye 34.054270
 
 a   b   sum:hatpan
-hat pan 168.553807
+hat pan 42.538758
 
-mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b"} ../data/medium
+a   b   sum:hatcat
+hat cat 44.325655
+
+a   b   sum:hatdog
+hat dog 37.114244
+
+mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
-a   b   panpan
-pan pan 219.185129
+a   b   catpan
+cat pan 42.327158
+
+a   b   cathat
+cat hat 43.184410
+
+a   b   catdog
+cat dog 39.241473
+
+a   b   catwye
+cat wye 45.196775
+
+a   b   catcat
+cat cat 37.894148
 
 a   b   panwye
-pan wye 198.432931
+pan wye 40.135300
 
-a   b   paneks
-pan eks 216.075228
+a   b   panpan
+pan pan 36.226334
 
 a   b   panhat
-pan hat 205.222776
+pan hat 35.115869
 
-a   b   panzee
-pan zee 205.097518
+a   b   pandog
+pan dog 37.817560
 
-a   b   ekspan
-eks pan 179.963030
+a   b   pancat
+pan cat 42.235677
 
-a   b   ekswye
-eks wye 196.945286
-
-a   b   ekszee
-eks zee 176.880365
-
-a   b   ekseks
-eks eks 215.916097
-
-a   b   ekshat
-eks hat 208.783171
-
-a   b   wyewye
-wye wye 185.295850
-
-a   b   wyepan
-wye pan 195.847900
+a   b   wyecat
+wye cat 40.805723
 
 a   b   wyehat
-wye hat 212.033183
+wye hat 41.166697
 
-a   b   wyezee
-wye zee 194.774048
+a   b   wyedog
+wye dog 40.619547
 
-a   b   wyeeks
-wye eks 204.812961
+a   b   wyewye
+wye wye 32.490973
 
-a   b   zeepan
-zee pan 202.213804
+a   b   wyepan
+wye pan 33.027196
 
-a   b   zeewye
-zee wye 233.991394
+a   b   doghat
+dog hat 43.515162
 
-a   b   zeeeks
-zee eks 190.961778
+a   b   dogpan
+dog pan 45.614011
 
-a   b   zeezee
-zee zee 206.640635
+a   b   dogdog
+dog dog 43.545956
 
-a   b   zeehat
-zee hat 191.300006
+a   b   dogwye
+dog wye 37.223795
 
-a   b   hatwye
-hat wye 208.883010
-
-a   b   hatzee
-hat zee 196.349450
-
-a   b   hateks
-hat eks 189.006793
+a   b   dogcat
+dog cat 45.642595
 
 a   b   hathat
-hat hat 182.853532
+hat hat 48.058897
+
+a   b   hatwye
+hat wye 34.054270
 
 a   b   hatpan
-hat pan 168.553807
+hat pan 42.538758
 
-mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b", "ab"} ../data/medium
+a   b   hatcat
+hat cat 44.325655
+
+a   b   hatdog
+hat dog 37.114244
+
+mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b", "ab"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
 a   b   ab     sum
-pan pan panpan 219.185129
-pan wye panwye 198.432931
-pan eks paneks 216.075228
-pan hat panhat 205.222776
-pan zee panzee 205.097518
-eks pan ekspan 179.963030
-eks wye ekswye 196.945286
-eks zee ekszee 176.880365
-eks eks ekseks 215.916097
-eks hat ekshat 208.783171
-wye wye wyewye 185.295850
-wye pan wyepan 195.847900
-wye hat wyehat 212.033183
-wye zee wyezee 194.774048
-wye eks wyeeks 204.812961
-zee pan zeepan 202.213804
-zee wye zeewye 233.991394
-zee eks zeeeks 190.961778
-zee zee zeezee 206.640635
-zee hat zeehat 191.300006
-hat wye hatwye 208.883010
-hat zee hatzee 196.349450
-hat eks hateks 189.006793
-hat hat hathat 182.853532
-hat pan hatpan 168.553807
+cat pan catpan 42.327158
+cat hat cathat 43.184410
+cat dog catdog 39.241473
+cat wye catwye 45.196775
+cat cat catcat 37.894148
+pan wye panwye 40.135300
+pan pan panpan 36.226334
+pan hat panhat 35.115869
+pan dog pandog 37.817560
+pan cat pancat 42.235677
+wye cat wyecat 40.805723
+wye hat wyehat 41.166697
+wye dog wyedog 40.619547
+wye wye wyewye 32.490973
+wye pan wyepan 33.027196
+dog hat doghat 43.515162
+dog pan dogpan 45.614011
+dog dog dogdog 43.545956
+dog wye dogwye 37.223795
+dog cat dogcat 45.642595
+hat hat hathat 48.058897
+hat wye hatwye 34.054270
+hat pan hatpan 42.538758
+hat cat hatcat 44.325655
+hat dog hatdog 37.114244
 
-mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b", "ab"} ../data/medium
+mlr --opprint put -q @sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b", "ab"} ./reg_test/input/abixy-wide
 {
   "sum": {
-    "pan": {
+    "cat": {
       "pan": {
-        "panpan": 219.185129
-      },
-      "wye": {
-        "panwye": 198.432931
-      },
-      "eks": {
-        "paneks": 216.075228
+        "catpan": 42.327158
       },
       "hat": {
-        "panhat": 205.222776
+        "cathat": 43.184410
       },
-      "zee": {
-        "panzee": 205.097518
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
       }
     },
-    "eks": {
-      "pan": {
-        "ekspan": 179.963030
-      },
+    "pan": {
       "wye": {
-        "ekswye": 196.945286
+        "panwye": 40.135300
       },
-      "zee": {
-        "ekszee": 176.880365
-      },
-      "eks": {
-        "ekseks": 215.916097
+      "pan": {
+        "panpan": 36.226334
       },
       "hat": {
-        "ekshat": 208.783171
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
       }
     },
     "wye": {
-      "wye": {
-        "wyewye": 185.295850
-      },
-      "pan": {
-        "wyepan": 195.847900
+      "cat": {
+        "wyecat": 40.805723
       },
       "hat": {
-        "wyehat": 212.033183
+        "wyehat": 41.166697
       },
-      "zee": {
-        "wyezee": 194.774048
+      "dog": {
+        "wyedog": 40.619547
       },
-      "eks": {
-        "wyeeks": 204.812961
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
       }
     },
-    "zee": {
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
       "pan": {
-        "zeepan": 202.213804
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
       },
       "wye": {
-        "zeewye": 233.991394
+        "dogwye": 37.223795
       },
-      "eks": {
-        "zeeeks": 190.961778
-      },
-      "zee": {
-        "zeezee": 206.640635
-      },
-      "hat": {
-        "zeehat": 191.300006
+      "cat": {
+        "dogcat": 45.642595
       }
     },
     "hat": {
-      "wye": {
-        "hatwye": 208.883010
-      },
-      "zee": {
-        "hatzee": 196.349450
-      },
-      "eks": {
-        "hateks": 189.006793
-      },
       "hat": {
-        "hathat": 182.853532
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
       },
       "pan": {
-        "hatpan": 168.553807
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
       }
     }
   }
 }
 a   b   ab     sum
-pan pan panpan 219.185129
-pan wye panwye 198.432931
-pan eks paneks 216.075228
-pan hat panhat 205.222776
-pan zee panzee 205.097518
-eks pan ekspan 179.963030
-eks wye ekswye 196.945286
-eks zee ekszee 176.880365
-eks eks ekseks 215.916097
-eks hat ekshat 208.783171
-wye wye wyewye 185.295850
-wye pan wyepan 195.847900
-wye hat wyehat 212.033183
-wye zee wyezee 194.774048
-wye eks wyeeks 204.812961
-zee pan zeepan 202.213804
-zee wye zeewye 233.991394
-zee eks zeeeks 190.961778
-zee zee zeezee 206.640635
-zee hat zeehat 191.300006
-hat wye hatwye 208.883010
-hat zee hatzee 196.349450
-hat eks hateks 189.006793
-hat hat hathat 182.853532
-hat pan hatpan 168.553807
+cat pan catpan 42.327158
+cat hat cathat 43.184410
+cat dog catdog 39.241473
+cat wye catwye 45.196775
+cat cat catcat 37.894148
+pan wye panwye 40.135300
+pan pan panpan 36.226334
+pan hat panhat 35.115869
+pan dog pandog 37.817560
+pan cat pancat 42.235677
+wye cat wyecat 40.805723
+wye hat wyehat 41.166697
+wye dog wyedog 40.619547
+wye wye wyewye 32.490973
+wye pan wyepan 33.027196
+dog hat doghat 43.515162
+dog pan dogpan 45.614011
+dog dog dogdog 43.545956
+dog wye dogwye 37.223795
+dog cat dogcat 45.642595
+hat hat hathat 48.058897
+hat wye hatwye 34.054270
+hat pan hatpan 42.538758
+hat cat hatcat 44.325655
+hat dog hatdog 37.114244
 
-mlr --oxtab head -n 2 then put -q @v       =  $*; end{dump;emit  @v} ../data/small
+mlr --oxtab head -n 2 then put -q @v       =  $*; end{dump;emit  @v} ./reg_test/input/abixy
 {
   "v": {
     "a": "eks",
@@ -15467,7 +15467,7 @@ v:i 2
 v:x 0.7586799647899636
 v:y 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v       =  $*; end{dump;emitn @v} ../data/small
+mlr --oxtab head -n 2 then put -q @v       =  $*; end{dump;emitn @v} ./reg_test/input/abixy
 {
   "v": {
     "a": "eks",
@@ -15483,7 +15483,7 @@ i 2
 x 0.7586799647899636
 y 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR]   =  $*; end{dump;emit  @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR]   =  $*; end{dump;emit  @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15513,7 +15513,7 @@ v:2:i 2
 v:2:x 0.7586799647899636
 v:2:y 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR]   =  $*; end{dump;emitn @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR]   =  $*; end{dump;emitn @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15544,7 +15544,7 @@ i 2
 x 0.7586799647899636
 y 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR]   =  $*; end{dump;emit  @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR]   =  $*; end{dump;emit  @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15567,7 +15567,7 @@ I v:a v:b v:i v:x                v:y
 1 pan pan 1   0.3467901443380824 0.7268028627434533
 2 eks pan 2   0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR]   =  $*; end{dump;emitn @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR]   =  $*; end{dump;emitn @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15590,7 +15590,7 @@ I a   b   i x                  y
 1 pan pan 1 0.3467901443380824 0.7268028627434533
 2 eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15624,7 +15624,7 @@ v:2:2:i 2
 v:2:2:x 0.7586799647899636
 v:2:2:y 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15659,7 +15659,7 @@ i 2
 x 0.7586799647899636
 y 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15688,7 +15688,7 @@ I v:1:a v:1:b v:1:i v:1:x              v:1:y
 I v:2:a v:2:b v:2:i v:2:x              v:2:y
 2 eks   pan   2     0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15715,7 +15715,7 @@ I a   b   i x                  y
 1 pan pan 1 0.3467901443380824 0.7268028627434533
 2 eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15742,7 +15742,7 @@ I J v:a v:b v:i v:x                v:y
 1 1 pan pan 1   0.3467901443380824 0.7268028627434533
 2 2 eks pan 2   0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15769,7 +15769,7 @@ I J a   b   i x                  y
 1 1 pan pan 1 0.3467901443380824 0.7268028627434533
 2 2 eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15807,7 +15807,7 @@ v:2:2:2:i 2
 v:2:2:2:x 0.7586799647899636
 v:2:2:2:y 0.5221511083334797
 
-mlr --oxtab head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v        } ../data/small
+mlr --oxtab head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v        } ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15846,7 +15846,7 @@ i 2
 x 0.7586799647899636
 y 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15879,7 +15879,7 @@ I v:1:1:a v:1:1:b v:1:1:i v:1:1:x            v:1:1:y
 I v:2:2:a v:2:2:b v:2:2:i v:2:2:x            v:2:2:y
 2 eks     pan     2       0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15910,7 +15910,7 @@ I a   b   i x                  y
 1 pan pan 1 0.3467901443380824 0.7268028627434533
 2 eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15943,7 +15943,7 @@ I J v:1:a v:1:b v:1:i v:1:x              v:1:y
 I J v:2:a v:2:b v:2:i v:2:x              v:2:y
 2 2 eks   pan   2     0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -15974,7 +15974,7 @@ I J a   b   i x                  y
 1 1 pan pan 1 0.3467901443380824 0.7268028627434533
 2 2 eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J", "K"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J", "K"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
@@ -16005,7 +16005,7 @@ I J K v:a v:b v:i v:x                v:y
 1 1 1 pan pan 1   0.3467901443380824 0.7268028627434533
 2 2 2 eks pan 2   0.7586799647899636 0.5221511083334797
 
-mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J", "K"} ../data/small
+mlr --opprint head -n 2 then put -q @v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J", "K"} ./reg_test/input/abixy
 {
   "v": {
     "1": {
