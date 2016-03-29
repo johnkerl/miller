@@ -904,7 +904,19 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 					char* skey = mv_alloc_format_val(&pentry->level_key);
 					mv_t* pval = mv_alloc_copy(&pentry->level_value.u.mlrval);
 
-					// xxx xref to srec_assignment comments re typed_overlay.
+					// Write typed mlrval output to the typed overlay rather than into the lrec
+					// (which holds only string values).
+					//
+					// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the
+					// input had "x"=>"abc","y"=>"def" but a previous statement had set "y"=>7.4 and
+					// "z"=>"ghi", then an expression right-hand side referring to $y would get the
+					// floating-point value 7.4. So we don't need to lrec_put the value here, and
+					// moreover should not for two reasons: (1) there is a performance hit of doing
+					// throwaway number-to-string formatting -- it's better to do it once at the
+					// end; (2) having the string values doubly owned by the typed overlay and the
+					// lrec would result in double frees, or awkward bookkeeping. However, the NR
+					// variable evaluator reads prec->field_count, so we need to put something here.
+					// And putting something statically allocated minimizes copying/freeing.
 					lhmsv_put(ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
 					lrec_put(pinrec, skey, "bug", FREE_ENTRY_KEY);
 				}

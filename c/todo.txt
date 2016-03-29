@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
 ? make a 3.5.0 with nest, shuffle, put/filter -f, cat -n bugfix, etc.? after valgrinds ...
 * rh/fedora/centos mlr-3.4.0
 
+* reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
 ! pattern-action @ begin/end !
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
