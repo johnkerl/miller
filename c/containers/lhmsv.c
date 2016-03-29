@@ -89,6 +89,20 @@ void lhmsv_free(lhmsv_t* pmap) {
 	free(pmap);
 }
 
+void lhmsv_clear(lhmsv_t* pmap) {
+	if (pmap == NULL)
+		return;
+	for (lhmsve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
+	}
+	pmap->num_occupied = 0;
+	pmap->num_freed    = 0;
+	memset(pmap->states, EMPTY, pmap->array_length);
+	pmap->phead        = NULL;
+	pmap->ptail        = NULL;
+}
+
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >=0 for where the key is *or* should go (end of chain).

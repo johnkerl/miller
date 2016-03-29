@@ -888,8 +888,13 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 
-	lrec_clear(pinrec);
 	// xxx clear the typed overlay too
+	lrec_clear(pinrec);
+	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		mv_t* pmv = pe->pvvalue;
+		mv_free(pmv);
+	}
+	lhmsv_clear(ptyped_overlay);
 
 	int all_non_null_or_error = TRUE;
 	sllmv_t* prhskeys = evaluate_list(pitem->poosvar_rhs_keylist_evaluators,
