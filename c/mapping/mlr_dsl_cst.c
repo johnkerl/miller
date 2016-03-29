@@ -900,7 +900,6 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 		if (plevel != NULL) {
 			for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 				if (pentry->level_value.is_terminal) {
-					// xxx else flatten!
 					char* skey = mv_alloc_format_val(&pentry->level_key);
 					mv_t* pval = mv_alloc_copy(&pentry->level_value.u.mlrval);
 
