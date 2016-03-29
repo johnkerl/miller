@@ -424,7 +424,7 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) 
 				&prest_keys->value, NULL);
 		}
 	}
-	if (plevel_entry->level_value.is_terminal) {
+	if (plevel_entry == NULL || plevel_entry->level_value.is_terminal) {
 		*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
 		return NULL;
 	}
