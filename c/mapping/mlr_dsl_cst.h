@@ -50,7 +50,8 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 	string_array_t** ppregex_captures,
 	context_t*       pctx,
 	int*             pshould_emit_rec,
-	sllv_t*          poutrecs);
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator);
 
 // Most statements have one item, except multi-oosvar emit and multi-oosvar unset.
 typedef struct _mlr_dsl_cst_statement_item_t {
@@ -89,6 +90,7 @@ void mlr_dsl_cst_evaluate(
 	string_array_t** ppregex_captures,
 	context_t*       pctx,
 	int*             pshould_emit_rec,
-	sllv_t*          poutrecs);
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator);
 
 #endif // MLR_DSL_CST_H

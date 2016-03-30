@@ -10,6 +10,9 @@
 #include "dsls/mlr_dsl_wrapper.h"
 #include "mlr_dsl_cst.h"
 
+// xxx temp: needs to be parameterized
+#define TEMP_FLATTEN_SEP ":"
+
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
 	char*          mlr_dsl_expression;
@@ -216,13 +219,13 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	if (pstate->at_begin) {
 		mlr_dsl_cst_evaluate(pstate->pcst->pbegin_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs);
+			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
 		mlr_dsl_cst_evaluate(pstate->pcst->pend_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs);
+			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -233,7 +236,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	emit_rec = TRUE;
 	mlr_dsl_cst_evaluate(pstate->pcst->pmain_statements,
-		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs);
+		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
 
 	if (emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.
