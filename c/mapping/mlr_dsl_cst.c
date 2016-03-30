@@ -2,6 +2,9 @@
 #include "lib/mlrutil.h"
 #include "mlr_dsl_cst.h"
 
+// xxx temp: needs to be parameterized
+#define TEMP_FLATTEN_SEP ":"
+
 static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
@@ -1028,7 +1031,7 @@ static void mlr_dsl_cst_node_evaluate_emitn(
 		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE);
+			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE, TEMP_FLATTEN_SEP);
 		}
 		sllmv_free(pmvnames);
 	}
@@ -1051,7 +1054,7 @@ static void mlr_dsl_cst_node_evaluate_emitn_all(
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, FALSE);
+		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, FALSE, TEMP_FLATTEN_SEP);
 	}
 	sllmv_free(pmvnames);
 }
@@ -1076,7 +1079,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE);
+			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE, TEMP_FLATTEN_SEP);
 		}
 		sllmv_free(pmvnames);
 	}
@@ -1099,7 +1102,7 @@ static void mlr_dsl_cst_node_evaluate_emit_all(
 	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, TRUE);
+		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, TRUE, TEMP_FLATTEN_SEP);
 	}
 	sllmv_free(pmvnames);
 }
