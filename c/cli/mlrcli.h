@@ -36,6 +36,8 @@ typedef struct _cli_opts_t {
 	int   quote_json_values_always;
 	char* json_flatten_separator;
 
+	char* oosvar_flatten_separator;
+
 	char* ofmt;
 	quoting_t oquoting;
 

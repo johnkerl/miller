@@ -59,6 +59,8 @@ TOP-OF-LIST SUMMARY
 ----------------------------------------------------------------
 IMPLEMENT:
 
+? people may ask for ingest version of emit ...
+
 ? try to merge emitf and emit
 
 * cli-parameterize the joinchar (:)

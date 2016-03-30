@@ -202,6 +202,8 @@ static char* rebackslash(char* sep) {
 
 #define DEFAULT_JSON_FLATTEN_SEPARATOR ":"
 
+#define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
+
 // ----------------------------------------------------------------
 // The main_usage() function is split out into subroutines in support of the
 // manpage autogenerator.
@@ -594,6 +596,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->quote_json_values_always       = FALSE;
 	popts->json_flatten_separator         = DEFAULT_JSON_FLATTEN_SEPARATOR;
 
+	popts->oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->oquoting          = DEFAULT_OQUOTING;
 
@@ -767,6 +771,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--jflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->json_flatten_separator = cli_sep_from_arg(argv[argi+1], argv[0]);
+			argi++;
+
+		} else if (streq(argv[argi], "--vflatsep")) {
+			check_arg_count(argv, argi, argc, 2);
+			popts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1], argv[0]);
 			argi++;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
