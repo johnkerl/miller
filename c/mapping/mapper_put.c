@@ -56,6 +56,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
 	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
+	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
