@@ -1,11 +1,12 @@
 ================================================================
 BUGFIXES
 
-$ mlr put -q '$*=@v; @v[NR][NR]=$*' ../data/small
-Segmentation fault: 11
+:D
 
 ================================================================
 TOP-OF-LIST SUMMARY
+
+? http://blog.rstudio.org/2016/03/29/feather/
 
 ? make a 3.5.0 with nest, shuffle, put/filter -f, cat -n bugfix, etc.? after valgrinds ...
 * rh/fedora/centos mlr-3.4.0
