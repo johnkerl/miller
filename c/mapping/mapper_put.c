@@ -10,8 +10,7 @@
 #include "dsls/mlr_dsl_wrapper.h"
 #include "mlr_dsl_cst.h"
 
-// xxx temp: needs to be parameterized
-#define TEMP_FLATTEN_SEP ":"
+#define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 
 typedef struct _mapper_put_state_t {
 	ap_state_t*    pargp;
@@ -20,13 +19,14 @@ typedef struct _mapper_put_state_t {
 	mlr_dsl_cst_t* pcst;
 	int            at_begin;
 	mlhmmv_t*      poosvars;
+	char*          oosvar_flatten_separator;
 	int            outer_filter;
 } mapper_put_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing);
+	int outer_filter, int type_inferencing, char* oosvar_flatten_separator);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -86,6 +86,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	int   outer_filter        = TRUE;
 	int   type_inferencing    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast           = FALSE;
+	char* oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,    "-f", &expression_filename);
@@ -93,6 +94,8 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_false_flag(pstate,     "-q", &outer_filter);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
+	// xxx to online help
+	ap_define_string_flag(pstate,    "--oflatsep", &oosvar_flatten_separator);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -122,12 +125,13 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	if (print_ast)
 		mlr_dsl_ast_print(past);
 
-	return mapper_put_alloc(pstate, mlr_dsl_expression, past, outer_filter, type_inferencing);
+	return mapper_put_alloc(pstate, mlr_dsl_expression, past, outer_filter, type_inferencing,
+		oosvar_flatten_separator);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing)
+	int outer_filter, int type_inferencing, char* oosvar_flatten_separator)
 {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp        = pargp;
@@ -138,6 +142,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression, m
 	pstate->at_begin     = TRUE;
 	pstate->outer_filter = outer_filter;
 	pstate->poosvars     = mlhmmv_alloc();
+	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -219,13 +224,15 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	if (pstate->at_begin) {
 		mlr_dsl_cst_evaluate(pstate->pcst->pbegin_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
+			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
+				pstate->oosvar_flatten_separator);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
 		mlr_dsl_cst_evaluate(pstate->pcst->pend_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
+			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
+				pstate->oosvar_flatten_separator);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -236,7 +243,8 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	emit_rec = TRUE;
 	mlr_dsl_cst_evaluate(pstate->pcst->pmain_statements,
-		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs, TEMP_FLATTEN_SEP);
+		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs,
+			pstate->oosvar_flatten_separator);
 
 	if (emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.
