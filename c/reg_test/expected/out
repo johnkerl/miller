@@ -13823,6 +13823,13 @@ a=pan
 one=1,b=wye
 one=1,two=2,c=0.502626
 
+mlr --oxtab put --oflatsep @ -q @a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all} ./reg_test/input/abixy-het
+a pan
+
+b@1 wye
+
+c@1@2 0.502626
+
 
 ================================================================
 PREFIXED/UNPREFIXED EMIT

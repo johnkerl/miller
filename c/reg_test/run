@@ -1398,6 +1398,8 @@ run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one"}'              
 run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two"}'         $indir/abixy-het
 run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two","three"}' $indir/abixy-het
 
+run_mlr --oxtab put --oflatsep @ -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all}' $indir/abixy-het
+
 # ----------------------------------------------------------------
 announce PREFIXED/UNPREFIXED EMIT
 
