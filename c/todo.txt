@@ -16,6 +16,7 @@ TOP-OF-LIST SUMMARY
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
+! major doc section re oosvars, $*, and emits
 
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
 ! valgrinds
@@ -62,8 +63,6 @@ IMPLEMENT:
 ! declare @ doc what the 'f' stands for in 'emitf'
 
 ? people may ask for ingest version of dump ...
-
-* cli-parameterize the joinchar (:)
 
 > do more oosvar experiments before finalizing mlr4
 
