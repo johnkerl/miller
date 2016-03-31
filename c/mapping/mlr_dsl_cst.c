@@ -13,7 +13,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assign
 static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_node_t* past, int type_inferencing,
+static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int type_inferencing,
 	int do_full_prefixing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -130,7 +130,7 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
-static void mlr_dsl_cst_node_evaluate_emitn(
+static void mlr_dsl_cst_node_evaluate_emitp(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -141,7 +141,7 @@ static void mlr_dsl_cst_node_evaluate_emitn(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
-static void mlr_dsl_cst_node_evaluate_emitn_all(
+static void mlr_dsl_cst_node_evaluate_emitp_all(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -277,11 +277,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	case MD_AST_NODE_TYPE_EMITF:
 		return cst_statement_alloc_emitf(past, type_inferencing);
 		break;
-	case MD_AST_NODE_TYPE_EMITN:
-		return cst_statement_alloc_emit_or_emitn(past, type_inferencing, FALSE);
+	case MD_AST_NODE_TYPE_EMITP:
+		return cst_statement_alloc_emit_or_emitp(past, type_inferencing, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
-		return cst_statement_alloc_emit_or_emitn(past, type_inferencing, TRUE);
+		return cst_statement_alloc_emit_or_emitp(past, type_inferencing, FALSE);
 		break;
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
 		return cst_statement_alloc_conditional_block(past, type_inferencing);
@@ -523,7 +523,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_node_t* past, int type_inferencing,
+static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int type_inferencing,
 	int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
@@ -554,7 +554,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_no
 
 		pstatement->pevaluator = do_full_prefixing
 			? mlr_dsl_cst_node_evaluate_emit_all
-			: mlr_dsl_cst_node_evaluate_emitn_all;
+			: mlr_dsl_cst_node_evaluate_emitp_all;
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 		// First argument is oosvar name (e.g. @sums) or keyed ooosvar name (e.g. @sums[$group]). Remainings
@@ -579,7 +579,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitn(mlr_dsl_ast_no
 
 		pstatement->pevaluator = do_full_prefixing
 			? mlr_dsl_cst_node_evaluate_emit
-			: mlr_dsl_cst_node_evaluate_emitn;
+			: mlr_dsl_cst_node_evaluate_emitp;
 
 	} else {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -1035,7 +1035,7 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_cst_node_evaluate_emitn(
+static void mlr_dsl_cst_node_evaluate_emitp(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -1063,7 +1063,7 @@ static void mlr_dsl_cst_node_evaluate_emitn(
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_cst_node_evaluate_emitn_all(
+static void mlr_dsl_cst_node_evaluate_emitp_all(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,

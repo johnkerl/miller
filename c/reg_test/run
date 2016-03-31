@@ -1294,24 +1294,24 @@ run_mlr put -v 'begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}' /dev/null
 # ----------------------------------------------------------------
 announce TRI-SPLIT NULL
 
-run_mlr put -q '@sum     += $x; end{emit @sum}'      $indir/abixy
-run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy
+run_mlr put -q '@sum     += $x; end{emitp @sum}'      $indir/abixy
+run_mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' $indir/abixy
 run_mlr put    '$nonesuch = @nonesuch' $indir/abixy
 
-run_mlr put -q '@sum     += $x; end{emit @sum}'      $indir/abixy-het
-run_mlr put -q '@sum[$a] += $x; end{emit @sum, "a"}' $indir/abixy-het
+run_mlr put -q '@sum     += $x; end{emitp @sum}'      $indir/abixy-het
+run_mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' $indir/abixy-het
 run_mlr put    '$nonesuch = @nonesuch' $indir/abixy-het
 
-run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' $indir/abixy
-run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emit @sum}' $indir/abixy-het
+run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum}' $indir/abixy
+run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum}' $indir/abixy-het
 
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u' $indir/typeof.dkvp
 
-run_mlr put '@s = @s + $y; emit @s' $indir/typeof.dkvp
-run_mlr put '@s = @s + $y; emit @s' $indir/typeof.dkvp
-run_mlr put '@s = @s + $u; emit @s' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; emitp @s' $indir/typeof.dkvp
+run_mlr put '@s = @s + $y; emitp @s' $indir/typeof.dkvp
+run_mlr put '@s = @s + $u; emitp @s' $indir/typeof.dkvp
 
 run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
@@ -1324,152 +1324,152 @@ run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@
 # ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
-run_mlr put -q '@sum[$a] = $x; end{ emit @sum; }'         $indir/abixy
-run_mlr put -q '@sum[$a] = $x; end{ emit @sum,"a"; }'     $indir/abixy
-run_mlr put -q '@sum[$a] = $x; end{ emit @sum,"a","b"; }' $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emitp @sum; }'         $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emitp @sum,"a"; }'     $indir/abixy
+run_mlr put -q '@sum[$a] = $x; end{ emitp @sum,"a","b"; }' $indir/abixy
 
-run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum; }'         $indir/abixy
-run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a"; }'     $indir/abixy
-run_mlr put -q '@sum[$a][$b] = $x; end{ emit @sum,"a","b"; }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emitp @sum; }'         $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emitp @sum,"a"; }'     $indir/abixy
+run_mlr put -q '@sum[$a][$b] = $x; end{ emitp @sum,"a","b"; }' $indir/abixy
 
 run_mlr put -q '@v = $a;        end {emitf @v }' $indir/abixy
 run_mlr put -q '@v = $i;        end {emitf @v }' $indir/abixy
 run_mlr put -q '@v = $x;        end {emitf @v }' $indir/abixy
 run_mlr put -q '@v = $nonesuch; end {emitf @v }' $indir/abixy
 
-run_mlr put -q '@v = $a;        end {emit @v }' $indir/abixy
-run_mlr put -q '@v = $i;        end {emit @v }' $indir/abixy
-run_mlr put -q '@v = $x;        end {emit @v }' $indir/abixy
-run_mlr put -q '@v = $nonesuch; end {emit @v }' $indir/abixy
+run_mlr put -q '@v = $a;        end {emitp @v }' $indir/abixy
+run_mlr put -q '@v = $i;        end {emitp @v }' $indir/abixy
+run_mlr put -q '@v = $x;        end {emitp @v }' $indir/abixy
+run_mlr put -q '@v = $nonesuch; end {emitp @v }' $indir/abixy
 
 run_mlr put -q '@sum += $i;        end {emitf @sum }' $indir/abixy
 run_mlr put -q '@sum += $x;        end {emitf @sum }' $indir/abixy
 run_mlr put -q '@sum += $nonesuch; end {emitf @sum }' $indir/abixy
 
-run_mlr put -q '@sum += $i;        end {emit  @sum          }' $indir/abixy
-run_mlr put -q '@sum += $x;        end {emit  @sum          }' $indir/abixy
-run_mlr put -q '@sum += $nonesuch; end {emit  @sum          }' $indir/abixy
-run_mlr put -q '@sum += $i;        end {emit  @sum, "extra" }' $indir/abixy
-run_mlr put -q '@sum += $x;        end {emit  @sum, "extra" }' $indir/abixy
-run_mlr put -q '@sum += $nonesuch; end {emit  @sum, "extra" }' $indir/abixy
+run_mlr put -q '@sum += $i;        end {emitp  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $x;        end {emitp  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $nonesuch; end {emitp  @sum          }' $indir/abixy
+run_mlr put -q '@sum += $i;        end {emitp  @sum, "extra" }' $indir/abixy
+run_mlr put -q '@sum += $x;        end {emitp  @sum, "extra" }' $indir/abixy
+run_mlr put -q '@sum += $nonesuch; end {emitp  @sum, "extra" }' $indir/abixy
 
-run_mlr put -q '@sum[$a] += $i;        end {emit  @sum               }' $indir/abixy
-run_mlr put -q '@sum[$a] += $x;        end {emit  @sum               }' $indir/abixy
-run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum               }' $indir/abixy
-run_mlr put -q '@sum[$a] += $i;        end {emit  @sum, "a"          }' $indir/abixy
-run_mlr put -q '@sum[$a] += $x;        end {emit  @sum, "a"          }' $indir/abixy
-run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum, "a"          }' $indir/abixy
-run_mlr put -q '@sum[$a] += $i;        end {emit  @sum, "a", "extra" }' $indir/abixy
-run_mlr put -q '@sum[$a] += $x;        end {emit  @sum, "a", "extra" }' $indir/abixy
-run_mlr put -q '@sum[$a] += $nonesuch; end {emit  @sum, "a", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a] += $i;        end {emitp  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emitp  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emitp  @sum               }' $indir/abixy
+run_mlr put -q '@sum[$a] += $i;        end {emitp  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emitp  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emitp  @sum, "a"          }' $indir/abixy
+run_mlr put -q '@sum[$a] += $i;        end {emitp  @sum, "a", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a] += $x;        end {emitp  @sum, "a", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a] += $nonesuch; end {emitp  @sum, "a", "extra" }' $indir/abixy
 
-run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum                    }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum                    }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum                    }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a"               }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a"               }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a"               }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a", "b"          }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b"          }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b"          }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $i;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $x;        end {emit  @sum, "a", "b", "extra" }' $indir/abixy
-run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emit  @sum, "a", "b", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emitp  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emitp  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emitp  @sum                    }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emitp  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emitp  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emitp  @sum, "a"               }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emitp  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emitp  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emitp  @sum, "a", "b"          }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $i;        end {emitp  @sum, "a", "b", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $x;        end {emitp  @sum, "a", "b", "extra" }' $indir/abixy
+run_mlr put -q '@sum[$a][$b] += $nonesuch; end {emitp  @sum, "a", "b", "extra" }' $indir/abixy
 
-run_mlr --oxtab put -q '@sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emit all}' $indir/abixy-het
+run_mlr --oxtab put -q '@sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emitp all}' $indir/abixy-het
 
-run_mlr --opprint put -q '@v[NR]=$*; end{emit @v}'     $indir/abixy
-run_mlr --opprint put -q '@v[NR]=$*; end{emit @v,"X"}' $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emitp @v}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emitp @v,"X"}' $indir/abixy
 
-run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1]}'         $indir/abixy
-run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X"}'     $indir/abixy
-run_mlr --opprint put -q '@v[NR]=$*; end{emit @v[1],"X","Y"}' $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emitp @v[1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emitp @v[1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR]=$*; end{emitp @v[1],"X","Y"}' $indir/abixy
 
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1]}'         $indir/abixy
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1],"X"}'     $indir/abixy
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1],"X","Y"}' $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1],"X","Y"}' $indir/abixy
 
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1]}'         $indir/abixy
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X"}'     $indir/abixy
-run_mlr --opprint put -q '@v[NR][NR]=$*; end{emit @v[1][1],"X","Y"}' $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1][1]}'         $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1][1],"X"}'     $indir/abixy
+run_mlr --opprint put -q '@v[NR][NR]=$*; end{emitp @v[1][1],"X","Y"}' $indir/abixy
 
-run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all}'                     $indir/abixy-het
-run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one"}'               $indir/abixy-het
-run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two"}'         $indir/abixy-het
-run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all,"one","two","three"}' $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emitp all}'                     $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emitp all,"one"}'               $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emitp all,"one","two"}'         $indir/abixy-het
+run_mlr put -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emitp all,"one","two","three"}' $indir/abixy-het
 
-run_mlr --oxtab put --oflatsep @ -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emit all}' $indir/abixy-het
+run_mlr --oxtab put --oflatsep @ -q '@a=$a; @b[1]=$b; @c[1][2]=$x; end{emitp all}' $indir/abixy-het
 
 # ----------------------------------------------------------------
 announce PREFIXED/UNPREFIXED EMIT
 
-run_mlr --oxtab put -q '@sum     += $x; end{dump;emit  @sum     }'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum     += $x; end{dump;emitn @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum     += $x; end{dump;emitp  @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum     += $x; end{dump;emit @sum     }'  $indir/abixy-wide
 
 
-run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit  @sum     }'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitn @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitp  @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit @sum     }'  $indir/abixy-wide
 
-run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit  @sum, "a"}'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitn @sum, "a"}'  $indir/abixy-wide
-
-
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit  @sum     }'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitn @sum     }'  $indir/abixy-wide
-
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit  @sum, "a"}'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitn @sum, "a"}'  $indir/abixy-wide
-
-run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emit  @sum, "a", "b"}'  $indir/abixy-wide
-run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emitn @sum, "a", "b"}'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emitp  @sum, "a"}'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit @sum, "a"}'  $indir/abixy-wide
 
 
-run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum     }'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitp  @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit @sum     }'  $indir/abixy-wide
 
-run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a"}'  $indir/abixy-wide
-run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a"}'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emitp  @sum, "a"}'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end{dump;emit @sum, "a"}'  $indir/abixy-wide
 
-run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b"}'  $indir/abixy-wide
-run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b"}'  $indir/abixy-wide
-
-run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit  @sum, "a", "b", "ab"}'  $indir/abixy-wide
-run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitn @sum, "a", "b", "ab"}'  $indir/abixy-wide
+run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emitp  @sum, "a", "b"}'  $indir/abixy-wide
+run_mlr --opprint put -q '@sum[$a][$b] += $x; end{dump;emit @sum, "a", "b"}'  $indir/abixy-wide
 
 
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitp  @sum     }'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit @sum     }'  $indir/abixy-wide
 
-run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emit  @v}'         $indir/abixy
-run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emitn @v}'         $indir/abixy
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitp  @sum, "a"}'  $indir/abixy-wide
+run_mlr --oxtab put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit @sum, "a"}'  $indir/abixy-wide
 
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitp  @sum, "a", "b"}'  $indir/abixy-wide
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit @sum, "a", "b"}'  $indir/abixy-wide
 
-run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit  @v        }' $indir/abixy
-run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitn @v        }' $indir/abixy
-
-run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit  @v,   "I"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitn @v,   "I"}' $indir/abixy
-
-
-run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v        }' $indir/abixy
-run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v        }' $indir/abixy
-
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v,   "I"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v,   "I"}' $indir/abixy
-
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"}' $indir/abixy
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emitp  @sum, "a", "b", "ab"}'  $indir/abixy-wide
+run_mlr --opprint put -q '@sum[$a][$b][$a.$b] += $x; end{dump;emit @sum, "a", "b", "ab"}'  $indir/abixy-wide
 
 
-run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v        }' $indir/abixy
-run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v        }' $indir/abixy
 
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I"}' $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emitp  @v}'         $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v       =  $*; end{dump;emit @v}'         $indir/abixy
 
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J"}' $indir/abixy
 
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit  @v,   "I", "J", "K"}' $indir/abixy
-run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitn @v,   "I", "J", "K"}' $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitp  @v        }' $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit @v        }' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emitp  @v,   "I"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR]   =  $*; end{dump;emit @v,   "I"}' $indir/abixy
+
+
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitp  @v        }' $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit @v        }' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitp  @v,   "I"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit @v,   "I"}' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emitp  @v,   "I", "J"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR]   =  $*; end{dump;emit @v,   "I", "J"}' $indir/abixy
+
+
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitp  @v        }' $indir/abixy
+run_mlr --oxtab head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit @v        }' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitp  @v,   "I"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit @v,   "I"}' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitp  @v,   "I", "J"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit @v,   "I", "J"}' $indir/abixy
+
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emitp  @v,   "I", "J", "K"}' $indir/abixy
+run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit @v,   "I", "J", "K"}' $indir/abixy
 
 
 # ----------------------------------------------------------------
@@ -1482,14 +1482,14 @@ run_mlr put -v 'NR == 3 {@v     = $*}' /dev/null
 run_mlr put -v 'NR == 3 {@v[1]  = $*}' /dev/null
 run_mlr put -v 'NR == 3 {@v[$2] = $*}' /dev/null
 
-run_mlr --oxtab put -q '@v = $*; end {emit @v }' $indir/abixy-het
+run_mlr --oxtab put -q '@v = $*; end {emitp @v }' $indir/abixy-het
 
-run_mlr --oxtab put -q '@v[$a] = $*; end {emit @v      }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a] = $*; end {emit @v, "a" }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v      }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v, "a" }' $indir/abixy-het
 
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v          }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v, "a"     }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emit @v, "a", "b"}' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v          }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a"     }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a", "b"}' $indir/abixy-het
 
 # ----------------------------------------------------------------
 announce SREC-FROM-OOSVAR ASSIGNMENT
@@ -1527,27 +1527,27 @@ run_mlr put -v 'end { @u[2] = @v }'    /dev/null
 run_mlr put -v 'end { @u[2] = @v[1] }' /dev/null
 
 
-run_mlr put -q '@s    += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s    += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr put -q '@s[1] += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1] += $i; @t=@s[1];          end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr put -q '@s[1] += $i; @t[3]=@s;          end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1] += $i; @t[3]=@s[1];       end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr put -q '@s[1][2] += $i; @t=@s;             end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t=@s[1];          end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t=@s[1][2];       end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s;          end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1];       end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s;       end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emit@s; emit @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emit@s; emit @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t}' $indir/abixy
 
-run_mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emit@s,"A","B"; emit @t,"C","D","E"}' $indir/abixy
+run_mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"}' $indir/abixy
 
 # ----------------------------------------------------------------
 announce CHAINING
