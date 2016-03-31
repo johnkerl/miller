@@ -96,7 +96,6 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_false_flag(pstate,     "-q", &outer_filter);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
-	// xxx to online help
 	ap_define_string_flag(pstate,    "--oflatsep", &oosvar_flatten_separator);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
