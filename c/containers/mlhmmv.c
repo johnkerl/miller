@@ -715,6 +715,7 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 }
 
 // ----------------------------------------------------------------
+// For 'emit all' and 'emitp all'.
 void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
 	char* flatten_separator)
 {
@@ -725,7 +726,7 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 	}
 }
 
-// xxx comment copiously @ .h, and interleaved here
+// xxx comment copiously interleaved here, w/ xref to mlhmmv.h.
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
 	char* flatten_separator)
 {
