@@ -125,17 +125,76 @@ void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
-// For 'emit' in the DSL
-// xxx comment:
-// * names
-// * these allocate unbacked lrecs
+// For 'emit' and 'emitp' in the DSL. These allocate lrecs, appended to the poutrecs list.
+// * pmap is the base-level oosvar multi-level hashmap.
+// * pkeys specify the level in the mlhmmv at which to produce data.
+// * pnames is used to pull subsequent-level keys out into separate fields.
+// * In case pnames isn't long enough to reach a terminal mlrval level in the mlhmmv,
+//   do_full_prefixing specifies whether to concatenate nested mlhmmv keys into single lrec keys.
+//
+// Examples:
+
+// * pkeys reaches a terminal level:
+//
+//   $ mlr --opprint put -q '@sum += $x; end { emit @sum }' ../data/small
+//   sum
+//   4.536294
+
+// * pkeys reaches terminal levels:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' ../data/small
+//   a   b   sum
+//   pan pan 0.346790
+//   pan wye 0.502626
+//   eks pan 0.758680
+//   eks wye 0.381399
+//   eks zee 0.611784
+//   wye wye 0.204603
+//   wye pan 0.573289
+//   zee pan 0.527126
+//   zee wye 0.598554
+//   hat wye 0.031442
+
+// * pkeys reaches non-terminal levels: non-prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' ../data/small
+//   a   pan      wye
+//   pan 0.346790 0.502626
+//
+//   a   pan      wye      zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   wye      pan
+//   wye 0.204603 0.573289
+//
+//   a   pan      wye
+//   zee 0.527126 0.598554
+//
+//   a   wye
+//   hat 0.031442
+
+// * pkeys reaches non-terminal levels: prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' ../data/small
+//   a   sum:pan  sum:wye
+//   pan 0.346790 0.502626
+//
+//   a   sum:pan  sum:wye  sum:zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   sum:wye  sum:pan
+//   wye 0.204603 0.573289
+//
+//   a   sum:pan  sum:wye
+//   zee 0.527126 0.598554
+//
+//   a   sum:wye
+//   hat 0.031442
+
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 
-// For 'emit all' in the DSL
-// xxx comment:
-// * names
-// * these allocate unbacked lrecs
+// For 'emit all' and 'emitp all' in the DSL
 void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 
