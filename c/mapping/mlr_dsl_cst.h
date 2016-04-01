@@ -24,17 +24,20 @@
 // * bare-boolean statements: no-ops unless they have side effects: namely, the matches/does-not-match
 //   operators =~ and !=~ setting regex captures \1, \2, etc.
 //
-// * emit statements: these place oosvar key-value pairs into the output stream.  These can be of the form 'emit @a;
-//   emit @b' which produce separate records such as a=3 and b=4, or of the form 'emit @a, @b' which produce records
-//   such as a=3,b=4. Or, 'emit @a, "x", "y"' in case @a is a nested map in which case the first two map levels
-//   are pulled out and named "x" and "y" in separate records.
-// (xxx include example here) (xxx update comments after syntax mod)
+// * emit statements: these place oosvar key-value pairs into the output stream.  These can be of the following forms:
+//
+//   o 'emit @a; emit @b' which produce separate records such as a=3 and b=4
+//
+//   o 'emitf @a, @b' which produce records such as a=3,b=4
+//
+//   o For nested maps, 'emit @c, "x", "y"' in which case the first two map levels are pulled out and named "x" and "y"
+//   in separate fields.
 //
 // Further, these statements are organized into three groups:
 //
 // * begin: executed once, before the first input record is read.
-// * main : executed for each input record.
-// * end :  executed once, after the last input record is read.
+// * main:  executed for each input record.
+// * end:   executed once, after the last input record is read.
 //
 // The exceptions being, of course, assignment to/from srec is disallowed for begin/end statements since those occur
 // before/after stream processing, respectively.
