@@ -727,7 +727,74 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 }
 
 // ----------------------------------------------------------------
-// For 'emit' and 'emitp': the latter has do_full_prefixing == TRUE.
+// For 'emit' and 'emitp': the latter has do_full_prefixing == TRUE.  These allocate lrecs, appended to the poutrecs
+// list.
+
+// * pmap is the base-level oosvar multi-level hashmap.
+// * pkeys specify the level in the mlhmmv at which to produce data.
+// * pnames is used to pull subsequent-level keys out into separate fields.
+// * In case pnames isn't long enough to reach a terminal mlrval level in the mlhmmv,
+//   do_full_prefixing specifies whether to concatenate nested mlhmmv keys into single lrec keys.
+//
+// Examples:
+
+// * pkeys reaches a terminal level:
+//
+//   $ mlr --opprint put -q '@sum += $x; end { emit @sum }' ../data/small
+//   sum
+//   4.536294
+
+// * pkeys reaches terminal levels:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' ../data/small
+//   a   b   sum
+//   pan pan 0.346790
+//   pan wye 0.502626
+//   eks pan 0.758680
+//   eks wye 0.381399
+//   eks zee 0.611784
+//   wye wye 0.204603
+//   wye pan 0.573289
+//   zee pan 0.527126
+//   zee wye 0.598554
+//   hat wye 0.031442
+
+// * pkeys reaches non-terminal levels: non-prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' ../data/small
+//   a   pan      wye
+//   pan 0.346790 0.502626
+//
+//   a   pan      wye      zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   wye      pan
+//   wye 0.204603 0.573289
+//
+//   a   pan      wye
+//   zee 0.527126 0.598554
+//
+//   a   wye
+//   hat 0.031442
+
+// * pkeys reaches non-terminal levels: prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' ../data/small
+//   a   sum:pan  sum:wye
+//   pan 0.346790 0.502626
+//
+//   a   sum:pan  sum:wye  sum:zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   sum:wye  sum:pan
+//   wye 0.204603 0.573289
+//
+//   a   sum:pan  sum:wye
+//   zee 0.527126 0.598554
+//
+//   a   sum:wye
+//   hat 0.031442
+
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
 	char* flatten_separator)
 {
@@ -735,13 +802,19 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* po
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
 	if (ptop_entry == NULL) {
+		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_entry->level_value.is_terminal) {
+		// E.g. '@v = 3' at the top level of the mlhmmv.
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		lrec_put(poutrec,
 			mv_alloc_format_val(pfirstkey),
 			mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		sllv_append(poutrecs, poutrec);
 	} else {
+		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
+		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
+		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
+		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 		char* oosvar_name = mv_alloc_format_val(pfirstkey);
 		mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
@@ -761,6 +834,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 	char*           flatten_separator)
 {
 	if (prestnames != NULL) {
+		// If there is a namelist entry, pull it out to its own field on the output lrecs.
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_value_t* plevel_value = &pe->level_value;
 			lrec_t* pnextrec = lrec_copy(ptemplate);
@@ -780,6 +854,8 @@ static void mlhmmv_to_lrecs_aux_across_records(
 		}
 
 	} else {
+		// If there are no more remaining namelist entries, flatten remaining map levels using the join separator
+		// (default ":") and use them to create lrec values.
 		lrec_t* pnextrec = lrec_copy(ptemplate);
 		int emit = TRUE;
 		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
