@@ -726,7 +726,8 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 	}
 }
 
-// xxx comment copiously interleaved here, w/ xref to mlhmmv.h.
+// ----------------------------------------------------------------
+// For 'emit' and 'emitp': the latter has do_full_prefixing == TRUE.
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
 	char* flatten_separator)
 {

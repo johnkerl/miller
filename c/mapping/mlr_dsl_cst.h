@@ -31,7 +31,7 @@
 //   o 'emitf @a, @b' which produce records such as a=3,b=4
 //
 //   o For nested maps, 'emit @c, "x", "y"' in which case the first two map levels are pulled out and named "x" and "y"
-//   in separate fields.
+//   in separate fields. See containers/mlhmmv.h for more information.
 //
 // Further, these statements are organized into three groups:
 //
