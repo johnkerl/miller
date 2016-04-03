@@ -157,6 +157,7 @@ static void mapper_filter_free(mapper_t* pmapper) {
 	ap_free(pstate->pargp);
 	mlr_dsl_ast_node_free(pstate->past);
 	mlhmmv_free(pstate->poosvars);
+	free(pstate->mlr_dsl_expression);
 	free(pstate);
 	free(pmapper);
 }
