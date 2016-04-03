@@ -101,6 +101,9 @@ DOC:
 w subselector emits ... after syntax rework
 w basenaming syntax for subselector emits (once it exists!)
 
+* valgrind cleaner (iterate on):
+  mlr --nidx --rs '\n\n' --fs '\001' put -q '$1 =~ "^mlr" {@a=$1}; $1 =~ "by 0x"{@b=$1; @c=@a."\n".@b; emit @c}; ' vg.out
+
 ================================================================
 OOSVAR EXPERIMENTS:
 

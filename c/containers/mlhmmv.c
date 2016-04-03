@@ -876,6 +876,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 				free(temp);
 				mlhmmv_to_lrecs_aux_within_record(plevel_value->u.pnext_level, name, pnextrec,
 					do_full_prefixing, flatten_separator);
+				free(name);
 			} else {
 				mlhmmv_to_lrecs_aux_across_records(pe->level_value.u.pnext_level,
 					prefix, NULL, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
@@ -911,6 +912,7 @@ static void mlhmmv_to_lrecs_aux_within_record(
 		} else {
 			mlhmmv_to_lrecs_aux_within_record(plevel_value->u.pnext_level, name, poutrec,
 				do_full_prefixing, flatten_separator);
+			free(name);
 		}
 	}
 }
