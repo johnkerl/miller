@@ -821,6 +821,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error)
 		mlhmmv_put_terminal(poosvars, pmvkeys, &rhs_value);
+	mv_free(&rhs_value);
 	sllmv_free(pmvkeys);
 }
 
@@ -852,7 +853,6 @@ static void mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment(
 		if (rhs_all_non_null_or_error) {
 			mlhmmv_copy(poosvars, plhskeys, prhskeys);
 		}
-		sllmv_free(prhskeys);
 	}
 
 	sllmv_free(plhskeys);
