@@ -86,6 +86,8 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 
 		mlhmmv_free(pmap);
 
+		lrec_free(prec); // end of baton-pass
+
 	} else { // end of record stream
 		fputs(pstate->after_records_at_end_of_stream, output_stream);
 	}

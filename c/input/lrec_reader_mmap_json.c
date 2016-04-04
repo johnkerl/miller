@@ -131,6 +131,8 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			exit(1);
 		}
 
+		sllv_append(pstate->ptop_level_json_objects, parsed_top_level_json);
+
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
 		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->json_flatten_separator)) {
