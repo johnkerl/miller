@@ -11,6 +11,9 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+! feature: record-repeater w/ key field(s). UT & mld.
+! feature: stats1 weighted by count (or other) field?
+
 ? make a 3.5.0 with nest, shuffle, put/filter -f, cat -n bugfix, etc.? after valgrinds ...
 * rh/fedora/centos mlr-3.4.0
 
@@ -36,9 +39,6 @@ TOP-OF-LIST SUMMARY
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid double-searching.
 * dsls deps still not quite right?
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
-
-! feature: stats1 weighted by count (or other) field?
-! feature: record-repeater w/ key field(s)?
 
 ================================================================
 * relcut material since 3.4.0:

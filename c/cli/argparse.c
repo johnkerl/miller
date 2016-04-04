@@ -6,6 +6,7 @@
 typedef enum _ap_flag_t {
 	AP_INT_VALUE_FLAG,
 	AP_INT_FLAG,
+	AP_LONG_LONG_FLAG,
 	AP_DOUBLE_FLAG,
 	AP_STRING_FLAG,
 	AP_STRING_LIST_FLAG,
@@ -86,6 +87,9 @@ void ap_define_int_value_flag(ap_state_t* pstate, char* flag_name, int intval, i
 void ap_define_int_flag(ap_state_t* pstate, char* flag_name, int* pintval) {
 	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_INT_FLAG, 0, pintval, 2));
 }
+void ap_define_long_long_flag(ap_state_t* pstate, char* flag_name, long long* pintval) {
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_LONG_LONG_FLAG, 0, pintval, 2));
+}
 
 void ap_define_float_flag(ap_state_t* pstate, char* flag_name, double* pdoubleval) {
 	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_DOUBLE_FLAG, 0, pdoubleval, 2));
@@ -143,6 +147,13 @@ int ap_parse_aux(ap_state_t* pstate, char* verb, int* pargi, int argc, char** ar
 
 		} else if (pdef->type == AP_INT_FLAG) {
 			if (sscanf(argv[argi+1], "%d", (int *)pdef->pval) != 1) {
+				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as integer.\n",
+					argv[0], verb, argv[argi+1], argv[argi]);
+				fprintf(stderr, "\n");
+			}
+
+		} else if (pdef->type == AP_LONG_LONG_FLAG) {
+			if (sscanf(argv[argi+1], "%lld", (long long *)pdef->pval) != 1) {
 				fprintf(stderr, "%s %s: couldn't parse \"%s\" after \"%s\" as integer.\n",
 					argv[0], verb, argv[argi+1], argv[argi]);
 				fprintf(stderr, "\n");

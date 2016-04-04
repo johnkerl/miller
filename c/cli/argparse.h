@@ -19,6 +19,7 @@ void         ap_define_true_flag(ap_state_t* pstate, char* flag_name, int* pintv
 void        ap_define_false_flag(ap_state_t* pstate, char* flag_name, int* pintval);
 void    ap_define_int_value_flag(ap_state_t* pstate, char* flag_name, int value, int* pintval);
 void          ap_define_int_flag(ap_state_t* pstate, char* flag_name, int* pintval);
+void    ap_define_long_long_flag(ap_state_t* pstate, char* flag_name, long long* pintval);
 void       ap_define_float_flag(ap_state_t* pstate, char* flag_name, double* pdoubleval);
 void       ap_define_string_flag(ap_state_t* pstate, char* flag_name, char** pstring);
 void  ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pplist);

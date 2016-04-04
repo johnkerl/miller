@@ -854,8 +854,10 @@ mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
 .\}
 .nf
 Usage: mlr repeat [options]
--f {field name}    xxx put my description here please
-xxx describe me please.
+Copies input records to output records multiple times.
+-n {repeat count}  Repeat each input record this many times.
+-f {field name}    Same, but take the repeat count from the specified field name
+                   of each input record.
 .fi
 .if n \{\
 .RE
