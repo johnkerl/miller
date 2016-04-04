@@ -262,7 +262,12 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 				lrec_put(pinrec, output_field_name, string, free_flags);
 			}
 			free(pval);
-
+		}
+	} else {
+		for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+			mv_t* pval = pe->pvvalue;
+			mv_free(pval);
+			free(pval);
 		}
 	}
 	lhmsv_free(ptyped_overlay);
