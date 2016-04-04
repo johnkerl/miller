@@ -26,6 +26,7 @@ libmapping_la_SOURCES=	\
 			mapper_regularize.c \
 			mapper_rename.c \
 			mapper_reorder.c \
+			mapper_repeat.c \
 			mapper_reshape.c \
 			mapper_sample.c \
 			mapper_sec2gmt.c \
