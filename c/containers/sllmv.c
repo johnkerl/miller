@@ -52,7 +52,7 @@ static void sllmv_add(sllmv_t* plist, mv_t* pvalue, char free_flags) {
 }
 
 void sllmv_add_with_free(sllmv_t* plist, mv_t* pvalue) {
-	sllmv_add(plist, pvalue, FREE_ENTRY_KEY);
+	sllmv_add(plist, pvalue, FREE_ENTRY_VALUE);
 }
 
 void sllmv_add_no_free(sllmv_t* plist, mv_t* pvalue) {
