@@ -36,6 +36,8 @@ static void mlhmmv_put_value_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_v
 
 static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* pmap, mv_t* plevel_key, int* pindex);
 
+static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
+
 static void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
 static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_value_t* pvalue);
@@ -455,6 +457,21 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel,
 // * If restkeys too long (e.g. 'unset $a["b"]["c"]' with data "a":"b":3): do nothing.
 // * If restkeys just right: (e.g. 'unset $a["b"]' with data "a":"b":3) remove the terminal mlrval.
 // * If restkeys is too short: (e.g. 'unset $a["b"]' with data "a":"b":"c":4): remove the level and all below.
+
+void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
+	if (prestkeys == NULL)
+		return;
+
+	if (prestkeys->phead == NULL) {
+		mlhmmv_level_free(pmap->proot_level);
+		pmap->proot_level = mlhmmv_level_alloc();
+		return;
+	}
+
+	int unused = FALSE;
+	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
+}
+
 static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
 	*pemptied = FALSE;
 
@@ -483,6 +500,7 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 			plevel->num_freed++;
 			plevel->states[index] = DELETED;
 			pentry->ideal_index = -1;
+			mv_free(&pentry->level_key);
 			pentry->level_key = mv_error();
 
 			if (pentry == plevel->phead) {
@@ -512,6 +530,7 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 			exit(1);
 		}
 
+		mv_free(&pentry->level_key);
 		pentry->ideal_index = -1;
 		plevel->states[index] = DELETED;
 
@@ -543,20 +562,6 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 		}
 	}
 
-}
-
-void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
-	if (prestkeys == NULL)
-		return;
-
-	if (prestkeys->phead == NULL) {
-		mlhmmv_level_free(pmap->proot_level);
-		pmap->proot_level = mlhmmv_level_alloc();
-		return;
-	}
-
-	int unused = FALSE;
-	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
 }
 
 // ----------------------------------------------------------------
