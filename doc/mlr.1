@@ -145,8 +145,8 @@ output separator to the given value.
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
  group-like having-fields head histogram join label merge-fields nest put
- regularize rename reorder reshape sample shuffle sec2gmt sort stats1 stats2
- step tac tail top uniq
+ regularize rename reorder repeat reshape sample shuffle sec2gmt sort stats1
+ stats2 step tac tail top uniq
 .fi
 .if n \{\
 .RE
@@ -845,6 +845,17 @@ Usage: mlr reorder [options]
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+.fi
+.if n \{\
+.RE
+.SS "repeat"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr repeat [options]
+-f {field name}    xxx put my description here please
+xxx describe me please.
 .fi
 .if n \{\
 .RE
