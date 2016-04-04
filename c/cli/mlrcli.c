@@ -45,6 +45,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_regularize_setup,
 	&mapper_rename_setup,
 	&mapper_reorder_setup,
+	&mapper_repeat_setup,
 	&mapper_reshape_setup,
 	&mapper_sample_setup,
 	&mapper_shuffle_setup,

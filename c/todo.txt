@@ -37,6 +37,9 @@ TOP-OF-LIST SUMMARY
 * dsls deps still not quite right?
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 
+! feature: stats1 weighted by count (or other) field?
+! feature: record-repeater w/ key field(s)?
+
 ================================================================
 * relcut material since 3.4.0:
   BIG:

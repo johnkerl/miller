@@ -26,6 +26,7 @@ extern mapper_setup_t mapper_put_setup;
 extern mapper_setup_t mapper_regularize_setup;
 extern mapper_setup_t mapper_rename_setup;
 extern mapper_setup_t mapper_reorder_setup;
+extern mapper_setup_t mapper_repeat_setup;
 extern mapper_setup_t mapper_reshape_setup;
 extern mapper_setup_t mapper_sample_setup;
 extern mapper_setup_t mapper_sec2gmt_setup;
