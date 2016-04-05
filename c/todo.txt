@@ -21,6 +21,8 @@ TOP-OF-LIST SUMMARY
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
+!! MLRTUT !!
+
 ! screencaps for README.md & cover !
 * paragraph filter: mlr --nidx --rs '\n\n' --fs '\001'  filter -x '$1 =~ "slls_from_line" && $1 =~ "mapper_reshape_parse_cli"'
 
@@ -79,6 +81,17 @@ UT:
 
 ----------------------------------------------------------------
 DOC:
+
+* non-indexed oosvar assignments w/ mlrval rhs
+* indexed oosvar assignmnts w/ mlrval rhs
+* emit variants; dump w/ caveat
+* begin/end blocks; put -q
+* assignments with oosvars on both sides; recursive
+* unset. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+* assignments with $* as RHS
+* assignments with $* as LHS
+
+---
 
 * oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
 * $*
