@@ -219,13 +219,13 @@ copyright</a>.
   <li/> Submit <tt>brew</tt> pull request; notify any other distros which don&rsquo;t appear to have autoupdated
     since the previous release.
 <pre>
-git remote add upstream https://github.com/Homebrew/homebrew # one-time setup only
+git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
 git fetch upstream
 git rebase upstream/master
 git checkout -b miller-3.4.0
 shasum -a 256 /path/to/mlr-3.4.0.tar.gz
-edit Library/Formula/miller.rb
-git add Library/Formula/miller.rb
+edit Formula/miller.rb
+git add Formula/miller.rb
 git commit -m 'miller 3.4.0'
 git push -u origin miller-3.4.0
 (submit the pull request)
