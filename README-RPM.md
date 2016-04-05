@@ -39,7 +39,7 @@ sudo yum install rpmlint
 
 ### Build source-RPM only
 ```
-rpmbuild -bs miller.spec
+rpmbuild -bs mlr.spec
 Wrote: /your/home/dir/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
 ```
 
