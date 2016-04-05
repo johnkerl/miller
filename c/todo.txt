@@ -1,23 +1,14 @@
 ================================================================
 BUGFIXES
 
-* leak:
-  vgrun mlr put -q '@s=$x; end{unset @s}' ./reg_test/input/unset1.dkvp
-
-* dig into neatener ...
-
-* json input:
+* leak @ json input:
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! feature: record-repeater w/ key field(s). UT & mld.
-! feature: stats1 weighted by count (or other) field?
-
-? make a 3.5.0 with nest, shuffle, put/filter -f, cat -n bugfix, etc.? after valgrinds ...
-* rh/fedora/centos mlr-3.4.0
+* rh/fedora/centos mlr-3.5.0
 
 * reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
 * neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
@@ -44,14 +35,12 @@ TOP-OF-LIST SUMMARY
 
 ================================================================
 * relcut material since 3.5.0:
-  BIG:
   - oosvars
   - begin/end
   - emit/all
   - unset/all
   - bare-boolean and pattern-action
-  SMALL:
-  - put -q
+  - put -q: equiv to putting 'filter false'
 
 ================================================================
 ~@ PRE4 @~
@@ -103,9 +92,6 @@ DOC:
 
 w subselector emits ... after syntax rework
 w basenaming syntax for subselector emits (once it exists!)
-
-* valgrind cleaner (iterate on):
-  mlr --nidx --rs '\n\n' --fs '\001' put -q '$1 =~ "^mlr" {@a=$1}; $1 =~ "by 0x"{@b=$1; @c=@a."\n".@b; emit @c}; ' vg.out
 
 ================================================================
 OOSVAR EXPERIMENTS:
