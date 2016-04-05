@@ -378,6 +378,7 @@ git fetch upstream
 git rebase upstream/master
 git checkout -b miller-3.4.0
 shasum -a 256 ../mlr-3.4.0.tar.gz
+edit Library/Formula/miller.rb
 git add ...
 git commit -m 'miller 3.4.0'
 git push -u origin miller-3.4.0
