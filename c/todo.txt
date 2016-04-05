@@ -50,8 +50,8 @@ TOP-OF-LIST SUMMARY
   - emit/all
   - unset/all
   - bare-boolean and pattern-action
-  SMALL:
   - put -q
+  SMALL:
   - nest
   - shuffle
   - repeat

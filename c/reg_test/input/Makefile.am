@@ -11,8 +11,8 @@ EXTRA_DIST=	\
 		braced.csv \
 		c.csv \
 		c.pprint \
-		capture.dkvp \
 		capture-lengths.dkvp \
+		capture.dkvp \
 		d.csv \
 		d.pprint \
 		date1.csv \
@@ -25,6 +25,7 @@ EXTRA_DIST=	\
 		env-var.dkvp \
 		f.csv \
 		f.pprint \
+		filter-example.dsl \
 		from-first.csv \
 		fsec2xhms \
 		g.csv \
@@ -32,40 +33,40 @@ EXTRA_DIST=	\
 		gmt2sec \
 		gsub.dat \
 		having-fields-regex.dkvp \
-		het.csv \
-		het.dkvp \
 		het-join-left \
 		het-join-right-r0 \
 		het-join-right-r1 \
-		het-join-right-r2 \
-		het-join-right-r3 \
-		het-join-right-r4 \
-		het-join-right-r5 \
-		het-join-right-r6 \
 		het-join-right-r11 \
 		het-join-right-r12 \
 		het-join-right-r13 \
 		het-join-right-r14 \
 		het-join-right-r15 \
 		het-join-right-r16 \
+		het-join-right-r2 \
 		het-join-right-r22 \
 		het-join-right-r23 \
 		het-join-right-r24 \
 		het-join-right-r25 \
 		het-join-right-r26 \
+		het-join-right-r3 \
 		het-join-right-r33 \
 		het-join-right-r34 \
 		het-join-right-r35 \
 		het-join-right-r36 \
+		het-join-right-r4 \
 		het-join-right-r44 \
 		het-join-right-r45 \
 		het-join-right-r46 \
+		het-join-right-r5 \
 		het-join-right-r55 \
 		het-join-right-r56 \
+		het-join-right-r6 \
 		het-join-right-r66 \
-		int64io.dkvp \
-		int64arith.dkvp \
+		het.csv \
+		het.dkvp \
 		int-float.dkvp \
+		int64arith.dkvp \
+		int64io.dkvp \
 		ints.dkvp \
 		join-het.dkvp \
 		joina.dkvp \
@@ -88,8 +89,8 @@ EXTRA_DIST=	\
 		multi-sep.csv \
 		multi-sep.dkvp \
 		near-ovf.dkvp \
-		nest-explode.dkvp \
 		nest-explode-vary-fs-ps.dkvp \
+		nest-explode.dkvp \
 		null-fields.csv \
 		null-fields.nidx \
 		null-vs-empty.dkvp \
@@ -102,6 +103,7 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.csvl \
 		page-aligned-no-final-irs.dkvp \
 		page-aligned-no-final-irs.nidx \
+		put-example.dsl \
 		regex.dkvp \
 		regularize.dkvp \
 		repeat-input.dat \
