@@ -104,6 +104,7 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.nidx \
 		regex.dkvp \
 		regularize.dkvp \
+		repeat-input.dat \
 		reshape-long-ragged.dkvp \
 		reshape-long.tbl \
 		reshape-wide-ragged.dkvp \
