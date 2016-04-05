@@ -82,29 +82,22 @@ UT:
 ----------------------------------------------------------------
 DOC:
 
+Out-of-stream variables for put
 * non-indexed oosvar assignments w/ mlrval rhs
-* indexed oosvar assignmnts w/ mlrval rhs
-* emit variants; dump w/ caveat
-* begin/end blocks; put -q
+  o emit example; emitf example; dump example w/ caveat; emit all
+  o begin/end blocks; put -q
+  * unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+Index out-of-stream variables for put
+* indexed oosvar assignments w/ mlrval rhs
+  o emit example; dump example
+  o side-by-side pasting:
+    mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
+  o note difference between mlhmmv and single-level lrec
+  o emit vs. emitp example
+  * unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+More out-of-stream variable assignments for put
 * assignments with oosvars on both sides; recursive
-* unset. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
-* assignments with $* as RHS
-* assignments with $* as LHS
-
----
-
-* oosvar-to-oosvar assignments (w&w/o subselectors) with treecopy
-* $*
-* emit, multi-emit, emit-all @ test-mlhmmv.  note rhs="" vs. remove key. unset is latter since rhs="" does former.
-  cf cut -x.
-* unset, multi-unset, unset-all @ test-mlhmmv
-* += et al.
-* horizontality of emits
-* side-by-side pasting:
-  mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
-
-w subselector emits ... after syntax rework
-w basenaming syntax for subselector emits (once it exists!)
+* assignments with $* as RHS; assignments with $* as LHS
 
 ================================================================
 OOSVAR EXPERIMENTS:
