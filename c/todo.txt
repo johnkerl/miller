@@ -4,11 +4,10 @@ BUGFIXES
 * leak:
   vgrun mlr put -q '@s=$x; end{unset @s}' ./reg_test/input/unset1.dkvp
 
-* put: syntax error on DSL parse of '@s=$x; true {unset @s}'
-
 * dig into neatener ...
 
 * json input:
+
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
 ================================================================
