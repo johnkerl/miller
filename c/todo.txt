@@ -8,6 +8,9 @@ BUGFIXES
 
 * dig into neatener ...
 
+* json input:
+  vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
+
 ================================================================
 TOP-OF-LIST SUMMARY
 

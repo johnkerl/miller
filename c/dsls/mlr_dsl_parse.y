@@ -127,6 +127,7 @@ md_cond_block_statement ::= md_cond_block_srec_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_from_full_srec_assignment.
 md_cond_block_statement ::= md_cond_block_full_srec_from_oosvar_assignment.
+md_cond_block_statement ::= md_cond_block_unset.
 md_cond_block_statement ::= md_cond_block_emitf.
 md_cond_block_statement ::= md_cond_block_emitp.
 md_cond_block_statement ::= md_cond_block_emit.
@@ -236,6 +237,9 @@ md_cond_block_oosvar_from_full_srec_assignment(A) ::= md_oosvar_from_full_srec_a
 	A = B;
 }
 md_cond_block_full_srec_from_oosvar_assignment(A) ::= md_full_srec_from_oosvar_assignment(B). {
+	A = B;
+}
+md_cond_block_unset(A) ::= md_unset(B). {
 	A = B;
 }
 md_cond_block_emitf(A) ::= md_emitf(B). {
