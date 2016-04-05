@@ -174,6 +174,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#repeat">repeat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reshape">reshape</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sample">sample</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmt">sec2gmt</a><br/>
@@ -2544,6 +2545,80 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 </div>
 <p/>
 </td></tr></table>
+
+<!-- ================================================================ -->
+<a id="repeat"/><h2>repeat</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr repeat --help
+Usage: mlr repeat [options]
+Copies input records to output records multiple times.
+Options must be exactly one of the following:
+  -n {repeat count}  Repeat each input record this many times.
+  -f {field name}    Same, but take the repeat count from the specified
+                     field name of each input record.
+Example:
+  echo x=0 | mlr repeat -n 4 then put '$x=urand()'
+produces:
+ x=0.488189
+ x=0.484973
+ x=0.704983
+ x=0.147311
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f b
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f c
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+</pre>
+</div>
+<p/>
+
+<p>This is useful in at least two ways: one, as a data-generator as in the
+above example using <tt>urand()</tt>; two, for reconstructing individual
+samples from data which has been count-aggregated:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/repeat-example.dat
+color=blue,count=5
+color=red,count=4
+color=green,count=3
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr repeat -f count then cut -x -f count data/repeat-example.dat
+color=blue
+color=blue
+color=blue
+color=blue
+color=blue
+color=red
+color=red
+color=red
+color=red
+color=green
+color=green
+color=green
+</pre>
+</div>
+<p/>
+
+<p>After expansion with <tt>repeat</tt>, such data can then be sent on to
+<tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
+p10,p50,p90</tt>, etc.
 
 <!-- ================================================================ -->
 <a id="reshape"/><h2>reshape</h2>

@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-04-04
+.\"      Date: 2016-04-05
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-04-04" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-04-05" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -855,9 +855,28 @@ mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
 .nf
 Usage: mlr repeat [options]
 Copies input records to output records multiple times.
--n {repeat count}  Repeat each input record this many times.
--f {field name}    Same, but take the repeat count from the specified field name
-                   of each input record.
+Options must be exactly one of the following:
+  -n {repeat count}  Repeat each input record this many times.
+  -f {field name}    Same, but take the repeat count from the specified
+                     field name of each input record.
+Example:
+  echo x=0 | mlr repeat -n 4 then put '$x=urand()'
+produces:
+ x=0.488189
+ x=0.484973
+ x=0.704983
+ x=0.147311
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f b
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f c
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+  a=1,b=2,c=3
 .fi
 .if n \{\
 .RE

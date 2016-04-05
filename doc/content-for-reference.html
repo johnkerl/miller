@@ -765,6 +765,23 @@ POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
 </td></tr></table>
 
 <!-- ================================================================ -->
+<h2>repeat</h2>
+
+POKI_RUN_COMMAND{{mlr repeat --help}}HERE
+
+<p>This is useful in at least two ways: one, as a data-generator as in the
+above example using <tt>urand()</tt>; two, for reconstructing individual
+samples from data which has been count-aggregated:
+
+POKI_RUN_COMMAND{{cat data/repeat-example.dat}}HERE
+
+POKI_RUN_COMMAND{{mlr repeat -f count then cut -x -f count data/repeat-example.dat}}HERE
+
+<p>After expansion with <tt>repeat</tt>, such data can then be sent on to
+<tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
+p10,p50,p90</tt>, etc.
+
+<!-- ================================================================ -->
 <h2>reshape</h2>
 
 POKI_RUN_COMMAND{{mlr reshape --help}}HERE

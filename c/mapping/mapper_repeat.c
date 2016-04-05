@@ -10,9 +10,6 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-// xxx under construction
-// xxx implement repeat -n 10 as well
-
 typedef enum _repeat_type_t {
 	BY_COUNT,
 	BY_FIELD_NAME,
@@ -43,9 +40,28 @@ mapper_setup_t mapper_repeat_setup = {
 static void mapper_repeat_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Copies input records to output records multiple times.\n");
-	fprintf(o, "-n {repeat count}  Repeat each input record this many times.\n");
-	fprintf(o, "-f {field name}    Same, but take the repeat count from the specified field name\n");
-	fprintf(o, "                   of each input record.\n");
+	fprintf(o, "Options must be exactly one of the following:\n");
+	fprintf(o, "  -n {repeat count}  Repeat each input record this many times.\n");
+	fprintf(o, "  -f {field name}    Same, but take the repeat count from the specified\n");
+	fprintf(o, "                     field name of each input record.\n");
+	fprintf(o, "Example:\n");
+	fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", argv0, verb);
+	fprintf(o, "produces:\n");
+	fprintf(o, " x=0.488189\n");
+	fprintf(o, " x=0.484973\n");
+	fprintf(o, " x=0.704983\n");
+	fprintf(o, " x=0.147311\n");
+	fprintf(o, "Example:\n");
+	fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", argv0, verb);
+	fprintf(o, "produces:\n");
+	fprintf(o, "  a=1,b=2,c=3\n");
+	fprintf(o, "  a=1,b=2,c=3\n");
+	fprintf(o, "Example:\n");
+	fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", argv0, verb);
+	fprintf(o, "produces:\n");
+	fprintf(o, "  a=1,b=2,c=3\n");
+	fprintf(o, "  a=1,b=2,c=3\n");
+	fprintf(o, "  a=1,b=2,c=3\n");
 }
 
 static const long long UNINIT_REPEAT_COUNT = -123457689LL;
