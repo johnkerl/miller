@@ -43,23 +43,15 @@ TOP-OF-LIST SUMMARY
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 
 ================================================================
-* relcut material since 3.4.0:
+* relcut material since 3.5.0:
   BIG:
   - oosvars
   - begin/end
   - emit/all
   - unset/all
   - bare-boolean and pattern-action
-  - put -q
   SMALL:
-  - nest
-  - shuffle
-  - repeat
-  - put -f / filter -f
-  - \t \" et al. in DSL string literals
-  - typeof
-  - --nr-progress-mod
-  - cat -n bugfix
+  - put -q
 
 ================================================================
 ~@ PRE4 @~
