@@ -711,6 +711,121 @@ be executed. Instead, subsequent assignments are done unconditionally:
 POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
 
+<h3>Out-of-stream variables for put</h3>
+
+There are three kinds of variables in Miller:
+
+<p/> <b>Built-in variables</b>:
+
+<ul>
+
+<li/>These are written all in capital letters, such as <tt>NR</tt>,
+<tt>NF</tt>, <tt>FILENAME</tt>.
+
+<li/> Their values change from one record to the next as Miller scans through
+your input data stream: <tt>NR</tt> is the count of records so far encountered
+in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
+current input record; <tt>FILENAME</tt> is the current file name; and so on as
+detailed above.
+
+<li/> These are read-only for the <tt>mlr put</tt> DSL: they may be assigned
+from, e.g. <tt>'$nr=NR'</tt>, but they may not be assigned to: <tt>NR=100</tt>
+is a syntax error.
+
+<li/> You can output built-in variables indirectly, by assigning them to a
+non-built-in variable: e.g. <tt>'$nr = NR'</tt> adds a field named <tt>nr</tt>
+to each output record, containing the value of <tt>NR</tt> as of when that
+record was processed.
+
+</ul>
+
+<p/><b>Fields within stream records</b>:
+
+<ul>
+
+<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
+<tt>$hostname</tt>, etc.
+
+<li/> Their names depend on the contents of your input data stream, and their
+values change from one record to the next as Miller scans through your input
+data stream.
+
+<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.  
+
+<li/> Records are Miller&rsquo;s output: field names present in the input
+stream are passed through to output (written to standard output) unless fields
+are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt>,
+etc. Just assign a field and it will be output.
+
+</ul>
+
+<b>Out-of-stream variables</b>:
+
+<ul>
+
+<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do
+<tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or
+<tt>@sum[$color][$shape] += $quanity</tt>. The keys for the multi-level hashmap can be any expression
+which evaluates to string or integer: e.g.
+<tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<li/> Their names and their values are entirely under your control; they change only when you assign to them.
+
+<li/> These are read-write: you can do
+<tt>$sum=@sum</tt>,
+<tt>@sum=$sum</tt>, etc.
+
+<li/> You can output these in three ways: (1) Assign them to stream-record fields, e.g.
+<tt>$cumulative_sum = @sum</tt>; (2) Use <tt>emit</tt>, e.g.
+<tt>@sum += $x; emit @sum</tt> which produces an extra output record such as <tt>sum=3.1648382</tt>;
+(3) Use the <tt>dump</tt> keyword, which immediately prints all out-of-stream variables to the standard
+output as a JSON data structure. Note that these aren&rsquo;t output records which participate in
+<tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to stdout.
+
+</ul>
+
+<h3>Begin/end blocks for put</h3>
+
+<p/>xxx to do:
+
+<p/>* non-indexed oosvar assignments w/ mlrval rhs
+
+  <p/>o emit example; emitf example; dump example w/ caveat; emit all
+
+  <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+
+  <p/>o begin/end blocks; put -q
+
+<h3>Indexed out-of-stream variables for put</h3>
+
+<p/>xxx to do:
+
+<p/>* indexed oosvar assignments w/ mlrval rhs
+
+  <p/>o emit example; dump example
+
+  <p/>o side-by-side pasting:
+
+    <p/>mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
+
+  <p/>o note difference between mlhmmv and single-level lrec
+
+  <p/>o emit vs. emitp example
+
+  <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+
+<h3>More out-of-stream variable assignments for put</h3>
+
+<p/>xxx to do:
+
+<p/>* assignments with oosvars on both sides; recursive
+
+<p/>* assignments with $* as RHS; assignments with $* as LHS
+
 <!-- ================================================================ -->
 <h2>regularize</h2>
 
