@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+ARGV.shift
+cmd = "valgrind --leak-check=full mlrg"
+ARGV.each do |arg|
+    cmd += " '#{arg}'"
+end
+cmd += " 2>&1 1> /dev/null | tools/clean-valgrind-output"
+puts cmd
+system(cmd)

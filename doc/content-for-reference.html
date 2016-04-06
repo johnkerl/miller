@@ -337,7 +337,7 @@ POKI_RUN_COMMAND{{mlr bootstrap --help}}HERE
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp 
+$ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
 color  u_mean   u_count
 yellow 0.497129 1413
 red    0.492560 4641
@@ -346,7 +346,7 @@ green  0.504861 1109
 blue   0.517717 1470
 orange 0.490532 303
 
-$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp 
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
 color  u_mean   u_count
 yellow 0.500651 1380
 purple 0.501556 1111
@@ -355,7 +355,7 @@ red    0.493895 4702
 blue   0.512529 1496
 orange 0.521030 321
 
-$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp 
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
 color  u_mean   u_count
 yellow 0.498046 1485
 blue   0.513576 1417
@@ -364,7 +364,7 @@ orange 0.507697 307
 green  0.496803 1075
 purple 0.486337 1199
 
-$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp 
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
 color  u_mean   u_count
 blue   0.522921 1447
 red    0.490717 4617
@@ -689,6 +689,87 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 POKI_INCLUDE_ESCAPED(data/put-multiline-example.txt)HERE
 
+<h3>Out-of-stream variables for put</h3>
+
+There are three kinds of variables in Miller:
+
+<p/> <b>Built-in variables</b>, as discussed above:
+
+<ul>
+
+<li/>These are written all in capital letters, such as <tt>NR</tt>,
+<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
+defined by Miller.
+
+<li/> Their values change from one record to the next as Miller scans through
+your input data stream: <tt>NR</tt> is the count of records so far encountered
+in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
+current input record; <tt>FILENAME</tt> is the current file name; and so on as
+detailed above.
+
+<li/> These are read-only for the <tt>mlr put</tt> DSL: they may be assigned
+from, e.g. <tt>$nr=NR</tt>, but they may not be assigned to: <tt>NR=100</tt>
+is a syntax error.
+
+<li/> You can output built-in variables indirectly, by assigning them to a
+non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt>
+to each output record, containing the value of <tt>NR</tt> as of when that
+record was processed.
+
+</ul>
+
+<p/><b>Fields within stream records</b>, as discussed above:
+
+<ul>
+
+<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
+<tt>$hostname</tt>, etc.
+
+<li/> Their names depend on the contents of your input data stream, and their
+values change from one record to the next as Miller scans through your input
+data stream.
+
+<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.
+
+<li/> Records are Miller&rsquo;s output: field names present in the input
+stream are passed through to output (written to standard output) unless fields
+are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt>,
+etc. Just assign a field and it will be output.
+
+</ul>
+
+<b>Out-of-stream variables</b>, presented here:
+
+<ul>
+
+<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
+$quanity</tt>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<li/> Their names and their values are entirely under your control; they change
+only when you assign to them.
+
+<li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+etc.
+
+<li/> You can output these in three ways: (1) Assign them to stream-record
+fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) Use <tt>emit</tt>, e.g.
+<tt>@sum += $x; emit @sum</tt> which produces an extra output record such as
+<tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt> keyword, which immediately
+prints all out-of-stream variables to the standard output as a JSON data
+structure. Note that these aren&rsquo;t output records which participate in
+<tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to
+stdout.
+
+</ul>
+
+<p/>Features of out-of-stream variables, and examples of their use, will be
+presented in the following sections.
+
 <h3>Pattern-action blocks for put</h3>
 
 <p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
@@ -711,106 +792,65 @@ be executed. Instead, subsequent assignments are done unconditionally:
 POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
 
-<h3>Out-of-stream variables for put</h3>
-
-There are three kinds of variables in Miller:
-
-<p/> <b>Built-in variables</b>:
-
-<ul>
-
-<li/>These are written all in capital letters, such as <tt>NR</tt>,
-<tt>NF</tt>, <tt>FILENAME</tt>.
-
-<li/> Their values change from one record to the next as Miller scans through
-your input data stream: <tt>NR</tt> is the count of records so far encountered
-in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
-current input record; <tt>FILENAME</tt> is the current file name; and so on as
-detailed above.
-
-<li/> These are read-only for the <tt>mlr put</tt> DSL: they may be assigned
-from, e.g. <tt>'$nr=NR'</tt>, but they may not be assigned to: <tt>NR=100</tt>
-is a syntax error.
-
-<li/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>'$nr = NR'</tt> adds a field named <tt>nr</tt>
-to each output record, containing the value of <tt>NR</tt> as of when that
-record was processed.
-
-</ul>
-
-<p/><b>Fields within stream records</b>:
-
-<ul>
-
-<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
-<tt>$hostname</tt>, etc.
-
-<li/> Their names depend on the contents of your input data stream, and their
-values change from one record to the next as Miller scans through your input
-data stream.
-
-<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.  
-
-<li/> Records are Miller&rsquo;s output: field names present in the input
-stream are passed through to output (written to standard output) unless fields
-are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt>,
-etc. Just assign a field and it will be output.
-
-</ul>
-
-<b>Out-of-stream variables</b>:
-
-<ul>
-
-<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
-unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do
-<tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or
-<tt>@sum[$color][$shape] += $quanity</tt>. The keys for the multi-level hashmap can be any expression
-which evaluates to string or integer: e.g.
-<tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
-
-<li/> Their names and their values are entirely under your control; they change only when you assign to them.
-
-<li/> These are read-write: you can do
-<tt>$sum=@sum</tt>,
-<tt>@sum=$sum</tt>, etc.
-
-<li/> You can output these in three ways: (1) Assign them to stream-record fields, e.g.
-<tt>$cumulative_sum = @sum</tt>; (2) Use <tt>emit</tt>, e.g.
-<tt>@sum += $x; emit @sum</tt> which produces an extra output record such as <tt>sum=3.1648382</tt>;
-(3) Use the <tt>dump</tt> keyword, which immediately prints all out-of-stream variables to the standard
-output as a JSON data structure. Note that these aren&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to stdout.
-
-</ul>
-
 <h3>Begin/end blocks for put</h3>
+
+<p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
+statements in the <tt>begin</tt> block are executed before any input records
+are read; the statements in the <tt>end</tt> block are executed after the last
+input record is read.  For example:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)HERE
+
+<p/>Since uninitialized out-of-stream variables default to 0 for
+addition/substraction and 1 for multiplication when they appear on expression
+right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly as
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)HERE
+
+<p/>The <b>put -q</b> option is a shorthand which suppresses printing of each output record, with only <tt>emit</tt> statements being output. So to get only summary outputs, one could write
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)HERE
+
+<p/>We can do similarly with other variables:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)HERE
+
+This is of course not much different than
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
+
+<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
+<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
+
+The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+frequently-used patterns with a minimum of keystroking (and run a little
+faster), whereas using out-of-stream variables you have more flexibility and
+control in what you do. <b>Out-of-stream variables, along with pattern/action
+blocks and begin/end blocks, give you flexibility in what you can do with
+Miller.</b>
+
+<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
 <p/>xxx to do:
 
-<p/>* non-indexed oosvar assignments w/ mlrval rhs
+<p/> emit variants
+
+<p/> xxx we&rsquo;ve already seen above; define / exemplify ...
 
   <p/>o emit example; emitf example; dump example w/ caveat; emit all
 
   <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
 
-  <p/>o begin/end blocks; put -q
-
-<h3>Indexed out-of-stream variables for put</h3>
-
 <p/>xxx to do:
 
-<p/>* indexed oosvar assignments w/ mlrval rhs
+  <p/>xxx side-by-side pasting:
 
-  <p/>o emit example; dump example
-
-  <p/>o side-by-side pasting:
-
-    <p/>mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
+    <p/>mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het
 
   <p/>o note difference between mlhmmv and single-level lrec
 
