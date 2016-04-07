@@ -57,6 +57,9 @@ IMPLEMENT:
 
 > do more oosvar experiments before finalizing mlr4
 
+* ispresent/isabsent? redo isnotnull -> ispresent in mld:oosvar bit
+* isinit/isuninit?
+
 ----------------------------------------------------------------
 HYG:
 
