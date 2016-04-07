@@ -173,7 +173,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_out-of-stream_variable_assignments_for_put">More out-of-stream variable assignments for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -2303,6 +2303,34 @@ in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
 current input record; <tt>FILENAME</tt> is the current file name; and so on as
 detailed above.
 
+<li/> Their scope is global: you can refer to them in any <tt>filter</tt>
+or <tt>put</tt> statement. Their values are assigned by the input-record reader:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+4,5,6,2
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+1,2,3,1
+1,2,3,1
+4,5,6,2
+4,5,6,2
+4,5,6,2
+</pre>
+</div>
+<p/>
+
 <li/> These are read-only for the <tt>mlr put</tt> DSL: they may be assigned
 from, e.g. <tt>$nr=NR</tt>, but they may not be assigned to: <tt>NR=100</tt>
 is a syntax error.
@@ -2324,6 +2352,9 @@ record was processed.
 <li/> Their names depend on the contents of your input data stream, and their
 values change from one record to the next as Miller scans through your input
 data stream.
+
+<li/> They are scoped to the current record of the <tt>filter</tt> or
+<tt>put</tt> command in which they appear.
 
 <li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.
 
@@ -2349,6 +2380,17 @@ evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
 <li/> Their names and their values are entirely under your control; they change
 only when you assign to them.
 
+<li/> They are scoped to the <tt>put</tt> command in which they appear.
+In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
+each put will have its own set of out-of-stream variables:
+
+<!--
+xxx fix me
+PxKI_RUN_COMMAND{{mlr -x-csv cat data/a.csv}}HERE
+PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' data/a.csv}}HERE
+PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum += $a; end {emit @sum}' data/a.csv}}HERE
+-->
+
 <li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
 
@@ -2360,6 +2402,8 @@ prints all out-of-stream variables to the standard output as a JSON data
 structure. Note that these aren&rsquo;t output records which participate in
 <tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to
 stdout.
+
+<li/> xxx scope to single put; what if two plus
 
 </ul>
 
@@ -2453,7 +2497,8 @@ a=xyz_789,b=left_xyz,c=right_789
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
 statements in the <tt>begin</tt> block are executed before any input records
 are read; the statements in the <tt>end</tt> block are executed after the last
-input record is read.  For example:
+input record is read.  All other statements are, of course, executed on every
+input record. For example:
 
 <p/>
 <div class="pokipanel">
@@ -2646,7 +2691,7 @@ num_total=5,num_positive=3
 
   <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
 
-<a id="More_out-of-stream_variable_assignments_for_put"/><h3>More out-of-stream variable assignments for put</h3>
+<a id="More_variable_assignments_for_put"/><h3>More variable assignments for put</h3>
 
 <p/>xxx to do:
 
