@@ -327,6 +327,10 @@ Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
                      urand()/urandint()/urand32().
   --nr-progress-mod {m}, with m a positive integer: print filename and record
                      count to stderr every m input records.
+  --from {filename}  Use this to specify an input file before the verb(s),
+                     rather than after. May be used more than once. Example:
+                     "mlr --from a.dat --from b.dat cat" is the same as
+                     "mlr cat a.dat b.dat".
 .fi
 .if n \{\
 .RE

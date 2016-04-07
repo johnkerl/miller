@@ -505,6 +505,10 @@ Other options:
                      urand()/urandint()/urand32().
   --nr-progress-mod {m}, with m a positive integer: print filename and record
                      count to stderr every m input records.
+  --from {filename}  Use this to specify an input file before the verb(s),
+                     rather than after. May be used more than once. Example:
+                     "mlr --from a.dat --from b.dat cat" is the same as
+                     "mlr cat a.dat b.dat".
 
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.
@@ -2385,6 +2389,7 @@ In particular, if you have two or more <tt>put</tt> commands separated by <tt>th
 each put will have its own set of out-of-stream variables:
 
 <!--
+xxx begin-block at start of each file: use pattern/action with NR==0
 xxx += et al. ??
 xxx semicolon as stt sep
 xxx fix me

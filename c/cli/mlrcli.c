@@ -460,6 +460,10 @@ static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "                     urand()/urandint()/urand32().\n");
 	fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n");
 	fprintf(o, "                     count to stderr every m input records.\n");
+	fprintf(o, "  --from {filename}  Use this to specify an input file before the verb(s),\n");
+	fprintf(o, "                     rather than after. May be used more than once. Example:\n");
+	fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0);
+	fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {
@@ -704,6 +708,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--usage-see-also")) {
 			main_usage_see_also(stdout, argv[0]);
 			exit(0);
+
+		} else if (streq(argv[argi], "--from")) {
+			check_arg_count(argv, argi, argc, 2);
+			slls_append(popts->filenames, argv[argi+1], NO_FREE);
+			argi++;
 
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
