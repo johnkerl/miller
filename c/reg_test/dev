@@ -68,9 +68,58 @@ announce ABSENT-HANDLING
 
 run_mlr put '$a = $a * 2' <<EOF
 a=1,b=2
-a=3,b=4
-a=,b=6
-x=7,b=8
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put '$new = $a * 2' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put '$new = @nonesuch * 2' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put '$new = @nonesuch * $a' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put '@sum = @sum + $a; emit @sum' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put '@product = @product * $a; emit @product' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put 'begin { @sum = 10 }; @sum = @sum + $a; emit @sum' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
+EOF
+
+run_mlr put 'begin { @product = 10 }; @product = @product * $a; emit @product' <<EOF
+a=1,b=2
+a=,b=4
+x=,b=6
+a=7,b=8
 EOF
 
 # ================================================================

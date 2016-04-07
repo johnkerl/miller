@@ -4,7 +4,65 @@ ABSENT-HANDLING
 
 mlr put $a = $a * 2
 a=2,b=2
-a=6,b=4
-a=,b=6
-x=7,b=8,a=2
+a=,b=4
+x=,b=6,a=2
+a=14,b=8
+
+mlr put $new = $a * 2
+a=1,b=2,new=2
+a=,b=4,new=
+x=,b=6,new=2
+a=7,b=8,new=14
+
+mlr put $new = @nonesuch * 2
+a=1,b=2,new=2
+a=,b=4,new=2
+x=,b=6,new=2
+a=7,b=8,new=2
+
+mlr put $new = @nonesuch * $a
+a=1,b=2,new=1
+a=,b=4,new=
+x=,b=6,new=
+a=7,b=8,new=7
+
+mlr put @sum = @sum + $a; emit @sum
+sum=1
+a=1,b=2
+sum=
+a=,b=4
+sum=
+x=,b=6
+sum=
+a=7,b=8
+
+mlr put @product = @product * $a; emit @product
+product=1
+a=1,b=2
+product=
+a=,b=4
+product=
+x=,b=6
+product=
+a=7,b=8
+
+mlr put begin { @sum = 10 }; @sum = @sum + $a; emit @sum
+sum=11
+a=1,b=2
+sum=
+a=,b=4
+sum=
+x=,b=6
+sum=
+a=7,b=8
+
+mlr put begin { @product = 10 }; @product = @product * $a; emit @product
+product=10
+a=1,b=2
+product=
+a=,b=4
+product=
+x=,b=6
+product=
+a=7,b=8
 
