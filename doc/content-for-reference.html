@@ -766,27 +766,8 @@ only when you assign to them.
 In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
 each put will have its own set of out-of-stream variables:
 
-<!--
-xxx begin-block at start of each file: use pattern/action with NR==0
-xxx += et al. ??
-xxx semicolon as stt sep
-xxx fix me
-PxKI_RUN_COMMAND{{mlr -x-csv cat data/a.csv}}HERE
-PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' data/a.csv}}HERE
-PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum += $a; end {emit @sum}' data/a.csv}}HERE
-
-mlr put '@sum1 += $a; @a=$a;dump;emit all' then put '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
-mlr put '@sum1 += $a; @a=$a;dump' then put '$a=10*$a; @sum2 += $a; @a=$a;dump' data/a.dkvp
-mlr put -q '@sum1 += $a; @a=$a;dump;emit all' then put '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
-mlr put -q '@sum1 += $a; @a=$a;dump;emit all' then put -q '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
-mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum += $a; end {emit @sum}' data/a.dkvp
-mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
-mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
-mlr put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
-mlr put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum += $a; end {emit @sum}' data/a.dkvp
-
-
--->
+POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'isnotnull($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
 
 <li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
@@ -799,8 +780,6 @@ prints all out-of-stream variables to the standard output as a JSON data
 structure. Note that these aren&rsquo;t output records which participate in
 <tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to
 stdout.
-
-<li/> xxx scope to single put; what if two plus
 
 </ul>
 
@@ -834,28 +813,36 @@ POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "righ
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
 statements in the <tt>begin</tt> block are executed before any input records
 are read; the statements in the <tt>end</tt> block are executed after the last
-input record is read.  All other statements are, of course, executed on every
-input record. For example:
+input record is read.  (If you want to execute some statement at the start of
+each file, not at the start of the first file as with <tt>begin</tt>, you might
+use a pattern/action block of the form <tt>NR == 0 { ... }</tt>.) All
+statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
+on every input record. For example:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)HERE
 
 <p/>Since uninitialized out-of-stream variables default to 0 for
 addition/substraction and 1 for multiplication when they appear on expression
-right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly as
+right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly
+as
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)HERE
 
-<p/>The <b>put -q</b> option is a shorthand which suppresses printing of each output record, with only <tt>emit</tt> statements being output. So to get only summary outputs, one could write
+<p/>The <b>put -q</b> option is a shorthand which suppresses printing of each
+output record, with only <tt>emit</tt> statements being output. So to get only
+summary outputs, one could write
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)HERE
 
-<p/>We can do similarly with other variables:
+<p/>We can do similarly with multiple out-of-stream variables:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)HERE
 
 This is of course not much different than
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
+
+<h3>Indexed out-of-stream variables for put</h3>
 
 <p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
 <tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
@@ -874,9 +861,9 @@ Miller.</b>
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
-<p/>xxx to do:
+<h3>Emit statements for put</h3>
 
-<p/> emit variants
+<p/>xxx to do: emit variants
 
 <p/> xxx we&rsquo;ve already seen above; define / exemplify ...
 
