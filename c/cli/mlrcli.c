@@ -608,7 +608,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer      = NULL;
 
 	popts->prepipe           = NULL;
-	popts->filenames         = NULL;
+	popts->filenames         = slls_alloc();
 
 	popts->ifile_fmt         = "dkvp";
 	popts->ofile_fmt         = "dkvp";
@@ -990,10 +990,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		argi++;
 	}
 
-	popts->filenames = &argv[argi];
+	for ( ; argi < argc; argi++) {
+		slls_append(popts->filenames, argv[argi], NO_FREE);
+	}
 
 	// No filenames means read from standard input, and standard input cannot be mmapped.
-	if (argi == argc)
+	if (popts->filenames->length == 0)
 		popts->use_mmap_for_read = FALSE;
 
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,

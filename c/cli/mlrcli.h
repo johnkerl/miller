@@ -5,6 +5,7 @@
 #ifndef MLRCLI_H
 #define MLRCLI_H
 
+#include "containers/slls.h"
 #include "containers/sllv.h"
 #include "cli/quoting.h"
 #include "containers/lhmsi.h"
@@ -50,8 +51,8 @@ typedef struct _cli_opts_t {
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
 	// files are read directly rather than through a pipe.
 	char*  prepipe;
-	// Null-terminated array:
-	char** filenames;
+
+	slls_t* filenames;
 
 } cli_opts_t;
 

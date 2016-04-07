@@ -24,7 +24,7 @@ static void null_progress_indicator(context_t* pctx, long long nr_progress_mod);
 static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
+int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
 	lrec_writer_t* plrec_writer, char* ofmt, long long nr_progress_mod)
 {
 	FILE* output_stream = stdout;
@@ -37,18 +37,19 @@ int do_stream_chained(char* prepipe, char** filenames, lrec_reader_t* plrec_read
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
 	int ok = 1;
-	if (*filenames == NULL) {
+	if (filenames->length == 0) {
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
 		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream,
 			nr_progress_mod) && ok;
 	} else {
-		for (char** pfilename = filenames; *pfilename != NULL; pfilename++) {
+		for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
+			char* filename = pe->value;
 			ctx.filenum++;
-			ctx.filename = *pfilename;
+			ctx.filename = filename;
 			ctx.fnr = 0;
-			ok = do_file_chained(prepipe, *pfilename, &ctx, plrec_reader, pmapper_list,
+			ok = do_file_chained(prepipe, filename, &ctx, plrec_reader, pmapper_list,
 				plrec_writer, output_stream, nr_progress_mod) && ok;
 		}
 	}

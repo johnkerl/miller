@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	lrec_reader_t* plrec_reader = popts->plrec_reader;
 	sllv_t*        pmapper_list = popts->pmapper_list;
 	lrec_writer_t* plrec_writer = popts->plrec_writer;
-	char**         filenames    = popts->filenames;
+	slls_t*        filenames    = popts->filenames;
 
 	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, popts->ofmt,
 		popts->nr_progress_mod);

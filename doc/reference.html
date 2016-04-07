@@ -2385,10 +2385,24 @@ In particular, if you have two or more <tt>put</tt> commands separated by <tt>th
 each put will have its own set of out-of-stream variables:
 
 <!--
+xxx += et al. ??
+xxx semicolon as stt sep
 xxx fix me
 PxKI_RUN_COMMAND{{mlr -x-csv cat data/a.csv}}HERE
 PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' data/a.csv}}HERE
 PxKI_RUN_COMMAND{{mlr -x-csv put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum += $a; end {emit @sum}' data/a.csv}}HERE
+
+mlr put '@sum1 += $a; @a=$a;dump;emit all' then put '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
+mlr put '@sum1 += $a; @a=$a;dump' then put '$a=10*$a; @sum2 += $a; @a=$a;dump' data/a.dkvp
+mlr put -q '@sum1 += $a; @a=$a;dump;emit all' then put '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
+mlr put -q '@sum1 += $a; @a=$a;dump;emit all' then put -q '$a=10*$a; @sum2 += $a; @a=$a;dump;emit all' data/a.dkvp
+mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum += $a; end {emit @sum}' data/a.dkvp
+mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
+mlr put -q '@sum += $a; end {emit @sum}' then put -q '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
+mlr put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum2 += $a; end {emit @sum2}' data/a.dkvp
+mlr put '@sum += $a; end {emit @sum}' then put '$a=10*$a; @sum += $a; end {emit @sum}' data/a.dkvp
+
+
 -->
 
 <li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
