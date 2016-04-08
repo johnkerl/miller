@@ -175,6 +175,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
@@ -2747,33 +2749,485 @@ num_total=5,num_positive=3
 
 <a id="Emit_statements_for_put"/><h3>Emit statements for put</h3>
 
-<p/>xxx to do: emit variants
+<p/>As noted above, there are three ways to output out-of-stream variables:
+(1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
+(2) Use <tt>emit</tt>, e.g.  <tt>@sum += $x; emit @sum</tt> which produces an
+extra output record such as <tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt>
+keyword, which immediately prints all out-of-stream variables to the standard
+output as a JSON data structure. Note that these aren&rsquo;t output records
+which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just an
+immediate print to stdout. This section is about <tt>emit</tt>.
 
-<p/> xxx we&rsquo;ve already seen above; define / exemplify ...
+<p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
+<tt>emitp</tt>. Keep in mind that out-of-stream variables are a nested,
+multi-level hashmap (directly viewable as JSON using <tt>dump</tt>), whereas
+Miller output records are lists of single-level key-value pairs. The three emit
+variants allow you to control how the multilevel hashmaps are flatten down to
+output records.
 
-  <p/>o emit example; emitf example; dump example w/ caveat; emit all
+<p/>Use <b>emitf</b> to output several out-of-stream variables side-by-side in the same output record.
+For <tt>emitf</tt> these mustn&rsquo;t have indexing using <tt>@name[...]</tt>. Example:
 
-  <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
+count=5,x_sum=2.264762,y_sum=2.585086
+</pre>
+</div>
+<p/>
 
-<p/>xxx to do:
+<p/>Use <b>emit</b> to output an out-of-stream variable. If it&rsquo;s non-indexed you&rsquo;ll get a simple key-value pair:
 
-  <p/>xxx side-by-side pasting:
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum += $x; end { dump }' data/small
+{
+  "sum": 2.264762
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum += $x; end { emit @sum }' data/small
+sum=2.264762
+</pre>
+</div>
+<p/>
 
-    <p/>mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het
+<p/>If it&rsquo;s indexed then use as many names after <tt>emit</tt> as there are indices:
 
-  <p/>o note difference between mlhmmv and single-level lrec
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": 0.346790,
+    "eks": 1.140079,
+    "wye": 0.777892
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
+a=pan,sum=0.346790
+a=eks,sum=1.140079
+a=wye,sum=0.777892
+</pre>
+</div>
+<p/>
 
-  <p/>o emit vs. emitp example
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
+a=pan,b=pan,sum=0.346790
+a=eks,b=pan,sum=0.758680
+a=eks,b=wye,sum=0.381399
+a=wye,b=wye,sum=0.204603
+a=wye,b=pan,sum=0.573289
+</pre>
+</div>
+<p/>
 
-  <p/>* unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": {
+        "1": 0.346790
+      }
+    },
+    "eks": {
+      "pan": {
+        "2": 0.758680
+      },
+      "wye": {
+        "4": 0.381399
+      }
+    },
+    "wye": {
+      "wye": {
+        "3": 0.204603
+      },
+      "pan": {
+        "5": 0.573289
+      }
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
+a=pan,b=pan,i=1,sum=0.346790
+a=eks,b=pan,i=2,sum=0.758680
+a=eks,b=wye,i=4,sum=0.381399
+a=wye,b=wye,i=3,sum=0.204603
+a=wye,b=pan,i=5,sum=0.573289
+</pre>
+</div>
+<p/>
+
+<p/>Now for <b>emitp</b>: if you have as many names following <tt>emit</tt> as
+there are levels in the out-of-stream variable&rsquo;s hashmap, then <tt>emit</tt> and <tt>emitp</tt> do the same
+thing. Where they differ is when you don&rsquo;t specify as many names as there are hashmap levels. In this
+case, Miller needs to flatten multiple map indices down to output-record keys: <tt>emitp</tt> includes full
+prefixing (hence the <tt>p</tt> in <tt>emitp</tt>) while <tt>emit</tt> takes the deepest hashmap key as the
+output-record key:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
+a=pan,pan=0.346790
+a=eks,pan=0.758680,wye=0.381399
+a=wye,wye=0.204603,pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
+pan=0.346790
+pan=0.758680,wye=0.381399
+wye=0.204603,pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+a=pan,sum:pan=0.346790
+a=eks,sum:pan=0.758680,sum:wye=0.381399
+a=wye,sum:wye=0.204603,sum:pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum:pan:pan 0.346790
+sum:eks:pan 0.758680
+sum:eks:wye 0.381399
+sum:wye:wye 0.204603
+sum:wye:pan 0.573289
+</pre>
+</div>
+<p/>
+
+<p/>Use <b>--oflatsep</b> to specify the character which joins multilevel
+keys for <tt>emitp</tt> (it defaults to a colon):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+a=pan,sum/pan=0.346790
+a=eks,sum/pan=0.758680,sum/wye=0.381399
+a=wye,sum/wye=0.204603,sum/pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum/pan/pan 0.346790
+sum/eks/pan 0.758680
+sum/eks/wye 0.381399
+sum/wye/wye 0.204603
+sum/wye/pan 0.573289
+</pre>
+</div>
+<p/>
+
+<a id="Emit-all_statements_for_put"/><h3>Emit-all statements for put</h3>
+
+<p/>Use <b>emit all</b> to output all out-of-stream variables. You can use the
+following idiom to get various accumulators output side-by-side (reminiscent of
+<tt>mlr stats1</tt>):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{emit all}' data/small
+sum      count
+2.264762 5
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit all,"a","b"}' data/small
+a   b   sum      count
+pan pan 0.346790 1
+eks pan 0.758680 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573289 1
+</pre>
+</div>
+<p/>
+
+<a id="Unset_statements_for_put"/><h3>Unset statements for put</h3>
+
+<p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
+Using <tt>unset</tt> you can remove the key entirely. Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'unset $x, $a' data/small
+b=pan,i=1,y=0.7268028627434533
+b=pan,i=2,y=0.5221511083334797
+b=wye,i=3,y=0.33831852551664776
+b=wye,i=4,y=0.13418874328430463
+b=pan,i=5,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also clear out-of-stream variables, at the base name level, or at an indexed sublevel:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+{
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>If you use <tt>unset all</tt>, that will unset all out-of-stream variables which have been defined up to that point.
 
 <a id="More_variable_assignments_for_put"/><h3>More variable assignments for put</h3>
 
-<p/>xxx to do:
+<p/>There are three remaining kinds of variable assignment using out-of-stream
+variables, the last two of which use the <tt>$*</tt> syntax:
+<ul>
+<li/> Recursive copy of out-of-stream variables
+<li/> Out-of-stream variable assigned to full stream record
+<li/> Full stream record assigned to an out-of-stream variable
+</ul>
 
-<p/>* assignments with oosvars on both sides; recursive
+<p/> Example recursive copy of out-of-stream variables:
 
-<p/>* assignments with $* as RHS; assignments with $* as LHS
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
+{
+  "v": {
+    "sum": 2.264762,
+    "count": 5
+  }
+}
+{
+  "v": {
+    "sum": 2.264762,
+    "count": 5
+  },
+  "w": {
+    "sum": 2.264762,
+    "count": 5
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>Example of full stream record assigned to an out-of-stream variable, finding
+the record for which the <tt>x</tt> field has the largest value in the input
+stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
+a   b   i x                  y
+eks pan 2 0.7586799647899636 0.5221511083334797
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="regularize"/><h2>regularize</h2>
