@@ -842,6 +842,9 @@ This is of course not much different than
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
 
+<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field names (beginning with <tt>$</tt>),
+since these execute outside the context of input records.
+
 <h3>Indexed out-of-stream variables for put</h3>
 
 <p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
