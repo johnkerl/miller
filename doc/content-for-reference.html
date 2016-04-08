@@ -1347,6 +1347,53 @@ pythonic</a>:
   </ul>
 
 <!-- ================================================================ -->
+<h1>String literals</h1>
+
+<p/>
+You can use the following backslash escapes for strings such as between the double quotes in
+<tt>mlr filter '$name =~ "..."'</tt>,
+<tt>mlr put '$name = $othername . "..."'</tt>,
+<tt>mlr put '$name = sub($name, "...", "...")</tt>, etc.:
+
+<!--
+\001 01
+\a   07
+\b   08
+\f   0c
+\n   0a
+\r   0d
+\t   09
+\v   ???
+\\   5c
+\"   22
+\002 02
+-->
+
+<ul>
+<li/> <tt>\a</tt>: ASCII code 0x07 (alarm/bell)
+<li/> <tt>\b</tt>: ASCII code 0x08 (backspace)
+<li/> <tt>\f</tt>: ASCII code 0x0c (formfeed)
+<li/> <tt>\n</tt>: ASCII code 0x0a (LF/linefeed/newline)
+<li/> <tt>\r</tt>: ASCII code 0x0d (CR/carriage return)
+<li/> <tt>\t</tt>: ASCII code 0x09 (tab)
+<li/> <tt>\v</tt>: ASCII code 0x0b (vertical tab)
+<li/> <tt>\\</tt>: backslash
+<li/> <tt>\"</tt>: double quote
+<li/> <tt>\123</tt>: Octal 123, etc. for <tt>\000</tt> up to <tt>\377</tt>
+<li/> <tt>\x7f</tt>: Hexadecimal 7f, etc. for <tt>\x00</tt> up to <tt>\xff</tt>
+</ul>
+
+<p/>See also <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">https://en.wikipedia.org/wiki/Escape_sequences_in_C</a>.
+
+<p/>These replacements apply only to strings you key in for the DSL expressions for <tt>filter</tt> and <tt>put</tt>:
+that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a t, then please type <tt>\\t</tt>.
+
+<p/> These replacements are not done automatically within your data stream. If
+you wish to make these replacements, you can do for example for a field named
+<tt>field</tt>: <tt> mlr put '$field = gsub($field, "\\t", "\t")'</tt> If you
+need to make such a replacement for all fields in your data, you should
+probably simply use the system <tt>sed</tt> command.
+
 <h1>Regular expressions</h1>
 
 <p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
