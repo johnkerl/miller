@@ -850,6 +850,11 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
 
+<p/>Indices can be arbitrarily deep &mdash; here there are two of them:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7a.sh)HERE
+
 The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
@@ -1350,24 +1355,10 @@ pythonic</a>:
 <h1>String literals</h1>
 
 <p/>
-You can use the following backslash escapes for strings such as between the double quotes in
+You can use the following backslash escapes for strings such as between the double quotes in contexts such as
 <tt>mlr filter '$name =~ "..."'</tt>,
 <tt>mlr put '$name = $othername . "..."'</tt>,
 <tt>mlr put '$name = sub($name, "...", "...")</tt>, etc.:
-
-<!--
-\001 01
-\a   07
-\b   08
-\f   0c
-\n   0a
-\r   0d
-\t   09
-\v   ???
-\\   5c
-\"   22
-\002 02
--->
 
 <ul>
 <li/> <tt>\a</tt>: ASCII code 0x07 (alarm/bell)
@@ -1386,13 +1377,12 @@ You can use the following backslash escapes for strings such as between the doub
 <p/>See also <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">https://en.wikipedia.org/wiki/Escape_sequences_in_C</a>.
 
 <p/>These replacements apply only to strings you key in for the DSL expressions for <tt>filter</tt> and <tt>put</tt>:
-that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a t, then please type <tt>\\t</tt>.
+that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a <tt>t</tt>, then please type <tt>\\t</tt>.
 
-<p/> These replacements are not done automatically within your data stream. If
-you wish to make these replacements, you can do for example for a field named
-<tt>field</tt>: <tt> mlr put '$field = gsub($field, "\\t", "\t")'</tt> If you
-need to make such a replacement for all fields in your data, you should
-probably simply use the system <tt>sed</tt> command.
+<p/>However, these replacements are not done automatically within your data stream. If you wish to make these
+replacements, you can do, for example, for a field named <tt>field</tt>, <tt> mlr put '$field = gsub($field, "\\t",
+"\t")'</tt>. If you need to make such a replacement for all fields in your data, you should probably simply use the
+system <tt>sed</tt> command.
 
 <h1>Regular expressions</h1>
 

@@ -5,12 +5,19 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
+* echo 'x=a\tb'| mlr  put '$x=gsub($x,"\t","\t")'
+  x=a\tb
+
+  echo 'x=a\tb'| mlr  put '$x=gsub($x,"\\t","\t")'
+  x=a\    b
+
 ================================================================
 TOP-OF-LIST SUMMARY
 
 ! rethink tri-split null ... maybe mv_t contextual is-oosvar flag or some such. write up dev UTs.
 * reg_test/dev --no-diff
 * reg_test/dev common infile
+* reg_test/dev 'mention' function?
 
 * rh/fedora/centos mlr-3.5.0
 

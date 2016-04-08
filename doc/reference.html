@@ -2660,6 +2660,55 @@ a=hat,x_count=1,x_sum=0.031442
 </div>
 <p/>
 
+<p/>Indices can be arbitrarily deep &mdash; here there are two of them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+    emit @x_count, "a", "b";
+    emit @x_sum, "a", "b";
+  }
+' ../data/small
+a=pan,b=pan,x_count=1
+a=pan,b=wye,x_count=1
+a=eks,b=pan,x_count=1
+a=eks,b=wye,x_count=1
+a=eks,b=zee,x_count=1
+a=wye,b=wye,x_count=1
+a=wye,b=pan,x_count=1
+a=zee,b=pan,x_count=1
+a=zee,b=wye,x_count=1
+a=hat,b=wye,x_count=1
+a=pan,b=pan,x_sum=0.346790
+a=pan,b=wye,x_sum=0.502626
+a=eks,b=pan,x_sum=0.758680
+a=eks,b=wye,x_sum=0.381399
+a=eks,b=zee,x_sum=0.611784
+a=wye,b=wye,x_sum=0.204603
+a=wye,b=pan,x_sum=0.573289
+a=zee,b=pan,x_sum=0.527126
+a=zee,b=wye,x_sum=0.598554
+a=hat,b=wye,x_sum=0.031442
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a count,sum -f x -g a ../data/small
+a=pan,x_count=2,x_sum=0.849416
+a=eks,x_count=3,x_sum=1.751863
+a=wye,x_count=2,x_sum=0.777892
+a=zee,x_count=2,x_sum=1.125680
+a=hat,x_count=1,x_sum=0.031442
+</pre>
+</div>
+<p/>
+
 The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
@@ -4461,24 +4510,10 @@ pythonic</a>:
 <a id="String_literals"/><h1>String literals</h1>
 
 <p/>
-You can use the following backslash escapes for strings such as between the double quotes in
+You can use the following backslash escapes for strings such as between the double quotes in contexts such as
 <tt>mlr filter '$name =~ "..."'</tt>,
 <tt>mlr put '$name = $othername . "..."'</tt>,
 <tt>mlr put '$name = sub($name, "...", "...")</tt>, etc.:
-
-<!--
-\001 01
-\a   07
-\b   08
-\f   0c
-\n   0a
-\r   0d
-\t   09
-\v   ???
-\\   5c
-\"   22
-\002 02
--->
 
 <ul>
 <li/> <tt>\a</tt>: ASCII code 0x07 (alarm/bell)
@@ -4497,13 +4532,12 @@ You can use the following backslash escapes for strings such as between the doub
 <p/>See also <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">https://en.wikipedia.org/wiki/Escape_sequences_in_C</a>.
 
 <p/>These replacements apply only to strings you key in for the DSL expressions for <tt>filter</tt> and <tt>put</tt>:
-that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a t, then please type <tt>\\t</tt>.
+that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a <tt>t</tt>, then please type <tt>\\t</tt>.
 
-<p/> These replacements are not done automatically within your data stream. If
-you wish to make these replacements, you can do for example for a field named
-<tt>field</tt>: <tt> mlr put '$field = gsub($field, "\\t", "\t")'</tt> If you
-need to make such a replacement for all fields in your data, you should
-probably simply use the system <tt>sed</tt> command.
+<p/>However, these replacements are not done automatically within your data stream. If you wish to make these
+replacements, you can do, for example, for a field named <tt>field</tt>, <tt> mlr put '$field = gsub($field, "\\t",
+"\t")'</tt>. If you need to make such a replacement for all fields in your data, you should probably simply use the
+system <tt>sed</tt> command.
 
 <a id="Regular_expressions"/><h1>Regular expressions</h1>
 
