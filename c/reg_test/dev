@@ -52,6 +52,11 @@ announce() {
 	echo >> $outfile
 }
 
+mention() {
+	echo >> $outfile
+	echo ---------------------------------------------------------------- "$@" >> $outfile
+}
+
 run_mlr() {
   # Use just "mlr" for info messages
 	echo mlr "$@"
@@ -66,6 +71,7 @@ run_mlr() {
 # ================================================================
 announce ABSENT-HANDLING
 
+mention hello
 run_mlr put '$a = $a * 2' <<EOF
 a=1,b=2
 a=,b=4
@@ -73,6 +79,7 @@ x=,b=6
 a=7,b=8
 EOF
 
+mention hello
 run_mlr put '$new = $a * 2' <<EOF
 a=1,b=2
 a=,b=4

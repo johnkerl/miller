@@ -18,17 +18,16 @@ TOP-OF-LIST SUMMARY
 * reg_test/dev --no-diff
 * reg_test/dev common infile
 * reg_test/dev 'mention' function?
+! valgrinds
+* oosvar/$* examples to mlr put -h
 
 * rh/fedora/centos mlr-3.5.0
 
 * reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
-* neaten/xxxes/valgrind/UT/doc for emit/unset/tri-split-null/+=etal
 * double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
-! major doc section re oosvars, $*, and emits
 
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
-! valgrinds
 
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
@@ -62,20 +61,12 @@ TOP-OF-LIST SUMMARY
 ----------------------------------------------------------------
 IMPLEMENT:
 
-! declare @ doc what the 'f' stands for in 'emitf': first-level? :/
-
 ? people may ask for ingest version of dump ...
 
 > do more oosvar experiments before finalizing mlr4
 
 * ispresent/isabsent? redo isnotnull -> ispresent in mld:oosvar bit
 * isinit/isuninit?
-
-----------------------------------------------------------------
-HYG:
-
-k xxxes
-* valgrinds
 
 ----------------------------------------------------------------
 UT:
@@ -93,26 +84,6 @@ UT:
   mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
 
 * evolve & extend the existing UTs
-
-----------------------------------------------------------------
-DOC:
-
-Out-of-stream variables for put
-* non-indexed oosvar assignments w/ mlrval rhs
-  o emit example; emitf example; dump example w/ caveat; emit all
-  o begin/end blocks; put -q
-  * unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
-Index out-of-stream variables for put
-* indexed oosvar assignments w/ mlrval rhs
-  o emit example; dump example
-  o side-by-side pasting:
-    mlr --opprint put -q '@v[NR]["sum"] += $x; @v[NR]["count"] += 1; end{emit all,"NR"}' reg_test/input/abixy-het 
-  o note difference between mlhmmv and single-level lrec
-  o emit vs. emitp example
-  * unset ; multi-unset?; unset all. note rhs="" vs. remove key. unset is latter since rhs="" does former.  cf cut -x.
-More out-of-stream variable assignments for put
-* assignments with oosvars on both sides; recursive
-* assignments with $* as RHS; assignments with $* as LHS
 
 ================================================================
 OOSVAR EXPERIMENTS:
