@@ -11,6 +11,8 @@ BUGFIXES
   echo 'x=a\tb'| mlr  put '$x=gsub($x,"\\t","\t")'
   x=a\    b
 
+* reg_test/dev material
+
 ================================================================
 TOP-OF-LIST SUMMARY
 
