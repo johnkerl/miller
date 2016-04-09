@@ -1758,6 +1758,18 @@ mv_t b_x_isnotnull_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+mv_t b_x_isabsent_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(mv_is_absent(pval1));
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_ispresent_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(mv_is_present(pval1));
+	mv_free(pval1);
+	return rv;
+}
+
+// ----------------------------------------------------------------
 static mv_t boolean_v_x(mv_t* pa) { return mv_void(); }
 static mv_t boolean_e_x(mv_t* pa) { return mv_error(); }
 static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }

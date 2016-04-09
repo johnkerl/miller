@@ -213,6 +213,12 @@ static inline int mv_is_null_or_error(mv_t* pval) {
 static inline int mv_is_non_null(mv_t* pval) {
 	return MT_ERROR < pval->type && pval->type > MT_VOID;
 }
+static inline int mv_is_absent(mv_t* pval) {
+	return pval->type == MT_ABSENT;
+}
+static inline int mv_is_present(mv_t* pval) {
+	return pval->type != MT_ABSENT;
+}
 
 // ----------------------------------------------------------------
 // AUXILIARY METHODS
@@ -320,6 +326,8 @@ mv_t x_xx_roundm_func(mv_t* pval1, mv_t* pval2);
 
 mv_t b_x_isnull_func(mv_t* pval1);
 mv_t b_x_isnotnull_func(mv_t* pval1);
+mv_t b_x_isabsent_func(mv_t* pval1);
+mv_t b_x_ispresent_func(mv_t* pval1);
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);

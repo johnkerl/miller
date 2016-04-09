@@ -61,6 +61,8 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{FUNC_CLASS_CONVERSION, "isnull",    1, "True if argument is null, false otherwise"},
 	{FUNC_CLASS_CONVERSION, "isnotnull", 1, "False if argument is null, true otherwise."},
+	{FUNC_CLASS_CONVERSION, "isabsent",    1, "False if field is present in input, false otherwise"},
+	{FUNC_CLASS_CONVERSION, "ispresent", 1, "True if field is present in input, false otherwise."},
 	{FUNC_CLASS_CONVERSION, "boolean",   1, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",     1, "Convert int/float/bool/string to float."},
 	{FUNC_CLASS_CONVERSION, "fmtnum",    2,
@@ -335,8 +337,10 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 	} else if (streq(fnnm, "hms2sec"))   { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,   parg1);
 	} else if (streq(fnnm, "int"))       { return rval_evaluator_alloc_from_x_x_func(i_x_int_func,       parg1);
 	} else if (streq(fnnm, "invqnorm"))  { return rval_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,  parg1);
+	} else if (streq(fnnm, "isabsent"))  { return rval_evaluator_alloc_from_x_x_func(b_x_isabsent_func,  parg1);
 	} else if (streq(fnnm, "isnotnull")) { return rval_evaluator_alloc_from_x_x_func(b_x_isnotnull_func, parg1);
 	} else if (streq(fnnm, "isnull"))    { return rval_evaluator_alloc_from_x_x_func(b_x_isnull_func,    parg1);
+	} else if (streq(fnnm, "ispresent")) { return rval_evaluator_alloc_from_x_x_func(b_x_ispresent_func, parg1);
 	} else if (streq(fnnm, "log"))       { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,       parg1);
 	} else if (streq(fnnm, "log10"))     { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,     parg1);
 	} else if (streq(fnnm, "log1p"))     { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,     parg1);
@@ -351,11 +355,11 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 	} else if (streq(fnnm, "sqrt"))      { return rval_evaluator_alloc_from_f_f_func(f_f_sqrt_func,      parg1);
 	} else if (streq(fnnm, "string"))    { return rval_evaluator_alloc_from_x_x_func(s_x_string_func,    parg1);
 	} else if (streq(fnnm, "strlen"))    { return rval_evaluator_alloc_from_i_s_func(i_s_strlen_func,    parg1);
-	} else if (streq(fnnm, "typeof"))    { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,    parg1);
 	} else if (streq(fnnm, "tan"))       { return rval_evaluator_alloc_from_f_f_func(f_f_tan_func,       parg1);
 	} else if (streq(fnnm, "tanh"))      { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,      parg1);
 	} else if (streq(fnnm, "tolower"))   { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,   parg1);
 	} else if (streq(fnnm, "toupper"))   { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,   parg1);
+	} else if (streq(fnnm, "typeof"))    { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,    parg1);
 
 	} else return NULL;
 }

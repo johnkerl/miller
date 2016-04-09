@@ -1335,6 +1335,64 @@ run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@
 run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 
+run_mlr cat << EOF
+x=1
+x=
+x=7
+EOF
+
+run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+x=
+x=7
+EOF
+
+run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+x=
+x=7
+EOF
+
+run_mlr cat << EOF
+x=1
+xxx=
+x=7
+EOF
+
+run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+xxx=
+x=7
+EOF
+
+run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+xxx=
+x=7
+EOF
+
+run_mlr cat << EOF
+x=1
+x=
+y=
+x=7
+EOF
+
+run_mlr --ofs tab put '$xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)' <<EOF
+x=1
+x=
+y=
+x=7
+EOF
+
+run_mlr --ofs tab put '$xtype=typeof($x);$sum = ispresent($x) ? $x + 10 : 999; $stype=typeof($sum)' <<EOF
+x=1
+x=
+y=
+x=7
+EOF
+
+
 # ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
