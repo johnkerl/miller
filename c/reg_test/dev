@@ -101,19 +101,19 @@ EOF
 mention
 run_mlr cat << EOF
 x=1
-xxx=
+y=
 x=7
 EOF
 
 run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
 x=1
-xxx=
+y=
 x=7
 EOF
 
 run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
 x=1
-xxx=
+y=
 x=7
 EOF
 
