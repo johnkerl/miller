@@ -6,6 +6,7 @@ EXTRA_DIST=	\
 		abixy-het \
 		abixy-wide \
 		abixy-wide-short \
+		absent.dkvp \
 		b.csv \
 		b.pprint \
 		braced.csv \
