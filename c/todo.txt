@@ -16,8 +16,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! make a decision on float+absent and stick with it. horiz/vert cases.
 ! gsub\t bug
+! manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
 * oosvar/$*/etc examples to mlr put -h
 * UT --from

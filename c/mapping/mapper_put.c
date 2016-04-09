@@ -59,7 +59,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
 	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
-	fprintf(o, "    than from the command line.\n");
+	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
+	fprintf(o, "    should not be placed in the file.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");

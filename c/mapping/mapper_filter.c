@@ -44,7 +44,8 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    with no inference to int.\n");
 	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
-	fprintf(o, "    than from the command line.\n");
+	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
+	fprintf(o, "    should not be placed in the file.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
