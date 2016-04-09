@@ -481,6 +481,32 @@ static void main_usage_see_also(FILE* o, char* argv0) {
 #endif // HAVE_CONFIG_H
 }
 
+static void print_type_arithmetic_info(FILE* o, char* argv0) {
+	for (int i = -2; i < MT_DIM; i++) {
+		mv_t a = (mv_t) {.type = i, .free_flags = NO_FREE, .u.intv = 0};
+		if (i == -2)
+			printf("%-9s |", "(+)");
+		else if (i == -1)
+			printf("%-9s +", "---------");
+		else
+			printf("%-9s |", mt_describe_type(a.type));
+
+		for (int j = 0; j < MT_DIM; j++) {
+			mv_t b = (mv_t) {.type = j, .free_flags = NO_FREE, .u.intv = 0};
+			if (i == -2) {
+				printf(" %-9s", mt_describe_type(b.type));
+			} else if (i == -1) {
+				printf(" %-9s", "---------");
+			} else {
+				mv_t c = x_xx_plus_func(&a, &b);
+				printf(" %-9s", mt_describe_type(c.type));
+			}
+		}
+
+		fprintf(o, "\n");
+	}
+}
+
 // ----------------------------------------------------------------
 static void main_usage(FILE* o, char* argv0) {
 	main_usage_synopsis(o, argv0);
@@ -640,6 +666,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			exit(0);
 		} else if (streq(argv[argi], "--help")) {
 			main_usage(stdout, argv[0]);
+			exit(0);
+		} else if (streq(argv[argi], "--print-type-arithmetic-info")) {
+			print_type_arithmetic_info(stdout, argv[0]);
 			exit(0);
 		} else if (streq(argv[argi], "--help-all-verbs")) {
 			usage_all_verbs(argv[0]);
