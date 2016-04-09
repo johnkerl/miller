@@ -8917,16 +8917,16 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,ii=18
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,ii=20
 
 mlr put $emptytest = $i + $nosuch ./reg_test/input/abixy
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,emptytest=1
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,emptytest=2
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,emptytest=3
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,emptytest=4
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,emptytest=5
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,emptytest=6
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,emptytest=7
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,emptytest=8
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,emptytest=9
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,emptytest=10
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,emptytest=
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,emptytest=
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,emptytest=
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,emptytest=
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,emptytest=
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,emptytest=
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,emptytest=
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,emptytest=
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,emptytest=
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,emptytest=
 
 mlr --opprint put $nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM ./reg_test/input/abixy ./reg_test/input/abixy
 a   b   i  x                   y                   nr fnr nf filenum
@@ -9296,8 +9296,8 @@ x=1,y=,s=,z=
 x=,y=,s=hurrah,z=
 
 mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=1
-x=1,y=,s=,z=1
+x=1,y=2,s=hello,z=
+x=1,y=,s=,z=
 x=,y=,s=hurrah,z=
 
 mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
@@ -13440,7 +13440,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nonesuch=
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nonesuch=
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg_test/input/abixy-het
-sum=3.963005
+sum=
 
 mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg_test/input/abixy-het
 a=pan,sum=0.849416
@@ -13478,13 +13478,13 @@ sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
 sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.105470
 sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.310073
 sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.691473
-sumtype=MT_FLOAT,xtype=MT_ABSENT,sum=1.691473
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.218599
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.830383
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.428937
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.460379
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.963005
-sum=3.963005
+sumtype=MT_ABSENT,xtype=MT_ABSENT,sum=
+sumtype=MT_ABSENT,xtype=MT_FLOAT,sum=
+sumtype=MT_ABSENT,xtype=MT_FLOAT,sum=
+sumtype=MT_ABSENT,xtype=MT_FLOAT,sum=
+sumtype=MT_ABSENT,xtype=MT_FLOAT,sum=
+sumtype=MT_ABSENT,xtype=MT_FLOAT,sum=
+sum=
 
 mlr put $z = $x + $y ./reg_test/input/typeof.dkvp
 x=1,y=2,z=3
@@ -13499,8 +13499,8 @@ x=,y=2,z=
 x=,y=,z=
 
 mlr put $z = $x + $u ./reg_test/input/typeof.dkvp
-x=1,y=2,z=1
-x=1,y=,z=1
+x=1,y=2,z=
+x=1,y=,z=
 x=,y=2,z=
 x=,y=,z=
 
@@ -13547,8 +13547,8 @@ x=MT_VOID,y=MT_INT,z=MT_VOID
 x=MT_VOID,y=MT_VOID,z=MT_VOID
 
 mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_INT
+x=MT_INT,y=MT_INT,z=MT_ABSENT
+x=MT_INT,y=MT_VOID,z=MT_ABSENT
 x=MT_VOID,y=MT_INT,z=MT_VOID
 x=MT_VOID,y=MT_VOID,z=MT_VOID
 
