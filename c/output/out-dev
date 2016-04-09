@@ -649,3 +649,47 @@ sum=
 a=7,b=8,ostype=MT_VOID,atype=MT_INT,nstype=MT_VOID
 sum=
 
+
+================================================================
+NARROW IN
+
+
+----------------------------------------------------------------
+mlr cat
+x=1
+x=
+x=7
+
+mlr put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum += $x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1,osum=,ostype=MT_UNINIT,xtype=MT_INT,nstype=MT_INT,nsum=1
+x=,osum=1,ostype=MT_INT,xtype=MT_VOID,nstype=MT_VOID,nsum=
+x=7,osum=,ostype=MT_VOID,xtype=MT_INT,nstype=MT_VOID,nsum=
+sum=
+
+
+----------------------------------------------------------------
+mlr cat
+x=1
+xxx=
+x=7
+
+mlr put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum += $x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1,osum=,ostype=MT_UNINIT,xtype=MT_INT,nstype=MT_INT,nsum=1
+xxx=,osum=1,ostype=MT_INT,xtype=MT_ABSENT,nstype=MT_INT,nsum=1
+x=7,osum=1,ostype=MT_INT,xtype=MT_INT,nstype=MT_INT,nsum=8
+sum=8
+
+
+----------------------------------------------------------------
+mlr cat
+x=1
+x=
+y=
+x=7
+
+mlr --ofs tab put $xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)
+x=1	xtype=MT_INT	sum=11	stype=MT_INT
+x=	xtype=MT_VOID	sum=	stype=MT_VOID
+y=	xtype=MT_ABSENT	sum=10	stype=MT_INT
+x=7	xtype=MT_INT	sum=17	stype=MT_INT
+

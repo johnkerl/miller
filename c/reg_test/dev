@@ -24,12 +24,17 @@ else
   echo "Try 2: $try2" 1>&2
   exit 1
 fi
+do_diff="true"
 
-if [ "$1" = "--valgrind" ]; then
-  # Leak-check the test suite. Needs 'make mlrg' first.
-  # ../tools/clean-valg can be used to filter the output.
-  path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
-fi
+for arg; do
+  if [ "$1" = "--valgrind" ]; then
+    # Leak-check the test suite. Needs 'make mlrg' first.
+    # ../tools/clean-valg can be used to filter the output.
+    path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
+  elif [ "$1" = "--nodiff" ]; then
+    do_diff="false"
+  fi
+done
 echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input
@@ -217,14 +222,57 @@ run_mlr put 'emit @sum; @sum += $a; emit @sum; end { emit @sum }' $indir/absent.
 run_mlr put 'emit @sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum += $x; $nstype=typeof(@sum);emit @sum; end { emit @sum }' $indir/abixy-het|redden xxx
 run_mlr put 'emit @sum; $ostype=typeof(@sum);$atype=typeof($a);@sum += $a; $nstype=typeof(@sum);emit @sum; end { emit @sum }' $indir/absent.dkvp
 
+# ================================================================
+announce NARROW IN
+
+mention
+run_mlr cat << EOF
+x=1
+x=
+x=7
+EOF
+
+run_mlr put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum += $x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+x=
+x=7
+EOF
+
+mention
+run_mlr cat << EOF
+x=1
+xxx=
+x=7
+EOF
+
+run_mlr put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum += $x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
+x=1
+xxx=
+x=7
+EOF
+
+mention
+run_mlr cat << EOF
+x=1
+x=
+y=
+x=7
+EOF
+
+run_mlr --ofs tab put '$xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)' <<EOF
+x=1
+x=
+y=
+x=7
+EOF
 
 # ================================================================
 cat $outfile
 
-echo
-
-diff -I '^mlr ' -C5 $expfile $outfile
-
-# ================================================================
-echo ALL REGRESSION TESTS PASSED
-echo Tests completed: $num_passed
+if [ "$do_diff" = "true" ]; then
+  echo
+  diff -I '^mlr ' -C5 $expfile $outfile
+  echo diff OK # since set -e
+  echo ALL REGRESSION TESTS PASSED
+  echo Tests completed: $num_passed
+fi
