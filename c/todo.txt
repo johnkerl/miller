@@ -11,7 +11,27 @@ BUGFIXES
   echo 'x=a\tb'| mlr  put '$x=gsub($x,"\\t","\t")'
   x=a\    b
 
-* reg_test/dev material
+  -> try w/ regex lib directly
+
+  experimental/regexes.c:
+
+    $ a.out 'a@tb' '@t'
+    rc=0
+    pmatch[0].rm_so=   1 pmatch[0].rm_eo=   3
+      a@tb
+      .^^.
+
+    $ a.out 'a\tb' '\t'
+    rc=0
+    pmatch[0].rm_so=   2 pmatch[0].rm_eo=   3
+      a\tb
+      ..^.
+
+    $ a.out 'a\tb' '\\t'
+    rc=0
+    pmatch[0].rm_so=   1 pmatch[0].rm_eo=   3
+      a\tb
+      .^^.
 
 ================================================================
 TOP-OF-LIST SUMMARY

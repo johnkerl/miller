@@ -19,7 +19,7 @@
 // pmatch[9].rm_so=  -1 pmatch[9].rm_eo=  -1
 
 static void usage(char* argv0, FILE* o, int exit_code) {
-	fprintf(o, "Usage: %s {regex} {string}\n", argv0);
+	fprintf(o, "Usage: %s {string} {regex}\n", argv0);
 	exit(exit_code);
 }
 
@@ -32,8 +32,8 @@ int main(int argc, char** argv) {
 	}
 	regex_t reg;
 
-	char* sregex = argv[1];
-	char* sstr   = argv[2];
+	char* sstr   = argv[1];
+	char* sregex = argv[2];
 	int cflags = REG_EXTENDED;
 	const size_t nmatchmax = 10;
 	regmatch_t pmatch[nmatchmax];
@@ -51,11 +51,29 @@ int main(int argc, char** argv) {
 
 	rc = regexec(&reg, sstr, nmatchmax, pmatch, eflags);
 	printf("rc=%d\n", rc);
+	int len = strlen(sstr);
 	if (rc == 0) {
 		for (int i = 0; i < nmatchmax; i++) {
+			if (pmatch[i].rm_so == -1)
+				break;
 			printf("pmatch[%i].rm_so=%4lld pmatch[%d].rm_eo=%4lld\n",
 				i, (long long)pmatch[i].rm_so,
 				i, (long long)pmatch[i].rm_eo);
+
+			printf("  ");
+			for (int j = 0; j < len; j++) {
+				fputc(sstr[j], stdout);
+			}
+			printf("\n");
+
+			printf("  ");
+			for (int j = 0; j < len; j++) {
+				if (j >= pmatch[i].rm_so && j < pmatch[i].rm_eo)
+					fputc('^', stdout);
+				else
+					fputc('.', stdout);
+			}
+			printf("\n");
 		}
 	} else if (rc == REG_NOMATCH) {
 		printf("no match\n");
