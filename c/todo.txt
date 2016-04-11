@@ -5,37 +5,12 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
-* echo 'x=a\tb'| mlr  put '$x=gsub($x,"\t","\t")'
-  x=a\tb
-
-  echo 'x=a\tb'| mlr  put '$x=gsub($x,"\\t","\t")'
-  x=a\    b
-
-  -> try w/ regex lib directly
-
-  experimental/regexes.c:
-
-    $ a.out 'a@tb' '@t'
-    rc=0
-    pmatch[0].rm_so=   1 pmatch[0].rm_eo=   3
-      a@tb
-      .^^.
-
-    $ a.out 'a\tb' '\t'
-    rc=0
-    pmatch[0].rm_so=   2 pmatch[0].rm_eo=   3
-      a\tb
-      ..^.
-
-    $ a.out 'a\tb' '\\t'
-    rc=0
-    pmatch[0].rm_so=   1 pmatch[0].rm_eo=   3
-      a\tb
-      .^^.
+* regex w/ \t: ./gsubnotes.txt
 
 ================================================================
 TOP-OF-LIST SUMMARY
 
+! entirely rework null-data section @ mld
 ! gsub\t bug
 ! manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
