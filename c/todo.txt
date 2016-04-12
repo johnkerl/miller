@@ -8,9 +8,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info
+! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info; typeof
 ! valgrinds
-* UT behavior for null-valued filter / cond-block (see below)
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 * oosvar/etc -> cover x 2. from mlr put -h.
 * doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for
