@@ -907,6 +907,16 @@ run_mlr --opprint put '$f=isnotnull($y)'      $indir/nullvals.dkvp
 run_mlr --opprint put '$f=isnotnull($z)'      $indir/nullvals.dkvp
 run_mlr --opprint put '$f=isnotnull($nosuch)' $indir/nullvals.dkvp
 
+run_mlr put 'filter @nonesuch'       $indir/abixy
+run_mlr put 'filter @nonesuch==true' $indir/abixy
+run_mlr put 'filter $nonesuch==true' $indir/abixy
+run_mlr put 'filter $nonesuch'       $indir/abixy
+
+run_mlr put -q '@v=1; @nonesuch       {emit @v}' $indir/abixy
+run_mlr put -q '@v=1; @nonesuch==true {emit @v}' $indir/abixy
+run_mlr put -q '@v=1; $nonesuch       {emit @v}' $indir/abixy
+run_mlr put -q '@v=1; $nonesuch==true {emit @v}' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
 

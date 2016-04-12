@@ -8,8 +8,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! entirely rework null-data section @ mld
-! manify?/mldify! mlr --print-type-arithmetic-info
+! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
 * UT behavior for null-valued filter / cond-block (see below)
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
@@ -52,21 +51,6 @@ TOP-OF-LIST SUMMARY
   - += et al. were ever announced -- fix intro release & note
   - double-backslashing bug in sub/gsub
   - --from, & why: up-arrow & append then-chain
-
-================================================================
-UT:
-
-* define/test behavior for null-valued filter / cond-block
-
-  mlr put 'filter @nonesuch' ../data/small
-  mlr put 'filter @nonesuch==true' ../data/small
-  mlr put 'filter $nonesuch==true' ../data/small
-  mlr put 'filter $nonesuch' ../data/small
-
-  mlr put -q '@v=1; @nonesuch { emit @v}' ../data/small
-  mlr put -q '@v=1; @nonesuch==true { emit @v}' ../data/small
-  mlr put -q '@v=1; $nonesuch { emit @v}' ../data/small
-  mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
 
 ================================================================
 OOSVAR EXPERIMENTS:

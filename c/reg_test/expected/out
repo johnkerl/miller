@@ -9436,6 +9436,22 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
+mlr put filter @nonesuch ./reg_test/input/abixy
+
+mlr put filter @nonesuch==true ./reg_test/input/abixy
+
+mlr put filter $nonesuch==true ./reg_test/input/abixy
+
+mlr put filter $nonesuch ./reg_test/input/abixy
+
+mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
+
+mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
+
+mlr put -q @v=1; $nonesuch       {emit @v} ./reg_test/input/abixy
+
+mlr put -q @v=1; $nonesuch==true {emit @v} ./reg_test/input/abixy
+
 
 ================================================================
 DSL TYPE-INFERENCE
