@@ -128,6 +128,11 @@ EXTRA_DIST=	\
 		space-pad.nidx \
 		space-pad.pprint \
 		sub.dat \
+		subtab.dkvp \
+		subtab1.mlr \
+		subtab2.mlr \
+		subtab3.mlr \
+		subtab4.mlr \
 		truncated.csv \
 		truncated.dkvp \
 		truncated.nidx \
