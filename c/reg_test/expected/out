@@ -12393,6 +12393,95 @@ LMNOP      LMNOP
 ABCDEFG    BCDEFG
 ABABBABBBA BBBBBB
 
+mlr --oxtab cat ./reg_test/input/subtab.dkvp
+x afoob
+
+x a\tb
+
+x a\\tb
+
+x a	b
+
+z 
+
+x 
+
+mlr --oxtab put -f ./reg_test/input/subtab1.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a\tb
+
+x a\\tb
+y a\\tb
+
+x a	b
+y aTABb
+
+z 
+y 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab2.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y aTABb
+
+x a\\tb
+y a\TABb
+
+x a	b
+y a	b
+
+z 
+y 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab3.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a\tb
+
+x a\\tb
+y a\\tb
+
+x a	b
+y a	b
+
+z 
+y 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab4.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a	b
+
+x a\\tb
+y a\	b
+
+x a	b
+y a	b
+
+z 
+y 
+
+x 
+y 
+
 
 ================================================================
 DSL OOSVARS

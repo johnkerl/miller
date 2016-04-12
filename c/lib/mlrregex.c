@@ -8,9 +8,42 @@
 
 // ----------------------------------------------------------------
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.
+//
+// Reason for the double-backslashing routine: Miller DSL literals are unbackslashed, e.g. the
+// two-character sequence "\t" is converted to a tab character, and users need to type "\\t" to get
+// a backslash followed by a t. Well and good, but the system regex library handles backslashes not
+// quite as I want. Namely, without double-backslashing,
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\t","TAB")'
+//
+// (note: not echo -e, but just plain echo) outputs
+//
+//   a\TABb
+//
+// while
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\\\t","TAB")'
+//
+// outputs
+//
+//   aTABb
+//
+// Using double-backslashing, backslashes can be escaped as the regex library requires, before I call regcomp:
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\t","TAB")'
+//
+// outputs
+//
+//   aTABb
+//
+// as desired.
+
+char* mlr_alloc_double_backslash(char* input);
 regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 	cflags |= REG_EXTENDED;
-	int rc = regcomp(pregex, regex_string, cflags);
+	char* doubly_backslashed = mlr_alloc_double_backslash(regex_string);
+	int rc = regcomp(pregex, doubly_backslashed, cflags);
+	free(doubly_backslashed);
 	if (rc != 0) {
 		size_t nbytes = regerror(rc, pregex, NULL, 0);
 		char* errbuf = malloc(nbytes);

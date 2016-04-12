@@ -5,13 +5,10 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
-* regex w/ \t: ./gsubnotes.txt
-
 ================================================================
 TOP-OF-LIST SUMMARY
 
 ! entirely rework null-data section @ mld
-! gsub\t bug
 ! manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
 * UT --from
@@ -50,6 +47,7 @@ TOP-OF-LIST SUMMARY
   - bare-boolean and pattern-action
   - put -q: equiv to putting 'filter false'
   - += et al. were ever announced -- fix intro release & note
+  - double-backslashing bug in sub/gsub
 
 ================================================================
 ~@ PRE4 @~

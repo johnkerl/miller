@@ -426,6 +426,32 @@ char* mlr_alloc_unbackslash(char* input) {
 	return output;
 }
 
+// Does a strdup even if there's nothing to expand, so the caller can unconditionally
+// free what we return.
+char* mlr_alloc_double_backslash(char* input) {
+	char *p, *q;
+	int input_length = 0;
+	int num_backslashes = 0;
+	for (p = input; *p; p++) {
+		input_length++;
+		if (*p == '\\') {
+			num_backslashes++;
+		}
+	}
+	char* output = mlr_malloc_or_die(input_length + num_backslashes + 1);
+	for (p = input, q = output; *p; p++) {
+		if (*p == '\\') {
+			*(q++) = *p;
+			*(q++) = *p;
+		} else {
+			*(q++) = *p;
+		}
+	}
+	*q = 0;
+
+	return output;
+}
+
 // ----------------------------------------------------------------
 char* read_file_into_memory(char* filename, size_t* psize) {
 	struct stat statbuf;

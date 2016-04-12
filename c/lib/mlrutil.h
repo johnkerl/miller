@@ -125,6 +125,35 @@ int power_of_two_ceil(int n);
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
 char* mlr_alloc_unbackslash(char* input);
 
+// Miller DSL literals are unbackslashed: e.g. the two-character sequence "\t" is converted to a tab character, and
+// users need to type "\\t" to get a backslash followed by a t. Well and good, but the system regex library handles
+// backslashes not quite as I want. Namely, without this function,
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\t","TAB")'
+//
+// (note: not echo -e, but just plain echo) outputs
+//
+//   a\TABb
+//
+// while
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\\\t","TAB")'
+//
+// outputs
+//
+//   aTABb
+//
+// Using this function, backslashes can be escaped as the regex library requires, before I call regcomp:
+//
+//   echo 'x=a\tb' | mlr put '$x=sub($x,"\\t","TAB")'
+//
+// outputs
+//
+//   aTABb
+//
+// as desired.
+char* mlr_alloc_double_backslash(char* input);
+
 // The caller should free the return value.
 char* read_file_into_memory(char* filename, size_t* psize);
 // The caller should free the return value.

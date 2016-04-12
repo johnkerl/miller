@@ -1248,6 +1248,12 @@ run_mlr --opprint put '$y = gsub($x, "A",    "")'   $indir/gsub.dat
 run_mlr --opprint put '$y = gsub($x, "a"i,   "")'   $indir/gsub.dat
 run_mlr --opprint put '$y = gsub($x, "A"i,   "")'   $indir/gsub.dat
 
+run_mlr --oxtab cat                       $indir/subtab.dkvp
+run_mlr --oxtab put -f $indir/subtab1.mlr $indir/subtab.dkvp
+run_mlr --oxtab put -f $indir/subtab2.mlr $indir/subtab.dkvp
+run_mlr --oxtab put -f $indir/subtab3.mlr $indir/subtab.dkvp
+run_mlr --oxtab put -f $indir/subtab4.mlr $indir/subtab.dkvp
+
 # ----------------------------------------------------------------
 announce DSL OOSVARS
 
