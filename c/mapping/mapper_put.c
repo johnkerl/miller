@@ -81,6 +81,9 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s -q '@sum += $x; end {emit @sum}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q '@sum[$a] += $x; end {emit @sum, \"a\"}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}'\n", argv0, verb);
+	fprintf(o, "  %s %s -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'\n", argv0, verb);
+	fprintf(o, "  %s %s -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'\n", argv0, verb);
+
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);

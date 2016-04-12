@@ -798,6 +798,8 @@ Examples:
   mlr put -q '@sum += $x; end {emit @sum}'
   mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
   mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
+  mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
+  mlr put -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
 
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f".

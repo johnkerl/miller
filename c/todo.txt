@@ -14,7 +14,6 @@ TOP-OF-LIST SUMMARY
 ! gsub\t bug
 ! manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
-* oosvar/$*/etc examples to mlr put -h
 * UT --from
 ? dkvp colprint-style?
 
@@ -63,13 +62,11 @@ IMPLEMENT:
 > do more oosvar experiments before finalizing mlr4
 
 * ispresent/isabsent? redo isnotnull -> ispresent in mld:oosvar bit
-* isinit/isuninit?
 
 ----------------------------------------------------------------
 DOC:
 
-* begin/end example at mlhput
-* do absent-identify for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
+* do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 
 ----------------------------------------------------------------
 UT:
@@ -128,6 +125,21 @@ OOSVAR EXPERIMENTS:
   real  0m3.976s 0m3.971s 0m3.944s
   time mlr step -a ewma -d 0.1 -f x ../data/big.dkvp > /dev/null
   real  0m3.250s 0m3.283s 0m3.300s
+
+*
+  $ time   ../c/mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'  ../data/big.dkvp
+  min=0.000000,max=0.999999
+
+  real    0m3.270s
+  user    0m3.196s
+  sys 0m0.072s
+
+  $ time ../c/mlr stats1 -a min,max -f x ../data/big.dkvp
+  x_min=0.000000,x_max=0.999999
+
+  real    0m1.805s
+  user    0m1.736s
+  sys 0m0.062s
 
 ================================================================
 NON-PRE4
