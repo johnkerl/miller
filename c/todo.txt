@@ -13,10 +13,9 @@ TOP-OF-LIST SUMMARY
 ! valgrinds
 * UT behavior for null-valued filter / cond-block (see below)
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
-* UT --from
 * oosvar/etc -> cover x 2. from mlr put -h.
-* warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for
-  typos.
+* doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for
+  typos. consider a --strict?
 > do more oosvar experiments before finalizing mlr4
 
 * rh/fedora/centos mlr-3.5.0
@@ -52,6 +51,7 @@ TOP-OF-LIST SUMMARY
   - put -q: equiv to putting 'filter false'
   - += et al. were ever announced -- fix intro release & note
   - double-backslashing bug in sub/gsub
+  - --from, & why: up-arrow & append then-chain
 
 ================================================================
 UT:
