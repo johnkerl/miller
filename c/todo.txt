@@ -11,13 +11,14 @@ TOP-OF-LIST SUMMARY
 ! entirely rework null-data section @ mld
 ! manify?/mldify! mlr --print-type-arithmetic-info
 ! valgrinds
+* UT behavior for null-valued filter / cond-block (see below)
+! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 * UT --from
-? dkvp colprint-style?
+> do more oosvar experiments before finalizing mlr4
 
 * rh/fedora/centos mlr-3.5.0
 
 * reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
-* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using oosvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
 
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
@@ -50,23 +51,6 @@ TOP-OF-LIST SUMMARY
   - double-backslashing bug in sub/gsub
 
 ================================================================
-~@ PRE4 @~
-
-----------------------------------------------------------------
-IMPLEMENT:
-
-? people may ask for ingest version of dump ...
-
-> do more oosvar experiments before finalizing mlr4
-
-* ispresent/isabsent? redo isnotnull -> ispresent in mld:oosvar bit
-
-----------------------------------------------------------------
-DOC:
-
-* do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
-
-----------------------------------------------------------------
 UT:
 
 * define/test behavior for null-valued filter / cond-block
@@ -80,8 +64,6 @@ UT:
   mlr put -q '@v=1; @nonesuch==true { emit @v}' ../data/small
   mlr put -q '@v=1; $nonesuch { emit @v}' ../data/small
   mlr put -q '@v=1; $nonesuch==true { emit @v}' ../data/small
-
-* evolve & extend the existing UTs
 
 ================================================================
 OOSVAR EXPERIMENTS:
@@ -138,6 +120,44 @@ OOSVAR EXPERIMENTS:
   real    0m1.805s
   user    0m1.736s
   sys 0m0.062s
+
+*
+  $ cat f
+  @n += 1;
+  @sumx += $x;
+  @sumx2 += $x**2;
+  end{
+    @mean = @sumx / @n;
+    @var = (@sumx2 - @mean * (2 * @sumx - @n * @mean)) / (@n - 1);
+    @stddev = sqrt(@var);
+    emit all
+  }
+
+  $ time mlr put -q -f g ../data/big.dkvp
+  n=1000000
+  sumx=499567.231705
+  sumx2=333050.794634
+  mean=0.499567
+  numer=83483.375641
+  denom=999999
+  var=0.083483
+  stddev=0.288935
+
+  real    0m3.869s
+  user    0m3.790s
+  sys 0m0.073s
+
+
+  $ time mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x ../data/big.dkvp
+  x_count  1000000
+  x_sum    499567.231705
+  x_mean   0.499567
+  x_var    0.083483
+  x_stddev 0.288935
+
+  real    0m2.173s
+  user    0m2.111s
+  sys 0m0.060s
 
 ================================================================
 NON-PRE4
