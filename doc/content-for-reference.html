@@ -675,7 +675,8 @@ have special characters such as <tt>.</tt> then you can use braces, e.g.
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
-<tt>E</tt>.  The <tt>ENV[...]</tt> syntax is from Ruby.
+<tt>E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
+variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
 
 <h3>Expression formatting for put</h3>
 
@@ -683,11 +684,9 @@ href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 
 POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint put '$nf=NF; $nr=NR; $fnr=FNR; $filenum=FILENUM; $filename=FILENAME' data/small data/small2}}HERE
-
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
-POKI_INCLUDE_ESCAPED(data/put-multiline-example.txt)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
 
 <h3>Out-of-stream variables for put</h3>
 
@@ -713,14 +712,14 @@ or <tt>put</tt> statement. Their values are assigned by the input-record reader:
 POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
 
-<li/> These are read-only for the <tt>mlr put</tt> DSL: they may be assigned
-from, e.g. <tt>$nr=NR</tt>, but they may not be assigned to: <tt>NR=100</tt>
-is a syntax error.
+<li/> These are read-only for the <tt>mlr put</tt> and <tt>mlr filter</tt>
+DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
+assigned to: <tt>NR=100</tt> is a syntax error.
 
 <li/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt>
-to each output record, containing the value of <tt>NR</tt> as of when that
-record was processed.
+non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
+each output record, containing the value of <tt>NR</tt> as of when that record
+was ingested.
 
 </ul>
 
@@ -742,8 +741,8 @@ data stream.
 
 <li/> Records are Miller&rsquo;s output: field names present in the input
 stream are passed through to output (written to standard output) unless fields
-are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt>,
-etc. Just assign a field and it will be output.
+are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
+<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
 
 </ul>
 
@@ -767,18 +766,18 @@ In particular, if you have two or more <tt>put</tt> commands separated by <tt>th
 each put will have its own set of out-of-stream variables:
 
 POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'isnotnull($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
 
 <li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
 
-<li/> You can output these in three ways: (1) Assign them to stream-record
-fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) Use <tt>emit</tt>, e.g.
+<li/> You can output these in three ways: (1) assign them to stream-record
+fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use <tt>emit</tt>, e.g.
 <tt>@sum += $x; emit @sum</tt> which produces an extra output record such as
-<tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt> keyword, which immediately
+<tt>sum=3.1648382</tt>; (3) use the <tt>dump</tt> keyword, which immediately
 prints all out-of-stream variables to the standard output as a JSON data
 structure. Note that these aren&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just an immediate print to
+<tt>then</tt>-chaining; rather, they&rsquo;re just immediately printed to
 stdout.
 
 </ul>
@@ -815,9 +814,11 @@ statements in the <tt>begin</tt> block are executed before any input records
 are read; the statements in the <tt>end</tt> block are executed after the last
 input record is read.  (If you want to execute some statement at the start of
 each file, not at the start of the first file as with <tt>begin</tt>, you might
-use a pattern/action block of the form <tt>NR == 0 { ... }</tt>.) All
+use a pattern/action block of the form <tt>NR == 1 { ... }</tt>.) All
 statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
-on every input record. For example:
+on every input record. Semicolons separate statements inside or outside of
+begin/end blocks; semicolons are required between begin/end block bodies and
+any subsequent statement.  For example:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)HERE
 
@@ -853,7 +854,7 @@ since these execute outside the context of input records.
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
 
-<p/>Indices can be arbitrarily deep &mdash; here there are two of them:
+<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7a.sh)HERE

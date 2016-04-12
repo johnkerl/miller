@@ -3,6 +3,5 @@ mlr --opprint put '
   $nr       = NR;
   $fnr      = FNR;
   $filenum  = FILENUM;
-  $filename = FILENAME' \
-  data/small data/small2
-
+  $filename = FILENAME
+' data/small data/small2

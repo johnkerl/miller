@@ -21,7 +21,7 @@ TOP-OF-LIST SUMMARY
 * rh/fedora/centos mlr-3.5.0
 
 * reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
-* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using ossvars + emit
+* double-check oosvar+emit+tri-split-null by re-implementing as many mappers as possible using oosvars + emit
 * readme re srec vs lrec, & oosvar vs mlhmmv
 
 * allow begin/end srec assignments in the grammar, to allow better error messages than 'syntax error' in the caller
@@ -64,6 +64,12 @@ IMPLEMENT:
 
 * ispresent/isabsent? redo isnotnull -> ispresent in mld:oosvar bit
 * isinit/isuninit?
+
+----------------------------------------------------------------
+DOC:
+
+* begin/end example at mlhput
+* do absent-identify for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 
 ----------------------------------------------------------------
 UT:

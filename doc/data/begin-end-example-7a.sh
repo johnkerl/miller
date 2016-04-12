@@ -1,1 +1,7 @@
-mlr stats1 -a count,sum -f x -g a ../data/small
+mlr put -q '
+  @v[$a][$b]["x_sum"] += 1;
+  @v[$a][$b]["x_count"] += $x;
+  end {
+    emit @v, "a", "b";
+  }
+' ../data/small
