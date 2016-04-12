@@ -158,6 +158,7 @@ positional indices. For example:
 % mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
+% mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
 </pre>
 </div>
 <p/>
