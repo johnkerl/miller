@@ -1275,7 +1275,7 @@ stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although
 pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
 Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
 
-<p/> Miller has three kinds of null data:
+<p/> Miller has two kinds of null data:
 
 <ul>
 
@@ -1285,40 +1285,89 @@ assignment <tt>$x=""</tt> or <tt>@x=""</tt> in <tt>mlr put</tt>.
 
 <li/> <b>Absent</b>: a field name is not present, e.g. input record is
 <tt>x=1,y=2</tt> and a <tt>put</tt> or <tt>filter</tt> expression refers to
-<tt>$z</tt>.
+<tt>$z</tt>. Or, reading an out-of-stream variable which hasn&rsquo;t been
+assigned a value yet,
+e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
+'@sum[$a][$b] += $x'; end{emit @sum, "a", "b"}'</tt>.
 
-<li/> <b>Uninit</b>: an out-of-stream variable is read before being assigned
-to, e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
-'@sum[$a][$b] += $x'; end{emit @sum, "a", "b"}'</tt>.  Without uninit, for the
+</ul>
+
+<p/>
+Rules for null-handling:
+
+<ul>
+
+<li> Records with one or more null (void or absent) sort-field values sort
+after records with all sort-field values present:
+POKI_RUN_COMMAND{{mlr cat data/sort-null.dat}}HERE
+POKI_RUN_COMMAND{{mlr sort -n  a data/sort-null.dat}}HERE
+POKI_RUN_COMMAND{{mlr sort -nr a data/sort-null.dat}}HERE
+
+<li> Functions/operators which have one or more <i>void</i> arguments produce void output: e.g.
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$y'}}HERE
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=$x+$y'}}HERE
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'}}HERE
+
+with the exception that the <tt>min</tt> and <tt>max</tt> functions are
+special: if one argument is non-null, it wins:
+POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
+
+<li> Arithmetic operators with one <i>absent</i> operand return the other operand. More specifically,
+absent values act like zero for addition/subtraction, and one for multiplication:
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v'}}HERE
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$v'}}HERE
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'}}HERE
+
+</ul>
+
+The reasoning is as follows:
+
+<ul>
+
+<li/> Void values are explicit in the data so they should explicitly affect accumulations:
+<tt>mlr put '@sum += $x'</tt>
+should accumulate numeric <tt>x</tt> values into the sum but an empty
+<tt>x</tt>, when encountered in the input data stream, should make the sum
+non-numeric. To work around this you can use the
+<tt>isnotnull</tt> function as follows:
+<tt>mlr put 'isnotnull($x) { @sum += $x }'</tt>
+
+<li/> Absent stream-record values should not break accumulations, since Miller
+by design handles heterogenous data: the running <tt>@sum</tt> in
+<tt>mlr put '@sum += $x'</tt>
+should not be invalidated for records which have no <tt>x</tt>.
+
+<li/> Absent out-of-stream-variable values are precisely what allow you to write not
+<tt>mlr put 'begin{@sum = 0}; @sum += $x'</tt>
+but rather
+<tt>mlr put '@sum += $x'</tt>
+&mdash; and furthermore make it possible for you to write
+<tt>mlr put '@sum[$a] += $x'</tt>
+at all.
+
+<!--
+xxx merge
+
+<p/>Without uninit, for the
 former you&rsquo;d need to type <tt>mlr put -q 'begin{@sum = 0}; @sum += $x';
 end{emit @sum}'</tt> (which is tolerable), but for the latter you&rsquo;d need
 to know all values of <tt>$a</tt> and <tt>$b</tt> before reading your input
 data, which would be intolerable.
+-->
+
+<li/> The penalty for this is that misspelled variables can be hard to find:
+e.g. in <tt>mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'</tt>
+the accumulator is spelt <tt>@sumx</tt> in the begin-block but <tt>@sum</tt> in the end-block, where since it
+is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
 
 <!--
-<p/>xxx more examples.
-
 <p/>xxx keep typing up from here.
 -->
 
-<p/>
-Rules for null-handling:
-<ul>
-<li> Records with one or more null sort-field values sort after records with all sort-field values present:
-POKI_RUN_COMMAND{{mlr cat data/sort-null.dat}}HERE
-POKI_RUN_COMMAND{{mlr sort -n  a data/sort-null.dat}}HERE
-POKI_RUN_COMMAND{{mlr sort -nr a data/sort-null.dat}}HERE
-<li> Functions which have one or more null arguments produce null output: e.g.
-POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$y'}}HERE
-POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=$x+$y'}}HERE
-POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'}}HERE
-<li> The <tt>min</tt> and <tt>max</tt> functions are special: if one argument is non-null, it wins:
-POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
-</ul>
-
 <!--
+xxx say what for logical/bitwise
 <p/>xxx
 
 PxOKI_RUN_COMMAND{{mlr -x-print-type-arithmetic-info}}HERE
