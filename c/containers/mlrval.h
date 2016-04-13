@@ -168,7 +168,6 @@ static inline mv_t mv_from_string(char* s, unsigned char free_flags) {
 
 static inline mv_t mv_absent() { return (mv_t) {.type = MT_ABSENT, .free_flags = NO_FREE, .u.intv = 0}; }
 static inline mv_t mv_void()   { return (mv_t) {.type = MT_VOID,   .free_flags = NO_FREE, .u.strv = ""}; }
-static inline mv_t mv_uninit() { return (mv_t) {.type = MT_UNINIT, .free_flags = NO_FREE, .u.intv = 0}; }
 static inline mv_t mv_error()  { return (mv_t) {.type = MT_ERROR,  .free_flags = NO_FREE, .u.intv = 0}; }
 
 static inline mv_t mv_copy(mv_t* pval) {

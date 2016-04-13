@@ -24,7 +24,6 @@ char* mt_describe_type(int type) {
 	switch (type) {
 	case MT_ERROR:  return "MT_ERROR";  break;
 	case MT_ABSENT: return "MT_ABSENT"; break;
-	case MT_UNINIT: return "MT_UNINIT"; break;
 	case MT_VOID:   return "MT_VOID";  break;
 	case MT_STRING: return "MT_STRING"; break;
 	case MT_INT:    return "MT_INT";    break;
@@ -39,7 +38,6 @@ char* mv_alloc_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		return mlr_strdup_or_die("");
 		break;
 	case MT_ERROR:
@@ -69,7 +67,6 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 	switch(pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		*pfree_flags = NO_FREE;
 		rv = "";
 		break;
@@ -128,7 +125,6 @@ void mv_set_float_strict(mv_t* pval) {
 	switch (pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		break;
 	case MT_ERROR:
 		break;
@@ -165,7 +161,6 @@ void mv_set_float_nullable(mv_t* pval) {
 	switch (pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		break;
 	case MT_ERROR:
 		break;
@@ -204,7 +199,6 @@ void mv_set_int_nullable(mv_t* pval) {
 	switch (pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		break;
 	case MT_ERROR:
 		break;
@@ -242,7 +236,6 @@ void mv_set_number_nullable(mv_t* pval) {
 	switch (pval->type) {
 	case MT_ABSENT:
 	case MT_VOID:
-	case MT_UNINIT:
 		break;
 	case MT_ERROR:
 		break;

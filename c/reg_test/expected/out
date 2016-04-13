@@ -13739,13 +13739,13 @@ x=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_UNINIT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 x=	osum=1	ostype=MT_INT	xtype=MT_VOID	nstype=MT_VOID	nsum=
 x=7	osum=	ostype=MT_VOID	xtype=MT_INT	nstype=MT_VOID	nsum=
 sum=
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_UNINIT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 x=	osum=1	ostype=MT_INT	xtype=MT_VOID	nstype=MT_VOID	nsum=
 x=7	osum=	ostype=MT_VOID	xtype=MT_INT	nstype=MT_VOID	nsum=
 sum=
@@ -13756,13 +13756,13 @@ xxx=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_UNINIT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
 x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
 sum=8
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_UNINIT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
 x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
 sum=8
