@@ -12,7 +12,7 @@ TOP-OF-LIST SUMMARY
   -> merge absent & uninit
   -> UT uneg
   -> UT absent/void; void/absent; void/void; absent/absent
-  -> rename void to empty throughout (code & doc)
+  -> isempty/isnonempty functions + to mld:ref
 ! valgrinds
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 * doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for

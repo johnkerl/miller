@@ -1297,8 +1297,8 @@ Rules for null-handling:
 
 <ul>
 
-<li> Records with one or more null (empty or absent) sort-field values sort
-after records with all sort-field values present:
+<li> Records with one or more empty or absent sort-field values sort after
+records with all sort-field values present:
 POKI_RUN_COMMAND{{mlr cat data/sort-null.dat}}HERE
 POKI_RUN_COMMAND{{mlr sort -n  a data/sort-null.dat}}HERE
 POKI_RUN_COMMAND{{mlr sort -nr a data/sort-null.dat}}HERE
