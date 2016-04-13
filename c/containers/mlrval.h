@@ -216,6 +216,12 @@ static inline int mv_is_absent(mv_t* pval) {
 static inline int mv_is_present(mv_t* pval) {
 	return pval->type != MT_ABSENT;
 }
+static inline int mv_is_empty(mv_t* pval) {
+	return pval->type == MT_EMPTY;
+}
+static inline int mv_is_not_empty(mv_t* pval) {
+	return pval->type != MT_EMPTY;
+}
 
 // ----------------------------------------------------------------
 // AUXILIARY METHODS
@@ -325,6 +331,8 @@ mv_t b_x_isnull_func(mv_t* pval1);
 mv_t b_x_isnotnull_func(mv_t* pval1);
 mv_t b_x_isabsent_func(mv_t* pval1);
 mv_t b_x_ispresent_func(mv_t* pval1);
+mv_t b_x_isempty_func(mv_t* pval1);
+mv_t b_x_isnotempty_func(mv_t* pval1);
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);

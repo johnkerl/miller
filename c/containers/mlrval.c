@@ -1690,7 +1690,6 @@ mv_t b_x_isnotnull_func(mv_t* pval1) {
 	return rv;
 }
 
-// ----------------------------------------------------------------
 mv_t b_x_isabsent_func(mv_t* pval1) {
 	mv_t rv = mv_from_bool(mv_is_absent(pval1));
 	mv_free(pval1);
@@ -1698,6 +1697,17 @@ mv_t b_x_isabsent_func(mv_t* pval1) {
 }
 mv_t b_x_ispresent_func(mv_t* pval1) {
 	mv_t rv = mv_from_bool(mv_is_present(pval1));
+	mv_free(pval1);
+	return rv;
+}
+
+mv_t b_x_isempty_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(mv_is_empty(pval1));
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_isnotempty_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(mv_is_not_empty(pval1));
 	mv_free(pval1);
 	return rv;
 }

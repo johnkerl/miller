@@ -889,28 +889,71 @@ run_mlr put '$t = gsub($s,      "l",   "X")' $indir/null-vs-empty.dkvp
 run_mlr put '$t = gsub($s,      "l",   "")'  $indir/null-vs-empty.dkvp
 run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
 
-run_mlr --opprint filter 'isnull($x)'         $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnull($y)'         $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnull($z)'         $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnull($nosuch)'    $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnotnull($x)'      $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnotnull($y)'      $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnotnull($z)'      $indir/nullvals.dkvp
-run_mlr --opprint filter 'isnotnull($nosuch)' $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($x)'                           $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($y)'                           $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($z)'                           $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnull($nosuch)'                      $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($x)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($y)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($z)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotnull($nosuch)'                   $indir/nullvals.dkvp
 
-run_mlr --opprint put '$f=isnull($x)'         $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnull($y)'         $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnull($z)'         $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnull($nosuch)'    $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnotnull($x)'      $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnotnull($y)'      $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnotnull($z)'      $indir/nullvals.dkvp
-run_mlr --opprint put '$f=isnotnull($nosuch)' $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnull($x)'                        $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnull($y)'                        $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnull($z)'                        $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnull($nosuch)'                   $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnull(@nosuch)'                   $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isnull(@somesuch)'     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotnull($x)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotnull($y)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotnull($z)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotnull($nosuch)'                $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotnull(@nosuch)'                $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isnotnull(@somesuch)'  $indir/nullvals.dkvp
 
-run_mlr put 'filter @nonesuch'       $indir/abixy
-run_mlr put 'filter @nonesuch==true' $indir/abixy
-run_mlr put 'filter $nonesuch==true' $indir/abixy
-run_mlr put 'filter $nonesuch'       $indir/abixy
+run_mlr --opprint filter 'isabsent($x)'                         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isabsent($y)'                         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isabsent($z)'                         $indir/nullvals.dkvp
+run_mlr --opprint filter 'isabsent($nosuch)'                    $indir/nullvals.dkvp
+run_mlr --opprint filter 'ispresent($x)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'ispresent($y)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'ispresent($z)'                        $indir/nullvals.dkvp
+run_mlr --opprint filter 'ispresent($nosuch)'                   $indir/nullvals.dkvp
+
+run_mlr --opprint put    '$f=isabsent($x)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isabsent($y)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isabsent($z)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isabsent($nosuch)'                 $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isabsent(@nosuch)'                 $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isabsent(@somesuch)'   $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ispresent($x)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ispresent($y)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ispresent($z)'                     $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ispresent($nosuch)'                $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ispresent(@nosuch)'                $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=ispresent(@somesuch)'  $indir/nullvals.dkvp
+
+run_mlr --opprint filter 'isempty($x)'                          $indir/nullvals.dkvp
+run_mlr --opprint filter 'isempty($y)'                          $indir/nullvals.dkvp
+run_mlr --opprint filter 'isempty($z)'                          $indir/nullvals.dkvp
+run_mlr --opprint filter 'isempty($nosuch)'                     $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotempty($x)'                       $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotempty($y)'                       $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotempty($z)'                       $indir/nullvals.dkvp
+run_mlr --opprint filter 'isnotempty($nosuch)'                  $indir/nullvals.dkvp
+
+run_mlr --opprint put    '$f=isempty($x)'                       $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isempty($y)'                       $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isempty($z)'                       $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isempty($nosuch)'                  $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isempty(@nosuch)'                  $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isempty(@somesuch)'    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotempty($x)'                    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotempty($y)'                    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotempty($z)'                    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotempty($nosuch)'               $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotempty(@nosuch)'               $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isnotempty(@somesuch)' $indir/nullvals.dkvp
 
 run_mlr put -q '@v=1; @nonesuch       {emit @v}' $indir/abixy
 run_mlr put -q '@v=1; @nonesuch==true {emit @v}' $indir/abixy
