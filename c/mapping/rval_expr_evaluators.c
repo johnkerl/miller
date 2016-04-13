@@ -165,7 +165,7 @@ static mv_t rval_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* pt
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
-			return mv_void();
+			return mv_empty();
 		} else {
 			// string points into lrec memory and is valid as long as the lrec is.
 			return mv_from_string_no_free(string);
@@ -189,7 +189,7 @@ static mv_t rval_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* p
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
-			return mv_void();
+			return mv_empty();
 		} else {
 			double fltv;
 			if (mlr_try_float_from_string(string, &fltv)) {
@@ -217,7 +217,7 @@ static mv_t rval_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
-			return mv_void();
+			return mv_empty();
 		} else {
 			long long intv;
 			double fltv;
@@ -283,7 +283,7 @@ mv_t rval_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 		// into that. Otherwise the typed-overlay map in mapper_put would have its contents freed out from underneath it
 		// by the evaluator functions.
 		if (pval->type == MT_STRING && *pval->u.strv == 0)
-			return mv_void();
+			return mv_empty();
 		else
 			return mv_copy(pval);
 	} else {
@@ -335,7 +335,7 @@ mv_t rval_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay
 		mv_t* pval = mlhmmv_get_terminal(poosvars, pmvkeys, &error);
 		if (pval != NULL) {
 			if (pval->type == MT_STRING && *pval->u.strv == 0)
-				rv = mv_void();
+				rv = mv_empty();
 			else
 				rv = *pval;
 		}
@@ -619,7 +619,7 @@ mv_t rval_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhm
 		mv_free(&mvname);
 		if (free_flags & FREE_ENTRY_VALUE)
 			free(strname);
-		return mv_void();
+		return mv_empty();
 	}
 	mv_t rv = mv_from_string(strvalue, NO_FREE);
 	mv_free(&mvname);

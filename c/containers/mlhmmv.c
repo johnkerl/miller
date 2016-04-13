@@ -1074,7 +1074,7 @@ static int mlhmmv_other_hash_func(mv_t* pa) {
 static mlhmmv_typed_hash_func* mlhmmv_hash_func_dispositions[MT_DIM] = {
 	/*ERROR*/  mlhmmv_other_hash_func,
 	/*ABSENT*/ mlhmmv_other_hash_func,
-	/*VOID*/   mlhmmv_other_hash_func,
+	/*EMPTY*/  mlhmmv_other_hash_func,
 	/*STRING*/ mlhmmv_string_hash_func,
 	/*INT*/    mlhmmv_int_hash_func,
 	/*FLOAT*/  mlhmmv_other_hash_func,

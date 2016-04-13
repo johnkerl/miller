@@ -71,7 +71,7 @@
 //
 // * The following abbreviations apply:
 //   o a: MT_ABSENT
-//   o v: MT_VOID
+//   o v: MT_EMPTY
 //   o e: MT_ERROR
 //   o b: MT_BOOL
 //   o f: MT_FLOAT
@@ -100,7 +100,7 @@
 // Void-valued mlrvals have u.strv = "".
 #define MT_ERROR    0 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_ABSENT   1 // No such key, e.g. $z in 'x=,y=2'
-#define MT_VOID     2 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_EMPTY     2 // Empty value, e.g. $x in 'x=,y=2'
 #define MT_STRING   3
 #define MT_INT      4
 #define MT_FLOAT    5
@@ -113,7 +113,7 @@
 
 typedef struct _mv_t {
 	union {
-		char*      strv;  // MT_STRING and MT_VOID
+		char*      strv;  // MT_STRING and MT_EMPTY
 		long long  intv;  // MT_INT, and == 0 for MT_ABSENT and MT_ERROR
 		double     fltv;  // MT_FLOAT
 		int        boolv; // MT_BOOL
@@ -124,12 +124,12 @@ typedef struct _mv_t {
 
 // ----------------------------------------------------------------
 #define NULL_OR_ERROR_OUT_FOR_STRINGS(val) { \
-	if ((val).type < MT_VOID) \
+	if ((val).type < MT_EMPTY) \
 		return val; \
 }
 
 #define NULL_OR_ERROR_OUT_FOR_NUMBERS(val) { \
-	if ((val).type <= MT_VOID) \
+	if ((val).type <= MT_EMPTY) \
 		return val; \
 }
 
@@ -165,7 +165,7 @@ static inline mv_t mv_from_string(char* s, unsigned char free_flags) {
 }
 
 static inline mv_t mv_absent() { return (mv_t) {.type = MT_ABSENT, .free_flags = NO_FREE, .u.intv = 0}; }
-static inline mv_t mv_void()   { return (mv_t) {.type = MT_VOID,   .free_flags = NO_FREE, .u.strv = ""}; }
+static inline mv_t mv_empty()   { return (mv_t) {.type = MT_EMPTY,   .free_flags = NO_FREE, .u.strv = ""}; }
 static inline mv_t mv_error()  { return (mv_t) {.type = MT_ERROR,  .free_flags = NO_FREE, .u.intv = 0}; }
 
 static inline mv_t mv_copy(mv_t* pval) {
@@ -195,20 +195,20 @@ static inline void mv_free(mv_t* pval) {
 // ----------------------------------------------------------------
 // TYPE-TESTERS
 
-static inline int mv_is_string_or_void(mv_t* pval) {
-	return pval->type == MT_STRING || pval->type == MT_VOID;
+static inline int mv_is_string_or_empty(mv_t* pval) {
+	return pval->type == MT_STRING || pval->type == MT_EMPTY;
 }
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }
 static inline int mv_is_null(mv_t* pval) {
-	return MT_ERROR < pval->type && pval->type <= MT_VOID;
+	return MT_ERROR < pval->type && pval->type <= MT_EMPTY;
 }
 static inline int mv_is_null_or_error(mv_t* pval) {
-	return pval->type <= MT_VOID;
+	return pval->type <= MT_EMPTY;
 }
 static inline int mv_is_non_null(mv_t* pval) {
-	return MT_ERROR < pval->type && pval->type > MT_VOID;
+	return MT_ERROR < pval->type && pval->type > MT_EMPTY;
 }
 static inline int mv_is_absent(mv_t* pval) {
 	return pval->type == MT_ABSENT;

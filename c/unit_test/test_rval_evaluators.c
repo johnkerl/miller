@@ -186,7 +186,7 @@ static char * test3() {
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);
 	mu_assert_lf(valpx.type     == MT_ABSENT);
-	mu_assert_lf(valpx2.type    == MT_VOID);
+	mu_assert_lf(valpx2.type    == MT_EMPTY);
 	mu_assert_lf(valplogx.type  == MT_ABSENT);
 	mu_assert_lf(valp2logx.type == MT_FLOAT);
 

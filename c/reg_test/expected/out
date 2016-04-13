@@ -13699,39 +13699,39 @@ x=,y=
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_VOID
-x=MT_VOID,y=MT_INT,z=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_VOID
+x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
+x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_VOID
-x=MT_VOID,y=MT_INT,z=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_VOID
+x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
+x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
 
 mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_INT
-x=MT_VOID,y=MT_INT,z=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_VOID
+x=MT_INT,y=MT_EMPTY,z=MT_INT
+x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
 
 mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
 
 mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
-x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
 
 mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_VOID
-x=MT_INT,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_INT,z=MT_ABSENT,s=MT_VOID
-x=MT_VOID,y=MT_VOID,z=MT_ABSENT,s=MT_VOID
+x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
 
 mlr cat
 x=1
@@ -13740,14 +13740,14 @@ x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
 x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-x=	osum=1	ostype=MT_INT	xtype=MT_VOID	nstype=MT_VOID	nsum=
-x=7	osum=	ostype=MT_VOID	xtype=MT_INT	nstype=MT_VOID	nsum=
+x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
+x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
 sum=
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
 x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-x=	osum=1	ostype=MT_INT	xtype=MT_VOID	nstype=MT_VOID	nsum=
-x=7	osum=	ostype=MT_VOID	xtype=MT_INT	nstype=MT_VOID	nsum=
+x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
+x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
 sum=
 
 mlr cat
@@ -13775,13 +13775,13 @@ x=7
 
 mlr --ofs tab put $xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)
 x=1	xtype=MT_INT	sum=11	stype=MT_INT
-x=	xtype=MT_VOID	sum=	stype=MT_VOID
+x=	xtype=MT_EMPTY	sum=	stype=MT_EMPTY
 y=	xtype=MT_ABSENT	sum=10	stype=MT_INT
 x=7	xtype=MT_INT	sum=17	stype=MT_INT
 
 mlr --ofs tab put $xtype=typeof($x);$sum = ispresent($x) ? $x + 10 : 999; $stype=typeof($sum)
 x=1	xtype=MT_INT	sum=11	stype=MT_INT
-x=	xtype=MT_VOID	sum=	stype=MT_VOID
+x=	xtype=MT_EMPTY	sum=	stype=MT_EMPTY
 y=	xtype=MT_ABSENT	sum=999	stype=MT_INT
 x=7	xtype=MT_INT	sum=17	stype=MT_INT
 
