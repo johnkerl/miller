@@ -72,7 +72,6 @@
 // * The following abbreviations apply:
 //   o a: MT_ABSENT
 //   o v: MT_VOID
-//   o u: MT_UNINIT
 //   o e: MT_ERROR
 //   o b: MT_BOOL
 //   o f: MT_FLOAT
@@ -96,18 +95,17 @@
 // Among other things, these defines are used in mlrval.c to index disposition matrices.
 // So, if the numeric values are changed, all the matrices must be as well.
 
-// Three kinds of null: absent, uninit, void.
+// Two kinds of null: absent (key not present in a record) and void (key present with empty value).
 // Note void is an acceptable string (empty string) but not an acceptable number.
 // Void-valued mlrvals have u.strv = "".
 #define MT_ERROR    0 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_ABSENT   1 // No such key, e.g. $z in 'x=,y=2'
-#define MT_UNINIT   2 // Uninitialized, e.g. first access to '@sum[$group]'
-#define MT_VOID     3 // Empty value, e.g. $x in 'x=,y=2'
-#define MT_STRING   4
-#define MT_INT      5
-#define MT_FLOAT    6
-#define MT_BOOL     7
-#define MT_DIM      8
+#define MT_VOID     2 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_STRING   3
+#define MT_INT      4
+#define MT_FLOAT    5
+#define MT_BOOL     6
+#define MT_DIM      7
 
 #define MV_SB_ALLOC_LENGTH 32
 
@@ -116,7 +114,7 @@
 typedef struct _mv_t {
 	union {
 		char*      strv;  // MT_STRING and MT_VOID
-		long long  intv;  // MT_INT, and == 0 for MT_ABSENT, MT_UNINIT, MT_ERROR
+		long long  intv;  // MT_INT, and == 0 for MT_ABSENT and MT_ERROR
 		double     fltv;  // MT_FLOAT
 		int        boolv; // MT_BOOL
 	} u;

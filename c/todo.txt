@@ -9,7 +9,9 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info; typeof
-  -> merge absent & uninit ?!?
+  -> merge absent & uninit
+  -> UT uneg
+  -> UT absent/void; void/absent; void/void; absent/absent
 ! valgrinds
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 * doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for
