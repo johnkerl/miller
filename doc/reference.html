@@ -4769,7 +4769,7 @@ Rather, records lacking one or more sort keys are simply output contiguously by 
 
 <ul>
 
-<li/> <b>Void</b>: a field name is present in a record (or in an out-of-stream
+<li/> <b>Empty</b>: a field name is present in a record (or in an out-of-stream
 variable) with empty value: e.g. <tt>x=,y=2</tt> in the data input stream, or
 assignment <tt>$x=""</tt> or <tt>@x=""</tt> in <tt>mlr put</tt>.
 
@@ -4787,7 +4787,7 @@ Rules for null-handling:
 
 <ul>
 
-<li> Records with one or more null (void or absent) sort-field values sort
+<li> Records with one or more null (empty or absent) sort-field values sort
 after records with all sort-field values present:
 <p/>
 <div class="pokipanel">
@@ -4826,7 +4826,7 @@ x=9,b=10
 </div>
 <p/>
 
-<li> Functions/operators which have one or more <i>void</i> arguments produce void output: e.g.
+<li> Functions/operators which have one or more <i>empty</i> arguments produce empty output: e.g.
 <p/>
 <div class="pokipanel">
 <pre>
@@ -4896,7 +4896,7 @@ The reasoning is as follows:
 
 <ul>
 
-<li/> Void values are explicit in the data so they should explicitly affect accumulations:
+<li/> Empty values are explicit in the data so they should explicitly affect accumulations:
 <tt>mlr put '@sum += $x'</tt>
 should accumulate numeric <tt>x</tt> values into the sum but an empty
 <tt>x</tt>, when encountered in the input data stream, should make the sum
