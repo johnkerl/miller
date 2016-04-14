@@ -1362,6 +1362,12 @@ xxx say what for logical/bitwise
 <p/>xxx
 
 PxOKI_RUN_COMMAND{{mlr -x-print-type-arithmetic-info}}HERE
+
+xxx absent plus absent is empty, not absent(and likewise for arithmetic operators other than plus).
+The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
+<tt>$nonesuch</tt> and
+<tt>$notdefined</tt> fields absent from the input record, then there will be an output field
+<tt>$c</tt> present, with empty value.
 -->
 
 <!-- ================================================================ -->

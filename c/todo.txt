@@ -13,6 +13,8 @@ TOP-OF-LIST SUMMARY
   -> UT uneg
   -> UT absent/void; void/absent; void/void; absent/absent
   -> isempty/isnonempty functions + to mld:ref
+  -> all absent-math-ops all UTs: e.g. 'a=3,b=5,c=' -> '$x=$a|$b;$y=$a|$c;$z=$a|$u;$w=$u|$v'
+* --strict?
 ! valgrinds
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
 * doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for

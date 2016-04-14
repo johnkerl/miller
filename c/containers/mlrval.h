@@ -71,7 +71,7 @@
 //
 // * The following abbreviations apply:
 //   o a: MT_ABSENT
-//   o v: MT_EMPTY
+//   o v: MT_EMPTY (v for void; e is for error)
 //   o e: MT_ERROR
 //   o b: MT_BOOL
 //   o f: MT_FLOAT

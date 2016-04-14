@@ -984,7 +984,7 @@ static mv_t times_e_xx(mv_t* pa, mv_t* pb) {
 }
 static mv_t times_f_af(mv_t* pa, mv_t* pb) {
 	return *pb;
-}
+	}
 static mv_t times_f_fa(mv_t* pa, mv_t* pb) {
 	return *pa;
 }
@@ -1338,6 +1338,40 @@ static mv_unary_func_t* abs_dispositions[MT_DIM] = {
 mv_t x_x_abs_func(mv_t* pval1) { return (abs_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+static mv_t sgn_e_x(mv_t* pa) {
+	return mv_error();
+}
+static mv_t sgn_v_x(mv_t* pa) {
+	return mv_empty();
+}
+static mv_t sgn_n_f(mv_t* pa) {
+	if (pa->u.fltv > 0.0)
+		return mv_from_float(1.0);
+	if (pa->u.fltv < 0.0)
+		return mv_from_float(-1.0);
+	return mv_from_float(0.0);
+}
+static mv_t sgn_n_i(mv_t* pa) {
+	if (pa->u.intv > 0LL)
+		return mv_from_int(1LL);
+	if (pa->u.intv < 0LL)
+		return mv_from_int(-1LL);
+	return mv_from_int(0LL);
+}
+
+static mv_unary_func_t* sgn_dispositions[MT_DIM] = {
+	/*ERROR*/  sgn_e_x,
+	/*ABSENT*/ sgn_v_x,
+	/*EMPTY*/  sgn_v_x,
+	/*STRING*/ sgn_e_x,
+	/*INT*/    sgn_n_i,
+	/*FLOAT*/  sgn_n_f,
+	/*BOOL*/   sgn_e_x,
+};
+
+mv_t x_x_sgn_func(mv_t* pval1) { return (sgn_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 static mv_t ceil_e_x(mv_t* pa) {
 	return mv_error();
 }
@@ -1581,40 +1615,6 @@ static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) { return (max_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
-static mv_t sgn_e_x(mv_t* pa) {
-	return mv_error();
-}
-static mv_t sgn_v_x(mv_t* pa) {
-	return mv_empty();
-}
-static mv_t sgn_n_f(mv_t* pa) {
-	if (pa->u.fltv > 0.0)
-		return mv_from_float(1.0);
-	if (pa->u.fltv < 0.0)
-		return mv_from_float(-1.0);
-	return mv_from_float(0.0);
-}
-static mv_t sgn_n_i(mv_t* pa) {
-	if (pa->u.intv > 0LL)
-		return mv_from_int(1LL);
-	if (pa->u.intv < 0LL)
-		return mv_from_int(-1LL);
-	return mv_from_int(0LL);
-}
-
-static mv_unary_func_t* sgn_dispositions[MT_DIM] = {
-	/*ERROR*/  sgn_e_x,
-	/*ABSENT*/ sgn_v_x,
-	/*EMPTY*/  sgn_v_x,
-	/*STRING*/ sgn_e_x,
-	/*INT*/    sgn_n_i,
-	/*FLOAT*/  sgn_n_f,
-	/*BOOL*/   sgn_e_x,
-};
-
-mv_t x_x_sgn_func(mv_t* pval1) { return (sgn_dispositions[pval1->type])(pval1); }
-
-// ----------------------------------------------------------------
 static mv_t int_v_x(mv_t* pa) { return mv_empty(); }
 static mv_t int_e_x(mv_t* pa) { return mv_error(); }
 static mv_t int_i_b(mv_t* pa) { return mv_from_int(pa->u.boolv ? 1 : 0); }
@@ -1677,6 +1677,61 @@ static mv_unary_func_t* float_dispositions[MT_DIM] = {
 };
 
 mv_t f_x_float_func(mv_t* pval1) { return (float_dispositions[pval1->type])(pval1); }
+
+//// ----------------------------------------------------------------
+// xxx xor et al.
+//static mv_t bxor_v_xx(mv_t* pa, mv_t* pb) {
+//	return mv_empty();
+//}
+//static mv_t bxor_e_xx(mv_t* pa, mv_t* pb) {
+//	return mv_error();
+//}
+//static mv_t bxor_f_af(mv_t* pa, mv_t* pb) {
+//	return *pb;
+//}
+//static mv_t bxor_f_fa(mv_t* pa, mv_t* pb) {
+//	return *pa;
+//}
+//static mv_t bxor_i_ai(mv_t* pa, mv_t* pb) {
+//	return *pb;
+//}
+//static mv_t bxor_i_ia(mv_t* pa, mv_t* pb) {
+//	return *pa;
+//}
+//
+//static mv_t bxor_f_ff(mv_t* pa, mv_t* pb) {
+//	double a = pa->u.fltv;
+//	double b = pb->u.fltv;
+//	return mv_from_float(a + b);
+//}
+//static mv_t bxor_f_fi(mv_t* pa, mv_t* pb) {
+//	double a = pa->u.fltv;
+//	double b = (double)pb->u.intv;
+//	return mv_from_float(a + b);
+//}
+//static mv_t bxor_f_if(mv_t* pa, mv_t* pb) {
+//	double a = (double)pa->u.intv;
+//	double b = pb->u.fltv;
+//	return mv_from_float(a + b);
+//}
+//static mv_t bxor_i_ii(mv_t* pa, mv_t* pb) {
+//	return mv_from_int(pa->u.intv ^ pb->u.intv);
+//}
+//
+//static mv_binary_func_t* bxor_dispositions[MT_DIM][MT_DIM] = {
+//	//         ERROR       ABSENT     EMPTY      STRING     INT        FLOAT      BOOL
+//	/*ERROR*/  {........., ........., ........., ........., ........., ........., .........},
+//	/*ABSENT*/ {........., bxor_v_xx, bxor_v_xx, ........., bxor_i_ai, ........., .........},
+//	/*EMPTY*/  {........., bxor_v_xx, bxor_v_xx, ........., bxor_v_xx, ........., .........},
+//	/*STRING*/ {........., ........., ........., ........., ........., ........., .........},
+//	/*INT*/    {........., bxor_i_ia, bxor_v_xx, ........., bxor_i_ii, ........., .........},
+//	/*FLOAT*/  {........., ........., ........., ........., ........., ........., .........},
+//	/*BOOL*/   {........., ........., ........., ........., ........., ........., .........},
+//};
+//
+//mv_t x_xx_bxor_func(mv_t* pval1, mv_t* pval2) { return (bxor_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// xxx impl a for-reuse e_xx et al.
 
 // ----------------------------------------------------------------
 mv_t b_x_isnull_func(mv_t* pval1) {
