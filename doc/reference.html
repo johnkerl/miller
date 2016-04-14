@@ -4913,25 +4913,15 @@ by design handles heterogenous data: the running <tt>@sum</tt> in
 <tt>mlr put '@sum += $x'</tt>
 should not be invalidated for records which have no <tt>x</tt>.
 
-<li/> Absent out-of-stream-variable values are precisely what allow you to write not
-<tt>mlr put 'begin{@sum = 0}; @sum += $x'</tt>
-but rather
-<tt>mlr put '@sum += $x'</tt>
-&mdash; and furthermore make it possible for you to write
-<tt>mlr put '@sum[$a] += $x'</tt>
-at all.
+<li/> Absent out-of-stream-variable values are precisely what allow you to write
+<tt>mlr put '@sum += $x'</tt>. Otherwise you would have to write
+<tt>mlr put 'begin{@sum = 0}; @sum += $x'</tt> &mdash;
+which is tolerable &mdash; but for
+<tt>mlr put 'begin{...}; @sum[$a][$b] += $x'</tt>
+you&rsquo;d have to pre-initialize <tt>@sum</tt> for all values of <tt>$a</tt> and <tt>$b</tt> in your
+input data stream, which is intolerable.
 
-<!--
-vxx merge
-
-<p/>Without uninit, for the
-former you&rsquo;d need to type <tt>mlr put -q 'begin{@sum = 0}; @sum += $x';
-end{emit @sum}'</tt> (which is tolerable), but for the latter you&rsquo;d need
-to know all values of <tt>$a</tt> and <tt>$b</tt> before reading your input
-data, which would be intolerable.
--->
-
-<li/> The penalty for this is that misspelled variables can be hard to find:
+<li/> The penalty for the absent feature is that misspelled variables can be hard to find:
 e.g. in <tt>mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'</tt>
 the accumulator is spelt <tt>@sumx</tt> in the begin-block but <tt>@sum</tt> in the end-block, where since it
 is absent, <tt>@sum*2</tt> evaluates to 2.
