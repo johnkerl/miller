@@ -4786,6 +4786,11 @@ e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
 
 </ul>
 
+<p/>You can test these programatically using the functions
+<tt>isempty</tt>/<tt>isnotempty</tt>, <tt>isabsent</tt>/<tt>ispresent</tt>, and
+<tt>isnull</tt>/<tt>isnotnull</tt>. For the last pair, note that null means
+either empty or absent.
+
 <p/>
 Rules for null-handling:
 
@@ -4927,10 +4932,6 @@ the accumulator is spelt <tt>@sumx</tt> in the begin-block but <tt>@sum</tt> in 
 is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
-
-<!--
-<p/>xxx keep typing up from here.
--->
 
 <!--
 xxx say what for logical/bitwise
