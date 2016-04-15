@@ -8,17 +8,12 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info; typeof
+! absent
   -> chk UT uneg
   -> UT absent/void; void/absent; void/void; absent/absent; $/@
-  -> isempty/isnonempty functions + to mld:ref
-  -> all absent-math-ops all UTs: e.g. 'a=3,b=5,c=' -> '$x=$a|$b;$y=$a|$c;$z=$a|$u;$w=$u|$v'
-  -> xxxes
+  -> all absent-math/logical/bitwise-ops all UTs: e.g. 'a=3,b=5,c=' -> '$x=$a|$b;$y=$a|$c;$z=$a|$u;$w=$u|$v'
 * --strict?
 ! valgrinds
-! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.
-* doc warn: the same implicit-identity feature that makes oosvars usable (emph in nested maps) makes it confusing for
-  typos. consider a --strict?
 * do more oosvar experiments before finalizing mlr4
 
 * rh/fedora/centos mlr-3.5.0
