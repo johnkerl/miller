@@ -100,7 +100,7 @@
 // Void-valued mlrvals have u.strv = "".
 #define MT_ERROR    0 // E.g. error encountered in one eval & it propagates up the AST.
 #define MT_ABSENT   1 // No such key, e.g. $z in 'x=,y=2'
-#define MT_EMPTY     2 // Empty value, e.g. $x in 'x=,y=2'
+#define MT_EMPTY    2 // Empty value, e.g. $x in 'x=,y=2'
 #define MT_STRING   3
 #define MT_INT      4
 #define MT_FLOAT    5
@@ -130,6 +130,11 @@ typedef struct _mv_t {
 
 #define NULL_OR_ERROR_OUT_FOR_NUMBERS(val) { \
 	if ((val).type <= MT_EMPTY) \
+		return val; \
+}
+
+#define EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val) { \
+	if ((val).type == MT_ERROR || (val).type == MT_EMPTY) \
 		return val; \
 }
 
@@ -227,6 +232,7 @@ static inline int mv_is_not_empty(mv_t* pval) {
 // AUXILIARY METHODS
 
 char* mt_describe_type(int type);
+char* mt_describe_type_simple(int type);
 char* mv_alloc_format_val(mv_t* pval);
 char* mv_format_val(mv_t* pval, char* pfree_flags);
 char* mv_describe_val(mv_t val);
@@ -317,6 +323,11 @@ mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2);
 mv_t x_x_upos_func(mv_t* pval1);
 mv_t x_x_uneg_func(mv_t* pval1);
 
+// Bitwise
+mv_t x_xx_bxor_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_band_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_bor_func(mv_t* pval1, mv_t* pval2);
+
 mv_t x_x_abs_func(mv_t* pval1);
 mv_t x_x_ceil_func(mv_t* pval1);
 mv_t x_x_floor_func(mv_t* pval1);
@@ -367,15 +378,6 @@ static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_int(u);
 }
 
-static inline mv_t i_ii_bitwise_or_func(mv_t* pval1, mv_t* pval2) {
-	return mv_from_int(pval1->u.intv | pval2->u.intv);
-}
-static inline mv_t i_ii_bitwise_xor_func(mv_t* pval1, mv_t* pval2) {
-	return mv_from_int(pval1->u.intv ^ pval2->u.intv);
-}
-static inline mv_t i_ii_bitwise_and_func(mv_t* pval1, mv_t* pval2) {
-	return mv_from_int(pval1->u.intv & pval2->u.intv);
-}
 static inline mv_t i_ii_bitwise_lsh_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_int(pval1->u.intv << pval2->u.intv);
 }

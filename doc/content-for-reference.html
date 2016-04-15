@@ -1267,7 +1267,7 @@ integer as well as float input.
 </ul>
 
 <!-- ================================================================ -->
-<h1>Null data</h1>
+<h1>Null data: empty and absent</h1>
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
 Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
@@ -1317,8 +1317,9 @@ with the exception that the <tt>min</tt> and <tt>max</tt> functions are
 special: if one argument is non-null, it wins:
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
-<li> Arithmetic operators with one <i>absent</i> operand return the other operand. More specifically,
-absent values act like zero for addition/subtraction, and one for multiplication:
+<li> Arithmetic operators with one <i>absent</i> operand return the other operand. The same is true for logical and
+bitwise AND, OR, and XOR. More specifically, absent values act like zero for addition/subtraction, and one for
+multiplication:
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v'}}HERE
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$v'}}HERE
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'}}HERE
@@ -1357,18 +1358,15 @@ is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
 
-<!--
-xxx say what for logical/bitwise
-<p/>xxx
-
-PxOKI_RUN_COMMAND{{mlr -x-print-type-arithmetic-info}}HERE
-
-xxx absent plus absent is empty, not absent(and likewise for arithmetic operators other than plus).
-The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
+<p/>Note that absent plus absent is empty, not absent (and likewise for arithmetic/boolean/bitwise operators other than
+plus).  The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
 <tt>$nonesuch</tt> and
 <tt>$notdefined</tt> fields absent from the input record, then there will be an output field
 <tt>$c</tt> present, with empty value.
--->
+If you&rsquo;re interested in a formal description, here&rsquo;s a table for plus (other arithmetic/boolean/bitwise
+operators are similar):
+
+POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 
 <!-- ================================================================ -->
 <h1>String literals</h1>

@@ -9,11 +9,11 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! entirely rework null-data section @ mld; manify?/mldify! mlr --print-type-arithmetic-info; typeof
-  -> merge absent & uninit
-  -> UT uneg
-  -> UT absent/void; void/absent; void/void; absent/absent
+  -> chk UT uneg
+  -> UT absent/void; void/absent; void/void; absent/absent; $/@
   -> isempty/isnonempty functions + to mld:ref
   -> all absent-math-ops all UTs: e.g. 'a=3,b=5,c=' -> '$x=$a|$b;$y=$a|$c;$z=$a|$u;$w=$u|$v'
+  -> xxxes
 * --strict?
 ! valgrinds
 ! do absent-identity for logical, bitwise, and exp? UTs for all regardless of what changes/doesn't.

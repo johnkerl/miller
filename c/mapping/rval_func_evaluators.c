@@ -399,9 +399,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "roundm")) { return rval_evaluator_alloc_from_x_xx_func(x_xx_roundm_func,     parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return rval_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,     parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return rval_evaluator_alloc_from_i_ii_func(i_ii_urandint_func, parg1, parg2);
-	} else if (streq(fnnm, "|"))    { return rval_evaluator_alloc_from_i_ii_func(i_ii_bitwise_or_func,   parg1, parg2);
-	} else if (streq(fnnm, "^"))    { return rval_evaluator_alloc_from_i_ii_func(i_ii_bitwise_xor_func,  parg1, parg2);
-	} else if (streq(fnnm, "&"))    { return rval_evaluator_alloc_from_i_ii_func(i_ii_bitwise_and_func,  parg1, parg2);
+	} else if (streq(fnnm, "&"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_band_func,         parg1, parg2);
+	} else if (streq(fnnm, "|"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bor_func,          parg1, parg2);
+	} else if (streq(fnnm, "^"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bxor_func,         parg1, parg2);
 	} else if (streq(fnnm, "<<"))   { return rval_evaluator_alloc_from_i_ii_func(i_ii_bitwise_lsh_func,  parg1, parg2);
 	} else if (streq(fnnm, ">>"))   { return rval_evaluator_alloc_from_i_ii_func(i_ii_bitwise_rsh_func,  parg1, parg2);
 	} else if (streq(fnnm, "strftime")) { return rval_evaluator_alloc_from_x_ns_func(s_ns_strftime_func, parg1, parg2);
@@ -506,19 +506,24 @@ mv_t rval_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
+	if (val1.type == MT_BOOL) {
+		if (val1.u.boolv == FALSE)
+			return val1;
+	} else if (val1.type != MT_ABSENT) {
 		return mv_error();
-	if (val1.u.boolv == FALSE)
-		return val1;
+	}
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
+	if (val2.type == MT_BOOL) {
+		return val2;
+	} else if (val2.type == MT_ABSENT) {
+		return val1;
+	} else {
 		return mv_error();
-
-	return val2;
+	}
 }
 
 // This is different from most of the lrec-evaluator functions in that it does short-circuiting:
@@ -530,19 +535,24 @@ mv_t rval_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
+	if (val1.type == MT_BOOL) {
+		if (val1.u.boolv == TRUE)
+			return val1;
+	} else if (val1.type != MT_ABSENT) {
 		return mv_error();
-	if (val1.u.boolv == TRUE)
-		return val1;
+	}
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
+	if (val2.type == MT_BOOL) {
+		return val2;
+	} else if (val2.type == MT_ABSENT) {
+		return val1;
+	} else {
 		return mv_error();
-
-	return val2;
+	}
 }
 
 mv_t rval_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
@@ -552,17 +562,24 @@ mv_t rval_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 
 	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg1->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
+	if (val1.type != MT_BOOL && val1.type != MT_ABSENT) {
 		return mv_error();
+	}
 
 	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
 		pctx, pstate->parg2->pvstate);
-	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type != MT_BOOL)
+	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
+	if (val2.type == MT_BOOL) {
+		if (val1.type == MT_BOOL)
+			return mv_from_bool(val1.u.boolv ^ val2.u.boolv);
+		else
+			return val2;
+	} else if (val2.type == MT_ABSENT) {
+		return val1;
+	} else {
 		return mv_error();
-
-	return mv_from_bool(val1.u.boolv ^ val2.u.boolv);
+	}
 }
 
 static void rval_evaluator_b_bb_free(rval_evaluator_t* pevaluator) {

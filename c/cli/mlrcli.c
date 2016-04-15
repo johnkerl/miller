@@ -485,21 +485,21 @@ static void print_type_arithmetic_info(FILE* o, char* argv0) {
 	for (int i = -2; i < MT_DIM; i++) {
 		mv_t a = (mv_t) {.type = i, .free_flags = NO_FREE, .u.intv = 0};
 		if (i == -2)
-			printf("%-9s |", "(+)");
+			printf("%-6s |", "(+)");
 		else if (i == -1)
-			printf("%-9s +", "---------");
+			printf("%-6s +", "------");
 		else
-			printf("%-9s |", mt_describe_type(a.type));
+			printf("%-6s |", mt_describe_type_simple(a.type));
 
 		for (int j = 0; j < MT_DIM; j++) {
 			mv_t b = (mv_t) {.type = j, .free_flags = NO_FREE, .u.intv = 0};
 			if (i == -2) {
-				printf(" %-9s", mt_describe_type(b.type));
+				printf(" %-6s", mt_describe_type_simple(b.type));
 			} else if (i == -1) {
-				printf(" %-9s", "---------");
+				printf(" %-6s", "------");
 			} else {
 				mv_t c = x_xx_plus_func(&a, &b);
-				printf(" %-9s", mt_describe_type(c.type));
+				printf(" %-6s", mt_describe_type_simple(c.type));
 			}
 		}
 

@@ -199,7 +199,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
-&bull;&nbsp;<a href="#Null_data">Null data</a><br/>
+&bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
 &bull;&nbsp;<a href="#String_literals">String literals</a><br/>
 &bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Regex_captures">Regex captures</a><br/>
@@ -4761,7 +4761,7 @@ integer as well as float input.
 </ul>
 
 <!-- ================================================================ -->
-<a id="Null_data"/><h1>Null data</h1>
+<a id="Null_data:_empty_and_absent"/><h1>Null data: empty and absent</h1>
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
 Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
@@ -4872,8 +4872,9 @@ x=,y=3,a=3,b=3
 </div>
 <p/>
 
-<li> Arithmetic operators with one <i>absent</i> operand return the other operand. More specifically,
-absent values act like zero for addition/subtraction, and one for multiplication:
+<li> Arithmetic operators with one <i>absent</i> operand return the other operand. The same is true for logical and
+bitwise AND, OR, and XOR. More specifically, absent values act like zero for addition/subtraction, and one for
+multiplication:
 <p/>
 <div class="pokipanel">
 <pre>
@@ -4933,12 +4934,30 @@ is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
 
-<!--
-xxx say what for logical/bitwise
-<p/>xxx
+<p/>Note that absent plus absent is empty, not absent (and likewise for arithmetic/boolean/bitwise operators other than
+plus).  The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
+<tt>$nonesuch</tt> and
+<tt>$notdefined</tt> fields absent from the input record, then there will be an output field
+<tt>$c</tt> present, with empty value.
+If you&rsquo;re interested in a formal description, here&rsquo;s a table for plus (other arithmetic/boolean/bitwise
+operators are similar):
 
-PxOKI_RUN_COMMAND{{mlr -x-print-type-arithmetic-info}}HERE
--->
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --print-type-arithmetic-info
+(+)    | error  absent empty  string int    float  bool
+------ + ------ ------ ------ ------ ------ ------ ------
+error  | error  error  error  error  error  error  error
+absent | error  empty  empty  error  int    float  error
+empty  | error  empty  empty  error  empty  empty  error
+string | error  error  error  error  error  error  error
+int    | error  int    empty  error  int    float  error
+float  | error  float  empty  error  float  float  error
+bool   | error  error  error  error  error  error  error
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="String_literals"/><h1>String literals</h1>

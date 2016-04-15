@@ -781,3 +781,34 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 	} else  { return NULL;
 	}
 }
+
+// ----------------------------------------------------------------
+typedef struct _rval_evaluator_mv_state_t {
+	mv_t literal;
+} rval_evaluator_mv_state_t;
+
+mv_t rval_evaluator_mv_process(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
+{
+	rval_evaluator_mv_state_t* pstate = pvstate;
+	return mv_copy(&pstate->literal);
+
+}
+static void rval_evaluator_mv_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_mv_state_t* pstate = pevaluator->pvstate;
+	mv_free(&pstate->literal);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval) {
+	rval_evaluator_mv_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_mv_state_t));
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	pstate->literal = mv_copy(pval);
+	pevaluator->pprocess_func = rval_evaluator_mv_process;
+	pevaluator->pfree_func = rval_evaluator_mv_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
