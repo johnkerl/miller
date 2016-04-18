@@ -13876,7 +13876,7 @@ cond (conditional_block):
 
 
 ================================================================
-TRI-SPLIT NULL
+ABSENT/EMPTY
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg_test/input/abixy
 sum=4.536294
@@ -13952,18 +13952,28 @@ x=1,y=2,z=3
 x=1,y=,z=
 x=,y=2,z=
 x=,y=,z=
-
-mlr put $z = $x + $y ./reg_test/input/typeof.dkvp
-x=1,y=2,z=3
-x=1,y=,z=
-x=,y=2,z=
-x=,y=,z=
+a=1,y=2,z=2
+a=1,y=,z=
+a=,y=2,z=2
+a=,y=,z=
+x=1,b=2,z=1
+x=1,b=,z=1
+x=,b=2,z=
+x=,b=,z=
 
 mlr put $z = $x + $u ./reg_test/input/typeof.dkvp
 x=1,y=2,z=1
 x=1,y=,z=1
 x=,y=2,z=
 x=,y=,z=
+a=1,y=2,z=
+a=1,y=,z=
+a=,y=2,z=
+a=,y=,z=
+x=1,b=2,z=1
+x=1,b=,z=1
+x=,b=2,z=
+x=,b=,z=
 
 mlr put @s = @s + $y; emitp @s ./reg_test/input/typeof.dkvp
 s=2
@@ -13974,16 +13984,22 @@ s=
 x=,y=2
 s=
 x=,y=
-
-mlr put @s = @s + $y; emitp @s ./reg_test/input/typeof.dkvp
-s=2
-x=1,y=2
 s=
-x=1,y=
+a=1,y=2
 s=
-x=,y=2
+a=1,y=
 s=
-x=,y=
+a=,y=2
+s=
+a=,y=
+s=
+x=1,b=2
+s=
+x=1,b=
+s=
+x=,b=2
+s=
+x=,b=
 
 mlr put @s = @s + $u; emitp @s ./reg_test/input/typeof.dkvp
 s=
@@ -13994,42 +14010,78 @@ s=
 x=,y=2
 s=
 x=,y=
+s=
+a=1,y=2
+s=
+a=1,y=
+s=
+a=,y=2
+s=
+a=,y=
+s=
+x=1,b=2
+s=
+x=1,b=
+s=
+x=,b=2
+s=
+x=,b=
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
 x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
 x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
 x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
-
-mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
-x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
+a=1,y=MT_INT,z=MT_INT,x=MT_ABSENT
+a=1,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+a=,y=MT_INT,z=MT_INT,x=MT_ABSENT
+a=,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
+x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
+x=MT_EMPTY,b=2,z=MT_EMPTY,y=MT_ABSENT
+x=MT_EMPTY,b=,z=MT_EMPTY,y=MT_ABSENT
 
 mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
 x=MT_INT,y=MT_EMPTY,z=MT_INT
 x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
 x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
+a=1,y=MT_INT,z=MT_EMPTY,x=MT_ABSENT
+a=1,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+a=,y=MT_INT,z=MT_EMPTY,x=MT_ABSENT
+a=,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
+x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
+x=MT_EMPTY,b=2,z=MT_EMPTY,y=MT_ABSENT
+x=MT_EMPTY,b=,z=MT_EMPTY,y=MT_ABSENT
 
 mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
 x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
 x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
 x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-
-mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
-x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
+a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
 
 mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
 x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
 x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
 x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
+a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
 
 mlr cat
 x=1

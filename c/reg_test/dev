@@ -74,70 +74,63 @@ run_mlr() {
 }
 
 # ================================================================
-announce OLD NULL-HANDLING
+announce FOO
 
-# ================================================================
-announce NARROW IN
+mention PLUS
+run_mlr --ofs tab put 'begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
 
-mention
-run_mlr cat << EOF
-x=1
-x=
-x=7
-EOF
+mention MINUS
+run_mlr --ofs tab put 'begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
-x=1
-x=
-x=7
-EOF
+mention TIMES
+run_mlr --ofs tab put 'begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
-x=1
-x=
-x=7
-EOF
+mention DIVIDE
+run_mlr --ofs tab put 'begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
 
-mention
-run_mlr cat << EOF
-x=1
-y=
-x=7
-EOF
+mention INTEGER DIVIDE
+run_mlr --ofs tab put 'begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
-x=1
-y=
-x=7
-EOF
+mention REMAINDER
+run_mlr --ofs tab put 'begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }' <<EOF
-x=1
-y=
-x=7
-EOF
+mention BITWISE AND
+run_mlr --ofs tab put 'begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
 
-mention
-run_mlr cat << EOF
-x=1
-x=
-y=
-x=7
-EOF
+mention BITWISE OR
+run_mlr --ofs tab put 'begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)' <<EOF
-x=1
-x=
-y=
-x=7
-EOF
+mention BITWISE XOR
+run_mlr --ofs tab put 'begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
 
-run_mlr --ofs tab put '$xtype=typeof($x);$sum = ispresent($x) ? $x + 10 : 999; $stype=typeof($sum)' <<EOF
-x=1
-x=
-y=
-x=7
-EOF
+# There is logical-operator testing in unit_test/test_rval_evaluators.c.
 
 # ================================================================
 cat $outfile

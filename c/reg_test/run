@@ -1374,7 +1374,7 @@ run_mlr put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w
 run_mlr put -v 'begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}' /dev/null
 
 # ----------------------------------------------------------------
-announce TRI-SPLIT NULL
+announce ABSENT/EMPTY
 
 run_mlr put -q '@sum     += $x; end{emitp @sum}'      $indir/abixy
 run_mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' $indir/abixy
@@ -1388,18 +1388,14 @@ run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf 
 run_mlr put -q '@sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum}' $indir/abixy-het
 
 run_mlr put '$z = $x + $y' $indir/typeof.dkvp
-run_mlr put '$z = $x + $y' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u' $indir/typeof.dkvp
 
-run_mlr put '@s = @s + $y; emitp @s' $indir/typeof.dkvp
 run_mlr put '@s = @s + $y; emitp @s' $indir/typeof.dkvp
 run_mlr put '@s = @s + $u; emitp @s' $indir/typeof.dkvp
 
 run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
-run_mlr put '$z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 run_mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typeof.dkvp
 
-run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 

@@ -1109,7 +1109,7 @@ static mv_binary_func_t* divide_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT       EMPTY STRING INT          FLOAT        BOOL
 	/*ERROR*/  {_e,  _e,          _e,   _e,    _e,          _e,          _e},
 	/*ABSENT*/ {_e,  _v,          _v,   _e,    divide_i_ai, divide_f_af, _e},
-	/*EMPTY*/  {_e,  _v,          _v,   _e,    _e,          _e,          _e},
+	/*EMPTY*/  {_e,  _v,          _v,   _e,    _v,          _v,          _e},
 	/*STRING*/ {_e,  _e,          _e,   _e,    _e,          _e,          _e},
 	/*INT*/    {_e,  divide_i_ia, _v,   _e,    divide_i_ii, divide_f_if, _e},
 	/*FLOAT*/  {_e,  divide_f_fa, _v,   _e,    divide_f_fi, divide_f_ff, _e},
@@ -1171,7 +1171,7 @@ static mv_binary_func_t* idiv_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT     EMPTY STRING INT        FLOAT      BOOL
 	/*ERROR*/  {_e,  _e,        _e,   _e,    _e,        _e,        _e},
 	/*ABSENT*/ {_e,  _v,        _v,   _e,    idiv_i_ai, idiv_f_af, _e},
-	/*EMPTY*/  {_e,  _v,        _v,   _e,    _e,        _e,        _e},
+	/*EMPTY*/  {_e,  _v,        _v,   _e,    _v,        _v,        _e},
 	/*STRING*/ {_e,  _e,        _e,   _e,    _e,        _e,        _e},
 	/*INT*/    {_e,  idiv_i_ia, _v,   _e,    idiv_i_ii, idiv_f_if, _e},
 	/*FLOAT*/  {_e,  idiv_f_fa, _v,   _e,    idiv_f_fi, idiv_f_ff, _e},
@@ -1233,7 +1233,7 @@ static mv_binary_func_t* mod_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT    EMPTY STRING INT       FLOAT     BOOL
 	/*ERROR*/  {_e,  _e,       _e,   _e,    _e,       _e,       _e},
 	/*ABSENT*/ {_e,  _v,       _v,   _e,    mod_i_ai, mod_f_af, _e},
-	/*EMPTY*/  {_e,  _v,       _v,   _e,    _e,       _e,       _e},
+	/*EMPTY*/  {_e,  _v,       _v,   _e,    _v,       _v,       _e},
 	/*STRING*/ {_e,  _e,       _e,   _e,    _e,       _e,       _e},
 	/*INT*/    {_e,  mod_i_ia, _v,   _e,    mod_i_ii, mod_f_if, _e},
 	/*FLOAT*/  {_e,  mod_f_fa, _v,   _e,    mod_f_fi, mod_f_ff, _e},

@@ -9,9 +9,9 @@ int assertions_run    = 0;
 int assertions_failed = 0;
 
 // ----------------------------------------------------------------
-static char * test1() {
+static char * test_caps() {
 	printf("\n");
-	printf("-- TEST_RVAL_EVALUATORS test1 ENTER\n");
+	printf("-- TEST_RVAL_EVALUATORS test_caps ENTER\n");
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
@@ -50,9 +50,9 @@ static char * test1() {
 }
 
 // ----------------------------------------------------------------
-static char * test2() {
+static char * test_strings() {
 	printf("\n");
-	printf("-- TEST_RVAL_EVALUATORS test2 ENTER\n");
+	printf("-- TEST_RVAL_EVALUATORS test_strings ENTER\n");
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
@@ -103,9 +103,9 @@ static char * test2() {
 }
 
 // ----------------------------------------------------------------
-static char * test3() {
+static char * test_numbers() {
 	printf("\n");
-	printf("-- TEST_RVAL_EVALUATORS test3 ENTER\n");
+	printf("-- TEST_RVAL_EVALUATORS test_numbers ENTER\n");
 	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
 	context_t* pctx = &ctx;
 
@@ -228,22 +228,22 @@ static char * test_logical_and() {
 
 	mv_t ott = ptt->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptt->pvstate);
 	mv_t otf = ptf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptf->pvstate);
-	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
 	mv_t oft = pft->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pft->pvstate);
 	mv_t off = pff->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pff->pvstate);
-	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
 	mv_t oat = pat->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pat->pvstate);
 	mv_t oaf = paf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paf->pvstate);
+	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
+	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
 	mv_t oaa = paa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paa->pvstate);
 
 	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == TRUE);
 	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == FALSE);
-	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
 	mu_assert_lf(oft.type == MT_BOOL); mu_assert_lf(oft.u.boolv == FALSE);
 	mu_assert_lf(off.type == MT_BOOL); mu_assert_lf(off.u.boolv == FALSE);
-	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oat.type == MT_BOOL); mu_assert_lf(oat.u.boolv == TRUE);
 	mu_assert_lf(oaf.type == MT_BOOL); mu_assert_lf(oaf.u.boolv == FALSE);
+	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
+	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oaa.type == MT_ABSENT);
 
 	return 0;
@@ -324,32 +324,32 @@ static char * test_logical_xor() {
 
 	rval_evaluator_t* ptt = rval_evaluator_alloc_from_b_bb_xor_func(pt, pt);
 	rval_evaluator_t* ptf = rval_evaluator_alloc_from_b_bb_xor_func(pt, pf);
-	rval_evaluator_t* pta = rval_evaluator_alloc_from_b_bb_xor_func(pt, pa);
 	rval_evaluator_t* pft = rval_evaluator_alloc_from_b_bb_xor_func(pf, pt);
 	rval_evaluator_t* pff = rval_evaluator_alloc_from_b_bb_xor_func(pf, pf);
-	rval_evaluator_t* pfa = rval_evaluator_alloc_from_b_bb_xor_func(pf, pa);
 	rval_evaluator_t* pat = rval_evaluator_alloc_from_b_bb_xor_func(pa, pt);
 	rval_evaluator_t* paf = rval_evaluator_alloc_from_b_bb_xor_func(pa, pf);
+	rval_evaluator_t* pta = rval_evaluator_alloc_from_b_bb_xor_func(pt, pa);
+	rval_evaluator_t* pfa = rval_evaluator_alloc_from_b_bb_xor_func(pf, pa);
 	rval_evaluator_t* paa = rval_evaluator_alloc_from_b_bb_xor_func(pa, pa);
 
 	mv_t ott = ptt->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptt->pvstate);
 	mv_t otf = ptf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptf->pvstate);
-	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
 	mv_t oft = pft->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pft->pvstate);
 	mv_t off = pff->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pff->pvstate);
-	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
 	mv_t oat = pat->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pat->pvstate);
 	mv_t oaf = paf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paf->pvstate);
+	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
+	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
 	mv_t oaa = paa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paa->pvstate);
 
 	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == FALSE);
 	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == TRUE);
-	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
 	mu_assert_lf(oft.type == MT_BOOL); mu_assert_lf(oft.u.boolv == TRUE);
 	mu_assert_lf(off.type == MT_BOOL); mu_assert_lf(off.u.boolv == FALSE);
-	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oat.type == MT_BOOL); mu_assert_lf(oat.u.boolv == TRUE);
 	mu_assert_lf(oaf.type == MT_BOOL); mu_assert_lf(oaf.u.boolv == FALSE);
+	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
+	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oaa.type == MT_ABSENT);
 
 	return 0;
@@ -357,12 +357,13 @@ static char * test_logical_xor() {
 
 // ================================================================
 static char * all_tests() {
-	mu_run_test(test1);
-	mu_run_test(test2);
-	mu_run_test(test3);
+	mu_run_test(test_caps);
+	mu_run_test(test_strings);
+	mu_run_test(test_numbers);
 	mu_run_test(test_logical_and);
 	mu_run_test(test_logical_or);
 	mu_run_test(test_logical_xor);
+	// There is more operator testing in reg_test/run
 	return 0;
 }
 

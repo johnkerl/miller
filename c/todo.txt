@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
   -> chk UT uneg
   -> UT absent/void; void/absent; void/void; absent/absent; $/@
   -> all absent-math/logical/bitwise-ops all UTs: e.g. 'a=3,b=5,c=' -> '$x=$a|$b;$y=$a|$c;$z=$a|$u;$w=$u|$v'
+  -> xxx reg_test/dev
 * --strict?
 ! valgrinds
 * do more oosvar experiments before finalizing mlr4
