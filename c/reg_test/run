@@ -63,6 +63,11 @@ announce() {
 	echo >> $outfile
 }
 
+mention() {
+	echo >> $outfile
+	echo ---------------------------------------------------------------- "$@" >> $outfile
+}
+
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to the mlr
 # executable may vary.  Nonetheless for debugging it's crucial that we echo out
@@ -959,6 +964,60 @@ run_mlr put -q '@v=1; @nonesuch       {emit @v}' $indir/abixy
 run_mlr put -q '@v=1; @nonesuch==true {emit @v}' $indir/abixy
 run_mlr put -q '@v=1; $nonesuch       {emit @v}' $indir/abixy
 run_mlr put -q '@v=1; $nonesuch==true {emit @v}' $indir/abixy
+
+mention PLUS
+run_mlr --ofs tab put 'begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+
+mention MINUS
+run_mlr --ofs tab put 'begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
+
+mention TIMES
+run_mlr --ofs tab put 'begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
+
+mention DIVIDE
+run_mlr --ofs tab put 'begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
+
+mention INTEGER DIVIDE
+run_mlr --ofs tab put 'begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
+
+mention REMAINDER
+run_mlr --ofs tab put 'begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
+
+mention BITWISE AND
+run_mlr --ofs tab put 'begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
+
+mention BITWISE OR
+run_mlr --ofs tab put 'begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
+
+mention BITWISE XOR
+run_mlr --ofs tab put 'begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
+run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
 
 # ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
