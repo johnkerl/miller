@@ -1362,9 +1362,15 @@ is absent, <tt>@sum*2</tt> evaluates to 2.
 plus).  The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
 <tt>$nonesuch</tt> and
 <tt>$notdefined</tt> fields absent from the input record, then there will be an output field
-<tt>$c</tt> present, with empty value.
-If you&rsquo;re interested in a formal description, here&rsquo;s a table for plus (other arithmetic/boolean/bitwise
-operators are similar):
+<tt>$c</tt> present, with empty value. To work around this &mdash; namely, to set an output field only for
+records which have the the inputs present &mdash; you can use a pattern-action block with <tt>ispresent</tt>:
+
+POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put 'ispresent($loadmillis) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
+
+<p/> If you&rsquo;re interested in a formal description of how empty and absent
+fields participate in arithmetic, here&rsquo;s a table for plus (other
+arithmetic/boolean/bitwise operators are similar):
 
 POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 

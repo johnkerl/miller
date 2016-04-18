@@ -8,8 +8,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! absent
-  -> chk UT uneg
 * --strict?
 ! valgrinds
 * do more oosvar experiments before finalizing mlr4
