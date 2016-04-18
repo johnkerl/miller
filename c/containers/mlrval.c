@@ -859,6 +859,12 @@ static mv_t _1(mv_t* pa, mv_t* pb) {
 static mv_t _2(mv_t* pa, mv_t* pb) {
 	return *pb;
 }
+static mv_t _f0(mv_t* pa, mv_t* pb) {
+	return mv_from_float(0.0);
+}
+static mv_t _i0(mv_t* pa, mv_t* pb) {
+	return mv_from_int(0LL);
+}
 static mv_t _v1(mv_t* pa) {
 	return mv_empty();
 }
@@ -1038,13 +1044,6 @@ static mv_binary_func_t* times_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_times_func(mv_t* pval1, mv_t* pval2) { return (times_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
-static mv_t divide_f_af(mv_t* pa, mv_t* pb) {
-	return mv_from_float(0.0);
-}
-static mv_t divide_i_ai(mv_t* pa, mv_t* pb) {
-	return mv_from_int(0LL);
-}
-
 static mv_t divide_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1075,7 +1074,7 @@ static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* divide_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT EMPTY STRING INT          FLOAT        BOOL
 	/*ERROR*/  {_e,  _e,    _e,   _e,    _e,          _e,          _e},
-	/*ABSENT*/ {_e,  _v,    _v,   _e,    divide_i_ai, divide_f_af, _e},
+	/*ABSENT*/ {_e,  _v,    _v,   _e,    _i0,         _f0,         _e},
 	/*EMPTY*/  {_e,  _v,    _v,   _e,    _v,          _v,          _e},
 	/*STRING*/ {_e,  _e,    _e,   _e,    _e,          _e,          _e},
 	/*INT*/    {_e,  _1,    _v,   _e,    divide_i_ii, divide_f_if, _e},
@@ -1086,13 +1085,6 @@ static mv_binary_func_t* divide_dispositions[MT_DIM][MT_DIM] = {
 mv_t x_xx_divide_func(mv_t* pval1, mv_t* pval2) { return (divide_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
-static mv_t idiv_f_af(mv_t* pa, mv_t* pb) {
-	return mv_from_float(0.0);
-}
-static mv_t idiv_i_ai(mv_t* pa, mv_t* pb) {
-	return mv_from_int(0LL);
-}
-
 static mv_t idiv_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1131,7 +1123,7 @@ static mv_t idiv_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* idiv_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT EMPTY STRING INT        FLOAT      BOOL
 	/*ERROR*/  {_e,  _e,    _e,   _e,    _e,        _e,        _e},
-	/*ABSENT*/ {_e,  _v,    _v,   _e,    idiv_i_ai, idiv_f_af, _e},
+	/*ABSENT*/ {_e,  _v,    _v,   _e,    _i0,       _f0,       _e},
 	/*EMPTY*/  {_e,  _v,    _v,   _e,    _v,        _v,        _e},
 	/*STRING*/ {_e,  _e,    _e,   _e,    _e,        _e,        _e},
 	/*INT*/    {_e,  _1,    _v,   _e,    idiv_i_ii, idiv_f_if, _e},
@@ -1144,13 +1136,6 @@ mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2) {
 }
 
 // ----------------------------------------------------------------
-static mv_t mod_f_af(mv_t* pa, mv_t* pb) {
-	return mv_from_float(0.0);
-}
-static mv_t mod_i_ai(mv_t* pa, mv_t* pb) {
-	return mv_from_int(0LL);
-}
-
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -1186,7 +1171,7 @@ static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 static mv_binary_func_t* mod_dispositions[MT_DIM][MT_DIM] = {
 	//         ERROR ABSENT EMPTY STRING INT       FLOAT     BOOL
 	/*ERROR*/  {_e,  _e,    _e,   _e,    _e,       _e,       _e},
-	/*ABSENT*/ {_e,  _v,    _v,   _e,    mod_i_ai, mod_f_af, _e},
+	/*ABSENT*/ {_e,  _v,    _v,   _e,    _i0,      _f0,      _e},
 	/*EMPTY*/  {_e,  _v,    _v,   _e,    _v,       _v,       _e},
 	/*STRING*/ {_e,  _e,    _e,   _e,    _e,       _e,       _e},
 	/*INT*/    {_e,  _1,    _v,   _e,    mod_i_ii, mod_f_if, _e},
@@ -1200,10 +1185,10 @@ mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2) {
 
 // ----------------------------------------------------------------
 static mv_t upos_i_i(mv_t* pa) {
-	return mv_from_int(pa->u.intv);
+	return *pa;
 }
 static mv_t upos_f_f(mv_t* pa) {
-	return mv_from_float(pa->u.fltv);
+	return *pa;
 }
 
 static mv_unary_func_t* upos_dispositions[MT_DIM] = {
