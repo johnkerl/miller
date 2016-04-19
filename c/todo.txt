@@ -5,11 +5,16 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
+* syntax error?
+
+  mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp
+
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! absent non-assign??
+! absent non-assign
   -> ENV ...
+  -> doc ...
 ! valgrinds
 * --strict? mlh/mld if so.
 * revisit filter/put issue; probably close

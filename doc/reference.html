@@ -4763,11 +4763,13 @@ integer as well as float input.
 <!-- ================================================================ -->
 <a id="Null_data:_empty_and_absent"/><h1>Null data: empty and absent</h1>
 
-<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
-Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
-stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although you could
-pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
-Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
+<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
+data.  For example, take <tt>mlr sort</tt>: if you try to sort on field
+<tt>hostname</tt> when not all records in the data stream <i>have</i> a field
+named <tt>hostname</tt>, it is not an error (although you could pre-filter the
+data stream using <tt>mlr having-fields --at-least hostname then sort
+...</tt>).  Rather, records lacking one or more sort keys are simply output
+contiguously by <tt>mlr sort</tt>.
 
 <p/> Miller has two kinds of null data:
 
@@ -4796,8 +4798,8 @@ Rules for null-handling:
 
 <ul>
 
-<li> Records with one or more empty or absent sort-field values sort after
-records with all sort-field values present:
+<li> Records with one or more empty sort-field values sort after records with
+all sort-field values present:
 <p/>
 <div class="pokipanel">
 <pre>
@@ -4872,22 +4874,27 @@ x=,y=3,a=3,b=3
 </div>
 <p/>
 
-<li> Arithmetic operators with one <i>absent</i> operand return the other operand. The same is true for logical and
-bitwise AND, OR, and XOR. More specifically, absent values act like zero for addition/subtraction, and one for
-multiplication:
+<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y = log10($nonesuch)'</tt>) evaluate to absent,
+and arithmetic/bitwise/boolean operators with both operands being <i>absent</i> evaluate to absent. Furthermore,
+<b>any expression which evaluates to absent is not stored in the output record</b>:
+
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'x=2,y=3' | mlr put '$a=$u+$v'
-x=2,y=3
+$ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y'
+x=2,y=3,b=5
 </pre>
 </div>
 <p/>
+
+<li> Arithmetic operators with one <i>absent</i> operand return the other
+operand.  More specifically, absent values act like zero for
+addition/subtraction, and one for multiplication:
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'x=2,y=3' | mlr put '$a=$x+$v'
-x=2,y=3,a=2
+$ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y; $c=$u+$y'
+x=2,y=3,b=5,c=3
 </pre>
 </div>
 <p/>
@@ -4934,12 +4941,13 @@ is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
 
-<p/>Note that absent plus absent is empty, not absent (and likewise for arithmetic/boolean/bitwise operators other than
-plus).  The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
-<tt>$nonesuch</tt> and
-<tt>$notdefined</tt> fields absent from the input record, then there will be an output field
-<tt>$c</tt> present, with empty value. To work around this &mdash; namely, to set an output field only for
-records which have the the inputs present &mdash; you can use a pattern-action block with <tt>ispresent</tt>:
+<p/>Since absent plus absent is absent (and likewise for other operators),
+accumulations such as <tt>@sum += $x</tt> work correctly on heterogenous data,
+as do within-record formulas if both operands are absent. If one operand is
+present, you may get behavior you don&rsquo;t desire.  To work around this
+&mdash; namely, to set an output field only for records which have all the
+inputs present &mdash; you can use a pattern-action block with
+<tt>ispresent</tt>:
 
 <p/>
 <div class="pokipanel">
@@ -4956,15 +4964,18 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put 'ispresent($loadmillis) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true
+$ mlr put 'ispresent($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
 record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
+resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
 record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
+resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
 </pre>
 </div>
 <p/>
+<!-- xxx fix me
+PxKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp}}HERE
+-->
 
 <p/> If you&rsquo;re interested in a formal description of how empty and absent
 fields participate in arithmetic, here&rsquo;s a table for plus (other

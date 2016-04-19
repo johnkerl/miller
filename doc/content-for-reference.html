@@ -1269,11 +1269,13 @@ integer as well as float input.
 <!-- ================================================================ -->
 <h1>Null data: empty and absent</h1>
 
-<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b> data.
-Accordingly, if you try to sort on field <tt>hostname</tt> when not all records in the data
-stream <i>have</i> a field named <tt>hostname</tt>, it is not an error (although you could
-pre-filter the data stream using <tt>mlr having-fields --at-least hostname then sort ...</tt>).
-Rather, records lacking one or more sort keys are simply output contiguously by <tt>mlr sort</tt>.
+<p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
+data.  For example, take <tt>mlr sort</tt>: if you try to sort on field
+<tt>hostname</tt> when not all records in the data stream <i>have</i> a field
+named <tt>hostname</tt>, it is not an error (although you could pre-filter the
+data stream using <tt>mlr having-fields --at-least hostname then sort
+...</tt>).  Rather, records lacking one or more sort keys are simply output
+contiguously by <tt>mlr sort</tt>.
 
 <p/> Miller has two kinds of null data:
 
@@ -1302,8 +1304,8 @@ Rules for null-handling:
 
 <ul>
 
-<li> Records with one or more empty or absent sort-field values sort after
-records with all sort-field values present:
+<li> Records with one or more empty sort-field values sort after records with
+all sort-field values present:
 POKI_RUN_COMMAND{{mlr cat data/sort-null.dat}}HERE
 POKI_RUN_COMMAND{{mlr sort -n  a data/sort-null.dat}}HERE
 POKI_RUN_COMMAND{{mlr sort -nr a data/sort-null.dat}}HERE
@@ -1317,11 +1319,16 @@ with the exception that the <tt>min</tt> and <tt>max</tt> functions are
 special: if one argument is non-null, it wins:
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
-<li> Arithmetic operators with one <i>absent</i> operand return the other operand. The same is true for logical and
-bitwise AND, OR, and XOR. More specifically, absent values act like zero for addition/subtraction, and one for
-multiplication:
-POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v'}}HERE
-POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$v'}}HERE
+<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y = log10($nonesuch)'</tt>) evaluate to absent,
+and arithmetic/bitwise/boolean operators with both operands being <i>absent</i> evaluate to absent. Furthermore,
+<b>any expression which evaluates to absent is not stored in the output record</b>:
+
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y'}}HERE
+
+<li> Arithmetic operators with one <i>absent</i> operand return the other
+operand.  More specifically, absent values act like zero for
+addition/subtraction, and one for multiplication:
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y; $c=$u+$y'}}HERE
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'}}HERE
 
 </ul>
@@ -1358,15 +1365,19 @@ is absent, <tt>@sum*2</tt> evaluates to 2.
 
 </ul>
 
-<p/>Note that absent plus absent is empty, not absent (and likewise for arithmetic/boolean/bitwise operators other than
-plus).  The reason is that if you write <tt>'$c = $nonesuch + $notdefined'</tt> with the
-<tt>$nonesuch</tt> and
-<tt>$notdefined</tt> fields absent from the input record, then there will be an output field
-<tt>$c</tt> present, with empty value. To work around this &mdash; namely, to set an output field only for
-records which have the the inputs present &mdash; you can use a pattern-action block with <tt>ispresent</tt>:
+<p/>Since absent plus absent is absent (and likewise for other operators),
+accumulations such as <tt>@sum += $x</tt> work correctly on heterogenous data,
+as do within-record formulas if both operands are absent. If one operand is
+present, you may get behavior you don&rsquo;t desire.  To work around this
+&mdash; namely, to set an output field only for records which have all the
+inputs present &mdash; you can use a pattern-action block with
+<tt>ispresent</tt>:
 
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put 'ispresent($loadmillis) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put 'ispresent($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
+<!-- xxx fix me
+PxKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp}}HERE
+-->
 
 <p/> If you&rsquo;re interested in a formal description of how empty and absent
 fields participate in arithmetic, here&rsquo;s a table for plus (other
