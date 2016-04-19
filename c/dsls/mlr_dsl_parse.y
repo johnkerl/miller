@@ -898,7 +898,7 @@ md_atom_or_fcn(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_R
 	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 }
 
-md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_logical_or_term(B) MD_TOKEN_RPAREN. {
+md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN. {
 	A = B;
 }
 
@@ -916,9 +916,9 @@ md_atom_or_fcn(A) ::= MD_TOKEN_FCN_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOK
 md_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
 }
-md_fcn_args(A) ::= md_logical_or_term(B). {
+md_fcn_args(A) ::= md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
 }
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_logical_or_term(C). {
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
