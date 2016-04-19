@@ -793,8 +793,10 @@ static void mlr_dsl_cst_node_evaluate_srec_assignment(
 	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
-	lhmsv_put(ptyped_overlay, output_field_name, pval, FREE_ENTRY_VALUE);
-	lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+	if (mv_is_present(pval)) {
+		lhmsv_put(ptyped_overlay, output_field_name, pval, FREE_ENTRY_VALUE);
+		lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+	}
 }
 
 // ----------------------------------------------------------------
@@ -815,13 +817,15 @@ static void mlr_dsl_cst_node_evaluate_oosvar_assignment(
 	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
 		poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
 
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
-	if (all_non_null_or_error)
-		mlhmmv_put_terminal(poosvars, pmvkeys, &rhs_value);
+	if (mv_is_present(&rhs_value)) {
+		int all_non_null_or_error = TRUE;
+		sllmv_t* pmvkeys = evaluate_list(pitem->poosvar_lhs_keylist_evaluators,
+			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+		if (all_non_null_or_error)
+			mlhmmv_put_terminal(poosvars, pmvkeys, &rhs_value);
+		sllmv_free(pmvkeys);
+	}
 	mv_free(&rhs_value);
-	sllmv_free(pmvkeys);
 }
 
 // ----------------------------------------------------------------

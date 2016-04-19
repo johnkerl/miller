@@ -9274,12 +9274,12 @@ x=3,a="world"
 mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
 name=X,x=97,y=97
 name=Y,x=97,y=98
-x=97,y=
+x=97,y=6
 
 mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
 name=X,x=,y=
 name=Y,x=,y=
-x=,y=
+x=,y=6
 
 
 ================================================================
@@ -9298,7 +9298,7 @@ x=,y=,s=hurrah,z=
 mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=1
 x=1,y=,s=,z=1
-x=,y=,s=hurrah,z=
+x=,y=,s=hurrah
 
 mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=hXo
@@ -9311,9 +9311,9 @@ x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
 mlr put $t = sub($nosuch,  "ell", "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=
+x=1,y=2,s=hello
+x=1,y=,s=
+x=,y=,s=hurrah
 
 mlr put $t = gsub($s,      "l",   "X") ./reg_test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=heXXo
@@ -9326,9 +9326,9 @@ x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
 mlr put $t = gsub($nosuch, "l",   "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=
+x=1,y=2,s=hello
+x=1,y=,s=
+x=,y=,s=hurrah
 
 mlr --opprint filter isnull($x) ./reg_test/input/nullvals.dkvp
 a x y z
@@ -9753,46 +9753,46 @@ mlr put -q @v=1; $nonesuch==true {emit @v} ./reg_test/input/abixy
 
 ---------------------------------------------------------------- PLUS
 mlr --ofs tab put begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=3	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=5	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=5	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=5	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=5	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=5	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=5	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=5	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
+x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=5	st=4
+x=1	b=	xy=1	xt=5	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=5	xt=5	st=7
@@ -9800,57 +9800,57 @@ x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=5	xt=	st=7
 x=	y=	xy=	sy=	xt=	st=7
 a=1	y=2	xy=2	sy=5	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
+a=1	y=	sy=	xt=4	st=7
 a=	y=2	xy=2	sy=5	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
+a=	y=	sy=	xt=4	st=7
 x=1	b=2	xy=1	sy=3	xt=5	st=7
 x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
+x=	b=2	sy=3	xt=	st=7
+x=	b=	sy=3	xt=	st=7
 
 
 ---------------------------------------------------------------- MINUS
 mlr --ofs tab put begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=-1	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=-1	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=1	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=1	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=1	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=2	xt=-3	st=4
-x=1	y=	xy=	sy=	xt=-3	st=4
+x=1	y=	xy=	xt=-3	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=-3	st=4
-x=1	b=	xy=1	sy=	xt=-3	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=-3	st=4
+x=1	b=	xy=1	xt=-3	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=1	xt=-3	st=-1
@@ -9858,57 +9858,57 @@ x=1	y=	xy=	sy=	xt=-3	st=-1
 x=	y=2	xy=	sy=1	xt=	st=-1
 x=	y=	xy=	sy=	xt=	st=-1
 a=1	y=2	xy=2	sy=1	xt=4	st=-1
-a=1	y=	xy=	sy=	xt=4	st=-1
+a=1	y=	sy=	xt=4	st=-1
 a=	y=2	xy=2	sy=1	xt=4	st=-1
-a=	y=	xy=	sy=	xt=4	st=-1
+a=	y=	sy=	xt=4	st=-1
 x=1	b=2	xy=1	sy=3	xt=-3	st=-1
 x=1	b=	xy=1	sy=3	xt=-3	st=-1
-x=	b=2	xy=	sy=3	xt=	st=-1
-x=	b=	xy=	sy=3	xt=	st=-1
+x=	b=2	sy=3	xt=	st=-1
+x=	b=	sy=3	xt=	st=-1
 
 
 ---------------------------------------------------------------- TIMES
 mlr --ofs tab put begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=2	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=2	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=6	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=6	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=6	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=6	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=6	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=6	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=6	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=2	xt=4	st=4
-x=1	y=	xy=	sy=	xt=4	st=4
+x=1	y=	xy=	xt=4	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=4	st=4
-x=1	b=	xy=1	sy=	xt=4	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=4	st=4
+x=1	b=	xy=1	xt=4	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=6	xt=4	st=12
@@ -9916,57 +9916,57 @@ x=1	y=	xy=	sy=	xt=4	st=12
 x=	y=2	xy=	sy=6	xt=	st=12
 x=	y=	xy=	sy=	xt=	st=12
 a=1	y=2	xy=2	sy=6	xt=4	st=12
-a=1	y=	xy=	sy=	xt=4	st=12
+a=1	y=	sy=	xt=4	st=12
 a=	y=2	xy=2	sy=6	xt=4	st=12
-a=	y=	xy=	sy=	xt=4	st=12
+a=	y=	sy=	xt=4	st=12
 x=1	b=2	xy=1	sy=3	xt=4	st=12
 x=1	b=	xy=1	sy=3	xt=4	st=12
-x=	b=2	xy=	sy=3	xt=	st=12
-x=	b=	xy=	sy=3	xt=	st=12
+x=	b=2	sy=3	xt=	st=12
+x=	b=	sy=3	xt=	st=12
 
 
 ---------------------------------------------------------------- DIVIDE
 mlr --ofs tab put begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=0.500000	sy=0	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=0
+x=	y=	xy=
+a=1	y=2	xy=0	sy=0
+a=1	y=
+a=	y=2	xy=0	sy=0
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=1.500000	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1.500000	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1.500000	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1.500000	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=1.500000	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=0	sy=1.500000	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=0	sy=1.500000	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=0	xt=0.250000	st=0
-x=1	y=	xy=	sy=	xt=0.250000	st=0
+x=1	y=	xy=	xt=0.250000	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
+x=	y=	xy=	xt=	st=0
 a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
+a=1	y=	xt=0	st=0
 a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=0.250000	st=0
-x=1	b=	xy=1	sy=	xt=0.250000	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
+a=	y=	xt=0	st=0
+x=1	b=2	xy=1	xt=0.250000	st=0
+x=1	b=	xy=1	xt=0.250000	st=0
+x=	b=2	xt=	st=0
+x=	b=	xt=	st=0
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=1.500000	xt=0.250000	st=0.750000
@@ -9974,57 +9974,57 @@ x=1	y=	xy=	sy=	xt=0.250000	st=0.750000
 x=	y=2	xy=	sy=1.500000	xt=	st=0.750000
 x=	y=	xy=	sy=	xt=	st=0.750000
 a=1	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=1	y=	xy=	sy=	xt=0	st=0.750000
+a=1	y=	sy=	xt=0	st=0.750000
 a=	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=	y=	xy=	sy=	xt=0	st=0.750000
+a=	y=	sy=	xt=0	st=0.750000
 x=1	b=2	xy=1	sy=3	xt=0.250000	st=0.750000
 x=1	b=	xy=1	sy=3	xt=0.250000	st=0.750000
-x=	b=2	xy=	sy=3	xt=	st=0.750000
-x=	b=	xy=	sy=3	xt=	st=0.750000
+x=	b=2	sy=3	xt=	st=0.750000
+x=	b=	sy=3	xt=	st=0.750000
 
 
 ---------------------------------------------------------------- INTEGER DIVIDE
 mlr --ofs tab put begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=0	sy=0	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=0
+x=	y=	xy=
+a=1	y=2	xy=0	sy=0
+a=1	y=
+a=	y=2	xy=0	sy=0
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=1	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=0	sy=1	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=0	sy=1	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=0	xt=0	st=0
-x=1	y=	xy=	sy=	xt=0	st=0
+x=1	y=	xy=	xt=0	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
+x=	y=	xy=	xt=	st=0
 a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
+a=1	y=	xt=0	st=0
 a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=0	st=0
-x=1	b=	xy=1	sy=	xt=0	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
+a=	y=	xt=0	st=0
+x=1	b=2	xy=1	xt=0	st=0
+x=1	b=	xy=1	xt=0	st=0
+x=	b=2	xt=	st=0
+x=	b=	xt=	st=0
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=1	xt=0	st=0
@@ -10032,57 +10032,57 @@ x=1	y=	xy=	sy=	xt=0	st=0
 x=	y=2	xy=	sy=1	xt=	st=0
 x=	y=	xy=	sy=	xt=	st=0
 a=1	y=2	xy=0	sy=1	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
+a=1	y=	sy=	xt=0	st=0
 a=	y=2	xy=0	sy=1	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
+a=	y=	sy=	xt=0	st=0
 x=1	b=2	xy=1	sy=3	xt=0	st=0
 x=1	b=	xy=1	sy=3	xt=0	st=0
-x=	b=2	xy=	sy=3	xt=	st=0
-x=	b=	xy=	sy=3	xt=	st=0
+x=	b=2	sy=3	xt=	st=0
+x=	b=	sy=3	xt=	st=0
 
 
 ---------------------------------------------------------------- REMAINDER
 mlr --ofs tab put begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=1	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=1	sy=0	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=0
+x=	y=	xy=
+a=1	y=2	xy=0	sy=0
+a=1	y=
+a=	y=2	xy=0	sy=0
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=1	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=0	sy=1	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=0	sy=1	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=0	xt=1	st=0
-x=1	y=	xy=	sy=	xt=1	st=0
+x=1	y=	xy=	xt=1	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
+x=	y=	xy=	xt=	st=0
 a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
+a=1	y=	xt=0	st=0
 a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=1	st=0
-x=1	b=	xy=1	sy=	xt=1	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
+a=	y=	xt=0	st=0
+x=1	b=2	xy=1	xt=1	st=0
+x=1	b=	xy=1	xt=1	st=0
+x=	b=2	xt=	st=0
+x=	b=	xt=	st=0
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=1	xt=1	st=3
@@ -10090,57 +10090,57 @@ x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	xt=	st=3
 x=	y=	xy=	sy=	xt=	st=3
 a=1	y=2	xy=0	sy=1	xt=0	st=3
-a=1	y=	xy=	sy=	xt=0	st=3
+a=1	y=	sy=	xt=0	st=3
 a=	y=2	xy=0	sy=1	xt=0	st=3
-a=	y=	xy=	sy=	xt=0	st=3
+a=	y=	sy=	xt=0	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	xt=	st=3
+x=	b=	sy=3	xt=	st=3
 
 
 ---------------------------------------------------------------- BITWISE AND
 mlr --ofs tab put begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=0	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=2	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=2	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=2	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=2	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=2	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=2	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=0	st=4
-x=1	y=	xy=	sy=	xt=0	st=4
+x=1	y=	xy=	xt=0	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=0	st=4
-x=1	b=	xy=1	sy=	xt=0	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=0	st=4
+x=1	b=	xy=1	xt=0	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=0	st=0
@@ -10148,57 +10148,57 @@ x=1	y=	xy=	sy=	xt=0	st=0
 x=	y=2	xy=	sy=2	xt=	st=0
 x=	y=	xy=	sy=	xt=	st=0
 a=1	y=2	xy=2	sy=2	xt=4	st=0
-a=1	y=	xy=	sy=	xt=4	st=0
+a=1	y=	sy=	xt=4	st=0
 a=	y=2	xy=2	sy=2	xt=4	st=0
-a=	y=	xy=	sy=	xt=4	st=0
+a=	y=	sy=	xt=4	st=0
 x=1	b=2	xy=1	sy=3	xt=0	st=0
 x=1	b=	xy=1	sy=3	xt=0	st=0
-x=	b=2	xy=	sy=3	xt=	st=0
-x=	b=	xy=	sy=3	xt=	st=0
+x=	b=2	sy=3	xt=	st=0
+x=	b=	sy=3	xt=	st=0
 
 
 ---------------------------------------------------------------- BITWISE OR
 mlr --ofs tab put begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=3	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=3	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=3	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=3	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=3	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=3	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=3	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=3	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
+x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=5	st=4
+x=1	b=	xy=1	xt=5	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=3	xt=5	st=7
@@ -10206,57 +10206,57 @@ x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=3	xt=	st=7
 x=	y=	xy=	sy=	xt=	st=7
 a=1	y=2	xy=2	sy=3	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
+a=1	y=	sy=	xt=4	st=7
 a=	y=2	xy=2	sy=3	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
+a=	y=	sy=	xt=4	st=7
 x=1	b=2	xy=1	sy=3	xt=5	st=7
 x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
+x=	b=2	sy=3	xt=	st=7
+x=	b=	sy=3	xt=	st=7
 
 
 ---------------------------------------------------------------- BITWISE XOR
 mlr --ofs tab put begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+x=1	y=2	xy=3	sy=2	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=2
+x=	y=	xy=
+a=1	y=2	xy=2	sy=2
+a=1	y=
+a=	y=2	xy=2	sy=2
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
+x=	y=2	xy=	sy=1	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=1	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=1	st=3
+a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
+x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
+x=	y=	xy=	xt=	st=4
 a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
+a=1	y=	xt=4	st=4
 a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=5	st=4
+x=1	b=	xy=1	xt=5	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=1	xt=5	st=7
@@ -10264,13 +10264,13 @@ x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=1	xt=	st=7
 x=	y=	xy=	sy=	xt=	st=7
 a=1	y=2	xy=2	sy=1	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
+a=1	y=	sy=	xt=4	st=7
 a=	y=2	xy=2	sy=1	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
+a=	y=	sy=	xt=4	st=7
 x=1	b=2	xy=1	sy=3	xt=5	st=7
 x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
+x=	b=2	sy=3	xt=	st=7
+x=	b=	sy=3	xt=	st=7
 
 
 ================================================================
@@ -11793,13 +11793,13 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,xy=0.023567,ab=hatwye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,xy=0.478811,ab=panwye
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.252048,ab=panpan
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.396146,ab=ekspan
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.069221,ab=
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.051180,ab=
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.069221
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.051180
 a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,xy=0.863624,ab=wyepan
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,xy=0.259990,ab=zeepan
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,xy=0.114945,ab=ekszee
 a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,xy=0.598554,ab=zeewye
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,xy=0.023567,ab=
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,xy=0.023567
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,xy=0.478811,ab=panwye
 
 mlr --from ./reg_test/input/abixy --from ./reg_test/input/abixy-het filter -f ./reg_test/input/filter-example.dsl
@@ -13314,7 +13314,6 @@ x a	b
 y aTABb
 
 z 
-y 
 
 x 
 y 
@@ -13333,7 +13332,6 @@ x a	b
 y a	b
 
 z 
-y 
 
 x 
 y 
@@ -13352,7 +13350,6 @@ x a	b
 y a	b
 
 z 
-y 
 
 x 
 y 
@@ -13371,7 +13368,6 @@ x a	b
 y a	b
 
 z 
-y 
 
 x 
 y 
@@ -14411,16 +14407,16 @@ a=zee,sum=1.125680
 a=hat,sum=0.031442
 
 mlr put $nonesuch = @nonesuch ./reg_test/input/abixy
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nonesuch=
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nonesuch=
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nonesuch=
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nonesuch=
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nonesuch=
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nonesuch=
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,nonesuch=
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,nonesuch=
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nonesuch=
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nonesuch=
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg_test/input/abixy-het
 sum=3.963005
@@ -14428,20 +14424,19 @@ sum=3.963005
 mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg_test/input/abixy-het
 a=pan,sum=0.849416
 a=eks,sum=1.751863
-a=wye,sum=
 a=zee,sum=1.125680
 
 mlr put $nonesuch = @nonesuch ./reg_test/input/abixy-het
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nonesuch=
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nonesuch=
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nonesuch=
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nonesuch=
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,nonesuch=
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nonesuch=
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,nonesuch=
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,nonesuch=
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nonesuch=
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nonesuch=
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg_test/input/abixy
 sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
@@ -14475,27 +14470,27 @@ x=1,y=,z=
 x=,y=2,z=
 x=,y=,z=
 a=1,y=2,z=2
-a=1,y=,z=
+a=1,y=
 a=,y=2,z=2
-a=,y=,z=
+a=,y=
 x=1,b=2,z=1
 x=1,b=,z=1
-x=,b=2,z=
-x=,b=,z=
+x=,b=2
+x=,b=
 
 mlr put $z = $x + $u ./reg_test/input/typeof.dkvp
 x=1,y=2,z=1
 x=1,y=,z=1
-x=,y=2,z=
-x=,y=,z=
-a=1,y=2,z=
-a=1,y=,z=
-a=,y=2,z=
-a=,y=,z=
+x=,y=2
+x=,y=
+a=1,y=2
+a=1,y=
+a=,y=2
+a=,y=
 x=1,b=2,z=1
 x=1,b=,z=1
-x=,b=2,z=
-x=,b=,z=
+x=,b=2
+x=,b=
 
 mlr put @s = @s + $y; emitp @s ./reg_test/input/typeof.dkvp
 s=2
@@ -14524,29 +14519,17 @@ s=
 x=,b=
 
 mlr put @s = @s + $u; emitp @s ./reg_test/input/typeof.dkvp
-s=
 x=1,y=2
-s=
 x=1,y=
-s=
 x=,y=2
-s=
 x=,y=
-s=
 a=1,y=2
-s=
 a=1,y=
-s=
 a=,y=2
-s=
 a=,y=
-s=
 x=1,b=2
-s=
 x=1,b=
-s=
 x=,b=2
-s=
 x=,b=
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
@@ -14555,27 +14538,27 @@ x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
 x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
 x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
 a=1,y=MT_INT,z=MT_INT,x=MT_ABSENT
-a=1,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
 a=,y=MT_INT,z=MT_INT,x=MT_ABSENT
-a=,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
 x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
 x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
-x=MT_EMPTY,b=2,z=MT_EMPTY,y=MT_ABSENT
-x=MT_EMPTY,b=,z=MT_EMPTY,y=MT_ABSENT
+x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT
+x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT
 
 mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_INT
 x=MT_INT,y=MT_EMPTY,z=MT_INT
-x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
-a=1,y=MT_INT,z=MT_EMPTY,x=MT_ABSENT
-a=1,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
-a=,y=MT_INT,z=MT_EMPTY,x=MT_ABSENT
-a=,y=MT_EMPTY,z=MT_EMPTY,x=MT_ABSENT
+x=MT_EMPTY,y=MT_INT,z=MT_ABSENT
+x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT
+a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT
+a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
+a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT
+a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
 x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
 x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
-x=MT_EMPTY,b=2,z=MT_EMPTY,y=MT_ABSENT
-x=MT_EMPTY,b=,z=MT_EMPTY,y=MT_ABSENT
+x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT
+x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT
 
 mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
 x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
@@ -14592,18 +14575,18 @@ x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
 x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
 
 mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_ABSENT
+x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_ABSENT
+a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
 
 mlr cat
 x=1
@@ -14611,13 +14594,13 @@ x=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
 x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
 sum=
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
 x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
 sum=
@@ -14628,13 +14611,13 @@ xxx=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
 x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
 sum=8
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	osum=	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
+x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
 xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
 x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
 sum=8
@@ -14722,7 +14705,6 @@ mlr put -q @v = $x;        end {emitp @v } ./reg_test/input/abixy
 v=0.502626
 
 mlr put -q @v = $nonesuch; end {emitp @v } ./reg_test/input/abixy
-v=
 
 mlr put -q @sum += $i;        end {emitf @sum } ./reg_test/input/abixy
 sum=55
@@ -14740,7 +14722,6 @@ mlr put -q @sum += $x;        end {emitp  @sum          } ./reg_test/input/abixy
 sum=4.536294
 
 mlr put -q @sum += $nonesuch; end {emitp  @sum          } ./reg_test/input/abixy
-sum=
 
 mlr put -q @sum += $i;        end {emitp  @sum, "extra" } ./reg_test/input/abixy
 sum=55
@@ -14749,7 +14730,6 @@ mlr put -q @sum += $x;        end {emitp  @sum, "extra" } ./reg_test/input/abixy
 sum=4.536294
 
 mlr put -q @sum += $nonesuch; end {emitp  @sum, "extra" } ./reg_test/input/abixy
-sum=
 
 mlr put -q @sum[$a] += $i;        end {emitp  @sum               } ./reg_test/input/abixy
 sum:pan=11,sum:eks=13,sum:wye=8,sum:zee=14,sum:hat=9
@@ -14758,7 +14738,6 @@ mlr put -q @sum[$a] += $x;        end {emitp  @sum               } ./reg_test/in
 sum:pan=0.849416,sum:eks=1.751863,sum:wye=0.777892,sum:zee=1.125680,sum:hat=0.031442
 
 mlr put -q @sum[$a] += $nonesuch; end {emitp  @sum               } ./reg_test/input/abixy
-sum:pan=,sum:eks=,sum:wye=,sum:zee=,sum:hat=
 
 mlr put -q @sum[$a] += $i;        end {emitp  @sum, "a"          } ./reg_test/input/abixy
 a=pan,sum=11
@@ -14775,11 +14754,6 @@ a=zee,sum=1.125680
 a=hat,sum=0.031442
 
 mlr put -q @sum[$a] += $nonesuch; end {emitp  @sum, "a"          } ./reg_test/input/abixy
-a=pan,sum=
-a=eks,sum=
-a=wye,sum=
-a=zee,sum=
-a=hat,sum=
 
 mlr put -q @sum[$a] += $i;        end {emitp  @sum, "a", "extra" } ./reg_test/input/abixy
 a=pan,sum=11
@@ -14796,11 +14770,6 @@ a=zee,sum=1.125680
 a=hat,sum=0.031442
 
 mlr put -q @sum[$a] += $nonesuch; end {emitp  @sum, "a", "extra" } ./reg_test/input/abixy
-a=pan,sum=
-a=eks,sum=
-a=wye,sum=
-a=zee,sum=
-a=hat,sum=
 
 mlr put -q @sum[$a][$b] += $i;        end {emitp  @sum                    } ./reg_test/input/abixy
 sum:pan:pan=1,sum:pan:wye=10,sum:eks:pan=2,sum:eks:wye=4,sum:eks:zee=7,sum:wye:wye=3,sum:wye:pan=5,sum:zee:pan=6,sum:zee:wye=8,sum:hat:wye=9
@@ -14809,7 +14778,6 @@ mlr put -q @sum[$a][$b] += $x;        end {emitp  @sum                    } ./re
 sum:pan:pan=0.346790,sum:pan:wye=0.502626,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:eks:zee=0.611784,sum:wye:wye=0.204603,sum:wye:pan=0.573289,sum:zee:pan=0.527126,sum:zee:wye=0.598554,sum:hat:wye=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emitp  @sum                    } ./reg_test/input/abixy
-sum:pan:pan=,sum:pan:wye=,sum:eks:pan=,sum:eks:wye=,sum:eks:zee=,sum:wye:wye=,sum:wye:pan=,sum:zee:pan=,sum:zee:wye=,sum:hat:wye=
 
 mlr put -q @sum[$a][$b] += $i;        end {emitp  @sum, "a"               } ./reg_test/input/abixy
 a=pan,sum:pan=1,sum:wye=10
@@ -14826,11 +14794,6 @@ a=zee,sum:pan=0.527126,sum:wye=0.598554
 a=hat,sum:wye=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emitp  @sum, "a"               } ./reg_test/input/abixy
-a=pan,sum:pan=,sum:wye=
-a=eks,sum:pan=,sum:wye=,sum:zee=
-a=wye,sum:wye=,sum:pan=
-a=zee,sum:pan=,sum:wye=
-a=hat,sum:wye=
 
 mlr put -q @sum[$a][$b] += $i;        end {emitp  @sum, "a", "b"          } ./reg_test/input/abixy
 a=pan,b=pan,sum=1
@@ -14857,16 +14820,6 @@ a=zee,b=wye,sum=0.598554
 a=hat,b=wye,sum=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emitp  @sum, "a", "b"          } ./reg_test/input/abixy
-a=pan,b=pan,sum=
-a=pan,b=wye,sum=
-a=eks,b=pan,sum=
-a=eks,b=wye,sum=
-a=eks,b=zee,sum=
-a=wye,b=wye,sum=
-a=wye,b=pan,sum=
-a=zee,b=pan,sum=
-a=zee,b=wye,sum=
-a=hat,b=wye,sum=
 
 mlr put -q @sum[$a][$b] += $i;        end {emitp  @sum, "a", "b", "extra" } ./reg_test/input/abixy
 a=pan,b=pan,sum=1
@@ -14893,22 +14846,11 @@ a=zee,b=wye,sum=0.598554
 a=hat,b=wye,sum=0.031442
 
 mlr put -q @sum[$a][$b] += $nonesuch; end {emitp  @sum, "a", "b", "extra" } ./reg_test/input/abixy
-a=pan,b=pan,sum=
-a=pan,b=wye,sum=
-a=eks,b=pan,sum=
-a=eks,b=wye,sum=
-a=eks,b=zee,sum=
-a=wye,b=wye,sum=
-a=wye,b=pan,sum=
-a=zee,b=pan,sum=
-a=zee,b=wye,sum=
-a=hat,b=wye,sum=
 
 mlr --oxtab put -q @sum[$a][$b] += $i; NR == 3 { @x = $x }; NR == 7 { @v = $* }; end {emitp all} ./reg_test/input/abixy-het
 sum:pan:pan 1
 sum:pan:wye 10
 sum:eks:pan 2
-sum:eks:zee 
 sum:wye:pan 5
 sum:zee:pan 6
 sum:zee:wye 8
@@ -17577,14 +17519,14 @@ AST END STATEMENTS (0):
 mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
 1=pan
 1=pan,2=eks
-1=pan,2=eks,3=
-1=pan,2=eks,3=,4=eks
-1=pan,2=eks,3=,4=eks,5=wye
-1=pan,2=eks,3=,4=eks,5=wye,6=zee
+1=pan,2=eks
+1=pan,2=eks,4=eks
+1=pan,2=eks,4=eks,5=wye
+1=pan,2=eks,4=eks,5=wye,6=zee
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,9=,10=pan
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,10=pan
 
 
 ================================================================
