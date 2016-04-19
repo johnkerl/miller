@@ -5,9 +5,10 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
-* syntax error?
-
-  mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp
+* ok:
+  mlr --from ../data/small put '$new = NR == 3 ? $x : $i'
+  syntax error:
+  mlr --from ../data/small put '$new = (NR == 3 ? $x : $i) * 10'
 
 ================================================================
 TOP-OF-LIST SUMMARY
@@ -15,6 +16,7 @@ TOP-OF-LIST SUMMARY
 ! absent non-assign
   -> ENV ...
   -> doc ...
+  -> revert?? $nonesuch * 1000 reveals ispresent-bracketing is needed & it may as well be consistent ...
 ! valgrinds
 * --strict? mlh/mld if so.
 * revisit filter/put issue; probably close
