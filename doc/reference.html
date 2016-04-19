@@ -4879,7 +4879,7 @@ multiplication:
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=$u+$v'
-x=2,y=3,a=
+x=2,y=3
 </pre>
 </div>
 <p/>
@@ -4895,7 +4895,7 @@ x=2,y=3,a=2
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
-x=2,y=3,a=2,b=3,c=
+x=2,y=3,a=2,b=3
 </pre>
 </div>
 <p/>
@@ -4977,8 +4977,8 @@ $ mlr --print-type-arithmetic-info
 (+)    | error  absent empty  string int    float  bool
 ------ + ------ ------ ------ ------ ------ ------ ------
 error  | error  error  error  error  error  error  error
-absent | error  empty  empty  error  int    float  error
-empty  | error  empty  empty  error  empty  empty  error
+absent | error  absent absent error  int    float  error
+empty  | error  absent empty  error  empty  empty  error
 string | error  error  error  error  error  error  error
 int    | error  int    empty  error  int    float  error
 float  | error  float  empty  error  float  float  error
