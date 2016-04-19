@@ -1319,16 +1319,15 @@ with the exception that the <tt>min</tt> and <tt>max</tt> functions are
 special: if one argument is non-null, it wins:
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
-<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y = log10($nonesuch)'</tt>) evaluate to absent,
-and arithmetic/bitwise/boolean operators with both operands being <i>absent</i> evaluate to absent. Furthermore,
-<b>any expression which evaluates to absent is not stored in the output record</b>:
+<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y =
+log10($nonesuch)'</tt>) evaluate to absent, and arithmetic/bitwise/boolean
+operators with both operands being absent evaluate to absent.
+Arithmetic operators with one absent operand return the other operand.
+More specifically, absent values act like zero for addition/subtraction, and
+one for multiplication: Furthermore, <b>any expression which evaluates to
+absent is not stored in the output record</b>:
 
-POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y'}}HERE
-
-<li> Arithmetic operators with one <i>absent</i> operand return the other
-operand.  More specifically, absent values act like zero for
-addition/subtraction, and one for multiplication:
-POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y; $c=$u+$y'}}HERE
+POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'}}HERE
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'}}HERE
 
 </ul>
@@ -1375,9 +1374,7 @@ inputs present &mdash; you can use a pattern-action block with
 
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put 'ispresent($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
-<!-- xxx fix me
-PxKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp}}HERE
--->
+POKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp}}HERE
 
 <p/> If you&rsquo;re interested in a formal description of how empty and absent
 fields participate in arithmetic, here&rsquo;s a table for plus (other

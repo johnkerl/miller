@@ -4874,27 +4874,19 @@ x=,y=3,a=3,b=3
 </div>
 <p/>
 
-<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y = log10($nonesuch)'</tt>) evaluate to absent,
-and arithmetic/bitwise/boolean operators with both operands being <i>absent</i> evaluate to absent. Furthermore,
-<b>any expression which evaluates to absent is not stored in the output record</b>:
+<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y =
+log10($nonesuch)'</tt>) evaluate to absent, and arithmetic/bitwise/boolean
+operators with both operands being absent evaluate to absent.
+Arithmetic operators with one absent operand return the other operand.
+More specifically, absent values act like zero for addition/subtraction, and
+one for multiplication: Furthermore, <b>any expression which evaluates to
+absent is not stored in the output record</b>:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y'
-x=2,y=3,b=5
-</pre>
-</div>
-<p/>
-
-<li> Arithmetic operators with one <i>absent</i> operand return the other
-operand.  More specifically, absent values act like zero for
-addition/subtraction, and one for multiplication:
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$x+$y; $c=$u+$y'
-x=2,y=3,b=5,c=3
+$ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
+x=2,y=3,b=3,c=5
 </pre>
 </div>
 <p/>
@@ -4973,9 +4965,18 @@ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
 </pre>
 </div>
 <p/>
-<!-- xxx fix me
-PxKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000 }' data/het.dkvp}}HERE
--->
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
+resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
+record_count=100,resource=/path/to/file,loadmillis=0.000000
+resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
+record_count=150,resource=/path/to/second/file,loadmillis=0.000000
+resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
+</pre>
+</div>
+<p/>
 
 <p/> If you&rsquo;re interested in a formal description of how empty and absent
 fields participate in arithmetic, here&rsquo;s a table for plus (other

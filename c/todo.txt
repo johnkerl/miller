@@ -5,11 +5,6 @@ BUGFIXES
 
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
 
-* ok:
-  mlr --from ../data/small put '$new = NR == 3 ? $x : $i'
-  syntax error:
-  mlr --from ../data/small put '$new = (NR == 3 ? $x : $i) * 10'
-
 ================================================================
 TOP-OF-LIST SUMMARY
 
