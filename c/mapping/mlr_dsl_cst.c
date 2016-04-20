@@ -796,6 +796,9 @@ static void mlr_dsl_cst_node_evaluate_srec_assignment(
 	if (mv_is_present(pval)) {
 		lhmsv_put(ptyped_overlay, output_field_name, pval, FREE_ENTRY_VALUE);
 		lrec_put(pinrec, output_field_name, "bug", NO_FREE);
+	} else {
+		mv_free(pval);
+		free(pval);
 	}
 }
 
@@ -856,6 +859,7 @@ static void mlr_dsl_cst_node_evaluate_oosvar_to_oosvar_assignment(
 		if (rhs_all_non_null_or_error) {
 			mlhmmv_copy(poosvars, plhskeys, prhskeys);
 		}
+		sllmv_free(prhskeys);
 	}
 
 	sllmv_free(plhskeys);
