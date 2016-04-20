@@ -459,17 +459,16 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel,
 // * If restkeys is too short: (e.g. 'unset $a["b"]' with data "a":"b":"c":4): remove the level and all below.
 
 void mlhmmv_remove(mlhmmv_t* pmap, sllmv_t* prestkeys) {
-	if (prestkeys == NULL)
+	if (prestkeys == NULL) {
 		return;
-
-	if (prestkeys->phead == NULL) {
+	} else if (prestkeys->phead == NULL) {
 		mlhmmv_level_free(pmap->proot_level);
 		pmap->proot_level = mlhmmv_level_alloc();
 		return;
+	} else {
+		int unused = FALSE;
+		mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
 	}
-
-	int unused = FALSE;
-	mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
 }
 
 static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
