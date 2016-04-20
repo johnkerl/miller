@@ -1068,6 +1068,8 @@ void cli_opts_free(cli_opts_t* popts) {
 
 	popts->plrec_writer->pfree_func(popts->plrec_writer);
 
+	slls_free(popts->filenames);
+
 	free(popts);
 
 	free_opt_singletons();

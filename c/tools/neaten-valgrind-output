@@ -2,7 +2,9 @@
 
 mlr --nidx --rs '\n\n' --fs '\001' put -q '
   $1 =~ "^mlr " {@a=$1};
-  $1 =~ "by 0x"{@b=$1;
-  @c = @a."\n".@b;
-  emit @c};
+  $1 =~ "by 0x" {
+    @b=$1;
+    @c = @a."\n".@b;
+    emit @c
+  }
 ' "$@"
