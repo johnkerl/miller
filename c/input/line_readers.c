@@ -33,10 +33,11 @@ char* mlr_get_cline2(FILE* fp, char irs) {
 	int c;
 
 	while (TRUE) {
-		if ((p-line) >= linecap) {
+		size_t offset = p - line;
+		if (offset >= linecap) {
 			linecap = linecap << 1;
 			line = mlr_realloc_or_die(line, linecap);
-			p = line;
+			p = line + offset;
 		}
 		c = getc_unlocked(fp);
 		if (c == irs) {
@@ -73,10 +74,11 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 	int irslast = irs[irslenm1];
 
 	while (TRUE) {
-		if ((p-line) >= linecap) {
+		size_t offset = p - line;
+		if (offset >= linecap) {
 			linecap = linecap << 1;
 			line = mlr_realloc_or_die(line, linecap);
-			p = line;
+			p = line + offset;
 		}
 		c = getc_unlocked(fp);
 		if (c == EOF) {
@@ -87,7 +89,7 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 		} else if (c == irslast) {
 			// Example: delim="abc". last='c'. Already have read "ab" into line. p-line=2.
 			// Now reading 'c'.
-			if (((p-line) >= irslenm1) && streqn(p-irslenm1, irs, irslenm1)) {
+			if ((offset >= irslenm1) && streqn(p-irslenm1, irs, irslenm1)) {
 				p -= irslenm1;
 				*p = 0;
 				break;
