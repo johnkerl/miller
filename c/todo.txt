@@ -2,8 +2,8 @@
 BUGFIXES
 
 * leak @ json input:
-
   vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
+-> replace value-free with recursive-free thruout
 
 * neatener itself ...
 
@@ -13,6 +13,7 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! valgrinds
+! autodetect format by file extension -- ?
 * do more oosvar experiments before finalizing mlr4
 * doc curly-bracing for oosvar names too
 * paragraph-mode UTs

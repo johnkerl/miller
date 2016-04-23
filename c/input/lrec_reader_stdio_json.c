@@ -53,7 +53,7 @@ static void lrec_reader_stdio_json_free(lrec_reader_t* preader) {
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
 			json_value_t* top_level_json_object = pe->pvvalue;
-			json_value_free(top_level_json_object);
+			json_free_value(top_level_json_object);
 		}
 		sllv_free(pstate->ptop_level_json_objects);
 	}
@@ -87,7 +87,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
 			json_value_t* top_level_json_object = pe->pvvalue;
-			json_value_free(top_level_json_object);
+			json_free_value(top_level_json_object);
 		}
 		sllv_free(pstate->ptop_level_json_objects);
 	}

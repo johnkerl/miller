@@ -264,6 +264,9 @@ EXPERIMENTAL_READER_SRCS = \
   containers/parse_trie.c \
   experimental/getlines.c
 
+EXPERIMENTAL_JSON_VG_MEM_SRCS = \
+  experimental/json_vg_mem.c
+
 # ================================================================
 # User-make: creates the executable and runs unit & regression tests
 # This is the default target for anyone pulling the repo and trying to
@@ -382,8 +385,10 @@ termcvt: tools/termcvt.c
 	$(CCDEBUG) tools/termcvt.c -o termcvt
 
 getl: .always
-	#$(CCDEBUG) $(EXPERIMENTAL_READER_SRCS) -o getl
 	$(CCOPT) $(EXPERIMENTAL_READER_SRCS) -o getl
+
+json-vg-mem: .always
+	$(CCDEBUG) $(EXPERIMENTAL_JSON_VG_MEM_SRCS) -o json-vg-mem
 
 # ================================================================
 clean:

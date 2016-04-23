@@ -862,7 +862,7 @@ e_failed:
 	}
 
 	if (!state.first_pass)
-		json_value_free(proot);
+		json_free_value(proot);
 
 	return 0;
 }
@@ -876,7 +876,7 @@ json_value_t * json_parse_for_unit_test(
 }
 
 // ----------------------------------------------------------------
-void json_value_free(json_value_t * pvalue) {
+void json_free_value(json_value_t * pvalue) {
 	json_value_t * cur_value;
 
 	if (!pvalue)
@@ -887,12 +887,10 @@ void json_value_free(json_value_t * pvalue) {
 	while (pvalue) {
 		switch (pvalue->type) {
 			case JSON_ARRAY:
-
 				if (!pvalue->u.array.length) {
 					free(pvalue->u.array.values);
 					break;
 				}
-
 				pvalue = pvalue->u.array.values[--pvalue->u.array.length];
 				continue;
 
@@ -901,7 +899,6 @@ void json_value_free(json_value_t * pvalue) {
 					free(pvalue->u.object.p.values);
 					break;
 				}
-
 				pvalue = pvalue->u.object.p.values[--pvalue->u.object.length].pvalue;
 				continue;
 
@@ -929,6 +926,13 @@ void json_value_free(json_value_t * pvalue) {
 		pvalue = pvalue->parent;
 		free(cur_value);
 	}
+}
+
+// ----------------------------------------------------------------
+// xxx after validation, make json_free_value private aux and only keep this one public.
+
+void json_free_recursive(json_value_t * pvalue)  {
+
 }
 
 // ----------------------------------------------------------------
