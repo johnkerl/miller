@@ -22,7 +22,6 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 				return FALSE;
 			sllv_append(precords, prec);
 		}
-		ptop_level_json->u.array.length = 0;
 	} else if (ptop_level_json->type == JSON_OBJECT) {
 		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep);
 		if (prec == NULL)
