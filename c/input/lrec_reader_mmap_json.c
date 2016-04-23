@@ -52,9 +52,14 @@ static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
 			json_value_t* top_level_json_object = pe->pvvalue;
+			// xxx
+			//printf("FREE1 [\n");
+			//json_print_recursive(top_level_json_object);
+			//printf("]\n");
 			json_free_value(top_level_json_object);
 		}
 		sllv_free(pstate->ptop_level_json_objects);
+		pstate->ptop_level_json_objects = NULL;
 	}
 	if (pstate->precords != NULL) {
 		for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
@@ -86,9 +91,14 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	if (pstate->ptop_level_json_objects != NULL) {
 		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
 			json_value_t* top_level_json_object = pe->pvvalue;
+			// xxx
+			//printf("FREE2 [\n");
+			//json_print_recursive(top_level_json_object);
+			//printf("]\n");
 			json_free_value(top_level_json_object);
 		}
 		sllv_free(pstate->ptop_level_json_objects);
+		pstate->ptop_level_json_objects = NULL;
 	}
 	if (pstate->precords != NULL) {
 		for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
@@ -125,6 +135,10 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 	while (TRUE) {
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
+			// xxx
+			//printf("ALLOC [\n");
+			//json_print_recursive(parsed_top_level_json);
+			//printf("]\n");
 
 		if (parsed_top_level_json == NULL) {
 			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.argv0, error_buf);
@@ -148,7 +162,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 		json_input = item_start;
 
 	}
-
 }
 
 // ----------------------------------------------------------------
