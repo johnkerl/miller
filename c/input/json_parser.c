@@ -929,13 +929,6 @@ void json_free_value(json_value_t * pvalue) {
 }
 
 // ----------------------------------------------------------------
-// xxx after validation, make json_free_value private aux and only keep this one public.
-
-void json_free_recursive(json_value_t * pvalue)  {
-
-}
-
-// ----------------------------------------------------------------
 char* json_describe_type(json_type_t type) {
 	switch(type) {
 	case JSON_NONE:    return "JSON_NONE";    break;

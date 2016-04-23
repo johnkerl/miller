@@ -265,6 +265,9 @@ EXPERIMENTAL_READER_SRCS = \
   experimental/getlines.c
 
 EXPERIMENTAL_JSON_VG_MEM_SRCS = \
+  lib/mlr_globals.c \
+  lib/mlrutil.c \
+  input/json_parser.c \
   experimental/json_vg_mem.c
 
 # ================================================================

@@ -58,4 +58,7 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 void file_ingestor_stdio_vclose(void* pvstate, void* pvhandle, char* prepipe) {
 	char* file_contents_buffer = pvhandle;
 	free(file_contents_buffer);
+	// xxx need to clarify the teardown order
+	//file_ingestor_stdio_state_t* pstate = pvstate;
+	//free(pstate);
 }

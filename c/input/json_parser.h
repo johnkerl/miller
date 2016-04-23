@@ -152,7 +152,6 @@ json_value_t * json_parse_for_unit_test(
 	json_char** ppend_of_item);
 
 void json_free_value(json_value_t *);
-void json_free_recursive(json_value_t *);
 
 char* json_describe_type(json_type_t type);
 

@@ -13,6 +13,7 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! valgrinds
+! xxxes
 ! autodetect format by file extension -- ?
 * do more oosvar experiments before finalizing mlr4
 * doc curly-bracing for oosvar names too
