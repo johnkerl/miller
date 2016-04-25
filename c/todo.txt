@@ -1,13 +1,7 @@
 ================================================================
 BUGFIXES
 
-* leak @ json input:
-  vgrun mlr --ijson --opprint cat reg_test/input/small-non-nested-wrapped.json
--> replace value-free with recursive-free thruout
-
-* neatener itself ...
-
-* final ; inside p/a block?!?
+* final ; inside p/a block
 
 ================================================================
 TOP-OF-LIST SUMMARY
@@ -16,10 +10,11 @@ TOP-OF-LIST SUMMARY
 ! xxxes
 ! autodetect format by file extension -- ?
 ! multifile JSON UTs (stdio x mmap)
+* ingestor mem-leak @ multifile json stdio
+? munmap@retent/multifile htf?
 * do more oosvar experiments before finalizing mlr4
 * doc curly-bracing for oosvar names too
 * paragraph-mode UTs
-? munmap@retent/multifile htf?
 
 * rh/fedora/centos mlr-3.5.0
 
