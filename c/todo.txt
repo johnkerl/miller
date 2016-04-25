@@ -8,13 +8,13 @@ TOP-OF-LIST SUMMARY
 
 ! valgrinds
 ! xxxes
-! autodetect format by file extension -- ?
-! multifile JSON UTs (stdio x mmap)
+! unset-leak
 * ingestor mem-leak @ multifile json stdio
 ? munmap@retent/multifile htf?
 * do more oosvar experiments before finalizing mlr4
-* doc curly-bracing for oosvar names too
 * paragraph-mode UTs
+* doc curly-bracing for oosvar names too
+? autodetect format by file extension -- ?
 
 * rh/fedora/centos mlr-3.5.0
 
