@@ -16,6 +16,8 @@ TOP-OF-LIST SUMMARY
 * doc curly-bracing for oosvar names too
 ? autodetect format by file extension -- ?
 
+? komosa multiops? 4.1.0 material if so.
+
 * rh/fedora/centos mlr-3.5.0
 
 !! MLRTUT !!
