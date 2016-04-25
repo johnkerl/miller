@@ -53,21 +53,18 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* json_flatten_separator) {
 static void lrec_reader_mmap_json_free(lrec_reader_t* preader) {
 	lrec_reader_mmap_json_state_t* pstate = preader->pvstate;
 
-	if (pstate->ptop_level_json_objects != NULL) {
-		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
-			json_value_t* top_level_json_object = pe->pvvalue;
-			json_free_value(top_level_json_object);
-		}
-		sllv_free(pstate->ptop_level_json_objects);
-		pstate->ptop_level_json_objects = NULL;
+	for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
+		json_value_t* top_level_json_object = pe->pvvalue;
+		json_free_value(top_level_json_object);
 	}
-	if (pstate->precords != NULL) {
-		for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
-			lrec_t* prec = pf->pvvalue;
-			lrec_free(prec);
-		}
-		sllv_free(pstate->precords);
+	sllv_free(pstate->ptop_level_json_objects);
+	pstate->ptop_level_json_objects = NULL;
+	for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
+		lrec_t* prec = pf->pvvalue;
+		lrec_free(prec);
 	}
+	sllv_free(pstate->precords);
+	pstate->precords = NULL;
 
 	free(pstate);
 	free(preader);
@@ -132,7 +129,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		length -= (item_start - json_input);
 		json_input = item_start;
-
 	}
 }
 

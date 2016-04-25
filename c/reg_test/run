@@ -1789,7 +1789,6 @@ run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/mult
 run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv
 run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv
 
-
 # ----------------------------------------------------------------
 announce HET-CSV INPUT
 
@@ -2101,6 +2100,9 @@ run_mlr --ojson                         --jquoteall cat $indir/json-output-optio
 run_mlr --ojson --jvstack               --jquoteall cat $indir/json-output-options.dkvp
 run_mlr --ojson             --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
 run_mlr --ojson --jvstack   --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
+
+run_mlr           --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
+run_mlr --no-mmap --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any

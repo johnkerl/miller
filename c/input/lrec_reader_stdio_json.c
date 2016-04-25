@@ -19,6 +19,10 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	// backed by the top-level JSON objects. This means the latter should not be freed while
 	// the records are in used. (This is done to reduce data copies, for performance: we can
 	// manipulate pointers to strings rather than copying strings.)
+	//
+	// In particular, in the multifile-input case, we need to keep *all* parsed JSON (and
+	// not free one file's data when we proceed to the next) since records with pointers
+	// into the parsed JSON may still be in use -- e.g. mlr sort.
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	char* json_flatten_separator;
@@ -33,8 +37,8 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* json_flatten_separator) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_json_state_t));
-	pstate->ptop_level_json_objects = NULL;
-	pstate->precords                = NULL;
+	pstate->ptop_level_json_objects = sllv_alloc();
+	pstate->precords                = sllv_alloc();
 	pstate->json_flatten_separator  = json_flatten_separator;
 
 	plrec_reader->pvstate       = (void*)pstate;
@@ -50,20 +54,17 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* json_flatten_separator) {
 static void lrec_reader_stdio_json_free(lrec_reader_t* preader) {
 	lrec_reader_stdio_json_state_t* pstate = preader->pvstate;
 
-	if (pstate->ptop_level_json_objects != NULL) {
-		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
-			json_value_t* top_level_json_object = pe->pvvalue;
-			json_free_value(top_level_json_object);
-		}
-		sllv_free(pstate->ptop_level_json_objects);
+	for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
+		json_value_t* top_level_json_object = pe->pvvalue;
+		json_free_value(top_level_json_object);
 	}
-	if (pstate->precords != NULL) {
-		for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
-			lrec_t* prec = pf->pvvalue;
-			lrec_free(prec);
-		}
-		sllv_free(pstate->precords);
+	sllv_free(pstate->ptop_level_json_objects);
+	for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
+		lrec_t* prec = pf->pvvalue;
+		lrec_free(prec);
 	}
+	sllv_free(pstate->precords);
+	pstate->precords = NULL;
 
 	free(pstate);
 	free(preader);
@@ -83,24 +84,6 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	json_char* json_input = (json_char*)phandle->sof;
 	json_value_t* parsed_top_level_json;
 	json_char error_buf[JSON_ERROR_MAX];
-
-	if (pstate->ptop_level_json_objects != NULL) {
-		for (sllve_t* pe = pstate->ptop_level_json_objects->phead; pe != NULL; pe = pe->pnext) {
-			json_value_t* top_level_json_object = pe->pvvalue;
-			json_free_value(top_level_json_object);
-		}
-		sllv_free(pstate->ptop_level_json_objects);
-	}
-	if (pstate->precords != NULL) {
-		for (sllve_t* pf = pstate->precords->phead; pf != NULL; pf = pf->pnext) {
-			lrec_t* prec = pf->pvvalue;
-			lrec_free(prec);
-		}
-		sllv_free(pstate->precords);
-	}
-
-	pstate->ptop_level_json_objects = sllv_alloc();
-	pstate->precords = sllv_alloc();
 
 	// This enables us to handle input of the form
 	//
@@ -142,9 +125,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		length -= (item_start - json_input);
 		json_input = item_start;
-
 	}
-
 }
 
 // ----------------------------------------------------------------
