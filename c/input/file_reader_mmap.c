@@ -50,6 +50,7 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 
 // ----------------------------------------------------------------
 void file_reader_mmap_close(file_reader_mmap_state_t* pstate, char* prepipe) {
+	// xxx cmt why not munmap (backings)
 	if (close(pstate->fd) < 0) {
 		perror("close");
 		exit(1);
