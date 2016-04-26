@@ -127,6 +127,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
 			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep);
 			free(prefix);
+			free(lrec_key);
 			break;
 		case JSON_ARRAY:
 			fprintf(stderr,
