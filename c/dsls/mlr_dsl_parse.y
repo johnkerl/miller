@@ -123,6 +123,8 @@ md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON m
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
+//xxx
+//md_cond_block_statement ::= .
 md_cond_block_statement ::= md_cond_block_srec_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_from_full_srec_assignment.

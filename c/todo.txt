@@ -6,11 +6,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! valgrinds
-! xxxes
-! unset-leak
-! ingestor mem-leak @ multifile json stdio
-! munmap@retent/multifile -- comment & w/ refct.
+! valgrinds: unset-leak
+! final ; inside p/a block
 * do more oosvar experiments before finalizing mlr4
 * paragraph-mode UTs
 
