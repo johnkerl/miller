@@ -45,16 +45,23 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 		}
 	}
 	pstate->eof = pstate->sol + stat.st_size;
-	return pstate;
-}
-
-// ----------------------------------------------------------------
-void file_reader_mmap_close(file_reader_mmap_state_t* pstate, char* prepipe) {
-	// xxx cmt why not munmap (backings)
+	// POSIX semantics: the mmap itself increments a reference count to the file, in addition to the
+	// open.  We close the file but keep the mmap reference until a subsequent munmap.
 	if (close(pstate->fd) < 0) {
 		perror("close");
 		exit(1);
 	}
+	return pstate;
+}
+
+// ----------------------------------------------------------------
+// Here we intentionally do not munmap.
+//
+// This method is used by various lrec readers, where lrecs are instantiated with keys/values
+// pointing into mmapped file-contents buffers.  This is done for the sake of performance, to reduce
+// data-copies. But it also means we can't unmap files after ingesting lrecs, since the lrecs in
+// question might be retained after the input-file closes.  Example: mlr sort on multiple files.
+void file_reader_mmap_close(file_reader_mmap_state_t* pstate, char* prepipe) {
 	free(pstate);
 }
 

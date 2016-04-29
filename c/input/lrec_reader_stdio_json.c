@@ -43,7 +43,7 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* json_flatten_separator) {
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_ingestor_stdio_vopen;
-	plrec_reader->pclose_func   = file_ingestor_stdio_vclose;
+	plrec_reader->pclose_func   = file_ingestor_stdio_nop_vclose;
 	plrec_reader->pprocess_func = lrec_reader_stdio_json_process;
 	plrec_reader->psof_func     = lrec_reader_stdio_json_sof;
 	plrec_reader->pfree_func    = lrec_reader_stdio_json_free;

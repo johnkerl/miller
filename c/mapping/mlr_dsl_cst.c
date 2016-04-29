@@ -794,6 +794,12 @@ static void mlr_dsl_cst_node_evaluate_srec_assignment(
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(pval)) {
+		// xxx to do: replace the typed overlay with an mlhmmv entirely.
+		mv_t* pold = lhmsv_get(ptyped_overlay, output_field_name);
+		if (pold != NULL) {
+			mv_free(pold);
+			free(pold);
+		}
 		lhmsv_put(ptyped_overlay, output_field_name, pval, FREE_ENTRY_VALUE);
 		lrec_put(pinrec, output_field_name, "bug", NO_FREE);
 	} else {
@@ -950,6 +956,12 @@ static void mlr_dsl_cst_node_evaluate_full_srec_from_oosvar_assignment(
 					// lrec would result in double frees, or awkward bookkeeping. However, the NR
 					// variable evaluator reads prec->field_count, so we need to put something here.
 					// And putting something statically allocated minimizes copying/freeing.
+					mv_t* pold = lhmsv_get(ptyped_overlay, skey);
+					if (pold != NULL) {
+						// xxx to do: replace the typed overlay with an mlhmmv entirely.
+						mv_free(pold);
+						free(pold);
+					}
 					lhmsv_put(ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
 					lrec_put(pinrec, skey, "bug", FREE_ENTRY_KEY);
 				}
