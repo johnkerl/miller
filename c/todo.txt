@@ -3,11 +3,6 @@ BUGFIXES
 
 * final ; inside p/a block
 
-* leak:
-  BAD  vgrun mlr put '$z = $x + $y; $z=$z' ./reg_test/input/typeof.dkvp
-  BAD  vgrun mlr put '$x=$x;$x=$x' ./reg_test/input/typeof.dkvp
-  GOOD vgrun mlr put '$x=$x' ./reg_test/input/typeof.dkvp
-
 ================================================================
 TOP-OF-LIST SUMMARY
 
