@@ -4,7 +4,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! valgrinds: unset-leak
 * do more oosvar experiments before finalizing mlr4
 * paragraph-mode UTs
 

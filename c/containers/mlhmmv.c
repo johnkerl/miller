@@ -518,6 +518,11 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 				pentry->pprev->pnext = pentry->pnext;
 				pentry->pnext->pprev = pentry->pprev;
 			}
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.u.mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.u.pnext_level);
+			}
 		}
 
 	} else {
