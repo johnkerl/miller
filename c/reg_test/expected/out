@@ -8772,6 +8772,226 @@ AST END STATEMENTS (0):
 
 
 ================================================================
+DSL EMPTY STATEMENTS
+
+mlr --from /dev/null put -v begin {}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {;;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {@x=1}
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {@x=1;}
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {;@x=1}
+AST BEGIN STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {@x=1;@y=2}
+AST BEGIN STATEMENTS (2):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+= (oosvar_assignment):
+    y (oosvar_name).
+    2 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v begin {@x=1;;@y=2}
+AST BEGIN STATEMENTS (2):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+= (oosvar_assignment):
+    y (oosvar_name).
+    2 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {;;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {@x=1}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+    = (oosvar_assignment):
+        x (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {@x=1;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+    = (oosvar_assignment):
+        x (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {;@x=1}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+    = (oosvar_assignment):
+        x (oosvar_name).
+        1 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {@x=1;@y=2}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+    = (oosvar_assignment):
+        x (oosvar_name).
+        1 (strnum_literal).
+    = (oosvar_assignment):
+        y (oosvar_name).
+        2 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v true {@x=1;;@y=2}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (1):
+cond (conditional_block):
+    true (boolean_literal).
+    = (oosvar_assignment):
+        x (oosvar_name).
+        1 (strnum_literal).
+    = (oosvar_assignment):
+        y (oosvar_name).
+        2 (strnum_literal).
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v end {}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v end {;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v end {;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v end {;;;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+mlr --from /dev/null put -v end {@x=1}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+
+mlr --from /dev/null put -v end {@x=1;}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+
+mlr --from /dev/null put -v end {;@x=1}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (1):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+
+mlr --from /dev/null put -v end {@x=1;@y=2}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (2):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+= (oosvar_assignment):
+    y (oosvar_name).
+    2 (strnum_literal).
+
+mlr --from /dev/null put -v end {@x=1;;@y=2}
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (2):
+= (oosvar_assignment):
+    x (oosvar_name).
+    1 (strnum_literal).
+= (oosvar_assignment):
+    y (oosvar_name).
+    2 (strnum_literal).
+
+
+================================================================
 DSL FUNCTIONAL TESTS
 
 mlr filter $x>.3 ./reg_test/input/abixy

@@ -112,19 +112,27 @@ md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(C) M
 // * On the "$c=3" we append the next argument to get "cond" having children $a=1, $b=2, and $c=3.
 // * On the "$x>0" we prepend the conditional expression to get "cond" having children $x>0, $a=1, $b=2, and $c=3.
 
-// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-md_cond_block_statements(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
-}
+// We handle statements of the form 'true{ ; ; }' by parsing the empty spaces around the semicolons as NOP nodes.
+// But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 md_cond_block_statements(A) ::= md_cond_block_statement(B). {
-	A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
+	} else {
+		A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+	}
 }
 md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON md_cond_block_statement(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
+	if (C->type == MD_AST_NODE_TYPE_NOP) {
+		A = B;
+	} else {
+		A = mlr_dsl_ast_node_append_arg(B, C);
+	}
 }
 
-//xxx
-//md_cond_block_statement ::= .
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+md_cond_block_statement(A) ::= . {
+    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
+}
 md_cond_block_statement ::= md_cond_block_srec_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_assignment.
 md_cond_block_statement ::= md_cond_block_oosvar_from_full_srec_assignment.
