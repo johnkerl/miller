@@ -1,13 +1,10 @@
 ================================================================
 BUGFIXES
 
-* final ; inside p/a block
-
 ================================================================
 TOP-OF-LIST SUMMARY
 
 ! valgrinds: unset-leak
-! final ; inside p/a block
 * do more oosvar experiments before finalizing mlr4
 * paragraph-mode UTs
 
