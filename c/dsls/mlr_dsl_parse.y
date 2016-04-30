@@ -135,6 +135,29 @@ md_cond_block_statement ::= md_cond_block_emitp.
 md_cond_block_statement ::= md_cond_block_emit.
 md_cond_block_statement ::= md_cond_block_dump.
 
+// ----------------------------------------------------------------
+// // Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
+// // then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
+// // * On the "a" we make a function sub-AST called "anon(a)".
+// // * On the "b" we append the next argument to get "anon(a,b)".
+// // * On the "c" we append the next argument to get "anon(a,b,c)".
+// // * On the "f" we change the function name to get "f(a,b,c)".
+
+// md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(B) MD_TOKEN_RPAREN. {
+// 	A = mlr_dsl_ast_node_set_function_name(B, "cond");
+// }
+// // Need to invalidate "f(10,)" -- use some non-empty-args expr.
+// md_cond_block_statements(A) ::= . {
+// 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
+// }
+// md_cond_block_statements(A) ::= md_rhs(B). {
+// 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
+// }
+// md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON md_rhs(C). {
+// 	A = mlr_dsl_ast_node_append_arg(B, C);
+// }
+// ----------------------------------------------------------------
+
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
 

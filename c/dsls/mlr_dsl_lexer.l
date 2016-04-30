@@ -366,7 +366,7 @@ false {
 	return MD_TOKEN_ENV;
 }
 
-[a-zA-Z_][a-zA-Z_0-9]+ {
+[a-zA-Z_][a-zA-Z_0-9]* {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FUNCTION_NAME);
 	return MD_TOKEN_FCN_NAME;
 }
