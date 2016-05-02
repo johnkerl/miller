@@ -14,11 +14,12 @@ TOP-OF-LIST SUMMARY
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 * readme re srec vs lrec, & oosvar vs mlhmmv
 
-* rh/fedora/centos mlr-3.5.0
+! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 
 !! MLRTUT !! and/or expand cookbook
 ! screencaps for README.md & cover !
-* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe shouldabeen pickalanguage w/ I/O support and API.
+* doc section on programmability spectrum (perl to asic) & how much effort is/isn't worth putting into miller. & maybe
+  shouldabeen pickalanguage w/ I/O support and API.
 * in why-miller: list the intersection points. perf; multifmt; math+strings; expressive/programmable; compact notation; pipe-friendly.
 
 ? call for use-cases? (go first.)
