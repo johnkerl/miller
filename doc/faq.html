@@ -267,11 +267,11 @@ of all assignments in the <tt>put</tt>.
 <a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
-pipes. You can print your data one pipeline step at a time, to see what
-intermediate
-output at one step becomes the input to the next step.
+pipes, but with less keystroking. You can print your data one pipeline step at
+a time, to see what intermediate output at one step becomes the input to the
+next step.
 
-<p/>First, review the input data:
+<p/>First, look at the input data:
 
 <p/>
 <div class="pokipanel">
@@ -317,8 +317,9 @@ paid    debit        1
 </div>
 <p/>
 
-Now if you include another <tt>then</tt> step after this, the columns <tt>Status</tt>,
-<tt>Payment_Type</tt>, and <tt>count</tt> will be its input.
+Now if you use <tt>then</tt> to include another verb after that, the columns
+<tt>Status</tt>, <tt>Payment_Type</tt>, and <tt>count</tt> will be the input to
+that verb.
 
 <p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
 <p/>
@@ -337,10 +338,11 @@ paid    debit        1
 <a id="I_assigned_$9_and_it&rsquo;s_not_9th"/><h1>I assigned $9 and it&rsquo;s not 9th</h1>
 
 <p/> Miller records are ordered lists of key-value pairs. For NIDX format, DKVP
-when keys are missing, or CSV with <tt>--implicit-csv-header</tt>, Miller will
-sequentially assign keys of the form <tt>1</tt>, <tt>2</tt>, etc. But these are
-not integer array indices: they&rsquo;re just field names taken from the
-initial field ordering in the input data.
+format when keys are missing, or CSV/CSV-lite format with
+<tt>--implicit-csv-header</tt>, Miller will sequentially assign keys of the
+form <tt>1</tt>, <tt>2</tt>, etc. But these are not integer array indices:
+they&rsquo;re just field names taken from the initial field ordering in the
+input data.
 
 <p/>
 <div class="pokipanel">
