@@ -140,6 +140,7 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
+&bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 &bull;&nbsp;<a href="#Using_out-of-stream_variables">Using out-of-stream variables</a><br/>
@@ -171,6 +172,66 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 <div class="pokipanel">
 <pre>
 grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
+</pre>
+</div>
+<p/>
+
+<a id="Filtering_paragraphs_of_text"/><h1>Filtering paragraphs of text</h1>
+
+<p/>The idea is to use a record separator which is a pair of newlines. Then, if
+you want each paragraph to be a record with a single value, use a
+field-separator which isn&rsquo;t present in the input data (e.g. a control-A
+which is octal 001). Or, if you want each paragraph to have its lines as
+separate values, use newline as field separator.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat paragraphs.txt
+The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
+over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick
+brown fox jumped over the lazy dogs. The quick brown fox jumped over the
+lazy dogs.
+
+Now is the time for all good people to come to the aid of their country.  Now
+is the time for all good people to come to the aid of their country.  Now is
+the time for all good people to come to the aid of their country.  Now is the
+time for all good people to come to the aid of their country.  Now is the
+time for all good people to come to the aid of their country.
+
+Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
+Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
+Sphynx of black quartz, judge my vow.
+
+The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
+on the plain. The rain in Spain falls mainly on the plain. The rain in Spain
+falls mainly on the plain. The rain in Spain falls mainly on the plain. The
+rain in Spain falls mainly on the plain. The rain in Spain falls mainly on
+the plain. The rain in Spain falls mainly on the plain.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001'  filter '$1 =~ "the"'
+The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
+over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick
+brown fox jumped over the lazy dogs. The quick brown fox jumped over the
+lazy dogs.
+
+Now is the time for all good people to come to the aid of their country.  Now
+is the time for all good people to come to the aid of their country.  Now is
+the time for all good people to come to the aid of their country.  Now is the
+time for all good people to come to the aid of their country.  Now is the
+time for all good people to come to the aid of their country.
+
+The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
+on the plain. The rain in Spain falls mainly on the plain. The rain in Spain
+falls mainly on the plain. The rain in Spain falls mainly on the plain. The
+rain in Spain falls mainly on the plain. The rain in Spain falls mainly on
+the plain. The rain in Spain falls mainly on the plain.
 </pre>
 </div>
 <p/>
