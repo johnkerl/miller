@@ -848,6 +848,7 @@ Emits an n-sample, with replacement, of the input records.
 Options:
 -n {number} Number of samples to output. Defaults to number of input records.
             Must be non-negative.
+See also mlr sample and mlr shuffle.
 </pre>
 </div>
 <p/>
@@ -2024,6 +2025,7 @@ Notes:
   combinations result in streaming (tail -f friendly) data processing.
 * It's up to you to ensure that the nested-fs is distinct from your data's IFS:
   e.g. by default the former is semicolon and the latter is comma.
+See also mlr reshape.
 </pre>
 </div>
 <p/>
@@ -3435,6 +3437,7 @@ Examples:
     2009-01-01 0.65473572  2.4520609
     2009-01-02 -0.89248112 0.2154713
     2009-01-03 0.98012375  1.3179287
+See also mlr nest.
 </pre>
 </div>
 <p/>
@@ -3450,6 +3453,7 @@ Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
 -k {count}    Required: number of records to output, total, or by group if using -g.
 -g {a,b,c}    Optional: group-by-field names for samples.
+See also mlr bootstrap and mlr shuffle.
 </pre>
 </div>
 <p/>
@@ -3543,6 +3547,7 @@ $ mlr shuffle -h
 Usage: mlr shuffle {no options}
 Outputs records randomly permuted. No output records are produced until
 all input records are read.
+See also mlr bootstrap and mlr sample.
 </pre>
 </div>
 <p/>

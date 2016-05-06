@@ -137,6 +137,7 @@ static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    2009-01-01 0.65473572  2.4520609\n");
 	fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n");
 	fprintf(o, "    2009-01-03 0.98012375  1.3179287\n");
+	fprintf(o, "See also %s nest.\n", argv0);
 }
 
 static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {

@@ -107,6 +107,7 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  combinations result in streaming (tail -f friendly) data processing.\n");
 	fprintf(o, "* It's up to you to ensure that the nested-fs is distinct from your data's IFS:\n");
 	fprintf(o, "  e.g. by default the former is semicolon and the latter is comma.\n");
+	fprintf(o, "See also %s reshape.\n", argv0);
 }
 
 static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {

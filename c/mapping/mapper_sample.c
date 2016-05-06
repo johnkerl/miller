@@ -51,6 +51,7 @@ static void mapper_sample_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Reservoir sampling (subsampling without replacement), optionally by category.\n");
 	fprintf(o, "-k {count}    Required: number of records to output, total, or by group if using -g.\n");
 	fprintf(o, "-g {a,b,c}    Optional: group-by-field names for samples.\n");
+	fprintf(o, "See also %s bootstrap and %s shuffle.\n", argv0, argv0);
 }
 
 static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv) {

@@ -32,6 +32,7 @@ static void mapper_bootstrap_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-n {number} Number of samples to output. Defaults to number of input records.\n");
 	fprintf(o, "            Must be non-negative.\n");
+	fprintf(o, "See also %s sample and %s shuffle.\n", argv0, argv0);
 }
 
 static mapper_t* mapper_bootstrap_parse_cli(int* pargi, int argc, char** argv) {
