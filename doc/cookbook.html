@@ -215,7 +215,7 @@ the plain. The rain in Spain falls mainly on the plain.
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001'  filter '$1 =~ "the"'
+$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001' filter '$1 =~ "the"'
 The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
 over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick
 brown fox jumped over the lazy dogs. The quick brown fox jumped over the
@@ -232,6 +232,25 @@ on the plain. The rain in Spain falls mainly on the plain. The rain in Spain
 falls mainly on the plain. The rain in Spain falls mainly on the plain. The
 rain in Spain falls mainly on the plain. The rain in Spain falls mainly on
 the plain. The rain in Spain falls mainly on the plain.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\n' cut  -f 1,3
+The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
+brown fox jumped over the lazy dogs. The quick brown fox jumped over the
+
+Now is the time for all good people to come to the aid of their country.  Now
+the time for all good people to come to the aid of their country.  Now is the
+
+Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
+Sphynx of black quartz, judge my vow.
+
+The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
+falls mainly on the plain. The rain in Spain falls mainly on the plain. The
 </pre>
 </div>
 <p/>
