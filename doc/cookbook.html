@@ -140,6 +140,7 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
+&bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
@@ -172,6 +173,42 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 <div class="pokipanel">
 <pre>
 grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
+</pre>
+</div>
+<p/>
+
+<a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat spaces.csv
+a b c,d e f
+123,4567
+890,2468
+9987,3312
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf rename -r -g ' ,_'  spaces.csv
+a_b_c,d_e_f
+123,4567
+890,2468
+9987,3312
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --irs lf --opprint rename -r -g ' ,_'  spaces.csv
+a_b_c d_e_f
+123   4567
+890   2468
+9987  3312
 </pre>
 </div>
 <p/>

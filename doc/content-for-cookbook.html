@@ -11,6 +11,12 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 
 POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
 
+<h1>Bulk rename of field names</h1>
+
+POKI_RUN_COMMAND{{cat spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf rename -r -g ' ,_'  spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --irs lf --opprint rename -r -g ' ,_'  spaces.csv}}HERE
+
 <h1>Filtering paragraphs of text</h1>
 
 <p/>The idea is to use a record separator which is a pair of newlines. Then, if
