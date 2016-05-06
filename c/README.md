@@ -5,6 +5,19 @@ by one or more mappers in `mapping/`, written by a record-writer in `output/`,
 controlled by logic in `stream/`. Argument parsing for initial stream setup is
 in `cli/`.
 
+# Container names
+
+The user-visible concept of *stream record* (or *srec*) is implemented in the
+`lrec_t` (*linked-record type*) data structure. The user-visible concept of
+*out-of-stream variables* is implemented using the `mlhmmv_t` (multi-level
+hashmap of mlrvals) structure. Source-code comments and names within the code
+refer to `srec`/`lrec` and `oosvar`/`mlhmmv` depending on the context.
+
+While those two data structures contain user-visible data structures, others
+are used in Miller's implementation: `slls` and `sllv` are singly-linked lists
+of string and void-star respectively; `lhmss` is a linked hashmap from string
+to string; `lhmsi` is a linked hashmap from string to int; and so on.
+
 # Memory management
 
 Miller is streaming and as near stateless as possible. For most Miller

@@ -14,7 +14,6 @@ TOP-OF-LIST SUMMARY
 * doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
 * readme re srec vs lrec, & oosvar vs mlhmmv
-! screencaps for README.md & cover !
 
 ! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 

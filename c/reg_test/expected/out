@@ -14431,6 +14431,16 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./re
 {
 }
 
+mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg_test/input/abixy
+variable.name=4.536294
+
+mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ./reg_test/input/abixy
+a=pan,variable.name=0.849416
+a=eks,variable.name=1.751863
+a=wye,variable.name=0.777892
+a=zee,variable.name=1.125680
+a=hat,variable.name=0.031442
+
 
 ================================================================
 DSL PATTERN-ACTION BLOCKS

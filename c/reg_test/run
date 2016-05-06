@@ -1455,6 +1455,9 @@ run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump}
 
 run_mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump}' $indir/unset4.dkvp
 
+run_mlr put -q '@{variable.name} += $x; end{emit @{variable.name}}' $indir/abixy
+run_mlr put -q '@{variable.name}[$a] += $x; end{emit @{variable.name},"a"}' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL PATTERN-ACTION BLOCKS
 
