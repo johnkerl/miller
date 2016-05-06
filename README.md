@@ -19,7 +19,7 @@ indices.  Examples:
 % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
 % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
+% mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 % mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
@@ -35,41 +35,49 @@ including but not limited to the familiar **CSV** and **JSON**.  (Miller can han
 
 Features:
 
-* I/O formats including **tabular pretty-printing** and **positionally indexed** (Unix-toolkit style)
+* Miller is **multi-purpose**: it's useful for **data cleaning**,
+**data reduction**, **statistical reporting**, **devops**, **system
+administration**, **log-file processing**, **format conversion**, and
+**database-query post-processing**.
 
-* **Conversion** between formats
+* You can use Miller to snarf and munge **log-file data**, including selecting
+out relevant substreams, then produce CSV format and load that into
+all-in-memory/data-frame utilities for further statistical and/or graphical
+processing.
 
-* **Format-aware processing**: e.g. CSV `sort` and `tac` keep header lines first
+* Miller complements **data-analysis tools** such as **R**, **pandas**, etc.:
+you can use Miller to **clean** and **prepare** your data. While you can do
+**basic statistics** entirely in Miller, its streaming-data feature and
+single-pass algorithms enable you to **reduce very large data sets**.
 
-* High-throughput **performance** on par with the Unix toolkit
+* Miller complements SQL **databases**: you can slice, dice, and reformat data
+on the client side on its way into or out of a database. You can also reap some
+of the benefits of databases for quick, setup-free one-off tasks when you just
+need to query some data in disk files in a hurry.
 
-* Miller is **pipe-friendly** and interoperates with Unix toolkit
+* Miller also goes beyond the classic Unix tools by stepping fully into our
+modern, **no-SQL** world: its essential record-heterogeneity property allows
+Miller to operate on data where records with different schema (field names) are
+interleaved.
 
 * Miller is **streaming**: most operations need only a single record in
 memory at a time, rather than ingesting all input before producing any output.
 For those operations which require deeper retention (`sort`, `tac`, `stats1`),
 Miller retains only as much data as needed. This means that whenever
 functionally possible, you can operate on files which are larger than your
-system&rsquo;s available RAM, and you can use Miller in **tail -f**
-contexts.
+system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 
-* Miller complements SQL **databases**: you can slice, dice, and reformat data on
-the client side on its way into or out of a database. You can also reap some of
-the benefits of databases for quick, setup-free one-off tasks when you just
-need to query some data in disk files in a hurry.
+* Miller is **pipe-friendly** and interoperates with the Unix toolkit
 
-* Miller complements **data-analysis tools** such as **R**, **pandas**, etc.:
-you can use Miller to **clean** and **prepare** your data. While you can do
-**basic statistics** entirely in Miller, its streaming-data feature and single-pass
-algorithms enable you to **reduce very large data sets**.  You can snarf and munge
-**log-file data**, including selecting out relevant substreams, then produce CSV
-format and load that into all-in-memory/data-frame utilities for further
-statistical and/or graphical processing.
+* Miller's I/O formats include **tabular pretty-printing**, **positionally
+  indexed** (Unix-toolkit style), CSV, JSON, and others
 
-* Miller also goes beyond the classic Unix tools by stepping fully into our
-modern, **no-SQL** world: its essential record-heterogeneity property allows
-Miller to operate on data where records with different schema (field names) are
-interleaved.
+* **conversion** between formats
+
+* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header
+lines first
+
+* Miller has high-throughput **performance** on par with the Unix toolkit
 
 * Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written
 in portable, modern C, with **zero runtime dependencies**. You can download or
