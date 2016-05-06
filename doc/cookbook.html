@@ -142,6 +142,13 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
+&bull;&nbsp;<a href="#Using_out-of-stream_variables">Using out-of-stream variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Mean_with/without_oosvars">Mean with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variance_and_standard_deviation_with/without_oosvars">Variance and standard deviation with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Min/max_with/without_oosvars">Min/max with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Delta_with/without_oosvars">Delta with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_delta_with/without_oosvars">Keyed delta with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Exponentially_weighted_moving_averages_with/without_oosvars">Exponentially weighted moving averages with/without oosvars</a><br/>
 </div>
 <p/>
 
@@ -246,6 +253,280 @@ mlr --ofmt '%.9le' --oxtab \
 t_delta_min  2.861022949e-06
 t_delta_mean 4.077508505e-06
 t_delta_max  5.388259888e-05
+</pre>
+</div>
+<p/>
+
+<a id="Using_out-of-stream_variables"/><h1>Using out-of-stream variables</h1>
+
+<p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 5 ../data/medium
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+you can simply do
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -a sum -f x ../data/medium
+x_sum 4986.019682
+</pre>
+</div>
+<p/>
+
+or
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a sum -f x -g b ../data/medium
+b   x_sum
+pan 965.763670
+wye 1023.548470
+zee 979.742016
+eks 1016.772857
+hat 1000.192668
+</pre>
+</div>
+<p/>
+
+rather than the more tedious
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q '
+  @x_sum += $x;
+  end {
+    emit @x_sum
+  }
+' data/medium
+x_sum 4986.019682
+</pre>
+</div>
+<p/>
+
+or
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '
+  @x_sum[$b] += $x;
+  end {
+    emit @x_sum, "b"
+  }
+' data/medium
+b   x_sum
+pan 965.763670
+wye 1023.548470
+zee 979.742016
+eks 1016.772857
+hat 1000.192668
+</pre>
+</div>
+<p/>
+
+<p/> The former (<tt>mlr stats1</tt> et al.) has the advantages of being easier
+to type, being less error-prone to type, and running faster.
+
+<p/> Nonetheless, out-of-stream variables (which I whimsically call
+<i>oosvars</i>), begin/end blocks, and emit statements give you the ability to
+implement logic &mdash; if you wish to do so &mdash; which isn&rsquo;t present
+in other Miller verbs.  (If you find yourself often using the same
+out-of-stream-variable logic over and over, please file a request at <a
+href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
+to get it implemented directly in C as a Miller verb of its own.)
+
+<p/> The following examples compute some things using oosvars which are already
+computable using Miller verbs, by way of providing food for thought.
+
+<a id="Mean_with/without_oosvars"/><h2>Mean with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a mean -f x data/medium
+x_mean=0.498602
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@x_sum += $x; @x_count += 1; end{@x_mean=@x_sum/@x_count; emit @x_mean}' data/medium
+x_mean=0.498602
+</pre>
+</div>
+<p/>
+
+<a id="Variance_and_standard_deviation_with/without_oosvars"/><h2>Variance and standard deviation with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
+x_count  10000
+x_sum    4986.019682
+x_mean   0.498602
+x_var    0.084270
+x_stddev 0.290293
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat variance.mlr
+@n += 1;
+@sumx += $x;
+@sumx2 += $x**2;
+end {
+  @mean = @sumx / @n;
+  @var = (@sumx2 - @mean * (2 * @sumx - @n * @mean)) / (@n - 1);
+  @stddev = sqrt(@var);
+  emitf @n, @sumx, @sumx2, @mean, @var, @stddev
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q -f variance.mlr data/medium
+n      10000
+sumx   4986.019682
+sumx2  3328.652400
+mean   0.498602
+var    0.084270
+stddev 0.290293
+</pre>
+</div>
+<p/>
+
+<a id="Min/max_with/without_oosvars"/><h2>Min/max with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -a min,max -f x data/medium
+x_min 0.000045
+x_max 0.999953
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q '@min = min(@min, $x); @max = max(@max, $x); end{emitf @min, @max}' data/medium
+min 0.000045
+max 0.999953
+</pre>
+</div>
+<p/>
+
+<a id="Delta_with/without_oosvars"/><h2>Delta with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta -f x data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
+wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
+eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
+wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$x_delta = ispresent(@last) ? $x - @last : 0; @last = $x' data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
+wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
+eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
+wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
+</pre>
+</div>
+<p/>
+
+<a id="Keyed_delta_with/without_oosvars"/><h2>Keyed delta with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a delta -f x -g a data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0
+wye wye 3 0.20460330576630303 0.33831852551664776 0
+eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
+wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$x_delta = ispresent(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0
+wye wye 3 0.20460330576630303 0.33831852551664776 0
+eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
+wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
+</pre>
+</div>
+<p/>
+
+<a id="Exponentially_weighted_moving_averages_with/without_oosvars"/><h2>Exponentially weighted moving averages with/without oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint step -a ewma -d 0.1 -f x data/small
+a   b   i x                   y                   x_ewma_0.1
+pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
+eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
+wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
+eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
+wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '
+  begin{ @a=0.1 };
+  $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;
+  @e=$e
+' data/small
+a   b   i x                   y                   e
+pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
+eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
+wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
+eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
+wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
 </pre>
 </div>
 <p/>

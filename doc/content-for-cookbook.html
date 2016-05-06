@@ -23,3 +23,74 @@ runtime. The <tt>delta</tt> function computes the difference between successive
 timestamps.
 
 POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
+
+<h1>Using out-of-stream variables</h1>
+
+<p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form
+
+POKI_RUN_COMMAND{{head -n 5 ../data/medium}}HERE
+
+you can simply do
+
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a sum -f x ../data/medium}}HERE
+
+or
+
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a sum -f x -g b ../data/medium}}HERE
+
+rather than the more tedious
+
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)HERE
+
+or
+
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)HERE
+
+<p/> The former (<tt>mlr stats1</tt> et al.) has the advantages of being easier
+to type, being less error-prone to type, and running faster.
+
+<p/> Nonetheless, out-of-stream variables (which I whimsically call
+<i>oosvars</i>), begin/end blocks, and emit statements give you the ability to
+implement logic &mdash; if you wish to do so &mdash; which isn&rsquo;t present
+in other Miller verbs.  (If you find yourself often using the same
+out-of-stream-variable logic over and over, please file a request at <a
+href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
+to get it implemented directly in C as a Miller verb of its own.)
+
+<p/> The following examples compute some things using oosvars which are already
+computable using Miller verbs, by way of providing food for thought.
+
+<h2>Mean with/without oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr stats1 -a mean -f x data/medium}}HERE
+POKI_RUN_COMMAND{{mlr put -q '@x_sum += $x; @x_count += 1; end{@x_mean=@x_sum/@x_count; emit @x_mean}' data/medium}}HERE
+
+<h2>Variance and standard deviation with/without oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium}}HERE
+POKI_RUN_COMMAND{{cat variance.mlr}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab put -q -f variance.mlr data/medium}}HERE
+
+<h2>Min/max with/without oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,max -f x data/medium}}HERE
+
+POKI_RUN_COMMAND{{mlr --oxtab put -q '@min = min(@min, $x); @max = max(@max, $x); end{emitf @min, @max}' data/medium}}HERE
+
+<h2>Delta with/without oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last) ? $x - @last : 0; @last = $x' data/small}}HERE
+
+<h2>Keyed delta with/without oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x -g a data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small}}HERE
+
+<h2>Exponentially weighted moving averages with/without oosvars</h2>
+
+POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)HERE
+
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)HERE
