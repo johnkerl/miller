@@ -174,7 +174,9 @@ Miller&rsquo;s added values include:
 <ul>
 <li> Name-indexing, compared to the Unix toolkit&rsquo;s positional indexing.
 <li> Raw speed, compared to <tt>awk</tt>, RecordStream, <tt>stats_m</tt>, or various other kinds of Python/Ruby/etc. scripts one can easily create.
+<li> Compact keystroking for many common tasks, with a decent amount of flexibility.
 <li> Ability to handle text files on the Unix pipe, without need for creating database tables, compared to SQL databases.
+<li> Various file formats, and on-the-fly format conversion.
 </ul>
 
 <p/><boldmaroon>jq</boldmaroon>: Miller does for name-indexed text what
@@ -197,6 +199,24 @@ non-starter in terms of uptake.  Moreover, it makes sense for me to have Miller
 be a tool which collects together format-aware record-stream processing into
 one place, with good reuse of Miller-internal library code for its various
 features.
+
+<p/><boldmaroon>Why not use Perl/Python/Ruby etc.?</boldmaroon> Maybe you
+should. With those tools you&rsquo;ll get far more expressive power, and
+sufficiently quick turnaround time for small-to-medium-sized data.  Using
+Miller you&rsquo;ll get something less than a complete programming language,
+but which is fast, with moderate amounts of flexibility and much less
+keystroking.
+
+<p/>When I was first developing Miller I made a survey of several languages.
+Using low-level implementation languages like C, Go, Rust, and Nim, I&rsquo;d
+need to create my own domain-specific language (DSL) which would always be less
+featured than a full programming language, but I&rsquo;d get better
+performance.  Using high-level interpreted languages such as Perl/Python/Ruby
+I&rsquo;d get the language&rsquo;s <tt>eval</tt> for free and I wouldn&rsquo;t
+need a DSL; Miller would have mainly been a set of format-specific I/O hooks.
+If I&rsquo;d gotten good enough performance from the latter I&rsquo;d have done
+it without question and Miller would be far more flexible.  But C won the
+performance criteria by a landslide so we have Miller in C with a custom DSL.
 
 <p/> <boldmaroon>No, really, why one more command-line data-manipulation
 tool?</boldmaroon> I wrote Miller because I was frustrated with tools like
