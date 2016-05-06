@@ -1,0 +1,3 @@
+#!/bin/bash
+# For realigning disposition matrices, e.g. in vim using !}
+liit "$@" | sed 's/^	}/}/'
