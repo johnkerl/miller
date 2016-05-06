@@ -2255,6 +2255,9 @@ evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
 <li/> Their names and their values are entirely under your control; they change
 only when you assign to them.
 
+<li/> Just as for field names in stream records, if you want to define out-of-stream variables
+with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+
 <li/> They are scoped to the <tt>put</tt> command in which they appear.
 In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
 each put will have its own set of out-of-stream variables:

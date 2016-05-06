@@ -8,12 +8,10 @@ TOP-OF-LIST SUMMARY
 
 * oosvar/verb examples
 * paragraph-mode UTs
-* doc curly-bracing for oosvar names too
 * paragraph filter doc: mlr --nidx --rs '\n\n' --fs '\001'  filter -x '$1 =~ "slls_from_line" && $1 =~ "mapper_reshape_parse_cli"'
 * olh xrefs between reshape & nest; between sample, bootstrap, & shuffle.
 * doc rename-all w/ regex-captures: e.g. de-spacifying field names etc.  echo 'a x z=1,b x z=1' | mlr rename -r -g ' ,:' -> a:x:z=1,b:x:z=1
 * faqent re nidx output: '$9 = ...' doesn't make it the 9th output field.
-* readme re srec vs lrec, & oosvar vs mlhmmv
 
 ! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 
