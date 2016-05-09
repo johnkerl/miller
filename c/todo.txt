@@ -7,6 +7,18 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! oosvar keyed mean?!? solvable with `for`.
+  * for (k, v in $*)
+  * for (k, v in @v)
+  * for (k1, k2, k3, v in @v)
+  * for (k1, k2, v in @v["a"])
+  ? for (k1, k2, v in @v[]["a"][]) ? easier to do this w/ cond-block @ 2nd loop
+  ? for (k1, k2, v in @*)
+! recursive PA-blocks & for-blocks
+? if-else?
+? while / do-while?
+
+? substring?
+? CONVFMT? IGNORECASE? MLRPATH?
 
 ! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 
