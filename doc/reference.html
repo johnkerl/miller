@@ -2293,7 +2293,7 @@ fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use <tt>emit</tt>, e.g.
 <tt>@sum += $x; emit @sum</tt> which produces an extra output record such as
 <tt>sum=3.1648382</tt>; (3) use the <tt>dump</tt> keyword, which immediately
 prints all out-of-stream variables to the standard output as a JSON data
-structure. Note that these aren&rsquo;t output records which participate in
+structure. Note that the latter aren&rsquo;t output records which participate in
 <tt>then</tt>-chaining; rather, they&rsquo;re just immediately printed to
 stdout.
 
@@ -2391,7 +2391,7 @@ statements in the <tt>begin</tt> block are executed before any input records
 are read; the statements in the <tt>end</tt> block are executed after the last
 input record is read.  (If you want to execute some statement at the start of
 each file, not at the start of the first file as with <tt>begin</tt>, you might
-use a pattern/action block of the form <tt>NR == 1 { ... }</tt>.) All
+use a pattern/action block of the form <tt>FNR == 1 { ... }</tt>.) All
 statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
 on every input record. Semicolons separate statements inside or outside of
 begin/end blocks; semicolons are required between begin/end block bodies and
