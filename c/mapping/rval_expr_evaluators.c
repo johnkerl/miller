@@ -50,7 +50,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing);
 
 	} else { // operator/function
-		if ((pnode->type != MD_AST_NODE_TYPE_FUNCTION_NAME)
+		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
 				MLR_GLOBALS.argv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));

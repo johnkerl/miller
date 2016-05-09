@@ -9,10 +9,12 @@ TOP-OF-LIST SUMMARY
 ! oosvar keyed mean?!? solvable with `for`.
   * for (k, v in $*)
   * for (k, v in @v)
+  ? for (k1, k2, v in @*)
   * for (k1, k2, k3, v in @v)
   * for (k1, k2, v in @v["a"])
   ? for (k1, k2, v in @v[]["a"][]) ? easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
+  ? break/continue?
 ! recursive PA-blocks & for-blocks
 ? if-else?
 ? while / do-while?

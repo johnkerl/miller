@@ -15,7 +15,7 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_FULL_SREC,
 	MD_AST_NODE_TYPE_OOSVAR_NAME,
 	MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY,
-	MD_AST_NODE_TYPE_FUNCTION_NAME,
+	MD_AST_NODE_TYPE_NON_SIGIL_NAME,
 	MD_AST_NODE_TYPE_OPERATOR,
 	MD_AST_NODE_TYPE_SREC_ASSIGNMENT,
 	MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT,
@@ -33,6 +33,8 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_DUMP,
 	MD_AST_NODE_TYPE_ALL,
 	MD_AST_NODE_TYPE_NOP, // only for parser internals; should not be in the AST returned by the parser
+	MD_AST_NODE_TYPE_FOR,
+	MD_AST_NODE_TYPE_IN,
 } mlr_dsl_ast_node_type_t;
 
 typedef struct _mlr_dsl_ast_t {

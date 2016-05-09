@@ -51,6 +51,7 @@ md_statement ::= md_main_oosvar_assignment.
 md_statement ::= md_main_oosvar_from_full_srec_assignment.
 md_statement ::= md_main_full_srec_from_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
+md_statement ::= md_main_for_loop.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_unset.
 md_statement ::= md_main_emitf.
@@ -126,8 +127,7 @@ md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON m
 		A = B;
 	} else {
 		A = mlr_dsl_ast_node_append_arg(B, C);
-	}
-}
+	} }
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_cond_block_statement(A) ::= . {
@@ -142,29 +142,6 @@ md_cond_block_statement ::= md_cond_block_emitf.
 md_cond_block_statement ::= md_cond_block_emitp.
 md_cond_block_statement ::= md_cond_block_emit.
 md_cond_block_statement ::= md_cond_block_dump.
-
-// ----------------------------------------------------------------
-// // Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-// // then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-// // * On the "a" we make a function sub-AST called "anon(a)".
-// // * On the "b" we append the next argument to get "anon(a,b)".
-// // * On the "c" we append the next argument to get "anon(a,b,c)".
-// // * On the "f" we change the function name to get "f(a,b,c)".
-
-// md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(B) MD_TOKEN_RPAREN. {
-// 	A = mlr_dsl_ast_node_set_function_name(B, "cond");
-// }
-// // Need to invalidate "f(10,)" -- use some non-empty-args expr.
-// md_cond_block_statements(A) ::= . {
-// 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
-// }
-// md_cond_block_statements(A) ::= md_rhs(B). {
-// 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
-// }
-// md_cond_block_statements(A) ::= md_cond_block_statements(B) MD_TOKEN_SEMICOLON md_rhs(C). {
-// 	A = mlr_dsl_ast_node_append_arg(B, C);
-// }
-// ----------------------------------------------------------------
 
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
@@ -190,12 +167,25 @@ md_main_bare_boolean(A) ::= md_rhs(B). {
 	A = B;
 	sllv_append(past->pmain_statements, A);
 }
-md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-	sllv_append(past->pmain_statements, A);
-}
 md_main_cond_block(A) ::= md_cond_block(B). {
 	A = B;
+	sllv_append(past->pmain_statements, A);
+}
+
+// xxx temp
+md_main_for_loop(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+	MD_TOKEN_IN MD_TOKEN_FULL_SREC
+	MD_TOKEN_RPAREN. {
+
+	//A = B;
+	sllv_append(past->pmain_statements, K);
+	sllv_append(past->pmain_statements, V);
+	sllv_append(past->pmain_statements, A);
+}
+
+md_main_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 	sllv_append(past->pmain_statements, A);
 }
 md_main_unset(A) ::= md_unset(B). {
@@ -942,15 +932,15 @@ md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN. {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-md_atom_or_fcn(A) ::= MD_TOKEN_FCN_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+md_atom_or_fcn(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
 md_fcn_args(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME);
+	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
 md_fcn_args(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_FUNCTION_NAME, B);
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
 md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);

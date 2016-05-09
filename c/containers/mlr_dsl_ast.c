@@ -154,7 +154,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FULL_SREC:          return "full_srec";          break;
 	case MD_AST_NODE_TYPE_OOSVAR_NAME:        return "oosvar_name";        break;
 	case MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY:   return "oosvar_level_key";   break;
-	case MD_AST_NODE_TYPE_FUNCTION_NAME:      return "function_name";      break;
+	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:     return "non_sigil_name";     break;
 	case MD_AST_NODE_TYPE_OPERATOR:           return "operator";           break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:    return "srec_assignment";    break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:  return "oosvar_assignment";  break;
@@ -171,6 +171,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_DUMP:               return "dump";               break;
 	case MD_AST_NODE_TYPE_ALL:                return "all";                break;
 	case MD_AST_NODE_TYPE_ENV:                return "env";                break;
+	case MD_AST_NODE_TYPE_FOR:                return "for";                break;
+	case MD_AST_NODE_TYPE_IN:                 return "in";                 break;
 	default: return "???";
 	}
 }
