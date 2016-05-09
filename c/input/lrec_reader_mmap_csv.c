@@ -215,6 +215,11 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 			// Loop over characters in field
 			field_done = FALSE;
 			while (!field_done) {
+				if (e > phandle->eof) {
+					fprintf(stderr, "%s: internal coding error detected at line %d of file %s.\n",
+						MLR_GLOBALS.argv0, __LINE__, __FILE__);
+					exit(1);
+				}
 				rc = parse_trie_match(pstate->pno_dquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
 				if (rc) {
 					switch(stridx) {
@@ -273,6 +278,11 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 			// we use the string-build logic to build up a dynamically allocated string. E.g.
 			// "ab""c" becomes ab"c.
 			while (!field_done) {
+				if (e >= phandle->eof) {
+					fprintf(stderr, "%s: unmatched double quote at line  %lld.\n",
+						MLR_GLOBALS.argv0, pstate->ilno);
+					exit(1);
+				}
 
 				rc = parse_trie_match(pstate->pdquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
 
