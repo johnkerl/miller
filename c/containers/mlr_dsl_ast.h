@@ -35,6 +35,8 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_NOP, // only for parser internals; should not be in the AST returned by the parser
 	MD_AST_NODE_TYPE_FOR,
 	MD_AST_NODE_TYPE_IN,
+	MD_AST_NODE_TYPE_BREAK,
+	MD_AST_NODE_TYPE_CONTINUE,
 } mlr_dsl_ast_node_type_t;
 
 typedef struct _mlr_dsl_ast_t {

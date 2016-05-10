@@ -43,18 +43,6 @@ TOP-OF-LIST SUMMARY
     ? for x $* { for y { @v["a"] { ... } } ?
 
 ================================================================
-* relcut material since 3.5.0:
-  - oosvars
-  - begin/end
-  - emit/all
-  - unset/all
-  - bare-boolean and pattern-action
-  - put -q: equiv to putting 'filter false'
-  - += et al. were ever announced -- fix intro release & note
-  - double-backslashing bug in sub/gsub
-  - --from, & why: up-arrow & append then-chain
-
-================================================================
 NON-PRE4
 ================================================================
 

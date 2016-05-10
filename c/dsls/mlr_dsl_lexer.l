@@ -4,6 +4,17 @@
 #include "mlr_dsl_parse.h"
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
+
+//xxx to do
+//"break" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BREAK);
+//	return MD_TOKEN_BREAK;
+//}
+//"continue" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTINUE);
+//	return MD_TOKEN_CONTINUE;
+//}
+
 %}
 
 %option reentrant
