@@ -70,6 +70,7 @@ new_md_statement ::= new_md_for_loop_full_srec.
 //
 new_md_statement ::= new_md_bare_boolean.
 new_md_statement ::= new_md_cond_block.
+new_md_statement ::= new_md_while_block.
 //new_md_statement ::= new_md_filter.
 //
 //new_md_statement ::= new_md_unset.
@@ -90,6 +91,15 @@ new_md_bare_boolean(A) ::= md_rhs(B). {
 
 // ----------------------------------------------------------------
 new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+	//mlr_dsl_ast_node_print(C);
+	//mlr_dsl_ast_node_print(B);
+	mlr_dsl_ast_node_print(A);
+}
+
+// ----------------------------------------------------------------
+new_md_while_block(A) ::= MD_TOKEN_WHILE MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+
 	//mlr_dsl_ast_node_print(C);
 	//mlr_dsl_ast_node_print(B);
 	mlr_dsl_ast_node_print(A);
@@ -147,7 +157,6 @@ md_statement ::= md_main_oosvar_assignment.
 md_statement ::= md_main_oosvar_from_full_srec_assignment.
 md_statement ::= md_main_full_srec_from_oosvar_assignment.
 md_statement ::= md_main_bare_boolean.
-md_statement ::= md_main_for_loop.
 md_statement ::= md_main_filter.
 md_statement ::= md_main_unset.
 md_statement ::= md_main_emitf.
@@ -238,18 +247,6 @@ md_cond_block_statement ::= md_cond_block_emitf.
 md_cond_block_statement ::= md_cond_block_emitp.
 md_cond_block_statement ::= md_cond_block_emit.
 md_cond_block_statement ::= md_cond_block_dump.
-
-// xxx temp
-md_main_for_loop(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
-	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
-	MD_TOKEN_IN MD_TOKEN_FULL_SREC
-	MD_TOKEN_RPAREN. {
-
-	//A = B;
-	sllv_append(past->pmain_statements, K);
-	sllv_append(past->pmain_statements, V);
-	sllv_append(past->pmain_statements, A);
-}
 
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
