@@ -43,6 +43,90 @@ TOP-OF-LIST SUMMARY
     ? for x $* { for y { @v["a"] { ... } } ?
 
 ================================================================
+GRAMMAR RE-ORG
+
+  // ! allow $stuff in b/e then flag @ C code rather than in the parser.
+  //   -> likewise disallow filter
+  //   -> better error messages, and simpler grammar.
+  //   -> needs expect-fail cases in reg_test/run, finally! ;)
+
+  xxx need to disambiguate top-level from not, for sllv_append
+
+  xxx maybe experiment with md2_... & top-level starting w/ S ... ?
+
+  // ================================================================
+  md_body ::= md_statements.
+
+  md_statements ::= md_statement.
+  md_statements ::= md_statement MD_TOKEN_SEMICOLON md_statements.
+
+  // ================================================================
+  // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+  md_statement ::= .
+
+  md_statement ::= md_begin_block.
+  md_statement ::= md_end_block.
+
+  md_statement ::= md_srec_assignment.
+  md_statement ::= md_oosvar_from_full_srec_assignment.
+  md_statement ::= md_full_srec_from_oosvar_assignment.
+  md_statement ::= md_for_loop_full_srec.
+
+  md_statement ::= md_oosvar_assignment.
+  md_statement ::= md_for_loop_oosvar.
+  md_statement ::= MD_TOKEN_BREAK.
+  md_statement ::= MD_TOKEN_CONTINUE.
+  //md_statement ::= if_else ... elif??
+
+  md_statement ::= md_bare_boolean.
+  md_statement ::= md_filter.
+
+  md_statement ::= md_unset.
+  md_statement ::= md_emitf.
+  md_statement ::= md_emitp.
+  md_statement ::= md_emit.
+  md_statement ::= md_dump.
+
+  // ================================================================
+  md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE md_statements MD_TOKEN_RBRACE.
+  md_end_block   ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE md_statements MD_TOKEN_RBRACE.
+
+  // ----------------------------------------------------------------
+  md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
+
+  // ----------------------------------------------------------------
+  md_for_loop_full_srec(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+  	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+  	MD_TOKEN_IN MD_TOKEN_FULL_SREC
+  	MD_TOKEN_RPAREN
+      MD_TOKEN_LBRACE
+      md_for_body_statements
+      MD_TOKEN_RBRACE
+
+  // xxx oosvar name -> bare oosvar name
+  // xxx then oosvar name = bare or indexed
+  md_for_loop_oosvar(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+  	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+  	MD_TOKEN_IN md_oosvar_name
+  	MD_TOKEN_RPAREN
+      MD_TOKEN_LBRACE
+      md_for_body_statements
+      MD_TOKEN_RBRACE
+
+  md_for_body_statements ::= md_for_body_statement.
+  md_for_body_statements ::= md_for_body_statement  MD_TOKEN_SEMICOLON md_for_body_statements.
+  md_for_body_statement  ::= md_statement.
+  md_for_body_statement  ::= MD_TOKEN_BREAK.
+  md_for_body_statement  ::= MD_TOKEN_CONTINUE.
+  md_for_body_statement  ::= .
+
+  // ----------------------------------------------------------------
+  // xxx if-elif-elif-else
+
+
+
+
+================================================================
 NON-PRE4
 ================================================================
 
