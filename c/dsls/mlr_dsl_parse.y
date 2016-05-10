@@ -26,7 +26,6 @@
 //void token_destructor(mlr_dsl_ast_node_t t) {
 //	printf("In token_destructor t->text(%s)=t->type(%lf)\n", t->text, t->type);
 //}
-
 //%token_destructor {token_destructor($$);}
 
 %parse_accept {
@@ -66,7 +65,7 @@ md_statement ::= md_end_block.        // E.g. 'end { emit @count }'
 // ================================================================
 // This looks redundant to the above, but it avoids having pathologies such as nested 'begin { begin { ... } }'.
 
-md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LEFT_BRACE md_begin_block_statements MD_TOKEN_RIGHT_BRACE.
+md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE md_begin_block_statements MD_TOKEN_RBRACE.
 
 md_begin_block_statements ::= md_begin_block_statement.
 md_begin_block_statements ::= md_begin_block_statement MD_TOKEN_SEMICOLON md_begin_block_statements.
@@ -84,7 +83,7 @@ md_begin_block_statement ::= md_begin_block_emit.
 md_begin_block_statement ::= md_begin_block_dump.
 
 // ----------------------------------------------------------------
-md_end_block ::= MD_TOKEN_END MD_TOKEN_LEFT_BRACE md_end_block_statements MD_TOKEN_RIGHT_BRACE.
+md_end_block ::= MD_TOKEN_END MD_TOKEN_LBRACE md_end_block_statements MD_TOKEN_RBRACE.
 
 md_end_block_statements ::= md_end_block_statement.
 md_end_block_statements ::= md_end_block_statement MD_TOKEN_SEMICOLON md_end_block_statements.
@@ -102,7 +101,7 @@ md_end_block_statement ::= md_end_block_emit.
 md_end_block_statement ::= md_end_block_dump.
 
 // ----------------------------------------------------------------
-md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LEFT_BRACE md_cond_block_statements(C) MD_TOKEN_RIGHT_BRACE . {
+md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_cond_block_statements(C) MD_TOKEN_RBRACE . {
 	A = mlr_dsl_ast_node_prepend_arg(C, B);
 }
 
@@ -143,6 +142,18 @@ md_cond_block_statement ::= md_cond_block_emitp.
 md_cond_block_statement ::= md_cond_block_emit.
 md_cond_block_statement ::= md_cond_block_dump.
 
+// xxx temp
+md_main_for_loop(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+	MD_TOKEN_IN MD_TOKEN_FULL_SREC
+	MD_TOKEN_RPAREN. {
+
+	//A = B;
+	sllv_append(past->pmain_statements, K);
+	sllv_append(past->pmain_statements, V);
+	sllv_append(past->pmain_statements, A);
+}
+
 // ================================================================
 // These are top-level; they update the AST top-level statement-lists.
 
@@ -169,18 +180,6 @@ md_main_bare_boolean(A) ::= md_rhs(B). {
 }
 md_main_cond_block(A) ::= md_cond_block(B). {
 	A = B;
-	sllv_append(past->pmain_statements, A);
-}
-
-// xxx temp
-md_main_for_loop(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
-	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
-	MD_TOKEN_IN MD_TOKEN_FULL_SREC
-	MD_TOKEN_RPAREN. {
-
-	//A = B;
-	sllv_append(past->pmain_statements, K);
-	sllv_append(past->pmain_statements, V);
 	sllv_append(past->pmain_statements, A);
 }
 

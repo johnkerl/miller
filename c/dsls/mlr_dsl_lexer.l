@@ -17,11 +17,11 @@
 }
 "{" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_LEFT_BRACE;
+	return MD_TOKEN_LBRACE;
 }
 "}" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_RIGHT_BRACE;
+	return MD_TOKEN_RBRACE;
 }
 
 "=" {

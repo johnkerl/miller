@@ -16,11 +16,13 @@ TOP-OF-LIST SUMMARY
   ? for (k1, k2, v in @*)
   ? break/continue?
 ! recursive PA-blocks & for-blocks
-? if-else?
+? if-elif-elif-else?
 ? while / do-while?
+? let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
 ? substring?
 ? CONVFMT? IGNORECASE? MLRPATH?
+* in 4.1.0 release notes make the inspiration from awk explicit
 
 ! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 
