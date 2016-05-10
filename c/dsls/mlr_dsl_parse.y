@@ -38,6 +38,92 @@
 
 // ================================================================
 md_body       ::= md_statements.
+md_body       ::= MD_TOKEN_EXPERIMENTAL new_md_statements.
+
+// ================================================================
+// ================================================================
+// NEW GRAMMAR
+// ================================================================
+// ================================================================
+
+new_md_statements ::= new_md_statement. {
+}
+
+new_md_statements ::= new_md_statement MD_TOKEN_SEMICOLON new_md_statements.
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+new_md_statement ::= .
+
+new_md_statement ::= new_md_begin_block.
+new_md_statement ::= new_md_end_block.
+
+new_md_statement ::= new_md_srec_assignment.
+//new_md_statement ::= new_md_oosvar_from_full_srec_assignment.
+//new_md_statement ::= new_md_full_srec_from_oosvar_assignment.
+//new_md_statement ::= new_md_for_loop_full_srec.
+//
+//new_md_statement ::= new_md_oosvar_assignment.
+//new_md_statement ::= new_md_for_loop_oosvar.
+//new_md_statement ::= MD_TOKEN_BREAK.
+//new_md_statement ::= MD_TOKEN_CONTINUE.
+////new_md_statement ::= if_else ... elif??
+//
+//new_md_statement ::= new_md_bare_boolean.
+//new_md_statement ::= new_md_filter.
+//
+//new_md_statement ::= new_md_unset.
+//new_md_statement ::= new_md_emitf.
+//new_md_statement ::= new_md_emitp.
+//new_md_statement ::= new_md_emit.
+//new_md_statement ::= new_md_dump.
+
+//// ================================================================
+new_md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE.
+new_md_end_block   ::= MD_TOKEN_END   MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE.
+
+//// ----------------------------------------------------------------
+//new_md_cond_block(A) ::= new_md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+//
+//// ----------------------------------------------------------------
+//new_md_for_loop_full_srec(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+//	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+//	MD_TOKEN_IN MD_TOKEN_FULL_SREC
+//	MD_TOKEN_RPAREN
+//    MD_TOKEN_LBRACE
+//    new_md_for_body_statements
+//    MD_TOKEN_RBRACE
+//
+//// xxx oosvar name -> bare oosvar name
+//// xxx then oosvar name = bare or indexed
+//new_md_for_loop_oosvar(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+//	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+//	MD_TOKEN_IN new_md_oosvar_name
+//	MD_TOKEN_RPAREN
+//    MD_TOKEN_LBRACE
+//    new_md_for_body_statements
+//    MD_TOKEN_RBRACE
+//
+//new_md_for_body_statements ::= new_md_for_body_statement.
+//new_md_for_body_statements ::= new_md_for_body_statement  MD_TOKEN_SEMICOLON new_md_for_body_statements.
+//new_md_for_body_statement  ::= new_md_statement.
+//new_md_for_body_statement  ::= MD_TOKEN_BREAK.
+//new_md_for_body_statement  ::= MD_TOKEN_CONTINUE.
+//new_md_for_body_statement  ::= .
+//
+//// ----------------------------------------------------------------
+//// xxx if-elif-elif-else
+//
+
+new_md_srec_assignment(A)  ::= md_srec_assignment(B). {
+	A = B;
+	mlr_dsl_ast_node_print(A);
+}
+
+// ================================================================
+// ================================================================
+// OLD GRAMMAR
+// ================================================================
+// ================================================================
 
 md_statements ::= md_statement.
 md_statements ::= md_statement MD_TOKEN_SEMICOLON md_statements.
