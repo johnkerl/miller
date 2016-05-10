@@ -74,63 +74,17 @@ run_mlr() {
 }
 
 # ================================================================
-announce FOO
+announce GRAMMAR REORG
 
-mention PLUS
-run_mlr --ofs tab put 'begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t' $indir/typeof.dkvp
+run_mlr --from /dev/null put -v '#$m=2'
+run_mlr --from /dev/null put -v '#begin{$b=1};$m=2;end{$e=3}'
 
-mention MINUS
-run_mlr --ofs tab put 'begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t' $indir/typeof.dkvp
-
-mention TIMES
-run_mlr --ofs tab put 'begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t' $indir/typeof.dkvp
-
-mention DIVIDE
-run_mlr --ofs tab put 'begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t' $indir/typeof.dkvp
-
-mention INTEGER DIVIDE
-run_mlr --ofs tab put 'begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t' $indir/typeof.dkvp
-
-mention REMAINDER
-run_mlr --ofs tab put 'begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t' $indir/typeof.dkvp
-
-mention BITWISE AND
-run_mlr --ofs tab put 'begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' $indir/typeof.dkvp
-
-mention BITWISE OR
-run_mlr --ofs tab put 'begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t' $indir/typeof.dkvp
-
-mention BITWISE XOR
-run_mlr --ofs tab put 'begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
-run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
-
-# There is logical-operator testing in unit_test/test_rval_evaluators.c.
+run_mlr --from /dev/null put -v '#true{$m=2}'
+run_mlr --from /dev/null put -v '#for(k,v in $*) { }'
+run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=3}'
+run_mlr --from /dev/null put -v '#for(k,v in $*) { true{$m=3} }'
+run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { true{$m=3} } }'
+run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }'
 
 # ================================================================
 cat $outfile

@@ -1,526 +1,74 @@
 
 ================================================================
-FOO
+GRAMMAR REORG
 
+mlr --from /dev/null put -v #$m=2
+= (srec_assignment):
+    m (field_name).
+    2 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
----------------------------------------------------------------- PLUS
-mlr --ofs tab put begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+mlr --from /dev/null put -v #begin{$b=1};$m=2;end{$e=3}
+= (srec_assignment):
+    b (field_name).
+    1 (strnum_literal).
+= (srec_assignment):
+    m (field_name).
+    2 (strnum_literal).
+= (srec_assignment):
+    e (field_name).
+    3 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
-mlr --ofs tab put begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=5	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=5	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=5	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=5	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
+mlr --from /dev/null put -v #true{$m=2}
+= (srec_assignment):
+    m (field_name).
+    2 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
-mlr --ofs tab put begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
+mlr --from /dev/null put -v #for(k,v in $*) { }
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=5	xt=5	st=7
-x=1	y=	xy=	sy=	xt=5	st=7
-x=	y=2	xy=	sy=5	xt=	st=7
-x=	y=	xy=	sy=	xt=	st=7
-a=1	y=2	xy=2	sy=5	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
-a=	y=2	xy=2	sy=5	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
-x=1	b=2	xy=1	sy=3	xt=5	st=7
-x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
+mlr --from /dev/null put -v #for(k,v in $*) { $m=3}
+= (srec_assignment):
+    m (field_name).
+    3 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
+mlr --from /dev/null put -v #for(k,v in $*) { true{$m=3} }
+= (srec_assignment):
+    m (field_name).
+    3 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
----------------------------------------------------------------- MINUS
-mlr --ofs tab put begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=-1	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
+mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
+= (srec_assignment):
+    m (field_name).
+    3 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
-mlr --ofs tab put begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=-1	sy=1	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=-1	sy=2	xt=-3	st=4
-x=1	y=	xy=	sy=	xt=-3	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=-3	st=4
-x=1	b=	xy=1	sy=	xt=-3	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=-1	sy=1	xt=-3	st=-1
-x=1	y=	xy=	sy=	xt=-3	st=-1
-x=	y=2	xy=	sy=1	xt=	st=-1
-x=	y=	xy=	sy=	xt=	st=-1
-a=1	y=2	xy=2	sy=1	xt=4	st=-1
-a=1	y=	xy=	sy=	xt=4	st=-1
-a=	y=2	xy=2	sy=1	xt=4	st=-1
-a=	y=	xy=	sy=	xt=4	st=-1
-x=1	b=2	xy=1	sy=3	xt=-3	st=-1
-x=1	b=	xy=1	sy=3	xt=-3	st=-1
-x=	b=2	xy=	sy=3	xt=	st=-1
-x=	b=	xy=	sy=3	xt=	st=-1
-
-
----------------------------------------------------------------- TIMES
-mlr --ofs tab put begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=2	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=2	sy=6	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=6	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=6	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=6	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=2	sy=2	xt=4	st=4
-x=1	y=	xy=	sy=	xt=4	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=4	st=4
-x=1	b=	xy=1	sy=	xt=4	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=2	sy=6	xt=4	st=12
-x=1	y=	xy=	sy=	xt=4	st=12
-x=	y=2	xy=	sy=6	xt=	st=12
-x=	y=	xy=	sy=	xt=	st=12
-a=1	y=2	xy=2	sy=6	xt=4	st=12
-a=1	y=	xy=	sy=	xt=4	st=12
-a=	y=2	xy=2	sy=6	xt=4	st=12
-a=	y=	xy=	sy=	xt=4	st=12
-x=1	b=2	xy=1	sy=3	xt=4	st=12
-x=1	b=	xy=1	sy=3	xt=4	st=12
-x=	b=2	xy=	sy=3	xt=	st=12
-x=	b=	xy=	sy=3	xt=	st=12
-
-
----------------------------------------------------------------- DIVIDE
-mlr --ofs tab put begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=1.500000	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1.500000	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1.500000	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1.500000	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=0	xt=0.250000	st=0
-x=1	y=	xy=	sy=	xt=0.250000	st=0
-x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
-a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
-a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=0.250000	st=0
-x=1	b=	xy=1	sy=	xt=0.250000	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=1.500000	xt=0.250000	st=0.750000
-x=1	y=	xy=	sy=	xt=0.250000	st=0.750000
-x=	y=2	xy=	sy=1.500000	xt=	st=0.750000
-x=	y=	xy=	sy=	xt=	st=0.750000
-a=1	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=1	y=	xy=	sy=	xt=0	st=0.750000
-a=	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=	y=	xy=	sy=	xt=0	st=0.750000
-x=1	b=2	xy=1	sy=3	xt=0.250000	st=0.750000
-x=1	b=	xy=1	sy=3	xt=0.250000	st=0.750000
-x=	b=2	xy=	sy=3	xt=	st=0.750000
-x=	b=	xy=	sy=3	xt=	st=0.750000
-
-
----------------------------------------------------------------- INTEGER DIVIDE
-mlr --ofs tab put begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=1	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=0	xt=0	st=0
-x=1	y=	xy=	sy=	xt=0	st=0
-x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
-a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
-a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=0	st=0
-x=1	b=	xy=1	sy=	xt=0	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=1	xt=0	st=0
-x=1	y=	xy=	sy=	xt=0	st=0
-x=	y=2	xy=	sy=1	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
-a=1	y=2	xy=0	sy=1	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
-a=	y=2	xy=0	sy=1	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=3	xt=0	st=0
-x=1	b=	xy=1	sy=3	xt=0	st=0
-x=	b=2	xy=	sy=3	xt=	st=0
-x=	b=	xy=	sy=3	xt=	st=0
-
-
----------------------------------------------------------------- REMAINDER
-mlr --ofs tab put begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=1	sy=0	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=0	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=0	sy=0	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=0	sy=0	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=1	sy=1	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=0	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=1	sy=0	xt=1	st=0
-x=1	y=	xy=	sy=	xt=1	st=0
-x=	y=2	xy=	sy=0	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
-a=1	y=2	xy=0	sy=0	xt=0	st=0
-a=1	y=	xy=	sy=	xt=0	st=0
-a=	y=2	xy=0	sy=0	xt=0	st=0
-a=	y=	xy=	sy=	xt=0	st=0
-x=1	b=2	xy=1	sy=	xt=1	st=0
-x=1	b=	xy=1	sy=	xt=1	st=0
-x=	b=2	xy=	sy=	xt=	st=0
-x=	b=	xy=	sy=	xt=	st=0
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=1	sy=1	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=0	sy=1	xt=0	st=3
-a=1	y=	xy=	sy=	xt=0	st=3
-a=	y=2	xy=0	sy=1	xt=0	st=3
-a=	y=	xy=	sy=	xt=0	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-
----------------------------------------------------------------- BITWISE AND
-mlr --ofs tab put begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=2	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=2	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=2	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=2	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=2	xt=0	st=4
-x=1	y=	xy=	sy=	xt=0	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=0	st=4
-x=1	b=	xy=1	sy=	xt=0	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=0	sy=2	xt=0	st=0
-x=1	y=	xy=	sy=	xt=0	st=0
-x=	y=2	xy=	sy=2	xt=	st=0
-x=	y=	xy=	sy=	xt=	st=0
-a=1	y=2	xy=2	sy=2	xt=4	st=0
-a=1	y=	xy=	sy=	xt=4	st=0
-a=	y=2	xy=2	sy=2	xt=4	st=0
-a=	y=	xy=	sy=	xt=4	st=0
-x=1	b=2	xy=1	sy=3	xt=0	st=0
-x=1	b=	xy=1	sy=3	xt=0	st=0
-x=	b=2	xy=	sy=3	xt=	st=0
-x=	b=	xy=	sy=3	xt=	st=0
-
-
----------------------------------------------------------------- BITWISE OR
-mlr --ofs tab put begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=3	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=3	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=3	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=3	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=3	xt=5	st=7
-x=1	y=	xy=	sy=	xt=5	st=7
-x=	y=2	xy=	sy=3	xt=	st=7
-x=	y=	xy=	sy=	xt=	st=7
-a=1	y=2	xy=2	sy=3	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
-a=	y=2	xy=2	sy=3	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
-x=1	b=2	xy=1	sy=3	xt=5	st=7
-x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
-
-
----------------------------------------------------------------- BITWISE XOR
-mlr --ofs tab put begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=1	st=
-x=1	y=	xy=	sy=	xt=1	st=
-x=	y=2	xy=	sy=2	xt=	st=
-x=	y=	xy=	sy=	xt=	st=
-a=1	y=2	xy=2	sy=2	xt=	st=
-a=1	y=	xy=	sy=	xt=	st=
-a=	y=2	xy=2	sy=2	xt=	st=
-a=	y=	xy=	sy=	xt=	st=
-x=1	b=2	xy=1	sy=	xt=1	st=
-x=1	b=	xy=1	sy=	xt=1	st=
-x=	b=2	xy=	sy=	xt=	st=
-x=	b=	xy=	sy=	xt=	st=
-
-mlr --ofs tab put begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=1	xt=1	st=3
-x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1	xt=	st=3
-x=	y=	xy=	sy=	xt=	st=3
-a=1	y=2	xy=2	sy=1	xt=	st=3
-a=1	y=	xy=	sy=	xt=	st=3
-a=	y=2	xy=2	sy=1	xt=	st=3
-a=	y=	xy=	sy=	xt=	st=3
-x=1	b=2	xy=1	sy=3	xt=1	st=3
-x=1	b=	xy=1	sy=3	xt=1	st=3
-x=	b=2	xy=	sy=3	xt=	st=3
-x=	b=	xy=	sy=3	xt=	st=3
-
-mlr --ofs tab put begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=2	xt=5	st=4
-x=1	y=	xy=	sy=	xt=5	st=4
-x=	y=2	xy=	sy=2	xt=	st=4
-x=	y=	xy=	sy=	xt=	st=4
-a=1	y=2	xy=2	sy=2	xt=4	st=4
-a=1	y=	xy=	sy=	xt=4	st=4
-a=	y=2	xy=2	sy=2	xt=4	st=4
-a=	y=	xy=	sy=	xt=4	st=4
-x=1	b=2	xy=1	sy=	xt=5	st=4
-x=1	b=	xy=1	sy=	xt=5	st=4
-x=	b=2	xy=	sy=	xt=	st=4
-x=	b=	xy=	sy=	xt=	st=4
-
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
-x=1	y=2	xy=3	sy=1	xt=5	st=7
-x=1	y=	xy=	sy=	xt=5	st=7
-x=	y=2	xy=	sy=1	xt=	st=7
-x=	y=	xy=	sy=	xt=	st=7
-a=1	y=2	xy=2	sy=1	xt=4	st=7
-a=1	y=	xy=	sy=	xt=4	st=7
-a=	y=2	xy=2	sy=1	xt=4	st=7
-a=	y=	xy=	sy=	xt=4	st=7
-x=1	b=2	xy=1	sy=3	xt=5	st=7
-x=1	b=	xy=1	sy=3	xt=5	st=7
-x=	b=2	xy=	sy=3	xt=	st=7
-x=	b=	xy=	sy=3	xt=	st=7
+mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
+= (srec_assignment):
+    m (field_name).
+    1 (strnum_literal).
+= (srec_assignment):
+    m (field_name).
+    2 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
 
