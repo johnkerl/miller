@@ -64,8 +64,6 @@ new_md_statement ::= new_md_for_loop_full_srec.
 
 //new_md_statement ::= new_md_oosvar_assignment.
 //new_md_statement ::= new_md_for_loop_oosvar.
-//new_md_statement ::= MD_TOKEN_BREAK.
-//new_md_statement ::= MD_TOKEN_CONTINUE.
 ////new_md_statement ::= if-else-elif ...
 //
 new_md_statement ::= new_md_bare_boolean.
@@ -90,11 +88,47 @@ new_md_bare_boolean(A) ::= md_rhs(B). {
 }
 
 // ----------------------------------------------------------------
-new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
-	//mlr_dsl_ast_node_print(C);
-	//mlr_dsl_ast_node_print(B);
-	mlr_dsl_ast_node_print(A);
+//new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+//	//mlr_dsl_ast_node_print(C);
+//	//mlr_dsl_ast_node_print(B);
+//	mlr_dsl_ast_node_print(A);
+//}
+
+new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_cond_block_statements(C) MD_TOKEN_RBRACE . {
+	A = mlr_dsl_ast_node_prepend_arg(C, B);
 }
+
+// Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
+// then "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally "$x>0 {$a=1;$b=2;$c=3}". So:
+//
+// * On the "$a=1" we make a sub-AST called "cond" with child $a=1.
+// * On the "$b=2" we append the next argument to get "cond" having children $a=1 and $b=2.
+// * On the "$c=3" we append the next argument to get "cond" having children $a=1, $b=2, and $c=3.
+// * On the "$x>0" we prepend the conditional expression to get "cond" having children $x>0, $a=1, $b=2, and $c=3.
+//
+// We handle statements of the form 'true{ ; ; }' by parsing the empty spaces around the semicolons as NOP nodes.
+// But, the NOP nodes are immediately stripped here and are not included in the AST we return.
+new_md_cond_block_statements(A) ::= new_md_cond_block_statement(B). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
+	} else {
+		A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+	}
+}
+new_md_cond_block_statements(A) ::= new_md_cond_block_statements(B) MD_TOKEN_SEMICOLON new_md_cond_block_statement(C). {
+	if (C->type == MD_AST_NODE_TYPE_NOP) {
+		A = B;
+	} else {
+		A = mlr_dsl_ast_node_append_arg(B, C);
+	} }
+
+// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+new_md_cond_block_statement(A) ::= . {
+    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
+}
+new_md_cond_block_statement ::= MD_TOKEN_BREAK.
+new_md_cond_block_statement ::= MD_TOKEN_CONTINUE.
+//new_md_cond_block_statement ::= new_md_statement.
 
 // ----------------------------------------------------------------
 new_md_while_block(A) ::= MD_TOKEN_WHILE MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
