@@ -8,6 +8,7 @@
 
 // ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
+	MD_AST_NODE_TYPE_STATEMENT_LIST, // xxx experimental
 	MD_AST_NODE_TYPE_STRNUM_LITERAL,
 	MD_AST_NODE_TYPE_BOOLEAN_LITERAL,
 	MD_AST_NODE_TYPE_REGEXI,
