@@ -40,9 +40,8 @@
 md_body ::= md_statements.
 md_body(A) ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
 	A = B;
-	printf("================================= TOP LEVEL BEGIN:\n");
+	printf("NEW-GRAMMAR STATEMENTS:\n");
 	mlr_dsl_ast_node_print(A);
-	printf("================================= TOP LEVEL END.\n");
 }
 
 // ================================================================
@@ -66,23 +65,13 @@ md_body(A) ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 
 new_md_statements(A) ::= new_md_statement(B). {
-	//printf(">>>>>>>>>>>>>>>>>>> MDS1\n");
-	//mlr_dsl_ast_node_print(B);
-	//printf("<<<<<<<<<<<<<<<<<<< MDS1\n");
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
 		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 	}
-	//printf("-- MD STATEMENT LIST BEGIN:\n");
-	//mlr_dsl_ast_node_print(A);
-	//printf("-- MD STATEMENT LIST END.\n");
 }
 new_md_statements(A) ::= new_md_statements(B) MD_TOKEN_SEMICOLON new_md_statement(C). {
-	//printf(">>>>>>>>>>>>>>>>>>> MDS2\n");
-	//mlr_dsl_ast_node_print(B);
-	//mlr_dsl_ast_node_print(C);
-	//printf("<<<<<<<<<<<<<<<<<<< MDS2\n");
 	if (C->type == MD_AST_NODE_TYPE_NOP) {
 		A = B;
 	} else {
@@ -93,8 +82,6 @@ new_md_statements(A) ::= new_md_statements(B) MD_TOKEN_SEMICOLON new_md_statemen
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 new_md_statement(A) ::= . {
-	//printf(">>>>>>>>>>>>>>>>>>> MDS0\n");
-	//printf("<<<<<<<<<<<<<<<<<<< MDS0\n");
     A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
@@ -166,13 +153,13 @@ md_for_loop_full_srec(A) ::=
     	new_md_statements(C)
     MD_TOKEN_RBRACE.
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR,
-		mlr_dsl_ast_node_alloc_binary("indices", MD_AST_NODE_TYPE_STRIPPED_AWAY, K, V), // xxx temp
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR_SREC,
+		mlr_dsl_ast_node_alloc_binary("variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K, V),
 		C);
 }
 
 md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
-	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_STRNUM_LITERAL); // xxx stub
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
 
 // ----------------------------------------------------------------
