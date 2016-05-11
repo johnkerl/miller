@@ -20,6 +20,7 @@ TOP-OF-LIST SUMMARY
 ? if-elif-elif-else?
 ? while / do-while?
 x let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
+! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 
 ? substring?
 ? CONVFMT? IGNORECASE? MLRPATH?

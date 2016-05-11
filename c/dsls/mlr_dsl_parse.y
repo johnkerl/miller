@@ -180,6 +180,8 @@ md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 // ================================================================
 // ================================================================
 
+// xxx maybe elimintate need for semicolon after closing curly brace by making an intermediate
+// md_braced_block which expands to if/for/while/cond?
 md_statements ::= md_statement.
 md_statements ::= md_statement MD_TOKEN_SEMICOLON md_statements.
 

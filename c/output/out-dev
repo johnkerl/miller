@@ -5,24 +5,27 @@ GRAMMAR REORG
 
 ---------------------------------------------------------------- simplest
 mlr --from /dev/null put -v #
-NEW-GRAMMAR STATEMENTS:
-list (statement_list):
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
 
 mlr --from /dev/null put -v #$m=2
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     = (srec_assignment):
         m (field_name).
         2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #$m=2;$m=3
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     = (srec_assignment):
         m (field_name).
@@ -30,12 +33,12 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         3 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #$m=2;$m=3;$m=4
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     = (srec_assignment):
         m (field_name).
@@ -46,12 +49,12 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         4 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #$m=2;;$m=3;$m=4
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     = (srec_assignment):
         m (field_name).
@@ -62,14 +65,14 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         4 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- begin/main/end
 mlr --from /dev/null put -v #begin{$b=1};$m=2;end{$e=3}
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
@@ -84,14 +87,14 @@ list (statement_list):
             = (srec_assignment):
                 e (field_name).
                 3 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:cond
 mlr --from /dev/null put -v #true{$m=2}
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
@@ -99,28 +102,28 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:empty-for
 mlr --from /dev/null put -v #for(k,v in $*) { }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
             k (non_sigil_name).
             v (non_sigil_name).
         list (statement_list):
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:single-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1}
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -130,14 +133,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 1 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:double-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;$m=2 }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -150,14 +153,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:for w/ break/continue
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;$m=2 }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -171,12 +174,12 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;$m=2 }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -191,12 +194,12 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;;$m=2 }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -211,14 +214,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:for:cond
 mlr --from /dev/null put -v #for(k,v in $*) { true{$m=3} }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     for (for-srec):
         variables (for-variables):
@@ -231,14 +234,14 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         3 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:cond:for
 mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1 } }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
@@ -251,12 +254,12 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         1 (strnum_literal).
+
+mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
-
-mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
-NEW-GRAMMAR STATEMENTS:
+AST ROOT:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
@@ -274,14 +277,14 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         2 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
 
 ---------------------------------------------------------------- main:cond:for:cond
 mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
-NEW-GRAMMAR STATEMENTS:
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
@@ -297,7 +300,4 @@ list (statement_list):
                             = (srec_assignment):
                                 m (field_name).
                                 3 (strnum_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 

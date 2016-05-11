@@ -227,6 +227,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	pcst->pmain_statements  = mlr_dsl_cst_alloc_from_statement_list(past->pmain_statements,  type_inferencing);
 	pcst->pend_statements   = mlr_dsl_cst_alloc_from_statement_list(past->pend_statements,   type_inferencing);
 
+	// xxx new grammar
+
 	return pcst;
 }
 
@@ -239,6 +241,12 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 	}
 	return pstatements;
 }
+
+// xxx new grammar
+// * assert root is list
+// * make an aux-routine with incremented 1-up depth.
+// * allow begin/end only at depth==1.
+// * include is-main flag at some level; disallow all $stuff for begin/end.
 
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)

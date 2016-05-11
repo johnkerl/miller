@@ -111,6 +111,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 
 // ----------------------------------------------------------------
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
+	// xxx old grammar
 	printf("AST BEGIN STATEMENTS (%llu):\n", past->pbegin_statements->length);
 	for (sllve_t* pe = past->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
@@ -123,6 +124,7 @@ void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
 	for (sllve_t* pe = past->pend_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
 
+	// xxx new grammar
 	if (past->proot != NULL) {
 		printf("AST ROOT:\n");
 		mlr_dsl_ast_node_print(past->proot);
