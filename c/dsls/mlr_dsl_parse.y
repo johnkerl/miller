@@ -46,17 +46,25 @@ md_body ::= MD_TOKEN_EXPERIMENTAL new_md_statements.
 // ================================================================
 // ================================================================
 
-new_md_statements ::= new_md_statement. {
-}
+// xxx need top-level w/ include/exclude begin/end. or, again, reject @ cst.
 
+new_md_statements ::= new_md_statement. {
+	// xxx ast
+}
 new_md_statements ::= new_md_statement MD_TOKEN_SEMICOLON new_md_statements. {
+	// xxx ast
 }
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 new_md_statement ::= .
 
-new_md_statement ::= new_md_begin_block.
-new_md_statement ::= new_md_end_block.
+// Begin/end (non-nestable)
+new_md_statement(A) ::= new_md_begin_block(B). {
+	A = B;
+}
+new_md_statement(A) ::= new_md_end_block(B). {
+	A = B;
+}
 
 // Nested control structures:
 new_md_statement ::= new_md_cond_block.
@@ -70,7 +78,7 @@ new_md_statement ::= md_srec_assignment.
 new_md_statement ::= md_oosvar_from_full_srec_assignment.
 new_md_statement ::= md_full_srec_from_oosvar_assignment.
 
-// Valid in begin/end since they don't refer to srecs:
+// Valid in begin/end since they don't refer to srecs (although the RHSs might):
 new_md_statement ::= md_bare_boolean.
 new_md_statement ::= md_oosvar_assignment.
 new_md_statement ::= md_filter.
@@ -80,14 +88,14 @@ new_md_statement ::= md_emitp.
 new_md_statement ::= md_emit.
 new_md_statement ::= md_dump.
 
-// Valid only within for/while, but accept them here syntactically and reject them in the AST-to-CST
+// Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
 new_md_statement ::= MD_TOKEN_BREAK.
 new_md_statement ::= MD_TOKEN_CONTINUE.
 
 // ================================================================
-new_md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE.
-new_md_end_block   ::= MD_TOKEN_END   MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE.
+new_md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE. // xxx ast
+new_md_end_block   ::= MD_TOKEN_END   MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE. // xxx ast
 
 // ----------------------------------------------------------------
 new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
@@ -96,6 +104,11 @@ new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN
 //	A = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = B;
 	printf("-- COND BLOCK:\n");
+	printf("-- -- BODY:\n");
+	mlr_dsl_ast_node_print(C);
+	printf("-- -- RHS:\n");
+	mlr_dsl_ast_node_print(B);
+	printf("-- -- LHS:\n");
 	mlr_dsl_ast_node_print(A);
 }
 
@@ -124,9 +137,13 @@ new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN
 //	} }
 
 // ----------------------------------------------------------------
-md_while_block(A) ::= MD_TOKEN_WHILE MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-	MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+md_while_block(A) ::=
+	MD_TOKEN_WHILE
+		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
+		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+{
 
+	// xxx ast
 	//mlr_dsl_ast_node_print(C);
 	//mlr_dsl_ast_node_print(B);
 	A = B;
@@ -150,6 +167,7 @@ md_for_loop_full_srec(A) ::=
 	A = K;
 }
 
+// ----------------------------------------------------------------
 //// xxx oosvar name -> bare oosvar name
 //// xxx then oosvar name = bare or indexed
 //new_md_for_loop_oosvar(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
@@ -160,6 +178,7 @@ md_for_loop_full_srec(A) ::=
 //    new_md_for_body_statements
 //    MD_TOKEN_RBRACE
 
+// ----------------------------------------------------------------
 //// xxx if-elif-elif-else
 
 // ================================================================
