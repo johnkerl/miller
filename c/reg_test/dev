@@ -77,7 +77,12 @@ run_mlr() {
 announce GRAMMAR REORG
 
 mention simplest
+run_mlr --from /dev/null put -v '#'
+run_mlr --from /dev/null put -v '#$m=2'
+run_mlr --from /dev/null put -v '#$m=2;$m=3'
+run_mlr --from /dev/null put -v '#$m=2;$m=3;$m=4'
 run_mlr --from /dev/null put -v '#$m=2;;$m=3;$m=4'
+
 mention begin/main/end
 run_mlr --from /dev/null put -v '#begin{$b=1};$m=2;end{$e=3}'
 

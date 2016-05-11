@@ -38,7 +38,12 @@
 
 // ================================================================
 md_body ::= md_statements.
-md_body ::= MD_TOKEN_EXPERIMENTAL new_md_statements.
+md_body(A) ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
+	A = B;
+	printf("================================= TOP LEVEL BEGIN:\n");
+	mlr_dsl_ast_node_print(A);
+	printf("================================= TOP LEVEL END.\n");
+}
 
 // ================================================================
 // ================================================================
@@ -48,23 +53,54 @@ md_body ::= MD_TOKEN_EXPERIMENTAL new_md_statements.
 
 // xxx need top-level w/ include/exclude begin/end. or, again, reject @ cst.
 
-new_md_statements ::= new_md_statement. {
-	// xxx ast
+// ----------------------------------------------------------------
+// Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then
+// "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally realize that's the top level, or it's embedded
+// within a cond-block, or for-loop body, etc.
+
+// * On the "$a=1" we make a sub-AST called "list" with child $a=1.
+// * On the "$b=2" we append the next argument to get "list" having children $a=1 and $b=2.
+// * On the "$c=3" we append the next argument to get "list" having children $a=1, $b=2, and $c=3.
+//
+// We handle statements of the form ' ; ; ' by parsing the empty spaces around the semicolons as NOP nodes.
+// But, the NOP nodes are immediately stripped here and are not included in the AST we return.
+
+new_md_statements(A) ::= new_md_statement(B). {
+	//printf(">>>>>>>>>>>>>>>>>>> MDS1\n");
+	//mlr_dsl_ast_node_print(B);
+	//printf("<<<<<<<<<<<<<<<<<<< MDS1\n");
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	} else {
+		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+	}
+	//printf("-- MD STATEMENT LIST BEGIN:\n");
+	//mlr_dsl_ast_node_print(A);
+	//printf("-- MD STATEMENT LIST END.\n");
 }
-new_md_statements ::= new_md_statement MD_TOKEN_SEMICOLON new_md_statements. {
-	// xxx ast
+new_md_statements(A) ::= new_md_statements(B) MD_TOKEN_SEMICOLON new_md_statement(C). {
+	//printf(">>>>>>>>>>>>>>>>>>> MDS2\n");
+	//mlr_dsl_ast_node_print(B);
+	//mlr_dsl_ast_node_print(C);
+	//printf("<<<<<<<<<<<<<<<<<<< MDS2\n");
+	if (C->type == MD_AST_NODE_TYPE_NOP) {
+		A = B;
+	} else {
+		A = mlr_dsl_ast_node_append_arg(B, C);
+	}
+	//mlr_dsl_ast_node_print(C);
 }
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-new_md_statement ::= .
+new_md_statement(A) ::= . {
+	//printf(">>>>>>>>>>>>>>>>>>> MDS0\n");
+	//printf("<<<<<<<<<<<<<<<<<<< MDS0\n");
+    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
+}
 
 // Begin/end (non-nestable)
-new_md_statement(A) ::= new_md_begin_block(B). {
-	A = B;
-}
-new_md_statement(A) ::= new_md_end_block(B). {
-	A = B;
-}
+new_md_statement ::= new_md_begin_block.
+new_md_statement ::= new_md_end_block.
 
 // Nested control structures:
 new_md_statement ::= new_md_cond_block.
@@ -94,61 +130,26 @@ new_md_statement ::= MD_TOKEN_BREAK.
 new_md_statement ::= MD_TOKEN_CONTINUE.
 
 // ================================================================
-new_md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE. // xxx ast
-new_md_end_block   ::= MD_TOKEN_END   MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE. // xxx ast
+new_md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE new_md_statements(B) MD_TOKEN_RBRACE. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_BEGIN, B);
+}
+new_md_end_block(A)   ::= MD_TOKEN_END(O)   MD_TOKEN_LBRACE new_md_statements(B) MD_TOKEN_RBRACE. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_END, B);
+}
 
 // ----------------------------------------------------------------
 new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
-	//mlr_dsl_ast_node_print(C);
-	//mlr_dsl_ast_node_print(B);
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = B;
-	printf("-- COND BLOCK:\n");
-	printf("-- -- BODY:\n");
-	mlr_dsl_ast_node_print(C);
-	printf("-- -- RHS:\n");
-	mlr_dsl_ast_node_print(B);
-	printf("-- -- LHS:\n");
-	mlr_dsl_ast_node_print(A);
+	//A = mlr_dsl_ast_node_prepend_arg(C, B);
+	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 }
-
-// Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
-// then "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally "$x>0 {$a=1;$b=2;$c=3}". So:
-//
-// * On the "$a=1" we make a sub-AST called "cond" with child $a=1.
-// * On the "$b=2" we append the next argument to get "cond" having children $a=1 and $b=2.
-// * On the "$c=3" we append the next argument to get "cond" having children $a=1, $b=2, and $c=3.
-// * On the "$x>0" we prepend the conditional expression to get "cond" having children $x>0, $a=1, $b=2, and $c=3.
-//
-// We handle statements of the form 'true{ ; ; }' by parsing the empty spaces around the semicolons as NOP nodes.
-// But, the NOP nodes are immediately stripped here and are not included in the AST we return.
-//new_md_cond_block_statements(A) ::= new_md_cond_block_statement(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
-//	}
-//}
-//new_md_cond_block_statements(A) ::= new_md_cond_block_statements(B) MD_TOKEN_SEMICOLON new_md_cond_block_statement(C). {
-//	if (C->type == MD_AST_NODE_TYPE_NOP) {
-//		A = B;
-//	} else {
-//		A = mlr_dsl_ast_node_append_arg(B, C);
-//	} }
 
 // ----------------------------------------------------------------
 md_while_block(A) ::=
-	MD_TOKEN_WHILE
+	MD_TOKEN_WHILE(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
 		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
 {
-
-	// xxx ast
-	//mlr_dsl_ast_node_print(C);
-	//mlr_dsl_ast_node_print(B);
-	A = B;
-	printf("-- WHILE BLOCK:\n");
-	mlr_dsl_ast_node_print(A);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_BEGIN, B, C);
 }
 
 //// ----------------------------------------------------------------
@@ -161,7 +162,7 @@ md_for_loop_full_srec(A) ::=
     	new_md_statements
     MD_TOKEN_RBRACE.
 {
-	printf("-- FOR SREC:\n");
+	printf("-- FOR SREC:\n"); // xxx stub
 	mlr_dsl_ast_node_print(K);
 	mlr_dsl_ast_node_print(V);
 	A = K;

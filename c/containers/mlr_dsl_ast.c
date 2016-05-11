@@ -148,6 +148,8 @@ void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode) {
 char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	switch(type) {
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:     return "statement_list";     break;
+	case MD_AST_NODE_TYPE_BEGIN:              return "begin";              break;
+	case MD_AST_NODE_TYPE_END:                return "end";                break;
 	case MD_AST_NODE_TYPE_STRNUM_LITERAL:     return "strnum_literal";     break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:    return "boolean_literal";    break;
 	case MD_AST_NODE_TYPE_REGEXI:             return "regexi";             break;
