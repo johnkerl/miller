@@ -126,8 +126,12 @@ new_md_statement ::= md_dump.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
-new_md_statement ::= MD_TOKEN_BREAK.
-new_md_statement ::= MD_TOKEN_CONTINUE.
+new_md_statement(A) ::= MD_TOKEN_BREAK(O). {
+	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
+}
+new_md_statement(A) ::= MD_TOKEN_CONTINUE(O). {
+	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
+}
 
 // ================================================================
 new_md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE new_md_statements(B) MD_TOKEN_RBRACE. {
@@ -152,20 +156,23 @@ md_while_block(A) ::=
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_BEGIN, B, C);
 }
 
-//// ----------------------------------------------------------------
+// ----------------------------------------------------------------
 md_for_loop_full_srec(A) ::=
-	MD_TOKEN_FOR MD_TOKEN_LPAREN
-		MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
+	MD_TOKEN_FOR(O) MD_TOKEN_LPAREN
+		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_SREC
 	MD_TOKEN_RPAREN
     MD_TOKEN_LBRACE
-    	new_md_statements
+    	new_md_statements(C)
     MD_TOKEN_RBRACE.
 {
-	printf("-- FOR SREC:\n"); // xxx stub
-	mlr_dsl_ast_node_print(K);
-	mlr_dsl_ast_node_print(V);
-	A = K;
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR,
+		mlr_dsl_ast_node_alloc_binary("indices", MD_AST_NODE_TYPE_STRIPPED_AWAY, K, V), // xxx temp
+		C);
+}
+
+md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_STRNUM_LITERAL); // xxx stub
 }
 
 // ----------------------------------------------------------------

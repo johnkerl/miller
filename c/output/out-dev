@@ -113,12 +113,13 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:empty-for
 mlr --from /dev/null put -v #for(k,v in $*) { }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -127,12 +128,16 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:single-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1}
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            = (srec_assignment):
+                m (field_name).
+                1 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -141,12 +146,19 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:double-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;$m=2 }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            = (srec_assignment):
+                m (field_name).
+                1 (strnum_literal).
+            = (srec_assignment):
+                m (field_name).
+                2 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -155,36 +167,62 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:for w/ break/continue
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;$m=2 }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            = (srec_assignment):
+                m (field_name).
+                1 (strnum_literal).
+            break (break).
+            = (srec_assignment):
+                m (field_name).
+                2 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;$m=2 }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            = (srec_assignment):
+                m (field_name).
+                1 (strnum_literal).
+            break (break).
+            continue (break).
+            = (srec_assignment):
+                m (field_name).
+                2 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;;$m=2 }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            = (srec_assignment):
+                m (field_name).
+                1 (strnum_literal).
+            break (break).
+            continue (break).
+            = (srec_assignment):
+                m (field_name).
+                2 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -193,12 +231,19 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:for:cond
 mlr --from /dev/null put -v #for(k,v in $*) { true{$m=3} }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
-    k (non_sigil_name).
+    for (for):
+        indices (stripped_away):
+            k (strnum_literal).
+            v (strnum_literal).
+        list (statement_list):
+            cond (conditional_block):
+                true (boolean_literal).
+                list (statement_list):
+                    = (srec_assignment):
+                        m (field_name).
+                        3 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -207,30 +252,43 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:cond:for
 mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1 } }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
         list (statement_list):
-            k (non_sigil_name).
+            for (for):
+                indices (stripped_away):
+                    k (strnum_literal).
+                    v (strnum_literal).
+                list (statement_list):
+                    = (srec_assignment):
+                        m (field_name).
+                        1 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
         list (statement_list):
-            k (non_sigil_name).
+            for (for):
+                indices (stripped_away):
+                    k (strnum_literal).
+                    v (strnum_literal).
+                list (statement_list):
+                    = (srec_assignment):
+                        m (field_name).
+                        1 (strnum_literal).
+                    break (break).
+                    continue (break).
+                    = (srec_assignment):
+                        m (field_name).
+                        2 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -239,15 +297,22 @@ AST END STATEMENTS (0):
 
 ---------------------------------------------------------------- main:cond:for:cond
 mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
 ================================= TOP LEVEL BEGIN:
 list (statement_list):
     cond (conditional_block):
         true (boolean_literal).
         list (statement_list):
-            k (non_sigil_name).
+            for (for):
+                indices (stripped_away):
+                    k (strnum_literal).
+                    v (strnum_literal).
+                list (statement_list):
+                    cond (conditional_block):
+                        true (boolean_literal).
+                        list (statement_list):
+                            = (srec_assignment):
+                                m (field_name).
+                                3 (strnum_literal).
 ================================= TOP LEVEL END.
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
