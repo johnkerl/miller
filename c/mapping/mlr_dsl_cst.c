@@ -3,6 +3,14 @@
 #include "mlr_dsl_cst.h"
 
 static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing);
+
+static void mlr_dsl_cst_alloc_from_ast(
+	mlr_dsl_ast_t* past,
+	sllv_t* pbegin_statements,
+	sllv_t* pmain_statements,
+	sllv_t* pend_statements,
+	int type_inferencing);
+
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
@@ -223,9 +231,21 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
 
-	pcst->pbegin_statements = mlr_dsl_cst_alloc_from_statement_list(past->pbegin_statements, type_inferencing);
-	pcst->pmain_statements  = mlr_dsl_cst_alloc_from_statement_list(past->pmain_statements,  type_inferencing);
-	pcst->pend_statements   = mlr_dsl_cst_alloc_from_statement_list(past->pend_statements,   type_inferencing);
+	if (past->proot == NULL) { // OLD GRAMMAR
+		pcst->pbegin_statements = mlr_dsl_cst_alloc_from_statement_list(past->pbegin_statements, type_inferencing);
+		pcst->pmain_statements  = mlr_dsl_cst_alloc_from_statement_list(past->pmain_statements,  type_inferencing);
+		pcst->pend_statements   = mlr_dsl_cst_alloc_from_statement_list(past->pend_statements,   type_inferencing);
+	} else { // NEW GRAMMAR
+		pcst->pbegin_statements = sllv_alloc();
+		pcst->pmain_statements  = sllv_alloc();
+		pcst->pend_statements   = sllv_alloc();
+		mlr_dsl_cst_alloc_from_ast(
+			past,
+			pcst->pbegin_statements,
+			pcst->pmain_statements,
+			pcst->pend_statements,
+			type_inferencing);
+	}
 
 	// xxx new grammar
 
@@ -242,12 +262,41 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 	return pstatements;
 }
 
+// ----------------------------------------------------------------
 // xxx new grammar
-// * assert root is list
-// * make an aux-routine with incremented 1-up depth.
-// * allow begin/end only at depth==1.
-// * include is-main flag at some level; disallow all $stuff for begin/end.
+static void mlr_dsl_cst_alloc_from_ast(
+	mlr_dsl_ast_t* past,
+	sllv_t* pbegin_statements,
+	sllv_t* pmain_statements,
+	sllv_t* pend_statements,
+	int type_inferencing)
+{
+	printf("AST->CST STUB\n");
+	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	for (sllve_t* pe = past->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		switch (pnode->type) {
+		case MD_AST_NODE_TYPE_BEGIN:
+			printf("GOT BEGIN\n");
+			break;
+		case MD_AST_NODE_TYPE_END:
+			printf("GOT END\n");
+			break;
+		default:
+			printf("GOT %s\n", mlr_dsl_ast_node_describe_type(pnode->type));
+			break;
+		}
+	}
+	// * make an aux-routine with incremented 1-up depth.
+	// * allow begin/end only at depth==1.
+	// * include is-main flag at some level; disallow all $stuff for begin/end.
+}
 
+// ----------------------------------------------------------------
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;

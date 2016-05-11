@@ -138,7 +138,7 @@ md_while_block(A) ::=
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
 		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_BEGIN, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
 }
 
 // ----------------------------------------------------------------
