@@ -2,16 +2,22 @@
 ================================================================
 GRAMMAR REORG
 
+
+---------------------------------------------------------------- simplest
 mlr --from /dev/null put -v #$m=2;;$m=3;$m=4
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- begin/main/end
 mlr --from /dev/null put -v #begin{$b=1};$m=2;end{$e=3}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:cond
 mlr --from /dev/null put -v #true{$m=2}
 -- COND BLOCK:
 true (boolean_literal).
@@ -19,6 +25,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:empty-for
 mlr --from /dev/null put -v #for(k,v in $*) { }
 -- FOR SREC:
 k (non_sigil_name).
@@ -27,6 +35,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:single-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1}
 -- FOR SREC:
 k (non_sigil_name).
@@ -35,6 +45,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:double-statement-for
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;$m=2 }
 -- FOR SREC:
 k (non_sigil_name).
@@ -43,6 +55,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:for w/ break/continue
 mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;$m=2 }
 -- FOR SREC:
 k (non_sigil_name).
@@ -67,6 +81,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
+
+---------------------------------------------------------------- main:for:cond
 mlr --from /dev/null put -v #for(k,v in $*) { true{$m=3} }
 -- COND BLOCK:
 true (boolean_literal).
@@ -77,18 +93,8 @@ AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
-mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
--- COND BLOCK:
-true (boolean_literal).
--- FOR SREC:
-k (non_sigil_name).
-v (non_sigil_name).
--- COND BLOCK:
-true (boolean_literal).
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
 
+---------------------------------------------------------------- main:cond:for
 mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1 } }
 -- FOR SREC:
 k (non_sigil_name).
@@ -100,6 +106,20 @@ AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 
 mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
+-- FOR SREC:
+k (non_sigil_name).
+v (non_sigil_name).
+-- COND BLOCK:
+true (boolean_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+
+
+---------------------------------------------------------------- main:cond:for:cond
+mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
+-- COND BLOCK:
+true (boolean_literal).
 -- FOR SREC:
 k (non_sigil_name).
 v (non_sigil_name).

@@ -76,20 +76,37 @@ run_mlr() {
 # ================================================================
 announce GRAMMAR REORG
 
+mention simplest
 run_mlr --from /dev/null put -v '#$m=2;;$m=3;$m=4'
+mention begin/main/end
 run_mlr --from /dev/null put -v '#begin{$b=1};$m=2;end{$e=3}'
 
+mention main:cond
 run_mlr --from /dev/null put -v '#true{$m=2}'
+
+mention main:empty-for
 run_mlr --from /dev/null put -v '#for(k,v in $*) { }'
+
+mention main:single-statement-for
 run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=1}'
+
+mention main:double-statement-for
 run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=1;$m=2 }'
+
+mention main:for w/ break/continue
 run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=1;break;$m=2 }'
 run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=1;break;continue;$m=2 }'
 run_mlr --from /dev/null put -v '#for(k,v in $*) { $m=1;break;continue;;$m=2 }'
+
+mention main:for:cond
 run_mlr --from /dev/null put -v '#for(k,v in $*) { true{$m=3} }'
-run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { true{$m=3} } }'
+
+mention main:cond:for
 run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { $m=1 } }'
 run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }'
+
+mention main:cond:for:cond
+run_mlr --from /dev/null put -v '#true{ for(k,v in $*) { true{$m=3} } }'
 
 # ================================================================
 cat $outfile
