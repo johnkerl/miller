@@ -38,10 +38,8 @@
 
 // ================================================================
 md_body ::= md_statements.
-md_body(A) ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
-	A = B;
-	printf("NEW-GRAMMAR STATEMENTS:\n");
-	mlr_dsl_ast_node_print(A);
+md_body ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
+	past->proot = B;
 }
 
 // ================================================================

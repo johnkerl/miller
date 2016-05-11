@@ -44,17 +44,18 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_CONTINUE,
 } mlr_dsl_ast_node_type_t;
 
-typedef struct _mlr_dsl_ast_t {
-	sllv_t* pbegin_statements;
-	sllv_t* pmain_statements;
-	sllv_t* pend_statements;
-} mlr_dsl_ast_t;
-
 typedef struct _mlr_dsl_ast_node_t {
 	char*                   text;
 	mlr_dsl_ast_node_type_t type;
 	sllv_t*                 pchildren;
 } mlr_dsl_ast_node_t;
+
+typedef struct _mlr_dsl_ast_t {
+	sllv_t* pbegin_statements;
+	sllv_t* pmain_statements;
+	sllv_t* pend_statements;
+	mlr_dsl_ast_node_t* proot;
+} mlr_dsl_ast_t;
 
 // ----------------------------------------------------------------
 mlr_dsl_ast_t* mlr_dsl_ast_alloc();

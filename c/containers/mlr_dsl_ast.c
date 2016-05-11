@@ -8,6 +8,7 @@ mlr_dsl_ast_t* mlr_dsl_ast_alloc() {
 	past->pbegin_statements = sllv_alloc();
 	past->pmain_statements  = sllv_alloc();
 	past->pend_statements   = sllv_alloc();
+	past->proot             = NULL;
 	return past;
 }
 
@@ -121,6 +122,11 @@ void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
 	printf("AST END STATEMENTS (%llu):\n", past->pend_statements->length);
 	for (sllve_t* pe = past->pend_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_print(pe->pvvalue);
+
+	if (past->proot != NULL) {
+		printf("AST ROOT:\n");
+		mlr_dsl_ast_node_print(past->proot);
+	}
 }
 
 // ----------------------------------------------------------------
