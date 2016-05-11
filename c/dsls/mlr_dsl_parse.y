@@ -76,6 +76,8 @@ new_md_statement ::= new_md_while_block.
 //new_md_statement ::= new_md_emitp.
 //new_md_statement ::= new_md_emit.
 //new_md_statement ::= new_md_dump.
+new_md_statement  ::= MD_TOKEN_BREAK.
+new_md_statement  ::= MD_TOKEN_CONTINUE.
 
 //// ================================================================
 new_md_begin_block ::= MD_TOKEN_BEGIN MD_TOKEN_LBRACE new_md_statements MD_TOKEN_RBRACE.
@@ -88,15 +90,15 @@ new_md_bare_boolean(A) ::= md_rhs(B). {
 }
 
 // ----------------------------------------------------------------
-//new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
-//	//mlr_dsl_ast_node_print(C);
-//	//mlr_dsl_ast_node_print(B);
-//	mlr_dsl_ast_node_print(A);
-//}
-
-new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_cond_block_statements(C) MD_TOKEN_RBRACE . {
-	A = mlr_dsl_ast_node_prepend_arg(C, B);
+new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+	//mlr_dsl_ast_node_print(C);
+	//mlr_dsl_ast_node_print(B);
+	mlr_dsl_ast_node_print(A);
 }
+
+//new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_cond_block_statements(C) MD_TOKEN_RBRACE . {
+//	A = mlr_dsl_ast_node_prepend_arg(C, B);
+//}
 
 // Given "$x>0 {$a=1;$b=2;$c=3}": since this is a bottom-up parser, we get first the "$a=1",
 // then "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally "$x>0 {$a=1;$b=2;$c=3}". So:
@@ -108,27 +110,27 @@ new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_cond_block_statements(
 //
 // We handle statements of the form 'true{ ; ; }' by parsing the empty spaces around the semicolons as NOP nodes.
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
-new_md_cond_block_statements(A) ::= new_md_cond_block_statement(B). {
-	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
-	} else {
-		A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
-	}
-}
-new_md_cond_block_statements(A) ::= new_md_cond_block_statements(B) MD_TOKEN_SEMICOLON new_md_cond_block_statement(C). {
-	if (C->type == MD_AST_NODE_TYPE_NOP) {
-		A = B;
-	} else {
-		A = mlr_dsl_ast_node_append_arg(B, C);
-	} }
+//new_md_cond_block_statements(A) ::= new_md_cond_block_statement(B). {
+//	if (B->type == MD_AST_NODE_TYPE_NOP) {
+//		A = mlr_dsl_ast_node_alloc_zary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK);
+//	} else {
+//		A = mlr_dsl_ast_node_alloc_unary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B);
+//	}
+//}
+//new_md_cond_block_statements(A) ::= new_md_cond_block_statements(B) MD_TOKEN_SEMICOLON new_md_cond_block_statement(C). {
+//	if (C->type == MD_AST_NODE_TYPE_NOP) {
+//		A = B;
+//	} else {
+//		A = mlr_dsl_ast_node_append_arg(B, C);
+//	} }
 
-// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-new_md_cond_block_statement(A) ::= . {
-    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
-}
-new_md_cond_block_statement ::= MD_TOKEN_BREAK.
-new_md_cond_block_statement ::= MD_TOKEN_CONTINUE.
-//new_md_cond_block_statement ::= new_md_statement.
+//// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
+//new_md_cond_block_statement(A) ::= . {
+//    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
+//}
+//new_md_cond_block_statement ::= MD_TOKEN_BREAK.
+//new_md_cond_block_statement ::= MD_TOKEN_CONTINUE.
+////new_md_cond_block_statement ::= new_md_statement.
 
 // ----------------------------------------------------------------
 new_md_while_block(A) ::= MD_TOKEN_WHILE MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
@@ -161,8 +163,8 @@ new_md_for_loop_full_srec(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
 new_md_for_body_statements ::= new_md_for_body_statement.
 new_md_for_body_statements ::= new_md_for_body_statement MD_TOKEN_SEMICOLON new_md_for_body_statements.
 new_md_for_body_statement  ::= new_md_statement.
-new_md_for_body_statement  ::= MD_TOKEN_BREAK.
-new_md_for_body_statement  ::= MD_TOKEN_CONTINUE.
+//new_md_for_body_statement  ::= MD_TOKEN_BREAK.
+//new_md_for_body_statement  ::= MD_TOKEN_CONTINUE.
 ////new_md_for_body_statement  ::= .
 
 //// ----------------------------------------------------------------
