@@ -59,8 +59,10 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 // Most statements have one item, except multi-oosvar emit and multi-oosvar unset.
 typedef struct _mlr_dsl_cst_statement_item_t {
 	// E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
-	sllv_t* poosvar_lhs_keylist_evaluators;
+	// xxx oosvar assignment; emit; unset
 	sllv_t* poosvar_lhs_namelist_evaluators; // for emit
+
+	sllv_t* punset_oosvar_keylist_evaluators; // for unset
 
 	char* emitf_or_unset_srec_field_name; // xxx temp
 	rval_evaluator_t* pemitf_arg_evaluator; // xxx temp
@@ -73,16 +75,40 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
 
+	// For assignment to oosvar, emit, and emitp
+	sllv_t* poosvar_lhs_keylist_evaluators;
+
+	// For assignment to srec
 	char* srec_lhs_field_name;
+
 	// For assignments to srec or oosvar, filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
-	//sllv_t* unset_srec_field_names;
-	//sllv_t* emitf_srec_field_names;
 
 	sllv_t* pitems;
 
 	sllv_t* pblock_statements; // For pattern-action blocks, while, for, etc.
 } mlr_dsl_cst_statement_t;
+
+// ---------------------------------------------------------------- xxx
+// cond-expr {}
+// while (expr) {}
+// for (k, v in $*) {}
+// for (k1, k2, v in @v["a"]) {}
+// if (expr) {} elif (expr) {} elif (expr) else {}
+// $srec = RHS
+// @v["a"] = $*
+// $* = @v["a"]
+// bare-boolean
+// @v["a"] = RHS
+// filter expr
+// unset
+// emitf
+// emitp
+// emit
+// dump
+// break
+// continue
+// ---------------------------------------------------------------- xxx
 
 typedef struct _mlr_dsl_cst_t {
 	sllv_t* pbegin_statements;
