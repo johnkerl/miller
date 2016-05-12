@@ -26,7 +26,6 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             srec_lhs_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
 	sllv_t*           poosvar_lhs_namelist_evaluators,
-	int               all_flag,
 	rval_evaluator_t* prhs_evaluator,
 	sllv_t*           pblock_statements,
 	sllv_t*           poosvar_rhs_keylist_evaluators);
@@ -307,7 +306,6 @@ static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_i
 // * srec_lhs_field_name
 // * poosvar_lhs_keylist_evaluators
 // * poosvar_lhs_namelist_evaluators
-// * all_flag
 // * prhs_evaluator
 // * pbody_statements: cond, while, for
 // * poosvar_rhs_keylist_evaluators
@@ -402,7 +400,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_srec_assignment(mlr_dsl_ast_
 		pleft->text,
 		NULL,
 		NULL,
-		FALSE,
 		rval_evaluator_alloc_from_ast(pright, type_inferencing),
 		NULL,
 		NULL));
@@ -439,7 +436,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 			NULL,
 			poosvar_lhs_keylist_evaluators,
 			NULL,
-			FALSE,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
 			allocate_keylist_evaluators_from_oosvar_node(pright, type_inferencing)));
@@ -449,7 +445,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 			NULL,
 			poosvar_lhs_keylist_evaluators,
 			NULL,
-			FALSE,
 			rval_evaluator_alloc_from_ast(pright, type_inferencing),
 			NULL,
 			NULL));
@@ -484,7 +479,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_from_full_srec_assign
 		NULL,
 		allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing),
 		NULL,
-		FALSE,
 		NULL,
 		NULL,
 		NULL));
@@ -516,7 +510,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assign
 		NULL,
 		NULL,
 		NULL,
-		FALSE,
 		NULL,
 		NULL,
 		allocate_keylist_evaluators_from_oosvar_node(pright, type_inferencing)));
@@ -539,7 +532,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 				NULL,
 				NULL,
 				NULL,
-				TRUE,
 				NULL,
 				NULL,
 				NULL));
@@ -552,7 +544,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 				pnode->text,
 				NULL,
 				NULL,
-				FALSE,
 				NULL,
 				NULL,
 				NULL));
@@ -562,7 +553,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 				NULL,
 				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing),
 				NULL,
-				FALSE,
 				NULL,
 				NULL,
 				NULL));
@@ -588,7 +578,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 			pnode->text,
 			NULL,
 			NULL,
-			FALSE,
 			rval_evaluator_alloc_from_ast(pnode, type_inferencing),
 			NULL,
 			NULL));
@@ -622,7 +611,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 			NULL,
 			NULL,
 			poosvar_lhs_namelist_evaluators,
-			TRUE,
 			NULL,
 			NULL,
 			NULL));
@@ -647,7 +635,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 			pnamenode->text,
 			allocate_keylist_evaluators_from_oosvar_node(pnamenode, type_inferencing),
 			poosvar_lhs_namelist_evaluators,
-			FALSE,
 			NULL,
 			NULL,
 			NULL));
@@ -684,7 +671,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_as
 		NULL,
 		NULL,
 		NULL,
-		FALSE,
 		rval_evaluator_alloc_from_ast(pfirst, type_inferencing),
 		pblock_statements,
 		NULL));
@@ -703,7 +689,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* p
 		NULL,
 		NULL,
 		NULL,
-		FALSE,
 		rval_evaluator_alloc_from_ast(pnode, type_inferencing),
 		NULL,
 		NULL));
@@ -721,7 +706,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* pas
 		NULL,
 		NULL,
 		NULL,
-		FALSE,
 		NULL,
 		NULL,
 		NULL));
@@ -739,7 +723,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_nod
 		NULL,
 		NULL,
 		NULL,
-		FALSE,
 		rval_evaluator_alloc_from_ast(past, type_inferencing),
 		NULL,
 		NULL));
@@ -761,7 +744,6 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             srec_lhs_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
 	sllv_t*           poosvar_lhs_namelist_evaluators,
-	int               all_flag,
 	rval_evaluator_t* prhs_evaluator,
 	sllv_t*           pblock_statements,
 	sllv_t*           poosvar_rhs_keylist_evaluators)
@@ -770,7 +752,6 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	pitem->srec_lhs_field_name = srec_lhs_field_name == NULL ? NULL : mlr_strdup_or_die(srec_lhs_field_name);
 	pitem->poosvar_lhs_keylist_evaluators  = poosvar_lhs_keylist_evaluators;
 	pitem->poosvar_lhs_namelist_evaluators = poosvar_lhs_namelist_evaluators;
-	pitem->all_flag                        = all_flag;
 	pitem->prhs_evaluator                  = prhs_evaluator;
 	pitem->pblock_statements               = pblock_statements;
 	pitem->poosvar_rhs_keylist_evaluators  = poosvar_rhs_keylist_evaluators;

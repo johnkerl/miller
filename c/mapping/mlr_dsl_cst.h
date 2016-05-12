@@ -63,7 +63,6 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	// E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 	sllv_t* poosvar_lhs_keylist_evaluators;
 	sllv_t* poosvar_lhs_namelist_evaluators; // for emit
-	int all_flag; // for emit all and unset all
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;                 // E.g. for srec assignments
