@@ -60,8 +60,9 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 typedef struct _mlr_dsl_cst_statement_item_t {
 	// LHS:
 	char* output_field_name;
+	// E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 	sllv_t* poosvar_lhs_keylist_evaluators;
-	sllv_t* poosvar_lhs_namelist_evaluators;
+	sllv_t* poosvar_lhs_namelist_evaluators; // for emit
 	int all_flag; // for emit all and unset all
 
 	// RHS:

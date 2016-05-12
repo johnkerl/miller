@@ -280,6 +280,42 @@ static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_i
 }
 
 // ----------------------------------------------------------------
+// begin {}
+// end {}
+// ----------------------------------------------------------------
+// cond-expr {}
+// while (expr) {}
+// for (k, v in $*) {}
+// for (k1, k2, v in @v["a"]) {}
+// if (expr) {} elif (expr) {} elif (expr) else {}
+// $srec = RHS
+// @v["a"] = $*
+// $* = @v["a"]
+// bare-boolean
+// @v["a"] = RHS
+// filter
+// unset
+// emitf
+// emitp
+// emit
+// dump
+// break
+// continue
+
+// LHS:
+// * pfunc
+// * srec_lhs_field_name
+// * poosvar_lhs_keylist_evaluators
+// * poosvar_lhs_namelist_evaluators
+// * all_flag
+// * prhs_evaluator
+// * pbody_statements: cond, while, for
+// * poosvar_rhs_keylist_evaluators
+// * if-elif-elif-else -- ???
+// * for-srec -- ???
+// * for-oosvar -- ???
+
+// ----------------------------------------------------------------
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
