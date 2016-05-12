@@ -66,13 +66,13 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;                 // E.g. for srec assignments
-	sllv_t*           pblock_statements;              // For pattern-action blocks, while, for, etc.
 	sllv_t*           poosvar_rhs_keylist_evaluators; // For assigning full srec from oosvar
 } mlr_dsl_cst_statement_item_t;
 
 typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
 	sllv_t* pitems;
+	sllv_t* pblock_statements;              // For pattern-action blocks, while, for, etc.
 } mlr_dsl_cst_statement_t;
 
 typedef struct _mlr_dsl_cst_t {
