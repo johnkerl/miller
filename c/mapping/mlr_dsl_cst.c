@@ -25,8 +25,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_nod
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             emitf_or_unset_srec_field_name,
-	sllv_t*           punset_oosvar_keylist_evaluators,
-	rval_evaluator_t* pemitf_arg_evaluator);
+	rval_evaluator_t* pemitf_arg_evaluator,
+	sllv_t*           punset_oosvar_keylist_evaluators);
 
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
 
@@ -512,8 +512,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 			sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 				NULL,
-				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing),
-				NULL));
+				NULL,
+				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing)));
 
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -532,8 +532,8 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pnode->text,
-			NULL,
-			rval_evaluator_alloc_from_ast(pnode, type_inferencing)));
+			rval_evaluator_alloc_from_ast(pnode, type_inferencing),
+			NULL));
 	}
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_emitf;
@@ -712,8 +712,8 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             emitf_or_unset_srec_field_name,
-	sllv_t*           punset_oosvar_keylist_evaluators,
-	rval_evaluator_t* pemitf_arg_evaluator)
+	rval_evaluator_t* pemitf_arg_evaluator,
+	sllv_t*           punset_oosvar_keylist_evaluators)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL ? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
