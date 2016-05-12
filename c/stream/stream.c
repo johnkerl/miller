@@ -37,13 +37,17 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 
 	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
 	int ok = 1;
-	if (filenames->length == 0) {
+	if (filenames == NULL) {
+		// No input at all
+	} else if (filenames->length == 0) {
+		// Zero file names means read from standard input
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
 		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream,
 			nr_progress_mod) && ok;
 	} else {
+		// Read from each file name in turn
 		for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
 			char* filename = pe->value;
 			ctx.filenum++;

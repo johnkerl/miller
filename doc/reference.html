@@ -519,6 +519,9 @@ Other options:
                      rather than after. May be used more than once. Example:
                      "mlr --from a.dat --from b.dat cat" is the same as
                      "mlr cat a.dat b.dat".
+  -n                 Process no input files, nor standard input either. Useful
+                     for mlr put with begin/end statements only. (Same as --from
+                     /dev/null.)
 
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.

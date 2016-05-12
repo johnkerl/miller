@@ -23,10 +23,12 @@ x let newlines replace semicolons? no, and make it clear why: no need for \ cont
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 * impl a -n, functionally equiv to --from /dev/null
 
+----------------------------------------------------------------
 ? substring?
 ? CONVFMT? IGNORECASE? MLRPATH?
 * in 4.1.0 release notes make the inspiration from awk explicit
 
+----------------------------------------------------------------
 ! rh/fedora/centos mlr-3.5.0 or mlr-4.0.0
 
 ? call for use-cases? (go first.)
@@ -40,10 +42,9 @@ x let newlines replace semicolons? no, and make it clear why: no need for \ cont
 * --strict? mlh/mld if so.
 
 * 4.1.0:
+  ! for/while/if/etc
+  k mlr -n
   ? autodetect format by file extension -- ?
-  ? mlr -n ?
-  ? komosa multiops?
-    ? for x $* { for y { @v["a"] { ... } } ?
 
 ================================================================
 GRAMMAR RE-ORG

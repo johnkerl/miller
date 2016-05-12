@@ -464,6 +464,9 @@ static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "                     rather than after. May be used more than once. Example:\n");
 	fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0);
 	fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
+	fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n");
+	fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
+	fprintf(o, "                     /dev/null.)\n");
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {
@@ -646,6 +649,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->use_mmap_for_read = TRUE;
 	int left_align_pprint    = TRUE;
 
+	int no_input             = FALSE;
 	int have_rand_seed       = FALSE;
 	unsigned rand_seed       = 0;
 
@@ -737,6 +741,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--usage-see-also")) {
 			main_usage_see_also(stdout, argv[0]);
 			exit(0);
+
+		} else if (streq(argv[argi], "-n")) {
+			no_input = TRUE;
 
 		} else if (streq(argv[argi], "--from")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -1032,9 +1039,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
+	if (no_input) {
+		slls_free(popts->filenames);
+		popts->filenames = NULL;
+	} else if (popts->filenames->length == 0) {
 	// No filenames means read from standard input, and standard input cannot be mmapped.
-	if (popts->filenames->length == 0)
 		popts->use_mmap_for_read = FALSE;
+	}
 
 	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
 		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
