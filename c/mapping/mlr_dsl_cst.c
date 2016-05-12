@@ -26,7 +26,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_nod
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             emitf_or_unset_srec_field_name,
 	sllv_t*           punset_oosvar_keylist_evaluators,
-	sllv_t*           poosvar_lhs_namelist_evaluators,
+	sllv_t*           pemit_oosvar_namelist_evaluators,
 	rval_evaluator_t* pemitf_arg_evaluator);
 
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem);
@@ -560,17 +560,17 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 	// So if 'all' appears at all, it's the only name.
 	if (pnode->type == MD_AST_NODE_TYPE_ALL) {
 
-		sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
 		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(poosvar_lhs_namelist_evaluators,
+			sllv_append(pemit_oosvar_namelist_evaluators,
 				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 		}
 
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			NULL,
 			NULL,
-			poosvar_lhs_namelist_evaluators,
+			pemit_oosvar_namelist_evaluators,
 			NULL));
 
 		pstatement->pevaluator = do_full_prefixing
@@ -582,17 +582,17 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 		// evaluate to string, e.g. 'emit @sums, "color", "shape"'.
 		mlr_dsl_ast_node_t* pnamenode = past->pchildren->phead->pvvalue;
 
-		sllv_t* poosvar_lhs_namelist_evaluators = sllv_alloc();
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
 		for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(poosvar_lhs_namelist_evaluators,
+			sllv_append(pemit_oosvar_namelist_evaluators,
 				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 		}
 
 		sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 			pnamenode->text,
 			NULL,
-			poosvar_lhs_namelist_evaluators,
+			pemit_oosvar_namelist_evaluators,
 			NULL));
 
 		pstatement->pevaluator = do_full_prefixing
@@ -718,13 +718,13 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 	char*             emitf_or_unset_srec_field_name,
 	sllv_t*           punset_oosvar_keylist_evaluators,
-	sllv_t*           poosvar_lhs_namelist_evaluators,
+	sllv_t*           pemit_oosvar_namelist_evaluators,
 	rval_evaluator_t* pemitf_arg_evaluator)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
 	pitem->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL ? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
 	pitem->punset_oosvar_keylist_evaluators  = punset_oosvar_keylist_evaluators;
-	pitem->poosvar_lhs_namelist_evaluators = poosvar_lhs_namelist_evaluators;
+	pitem->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 	pitem->pemitf_arg_evaluator            = pemitf_arg_evaluator;
 	return pitem;
 }
@@ -742,12 +742,12 @@ static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 		sllv_free(pitem->punset_oosvar_keylist_evaluators);
 	}
 
-	if (pitem->poosvar_lhs_namelist_evaluators != NULL) {
-		for (sllve_t* pe = pitem->poosvar_lhs_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+	if (pitem->pemit_oosvar_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pitem->pemit_oosvar_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* pevaluator = pe->pvvalue;
 			pevaluator->pfree_func(pevaluator);
 		}
-		sllv_free(pitem->poosvar_lhs_namelist_evaluators);
+		sllv_free(pitem->pemit_oosvar_namelist_evaluators);
 	}
 
 	if (pitem->pemitf_arg_evaluator != NULL)
@@ -1076,7 +1076,7 @@ static void mlr_dsl_cst_node_evaluate_emitp(
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		sllmv_t* pmvnames = evaluate_list(pitem->pemit_oosvar_namelist_evaluators,
 			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
@@ -1100,7 +1100,7 @@ static void mlr_dsl_cst_node_evaluate_emitp_all(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+	sllmv_t* pmvnames = evaluate_list(pitem->pemit_oosvar_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
@@ -1126,7 +1126,7 @@ static void mlr_dsl_cst_node_evaluate_emit(
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+		sllmv_t* pmvnames = evaluate_list(pitem->pemit_oosvar_namelist_evaluators,
 			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
@@ -1150,7 +1150,7 @@ static void mlr_dsl_cst_node_evaluate_emit_all(
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pitem->poosvar_lhs_namelist_evaluators,
+	sllmv_t* pmvnames = evaluate_list(pitem->pemit_oosvar_namelist_evaluators,
 		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
