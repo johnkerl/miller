@@ -7,6 +7,7 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_inferencing);
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -23,7 +24,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* pas
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
 
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char*             srec_lhs_field_name,
+	char*             emitf_or_unset_srec_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
 	sllv_t*           poosvar_lhs_namelist_evaluators,
 	rval_evaluator_t* prhs_evaluator,
@@ -372,11 +373,18 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* cst_statement_alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* cst_statement_alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
 	pstatement->pevaluator = NULL;
+	pstatement->srec_lhs_field_name = NULL;
+	pstatement->pitems = sllv_alloc();
 	pstatement->pblock_statements = NULL;
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* cst_statement_alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -398,20 +406,18 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_srec_assignment(mlr_dsl_ast_
 	}
 
 	sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
-		pleft->text,
+		NULL,
 		NULL,
 		NULL,
 		rval_evaluator_alloc_from_ast(pright, type_inferencing),
 		NULL));
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_srec_assignment;
+	pstatement->srec_lhs_field_name = pleft->text;
 	return pstatement;
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
@@ -456,10 +462,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_assignment(mlr_dsl_as
 static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_from_full_srec_assignment(
 	mlr_dsl_ast_node_t* past, int type_inferencing)
 {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
@@ -487,10 +490,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_oosvar_from_full_srec_assign
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
@@ -518,10 +518,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_full_srec_from_oosvar_assign
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_unset;
 	for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -564,10 +561,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_unset(mlr_dsl_ast_node_t* pa
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
 	for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -587,10 +581,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int type_inferencing,
 	int do_full_prefixing)
 {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 
@@ -648,10 +639,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	// First child node is the AST for the boolean expression. Remaining child nodes are statements
 	// to be executed if it evaluates to true.
@@ -677,10 +665,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_as
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
 	sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
@@ -695,10 +680,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* p
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 		NULL,
@@ -712,10 +694,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* pas
 }
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing) {
-	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
-	pstatement->pitems = sllv_alloc();
-	pstatement->pevaluator = NULL;
-	pstatement->pblock_statements = NULL;
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	sllv_append(pstatement->pitems, mlr_dsl_cst_statement_item_alloc(
 		NULL,
@@ -743,14 +722,14 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
-	char*             srec_lhs_field_name,
+	char*             emitf_or_unset_srec_field_name,
 	sllv_t*           poosvar_lhs_keylist_evaluators,
 	sllv_t*           poosvar_lhs_namelist_evaluators,
 	rval_evaluator_t* prhs_evaluator,
 	sllv_t*           poosvar_rhs_keylist_evaluators)
 {
 	mlr_dsl_cst_statement_item_t* pitem = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_item_t));
-	pitem->srec_lhs_field_name = srec_lhs_field_name == NULL ? NULL : mlr_strdup_or_die(srec_lhs_field_name);
+	pitem->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL ? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
 	pitem->poosvar_lhs_keylist_evaluators  = poosvar_lhs_keylist_evaluators;
 	pitem->poosvar_lhs_namelist_evaluators = poosvar_lhs_namelist_evaluators;
 	pitem->prhs_evaluator                  = prhs_evaluator;
@@ -761,7 +740,7 @@ static mlr_dsl_cst_statement_item_t* mlr_dsl_cst_statement_item_alloc(
 static void cst_statement_item_free(mlr_dsl_cst_statement_item_t* pitem) {
 	if (pitem == NULL)
 		return;
-	free(pitem->srec_lhs_field_name);
+	free(pitem->emitf_or_unset_srec_field_name);
 
 	if (pitem->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pitem->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -825,7 +804,7 @@ static void mlr_dsl_cst_node_evaluate_srec_assignment(
 	char*            oosvar_flatten_separator)
 {
 	mlr_dsl_cst_statement_item_t* pitem = pnode->pitems->phead->pvvalue;
-	char* srec_lhs_field_name = pitem->srec_lhs_field_name;
+	char* srec_lhs_field_name = pnode->srec_lhs_field_name;
 	rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
@@ -1046,7 +1025,7 @@ static void mlr_dsl_cst_node_evaluate_unset(
 				mlhmmv_remove(poosvars, pmvkeys);
 			sllmv_free(pmvkeys);
 		} else {
-			lrec_remove(pinrec, pitem->srec_lhs_field_name);
+			lrec_remove(pinrec, pitem->emitf_or_unset_srec_field_name);
 		}
 	}
 }
@@ -1083,21 +1062,21 @@ static void mlr_dsl_cst_node_evaluate_emitf(
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pitems->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_item_t* pitem = pf->pvvalue;
-		char* srec_lhs_field_name = pitem->srec_lhs_field_name;
+		char* emitf_or_unset_srec_field_name = pitem->emitf_or_unset_srec_field_name;
 		rval_evaluator_t* prhs_evaluator = pitem->prhs_evaluator;
 
 		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-		// that and just hashmap-get keyed by srec_lhs_field_name here.
+		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
 		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
 			ppregex_captures, pctx, prhs_evaluator->pvstate);
 
 		if (val.type == MT_STRING) {
 			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-			lrec_put(prec_to_emit, srec_lhs_field_name, val.u.strv, val.free_flags);
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
 		} else {
 			char free_flags = NO_FREE;
 			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(prec_to_emit, srec_lhs_field_name, string, free_flags);
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
 		}
 
 	}

@@ -58,11 +58,11 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 
 // Most statements have one item, except multi-oosvar emit and multi-oosvar unset.
 typedef struct _mlr_dsl_cst_statement_item_t {
-	// LHS: for srec assignment, and unset
-	char* srec_lhs_field_name;
 	// E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 	sllv_t* poosvar_lhs_keylist_evaluators;
 	sllv_t* poosvar_lhs_namelist_evaluators; // for emit
+
+	char* emitf_or_unset_srec_field_name; // xxx temp
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;                 // E.g. for srec assignments
@@ -71,8 +71,14 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 
 typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
+
+	char* srec_lhs_field_name;
+	//sllv_t* unset_srec_field_names;
+	//sllv_t* emitf_srec_field_names;
+
 	sllv_t* pitems;
-	sllv_t* pblock_statements;              // For pattern-action blocks, while, for, etc.
+
+	sllv_t* pblock_statements; // For pattern-action blocks, while, for, etc.
 } mlr_dsl_cst_statement_t;
 
 typedef struct _mlr_dsl_cst_t {
