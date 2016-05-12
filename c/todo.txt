@@ -21,7 +21,7 @@ TOP-OF-LIST SUMMARY
 ? while / do-while?
 x let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
-* impl a -n, functionally equiv to --from /dev/null
+* comments-stripper (strdup & state-machine copy)
 
 ----------------------------------------------------------------
 ? substring?
