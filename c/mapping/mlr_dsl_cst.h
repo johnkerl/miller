@@ -63,6 +63,7 @@ typedef struct _mlr_dsl_cst_statement_item_t {
 	sllv_t* poosvar_lhs_namelist_evaluators; // for emit
 
 	char* emitf_or_unset_srec_field_name; // xxx temp
+	rval_evaluator_t* pemitf_arg_evaluator; // xxx temp
 
 	// RHS:
 	rval_evaluator_t* prhs_evaluator;                 // E.g. for srec assignments
@@ -73,6 +74,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
 
 	char* srec_lhs_field_name;
+	// For assignments to srec or oosvar, filter, cond, and bare-boolean
+	rval_evaluator_t* prhs_evaluator;
 	//sllv_t* unset_srec_field_names;
 	//sllv_t* emitf_srec_field_names;
 
