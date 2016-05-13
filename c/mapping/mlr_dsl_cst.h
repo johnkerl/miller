@@ -56,15 +56,16 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
-// Most statements have one item, except multi-oosvar emit and multi-oosvar unset.
+// Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
-	char*   emitf_or_unset_srec_field_name;   // xxx temp
-	rval_evaluator_t* pemitf_arg_evaluator;   // xxx temp
-	sllv_t* punset_oosvar_keylist_evaluators; // xxx temp
+	char*   emitf_or_unset_srec_field_name;
+	rval_evaluator_t* pemitf_arg_evaluator;
+	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
 
 // E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
+	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
 
 	// For assignment to oosvar, emit, and emitp
@@ -73,7 +74,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// For assignment to srec
 	char* srec_lhs_field_name;
 
-	// For assignments to srec or oosvar, filter, cond, and bare-boolean
+	// For assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
 	// For assigning full srec from oosvar
