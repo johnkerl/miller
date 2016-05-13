@@ -58,9 +58,9 @@ typedef void mlr_dsl_cst_node_evaluator_func_t(
 
 // Most statements have one item, except multi-oosvar emit and multi-oosvar unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
-	char*   emitf_or_unset_srec_field_name;   // xxx temp
-	rval_evaluator_t* pemitf_arg_evaluator;   // xxx temp
-	sllv_t* punset_oosvar_keylist_evaluators; // xxx temp
+	char*   emitf_or_unset_srec_field_name;
+	rval_evaluator_t* pemitf_arg_evaluator;
+	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
 
 // E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].

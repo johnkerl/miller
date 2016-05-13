@@ -7,18 +7,18 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! oosvar keyed mean?!? solvable with `for`.
-  * for (k, v in $*)
+  * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
+  * for (k, v in $*) { if (k =~ "^f.*$") { $sum += $[k]} }
   * for (k, v in @v)
-  ? for (k1, k2, v in @*)
-  * for (k1, k2, k3, v in @v)
+  ? for (k1, k2, v in @sum) { @mean[k1][k2] = @sum[k1][k2] / @count[k1][k2]}
   * for (k1, k2, v in @v["a"])
-  ? for (k1, k2, v in @v[]["a"][]) ? easier to do this w/ cond-block @ 2nd loop
+  ? for (k1, k2, v in @v[]["a"][]) ? no -- easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
-  ? break/continue?
-! need $[x] and @[x] to be really useful
+  ? break/continue
+! need $[k] and @[k]
 ! recursive PA-blocks & for-blocks
-? if-elif-elif-else?
-? while / do-while?
+! if-elif-elif-else
+! while / do-while
 x let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 * comments-stripper (strdup & state-machine copy)
