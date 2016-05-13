@@ -5,6 +5,8 @@
 static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing);
 
 static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_inferencing);
+static void mlr_dsl_cst_append_from_ast_aux(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	sllv_t* pstatements, int begin_end_only);
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_blank();
@@ -19,6 +21,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emitf(mlr_dsl_ast_node_t* pa
 static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int type_inferencing,
 	int do_full_prefixing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -206,6 +209,17 @@ static void mlr_dsl_cst_node_evaluate_conditional_block(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
+static void mlr_dsl_cst_node_evaluate_while(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator);
+
 static void mlr_dsl_cst_node_evaluate_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -261,19 +275,32 @@ static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_i
 		switch (pnode->type) {
 		case MD_AST_NODE_TYPE_BEGIN:
 			printf("GOT BEGIN\n");
+			mlr_dsl_cst_append_from_ast_aux(pnode, type_inferencing, pcst->pbegin_statements, TRUE);
 			break;
 		case MD_AST_NODE_TYPE_END:
 			printf("GOT END\n");
+			mlr_dsl_cst_append_from_ast_aux(pnode, type_inferencing, pcst->pend_statements, TRUE);
 			break;
 		default:
 			printf("GOT MAIN:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
+			mlr_dsl_cst_append_from_ast_aux(pnode, type_inferencing, pcst->pmain_statements, FALSE);
 			break;
 		}
 	}
-	// * make an aux-routine with incremented 1-up depth.
-	// * allow begin/end only at depth==1.
-	// * include is-main flag at some level; disallow all $stuff for begin/end.
 	return pcst;
+}
+
+static void mlr_dsl_cst_append_from_ast_aux(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	sllv_t* pstatements, int begin_end_only)
+{
+	switch(pnode->type) {
+	case MD_AST_NODE_TYPE_WHILE:
+		printf("-- GOT WHILE\n");
+		sllv_append(pstatements, cst_statement_alloc(pnode, type_inferencing));
+		break;
+	default:
+		break;
+	}
 }
 
 // ----------------------------------------------------------------
@@ -320,8 +347,11 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, in
 	case MD_AST_NODE_TYPE_EMIT:
 		return cst_statement_alloc_emit_or_emitp(past, type_inferencing, FALSE);
 		break;
-	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
+	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK: // xxx rename to ..._COND
 		return cst_statement_alloc_conditional_block(past, type_inferencing);
+		break;
+	case MD_AST_NODE_TYPE_WHILE:
+		return cst_statement_alloc_while(past, type_inferencing);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
 		return cst_statement_alloc_filter(past, type_inferencing);
@@ -587,9 +617,29 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_as
 		sllv_append(pblock_statements, pstatement);
 	}
 
-
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_conditional_block;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pfirst, type_inferencing);
+	pstatement->pblock_statements = pblock_statements;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
+
+	// xxx new grammar
+	// Left child node is the AST for the boolean expression. Right child node is the list of statements in the body.
+	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+	sllv_t* pblock_statements = sllv_alloc();
+
+	for (sllve_t* pe = pright->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing);
+		sllv_append(pblock_statements, pstatement);
+	}
+
+	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_while;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, type_inferencing);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
 }
@@ -1157,6 +1207,38 @@ static void mlr_dsl_cst_node_evaluate_conditional_block(
 			mlr_dsl_cst_evaluate(pnode->pblock_statements,
 				poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
 				oosvar_flatten_separator);
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_while(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	while (TRUE) {
+		if (mv_is_non_null(&val)) {
+			mv_set_boolean_strict(&val);
+			if (val.u.boolv) {
+				mlr_dsl_cst_evaluate(pnode->pblock_statements,
+					poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
+					oosvar_flatten_separator);
+			} else {
+				break;
+			}
+		} else {
+			break;
 		}
 	}
 }
