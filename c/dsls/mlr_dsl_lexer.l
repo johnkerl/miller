@@ -13,12 +13,6 @@
 
 %%
 
-"#" {
-	// Temporary: prefix statements with '#' to invoke the new reorganized grammar.
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_EXPERIMENTAL;
-}
-
 ";" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_SEMICOLON;

@@ -114,29 +114,8 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_print(past);
 	}
 
-	if (past->proot != NULL) {
-		// New grammar xxx
-		mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
-		return mapper_filter_alloc(pstate, mlr_dsl_expression, psubtree, type_inferencing, do_exclude);
-	} else {
-		// Old grammar
-
-		if (past->pbegin_statements->length != 0) {
-			fprintf(stderr, "%s %s: begin-statements are unsupported. Please use filter inside put.\n", argv[0], verb);
-			return NULL;
-		}
-		if (past->pmain_statements->length != 1) {
-			fprintf(stderr, "%s %s: multiple expressions are unsupported.\n", argv[0], verb);
-			return NULL;
-		}
-		if (past->pend_statements->length != 0) {
-			fprintf(stderr, "%s %s: end-statements are unsupported. Please use filter inside put.\n", argv[0], verb);
-			return NULL;
-		}
-		mlr_dsl_ast_node_t* psubtree = sllv_pop(past->pmain_statements);
-		mlr_dsl_ast_free(past);
-		return mapper_filter_alloc(pstate, mlr_dsl_expression, psubtree, type_inferencing, do_exclude);
-	}
+	mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
+	return mapper_filter_alloc(pstate, mlr_dsl_expression, psubtree, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------

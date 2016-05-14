@@ -8,9 +8,9 @@
 
 // ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
-	MD_AST_NODE_TYPE_STATEMENT_LIST, // xxx experimental
-	MD_AST_NODE_TYPE_BEGIN, // xxx experimental
-	MD_AST_NODE_TYPE_END, // xxx experimental
+	MD_AST_NODE_TYPE_STATEMENT_LIST,
+	MD_AST_NODE_TYPE_BEGIN,
+	MD_AST_NODE_TYPE_END,
 	MD_AST_NODE_TYPE_STRNUM_LITERAL,
 	MD_AST_NODE_TYPE_BOOLEAN_LITERAL,
 	MD_AST_NODE_TYPE_REGEXI,
@@ -53,9 +53,6 @@ typedef struct _mlr_dsl_ast_node_t {
 } mlr_dsl_ast_node_t;
 
 typedef struct _mlr_dsl_ast_t {
-	sllv_t* pbegin_statements;
-	sllv_t* pmain_statements;
-	sllv_t* pend_statements;
 	mlr_dsl_ast_node_t* proot;
 } mlr_dsl_ast_t;
 

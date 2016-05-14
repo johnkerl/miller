@@ -5,10 +5,7 @@
 // ----------------------------------------------------------------
 mlr_dsl_ast_t* mlr_dsl_ast_alloc() {
 	mlr_dsl_ast_t* past = mlr_malloc_or_die(sizeof(mlr_dsl_ast_t));
-	past->pbegin_statements = sllv_alloc();
-	past->pmain_statements  = sllv_alloc();
-	past->pend_statements   = sllv_alloc();
-	past->proot             = NULL;
+	past->proot = NULL;
 	return past;
 }
 
@@ -111,22 +108,10 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 
 // ----------------------------------------------------------------
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
-	// xxx old grammar
-	printf("AST BEGIN STATEMENTS (%llu):\n", past->pbegin_statements->length);
-	for (sllve_t* pe = past->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_ast_node_print(pe->pvvalue);
-
-	printf("AST MAIN STATEMENTS (%llu):\n", past->pmain_statements->length);
-	for (sllve_t* pe = past->pmain_statements->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_ast_node_print(pe->pvvalue);
-
-	printf("AST END STATEMENTS (%llu):\n", past->pend_statements->length);
-	for (sllve_t* pe = past->pend_statements->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_ast_node_print(pe->pvvalue);
-
-	// xxx new grammar
-	if (past->proot != NULL) {
-		printf("AST ROOT:\n");
+	printf("AST ROOT:\n");
+	if (past->proot == NULL) {
+		printf("(null)\n");
+	} else {
 		mlr_dsl_ast_node_print(past->proot);
 	}
 }
@@ -195,16 +180,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_ast_free_statement_list(sllv_t* plist) {
-	for (sllve_t* pe = plist->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_ast_node_free(pe->pvvalue);
-	sllv_free(plist);
-}
-
 void mlr_dsl_ast_free(mlr_dsl_ast_t* past) {
-	mlr_dsl_ast_free_statement_list(past->pbegin_statements);
-	mlr_dsl_ast_free_statement_list(past->pmain_statements);
-	mlr_dsl_ast_free_statement_list(past->pend_statements);
+	mlr_dsl_ast_node_free(past->proot);
 	free(past);
 }
 
