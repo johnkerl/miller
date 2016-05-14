@@ -242,14 +242,14 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-		mlr_dsl_cst_evaluate(pstate->pcst->pbegin_statements,
+		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements,
 			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
 				pstate->oosvar_flatten_separator);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		mlr_dsl_cst_evaluate(pstate->pcst->pend_statements,
+		mlr_dsl_cst_handle(pstate->pcst->pend_statements,
 			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
 				pstate->oosvar_flatten_separator);
 
@@ -261,7 +261,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
 	emit_rec = TRUE;
-	mlr_dsl_cst_evaluate(pstate->pcst->pmain_statements,
+	mlr_dsl_cst_handle(pstate->pcst->pmain_statements,
 		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs,
 			pstate->oosvar_flatten_separator);
 

@@ -45,7 +45,7 @@
 
 struct _mlr_dsl_cst_statement_t;
 
-typedef void mlr_dsl_cst_node_evaluator_func_t(
+typedef void mlr_dsl_cst_node_handler_func_t(
 	struct _mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -66,7 +66,7 @@ typedef struct _mlr_dsl_cst_statement_vararg_t {
 // E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
-	mlr_dsl_cst_node_evaluator_func_t* pevaluator;
+	mlr_dsl_cst_node_handler_func_t* phandler;
 
 	// For assignment to oosvar, emit, and emitp
 	sllv_t* poosvar_lhs_keylist_evaluators;
@@ -92,6 +92,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// For pattern-action blocks, while, for, etc.
 	sllv_t* pblock_statements;
+
+	// For if-elif-elif-else:
+	sllv_t* pif_chain_statements;
 
 } mlr_dsl_cst_statement_t;
 
@@ -131,7 +134,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
-void mlr_dsl_cst_evaluate(
+void mlr_dsl_cst_handle(
 	sllv_t*          pcst_statements, // begin/main/end
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,

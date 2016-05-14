@@ -7,6 +7,7 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! for-variants:
+  ?? take out the v part??
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += $[k]} }
   * for (k, v in @v)
@@ -22,10 +23,13 @@ TOP-OF-LIST SUMMARY
 * comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
+
+UT/olh/mld:
 * UT for empty statement for put
 * UT for empty statement for filter
-
-doc:
+* UT if-chaining: put -v's as well as contentful @ abixy
+* olh comment-stripping for put & filter
+* UT comment-stripping for put & filter
 * doc re oosvar keyed mean solvable with `for`.
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 

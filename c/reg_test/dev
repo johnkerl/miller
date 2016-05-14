@@ -209,6 +209,13 @@ run_mlr -n put -v '
     $x = 33
   }'
 
+run_mlr --opprint put 'if(NR==2){$x=777}' $indir/abixy
+run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}' $indir/abixy
+run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999}' $indir/abixy
+run_mlr --opprint put 'if(NR==2){$x=777}else{$x=0}' $indir/abixy
+run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}else{$x=0}' $indir/abixy
+run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999}else{$x=0}' $indir/abixy
+
 # ================================================================
 cat $outfile
 

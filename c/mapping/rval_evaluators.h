@@ -85,6 +85,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int typ
 rval_evaluator_t* rval_evaluator_alloc_from_string(char* string);
 
 rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string);
+rval_evaluator_t* rval_evaluator_alloc_from_boolean(int boolval);
 rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 rval_evaluator_t* rval_evaluator_alloc_from_NF();
 rval_evaluator_t* rval_evaluator_alloc_from_NR();

@@ -585,6 +585,18 @@ rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string) {
 	return pevaluator;
 }
 
+rval_evaluator_t* rval_evaluator_alloc_from_boolean(int boolval) {
+	rval_evaluator_boolean_literal_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_boolean_literal_state_t));
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	pstate->literal = mv_from_bool(boolval);
+	pevaluator->pprocess_func = rval_evaluator_boolean_literal_func;
+	pevaluator->pfree_func = rval_evaluator_boolean_literal_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
+
 // ================================================================
 // Example:
 // $ mlr put -v '$y=ENV["X"]' ...
