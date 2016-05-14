@@ -188,7 +188,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_IN:                 return "in";                 break;
 	case MD_AST_NODE_TYPE_BREAK:              return "break";              break;
 	case MD_AST_NODE_TYPE_CONTINUE:           return "continue";           break;
-	case MD_AST_NODE_TYPE_IFCHAIN:            return "ifchain";            break;
+	case MD_AST_NODE_TYPE_IF_HEAD:            return "if_head";            break;
+	case MD_AST_NODE_TYPE_IF_ITEM:            return "if_item";            break;
 	default: return "???";
 	}
 }

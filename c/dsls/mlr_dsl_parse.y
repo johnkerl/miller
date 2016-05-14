@@ -162,30 +162,50 @@ md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 
 // ----------------------------------------------------------------
 // xxx in progress
+
 md_ifchain(A) ::= md_ifblock(B). {
-	A=B; // xxx stub
+	A = mlr_dsl_ast_node_alloc_unary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B);
 }
 
 md_ifchain(A) ::= md_ifblock(B) md_afterif(C). {
-	A=C; // xxx stub
-	A=B; // xxx stub
+	A = mlr_dsl_ast_node_alloc_binary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B, C);
 }
 
 md_afterif(A) ::= md_elseblock(B). {
-	A=B; // xxx stub
+	A = B;
 }
 
+// xxx how to handle bottom-up ...
 md_afterif(A) ::= md_elifblock(B) md_afterif(C). {
 	A=C; // xxx stub
 	A=B; // xxx stub
 }
+
+
+
+// Another idea:
+//md_ifchain(A) ::= md_ifblock(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B);
+//}
+//
+//md_ifchain(A) ::= md_before_else(B) md_else(C). {
+//	A = mlr_dsl_ast_node_alloc_binary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B, C);
+//}
+//
+//md_before_else(A) ::= md_ifblock(B). {
+//}
+//
+//md_before_else(A) ::= md_before_else(B) md_elif(C). {
+//}
+
+
 
 md_ifblock(A) ::=
 	MD_TOKEN_IF(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
 		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IFCHAIN, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
 
 md_elifblock(A) ::=
@@ -193,14 +213,14 @@ md_elifblock(A) ::=
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
 		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IFCHAIN, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
 
 md_elseblock(A) ::=
 	MD_TOKEN_ELSE(O)
 		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
 {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IFCHAIN, C);
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IF_ITEM, C);
 }
 
 // ----------------------------------------------------------------

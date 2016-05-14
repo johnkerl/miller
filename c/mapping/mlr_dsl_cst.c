@@ -22,7 +22,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t* cst_statement_alloc_ifchain(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_if_head(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -232,7 +232,7 @@ static void mlr_dsl_cst_node_evaluate_for_srec(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
-static void mlr_dsl_cst_node_evaluate_ifchain(
+static void mlr_dsl_cst_node_evaluate_if_head(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -433,9 +433,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 
 	// xxx for-oosvar
 
-	case MD_AST_NODE_TYPE_IFCHAIN:
-		printf("IFCHAIN STUB\n");
-		return cst_statement_alloc_ifchain(pnode, type_inferencing);
+	case MD_AST_NODE_TYPE_IF_HEAD:
+		printf("IF_HEAD STUB\n");
+		return cst_statement_alloc_if_head(pnode, type_inferencing);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
@@ -808,12 +808,12 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* cst_statement_alloc_ifchain(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* cst_statement_alloc_if_head(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
-	printf("cst_statement_alloc_ifchain stub!\n");
+	printf("cst_statement_alloc_if_head stub!\n");
 
-	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_ifchain;
+	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_if_head;
 	return pstatement;
 }
 
@@ -1436,7 +1436,7 @@ static void mlr_dsl_cst_node_evaluate_for_srec(
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_cst_node_evaluate_ifchain(
+static void mlr_dsl_cst_node_evaluate_if_head(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
 	lrec_t*          pinrec,
@@ -1447,7 +1447,7 @@ static void mlr_dsl_cst_node_evaluate_ifchain(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator)
 {
-	printf("mlr_dsl_cst_node_evaluate_ifchain stub!\n");
+	printf("mlr_dsl_cst_node_evaluate_if_head stub!\n");
 }
 
 // ----------------------------------------------------------------
