@@ -603,3 +603,192 @@ GOT MAIN:if_head
 IF_HEAD STUB
 cst_statement_alloc_if_head stub!
 
+
+---------------------------------------------------------------- ifs
+mlr -n put -v #
+  if (NR==1) {
+    $x = 2;
+    $x = 3
+  };
+  if (NR == 4) {
+    $x = 5;
+    $x = 6
+  };
+  if (NR == 7) {
+    $x = 8;
+    $x = 9
+  } elif (NR == 10) {
+    $x = 11;
+    $x = 12
+  };
+  if (NR == 13) {
+    $x = 14;
+    $x = 15
+  } elif (NR == 16) {
+    $x = 17;
+    $x = 18
+  } elif (NR == 19) {
+    $x = 20;
+    $x = 21
+  };
+  if (NR == 22) {
+    $x = 23;
+    $x = 24
+  } elif (NR == 25) {
+    $x = 26;
+    $x = 27
+  } elif (NR == 28) {
+    $x = 29;
+    $x = 30
+  } elif (NR == 31) {
+    $x = 32;
+    $x = 33
+  }
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                1 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    2 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    3 (strnum_literal).
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                4 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    5 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    6 (strnum_literal).
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                7 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    8 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    9 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                10 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    11 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    12 (strnum_literal).
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                13 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    14 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    15 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                16 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    17 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    18 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                19 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    20 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    21 (strnum_literal).
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                22 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    23 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    24 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                25 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    26 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    27 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                28 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    29 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    30 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                31 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    32 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    33 (strnum_literal).
+AST->CST STUB
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
+

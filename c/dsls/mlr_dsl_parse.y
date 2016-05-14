@@ -161,16 +161,20 @@ md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 }
 
 // ----------------------------------------------------------------
-md_if_chain(A) ::= md_if_block(B). {
-	A = mlr_dsl_ast_node_alloc_unary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B);
+// Cases:
+//   if elif*
+//   if elif* else
+
+md_if_chain(A) ::= md_if_elif_star(B) . {
+	A = B;
 }
-md_if_chain(A) ::= md_before_else(B) md_else_block(C). {
+md_if_chain(A) ::= md_if_elif_star(B) md_else_block(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
-md_before_else(A) ::= md_if_block(B). {
+md_if_elif_star(A) ::= md_if_block(B). {
 	A = mlr_dsl_ast_node_alloc_unary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B);
 }
-md_before_else(A) ::= md_before_else(B) md_elif_block(C). {
+md_if_elif_star(A) ::= md_if_elif_star(B) md_elif_block(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
