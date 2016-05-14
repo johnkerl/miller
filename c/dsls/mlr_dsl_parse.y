@@ -37,8 +37,8 @@
 }
 
 // ================================================================
-md_body ::= md_statements.
-md_body ::= MD_TOKEN_EXPERIMENTAL new_md_statements(B). {
+md_body ::= MD_TOKEN_EXPERIMENTAL md_statements.
+md_body ::= new_md_statements(B). {
 	past->proot = B;
 }
 

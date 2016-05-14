@@ -5858,1377 +5858,1646 @@ DSL OPERATOR ASSOCIATIVITY
 
 mlr put -v $x = 1 || 2 || 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            || (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 || 2 || 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         || (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 || 2 || 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    || (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^^ (operator):
+            ^^ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^^ (operator):
         ^^ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^^ (operator):
-    ^^ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 && 2 && 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        && (operator):
+            && (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 && 2 && 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     && (operator):
         && (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 && 2 && 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-&& (operator):
-    && (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  == 2  == 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        == (operator):
+            == (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  == 2  == 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     == (operator):
         == (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  == 2  == 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-== (operator):
-    == (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  != 2  != 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        != (operator):
+            != (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  != 2  != 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     != (operator):
         != (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  != 2  != 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-!= (operator):
-    != (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        =~ (operator):
+            =~ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  =~ 2  =~ 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     =~ (operator):
         =~ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  =~ 2  =~ 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    =~ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        !=~ (operator):
+            !=~ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     !=~ (operator):
         !=~ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-!=~ (operator):
-    !=~ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  == 2  != 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        != (operator):
+            == (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  == 2  != 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     != (operator):
         == (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  == 2  != 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-!= (operator):
-    == (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  != 2  == 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        == (operator):
+            != (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  != 2  == 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     == (operator):
         != (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  != 2  == 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-== (operator):
-    != (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  <  2  <  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        < (operator):
+            < (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  <  2  <  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     < (operator):
         < (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  <  2  <  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-< (operator):
-    < (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  <= 2  <= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        <= (operator):
+            <= (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  <= 2  <= 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     <= (operator):
         <= (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  <= 2  <= 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<= (operator):
-    <= (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  >  2  >  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        > (operator):
+            > (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  >  2  >  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     > (operator):
         > (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  >  2  >  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-> (operator):
-    > (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  >= 2  >= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        >= (operator):
+            >= (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  >= 2  >= 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     >= (operator):
         >= (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  >= 2  >= 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
->= (operator):
-    >= (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  <  2  <= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        <= (operator):
+            < (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  <  2  <= 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     <= (operator):
         < (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  <  2  <= 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<= (operator):
-    < (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  <= 2  <  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        < (operator):
+            <= (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  <= 2  <  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     < (operator):
         <= (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  <= 2  <  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-< (operator):
-    <= (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 |  2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            | (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 |  2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         | (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 |  2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    | (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ^  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ^ (operator):
-        ^ (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^ (operator):
+            ^ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 ^  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^ (operator):
-    ^ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ^ (operator):
+        ^ (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 &  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    & (operator):
-        & (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        & (operator):
+            & (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 &  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-& (operator):
-    & (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    & (operator):
+        & (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 |  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    | (operator):
-        1 (strnum_literal).
-        & (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            1 (strnum_literal).
+            & (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 |  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    1 (strnum_literal).
-    & (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    | (operator):
+        1 (strnum_literal).
+        & (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 |  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    | (operator):
-        1 (strnum_literal).
-        ^ (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            1 (strnum_literal).
+            ^ (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 |  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    1 (strnum_literal).
-    ^ (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    | (operator):
+        1 (strnum_literal).
+        ^ (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 ^  2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            ^ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ^  2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         ^ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ^  2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    ^ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ^  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^ (operator):
+            1 (strnum_literal).
+            & (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v      1 ^  2 &  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^ (operator):
         1 (strnum_literal).
         & (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ^  2 &  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^ (operator):
-    1 (strnum_literal).
-    & (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 &  2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            & (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 &  2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         & (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 &  2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    & (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 &  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^ (operator):
+            & (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 &  2 ^  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^ (operator):
         & (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 &  2 ^  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^ (operator):
-    & (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  << 2  << 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    << (operator):
-        << (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        << (operator):
+            << (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1  << 2  << 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<< (operator):
-    << (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    << (operator):
+        << (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1  >> 2  >> 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        >> (operator):
+            >> (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  >> 2  >> 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     >> (operator):
         >> (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  >> 2  >> 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
->> (operator):
-    >> (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  << 2  >> 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        >> (operator):
+            << (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  << 2  >> 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     >> (operator):
         << (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  << 2  >> 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
->> (operator):
-    << (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1  >> 2  << 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        << (operator):
+            >> (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1  >> 2  << 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     << (operator):
         >> (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1  >> 2  << 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<< (operator):
-    >> (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 + 2 + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        + (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            + (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 + 2 + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    + (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        + (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 - 2 - 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        - (operator):
+            - (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 - 2 - 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     - (operator):
         - (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 - 2 - 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-- (operator):
-    - (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 + 2 - 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        - (operator):
+            + (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 + 2 - 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     - (operator):
         + (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 + 2 - 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-- (operator):
-    + (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 - 2 + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            - (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 - 2 + 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     + (operator):
         - (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 - 2 + 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    - (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 . 2 . 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        . (operator):
+            . (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 . 2 . 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     . (operator):
         . (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 . 2 . 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-. (operator):
-    . (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 * 2 * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        * (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 * 2 * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        * (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 / 2 / 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    / (operator):
-        / (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            / (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 / 2 / 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    / (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    / (operator):
+        / (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    // (operator):
-        // (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            // (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 // 2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    // (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    // (operator):
+        // (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 % 2 % 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    % (operator):
-        % (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            % (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 % 2 % 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    % (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    % (operator):
+        % (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 ** 2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ** (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ** (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 ** 2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-** (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ** (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    / (operator):
-        * (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 *  2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    / (operator):
+        * (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    // (operator):
-        * (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 *  2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    // (operator):
+        * (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 *  2 %  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 *  2 %  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     % (operator):
         * (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 *  2 %  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 *  2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 *  2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        / (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            / (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 /  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    / (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        / (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    // (operator):
-        / (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            / (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 /  2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    / (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    // (operator):
+        / (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 /  2 %  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            / (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 /  2 %  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     % (operator):
         / (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 /  2 %  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    / (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 /  2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    / (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 /  2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    / (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        // (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            // (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 // 2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    // (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        // (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    / (operator):
-        // (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            // (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      1 // 2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    // (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    / (operator):
+        // (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = 1 // 2 %  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            // (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 // 2 %  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     % (operator):
         // (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 // 2 %  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    // (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 // 2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    // (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 // 2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    // (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 %  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            % (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 %  2 *  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     * (operator):
         % (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 %  2 *  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    % (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 %  2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            % (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 %  2 /  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     / (operator):
         % (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 %  2 /  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    % (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 %  2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            % (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 %  2 // 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     // (operator):
         % (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 %  2 // 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    % (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 %  2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v      1 %  2 ** 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     % (operator):
         1 (strnum_literal).
         ** (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 %  2 ** 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ** 2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ** 2 *  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     * (operator):
         ** (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ** 2 *  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ** 2 /  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        / (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ** 2 /  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     / (operator):
         ** (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ** 2 /  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-/ (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ** 2 // 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        // (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ** 2 // 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     // (operator):
         ** (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ** 2 // 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-// (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ** 2 %  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        % (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ** 2 %  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     % (operator):
         ** (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ** 2 %  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-% (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = ++1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        + (operator):
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            + (operator):
+                1 (strnum_literal).
 
 mlr filter -v      ++1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    + (operator):
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        + (operator):
+            1 (strnum_literal).
 
 mlr put -v $x = --1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    - (operator):
-        - (operator):
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        - (operator):
+            - (operator):
+                1 (strnum_literal).
 
 mlr filter -v      --1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-- (operator):
-    - (operator):
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    - (operator):
+        - (operator):
+            1 (strnum_literal).
 
 mlr put -v $x = !!1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ! (operator):
-        ! (operator):
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ! (operator):
+            ! (operator):
+                1 (strnum_literal).
 
 mlr filter -v      !!1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-! (operator):
-    ! (operator):
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ! (operator):
+        ! (operator):
+            1 (strnum_literal).
 
 mlr put -v $x = ~~1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ~ (operator):
-        ~ (operator):
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ~ (operator):
+            ~ (operator):
+                1 (strnum_literal).
 
 mlr filter -v      ~~1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-~ (operator):
-    ~ (operator):
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ~ (operator):
+        ~ (operator):
+            1 (strnum_literal).
 
 mlr put -v $x = 1 ? 2 : 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ? : (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ? 2 : 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ? : (operator):
         1 (strnum_literal).
         2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ? 2 : 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-? : (operator):
-    1 (strnum_literal).
-    2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ? : (operator):
+            1 (strnum_literal).
+            ? : (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+                4 (strnum_literal).
+            5 (strnum_literal).
+
+mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ? : (operator):
         1 (strnum_literal).
         ? : (operator):
@@ -7236,25 +7505,29 @@ AST MAIN STATEMENTS (1):
             3 (strnum_literal).
             4 (strnum_literal).
         5 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-? : (operator):
-    1 (strnum_literal).
-    ? : (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-        4 (strnum_literal).
-    5 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ? : (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+            ? : (operator):
+                3 (strnum_literal).
+                4 (strnum_literal).
+                5 (strnum_literal).
+
+mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ? : (operator):
         1 (strnum_literal).
         2 (strnum_literal).
@@ -7262,19 +7535,6 @@ AST MAIN STATEMENTS (1):
             3 (strnum_literal).
             4 (strnum_literal).
             5 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-? : (operator):
-    1 (strnum_literal).
-    2 (strnum_literal).
-    ? : (operator):
-        3 (strnum_literal).
-        4 (strnum_literal).
-        5 (strnum_literal).
-AST END STATEMENTS (0):
 
 
 ================================================================
@@ -7282,1045 +7542,1250 @@ DSL OPERATOR PRECEDENCE
 
 mlr put -v $x = 1 || 2 ^^ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    || (operator):
-        1 (strnum_literal).
-        ^^ (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            1 (strnum_literal).
+            ^^ (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      1 || 2 ^^ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    1 (strnum_literal).
-    ^^ (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    || (operator):
+        1 (strnum_literal).
+        ^^ (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = 1 || 2 && 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            1 (strnum_literal).
+            && (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v      1 || 2 && 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         1 (strnum_literal).
         && (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 || 2 && 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    1 (strnum_literal).
-    && (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ^^ 2 || 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            ^^ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 ^^ 2 || 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         ^^ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ^^ 2 || 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    ^^ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 ^^ 2 && 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^^ (operator):
+            1 (strnum_literal).
+            && (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v      1 ^^ 2 && 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^^ (operator):
         1 (strnum_literal).
         && (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 ^^ 2 && 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^^ (operator):
-    1 (strnum_literal).
-    && (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 && 2 || 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            && (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 && 2 || 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         && (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 && 2 || 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    && (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = 1 && 2 ^^ 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^^ (operator):
+            && (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      1 && 2 ^^ 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^^ (operator):
         && (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      1 && 2 ^^ 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^^ (operator):
-    && (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 == 2 <= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    == (operator):
-        1 (strnum_literal).
-        <= (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        == (operator):
+            1 (strnum_literal).
+            <= (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 == 2 <= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-== (operator):
-    1 (strnum_literal).
-    <= (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    == (operator):
+        1 (strnum_literal).
+        <= (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 <= 2 == 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        == (operator):
+            <= (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 <= 2 == 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     == (operator):
         <= (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 <= 2 == 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-== (operator):
-    <= (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 <= 2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    <= (operator):
-        1 (strnum_literal).
-        | (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        <= (operator):
+            1 (strnum_literal).
+            | (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 <= 2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<= (operator):
-    1 (strnum_literal).
-    | (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    <= (operator):
+        1 (strnum_literal).
+        | (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 |  2 <= 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        <= (operator):
+            | (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 |  2 <= 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     <= (operator):
         | (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 |  2 <= 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-<= (operator):
-    | (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 |  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    | (operator):
-        1 (strnum_literal).
-        ^ (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            1 (strnum_literal).
+            ^ (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 |  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    1 (strnum_literal).
-    ^ (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    | (operator):
+        1 (strnum_literal).
+        ^ (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 ^  2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            ^ (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 ^  2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         ^ (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 ^  2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    ^ (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 ^  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ^ (operator):
-        1 (strnum_literal).
-        & (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^ (operator):
+            1 (strnum_literal).
+            & (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 ^  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^ (operator):
-    1 (strnum_literal).
-    & (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ^ (operator):
+        1 (strnum_literal).
+        & (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 &  2 ^  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ^ (operator):
+            & (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 &  2 ^  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ^ (operator):
         & (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 &  2 ^  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-^ (operator):
-    & (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 &  2 << 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    & (operator):
-        1 (strnum_literal).
-        << (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        & (operator):
+            1 (strnum_literal).
+            << (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 &  2 << 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-& (operator):
-    1 (strnum_literal).
-    << (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    & (operator):
+        1 (strnum_literal).
+        << (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 << 2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        & (operator):
+            << (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 << 2 &  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     & (operator):
         << (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 << 2 &  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-& (operator):
-    << (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 +  2 * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        1 (strnum_literal).
-        * (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            * (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 +  2 * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    * (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        1 (strnum_literal).
+        * (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 *  2 + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        * (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v       1 *  2 + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        * (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 + (2 * 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        1 (strnum_literal).
-        * (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            * (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 + (2 * 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    * (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        1 (strnum_literal).
+        * (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 * (2 + 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        1 (strnum_literal).
-        + (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            1 (strnum_literal).
+            + (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 * (2 + 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    1 (strnum_literal).
-    + (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        1 (strnum_literal).
+        + (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = (1 + 2) * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        + (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            + (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      (1 + 2) * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    + (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        + (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x = (1 * 2) + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        * (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      (1 * 2) + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        * (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 +   2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 +   2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 **  2 +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        ** (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v       1 **  2 +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        ** (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 +  (2 ** 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 +  (2 ** 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 ** (2 +  3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    ** (operator):
-        1 (strnum_literal).
-        + (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ** (operator):
+            1 (strnum_literal).
+            + (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 ** (2 +  3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-** (operator):
-    1 (strnum_literal).
-    + (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    ** (operator):
+        1 (strnum_literal).
+        + (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = (1 +  2) ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ** (operator):
+            + (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      (1 +  2) ** 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ** (operator):
         + (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      (1 +  2) ** 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-** (operator):
-    + (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = (1 ** 2) +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        ** (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      (1 ** 2) +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        ** (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 *   2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 *   2 ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 **  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        ** (operator):
-            1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v       1 **  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        ** (operator):
+            1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 *  (2 ** 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    * (operator):
-        1 (strnum_literal).
-        ** (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            1 (strnum_literal).
+            ** (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v       1 *  (2 ** 3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    1 (strnum_literal).
-    ** (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    * (operator):
+        1 (strnum_literal).
+        ** (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x =  1 ** (2 *  3) /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ** (operator):
+            1 (strnum_literal).
+            * (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v       1 ** (2 *  3) /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ** (operator):
         1 (strnum_literal).
         * (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 ** (2 *  3) /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-** (operator):
-    1 (strnum_literal).
-    * (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = (1 *  2) ** 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ** (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      (1 *  2) ** 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ** (operator):
         * (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      (1 *  2) ** 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-** (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = (1 ** 2) *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        * (operator):
+            ** (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      (1 ** 2) *  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     * (operator):
         ** (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      (1 ** 2) *  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-* (operator):
-    ** (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = -1 +  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        - (operator):
-            1 (strnum_literal).
-        * (operator):
-            2 (strnum_literal).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            - (operator):
+                1 (strnum_literal).
+            * (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
 
 mlr filter -v      -1 +  2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    - (operator):
-        1 (strnum_literal).
-    * (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        - (operator):
+            1 (strnum_literal).
+        * (operator):
+            2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr put -v $x = -1 *  2 +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    + (operator):
-        * (operator):
-            - (operator):
-                1 (strnum_literal).
-            2 (strnum_literal).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            * (operator):
+                - (operator):
+                    1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
 
 mlr filter -v      -1 *  2 +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    * (operator):
-        - (operator):
-            1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    + (operator):
+        * (operator):
+            - (operator):
+                1 (strnum_literal).
+            2 (strnum_literal).
+        3 (strnum_literal).
 
 mlr put -v $x =  1 + -2 *  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            * (operator):
+                - (operator):
+                    2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v       1 + -2 *  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     + (operator):
         1 (strnum_literal).
         * (operator):
             - (operator):
                 2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 + -2 *  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    * (operator):
-        - (operator):
-            2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 * -2 +  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            * (operator):
+                1 (strnum_literal).
+                - (operator):
+                    2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 * -2 +  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     + (operator):
         * (operator):
             1 (strnum_literal).
             - (operator):
                 2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 * -2 +  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    * (operator):
-        1 (strnum_literal).
-        - (operator):
-            2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 +  2 * -3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            1 (strnum_literal).
+            * (operator):
+                2 (strnum_literal).
+                - (operator):
+                    3 (strnum_literal).
+
+mlr filter -v       1 +  2 * -3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     + (operator):
         1 (strnum_literal).
         * (operator):
             2 (strnum_literal).
             - (operator):
                 3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 +  2 * -3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    1 (strnum_literal).
-    * (operator):
-        2 (strnum_literal).
-        - (operator):
-            3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 *  2 + -3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        + (operator):
+            * (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            - (operator):
+                3 (strnum_literal).
+
+mlr filter -v       1 *  2 + -3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     + (operator):
         * (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         - (operator):
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 *  2 + -3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-+ (operator):
-    * (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    - (operator):
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = ~1 |  2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            ~ (operator):
+                1 (strnum_literal).
+            & (operator):
+                2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v      ~1 |  2 &  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         ~ (operator):
             1 (strnum_literal).
         & (operator):
             2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      ~1 |  2 &  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    ~ (operator):
-        1 (strnum_literal).
-    & (operator):
-        2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = ~1 &  2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            & (operator):
+                ~ (operator):
+                    1 (strnum_literal).
+                2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v      ~1 &  2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         & (operator):
             ~ (operator):
                 1 (strnum_literal).
             2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      ~1 &  2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    & (operator):
-        ~ (operator):
-            1 (strnum_literal).
-        2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 | ~2 &  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            1 (strnum_literal).
+            & (operator):
+                ~ (operator):
+                    2 (strnum_literal).
+                3 (strnum_literal).
+
+mlr filter -v       1 | ~2 &  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         1 (strnum_literal).
         & (operator):
             ~ (operator):
                 2 (strnum_literal).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 | ~2 &  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    1 (strnum_literal).
-    & (operator):
-        ~ (operator):
-            2 (strnum_literal).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 & ~2 |  3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            & (operator):
+                1 (strnum_literal).
+                ~ (operator):
+                    2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr filter -v       1 & ~2 |  3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         & (operator):
             1 (strnum_literal).
             ~ (operator):
                 2 (strnum_literal).
         3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 & ~2 |  3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    & (operator):
-        1 (strnum_literal).
-        ~ (operator):
-            2 (strnum_literal).
-    3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 |  2 & ~3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            1 (strnum_literal).
+            & (operator):
+                2 (strnum_literal).
+                ~ (operator):
+                    3 (strnum_literal).
+
+mlr filter -v       1 |  2 & ~3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         1 (strnum_literal).
         & (operator):
             2 (strnum_literal).
             ~ (operator):
                 3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 |  2 & ~3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    1 (strnum_literal).
-    & (operator):
-        2 (strnum_literal).
-        ~ (operator):
-            3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x =  1 &  2 | ~3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        | (operator):
+            & (operator):
+                1 (strnum_literal).
+                2 (strnum_literal).
+            ~ (operator):
+                3 (strnum_literal).
+
+mlr filter -v       1 &  2 | ~3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     | (operator):
         & (operator):
             1 (strnum_literal).
             2 (strnum_literal).
         ~ (operator):
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v       1 &  2 | ~3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-| (operator):
-    & (operator):
-        1 (strnum_literal).
-        2 (strnum_literal).
-    ~ (operator):
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = $a==1 && $b == 1 && $c == 1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        && (operator):
+            && (operator):
+                == (operator):
+                    a (field_name).
+                    1 (strnum_literal).
+                == (operator):
+                    b (field_name).
+                    1 (strnum_literal).
+            == (operator):
+                c (field_name).
+                1 (strnum_literal).
+
+mlr filter -v      $a==1 && $b == 1 && $c == 1 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     && (operator):
         && (operator):
             == (operator):
@@ -8332,29 +8797,33 @@ AST MAIN STATEMENTS (1):
         == (operator):
             c (field_name).
             1 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      $a==1 && $b == 1 && $c == 1 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-&& (operator):
-    && (operator):
-        == (operator):
-            a (field_name).
-            1 (strnum_literal).
-        == (operator):
-            b (field_name).
-            1 (strnum_literal).
-    == (operator):
-        c (field_name).
-        1 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = $a==1 || $b == 1 && $c == 1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            == (operator):
+                a (field_name).
+                1 (strnum_literal).
+            && (operator):
+                == (operator):
+                    b (field_name).
+                    1 (strnum_literal).
+                == (operator):
+                    c (field_name).
+                    1 (strnum_literal).
+
+mlr filter -v      $a==1 || $b == 1 && $c == 1 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         == (operator):
             a (field_name).
@@ -8366,29 +8835,33 @@ AST MAIN STATEMENTS (1):
             == (operator):
                 c (field_name).
                 1 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      $a==1 || $b == 1 && $c == 1 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    == (operator):
-        a (field_name).
-        1 (strnum_literal).
-    && (operator):
-        == (operator):
-            b (field_name).
-            1 (strnum_literal).
-        == (operator):
-            c (field_name).
-            1 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = $a==1 || $b == 1 || $c == 1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            || (operator):
+                == (operator):
+                    a (field_name).
+                    1 (strnum_literal).
+                == (operator):
+                    b (field_name).
+                    1 (strnum_literal).
+            == (operator):
+                c (field_name).
+                1 (strnum_literal).
+
+mlr filter -v      $a==1 || $b == 1 || $c == 1 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         || (operator):
             == (operator):
@@ -8400,29 +8873,33 @@ AST MAIN STATEMENTS (1):
         == (operator):
             c (field_name).
             1 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      $a==1 || $b == 1 || $c == 1 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    || (operator):
-        == (operator):
-            a (field_name).
-            1 (strnum_literal).
-        == (operator):
-            b (field_name).
-            1 (strnum_literal).
-    == (operator):
-        c (field_name).
-        1 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = $a==1 && $b == 1 || $c == 1 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        || (operator):
+            && (operator):
+                == (operator):
+                    a (field_name).
+                    1 (strnum_literal).
+                == (operator):
+                    b (field_name).
+                    1 (strnum_literal).
+            == (operator):
+                c (field_name).
+                1 (strnum_literal).
+
+mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     || (operator):
         && (operator):
             == (operator):
@@ -8434,29 +8911,32 @@ AST MAIN STATEMENTS (1):
         == (operator):
             c (field_name).
             1 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    && (operator):
-        == (operator):
-            a (field_name).
-            1 (strnum_literal).
-        == (operator):
-            b (field_name).
-            1 (strnum_literal).
-    == (operator):
-        c (field_name).
-        1 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = $a==1 ? $b == 2 : $c == 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        ? : (operator):
+            == (operator):
+                a (field_name).
+                1 (strnum_literal).
+            == (operator):
+                b (field_name).
+                2 (strnum_literal).
+            == (operator):
+                c (field_name).
+                3 (strnum_literal).
+
+mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     ? : (operator):
         == (operator):
             a (field_name).
@@ -8467,308 +8947,348 @@ AST MAIN STATEMENTS (1):
         == (operator):
             c (field_name).
             3 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-? : (operator):
-    == (operator):
-        a (field_name).
-        1 (strnum_literal).
-    == (operator):
-        b (field_name).
-        2 (strnum_literal).
-    == (operator):
-        c (field_name).
-        3 (strnum_literal).
-AST END STATEMENTS (0):
 
 mlr put -v $x = true /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    x (field_name).
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        true (boolean_literal).
 
 mlr filter -v      true /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    true (boolean_literal).
 
 mlr put -v true || 1==0; $x = 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (2):
-|| (operator):
-    true (boolean_literal).
-    == (operator):
-        1 (strnum_literal).
-        0 (strnum_literal).
-= (srec_assignment):
-    x (field_name).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    || (operator):
+        true (boolean_literal).
+        == (operator):
+            1 (strnum_literal).
+            0 (strnum_literal).
+    = (srec_assignment):
+        x (field_name).
+        3 (strnum_literal).
 
 mlr filter -v         true || 1==0 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    true (boolean_literal).
-    == (operator):
-        1 (strnum_literal).
-        0 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    || (operator):
+        true (boolean_literal).
+        == (operator):
+            1 (strnum_literal).
+            0 (strnum_literal).
 
 mlr put -v 1==0 || false; $x = 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (2):
-|| (operator):
-    == (operator):
-        1 (strnum_literal).
-        0 (strnum_literal).
-    false (boolean_literal).
-= (srec_assignment):
-    x (field_name).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    || (operator):
+        == (operator):
+            1 (strnum_literal).
+            0 (strnum_literal).
+        false (boolean_literal).
+    = (srec_assignment):
+        x (field_name).
+        3 (strnum_literal).
 
 mlr filter -v         1==0 || false /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-|| (operator):
-    == (operator):
-        1 (strnum_literal).
-        0 (strnum_literal).
-    false (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    || (operator):
+        == (operator):
+            1 (strnum_literal).
+            0 (strnum_literal).
+        false (boolean_literal).
 
 mlr put -v true && false; $x = 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (2):
-&& (operator):
-    true (boolean_literal).
-    false (boolean_literal).
-= (srec_assignment):
-    x (field_name).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    && (operator):
+        true (boolean_literal).
+        false (boolean_literal).
+    = (srec_assignment):
+        x (field_name).
+        3 (strnum_literal).
 
 mlr filter -v         true && false /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-&& (operator):
-    true (boolean_literal).
-    false (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    && (operator):
+        true (boolean_literal).
+        false (boolean_literal).
 
 mlr put -v true && false && true; $x = 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (2):
-&& (operator):
-    && (operator):
-        true (boolean_literal).
-        false (boolean_literal).
-    true (boolean_literal).
-= (srec_assignment):
-    x (field_name).
-    3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    && (operator):
+        && (operator):
+            true (boolean_literal).
+            false (boolean_literal).
+        true (boolean_literal).
+    = (srec_assignment):
+        x (field_name).
+        3 (strnum_literal).
 
 mlr filter -v         true && false && true /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-&& (operator):
-    && (operator):
-        true (boolean_literal).
-        false (boolean_literal).
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    && (operator):
+        && (operator):
+            true (boolean_literal).
+            false (boolean_literal).
+        true (boolean_literal).
 
 mlr put -v $y += $x + 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    + (operator):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
         y (field_name).
         + (operator):
-            x (field_name).
-            3 (strnum_literal).
-AST END STATEMENTS (0):
+            y (field_name).
+            + (operator):
+                x (field_name).
+                3 (strnum_literal).
 
 mlr put -v $y += $x * 3 /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    + (operator):
-        y (field_name).
-        * (operator):
-            x (field_name).
-            3 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        + (operator):
+            y (field_name).
+            * (operator):
+                x (field_name).
+                3 (strnum_literal).
 
 mlr put -v $y ||= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    || (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        || (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y ^^= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    ^^ (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        ^^ (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y &&= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    && (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        && (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y |=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    | (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        | (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y ^=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    ^ (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        ^ (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y &=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    & (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        & (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y <<= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    << (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        << (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y >>= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    >> (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        >> (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y +=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    + (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        + (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y -=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    - (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        - (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y .=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    . (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        . (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y *=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    * (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        * (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y /=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    / (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        / (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y //= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    // (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        // (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y %=  $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    % (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        % (operator):
+            y (field_name).
+            x (field_name).
 
 mlr put -v $y **= $x /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (srec_assignment):
-    y (field_name).
-    ** (operator):
-        y (field_name).
-        x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        y (field_name).
+        ** (operator):
+            y (field_name).
+            x (field_name).
 
 
 ================================================================
@@ -8778,217 +9298,316 @@ mlr --from /dev/null put -v begin {}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
 
 mlr --from /dev/null put -v begin {;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
 
 mlr --from /dev/null put -v begin {;;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
 
 mlr --from /dev/null put -v begin {;;;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
 
 mlr --from /dev/null put -v begin {@x=1}
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;}
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {;@x=1}
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;@y=2}
-AST BEGIN STATEMENTS (2):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
-= (oosvar_assignment):
-    y (oosvar_name).
-    2 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;;@y=2}
-AST BEGIN STATEMENTS (2):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
-= (oosvar_assignment):
-    y (oosvar_name).
-    2 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 mlr --from /dev/null put -v true {}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
 
 mlr --from /dev/null put -v true {;}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
 
 mlr --from /dev/null put -v true {;;}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
 
 mlr --from /dev/null put -v true {;;;}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
 
 mlr --from /dev/null put -v true {@x=1}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v true {;@x=1}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;@y=2}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
-    = (oosvar_assignment):
-        y (oosvar_name).
-        2 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;;@y=2}
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
-    = (oosvar_assignment):
-        y (oosvar_name).
-        2 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 mlr --from /dev/null put -v end {}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
 
 mlr --from /dev/null put -v end {;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
 
 mlr --from /dev/null put -v end {;;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
 
 mlr --from /dev/null put -v end {;;;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
 
 mlr --from /dev/null put -v end {@x=1}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v end {;@x=1}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;@y=2}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (2):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
-= (oosvar_assignment):
-    y (oosvar_name).
-    2 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;;@y=2}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (2):
-= (oosvar_assignment):
-    x (oosvar_name).
-    1 (strnum_literal).
-= (oosvar_assignment):
-    y (oosvar_name).
-    2 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                y (oosvar_name).
+                2 (strnum_literal).
 
 
 ================================================================
@@ -12360,78 +12979,94 @@ DSL REGEX MATCHING
 
 mlr filter -v $x =~ "bcd" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    bcd (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        bcd (strnum_literal).
 x=abcd,y=ghi
 x=abcde,y=ghi
 
 mlr filter -v $x =~ "^bcd" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^bcd (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^bcd (strnum_literal).
 
 mlr filter -v $x =~ "^abc" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^abc (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^abc (strnum_literal).
 x=abc,y=def
 x=abcd,y=ghi
 x=abcde,y=ghi
 
 mlr filter -v $x =~ "^abc$" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^abc$ (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^abc$ (strnum_literal).
 x=abc,y=def
 
 mlr filter -v $x =~ "^a.*d$" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^a.*d$ (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^a.*d$ (strnum_literal).
 x=abcd,y=ghi
 
 mlr filter -v $x =~ "^a.*"."d$" ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    . (operator):
-        ^a.* (strnum_literal).
-        d$ (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        . (operator):
+            ^a.* (strnum_literal).
+            d$ (strnum_literal).
 x=abcd,y=ghi
 
 mlr filter -v $y =~ "\".." ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    y (field_name).
-    ".. (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        y (field_name).
+        ".. (strnum_literal).
 x=ABCDE,y="GHI"
 
 mlr filter -v $x =~ "bcd"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    bcd (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        bcd (regexi).
 x=abcd,y=ghi
 x=ABCD,y=GHI
 x=abcde,y=ghi
@@ -12440,19 +13075,23 @@ x=ABCDE,y="GHI"
 
 mlr filter -v $x =~ "^bcd"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^bcd (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^bcd (regexi).
 
 mlr filter -v $x =~ "^abc"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^abc (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^abc (regexi).
 x=abc,y=def
 x=ABC,y=DEF
 x=abcd,y=ghi
@@ -12463,33 +13102,39 @@ x=ABCDE,y="GHI"
 
 mlr filter -v $x =~ "^abc$"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^abc$ (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^abc$ (regexi).
 x=abc,y=def
 x=ABC,y=DEF
 
 mlr filter -v $x =~ "^a.*d$"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    ^a.*d$ (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        ^a.*d$ (regexi).
 x=abcd,y=ghi
 x=ABCD,y=GHI
 
 mlr filter -v $x =~ "^a.*"."d$"i ./reg_test/input/regex.dkvp
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-=~ (operator):
-    x (field_name).
-    . (operator):
-        ^a.* (strnum_literal).
-        d$ (regexi).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    =~ (operator):
+        x (field_name).
+        . (operator):
+            ^a.* (strnum_literal).
+            d$ (regexi).
 x=abcd,y=ghi
 
 
@@ -13597,20 +14242,24 @@ y
 DSL OOSVARS
 
 mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    ox (oosvar_name).
-    0 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    d (field_name).
-    - (operator):
-        x (field_name).
-        ox (oosvar_name).
-= (oosvar_assignment):
-    ox (oosvar_name).
-    x (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                ox (oosvar_name).
+                0 (strnum_literal).
+    = (srec_assignment):
+        d (field_name).
+        - (operator):
+            x (field_name).
+            ox (oosvar_name).
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
@@ -13624,25 +14273,29 @@ hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
 mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    ox (oosvar_name).
-    no (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    d (field_name).
-    ? : (operator):
-        == (operator):
-            ox (oosvar_name).
-            no (strnum_literal).
-        1.0 (strnum_literal).
-        / (operator):
-            x (field_name).
-            ox (oosvar_name).
-= (oosvar_assignment):
-    ox (oosvar_name).
-    x (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                ox (oosvar_name).
+                no (strnum_literal).
+    = (srec_assignment):
+        d (field_name).
+        ? : (operator):
+            == (operator):
+                ox (oosvar_name).
+                no (strnum_literal).
+            1.0 (strnum_literal).
+            / (operator):
+                x (field_name).
+                ox (oosvar_name).
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -13657,16 +14310,18 @@ pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
 mlr --opprint put -v $d=$x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    d (field_name).
-    / (operator):
-        x (field_name).
-        ox (oosvar_name).
-= (oosvar_assignment):
-    ox (oosvar_name).
-    x (field_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        d (field_name).
+        / (operator):
+            x (field_name).
+            ox (oosvar_name).
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790  1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -13680,25 +14335,29 @@ hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
 mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg_test/input/abixy
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    ox (oosvar_name).
-    no (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    d (field_name).
-    ? : (operator):
-        == (operator):
-            ox (oosvar_name).
-            no (strnum_literal).
-        1.0 (strnum_literal).
-        / (operator):
-            x (field_name).
-            ox (oosvar_name).
-= (oosvar_assignment):
-    ox (oosvar_name).
-    x (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                ox (oosvar_name).
+                no (strnum_literal).
+    = (srec_assignment):
+        d (field_name).
+        ? : (operator):
+            == (operator):
+                ox (oosvar_name).
+                no (strnum_literal).
+            1.0 (strnum_literal).
+            / (operator):
+                x (field_name).
+                ox (oosvar_name).
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
 eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
@@ -13712,20 +14371,24 @@ hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
 mlr --opprint put -v begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum ./reg_test/input/abixy
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    rsum (oosvar_name).
-    0 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (oosvar_assignment):
-    rsum (oosvar_name).
-    + (operator):
-        rsum (oosvar_name).
-        x (field_name).
-= (srec_assignment):
-    rsum (field_name).
-    rsum (oosvar_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                rsum (oosvar_name).
+                0 (strnum_literal).
+    = (oosvar_assignment):
+        rsum (oosvar_name).
+        + (operator):
+            rsum (oosvar_name).
+            x (field_name).
+    = (srec_assignment):
+        rsum (field_name).
+        rsum (oosvar_name).
 a   b   i  x                   y                   rsum
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  1.105470
@@ -13739,43 +14402,47 @@ hat wye 9  0.03144187646093577 0.7495507603507059  4.033668
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294
 
 mlr --opprint put -v begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg_test/input/abixy
-AST BEGIN STATEMENTS (3):
-= (oosvar_assignment):
-    a (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    b (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    c (oosvar_name).
-    0 (strnum_literal).
-AST MAIN STATEMENTS (7):
-= (srec_assignment):
-    za (field_name).
-    a (oosvar_name).
-= (srec_assignment):
-    zb (field_name).
-    b (oosvar_name).
-= (srec_assignment):
-    zc (field_name).
-    c (oosvar_name).
-= (srec_assignment):
-    d (field_name).
-    + (operator):
-        + (operator):
-            a (oosvar_name).
-            b (oosvar_name).
-        c (oosvar_name).
-= (oosvar_assignment):
-    a (oosvar_name).
-    b (oosvar_name).
-= (oosvar_assignment):
-    b (oosvar_name).
-    c (oosvar_name).
-= (oosvar_assignment):
-    c (oosvar_name).
-    i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                b (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                c (oosvar_name).
+                0 (strnum_literal).
+    = (srec_assignment):
+        za (field_name).
+        a (oosvar_name).
+    = (srec_assignment):
+        zb (field_name).
+        b (oosvar_name).
+    = (srec_assignment):
+        zc (field_name).
+        c (oosvar_name).
+    = (srec_assignment):
+        d (field_name).
+        + (operator):
+            + (operator):
+                a (oosvar_name).
+                b (oosvar_name).
+            c (oosvar_name).
+    = (oosvar_assignment):
+        a (oosvar_name).
+        b (oosvar_name).
+    = (oosvar_assignment):
+        b (oosvar_name).
+        c (oosvar_name).
+    = (oosvar_assignment):
+        c (oosvar_name).
+        i (field_name).
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
 eks pan 2  0.7586799647899636  0.5221511083334797  0  0  1  1
@@ -13789,43 +14456,47 @@ hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
 mlr --opprint put -v begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg_test/input/abixy
-AST BEGIN STATEMENTS (3):
-= (oosvar_assignment):
-    a (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    b (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    c (oosvar_name).
-    0 (strnum_literal).
-AST MAIN STATEMENTS (7):
-= (srec_assignment):
-    za (field_name).
-    a (oosvar_name).
-= (srec_assignment):
-    zb (field_name).
-    b (oosvar_name).
-= (srec_assignment):
-    zc (field_name).
-    c (oosvar_name).
-= (srec_assignment):
-    d (field_name).
-    + (operator):
-        + (operator):
-            a (oosvar_name).
-            b (oosvar_name).
-        c (oosvar_name).
-= (oosvar_assignment):
-    a (oosvar_name).
-    b (oosvar_name).
-= (oosvar_assignment):
-    b (oosvar_name).
-    c (oosvar_name).
-= (oosvar_assignment):
-    c (oosvar_name).
-    i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                b (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                c (oosvar_name).
+                0 (strnum_literal).
+    = (srec_assignment):
+        za (field_name).
+        a (oosvar_name).
+    = (srec_assignment):
+        zb (field_name).
+        b (oosvar_name).
+    = (srec_assignment):
+        zc (field_name).
+        c (oosvar_name).
+    = (srec_assignment):
+        d (field_name).
+        + (operator):
+            + (operator):
+                a (oosvar_name).
+                b (oosvar_name).
+            c (oosvar_name).
+    = (oosvar_assignment):
+        a (oosvar_name).
+        b (oosvar_name).
+    = (oosvar_assignment):
+        b (oosvar_name).
+        c (oosvar_name).
+    = (oosvar_assignment):
+        c (oosvar_name).
+        i (field_name).
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
 eks pan 2  0.7586799647899636  0.5221511083334797  0  0  1  1
@@ -13839,20 +14510,24 @@ hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
 mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    ox (oosvar_name).
-    0 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    d (field_name).
-    - (operator):
-        x (field_name).
-        ox (oosvar_name).
-= (oosvar_assignment):
-    ox (oosvar_name).
-    x (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                ox (oosvar_name).
+                0 (strnum_literal).
+    = (srec_assignment):
+        d (field_name).
+        - (operator):
+            x (field_name).
+            ox (oosvar_name).
+    = (oosvar_assignment):
+        ox (oosvar_name).
+        x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
@@ -13867,23 +14542,27 @@ pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
 mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (3):
-= (oosvar_assignment):
-    a (oosvar_name).
-    a (field_name).
-= (oosvar_assignment):
-    b (oosvar_name).
-    b (field_name).
-= (oosvar_assignment):
-    c (oosvar_name).
-    x (field_name).
-AST END STATEMENTS (3):
-emitf (emitf):
-    a (oosvar_name).
-emitf (emitf):
-    b (oosvar_name).
-emitf (emitf):
-    c (oosvar_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        a (oosvar_name).
+        a (field_name).
+    = (oosvar_assignment):
+        b (oosvar_name).
+        b (field_name).
+    = (oosvar_assignment):
+        c (oosvar_name).
+        x (field_name).
+    end (end):
+        list (statement_list):
+            emitf (emitf):
+                a (oosvar_name).
+            emitf (emitf):
+                b (oosvar_name).
+            emitf (emitf):
+                c (oosvar_name).
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -13900,21 +14579,25 @@ c=0.502626
 
 mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg_test/input/abixy
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (3):
-= (oosvar_assignment):
-    a (oosvar_name).
-    a (field_name).
-= (oosvar_assignment):
-    b (oosvar_name).
-    b (field_name).
-= (oosvar_assignment):
-    c (oosvar_name).
-    x (field_name).
-AST END STATEMENTS (1):
-emitf (emitf):
-    a (oosvar_name).
-    b (oosvar_name).
-    c (oosvar_name).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        a (oosvar_name).
+        a (field_name).
+    = (oosvar_assignment):
+        b (oosvar_name).
+        b (field_name).
+    = (oosvar_assignment):
+        c (oosvar_name).
+        x (field_name).
+    end (end):
+        list (statement_list):
+            emitf (emitf):
+                a (oosvar_name).
+                b (oosvar_name).
+                c (oosvar_name).
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -13928,32 +14611,38 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=pan,b=wye,c=0.502626
 
 mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ./reg_test/input/abixy
-AST BEGIN STATEMENTS (2):
-= (oosvar_assignment):
-    count (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    sum (oosvar_name).
-    0.0 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (oosvar_assignment):
-    count (oosvar_name).
-    + (operator):
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                count (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                sum (oosvar_name).
+                0.0 (strnum_literal).
+    = (oosvar_assignment):
         count (oosvar_name).
-        1 (strnum_literal).
-= (oosvar_assignment):
-    sum (oosvar_name).
-    + (operator):
+        + (operator):
+            count (oosvar_name).
+            1 (strnum_literal).
+    = (oosvar_assignment):
         sum (oosvar_name).
-        x (field_name).
-AST END STATEMENTS (2):
-= (oosvar_assignment):
-    mean (oosvar_name).
-    / (operator):
-        sum (oosvar_name).
-        count (oosvar_name).
-emitf (emitf):
-    mean (oosvar_name).
+        + (operator):
+            sum (oosvar_name).
+            x (field_name).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                mean (oosvar_name).
+                / (operator):
+                    sum (oosvar_name).
+                    count (oosvar_name).
+            emitf (emitf):
+                mean (oosvar_name).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -13970,32 +14659,38 @@ mean
 0.453629
 
 mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg_test/input/abixy
-AST BEGIN STATEMENTS (2):
-= (oosvar_assignment):
-    count (oosvar_name).
-    0 (strnum_literal).
-= (oosvar_assignment):
-    sum (oosvar_name).
-    0.0 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (oosvar_assignment):
-    count (oosvar_name).
-    + (operator):
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                mean (oosvar_name).
+                / (operator):
+                    sum (oosvar_name).
+                    count (oosvar_name).
+            emitf (emitf):
+                mean (oosvar_name).
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                count (oosvar_name).
+                0 (strnum_literal).
+            = (oosvar_assignment):
+                sum (oosvar_name).
+                0.0 (strnum_literal).
+    = (oosvar_assignment):
         count (oosvar_name).
-        1 (strnum_literal).
-= (oosvar_assignment):
-    sum (oosvar_name).
-    + (operator):
+        + (operator):
+            count (oosvar_name).
+            1 (strnum_literal).
+    = (oosvar_assignment):
         sum (oosvar_name).
-        x (field_name).
-AST END STATEMENTS (2):
-= (oosvar_assignment):
-    mean (oosvar_name).
-    / (operator):
-        sum (oosvar_name).
-        count (oosvar_name).
-emitf (emitf):
-    mean (oosvar_name).
+        + (operator):
+            sum (oosvar_name).
+            x (field_name).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -14012,37 +14707,43 @@ mean
 0.453629
 
 mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    [] (oosvar_level_key):
-        b (oosvar_name).
-        1 (strnum_literal).
-AST MAIN STATEMENTS (2):
-= (srec_assignment):
-    c (field_name).
-    d (oosvar_name).
-= (oosvar_assignment):
-    [] (oosvar_level_key):
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                [] (oosvar_level_key):
+                    b (oosvar_name).
+                    1 (strnum_literal).
+    = (srec_assignment):
+        c (field_name).
+        d (oosvar_name).
+    = (oosvar_assignment):
         [] (oosvar_level_key):
             [] (oosvar_level_key):
-                e (oosvar_name).
-                i (field_name).
-            + (operator):
-                2 (strnum_literal).
-                j (field_name).
-        3 (strnum_literal).
-    4 (field_name).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        f (oosvar_name).
-        [] (oosvar_level_key):
-            [] (oosvar_level_key):
-                g (oosvar_name).
-                5 (strnum_literal).
-            h (oosvar_name).
-    6 (strnum_literal).
+                [] (oosvar_level_key):
+                    e (oosvar_name).
+                    i (field_name).
+                + (operator):
+                    2 (strnum_literal).
+                    j (field_name).
+            3 (strnum_literal).
+        4 (field_name).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    f (oosvar_name).
+                    [] (oosvar_level_key):
+                        [] (oosvar_level_key):
+                            g (oosvar_name).
+                            5 (strnum_literal).
+                        h (oosvar_name).
+                6 (strnum_literal).
 
 mlr put @y[$a]=$y; end{dump} ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -14446,181 +15147,225 @@ a=hat,variable.name=0.031442
 DSL PATTERN-ACTION BLOCKS
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    1 (strnum_literal).
-AST MAIN STATEMENTS (3):
-= (srec_assignment):
-    e (field_name).
-    2 (strnum_literal).
-cond (conditional_block):
-    || (operator):
-        == (operator):
-            f (field_name).
-            g (field_name).
-        == (operator):
-            h (field_name).
-            i (field_name).
-= (srec_assignment):
-    x (field_name).
-    6 (strnum_literal).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    z (oosvar_name).
-    9 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                1 (strnum_literal).
+    = (srec_assignment):
+        e (field_name).
+        2 (strnum_literal).
+    cond (conditional_block):
+        || (operator):
+            == (operator):
+                f (field_name).
+                g (field_name).
+            == (operator):
+                h (field_name).
+                i (field_name).
+        list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        6 (strnum_literal).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                z (oosvar_name).
+                9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    1 (strnum_literal).
-AST MAIN STATEMENTS (3):
-= (srec_assignment):
-    e (field_name).
-    2 (strnum_literal).
-cond (conditional_block):
-    || (operator):
-        == (operator):
-            f (field_name).
-            g (field_name).
-        == (operator):
-            h (field_name).
-            i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                1 (strnum_literal).
     = (srec_assignment):
-        s (field_name).
-        1 (strnum_literal).
-= (srec_assignment):
-    x (field_name).
-    6 (strnum_literal).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    z (oosvar_name).
-    9 (strnum_literal).
+        e (field_name).
+        2 (strnum_literal).
+    cond (conditional_block):
+        || (operator):
+            == (operator):
+                f (field_name).
+                g (field_name).
+            == (operator):
+                h (field_name).
+                i (field_name).
+        list (statement_list):
+            = (srec_assignment):
+                s (field_name).
+                1 (strnum_literal).
+    = (srec_assignment):
+        x (field_name).
+        6 (strnum_literal).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                z (oosvar_name).
+                9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    1 (strnum_literal).
-AST MAIN STATEMENTS (3):
-= (srec_assignment):
-    e (field_name).
-    2 (strnum_literal).
-cond (conditional_block):
-    || (operator):
-        == (operator):
-            f (field_name).
-            g (field_name).
-        == (operator):
-            h (field_name).
-            i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                1 (strnum_literal).
     = (srec_assignment):
-        s (field_name).
-        1 (strnum_literal).
-    = (srec_assignment):
-        t (field_name).
+        e (field_name).
         2 (strnum_literal).
-= (srec_assignment):
-    x (field_name).
-    6 (strnum_literal).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    z (oosvar_name).
-    9 (strnum_literal).
+    cond (conditional_block):
+        || (operator):
+            == (operator):
+                f (field_name).
+                g (field_name).
+            == (operator):
+                h (field_name).
+                i (field_name).
+        list (statement_list):
+            = (srec_assignment):
+                s (field_name).
+                1 (strnum_literal).
+            = (srec_assignment):
+                t (field_name).
+                2 (strnum_literal).
+    = (srec_assignment):
+        x (field_name).
+        6 (strnum_literal).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                z (oosvar_name).
+                9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    1 (strnum_literal).
-AST MAIN STATEMENTS (3):
-= (srec_assignment):
-    e (field_name).
-    2 (strnum_literal).
-cond (conditional_block):
-    || (operator):
-        == (operator):
-            f (field_name).
-            g (field_name).
-        == (operator):
-            h (field_name).
-            i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                1 (strnum_literal).
     = (srec_assignment):
-        s (field_name).
-        1 (strnum_literal).
-    = (srec_assignment):
-        t (field_name).
+        e (field_name).
         2 (strnum_literal).
+    cond (conditional_block):
+        || (operator):
+            == (operator):
+                f (field_name).
+                g (field_name).
+            == (operator):
+                h (field_name).
+                i (field_name).
+        list (statement_list):
+            = (srec_assignment):
+                s (field_name).
+                1 (strnum_literal).
+            = (srec_assignment):
+                t (field_name).
+                2 (strnum_literal).
+            = (srec_assignment):
+                u (field_name).
+                3 (strnum_literal).
     = (srec_assignment):
-        u (field_name).
-        3 (strnum_literal).
-= (srec_assignment):
-    x (field_name).
-    6 (strnum_literal).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    z (oosvar_name).
-    9 (strnum_literal).
+        x (field_name).
+        6 (strnum_literal).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                z (oosvar_name).
+                9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9} /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    a (oosvar_name).
-    1 (strnum_literal).
-AST MAIN STATEMENTS (3):
-= (srec_assignment):
-    e (field_name).
-    2 (strnum_literal).
-cond (conditional_block):
-    || (operator):
-        == (operator):
-            f (field_name).
-            g (field_name).
-        == (operator):
-            h (field_name).
-            i (field_name).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                a (oosvar_name).
+                1 (strnum_literal).
     = (srec_assignment):
-        s (field_name).
-        1 (strnum_literal).
-    = (oosvar_assignment):
-        [] (oosvar_level_key):
-            t (oosvar_name).
-            . (operator):
-                u (strnum_literal).
-                5 (field_name).
+        e (field_name).
         2 (strnum_literal).
-    emitf (emitf):
-        v (oosvar_name).
-        w (oosvar_name).
-    dump (dump):
-= (srec_assignment):
-    x (field_name).
-    6 (strnum_literal).
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    z (oosvar_name).
-    9 (strnum_literal).
+    cond (conditional_block):
+        || (operator):
+            == (operator):
+                f (field_name).
+                g (field_name).
+            == (operator):
+                h (field_name).
+                i (field_name).
+        list (statement_list):
+            = (srec_assignment):
+                s (field_name).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    t (oosvar_name).
+                    . (operator):
+                        u (strnum_literal).
+                        5 (field_name).
+                2 (strnum_literal).
+            emitf (emitf):
+                v (oosvar_name).
+                w (oosvar_name).
+            dump (dump):
+    = (srec_assignment):
+        x (field_name).
+        6 (strnum_literal).
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                z (oosvar_name).
+                9 (strnum_literal).
 
 mlr put -v begin{true{@x=1}}; true{@x=2}; end{true{@x=3}} /dev/null
-AST BEGIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        1 (strnum_literal).
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        2 (strnum_literal).
-AST END STATEMENTS (1):
-cond (conditional_block):
-    true (boolean_literal).
-    = (oosvar_assignment):
-        x (oosvar_name).
-        3 (strnum_literal).
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            cond (conditional_block):
+                true (boolean_literal).
+                list (statement_list):
+                    = (oosvar_assignment):
+                        x (oosvar_name).
+                        1 (strnum_literal).
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                x (oosvar_name).
+                2 (strnum_literal).
+    end (end):
+        list (statement_list):
+            cond (conditional_block):
+                true (boolean_literal).
+                list (statement_list):
+                    = (oosvar_assignment):
+                        x (oosvar_name).
+                        3 (strnum_literal).
 
 
 ================================================================
@@ -17412,71 +18157,86 @@ OOSVAR-FROM-SREC ASSIGNMENT
 
 mlr put -v @v     = $* /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_from_full_srec_assignment):
-    v (oosvar_name).
-    $* (full_srec).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
-
-mlr put -v @v[1]  = $* /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_from_full_srec_assignment):
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
-    $* (full_srec).
-AST END STATEMENTS (0):
-
-mlr put -v @v[$2] = $* /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_from_full_srec_assignment):
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        2 (field_name).
-    $* (full_srec).
-AST END STATEMENTS (0):
-
-mlr put -v NR == 3 {@v     = $*} /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST ROOT:
+list (statement_list):
     = (oosvar_from_full_srec_assignment):
         v (oosvar_name).
         $* (full_srec).
-AST END STATEMENTS (0):
 
-mlr put -v NR == 3 {@v[1]  = $*} /dev/null
+mlr put -v @v[1]  = $* /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     = (oosvar_from_full_srec_assignment):
         [] (oosvar_level_key):
             v (oosvar_name).
             1 (strnum_literal).
         $* (full_srec).
-AST END STATEMENTS (0):
 
-mlr put -v NR == 3 {@v[$2] = $*} /dev/null
+mlr put -v @v[$2] = $* /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     = (oosvar_from_full_srec_assignment):
         [] (oosvar_level_key):
             v (oosvar_name).
             2 (field_name).
         $* (full_srec).
+
+mlr put -v NR == 3 {@v     = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_from_full_srec_assignment):
+                v (oosvar_name).
+                $* (full_srec).
+
+mlr put -v NR == 3 {@v[1]  = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_from_full_srec_assignment):
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
+                $* (full_srec).
+
+mlr put -v NR == 3 {@v[$2] = $*} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_from_full_srec_assignment):
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    2 (field_name).
+                $* (full_srec).
 
 mlr --oxtab put -q @v = $*; end {emitp @v } ./reg_test/input/abixy-het
 v:a pan
@@ -17680,71 +18440,86 @@ SREC-FROM-OOSVAR ASSIGNMENT
 
 mlr put -v $* = @v     /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (full_srec_from_oosvar_assignment):
-    $* (full_srec).
-    v (oosvar_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
-
-mlr put -v $* = @v[1]  /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (full_srec_from_oosvar_assignment):
-    $* (full_srec).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
-AST END STATEMENTS (0):
-
-mlr put -v $* = @v[$2] /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (full_srec_from_oosvar_assignment):
-    $* (full_srec).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        2 (field_name).
-AST END STATEMENTS (0):
-
-mlr put -v NR == 3 {$* = @v    } /dev/null
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST ROOT:
+list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
         v (oosvar_name).
-AST END STATEMENTS (0):
 
-mlr put -v NR == 3 {$* = @v[1] } /dev/null
+mlr put -v $* = @v[1]  /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
         [] (oosvar_level_key):
             v (oosvar_name).
             1 (strnum_literal).
-AST END STATEMENTS (0):
 
-mlr put -v NR == 3 {$* = @v[$2]} /dev/null
+mlr put -v $* = @v[$2] /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
         [] (oosvar_level_key):
             v (oosvar_name).
             2 (field_name).
+
+mlr put -v NR == 3 {$* = @v    } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (full_srec_from_oosvar_assignment):
+                $* (full_srec).
+                v (oosvar_name).
+
+mlr put -v NR == 3 {$* = @v[1] } /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (full_srec_from_oosvar_assignment):
+                $* (full_srec).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
+
+mlr put -v NR == 3 {$* = @v[$2]} /dev/null
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (full_srec_from_oosvar_assignment):
+                $* (full_srec).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    2 (field_name).
 
 mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
 1=pan
@@ -17764,179 +18539,231 @@ OOSVAR-FROM-OOSVAR ASSIGNMENT
 
 mlr put -v @u    = @v /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    v (oosvar_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        u (oosvar_name).
+        v (oosvar_name).
 
 mlr put -v @u    = @v[1] /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        u (oosvar_name).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
 
 mlr put -v @u[2] = @v /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    v (oosvar_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            u (oosvar_name).
+            2 (strnum_literal).
+        v (oosvar_name).
 
 mlr put -v @u[2] = @v[1] /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            u (oosvar_name).
+            2 (strnum_literal).
+        [] (oosvar_level_key):
+            v (oosvar_name).
+            1 (strnum_literal).
 
 mlr put -v begin { @u    = @v } /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    v (oosvar_name).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                v (oosvar_name).
 
 mlr put -v begin { @u    = @v[1] } /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -v begin { @u[2] = @v } /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    v (oosvar_name).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                v (oosvar_name).
 
 mlr put -v begin { @u[2] = @v[1] } /dev/null
-AST BEGIN STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -v NR == 3 { @u    = @v } /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
-    = (oosvar_assignment):
-        u (oosvar_name).
-        v (oosvar_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                v (oosvar_name).
 
 mlr put -v NR == 3 { @u    = @v[1] } /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
-    = (oosvar_assignment):
-        u (oosvar_name).
-        [] (oosvar_level_key):
-            v (oosvar_name).
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -v NR == 3 { @u[2] = @v } /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
-    = (oosvar_assignment):
-        [] (oosvar_level_key):
-            u (oosvar_name).
-            2 (strnum_literal).
-        v (oosvar_name).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                v (oosvar_name).
 
 mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
 AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (1):
-cond (conditional_block):
-    == (operator):
-        NR (context_variable).
-        3 (strnum_literal).
-    = (oosvar_assignment):
-        [] (oosvar_level_key):
-            u (oosvar_name).
-            2 (strnum_literal).
-        [] (oosvar_level_key):
-            v (oosvar_name).
-            1 (strnum_literal).
+AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        == (operator):
+            NR (context_variable).
+            3 (strnum_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -v end { @u    = @v } /dev/null
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    v (oosvar_name).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                v (oosvar_name).
 
 mlr put -v end { @u    = @v[1] } /dev/null
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    u (oosvar_name).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                u (oosvar_name).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -v end { @u[2] = @v } /dev/null
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    v (oosvar_name).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                v (oosvar_name).
 
 mlr put -v end { @u[2] = @v[1] } /dev/null
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
-AST END STATEMENTS (1):
-= (oosvar_assignment):
-    [] (oosvar_level_key):
-        u (oosvar_name).
-        2 (strnum_literal).
-    [] (oosvar_level_key):
-        v (oosvar_name).
-        1 (strnum_literal).
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                [] (oosvar_level_key):
+                    u (oosvar_name).
+                    2 (strnum_literal).
+                [] (oosvar_level_key):
+                    v (oosvar_name).
+                    1 (strnum_literal).
 
 mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
 {
