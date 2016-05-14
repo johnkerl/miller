@@ -108,6 +108,12 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 		return NULL;
 	}
 
+	if (past->proot == NULL) {
+		fprintf(stderr, "%s %s: filter statement must not be empty.\n",
+			argv[0], verb);
+		return NULL;
+	}
+
 	// For just dev-testing the parser, you can do
 	//   mlr filter -v 'expression goes here' /dev/null
 	if (print_ast) {

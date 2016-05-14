@@ -37,7 +37,7 @@
 }
 
 // ================================================================
-md_body ::= md_statements(B). {
+md_body ::= md_statement_list(B). {
 	past->proot = B;
 }
 
@@ -61,14 +61,14 @@ md_body ::= md_statements(B). {
 // We handle statements of the form ' ; ; ' by parsing the empty spaces around the semicolons as NOP nodes.
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 
-md_statements(A) ::= md_statement(B). {
+md_statement_list(A) ::= md_statement(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
 		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 	}
 }
-md_statements(A) ::= md_statements(B) MD_TOKEN_SEMICOLON md_statement(C). {
+md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_statement(C). {
 	if (C->type == MD_AST_NODE_TYPE_NOP) {
 		A = B;
 	} else {
@@ -118,15 +118,15 @@ md_statement(A) ::= MD_TOKEN_CONTINUE(O). {
 }
 
 // ================================================================
-md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE md_statements(B) MD_TOKEN_RBRACE. {
+md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_BEGIN, B);
 }
-md_end_block(A)   ::= MD_TOKEN_END(O)   MD_TOKEN_LBRACE md_statements(B) MD_TOKEN_RBRACE. {
+md_end_block(A)   ::= MD_TOKEN_END(O)   MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_END, B);
 }
 
 // ----------------------------------------------------------------
-md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE. {
+md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE. {
 	//A = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 }
@@ -135,7 +135,7 @@ md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
 md_while_block(A) ::=
 	MD_TOKEN_WHILE(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
 }
@@ -147,7 +147,7 @@ md_for_loop_full_srec(A) ::=
 		MD_TOKEN_IN MD_TOKEN_FULL_SREC
 	MD_TOKEN_RPAREN
     MD_TOKEN_LBRACE
-    	md_statements(C)
+    	md_statement_list(C)
     MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR_SREC,
@@ -180,7 +180,7 @@ md_if_elif_star(A) ::= md_if_elif_star(B) md_elif_block(C). {
 md_if_block(A) ::=
 	MD_TOKEN_IF(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
@@ -188,14 +188,14 @@ md_if_block(A) ::=
 md_elif_block(A) ::=
 	MD_TOKEN_ELIF(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
 
 md_else_block(A) ::=
 	MD_TOKEN_ELSE(O)
-		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IF_ITEM, C);
 }

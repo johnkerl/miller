@@ -25,7 +25,8 @@ x let newlines replace semicolons? no, and make it clear why: no need for \ cont
 * comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
-? begin/end @ filter??
+* UT for empty statement for put
+* UT for empty statement for filter
 
 ----------------------------------------------------------------
 ? substring?
