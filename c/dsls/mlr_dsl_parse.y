@@ -37,7 +37,7 @@
 }
 
 // ================================================================
-md_body ::= new_md_statements(B). {
+md_body ::= md_statements(B). {
 	past->proot = B;
 }
 
@@ -61,14 +61,14 @@ md_body ::= new_md_statements(B). {
 // We handle statements of the form ' ; ; ' by parsing the empty spaces around the semicolons as NOP nodes.
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 
-new_md_statements(A) ::= new_md_statement(B). {
+md_statements(A) ::= md_statement(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
 		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 	}
 }
-new_md_statements(A) ::= new_md_statements(B) MD_TOKEN_SEMICOLON new_md_statement(C). {
+md_statements(A) ::= md_statements(B) MD_TOKEN_SEMICOLON md_statement(C). {
 	if (C->type == MD_AST_NODE_TYPE_NOP) {
 		A = B;
 	} else {
@@ -78,55 +78,55 @@ new_md_statements(A) ::= new_md_statements(B) MD_TOKEN_SEMICOLON new_md_statemen
 }
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-new_md_statement(A) ::= . {
+md_statement(A) ::= . {
     A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
 // Begin/end (non-nestable)
-new_md_statement ::= new_md_begin_block.
-new_md_statement ::= new_md_end_block.
+md_statement ::= md_begin_block.
+md_statement ::= md_end_block.
 
 // Nested control structures:
-new_md_statement ::= new_md_cond_block.
-new_md_statement ::= md_while_block.
-new_md_statement ::= md_for_loop_full_srec.
-//new_md_statement ::= md_for_loop_oosvar. // xxx to do
-new_md_statement ::= md_if_chain.
+md_statement ::= md_cond_block.
+md_statement ::= md_while_block.
+md_statement ::= md_for_loop_full_srec.
+//md_statement ::= md_for_loop_oosvar. // xxx to do
+md_statement ::= md_if_chain.
 
 // Not valid in begin/end since they refer to srecs:
-new_md_statement ::= md_srec_assignment.
-new_md_statement ::= md_oosvar_from_full_srec_assignment.
-new_md_statement ::= md_full_srec_from_oosvar_assignment.
+md_statement ::= md_srec_assignment.
+md_statement ::= md_oosvar_from_full_srec_assignment.
+md_statement ::= md_full_srec_from_oosvar_assignment.
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
-new_md_statement ::= md_bare_boolean.
-new_md_statement ::= md_oosvar_assignment.
-new_md_statement ::= md_filter.
-new_md_statement ::= md_unset.
-new_md_statement ::= md_emitf.
-new_md_statement ::= md_emitp.
-new_md_statement ::= md_emit.
-new_md_statement ::= md_dump.
+md_statement ::= md_bare_boolean.
+md_statement ::= md_oosvar_assignment.
+md_statement ::= md_filter.
+md_statement ::= md_unset.
+md_statement ::= md_emitf.
+md_statement ::= md_emitp.
+md_statement ::= md_emit.
+md_statement ::= md_dump.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
-new_md_statement(A) ::= MD_TOKEN_BREAK(O). {
+md_statement(A) ::= MD_TOKEN_BREAK(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
-new_md_statement(A) ::= MD_TOKEN_CONTINUE(O). {
+md_statement(A) ::= MD_TOKEN_CONTINUE(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
 
 // ================================================================
-new_md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE new_md_statements(B) MD_TOKEN_RBRACE. {
+md_begin_block(A) ::= MD_TOKEN_BEGIN(O) MD_TOKEN_LBRACE md_statements(B) MD_TOKEN_RBRACE. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_BEGIN, B);
 }
-new_md_end_block(A)   ::= MD_TOKEN_END(O)   MD_TOKEN_LBRACE new_md_statements(B) MD_TOKEN_RBRACE. {
+md_end_block(A)   ::= MD_TOKEN_END(O)   MD_TOKEN_LBRACE md_statements(B) MD_TOKEN_RBRACE. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_END, B);
 }
 
 // ----------------------------------------------------------------
-new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE. {
+md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE. {
 	//A = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 }
@@ -135,7 +135,7 @@ new_md_cond_block(A) ::= md_rhs(B) MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN
 md_while_block(A) ::=
 	MD_TOKEN_WHILE(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
 }
@@ -147,7 +147,7 @@ md_for_loop_full_srec(A) ::=
 		MD_TOKEN_IN MD_TOKEN_FULL_SREC
 	MD_TOKEN_RPAREN
     MD_TOKEN_LBRACE
-    	new_md_statements(C)
+    	md_statements(C)
     MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR_SREC,
@@ -180,7 +180,7 @@ md_if_elif_star(A) ::= md_if_elif_star(B) md_elif_block(C). {
 md_if_block(A) ::=
 	MD_TOKEN_IF(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
@@ -188,14 +188,14 @@ md_if_block(A) ::=
 md_elif_block(A) ::=
 	MD_TOKEN_ELIF(O)
 		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
-		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
 }
 
 md_else_block(A) ::=
 	MD_TOKEN_ELSE(O)
-		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+		MD_TOKEN_LBRACE md_statements(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IF_ITEM, C);
 }
@@ -203,12 +203,12 @@ md_else_block(A) ::=
 // ----------------------------------------------------------------
 //// xxx oosvar name -> bare oosvar name
 //// xxx then oosvar name = bare or indexed
-//new_md_for_loop_oosvar(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
+//md_for_loop_oosvar(A) ::= MD_TOKEN_FOR MD_TOKEN_LPAREN
 //	MD_TOKEN_NON_SIGIL_NAME(K) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(V)
-//	MD_TOKEN_IN new_md_oosvar_name
+//	MD_TOKEN_IN md_oosvar_name
 //	MD_TOKEN_RPAREN
 //    MD_TOKEN_LBRACE
-//    new_md_for_body_statements
+//    md_for_body_statements
 //    MD_TOKEN_RBRACE
 
 // ----------------------------------------------------------------
