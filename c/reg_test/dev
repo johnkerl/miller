@@ -115,6 +115,7 @@ run_mlr -n put -v '#true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }'
 mention main:cond:for:cond
 run_mlr -n put -v '#true{ for(k,v in $*) { true{$m=3} } }'
 
+# xxx need elseless cases
 mention ifs
 run_mlr -n put -v '#
   if (NR==1) {

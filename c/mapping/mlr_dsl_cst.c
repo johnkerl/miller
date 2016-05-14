@@ -808,10 +808,60 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 	return pstatement;
 }
 
+// Example parser-input:
+//
+//   if (NR == 9) {
+//       $x = 10;
+//       $x = 11
+//   } elif (NR == 12) {
+//       $x = 13;
+//       $x = 14
+//   } else {
+//       $x = 15;
+//       $x = 16
+//   };
+//
+// Corresponding parser-output AST:
+//   if_head (if_head):
+//       if (if_item):
+//           == (operator):
+//               NR (context_variable).
+//               9 (strnum_literal).
+//           list (statement_list):
+//               = (srec_assignment):
+//                   x (field_name).
+//                   10 (strnum_literal).
+//               = (srec_assignment):
+//                   x (field_name).
+//                   11 (strnum_literal).
+//       elif (if_item):
+//           == (operator):
+//               NR (context_variable).
+//               12 (strnum_literal).
+//           list (statement_list):
+//               = (srec_assignment):
+//                   x (field_name).
+//                   13 (strnum_literal).
+//               = (srec_assignment):
+//                   x (field_name).
+//                   14 (strnum_literal).
+//       else (if_item):
+//           list (statement_list):
+//               = (srec_assignment):
+//                   x (field_name).
+//                   15 (strnum_literal).
+//               = (srec_assignment):
+//                   x (field_name).
+//                   16 (strnum_literal).
+
 static mlr_dsl_cst_statement_t* cst_statement_alloc_if_head(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
 	printf("cst_statement_alloc_if_head stub!\n");
+
+	// xxx walk through the items. each is like a cond-block. the else-part must have an evaluate-to-true
+	// (here or in the AST).  then the evaluator will just
+	// need to loop through the conds until one of them i
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_if_head;
 	return pstatement;
