@@ -162,6 +162,7 @@ static char * test_alloc_comment_strip() {
 	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\n#four"), "one\ntwo\nthree\n"));
 	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\nfo#ur"), "one\ntwo\nthree\nfo"));
 	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\nfour#"), "one\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("#one\nt#wo\nth#ree\nfou#r#"), "\nt\nth\nfou"));
 	return 0;
 }
 

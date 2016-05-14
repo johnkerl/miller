@@ -29,6 +29,12 @@ doc:
 * doc re oosvar keyed mean solvable with `for`.
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
+4.1.0 release notes:
+* new forx2, while, if-chains
+* recursivity of existing conds
+* pound-to-EOL commenting for filter & put
+! don't release 4.1 w/o implicit semicolon after closing curly brace
+
 ----------------------------------------------------------------
 ? substring?
 ? CONVFMT? IGNORECASE? MLRPATH?
