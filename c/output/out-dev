@@ -4,24 +4,15 @@ GRAMMAR REORG
 
 
 ---------------------------------------------------------------- simplest
-mlr --from /dev/null put -v #
+mlr -n put -v #
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
 AST ROOT:
 list (statement_list):
+AST->CST STUB
 
-mlr --from /dev/null put -v #$m=2
-AST BEGIN STATEMENTS (0):
-AST MAIN STATEMENTS (0):
-AST END STATEMENTS (0):
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-
-mlr --from /dev/null put -v #$m=2;$m=3
+mlr -n put -v #$m=2
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -30,11 +21,10 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         2 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        3 (strnum_literal).
+AST->CST STUB
+GOT MAIN:srec_assignment
 
-mlr --from /dev/null put -v #$m=2;$m=3;$m=4
+mlr -n put -v #$m=2;$m=3
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -46,11 +36,11 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         3 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        4 (strnum_literal).
+AST->CST STUB
+GOT MAIN:srec_assignment
+GOT MAIN:srec_assignment
 
-mlr --from /dev/null put -v #$m=2;;$m=3;$m=4
+mlr -n put -v #$m=2;$m=3;$m=4
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -65,10 +55,34 @@ list (statement_list):
     = (srec_assignment):
         m (field_name).
         4 (strnum_literal).
+AST->CST STUB
+GOT MAIN:srec_assignment
+GOT MAIN:srec_assignment
+GOT MAIN:srec_assignment
+
+mlr -n put -v #$m=2;;$m=3;$m=4
+AST BEGIN STATEMENTS (0):
+AST MAIN STATEMENTS (0):
+AST END STATEMENTS (0):
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        m (field_name).
+        2 (strnum_literal).
+    = (srec_assignment):
+        m (field_name).
+        3 (strnum_literal).
+    = (srec_assignment):
+        m (field_name).
+        4 (strnum_literal).
+AST->CST STUB
+GOT MAIN:srec_assignment
+GOT MAIN:srec_assignment
+GOT MAIN:srec_assignment
 
 
 ---------------------------------------------------------------- begin/main/end
-mlr --from /dev/null put -v #begin{$b=1};$m=2;end{$e=3}
+mlr -n put -v #begin{@b=1};$m=2;end{@e=3}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -76,21 +90,27 @@ AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
-            = (srec_assignment):
-                b (field_name).
+            = (oosvar_assignment):
+                b (oosvar_name).
                 1 (strnum_literal).
     = (srec_assignment):
         m (field_name).
         2 (strnum_literal).
     end (end):
         list (statement_list):
-            = (srec_assignment):
-                e (field_name).
+            = (oosvar_assignment):
+                e (oosvar_name).
                 3 (strnum_literal).
+AST->CST STUB
+GOT BEGIN:begin
+-- WITHIN BEGIN:oosvar_assignment
+GOT MAIN:srec_assignment
+GOT END:end
+-- WITHIN END:oosvar_assignment
 
 
 ---------------------------------------------------------------- main:cond
-mlr --from /dev/null put -v #true{$m=2}
+mlr -n put -v #true{$m=2}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -102,10 +122,12 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:conditional_block
 
 
 ---------------------------------------------------------------- main:empty-for
-mlr --from /dev/null put -v #for(k,v in $*) { }
+mlr -n put -v #for(k,v in $*) { }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -116,10 +138,14 @@ list (statement_list):
             k (non_sigil_name).
             v (non_sigil_name).
         list (statement_list):
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 
 
 ---------------------------------------------------------------- main:single-statement-for
-mlr --from /dev/null put -v #for(k,v in $*) { $m=1}
+mlr -n put -v #for(k,v in $*) { $m=1}
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -133,10 +159,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 1 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 
 
 ---------------------------------------------------------------- main:double-statement-for
-mlr --from /dev/null put -v #for(k,v in $*) { $m=1;$m=2 }
+mlr -n put -v #for(k,v in $*) { $m=1;$m=2 }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -153,10 +183,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 
 
 ---------------------------------------------------------------- main:for w/ break/continue
-mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;$m=2 }
+mlr -n put -v #for(k,v in $*) { $m=1;break;$m=2 }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -174,8 +208,13 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
+break alloc stub!
 
-mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;$m=2 }
+mlr -n put -v #for(k,v in $*) { $m=1;break;continue;$m=2 }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -194,8 +233,14 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
+break alloc stub!
+break alloc stub!
 
-mlr --from /dev/null put -v #for(k,v in $*) { $m=1;break;continue;;$m=2 }
+mlr -n put -v #for(k,v in $*) { $m=1;break;continue;;$m=2 }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -214,10 +259,16 @@ list (statement_list):
             = (srec_assignment):
                 m (field_name).
                 2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
+break alloc stub!
+break alloc stub!
 
 
 ---------------------------------------------------------------- main:for:cond
-mlr --from /dev/null put -v #for(k,v in $*) { true{$m=3} }
+mlr -n put -v #for(k,v in $*) { true{$m=3} }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -234,10 +285,14 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         3 (strnum_literal).
+AST->CST STUB
+GOT MAIN:for-srec
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 
 
 ---------------------------------------------------------------- main:cond:for
-mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1 } }
+mlr -n put -v #true{ for(k,v in $*) { $m=1 } }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -254,8 +309,12 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         1 (strnum_literal).
+AST->CST STUB
+GOT MAIN:conditional_block
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 
-mlr --from /dev/null put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
+mlr -n put -v #true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -277,10 +336,16 @@ list (statement_list):
                     = (srec_assignment):
                         m (field_name).
                         2 (strnum_literal).
+AST->CST STUB
+GOT MAIN:conditional_block
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
+break alloc stub!
+break alloc stub!
 
 
 ---------------------------------------------------------------- main:cond:for:cond
-mlr --from /dev/null put -v #true{ for(k,v in $*) { true{$m=3} } }
+mlr -n put -v #true{ for(k,v in $*) { true{$m=3} } }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
 AST END STATEMENTS (0):
@@ -300,4 +365,8 @@ list (statement_list):
                             = (srec_assignment):
                                 m (field_name).
                                 3 (strnum_literal).
+AST->CST STUB
+GOT MAIN:conditional_block
+FOR SREC STUB
+cst_statement_alloc_for_srec stub!
 

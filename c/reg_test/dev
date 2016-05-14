@@ -84,7 +84,9 @@ run_mlr -n put -v '#$m=2;$m=3;$m=4'
 run_mlr -n put -v '#$m=2;;$m=3;$m=4'
 
 mention begin/main/end
-run_mlr -n put -v '#begin{$b=1};$m=2;end{$e=3}'
+# expect parse fail
+#run_mlr -n put -v '#begin{$b=1};$m=2;end{$e=3}'
+run_mlr -n put -v '#begin{@b=1};$m=2;end{@e=3}'
 
 mention main:cond
 run_mlr -n put -v '#true{$m=2}'

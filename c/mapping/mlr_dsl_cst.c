@@ -4,6 +4,7 @@
 
 static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inferencing);
 
+static mlr_dsl_ast_node_t* get_list_for_new_grammar_block(mlr_dsl_ast_node_t* pnode);
 static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_inferencing);
 
 static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int begin_end_only);
@@ -20,6 +21,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 	int do_full_prefixing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -218,6 +220,17 @@ static void mlr_dsl_cst_node_evaluate_while(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
+static void mlr_dsl_cst_node_evaluate_for_srec(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator);
+
 static void mlr_dsl_cst_node_evaluate_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -256,28 +269,103 @@ static sllv_t* mlr_dsl_cst_alloc_from_statement_list(sllv_t* pasts, int type_inf
 }
 
 // ----------------------------------------------------------------
-// xxx new grammar
-static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_inferencing) {
-	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
-	pcst->pbegin_statements = sllv_alloc();
-	pcst->pmain_statements  = sllv_alloc();
-	pcst->pend_statements   = sllv_alloc();
-	printf("AST->CST STUB\n");
-	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+// For begin, end, cond: there must be one child node, of type list.
+static mlr_dsl_ast_node_t* get_list_for_new_grammar_block(mlr_dsl_ast_node_t* pnode) {
+	if (pnode->pchildren->phead == NULL) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
 		exit(1);
 	}
+	if (pnode->pchildren->phead->pnext != NULL) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d: extraneous right child node.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	mlr_dsl_ast_node_t* pleft = pnode->pchildren->phead->pvvalue;
+
+	if (pleft->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d:\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		fprintf(stderr,
+			"expected node type %s but found %s.\n",
+			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
+			mlr_dsl_ast_node_describe_type(pnode->type));
+		exit(1);
+	}
+	return pleft;
+}
+
+// ----------------------------------------------------------------
+// Example:
+
+// $ mlr -n put -v '#begin{@a=1;@b=2};$m=2;$n=4;end{@y=5;@z=6}'
+// AST ROOT:
+// list (statement_list):
+//     begin (begin):
+//         list (statement_list):
+//             = (oosvar_assignment):
+//                 a (oosvar_name).
+//                 1 (strnum_literal).
+//             = (oosvar_assignment):
+//                 b (oosvar_name).
+//                 2 (strnum_literal).
+//     = (srec_assignment):
+//         m (field_name).
+//         2 (strnum_literal).
+//     = (srec_assignment):
+//         n (field_name).
+//         4 (strnum_literal).
+//     end (end):
+//         list (statement_list):
+//             = (oosvar_assignment):
+//                 y (oosvar_name).
+//                 5 (strnum_literal).
+//             = (oosvar_assignment):
+//                 z (oosvar_name).
+//                 6 (strnum_literal).
+
+// xxx new grammar
+static mlr_dsl_cst_t* mlr_dsl_cst_alloc_from_ast(mlr_dsl_ast_t* past, int type_inferencing) {
+	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
+
+	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		fprintf(stderr,
+			"expected root node type %s but found %s.\n",
+			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
+			mlr_dsl_ast_node_describe_type(past->proot->type));
+		exit(1);
+	}
+
+	pcst->pbegin_statements = sllv_alloc();
+	pcst->pmain_statements  = sllv_alloc();
+	pcst->pend_statements   = sllv_alloc();
+	mlr_dsl_ast_node_t* plistnode = NULL;
+	printf("AST->CST STUB\n");
 	for (sllve_t* pe = past->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 		case MD_AST_NODE_TYPE_BEGIN:
-			printf("GOT BEGIN\n");
-			sllv_append(pcst->pbegin_statements, cst_statement_alloc(pnode, type_inferencing, TRUE));
+			printf("GOT BEGIN:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
+			plistnode = get_list_for_new_grammar_block(pnode);
+			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+				printf("-- WITHIN BEGIN:%s\n", mlr_dsl_ast_node_describe_type(pchild->type));
+				sllv_append(pcst->pbegin_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
+			}
 			break;
 		case MD_AST_NODE_TYPE_END:
-			printf("GOT END\n");
-			sllv_append(pcst->pend_statements, cst_statement_alloc(pnode, type_inferencing, TRUE));
+			printf("GOT END:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
+			plistnode = get_list_for_new_grammar_block(pnode);
+			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+				printf("-- WITHIN END:%s\n", mlr_dsl_ast_node_describe_type(pchild->type));
+				sllv_append(pcst->pend_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
+			}
 			break;
 		default:
 			printf("GOT MAIN:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
@@ -320,6 +408,19 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 		exit(1);
 		break;
 
+	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK: // xxx rename to ..._COND
+		return cst_statement_alloc_conditional_block(pnode, type_inferencing);
+		break;
+	case MD_AST_NODE_TYPE_WHILE:
+		return cst_statement_alloc_while(pnode, type_inferencing);
+		break;
+	case MD_AST_NODE_TYPE_FOR_SREC:
+		printf("FOR SREC STUB\n");
+		return cst_statement_alloc_for_srec(pnode, type_inferencing);
+		break;
+	// xxx for-oosvar
+	// xxx if-elif-elif-else
+
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 		return cst_statement_alloc_srec_assignment(pnode, type_inferencing);
 		break;
@@ -343,12 +444,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
 		return cst_statement_alloc_emit_or_emitp(pnode, type_inferencing, FALSE);
-		break;
-	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK: // xxx rename to ..._COND
-		return cst_statement_alloc_conditional_block(pnode, type_inferencing);
-		break;
-	case MD_AST_NODE_TYPE_WHILE:
-		return cst_statement_alloc_while(pnode, type_inferencing);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
 		return cst_statement_alloc_filter(pnode, type_inferencing);
@@ -600,22 +695,46 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
+	// xxx
+	// Old grammar:
 	// First child node is the AST for the boolean expression. Remaining child nodes are statements
 	// to be executed if it evaluates to true.
-	mlr_dsl_ast_node_t* pfirst  = past->pchildren->phead->pvvalue;
+	// New grammar:
+	// Left node is the AST for the boolean expression. Right node is a list of statements to be executed
+	// if the left evaluates to true.
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	sllv_t* pblock_statements = sllv_alloc();
 
-	for (sllve_t* pe = past->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
-		sllv_append(pblock_statements, pstatement);
+	int got_new = FALSE;
+
+	if (pnode->pchildren->phead->pnext != NULL) {
+		mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+		if (pright->type == MD_AST_NODE_TYPE_STATEMENT_LIST) {
+			got_new = TRUE;
+		}
+	}
+
+	if (got_new) {
+		mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+			// xxx stub last arg
+			mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE);
+			sllv_append(pblock_statements, pstatement);
+		}
+	} else {
+		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+			mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
+			sllv_append(pblock_statements, pstatement);
+		}
 	}
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_conditional_block;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pfirst, type_inferencing);
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, type_inferencing);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
 }
@@ -637,6 +756,36 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* pa
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_while;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, type_inferencing);
+	pstatement->pblock_statements = pblock_statements;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
+
+	// xxx new grammar
+	// Left child node is list of bound variables. Right child node is the list of statements in the body.
+	//mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+	sllv_t* pblock_statements = sllv_alloc();
+
+	printf("cst_statement_alloc_for_srec stub!\n");
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		// xxx also elsewhere, invalidate. cmt there this is done at the CST
+		// rather than AST-parse level since we can give better error messages
+		// (and, a simpler Lemon grammar).
+		if (pbody_ast_node->type == MD_AST_NODE_TYPE_CONTINUE) {
+			printf("continue alloc stub!\n");
+		} else if (pbody_ast_node->type == MD_AST_NODE_TYPE_BREAK) {
+			printf("break alloc stub!\n");
+		} else {
+			// xxx stub 3rd arg
+			sllv_append(pblock_statements, cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE));
+		}
+	}
+
+	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_for_srec;
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
 }
@@ -1238,6 +1387,23 @@ static void mlr_dsl_cst_node_evaluate_while(
 			break;
 		}
 	}
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_for_srec(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator)
+{
+	printf("mlr_dsl_cst_node_evaluate_for_srec stub!\n");
+	// xxx continue
+	// xxx break
 }
 
 // ----------------------------------------------------------------
