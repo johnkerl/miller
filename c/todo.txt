@@ -6,6 +6,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+! cut over to new grammar sooner than later, and GC in the .y. but first: mapper_filter.
 ! oosvar keyed mean?!? solvable with `for`.
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += $[k]} }
@@ -24,6 +25,7 @@ x let newlines replace semicolons? no, and make it clear why: no need for \ cont
 * comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
+? begin/end @ filter??
 
 ----------------------------------------------------------------
 ? substring?
