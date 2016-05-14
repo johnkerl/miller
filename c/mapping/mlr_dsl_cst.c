@@ -748,9 +748,10 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* pa
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 	sllv_t* pblock_statements = sllv_alloc();
 
-	for (sllve_t* pe = pright->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
+		printf("BODY %s\n", mlr_dsl_ast_node_describe_type(pbody_ast_node->type));
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -1371,9 +1372,9 @@ static void mlr_dsl_cst_node_evaluate_while(
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
-	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-		ppregex_captures, pctx, prhs_evaluator->pvstate);
 	while (TRUE) {
+		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
+			ppregex_captures, pctx, prhs_evaluator->pvstate);
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
