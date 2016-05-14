@@ -23,6 +23,7 @@ x let newlines replace semicolons? no, and make it clear why: no need for \ cont
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 * comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
+* cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
 
 ----------------------------------------------------------------
 ? substring?
