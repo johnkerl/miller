@@ -406,6 +406,22 @@ mlr -n put -v #
   } else {
     $x = 26;
     $x = 27
+  };
+  if (NR == 28) {
+    $x = 29;
+    $x = 30
+  } elif (NR == 31) {
+    $x = 32;
+    $x = 33
+  } elif (NR == 34) {
+    $x = 35;
+    $x = 36
+  } elif (NR == 37) {
+    $x = 38;
+    $x = 39
+  } else {
+    $x = 40;
+    $x = 41
   }
 AST BEGIN STATEMENTS (0):
 AST MAIN STATEMENTS (0):
@@ -467,6 +483,14 @@ list (statement_list):
                 = (srec_assignment):
                     x (field_name).
                     14 (strnum_literal).
+        else (if_item):
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    15 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    16 (strnum_literal).
     if_head (if_head):
         if (if_item):
             == (operator):
@@ -490,7 +514,82 @@ list (statement_list):
                 = (srec_assignment):
                     x (field_name).
                     22 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                23 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    24 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    25 (strnum_literal).
+        else (if_item):
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    26 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    27 (strnum_literal).
+    if_head (if_head):
+        if (if_item):
+            == (operator):
+                NR (context_variable).
+                28 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    29 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    30 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                31 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    32 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    33 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                34 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    35 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    36 (strnum_literal).
+        elif (if_item):
+            == (operator):
+                NR (context_variable).
+                37 (strnum_literal).
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    38 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    39 (strnum_literal).
+        else (if_item):
+            list (statement_list):
+                = (srec_assignment):
+                    x (field_name).
+                    40 (strnum_literal).
+                = (srec_assignment):
+                    x (field_name).
+                    41 (strnum_literal).
 AST->CST STUB
+GOT MAIN:if_head
+IF_HEAD STUB
+cst_statement_alloc_if_head stub!
 GOT MAIN:if_head
 IF_HEAD STUB
 cst_statement_alloc_if_head stub!
