@@ -1403,8 +1403,10 @@ static void mlr_dsl_cst_node_evaluate_for_srec(
 	char*            oosvar_flatten_separator)
 {
 	printf("mlr_dsl_cst_node_evaluate_for_srec stub!\n");
-	// xxx continue
-	// xxx break
+	// xxx continue: rid of
+	// xxx break: rid of
+	// xxx outer loop over the fields in the srec, binding k & v
+	// xxx inner loop over the body statements
 }
 
 // ----------------------------------------------------------------

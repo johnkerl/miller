@@ -15,13 +15,14 @@ TOP-OF-LIST SUMMARY
   ? for (k1, k2, v in @v[]["a"][]) ? no -- easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
   ? break/continue
-! need $[k] and @[k]
 ! recursive PA-blocks & for-blocks
+! for-srec and for-oosvar
 ! if-elif-elif-else
 ! while / do-while
 x let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 * comments-stripper (strdup & state-machine copy)
+! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 
 ----------------------------------------------------------------
 ? substring?
