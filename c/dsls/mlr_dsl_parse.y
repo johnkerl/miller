@@ -92,7 +92,7 @@ new_md_statement ::= new_md_cond_block.
 new_md_statement ::= md_while_block.
 new_md_statement ::= md_for_loop_full_srec.
 //new_md_statement ::= md_for_loop_oosvar. // xxx to do
-//new_md_statement ::= if-elif-else ... // xxx to do
+new_md_statement ::= md_ifchain.
 
 // Not valid in begin/end since they refer to srecs:
 new_md_statement ::= md_srec_assignment.
@@ -158,6 +158,49 @@ md_for_loop_full_srec(A) ::=
 
 md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+}
+
+// ----------------------------------------------------------------
+// xxx in progress
+md_ifchain(A) ::= md_ifblock(B). {
+	A=B; // xxx stub
+}
+
+md_ifchain(A) ::= md_ifblock(B) md_afterif(C). {
+	A=C; // xxx stub
+	A=B; // xxx stub
+}
+
+md_afterif(A) ::= md_elseblock(B). {
+	A=B; // xxx stub
+}
+
+md_afterif(A) ::= md_elifblock(B) md_afterif(C). {
+	A=C; // xxx stub
+	A=B; // xxx stub
+}
+
+md_ifblock(A) ::=
+	MD_TOKEN_IF(O)
+		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
+		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IFCHAIN, B, C);
+}
+
+md_elifblock(A) ::=
+	MD_TOKEN_ELIF(O)
+		MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN
+		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IFCHAIN, B, C);
+}
+
+md_elseblock(A) ::=
+	MD_TOKEN_ELSE(O)
+		MD_TOKEN_LBRACE new_md_statements(C) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IFCHAIN, C);
 }
 
 // ----------------------------------------------------------------

@@ -94,6 +94,18 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTINUE);
 	return MD_TOKEN_CONTINUE;
 }
+"if" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IFCHAIN);
+	return MD_TOKEN_IF;
+}
+"elif" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IFCHAIN);
+	return MD_TOKEN_ELIF;
+}
+"else" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IFCHAIN);
+	return MD_TOKEN_ELSE;
+}
 
 "?" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);

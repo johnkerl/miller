@@ -42,6 +42,7 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_IN,
 	MD_AST_NODE_TYPE_BREAK,
 	MD_AST_NODE_TYPE_CONTINUE,
+	MD_AST_NODE_TYPE_IFCHAIN,
 } mlr_dsl_ast_node_type_t;
 
 typedef struct _mlr_dsl_ast_node_t {

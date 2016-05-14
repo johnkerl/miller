@@ -22,6 +22,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_emit_or_emitp(mlr_dsl_ast_no
 static mlr_dsl_cst_statement_t* cst_statement_alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t* cst_statement_alloc_ifchain(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* cst_statement_alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -231,6 +232,17 @@ static void mlr_dsl_cst_node_evaluate_for_srec(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator);
 
+static void mlr_dsl_cst_node_evaluate_ifchain(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator);
+
 static void mlr_dsl_cst_node_evaluate_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
 	mlhmmv_t*        poosvars,
@@ -418,8 +430,13 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 		printf("FOR SREC STUB\n");
 		return cst_statement_alloc_for_srec(pnode, type_inferencing);
 		break;
+
 	// xxx for-oosvar
-	// xxx if-elif-elif-else
+
+	case MD_AST_NODE_TYPE_IFCHAIN:
+		printf("IFCHAIN STUB\n");
+		return cst_statement_alloc_ifchain(pnode, type_inferencing);
+		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 		return cst_statement_alloc_srec_assignment(pnode, type_inferencing);
@@ -788,6 +805,15 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 
 	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_for_srec;
 	pstatement->pblock_statements = pblock_statements;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* cst_statement_alloc_ifchain(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
+
+	printf("cst_statement_alloc_ifchain stub!\n");
+
+	pstatement->pevaluator = mlr_dsl_cst_node_evaluate_ifchain;
 	return pstatement;
 }
 
@@ -1407,6 +1433,21 @@ static void mlr_dsl_cst_node_evaluate_for_srec(
 	// xxx break: rid of
 	// xxx outer loop over the fields in the srec, binding k & v
 	// xxx inner loop over the body statements
+}
+
+// ----------------------------------------------------------------
+static void mlr_dsl_cst_node_evaluate_ifchain(
+	mlr_dsl_cst_statement_t* pnode,
+	mlhmmv_t*        poosvars,
+	lrec_t*          pinrec,
+	lhmsv_t*         ptyped_overlay,
+	string_array_t** ppregex_captures,
+	context_t*       pctx,
+	int*             pshould_emit_rec,
+	sllv_t*          poutrecs,
+	char*            oosvar_flatten_separator)
+{
+	printf("mlr_dsl_cst_node_evaluate_ifchain stub!\n");
 }
 
 // ----------------------------------------------------------------
