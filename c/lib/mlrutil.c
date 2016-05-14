@@ -515,3 +515,30 @@ char* read_fp_into_memory(FILE* fp, size_t* psize) {
 	*psize = file_size;
 	return buffer;
 }
+
+// ----------------------------------------------------------------
+char* alloc_comment_strip(char* input) {
+	char* output = mlr_strdup_or_die(input);
+	char* q = output;
+	int copying = TRUE;
+
+	for (char* p = input; *p; p++) {
+		if (copying) {
+			if (*p == '#') {
+				copying = FALSE;
+			} else {
+				*q = *p;
+				q++;
+			}
+		} else {
+			if (*p == '\n') {
+				copying = TRUE;
+				*q = *p;
+				q++;
+			}
+		}
+	}
+
+	*q = 0;
+	return output;
+}

@@ -6,8 +6,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! cut over to new grammar sooner than later, and GC in the .y. but first: mapper_filter.
-! oosvar keyed mean?!? solvable with `for`.
+! for-variants:
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += $[k]} }
   * for (k, v in @v)
@@ -15,18 +14,20 @@ TOP-OF-LIST SUMMARY
   * for (k1, k2, v in @v["a"])
   ? for (k1, k2, v in @v[]["a"][]) ? no -- easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
-  ? break/continue
+  ? break/continue: fully support or eliminate from the lexer/parser
 ! recursive PA-blocks & for-blocks
-! for-srec and for-oosvar
 ! if-elif-elif-else
 ! while / do-while
-x let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
 * comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
 * UT for empty statement for put
 * UT for empty statement for filter
+
+doc:
+* doc re oosvar keyed mean solvable with `for`.
+* let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
 ----------------------------------------------------------------
 ? substring?

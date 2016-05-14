@@ -138,7 +138,30 @@ static char * test_unbackslash() {
 	mu_assert_lf(streq(mlr_alloc_unbackslash("\\t\\\\"), "\t\\"));
 	mu_assert_lf(streq(mlr_alloc_unbackslash("[\\132]"), "[Z]"));
 	mu_assert_lf(streq(mlr_alloc_unbackslash("[\\x59]"), "[Y]"));
+	return 0;
+}
 
+// ----------------------------------------------------------------
+static char * test_alloc_comment_strip() {
+	mu_assert_lf(streq(alloc_comment_strip(""), ""));
+	mu_assert_lf(streq(alloc_comment_strip("hello"), "hello"));
+	mu_assert_lf(streq(alloc_comment_strip("#"), ""));
+	mu_assert_lf(streq(alloc_comment_strip("######"), ""));
+	mu_assert_lf(streq(alloc_comment_strip("#hello"), ""));
+	mu_assert_lf(streq(alloc_comment_strip("#hello\n"), "\n"));
+	mu_assert_lf(streq(alloc_comment_strip("hello#there"), "hello"));
+	mu_assert_lf(streq(alloc_comment_strip("hello#there\n"), "hello\n"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\nfour"), "one\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("#one\ntwo\nthree\nfour"), "\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("on#e\ntwo\nthree\nfour"), "on\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one#\ntwo\nthree\nfour"), "one\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one\n#two\nthree\nfour"), "one\n\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo#\nthree\nfour"), "one\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthr#ee\nfour"), "one\ntwo\nthr\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree#\nfour"), "one\ntwo\nthree\nfour"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\n#four"), "one\ntwo\nthree\n"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\nfo#ur"), "one\ntwo\nthree\nfo"));
+	mu_assert_lf(streq(alloc_comment_strip("one\ntwo\nthree\nfour#"), "one\ntwo\nthree\nfour"));
 	return 0;
 }
 
@@ -151,6 +174,7 @@ static char * all_tests() {
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
 	mu_run_test(test_unbackslash);
+	mu_run_test(test_alloc_comment_strip);
 	return 0;
 }
 
