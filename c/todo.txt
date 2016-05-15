@@ -16,13 +16,14 @@ TOP-OF-LIST SUMMARY
   ? for (k1, k2, v in @v[]["a"][]) ? no -- easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
   ? break/continue: fully support or eliminate from the lexer/parser
-! recursive PA-blocks & for-blocks
-! if-elif-elif-else
-! while / do-while
 ! try to eliminate need for semicolon after curly brace. for now, highlighted faqent.
-* comments-stripper (strdup & state-machine copy)
 ! need $[k] and @[k]. also need evaluators (new context mllhmv) for boundvars.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
+? triple-for with boundvars??
+k recursive PA-blocks & for-blocks
+k if-elif-elif-else
+k while / do-while
+k comments-stripper (strdup & state-machine copy)
 
 UT/olh/mld:
 * UT for empty statement for put

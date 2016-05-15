@@ -479,7 +479,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 		return cst_statement_alloc_do_while(pnode, type_inferencing);
 		break;
 	case MD_AST_NODE_TYPE_FOR_SREC:
-		printf("FOR SREC STUB\n");
 		return cst_statement_alloc_for_srec(pnode, type_inferencing);
 		break;
 
@@ -832,6 +831,21 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_do_while(mlr_dsl_ast_node_t*
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
+// $ mlr -n put -v 'for (k,v in $*) { $x=1; $y=2 }'
+// list (statement_list):
+//     for (for-srec):
+//         variables (for-variables):
+//             k (non_sigil_name).
+//             v (non_sigil_name).
+//         list (statement_list):
+//             = (srec_assignment):
+//                 x (field_name).
+//                 1 (strnum_literal).
+//             = (srec_assignment):
+//                 y (field_name).
+//                 2 (strnum_literal).
+
 static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = cst_statement_alloc_blank();
 
@@ -842,7 +856,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 	sllv_t* pblock_statements = sllv_alloc();
 
-	printf("cst_statement_alloc_for_srec stub!\n");
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		// xxx also elsewhere, invalidate. cmt there this is done at the CST
@@ -1607,11 +1620,18 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	sllv_t*          poutrecs,
 	char*            oosvar_flatten_separator)
 {
-	printf("mlr_dsl_cst_node_handle_for_srec stub!\n");
-	// xxx continue: rid of
-	// xxx break: rid of
-	// xxx outer loop over the fields in the srec, binding k & v
-	// xxx inner loop over the body statements
+	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+		// xxx copy not ptr-ref in case unset in loop body
+		// xxx beware string/integer for lrec keys ...
+		// mlhmmv_put(pboundvars, pnode->for_srec_k_name, pe->key);
+		// xxx nope, use typed overlay instead
+		// mlhmmv_put(pboundvars, pnode->for_srec_v_name, pe->value);
+
+		mlr_dsl_cst_handle(pnode->pblock_statements,
+			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
+			oosvar_flatten_separator);
+	}
+	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
 }
 
 // ----------------------------------------------------------------

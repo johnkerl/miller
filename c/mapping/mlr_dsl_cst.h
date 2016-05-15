@@ -80,10 +80,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// For assigning full srec from oosvar
 	sllv_t* poosvar_rhs_keylist_evaluators;
 
-	// xxx for-oosvar key-list of names
-	// xxx for-srec key-name
-	// xxx for value-name
-
 	// For emit/emitp
 	sllv_t* pemit_oosvar_namelist_evaluators;
 
@@ -95,6 +91,12 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// For if-elif-elif-else:
 	sllv_t* pif_chain_statements;
+
+	// For for-srec:
+	char* for_srec_k_name;
+	char* for_srec_v_name;
+
+	// xxx for-oosvar key-list of names
 
 } mlr_dsl_cst_statement_t;
 
