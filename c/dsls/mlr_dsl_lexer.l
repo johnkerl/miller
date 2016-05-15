@@ -68,6 +68,10 @@
 	return MD_TOKEN_ALL;
 }
 
+"do" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_DO_WHILE);
+	return MD_TOKEN_DO;
+}
 "while" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_WHILE);
 	return MD_TOKEN_WHILE;

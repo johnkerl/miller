@@ -89,6 +89,7 @@ md_statement ::= md_end_block.
 // Nested control structures:
 md_statement ::= md_cond_block.
 md_statement ::= md_while_block.
+md_statement ::= md_do_while_block.
 md_statement ::= md_for_loop_full_srec.
 //md_statement ::= md_for_loop_oosvar. // xxx to do
 md_statement ::= md_if_chain.
@@ -138,6 +139,16 @@ md_while_block(A) ::=
 		MD_TOKEN_LBRACE md_statement_list(C) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
+}
+
+// ----------------------------------------------------------------
+md_do_while_block(A) ::=
+	MD_TOKEN_DO(O)
+		MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE
+	MD_TOKEN_WHILE
+		MD_TOKEN_LPAREN md_rhs(C) MD_TOKEN_RPAREN.
+{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DO_WHILE, B, C);
 }
 
 // ----------------------------------------------------------------
