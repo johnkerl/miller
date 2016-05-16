@@ -10,6 +10,7 @@ TOP-OF-LIST SUMMARY
   - bindstack container
     ! copy/reference semantics for mlrvals esp. w/r/t evaluators
     ! careful w/ mem mgmt @ enlarge as in mlhmmv
+    ! lhmsv->lhmsmv for typed overlay
   - boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
     to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
     step. at each level a name will have one nearest at-or-up binding or none at all.

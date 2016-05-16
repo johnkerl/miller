@@ -559,7 +559,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_blank() {
 	pstatement->pvarargs                         = NULL;
 	pstatement->pblock_statements                = NULL;
 	pstatement->pif_chain_statements             = NULL;
-	pstatement->pbind_stack                      = NULL;
+	pstatement->pbound_vars                      = NULL;
 
 	return pstatement;
 }
@@ -896,6 +896,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 
 	pstatement->phandler = mlr_dsl_cst_node_handle_for_srec;
 	pstatement->pblock_statements = pblock_statements;
+	pstatement->pbound_vars = lhmsmv_alloc();
 	return pstatement;
 }
 
@@ -1662,18 +1663,28 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	char*            oosvar_flatten_separator,
 	bind_stack_t*    pbind_stack)
 {
+	bind_stack_push(pbind_stack, pnode->pbound_vars);
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
-		// xxx copy not ptr-ref in case unset in loop body
 		// xxx beware string/integer for lrec keys ...
-		// mlhmmv_put(pboundvars, pnode->for_srec_k_name, pe->key);
-		// xxx nope, use typed overlay instead
-		// mlhmmv_put(pboundvars, pnode->for_srec_v_name, pe->value);
+		// Copy, not pointer-reference, in case of srec-unset in loop body.
+		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
+
+		mv_t* pmvval = lhmsv_get(ptyped_overlay, pe->key);
+		if (pmvval != NULL) {
+			*pmvval = mv_copy(pmvval);
+		} else {
+			*pmvval = mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+		}
+
+		lhmsmv_put(pnode->pbound_vars, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+		lhmsmv_put(pnode->pbound_vars, pnode->for_srec_v_name, pmvval, FREE_ENTRY_VALUE);
 
 		mlr_dsl_cst_handle(pnode->pblock_statements,
 			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
 			oosvar_flatten_separator, pbind_stack);
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
+	bind_stack_pop(pbind_stack);
 }
 
 // ----------------------------------------------------------------

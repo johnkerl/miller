@@ -3,6 +3,7 @@
 
 #include "containers/mlr_dsl_ast.h"
 #include "rval_evaluators.h"
+#include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 
 // ================================================================
@@ -101,30 +102,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// xxx for-oosvar key-list of names
 
 	// for-srec and for-oosvar:
-	bind_stack_t* pbind_stack;
+	lhmsmv_t* pbound_vars;
 
 } mlr_dsl_cst_statement_t;
-
-// ---------------------------------------------------------------- xxx
-// cond-expr {}
-// while (expr) {}
-// for (k, v in $*) {}
-// for (k1, k2, v in @v["a"]) {}
-// if (expr) {} elif (expr) {} elif (expr) else {}
-// $srec = RHS
-// @v["a"] = $*
-// $* = @v["a"]
-// bare-boolean
-// @v["a"] = RHS
-// filter expr
-// unset
-// emitf
-// emitp
-// emit
-// dump
-// break
-// continue
-// ---------------------------------------------------------------- xxx
 
 typedef struct _mlr_dsl_cst_t {
 	sllv_t* pbegin_statements;
