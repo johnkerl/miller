@@ -33,9 +33,19 @@
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
 #include "containers/mlrval.h"
+#include "containers/bind_stack.h"
 #include "lib/string_array.h"
 
 struct _rval_evaluator_t; // forward reference for method declarations
+
+typedef struct _rval_expr_data_t {
+	lrec_t*          pinrec;
+	lhmsv_t*         ptyped_overlay;
+	mlhmmv_t*        poosvars;
+	string_array_t** ppregex_captures;
+	context_t*       pctx;
+	bind_stack_t*    pbind_stack;
+} rval_expr_data_t;
 
 typedef mv_t rval_evaluator_process_func_t(
 	lrec_t*          pinrec,
