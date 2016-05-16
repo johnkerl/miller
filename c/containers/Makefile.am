@@ -1,5 +1,7 @@
 noinst_LTLIBRARIES=	libcontainers.la
 libcontainers_la_SOURCES=	\
+			bind_stack.c \
+			bind_stack.h \
 			dheap.c \
 			dheap.h \
 			dvector.c \

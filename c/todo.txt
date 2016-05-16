@@ -6,8 +6,16 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! need evaluators (new context mllhmv) for boundvars.
-! need $[k] and @[k].
+* for:
+  - bindstack container
+  - boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
+    to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
+    step. at each level a name will have one nearest at-or-up binding or none at all.
+  -> hide that in the blackboxed bindstack.
+  - $[boundvar] and @[boundvar] evaluators.
+  - cookbook example: key<->val inverter
+  - cookbook example: komosa originals x 2
+
 * for-variants:
   ?? take out the v part??
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
@@ -18,17 +26,10 @@ TOP-OF-LIST SUMMARY
   ? for (k1, k2, v in @v[]["a"][]) ? no -- easier to do this w/ cond-block @ 2nd loop
   ? for (k1, k2, v in @*)
   ? break/continue: fully support or eliminate from the lexer/parser
-* for:
-  - bindstack container
-  - boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
-    to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
-    step. at each level a name will have one nearest at-or-up binding or none at all.
-  -> hide that in the blackboxed bindstack.
-  - $[boundvar] and @[boundvar] evaluators.
-  - cookbook example: key<->val inverter
-  - cookbook example: komosa originals x 2
-* local vars w/ decl syntax
-* user-defined functions ... ??
+
+? local vars w/ decl syntax
+? user-defined functions ... ??
+
 * eliminate the need for semicolon after curly brace. for now, highlighted faqent.
 * cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
 ? triple-for with boundvars??
