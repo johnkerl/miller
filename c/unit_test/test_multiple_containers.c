@@ -13,6 +13,7 @@
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsmv.h"
+#include "containers/bind_stack.h"
 #include "containers/percentile_keeper.h"
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
@@ -523,7 +524,7 @@ static char* test_lhmsmv() {
 	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
 	mu_assert_lf(lhmsmv_check_counts(pmap));
 
-	lhmsmv_put(pmap, "x", mv_from_int(3), NO_FREE);
+	lhmsmv_put(pmap, "x", imv(3), NO_FREE);
 	lhmsmv_dump(pmap);
 	printf("\n");
 	mu_assert_lf(pmap->num_occupied == 1);
@@ -534,7 +535,7 @@ static char* test_lhmsmv() {
 	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
 	mu_assert_lf(lhmsmv_check_counts(pmap));
 
-	lhmsmv_put(pmap, "y", mv_from_string_no_free("5"), NO_FREE);
+	lhmsmv_put(pmap, "y", smv("5"), NO_FREE);
 	lhmsmv_dump(pmap);
 	printf("\n");
 	mu_assert_lf(pmap->num_occupied == 2);
@@ -545,7 +546,7 @@ static char* test_lhmsmv() {
 	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
 	mu_assert_lf(lhmsmv_check_counts(pmap));
 
-	lhmsmv_put(pmap, "x", mv_from_string_no_free("f"), NO_FREE);
+	lhmsmv_put(pmap, "x", smv("f"), NO_FREE);
 	lhmsmv_dump(pmap);
 	printf("\n");
 	mu_assert_lf(pmap->num_occupied == 2);
@@ -555,7 +556,7 @@ static char* test_lhmsmv() {
 	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
 	mu_assert_lf(lhmsmv_check_counts(pmap));
 
-	lhmsmv_put(pmap, "z", mv_from_int(7), NO_FREE);
+	lhmsmv_put(pmap, "z", imv(7), NO_FREE);
 	lhmsmv_dump(pmap);
 	printf("\n");
 	mu_assert_lf(pmap->num_occupied == 3);
@@ -569,6 +570,81 @@ static char* test_lhmsmv() {
 
 	lhmsmv_free(pmap);
 
+	return NULL;
+}
+
+// ----------------------------------------------------------------
+static char* test_bind_stack() {
+	printf("\n");
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	bind_stack_t* pstack = bind_stack_alloc();
+	bind_stack_print(pstack);
+
+	mu_assert_lf(bind_stack_resolve(pstack, "x") == NULL);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	lhmsmv_t* pframe0 = lhmsmv_alloc();
+	bind_stack_push(pstack, pframe0);
+	bind_stack_print(pstack);
+
+	lhmsmv_put(pframe0, "x", smv("1"), NO_FREE);
+	lhmsmv_put(pframe0, "y", smv("2"), NO_FREE);
+	bind_stack_print(pstack);
+
+	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
+	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
+	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	lhmsmv_t* pframe1 = lhmsmv_alloc();
+	bind_stack_push(pstack, pframe1);
+	bind_stack_print(pstack);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	lhmsmv_t* pframe2 = lhmsmv_alloc();
+	bind_stack_push(pstack, pframe2);
+	bind_stack_print(pstack);
+
+	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
+	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
+	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
+
+	lhmsmv_put(pframe2, "x", smv("three"), NO_FREE);
+	bind_stack_print(pstack);
+
+	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
+	mu_assert_lf(!mveq(bind_stack_resolve(pstack, "x"), smv("1")));
+	mu_assert_lf(!mveq(bind_stack_resolve(pstack, "x"), imv(1)));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("three")));
+	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
+	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	bind_stack_pop(pstack);
+	bind_stack_print(pstack);
+
+	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
+	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
+	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
+
+	bind_stack_free(pstack);
+
+	printf("\n");
 	return NULL;
 }
 
@@ -758,6 +834,7 @@ static char * run_all_tests() {
 	mu_run_test(test_lhms2v);
 	mu_run_test(test_lhmslv);
 	mu_run_test(test_lhmsmv);
+	mu_run_test(test_bind_stack);
 	mu_run_test(test_percentile_keeper);
 	mu_run_test(test_top_keeper);
 	mu_run_test(test_dheap);

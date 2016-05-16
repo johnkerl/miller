@@ -44,7 +44,7 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char free_flags);
+static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t* pvalue, char free_flags);
 static void lhmsmv_enlarge(lhmsmv_t* pmap);
 
 static void lhmsmv_init(lhmsmv_t *pmap, int length) {
@@ -130,13 +130,13 @@ static int lhmsmv_find_index_for_key(lhmsmv_t* pmap, char* key, int* pideal_inde
 }
 
 // ----------------------------------------------------------------
-void lhmsmv_put(lhmsmv_t* pmap, char* key, mv_t value, char free_flags) {
+void lhmsmv_put(lhmsmv_t* pmap, char* key, mv_t* pvalue, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
 		lhmsmv_enlarge(pmap);
-	lhmsmv_put_no_enlarge(pmap, key, value, free_flags);
+	lhmsmv_put_no_enlarge(pmap, key, pvalue, free_flags);
 }
 
-static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char free_flags) {
+static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t* pvalue, char free_flags) {
 	int ideal_index = 0;
 	int index = lhmsmv_find_index_for_key(pmap, key, &ideal_index);
 	lhmsmve_t* pe = &pmap->entries[index];
@@ -145,7 +145,7 @@ static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char fr
 		// Existing key found in chain; put value.
 		if (pe->free_flags & FREE_ENTRY_VALUE)
 			mv_free(&pe->value);
-		pe->value = value;
+		pe->value = *pvalue;
 		if (free_flags & FREE_ENTRY_VALUE)
 			pe->free_flags |= FREE_ENTRY_VALUE;
 		else
@@ -155,7 +155,7 @@ static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char fr
 		// End of chain.
 		pe->ideal_index = ideal_index;
 		pe->key = key;
-		pe->value = value;
+		pe->value = *pvalue;
 		pe->free_flags = free_flags;
 		pmap->states[index] = OCCUPIED;
 
@@ -218,7 +218,7 @@ static void lhmsmv_enlarge(lhmsmv_t* pmap) {
 	lhmsmv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
 	for (lhmsmve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		lhmsmv_put_no_enlarge(pmap, pe->key, pe->value, pe->free_flags);
+		lhmsmv_put_no_enlarge(pmap, pe->key, &pe->value, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);

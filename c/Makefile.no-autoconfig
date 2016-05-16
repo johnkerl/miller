@@ -124,13 +124,14 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/rslls.c \
   lib/string_array.c \
   containers/hss.c \
+  containers/mlrval.c \
   containers/lhmsi.c \
   containers/lhmss.c \
   containers/lhmsv.c \
   containers/lhms2v.c \
   containers/lhmslv.c \
   containers/lhmsmv.c \
-  containers/mlrval.c \
+  containers/bind_stack.c \
   containers/percentile_keeper.c \
   containers/top_keeper.c \
   containers/dheap.c \
