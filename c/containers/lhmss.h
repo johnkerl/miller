@@ -49,7 +49,7 @@ char* lhmss_get(lhmss_t* pmap, char* key);
 int   lhmss_has_key(lhmss_t* pmap, char* key);
 void  lhmss_rename(lhmss_t* pmap, char* old_key, char* new_key);
 
-void lhmss_print(lhmss_t* pmap);
+void lhmss_dump(lhmss_t* pmap);
 
 // Unit-test hook
 int lhmss_check_counts(lhmss_t* pmap);

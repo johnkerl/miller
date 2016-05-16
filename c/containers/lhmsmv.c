@@ -1,5 +1,5 @@
 // ================================================================
-// Array-only (open addressing) string-to-string linked hash map with linear
+// Array-only (open addressing) string-to-mlrval linked hash map with linear
 // probing for collisions.
 //
 // Keys and values are not strduped.
@@ -21,13 +21,13 @@
 
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "containers/lhmss.h"
+#include "containers/lhmsmv.h"
 #include "containers/free_flags.h"
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
 #ifndef INITIAL_ARRAY_LENGTH
-#define INITIAL_ARRAY_LENGTH 16
+#define INITIAL_ARRAY_LENGTH 32
 #endif
 
 #ifndef LOAD_FACTOR
@@ -44,49 +44,42 @@
 #define EMPTY    0xce
 
 // ----------------------------------------------------------------
-static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char free_flags);
-static void lhmss_enlarge(lhmss_t* pmap);
+static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char free_flags);
+static void lhmsmv_enlarge(lhmsmv_t* pmap);
 
-static void lhmss_init(lhmss_t *pmap, int length) {
+static void lhmsmv_init(lhmsmv_t *pmap, int length) {
 	pmap->num_occupied = 0;
 	pmap->num_freed    = 0;
 	pmap->array_length = length;
 
-	pmap->entries      = (lhmsse_t*)mlr_malloc_or_die(sizeof(lhmsse_t) * length);
-	// Don't do lhmsse_clear() of all entries at init time, since this has a
-	// drastic effect on the time needed to construct an empty map (and miller
+	pmap->entries      = (lhmsmve_t*)mlr_malloc_or_die(sizeof(lhmsmve_t) * length);
+	// Don't do a memset of all entries at init time, since this has a drastic
+	// effect on the time needed to construct an empty map (and Miller
 	// constructs an awful lot of those). The attributes there are don't-cares
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
 
-	pmap->states = (lhmsse_state_t*)mlr_malloc_or_die(sizeof(lhmsse_state_t) * length);
+	pmap->states = (lhmsmve_state_t*)mlr_malloc_or_die(sizeof(lhmsmve_state_t) * length);
 	memset(pmap->states, EMPTY, length);
 
 	pmap->phead = NULL;
 	pmap->ptail = NULL;
 }
 
-lhmss_t* lhmss_alloc() {
-	lhmss_t* pmap = mlr_malloc_or_die(sizeof(lhmss_t));
-	lhmss_init(pmap, INITIAL_ARRAY_LENGTH);
+lhmsmv_t* lhmsmv_alloc() {
+	lhmsmv_t* pmap = mlr_malloc_or_die(sizeof(lhmsmv_t));
+	lhmsmv_init(pmap, INITIAL_ARRAY_LENGTH);
 	return pmap;
 }
 
-lhmss_t* lhmss_copy(lhmss_t* pmap) {
-	lhmss_t* pnew = lhmss_alloc();
-	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext)
-		lhmss_put(pnew, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-	return pnew;
-}
-
-void lhmss_free(lhmss_t* pmap) {
+void lhmsmv_free(lhmsmv_t* pmap) {
 	if (pmap == NULL)
 		return;
-	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsmve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		if (pe->free_flags & FREE_ENTRY_KEY)
 			free(pe->key);
 		if (pe->free_flags & FREE_ENTRY_VALUE)
-			free(pe->value);
+			mv_free(&pe->value);
 	}
 	free(pmap->entries);
 	free(pmap->states);
@@ -100,14 +93,14 @@ void lhmss_free(lhmss_t* pmap) {
 // ----------------------------------------------------------------
 // Used by get() and remove().
 // Returns >=0 for where the key is *or* should go (end of chain).
-static int lhmss_find_index_for_key(lhmss_t* pmap, char* key, int* pideal_index) {
+static int lhmsmv_find_index_for_key(lhmsmv_t* pmap, char* key, int* pideal_index) {
 	int hash = mlr_string_hash_func(key);
 	int index = mlr_canonical_mod(hash, pmap->array_length);
 	*pideal_index = index;
 	int num_tries = 0;
 
 	while (TRUE) {
-		lhmsse_t* pe = &pmap->entries[index];
+		lhmsmve_t* pe = &pmap->entries[index];
 		if (pmap->states[index] == OCCUPIED) {
 			char* ekey = pe->key;
 			// Existing key found in chain.
@@ -137,21 +130,21 @@ static int lhmss_find_index_for_key(lhmss_t* pmap, char* key, int* pideal_index)
 }
 
 // ----------------------------------------------------------------
-void lhmss_put(lhmss_t* pmap, char* key, char* value, char free_flags) {
+void lhmsmv_put(lhmsmv_t* pmap, char* key, mv_t value, char free_flags) {
 	if ((pmap->num_occupied + pmap->num_freed) >= (pmap->array_length*LOAD_FACTOR))
-		lhmss_enlarge(pmap);
-	lhmss_put_no_enlarge(pmap, key, value, free_flags);
+		lhmsmv_enlarge(pmap);
+	lhmsmv_put_no_enlarge(pmap, key, value, free_flags);
 }
 
-static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char free_flags) {
+static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t value, char free_flags) {
 	int ideal_index = 0;
-	int index = lhmss_find_index_for_key(pmap, key, &ideal_index);
-	lhmsse_t* pe = &pmap->entries[index];
+	int index = lhmsmv_find_index_for_key(pmap, key, &ideal_index);
+	lhmsmve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
 		if (pe->free_flags & FREE_ENTRY_VALUE)
-			free(pe->value);
+			mv_free(&pe->value);
 		pe->value = value;
 		if (free_flags & FREE_ENTRY_VALUE)
 			pe->free_flags |= FREE_ENTRY_VALUE;
@@ -180,107 +173,72 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char fre
 		pmap->num_occupied++;
 
 	} else {
-		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsmv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
 
 // ----------------------------------------------------------------
-char* lhmss_get(lhmss_t* pmap, char* key) {
+mv_t* lhmsmv_get(lhmsmv_t* pmap, char* key) {
 	int ideal_index = 0;
-	int index = lhmss_find_index_for_key(pmap, key, &ideal_index);
-	lhmsse_t* pe = &pmap->entries[index];
+	int index = lhmsmv_find_index_for_key(pmap, key, &ideal_index);
+	lhmsmve_t* pe = &pmap->entries[index];
 
 	if (pmap->states[index] == OCCUPIED) {
-		return pe->value;
+		return &pe->value;
 	} else if (pmap->states[index] == EMPTY) {
 		return NULL;
 	} else {
-		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsmv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
 
 // ----------------------------------------------------------------
-int lhmss_has_key(lhmss_t* pmap, char* key) {
+int lhmsmv_has_key(lhmsmv_t* pmap, char* key) {
 	int ideal_index = 0;
-	int index = lhmss_find_index_for_key(pmap, key, &ideal_index);
+	int index = lhmsmv_find_index_for_key(pmap, key, &ideal_index);
 
 	if (pmap->states[index] == OCCUPIED)
 		return TRUE;
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "%s: lhmss_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsmv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
 		exit(1);
 	}
 }
 
 // ----------------------------------------------------------------
-void  lhmss_rename(lhmss_t* pmap, char* old_key, char* new_key) {
-	fprintf(stderr, "rename is not supported in the hashed-record impl.\n");
-	exit(1);
-}
+static void lhmsmv_enlarge(lhmsmv_t* pmap) {
+	lhmsmve_t*       old_entries = pmap->entries;
+	lhmsmve_state_t* old_states  = pmap->states;
+	lhmsmve_t*       old_head    = pmap->phead;
 
-// ----------------------------------------------------------------
-static void lhmss_enlarge(lhmss_t* pmap) {
-	lhmsse_t*       old_entries = pmap->entries;
-	lhmsse_state_t* old_states  = pmap->states;
-	lhmsse_t*       old_head    = pmap->phead;
+	lhmsmv_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
 
-	lhmss_init(pmap, pmap->array_length*ENLARGEMENT_FACTOR);
-
-	for (lhmsse_t* pe = old_head; pe != NULL; pe = pe->pnext) {
-		lhmss_put_no_enlarge(pmap, pe->key, pe->value, pe->free_flags);
+	for (lhmsmve_t* pe = old_head; pe != NULL; pe = pe->pnext) {
+		lhmsmv_put_no_enlarge(pmap, pe->key, pe->value, pe->free_flags);
 	}
 	free(old_entries);
 	free(old_states);
 }
 
 // ----------------------------------------------------------------
-static char* get_state_name(int state) {
-	switch(state) {
-	case OCCUPIED: return "occupied"; break;
-	case DELETED:  return "freed";  break;
-	case EMPTY:    return "empty";    break;
-	default:       return "?????";    break;
-	}
-}
-
-void lhmss_dump(lhmss_t* pmap) {
-	for (int index = 0; index < pmap->array_length; index++) {
-		lhmsse_t* pe = &pmap->entries[index];
-
+void lhmsmv_dump(lhmsmv_t* pmap) {
+	for (lhmsmve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
 			pe->key;
-		const char* value_string = (pe == NULL) ? "none" :
-			pe->value == NULL ? "null" :
-			pe->value;
-
-		printf(
-		"| stt: %-8s  | idx: %6d | nidx: %6d | key: %12s | value: %12s |\n",
-			get_state_name(pmap->states[index]), index, pe->ideal_index, key_string, value_string);
-	}
-	printf("+\n");
-	printf("| phead: %p | ptail %p\n", pmap->phead, pmap->ptail);
-	printf("+\n");
-	for (lhmsse_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
-		const char* key_string = (pe == NULL) ? "none" :
-			pe->key == NULL ? "null" :
-			pe->key;
-		const char* value_string = (pe == NULL) ? "none" :
-			pe->value == NULL ? "null" :
-			pe->value;
-		printf(
-		"| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | value: %12s |\n",
+		char* value_string = mv_alloc_format_val(&pe->value);
+		printf("| prev: %p curr: %p next: %p | nidx: %6d | key: %12s | value: %12s |\n",
 			pe->pprev, pe, pe->pnext,
 			pe->ideal_index, key_string, value_string);
 	}
 }
 
 // ----------------------------------------------------------------
-int lhmss_check_counts(lhmss_t* pmap) {
+int lhmsmv_check_counts(lhmsmv_t* pmap) {
 	int nocc = 0;
 	int ndel = 0;
 	for (int index = 0; index < pmap->array_length; index++) {

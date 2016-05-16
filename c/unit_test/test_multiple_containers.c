@@ -12,6 +12,7 @@
 #include "containers/lhmsv.h"
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
+#include "containers/lhmsmv.h"
 #include "containers/percentile_keeper.h"
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
@@ -20,6 +21,17 @@ int tests_run         = 0;
 int tests_failed      = 0;
 int assertions_run    = 0;
 int assertions_failed = 0;
+
+static mv_t* smv(char* strv) {
+	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
+	*pmv = mv_from_string(strv, NO_FREE);
+	return pmv;
+}
+static mv_t* imv(long long intv) {
+	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
+	*pmv = mv_from_int(intv);
+	return pmv;
+}
 
 // ----------------------------------------------------------------
 static char* test_slls() {
@@ -500,6 +512,67 @@ static char* test_lhmslv() {
 }
 
 // ----------------------------------------------------------------
+static char* test_lhmsmv() {
+	printf("\n");
+
+	lhmsmv_t *pmap = lhmsmv_alloc();
+	mu_assert_lf(pmap->num_occupied == 0);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "w")); mu_assert_lf(lhmsmv_get(pmap, "w") == NULL);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "x")); mu_assert_lf(lhmsmv_get(pmap, "x") == NULL);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "y")); mu_assert_lf(lhmsmv_get(pmap, "y") == NULL);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
+	mu_assert_lf(lhmsmv_check_counts(pmap));
+
+	lhmsmv_put(pmap, "x", mv_from_int(3), NO_FREE);
+	lhmsmv_dump(pmap);
+	printf("\n");
+	mu_assert_lf(pmap->num_occupied == 1);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "w")); mu_assert_lf(lhmsmv_get(pmap, "w") == NULL);
+	mu_assert_lf( lhmsmv_has_key(pmap, "x")); mu_assert_lf(mveq(lhmsmv_get(pmap, "x"), imv(3)));
+	mu_assert_lf( lhmsmv_has_key(pmap, "x")); mu_assert_lf(mveq(lhmsmv_get(pmap, "x"), smv("3")));
+	mu_assert_lf(!lhmsmv_has_key(pmap, "y")); mu_assert_lf(lhmsmv_get(pmap, "y") == NULL);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
+	mu_assert_lf(lhmsmv_check_counts(pmap));
+
+	lhmsmv_put(pmap, "y", mv_from_string_no_free("5"), NO_FREE);
+	lhmsmv_dump(pmap);
+	printf("\n");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "w")); mu_assert_lf(lhmsmv_get(pmap, "w") == NULL);
+	mu_assert_lf( lhmsmv_has_key(pmap, "x")); mu_assert_lf(mveq(lhmsmv_get(pmap, "x"), smv("3")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "y")); mu_assert_lf(mveq(lhmsmv_get(pmap, "y"), smv("5")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "y")); mu_assert_lf(mveq(lhmsmv_get(pmap, "y"), imv(5)));
+	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
+	mu_assert_lf(lhmsmv_check_counts(pmap));
+
+	lhmsmv_put(pmap, "x", mv_from_string_no_free("f"), NO_FREE);
+	lhmsmv_dump(pmap);
+	printf("\n");
+	mu_assert_lf(pmap->num_occupied == 2);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "w")); mu_assert_lf(lhmsmv_get(pmap, "w") == NULL);
+	mu_assert_lf( lhmsmv_has_key(pmap, "x")); mu_assert_lf(mveq(lhmsmv_get(pmap, "x"), smv("f")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "y")); mu_assert_lf(mveq(lhmsmv_get(pmap, "y"), smv("5")));
+	mu_assert_lf(!lhmsmv_has_key(pmap, "z")); mu_assert_lf(lhmsmv_get(pmap, "z") == NULL);
+	mu_assert_lf(lhmsmv_check_counts(pmap));
+
+	lhmsmv_put(pmap, "z", mv_from_int(7), NO_FREE);
+	lhmsmv_dump(pmap);
+	printf("\n");
+	mu_assert_lf(pmap->num_occupied == 3);
+	mu_assert_lf(!lhmsmv_has_key(pmap, "w")); mu_assert_lf(lhmsmv_get(pmap, "w") == NULL);
+	mu_assert_lf( lhmsmv_has_key(pmap, "x")); mu_assert_lf(mveq(lhmsmv_get(pmap, "x"), smv("f")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "y")); mu_assert_lf(mveq(lhmsmv_get(pmap, "y"), smv("5")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "y")); mu_assert_lf(mveq(lhmsmv_get(pmap, "y"), imv(5)));
+	mu_assert_lf( lhmsmv_has_key(pmap, "z")); mu_assert_lf(mveq(lhmsmv_get(pmap, "z"), smv("7")));
+	mu_assert_lf( lhmsmv_has_key(pmap, "z")); mu_assert_lf(mveq(lhmsmv_get(pmap, "z"), imv(7)));
+	mu_assert_lf(lhmsmv_check_counts(pmap));
+
+	lhmsmv_free(pmap);
+
+	return NULL;
+}
+
+// ----------------------------------------------------------------
 static char* test_percentile_keeper() {
 
 	percentile_keeper_t* ppercentile_keeper = percentile_keeper_alloc();
@@ -684,6 +757,7 @@ static char * run_all_tests() {
 	mu_run_test(test_lhmsv);
 	mu_run_test(test_lhms2v);
 	mu_run_test(test_lhmslv);
+	mu_run_test(test_lhmsmv);
 	mu_run_test(test_percentile_keeper);
 	mu_run_test(test_top_keeper);
 	mu_run_test(test_dheap);

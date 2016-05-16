@@ -60,11 +60,11 @@ static void lhmsv_init(lhmsv_t *pmap, int length) {
 	// if the corresponding entry state is EMPTY. They are set on put, and
 	// mutated on remove.
 
-	pmap->states       = (lhmsve_state_t*)mlr_malloc_or_die(sizeof(lhmsve_state_t) * length);
+	pmap->states = (lhmsve_state_t*)mlr_malloc_or_die(sizeof(lhmsve_state_t) * length);
 	memset(pmap->states, EMPTY, length);
 
-	pmap->phead        = NULL;
-	pmap->ptail        = NULL;
+	pmap->phead = NULL;
+	pmap->ptail = NULL;
 }
 
 lhmsv_t* lhmsv_alloc() {

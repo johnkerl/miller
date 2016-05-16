@@ -129,6 +129,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/lhmsv.c \
   containers/lhms2v.c \
   containers/lhmslv.c \
+  containers/lhmsmv.c \
   containers/mlrval.c \
   containers/percentile_keeper.c \
   containers/top_keeper.c \

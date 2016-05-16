@@ -2055,6 +2055,18 @@ int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) { return (ilt_dispositions[pval1->type]
 int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
+// For unit-test keystroke-saving
+int mveq(mv_t* pval1, mv_t* pval2) {
+	mv_t cmp = eq_op_func(pval1, pval2);
+	if (cmp.type != MT_BOOL) {
+		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return cmp.u.boolv;
+}
+
+// ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
 mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures) {
 	char* s1 = pval1->u.strv;

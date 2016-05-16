@@ -19,6 +19,8 @@ libcontainers_la_SOURCES=	\
 			lhmsi.h \
 			lhmslv.c \
 			lhmslv.h \
+			lhmsmv.c \
+			lhmsmv.h \
 			lhmss.c \
 			lhmss.h \
 			lhmsv.c \
@@ -39,14 +41,15 @@ libcontainers_la_SOURCES=	\
 			percentile_keeper.h \
 			rslls.c \
 			rslls.h \
+			sllmv.c \
+			sllmv.h \
 			slls.c \
 			slls.h \
 			sllv.c \
 			sllv.h \
-			sllmv.c \
-			sllmv.h \
 			top_keeper.c \
 			top_keeper.h
+
 libcontainers_la_LIBADD=	\
 			../lib/libmlr.la \
 			../mapping/libmapping.la
