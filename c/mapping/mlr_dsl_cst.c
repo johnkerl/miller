@@ -559,7 +559,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_blank() {
 	pstatement->pvarargs                         = NULL;
 	pstatement->pblock_statements                = NULL;
 	pstatement->pif_chain_statements             = NULL;
-	pstatement->pbound_vars                      = NULL;
+	pstatement->pbound_variables                      = NULL;
 
 	return pstatement;
 }
@@ -874,8 +874,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 
 	// Left child node is list of bound variables.
 	// Right child node is the list of statements in the body.
-	// xxx to do:
-	//mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 	sllv_t* pblock_statements = sllv_alloc();
 
@@ -894,9 +893,15 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_for_srec(mlr_dsl_ast_node_t*
 		}
 	}
 
+	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
+
 	pstatement->phandler = mlr_dsl_cst_node_handle_for_srec;
 	pstatement->pblock_statements = pblock_statements;
-	pstatement->pbound_vars = lhmsmv_alloc();
+	pstatement->for_srec_k_name   = pknode->text;
+	pstatement->for_srec_v_name   = pvnode->text;
+	pstatement->pbound_variables  = lhmsmv_alloc();
+
 	return pstatement;
 }
 
@@ -1663,25 +1668,29 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	char*            oosvar_flatten_separator,
 	bind_stack_t*    pbind_stack)
 {
-	bind_stack_push(pbind_stack, pnode->pbound_vars);
+	bind_stack_push(pbind_stack, pnode->pbound_variables);
+	//printf("FOO\n");
+	//bind_stack_print(pbind_stack);
+	//printf("BAR\n");
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		// xxx beware string/integer for lrec keys ...
 		// Copy, not pointer-reference, in case of srec-unset in loop body.
 		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
 
-		mv_t* pmvval = lhmsv_get(ptyped_overlay, pe->key);
-		if (pmvval != NULL) {
-			*pmvval = mv_copy(pmvval);
-		} else {
-			*pmvval = mv_from_string_with_free(mlr_strdup_or_die(pe->value));
-		}
+		mv_t* poverlay = lhmsv_get(ptyped_overlay, pe->key);
+		mv_t mvval = (poverlay != NULL)
+			? mv_copy(poverlay)
+			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
 
-		lhmsmv_put(pnode->pbound_vars, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-		lhmsmv_put(pnode->pbound_vars, pnode->for_srec_v_name, pmvval, FREE_ENTRY_VALUE);
+		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
 
 		mlr_dsl_cst_handle(pnode->pblock_statements,
 			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
 			oosvar_flatten_separator, pbind_stack);
+		//printf("FOO\n");
+		//bind_stack_print(pbind_stack);
+		//printf("BAR\n");
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
 	bind_stack_pop(pbind_stack);

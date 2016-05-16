@@ -37,6 +37,8 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 		} else if (pnode->type == MD_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
+		} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+			return rval_evaluator_alloc_from_bound_variable(pnode->text);
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 				MLR_GLOBALS.argv0, __FILE__, __LINE__);
@@ -792,6 +794,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 	} else if (streq(variable_name, "E"))        { return rval_evaluator_alloc_from_E();
 	} else  { return NULL;
 	}
+}
+
+// ================================================================
+rval_evaluator_t* rval_evaluator_alloc_from_bound_variable(char* variable_name) {
+	// xxx stub
+	return rval_evaluator_alloc_from_FILENAME();
 }
 
 // ----------------------------------------------------------------

@@ -102,7 +102,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// xxx for-oosvar key-list of names
 
 	// for-srec and for-oosvar:
-	lhmsmv_t* pbound_vars;
+	lhmsmv_t* pbound_variables;
 
 } mlr_dsl_cst_statement_t;
 

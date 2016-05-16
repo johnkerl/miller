@@ -813,11 +813,11 @@ md_atom_or_fcn(A) ::= md_regexi(B). {
 	A = B;
 }
 
-md_atom_or_fcn(A) ::= md_bound_var(B). {
+md_atom_or_fcn(A) ::= md_bound_variable(B). {
 	A = B;
 }
-md_bound_var(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
-	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOUND_VAR);
+md_bound_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOUND_VARIABLE);
 }
 
 md_string(A) ::= MD_TOKEN_STRING(B). {
