@@ -5,6 +5,7 @@
 #include "containers/sllv.h"
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
+#include "containers/bind_stack.h"
 #include "mapping/mappers.h"
 #include "mapping/rval_evaluators.h"
 #include "dsls/mlr_dsl_wrapper.h"
@@ -21,6 +22,7 @@ typedef struct _mapper_put_state_t {
 	int            at_begin;
 	mlhmmv_t*      poosvars;
 	char*          oosvar_flatten_separator;
+	bind_stack_t*  pbind_stack;
 	int            outer_filter;
 } mapper_put_state_t;
 
@@ -161,6 +163,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	pstate->outer_filter = outer_filter;
 	pstate->poosvars     = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
+	pstate->pbind_stack  = bind_stack_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -176,6 +179,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	free(pstate->mlr_dsl_expression);
 	free(pstate->comment_stripped_mlr_dsl_expression);
 	mlhmmv_free(pstate->poosvars);
+	bind_stack_free(pstate->pbind_stack);
 	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
@@ -244,14 +248,14 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	if (pstate->at_begin) {
 		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements,
 			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
-				pstate->oosvar_flatten_separator);
+				pstate->oosvar_flatten_separator, pstate->pbind_stack);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
 		mlr_dsl_cst_handle(pstate->pcst->pend_statements,
 			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
-				pstate->oosvar_flatten_separator);
+				pstate->oosvar_flatten_separator, pstate->pbind_stack);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -263,7 +267,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	emit_rec = TRUE;
 	mlr_dsl_cst_handle(pstate->pcst->pmain_statements,
 		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs,
-			pstate->oosvar_flatten_separator);
+			pstate->oosvar_flatten_separator, pstate->pbind_stack);
 
 	if (emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.

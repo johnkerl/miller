@@ -3,6 +3,7 @@
 
 #include "containers/mlr_dsl_ast.h"
 #include "rval_evaluators.h"
+#include "containers/bind_stack.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
@@ -54,7 +55,8 @@ typedef void mlr_dsl_cst_node_handler_func_t(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
@@ -68,35 +70,38 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* phandler;
 
-	// For assignment to oosvar, emit, and emitp
+	// Assignment to oosvar, emit, and emitp
 	sllv_t* poosvar_lhs_keylist_evaluators;
 
-	// For assignment to srec
+	// Assignment to srec
 	char* srec_lhs_field_name;
 
-	// For assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
+	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
-	// For assigning full srec from oosvar
+	// Assigning full srec from oosvar:
 	sllv_t* poosvar_rhs_keylist_evaluators;
 
-	// For emit/emitp
+	// emit/emitp:
 	sllv_t* pemit_oosvar_namelist_evaluators;
 
 	// Vararg stuff for emit and unset
 	sllv_t* pvarargs;
 
-	// For pattern-action blocks, while, for, etc.
+	// Pattern-action blocks, while, for, etc.
 	sllv_t* pblock_statements;
 
-	// For if-elif-elif-else:
+	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
 
-	// For for-srec:
+	// for-srec:
 	char* for_srec_k_name;
 	char* for_srec_v_name;
 
 	// xxx for-oosvar key-list of names
+
+	// for-srec and for-oosvar:
+	bind_stack_t* pbind_stack;
 
 } mlr_dsl_cst_statement_t;
 
@@ -145,6 +150,7 @@ void mlr_dsl_cst_handle(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 #endif // MLR_DSL_CST_H

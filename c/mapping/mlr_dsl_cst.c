@@ -43,7 +43,8 @@ static void mlr_dsl_cst_node_handle_srec_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
@@ -54,7 +55,8 @@ static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
@@ -65,7 +67,8 @@ static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
@@ -76,7 +79,8 @@ static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
@@ -87,7 +91,8 @@ static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
@@ -98,7 +103,8 @@ static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_unset(
 	mlr_dsl_cst_statement_t* pnode,
@@ -109,7 +115,8 @@ static void mlr_dsl_cst_node_handle_unset(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_unset_all(
 	mlr_dsl_cst_statement_t* pnode,
@@ -120,7 +127,8 @@ static void mlr_dsl_cst_node_handle_unset_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_emitf(
 	mlr_dsl_cst_statement_t* pnode,
@@ -131,7 +139,8 @@ static void mlr_dsl_cst_node_handle_emitf(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_emitp(
 	mlr_dsl_cst_statement_t* pnode,
@@ -142,7 +151,8 @@ static void mlr_dsl_cst_node_handle_emitp(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_emitp_all(
 	mlr_dsl_cst_statement_t* pnode,
@@ -153,7 +163,8 @@ static void mlr_dsl_cst_node_handle_emitp_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_emit(
 	mlr_dsl_cst_statement_t* pnode,
@@ -164,7 +175,8 @@ static void mlr_dsl_cst_node_handle_emit(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_emit_all(
 	mlr_dsl_cst_statement_t* pnode,
@@ -175,7 +187,8 @@ static void mlr_dsl_cst_node_handle_emit_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_dump(
 	mlr_dsl_cst_statement_t* pnode,
@@ -186,7 +199,8 @@ static void mlr_dsl_cst_node_handle_dump(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_filter(
 	mlr_dsl_cst_statement_t* pnode,
@@ -197,7 +211,8 @@ static void mlr_dsl_cst_node_handle_filter(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_conditional_block(
 	mlr_dsl_cst_statement_t* pnode,
@@ -208,7 +223,8 @@ static void mlr_dsl_cst_node_handle_conditional_block(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_while(
 	mlr_dsl_cst_statement_t* pnode,
@@ -219,7 +235,8 @@ static void mlr_dsl_cst_node_handle_while(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_do_while(
 	mlr_dsl_cst_statement_t* pnode,
@@ -230,7 +247,8 @@ static void mlr_dsl_cst_node_handle_do_while(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_do_while(
 	mlr_dsl_cst_statement_t* pnode,
@@ -241,7 +259,8 @@ static void mlr_dsl_cst_node_handle_do_while(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_for_srec(
 	mlr_dsl_cst_statement_t* pnode,
@@ -252,7 +271,8 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_if_head(
 	mlr_dsl_cst_statement_t* pnode,
@@ -263,7 +283,8 @@ static void mlr_dsl_cst_node_handle_if_head(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static void mlr_dsl_cst_node_handle_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
@@ -274,7 +295,8 @@ static void mlr_dsl_cst_node_handle_bare_boolean(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator);
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack);
 
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
@@ -537,6 +559,7 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_blank() {
 	pstatement->pvarargs                         = NULL;
 	pstatement->pblock_statements                = NULL;
 	pstatement->pif_chain_statements             = NULL;
+	pstatement->pbind_stack                      = NULL;
 
 	return pstatement;
 }
@@ -1091,12 +1114,13 @@ void mlr_dsl_cst_handle(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->phandler(pstatement, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pshould_emit_rec, poutrecs, oosvar_flatten_separator);
+			pctx, pshould_emit_rec, poutrecs, oosvar_flatten_separator, pbind_stack);
 	}
 }
 
@@ -1110,7 +1134,8 @@ static void mlr_dsl_cst_node_handle_srec_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	char* srec_lhs_field_name = pnode->srec_lhs_field_name;
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
@@ -1156,7 +1181,8 @@ static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
@@ -1186,7 +1212,8 @@ static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int lhs_all_non_null_or_error = TRUE;
 	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
@@ -1214,7 +1241,8 @@ static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int all_non_null_or_error = TRUE;
 	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
@@ -1252,7 +1280,8 @@ static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	lrec_clear(pinrec);
 	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
@@ -1311,7 +1340,8 @@ static void mlr_dsl_cst_node_handle_unset(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
@@ -1340,7 +1370,8 @@ static void mlr_dsl_cst_node_handle_unset_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	sllmv_t* pempty = sllmv_alloc();
 	mlhmmv_remove(poosvars, pempty);
@@ -1357,7 +1388,8 @@ static void mlr_dsl_cst_node_handle_emitf(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
@@ -1393,7 +1425,8 @@ static void mlr_dsl_cst_node_handle_emitp(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
@@ -1420,7 +1453,8 @@ static void mlr_dsl_cst_node_handle_emitp_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
@@ -1441,7 +1475,8 @@ static void mlr_dsl_cst_node_handle_emit(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
@@ -1468,7 +1503,8 @@ static void mlr_dsl_cst_node_handle_emit_all(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
@@ -1489,7 +1525,8 @@ static void mlr_dsl_cst_node_handle_dump(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	mlhmmv_print_json_stacked(poosvars, FALSE);
 }
@@ -1504,7 +1541,8 @@ static void mlr_dsl_cst_node_handle_filter(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
@@ -1528,7 +1566,8 @@ static void mlr_dsl_cst_node_handle_conditional_block(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
@@ -1539,7 +1578,7 @@ static void mlr_dsl_cst_node_handle_conditional_block(
 		if (val.u.boolv) {
 			mlr_dsl_cst_handle(pnode->pblock_statements,
 				poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-				oosvar_flatten_separator);
+				oosvar_flatten_separator, pbind_stack);
 		}
 	}
 }
@@ -1554,7 +1593,8 @@ static void mlr_dsl_cst_node_handle_while(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
@@ -1566,7 +1606,7 @@ static void mlr_dsl_cst_node_handle_while(
 			if (val.u.boolv) {
 				mlr_dsl_cst_handle(pnode->pblock_statements,
 					poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-					oosvar_flatten_separator);
+					oosvar_flatten_separator, pbind_stack);
 			} else {
 				break;
 			}
@@ -1586,14 +1626,15 @@ static void mlr_dsl_cst_node_handle_do_while(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
 	while (TRUE) {
 		mlr_dsl_cst_handle(pnode->pblock_statements,
 			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-			oosvar_flatten_separator);
+			oosvar_flatten_separator, pbind_stack);
 
 		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
 			ppregex_captures, pctx, prhs_evaluator->pvstate);
@@ -1618,7 +1659,8 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		// xxx copy not ptr-ref in case unset in loop body
@@ -1629,7 +1671,7 @@ static void mlr_dsl_cst_node_handle_for_srec(
 
 		mlr_dsl_cst_handle(pnode->pblock_statements,
 			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-			oosvar_flatten_separator);
+			oosvar_flatten_separator, pbind_stack);
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
 }
@@ -1644,7 +1686,8 @@ static void mlr_dsl_cst_node_handle_if_head(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
@@ -1657,7 +1700,7 @@ static void mlr_dsl_cst_node_handle_if_head(
 			if (val.u.boolv) {
 				mlr_dsl_cst_handle(pitemnode->pblock_statements,
 					poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-					oosvar_flatten_separator);
+					oosvar_flatten_separator, pbind_stack);
 
 				break;
 			}
@@ -1675,7 +1718,8 @@ static void mlr_dsl_cst_node_handle_bare_boolean(
 	context_t*       pctx,
 	int*             pshould_emit_rec,
 	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator)
+	char*            oosvar_flatten_separator,
+	bind_stack_t*    pbind_stack)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
