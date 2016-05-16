@@ -797,9 +797,34 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 }
 
 // ================================================================
+typedef struct _rval_evaluator_from_bound_variable_state_t {
+	char* variable_name;
+} rval_evaluator_from_bound_variable_state_t;
+
+mv_t rval_evaluator_from_bound_variable_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
+	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
+{
+	rval_evaluator_from_bound_variable_state_t* pstate = pvstate;
+	return mv_from_string_no_free(pstate->variable_name); // xxx stub
+}
+static void rval_evaluator_from_bound_variable_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_from_bound_variable_state_t* pstate = pevaluator->pvstate;
+	free(pstate->variable_name);
+	free(pstate);
+	free(pevaluator);
+}
+
 rval_evaluator_t* rval_evaluator_alloc_from_bound_variable(char* variable_name) {
-	// xxx stub
-	return rval_evaluator_alloc_from_FILENAME();
+	rval_evaluator_from_bound_variable_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_from_bound_variable_state_t));
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	pstate->variable_name     = mlr_strdup_or_die(variable_name);
+	pevaluator->pprocess_func = rval_evaluator_from_bound_variable_func;
+	pevaluator->pfree_func    = rval_evaluator_from_bound_variable_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
 }
 
 // ----------------------------------------------------------------
