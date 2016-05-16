@@ -1669,9 +1669,6 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	bind_stack_t*    pbind_stack)
 {
 	bind_stack_push(pbind_stack, pnode->pbound_variables);
-	//printf("FOO\n");
-	//bind_stack_print(pbind_stack);
-	//printf("BAR\n");
 	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 		// xxx beware string/integer for lrec keys ...
 		// Copy, not pointer-reference, in case of srec-unset in loop body.
@@ -1688,9 +1685,6 @@ static void mlr_dsl_cst_node_handle_for_srec(
 		mlr_dsl_cst_handle(pnode->pblock_statements,
 			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
 			oosvar_flatten_separator, pbind_stack);
-		//printf("FOO\n");
-		//bind_stack_print(pbind_stack);
-		//printf("BAR\n");
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
 	bind_stack_pop(pbind_stack);
