@@ -24,24 +24,34 @@ static char * test_caps() {
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
 
-	mv_t val = pnr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pnr->pvstate);
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
+
+	mv_t val = pnr->pprocess_func(pnr->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 888);
 
-	val = pfnr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfnr->pvstate);
+	val = pfnr->pprocess_func(pfnr->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 999);
 
-	val = pfilename->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfilename->pvstate);
+	val = pfilename->pprocess_func(pfilename->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "filename-goes-here"));
 
-	val = pfilenum->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfilenum->pvstate);
+	val = pfilenum->pprocess_func(pfilenum->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_INT);
 	mu_assert_lf(val.u.intv == 123);
@@ -66,34 +76,45 @@ static char * test_strings() {
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
+
 	lrec_put(prec, "s", "abc", NO_FREE);
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
 
-	mv_t val = ps->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ps->pvstate);
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
+
+	mv_t val = ps->pprocess_func(ps->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abc"));
 
-	val = pdef->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pdef->pvstate);
+	val = pdef->pprocess_func(pdef->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "def"));
 
-	val = pdot->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pdot->pvstate);
+	val = pdot->pprocess_func(pdot->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
-	val = ptolower->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptolower->pvstate);
+	val = ptolower->pprocess_func(ptolower->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
 	mu_assert_lf(streq(val.u.strv, "abcdef"));
 
-	val = ptoupper->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptoupper->pvstate);
+	val = ptoupper->pprocess_func(ptoupper->pvstate, &variables);
 	printf("[%s] %s\n", mt_describe_type(val.type), mv_alloc_format_val(&val));
 	mu_assert_lf(val.type == MT_STRING);
 	mu_assert_lf(val.u.strv != NULL);
@@ -129,14 +150,25 @@ static char * test_numbers() {
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
+
 	lrec_put(prec, "x", "4.5", NO_FREE);
 
-	mv_t valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p2->pvstate);
-	mv_t valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p4->pvstate);
-	mv_t valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, px->pvstate);
-	mv_t valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, &pregex_captures, pctx, px2->pvstate);
-	mv_t valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, &pregex_captures, pctx, plogx->pvstate);
-	mv_t valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, p2logx->pvstate);
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
+
+	mv_t valp2     = p2->pprocess_func(p2->pvstate, &variables);
+	mv_t valp4     = p4->pprocess_func(p4->pvstate, &variables);
+	mv_t valpx     = px->pprocess_func(px->pvstate, &variables);
+	mv_t valpx2    = px2->pprocess_func(px2->pvstate, &variables);
+	mv_t valplogx  = plogx->pprocess_func(plogx->pvstate, &variables);
+	mv_t valp2logx = p2logx->pprocess_func(p2logx->pvstate, &variables);
 
 	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
 	printf("newval 2        = %s\n", mv_describe_val(valp2));
@@ -163,17 +195,17 @@ static char * test_numbers() {
 
 	mlr_dsl_ast_node_print(p2logxnode);
 	printf("newval AST      = %s\n",
-		mv_describe_val(pastr->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pastr->pvstate)));
+		mv_describe_val(pastr->pprocess_func(pastr->pvstate, &variables)));
 	printf("\n");
 
 	lrec_rename(prec, "x", "y", FALSE);
 
-	valp2     = p2->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p2->pvstate);
-	valp4     = p4->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, p4->pvstate);
-	valpx     = px->pprocess_func(prec,     ptyped_overlay, poosvars, &pregex_captures, pctx, px->pvstate);
-	valpx2    = px2->pprocess_func(prec,    ptyped_overlay, poosvars, &pregex_captures, pctx, px2->pvstate);
-	valplogx  = plogx->pprocess_func(prec,  ptyped_overlay, poosvars, &pregex_captures, pctx, plogx->pvstate);
-	valp2logx = p2logx->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, p2logx->pvstate);
+	valp2     = p2->pprocess_func(p2->pvstate, &variables);
+	valp4     = p4->pprocess_func(p4->pvstate, &variables);
+	valpx     = px->pprocess_func(px->pvstate, &variables);
+	valpx2    = px2->pprocess_func(px2->pvstate, &variables);
+	valplogx  = plogx->pprocess_func(plogx->pvstate, &variables);
+	valp2logx = p2logx->pprocess_func(p2logx->pvstate, &variables);
 
 	printf("lrec   x        = %s\n", lrec_get(prec, "x"));
 	printf("newval 2        = %s\n", mv_describe_val(valp2));
@@ -207,6 +239,16 @@ static char * test_logical_and() {
 	lhmsv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
+
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
 
 	mv_t t = mv_from_bool(TRUE);
 	mv_t f = mv_from_bool(FALSE);
@@ -226,15 +268,15 @@ static char * test_logical_and() {
 	rval_evaluator_t* paf = rval_evaluator_alloc_from_b_bb_and_func(pa, pf);
 	rval_evaluator_t* paa = rval_evaluator_alloc_from_b_bb_and_func(pa, pa);
 
-	mv_t ott = ptt->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptt->pvstate);
-	mv_t otf = ptf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptf->pvstate);
-	mv_t oft = pft->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pft->pvstate);
-	mv_t off = pff->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pff->pvstate);
-	mv_t oat = pat->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pat->pvstate);
-	mv_t oaf = paf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paf->pvstate);
-	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
-	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
-	mv_t oaa = paa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paa->pvstate);
+	mv_t ott = ptt->pprocess_func(ptt->pvstate, &variables);
+	mv_t otf = ptf->pprocess_func(ptf->pvstate, &variables);
+	mv_t oft = pft->pprocess_func(pft->pvstate, &variables);
+	mv_t off = pff->pprocess_func(pff->pvstate, &variables);
+	mv_t oat = pat->pprocess_func(pat->pvstate, &variables);
+	mv_t oaf = paf->pprocess_func(paf->pvstate, &variables);
+	mv_t ota = pta->pprocess_func(pta->pvstate, &variables);
+	mv_t ofa = pfa->pprocess_func(pfa->pvstate, &variables);
+	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
 	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == TRUE);
 	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == FALSE);
@@ -260,6 +302,16 @@ static char * test_logical_or() {
 	lhmsv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
+
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
 
 	mv_t t = mv_from_bool(TRUE);
 	mv_t f = mv_from_bool(FALSE);
@@ -279,15 +331,15 @@ static char * test_logical_or() {
 	rval_evaluator_t* paf = rval_evaluator_alloc_from_b_bb_or_func(pa, pf);
 	rval_evaluator_t* paa = rval_evaluator_alloc_from_b_bb_or_func(pa, pa);
 
-	mv_t ott = ptt->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptt->pvstate);
-	mv_t otf = ptf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptf->pvstate);
-	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
-	mv_t oft = pft->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pft->pvstate);
-	mv_t off = pff->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pff->pvstate);
-	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
-	mv_t oat = pat->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pat->pvstate);
-	mv_t oaf = paf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paf->pvstate);
-	mv_t oaa = paa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paa->pvstate);
+	mv_t ott = ptt->pprocess_func(ptt->pvstate, &variables);
+	mv_t otf = ptf->pprocess_func(ptf->pvstate, &variables);
+	mv_t ota = pta->pprocess_func(pta->pvstate, &variables);
+	mv_t oft = pft->pprocess_func(pft->pvstate, &variables);
+	mv_t off = pff->pprocess_func(pff->pvstate, &variables);
+	mv_t ofa = pfa->pprocess_func(pfa->pvstate, &variables);
+	mv_t oat = pat->pprocess_func(pat->pvstate, &variables);
+	mv_t oaf = paf->pprocess_func(paf->pvstate, &variables);
+	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
 	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == TRUE);
 	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == TRUE);
@@ -313,6 +365,16 @@ static char * test_logical_xor() {
 	lhmsv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
+	bind_stack_t* pbind_stack = bind_stack_alloc();
+
+	variables_t variables = (variables_t) {
+		.pinrec           = prec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pbind_stack,
+	};
 
 	mv_t t = mv_from_bool(TRUE);
 	mv_t f = mv_from_bool(FALSE);
@@ -332,15 +394,15 @@ static char * test_logical_xor() {
 	rval_evaluator_t* pfa = rval_evaluator_alloc_from_b_bb_xor_func(pf, pa);
 	rval_evaluator_t* paa = rval_evaluator_alloc_from_b_bb_xor_func(pa, pa);
 
-	mv_t ott = ptt->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptt->pvstate);
-	mv_t otf = ptf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, ptf->pvstate);
-	mv_t oft = pft->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pft->pvstate);
-	mv_t off = pff->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pff->pvstate);
-	mv_t oat = pat->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pat->pvstate);
-	mv_t oaf = paf->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paf->pvstate);
-	mv_t ota = pta->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pta->pvstate);
-	mv_t ofa = pfa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, pfa->pvstate);
-	mv_t oaa = paa->pprocess_func(prec, ptyped_overlay, poosvars, &pregex_captures, pctx, paa->pvstate);
+	mv_t ott = ptt->pprocess_func(ptt->pvstate, &variables);
+	mv_t otf = ptf->pprocess_func(ptf->pvstate, &variables);
+	mv_t oft = pft->pprocess_func(pft->pvstate, &variables);
+	mv_t off = pff->pprocess_func(pff->pvstate, &variables);
+	mv_t oat = pat->pprocess_func(pat->pvstate, &variables);
+	mv_t oaf = paf->pprocess_func(paf->pvstate, &variables);
+	mv_t ota = pta->pprocess_func(pta->pvstate, &variables);
+	mv_t ofa = pfa->pprocess_func(pfa->pvstate, &variables);
+	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
 	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == FALSE);
 	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == TRUE);

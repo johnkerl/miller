@@ -151,19 +151,17 @@ typedef struct _rval_evaluator_field_name_state_t {
 	char* field_name;
 } rval_evaluator_field_name_state_t;
 
-static mv_t rval_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+static mv_t rval_evaluator_field_name_func_string_only(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
 		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
 		// freed out from underneath it by the evaluator functions.
 		return mv_copy(poverlay);
 	} else {
-		char* string = lrec_get(prec, pstate->field_name);
+		char* string = lrec_get(pvars->pinrec, pstate->field_name);
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
@@ -175,19 +173,17 @@ static mv_t rval_evaluator_field_name_func_string_only(lrec_t* prec, lhmsv_t* pt
 	}
 }
 
-static mv_t rval_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+static mv_t rval_evaluator_field_name_func_string_float(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
 		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
 		// freed out from underneath it by the evaluator functions.
 		return mv_copy(poverlay);
 	} else {
-		char* string = lrec_get(prec, pstate->field_name);
+		char* string = lrec_get(pvars->pinrec, pstate->field_name);
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
@@ -204,18 +200,17 @@ static mv_t rval_evaluator_field_name_func_string_float(lrec_t* prec, lhmsv_t* p
 	}
 }
 
-static mv_t rval_evaluator_field_name_func_string_float_int(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate) {
+static mv_t rval_evaluator_field_name_func_string_float_int(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(ptyped_overlay, pstate->field_name);
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
 		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
 		// freed out from underneath it by the evaluator functions.
 		return mv_copy(poverlay);
 	} else {
-		char* string = lrec_get(prec, pstate->field_name);
+		char* string = lrec_get(pvars->pinrec, pstate->field_name);
 		if (string == NULL) {
 			return mv_absent();
 		} else if (*string == 0) {
@@ -274,12 +269,10 @@ typedef struct _rval_evaluator_oosvar_name_state_t {
 	sllmv_t* pmvkeys;
 } rval_evaluator_oosvar_name_state_t;
 
-mv_t rval_evaluator_oosvar_name_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_oosvar_name_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_oosvar_name_state_t* pstate = pvstate;
 	int error = 0;
-	mv_t* pval = mlhmmv_get_terminal(poosvars, pstate->pmvkeys, &error);
+	mv_t* pval = mlhmmv_get_terminal(pvars->poosvars, pstate->pmvkeys, &error);
 	if (pval != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy a value here to feed
 		// into that. Otherwise the typed-overlay map in mapper_put would have its contents freed out from underneath it
@@ -322,19 +315,16 @@ typedef struct _rval_evaluator_oosvar_level_keys_state_t {
 	sllv_t* poosvar_rhs_keylist_evaluators;
 } rval_evaluator_oosvar_level_keys_state_t;
 
-mv_t rval_evaluator_oosvar_level_keys_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_oosvar_level_keys_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_oosvar_level_keys_state_t* pstate = pvstate;
 
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pstate->poosvar_rhs_keylist_evaluators,
-		prec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* pmvkeys = evaluate_list(pstate->poosvar_rhs_keylist_evaluators, pvars, &all_non_null_or_error);
 
 	mv_t rv = mv_absent();
 	if (all_non_null_or_error) {
 		int error = 0;
-		mv_t* pval = mlhmmv_get_terminal(poosvars, pmvkeys, &error);
+		mv_t* pval = mlhmmv_get_terminal(pvars->poosvars, pmvkeys, &error);
 		if (pval != NULL) {
 			if (pval->type == MT_STRING && *pval->u.strv == 0)
 				rv = mv_empty();
@@ -431,24 +421,20 @@ typedef struct _rval_evaluator_strnum_literal_state_t {
 	mv_t literal;
 } rval_evaluator_strnum_literal_state_t;
 
-mv_t rval_evaluator_non_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_non_string_literal_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_strnum_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
 
-mv_t rval_evaluator_string_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_string_literal_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_strnum_literal_state_t* pstate = pvstate;
 	char* input = pstate->literal.u.strv;
 
-	if (ppregex_captures == NULL || *ppregex_captures == NULL) {
+	if (pvars->ppregex_captures == NULL || *pvars->ppregex_captures == NULL) {
 		return mv_from_string_no_free(input);
 	} else {
 		int was_allocated = FALSE;
-		char* output = interpolate_regex_captures(input, *ppregex_captures, &was_allocated);
+		char* output = interpolate_regex_captures(input, *pvars->ppregex_captures, &was_allocated);
 		if (was_allocated)
 			return mv_from_string_with_free(output);
 		else
@@ -523,9 +509,7 @@ typedef struct _rval_evaluator_string_state_t {
 	char* string;
 } rval_evaluator_string_state_t;
 
-mv_t rval_evaluator_string_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_string_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_string_state_t* pstate = pvstate;
 	return mv_from_string_no_free(pstate->string);
 }
@@ -553,9 +537,7 @@ typedef struct _rval_evaluator_boolean_literal_state_t {
 	mv_t literal;
 } rval_evaluator_boolean_literal_state_t;
 
-mv_t rval_evaluator_boolean_literal_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_boolean_literal_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_boolean_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
@@ -616,13 +598,10 @@ typedef struct _rval_evaluator_environment_state_t {
 	rval_evaluator_t* pname_evaluator;
 } rval_evaluator_environment_state_t;
 
-mv_t rval_evaluator_environment_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_environment_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_environment_state_t* pstate = pvstate;
 
-	mv_t mvname = pstate->pname_evaluator->pprocess_func(prec, ptyped_overlay,
-		poosvars, ppregex_captures, pctx, pstate->pname_evaluator->pvstate);
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
 	if (mv_is_null(&mvname)) {
 		return mv_absent();
 	}
@@ -664,10 +643,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnod
 }
 
 // ================================================================
-mv_t rval_evaluator_NF_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
-	return mv_from_int(prec->field_count);
+mv_t rval_evaluator_NF_func(void* pvstate, variables_t* pvars) {
+	return mv_from_int(pvars->pinrec->field_count);
 }
 static void rval_evaluator_NF_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
@@ -681,10 +658,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_NF() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_NR_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
-	return mv_from_int(pctx->nr);
+mv_t rval_evaluator_NR_func(void* pvstate, variables_t* pvars) {
+	return mv_from_int(pvars->pctx->nr);
 }
 static void rval_evaluator_NR_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
@@ -698,10 +673,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_NR() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_FNR_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
-	return mv_from_int(pctx->fnr);
+mv_t rval_evaluator_FNR_func(void* pvstate, variables_t* pvars) {
+	return mv_from_int(pvars->pctx->fnr);
 }
 static void rval_evaluator_FNR_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
@@ -715,10 +688,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_FNR() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_FILENAME_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
-	return mv_from_string_no_free(pctx->filename);
+mv_t rval_evaluator_FILENAME_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->filename);
 }
 static void rval_evaluator_FILENAME_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
@@ -733,10 +704,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_FILENAME() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_FILENUM_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
-	return mv_from_int(pctx->filenum);
+mv_t rval_evaluator_FILENUM_func(void* pvstate, variables_t* pvars) {
+	return mv_from_int(pvars->pctx->filenum);
 }
 static void rval_evaluator_FILENUM_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
@@ -750,9 +719,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_FILENUM() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_PI_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_PI_func(void* pvstate, variables_t* pvars) {
 	return mv_from_float(M_PI);
 }
 static void rval_evaluator_PI_free(rval_evaluator_t* pevaluator) {
@@ -767,9 +734,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_PI() {
 }
 
 // ----------------------------------------------------------------
-mv_t rval_evaluator_E_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_E_func(void* pvstate, variables_t* pvars) {
 	return mv_from_float(M_E);
 }
 static void rval_evaluator_E_free(rval_evaluator_t* pevaluator) {
@@ -801,9 +766,7 @@ typedef struct _rval_evaluator_from_bound_variable_state_t {
 	char* variable_name;
 } rval_evaluator_from_bound_variable_state_t;
 
-mv_t rval_evaluator_from_bound_variable_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_from_bound_variable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_from_bound_variable_state_t* pstate = pvstate;
 	return mv_from_string_no_free(pstate->variable_name); // xxx stub
 }
@@ -832,9 +795,7 @@ typedef struct _rval_evaluator_mv_state_t {
 	mv_t literal;
 } rval_evaluator_mv_state_t;
 
-mv_t rval_evaluator_mv_process(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_mv_process(void* pvstate, variables_t* pvars) {
 	rval_evaluator_mv_state_t* pstate = pvstate;
 	return mv_copy(&pstate->literal);
 

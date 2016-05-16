@@ -49,15 +49,10 @@ struct _mlr_dsl_cst_statement_t;
 
 typedef void mlr_dsl_cst_node_handler_func_t(
 	struct _mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*         pshould_emit_rec, // xxx bag up the rest as cst bag ...
+	sllv_t*      poutrecs,
+	char*        oosvar_flatten_separator);
 
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
@@ -122,15 +117,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_handle(
-	sllv_t*          pcst_statements, // begin/main/end
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	sllv_t*      pcst_statements, // begin/main/end
+	variables_t* pvars,
+	int*         pshould_emit_rec,
+	sllv_t*      poutrecs,
+	char*        oosvar_flatten_separator);
 
 #endif // MLR_DSL_CST_H

@@ -13,21 +13,12 @@
 // See comments in rval_evaluators.h
 // ================================================================
 
-sllmv_t* evaluate_list(
-	sllv_t*          pevaluators,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	mlhmmv_t*        poosvars,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pall_non_null_or_error)
-{
+sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_null_or_error) {
 	sllmv_t* pmvs = sllmv_alloc();
 	int all_non_null_or_error = TRUE;
 	for (sllve_t* pe = pevaluators->phead; pe != NULL; pe = pe->pnext) {
 		rval_evaluator_t* pevaluator = pe->pvvalue;
-		mv_t mv = pevaluator->pprocess_func(pinrec, ptyped_overlay,
-			poosvars, ppregex_captures, pctx, pevaluator->pvstate);
+		mv_t mv = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
 		if (mv_is_null_or_error(&mv)) {
 			all_non_null_or_error = FALSE;
 			break;

@@ -38,22 +38,16 @@
 
 struct _rval_evaluator_t; // forward reference for method declarations
 
-typedef struct _rval_expr_data_t {
+typedef struct _variables_t {
 	lrec_t*          pinrec;
 	lhmsv_t*         ptyped_overlay;
 	mlhmmv_t*        poosvars;
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
 	bind_stack_t*    pbind_stack;
-} rval_expr_data_t;
+} variables_t;
 
-typedef mv_t rval_evaluator_process_func_t(
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	mlhmmv_t*        poosvars,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	void*            pvstate);
+typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
 
 typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
 

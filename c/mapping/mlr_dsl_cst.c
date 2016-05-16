@@ -36,267 +36,157 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
 static void mlr_dsl_cst_node_handle_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_unset(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_unset_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_emitf(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_emitp(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_emitp_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_emit(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_emit_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_dump(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_filter(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_conditional_block(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_while(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_do_while(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_do_while(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_for_srec(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_if_head(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static void mlr_dsl_cst_node_handle_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack);
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator);
 
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
@@ -1112,42 +1002,30 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 
 // ----------------------------------------------------------------
 void mlr_dsl_cst_handle(
-	sllv_t*          pcst_statements,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	sllv_t*      pcst_statements,
+	variables_t* pvars, // xxx rename -- not just RHS
+	int*         pshould_emit_rec,
+	sllv_t*      poutrecs,
+	char*        oosvar_flatten_separator)
 {
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->phandler(pstatement, poosvars, pinrec, ptyped_overlay, ppregex_captures,
-			pctx, pshould_emit_rec, poutrecs, oosvar_flatten_separator, pbind_stack);
+		pstatement->phandler(pstatement, pvars, pshould_emit_rec, poutrecs, oosvar_flatten_separator);
 	}
 }
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	char* srec_lhs_field_name = pnode->srec_lhs_field_name;
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
-	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
 	*pval = val;
 
@@ -1164,13 +1042,13 @@ static void mlr_dsl_cst_node_handle_srec_assignment(
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(pval)) {
 		// xxx to do: replace the typed overlay with an mlhmmv entirely.
-		mv_t* pold = lhmsv_get(ptyped_overlay, srec_lhs_field_name);
+		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
 		if (pold != NULL) {
 			mv_free(pold);
 			free(pold);
 		}
-		lhmsv_put(ptyped_overlay, srec_lhs_field_name, pval, FREE_ENTRY_VALUE);
-		lrec_put(pinrec, srec_lhs_field_name, "bug", NO_FREE);
+		lhmsv_put(pvars->ptyped_overlay, srec_lhs_field_name, pval, FREE_ENTRY_VALUE);
+		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
 	} else {
 		mv_free(pval);
 		free(pval);
@@ -1180,26 +1058,19 @@ static void mlr_dsl_cst_node_handle_srec_assignment(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	mv_t rhs_value = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay,
-		poosvars, ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	if (mv_is_present(&rhs_value)) {
 		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
-			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+		sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &all_non_null_or_error);
 		if (all_non_null_or_error)
-			mlhmmv_put_terminal(poosvars, pmvkeys, &rhs_value);
+			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
 		sllmv_free(pmvkeys);
 	}
 	mv_free(&rhs_value);
@@ -1211,26 +1082,19 @@ static void mlr_dsl_cst_node_handle_oosvar_assignment(
 
 static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int lhs_all_non_null_or_error = TRUE;
-	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &lhs_all_non_null_or_error);
+	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &lhs_all_non_null_or_error);
 
 	if (lhs_all_non_null_or_error) {
 		int rhs_all_non_null_or_error = TRUE;
-		sllmv_t* prhskeys = evaluate_list(pnode->poosvar_rhs_keylist_evaluators,
-			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &rhs_all_non_null_or_error);
+		sllmv_t* prhskeys = evaluate_list(pnode->poosvar_rhs_keylist_evaluators, pvars, &rhs_all_non_null_or_error);
 		if (rhs_all_non_null_or_error) {
-			mlhmmv_copy(poosvars, plhskeys, prhskeys);
+			mlhmmv_copy(pvars->poosvars, plhskeys, prhskeys);
 		}
 		sllmv_free(prhskeys);
 	}
@@ -1240,30 +1104,24 @@ static void mlr_dsl_cst_node_handle_oosvar_to_oosvar_assignment(
 
 static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int all_non_null_or_error = TRUE;
-	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* plhskeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 
-		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(poosvars, plhskeys);
+		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(pvars->poosvars, plhskeys);
 		if (plevel != NULL) {
 
 			mlhmmv_clear_level(plevel);
 
-			for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+			for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
 				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
 				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
-				mv_t* pomv = lhmsv_get(ptyped_overlay, pe->key);
+				mv_t* pomv = lhmsv_get(pvars->ptyped_overlay, pe->key);
 				if (pomv != NULL) {
 					mlhmmv_put_terminal_from_level(plevel, &e, pomv);
 				} else {
@@ -1279,29 +1137,23 @@ static void mlr_dsl_cst_node_handle_oosvar_from_full_srec_assignment(
 
 static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
-	lrec_clear(pinrec);
-	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+	lrec_clear(pvars->pinrec);
+	for (lhmsve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 		mv_t* pmv = pe->pvvalue;
 		mv_free(pmv);
 	}
-	lhmsv_clear(ptyped_overlay);
+	lhmsv_clear(pvars->ptyped_overlay);
 
 	int all_non_null_or_error = TRUE;
-	sllmv_t* prhskeys = evaluate_list(pnode->poosvar_rhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* prhskeys = evaluate_list(pnode->poosvar_rhs_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		int error = 0;
-		mlhmmv_level_t* plevel = mlhmmv_get_level(poosvars, prhskeys, &error);
+		mlhmmv_level_t* plevel = mlhmmv_get_level(pvars->poosvars, prhskeys, &error);
 		if (plevel != NULL) {
 			for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 				if (pentry->level_value.is_terminal) {
@@ -1321,14 +1173,14 @@ static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 					// lrec would result in double frees, or awkward bookkeeping. However, the NR
 					// variable evaluator reads prec->field_count, so we need to put something here.
 					// And putting something statically allocated minimizes copying/freeing.
-					mv_t* pold = lhmsv_get(ptyped_overlay, skey);
+					mv_t* pold = lhmsv_get(pvars->ptyped_overlay, skey);
 					if (pold != NULL) {
 						// xxx to do: replace the typed overlay with an mlhmmv entirely.
 						mv_free(pold);
 						free(pold);
 					}
-					lhmsv_put(ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
-					lrec_put(pinrec, skey, "bug", FREE_ENTRY_KEY);
+					lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
+					lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
 				}
 			}
 		}
@@ -1339,29 +1191,23 @@ static void mlr_dsl_cst_node_handle_full_srec_from_oosvar_assignment(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_unset(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
 		if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
 
 			int all_non_null_or_error = TRUE;
-			sllmv_t* pmvkeys = evaluate_list(pvararg->punset_oosvar_keylist_evaluators,
-				pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+			sllmv_t* pmvkeys = evaluate_list(pvararg->punset_oosvar_keylist_evaluators, pvars, &all_non_null_or_error);
 
 			if (all_non_null_or_error)
-				mlhmmv_remove(poosvars, pmvkeys);
+				mlhmmv_remove(pvars->poosvars, pmvkeys);
 			sllmv_free(pmvkeys);
 		} else {
-			lrec_remove(pinrec, pvararg->emitf_or_unset_srec_field_name);
+			lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
 		}
 	}
 }
@@ -1369,33 +1215,23 @@ static void mlr_dsl_cst_node_handle_unset(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_unset_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	sllmv_t* pempty = sllmv_alloc();
-	mlhmmv_remove(poosvars, pempty);
+	mlhmmv_remove(pvars->poosvars, pempty);
 	sllmv_free(pempty);
 }
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_emitf(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
@@ -1405,8 +1241,7 @@ static void mlr_dsl_cst_node_handle_emitf(
 
 		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
 		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
-		mv_t val = pemitf_arg_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, pemitf_arg_evaluator->pvstate);
+		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
 
 		if (val.type == MT_STRING) {
 			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
@@ -1424,25 +1259,18 @@ static void mlr_dsl_cst_node_handle_emitf(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_emitp(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
+	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
-			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
@@ -1452,21 +1280,15 @@ static void mlr_dsl_cst_node_handle_emitp(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_emitp_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs, FALSE, oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
 }
@@ -1474,25 +1296,18 @@ static void mlr_dsl_cst_node_handle_emitp_all(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_emit(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &keys_all_non_null_or_error);
+	sllmv_t* pmvkeys = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
-			pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &names_all_non_null_or_error);
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(poosvars, pmvkeys, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
@@ -1502,21 +1317,15 @@ static void mlr_dsl_cst_node_handle_emit(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_emit_all(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators,
-		pinrec, ptyped_overlay, poosvars, ppregex_captures, pctx, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(poosvars, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs, TRUE, oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
 }
@@ -1524,36 +1333,25 @@ static void mlr_dsl_cst_node_handle_emit_all(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_dump(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
-	mlhmmv_print_json_stacked(poosvars, FALSE);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE);
 }
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_filter(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
-	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		*pshould_emit_rec = val.u.boolv;
@@ -1565,26 +1363,18 @@ static void mlr_dsl_cst_node_handle_filter(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_conditional_block(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
-	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		if (val.u.boolv) {
-			mlr_dsl_cst_handle(pnode->pblock_statements,
-				poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-				oosvar_flatten_separator, pbind_stack);
+			mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pshould_emit_rec, poutrecs, oosvar_flatten_separator);
 		}
 	}
 }
@@ -1592,27 +1382,20 @@ static void mlr_dsl_cst_node_handle_conditional_block(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_while(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
 	while (TRUE) {
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				mlr_dsl_cst_handle(pnode->pblock_statements,
-					poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-					oosvar_flatten_separator, pbind_stack);
+				mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pshould_emit_rec, poutrecs,
+					oosvar_flatten_separator);
 			} else {
 				break;
 			}
@@ -1625,25 +1408,18 @@ static void mlr_dsl_cst_node_handle_while(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_do_while(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
 	while (TRUE) {
-		mlr_dsl_cst_handle(pnode->pblock_statements,
-			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-			oosvar_flatten_separator, pbind_stack);
+		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pshould_emit_rec, poutrecs,
+			oosvar_flatten_separator);
 
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (!val.u.boolv) {
@@ -1658,23 +1434,18 @@ static void mlr_dsl_cst_node_handle_do_while(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_for_srec(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*         pshould_emit_rec,
+	sllv_t*      poutrecs,
+	char*        oosvar_flatten_separator)
 {
-	bind_stack_push(pbind_stack, pnode->pbound_variables);
-	for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
+	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
 		// xxx beware string/integer for lrec keys ...
 		// Copy, not pointer-reference, in case of srec-unset in loop body.
 		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
 
-		mv_t* poverlay = lhmsv_get(ptyped_overlay, pe->key);
+		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
 		mv_t mvval = (poverlay != NULL)
 			? mv_copy(poverlay)
 			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
@@ -1682,39 +1453,30 @@ static void mlr_dsl_cst_node_handle_for_srec(
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
 
-		mlr_dsl_cst_handle(pnode->pblock_statements,
-			poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-			oosvar_flatten_separator, pbind_stack);
+		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pshould_emit_rec, poutrecs, oosvar_flatten_separator);
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
-	bind_stack_pop(pbind_stack);
+	bind_stack_pop(pvars->pbind_stack);
 }
 
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_if_head(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
 		rval_evaluator_t* prhs_evaluator = pitemnode->prhs_evaluator;
 
-		mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-			ppregex_captures, pctx, prhs_evaluator->pvstate);
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				mlr_dsl_cst_handle(pitemnode->pblock_statements,
-					poosvars, pinrec, ptyped_overlay, ppregex_captures, pctx, pshould_emit_rec, poutrecs,
-					oosvar_flatten_separator, pbind_stack);
+				mlr_dsl_cst_handle(pitemnode->pblock_statements, pvars, pshould_emit_rec, poutrecs,
+					oosvar_flatten_separator);
 
 				break;
 			}
@@ -1725,20 +1487,14 @@ static void mlr_dsl_cst_node_handle_if_head(
 // ----------------------------------------------------------------
 static void mlr_dsl_cst_node_handle_bare_boolean(
 	mlr_dsl_cst_statement_t* pnode,
-	mlhmmv_t*        poosvars,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pshould_emit_rec,
-	sllv_t*          poutrecs,
-	char*            oosvar_flatten_separator,
-	bind_stack_t*    pbind_stack)
+	variables_t* pvars,
+	int*              pshould_emit_rec,
+	sllv_t*           poutrecs,
+	char*             oosvar_flatten_separator)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
-	mv_t val = prhs_evaluator->pprocess_func(pinrec, ptyped_overlay, poosvars,
-		ppregex_captures, pctx, prhs_evaluator->pvstate);
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_non_null(&val))
 		mv_set_boolean_strict(&val);
 }

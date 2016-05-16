@@ -458,12 +458,9 @@ typedef struct _rval_evaluator_b_b_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_b_b_state_t;
 
-mv_t rval_evaluator_b_b_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_b_b_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_b_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL)
@@ -499,13 +496,10 @@ typedef struct _rval_evaluator_b_bb_state_t {
 
 // This is different from most of the lrec-evaluator functions in that it does short-circuiting:
 // since is logical AND, the LHS is not evaluated if the RHS is false.
-mv_t rval_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_b_bb_and_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type == MT_BOOL) {
 		if (val1.u.boolv == FALSE)
@@ -514,8 +508,7 @@ mv_t rval_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 		return mv_error();
 	}
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type == MT_BOOL) {
 		return val2;
@@ -528,13 +521,10 @@ mv_t rval_evaluator_b_bb_and_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_
 
 // This is different from most of the lrec-evaluator functions in that it does short-circuiting:
 // since is logical OR, the LHS is not evaluated if the RHS is true.
-mv_t rval_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_b_bb_or_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type == MT_BOOL) {
 		if (val1.u.boolv == TRUE)
@@ -543,8 +533,7 @@ mv_t rval_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t
 		return mv_error();
 	}
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type == MT_BOOL) {
 		return val2;
@@ -555,20 +544,16 @@ mv_t rval_evaluator_b_bb_or_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t
 	}
 }
 
-mv_t rval_evaluator_b_bb_xor_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_b_bb_xor_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_BOOL && val1.type != MT_ABSENT) {
 		return mv_error();
 	}
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type == MT_BOOL) {
 		if (val1.type == MT_BOOL)
@@ -634,11 +619,8 @@ typedef struct _rval_evaluator_x_z_state_t {
 	mv_zary_func_t* pfunc;
 } rval_evaluator_x_z_state_t;
 
-mv_t rval_evaluator_x_z_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_z_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_z_state_t* pstate = pvstate;
-
 	return pstate->pfunc();
 }
 static void rval_evaluator_x_z_free(rval_evaluator_t* pevaluator) {
@@ -663,12 +645,9 @@ typedef struct _rval_evaluator_f_f_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_f_f_state_t;
 
-mv_t rval_evaluator_f_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_f_f_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_f_f_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
@@ -703,13 +682,10 @@ typedef struct _rval_evaluator_x_n_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_x_n_state_t;
 
-mv_t rval_evaluator_x_n_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_n_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_n_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
@@ -741,12 +717,9 @@ typedef struct _rval_evaluator_i_i_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_i_i_state_t;
 
-mv_t rval_evaluator_i_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_i_i_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_i_i_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
@@ -780,17 +753,13 @@ typedef struct _rval_evaluator_f_ff_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_f_ff_state_t;
 
-mv_t rval_evaluator_f_ff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_f_ff_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_f_ff_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 
@@ -827,14 +796,10 @@ typedef struct _rval_evaluator_x_xx_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_x_xx_state_t;
 
-mv_t rval_evaluator_x_xx_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_xx_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_xx_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 
 	// nullities handled by full disposition matrices
 	return pstate->pfunc(&val1, &val2);
@@ -874,16 +839,12 @@ typedef struct _rval_evaluator_x_xx_nullable_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_x_xx_nullable_state_t;
 
-mv_t rval_evaluator_x_xx_nullable_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_xx_nullable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_xx_nullable_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_number_nullable(&val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	mv_set_number_nullable(&val2);
 
 	return pstate->pfunc(&val1, &val2);
@@ -920,22 +881,17 @@ typedef struct _rval_evaluator_f_fff_state_t {
 	rval_evaluator_t* parg3;
 } rval_evaluator_f_fff_state_t;
 
-mv_t rval_evaluator_f_fff_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_f_fff_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_f_fff_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	mv_set_float_nullable(&val2);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 	mv_set_float_nullable(&val3);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val3);
 
@@ -974,19 +930,15 @@ typedef struct _rval_evaluator_i_ii_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_i_ii_state_t;
 
-mv_t rval_evaluator_i_ii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_i_ii_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_i_ii_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_INT)
 		return mv_error();
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	mv_set_int_nullable(&val2);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_INT)
@@ -1026,26 +978,21 @@ typedef struct _rval_evaluator_i_iii_state_t {
 	rval_evaluator_t* parg3;
 } rval_evaluator_i_iii_state_t;
 
-mv_t rval_evaluator_i_iii_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_i_iii_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_i_iii_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	if (val1.type != MT_INT)
 		return mv_error();
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	mv_set_int_nullable(&val2);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
 	if (val2.type != MT_INT)
 		return mv_error();
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 	mv_set_int_nullable(&val3);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val3);
 	if (val3.type != MT_INT)
@@ -1086,20 +1033,15 @@ typedef struct _rval_evaluator_ternop_state_t {
 	rval_evaluator_t* parg3;
 } rval_evaluator_ternop_state_t;
 
-mv_t rval_evaluator_ternop_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_ternop_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_ternop_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 	mv_set_boolean_strict(&val1);
 
 	return val1.u.boolv
-		? pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-			pctx, pstate->parg2->pvstate)
-		: pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-			pctx, pstate->parg3->pvstate);
+		? pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars)
+		: pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 }
 static void rval_evaluator_ternop_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_ternop_state_t* pstate = pevaluator->pvstate;
@@ -1131,12 +1073,9 @@ typedef struct _rval_evaluator_s_s_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_s_s_state_t;
 
-mv_t rval_evaluator_s_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_s_s_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_s_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
@@ -1169,12 +1108,9 @@ typedef struct _rval_evaluator_s_f_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_s_f_state_t;
 
-mv_t rval_evaluator_s_f_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_s_f_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_s_f_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	mv_set_float_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
@@ -1207,12 +1143,9 @@ typedef struct _rval_evaluator_s_i_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_s_i_state_t;
 
-mv_t rval_evaluator_s_i_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_s_i_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_s_i_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	mv_set_int_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
@@ -1245,12 +1178,9 @@ typedef struct _rval_evaluator_f_s_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_f_s_state_t;
 
-mv_t rval_evaluator_f_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_f_s_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_f_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
@@ -1283,12 +1213,9 @@ typedef struct _rval_evaluator_i_s_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_i_s_state_t;
 
-mv_t rval_evaluator_i_s_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_i_s_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_i_s_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
@@ -1321,12 +1248,9 @@ typedef struct _rval_evaluator_x_x_state_t {
 	rval_evaluator_t* parg1;
 } rval_evaluator_x_x_state_t;
 
-mv_t rval_evaluator_x_x_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_x_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	// nullity handled by full disposition matrices
 	return pstate->pfunc(&val1);
@@ -1358,17 +1282,13 @@ typedef struct _rval_evaluator_x_ns_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_x_ns_state_t;
 
-mv_t rval_evaluator_x_ns_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_ns_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_ns_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	mv_set_number_nullable(&val1);
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
 	if (!mv_is_string_or_empty(&val2)) {
 		mv_free(&val1);
@@ -1408,18 +1328,14 @@ typedef struct _rval_evaluator_x_ss_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_x_ss_state_t;
 
-mv_t rval_evaluator_x_ss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_ss_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_ss_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
 	if (!mv_is_string_or_empty(&val2))
 		return mv_error();
@@ -1457,22 +1373,18 @@ typedef struct _rval_evaluator_x_ssc_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_x_ssc_state_t;
 
-mv_t rval_evaluator_x_ssc_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_ssc_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_ssc_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
 	if (!mv_is_string_or_empty(&val2))
 		return mv_error();
-	return pstate->pfunc(&val1, &val2, ppregex_captures);
+	return pstate->pfunc(&val1, &val2, pvars->ppregex_captures);
 }
 static void rval_evaluator_x_ssc_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_x_ssc_state_t* pstate = pevaluator->pvstate;
@@ -1506,18 +1418,15 @@ typedef struct _rval_evaluator_x_sr_state_t {
 	string_builder_t*             psb;
 } rval_evaluator_x_sr_state_t;
 
-mv_t rval_evaluator_x_sr_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_sr_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_sr_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
 
-	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, ppregex_captures);
+	return pstate->pfunc(&val1, &pstate->regex, pstate->psb, pvars->ppregex_captures);
 }
 static void rval_evaluator_x_sr_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_x_sr_state_t* pstate = pevaluator->pvstate;
@@ -1554,14 +1463,10 @@ typedef struct _rval_evaluator_s_xs_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_s_xs_state_t;
 
-mv_t rval_evaluator_s_xs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_s_xs_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_s_xs_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
 	if (!mv_is_string_or_empty(&val2))
 		return mv_error();
@@ -1600,26 +1505,21 @@ typedef struct _rval_evaluator_s_sss_state_t {
 	rval_evaluator_t* parg3;
 } rval_evaluator_s_sss_state_t;
 
-mv_t rval_evaluator_s_sss_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_s_sss_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_s_sss_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
 
-	mv_t val2 = pstate->parg2->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg2->pvstate);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val2);
 	if (!mv_is_string_or_empty(&val2)) {
 		mv_free(&val1);
 		return mv_error();
 	}
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val3);
 	if (!mv_is_string_or_empty(&val3)) {
 		mv_free(&val1);
@@ -1664,19 +1564,15 @@ typedef struct _rval_evaluator_x_srs_state_t {
 	string_builder_t*             psb;
 } rval_evaluator_x_srs_state_t;
 
-mv_t rval_evaluator_x_srs_func(lrec_t* prec, lhmsv_t* ptyped_overlay, mlhmmv_t* poosvars,
-	string_array_t** ppregex_captures, context_t* pctx, void* pvstate)
-{
+mv_t rval_evaluator_x_srs_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_x_srs_state_t* pstate = pvstate;
 
-	mv_t val1 = pstate->parg1->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg1->pvstate);
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
 	if (!mv_is_string_or_empty(&val1))
 		return mv_error();
 
-	mv_t val3 = pstate->parg3->pprocess_func(prec, ptyped_overlay, poosvars, ppregex_captures,
-		pctx, pstate->parg3->pvstate);
+	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val3);
 	if (!mv_is_string_or_empty(&val3)) {
 		mv_free(&val1);

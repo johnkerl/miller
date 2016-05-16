@@ -170,13 +170,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_fun
 // rval_list_evaluators.c
 
 // Nominally for oosvar multikeys.
-sllmv_t* evaluate_list(
-	sllv_t*          pevaluators,
-	lrec_t*          pinrec,
-	lhmsv_t*         ptyped_overlay,
-	mlhmmv_t*        poosvars,
-	string_array_t** ppregex_captures,
-	context_t*       pctx,
-	int*             pall_non_null_or_error);
+sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_null_or_error);
 
 #endif // LREC_FEVALUATORS_H

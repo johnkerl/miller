@@ -245,17 +245,44 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	sllv_t* poutrecs = sllv_alloc();
 	int emit_rec = TRUE;
 
+// xxx
+//	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = b};
+//typedef struct _variables_t {
+//	lrec_t*          pinrec;
+//	lhmsv_t*         ptyped_overlay;
+//	mlhmmv_t*        poosvars;
+//	string_array_t** ppregex_captures;
+//	context_t*       pctx;
+//	bind_stack_t*    pbind_stack;
+//} variables_t;
+
 	if (pstate->at_begin) {
-		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
-				pstate->oosvar_flatten_separator, pstate->pbind_stack);
+		variables_t variables = (variables_t) {
+			.pinrec           = NULL,
+			.ptyped_overlay   = NULL,
+			.poosvars         = pstate->poosvars,
+			.ppregex_captures = &pregex_captures,
+			.pctx             = pctx,
+			.pbind_stack      = pstate->pbind_stack,
+		};
+
+		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements, &variables,
+			&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
-		mlr_dsl_cst_handle(pstate->pcst->pend_statements,
-			pstate->poosvars, NULL, NULL, &pregex_captures, pctx, &emit_rec, poutrecs,
-				pstate->oosvar_flatten_separator, pstate->pbind_stack);
+		variables_t variables = (variables_t) {
+			.pinrec           = NULL,
+			.ptyped_overlay   = NULL,
+			.poosvars         = pstate->poosvars,
+			.ppregex_captures = &pregex_captures,
+			.pctx             = pctx,
+			.pbind_stack      = pstate->pbind_stack,
+		};
+
+		mlr_dsl_cst_handle(pstate->pcst->pend_statements, &variables,
+			&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -265,9 +292,18 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
 	emit_rec = TRUE;
-	mlr_dsl_cst_handle(pstate->pcst->pmain_statements,
-		pstate->poosvars, pinrec, ptyped_overlay, &pregex_captures, pctx, &emit_rec, poutrecs,
-			pstate->oosvar_flatten_separator, pstate->pbind_stack);
+
+	variables_t variables = (variables_t) {
+		.pinrec           = pinrec,
+		.ptyped_overlay   = ptyped_overlay,
+		.poosvars         = pstate->poosvars,
+		.ppregex_captures = &pregex_captures,
+		.pctx             = pctx,
+		.pbind_stack      = pstate->pbind_stack,
+	};
+
+	mlr_dsl_cst_handle(pstate->pcst->pmain_statements, &variables,
+		&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
 
 	if (emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.
