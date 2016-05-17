@@ -767,6 +767,14 @@ md_field_name(A) ::= MD_TOKEN_BRACED_FIELD_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
 }
 
+md_atom_or_fcn(A) ::= md_indirect_field_name(B). {
+	A = B;
+}
+md_indirect_field_name(A) ::= MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.
+{
+	A = mlr_dsl_ast_node_alloc_unary("indirect_field_name", MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, B);
+}
+
 md_atom_or_fcn(A) ::= md_keyed_oosvar_name(B). {
 	A = B;
 }

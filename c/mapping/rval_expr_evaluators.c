@@ -51,6 +51,9 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
+		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, type_inferencing);
+
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
@@ -260,6 +263,160 @@ rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int typ
 		break;
 	}
 	pevaluator->pfree_func = rval_evaluator_field_name_free;
+
+	return pevaluator;
+}
+
+// ================================================================
+// xxx reduce code-dup x 6
+
+typedef struct _rval_evaluator_indirect_field_name_state_t {
+	rval_evaluator_t* pname_evaluator;
+} rval_evaluator_indirect_field_name_state_t;
+
+static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, variables_t* pvars) {
+	rval_evaluator_indirect_field_name_state_t* pstate = pvstate;
+
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
+	if (mv_is_null(&mvname)) {
+		return mv_absent();
+	}
+	char* indirect_field_name = mv_alloc_format_val(&mvname);
+
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* string = lrec_get(pvars->pinrec, indirect_field_name);
+		if (string == NULL) {
+			rv = mv_absent();
+		} else if (*string == 0) {
+			rv = mv_empty();
+		} else {
+			// string points into lrec memory and is valid as long as the lrec is.
+			rv = mv_from_string_no_free(string);
+		}
+	}
+
+	free(indirect_field_name);
+	return rv;
+}
+
+static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, variables_t* pvars) {
+	rval_evaluator_indirect_field_name_state_t* pstate = pvstate;
+
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
+	if (mv_is_null(&mvname)) {
+		return mv_absent();
+	}
+	char* indirect_field_name = mv_alloc_format_val(&mvname);
+
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* string = lrec_get(pvars->pinrec, indirect_field_name);
+		if (string == NULL) {
+			rv = mv_absent();
+		} else if (*string == 0) {
+			rv = mv_empty();
+		} else {
+			double fltv;
+			if (mlr_try_float_from_string(string, &fltv)) {
+				rv = mv_from_float(fltv);
+			} else {
+				// string points into lrec memory and is valid as long as the lrec is.
+				rv = mv_from_string_no_free(string);
+			}
+		}
+	}
+	free(indirect_field_name);
+	return rv;
+}
+
+static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvstate, variables_t* pvars) {
+	rval_evaluator_indirect_field_name_state_t* pstate = pvstate;
+
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
+	if (mv_is_null(&mvname)) {
+		return mv_absent();
+	}
+	char* indirect_field_name = mv_alloc_format_val(&mvname);
+
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* string = lrec_get(pvars->pinrec, indirect_field_name);
+		if (string == NULL) {
+			rv = mv_absent();
+		} else if (*string == 0) {
+			rv = mv_empty();
+		} else {
+			long long intv;
+			double fltv;
+			if (mlr_try_int_from_string(string, &intv)) {
+				rv = mv_from_int(intv);
+			} else if (mlr_try_float_from_string(string, &fltv)) {
+				rv = mv_from_float(fltv);
+			} else {
+				// string points into AST memory and is valid as long as the AST is.
+				rv = mv_from_string_no_free(string);
+			}
+		}
+	}
+	free(indirect_field_name);
+	return rv;
+}
+
+static void rval_evaluator_indirect_field_name_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_indirect_field_name_state_t* pstate = pevaluator->pvstate;
+	pstate->pname_evaluator->pfree_func(pstate->pname_evaluator);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnamenode, int type_inferencing) {
+	rval_evaluator_indirect_field_name_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_indirect_field_name_state_t));
+
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing);
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = NULL;
+	switch (type_inferencing) {
+	case TYPE_INFER_STRING_ONLY:
+		pevaluator->pprocess_func = rval_evaluator_indirect_field_name_func_string_only;
+		break;
+	case TYPE_INFER_STRING_FLOAT:
+		pevaluator->pprocess_func = rval_evaluator_indirect_field_name_func_string_float;
+		break;
+	case TYPE_INFER_STRING_FLOAT_INT:
+		pevaluator->pprocess_func = rval_evaluator_indirect_field_name_func_string_float_int;
+		break;
+	default:
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+		break;
+	}
+	pevaluator->pfree_func = rval_evaluator_indirect_field_name_free;
 
 	return pevaluator;
 }

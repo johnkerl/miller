@@ -63,8 +63,9 @@ extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
 // Topmost function:
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing);
 
-// Next level fromrval_evaluator_alloc_from_ast:
+// Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
 // This is used for evaluating @-variables that don't have brackets: e.g. @x vs. @x[$1].
 // See comments above rval_evaluator_alloc_from_oosvar_level_keys for more information.
