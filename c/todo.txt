@@ -22,6 +22,7 @@ TOP-OF-LIST SUMMARY
   - $[boundvar] and @[boundvar] evaluators in the CST.
   - cookbook example: key<->val inverter
   - cookbook example: komosa originals x 2
+  - hygiene: sllv->slln @ ast; lhmsv->lhmsmv @ typed overlay
 
 * for-variants:
   ?? take out the v part??
