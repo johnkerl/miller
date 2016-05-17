@@ -245,17 +245,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	sllv_t* poutrecs = sllv_alloc();
 	int should_emit_rec = TRUE;
 
-// xxx
-//	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = b};
-//typedef struct _variables_t {
-//	lrec_t*          pinrec;
-//	lhmsv_t*         ptyped_overlay;
-//	mlhmmv_t*        poosvars;
-//	string_array_t** ppregex_captures;
-//	context_t*       pctx;
-//	bind_stack_t*    pbind_stack;
-//} variables_t;
-
 	if (pstate->at_begin) {
 		variables_t variables = (variables_t) {
 			.pinrec           = NULL,

@@ -476,6 +476,9 @@ md_unset_args(A) ::= . {
 md_unset_args(A) ::= md_field_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 }
+md_unset_args(A) ::= md_indirect_field_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
 md_unset_args(A) ::= md_oosvar_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 }

@@ -60,7 +60,8 @@ typedef void mlr_dsl_cst_node_handler_func_t(
 
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
-	char* emitf_or_unset_srec_field_name;
+	char* emitf_or_unset_srec_field_name; // xxx rename -- 'srec' not right
+	rval_evaluator_t* punset_srec_field_name_evaluator;
 	rval_evaluator_t* pemitf_arg_evaluator;
 	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
