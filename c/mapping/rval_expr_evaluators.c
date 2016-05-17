@@ -768,7 +768,12 @@ typedef struct _rval_evaluator_from_bound_variable_state_t {
 
 mv_t rval_evaluator_from_bound_variable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_from_bound_variable_state_t* pstate = pvstate;
-	return mv_from_string_no_free(pstate->variable_name); // xxx stub
+	mv_t* pval = bind_stack_resolve(pvars->pbind_stack, pstate->variable_name);
+	if (pval == NULL) {
+		return mv_absent();
+	} else {
+		return mv_copy(pval);
+	}
 }
 static void rval_evaluator_from_bound_variable_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_from_bound_variable_state_t* pstate = pevaluator->pvstate;

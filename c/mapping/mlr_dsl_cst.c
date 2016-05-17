@@ -1440,9 +1440,10 @@ static void mlr_dsl_cst_node_handle_for_srec(
 	char*        oosvar_flatten_separator)
 {
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
-	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
-		// xxx beware string/integer for lrec keys ...
-		// Copy, not pointer-reference, in case of srec-unset in loop body.
+	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
+	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
+		// Copy, not pointer-reference, in case of srec-unset in loop body:
 		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
 
 		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
@@ -1456,6 +1457,7 @@ static void mlr_dsl_cst_node_handle_for_srec(
 		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pshould_emit_rec, poutrecs, oosvar_flatten_separator);
 	}
 	// xxx break/continue-handling (needs to be in rval evluators w/ stack of brk/ctu flags @ context
+	lrec_free(pcopy);
 	bind_stack_pop(pvars->pbind_stack);
 }
 
