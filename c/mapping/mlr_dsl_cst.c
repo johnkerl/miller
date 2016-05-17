@@ -287,31 +287,24 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	mlr_dsl_ast_node_t* plistnode = NULL;
-	////xxx delete all these printfs
-	////printf("AST->CST STUB\n");
 	for (sllve_t* pe = past->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 		case MD_AST_NODE_TYPE_BEGIN:
-			////printf("GOT BEGIN:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				////printf("-- WITHIN BEGIN:%s\n", mlr_dsl_ast_node_describe_type(pchild->type));
 				sllv_append(pcst->pbegin_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
 			}
 			break;
 		case MD_AST_NODE_TYPE_END:
-			////printf("GOT END:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				////printf("-- WITHIN END:%s\n", mlr_dsl_ast_node_describe_type(pchild->type));
 				sllv_append(pcst->pend_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
 			}
 			break;
 		default:
-			////printf("GOT MAIN:%s\n", mlr_dsl_ast_node_describe_type(pnode->type));
 			sllv_append(pcst->pmain_statements, cst_statement_alloc(pnode, type_inferencing, FALSE));
 			break;
 		}
@@ -714,7 +707,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_while(mlr_dsl_ast_node_t* pa
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
-		////printf("BODY %s\n", mlr_dsl_ast_node_describe_type(pbody_ast_node->type));
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -736,7 +728,6 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc_do_while(mlr_dsl_ast_node_t*
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
-		////printf("BODY %s\n", mlr_dsl_ast_node_describe_type(pbody_ast_node->type));
 		sllv_append(pblock_statements, pstatement);
 	}
 
