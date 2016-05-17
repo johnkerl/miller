@@ -9,7 +9,7 @@ static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -36,6 +36,7 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
 static void                  handle_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void         handle_indirect_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void      handle_oosvar_to_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void handle_oosvar_from_full_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -266,6 +267,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 		return alloc_srec_assignment(pnode, type_inferencing);
 		break;
+	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
+		return alloc_indirect_srec_assignment(pnode, type_inferencing);
+		break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
 		return alloc_oosvar_assignment(pnode, type_inferencing);
 		break;
@@ -306,6 +310,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->phandler                         = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators   = NULL;
 	pstatement->srec_lhs_field_name              = NULL;
+	pstatement->psrec_lhs_evaluator              = NULL;
 	pstatement->prhs_evaluator                   = NULL;
 	pstatement->poosvar_rhs_keylist_evaluators   = NULL;
 	pstatement->pemit_oosvar_namelist_evaluators = NULL;
@@ -330,7 +335,6 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
 
-	// xxx indirect too
 	if (pleft->type != MD_AST_NODE_TYPE_FIELD_NAME) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.argv0, __FILE__, __LINE__);
@@ -347,6 +351,32 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, 
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
+// $ mlr --from ../data/small put -v '$[@x] = 1'
+// list (statement_list):
+//     = (indirect_srec_assignment):
+//         x (oosvar_name).
+//         1 (strnum_literal).
+
+static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+	pstatement->phandler = handle_indirect_srec_assignment;
+	pstatement->psrec_lhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  type_inferencing);
+	pstatement->prhs_evaluator      = rval_evaluator_alloc_from_ast(pright, type_inferencing);
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -912,6 +942,54 @@ static void handle_srec_assignment(
 		mv_free(pval);
 		free(pval);
 	}
+}
+
+// ----------------------------------------------------------------
+// xxx reduce code-dup
+static void handle_indirect_srec_assignment(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* plhs_evaluator = pnode->psrec_lhs_evaluator;
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
+	char free_flags;
+	char* srec_lhs_field_name = mv_format_val(&lval, &free_flags);
+
+	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	mv_t* prval = mlr_malloc_or_die(sizeof(mv_t));
+	*prval = rval;
+
+	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only
+	// string values).
+	//
+	// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
+	// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
+	// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
+	// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
+	// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
+	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
+	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
+	// here. And putting something statically allocated minimizes copying/freeing.
+	if (mv_is_present(prval)) {
+		// xxx to do: replace the typed overlay with an mlhmmv entirely.
+		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
+		if (pold != NULL) {
+			mv_free(pold);
+			free(pold);
+		}
+		lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY);
+	} else {
+		mv_free(prval);
+		free(prval);
+	}
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(srec_lhs_field_name);
 }
 
 // ----------------------------------------------------------------

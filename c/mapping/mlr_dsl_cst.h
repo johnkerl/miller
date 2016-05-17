@@ -54,7 +54,7 @@ typedef struct _cst_outputs_t {
 } cst_outputs_t;
 
 typedef void mlr_dsl_cst_node_handler_func_t(
-		struct _mlr_dsl_cst_statement_t* pnode,
+	struct _mlr_dsl_cst_statement_t* pnode,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
@@ -75,6 +75,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// Assignment to srec
 	char* srec_lhs_field_name;
+
+	// Indirect assignment to srec
+	rval_evaluator_t* psrec_lhs_evaluator;
 
 	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
