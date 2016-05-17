@@ -243,7 +243,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 	sllv_t* poutrecs = sllv_alloc();
-	int emit_rec = TRUE;
+	int should_emit_rec = TRUE;
 
 // xxx
 //	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = b};
@@ -265,9 +265,13 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
 		};
+		cst_outputs_t cst_outputs = (cst_outputs_t) {
+			.pshould_emit_rec         = &should_emit_rec,
+			.poutrecs                 = poutrecs,
+			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+		};
 
-		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements, &variables,
-			&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
+		mlr_dsl_cst_handle(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
 		pstate->at_begin = FALSE;
 	}
 
@@ -280,9 +284,13 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
 		};
+		cst_outputs_t cst_outputs = (cst_outputs_t) {
+			.pshould_emit_rec         = &should_emit_rec,
+			.poutrecs                 = poutrecs,
+			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+		};
 
-		mlr_dsl_cst_handle(pstate->pcst->pend_statements, &variables,
-			&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
+		mlr_dsl_cst_handle(pstate->pcst->pend_statements, &variables, &cst_outputs);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -291,7 +299,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	lhmsv_t* ptyped_overlay = lhmsv_alloc();
 
-	emit_rec = TRUE;
+	should_emit_rec = TRUE;
 
 	variables_t variables = (variables_t) {
 		.pinrec           = pinrec,
@@ -301,11 +309,15 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.pctx             = pctx,
 		.pbind_stack      = pstate->pbind_stack,
 	};
+	cst_outputs_t cst_outputs = (cst_outputs_t) {
+		.pshould_emit_rec         = &should_emit_rec,
+		.poutrecs                 = poutrecs,
+		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+	};
 
-	mlr_dsl_cst_handle(pstate->pcst->pmain_statements, &variables,
-		&emit_rec, poutrecs, pstate->oosvar_flatten_separator);
+	mlr_dsl_cst_handle(pstate->pcst->pmain_statements, &variables, &cst_outputs);
 
-	if (emit_rec && pstate->outer_filter) {
+	if (should_emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.
 		for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
@@ -331,7 +343,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	if (emit_rec && pstate->outer_filter) {
+	if (should_emit_rec && pstate->outer_filter) {
 		sllv_append(poutrecs, pinrec);
 	} else {
 		lrec_free(pinrec);

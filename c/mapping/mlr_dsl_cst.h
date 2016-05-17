@@ -47,16 +47,20 @@
 
 struct _mlr_dsl_cst_statement_t;
 
+typedef struct _cst_outputs_t {
+	int*    pshould_emit_rec;
+	sllv_t* poutrecs;
+	char*   oosvar_flatten_separator;
+} cst_outputs_t;
+
 typedef void mlr_dsl_cst_node_handler_func_t(
-	struct _mlr_dsl_cst_statement_t* pnode,
+		struct _mlr_dsl_cst_statement_t* pnode,
 	variables_t* pvars,
-	int*         pshould_emit_rec, // xxx bag up the rest as cst bag ...
-	sllv_t*      poutrecs,
-	char*        oosvar_flatten_separator);
+	cst_outputs_t* pcst_outputs);
 
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
-	char*   emitf_or_unset_srec_field_name;
+	char* emitf_or_unset_srec_field_name;
 	rval_evaluator_t* pemitf_arg_evaluator;
 	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
@@ -119,8 +123,6 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_handle(
 	sllv_t*      pcst_statements, // begin/main/end
 	variables_t* pvars,
-	int*         pshould_emit_rec,
-	sllv_t*      poutrecs,
-	char*        oosvar_flatten_separator);
+	cst_outputs_t* pcst_outputs);
 
 #endif // MLR_DSL_CST_H
