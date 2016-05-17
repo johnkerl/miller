@@ -96,6 +96,7 @@ md_statement ::= md_if_chain.
 
 // Not valid in begin/end since they refer to srecs:
 md_statement ::= md_srec_assignment.
+md_statement ::= md_srec_indirect_assignment.
 md_statement ::= md_oosvar_from_full_srec_assignment.
 md_statement ::= md_full_srec_from_oosvar_assignment.
 
@@ -235,6 +236,12 @@ md_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 // ----------------------------------------------------------------
 md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
+}
+md_srec_indirect_assignment(A)  ::=
+	MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET
+	MD_TOKEN_ASSIGN(O) md_rhs(C).
+{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT, B, C);
 }
 md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);

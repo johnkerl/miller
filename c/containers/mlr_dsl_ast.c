@@ -154,6 +154,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:                   return "non_sigil_name";                   break;
 	case MD_AST_NODE_TYPE_OPERATOR:                         return "operator";                         break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:                  return "srec_assignment";                  break;
+	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:         return "indirect_srec_assignment";         break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:                return "oosvar_assignment";                break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT: return "oosvar_from_full_srec_assignment"; break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT: return "full_srec_from_oosvar_assignment"; break;
