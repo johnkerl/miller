@@ -484,9 +484,6 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_i
 				NULL));
 
 		} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
-			printf("XXX\n");
-			mlr_dsl_ast_node_print(pnode);
-			printf("XXX\n");
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
 				NULL,
 				rval_evaluator_alloc_from_ast(pnode->pchildren->phead->pvvalue, type_inferencing),
