@@ -45,14 +45,17 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			exit(1);
 		}
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
+		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, type_inferencing);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 		return rval_evaluator_alloc_from_oosvar_level_keys(pnode);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME) {
+		return rval_evaluator_alloc_from_indirect_oosvar_name(pnode, type_inferencing);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing);
-
-	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
-		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, type_inferencing);
 
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
@@ -471,6 +474,80 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_name(char* oosvar_name) {
 	pevaluator->pprocess_func = NULL;
 	pevaluator->pprocess_func = rval_evaluator_oosvar_name_func;
 	pevaluator->pfree_func = rval_evaluator_oosvar_name_free;
+
+	return pevaluator;
+}
+
+// ================================================================
+typedef struct _rval_evaluator_indirect_oosvar_name_state_t {
+	sllv_t* poosvar_rhs_keylist_evaluators;
+} rval_evaluator_indirect_oosvar_name_state_t;
+
+mv_t rval_evaluator_indirect_oosvar_name_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_indirect_oosvar_name_state_t* pstate = pvstate;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->poosvar_rhs_keylist_evaluators, pvars, &all_non_null_or_error);
+
+	mv_t rv = mv_absent();
+	if (all_non_null_or_error) {
+		int error = 0;
+		mv_t* pval = mlhmmv_get_terminal(pvars->poosvars, pmvkeys, &error);
+		if (pval != NULL) {
+			if (pval->type == MT_STRING && *pval->u.strv == 0)
+				rv = mv_empty();
+			else
+				rv = *pval;
+		}
+	}
+
+	sllmv_free(pmvkeys);
+	return rv;
+}
+
+static void rval_evaluator_indirect_oosvar_name_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_indirect_oosvar_name_state_t* pstate = pevaluator->pvstate;
+	for (sllve_t* pe = pstate->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pevaluator = pe->pvvalue;
+		pevaluator->pfree_func(pevaluator);
+	}
+	sllv_free(pstate->poosvar_rhs_keylist_evaluators);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_oosvar_name(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+	rval_evaluator_indirect_oosvar_name_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_indirect_oosvar_name_state_t));
+
+	sllv_t* poosvar_rhs_keylist_evaluators = sllv_alloc();
+	mlr_dsl_ast_node_t* pwalker = pnode;
+	while (TRUE) {
+		// Bracket operators come in from the right. So the highest AST node is the rightmost
+		// map, and the lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
+		if (pwalker->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
+			sllv_prepend(poosvar_rhs_keylist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, TYPE_INFER_STRING_FLOAT_INT));
+		} else {
+			// Oosvar expressions are of the form '@name[$index1][@index2+3][4]["five"].  The first one (name) is
+			// special: syntactically, it's outside the brackets, although that issue is for the parser to handle.
+			// Here it's special since it's always a string, never an expression that evaluates to string.
+			// Yet for the mlhmmv the first key isn't special.
+			sllv_prepend(poosvar_rhs_keylist_evaluators,
+				rval_evaluator_alloc_from_string(pwalker->text));
+		}
+		if (pwalker->pchildren == NULL)
+				break;
+		pwalker = pwalker->pchildren->phead->pvvalue;
+	}
+	pstate->poosvar_rhs_keylist_evaluators = poosvar_rhs_keylist_evaluators;
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = NULL;
+	pevaluator->pprocess_func = rval_evaluator_indirect_oosvar_name_func;
+	pevaluator->pfree_func = rval_evaluator_indirect_oosvar_name_free;
 
 	return pevaluator;
 }
