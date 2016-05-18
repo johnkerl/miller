@@ -1149,9 +1149,11 @@ static void handle_unset(
 		} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
 			rval_evaluator_t* pev = pvararg->punset_srec_field_name_evaluator;
 			mv_t nameval = pev->pprocess_func(pev->pvstate, pvars);
-			char* field_name = mv_alloc_format_val(&nameval);
+			char free_flags = NO_FREE;
+			char* field_name = mv_maybe_alloc_format_val(&nameval, &free_flags);
 			lrec_remove(pvars->pinrec, field_name);
-			free(field_name);
+			if (free_flags & FREE_ENTRY_VALUE)
+				free(field_name);
 		} else {
 			lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
 		}
