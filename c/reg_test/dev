@@ -224,6 +224,9 @@ run_mlr -n put -v '@["x"]=3'
 run_mlr -n put -v '$[$y]=$y'
 run_mlr -n put -v '@[@y]=@y'
 
+run_mlr -n put -v '@x=2; @x["y"]=3; @x["y"][$z]=4'
+run_mlr -n put -v '@["x"]=2; @["x"]["y"]=3; @["x"]["y"][$z]=4'
+
 # echo x=1|mlr put '$x=$x+1; for (k,v in $*) { $[v] = typeof(v)}'
 # x=2,2=MT_INT
 

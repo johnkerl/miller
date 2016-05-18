@@ -244,6 +244,7 @@ md_srec_indirect_assignment(A)  ::=
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT, B, C);
 }
+
 md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
@@ -253,6 +254,9 @@ md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C
 
 md_indirect_oosvar_assignment(A)  ::= md_indirect_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT, B, C);
+}
+md_indirect_oosvar_assignment(A)  ::= md_keyed_indirect_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 }
 
 md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
@@ -823,6 +827,13 @@ md_atom_or_fcn(A) ::= md_indirect_oosvar_name(B). {
 }
 md_indirect_oosvar_name(A) ::= MD_TOKEN_AT_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.  {
 	A = mlr_dsl_ast_node_alloc_unary("indirect_oosvar_name", MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME, B);
+}
+
+md_keyed_indirect_oosvar_name(A) ::= md_indirect_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
+}
+md_keyed_indirect_oosvar_name(A) ::= md_keyed_indirect_oosvar_name(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("[]", MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, B, C);
 }
 
 md_atom_or_fcn(A) ::= MD_TOKEN_NUMBER(B). {

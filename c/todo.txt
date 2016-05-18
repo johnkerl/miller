@@ -11,8 +11,9 @@ TOP-OF-LIST SUMMARY
 - @[.] evaluators in the AST&CST (pre boundvar)
 - $[boundvar] and @[boundvar] evaluators in the AST.
 - $[boundvar] and @[boundvar] evaluators in the CST.
+- indirect oosvar from full srec @ .y
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-? update AST for indexed/non-indexed oosvars?
+? update AST to merge indexed/non-indexed oosvars? also indirect vs. indirect @ srec, oosvar?
 
 ? triple-for with boundvars??
 
