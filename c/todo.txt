@@ -6,27 +6,22 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* for:
-  - bindstack container
-    ! copy/reference semantics for mlrvals esp. w/r/t evaluators
-    ! careful w/ mem mgmt @ enlarge as in mlhmmv
-    ! lhmsv->lhmsmv for typed overlay
-    ! careful w/ string/int/float
-    ! mv_maybe_alloc_format_val -- read-only version returning the string if MT_STRING
-    ! invalidate $[x] outside for-loop ... either as syntax error; at least, mv_absent
-  - boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
-    to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
-    step. at each level a name will have one nearest at-or-up binding or none at all.
-    needs replacing bindstack with bindtree.
-  - @[.] evaluators in the AST&CST (pre boundvar)
-  - $[boundvar] and @[boundvar] evaluators in the AST.
-  - $[boundvar] and @[boundvar] evaluators in the CST.
-  - cookbook example: key<->val inverter
-  - cookbook example: komosa originals x 2
-  - hygiene: sllv->slln @ ast; lhmsv->lhmsmv @ typed overlay
+! UT all so far: reg_test/dev -> reg_test/run
 
+- @[.] evaluators in the AST&CST (pre boundvar)
+- $[boundvar] and @[boundvar] evaluators in the AST.
+- $[boundvar] and @[boundvar] evaluators in the CST.
+! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
+
+? triple-for with boundvars??
+
+! CST-build-time invalidations:
+  - $stuff @ begin/end
+  - break/continue outside for
+  - boundvars outside for
+
+----------------------------------------------------------------
 * for-variants:
-  ?? take out the v part??
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += $[k]} }
   * for (k, v in @v)
@@ -36,34 +31,41 @@ TOP-OF-LIST SUMMARY
   ? for (k1, k2, v in @*)
   ? break/continue: fully support or eliminate from the lexer/parser
 
-? local vars w/ decl syntax
-? user-defined functions ... ??
-
-* eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-* cst-time parse validations: top-level-only begin/end (done); no $stuff at begin/end.
-? triple-for with boundvars??
-k recursive PA-blocks & for-blocks
-k if-elif-elif-else
-k while / do-while
-k comments-stripper (strdup & state-machine copy)
-
 UT/olh/mld:
 * UT for empty statement for put
 * UT for empty statement for filter
 * UT if-chaining, while, do-while: put -v's as well as contentful @ abixy
+* careful w/ string/int/float
 * olh comment-stripping for put & filter
 * UT comment-stripping for put & filter
 * doc re oosvar keyed mean solvable with `for`.
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
+DOC:
+* cookbook example: key<->val inverter
+* cookbook example: komosa originals x 2
+
+HYGIENE:
+! lhmsv->lhmsmv @ typed overlay
+? sllv->slln @ ast
+! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
+! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 * xxxes
 * valgrinds
 
 4.1.0 release notes:
 * new forx2, while/do-while, if-chains
-* recursivity of existing conds
+* fully recursive; recursivity of existing conds
 * pound-to-EOL commenting for filter & put
 ! don't release 4.1 w/o implicit semicolon after closing curly brace
+
+NOTE FOR FUTURE:
+? local vars w/ decl syntax -- @vars for now?
+? user-defined functions ... ??
+- boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
+  to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
+  step. at each level a name will have one nearest at-or-up binding or none at all.
+  needs replacing bindstack with bindtree.
 
 ----------------------------------------------------------------
 ? substring?
