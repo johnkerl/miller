@@ -76,21 +76,6 @@ run_mlr() {
 # ================================================================
 announce GRAMMAR REORG
 
-mention simplest
-run_mlr -n put -v ''
-run_mlr -n put -v '$m=2'
-run_mlr -n put -v '$m=2;$m=3'
-run_mlr -n put -v '$m=2;$m=3;$m=4'
-run_mlr -n put -v '$m=2;;$m=3;$m=4'
-
-mention begin/main/end
-# expect parse fail
-#run_mlr -n put -v 'begin{$b=1};$m=2;end{$e=3}'
-run_mlr -n put -v 'begin{@b=1};$m=2;end{@e=3}'
-
-mention main:cond
-run_mlr -n put -v 'true{$m=2}'
-
 mention main:empty-for
 run_mlr -n put -v 'for(k,v in $*) { }'
 
@@ -115,99 +100,7 @@ run_mlr -n put -v 'true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }'
 mention main:cond:for:cond
 run_mlr -n put -v 'true{ for(k,v in $*) { true{$m=3} } }'
 
-mention ifs
-run_mlr -n put -v '
-  if (NR==1) {
-    $x = 2;
-    $x = 3
-  };
-  if (NR == 4) {
-    $x = 5;
-    $x = 6
-  } else {
-    $x = 7;
-    $x = 8
-  };
-  if (NR == 9) {
-    $x = 10;
-    $x = 11
-  } elif (NR == 12) {
-    $x = 13;
-    $x = 14
-  } else {
-    $x = 15;
-    $x = 16
-  };
-  if (NR == 17) {
-    $x = 18;
-    $x = 19
-  } elif (NR == 20) {
-    $x = 21;
-    $x = 22
-  } elif (NR == 23) {
-    $x = 24;
-    $x = 25
-  } else {
-    $x = 26;
-    $x = 27
-  };
-  if (NR == 28) {
-    $x = 29;
-    $x = 30
-  } elif (NR == 31) {
-    $x = 32;
-    $x = 33
-  } elif (NR == 34) {
-    $x = 35;
-    $x = 36
-  } elif (NR == 37) {
-    $x = 38;
-    $x = 39
-  } else {
-    $x = 40;
-    $x = 41
-  }'
-
-mention ifs
-run_mlr -n put -v '
-  if (NR==1) {
-    $x = 2;
-    $x = 3
-  };
-  if (NR == 4) {
-    $x = 5;
-    $x = 6
-  };
-  if (NR == 7) {
-    $x = 8;
-    $x = 9
-  } elif (NR == 10) {
-    $x = 11;
-    $x = 12
-  };
-  if (NR == 13) {
-    $x = 14;
-    $x = 15
-  } elif (NR == 16) {
-    $x = 17;
-    $x = 18
-  } elif (NR == 19) {
-    $x = 20;
-    $x = 21
-  };
-  if (NR == 22) {
-    $x = 23;
-    $x = 24
-  } elif (NR == 25) {
-    $x = 26;
-    $x = 27
-  } elif (NR == 28) {
-    $x = 29;
-    $x = 30
-  } elif (NR == 31) {
-    $x = 32;
-    $x = 33
-  }'
+# ----------------------------------------------------------------
 
 run_mlr --opprint put 'if(NR==2){$x=777}' $indir/abixy
 run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}' $indir/abixy
