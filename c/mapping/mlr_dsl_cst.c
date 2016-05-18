@@ -11,6 +11,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t*       alloc_indirect_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -274,6 +275,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
 		return alloc_oosvar_assignment(pnode, type_inferencing);
 		break;
+	case MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT:
+		return alloc_indirect_oosvar_assignment(pnode, type_inferencing);
+		break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
 		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing);
 		break;
@@ -395,6 +399,52 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past
 	int is_oosvar_to_oosvar = FALSE;
 
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pleft->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+		if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pright->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+			is_oosvar_to_oosvar = TRUE;
+		}
+	}
+
+	if (is_oosvar_to_oosvar) {
+		pstatement->phandler = handle_oosvar_to_oosvar_assignment;
+		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pright,
+			type_inferencing);
+	} else {
+		pstatement->phandler = handle_oosvar_assignment;
+		pstatement->poosvar_rhs_keylist_evaluators = NULL;
+	}
+
+	pstatement->poosvar_lhs_keylist_evaluators = poosvar_lhs_keylist_evaluators;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, type_inferencing);
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+// list (statement_list):
+//     = (indirect_oosvar_assignment):
+//         indirect_oosvar_name (indirect_oosvar_name):
+//             a (strnum_literal).
+//         2 (strnum_literal).
+
+static mlr_dsl_cst_statement_t* alloc_indirect_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+	if (pleft->type != MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME && pleft->type != MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	sllv_t* poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing);
+
+	int is_oosvar_to_oosvar = FALSE;
+
+	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_NAME
+	|| pleft->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME
+	|| pleft->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 		if (pright->type == MD_AST_NODE_TYPE_OOSVAR_NAME || pright->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
 			is_oosvar_to_oosvar = TRUE;
 		}
@@ -1467,12 +1517,18 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 
 	if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 		sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pnode->text));
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME) {
+		mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
+		sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 	} else {
 		mlr_dsl_ast_node_t* pwalker = pnode;
 		while (TRUE) {
 			// Bracket operators come in from the right. So the highest AST node is the rightmost index,
 			// and the lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.
 			if (pwalker->type == MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY) {
+				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
+				sllv_prepend(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+			} else if (pwalker->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME) {
 				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
 				sllv_prepend(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 			} else {
