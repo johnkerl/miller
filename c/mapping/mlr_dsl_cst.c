@@ -1518,7 +1518,7 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 	if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_NAME) {
 		sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pnode->text));
 	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME) {
-		mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pkeynode = pnode->pchildren->phead->pvvalue;
 		sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 	} else {
 		mlr_dsl_ast_node_t* pwalker = pnode;
@@ -1529,7 +1529,7 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
 				sllv_prepend(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 			} else if (pwalker->type == MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME) {
-				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pnext->pvvalue;
+				mlr_dsl_ast_node_t* pkeynode = pwalker->pchildren->phead->pvvalue;
 				sllv_prepend(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
 			} else {
 				// Oosvar expressions are of the form '@name[$index1][@index2+3][4]["five"].  The first one
