@@ -281,7 +281,8 @@ static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, v
 	if (mv_is_null(&mvname)) {
 		return mv_absent();
 	}
-	char* indirect_field_name = mv_alloc_format_val(&mvname);
+	char free_flags = NO_FREE;
+	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
@@ -303,7 +304,8 @@ static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, v
 		}
 	}
 
-	free(indirect_field_name);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(indirect_field_name);
 	return rv;
 }
 
@@ -314,7 +316,8 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, 
 	if (mv_is_null(&mvname)) {
 		return mv_absent();
 	}
-	char* indirect_field_name = mv_alloc_format_val(&mvname);
+	char free_flags = NO_FREE;
+	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
@@ -340,7 +343,9 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, 
 			}
 		}
 	}
-	free(indirect_field_name);
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(indirect_field_name);
 	return rv;
 }
 
@@ -351,7 +356,8 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvsta
 	if (mv_is_null(&mvname)) {
 		return mv_absent();
 	}
-	char* indirect_field_name = mv_alloc_format_val(&mvname);
+	char free_flags = NO_FREE;
+	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
@@ -380,7 +386,9 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvsta
 			}
 		}
 	}
-	free(indirect_field_name);
+
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(indirect_field_name);
 	return rv;
 }
 

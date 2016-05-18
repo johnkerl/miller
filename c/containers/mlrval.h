@@ -233,13 +233,29 @@ static inline int mv_is_not_empty(mv_t* pval) {
 
 char* mt_describe_type(int type);
 char* mt_describe_type_simple(int type);
+
+// Allocates memory which the caller must free; does not modify the mlrval.
+// Returns no reference to the mlrval's data.  Suitable for getting data out of
+// a mlrval which might be about to be freed.
 char* mv_alloc_format_val(mv_t* pval);
+
+// Returns a reference to the mlrval's data if the mlrval is MT_STRING.
+// Does not modify the mlrval. Suitable only for read-only string-formatting
+// of the mlrval while it still exists and hasn't been freed yet.
+char* mv_maybe_alloc_format_val(mv_t* pval, char* pfree_flags);
+
+// If the mlrval is MT_STRING, returns that and invalidates the argument.
+// This is suitable for baton-pass-out (end of evaluation chain).
 char* mv_format_val(mv_t* pval, char* pfree_flags);
+
+// Output string includes type and value information (e.g. for debug).
+// The caller must free the return value.
 char* mv_describe_val(mv_t val);
-void  mv_set_boolean_strict(mv_t* pval);
-void  mv_set_float_strict(mv_t* pval);
-void  mv_set_float_nullable(mv_t* pval);
-void  mv_set_int_nullable(mv_t* pval);
+
+void mv_set_boolean_strict(mv_t* pval);
+void mv_set_float_strict(mv_t* pval);
+void mv_set_float_nullable(mv_t* pval);
+void mv_set_int_nullable(mv_t* pval);
 
 // int or float:
 void mv_set_number_nullable(mv_t* pval);

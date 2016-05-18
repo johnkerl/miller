@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
     ! careful w/ mem mgmt @ enlarge as in mlhmmv
     ! lhmsv->lhmsmv for typed overlay
     ! careful w/ string/int/float
+    ! mv_maybe_alloc_format_val -- read-only version returning the string if MT_STRING
     ! invalidate $[x] outside for-loop ... either as syntax error; at least, mv_absent
   - boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
     to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
@@ -54,6 +55,9 @@ UT/olh/mld:
 * UT comment-stripping for put & filter
 * doc re oosvar keyed mean solvable with `for`.
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
+
+* xxxes
+* valgrinds
 
 4.1.0 release notes:
 * new forx2, while/do-while, if-chains

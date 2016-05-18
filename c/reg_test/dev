@@ -219,6 +219,13 @@ run_mlr --from $indir/abixy --opprint put -S -v 'for(k,v in $*) {$[k."_orig"]=v}
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {unset $[k]}'
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {if (k != "x") {unset $[k]}}'
 
+# echo x=1|mlr put '$x=$x+1; for (k,v in $*) { $[v] = typeof(v)}'
+# x=2,2=MT_INT
+
+# echo x=1|mlr put 'for (k,v in $*) { $[v] = typeof(v)}'
+# x=1,1=MT_STRING
+
+
 # ================================================================
 cat $outfile
 

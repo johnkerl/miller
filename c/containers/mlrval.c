@@ -46,7 +46,8 @@ char* mt_describe_type_simple(int type) {
 	}
 }
 
-// The caller should free the return value
+// ----------------------------------------------------------------
+// See comments in header file
 char* mv_alloc_format_val(mv_t* pval) {
 	switch(pval->type) {
 	case MT_ABSENT:
@@ -55,6 +56,9 @@ char* mv_alloc_format_val(mv_t* pval) {
 		break;
 	case MT_ERROR:
 		return mlr_strdup_or_die("(error)");
+		break;
+	case MT_STRING:
+		return mlr_strdup_or_die(pval->u.strv);
 		break;
 	case MT_BOOL:
 		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
@@ -65,16 +69,48 @@ char* mv_alloc_format_val(mv_t* pval) {
 	case MT_INT:
 		return mlr_alloc_string_from_ll(pval->u.intv);
 		break;
-	case MT_STRING:
-		return mlr_strdup_or_die(pval->u.strv);
-		break;
 	default:
 		return mlr_strdup_or_die("???");
 		break;
 	}
 }
 
-// The caller should free the return value if the free-flag is non-zero after return
+// See comments in header file
+char* mv_maybe_alloc_format_val(mv_t* pval, char* pfree_flags) {
+	switch(pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+		*pfree_flags = NO_FREE;
+		return "";
+		break;
+	case MT_ERROR:
+		*pfree_flags = NO_FREE;
+		return "(error)";
+		break;
+	case MT_STRING:
+		*pfree_flags = NO_FREE;
+		return pval->u.strv;
+		break;
+	case MT_BOOL:
+		*pfree_flags = NO_FREE;
+		return pval->u.boolv ? "true" : "false";
+		break;
+	case MT_FLOAT:
+		*pfree_flags = FREE_ENTRY_VALUE;
+		return mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
+		break;
+	case MT_INT:
+		*pfree_flags = FREE_ENTRY_VALUE;
+		return mlr_alloc_string_from_ll(pval->u.intv);
+		break;
+	default:
+		*pfree_flags = NO_FREE;
+		return "???";
+		break;
+	}
+}
+
+// See comments in header file
 char* mv_format_val(mv_t* pval, char* pfree_flags) {
 	char* rv = NULL;
 	switch(pval->type) {
@@ -86,6 +122,12 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 	case MT_ERROR:
 		*pfree_flags = NO_FREE;
 		rv = "(error)";
+		break;
+	case MT_STRING:
+		// Ownership transfer to the caller
+		*pfree_flags = pval->free_flags;;
+		rv = pval->u.strv;
+		*pval = mv_empty();
 		break;
 	case MT_BOOL:
 		*pfree_flags = NO_FREE;
@@ -99,12 +141,6 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 		*pfree_flags = FREE_ENTRY_VALUE;
 		rv = mlr_alloc_string_from_ll(pval->u.intv);
 		break;
-	case MT_STRING:
-		// Ownership transfer to the caller
-		*pfree_flags = pval->free_flags;;
-		rv = pval->u.strv;
-		*pval = mv_empty();
-		break;
 	default:
 		*pfree_flags = NO_FREE;
 		rv = "???";
@@ -113,6 +149,7 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 	return rv;
 }
 
+// See comments in header file
 char* mv_describe_val(mv_t val) {
 	char* stype = mt_describe_type(val.type);
 	char* strv  = mv_alloc_format_val(&val);
