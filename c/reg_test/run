@@ -1576,6 +1576,10 @@ run_mlr put -v '
   }' $indir/xy40.dkvp
 
 # ----------------------------------------------------------------
+announce INDIRECT SREC ASSIGNMENTS
+run_mlr put -v '$["a"] = $["b"]; $["x"] = 10 * $["y"]' $indir/abixy
+
+# ----------------------------------------------------------------
 announce ABSENT/EMPTY
 
 run_mlr put -q '@sum     += $x; end{emitp @sum}'      $indir/abixy
