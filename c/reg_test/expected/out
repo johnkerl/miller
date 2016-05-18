@@ -15172,7 +15172,7 @@ i=40,x=140,y=240
 
 
 ================================================================
-INDIRECT SREC ASSIGNMENTS
+DSL INDIRECT SREC ASSIGNMENTS
 
 mlr put -v $["a"] = $["b"]; $["x"] = 10 * $["y"] ./reg_test/input/abixy
 AST ROOT:
@@ -15197,6 +15197,82 @@ a=zee,b=zee,i=7,x=1.878849,y=0.1878849191181694
 a=wye,b=wye,i=8,x=9.761814,y=0.976181385699006
 a=wye,b=wye,i=9,x=7.495508,y=0.7495507603507059
 a=wye,b=wye,i=10,x=9.526184,y=0.9526183602969864
+
+
+================================================================
+DSL INDIRECT OOSVAR ASSIGNMENTS
+
+mlr put -v @["s"] = $x; emitp all ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (indirect_oosvar_assignment):
+        indirect_oosvar_name (indirect_oosvar_name):
+            s (strnum_literal).
+        x (field_name).
+    emitp (emitp):
+        all (all).
+s=0.346790
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+s=0.758680
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+s=0.204603
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+s=0.381399
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+s=0.573289
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+s=0.527126
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+s=0.611784
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+s=0.598554
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+s=0.031442
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+s=0.502626
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+
+================================================================
+DSL FOR-SREC LOOPS
+
+
+---------------------------------------------------------------- empty for-srec
+mlr -n put -v for(k,v in $*) { }
+AST ROOT:
+list (statement_list):
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+
+
+---------------------------------------------------------------- empty for-srec without boundvars
+mlr put -v $i = 0; for(k,v in $*) {$nr= NR} ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        i (field_name).
+        0 (strnum_literal).
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            = (srec_assignment):
+                nr (field_name).
+                NR (context_variable).
+a=pan,b=pan,i=0,x=0.3467901443380824,y=0.7268028627434533,nr=1
+a=eks,b=pan,i=0,x=0.7586799647899636,y=0.5221511083334797,nr=2
+a=wye,b=wye,i=0,x=0.20460330576630303,y=0.33831852551664776,nr=3
+a=eks,b=wye,i=0,x=0.38139939387114097,y=0.13418874328430463,nr=4
+a=wye,b=pan,i=0,x=0.5732889198020006,y=0.8636244699032729,nr=5
+a=zee,b=pan,i=0,x=0.5271261600918548,y=0.49322128674835697,nr=6
+a=eks,b=zee,i=0,x=0.6117840605678454,y=0.1878849191181694,nr=7
+a=zee,b=wye,i=0,x=0.5985540091064224,y=0.976181385699006,nr=8
+a=hat,b=wye,i=0,x=0.03144187646093577,y=0.7495507603507059,nr=9
+a=pan,b=wye,i=0,x=0.5026260055412137,y=0.9526183602969864,nr=10
 
 
 ================================================================

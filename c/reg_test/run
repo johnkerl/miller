@@ -1576,8 +1576,35 @@ run_mlr put -v '
   }' $indir/xy40.dkvp
 
 # ----------------------------------------------------------------
-announce INDIRECT SREC ASSIGNMENTS
+announce DSL INDIRECT SREC ASSIGNMENTS
 run_mlr put -v '$["a"] = $["b"]; $["x"] = 10 * $["y"]' $indir/abixy
+
+# ----------------------------------------------------------------
+announce DSL INDIRECT OOSVAR ASSIGNMENTS
+
+# xxx broken: no assign
+# run_mlr put -v '@s = NR; $s = @["s"]; emitp all' $indir/abixy
+# xxx broken: second statement doesn't parse
+# run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy
+
+run_mlr put -v '@["s"] = $x; emitp all' $indir/abixy
+# xxx broken: doesn't assign yet
+# run_mlr put -v '@["t"]["u"] = y; emitp all' $indir/abixy
+
+# xxx indirect from full srec
+# xxx full srec from indirect
+
+# xxx @* on the right
+# xxx @* on the left
+
+# ----------------------------------------------------------------
+announce DSL FOR-SREC LOOPS
+
+mention empty for-srec
+run_mlr -n put -v 'for(k,v in $*) { }'
+
+mention empty for-srec without boundvars
+run_mlr put -v '$i = 0; for(k,v in $*) {$nr= NR}' $indir/abixy
 
 # ----------------------------------------------------------------
 announce ABSENT/EMPTY
