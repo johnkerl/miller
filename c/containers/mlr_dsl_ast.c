@@ -157,6 +157,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:                  return "srec_assignment";                  break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:         return "indirect_srec_assignment";         break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:                return "oosvar_assignment";                break;
+	case MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT:       return "indirect_oosvar_assignment";       break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT: return "oosvar_from_full_srec_assignment"; break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT: return "full_srec_from_oosvar_assignment"; break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:                 return "context_variable";                 break;

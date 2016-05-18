@@ -103,6 +103,7 @@ md_statement ::= md_full_srec_from_oosvar_assignment.
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
 md_statement ::= md_bare_boolean.
 md_statement ::= md_oosvar_assignment.
+md_statement ::= md_indirect_oosvar_assignment.
 md_statement ::= md_filter.
 md_statement ::= md_unset.
 md_statement ::= md_emitf.
@@ -248,6 +249,10 @@ md_oosvar_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 }
 md_oosvar_assignment(A)  ::= md_keyed_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_indirect_oosvar_assignment(A)  ::= md_indirect_oosvar_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT, B, C);
 }
 
 md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_name(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
