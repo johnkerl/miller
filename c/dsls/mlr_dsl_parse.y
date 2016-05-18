@@ -780,8 +780,7 @@ md_field_name(A) ::= MD_TOKEN_BRACED_FIELD_NAME(B). {
 md_atom_or_fcn(A) ::= md_indirect_field_name(B). {
 	A = B;
 }
-md_indirect_field_name(A) ::= MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.
-{
+md_indirect_field_name(A) ::= MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.  {
 	A = mlr_dsl_ast_node_alloc_unary("indirect_field_name", MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, B);
 }
 
@@ -812,6 +811,13 @@ md_oosvar_name(A) ::= MD_TOKEN_BRACED_OOSVAR_NAME(B). {
 	if (len > 0)
 		no_at_name[len-1] = 0;
 	A = mlr_dsl_ast_node_alloc(no_at_name, B->type);
+}
+
+md_atom_or_fcn(A) ::= md_indirect_oosvar_name(B). {
+	A = B;
+}
+md_indirect_oosvar_name(A) ::= MD_TOKEN_AT_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.  {
+	A = mlr_dsl_ast_node_alloc_unary("indirect_oosvar_name", MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME, B);
 }
 
 md_atom_or_fcn(A) ::= MD_TOKEN_NUMBER(B). {

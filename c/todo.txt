@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
 - $[boundvar] and @[boundvar] evaluators in the AST.
 - $[boundvar] and @[boundvar] evaluators in the CST.
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
+? update AST for indexed/non-indexed oosvars?
 
 ? triple-for with boundvars??
 
