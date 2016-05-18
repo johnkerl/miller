@@ -22,6 +22,12 @@ TOP-OF-LIST SUMMARY
   - break/continue outside for
   - boundvars outside for
 
+! code-dup reduction:
+  - srec field name vs. indirect
+  - oosvar name, level keys, indirect name, indirect level keys
+  - @ .y, AST, CST, rval
+  - strip out unused methods @ all
+
 ----------------------------------------------------------------
 * for-variants:
   * for (k, v in $*) { if (k =~ "^f.*$") { $sum += v} }
