@@ -76,38 +76,6 @@ run_mlr() {
 # ================================================================
 announce GRAMMAR REORG
 
-mention main:empty-for
-run_mlr -n put -v 'for(k,v in $*) { }'
-
-mention main:single-statement-for
-run_mlr -n put -v 'for(k,v in $*) { $m=1}'
-
-mention main:double-statement-for
-run_mlr -n put -v 'for(k,v in $*) { $m=1;$m=2 }'
-
-mention main:for w/ break/continue
-run_mlr -n put -v 'for(k,v in $*) { $m=1;break;$m=2 }'
-run_mlr -n put -v 'for(k,v in $*) { $m=1;break;continue;$m=2 }'
-run_mlr -n put -v 'for(k,v in $*) { $m=1;break;continue;;$m=2 }'
-
-mention main:for:cond
-run_mlr -n put -v 'for(k,v in $*) { true{$m=3} }'
-
-mention main:cond:for
-run_mlr -n put -v 'true{ for(k,v in $*) { $m=1 } }'
-run_mlr -n put -v 'true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }'
-
-mention main:cond:for:cond
-run_mlr -n put -v 'true{ for(k,v in $*) { true{$m=3} } }'
-
-# ----------------------------------------------------------------
-
-run_mlr --opprint put 'if(NR==2){$x=777}' $indir/abixy
-run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}' $indir/abixy
-run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999}' $indir/abixy
-run_mlr --opprint put 'if(NR==2){$x=777}else{$x=0}' $indir/abixy
-run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}else{$x=0}' $indir/abixy
-run_mlr --opprint put 'if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999}else{$x=0}' $indir/abixy
 run_mlr --from $indir/abixy --opprint put -S -v 'for(k,v in $*) {$[k."_orig"]=v}'
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {unset $[k]}'
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {if (k != "x") {unset $[k]}}'

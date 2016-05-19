@@ -22,6 +22,7 @@ TOP-OF-LIST SUMMARY
   - $stuff @ begin/end
   - break/continue outside for
   - boundvars outside for
+  - break/continue outside while/do-while/for
 
 ! code-dup reduction:
   - srec field name vs. indirect
