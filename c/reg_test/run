@@ -1582,15 +1582,13 @@ run_mlr put -v '$["a"] = $["b"]; $["x"] = 10 * $["y"]' $indir/abixy
 # ----------------------------------------------------------------
 announce DSL INDIRECT OOSVAR ASSIGNMENTS
 
-# xxx broken: no assign
-# run_mlr put -v '@s = NR; $s = @["s"]; emitp all' $indir/abixy
-# xxx broken: second statement doesn't parse
-# run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy
+run_mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]; $v = $t - $u' $indir/abixy
+
+# run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy # xxx broken: second statement doesn't parse
 
 run_mlr put -v '@["s"] = $x; emitp all' $indir/abixy
-# xxx broken: doesn't assign yet
-# run_mlr put -v '@["t"]["u"] = y; emitp all' $indir/abixy
 
+# run_mlr put -v '@["t"]["u"] = y; emitp all' $indir/abixy # xxx broken: doesn't assign yet
 # xxx indirect from full srec
 # xxx full srec from indirect
 
@@ -1620,14 +1618,11 @@ run_mlr --from $indir/abixy put -v 'for(k,v in $*) {if (k != "x") {unset $[k]}};
 run_mlr --from $indir/abixy --opprint put -S -v 'for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}'
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
 
-# xxx broken this should autoconvert to numeric unless -S:
-# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }'
+# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }' # xxx broken this should autoconvert to numeric unless -S:
 
-# xxx broken why sum == error ?
-# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }'
+# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }' # xxx broken why sum == error ?
 
-# xxx broken why sum == error ?
-# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }'
+# run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }' # xxx broken why sum == error ?
 
 # xxx test break & continue when they are operable
 

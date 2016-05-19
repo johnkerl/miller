@@ -521,7 +521,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_indirect_oosvar_name(mlr_dsl_ast_nod
 		sizeof(rval_evaluator_indirect_oosvar_name_state_t));
 
 	sllv_t* poosvar_rhs_keylist_evaluators = sllv_alloc();
-	mlr_dsl_ast_node_t* pwalker = pnode;
+	mlr_dsl_ast_node_t* pwalker = pnode->pchildren->phead->pvvalue; // xxx comment step past the "indirect name" node
 	while (TRUE) {
 		// Bracket operators come in from the right. So the highest AST node is the rightmost
 		// map, and the lowest is the oosvar name. Hence sllv_prepend rather than sllv_append.

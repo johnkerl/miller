@@ -15202,6 +15202,36 @@ a=wye,b=wye,i=10,x=9.526184,y=0.9526183602969864
 ================================================================
 DSL INDIRECT OOSVAR ASSIGNMENTS
 
+mlr --opprint put -v @s = NR; $t = @s; $u=@["s"]; $v = $t - $u ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        s (oosvar_name).
+        NR (context_variable).
+    = (srec_assignment):
+        t (field_name).
+        s (oosvar_name).
+    = (srec_assignment):
+        u (field_name).
+        indirect_oosvar_name (indirect_oosvar_name):
+            s (strnum_literal).
+    = (srec_assignment):
+        v (field_name).
+        - (operator):
+            t (field_name).
+            u (field_name).
+a   b   i  x                   y                   t  u  v
+pan pan 1  0.3467901443380824  0.7268028627434533  1  1  0
+eks pan 2  0.7586799647899636  0.5221511083334797  2  2  0
+wye wye 3  0.20460330576630303 0.33831852551664776 3  3  0
+eks wye 4  0.38139939387114097 0.13418874328430463 4  4  0
+wye pan 5  0.5732889198020006  0.8636244699032729  5  5  0
+zee pan 6  0.5271261600918548  0.49322128674835697 6  6  0
+eks zee 7  0.6117840605678454  0.1878849191181694  7  7  0
+zee wye 8  0.5985540091064224  0.976181385699006   8  8  0
+hat wye 9  0.03144187646093577 0.7495507603507059  9  9  0
+pan wye 10 0.5026260055412137  0.9526183602969864  10 10 0
+
 mlr put -v @["s"] = $x; emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):

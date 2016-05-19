@@ -2,773 +2,67 @@
 ================================================================
 GRAMMAR REORG
 
-
----------------------------------------------------------------- simplest
-mlr -n put -v 
+mlr put -v @s = NR; $s = @["s"]; emitp all ./reg_test/input/abixy
 AST ROOT:
-(null)
+list (statement_list):
+    = (oosvar_assignment):
+        s (oosvar_name).
+        NR (context_variable).
+    = (srec_assignment):
+        s (field_name).
+        indirect_oosvar_name (indirect_oosvar_name):
+            s (strnum_literal).
+    emitp (emitp):
+        all (all).
+s=1
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+s=2
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+s=3
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+s=4
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+s=5
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+s=6
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+s=7
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+s=8
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+s=9
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+s=10
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -n put -v $m=2
+mlr put -v @["t"]["u"] = y; emitp all ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        [] (oosvar_level_key):
+            indirect_oosvar_name (indirect_oosvar_name):
+                t (strnum_literal).
+            u (strnum_literal).
+        y (bound_variable).
+    emitp (emitp):
+        all (all).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }
 AST ROOT:
 list (statement_list):
     = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-
-mlr -n put -v $m=2;$m=3
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        3 (strnum_literal).
-
-mlr -n put -v $m=2;$m=3;$m=4
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        3 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        4 (strnum_literal).
-
-mlr -n put -v $m=2;;$m=3;$m=4
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        3 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        4 (strnum_literal).
-
-
----------------------------------------------------------------- begin/main/end
-mlr -n put -v begin{@b=1};$m=2;end{@e=3}
-AST ROOT:
-list (statement_list):
-    begin (begin):
-        list (statement_list):
-            = (oosvar_assignment):
-                b (oosvar_name).
-                1 (strnum_literal).
-    = (srec_assignment):
-        m (field_name).
-        2 (strnum_literal).
-    end (end):
-        list (statement_list):
-            = (oosvar_assignment):
-                e (oosvar_name).
-                3 (strnum_literal).
-
-
----------------------------------------------------------------- main:cond
-mlr -n put -v true{$m=2}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                2 (strnum_literal).
-
-
----------------------------------------------------------------- main:empty-for
-mlr -n put -v for(k,v in $*) { }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-
-
----------------------------------------------------------------- main:single-statement-for
-mlr -n put -v for(k,v in $*) { $m=1}
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                1 (strnum_literal).
-
-
----------------------------------------------------------------- main:double-statement-for
-mlr -n put -v for(k,v in $*) { $m=1;$m=2 }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                1 (strnum_literal).
-            = (srec_assignment):
-                m (field_name).
-                2 (strnum_literal).
-
-
----------------------------------------------------------------- main:for w/ break/continue
-mlr -n put -v for(k,v in $*) { $m=1;break;$m=2 }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                1 (strnum_literal).
-            break (break).
-            = (srec_assignment):
-                m (field_name).
-                2 (strnum_literal).
-break alloc stub!
-
-mlr -n put -v for(k,v in $*) { $m=1;break;continue;$m=2 }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                1 (strnum_literal).
-            break (break).
-            continue (break).
-            = (srec_assignment):
-                m (field_name).
-                2 (strnum_literal).
-break alloc stub!
-break alloc stub!
-
-mlr -n put -v for(k,v in $*) { $m=1;break;continue;;$m=2 }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (srec_assignment):
-                m (field_name).
-                1 (strnum_literal).
-            break (break).
-            continue (break).
-            = (srec_assignment):
-                m (field_name).
-                2 (strnum_literal).
-break alloc stub!
-break alloc stub!
-
-
----------------------------------------------------------------- main:for:cond
-mlr -n put -v for(k,v in $*) { true{$m=3} }
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            cond (conditional_block):
-                true (boolean_literal).
-                list (statement_list):
-                    = (srec_assignment):
-                        m (field_name).
-                        3 (strnum_literal).
-
-
----------------------------------------------------------------- main:cond:for
-mlr -n put -v true{ for(k,v in $*) { $m=1 } }
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            for (for_srec):
-                variables (for_variables):
-                    k (non_sigil_name).
-                    v (non_sigil_name).
-                list (statement_list):
-                    = (srec_assignment):
-                        m (field_name).
-                        1 (strnum_literal).
-
-mlr -n put -v true{ for(k,v in $*) { $m=1;break;continue;;$m=2 } }
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            for (for_srec):
-                variables (for_variables):
-                    k (non_sigil_name).
-                    v (non_sigil_name).
-                list (statement_list):
-                    = (srec_assignment):
-                        m (field_name).
-                        1 (strnum_literal).
-                    break (break).
-                    continue (break).
-                    = (srec_assignment):
-                        m (field_name).
-                        2 (strnum_literal).
-break alloc stub!
-break alloc stub!
-
-
----------------------------------------------------------------- main:cond:for:cond
-mlr -n put -v true{ for(k,v in $*) { true{$m=3} } }
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            for (for_srec):
-                variables (for_variables):
-                    k (non_sigil_name).
-                    v (non_sigil_name).
-                list (statement_list):
-                    cond (conditional_block):
-                        true (boolean_literal).
-                        list (statement_list):
-                            = (srec_assignment):
-                                m (field_name).
-                                3 (strnum_literal).
-
-
----------------------------------------------------------------- ifs
-mlr -n put -v 
-  if (NR==1) {
-    $x = 2;
-    $x = 3
-  };
-  if (NR == 4) {
-    $x = 5;
-    $x = 6
-  } else {
-    $x = 7;
-    $x = 8
-  };
-  if (NR == 9) {
-    $x = 10;
-    $x = 11
-  } elif (NR == 12) {
-    $x = 13;
-    $x = 14
-  } else {
-    $x = 15;
-    $x = 16
-  };
-  if (NR == 17) {
-    $x = 18;
-    $x = 19
-  } elif (NR == 20) {
-    $x = 21;
-    $x = 22
-  } elif (NR == 23) {
-    $x = 24;
-    $x = 25
-  } else {
-    $x = 26;
-    $x = 27
-  };
-  if (NR == 28) {
-    $x = 29;
-    $x = 30
-  } elif (NR == 31) {
-    $x = 32;
-    $x = 33
-  } elif (NR == 34) {
-    $x = 35;
-    $x = 36
-  } elif (NR == 37) {
-    $x = 38;
-    $x = 39
-  } else {
-    $x = 40;
-    $x = 41
-  }
-AST ROOT:
-list (statement_list):
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                1 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    2 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    3 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                4 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    5 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    6 (strnum_literal).
-        else (if_item):
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    7 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    8 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                9 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    10 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    11 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                12 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    13 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    14 (strnum_literal).
-        else (if_item):
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    15 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    16 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                17 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    18 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    19 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                20 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    21 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    22 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                23 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    24 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    25 (strnum_literal).
-        else (if_item):
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    26 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    27 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                28 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    29 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    30 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                31 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    32 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    33 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                34 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    35 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    36 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                37 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    38 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    39 (strnum_literal).
-        else (if_item):
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    40 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    41 (strnum_literal).
-
-
----------------------------------------------------------------- ifs
-mlr -n put -v 
-  if (NR==1) {
-    $x = 2;
-    $x = 3
-  };
-  if (NR == 4) {
-    $x = 5;
-    $x = 6
-  };
-  if (NR == 7) {
-    $x = 8;
-    $x = 9
-  } elif (NR == 10) {
-    $x = 11;
-    $x = 12
-  };
-  if (NR == 13) {
-    $x = 14;
-    $x = 15
-  } elif (NR == 16) {
-    $x = 17;
-    $x = 18
-  } elif (NR == 19) {
-    $x = 20;
-    $x = 21
-  };
-  if (NR == 22) {
-    $x = 23;
-    $x = 24
-  } elif (NR == 25) {
-    $x = 26;
-    $x = 27
-  } elif (NR == 28) {
-    $x = 29;
-    $x = 30
-  } elif (NR == 31) {
-    $x = 32;
-    $x = 33
-  }
-AST ROOT:
-list (statement_list):
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                1 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    2 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    3 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                4 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    5 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    6 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                7 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    8 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    9 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                10 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    11 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    12 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                13 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    14 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    15 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                16 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    17 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    18 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                19 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    20 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    21 (strnum_literal).
-    if_head (if_head):
-        if (if_item):
-            == (operator):
-                NR (context_variable).
-                22 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    23 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    24 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                25 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    26 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    27 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                28 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    29 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    30 (strnum_literal).
-        elif (if_item):
-            == (operator):
-                NR (context_variable).
-                31 (strnum_literal).
-            list (statement_list):
-                = (srec_assignment):
-                    x (field_name).
-                    32 (strnum_literal).
-                = (srec_assignment):
-                    x (field_name).
-                    33 (strnum_literal).
-
-mlr --opprint put if(NR==2){$x=777} ./reg_test/input/abixy
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  777                 0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mlr --opprint put if(NR==2){$x=777}elif(NR==4){$x=888} ./reg_test/input/abixy
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  777                 0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  888                 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mlr --opprint put if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999} ./reg_test/input/abixy
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  777                 0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  888                 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  999                 0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mlr --opprint put if(NR==2){$x=777}else{$x=0} ./reg_test/input/abixy
-a   b   i  x   y
-pan pan 1  0   0.7268028627434533
-eks pan 2  777 0.5221511083334797
-wye wye 3  0   0.33831852551664776
-eks wye 4  0   0.13418874328430463
-wye pan 5  0   0.8636244699032729
-zee pan 6  0   0.49322128674835697
-eks zee 7  0   0.1878849191181694
-zee wye 8  0   0.976181385699006
-hat wye 9  0   0.7495507603507059
-pan wye 10 0   0.9526183602969864
-
-mlr --opprint put if(NR==2){$x=777}elif(NR==4){$x=888}else{$x=0} ./reg_test/input/abixy
-a   b   i  x   y
-pan pan 1  0   0.7268028627434533
-eks pan 2  777 0.5221511083334797
-wye wye 3  0   0.33831852551664776
-eks wye 4  888 0.13418874328430463
-wye pan 5  0   0.8636244699032729
-zee pan 6  0   0.49322128674835697
-eks zee 7  0   0.1878849191181694
-zee wye 8  0   0.976181385699006
-hat wye 9  0   0.7495507603507059
-pan wye 10 0   0.9526183602969864
-
-mlr --opprint put if(NR==2){$x=777}elif(NR==4){$x=888}elif(NR==6){$x=999}else{$x=0} ./reg_test/input/abixy
-a   b   i  x   y
-pan pan 1  0   0.7268028627434533
-eks pan 2  777 0.5221511083334797
-wye wye 3  0   0.33831852551664776
-eks wye 4  888 0.13418874328430463
-wye pan 5  0   0.8636244699032729
-zee pan 6  999 0.49322128674835697
-eks zee 7  0   0.1878849191181694
-zee wye 8  0   0.976181385699006
-hat wye 9  0   0.7495507603507059
-pan wye 10 0   0.9526183602969864
-
-mlr --from ./reg_test/input/abixy --opprint put -S -v for(k,v in $*) {$[k."_orig"]=v}
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            = (indirect_srec_assignment):
-                . (operator):
-                    k (bound_variable).
-                    _orig (strnum_literal).
-                v (bound_variable).
-a   b   i  x                   y                   a_orig b_orig i_orig x_orig              y_orig
-pan pan 1  0.3467901443380824  0.7268028627434533  pan    pan    1      0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797  eks    pan    2      0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776 wye    wye    3      0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463 eks    wye    4      0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729  wye    pan    5      0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697 zee    pan    6      0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694  eks    zee    7      0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006   zee    wye    8      0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059  hat    wye    9      0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864  pan    wye    10     0.5026260055412137  0.9526183602969864
-
-mlr --from ./reg_test/input/abixy put -S -v for(k,v in $*) {unset $[k]}
-AST ROOT:
-list (statement_list):
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            unset (unset):
-                indirect_field_name (indirect_field_name):
-                    k (bound_variable).
-
-
-
-
-
-
-
-
-
-
-
-mlr --from ./reg_test/input/abixy put -S -v for(k,v in $*) {if (k != "x") {unset $[k]}}
-AST ROOT:
-list (statement_list):
+        sum (field_name).
+        0 (strnum_literal).
     for (for_srec):
         variables (for_variables):
             k (non_sigil_name).
@@ -776,35 +70,93 @@ list (statement_list):
         list (statement_list):
             if_head (if_head):
                 if (if_item):
-                    != (operator):
+                    =~ (operator):
                         k (bound_variable).
-                        x (strnum_literal).
+                        ^[xy]$ (strnum_literal).
                     list (statement_list):
-                        unset (unset):
-                            indirect_field_name (indirect_field_name):
-                                k (bound_variable).
-x=0.3467901443380824
-x=0.7586799647899636
-x=0.20460330576630303
-x=0.38139939387114097
-x=0.5732889198020006
-x=0.5271261600918548
-x=0.6117840605678454
-x=0.5985540091064224
-x=0.03144187646093577
-x=0.5026260055412137
+                        = (srec_assignment):
+                            sum (field_name).
+                            + (operator):
+                                sum (field_name).
+                                indirect_field_name (indirect_field_name):
+                                    k (bound_variable).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
 
-mlr -n put -v $["x"]=3
+mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }
 AST ROOT:
 list (statement_list):
-    = (indirect_srec_assignment):
-        x (strnum_literal).
-        3 (strnum_literal).
+    = (srec_assignment):
+        sum (field_name).
+        0 (strnum_literal).
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            if_head (if_head):
+                if (if_item):
+                    =~ (operator):
+                        k (bound_variable).
+                        ^[xy]$ (strnum_literal).
+                    list (statement_list):
+                        = (srec_assignment):
+                            sum (field_name).
+                            + (operator):
+                                sum (field_name).
+                                float (non_sigil_name):
+                                    indirect_field_name (indirect_field_name):
+                                        k (bound_variable).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
 
-mlr -n put -v @["x"]=3
+mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }
 AST ROOT:
 list (statement_list):
-    = (indirect_oosvar_assignment):
-        indirect_oosvar_name (indirect_oosvar_name):
-            x (strnum_literal).
-        3 (strnum_literal).
+    = (srec_assignment):
+        sum (field_name).
+        0 (strnum_literal).
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            if_head (if_head):
+                if (if_item):
+                    >= (operator):
+                        k (bound_variable).
+                        i (strnum_literal).
+                    list (statement_list):
+                        = (srec_assignment):
+                            sum (field_name).
+                            + (operator):
+                                sum (field_name).
+                                indirect_field_name (indirect_field_name):
+                                    k (bound_variable).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
+
