@@ -103,6 +103,8 @@ run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]
 run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }' # xxx broken why sum == error ?
 run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }' # xxx broken why sum == error ?
 
+run_mlr -n put -v '$a=@s;$b=@t[1];$c=@u[1][2];$d=@v[1][2][3]; $a=@["s"]'
+
 # ================================================================
 cat $outfile
 

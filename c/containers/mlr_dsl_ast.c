@@ -149,6 +149,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FIELD_NAME:                       return "field_name";                       break;
 	case MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME:              return "indirect_field_name";              break;
 	case MD_AST_NODE_TYPE_FULL_SREC:                        return "full_srec";                        break;
+	case MD_AST_NODE_TYPE_OOSVAR_KEY_LIST:                  return "oosvar_key_list";                  break;
 	case MD_AST_NODE_TYPE_OOSVAR_NAME:                      return "oosvar_name";                      break;
 	case MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME:             return "indirect_oosvar_name";             break;
 	case MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY:                 return "oosvar_level_key";                 break;
