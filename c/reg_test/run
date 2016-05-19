@@ -1616,12 +1616,16 @@ run_mlr --from $indir/abixy put -v 'for(k,v in $*) {$nr= NR}'
 
 mention for-srec modifying the srec
 run_mlr --from $indir/abixy put -v 'for(k,v in $*) {unset $[k]}; $j = NR'
+run_mlr --from $indir/abixy put -v 'for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR'
 run_mlr --from $indir/abixy --opprint put -S -v 'for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}'
 run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
+
 # xxx broken this should autoconvert to numeric unless -S:
 # run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }'
+
 # xxx broken why sum == error ?
 # run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }'
+
 # xxx broken why sum == error ?
 # run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }'
 

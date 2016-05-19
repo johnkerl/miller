@@ -15360,6 +15360,37 @@ j=8
 j=9
 j=10
 
+mlr --from ./reg_test/input/abixy put -v for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
+AST ROOT:
+list (statement_list):
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            if_head (if_head):
+                if (if_item):
+                    != (operator):
+                        k (bound_variable).
+                        x (strnum_literal).
+                    list (statement_list):
+                        unset (unset):
+                            indirect_field_name (indirect_field_name):
+                                k (bound_variable).
+    = (srec_assignment):
+        j (field_name).
+        NR (context_variable).
+x=0.3467901443380824,j=1
+x=0.7586799647899636,j=2
+x=0.20460330576630303,j=3
+x=0.38139939387114097,j=4
+x=0.5732889198020006,j=5
+x=0.5271261600918548,j=6
+x=0.6117840605678454,j=7
+x=0.5985540091064224,j=8
+x=0.03144187646093577,j=9
+x=0.5026260055412137,j=10
+
 mlr --from ./reg_test/input/abixy --opprint put -S -v for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
 AST ROOT:
 list (statement_list):

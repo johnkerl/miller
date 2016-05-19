@@ -76,10 +76,6 @@ run_mlr() {
 # ================================================================
 announce GRAMMAR REORG
 
-run_mlr --from $indir/abixy --opprint put -S -v 'for(k,v in $*) {$[k."_orig"]=v}'
-run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {unset $[k]}'
-run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {if (k != "x") {unset $[k]}}'
-
 run_mlr -n put -v '$["x"]=3'
 run_mlr -n put -v '@["x"]=3'
 run_mlr -n put -v '$[$y]=$y'
