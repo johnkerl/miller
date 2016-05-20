@@ -93,23 +93,17 @@ echo x=1|mlr put '$x=$x+1; for (k,v in $*) { $[v] = typeof(v)}'
 echo x=1|mlr put 'for (k,v in $*) { $[v] = typeof(v)}'
 # x=1,1=MT_STRING
 
-run_mlr put -v '@s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all' /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
+run_mlr put -v '@s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all' $indir/abixy
 
-run_mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]' /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
+run_mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]' $indir/abixy
 
-run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy # xxx broken: second statement doesn't parse
-
+run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy
 
 run_mlr put -v '@["t"]["u"] = $y; emitp all' $indir/abixy
 
-run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }' # xxx broken this should autoconvert to numeric unless -S:
+run_mlr --from $indir/abixy put -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }'
 
-run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }' # xxx broken why sum == error ?
-
-run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }' # xxx broken why sum == error ?
-run_mlr --from $indir/abixy put -S -v '$sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }' # xxx broken why sum == error ?
-
-run_mlr -n put -v '
+run_mlr --from $indir/abixy -n put -v '
   $a = @s;
   $b = @t[1];
   $c = @u[1][2];
@@ -118,7 +112,7 @@ run_mlr -n put -v '
   $f = @["t"][1];
   $g = @["u"][1][2];
   $h = @["v"][1][2][3];
-  '
+'
 
 # ================================================================
 cat $outfile
