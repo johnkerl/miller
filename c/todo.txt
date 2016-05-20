@@ -12,7 +12,7 @@ TOP-OF-LIST SUMMARY
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
 
-? triple-for with boundvars??
+? triple-for with boundvars? or at least faqent re oosvars & while-loops
 
 ! CST-build-time invalidations:
   - $stuff @ begin/end
