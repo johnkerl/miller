@@ -467,9 +467,9 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_i
 	for (sllve_t* pe = past->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 
-		if (pnode->type == MD_AST_NODE_TYPE_ALL) {
+		if (pnode->type == MD_AST_NODE_TYPE_ALL || pnode->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 			// The grammar allows only 'unset all', not 'unset @x, all, $y'.
-			// So if 'all' appears at all, it's the only name.
+			// So if 'all' appears at all, it's the only name. Likewise with '@*'.
 			pstatement->phandler = handle_unset_all;
 
 		} else if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
@@ -579,7 +579,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 	// So if 'all' appears at all, it's the only name.
-	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL) {
+	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
 		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {

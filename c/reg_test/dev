@@ -114,6 +114,10 @@ run_mlr --from $indir/abixy -n put -v '
   $h = @["v"][1][2][3];
 '
 
+run_mlr -n put -v 'emit  @*'
+run_mlr -n put -v 'emitp @*'
+run_mlr -n put -v 'unset @*'
+
 # ================================================================
 cat $outfile
 
