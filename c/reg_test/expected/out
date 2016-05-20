@@ -8544,7 +8544,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;}
@@ -8553,7 +8554,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {;@x=1}
@@ -8562,7 +8564,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;@y=2}
@@ -8571,10 +8574,12 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 mlr --from /dev/null put -v begin {@x=1;;@y=2}
@@ -8583,10 +8588,12 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 mlr --from /dev/null put -v true {}
@@ -8624,7 +8631,8 @@ list (statement_list):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;}
@@ -8634,7 +8642,8 @@ list (statement_list):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v true {;@x=1}
@@ -8644,7 +8653,8 @@ list (statement_list):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;@y=2}
@@ -8654,10 +8664,12 @@ list (statement_list):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 mlr --from /dev/null put -v true {@x=1;;@y=2}
@@ -8667,10 +8679,12 @@ list (statement_list):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 mlr --from /dev/null put -v end {}
@@ -8703,7 +8717,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;}
@@ -8712,7 +8727,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v end {;@x=1}
@@ -8721,7 +8737,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;@y=2}
@@ -8730,10 +8747,12 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 mlr --from /dev/null put -v end {@x=1;;@y=2}
@@ -8742,10 +8761,12 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                y (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
                 2 (strnum_literal).
 
 
@@ -13347,15 +13368,18 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 0 (strnum_literal).
     = (srec_assignment):
         d (field_name).
         - (operator):
             x (field_name).
-            ox (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                ox (string_literal).
     = (oosvar_assignment):
-        ox (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            ox (string_literal).
         x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
@@ -13375,20 +13399,24 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 no (strnum_literal).
     = (srec_assignment):
         d (field_name).
         ? : (operator):
             == (operator):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 no (strnum_literal).
             1.0 (strnum_literal).
             / (operator):
                 x (field_name).
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
     = (oosvar_assignment):
-        ox (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            ox (string_literal).
         x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
@@ -13409,9 +13437,11 @@ list (statement_list):
         d (field_name).
         / (operator):
             x (field_name).
-            ox (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                ox (string_literal).
     = (oosvar_assignment):
-        ox (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            ox (string_literal).
         x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790  1.000000
@@ -13431,20 +13461,24 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 no (strnum_literal).
     = (srec_assignment):
         d (field_name).
         ? : (operator):
             == (operator):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 no (strnum_literal).
             1.0 (strnum_literal).
             / (operator):
                 x (field_name).
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
     = (oosvar_assignment):
-        ox (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            ox (string_literal).
         x (field_name).
 a   b   i  x                   y                   d         x_ratio
 pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
@@ -13464,16 +13498,20 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                rsum (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    rsum (string_literal).
                 0 (strnum_literal).
     = (oosvar_assignment):
-        rsum (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            rsum (string_literal).
         + (operator):
-            rsum (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                rsum (string_literal).
             x (field_name).
     = (srec_assignment):
         rsum (field_name).
-        rsum (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            rsum (string_literal).
 a   b   i  x                   y                   rsum
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  1.105470
@@ -13492,38 +13530,52 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                b (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    c (string_literal).
                 0 (strnum_literal).
     = (srec_assignment):
         za (field_name).
-        a (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
     = (srec_assignment):
         zb (field_name).
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
     = (srec_assignment):
         zc (field_name).
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
     = (srec_assignment):
         d (field_name).
         + (operator):
             + (operator):
-                a (oosvar_name).
-                b (oosvar_name).
-            c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
+            oosvar_keylist (oosvar_keylist):
+                c (string_literal).
     = (oosvar_assignment):
-        a (oosvar_name).
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
     = (oosvar_assignment):
-        b (oosvar_name).
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
     = (oosvar_assignment):
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
         i (field_name).
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
@@ -13543,38 +13595,52 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                b (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    c (string_literal).
                 0 (strnum_literal).
     = (srec_assignment):
         za (field_name).
-        a (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
     = (srec_assignment):
         zb (field_name).
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
     = (srec_assignment):
         zc (field_name).
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
     = (srec_assignment):
         d (field_name).
         + (operator):
             + (operator):
-                a (oosvar_name).
-                b (oosvar_name).
-            c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
+            oosvar_keylist (oosvar_keylist):
+                c (string_literal).
     = (oosvar_assignment):
-        a (oosvar_name).
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
     = (oosvar_assignment):
-        b (oosvar_name).
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
     = (oosvar_assignment):
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
         i (field_name).
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
@@ -13594,15 +13660,18 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                ox (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    ox (string_literal).
                 0 (strnum_literal).
     = (srec_assignment):
         d (field_name).
         - (operator):
             x (field_name).
-            ox (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                ox (string_literal).
     = (oosvar_assignment):
-        ox (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            ox (string_literal).
         x (field_name).
 a   b   i  x                   y                   d
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
@@ -13620,22 +13689,28 @@ mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg_test/in
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        a (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
         a (field_name).
     = (oosvar_assignment):
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
         b (field_name).
     = (oosvar_assignment):
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
         x (field_name).
     end (end):
         list (statement_list):
             emitf (emitf):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
             emitf (emitf):
-                b (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
             emitf (emitf):
-                c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    c (string_literal).
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -13654,20 +13729,26 @@ mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        a (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
         a (field_name).
     = (oosvar_assignment):
-        b (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
         b (field_name).
     = (oosvar_assignment):
-        c (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
         x (field_name).
     end (end):
         list (statement_list):
             emitf (emitf):
-                a (oosvar_name).
-                b (oosvar_name).
-                c (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    c (string_literal).
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -13686,30 +13767,40 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                count (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    count (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                sum (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    sum (string_literal).
                 0.0 (strnum_literal).
     = (oosvar_assignment):
-        count (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            count (string_literal).
         + (operator):
-            count (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                count (string_literal).
             1 (strnum_literal).
     = (oosvar_assignment):
-        sum (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            sum (string_literal).
         + (operator):
-            sum (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                sum (string_literal).
             x (field_name).
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                mean (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    mean (string_literal).
                 / (operator):
-                    sum (oosvar_name).
-                    count (oosvar_name).
+                    oosvar_keylist (oosvar_keylist):
+                        sum (string_literal).
+                    oosvar_keylist (oosvar_keylist):
+                        count (string_literal).
             emitf (emitf):
-                mean (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    mean (string_literal).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -13731,29 +13822,39 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                mean (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    mean (string_literal).
                 / (operator):
-                    sum (oosvar_name).
-                    count (oosvar_name).
+                    oosvar_keylist (oosvar_keylist):
+                        sum (string_literal).
+                    oosvar_keylist (oosvar_keylist):
+                        count (string_literal).
             emitf (emitf):
-                mean (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    mean (string_literal).
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                count (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    count (string_literal).
                 0 (strnum_literal).
             = (oosvar_assignment):
-                sum (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    sum (string_literal).
                 0.0 (strnum_literal).
     = (oosvar_assignment):
-        count (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            count (string_literal).
         + (operator):
-            count (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                count (string_literal).
             1 (strnum_literal).
     = (oosvar_assignment):
-        sum (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            sum (string_literal).
         + (operator):
-            sum (oosvar_name).
+            oosvar_keylist (oosvar_keylist):
+                sum (string_literal).
             x (field_name).
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
@@ -13776,34 +13877,34 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
-                [] (oosvar_level_key):
-                    b (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    b (string_literal).
                     1 (strnum_literal).
     = (srec_assignment):
         c (field_name).
-        d (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            d (string_literal).
     = (oosvar_assignment):
-        [] (oosvar_level_key):
-            [] (oosvar_level_key):
-                [] (oosvar_level_key):
-                    e (oosvar_name).
-                    i (field_name).
-                + (operator):
-                    2 (strnum_literal).
-                    j (field_name).
+        oosvar_keylist (oosvar_keylist):
+            e (string_literal).
+            i (field_name).
+            + (operator):
+                2 (strnum_literal).
+                j (field_name).
             3 (strnum_literal).
         4 (field_name).
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    f (oosvar_name).
-                    [] (oosvar_level_key):
-                        [] (oosvar_level_key):
-                            g (oosvar_name).
-                            5 (strnum_literal).
-                        h (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    f (string_literal).
+                    oosvar_keylist (oosvar_keylist):
+                        g (string_literal).
+                        5 (strnum_literal).
+                        oosvar_keylist (oosvar_keylist):
+                            h (string_literal).
                 6 (strnum_literal).
 
 mlr put @y[$a]=$y; end{dump} ./reg_test/input/abixy
@@ -14213,7 +14314,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 1 (strnum_literal).
     = (srec_assignment):
         e (field_name).
@@ -14233,7 +14335,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                z (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    z (string_literal).
                 9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9} /dev/null
@@ -14242,7 +14345,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 1 (strnum_literal).
     = (srec_assignment):
         e (field_name).
@@ -14265,7 +14369,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                z (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    z (string_literal).
                 9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9} /dev/null
@@ -14274,7 +14379,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 1 (strnum_literal).
     = (srec_assignment):
         e (field_name).
@@ -14300,7 +14406,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                z (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    z (string_literal).
                 9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9} /dev/null
@@ -14309,7 +14416,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 1 (strnum_literal).
     = (srec_assignment):
         e (field_name).
@@ -14338,7 +14446,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                z (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    z (string_literal).
                 9 (strnum_literal).
 
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9} /dev/null
@@ -14347,7 +14456,8 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                a (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    a (string_literal).
                 1 (strnum_literal).
     = (srec_assignment):
         e (field_name).
@@ -14365,15 +14475,17 @@ list (statement_list):
                 s (field_name).
                 1 (strnum_literal).
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    t (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    t (string_literal).
                     . (operator):
                         u (strnum_literal).
                         5 (field_name).
                 2 (strnum_literal).
             emitf (emitf):
-                v (oosvar_name).
-                w (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    w (string_literal).
             dump (dump):
     = (srec_assignment):
         x (field_name).
@@ -14381,7 +14493,8 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                z (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    z (string_literal).
                 9 (strnum_literal).
 
 mlr put -v begin{true{@x=1}}; true{@x=2}; end{true{@x=3}} /dev/null
@@ -14393,13 +14506,15 @@ list (statement_list):
                 true (boolean_literal).
                 list (statement_list):
                     = (oosvar_assignment):
-                        x (oosvar_name).
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
                         1 (strnum_literal).
     cond (conditional_block):
         true (boolean_literal).
         list (statement_list):
             = (oosvar_assignment):
-                x (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
                 2 (strnum_literal).
     end (end):
         list (statement_list):
@@ -14407,7 +14522,8 @@ list (statement_list):
                 true (boolean_literal).
                 list (statement_list):
                     = (oosvar_assignment):
-                        x (oosvar_name).
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
                         3 (strnum_literal).
 
 
@@ -15206,14 +15322,16 @@ mlr --opprint put -v @s = NR; $t = @s; $u=@["s"]; $v = $t - $u ./reg_test/input/
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        s (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
         NR (context_variable).
     = (srec_assignment):
         t (field_name).
-        s (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
     = (srec_assignment):
         u (field_name).
-        indirect_oosvar_name (indirect_oosvar_name):
+        oosvar_keylist (oosvar_keylist):
             s (strnum_literal).
     = (srec_assignment):
         v (field_name).
@@ -15235,8 +15353,8 @@ pan wye 10 0.5026260055412137  0.9526183602969864  10 10 0
 mlr put -v @["s"] = $x; emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
-    = (indirect_oosvar_assignment):
-        indirect_oosvar_name (indirect_oosvar_name):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
             s (strnum_literal).
         x (field_name).
     emitp (emitp):
@@ -18263,15 +18381,16 @@ mlr put -v @v     = $* /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_from_full_srec_assignment):
-        v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
         $* (full_srec).
 
 mlr put -v @v[1]  = $* /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_from_full_srec_assignment):
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             1 (strnum_literal).
         $* (full_srec).
 
@@ -18279,8 +18398,8 @@ mlr put -v @v[$2] = $* /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_from_full_srec_assignment):
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             2 (field_name).
         $* (full_srec).
 
@@ -18293,7 +18412,8 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_from_full_srec_assignment):
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                 $* (full_srec).
 
 mlr put -v NR == 3 {@v[1]  = $*} /dev/null
@@ -18305,8 +18425,8 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_from_full_srec_assignment):
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
                 $* (full_srec).
 
@@ -18319,8 +18439,8 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_from_full_srec_assignment):
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     2 (field_name).
                 $* (full_srec).
 
@@ -18529,15 +18649,16 @@ AST ROOT:
 list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
-        v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
 
 mlr put -v $* = @v[1]  /dev/null
 AST ROOT:
 list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             1 (strnum_literal).
 
 mlr put -v $* = @v[$2] /dev/null
@@ -18545,8 +18666,8 @@ AST ROOT:
 list (statement_list):
     = (full_srec_from_oosvar_assignment):
         $* (full_srec).
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             2 (field_name).
 
 mlr put -v NR == 3 {$* = @v    } /dev/null
@@ -18559,7 +18680,8 @@ list (statement_list):
         list (statement_list):
             = (full_srec_from_oosvar_assignment):
                 $* (full_srec).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v NR == 3 {$* = @v[1] } /dev/null
 AST ROOT:
@@ -18571,8 +18693,8 @@ list (statement_list):
         list (statement_list):
             = (full_srec_from_oosvar_assignment):
                 $* (full_srec).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v NR == 3 {$* = @v[$2]} /dev/null
@@ -18585,8 +18707,8 @@ list (statement_list):
         list (statement_list):
             = (full_srec_from_oosvar_assignment):
                 $* (full_srec).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     2 (field_name).
 
 mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
@@ -18609,36 +18731,40 @@ mlr put -v @u    = @v /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        u (oosvar_name).
-        v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            u (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
 
 mlr put -v @u    = @v[1] /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        u (oosvar_name).
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            u (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             1 (strnum_literal).
 
 mlr put -v @u[2] = @v /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        [] (oosvar_level_key):
-            u (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            u (string_literal).
             2 (strnum_literal).
-        v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
 
 mlr put -v @u[2] = @v[1] /dev/null
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        [] (oosvar_level_key):
-            u (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            u (string_literal).
             2 (strnum_literal).
-        [] (oosvar_level_key):
-            v (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
             1 (strnum_literal).
 
 mlr put -v begin { @u    = @v } /dev/null
@@ -18647,8 +18773,10 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v begin { @u    = @v[1] } /dev/null
 AST ROOT:
@@ -18656,9 +18784,10 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v begin { @u[2] = @v } /dev/null
@@ -18667,10 +18796,11 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v begin { @u[2] = @v[1] } /dev/null
 AST ROOT:
@@ -18678,11 +18808,11 @@ list (statement_list):
     begin (begin):
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v NR == 3 { @u    = @v } /dev/null
@@ -18694,8 +18824,10 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v NR == 3 { @u    = @v[1] } /dev/null
 AST ROOT:
@@ -18706,9 +18838,10 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v NR == 3 { @u[2] = @v } /dev/null
@@ -18720,10 +18853,11 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
 AST ROOT:
@@ -18734,11 +18868,11 @@ list (statement_list):
             3 (strnum_literal).
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v end { @u    = @v } /dev/null
@@ -18747,8 +18881,10 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v end { @u    = @v[1] } /dev/null
 AST ROOT:
@@ -18756,9 +18892,10 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                u (oosvar_name).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -v end { @u[2] = @v } /dev/null
@@ -18767,10 +18904,11 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
 
 mlr put -v end { @u[2] = @v[1] } /dev/null
 AST ROOT:
@@ -18778,11 +18916,11 @@ list (statement_list):
     end (end):
         list (statement_list):
             = (oosvar_assignment):
-                [] (oosvar_level_key):
-                    u (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    u (string_literal).
                     2 (strnum_literal).
-                [] (oosvar_level_key):
-                    v (oosvar_name).
+                oosvar_keylist (oosvar_keylist):
+                    v (string_literal).
                     1 (strnum_literal).
 
 mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy

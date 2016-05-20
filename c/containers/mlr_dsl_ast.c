@@ -117,24 +117,28 @@ void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level) {
+static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FILE* o) {
 	if (pnode == NULL)
 		return;
 	for (int i = 0; i < level; i++)
-		printf("    ");
-	printf("%s (%s)%s\n",
+		fprintf(o, "    ");
+	fprintf(o, "%s (%s)%s\n",
 		pnode->text,
 		mlr_dsl_ast_node_describe_type(pnode->type),
 		(pnode->pchildren != NULL) ? ":" : ".");
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_print_aux(pe->pvvalue, level + 1);
+			mlr_dsl_ast_node_print_aux(pe->pvvalue, level + 1, o);
 		}
 	}
 }
 
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode) {
-	mlr_dsl_ast_node_print_aux(pnode, 0);
+	mlr_dsl_ast_node_print_aux(pnode, 0, stdout);
+}
+
+void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
+	mlr_dsl_ast_node_print_aux(pnode, 0, o);
 }
 
 // ----------------------------------------------------------------
@@ -143,22 +147,19 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:                   return "statement_list";                   break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "begin";                            break;
 	case MD_AST_NODE_TYPE_END:                              return "end";                              break;
+	case MD_AST_NODE_TYPE_STRING_LITERAL:                   return "string_literal";                   break;
 	case MD_AST_NODE_TYPE_STRNUM_LITERAL:                   return "strnum_literal";                   break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:                  return "boolean_literal";                  break;
 	case MD_AST_NODE_TYPE_REGEXI:                           return "regexi";                           break;
 	case MD_AST_NODE_TYPE_FIELD_NAME:                       return "field_name";                       break;
 	case MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME:              return "indirect_field_name";              break;
 	case MD_AST_NODE_TYPE_FULL_SREC:                        return "full_srec";                        break;
-	case MD_AST_NODE_TYPE_OOSVAR_KEY_LIST:                  return "oosvar_key_list";                  break;
-	case MD_AST_NODE_TYPE_OOSVAR_NAME:                      return "oosvar_name";                      break;
-	case MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME:             return "indirect_oosvar_name";             break;
-	case MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY:                 return "oosvar_level_key";                 break;
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:                   return "oosvar_keylist";                   break;
 	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:                   return "non_sigil_name";                   break;
 	case MD_AST_NODE_TYPE_OPERATOR:                         return "operator";                         break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:                  return "srec_assignment";                  break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:         return "indirect_srec_assignment";         break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:                return "oosvar_assignment";                break;
-	case MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT:       return "indirect_oosvar_assignment";       break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT: return "oosvar_from_full_srec_assignment"; break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT: return "full_srec_from_oosvar_assignment"; break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:                 return "context_variable";                 break;

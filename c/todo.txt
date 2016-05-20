@@ -6,6 +6,17 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+
+! code-dup reduction:
+  !!!
+    mlr --from ./reg_test/input/abixy --opprint put -v '@ox="no"; $d=@ox'
+    mlr put -v '@a=$b;$new=@a' ../data/small
+    -> segv
+  - oosvar name, level keys, indirect name, indirect level keys
+  - @ .y, AST, CST, rval
+  - strip out unused methods @ all
+  - srec field name vs. indirect
+
 - @[.] evaluators in the AST&CST (pre boundvar)
 - $[boundvar] and @[boundvar] evaluators in the AST.
 - $[boundvar] and @[boundvar] evaluators in the CST.
@@ -24,11 +35,7 @@ TOP-OF-LIST SUMMARY
   - break/continue outside while/do-while/for
   - all with expect-fail UTs
 
-! code-dup reduction:
-  - srec field name vs. indirect
-  - oosvar name, level keys, indirect name, indirect level keys
-  - @ .y, AST, CST, rval
-  - strip out unused methods @ all
+! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 
 ----------------------------------------------------------------
 * for-variants:
@@ -70,6 +77,8 @@ HYGIENE:
 * fully recursive; recursivity of existing conds
 * pound-to-EOL commenting for filter & put
 ! don't release 4.1 w/o implicit semicolon after closing curly brace
+* bugfix:
+  ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 
 NOTE FOR FUTURE:
 ? local vars w/ decl syntax -- @vars for now?

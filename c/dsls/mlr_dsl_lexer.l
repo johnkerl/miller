@@ -303,10 +303,6 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_DOLLAR_SIGN;
 }
-@ {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_AT_SIGN;
-}
 
 \$[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the dollar sign being here. If this is changed,
@@ -324,15 +320,20 @@
 @[a-zA-Z_0-9]+ {
 	// Note: the parser depends on the at-sign being here. If this is changed,
 	// that needs to be changed as well.
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OOSVAR_NAME);
-	return MD_TOKEN_OOSVAR_NAME;
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
+	return MD_TOKEN_UNBRACED_OOSVAR_NAME;
 }
 @\{([^\}]|\\.)*\} {
 	// Note: the parser depends on the percent-sign being here. If this is changed,
 	// that needs to be changed as well.
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OOSVAR_NAME);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
 	return MD_TOKEN_BRACED_OOSVAR_NAME;
 }
+@ {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_AT_SIGN;
+}
+
 "\[" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_LEFT_BRACKET;

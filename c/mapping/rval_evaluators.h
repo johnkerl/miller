@@ -66,14 +66,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int ty
 // Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
 rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnode, int type_inferencing);
-
-// Evaluates @-variables that don't have brackets: e.g. @x vs. @x[$1].
-// See comments above rval_evaluator_alloc_from_oosvar_level_keys for more information.
-rval_evaluator_t* rval_evaluator_alloc_from_oosvar_name(char* oosvar_name);
-// Evaluates @-variables that don't have brackets: e.g. @x vs. @x[$1].
-rval_evaluator_t* rval_evaluator_alloc_from_oosvar_level_keys(mlr_dsl_ast_node_t* past);
-// Evaluates @-variables with base-key an expression rather than a string literal, e.g.  @["x"].
-rval_evaluator_t* rval_evaluator_alloc_from_indirect_oosvar_name(mlr_dsl_ast_node_t* pnode, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
 // This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
 // or '$x = "left_\1". The values are subject to replacement with regex captures. See comments

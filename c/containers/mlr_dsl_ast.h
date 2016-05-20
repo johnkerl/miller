@@ -11,22 +11,19 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_STATEMENT_LIST,
 	MD_AST_NODE_TYPE_BEGIN,
 	MD_AST_NODE_TYPE_END,
+	MD_AST_NODE_TYPE_STRING_LITERAL,
 	MD_AST_NODE_TYPE_STRNUM_LITERAL,
 	MD_AST_NODE_TYPE_BOOLEAN_LITERAL,
 	MD_AST_NODE_TYPE_REGEXI,
 	MD_AST_NODE_TYPE_FIELD_NAME, // E.g. $x
-	MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, // E.g. $[@x]
+	MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, // E.g. $[@x] // xxx rid of
 	MD_AST_NODE_TYPE_FULL_SREC,
-	MD_AST_NODE_TYPE_OOSVAR_KEY_LIST,
-	MD_AST_NODE_TYPE_OOSVAR_NAME, // xxx rid of
-	MD_AST_NODE_TYPE_INDIRECT_OOSVAR_NAME, // E.g. @[$x] // xxx rid of
-	MD_AST_NODE_TYPE_OOSVAR_LEVEL_KEY, // xxx rid of
+	MD_AST_NODE_TYPE_OOSVAR_KEYLIST,
 	MD_AST_NODE_TYPE_NON_SIGIL_NAME,
 	MD_AST_NODE_TYPE_OPERATOR,
 	MD_AST_NODE_TYPE_SREC_ASSIGNMENT,
 	MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT,
 	MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT,
-	MD_AST_NODE_TYPE_INDIRECT_OOSVAR_ASSIGNMENT, // xxx rid of
 	MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT,
 	MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT,
 	MD_AST_NODE_TYPE_CONTEXT_VARIABLE,
@@ -91,6 +88,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, c
 
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
+void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o);
 char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type);
 
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
