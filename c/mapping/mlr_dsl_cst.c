@@ -20,6 +20,7 @@ static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing);
+static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
 static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
@@ -57,6 +58,7 @@ static void                            handle_while(mlr_dsl_cst_statement_t* s, 
 static void                         handle_do_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_do_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_for_srec(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                       handle_for_oosvar(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                          handle_if_head(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_bare_boolean(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
@@ -258,9 +260,9 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 	case MD_AST_NODE_TYPE_FOR_SREC:
 		return alloc_for_srec(pnode, type_inferencing);
 		break;
-
-	// xxx for-oosvar
-
+	case MD_AST_NODE_TYPE_FOR_OOSVAR:
+		return alloc_for_oosvar(pnode, type_inferencing);
+		break;
 	case MD_AST_NODE_TYPE_IF_HEAD:
 		return alloc_if_head(pnode, type_inferencing);
 		break;
@@ -318,7 +320,8 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pvarargs                         = NULL;
 	pstatement->pblock_statements                = NULL;
 	pstatement->pif_chain_statements             = NULL;
-	pstatement->pbound_variables                      = NULL;
+	pstatement->pfor_oosvar_keylist_evaluators   = NULL;
+	pstatement->pbound_variables                 = NULL;
 
 	return pstatement;
 }
@@ -706,7 +709,68 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 	// Right child node is the list of statements in the body.
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+
+	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
+
+	pstatement->for_srec_k_name   = pknode->text;
+	pstatement->for_srec_v_name   = pvnode->text;
+
 	sllv_t* pblock_statements = sllv_alloc();
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		// xxx also elsewhere, invalidate. cmt there this is done at the CST
+		// rather than AST-parse level since we can give better error messages
+		// (and, a simpler Lemon grammar).
+		if (pbody_ast_node->type == MD_AST_NODE_TYPE_CONTINUE) {
+			printf("continue alloc stub!\n");
+		} else if (pbody_ast_node->type == MD_AST_NODE_TYPE_BREAK) {
+			printf("break alloc stub!\n");
+		} else {
+			// xxx stub 3rd arg
+			sllv_append(pblock_statements, cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE));
+		}
+	}
+
+	pstatement->phandler = handle_for_srec;
+	pstatement->pblock_statements = pblock_statements;
+	pstatement->pbound_variables  = lhmsmv_alloc();
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+// $ mlr -n put -v 'for((k1,k2,k3),v in @*) {}'
+// list (statement_list):
+//     for (for_oosvar):
+//         variables (for_variables):
+//             variables (for_variables):
+//                 k1 (non_sigil_name).
+//                 k2 (non_sigil_name).
+//                 k3 (non_sigil_name).
+//             v (non_sigil_name).
+//         list (statement_list):
+
+static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing) {
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	// Left child node is list of bound variables.
+	//   Left subnode is namelist for key boundvars.
+	//   Right subnode is name for value boundvar.
+	// Right child node is the list of statements in the body.
+	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* psubright  = pleft->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+	sllv_t* pblock_statements = sllv_alloc();
+
+	pstatement->pfor_oosvar_keylist_evaluators = sllv_alloc();
+	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
+		sllv_append(pstatement->pfor_oosvar_keylist_evaluators,
+			rval_evaluator_alloc_from_string(pnamenode->text));
+	}
+	pstatement->for_srec_v_name = psubright->text;
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -723,18 +787,14 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 		}
 	}
 
-	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
-
-	pstatement->phandler = handle_for_srec;
+	pstatement->phandler = handle_for_oosvar;
 	pstatement->pblock_statements = pblock_statements;
-	pstatement->for_srec_k_name   = pknode->text;
-	pstatement->for_srec_v_name   = pvnode->text;
 	pstatement->pbound_variables  = lhmsmv_alloc();
 
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
 // Example parser-input:
 //
 //   if (NR == 9) {
@@ -1420,6 +1480,36 @@ static void handle_for_srec(
 	}
 	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context
 	lrec_free(pcopy);
+	bind_stack_pop(pvars->pbind_stack);
+}
+
+// ----------------------------------------------------------------
+static void handle_for_oosvar(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+
+//	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
+//	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
+//		// Copy, not pointer-reference, in case of srec-unset in loop body:
+//		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
+//
+//		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
+//		mv_t mvval = (poverlay != NULL)
+//			? mv_copy(poverlay)
+//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+//
+//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
+//
+//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+//	}
+//	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context
+//	lrec_free(pcopy);
+
 	bind_stack_pop(pvars->pbind_stack);
 }
 

@@ -103,6 +103,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* for_srec_v_name;
 
 	// xxx for-oosvar key-list of names
+	sllv_t* pfor_oosvar_keylist_evaluators;
 
 	// for-srec and for-oosvar:
 	lhmsmv_t* pbound_variables;

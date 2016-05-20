@@ -11,6 +11,7 @@ TOP-OF-LIST SUMMARY
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
+* tab/space indents in .y
 
 ? triple-for with boundvars? or at least faqent re oosvars & while-loops
 
@@ -22,6 +23,9 @@ TOP-OF-LIST SUMMARY
   - all with expect-fail UTs
 
 ! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
+
+* readme note re head dev: announced features ok if build passing (and it is);
+  unannounced features may change
 
 ----------------------------------------------------------------
 * for-variants:

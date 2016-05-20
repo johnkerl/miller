@@ -130,6 +130,7 @@ run_mlr -n put -v 'for(k,v in $*) {}'
 #         list (statement_list):
 
 run_mlr -n put -v 'for(k1,v in @*) {}'
+run_mlr -n put -v 'for((k1),v in @*) {}'
 run_mlr -n put -v 'for((k1,k2),v in @*) {}'
 run_mlr -n put -v 'for((k1,k2,k3),v in @*) {}'
 
