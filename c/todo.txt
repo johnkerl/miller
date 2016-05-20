@@ -6,17 +6,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! code-dup reduction:
-  - srec field name vs. indirect
-  - @ .y, AST, CST, rval
-  - strip out unused methods @ all
-
-- @[.] evaluators in the AST&CST (pre boundvar)
-- $[boundvar] and @[boundvar] evaluators in the AST.
-- $[boundvar] and @[boundvar] evaluators in the CST.
-- indirect oosvar from full srec @ .y
-- $*
-- emit $* same as emit all
+! for-oosrec
+- @* in what contexts? not as LHS of assignment.  emit @* same as emit all; only in for-$* ?
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
