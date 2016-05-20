@@ -14532,11 +14532,11 @@ DSL IF-CHAINING
 
 
 ---------------------------------------------------------------- IF/ELIF WITH ELSE
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR==1) {
     $x = 2;
     $y = 3
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -14592,14 +14592,14 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 4) {
     $x = 5;
     $y = 6
   } else {
     $x = 1007;
     $y = 1008
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -14663,7 +14663,7 @@ i=38,x=1007,y=1008
 i=39,x=1007,y=1008
 i=40,x=1007,y=1008
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 9) {
     $x = 10;
     $y = 11
@@ -14673,7 +14673,7 @@ mlr put -v
   } else {
     $x = 1015;
     $y = 1016
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -14748,7 +14748,7 @@ i=38,x=1015,y=1016
 i=39,x=1015,y=1016
 i=40,x=1015,y=1016
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 17) {
     $x = 18;
     $y = 19
@@ -14761,7 +14761,7 @@ mlr put -v
   } else {
     $x = 1026;
     $y = 1027
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -14847,7 +14847,7 @@ i=38,x=1026,y=1027
 i=39,x=1026,y=1027
 i=40,x=1026,y=1027
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 28) {
     $x = 29;
     $y = 30
@@ -14863,7 +14863,7 @@ mlr put -v
   } else {
     $x = 1040;
     $y = 1041
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -14962,11 +14962,11 @@ i=40,x=1040,y=1041
 
 
 ---------------------------------------------------------------- IF/ELIF WITHOUT ELSE
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 1) {
     $x = 2;
     $y = 3
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -15022,14 +15022,14 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 4) {
     $x = 5;
     $y = 6
   } elif (NR == 7) {
     $x = 8;
     $y = 9
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -15096,7 +15096,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 10) {
     $x = 11;
     $y = 12
@@ -15106,7 +15106,7 @@ mlr put -v
   } elif (NR == 16) {
     $x = 17;
     $y = 18
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):
@@ -15184,7 +15184,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr put -v 
+mlr --from ./reg_test/input/xy40.dkvp put -v 
   if (NR == 19) {
     $x = 20;
     $y = 21
@@ -15197,7 +15197,7 @@ mlr put -v
   } elif (NR == 28) {
     $x = 29;
     $y = 30
-  } ./reg_test/input/xy40.dkvp
+  }
 AST ROOT:
 list (statement_list):
     if_head (if_head):

@@ -1472,22 +1472,22 @@ run_mlr put -v 'begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}' /dev/null
 announce DSL IF-CHAINING
 
 mention IF/ELIF WITH ELSE
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR==1) {
     $x = 2;
     $y = 3
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 4) {
     $x = 5;
     $y = 6
   } else {
     $x = 1007;
     $y = 1008
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 9) {
     $x = 10;
     $y = 11
@@ -1497,9 +1497,9 @@ run_mlr put -v '
   } else {
     $x = 1015;
     $y = 1016
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 17) {
     $x = 18;
     $y = 19
@@ -1512,9 +1512,9 @@ run_mlr put -v '
   } else {
     $x = 1026;
     $y = 1027
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 28) {
     $x = 29;
     $y = 30
@@ -1530,25 +1530,25 @@ run_mlr put -v '
   } else {
     $x = 1040;
     $y = 1041
-  }' $indir/xy40.dkvp
+  }'
 
 mention IF/ELIF WITHOUT ELSE
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 1) {
     $x = 2;
     $y = 3
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 4) {
     $x = 5;
     $y = 6
   } elif (NR == 7) {
     $x = 8;
     $y = 9
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 10) {
     $x = 11;
     $y = 12
@@ -1558,9 +1558,9 @@ run_mlr put -v '
   } elif (NR == 16) {
     $x = 17;
     $y = 18
-  }' $indir/xy40.dkvp
+  }'
 
-run_mlr put -v '
+run_mlr --from $indir/xy40.dkvp put -v '
   if (NR == 19) {
     $x = 20;
     $y = 21
@@ -1573,7 +1573,7 @@ run_mlr put -v '
   } elif (NR == 28) {
     $x = 29;
     $y = 30
-  }' $indir/xy40.dkvp
+  }'
 
 # ----------------------------------------------------------------
 announce DSL INDIRECT SREC ASSIGNMENTS

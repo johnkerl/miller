@@ -2,46 +2,79 @@
 ================================================================
 GRAMMAR REORG
 
-mlr put -v @s = NR; $s = @["s"]; emitp all ./reg_test/input/abixy
+mlr put -v @s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        s (oosvar_name).
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
         NR (context_variable).
     = (srec_assignment):
-        s (field_name).
-        indirect_oosvar_name (indirect_oosvar_name):
-            s (strnum_literal).
+        t (field_name).
+        typeof (non_sigil_name):
+            oosvar_keylist (oosvar_keylist):
+                s (string_literal).
+    = (srec_assignment):
+        u (field_name).
+        typeof (non_sigil_name):
+            oosvar_keylist (oosvar_keylist):
+                s (strnum_literal).
     emitp (emitp):
         all (all).
 s=1
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,t=MT_INT,u=MT_INT
 s=2
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,t=MT_INT,u=MT_INT
 s=3
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,t=MT_INT,u=MT_INT
 s=4
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,t=MT_INT,u=MT_INT
 s=5
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,t=MT_INT,u=MT_INT
 s=6
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,t=MT_INT,u=MT_INT
 s=7
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,t=MT_INT,u=MT_INT
 s=8
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,t=MT_INT,u=MT_INT
 s=9
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,t=MT_INT,u=MT_INT
 s=10
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,t=MT_INT,u=MT_INT
+
+mlr --opprint put -v @s = NR; $t = @s; $u=@["s"] /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
+        NR (context_variable).
+    = (srec_assignment):
+        t (field_name).
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
+    = (srec_assignment):
+        u (field_name).
+        oosvar_keylist (oosvar_keylist):
+            s (strnum_literal).
+a   b   i  x                   y                   t  u
+pan pan 1  0.3467901443380824  0.7268028627434533  1  1
+eks pan 2  0.7586799647899636  0.5221511083334797  2  2
+wye wye 3  0.20460330576630303 0.33831852551664776 3  3
+eks wye 4  0.38139939387114097 0.13418874328430463 4  4
+wye pan 5  0.5732889198020006  0.8636244699032729  5  5
+zee pan 6  0.5271261600918548  0.49322128674835697 6  6
+eks zee 7  0.6117840605678454  0.1878849191181694  7  7
+zee wye 8  0.5985540091064224  0.976181385699006   8  8
+hat wye 9  0.03144187646093577 0.7495507603507059  9  9
+pan wye 10 0.5026260055412137  0.9526183602969864  10 10
 
 mlr put -v @["t"]["u"] = y; emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
-        [] (oosvar_level_key):
-            indirect_oosvar_name (indirect_oosvar_name):
-                t (strnum_literal).
+        oosvar_keylist (oosvar_keylist):
+            t (strnum_literal).
             u (strnum_literal).
         y (bound_variable).
     emitp (emitp):
@@ -159,4 +192,34 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
+
+mlr -n put -v $a=@s;$b=@t[1];$c=@u[1][2];$d=@v[1][2][3]; $a=@["s"]
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        a (field_name).
+        oosvar_keylist (oosvar_keylist):
+            s (string_literal).
+    = (srec_assignment):
+        b (field_name).
+        oosvar_keylist (oosvar_keylist):
+            t (string_literal).
+            1 (strnum_literal).
+    = (srec_assignment):
+        c (field_name).
+        oosvar_keylist (oosvar_keylist):
+            u (string_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+    = (srec_assignment):
+        d (field_name).
+        oosvar_keylist (oosvar_keylist):
+            v (string_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+            3 (strnum_literal).
+    = (srec_assignment):
+        a (field_name).
+        oosvar_keylist (oosvar_keylist):
+            s (strnum_literal).
 
