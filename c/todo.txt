@@ -6,24 +6,18 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-
 ! code-dup reduction:
-  !!!
-    mlr --from ./reg_test/input/abixy --opprint put -v '@ox="no"; $d=@ox'
-    mlr put -v '@a=$b;$new=@a' ../data/small
-    -> segv
-  - oosvar name, level keys, indirect name, indirect level keys
+  - srec field name vs. indirect
   - @ .y, AST, CST, rval
   - strip out unused methods @ all
-  - srec field name vs. indirect
 
 - @[.] evaluators in the AST&CST (pre boundvar)
 - $[boundvar] and @[boundvar] evaluators in the AST.
 - $[boundvar] and @[boundvar] evaluators in the CST.
 - indirect oosvar from full srec @ .y
 - $*
+- emit $* same as emit all
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-? update AST to merge indexed/non-indexed oosvars? also indirect vs. indirect @ srec, oosvar?
 * chk UT x all
 
 ? triple-for with boundvars??
