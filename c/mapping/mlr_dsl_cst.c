@@ -757,11 +757,13 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	// Left child node is list of bound variables.
 	//   Left subnode is namelist for key boundvars.
 	//   Right subnode is name for value boundvar.
+	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
 	// Right child node is the list of statements in the body.
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* psubright  = pleft->pchildren->phead->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pmiddle = past->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pnext->pvvalue;
 	sllv_t* pblock_statements = sllv_alloc();
 
 	pstatement->pfor_oosvar_keylist_evaluators = sllv_alloc();
@@ -771,6 +773,9 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 			rval_evaluator_alloc_from_string(pnamenode->text));
 	}
 	pstatement->for_srec_v_name = psubright->text;
+
+	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pmiddle, type_inferencing);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
