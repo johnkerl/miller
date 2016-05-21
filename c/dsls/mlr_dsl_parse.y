@@ -183,8 +183,8 @@ md_for_loop_full_oosvar(A) ::=
     MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR_OOSVAR,
-		mlr_dsl_ast_node_alloc_binary("variables", MD_AST_NODE_TYPE_FOR_VARIABLES,
-			mlr_dsl_ast_node_alloc_unary("variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K),
+		mlr_dsl_ast_node_alloc_binary("key_and_value_variables", MD_AST_NODE_TYPE_FOR_VARIABLES,
+			mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K),
 		V),
 		C);
 }
@@ -201,12 +201,12 @@ md_for_loop_full_oosvar(A) ::=
     MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FOR_OOSVAR,
-		mlr_dsl_ast_node_alloc_binary("variables", MD_AST_NODE_TYPE_FOR_VARIABLES, L, V),
+		mlr_dsl_ast_node_alloc_binary("key_and_value_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, L, V),
 		C);
 }
 
 md_for_oosvar_keylist(A) ::= MD_TOKEN_NON_SIGIL_NAME(K). {
-	A = mlr_dsl_ast_node_alloc_unary("variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
+	A = mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
 }
 md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(K). {
 	A = mlr_dsl_ast_node_append_arg(L, K);
