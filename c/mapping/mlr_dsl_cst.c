@@ -62,6 +62,13 @@ static void                       handle_for_oosvar(mlr_dsl_cst_statement_t* s, 
 static void                          handle_if_head(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_bare_boolean(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
+static void handle_for_oosvar_aux(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs,
+	mlhmmv_value_t*          psubmap,
+	sllse_t*                 prest_for_k_names);
+
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
 
 // ----------------------------------------------------------------
@@ -320,7 +327,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pvarargs                         = NULL;
 	pstatement->pblock_statements                = NULL;
 	pstatement->pif_chain_statements             = NULL;
-	pstatement->pfor_oosvar_keylist_evaluators   = NULL;
+	pstatement->pfor_oosvar_k_names              = NULL;
 	pstatement->pbound_variables                 = NULL;
 
 	return pstatement;
@@ -713,8 +720,8 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
 
-	pstatement->for_srec_k_name   = pknode->text;
-	pstatement->for_srec_v_name   = pvnode->text;
+	pstatement->for_srec_k_name = pknode->text;
+	pstatement->for_v_name = pvnode->text;
 
 	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -776,15 +783,12 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	mlr_dsl_ast_node_t* pmiddle   = past->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pright    = past->pchildren->phead->pnext->pnext->pvvalue;
 
-	// xxx this should just be an slls
-	// xxx rename to boundvar_namelist
-	pstatement->pfor_oosvar_keylist_evaluators = sllv_alloc();
+	pstatement->pfor_oosvar_k_names = slls_alloc();
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
-		sllv_append(pstatement->pfor_oosvar_keylist_evaluators,
-			rval_evaluator_alloc_from_string(pnamenode->text));
+		slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pnamenode->text));
 	}
-	pstatement->for_srec_v_name = psubright->text;
+	pstatement->for_v_name = psubright->text;
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pmiddle, type_inferencing);
@@ -1492,7 +1496,7 @@ static void handle_for_srec(
 			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
 
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
+		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
 		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
 	}
@@ -1528,8 +1532,11 @@ static void handle_for_oosvar(
 		//		&error);
 		//	if (pfromentry != NULL) {
 		//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+		mlhmmv_value_t* psubmap = NULL; // xxx temp
 
-			// pnode->pfor_oosvar_keylist_evaluators
+			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
+			// into the submap.
+			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, psubmap, pnode->pfor_oosvar_k_names->phead);
 
 		//	}
 
@@ -1540,11 +1547,14 @@ static void handle_for_oosvar(
 	bind_stack_pop(pvars->pbind_stack);
 }
 
-// handle_for_oosvar_aux(
-//     ...
-// ) {
-
-	// xxx needs to recurse over keylist
+// xxx needs to recurse over keylist
+static void handle_for_oosvar_aux(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs,
+	mlhmmv_value_t*          psubmap,
+	sllse_t*                 prest_for_k_names)
+{
 
 	//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
 	//		mv_t mvkey = mv_from_string_no_free(pe->key);
@@ -1555,12 +1565,12 @@ static void handle_for_oosvar(
 	//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
 	//
 	//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-	//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
+	//		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 	//
 	//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
 	//	}
 
-// }
+}
 
 // ----------------------------------------------------------------
 static void handle_if_head(

@@ -71,7 +71,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* phandler;
 
-	// Assignment to oosvar, emit, and emitp
+	// Assignment to oosvar, emit, and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* poosvar_lhs_keylist_evaluators;
 
 	// Assignment to srec
@@ -100,10 +100,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// for-srec:
 	char* for_srec_k_name;
-	char* for_srec_v_name;
-
-	// xxx for-oosvar key-list of names
-	sllv_t* pfor_oosvar_keylist_evaluators;
+	slls_t* pfor_oosvar_k_names;
+	char* for_v_name;
 
 	// for-srec and for-oosvar:
 	lhmsmv_t* pbound_variables;

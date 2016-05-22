@@ -12,6 +12,7 @@ TOP-OF-LIST SUMMARY
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
 * tab/space indents in .y
+! cst_statement_free bring up to date with blank_alloc
 
 ? triple-for with boundvars? or at least faqent re oosvars & while-loops
 
