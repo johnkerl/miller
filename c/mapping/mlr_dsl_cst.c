@@ -776,6 +776,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	mlr_dsl_ast_node_t* pmiddle   = past->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pright    = past->pchildren->phead->pnext->pnext->pvvalue;
 
+	// xxx this should just be an slls
+	// xxx rename to boundvar_namelist
 	pstatement->pfor_oosvar_keylist_evaluators = sllv_alloc();
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
@@ -1527,24 +1529,9 @@ static void handle_for_oosvar(
 		//	if (pfromentry != NULL) {
 		//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
 
-			//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
-			//		// Copy, not pointer-reference, in case of srec-unset in loop body:
-			//		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
-			//
-			//		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
-			//		mv_t mvval = (poverlay != NULL)
-			//			? mv_copy(poverlay)
-			//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
-			//
-			//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-			//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
-			//
-			//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
-			//	}
+			// pnode->pfor_oosvar_keylist_evaluators
 
 		//	}
-
-		// pstatement->pfor_oosvar_keylist_evaluators
 
 		// xxx free the submap
 	}
@@ -1552,6 +1539,28 @@ static void handle_for_oosvar(
 
 	bind_stack_pop(pvars->pbind_stack);
 }
+
+// handle_for_oosvar_aux(
+//     ...
+// ) {
+
+	// xxx needs to recurse over keylist
+
+	//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
+	//		mv_t mvkey = mv_from_string_no_free(pe->key);
+	//
+	//		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
+	//		mv_t mvval = (poverlay != NULL)
+	//			? mv_copy(poverlay)
+	//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+	//
+	//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+	//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
+	//
+	//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+	//	}
+
+// }
 
 // ----------------------------------------------------------------
 static void handle_if_head(
