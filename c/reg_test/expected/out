@@ -15594,8 +15594,8 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,pan=a,wye=b,10=i,0.50
 DSL FOR-OOSVAR LOOPS
 
 mlr --opprint -n put -v 
-  @o[1][1][FILENAME][NR] = $a;
-  @o[1][2][FILENAME][NR] = $b;
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
@@ -15611,7 +15611,7 @@ list (statement_list):
             o (string_literal).
             1 (strnum_literal).
             1 (strnum_literal).
-            FILENAME (context_variable).
+            text1 (strnum_literal).
             NR (context_variable).
         a (field_name).
     = (oosvar_assignment):
@@ -15619,7 +15619,7 @@ list (statement_list):
             o (string_literal).
             1 (strnum_literal).
             2 (strnum_literal).
-            FILENAME (context_variable).
+            text2 (strnum_literal).
             NR (context_variable).
         b (field_name).
     = (oosvar_assignment):
@@ -15662,8 +15662,8 @@ list (statement_list):
                 d (strnum_literal).
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
-  @o[1][1][FILENAME][NR] = $a;
-  @o[1][2][FILENAME][NR] = $b;
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
@@ -15672,27 +15672,27 @@ mlr --opprint --from ./reg_test/input/abixy put -q
     emit @n, "a", "b", "c", "d"
   }
 
-a b c    d                      n
-3 4 1    ./reg_test/input/abixy pan
-3 4 100  pan                    0.346790
-3 4 2    ./reg_test/input/abixy pan
-3 4 200  eks                    0.758680
-3 4 3    ./reg_test/input/abixy wye
-3 4 300  wye                    0.204603
-3 4 4    ./reg_test/input/abixy wye
-3 4 400  eks                    0.381399
-3 4 5    ./reg_test/input/abixy pan
-3 4 500  wye                    0.573289
-3 4 6    ./reg_test/input/abixy pan
-3 4 600  zee                    0.527126
-3 4 7    ./reg_test/input/abixy zee
-3 4 700  eks                    0.611784
-3 4 8    ./reg_test/input/abixy wye
-3 4 800  zee                    0.598554
-3 4 9    ./reg_test/input/abixy wye
-3 4 900  hat                    0.031442
-3 4 10   ./reg_test/input/abixy wye
-3 4 1000 pan                    0.502626
+a b c    d     n
+3 4 1    text2 pan
+3 4 100  pan   0.346790
+3 4 2    text2 pan
+3 4 200  eks   0.758680
+3 4 3    text2 wye
+3 4 300  wye   0.204603
+3 4 4    text2 wye
+3 4 400  eks   0.381399
+3 4 5    text2 pan
+3 4 500  wye   0.573289
+3 4 6    text2 pan
+3 4 600  zee   0.527126
+3 4 7    text2 zee
+3 4 700  eks   0.611784
+3 4 8    text2 wye
+3 4 800  zee   0.598554
+3 4 9    text2 wye
+3 4 900  hat   0.031442
+3 4 10   text2 wye
+3 4 1000 pan   0.502626
 
 
 ================================================================

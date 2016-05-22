@@ -1630,8 +1630,8 @@ run_mlr --from $indir/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
 announce DSL FOR-OOSVAR LOOPS
 
 run_mlr --opprint -n put -v '
-  @o[1][1][FILENAME][NR] = $a;
-  @o[1][2][FILENAME][NR] = $b;
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
@@ -1642,8 +1642,8 @@ run_mlr --opprint -n put -v '
 '
 
 run_mlr --opprint --from $indir/abixy put -q '
-  @o[1][1][FILENAME][NR] = $a;
-  @o[1][2][FILENAME][NR] = $b;
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
