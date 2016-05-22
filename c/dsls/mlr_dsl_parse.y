@@ -79,7 +79,7 @@ md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_statement(C)
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_statement(A) ::= . {
-    A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
+	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
 // Begin/end (non-nestable)
@@ -160,9 +160,9 @@ md_for_loop_full_srec(A) ::=
 		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_SREC
 	MD_TOKEN_RPAREN
-    MD_TOKEN_LBRACE
-    	md_statement_list(S)
-    MD_TOKEN_RBRACE.
+	MD_TOKEN_LBRACE
+		md_statement_list(S)
+	MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_binary(
 		F->text,
@@ -183,9 +183,9 @@ md_for_loop_full_oosvar(A) ::=
 		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 	MD_TOKEN_RPAREN
-    MD_TOKEN_LBRACE
-    	md_statement_list(S)
-    MD_TOKEN_RBRACE.
+	MD_TOKEN_LBRACE
+		md_statement_list(S)
+	MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,
@@ -212,9 +212,9 @@ md_for_loop_full_oosvar(A) ::=
 		MD_TOKEN_LPAREN md_for_oosvar_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 	MD_TOKEN_RPAREN
-    MD_TOKEN_LBRACE
-    	md_statement_list(S)
-    MD_TOKEN_RBRACE.
+	MD_TOKEN_LBRACE
+		md_statement_list(S)
+	MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,
@@ -236,9 +236,9 @@ md_for_loop_oosvar(A) ::=
 		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN md_oosvar_keylist(O)
 	MD_TOKEN_RPAREN
-    MD_TOKEN_LBRACE
-    	md_statement_list(S)
-    MD_TOKEN_RBRACE.
+	MD_TOKEN_LBRACE
+		md_statement_list(S)
+	MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,
@@ -265,9 +265,9 @@ md_for_loop_oosvar(A) ::=
 		MD_TOKEN_LPAREN md_for_oosvar_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN md_oosvar_keylist(O)
 	MD_TOKEN_RPAREN
-    MD_TOKEN_LBRACE
-    	md_statement_list(S)
-    MD_TOKEN_RBRACE.
+	MD_TOKEN_LBRACE
+		md_statement_list(S)
+	MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,

@@ -15591,6 +15591,111 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,pan=a,wye=b,10=i,0.50
 
 
 ================================================================
+DSL FOR-OOSVAR LOOPS
+
+mlr --opprint -n put -v 
+  @o[1][1][FILENAME][NR] = $a;
+  @o[1][2][FILENAME][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  };
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            o (string_literal).
+            1 (strnum_literal).
+            1 (strnum_literal).
+            FILENAME (context_variable).
+            NR (context_variable).
+        a (field_name).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            o (string_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+            FILENAME (context_variable).
+            NR (context_variable).
+        b (field_name).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            o (string_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+            a (field_name).
+            * (operator):
+                i (field_name).
+                100 (strnum_literal).
+        x (field_name).
+    for (for_oosvar):
+        key_and_value_variables (for_variables):
+            key_variables (for_variables):
+                k1 (non_sigil_name).
+                k2 (non_sigil_name).
+            v (non_sigil_name).
+        oosvar_keylist (oosvar_keylist):
+            o (string_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    n (string_literal).
+                    3 (strnum_literal).
+                    4 (strnum_literal).
+                    k2 (bound_variable).
+                    k1 (bound_variable).
+                v (bound_variable).
+    end (end):
+        list (statement_list):
+            emit (emit):
+                oosvar_keylist (oosvar_keylist):
+                    n (string_literal).
+                a (strnum_literal).
+                b (strnum_literal).
+                c (strnum_literal).
+                d (strnum_literal).
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @o[1][1][FILENAME][NR] = $a;
+  @o[1][2][FILENAME][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  };
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
+a b c    d                      n
+3 4 1    ./reg_test/input/abixy pan
+3 4 100  pan                    0.346790
+3 4 2    ./reg_test/input/abixy pan
+3 4 200  eks                    0.758680
+3 4 3    ./reg_test/input/abixy wye
+3 4 300  wye                    0.204603
+3 4 4    ./reg_test/input/abixy wye
+3 4 400  eks                    0.381399
+3 4 5    ./reg_test/input/abixy pan
+3 4 500  wye                    0.573289
+3 4 6    ./reg_test/input/abixy pan
+3 4 600  zee                    0.527126
+3 4 7    ./reg_test/input/abixy zee
+3 4 700  eks                    0.611784
+3 4 8    ./reg_test/input/abixy wye
+3 4 800  zee                    0.598554
+3 4 9    ./reg_test/input/abixy wye
+3 4 900  hat                    0.031442
+3 4 10   ./reg_test/input/abixy wye
+3 4 1000 pan                    0.502626
+
+
+================================================================
 ABSENT/EMPTY
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg_test/input/abixy

@@ -94,8 +94,9 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 
 // For for-loop-over-oosvar, wherein we need to copy the submap before iterating over it
-// (since the iteration may modify it).
-mlhmmv_value_t mlhmmv_copy_submap(sllmv_t* pmvkeys);
+// (since the iteration may modify it). If the keys don't index a submap, then the return
+// value has is_terminal = TRUE and pnext_level = NULL.
+mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
 // Examples:
@@ -205,5 +206,8 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always);
+
+void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
+	int do_final_comma, int quote_values_always);
 
 #endif // MLHMMV_H

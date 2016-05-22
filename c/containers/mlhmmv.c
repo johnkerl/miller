@@ -50,8 +50,6 @@ static void mlhmmv_to_lrecs_aux_across_records(mlhmmv_level_t* plevel, char* pre
 static void mlhmmv_to_lrecs_aux_within_record(mlhmmv_level_t* plevel, char* prefix,
 	lrec_t* poutrec, int do_full_prefixing, char* flatten_separator);
 
-static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always);
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always);
 
@@ -636,20 +634,17 @@ static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
 }
 
 // ----------------------------------------------------------------
-mlhmmv_value_t mlhmmv_copy_submap(sllmv_t* pmvkeys) {
-
-//	int error;
-//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(
-//		pvars->poosvars->proot_level,
-//		plhskeylist->phead,
-//		&error);
-//	if (pfromentry != NULL) {
-//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
-
-	return (mlhmmv_value_t) {
-	    .is_terminal = FALSE,
-		.u.pnext_level = NULL,
-	}; // xxx temp
+mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	int error;
+	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, &error);
+	if (pfromentry != NULL) {
+		return mlhmmv_copy_aux(&pfromentry->level_value);
+	} else {
+		return (mlhmmv_value_t) {
+			.is_terminal = FALSE,
+			.u.pnext_level = NULL,
+		};
+	}
 }
 
 // ----------------------------------------------------------------
@@ -962,7 +957,7 @@ void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always) {
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always);
 }
 
-static void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
+void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always)
 {
 	static char* leader = "  ";
