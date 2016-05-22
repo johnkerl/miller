@@ -2,7 +2,230 @@
 ================================================================
 GRAMMAR REORG
 
-mlr put -v @s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
+mlr -n put -v $["x"]=3
+AST ROOT:
+list (statement_list):
+    = (indirect_srec_assignment):
+        x (strnum_literal).
+        3 (strnum_literal).
+
+mlr -n put -v @["x"]=3
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (strnum_literal).
+        3 (strnum_literal).
+
+mlr -n put -v $[$y]=$y
+AST ROOT:
+list (statement_list):
+    = (indirect_srec_assignment):
+        y (field_name).
+        y (field_name).
+
+mlr -n put -v @[@y]=@y
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            oosvar_keylist (oosvar_keylist):
+                y (string_literal).
+        oosvar_keylist (oosvar_keylist):
+            y (string_literal).
+
+mlr -n put -v @x=2; @x["y"]=3; @x["y"][$z]=4
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (string_literal).
+        2 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (string_literal).
+            y (strnum_literal).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (string_literal).
+            y (strnum_literal).
+            z (field_name).
+        4 (strnum_literal).
+
+mlr -n put -v @["x"]=2; @["x"]["y"]=3; @["x"]["y"][$z]=4
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (strnum_literal).
+        2 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (strnum_literal).
+            y (strnum_literal).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            x (strnum_literal).
+            y (strnum_literal).
+            z (field_name).
+        4 (strnum_literal).
+
+mlr --from ./reg_test/input/abixy put -q -v @a=2; @b["y"]=3; @c["y"][$a]=4; emitp all
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
+        2 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
+            y (strnum_literal).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
+            y (strnum_literal).
+            a (field_name).
+        4 (strnum_literal).
+    emitp (emitp):
+        all (all).
+a=2
+b:y=3
+c:y:pan=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+
+mlr --from ./reg_test/input/abixy put -q -v @a=2; @b["y"]=3; @c["y"][$a]=4; emitp all
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            a (string_literal).
+        2 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            b (string_literal).
+            y (strnum_literal).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            c (string_literal).
+            y (strnum_literal).
+            a (field_name).
+        4 (strnum_literal).
+    emitp (emitp):
+        all (all).
+a=2
+b:y=3
+c:y:pan=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+
+mlr --from ./reg_test/input/abixy put -q -v @["a"]=2; @["b"]["y"]=3; @["c"]["y"][$a]=4; emitp all
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            a (strnum_literal).
+        2 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            b (strnum_literal).
+            y (strnum_literal).
+        3 (strnum_literal).
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            c (strnum_literal).
+            y (strnum_literal).
+            a (field_name).
+        4 (strnum_literal).
+    emitp (emitp):
+        all (all).
+a=2
+b:y=3
+c:y:pan=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+a=2
+b:y=3
+c:y:pan=4,c:y:eks=4,c:y:wye=4,c:y:zee=4,c:y:hat=4
+
+mlr put -v @s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
@@ -42,7 +265,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,t=MT_INT,u=MT_INT
 s=10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,t=MT_INT,u=MT_INT
 
-mlr --opprint put -v @s = NR; $t = @s; $u=@["s"] /Users/kerl/pub_http_internet/miller/c/reg_test/input/abixy
+mlr --opprint put -v @s = NR; $t = @s; $u=@["s"] ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
@@ -69,28 +292,74 @@ zee wye 8  0.5985540091064224  0.976181385699006   8  8
 hat wye 9  0.03144187646093577 0.7495507603507059  9  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10 10
 
-mlr put -v @["t"]["u"] = y; emitp all ./reg_test/input/abixy
+mlr put -v @t["u"] = NR; $tu = @["t"]["u"]; emitp all ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            t (string_literal).
+            u (strnum_literal).
+        NR (context_variable).
+    = (srec_assignment):
+        tu (field_name).
+        oosvar_keylist (oosvar_keylist):
+            t (strnum_literal).
+            u (strnum_literal).
+    emitp (emitp):
+        all (all).
+t:u=1
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,tu=1
+t:u=2
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,tu=2
+t:u=3
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,tu=3
+t:u=4
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,tu=4
+t:u=5
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,tu=5
+t:u=6
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,tu=6
+t:u=7
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,tu=7
+t:u=8
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,tu=8
+t:u=9
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,tu=9
+t:u=10
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,tu=10
+
+mlr put -v @["t"]["u"] = $y; emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
     = (oosvar_assignment):
         oosvar_keylist (oosvar_keylist):
             t (strnum_literal).
             u (strnum_literal).
-        y (bound_variable).
+        y (field_name).
     emitp (emitp):
         all (all).
+t:u=0.726803
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+t:u=0.522151
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+t:u=0.338319
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+t:u=0.134189
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+t:u=0.863624
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+t:u=0.493221
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+t:u=0.187885
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+t:u=0.976181
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+t:u=0.749551
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+t:u=0.952618
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }
+mlr --from ./reg_test/input/abixy put -v $sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }
 AST ROOT:
 list (statement_list):
     = (srec_assignment):
@@ -113,87 +382,27 @@ list (statement_list):
                                 sum (field_name).
                                 indirect_field_name (indirect_field_name):
                                     k (bound_variable).
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.542922
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.515588
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.436913
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.020347
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.799669
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
 
-mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += float($[k])} }
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        sum (field_name).
-        0 (strnum_literal).
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            if_head (if_head):
-                if (if_item):
-                    =~ (operator):
-                        k (bound_variable).
-                        ^[xy]$ (strnum_literal).
-                    list (statement_list):
-                        = (srec_assignment):
-                            sum (field_name).
-                            + (operator):
-                                sum (field_name).
-                                float (non_sigil_name):
-                                    indirect_field_name (indirect_field_name):
-                                        k (bound_variable).
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
+mlr --from ./reg_test/input/abixy -n put -v 
+  $a = @s;
+  $b = @t[1];
+  $c = @u[1][2];
+  $d = @v[1][2][3];
+  $e = @["s"];
+  $f = @["t"][1];
+  $g = @["u"][1][2];
+  $h = @["v"][1][2][3];
 
-mlr --from ./reg_test/input/abixy put -S -v $sum = 0; for(k,v in $*) {if (k >= "i") {$sum += $[k]} }
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        sum (field_name).
-        0 (strnum_literal).
-    for (for_srec):
-        variables (for_variables):
-            k (non_sigil_name).
-            v (non_sigil_name).
-        list (statement_list):
-            if_head (if_head):
-                if (if_item):
-                    >= (operator):
-                        k (bound_variable).
-                        i (strnum_literal).
-                    list (statement_list):
-                        = (srec_assignment):
-                            sum (field_name).
-                            + (operator):
-                                sum (field_name).
-                                indirect_field_name (indirect_field_name):
-                                    k (bound_variable).
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=(error)
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=(error)
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=(error)
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=(error)
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=(error)
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=(error)
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=(error)
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=(error)
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=(error)
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=(error)
-
-mlr -n put -v $a=@s;$b=@t[1];$c=@u[1][2];$d=@v[1][2][3]; $a=@["s"]
 AST ROOT:
 list (statement_list):
     = (srec_assignment):
@@ -219,7 +428,99 @@ list (statement_list):
             2 (strnum_literal).
             3 (strnum_literal).
     = (srec_assignment):
-        a (field_name).
+        e (field_name).
         oosvar_keylist (oosvar_keylist):
             s (strnum_literal).
+    = (srec_assignment):
+        f (field_name).
+        oosvar_keylist (oosvar_keylist):
+            t (strnum_literal).
+            1 (strnum_literal).
+    = (srec_assignment):
+        g (field_name).
+        oosvar_keylist (oosvar_keylist):
+            u (strnum_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+    = (srec_assignment):
+        h (field_name).
+        oosvar_keylist (oosvar_keylist):
+            v (strnum_literal).
+            1 (strnum_literal).
+            2 (strnum_literal).
+            3 (strnum_literal).
+
+mlr -n put -v emit  @*
+AST ROOT:
+list (statement_list):
+    emit (emit):
+        @* (full_oosvar).
+
+mlr -n put -v emitp @*
+AST ROOT:
+list (statement_list):
+    emitp (emitp):
+        @* (full_oosvar).
+
+mlr -n put -v unset @*
+AST ROOT:
+list (statement_list):
+    unset (unset):
+        @* (full_oosvar).
+
+mlr -n put -v for(k,v in $*) {}
+AST ROOT:
+list (statement_list):
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+
+mlr -n put -v for(k1,v in @*) {}
+AST ROOT:
+list (statement_list):
+    for (for_oosvar):
+        key_and_value_variables (for_variables):
+            key_variables (for_variables):
+                k1 (non_sigil_name).
+            v (non_sigil_name).
+        empty_keylist (oosvar_keylist):
+        list (statement_list):
+
+mlr -n put -v for((k1),v in @*) {}
+AST ROOT:
+list (statement_list):
+    for (for_oosvar):
+        key_and_value_variables (for_variables):
+            key_variables (for_variables):
+                k1 (non_sigil_name).
+            v (non_sigil_name).
+        empty_keylist (oosvar_keylist):
+        list (statement_list):
+
+mlr -n put -v for((k1,k2),v in @*) {}
+AST ROOT:
+list (statement_list):
+    for (for_oosvar):
+        key_and_value_variables (for_variables):
+            key_variables (for_variables):
+                k1 (non_sigil_name).
+                k2 (non_sigil_name).
+            v (non_sigil_name).
+        empty_keylist (oosvar_keylist):
+        list (statement_list):
+
+mlr -n put -v for((k1,k2,k3),v in @*) {}
+AST ROOT:
+list (statement_list):
+    for (for_oosvar):
+        key_and_value_variables (for_variables):
+            key_variables (for_variables):
+                k1 (non_sigil_name).
+                k2 (non_sigil_name).
+                k3 (non_sigil_name).
+            v (non_sigil_name).
+        empty_keylist (oosvar_keylist):
+        list (statement_list):
 

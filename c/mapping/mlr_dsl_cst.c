@@ -740,16 +740,27 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 }
 
 // ----------------------------------------------------------------
-// $ mlr -n put -v 'for((k1,k2,k3),v in @*) {}'
+// $ mlr -n put -v 'for((k1,k2,k3),v in @a["4"][$5]) { $6 = 7; $8 = 9}'
+// AST ROOT:
 // list (statement_list):
 //     for (for_oosvar):
-//         variables (for_variables):
-//             variables (for_variables):
+//         key_and_value_variables (for_variables):
+//             key_variables (for_variables):
 //                 k1 (non_sigil_name).
 //                 k2 (non_sigil_name).
 //                 k3 (non_sigil_name).
 //             v (non_sigil_name).
+//         oosvar_keylist (oosvar_keylist):
+//             a (string_literal).
+//             4 (strnum_literal).
+//             5 (field_name).
 //         list (statement_list):
+//             = (srec_assignment):
+//                 6 (field_name).
+//                 7 (strnum_literal).
+//             = (srec_assignment):
+//                 8 (field_name).
+//                 9 (strnum_literal).
 
 static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing) {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
@@ -759,12 +770,11 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	//   Right subnode is name for value boundvar.
 	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
 	// Right child node is the list of statements in the body.
-	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pleft     = past->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* psubright  = pleft->pchildren->phead->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pmiddle = past->pchildren->phead->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pright = past->pchildren->phead->pnext->pnext->pvvalue;
-	sllv_t* pblock_statements = sllv_alloc();
+	mlr_dsl_ast_node_t* psubright = pleft->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pmiddle   = past->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright    = past->pchildren->phead->pnext->pnext->pvvalue;
 
 	pstatement->pfor_oosvar_keylist_evaluators = sllv_alloc();
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -777,6 +787,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pmiddle, type_inferencing);
 
+	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		// xxx also elsewhere, invalidate. cmt there this is done at the CST
@@ -791,10 +802,10 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 			sllv_append(pblock_statements, cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE));
 		}
 	}
+	pstatement->pblock_statements = pblock_statements;
+	pstatement->pbound_variables = lhmsmv_alloc();
 
 	pstatement->phandler = handle_for_oosvar;
-	pstatement->pblock_statements = pblock_statements;
-	pstatement->pbound_variables  = lhmsmv_alloc();
 
 	return pstatement;
 }
@@ -1471,7 +1482,7 @@ static void handle_for_srec(
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
 		// Copy, not pointer-reference, in case of srec-unset in loop body:
-		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
+		mv_t mvkey = mv_from_string_no_free(pe->key);
 
 		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
 		mv_t mvval = (poverlay != NULL)
@@ -1496,24 +1507,48 @@ static void handle_for_oosvar(
 {
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
 
-//	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
-//	lrec_t* pcopy = lrec_copy(pvars->pinrec);
-//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
-//		// Copy, not pointer-reference, in case of srec-unset in loop body:
-//		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
-//
-//		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
-//		mv_t mvval = (poverlay != NULL)
-//			? mv_copy(poverlay)
-//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
-//
-//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
-//
-//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
-//	}
-//	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context
-//	lrec_free(pcopy);
+	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
+	// the current record.
+
+	int keys_all_non_null_or_error = FALSE;
+	sllmv_t* plhskeylist = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+
+		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
+		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
+		// for-loop.
+
+		//	Expose from within mlhmmv.c:
+		//	int error;
+		//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(
+		//		pvars->poosvars->proot_level,
+		//		plhskeylist->phead,
+		//		&error);
+		//	if (pfromentry != NULL) {
+		//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+
+			//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
+			//		// Copy, not pointer-reference, in case of srec-unset in loop body:
+			//		mv_t mvkey = mv_from_string_with_free(mlr_strdup_or_die(pe->key));
+			//
+			//		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
+			//		mv_t mvval = (poverlay != NULL)
+			//			? mv_copy(poverlay)
+			//			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+			//
+			//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+			//		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_v_name, &mvval, FREE_ENTRY_VALUE);
+			//
+			//		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+			//	}
+
+		//	}
+
+		// pstatement->pfor_oosvar_keylist_evaluators
+
+		// xxx free the submap
+	}
+	sllmv_free(plhskeylist);
 
 	bind_stack_pop(pvars->pbind_stack);
 }
