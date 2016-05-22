@@ -93,6 +93,10 @@ mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
 // For oosvar-to-oosvar assignment.
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 
+// For for-loop-over-oosvar, wherein we need to copy the submap before iterating over it
+// (since the iteration may modify it).
+mlhmmv_value_t mlhmmv_copy_submap(sllmv_t* pmvkeys);
+
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
 // Examples:
 //   {

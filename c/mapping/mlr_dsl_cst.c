@@ -66,7 +66,7 @@ static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t*          psubmap,
+	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
@@ -1523,22 +1523,11 @@ static void handle_for_oosvar(
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
+		mlhmmv_value_t submap = mlhmmv_copy_submap(plhskeylist);
 
-		//	Expose from within mlhmmv.c:
-		//	int error;
-		//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(
-		//		pvars->poosvars->proot_level,
-		//		plhskeylist->phead,
-		//		&error);
-		//	if (pfromentry != NULL) {
-		//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
-		mlhmmv_value_t* psubmap = NULL; // xxx temp
-
-			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
-			// into the submap.
-			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, psubmap, pnode->pfor_oosvar_k_names->phead);
-
-		//	}
+		// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
+		// into the submap.
+		handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
 
 		// xxx free the submap
 	}
@@ -1552,9 +1541,27 @@ static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t*          psubmap,
+	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names)
 {
+	if (prest_for_k_names != NULL) {
+		// Keep recursing
+		if (submap.is_terminal) {
+			// submap too shallow for user-specified k-names; there is no terminal here.
+		} else {
+			// bind the k-name to the entry-key mlrval
+			// find the next-level submap
+			// recurse
+			// handle_for_oosvar_aux(pnode, pvars, pcst_output, next_level_submap, prest_for_k_names->pnext);
+		}
+	} else {
+		// End of recursion: k-names have all been used up
+		if (!submap.is_terminal) {
+			// submap too deep for user-specified k-names; there is no terminal here.
+		} else {
+			// bind the v-name to the terminal mlrval
+		}
+	}
 
 	//	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
 	//		mv_t mvkey = mv_from_string_no_free(pe->key);

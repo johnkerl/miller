@@ -635,6 +635,24 @@ static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
 	}
 }
 
+// ----------------------------------------------------------------
+mlhmmv_value_t mlhmmv_copy_submap(sllmv_t* pmvkeys) {
+
+//	int error;
+//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(
+//		pvars->poosvars->proot_level,
+//		plhskeylist->phead,
+//		&error);
+//	if (pfromentry != NULL) {
+//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+
+	return (mlhmmv_value_t) {
+	    .is_terminal = FALSE,
+		.u.pnext_level = NULL,
+	}; // xxx temp
+}
+
+// ----------------------------------------------------------------
 static void mlhmmv_put_value_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue) {
 	mlhmmv_put_value_at_level_aux(pmap->proot_level, pmvkeys->phead, pvalue);
 }
