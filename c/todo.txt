@@ -7,7 +7,7 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-! komosa cases -> reg_test/run; also -> mld/cookbook (something *not* doable w/o oosvars/for)
+! komosa cases -> mld/cookbook (as something *not* doable w/o oosvars/for)
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
 ! cst_statement_free bring up to date with blank_alloc
