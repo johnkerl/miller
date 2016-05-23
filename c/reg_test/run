@@ -1667,6 +1667,21 @@ run_mlr --opprint --from $indir/abixy put -q '
 '
 
 # ----------------------------------------------------------------
+announce FOR-OOSVAR DEPTH TESTS
+
+mention 'for full oosvar'
+run_mlr --from $indir/abixy put '@o[1][2] = 7; for(k1,v in @*) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2] = 7; for((k1),v in @*) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2] = 7; for((k1,k2),v in @*) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2] = 7; for((k1,k2,k3),v in @*) {$x+=10;$y+=100}'
+
+mention 'for oosvar submap'
+run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for(k1,v in @o[1][2]) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1),v in @o[1][2]) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1,k2),v in @o[1][2]) {$x+=10;$y+=100}'
+run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1,k2,k3),v in @o[1][2]) {$x+=10;$y+=100}'
+
+# ----------------------------------------------------------------
 # xxx test nested control structures: double-for; if-inside-while; etc.
 
 # ----------------------------------------------------------------

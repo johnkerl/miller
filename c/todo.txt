@@ -6,8 +6,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! for-oosrec
-- @* in what contexts? not as LHS of assignment.  emit @* same as emit all; only in for-$* ?
+! for @* semantics
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
@@ -67,6 +66,7 @@ HYGIENE:
 * fully recursive; recursivity of existing conds
 * pound-to-EOL commenting for filter & put
 ! don't release 4.1 w/o implicit semicolon after closing curly brace
+* emit/unset @* same as emit/unset all
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 

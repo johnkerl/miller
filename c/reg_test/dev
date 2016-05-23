@@ -118,48 +118,6 @@ run_mlr -n put -v 'emit  @*'
 run_mlr -n put -v 'emitp @*'
 run_mlr -n put -v 'unset @*'
 
-# ----------------------------------------------------------------
-run_mlr -n put -v 'for(k,v in $*) {}'
-
-# AST ROOT:
-# list (statement_list):
-#     for (for_srec):
-#         variables (for_variables):
-#             k (non_sigil_name).
-#             v (non_sigil_name).
-#         list (statement_list):
-
-run_mlr -n put -v 'for(k1,v in @*) {}'
-run_mlr -n put -v 'for((k1),v in @*) {}'
-run_mlr -n put -v 'for((k1,k2),v in @*) {}'
-run_mlr -n put -v 'for((k1,k2,k3),v in @*) {}'
-
-# list (statement_list):
-#     for (for_oosvar):
-#         variables (for_variables):
-#             k1 (non_sigil_name).
-#             v (non_sigil_name).
-#         list (statement_list):
-
-# list (statement_list):
-#     for (for_oosvar):
-#         variables (for_variables):
-#             variables (for_variables):
-#                 k1 (non_sigil_name).
-#                 k2 (non_sigil_name).
-#             v (non_sigil_name).
-#         list (statement_list):
-
-# list (statement_list):
-#     for (for_oosvar):
-#         variables (for_variables):
-#             variables (for_variables):
-#                 k1 (non_sigil_name).
-#                 k2 (non_sigil_name).
-#                 k3 (non_sigil_name).
-#             v (non_sigil_name).
-#         list (statement_list):
-
 # ================================================================
 cat $outfile
 
