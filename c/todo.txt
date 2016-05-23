@@ -37,6 +37,18 @@ TOP-OF-LIST SUMMARY
   ? for ((k1, k2), v in @*)
   ? break/continue: fully support or eliminate from the lexer/parser
 
+UT:
+run_mlr --opprint --from $indir/abixy-wide put -q '
+  @stats["sum"][$a][$b] += $x;
+  @stats["count"][$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @sum) {
+      @stats["mean"][k1][k2] = @stats["sum"][k1][k2] / @stats["count"][k1][k2]
+    };
+    emitp @stats, "stat", "a", "b";
+  }
+'
+
 UT/olh/mld:
 * UT for empty statement for put
 * UT for empty statement for filter

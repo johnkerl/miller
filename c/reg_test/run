@@ -1666,6 +1666,17 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
+run_mlr --opprint --from $indir/abixy-wide put -q '
+  @value["sum"][$a][$b] += $x;
+  @value["count"][$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @value["sum"]) {
+      @value["mean"][k1][k2] = @value["sum"][k1][k2] / @value["count"][k1][k2]
+    };
+    emitp @value, "stat", "a", "b";
+  }
+'
+
 # ----------------------------------------------------------------
 announce FOR-OOSVAR DEPTH TESTS
 
