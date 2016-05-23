@@ -12,8 +12,8 @@ TOP-OF-LIST SUMMARY
 * move/filter all reg_test/dev -> reg_test/run
 ! cst_statement_free bring up to date with blank_alloc
 ! extend mld:ref:put, and cookbook
-
-? triple-for with boundvars? or at least faqent re oosvars & while-loops
+! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
+* readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
 
 ! CST-build-time invalidations:
   - $stuff @ begin/end
@@ -24,10 +24,7 @@ TOP-OF-LIST SUMMARY
 
 ! break/continue: fully support or eliminate from the lexer/parser
 
-! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
-
-* readme note re head dev: announced features ok if build passing (and it is);
-  unannounced features may change
+? triple-for with boundvars? or at least faqent re oosvars & while-loops
 
 ----------------------------------------------------------------
 UT/olh/mld:
