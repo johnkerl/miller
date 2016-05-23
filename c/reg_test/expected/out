@@ -15694,6 +15694,54 @@ a b c    d     n
 3 4 10   text2 wye
 3 4 1000 pan   0.502626
 
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @sum[$a][$b] += $x;
+  @count[$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @sum) {
+      @mean[k1][k2] = @sum[k1][k2] / @count[k1][k2]
+    };
+    emitp @sum, "a", "b";
+    emitp @count, "a", "b";
+    emitp @mean, "a", "b"
+  }
+
+a   b   sum
+pan pan 0.346790
+pan wye 0.502626
+eks pan 0.758680
+eks wye 0.381399
+eks zee 0.611784
+wye wye 0.204603
+wye pan 0.573289
+zee pan 0.527126
+zee wye 0.598554
+hat wye 0.031442
+
+a   b   count
+pan pan 1
+pan wye 1
+eks pan 1
+eks wye 1
+eks zee 1
+wye wye 1
+wye pan 1
+zee pan 1
+zee wye 1
+hat wye 1
+
+a   b   mean
+pan pan 0.346790
+pan wye 0.502626
+eks pan 0.758680
+eks wye 0.381399
+eks zee 0.611784
+wye wye 0.204603
+wye pan 0.573289
+zee pan 0.527126
+zee wye 0.598554
+hat wye 0.031442
+
 
 ================================================================
 ABSENT/EMPTY

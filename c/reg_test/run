@@ -1653,6 +1653,19 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
+run_mlr --opprint --from $indir/abixy put -q '
+  @sum[$a][$b] += $x;
+  @count[$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @sum) {
+      @mean[k1][k2] = @sum[k1][k2] / @count[k1][k2]
+    };
+    emitp @sum, "a", "b";
+    emitp @count, "a", "b";
+    emitp @mean, "a", "b"
+  }
+'
+
 # ----------------------------------------------------------------
 # xxx test nested control structures: double-for; if-inside-while; etc.
 
