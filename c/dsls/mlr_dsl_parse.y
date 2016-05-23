@@ -61,7 +61,7 @@ md_body ::= md_statement_list(B). {
 // We handle statements of the form ' ; ; ' by parsing the empty spaces around the semicolons as NOP nodes.
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 
-md_statement_list(A) ::= md_statement(B). {
+md_statement_list(A) ::= md_unbraced_statement(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
@@ -69,16 +69,25 @@ md_statement_list(A) ::= md_statement(B). {
 	}
 }
 
-//md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_statement(C). {
-//	if (C->type == MD_AST_NODE_TYPE_NOP) {
-//		A = B;
-//	} else {
-//		A = mlr_dsl_ast_node_append_arg(B, C);
-//	}
-//}
+md_statement_list(A) ::= md_braced_statement(B). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	} else {
+		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+	}
+}
 
 // xxx cmt why prepend not postpend
-md_statement_list(A) ::= md_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = C;
+	} else {
+		A = mlr_dsl_ast_node_prepend_arg(C, B);
+	}
+}
+
+// xxx cmt why prepend not postpend
+md_statement_list(A) ::= md_braced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
 	} else {
@@ -88,12 +97,12 @@ md_statement_list(A) ::= md_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C)
 
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-md_statement(A) ::= . {
+md_unbraced_statement(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
-md_statement ::= md_braced_statement.
-md_statement ::= md_unbraced_statement.
+//md_statement ::= md_braced_statement.
+//md_statement ::= md_unbraced_statement.
 
 // Begin/end (non-nestable)
 md_braced_statement ::= md_begin_block.
