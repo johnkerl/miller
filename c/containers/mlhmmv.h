@@ -97,6 +97,7 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 // (since the iteration may modify it). If the keys don't index a submap, then the return
 // value has is_terminal = TRUE and pnext_level = NULL.
 mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+void mlhmmv_free_submap(mlhmmv_value_t submap);
 
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
 // Examples:

@@ -617,13 +617,8 @@ static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
 			psubentry = psubentry->pnext)
 		{
 			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
-			if (psubentry->level_value.is_terminal) {
-				mlhmmv_put_value_at_level_aux(pdst_level, &e, &psubentry->level_value);
-			} else {
-				mlhmmv_value_t next_value = mlhmmv_copy_aux(&psubentry->level_value);
-				mlhmmv_put_value_at_level_aux(pdst_level, &e, &next_value);
-			}
-
+			mlhmmv_value_t next_value = mlhmmv_copy_aux(&psubentry->level_value);
+			mlhmmv_put_value_at_level_aux(pdst_level, &e, &next_value);
 		}
 
 		return (mlhmmv_value_t) {
@@ -644,6 +639,14 @@ mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 			.is_terminal = FALSE,
 			.u.pnext_level = NULL,
 		};
+	}
+}
+
+void mlhmmv_free_submap(mlhmmv_value_t submap) {
+	if (submap.is_terminal) {
+		mv_free(&submap.u.mlrval);
+	} else if (submap.u.pnext_level != NULL) {
+		mlhmmv_level_free(submap.u.pnext_level);
 	}
 }
 

@@ -32,9 +32,9 @@ typedef struct _lhmsmve_t {
 typedef unsigned char lhmsmve_state_t;
 
 typedef struct _lhmsmv_t {
-	int             num_occupied;
-	int             num_freed;
-	int             array_length;
+	int              num_occupied;
+	int              num_freed;
+	int              array_length;
 	lhmsmve_t*       entries;
 	lhmsmve_state_t* states;
 	lhmsmve_t*       phead;

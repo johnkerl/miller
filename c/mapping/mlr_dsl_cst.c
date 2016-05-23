@@ -946,6 +946,20 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* past, int
 // ----------------------------------------------------------------
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
+	// xxx to free:
+	//
+	// k pstatement->poosvar_lhs_keylist_evaluators
+	// x pstatement->srec_lhs_field_name
+	//   pstatement->psrec_lhs_evaluator
+	// k pstatement->prhs_evaluator
+	// k pstatement->poosvar_rhs_keylist_evaluators
+	// k pstatement->pemit_oosvar_namelist_evaluators
+	// k pstatement->pvarargs
+	// k pstatement->pblock_statements
+	//   pstatement->pif_chain_statements
+	//   pstatement->pfor_oosvar_k_names
+	//   pstatement->pbound_variables
+
 	if (pstatement->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstatement->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
@@ -1526,19 +1540,19 @@ static void handle_for_oosvar(
 		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
 
 		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
-
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
 			// into the submap.
 			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
-
-			// xxx free the submap
 		}
+
+		mlhmmv_free_submap(submap);
 	}
 	sllmv_free(plhskeylist);
 
 	bind_stack_pop(pvars->pbind_stack);
 }
 
+// xxx free pmv after mv_free @ boundvars dtor
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
