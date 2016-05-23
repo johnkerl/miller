@@ -82,41 +82,44 @@ md_statement(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
+md_statement ::= md_braced_statement.
+md_statement ::= md_unbraced_statement.
+
 // Begin/end (non-nestable)
-md_statement ::= md_begin_block.
-md_statement ::= md_end_block.
+md_braced_statement ::= md_begin_block.
+md_braced_statement ::= md_end_block.
 
 // Nested control structures:
-md_statement ::= md_cond_block.
-md_statement ::= md_while_block.
-md_statement ::= md_do_while_block.
-md_statement ::= md_for_loop_full_srec.
-md_statement ::= md_for_loop_full_oosvar.
-md_statement ::= md_for_loop_oosvar.
-md_statement ::= md_if_chain.
+md_braced_statement ::= md_cond_block.
+md_braced_statement ::= md_while_block.
+md_braced_statement ::= md_do_while_block.
+md_braced_statement ::= md_for_loop_full_srec.
+md_braced_statement ::= md_for_loop_full_oosvar.
+md_braced_statement ::= md_for_loop_oosvar.
+md_braced_statement ::= md_if_chain.
 
 // Not valid in begin/end since they refer to srecs:
-md_statement ::= md_srec_assignment.
-md_statement ::= md_srec_indirect_assignment.
-md_statement ::= md_oosvar_from_full_srec_assignment.
-md_statement ::= md_full_srec_from_oosvar_assignment.
+md_unbraced_statement ::= md_srec_assignment.
+md_unbraced_statement ::= md_srec_indirect_assignment.
+md_unbraced_statement ::= md_oosvar_from_full_srec_assignment.
+md_unbraced_statement ::= md_full_srec_from_oosvar_assignment.
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
-md_statement ::= md_bare_boolean.
-md_statement ::= md_oosvar_assignment.
-md_statement ::= md_filter.
-md_statement ::= md_unset.
-md_statement ::= md_emitf.
-md_statement ::= md_emitp.
-md_statement ::= md_emit.
-md_statement ::= md_dump.
+md_unbraced_statement ::= md_bare_boolean.
+md_unbraced_statement ::= md_oosvar_assignment.
+md_unbraced_statement ::= md_filter.
+md_unbraced_statement ::= md_unset.
+md_unbraced_statement ::= md_emitf.
+md_unbraced_statement ::= md_emitp.
+md_unbraced_statement ::= md_emit.
+md_unbraced_statement ::= md_dump.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
-md_statement(A) ::= MD_TOKEN_BREAK(O). {
+md_unbraced_statement(A) ::= MD_TOKEN_BREAK(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
-md_statement(A) ::= MD_TOKEN_CONTINUE(O). {
+md_unbraced_statement(A) ::= MD_TOKEN_CONTINUE(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
 
