@@ -15589,6 +15589,88 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,zee=a,wye=b,8=i,0.59855
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,hat=a,wye=b,9=i,0.03144187646093577=x,0.7495507603507059=y
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,pan=a,wye=b,10=i,0.5026260055412137=x,0.9526183602969864=y
 
+mlr --from ./reg_test/input/abixy put -v 
+  $sum = 0;
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += $[k]
+    }
+  }
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        sum (field_name).
+        0 (strnum_literal).
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            if_head (if_head):
+                if (if_item):
+                    =~ (operator):
+                        k (bound_variable).
+                        ^[xy]$ (strnum_literal).
+                    list (statement_list):
+                        = (srec_assignment):
+                            sum (field_name).
+                            + (operator):
+                                sum (field_name).
+                                indirect_field_name (indirect_field_name):
+                                    k (bound_variable).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.542922
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.515588
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.436913
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.020347
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.799669
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
+
+mlr --from ./reg_test/input/abixy put -S -v 
+  $sum = float(0);
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += float($[k])
+    }
+  }
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        sum (field_name).
+        float (non_sigil_name):
+            0 (strnum_literal).
+    for (for_srec):
+        variables (for_variables):
+            k (non_sigil_name).
+            v (non_sigil_name).
+        list (statement_list):
+            if_head (if_head):
+                if (if_item):
+                    =~ (operator):
+                        k (bound_variable).
+                        ^[xy]$ (strnum_literal).
+                    list (statement_list):
+                        = (srec_assignment):
+                            sum (field_name).
+                            + (operator):
+                                sum (field_name).
+                                float (non_sigil_name):
+                                    indirect_field_name (indirect_field_name):
+                                        k (bound_variable).
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.542922
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.515588
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.436913
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.020347
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.799669
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
+
 
 ================================================================
 DSL FOR-OOSVAR LOOPS
