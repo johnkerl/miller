@@ -68,14 +68,24 @@ md_statement_list(A) ::= md_statement(B). {
 		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 	}
 }
-md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_statement(C). {
-	if (C->type == MD_AST_NODE_TYPE_NOP) {
-		A = B;
+
+//md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_statement(C). {
+//	if (C->type == MD_AST_NODE_TYPE_NOP) {
+//		A = B;
+//	} else {
+//		A = mlr_dsl_ast_node_append_arg(B, C);
+//	}
+//}
+
+// xxx cmt why prepend not postpend
+md_statement_list(A) ::= md_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = C;
 	} else {
-		A = mlr_dsl_ast_node_append_arg(B, C);
+		A = mlr_dsl_ast_node_prepend_arg(C, B);
 	}
-	//mlr_dsl_ast_node_print(C);
 }
+
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_statement(A) ::= . {
