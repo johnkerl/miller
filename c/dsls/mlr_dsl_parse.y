@@ -47,6 +47,8 @@ md_body ::= md_statement_list(B). {
 // ================================================================
 // ================================================================
 
+// xxx need top-level w/ include/exclude begin/end. or, again, reject @ cst.
+
 // ----------------------------------------------------------------
 // Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then
 // "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally realize that's the top level, or it's embedded
@@ -75,39 +77,24 @@ md_statement_list(A) ::= md_braced_statement(B). {
 	}
 }
 
-//// xxx cmt why prepend not postpend
-//md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_prepend_arg(C, B);
-//	}
-//}
-//
-//// xxx cmt why prepend not postpend
-//md_statement_list(A) ::= md_braced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_prepend_arg(C, B);
-//	}
-//}
-
-md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_unbraced_statement(C). {
-	if (C->type == MD_AST_NODE_TYPE_NOP) {
-		A = B;
+// xxx cmt why prepend not postpend
+md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = C;
 	} else {
-		A = mlr_dsl_ast_node_append_arg(B, C);
+		A = mlr_dsl_ast_node_prepend_arg(C, B);
 	}
 }
 
-md_statement_list(A) ::= md_statement_list(B) MD_TOKEN_SEMICOLON md_braced_statement(C). {
-	if (C->type == MD_AST_NODE_TYPE_NOP) {
-		A = B;
+// xxx cmt why prepend not postpend
+md_statement_list(A) ::= md_braced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+	if (B->type == MD_AST_NODE_TYPE_NOP) {
+		A = C;
 	} else {
-		A = mlr_dsl_ast_node_append_arg(B, C);
+		A = mlr_dsl_ast_node_prepend_arg(C, B);
 	}
 }
+
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_unbraced_statement(A) ::= . {
