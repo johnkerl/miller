@@ -15913,6 +15913,89 @@ mean  hat dog 0.475824
 
 
 ================================================================
+DSL CONTEXT-SPECIFIC VALIDATION
+
+
+---------------------------------------------------------------- srecs in begin/end
+mlr put -v begin{$x=1}
+./reg_test/../../c/mlr: assignments to $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (srec_assignment):
+                x (field_name).
+                1 (strnum_literal).
+
+mlr put -v begin{@x=$y}
+./reg_test/../../c/mlr: statements involving $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                y (field_name).
+
+mlr put -v end{$x=1}
+./reg_test/../../c/mlr: assignments to $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (srec_assignment):
+                x (field_name).
+                1 (strnum_literal).
+
+mlr put -v end{@x=$y}
+./reg_test/../../c/mlr: statements involving $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                y (field_name).
+
+
+---------------------------------------------------------------- boundvars outside for
+mlr put -v $x=x
+./reg_test/../../c/mlr: statements involving bound variables are not valid outside for-loops.
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        x (bound_variable).
+
+
+---------------------------------------------------------------- break/continue outside loop
+mlr put -v break
+./reg_test/../../c/mlr: break statements are only valid within for, while, or do-while.
+AST ROOT:
+list (statement_list):
+    break (break).
+
+mlr put -v continue
+./reg_test/../../c/mlr: break statements are only valid within for, while, or do-while.
+AST ROOT:
+list (statement_list):
+    continue (continue).
+
+
+---------------------------------------------------------------- oosvars in mlr filter
+mlr filter -v @x > 3
+./reg_test/../../c/mlr: statements involving $-variables are not valid in ./reg_test/../../c/mlr filter.
+AST ROOT:
+list (statement_list):
+    > (operator):
+        oosvar_keylist (oosvar_keylist):
+            x (string_literal).
+        3 (strnum_literal).
+
+
+================================================================
 FOR-OOSVAR DEPTH TESTS
 
 
