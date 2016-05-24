@@ -83,6 +83,25 @@ run_mlr() {
 	num_passed=`expr $num_passed + 1`
 }
 
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+	echo mlr "$@"
+	echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+    set +e
+	$path_to_mlr "$@" >> $outfile 2>&1
+    status=$?
+    if [ $status -ne 1 ]; then
+        echo "Exit status was $status; expected 1."
+        echo "Exit status was $status; expected 1." >> $outfile
+    fi
+    set -e
+	echo >> $outfile
+    test $status -eq 1
+	# since set -e
+	num_passed=`expr $num_passed + 1`
+}
+
 # ================================================================
 announce STATELESS MAPPERS
 
@@ -1686,6 +1705,25 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
     emitp @value, "stat", "a", "b";
   }
 '
+
+# ================================================================
+announce DSL CONTEXT-SPECIFIC VALIDATION
+
+mention srecs in begin/end
+mlr_expect_fail put -v 'begin{$x=1}'
+mlr_expect_fail put -v 'begin{@x=$y}'
+mlr_expect_fail put -v 'end{$x=1}'
+mlr_expect_fail put -v 'end{@x=$y}'
+
+mention boundvars outside for
+mlr_expect_fail put -v '$x=x'
+
+mention break/continue outside loop
+mlr_expect_fail put -v 'break'
+mlr_expect_fail put -v 'continue'
+
+mention oosvars in mlr filter
+mlr_expect_fail filter -v '@x > 3'
 
 # ----------------------------------------------------------------
 announce FOR-OOSVAR DEPTH TESTS
