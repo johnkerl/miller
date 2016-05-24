@@ -5,6 +5,7 @@
 // The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
 // The following flags are used as the CST is built from the AST for CST-build-time validation.
+// xxx move to header file for use by rval expr evaluators
 #define IN_BINDABLE     0x0100 // boundvars are only OK inside a bindable, e.g. (recursively) inside a for-loop
 #define IN_BREAKABLE    0x0200 // break/continue are only OK (recursively) inside for/while/do-while
 #define IN_BEGIN_OR_END 0x0400 // $stuff is not OK (recursively) inside begin/end
@@ -266,6 +267,9 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
     switch(pnode->type) {
 
 	// xxx invalidates based on context flags
+	// IN_BINDABLE
+	// IN_BREAKABLE
+	// IN_BEGIN_OR_END
 
 	case MD_AST_NODE_TYPE_BEGIN:
 		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.argv0);
@@ -289,6 +293,17 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_for_oosvar(pnode, type_inferencing, context_flags | IN_BREAKABLE | IN_BINDABLE);
 		break;
 
+	case MD_AST_NODE_TYPE_BREAK:
+		// xxx not OK unless IN_BREAKABLE
+		printf("break alloc stub!\n");
+		return NULL;
+		break;
+	case MD_AST_NODE_TYPE_CONTINUE:
+		printf("continue alloc stub!\n");
+		// xxx not OK unless IN_BREAKABLE
+		return NULL;
+		break;
+
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
 		return alloc_conditional_block(pnode, type_inferencing, context_flags);
 		break;
@@ -297,21 +312,26 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
+		// xxx not OK IN_BEGIN_OR_END
 		return alloc_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
+		// xxx not OK IN_BEGIN_OR_END
 		return alloc_indirect_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
 		return alloc_oosvar_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+		// xxx not OK IN_BEGIN_OR_END
 		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
+		// xxx not OK IN_BEGIN_OR_END
 		return alloc_full_srec_from_oosvar_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_UNSET:
+		// xxx not OK to unset srec IN_BEGIN_OR_END
 		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITF:
@@ -324,15 +344,19 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_emit_or_emitp(pnode, type_inferencing, FALSE, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
+		// xxx not OK to test on srec IN_BEGIN_OR_END
 		return alloc_filter(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_DUMP:
 		return alloc_dump(pnode, type_inferencing, context_flags);
 		break;
 	default:
+		// xxx not OK to test on srec IN_BEGIN_OR_END
 		return alloc_bare_boolean(pnode, type_inferencing, context_flags);
 		break;
 	}
+	// xxx propagate to rval_expr_evaluators alloc methods as well
+	// xxx propagate to rval_expr_evluators: boundvars not OK if IN_BINDABLE
 }
 
 // ----------------------------------------------------------------
@@ -741,17 +765,7 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		// xxx also elsewhere, invalidate. cmt there this is done at the CST
-		// rather than AST-parse level since we can give better error messages
-		// (and, a simpler Lemon grammar).
-		if (pbody_ast_node->type == MD_AST_NODE_TYPE_CONTINUE) {
-			printf("continue alloc stub!\n");
-		} else if (pbody_ast_node->type == MD_AST_NODE_TYPE_BREAK) {
-			printf("break alloc stub!\n");
-		} else {
-			// xxx stub 3rd arg
-			sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags));
-		}
+		sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags));
 	}
 
 	pstatement->phandler = handle_for_srec;
