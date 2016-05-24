@@ -47,8 +47,6 @@ md_body ::= md_statement_list(B). {
 // ================================================================
 // ================================================================
 
-// xxx need top-level w/ include/exclude begin/end. or, again, reject @ cst.
-
 // ----------------------------------------------------------------
 // Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then
 // "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally realize that's the top level, or it's embedded
@@ -77,7 +75,9 @@ md_statement_list(A) ::= md_braced_statement(B). {
 	}
 }
 
-// xxx cmt why prepend not postpend
+// This could also be done with the list on the left and statement on the right. However,
+// curly-braced statements *end* with a semicolon; they don't end with one. So this seems to
+// be the right way to differentiate.
 md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
@@ -86,7 +86,6 @@ md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statemen
 	}
 }
 
-// xxx cmt why prepend not postpend
 md_statement_list(A) ::= md_braced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
@@ -95,14 +94,10 @@ md_statement_list(A) ::= md_braced_statement(B) MD_TOKEN_SEMICOLON md_statement_
 	}
 }
 
-
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
 md_unbraced_statement(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
-
-//md_statement ::= md_braced_statement.
-//md_statement ::= md_unbraced_statement.
 
 // Begin/end (non-nestable)
 md_braced_statement ::= md_begin_block.
