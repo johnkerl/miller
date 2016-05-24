@@ -7,15 +7,15 @@ BUGFIXES
 TOP-OF-LIST SUMMARY
 
 ! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
+  -> find a more elegant way to do this but don't block 4.1.0
 
 ! CST-build-time invalidations:
   - $stuff inside begin/end
-  - break/continue outside for
+  - break/continue outside for/while/do-while
   - boundvars outside for
-  - break/continue outside while/do-while/for
   => all with expect-fail UTs
-
 ! break/continue: fully support or eliminate from the lexer/parser
+  - in-loop stack flags for handlers (at pvars?)
 
 ! komosa cases -> mld/cookbook (as something *not* doable w/o oosvars/for)
 * chk UT x all

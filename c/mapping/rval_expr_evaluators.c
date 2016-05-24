@@ -43,7 +43,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			exit(1);
 		}
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) { // xxx rid of
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
 		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, type_inferencing);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {

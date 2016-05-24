@@ -2,32 +2,45 @@
 #include "lib/mlrutil.h"
 #include "mlr_dsl_cst.h"
 
+// The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
+// there, and (b) because we get far better control over error messages here (vs. 'syntax error').
+// The following flags are used as the CST is built from the AST for CST-build-time validation.
+#define IN_BINDABLE     0x0100 // boundvars are only OK inside a bindable, e.g. (recursively) inside a for-loop
+#define IN_BREAKABLE    0x0200 // break/continue are only OK (recursively) inside for/while/do-while
+#define IN_BEGIN_OR_END 0x0400 // $stuff is not OK (recursively) inside begin/end
+
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
-static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* past, int type_inferencing, int begin_end_only);
+static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* past, int type_inferencing, int begin_end_only);
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int  type_inferencing, int do_full_prefixing);
-static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing);
-static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing);
+// ti = type_inferencing
+// cf = context_flags
+static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int ti,
+	int do_full_prefixing, int context_flags);
+static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* past, int ti, int cf);
 
-static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode, mlr_dsl_ast_node_t* plistnode,
-	int type_inferencing);
+static mlr_dsl_cst_statement_t* alloc_if_item(
+	mlr_dsl_ast_node_t* pexprnode,
+	mlr_dsl_ast_node_t* plistnode,
+	int                 type_inferencing,
+	int                 context_flags);
 
 static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	char*             emitf_or_unset_srec_field_name,
@@ -69,7 +82,8 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing);
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags);
 
 // ----------------------------------------------------------------
 // For mlr filter, which takes a reduced subset of mlr-put syntax:
@@ -175,18 +189,18 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				sllv_append(pcst->pbegin_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
+				sllv_append(pcst->pbegin_statements, alloc_cst_statement(pchild, type_inferencing, TRUE));
 			}
 			break;
 		case MD_AST_NODE_TYPE_END:
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				sllv_append(pcst->pend_statements, cst_statement_alloc(pchild, type_inferencing, TRUE));
+				sllv_append(pcst->pend_statements, alloc_cst_statement(pchild, type_inferencing, TRUE));
 			}
 			break;
 		default:
-			sllv_append(pcst->pmain_statements, cst_statement_alloc(pnode, type_inferencing, FALSE));
+			sllv_append(pcst->pmain_statements, alloc_cst_statement(pnode, type_inferencing, FALSE));
 			break;
 		}
 	}
@@ -241,8 +255,8 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int begin_end_only)
+static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
 {
     switch(pnode->type) {
 
@@ -256,59 +270,59 @@ static mlr_dsl_cst_statement_t* cst_statement_alloc(mlr_dsl_ast_node_t* pnode,
 		break;
 
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK: // xxx rename to ..._COND
-		return alloc_conditional_block(pnode, type_inferencing);
+		return alloc_conditional_block(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_WHILE:
-		return alloc_while(pnode, type_inferencing);
+		return alloc_while(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_DO_WHILE:
-		return alloc_do_while(pnode, type_inferencing);
+		return alloc_do_while(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FOR_SREC:
-		return alloc_for_srec(pnode, type_inferencing);
+		return alloc_for_srec(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
-		return alloc_for_oosvar(pnode, type_inferencing);
+		return alloc_for_oosvar(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_IF_HEAD:
-		return alloc_if_head(pnode, type_inferencing);
+		return alloc_if_head(pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
-		return alloc_srec_assignment(pnode, type_inferencing);
+		return alloc_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
-		return alloc_indirect_srec_assignment(pnode, type_inferencing);
+		return alloc_indirect_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
-		return alloc_oosvar_assignment(pnode, type_inferencing);
+		return alloc_oosvar_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
-		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing);
+		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
-		return alloc_full_srec_from_oosvar_assignment(pnode, type_inferencing);
+		return alloc_full_srec_from_oosvar_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_UNSET:
-		return alloc_unset(pnode, type_inferencing);
+		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITF:
-		return alloc_emitf(pnode, type_inferencing);
+		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
-		return alloc_emit_or_emitp(pnode, type_inferencing, TRUE);
+		return alloc_emit_or_emitp(pnode, type_inferencing, TRUE, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
-		return alloc_emit_or_emitp(pnode, type_inferencing, FALSE);
+		return alloc_emit_or_emitp(pnode, type_inferencing, FALSE, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
-		return alloc_filter(pnode, type_inferencing);
+		return alloc_filter(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_DUMP:
-		return alloc_dump(pnode, type_inferencing);
+		return alloc_dump(pnode, type_inferencing, context_flags);
 		break;
 	default:
-		return alloc_bare_boolean(pnode, type_inferencing);
+		return alloc_bare_boolean(pnode, type_inferencing, context_flags);
 		break;
 	}
 }
@@ -334,7 +348,9 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
@@ -369,7 +385,9 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, 
 //         x (oosvar_name).
 //         1 (strnum_literal).
 
-static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
@@ -388,7 +406,9 @@ static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
@@ -400,12 +420,13 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past
 		exit(1);
 	}
 
-	sllv_t* poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing);
+	sllv_t* poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft, type_inferencing,
+		context_flags);
 
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		pstatement->phandler = handle_oosvar_to_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pright,
-			type_inferencing);
+			type_inferencing, context_flags);
 	} else {
 		pstatement->phandler = handle_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = NULL;
@@ -419,7 +440,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(
-	mlr_dsl_ast_node_t* past, int type_inferencing)
+	mlr_dsl_ast_node_t* past, int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -439,11 +460,13 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(
 
 	pstatement->phandler = handle_oosvar_from_full_srec_assignment;
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft,
-		type_inferencing);
+		type_inferencing, context_flags);
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pleft  = past->pchildren->phead->pvvalue;
@@ -465,11 +488,13 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_a
 
 	pstatement->phandler = handle_full_srec_from_oosvar_assignment;
 	pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pright,
-		type_inferencing);
+		type_inferencing, context_flags);
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	pstatement->phandler = handle_unset;
@@ -501,7 +526,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_i
 				NULL,
 				NULL,
 				NULL,
-				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing)));
+				allocate_keylist_evaluators_from_oosvar_node(pnode, type_inferencing, context_flags)));
 
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -530,7 +555,9 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_i
 //         oosvar_keylist (oosvar_keylist):
 //             b (string_literal).
 
-static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
@@ -578,10 +605,8 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 //         y (strnum_literal).
 //         z (strnum_literal).
 
-// xxx consider modifying the AST to produce emit_namelist wrapping the names
-
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int do_full_prefixing)
+	int do_full_prefixing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -617,7 +642,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 			: handle_emitp;
 
 		pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing);
+			type_inferencing, context_flags);
 		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 	} else {
@@ -629,7 +654,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 }
 
 static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnode,
-	int type_inferencing)
+	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -641,8 +666,7 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		// xxx stub last arg
-		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE);
+		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -652,7 +676,9 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	// Left child node is the AST for the boolean expression.
@@ -663,7 +689,7 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* past, int type_i
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
+		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -673,7 +699,9 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* past, int type_i
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	// Left child node is the list of statements in the body.
@@ -684,7 +712,7 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* past, int typ
 
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE); // xxx stub
+		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -709,7 +737,9 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* past, int typ
 //                 y (field_name).
 //                 2 (strnum_literal).
 
-static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	// Left child node is list of bound variables.
@@ -735,7 +765,7 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 			printf("break alloc stub!\n");
 		} else {
 			// xxx stub 3rd arg
-			sllv_append(pblock_statements, cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE));
+			sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags));
 		}
 	}
 
@@ -769,7 +799,9 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* past, int typ
 //                 8 (field_name).
 //                 9 (strnum_literal).
 
-static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	// Left child node is list of bound variables.
@@ -791,7 +823,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 	pstatement->for_v_name = psubright->text;
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
-		pmiddle, type_inferencing);
+		pmiddle, type_inferencing, context_flags);
 
 	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -805,7 +837,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 			printf("break alloc stub!\n");
 		} else {
 			// xxx stub 3rd arg
-			sllv_append(pblock_statements, cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE));
+			sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags));
 		}
 	}
 	pstatement->pblock_statements = pblock_statements;
@@ -865,7 +897,9 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* past, int t
 
 // xxx rename pasts to pnodes thruout
 
-static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	sllv_t* pif_chain_statements = sllv_alloc();
@@ -887,7 +921,7 @@ static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int typ
 		}
 
 		sllv_append(pif_chain_statements, alloc_if_item(pexprnode, plistnode,
-			type_inferencing/*, xxx FALSE*/));
+			type_inferencing, context_flags));
 	}
 
 	pstatement->phandler = handle_if_head;
@@ -896,7 +930,7 @@ static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int typ
 }
 
 static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
-	mlr_dsl_ast_node_t* plistnode, int type_inferencing)
+	mlr_dsl_ast_node_t* plistnode, int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -904,8 +938,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
 
 	for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		// xxx stub last arg
-		mlr_dsl_cst_statement_t *pstatement = cst_statement_alloc(pbody_ast_node, type_inferencing, FALSE);
+		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
 
@@ -918,7 +951,9 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pnode = past->pchildren->phead->pvvalue;
@@ -928,14 +963,18 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* past, int type_
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	pstatement->phandler = handle_dump;
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing) {
+static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* past, int type_inferencing,
+	int context_flags)
+{
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	pstatement->phandler = handle_bare_boolean;
@@ -1666,7 +1705,9 @@ static void handle_bare_boolean(
 //         c (strnum_literal).
 
 // pnode is input; pkeylist_evaluators is appended to.
-static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
 	sllv_t* pkeylist_evaluators = sllv_alloc();
 
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
