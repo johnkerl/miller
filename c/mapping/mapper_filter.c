@@ -1,6 +1,7 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
+#include "mapping/context_flags.h"
 #include "mapping/mlr_dsl_cst.h"
 #include "mapping/rval_evaluators.h"
 #include "mapping/mappers.h"
@@ -133,7 +134,7 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression
 	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude)
 {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
-	int context_flags = 0; // xxx
+	int context_flags = IN_MLR_FILTER;
 
 	pstate->pargp      = pargp;
 	// Retain the string contents along with any in-pointers from the AST/CST

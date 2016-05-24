@@ -316,7 +316,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
-		if ((context_flags & IN_BEGIN_OR_END)) {
+		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.argv0);
 			exit(1);
@@ -324,7 +324,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
-		if ((context_flags & IN_BEGIN_OR_END)) {
+		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.argv0);
 			exit(1);
@@ -335,7 +335,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_oosvar_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
-		if ((context_flags & IN_BEGIN_OR_END)) {
+		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments from $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.argv0);
 			exit(1);
@@ -343,7 +343,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
-		if ((context_flags & IN_BEGIN_OR_END)) {
+		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.argv0);
 			exit(1);

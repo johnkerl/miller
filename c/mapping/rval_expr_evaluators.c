@@ -30,14 +30,9 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
 {
 
-// IN_BINDABLE
-// IN_BREAKABLE
-// IN_BEGIN_OR_END
-
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
-			// xxx functionize
-			if ((context_flags & IN_BEGIN_OR_END)) {
+			if (context_flags & IN_BEGIN_OR_END) {
 				fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
 					MLR_GLOBALS.argv0);
 				exit(1);
@@ -52,7 +47,11 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (pnode->type == MD_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
 		} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-			if (!(context_flags & IN_BINDABLE)) {
+			if (context_flags & IN_MLR_FILTER) {
+				fprintf(stderr, "%s: statements involving bound variables are not valid in %s filter.\n",
+					MLR_GLOBALS.argv0, MLR_GLOBALS.argv0);
+				exit(1);
+			} else if (!(context_flags & IN_BINDABLE)) {
 				fprintf(stderr, "%s: statements involving bound variables are not valid outside for-loops.\n",
 					MLR_GLOBALS.argv0);
 				exit(1);
@@ -65,7 +64,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		}
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
-		if ((context_flags & IN_BEGIN_OR_END)) {
+		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.argv0);
 			exit(1);
@@ -74,11 +73,21 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+		if (context_flags & IN_MLR_FILTER) {
+			fprintf(stderr, "%s: statements involving $-variables are not valid in %s filter.\n",
+				MLR_GLOBALS.argv0, MLR_GLOBALS.argv0);
+			exit(1);
+		}
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing, context_flags);
 
+	} else if (context_flags & IN_MLR_FILTER) {
+		fprintf(stderr,
+			"%s: statements in %s filter should only be single expressions evaluating to boolean.\n",
+			MLR_GLOBALS.argv0, MLR_GLOBALS.argv0);
+		exit(1);
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
 		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
