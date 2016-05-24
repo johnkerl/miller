@@ -6,23 +6,26 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! eliminate the need for semicolon after curly brace. for now, highlighted faqent.
+! break/continue: fully support or eliminate from the lexer/parser
+  - in-loop stack flags for handlers (at pvars?)
+! cst_statement_free bring up to date with blank_alloc
+
+! xxxes
+! valgrinds
+
+* eliminate the need for semicolon after curly brace. for now, highlighted faqent.
   -> find a more elegant way to do this but don't block 4.1.0
 
-! CST-build-time invalidations:
+* CST-build-time invalidations:
   ! propagate-back to caller
   ! filter is oosless
   - $stuff inside begin/end
   - break/continue outside for/while/do-while
   - boundvars outside for
   => all with expect-fail UTs
-! break/continue: fully support or eliminate from the lexer/parser
-  - in-loop stack flags for handlers (at pvars?)
 
-! komosa cases -> mld/cookbook (as something *not* doable w/o oosvars/for)
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
-! cst_statement_free bring up to date with blank_alloc
 ! extend mld:ref:put, and cookbook
 ! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
@@ -36,20 +39,18 @@ UT/olh/mld:
 * UT if-chaining, while, do-while: put -v's as well as contentful @ abixy
 * olh comment-stripping for put & filter
 * UT comment-stripping for put & filter
-* doc re oosvar keyed mean solvable with `for`.
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
 DOC:
 * cookbook example: key<->val inverter
 * cookbook example: komosa originals x 2
+* cookbook example: oosvar keyed mean
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay
 ? sllv->slln @ ast
 ! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
-* xxxes
-* valgrinds
 
 4.1.0 release notes:
 * new forx2, while/do-while, if-chains
