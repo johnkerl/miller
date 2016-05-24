@@ -1449,7 +1449,9 @@ int main(int argc, char **argv) {
 	if (lem.nconflict) {
 		fprintf(stderr,"%d parsing conflicts.\n",lem.nconflict);
 	}
-	exit(lem.errorcnt + lem.nconflict);
+	//exit(lem.errorcnt + lem.nconflict);
+	// JRK 2016-05-23
+	exit(lem.errorcnt);
 	return (lem.errorcnt + lem.nconflict);
 }
 
