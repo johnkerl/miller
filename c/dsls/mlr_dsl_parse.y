@@ -134,7 +134,7 @@ md_unbraced_statement(A) ::= MD_TOKEN_BREAK(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
 md_unbraced_statement(A) ::= MD_TOKEN_CONTINUE(O). {
-	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
+	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
 }
 
 // ================================================================

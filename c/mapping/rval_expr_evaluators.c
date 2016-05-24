@@ -8,24 +8,40 @@
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "mapping/rval_evaluators.h"
+#include "mapping/context_flags.h"
 
 // ================================================================
 // See comments in rval_evaluators.h
 // ================================================================
 
 static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, function_lookup_t* fcn_lookup_table);
+	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table);
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
-	return rval_evaluator_alloc_from_ast_aux(pnode, type_inferencing, FUNCTION_LOOKUP_TABLE);
+// The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
+// there, and (b) because we get far better control over error messages here (vs. 'syntax error').
+// The context flags are used as the CST is built from the AST, for CST-build-time validation.
+
+rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags) {
+	return rval_evaluator_alloc_from_ast_aux(pnode, type_inferencing, context_flags, FUNCTION_LOOKUP_TABLE);
 }
 
 static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, function_lookup_t* fcn_lookup_table)
+	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
 {
+
+// IN_BINDABLE
+// IN_BREAKABLE
+// IN_BEGIN_OR_END
+
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
+			// xxx functionize
+			if ((context_flags & IN_BEGIN_OR_END)) {
+				fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
+					MLR_GLOBALS.argv0);
+				exit(1);
+			}
 			return rval_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 		} else if (pnode->type == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
@@ -36,6 +52,11 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		} else if (pnode->type == MD_AST_NODE_TYPE_CONTEXT_VARIABLE) {
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
 		} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+			if (!(context_flags & IN_BINDABLE)) {
+				fprintf(stderr, "%s: statements involving bound variables are not valid outside for-loops.\n",
+					MLR_GLOBALS.argv0);
+				exit(1);
+			}
 			return rval_evaluator_alloc_from_bound_variable(pnode->text);
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -44,13 +65,19 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 		}
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
-		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, type_inferencing);
+		if ((context_flags & IN_BEGIN_OR_END)) {
+			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
+				MLR_GLOBALS.argv0);
+			exit(1);
+		}
+		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue,
+			type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		return rval_evaluator_alloc_from_oosvar_keylist(pnode, type_inferencing);
+		return rval_evaluator_alloc_from_oosvar_keylist(pnode, type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
-		return rval_evaluator_alloc_from_environment(pnode, type_inferencing);
+		return rval_evaluator_alloc_from_environment(pnode, type_inferencing, context_flags);
 
 	} else { // operator/function
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
@@ -70,7 +97,8 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			pevaluator = rval_evaluator_alloc_from_zary_func_name(func_name);
 		} else if (user_provided_arity == 1) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing, fcn_lookup_table);
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_unary_func_name(func_name, parg1);
 		} else if (user_provided_arity == 2) {
 			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
@@ -79,12 +107,12 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 
 			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name,
 					parg1, parg2_node->text, FALSE);
 			} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 					TYPE_INFER_STRING_FLOAT_INT);
 			} else {
@@ -92,9 +120,9 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 				// the regexes will be compiled record-by-record rather than once at alloc time, which will
 				// be slower.
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
 			}
 
@@ -107,18 +135,18 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 				// sub/gsub-regex special case:
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 					FALSE, parg3);
 
 			} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
 				// sub/gsub-regex special case:
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 					TYPE_INFER_STRING_FLOAT_INT, parg3);
 
@@ -127,11 +155,11 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 				// the regexes will be compiled record-by-record rather than once at alloc time, which will
 				// be slower.
 				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					fcn_lookup_table);
+					context_flags, fcn_lookup_table);
 				pevaluator = rval_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 			}
 		} else {
@@ -397,11 +425,13 @@ static void rval_evaluator_indirect_field_name_free(rval_evaluator_t* pevaluator
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnamenode, int type_inferencing) {
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnamenode,
+	int type_inferencing, int context_flags)
+{
 	rval_evaluator_indirect_field_name_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rval_evaluator_indirect_field_name_state_t));
 
-	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing);
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing, context_flags);
 
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	pevaluator->pvstate = pstate;
@@ -481,7 +511,9 @@ static void rval_evaluator_oosvar_keylist_free(rval_evaluator_t* pevaluator) {
 //             oosvar_keylist (oosvar_keylist):
 //                 5 (string_literal).
 
-rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
 	rval_evaluator_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rval_evaluator_oosvar_keylist_state_t));
 
@@ -492,7 +524,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* p
 		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
 		} else {
-			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing));
+			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 		}
 	}
 	pstate->poosvar_rhs_keylist_evaluators = pkeylist_evaluators;
@@ -725,13 +757,15 @@ static void rval_evaluator_environment_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, int type_inferencing) {
+rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
 	rval_evaluator_environment_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_environment_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing);
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing, context_flags);
 	pevaluator->pprocess_func = rval_evaluator_environment_func;
 	pevaluator->pfree_func = rval_evaluator_environment_free;
 

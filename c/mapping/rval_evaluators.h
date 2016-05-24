@@ -61,12 +61,14 @@ extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
 // rval_expr_evaluators.c
 
 // Topmost function:
-rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing, int context_flags);
 
 // Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
-rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnode, int type_inferencing);
-rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags);
+rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags);
 
 // This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
 // or '$x = "left_\1". The values are subject to replacement with regex captures. See comments
@@ -82,7 +84,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_string(char* string);
 
 rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string);
 rval_evaluator_t* rval_evaluator_alloc_from_boolean(int boolval);
-rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags);
 rval_evaluator_t* rval_evaluator_alloc_from_NF();
 rval_evaluator_t* rval_evaluator_alloc_from_NR();
 rval_evaluator_t* rval_evaluator_alloc_from_FNR();

@@ -133,13 +133,14 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression
 	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude)
 {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
+	int context_flags = 0; // xxx
 
 	pstate->pargp      = pargp;
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past       = past;
-	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, type_inferencing);
+	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, type_inferencing, context_flags);
 	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
 

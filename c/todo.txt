@@ -10,6 +10,8 @@ TOP-OF-LIST SUMMARY
   -> find a more elegant way to do this but don't block 4.1.0
 
 ! CST-build-time invalidations:
+  ! propagate-back to caller
+  ! filter is oosless
   - $stuff inside begin/end
   - break/continue outside for/while/do-while
   - boundvars outside for
