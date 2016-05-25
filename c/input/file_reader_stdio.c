@@ -17,7 +17,7 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 		if (!streq(filename, "-")) {
 			input_stream = fopen(filename, "r");
 			if (input_stream == NULL) {
-				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.bargv0, filename);
 				perror(filename);
 				exit(1);
 			}
@@ -30,7 +30,7 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 			sprintf(command, "%s < %s", prepipe, filename);
 		input_stream = popen(command, "r");
 		if (input_stream == NULL) {
-			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.argv0, command);
+			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
 			perror(command);
 			exit(1);
 		}

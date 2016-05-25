@@ -138,7 +138,7 @@ double mlr_double_from_string_or_die(char* string) {
 	double d;
 	if (!mlr_try_float_from_string(string, &d)) {
 		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
-			MLR_GLOBALS.argv0, string);
+			MLR_GLOBALS.bargv0, string);
 		exit(1);
 	}
 	return d;
@@ -457,7 +457,7 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 	struct stat statbuf;
 	if (stat(filename, &statbuf) < 0) {
 		perror("stat");
-		fprintf(stderr, "%s: could not stat \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: could not stat \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 		exit(1);
 	}
 	char* buffer = mlr_malloc_or_die(statbuf.st_size + 1);
@@ -465,7 +465,7 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 	FILE* fp = fopen(filename, "r");
 	if (fp == NULL) {
 		perror("fopen");
-		fprintf(stderr, "%s: could not fopen \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: could not fopen \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 		free(buffer);
 		return NULL;
 	}
@@ -474,7 +474,7 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 	if (rc != 1) {
 		fprintf(stderr, "Unable t read content of %s\n", filename);
 		perror("fread");
-		fprintf(stderr, "%s: could not fread \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: could not fread \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 		fclose(fp);
 		free(buffer);
 		return NULL;
@@ -504,7 +504,7 @@ char* read_fp_into_memory(FILE* fp, size_t* psize) {
 			if (feof(fp))
 				break;
 			perror("fread");
-			fprintf(stderr, "%s: stdio/popen fread failed\n", MLR_GLOBALS.argv0);
+			fprintf(stderr, "%s: stdio/popen fread failed\n", MLR_GLOBALS.bargv0);
 			free(buffer);
 			*psize = 0;
 			return NULL;

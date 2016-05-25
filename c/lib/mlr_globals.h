@@ -3,7 +3,7 @@
 #include "cli/mlrcli.h"
 
 typedef struct _mlr_globals_t {
-	char*       argv0;
+	char*       bargv0; // basename of argv0
 	char*       ofmt;
 	// These are shared by mlrcli.c and mlrmain.c. The only reason for their
 	// exposure anywhere else is to communicate format and separator flags to

@@ -79,7 +79,7 @@ void mlr_reference_values_from_record_into_string_array(lrec_t* prec, string_arr
 {
 	if (pselected_field_names->length != pvalues->length) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	pvalues->strings_need_freeing = FALSE;

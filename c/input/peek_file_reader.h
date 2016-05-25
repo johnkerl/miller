@@ -85,7 +85,7 @@ static inline void pfr_buffer_by(peek_file_reader_t* pfr, int len) {
 static inline void pfr_advance_by(peek_file_reader_t* pfr, int len) {
 	if (len > pfr->npeeked) {
 		fprintf(stderr, "%s: internal coding error: advance-by %d exceeds buffer depth %d.\n",
-			MLR_GLOBALS.argv0, len, pfr->npeeked);
+			MLR_GLOBALS.bargv0, len, pfr->npeeked);
 		exit(1);
 	}
 	pfr->sob = (pfr->sob + len) & pfr->peekbuflenmask;

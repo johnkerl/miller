@@ -16,7 +16,7 @@ char* write_temp_file_or_die(char* contents) {
 	if (rc != len) {
 		perror("fwrite");
 		fprintf(stderr, "%s: fwrite (%d) to \"%s\" failed.\n",
-		MLR_GLOBALS.argv0, len, path);
+		MLR_GLOBALS.bargv0, len, path);
 		exit(1);
 	}
 	fclose(fp);

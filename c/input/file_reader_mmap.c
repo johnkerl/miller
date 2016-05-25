@@ -16,7 +16,7 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (prepipe != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -24,13 +24,13 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 	pstate->fd = open(file_name, O_RDONLY);
 	if (pstate->fd < 0) {
 		perror("open");
-		fprintf(stderr, "%s: could not open \"%s\"\n", MLR_GLOBALS.argv0, file_name);
+		fprintf(stderr, "%s: could not open \"%s\"\n", MLR_GLOBALS.bargv0, file_name);
 		exit(1);
 	}
 	struct stat stat;
 	if (fstat(pstate->fd, &stat) < 0) {
 		perror("fstat");
-		fprintf(stderr, "%s: could not fstat \"%s\"\n", MLR_GLOBALS.argv0, file_name);
+		fprintf(stderr, "%s: could not fstat \"%s\"\n", MLR_GLOBALS.bargv0, file_name);
 		exit(1);
 	}
 	if (stat.st_size == 0) {
@@ -40,7 +40,7 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 		pstate->sol = mmap(NULL, (size_t)stat.st_size, PROT_READ|PROT_WRITE, MAP_FILE|MAP_PRIVATE, pstate->fd, (off_t)0);
 		if (pstate->sol == MAP_FAILED) {
 			perror("mmap");
-			fprintf(stderr, "%s: could not mmap \"%s\"\n", MLR_GLOBALS.argv0, file_name);
+			fprintf(stderr, "%s: could not mmap \"%s\"\n", MLR_GLOBALS.bargv0, file_name);
 			exit(1);
 		}
 	}

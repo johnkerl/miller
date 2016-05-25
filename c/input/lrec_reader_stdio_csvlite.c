@@ -128,7 +128,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 					for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
 						if (*pe->value == 0) {
 							fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
-								MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+								MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 							exit(1);
 						}
 					}
@@ -269,7 +269,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, filename, ilno);
+					MLR_GLOBALS.bargv0, filename, ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -290,14 +290,14 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 		; // OK
 	} else if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, filename, ilno);
+			MLR_GLOBALS.bargv0, filename, ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, filename, ilno);
+				MLR_GLOBALS.bargv0, filename, ilno);
 			exit(1);
 		}
 	}
@@ -324,7 +324,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, filename, ilno);
+					MLR_GLOBALS.bargv0, filename, ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -345,14 +345,14 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 		; // OK
 	} else if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, filename, ilno);
+			MLR_GLOBALS.bargv0, filename, ilno);
 		exit(1);
 	} else {
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.argv0, filename, ilno);
+				MLR_GLOBALS.bargv0, filename, ilno);
 			exit(1);
 		}
 	}

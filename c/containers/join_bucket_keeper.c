@@ -233,7 +233,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 			}
 		} else if (pkeeper->state != LEFT_STATE_3_EOF) {
 			fprintf(stderr, "%s: internal coding error: failed transition from prefill state.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 
@@ -294,7 +294,7 @@ static void join_bucket_keeper_fill(join_bucket_keeper_t* pkeeper, sllv_t** ppre
 		pkeeper->pleft_field_names);
 	if (pleft_field_values == NULL) {
 		fprintf(stderr, "%s: internal coding error: peek record should have had join keys.\n",
-			MLR_GLOBALS.argv0);
+			MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 

@@ -41,7 +41,7 @@ void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* pframe) {
 void bind_stack_pop(bind_stack_t* pstack) {
 	if (pstack->num_used <= 0) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	pstack->num_used--;

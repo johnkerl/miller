@@ -355,7 +355,7 @@ static typed_sort_key_t* parse_sort_keys(slls_t* pkey_field_values, int* sort_pa
 				typed_sort_keys[i].u.d = nan("");
 			} else if (!mlr_try_float_from_string(pe->value, &typed_sort_keys[i].u.d)) {
 				fprintf(stderr, "%s: couldn't parse \"%s\" as number in file \"%s\" record %lld.\n",
-					MLR_GLOBALS.argv0, pe->value, pctx->filename, pctx->fnr);
+					MLR_GLOBALS.bargv0, pe->value, pctx->filename, pctx->fnr);
 				exit(1);
 			}
 		} else {

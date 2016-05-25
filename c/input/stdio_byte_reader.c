@@ -46,7 +46,7 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe
 			pstate->fp = fopen(filename, "r");
 			if (pstate->fp == NULL) {
 				perror("fopen");
-				fprintf(stderr, "%s: Couldn't fopen \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+				fprintf(stderr, "%s: Couldn't fopen \"%s\" for read.\n", MLR_GLOBALS.bargv0, filename);
 				exit(1);
 			}
 		}
@@ -58,7 +58,7 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe
 			sprintf(command, "%s < %s", prepipe, filename);
 		pstate->fp = popen(command, "r");
 		if (pstate->fp == NULL) {
-			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.argv0, command);
+			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
 			perror(command);
 			exit(1);
 		}
@@ -74,7 +74,7 @@ static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr) {
 	int c = getc_unlocked(pstate->fp);
 	if (c == EOF && ferror(pstate->fp)) {
 		perror("fread");
-		fprintf(stderr, "%s: Read error on file \"%s\".\n", MLR_GLOBALS.argv0, pstate->filename);
+		fprintf(stderr, "%s: Read error on file \"%s\".\n", MLR_GLOBALS.bargv0, pstate->filename);
 		exit(1);
 	}
 	return c;

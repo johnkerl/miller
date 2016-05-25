@@ -28,7 +28,7 @@ void  sb_free(string_builder_t* psb) {
 void sb_init(string_builder_t* psb, int alloc_length) {
 	if (alloc_length < 1) {
 		fprintf(stderr, "%s: string_builder alloc_length must be >= 1; got %d.\n",
-			MLR_GLOBALS.argv0, alloc_length);
+			MLR_GLOBALS.bargv0, alloc_length);
 		exit(1);
 	}
 	psb->used_length = 0;

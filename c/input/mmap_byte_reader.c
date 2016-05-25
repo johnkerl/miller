@@ -46,7 +46,7 @@ static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe,
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (prepipe != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -55,14 +55,14 @@ static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe,
 	pstate->fd = open(filename, O_RDONLY);
 	if (pstate->fd < 0) {
 		perror("open");
-		fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.bargv0, filename);
 		exit(1);
 	}
 
 	struct stat stat;
 	if (fstat(pstate->fd, &stat) < 0) {
 		perror("fstat");
-		fprintf(stderr, "%s: could not fstat \"%s\"\n", MLR_GLOBALS.argv0, filename);
+		fprintf(stderr, "%s: could not fstat \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 		exit(1);
 	}
 	if (stat.st_size == 0) {
@@ -73,7 +73,7 @@ static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe,
 			pstate->fd, (off_t)0);
 		if (pstate->sof == MAP_FAILED) {
 			perror("mmap");
-			fprintf(stderr, "%s: could not mmap \"%s\"\n", MLR_GLOBALS.argv0, filename);
+			fprintf(stderr, "%s: could not mmap \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 			exit(1);
 		}
 	}
@@ -98,7 +98,7 @@ static void mmap_byte_reader_close_func(struct _byte_reader_t* pbr, char* prepip
 	mmap_byte_reader_state_t* pstate = pbr->pvstate;
 	if (close(pstate->fd) < 0) {
 		perror("close");
-		fprintf(stderr, "%s: close error on file \"%s\".\n", MLR_GLOBALS.argv0, pstate->filename);
+		fprintf(stderr, "%s: close error on file \"%s\".\n", MLR_GLOBALS.bargv0, pstate->filename);
 		exit(1);
 	}
 }

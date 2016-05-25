@@ -131,7 +131,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
 				if (*pe->value == 0) {
 					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
-						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+						MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 					exit(1);
 				}
 			}
@@ -177,7 +177,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 			for (sllse_t* pe = pheader_fields->phead; pe != NULL; pe = pe->pnext) {
 				if (*pe->value == 0) {
 					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
-						MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+						MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 					exit(1);
 				}
 			}
@@ -360,7 +360,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -385,7 +385,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 
 	if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
 	}
 	key = pe->value;
@@ -405,7 +405,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 
 	if (pe->pnext != NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
 	}
 
@@ -453,7 +453,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 			*p = 0;
 			if (pe == NULL) {
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
 			key = pe->value;
@@ -478,7 +478,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 
 	if (pe == NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
 	}
 	key = pe->value;
@@ -498,7 +498,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 
 	if (pe->pnext != NULL) {
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
 	}
 

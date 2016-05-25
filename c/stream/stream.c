@@ -31,7 +31,7 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 
 	if (pmapper_list->length < 1) { // Should not have been allowed by the CLI parser.
 		fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 

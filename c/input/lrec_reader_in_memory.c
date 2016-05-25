@@ -59,7 +59,7 @@ static void* lrec_reader_in_memory_vopen(void* pvstate, char* prepipe, char* fil
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (prepipe != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 

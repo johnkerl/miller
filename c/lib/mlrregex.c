@@ -49,7 +49,7 @@ regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 		char* errbuf = malloc(nbytes);
 		(void)regerror(rc, pregex, errbuf, nbytes);
 		fprintf(stderr, "%s: could not compile regex \"%s\" : %s\n",
-			MLR_GLOBALS.argv0, regex_string, errbuf);
+			MLR_GLOBALS.bargv0, regex_string, errbuf);
 		exit(1);
 	}
 	return pregex;
@@ -71,7 +71,7 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* orig_regex_string, int cfl
 			cflags |= REG_ICASE;
 		} else {
 			fprintf(stderr, "%s: imbalanced double-quote in regex [%s].\n",
-				MLR_GLOBALS.argv0, regex_string);
+				MLR_GLOBALS.bargv0, regex_string);
 			exit(1);
 		}
 		regcomp_or_die(pregex, regex_string+1, cflags);

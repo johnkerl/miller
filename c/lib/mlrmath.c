@@ -193,7 +193,7 @@ double invqnorm(double x) {
 			break;
 		if (niter > INVQNORM_MAXITER) {
 			fprintf(stderr, "%s: internal coding error: max iterations %d exceeded in invqnorm.\n",
-				MLR_GLOBALS.argv0, INVQNORM_MAXITER);
+				MLR_GLOBALS.bargv0, INVQNORM_MAXITER);
 			exit(1);
 		}
 		double m = sqrt(2*M_PI) * exp(y*y/2.0);

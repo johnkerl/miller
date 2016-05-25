@@ -177,7 +177,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 		for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext) {
 			if (*pe->value == 0) {
 				fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
-					MLR_GLOBALS.argv0, pctx->filename, pstate->ilno);
+					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 				exit(1);
 			}
 			// Transfer pointer-free responsibility from the rslls to the
@@ -248,7 +248,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						break;
 					case IFS_EOF_STRIDX:
 						fprintf(stderr, "%s: syntax error: record-ending field separator at line %lld.\n",
-							MLR_GLOBALS.argv0, pstate->ilno);
+							MLR_GLOBALS.bargv0, pstate->ilno);
 						exit(1);
 						break;
 					case IFS_STRIDX: // end of field
@@ -262,12 +262,12 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						break;
 					case DQUOTE_STRIDX: // CSV syntax error: fields containing quotes must be fully wrapped in quotes
 						fprintf(stderr, "%s: syntax error: unwrapped double quote at line %lld.\n",
-							MLR_GLOBALS.argv0, pstate->ilno);
+							MLR_GLOBALS.bargv0, pstate->ilno);
 						exit(1);
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
-							MLR_GLOBALS.argv0, stridx, pstate->ilno);
+							MLR_GLOBALS.bargv0, stridx, pstate->ilno);
 						exit(1);
 						break;
 					}
@@ -299,7 +299,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
 						fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n",
-							MLR_GLOBALS.argv0, pstate->ilno);
+							MLR_GLOBALS.bargv0, pstate->ilno);
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
@@ -321,7 +321,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
-							MLR_GLOBALS.argv0, stridx, pstate->ilno);
+							MLR_GLOBALS.bargv0, stridx, pstate->ilno);
 						exit(1);
 						break;
 					}
@@ -360,7 +360,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {
 		fprintf(stderr, "%s: Header/data length mismatch (%llu != %llu) at file \"%s\" line %lld.\n",
-			MLR_GLOBALS.argv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
+			MLR_GLOBALS.bargv0, pstate->pheader_keeper->pkeys->length, pdata_fields->length,
 			pctx->filename, pstate->ilno);
 		exit(1);
 	}

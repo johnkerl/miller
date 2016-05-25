@@ -23,7 +23,7 @@ static int is_percentile_acc_name(char* stats1_acc_name) {
 		return FALSE;
 	if (percentile < 0.0 || percentile > 100.0) {
 		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
-			MLR_GLOBALS.argv0, stats1_acc_name);
+			MLR_GLOBALS.bargv0, stats1_acc_name);
 		exit(1);
 	}
 	return TRUE;
@@ -52,7 +52,7 @@ void make_stats1_accs(
 			stats1_acc_t* pstats1_acc = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float);
 			if (pstats1_acc == NULL) {
 				fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
-					MLR_GLOBALS.argv0, stats1_acc_name);
+					MLR_GLOBALS.bargv0, stats1_acc_name);
 				exit(1);
 			}
 			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, pstats1_acc, NO_FREE);

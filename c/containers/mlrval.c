@@ -199,7 +199,7 @@ void mv_set_float_strict(mv_t* pval) {
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		break;
 	}
 }
@@ -237,7 +237,7 @@ void mv_set_float_nullable(mv_t* pval) {
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		break;
 	}
 }
@@ -275,7 +275,7 @@ void mv_set_int_nullable(mv_t* pval) {
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		break;
 	}
 }
@@ -304,7 +304,7 @@ void mv_set_number_nullable(mv_t* pval) {
 		break;
 	default:
 		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		break;
 	}
 }
@@ -329,7 +329,7 @@ mv_t mv_scan_number_or_die(char* string) {
 	mv_t rv = mv_scan_number_nullable(string);
 	if (!mv_is_numeric(&rv)) {
 		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
-			MLR_GLOBALS.argv0, string);
+			MLR_GLOBALS.bargv0, string);
 	}
 	return rv;
 }
@@ -559,14 +559,14 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	struct tm *ptm = gmtime_r(&clock, &tm);
 	if (ptm == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
 	int written_length = strftime(string, NZBUFLEN, format, ptm);
 	if (written_length > NZBUFLEN || written_length == 0) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -593,12 +593,12 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 		char* retval = strptime(time, format, &tm);
 		if (retval == NULL) {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 		}
 		if (*retval != 0) { // Parseable input followed by non-parseable
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d: unparseable trailer \"%s\".\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__, retval);
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__, retval);
 			exit(1);
 		}
 		time_t t = mlr_timegm(&tm);
@@ -2097,7 +2097,7 @@ int mveq(mv_t* pval1, mv_t* pval2) {
 	mv_t cmp = eq_op_func(pval1, pval2);
 	if (cmp.type != MT_BOOL) {
 		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	return cmp.u.boolv;

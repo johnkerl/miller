@@ -18,13 +18,13 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 		if (streq(filename, "-")) {
 			file_contents_buffer = read_fp_into_memory(stdin, &file_size);
 			if (file_contents_buffer == NULL) {
-				fprintf(stderr, "%s: Couldn't open standard input for read.\n", MLR_GLOBALS.argv0);
+				fprintf(stderr, "%s: Couldn't open standard input for read.\n", MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 		} else {
 			file_contents_buffer = read_file_into_memory(filename, &file_size);
 			if (file_contents_buffer == NULL) {
-				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.argv0, filename);
+				fprintf(stderr, "%s: Couldn't open \"%s\" for read.\n", MLR_GLOBALS.bargv0, filename);
 				exit(1);
 			}
 		}
@@ -37,13 +37,13 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 			sprintf(command, "%s < %s", prepipe, filename);
 		FILE* input_stream = popen(command, "r");
 		if (input_stream == NULL) {
-			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.argv0, command);
+			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
 			perror(command);
 			exit(1);
 		}
 		file_contents_buffer = read_fp_into_memory(input_stream, &file_size);
 		if (file_contents_buffer == NULL) {
-			fprintf(stderr, "%s: Couldn't open popen for read: \"%s\".\n", MLR_GLOBALS.argv0, command);
+			fprintf(stderr, "%s: Couldn't open popen for read: \"%s\".\n", MLR_GLOBALS.bargv0, command);
 			exit(1);
 		}
 		free(command);

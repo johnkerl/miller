@@ -156,7 +156,7 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 		// continue looking.
 		if (++num_tries >= plevel->array_length) {
 			fprintf(stderr,
-				"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.argv0);
+				"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 
@@ -165,7 +165,7 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 			index = 0;
 	}
 	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 	exit(1);
 }
 
@@ -242,7 +242,7 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 		}
 
 	} else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -291,7 +291,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_v
 		plevel->num_occupied++;
 	}
 	else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -397,7 +397,7 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 		}
 
 	} else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -444,7 +444,7 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel,
 	else if (plevel->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -528,7 +528,7 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 
 		// 1. Excise the node and its descendants from the storage tree
 		if (plevel->states[index] != OCCUPIED) {
-			fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.argv0);
+			fprintf(stderr, "%s: mlhmmv_remove: did not find end of chain.\n", MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 
@@ -727,7 +727,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 		}
 
 	} else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -1093,7 +1093,7 @@ static int mlhmmv_int_hash_func(mv_t* pa) {
 }
 static int mlhmmv_other_hash_func(mv_t* pa) {
 	fprintf(stderr, "%s: @-variable keys must be of type %s or %s; got %s.\n",
-		MLR_GLOBALS.argv0,
+		MLR_GLOBALS.bargv0,
 		mt_describe_type(MT_STRING),
 		mt_describe_type(MT_INT),
 		mt_describe_type(pa->type));

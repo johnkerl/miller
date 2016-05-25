@@ -102,7 +102,7 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "               lexically by their join-field names, else not all records will\n");
 	fprintf(o, "               be paired.\n");
 	fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
-		MLR_GLOBALS.argv0);
+		MLR_GLOBALS.bargv0);
 	fprintf(o, "               If you wish to use a prepipe command for the main input as well\n");
 	fprintf(o, "               as here, it must be specified there as well as here.\n");
 	fprintf(o, "File-format options default to those for the right file names on the Miller\n");
@@ -183,20 +183,20 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 		popts->use_mmap_for_read = FALSE;
 
 	if (popts->left_file_name == NULL) {
-		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.argv0, verb);
+		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.bargv0, verb);
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (!popts->emit_pairables && !popts->emit_left_unpairables && !popts->emit_right_unpairables) {
 		fprintf(stderr, "%s %s: all emit flags are unset; no output is possible.\n",
-			MLR_GLOBALS.argv0, verb);
+			MLR_GLOBALS.bargv0, verb);
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (popts->poutput_join_field_names == NULL) {
-		fprintf(stderr, "%s %s: need output field names\n", MLR_GLOBALS.argv0, verb);
+		fprintf(stderr, "%s %s: need output field names\n", MLR_GLOBALS.bargv0, verb);
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
@@ -211,7 +211,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	if (llen != rlen || llen != olen) {
 		fprintf(stderr,
 			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
-			MLR_GLOBALS.argv0, verb, llen, rlen, olen);
+			MLR_GLOBALS.bargv0, verb, llen, rlen, olen);
 		exit(1);
 	}
 

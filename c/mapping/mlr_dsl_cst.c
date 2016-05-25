@@ -97,26 +97,26 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 	if (proot == NULL) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d: null root node.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	if (proot->pchildren->phead == NULL) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	if (proot->pchildren->phead->pnext != NULL) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d: extraneous right child node.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
 	if (proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d:\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected node type %s but found %s.\n",
 			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
@@ -170,7 +170,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing) {
 
 	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected root node type %s but found %s.\n",
 			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
@@ -216,13 +216,13 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren->phead == NULL) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	if (pnode->pchildren->phead->pnext != NULL) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d: extraneous right child node.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	mlr_dsl_ast_node_t* pleft = pnode->pchildren->phead->pvvalue;
@@ -230,7 +230,7 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	if (pleft->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d:\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected node type %s but found %s.\n",
 			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
@@ -270,11 +270,11 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	// IN_BEGIN_OR_END
 
 	case MD_AST_NODE_TYPE_BEGIN:
-		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
 	case MD_AST_NODE_TYPE_END:
-		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
 
@@ -294,7 +294,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_BREAK:
 		if (!(context_flags & IN_BREAKABLE)) {
 			fprintf(stderr, "%s: break statements are only valid within for, while, or do-while.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_break(pnode, type_inferencing, context_flags);
@@ -302,7 +302,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_CONTINUE:
 		if (!(context_flags & IN_BREAKABLE)) {
 			fprintf(stderr, "%s: break statements are only valid within for, while, or do-while.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_continue(pnode, type_inferencing, context_flags);
@@ -318,7 +318,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_srec_assignment(pnode, type_inferencing, context_flags);
@@ -326,7 +326,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_indirect_srec_assignment(pnode, type_inferencing, context_flags);
@@ -337,7 +337,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments from $-variables are not valid within begin or end blocks.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_oosvar_from_full_srec_assignment(pnode, type_inferencing, context_flags);
@@ -345,7 +345,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		return alloc_full_srec_from_oosvar_assignment(pnode, type_inferencing, context_flags);
@@ -407,7 +407,7 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, 
 
 	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -416,11 +416,11 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* past, 
 
 	if (pleft->type != MD_AST_NODE_TYPE_FIELD_NAME) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	} else if (pleft->pchildren != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -444,7 +444,7 @@ static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_
 
 	if ((past->pchildren == NULL) || (past->pchildren->length != 2)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -468,7 +468,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* past
 
 	if (pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -501,12 +501,12 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(
 
 	if (pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	if (pright->type != MD_AST_NODE_TYPE_FULL_SREC) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -529,12 +529,12 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_a
 	// xxx etc.
 	if (pleft->type != MD_AST_NODE_TYPE_FULL_SREC) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	if (pright->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
@@ -582,7 +582,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* past, int type_i
 
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 		}
 	}
@@ -621,7 +621,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 		if (pwalker->pchildren->length != 1 || pchild->type != MD_AST_NODE_TYPE_STRING_LITERAL) {
 			fprintf(stderr,
 				"%s: emitf arguments must be all non-indexed, e.g. @a but not @[\"a\"] or @a[2].\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			fprintf(stderr, "Abstract syntax tree for the statement:\n");
 			mlr_dsl_ast_node_fprint(pnode, stderr);
 			exit(1);
@@ -699,7 +699,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 
 	} else {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.argv0, __FILE__, __LINE__);
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 	return pstatement;

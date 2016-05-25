@@ -14,7 +14,7 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 			if (pnext_level_json->type != JSON_OBJECT) {
 				fprintf(stderr,
 					"%s: found non-object (type %s) within top-level array. This is valid but unmillerable JSON.\n",
-					MLR_GLOBALS.argv0, json_describe_type(ptop_level_json->type));
+					MLR_GLOBALS.bargv0, json_describe_type(ptop_level_json->type));
 				return FALSE;
 			}
 			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep);
@@ -30,7 +30,7 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 	} else {
 		fprintf(stderr,
 			"%s: found non-terminal (type %s) at top level. This is valid but unmillerable JSON.\n",
-			MLR_GLOBALS.argv0, json_describe_type(ptop_level_json->type));
+			MLR_GLOBALS.bargv0, json_describe_type(ptop_level_json->type));
 		return FALSE;
 	}
 	return TRUE;
@@ -69,7 +69,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 		case JSON_ARRAY:
 			fprintf(stderr,
 				"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			return NULL;
 			break;
 
@@ -88,7 +88,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			break;
 		default:
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 			break;
 		}
@@ -132,7 +132,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 		case JSON_ARRAY:
 			fprintf(stderr,
 				"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
-				MLR_GLOBALS.argv0);
+				MLR_GLOBALS.bargv0);
 			break;
 		case JSON_INTEGER:
 			lrec_put(prec, lrec_key, pjson_value->u.integer.sval, FREE_ENTRY_KEY);
@@ -142,7 +142,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			break;
 		default:
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.argv0, __FILE__, __LINE__);
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 			break;
 		}

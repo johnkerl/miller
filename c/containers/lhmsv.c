@@ -129,7 +129,7 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key, int* pideal_index)
 		// continue looking.
 		if (++num_tries >= pmap->array_length) {
 			fprintf(stderr,
-				"%s: internal coding error: table full even after enlargement.\n", MLR_GLOBALS.argv0);
+				"%s: internal coding error: table full even after enlargement.\n", MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 
@@ -138,7 +138,7 @@ static int lhmsv_find_index_for_key(lhmsv_t* pmap, char* key, int* pideal_index)
 			index = 0;
 	}
 	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.argv0, __FILE__, __LINE__);
+		MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 	exit(1);
 }
 
@@ -180,7 +180,7 @@ static void lhmsv_put_no_enlarge(lhmsv_t* pmap, char* key, void* pvvalue, char f
 		pmap->num_occupied++;
 
 	} else {
-		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -196,7 +196,7 @@ void* lhmsv_get(lhmsv_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return NULL;
 	else {
-		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -211,7 +211,7 @@ int  lhmsv_has_key(lhmsv_t* pmap, char* key) {
 	else if (pmap->states[index] == EMPTY)
 		return FALSE;
 	else {
-		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.argv0);
+		fprintf(stderr, "%s: lhmsv_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
