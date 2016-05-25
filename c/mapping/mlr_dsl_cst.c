@@ -46,6 +46,11 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 
 static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
+static void handle_statement_list_with_break_continue(
+	sllv_t*        pcst_statements,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs);
+
 static void                  handle_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void         handle_indirect_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1127,7 +1132,9 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
-void mlr_dsl_cst_handle(
+// This is for statement lists not recursively contained within a loop body -- including the main/begin/end statements.
+// Since there is no containing loop body, there is no need to check for break or continue flags after each statement.
+void mlr_dsl_cst_handle_statement_list(
 	sllv_t*        pcst_statements,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
@@ -1135,6 +1142,22 @@ void mlr_dsl_cst_handle(
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->phandler(pstatement, pvars, pcst_outputs);
+	}
+}
+
+// This is for statement lists recursively contained within a loop body.
+// It checks for break or continue flags after each statement.
+static void handle_statement_list_with_break_continue(
+	sllv_t*        pcst_statements,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		pstatement->phandler(pstatement, pvars, pcst_outputs);
+		if (pvars->loop_broken_or_continued) {
+			break;
+		}
 	}
 }
 
@@ -1528,7 +1551,8 @@ static void handle_conditional_block(
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		if (val.u.boolv) {
-			mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+			// funcptrize
+			handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		}
 	}
 }
@@ -1546,7 +1570,8 @@ static void handle_while(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+				// funcptrize
+				handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 			} else {
 				break;
 			}
@@ -1565,7 +1590,8 @@ static void handle_do_while(
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
 	while (TRUE) {
-		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+		// xxx funcptrize
+		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 
 		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
@@ -1600,7 +1626,15 @@ static void handle_for_srec(
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
-		mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+		// xxx funcptrize
+		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+		if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
+			pvars->loop_broken_or_continued |= ~LOOP_BROKEN;
+			break;
+		} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
+			pvars->loop_broken_or_continued |= ~LOOP_CONTINUED;
+			continue;
+		}
 	}
 	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context)
 	lrec_free(pcopy);
@@ -1670,7 +1704,8 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &submap.u.mlrval, NO_FREE);
 			// Execute the loop-body statements:
-			mlr_dsl_cst_handle(pnode->pblock_statements, pvars, pcst_outputs);
+			// xxx funcptrize
+			handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		}
 
 	}
@@ -1682,7 +1717,7 @@ static void handle_break(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx stub
+	pvars->loop_broken_or_continued |= LOOP_BROKEN;
 }
 
 // ----------------------------------------------------------------
@@ -1691,7 +1726,7 @@ static void handle_continue(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx stub
+	pvars->loop_broken_or_continued |= LOOP_CONTINUED;
 }
 
 // ----------------------------------------------------------------
@@ -1708,7 +1743,8 @@ static void handle_if_head(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				mlr_dsl_cst_handle(pitemnode->pblock_statements, pvars, pcst_outputs);
+				// xxx func-ptrize
+				handle_statement_list_with_break_continue(pitemnode->pblock_statements, pvars, pcst_outputs);
 
 				break;
 			}

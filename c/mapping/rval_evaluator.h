@@ -36,6 +36,7 @@
 #include "containers/bind_stack.h"
 #include "lib/string_array.h"
 
+// xxx move to another header file
 #define LOOP_BROKEN    0x8000
 #define LOOP_CONTINUED 0x0100
 

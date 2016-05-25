@@ -123,7 +123,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
-void mlr_dsl_cst_handle(
+void mlr_dsl_cst_handle_statement_list(
 	sllv_t*      pcst_statements, // begin/main/end
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
