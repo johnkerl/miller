@@ -18,8 +18,8 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* past, int ti, int cf);
-static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int ti,
-	int do_full_prefixing, int context_flags);
+static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int ti, int cf,
+	int do_full_prefixing);
 static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* past, int ti, int cf);
@@ -358,10 +358,10 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
-		return alloc_emit_or_emitp(pnode, type_inferencing, TRUE, context_flags);
+		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
-		return alloc_emit_or_emitp(pnode, type_inferencing, FALSE, context_flags);
+		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, FALSE);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
 		// xxx not OK to test on srec IN_BEGIN_OR_END. pass this through.
@@ -658,7 +658,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 //         z (strnum_literal).
 
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int do_full_prefixing, int context_flags)
+	int context_flags, int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
