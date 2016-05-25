@@ -15994,6 +15994,18 @@ list (statement_list):
             x (string_literal).
         3 (strnum_literal).
 
+mlr filter -v break
+mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+AST ROOT:
+list (statement_list):
+    break (break).
+
+mlr filter -v continue
+mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+AST ROOT:
+list (statement_list):
+    continue (continue).
+
 
 ================================================================
 FOR-OOSVAR DEPTH TESTS
