@@ -1707,6 +1707,94 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
 '
 
 # ================================================================
+announce BREAK/CONTINUE
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k,v in $*) {
+      @logging1[NR][k] = v;
+      if (k == "x") {
+          break;
+      }
+  }
+  end {
+    emitp @logging1, "NR", "k";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k,v in $*) {
+      if (k == "x") {
+          break;
+      }
+      @logging2[NR][k] = v;
+  }
+  end {
+    emitp @logging2, "NR", "k";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k,v in $*) {
+      @logging3[NR][k] = v;
+      if (k == "x") {
+          continue;
+      }
+  }
+  end {
+    emitp @logging3, "NR", "k";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k,v in $*) {
+      if (k == "x") {
+          continue;
+      }
+      @logging4[NR][k] = v;
+  }
+  end {
+    emitp @logging4, "NR", "k"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k,v in $*) {
+      @logging1[NR][k] = v;
+      if (k == "x") {
+          break;
+      }
+  }
+
+  for (k,v in $*) {
+      if (k == "x") {
+          break;
+      }
+      @logging2[NR][k] = v;
+  }
+
+  for (k,v in $*) {
+      @logging3[NR][k] = v;
+      if (k == "x") {
+          continue;
+      }
+  }
+
+  for (k,v in $*) {
+      if (k == "x") {
+          continue;
+      }
+      @logging4[NR][k] = v;
+  }
+
+  end {
+    emitp @logging1, "NR", "k";
+    emitp @logging2, "NR", "k";
+    emitp @logging3, "NR", "k";
+    emitp @logging4, "NR", "k"
+  }
+'
+
+# ================================================================
 announce DSL CONTEXT-SPECIFIC VALIDATION
 
 mention srecs in begin/end

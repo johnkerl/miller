@@ -1629,10 +1629,10 @@ static void handle_for_srec(
 		// xxx funcptrize
 		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
-			pvars->loop_broken_or_continued |= ~LOOP_BROKEN;
+			pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
 			break;
 		} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
-			pvars->loop_broken_or_continued |= ~LOOP_CONTINUED;
+			pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
 			continue;
 		}
 	}
