@@ -57,6 +57,10 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 				exit(1);
 			}
 			return rval_evaluator_alloc_from_bound_variable(pnode->text);
+		} else if (context_flags & IN_MLR_FILTER) {
+			fprintf(stderr, "%s: expressions for mlr filter must be single statements, evaluating to boolean.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
 		} else {
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);

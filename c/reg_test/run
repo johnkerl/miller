@@ -1724,6 +1724,8 @@ mlr_expect_fail put -v 'continue'
 
 mention oosvars in mlr filter
 mlr_expect_fail filter -v '@x > 3'
+mlr_expect_fail filter -v 'break'
+mlr_expect_fail filter -v 'continue'
 
 # ----------------------------------------------------------------
 announce FOR-OOSVAR DEPTH TESTS
