@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
+			context_flags.h \
 			rval_evaluator.h \
 			rval_evaluators.h \
 			rval_expr_evaluators.c \
