@@ -15918,7 +15918,7 @@ DSL CONTEXT-SPECIFIC VALIDATION
 
 ---------------------------------------------------------------- srecs in begin/end
 mlr put -v begin{$x=1}
-./reg_test/../../c/mlr: assignments to $-variables are not valid within begin or end blocks.
+mlr: assignments to $-variables are not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -15928,7 +15928,7 @@ list (statement_list):
                 1 (strnum_literal).
 
 mlr put -v begin{@x=$y}
-./reg_test/../../c/mlr: statements involving $-variables are not valid within begin or end blocks.
+mlr: statements involving $-variables are not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -15939,7 +15939,7 @@ list (statement_list):
                 y (field_name).
 
 mlr put -v end{$x=1}
-./reg_test/../../c/mlr: assignments to $-variables are not valid within begin or end blocks.
+mlr: assignments to $-variables are not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     end (end):
@@ -15949,7 +15949,7 @@ list (statement_list):
                 1 (strnum_literal).
 
 mlr put -v end{@x=$y}
-./reg_test/../../c/mlr: statements involving $-variables are not valid within begin or end blocks.
+mlr: statements involving $-variables are not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     end (end):
@@ -15962,7 +15962,7 @@ list (statement_list):
 
 ---------------------------------------------------------------- boundvars outside for
 mlr put -v $x=x
-./reg_test/../../c/mlr: statements involving bound variables are not valid outside for-loops.
+mlr: statements involving bound variables are not valid outside for-loops.
 AST ROOT:
 list (statement_list):
     = (srec_assignment):
@@ -15972,13 +15972,13 @@ list (statement_list):
 
 ---------------------------------------------------------------- break/continue outside loop
 mlr put -v break
-./reg_test/../../c/mlr: break statements are only valid within for, while, or do-while.
+mlr: break statements are only valid within for, while, or do-while.
 AST ROOT:
 list (statement_list):
     break (break).
 
 mlr put -v continue
-./reg_test/../../c/mlr: break statements are only valid within for, while, or do-while.
+mlr: break statements are only valid within for, while, or do-while.
 AST ROOT:
 list (statement_list):
     continue (continue).
@@ -15986,7 +15986,7 @@ list (statement_list):
 
 ---------------------------------------------------------------- oosvars in mlr filter
 mlr filter -v @x > 3
-./reg_test/../../c/mlr: statements involving $-variables are not valid in ./reg_test/../../c/mlr filter.
+mlr: statements involving $-variables are not valid in mlr filter.
 AST ROOT:
 list (statement_list):
     > (operator):
