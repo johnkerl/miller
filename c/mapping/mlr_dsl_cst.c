@@ -1679,6 +1679,13 @@ static void handle_for_oosvar(
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
 			// into the submap.
 			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
+
+			if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
+				pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
+			}
+			if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
+				pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
+			}
 		}
 
 		mlhmmv_free_submap(submap);
@@ -1708,7 +1715,14 @@ static void handle_for_oosvar_aux(
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pnode, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
 
-				// xxx break/continue handling ... also break out of recursion.
+				if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
+					pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
+					break;
+				} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
+					pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
+					continue; // xxx return?
+				}
+
 			}
 		}
 

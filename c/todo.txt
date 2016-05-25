@@ -8,6 +8,7 @@ TOP-OF-LIST SUMMARY
 
 ! break/continue: fully support or eliminate from the lexer/parser
   - in-loop stack flags for handlers (at pvars?)
+  - test break & continue both set
 ! cst_statement_free bring up to date with blank_alloc
 
 ! xxxes
