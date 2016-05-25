@@ -1572,6 +1572,13 @@ static void handle_while(
 			if (val.u.boolv) {
 				// funcptrize
 				handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+				if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
+					pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
+					break;
+				} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
+					pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
+					continue;
+				}
 			} else {
 				break;
 			}
@@ -1592,6 +1599,13 @@ static void handle_do_while(
 	while (TRUE) {
 		// xxx funcptrize
 		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+		if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
+			pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
+			break;
+		} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
+			pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
+			continue;
+		}
 
 		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
@@ -1693,6 +1707,8 @@ static void handle_for_oosvar_aux(
 				lhmsmv_put(pnode->pbound_variables, prest_for_k_names->value, &pe->level_key, NO_FREE);
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pnode, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
+
+				// xxx break/continue handling ... also break out of recursion.
 			}
 		}
 
@@ -1730,6 +1746,7 @@ static void handle_continue(
 }
 
 // ----------------------------------------------------------------
+// xxx move up by cond @ prototypes as well as bodies as well as switch-stt, & wherever else.
 static void handle_if_head(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
