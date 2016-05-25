@@ -176,12 +176,13 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	sllv_t* rv = NULL;
 
 	variables_t variables = (variables_t) {
-		.pinrec           = pinrec,
-		.ptyped_overlay   = ptyped_overlay,
-		.poosvars         = pstate->poosvars,
-		.ppregex_captures = NULL,
-		.pctx             = pctx,
-		.pbind_stack      = NULL,
+		.pinrec                   = pinrec,
+		.ptyped_overlay           = ptyped_overlay,
+		.poosvars                 = pstate->poosvars,
+		.ppregex_captures         = NULL,
+		.pctx                     = pctx,
+		.pbind_stack              = NULL,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t val = pstate->pevaluator->pprocess_func(pstate->pevaluator->pvstate, &variables);

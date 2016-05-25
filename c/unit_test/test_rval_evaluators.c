@@ -33,6 +33,7 @@ static char * test_caps() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t val = pnr->pprocess_func(pnr->pvstate, &variables);
@@ -88,6 +89,7 @@ static char * test_strings() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t val = ps->pprocess_func(ps->pvstate, &variables);
@@ -161,6 +163,7 @@ static char * test_numbers() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t valp2     = p2->pprocess_func(p2->pvstate, &variables);
@@ -248,6 +251,7 @@ static char * test_logical_and() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t t = mv_from_bool(TRUE);
@@ -311,6 +315,7 @@ static char * test_logical_or() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t t = mv_from_bool(TRUE);
@@ -374,6 +379,7 @@ static char * test_logical_xor() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.loop_broken_or_continued = 0,
 	};
 
 	mv_t t = mv_from_bool(TRUE);

@@ -36,6 +36,9 @@
 #include "containers/bind_stack.h"
 #include "lib/string_array.h"
 
+#define LOOP_BROKEN    0x8000
+#define LOOP_CONTINUED 0x0100
+
 struct _rval_evaluator_t; // forward reference for method declarations
 
 typedef struct _variables_t {
@@ -45,6 +48,7 @@ typedef struct _variables_t {
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
 	bind_stack_t*    pbind_stack;
+	int              loop_broken_or_continued;
 } variables_t;
 
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
