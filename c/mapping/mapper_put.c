@@ -257,7 +257,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
 			.ploop_stack      = pstate->ploop_stack,
-			.loop_broken_or_continued = 0,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec         = &should_emit_rec,
@@ -278,7 +277,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
 			.ploop_stack      = pstate->ploop_stack,
-			.loop_broken_or_continued = 0,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec         = &should_emit_rec,
@@ -305,7 +303,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.pctx             = pctx,
 		.pbind_stack      = pstate->pbind_stack,
 		.ploop_stack      = pstate->ploop_stack,
-		.loop_broken_or_continued = 0,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
 		.pshould_emit_rec         = &should_emit_rec,

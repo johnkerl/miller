@@ -47,7 +47,6 @@ typedef struct _variables_t {
 	context_t*       pctx;
 	bind_stack_t*    pbind_stack;
 	loop_stack_t*    ploop_stack;
-	int              loop_broken_or_continued; // xxx rid of
 } variables_t;
 
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
