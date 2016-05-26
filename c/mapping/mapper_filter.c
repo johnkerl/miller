@@ -182,6 +182,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		.ppregex_captures         = NULL,
 		.pctx                     = pctx,
 		.pbind_stack              = NULL,
+		.ploop_stack              = NULL,
 		.loop_broken_or_continued = 0,
 	};
 

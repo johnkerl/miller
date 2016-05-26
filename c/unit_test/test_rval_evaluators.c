@@ -25,6 +25,7 @@ static char * test_caps() {
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
 		.pinrec           = prec,
@@ -33,6 +34,7 @@ static char * test_caps() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 
@@ -78,6 +80,7 @@ static char * test_strings() {
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	lrec_put(prec, "s", "abc", NO_FREE);
 	printf("lrec s = %s\n", lrec_get(prec, "s"));
@@ -89,6 +92,7 @@ static char * test_strings() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 
@@ -153,6 +157,7 @@ static char * test_numbers() {
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	lrec_put(prec, "x", "4.5", NO_FREE);
 
@@ -163,6 +168,7 @@ static char * test_numbers() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 
@@ -243,6 +249,7 @@ static char * test_logical_and() {
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
 		.pinrec           = prec,
@@ -251,6 +258,7 @@ static char * test_logical_and() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 
@@ -307,6 +315,7 @@ static char * test_logical_or() {
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
 		.pinrec           = prec,
@@ -315,6 +324,7 @@ static char * test_logical_or() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 
@@ -371,6 +381,7 @@ static char * test_logical_xor() {
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
+	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
 		.pinrec           = prec,
@@ -379,6 +390,7 @@ static char * test_logical_xor() {
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pbind_stack,
+		.ploop_stack      = ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 

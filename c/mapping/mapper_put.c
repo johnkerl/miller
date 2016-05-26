@@ -23,6 +23,7 @@ typedef struct _mapper_put_state_t {
 	mlhmmv_t*      poosvars;
 	char*          oosvar_flatten_separator;
 	bind_stack_t*  pbind_stack;
+	loop_stack_t*  ploop_stack;
 	int            outer_filter;
 } mapper_put_state_t;
 
@@ -164,6 +165,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	pstate->poosvars     = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->pbind_stack  = bind_stack_alloc();
+	pstate->ploop_stack  = loop_stack_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -180,6 +182,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	free(pstate->comment_stripped_mlr_dsl_expression);
 	mlhmmv_free(pstate->poosvars);
 	bind_stack_free(pstate->pbind_stack);
+	loop_stack_free(pstate->ploop_stack);
 	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
@@ -253,6 +256,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.ppregex_captures = &pregex_captures,
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
+			.ploop_stack      = pstate->ploop_stack,
 			.loop_broken_or_continued = 0,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
@@ -273,6 +277,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.ppregex_captures = &pregex_captures,
 			.pctx             = pctx,
 			.pbind_stack      = pstate->pbind_stack,
+			.ploop_stack      = pstate->ploop_stack,
 			.loop_broken_or_continued = 0,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
@@ -299,6 +304,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
 		.pbind_stack      = pstate->pbind_stack,
+		.ploop_stack      = pstate->ploop_stack,
 		.loop_broken_or_continued = 0,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
