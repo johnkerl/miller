@@ -20,14 +20,14 @@ static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* past, int ti, int cf,
 	int do_full_prefixing);
+static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* past, int ti, int cf);
+static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_break(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                         alloc_continue(mlr_dsl_ast_node_t* past, int ti, int cf);
-static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* past, int ti, int cf);
-static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* past, int ti, int cf);
 static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* past, int ti, int cf);
@@ -283,6 +283,13 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		exit(1);
 		break;
 
+	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
+		return alloc_conditional_block(pnode, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_IF_HEAD:
+		return alloc_if_head(pnode, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_WHILE:
 		return alloc_while(pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
@@ -311,13 +318,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 			exit(1);
 		}
 		return alloc_continue(pnode, type_inferencing, context_flags);
-		break;
-
-	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
-		return alloc_conditional_block(pnode, type_inferencing, context_flags);
-		break;
-	case MD_AST_NODE_TYPE_IF_HEAD:
-		return alloc_if_head(pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
@@ -1558,6 +1558,30 @@ static void handle_conditional_block(
 }
 
 // ----------------------------------------------------------------
+// xxx move up by cond @ prototypes as well as bodies as well as switch-stt, & wherever else.
+static void handle_if_head(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
+		rval_evaluator_t* prhs_evaluator = pitemnode->prhs_evaluator;
+
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+		if (mv_is_non_null(&val)) {
+			mv_set_boolean_strict(&val);
+			if (val.u.boolv) {
+				// xxx func-ptrize
+				handle_statement_list_with_break_continue(pitemnode->pblock_statements, pvars, pcst_outputs);
+
+				break;
+			}
+		}
+	}
+}
+
+// ----------------------------------------------------------------
 static void handle_while(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1717,10 +1741,10 @@ static void handle_for_oosvar_aux(
 
 				if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
 					pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
-					break;
+					return;
 				} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
 					pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
-					continue; // xxx return?
+					continue;
 				}
 
 			}
@@ -1757,30 +1781,6 @@ static void handle_continue(
 	cst_outputs_t*           pcst_outputs)
 {
 	pvars->loop_broken_or_continued |= LOOP_CONTINUED;
-}
-
-// ----------------------------------------------------------------
-// xxx move up by cond @ prototypes as well as bodies as well as switch-stt, & wherever else.
-static void handle_if_head(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitemnode->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-		if (mv_is_non_null(&val)) {
-			mv_set_boolean_strict(&val);
-			if (val.u.boolv) {
-				// xxx func-ptrize
-				handle_statement_list_with_break_continue(pitemnode->pblock_statements, pvars, pcst_outputs);
-
-				break;
-			}
-		}
-	}
 }
 
 // ----------------------------------------------------------------
