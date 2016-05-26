@@ -1809,7 +1809,114 @@ run_mlr --opprint --from $indir/abixy put '
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN NESTED WHILE/DO-WHILE
 
-mention xxx to do after bcstack impl
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    break;
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    continue;
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    while ($k < 7) {
+      $k += 1;
+      break;
+      $k += 10000;
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    while ($k < 7) {
+      $k += 1;
+      continue;
+      $k += 10000;
+    }
+  }
+'
+
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    if (NR == 2 || NR == 8) {
+      break;
+    }
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    if (NR == 2 || NR == 8) {
+      continue;
+    }
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    while ($k < 7) {
+      $k += 1;
+      if (NR == 2 || NR == 8) {
+        break;
+      }
+      $k += 10000;
+    }
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    while ($k < 7) {
+      $k += 1;
+      if (NR == 2 || NR == 8) {
+        continue;
+      }
+      $k += 10000;
+    }
+  }
+'
 
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE FOR-SREC
