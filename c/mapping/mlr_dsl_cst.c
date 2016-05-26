@@ -1132,8 +1132,9 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
-// This is for statement lists not recursively contained within a loop body -- including the main/begin/end statements.
-// Since there is no containing loop body, there is no need to check for break or continue flags after each statement.
+// This is for statement lists not recursively contained within a loop body -- including the
+// main/begin/end statements.  Since there is no containing loop body, there is no need to check
+// for break or continue flags after each statement.
 void mlr_dsl_cst_handle_statement_list(
 	sllv_t*        pcst_statements,
 	variables_t*   pvars,
@@ -1574,7 +1575,6 @@ static void handle_if_head(
 			if (val.u.boolv) {
 				// xxx func-ptrize
 				handle_statement_list_with_break_continue(pitemnode->pblock_statements, pvars, pcst_outputs);
-
 				break;
 			}
 		}
@@ -1601,7 +1601,6 @@ static void handle_while(
 					break;
 				} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
 					pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
-					continue;
 				}
 			} else {
 				break;
@@ -1671,7 +1670,6 @@ static void handle_for_srec(
 			break;
 		} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
 			pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
-			continue;
 		}
 	}
 	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context)
@@ -1702,6 +1700,11 @@ static void handle_for_oosvar(
 		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
 			// into the submap.
+			// xx note there must be at least one k-name so we are assuming the for-loop within
+
+			// handle_for_oosvar_aux was gone through once & thus handle_statement_list_with_break_continue
+			// was called through there.
+
 			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
 
 			if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
@@ -1740,11 +1743,9 @@ static void handle_for_oosvar_aux(
 				handle_for_oosvar_aux(pnode, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
 
 				if (pvars->loop_broken_or_continued & LOOP_BROKEN) {
-					pvars->loop_broken_or_continued &= ~LOOP_BROKEN;
 					return;
 				} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
 					pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
-					continue;
 				}
 
 			}
