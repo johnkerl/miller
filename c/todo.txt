@@ -6,11 +6,9 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! break/continue: fully support or eliminate from the lexer/parser
-  - in-loop stack flags for handlers (at pvars?)
-  - test break & continue both set
-  ! bcstack! push at entry to each loop. test w/ nested break out of nested loops.
 ! cst_statement_free bring up to date with blank_alloc
+* mixed for/while UTs
+* for-oosvar UTs
 
 ! xxxes
 ! valgrinds
