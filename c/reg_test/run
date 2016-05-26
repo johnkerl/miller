@@ -1902,7 +1902,303 @@ run_mlr --opprint --from $indir/abixy put -q '
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN NESTED FOR-SREC
 
-mention xxx to do after bcstack impl
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    break;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    continue;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      break;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      continue;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+# ----------------------------------------------------------------
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    break;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      break;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    continue;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      break;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    break;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      continue;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    continue;
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      continue;
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+
+# ----------------------------------------------------------------
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        break
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        continue
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "a") {
+          break
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "b") {
+          continue
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+# ----------------------------------------------------------------
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        break
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "a") {
+          break
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        continue
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "a") {
+          break
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        break
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "a") {
+          continue
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        continue
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      if (k2 == "a") {
+          continue
+      }
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+'
+
 
 # ----------------------------------------------------------------
 announce FOR-OOSVAR DEPTH TESTS
