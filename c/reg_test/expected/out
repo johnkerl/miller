@@ -16715,7 +16715,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 DSL BREAK/CONTINUE IN SINGLE FOR-OOSVAR
 
 
----------------------------------------------------------------- single-key tests
+---------------------------------------------------------------- single-key tests, direct break/continue
 mlr --opprint --from ./reg_test/input/abixy put -q 
   @logging[NR] = $*;
   end {
@@ -16733,7 +16733,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
     for (k1, v in @logging[2]) {
         @output[k1] = v;
         break;
-        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+        @output[k1] = "ERROR";
     }
     emit @output, "NR", "name"
   }
@@ -16758,7 +16758,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
     for (k1, v in @logging[2]) {
         @output[k1] = v;
         continue;
-        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+        @output[k1] = "ERROR";
     }
     emit @output, "NR", "name"
   }
@@ -16771,7 +16771,80 @@ x  0.7586799647899636
 y  0.5221511083334797
 
 
----------------------------------------------------------------- multiple-key tests
+---------------------------------------------------------------- single-key tests, indirect break/continue
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        if (k1 == "i") {
+          break;
+        }
+        @output[k1] = v;
+    }
+    emit @output, "NR", "name"
+  }
+
+NR output
+a  eks
+b  pan
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        @output[k1] = v;
+        if (k1 == "i") {
+          break;
+        }
+    }
+    emit @output, "NR", "name"
+  }
+
+NR output
+a  eks
+b  pan
+i  2
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        if (k1 == "i") {
+          continue;
+        }
+        @output[k1] = v
+    }
+    emit @output, "NR", "name"
+  }
+
+NR output
+a  eks
+b  pan
+x  0.7586799647899636
+y  0.5221511083334797
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        @output[k1] = v;
+        if (k1 == "i") {
+          continue;
+        }
+        @output[k1] = "reached";
+    }
+    emit @output, "NR", "name"
+  }
+
+NR output
+a  reached
+b  reached
+i  2
+x  reached
+y  reached
+
+
+---------------------------------------------------------------- multiple-key tests, direct break/continue
 mlr --opprint --from ./reg_test/input/abixy put -q 
   @logging[NR] = $*;
   end {
@@ -16789,7 +16862,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
     for ((k1, k2), v in @logging) {
         @output[k2][k1] = v;
         break;
-        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+        @output[k2][k1] = "ERROR"
     }
     emit @output, "name", "NR"
   }
@@ -16814,7 +16887,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
     for ((k1, k2), v in @logging) {
         @output[k2][k1] = v;
         continue;
-        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+        @output[k2][k1] = "ERROR";
     }
     emit @output, "name", "NR"
   }
@@ -16850,6 +16923,352 @@ i    7  7
 i    8  8
 i    9  9
 i    10 10
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+x    5  0.5732889198020006
+x    6  0.5271261600918548
+x    7  0.6117840605678454
+x    8  0.5985540091064224
+x    9  0.03144187646093577
+x    10 0.5026260055412137
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+y    5  0.8636244699032729
+y    6  0.49322128674835697
+y    7  0.1878849191181694
+y    8  0.976181385699006
+y    9  0.7495507603507059
+y    10 0.9526183602969864
+
+
+---------------------------------------------------------------- multiple-key tests, indirect break/continue
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k1 == 5) {
+          break;
+        }
+        @output[k2][k1] = v;
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+i    1  1
+i    2  2
+i    3  3
+i    4  4
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k2 == "i") {
+          break;
+        }
+        @output[k2][k1] = v;
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+b    1  pan
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = v;
+        if (k1 == 5) {
+          break;
+        }
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+a    5  wye
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+i    1  1
+i    2  2
+i    3  3
+i    4  4
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = v;
+        if (k2 == "i") {
+          break;
+        }
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+b    1  pan
+i    1  1
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k1 == 5) {
+          continue;
+        }
+        @output[k2][k1] = v
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+a    6  zee
+a    7  eks
+a    8  zee
+a    9  hat
+a    10 pan
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+b    6  pan
+b    7  zee
+b    8  wye
+b    9  wye
+b    10 wye
+i    1  1
+i    2  2
+i    3  3
+i    4  4
+i    6  6
+i    7  7
+i    8  8
+i    9  9
+i    10 10
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+x    6  0.5271261600918548
+x    7  0.6117840605678454
+x    8  0.5985540091064224
+x    9  0.03144187646093577
+x    10 0.5026260055412137
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+y    6  0.49322128674835697
+y    7  0.1878849191181694
+y    8  0.976181385699006
+y    9  0.7495507603507059
+y    10 0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k2 == "i") {
+          continue;
+        }
+        @output[k2][k1] = v
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+a    5  wye
+a    6  zee
+a    7  eks
+a    8  zee
+a    9  hat
+a    10 pan
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+b    5  pan
+b    6  pan
+b    7  zee
+b    8  wye
+b    9  wye
+b    10 wye
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+x    5  0.5732889198020006
+x    6  0.5271261600918548
+x    7  0.6117840605678454
+x    8  0.5985540091064224
+x    9  0.03144187646093577
+x    10 0.5026260055412137
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+y    5  0.8636244699032729
+y    6  0.49322128674835697
+y    7  0.1878849191181694
+y    8  0.976181385699006
+y    9  0.7495507603507059
+y    10 0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = v;
+        if (k1 == 5) {
+          continue;
+        }
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+a    5  wye
+a    6  zee
+a    7  eks
+a    8  zee
+a    9  hat
+a    10 pan
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+b    5  pan
+b    6  pan
+b    7  zee
+b    8  wye
+b    9  wye
+b    10 wye
+i    1  1
+i    2  2
+i    3  3
+i    4  4
+i    5  5
+i    6  6
+i    7  7
+i    8  8
+i    9  9
+i    10 10
+x    1  0.3467901443380824
+x    2  0.7586799647899636
+x    3  0.20460330576630303
+x    4  0.38139939387114097
+x    5  0.5732889198020006
+x    6  0.5271261600918548
+x    7  0.6117840605678454
+x    8  0.5985540091064224
+x    9  0.03144187646093577
+x    10 0.5026260055412137
+y    1  0.7268028627434533
+y    2  0.5221511083334797
+y    3  0.33831852551664776
+y    4  0.13418874328430463
+y    5  0.8636244699032729
+y    6  0.49322128674835697
+y    7  0.1878849191181694
+y    8  0.976181385699006
+y    9  0.7495507603507059
+y    10 0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put -q 
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = "before";
+        if (k2 == "i") {
+          continue;
+        }
+        @output[k2][k1] = v;
+    }
+    emit @output, "name", "NR"
+  }
+
+name NR output
+a    1  pan
+a    2  eks
+a    3  wye
+a    4  eks
+a    5  wye
+a    6  zee
+a    7  eks
+a    8  zee
+a    9  hat
+a    10 pan
+b    1  pan
+b    2  pan
+b    3  wye
+b    4  wye
+b    5  pan
+b    6  pan
+b    7  zee
+b    8  wye
+b    9  wye
+b    10 wye
+i    1  before
+i    2  before
+i    3  before
+i    4  before
+i    5  before
+i    6  before
+i    7  before
+i    8  before
+i    9  before
+i    10 before
 x    1  0.3467901443380824
 x    2  0.7586799647899636
 x    3  0.20460330576630303
