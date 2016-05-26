@@ -870,7 +870,7 @@ run_mlr --from /dev/null put -v 'end {;@x=1}'
 run_mlr --from /dev/null put -v 'end {@x=1;@y=2}'
 run_mlr --from /dev/null put -v 'end {@x=1;;@y=2}'
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DSL CONTEXT-SPECIFIC VALIDATION
 
 mention srecs in begin/end
@@ -1727,7 +1727,7 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
   }
 '
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
 
 run_mlr --opprint --from $indir/abixy put '
@@ -1806,12 +1806,12 @@ run_mlr --opprint --from $indir/abixy put '
   } while ($i < 5);
 '
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN NESTED WHILE/DO-WHILE
 
 mention xxx to do after bcstack impl
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE FOR-SREC
 
 run_mlr --opprint --from $indir/abixy put -q '
@@ -1899,7 +1899,7 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN NESTED FOR-SREC
 
 mention xxx to do after bcstack impl
@@ -1918,6 +1918,12 @@ run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for(k1,v in @o[1][2]) {$x+=10;
 run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1),v in @o[1][2]) {$x+=10;$y+=100}'
 run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1,k2),v in @o[1][2]) {$x+=10;$y+=100}'
 run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1,k2,k3),v in @o[1][2]) {$x+=10;$y+=100}'
+
+# ----------------------------------------------------------------
+announce DSL BREAK/CONTINUE IN SINGLE FOR-OOSVAR
+
+# ----------------------------------------------------------------
+announce DSL BREAK/CONTINUE IN NESTED FOR-OOSVAR
 
 # ----------------------------------------------------------------
 # xxx test nested control structures: double-for; if-inside-while; etc.
@@ -2345,7 +2351,7 @@ run_mlr --ipprint --odkvp cat $indir/f.pprint $indir/g.pprint
 run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint \
   $indir/c.pprint $indir/d.pprint $indir/e.pprint $indir/f.pprint $indir/g.pprint
 
-# ================================================================
+# ----------------------------------------------------------------
 announce NULL-FIELD INPUT
 
 run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
@@ -2398,7 +2404,7 @@ run_mlr --opprint step -a counter,rsum -f y     -g a $indir/nullvals.dkvp
 run_mlr --opprint step -a counter,rsum -f z     -g a $indir/nullvals.dkvp
 run_mlr --opprint step -a counter,rsum -f x,y,z -g a $indir/nullvals.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce SPACE-PADDING
 
 run_mlr --mmap    --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
@@ -2408,13 +2414,13 @@ run_mlr --no-mmap --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.n
 run_mlr --mmap    --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
 run_mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
 
-# ================================================================
+# ----------------------------------------------------------------
 announce DOUBLE PS
 
 run_mlr --no-mmap --opprint cat $indir/double-ps.dkvp
 run_mlr    --mmap --opprint cat $indir/double-ps.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MISSING FINAL LF
 
 run_mlr --no-mmap --csvlite cat $indir/truncated.csv
@@ -2428,7 +2434,7 @@ run_mlr           --pprint  cat $indir/truncated.pprint
 run_mlr --no-mmap --xtab    cat $indir/truncated.xtab
 run_mlr           --xtab    cat $indir/truncated.xtab
 
-# ================================================================
+# ----------------------------------------------------------------
 announce UTF-8 alignment
 
 run_mlr --icsvlite --opprint cat $indir/utf8-1.csv
@@ -2442,7 +2448,7 @@ run_mlr --oxtab cat $indir/utf8-align.dkvp
 
 run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MMAP AT PAGE BOUNDARIES
 
 run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-ifs.dkvp
@@ -2454,7 +2460,7 @@ run_mlr --csvlite     tail -n 4 $indir/page-aligned-no-final-irs.csvl
 run_mlr --csv --rs lf tail -n 4 $indir/page-aligned-no-final-irs.csvl
 run_mlr --xtab        tail -n 4 $indir/page-aligned-no-final-eol.xtab
 
-# ================================================================
+# ----------------------------------------------------------------
 announce INT64 I/O
 
 run_mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' $indir/int64io.dkvp
@@ -2468,7 +2474,7 @@ run_mlr --oxtab --ofmt '%.8g' put '$n0=$n+0;$n1=$n+1;$n2=$n+2;$n3=$n+3' $indir/i
 run_mlr --oxtab --ofmt '%.8g' put '$n0=$n-0;$n1=$n-1;$n2=$n-2;$n3=$n-3' $indir/int64arith.dkvp
 run_mlr --oxtab --ofmt '%.8g' put '$n0=$n*0;$n1=$n*1;$n2=$n*2;$n3=$n*3' $indir/int64arith.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce COMPRESSED INPUT
 
 run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv
@@ -2476,12 +2482,12 @@ run_mlr --dkvp --prepipe 'cat'   cat   $indir/abixy
 run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv
 run_mlr --dkvp --prepipe 'cat'   cat < $indir/abixy
 
-# ================================================================
+# ----------------------------------------------------------------
 announce STDIN
 
 run_mlr --csv cat < $indir/rfc-csv/simple.csv
 
-# ================================================================
+# ----------------------------------------------------------------
 announce RFC-CSV
 
 run_mlr --no-mmap --csv cat $indir/rfc-csv/simple.csv
@@ -2514,7 +2520,7 @@ run_mlr --mmap    --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/s
 run_mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
 run_mlr --mmap    --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
 run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
@@ -2527,7 +2533,7 @@ run_mlr --oxtab --no-mmap --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/mu
 run_mlr --oxtab --no-mmap --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
 run_mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS FOR NIDX
 
 run_mlr --oxtab --inidx --mmap    --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
@@ -2540,7 +2546,7 @@ run_mlr --oxtab --inidx --no-mmap --irs lf   --ifs /, cut -o -f 4,1,3 $indir/mul
 run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
 run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
 run_mlr --oxtab --icsvlite --mmap    --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
@@ -2553,7 +2559,7 @@ run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs /, cut -o -f x,a,i    $ind
 run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
 run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER SEPARATORS FOR XTAB
 
 run_mlr --mmap    --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
@@ -2563,19 +2569,19 @@ run_mlr --no-mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
 run_mlr --no-mmap --xtab --ips . --ops := cut -x -f b $indir/dots.xtab
 run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS FOR PPRINT
 
 run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
 run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
 
-# ================================================================
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IXS SPECIFIERS
 
 run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
 run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
 
-# ================================================================
+# ----------------------------------------------------------------
 announce JSON I/O
 
 run_mlr --ijson --opprint cat $indir/small-non-nested.json
