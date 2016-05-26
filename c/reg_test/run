@@ -1922,6 +1922,103 @@ run_mlr --from $indir/abixy put '@o[1][2][3] = 7; for((k1,k2,k3),v in @o[1][2]) 
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE FOR-OOSVAR
 
+mention single-key tests
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        break;
+        @output[k1] = v;
+    }
+    emit @output, "NR", "name"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        @output[k1] = v;
+        break;
+        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+    }
+    emit @output, "NR", "name"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        continue;
+        @output[k1] = v
+    }
+    emit @output, "NR", "name"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for (k1, v in @logging[2]) {
+        @output[k1] = v;
+        continue;
+        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+    }
+    emit @output, "NR", "name"
+  }
+'
+
+mention multiple-key tests
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        break;
+        @output[k2][k1] = v;
+    }
+    emit @output, "name", "NR"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = v;
+        break;
+        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+    }
+    emit @output, "name", "NR"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        continue;
+        @output[k2][k1] = v
+    }
+    emit @output, "name", "NR"
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k2][k1] = v;
+        continue;
+        @output["REACHED"] = "SHOULD NOT HAVE BEEN";
+    }
+    emit @output, "name", "NR"
+  }
+'
+
+
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN NESTED FOR-OOSVAR
 
