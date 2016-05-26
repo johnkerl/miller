@@ -14,7 +14,7 @@
 // * parens, commas, semis, line endings, whitespace are all stripped away
 // * variable names and literal values remain as leaf nodes of the AST
 // * = + - * / ** {function names} remain as non-leaf nodes of the AST
-// CST: See the md_cst.c
+// CST: See mlr_dsl_cst.c
 // ================================================================
 
 }
@@ -59,7 +59,7 @@ md_body ::= md_statement_list(B). {
 // We handle statements of the form ' ; ; ' by parsing the empty spaces around the semicolons as NOP nodes.
 // But, the NOP nodes are immediately stripped here and are not included in the AST we return.
 
-md_statement_list(A) ::= md_unbraced_statement(B). {
+md_statement_list(A) ::= md_statement_not_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
@@ -67,7 +67,7 @@ md_statement_list(A) ::= md_unbraced_statement(B). {
 	}
 }
 
-md_statement_list(A) ::= md_braced_statement(B). {
+md_statement_list(A) ::= md_statement_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	} else {
@@ -76,9 +76,9 @@ md_statement_list(A) ::= md_braced_statement(B). {
 }
 
 // This could also be done with the list on the left and statement on the right. However,
-// curly-braced statements *end* with a semicolon; they don't end with one. So this seems to
-// be the right way to differentiate.
-md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
+// curly-brace-terminated statements *end* with a semicolon; they don't start with one. So this seems
+// to be the right way to differentiate.
+md_statement_list(A) ::= md_statement_not_braced_end(B) MD_TOKEN_SEMICOLON md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
 	} else {
@@ -86,7 +86,7 @@ md_statement_list(A) ::= md_unbraced_statement(B) MD_TOKEN_SEMICOLON md_statemen
 	}
 }
 
-md_statement_list(A) ::= md_braced_statement(B) md_statement_list(C). {
+md_statement_list(A) ::= md_statement_braced_end(B) md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
 	} else {
@@ -95,45 +95,45 @@ md_statement_list(A) ::= md_braced_statement(B) md_statement_list(C). {
 }
 
 // This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-md_unbraced_statement(A) ::= . {
+md_statement_not_braced_end(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
 // Begin/end (non-nestable)
-md_braced_statement ::= md_begin_block.
-md_braced_statement ::= md_end_block.
+md_statement_braced_end ::= md_begin_block.
+md_statement_braced_end ::= md_end_block.
 
 // Nested control structures:
-md_braced_statement ::= md_cond_block.
-md_braced_statement ::= md_while_block.
-md_braced_statement ::= md_do_while_block.
-md_braced_statement ::= md_for_loop_full_srec.
-md_braced_statement ::= md_for_loop_full_oosvar.
-md_braced_statement ::= md_for_loop_oosvar.
-md_braced_statement ::= md_if_chain.
+md_statement_braced_end ::= md_cond_block.
+md_statement_braced_end ::= md_while_block.
+md_statement_braced_end ::= md_for_loop_full_srec.
+md_statement_braced_end ::= md_for_loop_full_oosvar.
+md_statement_braced_end ::= md_for_loop_oosvar.
+md_statement_braced_end ::= md_if_chain.
 
 // Not valid in begin/end since they refer to srecs:
-md_unbraced_statement ::= md_srec_assignment.
-md_unbraced_statement ::= md_srec_indirect_assignment.
-md_unbraced_statement ::= md_oosvar_from_full_srec_assignment.
-md_unbraced_statement ::= md_full_srec_from_oosvar_assignment.
+md_statement_not_braced_end ::= md_srec_assignment.
+md_statement_not_braced_end ::= md_srec_indirect_assignment.
+md_statement_not_braced_end ::= md_oosvar_from_full_srec_assignment.
+md_statement_not_braced_end ::= md_full_srec_from_oosvar_assignment.
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
-md_unbraced_statement ::= md_bare_boolean.
-md_unbraced_statement ::= md_oosvar_assignment.
-md_unbraced_statement ::= md_filter.
-md_unbraced_statement ::= md_unset.
-md_unbraced_statement ::= md_emitf.
-md_unbraced_statement ::= md_emitp.
-md_unbraced_statement ::= md_emit.
-md_unbraced_statement ::= md_dump.
+md_statement_not_braced_end ::= md_do_while_block.
+md_statement_not_braced_end ::= md_bare_boolean.
+md_statement_not_braced_end ::= md_oosvar_assignment.
+md_statement_not_braced_end ::= md_filter.
+md_statement_not_braced_end ::= md_unset.
+md_statement_not_braced_end ::= md_emitf.
+md_statement_not_braced_end ::= md_emitp.
+md_statement_not_braced_end ::= md_emit.
+md_statement_not_braced_end ::= md_dump.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
-md_unbraced_statement(A) ::= MD_TOKEN_BREAK(O). {
+md_statement_not_braced_end(A) ::= MD_TOKEN_BREAK(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 }
-md_unbraced_statement(A) ::= MD_TOKEN_CONTINUE(O). {
+md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
 }
 
