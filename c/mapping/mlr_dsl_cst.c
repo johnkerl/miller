@@ -1588,6 +1588,7 @@ static void handle_while(
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
+	loop_stack_push(pvars->ploop_stack);
 	while (TRUE) {
 		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
@@ -1608,6 +1609,7 @@ static void handle_while(
 			break;
 		}
 	}
+	loop_stack_pop(pvars->ploop_stack);
 }
 
 // ----------------------------------------------------------------
@@ -1618,6 +1620,7 @@ static void handle_do_while(
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
+	loop_stack_push(pvars->ploop_stack);
 	while (TRUE) {
 		// xxx funcptrize
 		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
@@ -1639,6 +1642,7 @@ static void handle_do_while(
 			break;
 		}
 	}
+	loop_stack_pop(pvars->ploop_stack);
 }
 
 // ----------------------------------------------------------------
@@ -1648,6 +1652,7 @@ static void handle_for_srec(
 	cst_outputs_t*           pcst_outputs)
 {
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
@@ -1673,6 +1678,7 @@ static void handle_for_srec(
 	}
 	// xxx break/continue-handling (needs to be in rval evaluators w/ stack of brk/ctu flags @ context)
 	lrec_free(pcopy);
+	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_pop(pvars->pbind_stack);
 }
 
@@ -1683,6 +1689,7 @@ static void handle_for_oosvar(
 	cst_outputs_t*           pcst_outputs)
 {
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+	loop_stack_push(pvars->ploop_stack);
 
 	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
 	// the current record.
@@ -1718,6 +1725,7 @@ static void handle_for_oosvar(
 	}
 	sllmv_free(plhskeylist);
 
+	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_pop(pvars->pbind_stack);
 }
 
