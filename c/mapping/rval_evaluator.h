@@ -34,11 +34,8 @@
 #include "containers/mlhmmv.h"
 #include "containers/mlrval.h"
 #include "containers/bind_stack.h"
+#include "containers/loop_stack.h"
 #include "lib/string_array.h"
-
-// xxx move to another header file
-#define LOOP_BROKEN    0x8000
-#define LOOP_CONTINUED 0x0100
 
 struct _rval_evaluator_t; // forward reference for method declarations
 
@@ -49,7 +46,8 @@ typedef struct _variables_t {
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
 	bind_stack_t*    pbind_stack;
-	int              loop_broken_or_continued;
+	loop_stack_t*    ploop_stack;
+	int              loop_broken_or_continued; // xxx rid of
 } variables_t;
 
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);

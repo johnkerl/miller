@@ -25,6 +25,8 @@ libcontainers_la_SOURCES=	\
 			lhmss.h \
 			lhmsv.c \
 			lhmsv.h \
+			loop_stack.c \
+			loop_stack.h \
 			lrec.c \
 			lrec.h \
 			mixutil.c \

@@ -5,6 +5,7 @@
 #include "rval_evaluators.h"
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
+#include "containers/loop_stack.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).

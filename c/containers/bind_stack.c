@@ -29,7 +29,7 @@ void bind_stack_free(bind_stack_t* pstack) {
 
 // ----------------------------------------------------------------
 void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* pframe) {
-	if (pstack->num_used > pstack->num_allocated) {
+	if (pstack->num_used >= pstack->num_allocated) {
 		pstack->num_allocated += INITIAL_SIZE;
 		pstack->pframes = mlr_realloc_or_die(pstack->pframes, pstack->num_allocated);
 	}

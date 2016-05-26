@@ -64,7 +64,7 @@ simplicity of C++; templates and STL are even more awkward and even less
 elegant. (Meanwhile I find Java, Go, and D to be both elegant and modern; I
 ruled them out not for aesthetics but for performance as described above.)
 Meanwhile all the positive features I would want from C++ are easily
-implementable in C:
+implementable in C as follows:
 
 <h2><tt>this</tt> pointers and attributes</h2>
 The C++ compiler implictly inserts <tt>this</tt> pointers into method calls:
@@ -137,6 +137,8 @@ void lrec_bar(lrec_t* prec, ...) {
 }
 </pre>
 
+<p/> This implements the object-oriented principle of <b>encapsulation</b>.
+
 
 <h2>Interfaces and virtual-function pointers</h2>
 
@@ -202,6 +204,9 @@ reader_t* reader_csv_alloc(...) {
   lrec_t* pinrec = preader-&gt;preader_func(input_stream, preader-&gt;pvstate, pctx);
   ...
 </pre>
+
+<p/> This implements the object-oriented principles of <b>polymorphism</b> and
+<b>runtime binding</b>.
 
 <p/>More details are at
 <a href="https://github.com/johnkerl/miller/tree/master/c/containers">https://github.com/johnkerl/miller/tree/master/c/containers</a>.
