@@ -2032,9 +2032,9 @@ run_mlr --opprint --from $indir/abixy put -q '
   end {
     for ((k1, k2), v in @logging) {
         break;
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2042,11 +2042,11 @@ run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
         break;
-        @output[k2][k1] = "ERROR"
+        @output[k1][k2] = "ERROR"
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2055,9 +2055,9 @@ run_mlr --opprint --from $indir/abixy put -q '
   end {
     for ((k1, k2), v in @logging) {
         continue;
-        @output[k2][k1] = v
+        @output[k1][k2] = v
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2065,11 +2065,11 @@ run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
         continue;
-        @output[k2][k1] = "ERROR";
+        @output[k1][k2] = "ERROR";
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2082,9 +2082,9 @@ run_mlr --opprint --from $indir/abixy put -q '
         if (k1 == 5) {
           break;
         }
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 run_mlr --opprint --from $indir/abixy put -q '
@@ -2094,9 +2094,9 @@ run_mlr --opprint --from $indir/abixy put -q '
         if (k2 == "i") {
           break;
         }
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2104,24 +2104,24 @@ run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
         if (k1 == 5) {
           break;
         }
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
         if (k2 == "i") {
           break;
         }
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2132,9 +2132,9 @@ run_mlr --opprint --from $indir/abixy put -q '
         if (k1 == 5) {
           continue;
         }
-        @output[k2][k1] = v
+        @output[k1][k2] = v
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 run_mlr --opprint --from $indir/abixy put -q '
@@ -2144,9 +2144,9 @@ run_mlr --opprint --from $indir/abixy put -q '
         if (k2 == "i") {
           continue;
         }
-        @output[k2][k1] = v
+        @output[k1][k2] = v
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
@@ -2154,25 +2154,26 @@ run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = v;
+        @output[k1][k2] = "before";
         if (k1 == 5) {
           continue;
         }
+        @output[k1][k2] = v;
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 run_mlr --opprint --from $indir/abixy put -q '
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
-        @output[k2][k1] = "before";
+        @output[k1][k2] = "before";
         if (k2 == "i") {
           continue;
         }
-        @output[k2][k1] = v;
+        @output[k1][k2] = v;
     }
-    emit @output, "name", "NR"
+    emit @output, "NR", "name"
   }
 '
 
