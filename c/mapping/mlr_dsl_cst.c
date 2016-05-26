@@ -70,7 +70,6 @@ static void                           handle_filter(mlr_dsl_cst_statement_t* s, 
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_do_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                         handle_do_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_for_srec(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                       handle_for_oosvar(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_break(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1627,7 +1626,7 @@ static void handle_do_while(
 			break;
 		} else if (pvars->loop_broken_or_continued & LOOP_CONTINUED) {
 			pvars->loop_broken_or_continued &= ~LOOP_CONTINUED;
-			continue;
+			// don't skip the boolean test
 		}
 
 		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);

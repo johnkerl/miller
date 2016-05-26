@@ -8771,6 +8771,101 @@ list (statement_list):
 
 
 ================================================================
+DSL CONTEXT-SPECIFIC VALIDATION
+
+
+---------------------------------------------------------------- srecs in begin/end
+mlr put -v begin{$x=1}
+mlr: assignments to $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (srec_assignment):
+                x (field_name).
+                1 (strnum_literal).
+
+mlr put -v begin{@x=$y}
+mlr: statements involving $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                y (field_name).
+
+mlr put -v end{$x=1}
+mlr: assignments to $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (srec_assignment):
+                x (field_name).
+                1 (strnum_literal).
+
+mlr put -v end{@x=$y}
+mlr: statements involving $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                y (field_name).
+
+
+---------------------------------------------------------------- boundvars outside for
+mlr put -v $x=x
+mlr: statements involving bound variables are not valid outside for-loops.
+AST ROOT:
+list (statement_list):
+    = (srec_assignment):
+        x (field_name).
+        x (bound_variable).
+
+
+---------------------------------------------------------------- break/continue outside loop
+mlr put -v break
+mlr: break statements are only valid within for, while, or do-while.
+AST ROOT:
+list (statement_list):
+    break (break).
+
+mlr put -v continue
+mlr: break statements are only valid within for, while, or do-while.
+AST ROOT:
+list (statement_list):
+    continue (continue).
+
+
+---------------------------------------------------------------- oosvars in mlr filter
+mlr filter -v @x > 3
+mlr: statements involving $-variables are not valid in mlr filter.
+AST ROOT:
+list (statement_list):
+    > (operator):
+        oosvar_keylist (oosvar_keylist):
+            x (string_literal).
+        3 (strnum_literal).
+
+mlr filter -v break
+mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+AST ROOT:
+list (statement_list):
+    break (break).
+
+mlr filter -v continue
+mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+AST ROOT:
+list (statement_list):
+    continue (continue).
+
+
+================================================================
 DSL FUNCTIONAL TESTS
 
 mlr filter $x>.3 ./reg_test/input/abixy
@@ -15913,7 +16008,181 @@ mean  hat dog 0.475824
 
 
 ================================================================
-BREAK/CONTINUE
+DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  while ($i < 5) {
+    $i += 1;
+    break;
+    $a = "ERROR";
+  }
+
+a   b   i  x                   y
+pan pan 2  0.3467901443380824  0.7268028627434533
+eks pan 3  0.7586799647899636  0.5221511083334797
+wye wye 4  0.20460330576630303 0.33831852551664776
+eks wye 5  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  while ($i < 5) {
+    $i += 1;
+    continue;
+    $a = "ERROR";
+  }
+
+a   b   i  x                   y
+pan pan 5  0.3467901443380824  0.7268028627434533
+eks pan 5  0.7586799647899636  0.5221511083334797
+wye wye 5  0.20460330576630303 0.33831852551664776
+eks wye 5  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  do {
+    $i += 1;
+    break;
+    $a = "ERROR";
+  } while ($i < 5);
+
+a   b   i  x                   y
+pan pan 2  0.3467901443380824  0.7268028627434533
+eks pan 3  0.7586799647899636  0.5221511083334797
+wye wye 4  0.20460330576630303 0.33831852551664776
+eks wye 5  0.38139939387114097 0.13418874328430463
+wye pan 6  0.5732889198020006  0.8636244699032729
+zee pan 7  0.5271261600918548  0.49322128674835697
+eks zee 8  0.6117840605678454  0.1878849191181694
+zee wye 9  0.5985540091064224  0.976181385699006
+hat wye 10 0.03144187646093577 0.7495507603507059
+pan wye 11 0.5026260055412137  0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  do {
+    $i += 1;
+    continue;
+    $a = "ERROR";
+  } while ($i < 5);
+
+a   b   i  x                   y
+pan pan 5  0.3467901443380824  0.7268028627434533
+eks pan 5  0.7586799647899636  0.5221511083334797
+wye wye 5  0.20460330576630303 0.33831852551664776
+eks wye 5  0.38139939387114097 0.13418874328430463
+wye pan 6  0.5732889198020006  0.8636244699032729
+zee pan 7  0.5271261600918548  0.49322128674835697
+eks zee 8  0.6117840605678454  0.1878849191181694
+zee wye 9  0.5985540091064224  0.976181385699006
+hat wye 10 0.03144187646093577 0.7495507603507059
+pan wye 11 0.5026260055412137  0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  $NR = NR;
+  while ($i < 5) {
+    $i += 1;
+    if (NR == 2) {
+      break;
+    }
+    $a = "reached";
+  }
+
+a       b   i  x                   y                   NR
+reached pan 5  0.3467901443380824  0.7268028627434533  1
+eks     pan 3  0.7586799647899636  0.5221511083334797  2
+reached wye 5  0.20460330576630303 0.33831852551664776 3
+reached wye 5  0.38139939387114097 0.13418874328430463 4
+wye     pan 5  0.5732889198020006  0.8636244699032729  5
+zee     pan 6  0.5271261600918548  0.49322128674835697 6
+eks     zee 7  0.6117840605678454  0.1878849191181694  7
+zee     wye 8  0.5985540091064224  0.976181385699006   8
+hat     wye 9  0.03144187646093577 0.7495507603507059  9
+pan     wye 10 0.5026260055412137  0.9526183602969864  10
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  $NR = NR;
+  while ($i < 5) {
+    $i += 1;
+    if (NR == 2) {
+      continue;
+    }
+    $a = "reached";
+  }
+
+a       b   i  x                   y                   NR
+reached pan 5  0.3467901443380824  0.7268028627434533  1
+eks     pan 5  0.7586799647899636  0.5221511083334797  2
+reached wye 5  0.20460330576630303 0.33831852551664776 3
+reached wye 5  0.38139939387114097 0.13418874328430463 4
+wye     pan 5  0.5732889198020006  0.8636244699032729  5
+zee     pan 6  0.5271261600918548  0.49322128674835697 6
+eks     zee 7  0.6117840605678454  0.1878849191181694  7
+zee     wye 8  0.5985540091064224  0.976181385699006   8
+hat     wye 9  0.03144187646093577 0.7495507603507059  9
+pan     wye 10 0.5026260055412137  0.9526183602969864  10
+
+mlr --opprint --from ./reg_test/input/abixy put 
+$NR = NR;
+  do {
+    $i += 1;
+    if (NR == 2) {
+      break;
+    }
+    $a = "reached";
+  } while ($i < 5);
+
+a       b   i  x                   y                   NR
+reached pan 5  0.3467901443380824  0.7268028627434533  1
+eks     pan 3  0.7586799647899636  0.5221511083334797  2
+reached wye 5  0.20460330576630303 0.33831852551664776 3
+reached wye 5  0.38139939387114097 0.13418874328430463 4
+reached pan 6  0.5732889198020006  0.8636244699032729  5
+reached pan 7  0.5271261600918548  0.49322128674835697 6
+reached zee 8  0.6117840605678454  0.1878849191181694  7
+reached wye 9  0.5985540091064224  0.976181385699006   8
+reached wye 10 0.03144187646093577 0.7495507603507059  9
+reached wye 11 0.5026260055412137  0.9526183602969864  10
+
+mlr --opprint --from ./reg_test/input/abixy put 
+  $NR = NR;
+  do {
+    $i += 1;
+    if (NR == 2) {
+      continue;
+    }
+    $a = "reached";
+  } while ($i < 5);
+
+a       b   i  x                   y                   NR
+reached pan 5  0.3467901443380824  0.7268028627434533  1
+eks     pan 5  0.7586799647899636  0.5221511083334797  2
+reached wye 5  0.20460330576630303 0.33831852551664776 3
+reached wye 5  0.38139939387114097 0.13418874328430463 4
+reached pan 6  0.5732889198020006  0.8636244699032729  5
+reached pan 7  0.5271261600918548  0.49322128674835697 6
+reached zee 8  0.6117840605678454  0.1878849191181694  7
+reached wye 9  0.5985540091064224  0.976181385699006   8
+reached wye 10 0.03144187646093577 0.7495507603507059  9
+reached wye 11 0.5026260055412137  0.9526183602969864  10
+
+
+================================================================
+DSL BREAK/CONTINUE IN NESTED WHILE/DO-WHILE
+
+
+---------------------------------------------------------------- xxx to do after bcstack impl
+
+================================================================
+DSL BREAK/CONTINUE IN SINGLE FOR-SREC
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
   for (k,v in $*) {
@@ -16333,99 +16602,10 @@ NR k logging4
 
 
 ================================================================
-DSL CONTEXT-SPECIFIC VALIDATION
+DSL BREAK/CONTINUE IN NESTED FOR-SREC
 
 
----------------------------------------------------------------- srecs in begin/end
-mlr put -v begin{$x=1}
-mlr: assignments to $-variables are not valid within begin or end blocks.
-AST ROOT:
-list (statement_list):
-    begin (begin):
-        list (statement_list):
-            = (srec_assignment):
-                x (field_name).
-                1 (strnum_literal).
-
-mlr put -v begin{@x=$y}
-mlr: statements involving $-variables are not valid within begin or end blocks.
-AST ROOT:
-list (statement_list):
-    begin (begin):
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                y (field_name).
-
-mlr put -v end{$x=1}
-mlr: assignments to $-variables are not valid within begin or end blocks.
-AST ROOT:
-list (statement_list):
-    end (end):
-        list (statement_list):
-            = (srec_assignment):
-                x (field_name).
-                1 (strnum_literal).
-
-mlr put -v end{@x=$y}
-mlr: statements involving $-variables are not valid within begin or end blocks.
-AST ROOT:
-list (statement_list):
-    end (end):
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                y (field_name).
-
-
----------------------------------------------------------------- boundvars outside for
-mlr put -v $x=x
-mlr: statements involving bound variables are not valid outside for-loops.
-AST ROOT:
-list (statement_list):
-    = (srec_assignment):
-        x (field_name).
-        x (bound_variable).
-
-
----------------------------------------------------------------- break/continue outside loop
-mlr put -v break
-mlr: break statements are only valid within for, while, or do-while.
-AST ROOT:
-list (statement_list):
-    break (break).
-
-mlr put -v continue
-mlr: break statements are only valid within for, while, or do-while.
-AST ROOT:
-list (statement_list):
-    continue (continue).
-
-
----------------------------------------------------------------- oosvars in mlr filter
-mlr filter -v @x > 3
-mlr: statements involving $-variables are not valid in mlr filter.
-AST ROOT:
-list (statement_list):
-    > (operator):
-        oosvar_keylist (oosvar_keylist):
-            x (string_literal).
-        3 (strnum_literal).
-
-mlr filter -v break
-mlr: expressions for mlr filter must be single statements, evaluating to boolean.
-AST ROOT:
-list (statement_list):
-    break (break).
-
-mlr filter -v continue
-mlr: expressions for mlr filter must be single statements, evaluating to boolean.
-AST ROOT:
-list (statement_list):
-    continue (continue).
-
+---------------------------------------------------------------- xxx to do after bcstack impl
 
 ================================================================
 FOR-OOSVAR DEPTH TESTS

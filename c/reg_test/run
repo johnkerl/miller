@@ -870,6 +870,27 @@ run_mlr --from /dev/null put -v 'end {;@x=1}'
 run_mlr --from /dev/null put -v 'end {@x=1;@y=2}'
 run_mlr --from /dev/null put -v 'end {@x=1;;@y=2}'
 
+# ================================================================
+announce DSL CONTEXT-SPECIFIC VALIDATION
+
+mention srecs in begin/end
+mlr_expect_fail put -v 'begin{$x=1}'
+mlr_expect_fail put -v 'begin{@x=$y}'
+mlr_expect_fail put -v 'end{$x=1}'
+mlr_expect_fail put -v 'end{@x=$y}'
+
+mention boundvars outside for
+mlr_expect_fail put -v '$x=x'
+
+mention break/continue outside loop
+mlr_expect_fail put -v 'break'
+mlr_expect_fail put -v 'continue'
+
+mention oosvars in mlr filter
+mlr_expect_fail filter -v '@x > 3'
+mlr_expect_fail filter -v 'break'
+mlr_expect_fail filter -v 'continue'
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 
@@ -1707,7 +1728,91 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
 '
 
 # ================================================================
-announce BREAK/CONTINUE
+announce DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
+
+run_mlr --opprint --from $indir/abixy put '
+  while ($i < 5) {
+    $i += 1;
+    break;
+    $a = "ERROR";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  while ($i < 5) {
+    $i += 1;
+    continue;
+    $a = "ERROR";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  do {
+    $i += 1;
+    break;
+    $a = "ERROR";
+  } while ($i < 5);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  do {
+    $i += 1;
+    continue;
+    $a = "ERROR";
+  } while ($i < 5);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $NR = NR;
+  while ($i < 5) {
+    $i += 1;
+    if (NR == 2) {
+      break;
+    }
+    $a = "reached";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $NR = NR;
+  while ($i < 5) {
+    $i += 1;
+    if (NR == 2) {
+      continue;
+    }
+    $a = "reached";
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+$NR = NR;
+  do {
+    $i += 1;
+    if (NR == 2) {
+      break;
+    }
+    $a = "reached";
+  } while ($i < 5);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $NR = NR;
+  do {
+    $i += 1;
+    if (NR == 2) {
+      continue;
+    }
+    $a = "reached";
+  } while ($i < 5);
+'
+
+# ================================================================
+announce DSL BREAK/CONTINUE IN NESTED WHILE/DO-WHILE
+
+mention xxx to do after bcstack impl
+
+# ================================================================
+announce DSL BREAK/CONTINUE IN SINGLE FOR-SREC
 
 run_mlr --opprint --from $indir/abixy put -q '
   for (k,v in $*) {
@@ -1795,25 +1900,9 @@ run_mlr --opprint --from $indir/abixy put -q '
 '
 
 # ================================================================
-announce DSL CONTEXT-SPECIFIC VALIDATION
+announce DSL BREAK/CONTINUE IN NESTED FOR-SREC
 
-mention srecs in begin/end
-mlr_expect_fail put -v 'begin{$x=1}'
-mlr_expect_fail put -v 'begin{@x=$y}'
-mlr_expect_fail put -v 'end{$x=1}'
-mlr_expect_fail put -v 'end{@x=$y}'
-
-mention boundvars outside for
-mlr_expect_fail put -v '$x=x'
-
-mention break/continue outside loop
-mlr_expect_fail put -v 'break'
-mlr_expect_fail put -v 'continue'
-
-mention oosvars in mlr filter
-mlr_expect_fail filter -v '@x > 3'
-mlr_expect_fail filter -v 'break'
-mlr_expect_fail filter -v 'continue'
+mention xxx to do after bcstack impl
 
 # ----------------------------------------------------------------
 announce FOR-OOSVAR DEPTH TESTS

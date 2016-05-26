@@ -48,6 +48,7 @@ DOC:
 * cookbook example: key<->val inverter
 * cookbook example: komosa originals x 2
 * cookbook example: oosvar keyed mean
+* ref emph while is *within* each srec do don't loop over NR (for example)
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay
