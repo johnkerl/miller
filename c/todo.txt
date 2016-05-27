@@ -8,7 +8,7 @@ TOP-OF-LIST SUMMARY
 
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
-* for-oosvar UTs
+* nested-for-oosvar UTs
 
 ! xxxes
 ! valgrinds
@@ -60,6 +60,7 @@ HYGIENE:
 * pound-to-EOL commenting for filter & put
 ! don't release 4.1 w/o implicit semicolon after closing curly brace
 * emit/unset @* same as emit/unset all
+* mlr -n
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 
@@ -71,6 +72,7 @@ NOTE FOR FUTURE:
   to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
   step. at each level a name will have one nearest at-or-up binding or none at all.
   needs replacing bindstack with bindtree.
+? autodetect format by file extension -- ?
 
 ----------------------------------------------------------------
 ? substring?
@@ -85,23 +87,12 @@ NOTE FOR FUTURE:
 
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid
   double-searching.
-* reduce parameter-marshaling by pevalbag; measure perf delta (suspect negligible)
 * typed overlay -> mlhmmv rather than lhmsv
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 * --strict? mlh/mld if so.
 
-* 4.1.0:
-  ! for/while/if/etc
-  k mlr -n
-  ? autodetect format by file extension -- ?
-
 ================================================================
 GRAMMAR RE-ORG
-
-* xxx allow $stuff in begin/end then reject @ C code, rather than in the parser. UT this w/ expect-fail.
-* xxx likewise filter @ begin/end
-# xxx expect-fail bare-boolean with $stuff in begin/end
-# xxx expect-fail nested begin/begin etc. with $stuff in begin/end
 
 ================================================================
 NON-PRE4
@@ -109,7 +100,6 @@ NON-PRE4
 
 * look into 'perf'
 * linreg in terms of stats only ... check py book
-* option for: print to stderr NR if NR%N==0 for user-specified N
 * cat/cut langcomps (w/ gh links) -> perf page
 
 * pipe-viewer-like feature to stderr?
