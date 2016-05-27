@@ -121,7 +121,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 
 	if (past->proot == NULL) {
 		fprintf(stderr, "%s %s: filter statement must not be empty.\n",
-			argv[0], verb);
+			MLR_GLOBALS.bargv0, verb);
 		return NULL;
 	}
 
