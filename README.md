@@ -72,7 +72,7 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 * Miller's I/O formats include **tabular pretty-printing**, **positionally
   indexed** (Unix-toolkit style), CSV, JSON, and others
 
-* **conversion** between formats
+* Miller does **conversion** between formats
 
 * Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header
 lines first
