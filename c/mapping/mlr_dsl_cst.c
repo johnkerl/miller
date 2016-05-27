@@ -1038,26 +1038,16 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* past, int
 // ----------------------------------------------------------------
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
-	// xxx to free:
-	//
-	// k pstatement->poosvar_lhs_keylist_evaluators
-	// x pstatement->srec_lhs_field_name
-	//   pstatement->psrec_lhs_evaluator
-	// k pstatement->prhs_evaluator
-	// k pstatement->poosvar_rhs_keylist_evaluators
-	// k pstatement->pemit_oosvar_namelist_evaluators
-	// k pstatement->pvarargs
-	// k pstatement->pblock_statements
-	//   pstatement->pif_chain_statements
-	//   pstatement->pfor_oosvar_k_names
-	//   pstatement->pbound_variables
-
 	if (pstatement->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstatement->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
 			phandler->pfree_func(phandler);
 		}
 		sllv_free(pstatement->poosvar_lhs_keylist_evaluators);
+	}
+
+	if (pstatement->psrec_lhs_evaluator != NULL) {
+		pstatement->psrec_lhs_evaluator->pfree_func(pstatement->psrec_lhs_evaluator);
 	}
 
 	if (pstatement->prhs_evaluator != NULL) {
@@ -1090,6 +1080,20 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		for (sllve_t* pe = pstatement->pblock_statements->phead; pe != NULL; pe = pe->pnext)
 			cst_statement_free(pe->pvvalue);
 		sllv_free(pstatement->pblock_statements);
+	}
+
+	if (pstatement->pif_chain_statements != NULL) {
+		for (sllve_t* pe = pstatement->pif_chain_statements->phead; pe != NULL; pe = pe->pnext)
+			cst_statement_free(pe->pvvalue);
+		sllv_free(pstatement->pif_chain_statements);
+	}
+
+	if (pstatement->pfor_oosvar_k_names != NULL) {
+		slls_free(pstatement->pfor_oosvar_k_names);
+	}
+
+	if (pstatement->pbound_variables != NULL) {
+		lhmsmv_free(pstatement->pbound_variables);
 	}
 
 	free(pstatement);
