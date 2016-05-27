@@ -6,6 +6,21 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+UT/olh/mld:
+* UT for empty statement for put
+* UT for empty statement for filter
+* UT if-chaining, while, do-while: put -v's as well as contentful @ abixy
+* olh comment-stripping for put & filter
+* UT comment-stripping for put & filter
+
+* double-check all CST-build-time invalidations exist and are UT'ed:
+  ! propagate back to caller
+  ! filter is oosless
+  - $stuff inside begin/end
+  - break/continue outside for/while/do-while
+  - boundvars outside for
+  => all with expect-fail UTs
+
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
 * nested-for-oosvar UTs
@@ -14,14 +29,6 @@ TOP-OF-LIST SUMMARY
 ! valgrinds
 
 * eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-
-* CST-build-time invalidations:
-  ! propagate back to caller
-  ! filter is oosless
-  - $stuff inside begin/end
-  - break/continue outside for/while/do-while
-  - boundvars outside for
-  => all with expect-fail UTs
 
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
@@ -34,12 +41,8 @@ TOP-OF-LIST SUMMARY
 ? triple-for with boundvars? or at least faqent re oosvars & while-loops
 
 ----------------------------------------------------------------
+
 UT/olh/mld:
-* UT for empty statement for put
-* UT for empty statement for filter
-* UT if-chaining, while, do-while: put -v's as well as contentful @ abixy
-* olh comment-stripping for put & filter
-* UT comment-stripping for put & filter
 * let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
 DOC:

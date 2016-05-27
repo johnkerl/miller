@@ -8514,51 +8514,38 @@ list (statement_list):
 ================================================================
 DSL EMPTY STATEMENTS
 
-mlr --from /dev/null put -v begin {}
+mlr -n put -v 
+AST ROOT:
+(null)
+
+mlr -n filter -v 
+./reg_test/../../c/mlr filter: filter statement must not be empty.
+
+mlr -n put -v begin {}
 AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
 
-mlr --from /dev/null put -v begin {;}
+mlr -n put -v begin {;}
 AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
 
-mlr --from /dev/null put -v begin {;;}
+mlr -n put -v begin {;;}
 AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
 
-mlr --from /dev/null put -v begin {;;;}
+mlr -n put -v begin {;;;}
 AST ROOT:
 list (statement_list):
     begin (begin):
         list (statement_list):
 
-mlr --from /dev/null put -v begin {@x=1}
-AST ROOT:
-list (statement_list):
-    begin (begin):
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                1 (strnum_literal).
-
-mlr --from /dev/null put -v begin {@x=1;}
-AST ROOT:
-list (statement_list):
-    begin (begin):
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                1 (strnum_literal).
-
-mlr --from /dev/null put -v begin {;@x=1}
+mlr -n put -v begin {@x=1}
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -8568,7 +8555,7 @@ list (statement_list):
                     x (string_literal).
                 1 (strnum_literal).
 
-mlr --from /dev/null put -v begin {@x=1;@y=2}
+mlr -n put -v begin {@x=1;}
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -8577,12 +8564,18 @@ list (statement_list):
                 oosvar_keylist (oosvar_keylist):
                     x (string_literal).
                 1 (strnum_literal).
+
+mlr -n put -v begin {;@x=1}
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
             = (oosvar_assignment):
                 oosvar_keylist (oosvar_keylist):
-                    y (string_literal).
-                2 (strnum_literal).
+                    x (string_literal).
+                1 (strnum_literal).
 
-mlr --from /dev/null put -v begin {@x=1;;@y=2}
+mlr -n put -v begin {@x=1;@y=2}
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -8596,72 +8589,10 @@ list (statement_list):
                     y (string_literal).
                 2 (strnum_literal).
 
-mlr --from /dev/null put -v true {}
+mlr -n put -v begin {@x=1;;@y=2}
 AST ROOT:
 list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-
-mlr --from /dev/null put -v true {;}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-
-mlr --from /dev/null put -v true {;;}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-
-mlr --from /dev/null put -v true {;;;}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-
-mlr --from /dev/null put -v true {@x=1}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                1 (strnum_literal).
-
-mlr --from /dev/null put -v true {@x=1;}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                1 (strnum_literal).
-
-mlr --from /dev/null put -v true {;@x=1}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
-        list (statement_list):
-            = (oosvar_assignment):
-                oosvar_keylist (oosvar_keylist):
-                    x (string_literal).
-                1 (strnum_literal).
-
-mlr --from /dev/null put -v true {@x=1;@y=2}
-AST ROOT:
-list (statement_list):
-    cond (conditional_block):
-        true (boolean_literal).
+    begin (begin):
         list (statement_list):
             = (oosvar_assignment):
                 oosvar_keylist (oosvar_keylist):
@@ -8672,7 +8603,68 @@ list (statement_list):
                     y (string_literal).
                 2 (strnum_literal).
 
-mlr --from /dev/null put -v true {@x=1;;@y=2}
+mlr -n put -v true {}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+
+mlr -n put -v true {;}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+
+mlr -n put -v true {;;}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+
+mlr -n put -v true {;;;}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+
+mlr -n put -v true {@x=1}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                1 (strnum_literal).
+
+mlr -n put -v true {@x=1;}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                1 (strnum_literal).
+
+mlr -n put -v true {;@x=1}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                1 (strnum_literal).
+
+mlr -n put -v true {@x=1;@y=2}
 AST ROOT:
 list (statement_list):
     cond (conditional_block):
@@ -8687,31 +8679,46 @@ list (statement_list):
                     y (string_literal).
                 2 (strnum_literal).
 
-mlr --from /dev/null put -v end {}
+mlr -n put -v true {@x=1;;@y=2}
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    x (string_literal).
+                1 (strnum_literal).
+            = (oosvar_assignment):
+                oosvar_keylist (oosvar_keylist):
+                    y (string_literal).
+                2 (strnum_literal).
+
+mlr -n put -v end {}
 AST ROOT:
 list (statement_list):
     end (end):
         list (statement_list):
 
-mlr --from /dev/null put -v end {;}
+mlr -n put -v end {;}
 AST ROOT:
 list (statement_list):
     end (end):
         list (statement_list):
 
-mlr --from /dev/null put -v end {;;}
+mlr -n put -v end {;;}
 AST ROOT:
 list (statement_list):
     end (end):
         list (statement_list):
 
-mlr --from /dev/null put -v end {;;;}
+mlr -n put -v end {;;;}
 AST ROOT:
 list (statement_list):
     end (end):
         list (statement_list):
 
-mlr --from /dev/null put -v end {@x=1}
+mlr -n put -v end {@x=1}
 AST ROOT:
 list (statement_list):
     end (end):
@@ -8721,7 +8728,7 @@ list (statement_list):
                     x (string_literal).
                 1 (strnum_literal).
 
-mlr --from /dev/null put -v end {@x=1;}
+mlr -n put -v end {@x=1;}
 AST ROOT:
 list (statement_list):
     end (end):
@@ -8731,7 +8738,7 @@ list (statement_list):
                     x (string_literal).
                 1 (strnum_literal).
 
-mlr --from /dev/null put -v end {;@x=1}
+mlr -n put -v end {;@x=1}
 AST ROOT:
 list (statement_list):
     end (end):
@@ -8741,7 +8748,7 @@ list (statement_list):
                     x (string_literal).
                 1 (strnum_literal).
 
-mlr --from /dev/null put -v end {@x=1;@y=2}
+mlr -n put -v end {@x=1;@y=2}
 AST ROOT:
 list (statement_list):
     end (end):
@@ -8755,7 +8762,7 @@ list (statement_list):
                     y (string_literal).
                 2 (strnum_literal).
 
-mlr --from /dev/null put -v end {@x=1;;@y=2}
+mlr -n put -v end {@x=1;;@y=2}
 AST ROOT:
 list (statement_list):
     end (end):
@@ -15445,6 +15452,42 @@ zee wye 8  0.5985540091064224  0.976181385699006   8  8  0
 hat wye 9  0.03144187646093577 0.7495507603507059  9  9  0
 pan wye 10 0.5026260055412137  0.9526183602969864  10 10 0
 
+mlr put -v @t["u"] = NR; $tu = @["t"]["u"]; emitp all ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            t (string_literal).
+            u (strnum_literal).
+        NR (context_variable).
+    = (srec_assignment):
+        tu (field_name).
+        oosvar_keylist (oosvar_keylist):
+            t (strnum_literal).
+            u (strnum_literal).
+    emitp (emitp):
+        all (all).
+t:u=1
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,tu=1
+t:u=2
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,tu=2
+t:u=3
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,tu=3
+t:u=4
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,tu=4
+t:u=5
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,tu=5
+t:u=6
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,tu=6
+t:u=7
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,tu=7
+t:u=8
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,tu=8
+t:u=9
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,tu=9
+t:u=10
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,tu=10
+
 mlr put -v @["s"] = $x; emitp all ./reg_test/input/abixy
 AST ROOT:
 list (statement_list):
@@ -15473,6 +15516,37 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 s=0.031442
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 s=0.502626
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr put -v @["t"]["u"] = $y; emitp all ./reg_test/input/abixy
+AST ROOT:
+list (statement_list):
+    = (oosvar_assignment):
+        oosvar_keylist (oosvar_keylist):
+            t (strnum_literal).
+            u (strnum_literal).
+        y (field_name).
+    emitp (emitp):
+        all (all).
+t:u=0.726803
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+t:u=0.522151
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+t:u=0.338319
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+t:u=0.134189
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+t:u=0.863624
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+t:u=0.493221
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+t:u=0.187885
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+t:u=0.976181
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+t:u=0.749551
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+t:u=0.952618
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
