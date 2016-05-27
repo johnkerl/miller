@@ -1641,8 +1641,6 @@ announce DSL WHILE/DO-WHILE LOOPS
 run_mlr put -v 'while($i < 5) { $i += 1}' $indir/abixy
 run_mlr put -v 'do {$i += 1} while($i < 5)' $indir/abixy
 
-# xxx test break & continue when they are operable
-
 # ----------------------------------------------------------------
 announce DSL FOR-SREC LOOPS
 
@@ -1673,8 +1671,6 @@ run_mlr --from $indir/abixy put -S -v '
       $sum += float($[k])
     }
   }'
-
-# xxx test break & continue when they are operable
 
 # ----------------------------------------------------------------
 announce DSL FOR-OOSVAR LOOPS
@@ -1918,6 +1914,117 @@ run_mlr --opprint --from $indir/abixy put '
   }
 '
 
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    break;
+    do {
+      $k += 1
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    continue;
+    do {
+      $k += 1
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    do {
+      $k += 1;
+      break;
+      $k += 10000;
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    do {
+      $k += 1;
+      continue;
+      $k += 10000;
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    if (NR == 2 || NR == 8) {
+      break;
+    }
+    do {
+      $k += 1
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    if (NR == 2 || NR == 8) {
+      continue;
+    }
+    do {
+      $k += 1
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    do {
+      $k += 1;
+      if (NR == 2 || NR == 8) {
+        break;
+      }
+      $k += 10000;
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    do {
+      $k += 1;
+      if (NR == 2 || NR == 8) {
+        continue;
+      }
+      $k += 10000;
+    } while ($k < 7);
+  } while ($j < 4);
+'
+
+
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE FOR-SREC
 
@@ -2073,8 +2180,6 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
-# ----------------------------------------------------------------
-
 run_mlr --opprint --from $indir/abixy put -q '
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
@@ -2144,8 +2249,6 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
-
-# ----------------------------------------------------------------
 
 run_mlr --opprint --from $indir/abixy put -q '
   for (k1, v1 in $*) {
@@ -2219,7 +2322,6 @@ run_mlr --opprint --from $indir/abixy put -q '
   }
 '
 
-# ----------------------------------------------------------------
 
 run_mlr --opprint --from $indir/abixy put -q '
   for (k1, v1 in $*) {
@@ -2579,7 +2681,6 @@ run_mlr --opprint --from $indir/abixy put -q '
     emit @output, "NR", "name"
   }
 '
-
 
 
 # ----------------------------------------------------------------

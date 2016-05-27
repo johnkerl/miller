@@ -16,7 +16,7 @@ TOP-OF-LIST SUMMARY
 * eliminate the need for semicolon after curly brace. for now, highlighted faqent.
 
 * CST-build-time invalidations:
-  ! propagate-back to caller
+  ! propagate back to caller
   ! filter is oosless
   - $stuff inside begin/end
   - break/continue outside for/while/do-while
