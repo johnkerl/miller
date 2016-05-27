@@ -15,6 +15,15 @@
 // * variable names and literal values remain as leaf nodes of the AST
 // * = + - * / ** {function names} remain as non-leaf nodes of the AST
 // CST: See mlr_dsl_cst.c
+//
+// Note: This grammar accepts many things that are invalid, e.g.
+// * begin{end{}} -- begin/end not at top level
+// * begin{$x=1} -- references to stream records at begin/end
+// * break/continue outside of for/while/do-while
+// * $x=x -- boundvars outside of for-loop variable bindings
+// All of the above are enforced by the CST builder, which takes this grammar's output AST as input.
+// This is done (a) to keep this grammar from being overly complex, and (b) so we can get much more
+// informative error messages in C than in Lemon ('syntax error').
 // ================================================================
 
 }
