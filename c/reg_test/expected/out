@@ -8809,6 +8809,62 @@ list (statement_list):
 DSL CONTEXT-SPECIFIC VALIDATION
 
 
+---------------------------------------------------------------- non-top-level begin/end
+mlr put -v begin{begin{@x=1}}
+mlr: begin statements are only valid at top level.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            begin (begin):
+                list (statement_list):
+                    = (oosvar_assignment):
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
+                        1 (strnum_literal).
+
+mlr put -v true{begin{@x=1}}
+mlr: begin statements are only valid at top level.
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            begin (begin):
+                list (statement_list):
+                    = (oosvar_assignment):
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
+                        1 (strnum_literal).
+
+mlr put -v end{end{@x=1}}
+mlr: end statements are only valid at top level.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            end (end):
+                list (statement_list):
+                    = (oosvar_assignment):
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
+                        1 (strnum_literal).
+
+mlr put -v true{end{@x=1}}
+mlr: end statements are only valid at top level.
+AST ROOT:
+list (statement_list):
+    cond (conditional_block):
+        true (boolean_literal).
+        list (statement_list):
+            end (end):
+                list (statement_list):
+                    = (oosvar_assignment):
+                        oosvar_keylist (oosvar_keylist):
+                            x (string_literal).
+                        1 (strnum_literal).
+
+
 ---------------------------------------------------------------- srecs in begin/end
 mlr put -v begin{$x=1}
 mlr: assignments to $-variables are not valid within begin or end blocks.
@@ -8877,7 +8933,7 @@ list (statement_list):
     continue (continue).
 
 
----------------------------------------------------------------- oosvars in mlr filter
+---------------------------------------------------------------- oosvars etc. in mlr filter
 mlr filter -v @x > 3
 mlr: statements involving $-variables are not valid in mlr filter.
 AST ROOT:
@@ -8885,6 +8941,14 @@ list (statement_list):
     > (operator):
         oosvar_keylist (oosvar_keylist):
             x (string_literal).
+        3 (strnum_literal).
+
+mlr filter -v x > 3
+mlr: statements involving bound variables are not valid in mlr filter.
+AST ROOT:
+list (statement_list):
+    > (operator):
+        x (bound_variable).
         3 (strnum_literal).
 
 mlr filter -v break

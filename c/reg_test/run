@@ -891,6 +891,12 @@ run_mlr -n put -v 'end {@x=1;;@y=2}'
 # ----------------------------------------------------------------
 announce DSL CONTEXT-SPECIFIC VALIDATION
 
+mention non-top-level begin/end
+mlr_expect_fail put -v 'begin{begin{@x=1}}'
+mlr_expect_fail put -v 'true{begin{@x=1}}'
+mlr_expect_fail put -v 'end{end{@x=1}}'
+mlr_expect_fail put -v 'true{end{@x=1}}'
+
 mention srecs in begin/end
 mlr_expect_fail put -v 'begin{$x=1}'
 mlr_expect_fail put -v 'begin{@x=$y}'
@@ -904,8 +910,9 @@ mention break/continue outside loop
 mlr_expect_fail put -v 'break'
 mlr_expect_fail put -v 'continue'
 
-mention oosvars in mlr filter
+mention oosvars etc. in mlr filter
 mlr_expect_fail filter -v '@x > 3'
+mlr_expect_fail filter -v 'x > 3'
 mlr_expect_fail filter -v 'break'
 mlr_expect_fail filter -v 'continue'
 
