@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* olh comment-stripping for put & filter
-
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
 
