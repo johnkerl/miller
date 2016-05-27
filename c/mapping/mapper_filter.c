@@ -209,6 +209,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 		mv_t* pmv = pe->pvvalue;
 		mv_free(pmv);
+		free(pmv);
 	}
 	lhmsv_free(ptyped_overlay);
 	return rv;

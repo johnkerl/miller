@@ -1239,9 +1239,12 @@ static void handle_indirect_srec_assignment(
 		if (pold != NULL) {
 			mv_free(pold);
 			free(pold);
+			lhmsv_put(pvars->ptyped_overlay, srec_lhs_field_name, prval,
+				FREE_ENTRY_VALUE);
+		} else {
+			lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
+				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
-		lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
-			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY);
 	} else {
 		mv_free(prval);

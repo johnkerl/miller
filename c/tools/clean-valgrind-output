@@ -28,6 +28,8 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'mlr_dsl_lexer_lex' \
   | mgrepv 'mlr_dsl_parse' \
   | mgrepv 'unbackslash' \
+  | mgrepv 'join_bucket_keeper_alloc' \
+  | mgrepv 'join_bucket_keeper_emit' \
   | cat
 
   #| mgrepv 'parse_command_line'

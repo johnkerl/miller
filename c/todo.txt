@@ -8,6 +8,7 @@ TOP-OF-LIST SUMMARY
 
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
+! intentional dup-assign (non-invertible map) $[v]=k UT
 
 ! xxxes
 ! valgrinds
@@ -32,6 +33,7 @@ DOC:
 * cookbook example: komosa originals x 2
 * cookbook example: oosvar keyed mean
 * ref emph while is *within* each srec do don't loop over NR (for example)
+* doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay
