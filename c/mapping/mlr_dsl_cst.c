@@ -1120,6 +1120,10 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 		return;
 	free(pvararg->emitf_or_unset_srec_field_name);
 
+	if (pvararg->punset_srec_field_name_evaluator != NULL) {
+		pvararg->punset_srec_field_name_evaluator->pfree_func(pvararg->punset_srec_field_name_evaluator);
+	}
+
 	if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pvararg->punset_oosvar_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
@@ -1397,13 +1401,14 @@ static void handle_unset(
 				mlhmmv_remove(pvars->poosvars, pmvkeys);
 			sllmv_free(pmvkeys);
 		} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
-			rval_evaluator_t* pev = pvararg->punset_srec_field_name_evaluator;
-			mv_t nameval = pev->pprocess_func(pev->pvstate, pvars);
+			rval_evaluator_t* pevaluator = pvararg->punset_srec_field_name_evaluator;
+			mv_t nameval = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
 			char free_flags = NO_FREE;
 			char* field_name = mv_maybe_alloc_format_val(&nameval, &free_flags);
 			lrec_remove(pvars->pinrec, field_name);
 			if (free_flags & FREE_ENTRY_VALUE)
 				free(field_name);
+			mv_free(&nameval);
 		} else {
 			lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
 		}

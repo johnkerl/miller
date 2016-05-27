@@ -322,6 +322,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, v
 
 	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
 	if (mv_is_null(&mvname)) {
+		mv_free(&mvname);
 		return mv_absent();
 	}
 	char free_flags = NO_FREE;
@@ -349,6 +350,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, v
 
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
+	mv_free(&mvname);
 	return rv;
 }
 
@@ -357,6 +359,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, 
 
 	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
 	if (mv_is_null(&mvname)) {
+		mv_free(&mvname);
 		return mv_absent();
 	}
 	char free_flags = NO_FREE;
@@ -389,6 +392,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, 
 
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
+	mv_free(&mvname);
 	return rv;
 }
 
@@ -397,6 +401,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvsta
 
 	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
 	if (mv_is_null(&mvname)) {
+		mv_free(&mvname);
 		return mv_absent();
 	}
 	char free_flags = NO_FREE;
@@ -432,6 +437,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvsta
 
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
+	mv_free(&mvname);
 	return rv;
 }
 
