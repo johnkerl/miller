@@ -8547,7 +8547,7 @@ AST ROOT:
 (null)
 
 mlr -n filter -v 
-./reg_test/../../c/mlr filter: filter statement must not be empty.
+mlr filter: filter statement must not be empty.
 
 mlr -n put -v begin {}
 AST ROOT:
