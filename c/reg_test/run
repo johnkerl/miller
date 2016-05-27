@@ -838,6 +838,21 @@ run_mlr put -v '$y %=  $x' /dev/null
 run_mlr put -v '$y **= $x' /dev/null
 
 # ----------------------------------------------------------------
+announce DSL COMMENTS
+
+run_mlr --from $indir/abixy put '
+  $s = 1;
+  #$t = 2;
+  $u = 3;
+'
+
+run_mlr --from $indir/abixy filter '
+  NR == 1 ||
+  #NR == 2 ||
+  NR == 3
+'
+
+# ----------------------------------------------------------------
 announce DSL EMPTY STATEMENTS
 
 run_mlr -n put -v ''
