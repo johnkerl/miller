@@ -14,8 +14,6 @@ TOP-OF-LIST SUMMARY
 ! xxxes
 ! valgrinds
 
-* eliminate the need for semicolon after curly brace. for now, highlighted faqent.
-
 * chk UT x all
 * move/filter all reg_test/dev -> reg_test/run
 ! extend mld:ref:put, and cookbook
@@ -47,7 +45,7 @@ HYGIENE:
 * new forx2, while/do-while, if-chains
 * fully recursive; recursivity of existing conds
 * pound-to-EOL commenting for filter & put
-! don't release 4.1 w/o implicit semicolon after closing curly brace
+! semicolon no longer required after closing curly brace
 * emit/unset @* same as emit/unset all
 * mlr -n
 * bugfix:

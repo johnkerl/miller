@@ -56,6 +56,8 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
 	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
 	fprintf(o, "\n");
+	fprintf(o, "Use # to comment to end of line.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
 	fprintf(o, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
@@ -63,6 +65,11 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
 	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
 	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
+	fprintf(o, "  %s %s '\n", argv0, verb);
+	fprintf(o, "    NR == 1 ||\n");
+	fprintf(o, "   #NR == 2 ||\n");
+	fprintf(o, "    NR == 3\n");
+	fprintf(o, "  '\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);

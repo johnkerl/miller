@@ -1183,6 +1183,8 @@ use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
 variables. The environment-variable name may be an expression, e.g. a field value.
 
+Use # to comment to end of line.
+
 Examples:
   mlr filter 'log10($count) &gt; 4.0'
   mlr filter 'FNR == 2          (second record in each file)'
@@ -1190,6 +1192,11 @@ Examples:
   mlr filter '$color != "blue" &amp;&amp; $value &gt; 4.2'
   mlr filter '($x&lt;.5 &amp;&amp; $y&lt;.5) || ($x&gt;.5 &amp;&amp; $y&gt;.5)'
   mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
+  mlr filter '
+    NR == 1 ||
+   #NR == 2 ||
+    NR == 3
+  '
 
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f". Please also also "mlr grep" which is
@@ -2069,6 +2076,7 @@ use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
 variables. The environment-variable name may be an expression, e.g. a field value.
 
+Use # to comment to end of line.
 Examples:
   mlr put '$y = log10($x); $z = sqrt($y)'
   mlr put '$x&gt;0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x &gt; 0.0
@@ -2084,6 +2092,11 @@ Examples:
   mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
   mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
   mlr put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
+  mlr put '
+    $x = 1;
+   #$y = 2;
+    $z = 3
+  '
 
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f".

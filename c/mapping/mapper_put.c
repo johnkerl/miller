@@ -73,6 +73,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
 	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
 	fprintf(o, "\n");
+	fprintf(o, "Use # to comment to end of line.\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$x>0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x > 0.0\n", argv0, verb);
@@ -88,6 +89,11 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'\n", argv0, verb);
+	fprintf(o, "  %s %s '\n", argv0, verb);
+	fprintf(o, "    $x = 1;\n");
+	fprintf(o, "   #$y = 2;\n");
+	fprintf(o, "    $z = 3\n");
+	fprintf(o, "  '\n");
 
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
