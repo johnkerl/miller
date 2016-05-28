@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
+! header/length mismatch: print the #'s!
+
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
 ! intentional dup-assign (non-invertible map) $[v]=k UT
@@ -34,6 +36,15 @@ DOC:
 * cookbook example: oosvar keyed mean
 * ref emph while is *within* each srec do don't loop over NR (for example)
 * doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
+* cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
+  mlr --fs comma --nidx put '
+    @maxnf = max(@maxnf, NF);
+    @nf = NF;
+    while(@nf < @maxnf) {
+      @nf += 1;
+      $[@nf] = ""
+    }
+  ' jb.csv
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay
@@ -60,6 +71,7 @@ NOTE FOR FUTURE:
   step. at each level a name will have one nearest at-or-up binding or none at all.
   needs replacing bindstack with bindtree.
 ? autodetect format by file extension -- ?
+* double-quote-aware (non-lite) nidx & dkvp options ...
 
 ----------------------------------------------------------------
 ? substring?
