@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! header/length mismatch: print the #'s!
-
 ! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
 ! intentional dup-assign (non-invertible map) $[v]=k UT
@@ -22,18 +20,17 @@ TOP-OF-LIST SUMMARY
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
 ! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
 * lemon note/message-wording re resolvable conflicts
+* header/length mismatch: print the #'s!
 
-? triple-for with boundvars? or at least faqent re oosvars & while-loops
+? faqent: no triple-for with boundvars, but oosvars & while-loops
 
 ----------------------------------------------------------------
-
-UT/olh/mld:
-* let newlines replace semicolons? no, and make it clear why: no need for \ continuations that way.
 
 DOC:
 * cookbook example: key<->val inverter
 * cookbook example: komosa originals x 2
 * cookbook example: oosvar keyed mean
+* doc re newlines not replacing semicolons. no need for \ continuations that way; simple parser.
 * ref emph while is *within* each srec do don't loop over NR (for example)
 * doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
@@ -72,6 +69,7 @@ NOTE FOR FUTURE:
   needs replacing bindstack with bindtree.
 ? autodetect format by file extension -- ?
 * double-quote-aware (non-lite) nidx & dkvp options ...
+? triple-for with boundvars?
 
 ----------------------------------------------------------------
 ? substring?
