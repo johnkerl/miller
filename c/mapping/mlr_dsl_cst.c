@@ -261,16 +261,24 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 }
 
 // ----------------------------------------------------------------
+// The parser accepts many things that are invalid, e.g.
+// * begin{end{}} -- begin/end not at top level
+// * begin{$x=1} -- references to stream records at begin/end
+// * break/continue outside of for/while/do-while
+// * $x=x -- boundvars outside of for-loop variable bindings
+//
+// All of the above are enforced here by the CST builder, which takes the parser's output AST as
+// input.  This is done (a) to keep the parser from being overly complex, and (b) so we can get much
+// more informative error messages in C than in Lemon ('syntax error').
+//
+// In this file we set up left-hand sides for assignments, as well as right-hand sides for emit and
+// unset.  Most right-hand sides are set up in rval_expr_evaluators.c so the context_flags are
+// passed through to there as well.
+
 static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
     switch(pnode->type) {
-
-	// xxx invalidates based on context flags
-	// xxx comment we only invalidate LHS here (and RHS for full-srec stuff). the rest in rval_expr_evaluators.
-	// IN_BINDABLE
-	// IN_BREAKABLE
-	// IN_BEGIN_OR_END
 
 	case MD_AST_NODE_TYPE_BEGIN:
 		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
@@ -366,19 +374,15 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, FALSE);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
-		// xxx not OK to test on srec IN_BEGIN_OR_END. pass this through.
 		return alloc_filter(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_DUMP:
 		return alloc_dump(pnode, type_inferencing, context_flags);
 		break;
 	default:
-		// xxx not OK to test on srec IN_BEGIN_OR_END. pass this through.
 		return alloc_bare_boolean(pnode, type_inferencing, context_flags);
 		break;
 	}
-	// xxx propagate to rval_expr_evaluators alloc methods as well
-	// xxx propagate to rval_expr_evluators: boundvars not OK if IN_BINDABLE
 }
 
 // ----------------------------------------------------------------
@@ -955,8 +959,6 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 //               = (srec_assignment):
 //                   x (field_name).
 //                   16 (strnum_literal).
-
-// xxx rename pasts to pnodes thruout
 
 static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
