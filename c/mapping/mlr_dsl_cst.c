@@ -1748,6 +1748,9 @@ static void handle_for_srec(
 		// Copy, not pointer-reference, in case of srec-unset in loop body:
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
+		// xxx something like rval_evaluator_alloc_from_indirect_field_name (extract-method?)
+		// for typed eval here.
+
 		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
 		mv_t mvval = (poverlay != NULL)
 			? mv_copy(poverlay)

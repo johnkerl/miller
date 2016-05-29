@@ -123,7 +123,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
 
-	// for-srec:
+	// for-srec / for-oosvar:
 	char* for_srec_k_name;
 	slls_t* pfor_oosvar_k_names;
 	char* for_v_name;

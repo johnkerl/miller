@@ -709,28 +709,6 @@ stdout.
 <p/>Features of out-of-stream variables, and examples of their use, will be
 presented in the following sections.
 
-<h3>Pattern-action blocks for put</h3>
-
-<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
-assignments to be done only when appropriate &mdash; e.g. for math-function
-domain restrictions, regex-matching, and so on:
-
-POKI_RUN_COMMAND{{mlr cat data/put-gating-example-1.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr cat data/put-gating-example-2.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp}}HERE
-
-<p/>This produces heteregenous output which Miller, of course, has no problems
-with (see POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE).  But
-if homogeneous output is desired, the curly braces can be omitted.  This
-causes <tt>put</tt> to evaluate the boolean expression (along with any side
-effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
-doesn&rsquo;t use it as a criterion for whether subsequent assignments should
-be executed. Instead, subsequent assignments are done unconditionally:
-
-POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
-
 <h3>Begin/end blocks for put</h3>
 
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
@@ -903,6 +881,123 @@ stream:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small}}HERE
+
+<h3>Semicolons and curly braces for put</h3>
+
+<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+
+POKI_CARDIFY(mlr put 'x=1')HERE
+POKI_CARDIFY(mlr put 'x=1;$y=2')HERE
+POKI_CARDIFY(mlr put 'x=1;$y=2;')HERE
+POKI_CARDIFY(mlr put 'x=1;;;;$y=2;')HERE
+
+<p/>Semicolons are required between statements even if those statements are on separate lines.
+
+<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""} $foo = "bar"'}}HERE
+
+<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2 # Syntax error}}HERE
+
+<p/>Bodies for compound statements may be empty:
+
+POKI_CARDIFY{{mlr put 'if ($x == 1) { } # This no-op is syntactically acceptable}}HERE
+
+<h3>Pattern-action blocks for put</h3>
+
+<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
+assignments to be done only when appropriate &mdash; e.g. for math-function
+domain restrictions, regex-matching, and so on:
+
+POKI_RUN_COMMAND{{mlr cat data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr cat data/put-gating-example-2.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp}}HERE
+
+<p/>This produces heteregenous output which Miller, of course, has no problems
+with (see POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE).  But if
+homogeneous output is desired, the curly braces can be replaced with a
+semicolon between the expression and the body statements.  This causes
+<tt>put</tt> to evaluate the boolean expression (along with any side effects,
+namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it
+as a criterion for whether subsequent assignments should be executed. Instead,
+subsequent assignments are done unconditionally:
+
+POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
+
+<h3>If-statements for put</h3>
+
+<p/>These are again reminiscent of <tt>awk</tt>. Pattern-action blocks are a special case of <tt>if</tt> with no
+<tt>elif</tt> or <tt>else</tt> blocks, no <tt>if</tt> keyword, and parentheses optional around the boolean expression:
+
+POKI_CARDIFY{{mlr put 'NR == 4 {$foo = "bar"}'}}HERE
+POKI_CARDIFY{{mlr put 'if (NR == 4) {$foo = "bar"}'}}HERE
+
+<p/>Compound statements use <tt>elif</tt> (rather than <tt>elsif</tt> or <tt>else if</tt>):
+
+POKI_INCLUDE_ESCAPED(data/if-chain.sh)HERE
+
+<h3>While-loop and do-while-loop statements for put</h3>
+
+<p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
+comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)HERE
+
+<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or if-statements will, of course,
+propagate to the loop enclosing them, if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax
+error that will be flagged as soon as the expression is parsed.
+
+<p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
+in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
+inadvertently.  In particular, please recall that DSL statements are executed
+once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
+otherwise. For example, <tt>while (NR < 10)</tt> will never terminate as
+<tt>NR</tt> is only incremented <i>between</i> records.
+
+<h3>For-loop statements for put</h3>
+
+<p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
+much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
+Miller. They are loops over key-value pairs, whether in stream records or
+out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
+example) PHP.
+
+<p/> There are a few variants, as follows. In each case the <tt>in</tt> keyword
+specifies the hashmap being iterated over, and the variable names between
+<tt>for</tt> and <tt>in</tt> are bound to the keys and values, respectively, of
+the hashmap's key-value pairs on each loop iteration.  Also, as with
+<tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or <tt>continue</tt>
+within nested control structures will propagate to the loop enclosing them, if
+any, and a <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+that will be flagged as soon as the expression is parsed.
+
+<p/><b>For-loop over the current stream record</b>:
+
+POKI_RUN_COMMAND{{cat data/for-srec-example.tbl}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
+
+<p/>Note that the value of the current field in the for-loop can be gotten either using the bound
+variable <tt>value</tt>, or through an <i>indirect field name</i> using <tt>$[key]</tt>.
+
+<p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
+
+POKI_CARDIFY{{for (i = 1; i <= 10; i++) { ... } # No such}}HERE
+
+but this can be synthesized using out-of-stream variables and <tt>while</tt>:
+
+POKI_CARDIFY{{@i = 1; while (@i <= 10) {...; @i += 1}}}HERE
+
+<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
+record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
+an out-of-stream variable; you
+
+<p/> xxx finish typing me up
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-1.sh)HERE
 
 <!-- ================================================================ -->
 <h2>regularize</h2>

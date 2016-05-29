@@ -1,0 +1,12 @@
+mlr --pprint put '
+  $sum1 = $f1 + $f2 + $f3;
+  $sum2 = 0;
+  $sum3 = 0;
+  for (key, value in $*) {
+    if (key =~ "^f[0-9]+") {
+      # xxx fix me
+      $sum2 += float(value);
+      $sum3 += $[key];
+    }
+  }
+' data/for-srec-example.tbl

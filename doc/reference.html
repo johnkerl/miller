@@ -173,13 +173,17 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_put">Expression formatting for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons_and_curly_braces_for_put">Semicolons and curly braces for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements_for_put">If-statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While-loop_and_do-while-loop_statements_for_put">While-loop and do-while-loop statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_statements_for_put">For-loop statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -2318,88 +2322,6 @@ stdout.
 <p/>Features of out-of-stream variables, and examples of their use, will be
 presented in the following sections.
 
-<a id="Pattern-action_blocks_for_put"/><h3>Pattern-action blocks for put</h3>
-
-<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
-assignments to be done only when appropriate &mdash; e.g. for math-function
-domain restrictions, regex-matching, and so on:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr cat data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1
-x=2
-x=3
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr cat data/put-gating-example-2.dkvp
-a=abc_123
-a=some other name
-a=xyz_789
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
-a=abc_123,b=left_abc,c=right_123
-a=some other name
-a=xyz_789,b=left_xyz,c=right_789
-</pre>
-</div>
-<p/>
-
-<p/>This produces heteregenous output which Miller, of course, has no problems
-with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But
-if homogeneous output is desired, the curly braces can be omitted.  This
-causes <tt>put</tt> to evaluate the boolean expression (along with any side
-effects, namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but
-doesn&rsquo;t use it as a criterion for whether subsequent assignments should
-be executed. Instead, subsequent assignments are done unconditionally:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
-x=-1,y=nan,z=nan
-x=0,y=-inf,z=nan
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
-a=abc_123,b=left_abc,c=right_123
-a=some other name,b=left_,c=right_
-a=xyz_789,b=left_xyz,c=right_789
-</pre>
-</div>
-<p/>
-
 <a id="Begin/end_blocks_for_put"/><h3>Begin/end blocks for put</h3>
 
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
@@ -3128,6 +3050,464 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 $ mlr --opprint put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
 a   b   i x                  y
 eks pan 2 0.7586799647899636 0.5221511083334797
+</pre>
+</div>
+<p/>
+
+<a id="Semicolons_and_curly_braces_for_put"/><h3>Semicolons and curly braces for put</h3>
+
+<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'x=1'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'x=1;$y=2'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'x=1;$y=2;'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'x=1;;;;$y=2;'
+</pre>
+</div>
+<p/>
+
+<p/>Semicolons are required between statements even if those statements are on separate lines.
+
+<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""} $foo = "bar"'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+
+<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) $y = 2 # Syntax error
+</pre>
+</div>
+<p/>
+
+<p/>Bodies for compound statements may be empty:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) { } # This no-op is syntactically acceptable
+</pre>
+</div>
+<p/>
+
+<a id="Pattern-action_blocks_for_put"/><h3>Pattern-action blocks for put</h3>
+
+<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
+assignments to be done only when appropriate &mdash; e.g. for math-function
+domain restrictions, regex-matching, and so on:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1
+x=2
+x=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/put-gating-example-2.dkvp
+a=abc_123
+a=some other name
+a=xyz_789
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
+a=abc_123,b=left_abc,c=right_123
+a=some other name
+a=xyz_789,b=left_xyz,c=right_789
+</pre>
+</div>
+<p/>
+
+<p/>This produces heteregenous output which Miller, of course, has no problems
+with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if
+homogeneous output is desired, the curly braces can be replaced with a
+semicolon between the expression and the body statements.  This causes
+<tt>put</tt> to evaluate the boolean expression (along with any side effects,
+namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it
+as a criterion for whether subsequent assignments should be executed. Instead,
+subsequent assignments are done unconditionally:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+x=-1,y=nan,z=nan
+x=0,y=-inf,z=nan
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+a=abc_123,b=left_abc,c=right_123
+a=some other name,b=left_,c=right_
+a=xyz_789,b=left_xyz,c=right_789
+</pre>
+</div>
+<p/>
+
+<a id="If-statements_for_put"/><h3>If-statements for put</h3>
+
+<p/>These are again reminiscent of <tt>awk</tt>. Pattern-action blocks are a special case of <tt>if</tt> with no
+<tt>elif</tt> or <tt>else</tt> blocks, no <tt>if</tt> keyword, and parentheses optional around the boolean expression:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'NR == 4 {$foo = "bar"}'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if (NR == 4) {$foo = "bar"}'
+</pre>
+</div>
+<p/>
+
+<p/>Compound statements use <tt>elif</tt> (rather than <tt>elsif</tt> or <tt>else if</tt>):
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put '
+  if (NR == 2) {
+    ...
+  } elif (NR ==4) {
+    ...
+  } elif (NR ==6) {
+    ...
+  } else {
+    ...
+  }
+'
+</pre>
+</div>
+<p/>
+
+<a id="While-loop_and_do-while-loop_statements_for_put"/><h3>While-loop and do-while-loop statements for put</h3>
+
+<p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
+comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put '
+  while (NF &lt; 10) {
+    $[NF+1] = ""
+  }
+  $foo = "bar"
+'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put '
+  do {
+    $[NF+1] = "";
+    if (NF == 5) {
+      break
+    }
+  } while (NF &lt; 10);
+  $foo = "bar"
+'
+x=1,y=2,3=,4=,5=,foo=bar
+</pre>
+</div>
+<p/>
+
+<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or if-statements will, of course,
+propagate to the loop enclosing them, if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax
+error that will be flagged as soon as the expression is parsed.
+
+<p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
+in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
+inadvertently.  In particular, please recall that DSL statements are executed
+once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
+otherwise. For example, <tt>while (NR < 10)</tt> will never terminate as
+<tt>NR</tt> is only incremented <i>between</i> records.
+
+<a id="For-loop_statements_for_put"/><h3>For-loop statements for put</h3>
+
+<p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
+much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
+Miller. They are loops over key-value pairs, whether in stream records or
+out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
+example) PHP.
+
+<p/> There are a few variants, as follows. In each case the <tt>in</tt> keyword
+specifies the hashmap being iterated over, and the variable names between
+<tt>for</tt> and <tt>in</tt> are bound to the keys and values, respectively, of
+the hashmap's key-value pairs on each loop iteration.  Also, as with
+<tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or <tt>continue</tt>
+within nested control structures will propagate to the loop enclosing them, if
+any, and a <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+that will be flagged as soon as the expression is parsed.
+
+<p/><b>For-loop over the current stream record</b>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/for-srec-example.tbl
+label1 label2 f1  f2  f3
+blue   green  100 240 350
+red    green  120 11  195
+yellow blue   140 0   240
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --pprint put '
+  $sum1 = $f1 + $f2 + $f3;
+  $sum2 = 0;
+  $sum3 = 0;
+  for (key, value in $*) {
+    if (key =~ "^f[0-9]+") {
+      # xxx fix me
+      $sum2 += float(value);
+      $sum3 += $[key];
+    }
+  }
+' data/for-srec-example.tbl
+label1 label2 f1  f2  f3  sum1 sum2       sum3
+blue   green  100 240 350 690  690.000000 690
+red    green  120 11  195 326  326.000000 326
+yellow blue   140 0   240 380  380.000000 380
+</pre>
+</div>
+<p/>
+
+<p/>Note that the value of the current field in the for-loop can be gotten either using the bound
+variable <tt>value</tt>, or through an <i>indirect field name</i> using <tt>$[key]</tt>.
+
+<p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+for (i = 1; i &lt;= 10; i++) { ... } # No such
+</pre>
+</div>
+<p/>
+
+but this can be synthesized using out-of-stream variables and <tt>while</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+@i = 1; while (@i &lt;= 10) {...; @i += 1}
+</pre>
+</div>
+<p/>
+
+<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
+record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
+an out-of-stream variable; you
+
+<p/> xxx finish typing me up
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '
+  @xes[NR] = $x;
+  @all_fields[NR] = $*;
+  end {
+    dump;
+
+    # Simple loop over key-value pairs in an out-of-stream variable:
+    for (key, value in @xes) {
+      @item1[key] = value
+    }
+    emitp @item1, "key";
+
+    # Simple loop over key-value pairs in a subhashmap of an out-of-stream variable:
+    for (key, value in @all_fields[4]) {
+      @item2[key] = value
+    }
+    emitp @item2, "key";
+
+    # Loop over multilevel key-value pairs:
+    for ((nr, key), value in @all_fields) {
+      @item3[nr][key] = value
+    }
+    emitp @item3, "NR", "key";
+
+    # Loop over all out-of-stream variables with depth two
+    for ((k1, k2), v in @*) {
+      @item4[string(k1)."_".string(k2)] = v;
+    }
+    emitp @item4, "key", "value"
+
+  }
+' data/small
+{
+  "xes": {
+    "1": 0.346790,
+    "2": 0.758680,
+    "3": 0.204603,
+    "4": 0.381399,
+    "5": 0.573289
+  },
+  "all_fields": {
+    "1": {
+      "a": "pan",
+      "b": "pan",
+      "i": 1,
+      "x": 0.3467901443380824,
+      "y": 0.7268028627434533
+    },
+    "2": {
+      "a": "eks",
+      "b": "pan",
+      "i": 2,
+      "x": 0.7586799647899636,
+      "y": 0.5221511083334797
+    },
+    "3": {
+      "a": "wye",
+      "b": "wye",
+      "i": 3,
+      "x": 0.20460330576630303,
+      "y": 0.33831852551664776
+    },
+    "4": {
+      "a": "eks",
+      "b": "wye",
+      "i": 4,
+      "x": 0.38139939387114097,
+      "y": 0.13418874328430463
+    },
+    "5": {
+      "a": "wye",
+      "b": "pan",
+      "i": 5,
+      "x": 0.5732889198020006,
+      "y": 0.8636244699032729
+    }
+  }
+}
+key item1
+1   0.346790
+2   0.758680
+3   0.204603
+4   0.381399
+5   0.573289
+
+key item2
+a   eks
+b   wye
+i   4
+x   0.38139939387114097
+y   0.13418874328430463
+
+NR key item3
+1  a   pan
+1  b   pan
+1  i   1
+1  x   0.3467901443380824
+1  y   0.7268028627434533
+2  a   eks
+2  b   pan
+2  i   2
+2  x   0.7586799647899636
+2  y   0.5221511083334797
+3  a   wye
+3  b   wye
+3  i   3
+3  x   0.20460330576630303
+3  y   0.33831852551664776
+4  a   eks
+4  b   wye
+4  i   4
+4  x   0.38139939387114097
+4  y   0.13418874328430463
+5  a   wye
+5  b   pan
+5  i   5
+5  x   0.5732889198020006
+5  y   0.8636244699032729
+
+key     item4
+xes_1   0.346790
+xes_2   0.758680
+xes_3   0.204603
+xes_4   0.381399
+xes_5   0.573289
+item1_1 0.346790
+item1_2 0.758680
+item1_3 0.204603
+item1_4 0.381399
+item1_5 0.573289
+item2_a eks
+item2_b wye
+item2_i 4
+item2_x 0.38139939387114097
+item2_y 0.13418874328430463
 </pre>
 </div>
 <p/>

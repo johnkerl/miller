@@ -6,6 +6,7 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! typing for v in for-srec !
 * re-do valgrinds before release
 
 COOKBOOK:
@@ -45,10 +46,10 @@ UT:
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay
-? sllv->slln @ ast
 ! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
-* lemon note/message-wording re resolvable conflicts
+! lemon note/message-wording re resolvable conflicts
+* release poki mod
 
 4.1.0 release notes:
 * new forx2, while/do-while, if-chains
