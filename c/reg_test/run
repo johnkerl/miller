@@ -1532,6 +1532,20 @@ run_mlr put 'unset $*; $aaa = 999' $indir/unset4.dkvp
 run_mlr put -q '@{variable.name} += $x; end{emit @{variable.name}}' $indir/abixy
 run_mlr put -q '@{variable.name}[$a] += $x; end{emit @{variable.name},"a"}' $indir/abixy
 
+run_mlr put 'for (k,v in $*) { if (k == "i") {unset $[k]}}' $indir/abixy
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @output[NR] = $*;
+  end {
+    for ((nr, k), v in @output) {
+      if (nr == 4 || k == "i") {
+        unset @output[nr][k]
+      }
+    }
+    emitp @output, "NR", "k"
+  }
+'
+
 # ----------------------------------------------------------------
 announce DSL PATTERN-ACTION BLOCKS
 
