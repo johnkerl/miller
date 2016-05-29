@@ -6,9 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* funcptrize unsetters
-! indirect unset @[k]?
-! indirect unset $[k]?
 * re-do valgrinds before release
 
 COOKBOOK:
