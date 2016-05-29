@@ -530,9 +530,6 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_a
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx helper-func for assert-length-one-with-types
-	// xxx helper-func for assert-length-two-with-types
-	// xxx etc.
 	if (pleft->type != MD_AST_NODE_TYPE_FULL_SREC) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
@@ -1248,7 +1245,6 @@ static void handle_indirect_srec_assignment(
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(prval)) {
-		// xxx to do: replace the typed overlay with an mlhmmv entirely.
 		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
 		if (pold != NULL) {
 			mv_free(pold);
@@ -1381,7 +1377,6 @@ static void handle_full_srec_from_oosvar_assignment(
 					// And putting something statically allocated minimizes copying/freeing.
 					mv_t* pold = lhmsv_get(pvars->ptyped_overlay, skey);
 					if (pold != NULL) {
-						// xxx to do: replace the typed overlay with an lhmsmv entirely.
 						mv_free(pold);
 						free(pold);
 					}
@@ -1580,7 +1575,6 @@ static void handle_conditional_block(
 }
 
 // ----------------------------------------------------------------
-// xxx move up by cond @ prototypes as well as bodies as well as switch-stt, & wherever else.
 static void handle_if_head(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1644,7 +1638,6 @@ static void handle_do_while(
 
 	loop_stack_push(pvars->ploop_stack);
 	while (TRUE) {
-		// xxx funcptrize
 		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -1689,7 +1682,6 @@ static void handle_for_srec(
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
-		// xxx funcptrize
 		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -1788,7 +1780,6 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &submap.u.mlrval, NO_FREE);
 			// Execute the loop-body statements:
-			// xxx funcptrize
 			handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
 		}
 
