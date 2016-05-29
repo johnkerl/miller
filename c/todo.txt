@@ -6,9 +6,7 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-! cst_statement_free bring up to date with blank_alloc
 * mixed for/while UTs
-! intentional dup-assign (non-invertible map) $[v]=k UT
 
 ! xxxes
 ! valgrinds
@@ -21,6 +19,7 @@ TOP-OF-LIST SUMMARY
 ! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
 * lemon note/message-wording re resolvable conflicts
 * header/length mismatch: print the #'s!
+? unset @*? unset $*?
 
 ? faqent: no triple-for with boundvars, but oosvars & while-loops
 
@@ -42,6 +41,7 @@ DOC:
       $[@nf] = ""
     }
   ' jb.csv
+* faqent about NR from original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay

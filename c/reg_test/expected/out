@@ -8908,6 +8908,24 @@ list (statement_list):
                     x (string_literal).
                 y (field_name).
 
+mlr put -v begin{unset $x}
+mlr: unset of $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            unset (unset):
+                x (field_name).
+
+mlr put -v end{unset $x}
+mlr: unset of $-variables are not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            unset (unset):
+                x (field_name).
+
 
 ---------------------------------------------------------------- boundvars outside for
 mlr put -v $x=x
