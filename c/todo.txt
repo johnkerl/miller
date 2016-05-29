@@ -6,14 +6,6 @@ BUGFIXES
 ================================================================
 TOP-OF-LIST SUMMARY
 
-* mixed for/while UTs
-
-! xxxes
-! valgrinds
-
-* chk UT x all
-* move/filter all reg_test/dev -> reg_test/run
-! extend mld:ref:put, and cookbook
 ! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
 ! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
@@ -22,6 +14,8 @@ TOP-OF-LIST SUMMARY
 ? unset @*? unset $*?
 
 ? faqent: no triple-for with boundvars, but oosvars & while-loops
+
+* re-do valgrinds before release
 
 ----------------------------------------------------------------
 
@@ -42,6 +36,13 @@ DOC:
     }
   ' jb.csv
 * faqent about NR from original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+* -n can be used as syntax-checker flag for DSLs. and/or for dataless ops all in begin{}.
+* dbl-chk mld:ref:put & cookbook for all 4.1.0 features
+
+UT:
+* mixed for/while
+* dlb-chk UT coverage for 4.1.0 features
+* move/filter all reg_test/dev -> reg_test/run
 
 HYGIENE:
 ! lhmsv->lhmsmv @ typed overlay

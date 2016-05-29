@@ -14506,6 +14506,33 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./re
 {
 }
 
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ./reg_test/input/unset4.dkvp
+{
+  "s": 9,
+  "t": {
+    "1": 9,
+    "4": 9
+  },
+  "u": {
+    "1": {
+      "2": 9,
+      "3": 9
+    },
+    "4": {
+      "5": 9,
+      "6": 9
+    }
+  }
+}
+{
+}
+
+mlr put unset $x ./reg_test/input/unset4.dkvp
+a=1,b=2
+a=1,b=3
+a=4,b=5
+a=4,b=6
+
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg_test/input/abixy
 variable.name=4.536294
 

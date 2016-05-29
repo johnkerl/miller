@@ -278,7 +278,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
-    switch(pnode->type) {
+	switch(pnode->type) {
 
 	case MD_AST_NODE_TYPE_BEGIN:
 		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
@@ -389,7 +389,8 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
-	pstatement->phandler                         = NULL;
+	pstatement->pnode_handler                    = NULL;
+	pstatement->pblock_handler                   = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators   = NULL;
 	pstatement->srec_lhs_field_name              = NULL;
 	pstatement->psrec_lhs_evaluator              = NULL;
@@ -430,7 +431,7 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* pnode,
 		exit(1);
 	}
 
-	pstatement->phandler = handle_srec_assignment;
+	pstatement->pnode_handler = handle_srec_assignment;
 	pstatement->srec_lhs_field_name = pleft->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, type_inferencing, context_flags);
 	return pstatement;
@@ -457,7 +458,7 @@ static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstatement->phandler = handle_indirect_srec_assignment;
+	pstatement->pnode_handler = handle_indirect_srec_assignment;
 	pstatement->psrec_lhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  type_inferencing, context_flags);
 	pstatement->prhs_evaluator      = rval_evaluator_alloc_from_ast(pright, type_inferencing, context_flags);
 	return pstatement;
@@ -482,11 +483,11 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_ast_node_t* pnod
 		context_flags);
 
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		pstatement->phandler = handle_oosvar_to_oosvar_assignment;
+		pstatement->pnode_handler = handle_oosvar_to_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pright,
 			type_inferencing, context_flags);
 	} else {
-		pstatement->phandler = handle_oosvar_assignment;
+		pstatement->pnode_handler = handle_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = NULL;
 	}
 
@@ -516,7 +517,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(
 		exit(1);
 	}
 
-	pstatement->phandler = handle_oosvar_from_full_srec_assignment;
+	pstatement->pnode_handler = handle_oosvar_from_full_srec_assignment;
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pleft,
 		type_inferencing, context_flags);
 	return pstatement;
@@ -541,7 +542,7 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_a
 		exit(1);
 	}
 
-	pstatement->phandler = handle_full_srec_from_oosvar_assignment;
+	pstatement->pnode_handler = handle_full_srec_from_oosvar_assignment;
 	pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pright,
 		type_inferencing, context_flags);
 	return pstatement;
@@ -552,7 +553,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	pstatement->phandler = handle_unset;
+	pstatement->pnode_handler = handle_unset;
 	pstatement->pvarargs = sllv_alloc();
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
@@ -560,7 +561,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 		if (pnode->type == MD_AST_NODE_TYPE_ALL || pnode->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 			// The grammar allows only 'unset all', not 'unset @x, all, $y'.
 			// So if 'all' appears at all, it's the only name. Likewise with '@*'.
-			pstatement->phandler = handle_unset_all;
+			pstatement->pnode_handler = handle_unset_all;
 
 		} else if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 			if (context_flags & IN_BEGIN_OR_END) {
@@ -646,7 +647,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 			NULL));
 	}
 
-	pstatement->phandler = handle_emitf;
+	pstatement->pnode_handler = handle_emitf;
 	return pstatement;
 }
 
@@ -688,7 +689,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 		}
 
-		pstatement->phandler = do_full_prefixing
+		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit_all
 			: handle_emitp_all;
 		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
@@ -702,7 +703,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 		}
 
-		pstatement->phandler = do_full_prefixing
+		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit
 			: handle_emitp;
 
@@ -735,7 +736,8 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* pnode, int type_
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->phandler = handle_while;
+	pstatement->pnode_handler = handle_while;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, type_inferencing, context_flags);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
@@ -758,7 +760,8 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* pnode, int ty
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->phandler = handle_do_while;
+	pstatement->pnode_handler = handle_do_while;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, type_inferencing, context_flags);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
@@ -801,7 +804,8 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 		sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, type_inferencing, context_flags));
 	}
 
-	pstatement->phandler = handle_for_srec;
+	pstatement->pnode_handler = handle_for_srec;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->pblock_statements = pblock_statements;
 	pstatement->pbound_variables  = lhmsmv_alloc();
 
@@ -865,7 +869,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* pnode, int 
 	pstatement->pblock_statements = pblock_statements;
 	pstatement->pbound_variables = lhmsmv_alloc();
 
-	pstatement->phandler = handle_for_oosvar;
+	pstatement->pnode_handler = handle_for_oosvar;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 
 	return pstatement;
 }
@@ -874,7 +879,7 @@ static mlr_dsl_cst_statement_t* alloc_break(mlr_dsl_ast_node_t* pnode, int type_
 	int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	pstatement->phandler = handle_break;
+	pstatement->pnode_handler = handle_break;
 	return pstatement;
 }
 
@@ -882,7 +887,7 @@ static mlr_dsl_cst_statement_t* alloc_continue(mlr_dsl_ast_node_t* pnode, int ty
 	int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	pstatement->phandler = handle_continue;
+	pstatement->pnode_handler = handle_continue;
 	return pstatement;
 }
 
@@ -904,7 +909,10 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->phandler = handle_conditional_block;
+	pstatement->pnode_handler = handle_conditional_block;
+	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
+		?  handle_statement_list_with_break_continue
+		: mlr_dsl_cst_handle_statement_list;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, type_inferencing, context_flags);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
@@ -984,7 +992,10 @@ static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_ast_node_t* pnode, int typ
 			type_inferencing, context_flags));
 	}
 
-	pstatement->phandler = handle_if_head;
+	pstatement->pnode_handler = handle_if_head;
+	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
+		?  handle_statement_list_with_break_continue
+		: mlr_dsl_cst_handle_statement_list;
 	pstatement->pif_chain_statements = pif_chain_statements;
 	return pstatement;
 }
@@ -1002,7 +1013,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->phandler = NULL; // handled by the containing if-head evaluator
+	pstatement->pnode_handler = NULL; // handled by the containing if-head evaluator
 	pstatement->prhs_evaluator = pexprnode != NULL
 		? rval_evaluator_alloc_from_ast(pexprnode, type_inferencing, context_flags) // if-statement or elif-statement
 		: rval_evaluator_alloc_from_boolean(TRUE); // else-statement
@@ -1018,7 +1029,7 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* pnode, int type
 
 	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
 
-	pstatement->phandler = handle_filter;
+	pstatement->pnode_handler = handle_filter;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1028,7 +1039,7 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	pstatement->phandler = handle_dump;
+	pstatement->pnode_handler = handle_dump;
 	return pstatement;
 }
 
@@ -1037,7 +1048,7 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, in
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	pstatement->phandler = handle_bare_boolean;
+	pstatement->pnode_handler = handle_bare_boolean;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1156,7 +1167,7 @@ void mlr_dsl_cst_handle_statement_list(
 {
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->phandler(pstatement, pvars, pcst_outputs);
+		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 	}
 }
 
@@ -1169,7 +1180,7 @@ static void handle_statement_list_with_break_continue(
 {
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->phandler(pstatement, pvars, pcst_outputs);
+		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
 			break;
 		}
@@ -1566,8 +1577,7 @@ static void handle_conditional_block(
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		if (val.u.boolv) {
-			// funcptrize
-			handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
 		}
 	}
 }
@@ -1586,8 +1596,7 @@ static void handle_if_head(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				// xxx func-ptrize
-				handle_statement_list_with_break_continue(pitemnode->pblock_statements, pvars, pcst_outputs);
+				pnode->pblock_handler(pitemnode->pblock_statements, pvars, pcst_outputs);
 				break;
 			}
 		}
@@ -1608,8 +1617,7 @@ static void handle_while(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				// funcptrize
-				handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+				pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
 				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 					loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 					break;
@@ -1636,7 +1644,7 @@ static void handle_do_while(
 
 	loop_stack_push(pvars->ploop_stack);
 	while (TRUE) {
-		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 			break;
@@ -1680,7 +1688,7 @@ static void handle_for_srec(
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
-		handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 			break;
@@ -1715,12 +1723,10 @@ static void handle_for_oosvar(
 		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
 
 		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
-			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level deeper
-			// into the submap.
-			// xx note there must be at least one k-name so we are assuming the for-loop within
-
-			// handle_for_oosvar_aux was gone through once & thus handle_statement_list_with_break_continue
-			// was called through there.
+			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
+			// deeper into the submap.  Note there must be at least one k-name so we are assuming
+			// the for-loop within handle_for_oosvar_aux was gone through once & thus
+			// handle_statement_list_with_break_continue was called through there.
 
 			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
 
@@ -1777,7 +1783,7 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &submap.u.mlrval, NO_FREE);
 			// Execute the loop-body statements:
-			handle_statement_list_with_break_continue(pnode->pblock_statements, pvars, pcst_outputs);
+			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
 		}
 
 	}

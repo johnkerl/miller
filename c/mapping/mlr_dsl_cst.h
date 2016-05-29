@@ -67,10 +67,20 @@ typedef struct _mlr_dsl_cst_statement_vararg_t {
 	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
 
+typedef void mlr_dsl_cst_statement_list_handler_t(
+	sllv_t*      pcst_statements,
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs);
+
 // E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
-	mlr_dsl_cst_node_handler_func_t* phandler;
+	mlr_dsl_cst_node_handler_func_t* pnode_handler;
+
+	// There are two variants: one for inside loop bodies which has to check break/continue flags after
+	// each statement, and another for outside loop bodies which doesn't need to check those. (This is
+	// a micro-optimization.)
+	mlr_dsl_cst_statement_list_handler_t* pblock_handler;
 
 	// Assignment to oosvar, emit, and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* poosvar_lhs_keylist_evaluators;
@@ -125,7 +135,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_handle_statement_list(
-	sllv_t*      pcst_statements, // begin/main/end
+	sllv_t*      pcst_statements, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
