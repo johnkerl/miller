@@ -4,28 +4,15 @@ BUGFIXES
 :D
 
 ================================================================
-TOP-OF-LIST SUMMARY
+TOP OF LIST:
 
-! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
-* readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
-! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
-* lemon note/message-wording re resolvable conflicts
-* header/length mismatch: print the #'s!
-? unset @*? unset $*?
-
-? faqent: no triple-for with boundvars, but oosvars & while-loops
-
+* unset $*
 * re-do valgrinds before release
 
-----------------------------------------------------------------
-
-DOC:
+COOKBOOK:
 * cookbook example: key<->val inverter
 * cookbook example: komosa originals x 2
 * cookbook example: oosvar keyed mean
-* doc re newlines not replacing semicolons. no need for \ continuations that way; simple parser.
-* ref emph while is *within* each srec do don't loop over NR (for example)
-* doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
   mlr --fs comma --nidx put '
     @maxnf = max(@maxnf, NF);
@@ -35,9 +22,22 @@ DOC:
       $[@nf] = ""
     }
   ' jb.csv
+
+FAQ:
 * faqent about NR from original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+
+MLD:
+* doc re newlines not replacing semicolons. no need for \ continuations that way; simple parser.
+* ref emph while is *within* each srec do don't loop over NR (for example)
+* doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 * -n can be used as syntax-checker flag for DSLs. and/or for dataless ops all in begin{}.
+* faqent: no triple-for with boundvars, but oosvars & while-loops
+* readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
+! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
+
+GEN DOC:
 * dbl-chk mld:ref:put & cookbook for all 4.1.0 features
+! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 
 UT:
 * mixed for/while
@@ -49,6 +49,7 @@ HYGIENE:
 ? sllv->slln @ ast
 ! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
+* lemon note/message-wording re resolvable conflicts
 
 4.1.0 release notes:
 * new forx2, while/do-while, if-chains

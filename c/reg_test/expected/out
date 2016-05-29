@@ -8909,7 +8909,7 @@ list (statement_list):
                 y (field_name).
 
 mlr put -v begin{unset $x}
-mlr: unset of $-variables are not valid within begin or end blocks.
+mlr: unset of $-variables is not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     begin (begin):
@@ -8918,13 +8918,31 @@ list (statement_list):
                 x (field_name).
 
 mlr put -v end{unset $x}
-mlr: unset of $-variables are not valid within begin or end blocks.
+mlr: unset of $-variables is not valid within begin or end blocks.
 AST ROOT:
 list (statement_list):
     end (end):
         list (statement_list):
             unset (unset):
                 x (field_name).
+
+mlr put -v begin{unset $*}
+mlr: unset of $-variables is not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    begin (begin):
+        list (statement_list):
+            unset (unset):
+                $* (full_srec).
+
+mlr put -v end{unset $*}
+mlr: unset of $-variables is not valid within begin or end blocks.
+AST ROOT:
+list (statement_list):
+    end (end):
+        list (statement_list):
+            unset (unset):
+                $* (full_srec).
 
 
 ---------------------------------------------------------------- boundvars outside for
@@ -14532,6 +14550,12 @@ a=1,b=2
 a=1,b=3
 a=4,b=5
 a=4,b=6
+
+mlr put unset $*; $aaa = 999 ./reg_test/input/unset4.dkvp
+aaa=999
+aaa=999
+aaa=999
+aaa=999
 
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg_test/input/abixy
 variable.name=4.536294

@@ -563,9 +563,21 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 			// So if 'all' appears at all, it's the only name. Likewise with '@*'.
 			pstatement->pnode_handler = handle_unset_all;
 
+		} else if (pnode->type == MD_AST_NODE_TYPE_FULL_SREC) {
+			if (context_flags & IN_BEGIN_OR_END) {
+				fprintf(stderr, "%s: unset of $-variables is not valid within begin or end blocks.\n",
+					MLR_GLOBALS.bargv0);
+				exit(1);
+			}
+			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				NULL,
+				NULL,
+				NULL,
+				NULL));
+
 		} else if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 			if (context_flags & IN_BEGIN_OR_END) {
-				fprintf(stderr, "%s: unset of $-variables are not valid within begin or end blocks.\n",
+				fprintf(stderr, "%s: unset of $-variables is not valid within begin or end blocks.\n",
 					MLR_GLOBALS.bargv0);
 				exit(1);
 			}
@@ -1406,6 +1418,7 @@ static void handle_unset(
 {
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
+		// xxx funcptrize
 		if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
 
 			int all_non_null_or_error = TRUE;
@@ -1423,6 +1436,8 @@ static void handle_unset(
 			if (free_flags & FREE_ENTRY_VALUE)
 				free(field_name);
 			mv_free(&nameval);
+		} else if (pvararg->emitf_or_unset_srec_field_name == NULL) {
+			lrec_clear(pvars->pinrec);
 		} else {
 			lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
 		}
