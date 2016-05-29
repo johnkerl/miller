@@ -46,40 +46,54 @@
 // before/after stream processing, respectively.
 // ================================================================
 
+// Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_statement_t;
+struct _mlr_dsl_cst_statement_vararg_t;
 
+// Parameter bag to reduce parameter-marshaling
 typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
 } cst_outputs_t;
 
+// Generic handler for a statement.
 typedef void mlr_dsl_cst_node_handler_func_t(
 	struct _mlr_dsl_cst_statement_t* pnode,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
+// Subhandler for emitf/unset vararg items: e.g. in 'unset @o, $s' there is one for the @o and one for the $s.
+typedef void unset_vararg_handler_t(
+	struct _mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
+
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
+	unset_vararg_handler_t* punset_handler;
 	char* emitf_or_unset_srec_field_name;
 	rval_evaluator_t* punset_srec_field_name_evaluator;
 	rval_evaluator_t* pemitf_arg_evaluator;
 	sllv_t* punset_oosvar_keylist_evaluators;
 } mlr_dsl_cst_statement_vararg_t;
 
+// Handler for statement lists: begin/main/end; cond/if/for/while/do-while.
 typedef void mlr_dsl_cst_statement_list_handler_t(
 	sllv_t*      pcst_statements,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-// E.g. emit @a[$b]["c"], "d", @e: keylist is [$b, "c"] and namelist is ["d", @e].
+// Diffrence between keylist and namelist: in emit @a[$b]["c"], "d", @e,
+// the keylist is [$b, "c"] and the namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
+
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
-	// There are two variants: one for inside loop bodies which has to check break/continue flags after
-	// each statement, and another for outside loop bodies which doesn't need to check those. (This is
-	// a micro-optimization.)
+	// There are two variants of statement-list handlers: one for inside loop bodies which has to check break/continue
+	// flags after each statement, and another for outside loop bodies which doesn't need to check those. (This is a
+	// micro-optimization.) For bodyless statements (e.g. assignment) this is null.
 	mlr_dsl_cst_statement_list_handler_t* pblock_handler;
 
 	// Assignment to oosvar, emit, and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.

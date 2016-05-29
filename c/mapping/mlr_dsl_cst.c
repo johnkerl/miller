@@ -44,6 +44,9 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	rval_evaluator_t* pemitf_arg_evaluator,
 	sllv_t*           punset_oosvar_keylist_evaluators);
 
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags);
+
 static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
 static void handle_statement_list_with_break_continue(
@@ -84,8 +87,25 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags);
+static void handle_unset_vararg_oosvar(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
+
+static void handle_unset_vararg_full_srec(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
+
+static void handle_unset_vararg_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
+
+static void handle_unset_vararg_indirect_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 // ----------------------------------------------------------------
 // For mlr filter, which takes a reduced subset of mlr-put syntax:
@@ -1137,11 +1157,23 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	sllv_t*           punset_oosvar_keylist_evaluators)
 {
 	mlr_dsl_cst_statement_vararg_t* pvararg = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_vararg_t));
+	pvararg->punset_handler = NULL;
 	pvararg->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL
 		? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
 	pvararg->punset_oosvar_keylist_evaluators = punset_oosvar_keylist_evaluators;
 	pvararg->punset_srec_field_name_evaluator = punset_srec_field_name_evaluator;
 	pvararg->pemitf_arg_evaluator             = pemitf_arg_evaluator;
+
+	if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
+		pvararg->punset_handler = handle_unset_vararg_oosvar;
+	} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
+		pvararg->punset_handler = handle_unset_vararg_indirect_srec_field_name;
+	} else if (pvararg->emitf_or_unset_srec_field_name != NULL) {
+		pvararg->punset_handler = handle_unset_vararg_srec_field_name;
+	} else {
+		pvararg->punset_handler = handle_unset_vararg_full_srec;
+	}
+
 	return pvararg;
 }
 
@@ -1418,30 +1450,51 @@ static void handle_unset(
 {
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		// xxx funcptrize
-		if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
-
-			int all_non_null_or_error = TRUE;
-			sllmv_t* pmvkeys = evaluate_list(pvararg->punset_oosvar_keylist_evaluators, pvars, &all_non_null_or_error);
-
-			if (all_non_null_or_error)
-				mlhmmv_remove(pvars->poosvars, pmvkeys);
-			sllmv_free(pmvkeys);
-		} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
-			rval_evaluator_t* pevaluator = pvararg->punset_srec_field_name_evaluator;
-			mv_t nameval = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
-			char free_flags = NO_FREE;
-			char* field_name = mv_maybe_alloc_format_val(&nameval, &free_flags);
-			lrec_remove(pvars->pinrec, field_name);
-			if (free_flags & FREE_ENTRY_VALUE)
-				free(field_name);
-			mv_free(&nameval);
-		} else if (pvararg->emitf_or_unset_srec_field_name == NULL) {
-			lrec_clear(pvars->pinrec);
-		} else {
-			lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
-		}
+		pvararg->punset_handler(pvararg, pvars, pcst_outputs);
 	}
+}
+
+static void handle_unset_vararg_oosvar(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pvararg->punset_oosvar_keylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error)
+		mlhmmv_remove(pvars->poosvars, pmvkeys);
+	sllmv_free(pmvkeys);
+}
+
+static void handle_unset_vararg_full_srec(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs)
+{
+	lrec_clear(pvars->pinrec);
+}
+
+static void handle_unset_vararg_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs)
+{
+	lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
+}
+
+static void handle_unset_vararg_indirect_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs)
+{
+	rval_evaluator_t* pevaluator = pvararg->punset_srec_field_name_evaluator;
+	mv_t nameval = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
+	char free_flags = NO_FREE;
+	char* field_name = mv_maybe_alloc_format_val(&nameval, &free_flags);
+	lrec_remove(pvars->pinrec, field_name);
+	if (free_flags & FREE_ENTRY_VALUE)
+		free(field_name);
+	mv_free(&nameval);
 }
 
 // ----------------------------------------------------------------
