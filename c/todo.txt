@@ -6,7 +6,7 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* unset $*
+* funcptrize unsetters
 * re-do valgrinds before release
 
 COOKBOOK:
@@ -57,7 +57,8 @@ HYGIENE:
 * pound-to-EOL commenting for filter & put
 ! semicolon no longer required after closing curly brace
 * emit/unset @* same as emit/unset all
-* mlr -n
+* unset $*
+* mlr -n: can be used as syntax-checker flag for DSLs, and/or for dataless ops all in begin{}.
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 
