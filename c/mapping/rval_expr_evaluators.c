@@ -311,8 +311,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int typ
 }
 
 // ================================================================
-// xxx reduce code-dup x 6
-
 typedef struct _rval_evaluator_indirect_field_name_state_t {
 	rval_evaluator_t* pname_evaluator;
 } rval_evaluator_indirect_field_name_state_t;

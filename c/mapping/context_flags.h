@@ -1,8 +1,6 @@
 #ifndef CONTEXT_FLAGS_H
 #define CONTEXT_FLAGS_H
 
-// xxx cmt more. incl whom shared by.
-
 // The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
 // The following flags are used as the CST is built from the AST for CST-build-time validation.

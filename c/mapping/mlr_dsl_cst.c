@@ -1201,7 +1201,6 @@ static void handle_srec_assignment(
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(pval)) {
-		// xxx to do: replace the typed overlay with an lhmsmv entirely.
 		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
 		if (pold != NULL) {
 			mv_free(pold);
@@ -1216,7 +1215,6 @@ static void handle_srec_assignment(
 }
 
 // ----------------------------------------------------------------
-// xxx reduce code-dup
 static void handle_indirect_srec_assignment(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1742,7 +1740,6 @@ static void handle_for_oosvar(
 	bind_stack_pop(pvars->pbind_stack);
 }
 
-// xxx free pmv after mv_free @ boundvars dtor
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
