@@ -947,9 +947,11 @@ comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
 POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)HERE
 
-<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or if-statements will, of course,
-propagate to the loop enclosing them, if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax
-error that will be flagged as soon as the expression is parsed.
+<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or
+if-statements will, of course, propagate to the innermost loop enclosing them,
+if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+that will be flagged as soon as the expression is parsed, before any input
+records are ingested.
 
 <p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
 in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
@@ -966,15 +968,16 @@ Miller. They are loops over key-value pairs, whether in stream records or
 out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
 example) PHP.
 
-<p/> There are a two variants: <b>loop over stream record</b> and <b>loop over
-out-of-stream variable(s)</b>. In each case the <tt>in</tt> keyword specifies
-the hashmap being iterated over, and the variable names between <tt>for</tt>
-and <tt>in</tt> are bound to the keys and values, respectively, of the
-hashmap's key-value pairs on each loop iteration.  Also, as with <tt>while</tt>
-and <tt>do-while</tt>, a <tt>break</tt> or <tt>continue</tt> within nested
-control structures will propagate to the loop enclosing them, if any, and a
-<tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error that will
-be flagged as soon as the expression is parsed.
+<p/> There are a two variants: <b>for-loop over key-value pairs in the current
+stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
+variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
+iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
+bound to the keys and values, respectively, of the hashmap's key-value pairs on
+each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
+<tt>break</tt> or <tt>continue</tt> within nested control structures will
+propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
+<tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
+as the expression is parsed, before any input records are ingested.
 
 <p/><b>For-loop over the current stream record</b>:
 

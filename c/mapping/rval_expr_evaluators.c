@@ -199,82 +199,19 @@ typedef struct _rval_evaluator_field_name_state_t {
 
 static mv_t rval_evaluator_field_name_func_string_only(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		return mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, pstate->field_name);
-		if (string == NULL) {
-			return mv_absent();
-		} else if (*string == 0) {
-			return mv_empty();
-		} else {
-			// string points into lrec memory and is valid as long as the lrec is.
-			return mv_from_string_no_free(string);
-		}
-	}
+	return get_srec_value_string_only(pstate->field_name, pvars);
 }
 
 static mv_t rval_evaluator_field_name_func_string_float(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		return mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, pstate->field_name);
-		if (string == NULL) {
-			return mv_absent();
-		} else if (*string == 0) {
-			return mv_empty();
-		} else {
-			double fltv;
-			if (mlr_try_float_from_string(string, &fltv)) {
-				return mv_from_float(fltv);
-			} else {
-				// string points into lrec memory and is valid as long as the lrec is.
-				return mv_from_string_no_free(string);
-			}
-		}
-	}
+	return get_srec_value_string_float(pstate->field_name, pvars);
 }
 
 static mv_t rval_evaluator_field_name_func_string_float_int(void* pvstate, variables_t* pvars) {
 	rval_evaluator_field_name_state_t* pstate = pvstate;
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pstate->field_name);
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		return mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, pstate->field_name);
-		if (string == NULL) {
-			return mv_absent();
-		} else if (*string == 0) {
-			return mv_empty();
-		} else {
-			long long intv;
-			double fltv;
-			if (mlr_try_int_from_string(string, &intv)) {
-				return mv_from_int(intv);
-			} else if (mlr_try_float_from_string(string, &fltv)) {
-				return mv_from_float(fltv);
-			} else {
-				// string points into AST memory and is valid as long as the AST is.
-				return mv_from_string_no_free(string);
-			}
-		}
-	}
+	return get_srec_value_string_float_int(pstate->field_name, pvars);
 }
+
 static void rval_evaluator_field_name_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_field_name_state_t* pstate = pevaluator->pvstate;
 	free(pstate->field_name);
@@ -326,26 +263,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_only(void* pvstate, v
 	char free_flags = NO_FREE;
 	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
-	mv_t rv;
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		rv = mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, indirect_field_name);
-		if (string == NULL) {
-			rv = mv_absent();
-		} else if (*string == 0) {
-			rv = mv_empty();
-		} else {
-			// string points into lrec memory and is valid as long as the lrec is.
-			rv = mv_from_string_no_free(string);
-		}
-	}
-
+	mv_t rv = get_srec_value_string_only(indirect_field_name, pvars);
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
 	mv_free(&mvname);
@@ -363,30 +281,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float(void* pvstate, 
 	char free_flags = NO_FREE;
 	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
-	mv_t rv;
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		rv = mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, indirect_field_name);
-		if (string == NULL) {
-			rv = mv_absent();
-		} else if (*string == 0) {
-			rv = mv_empty();
-		} else {
-			double fltv;
-			if (mlr_try_float_from_string(string, &fltv)) {
-				rv = mv_from_float(fltv);
-			} else {
-				// string points into lrec memory and is valid as long as the lrec is.
-				rv = mv_from_string_no_free(string);
-			}
-		}
-	}
+	mv_t rv = get_srec_value_string_float(indirect_field_name, pvars);
 
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
@@ -405,33 +300,7 @@ static mv_t rval_evaluator_indirect_field_name_func_string_float_int(void* pvsta
 	char free_flags = NO_FREE;
 	char* indirect_field_name = mv_maybe_alloc_format_val(&mvname, &free_flags);
 
-	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, indirect_field_name);
-	mv_t rv;
-	if (poverlay != NULL) {
-		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
-		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
-		// freed out from underneath it by the evaluator functions.
-		rv = mv_copy(poverlay);
-	} else {
-		char* string = lrec_get(pvars->pinrec, indirect_field_name);
-		if (string == NULL) {
-			rv = mv_absent();
-		} else if (*string == 0) {
-			rv = mv_empty();
-		} else {
-			long long intv;
-			double fltv;
-			if (mlr_try_int_from_string(string, &intv)) {
-				rv = mv_from_int(intv);
-			} else if (mlr_try_float_from_string(string, &fltv)) {
-				rv = mv_from_float(fltv);
-			} else {
-				// string points into AST memory and is valid as long as the AST is.
-				rv = mv_from_string_no_free(string);
-			}
-		}
-	}
+	mv_t rv = get_srec_value_string_float_int(indirect_field_name, pvars);
 
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(indirect_field_name);
@@ -974,4 +843,93 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval) {
 
 	pevaluator->pvstate = pstate;
 	return pevaluator;
+}
+
+// ================================================================
+// Type-inferenced srec-field getters
+mv_t get_srec_value_string_only(char* field_name, variables_t* pvars) {
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* strval = lrec_get(pvars->pinrec, field_name);
+		if (strval == NULL) {
+			rv = mv_absent();
+		} else if (*strval == 0) {
+			rv = mv_empty();
+		} else {
+			// strval points into lrec memory and is valid as long as the lrec is.
+			rv = mv_from_string_no_free(strval);
+		}
+	}
+
+	return rv;
+}
+
+// ----------------------------------------------------------------
+mv_t get_srec_value_string_float(char* field_name, variables_t* pvars) {
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* strval = lrec_get(pvars->pinrec, field_name);
+		if (strval == NULL) {
+			rv = mv_absent();
+		} else if (*strval == 0) {
+			rv = mv_empty();
+		} else {
+			double fltv;
+			if (mlr_try_float_from_string(strval, &fltv)) {
+				rv = mv_from_float(fltv);
+			} else {
+				// strval points into lrec memory and is valid as long as the lrec is.
+				rv = mv_from_string_no_free(strval);
+			}
+		}
+	}
+
+	return rv;
+}
+
+// ----------------------------------------------------------------
+mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars) {
+	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
+	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t rv;
+	if (poverlay != NULL) {
+		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
+		// a value here to feed into that. Otherwise the typed-overlay map would have its contents
+		// freed out from underneath it by the evaluator functions.
+		rv = mv_copy(poverlay);
+	} else {
+		char* strval = lrec_get(pvars->pinrec, field_name);
+		if (strval == NULL) {
+			rv = mv_absent();
+		} else if (*strval == 0) {
+			rv = mv_empty();
+		} else {
+			long long intv;
+			double fltv;
+			if (mlr_try_int_from_string(strval, &intv)) {
+				rv = mv_from_int(intv);
+			} else if (mlr_try_float_from_string(strval, &fltv)) {
+				rv = mv_from_float(fltv);
+			} else {
+				// strval points into AST memory and is valid as long as the AST is.
+				rv = mv_from_string_no_free(strval);
+			}
+		}
+	}
+
+	return rv;
 }

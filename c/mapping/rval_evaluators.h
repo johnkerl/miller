@@ -171,4 +171,11 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_fun
 // Nominally for oosvar multikeys.
 sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_null_or_error);
 
+// ----------------------------------------------------------------
+// Type-inferenced srec-field getters for the expression-evaluators, as well as for boundvars in srec for-loops.
+
+mv_t get_srec_value_string_only(char* field_name, variables_t* pvars);
+mv_t get_srec_value_string_float(char* field_name, variables_t* pvars);
+mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars);
+
 #endif // LREC_FEVALUATORS_H

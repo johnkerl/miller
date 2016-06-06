@@ -3277,9 +3277,11 @@ x=1,y=2,3=,4=,5=,foo=bar
 </div>
 <p/>
 
-<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or if-statements will, of course,
-propagate to the loop enclosing them, if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax
-error that will be flagged as soon as the expression is parsed.
+<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or
+if-statements will, of course, propagate to the innermost loop enclosing them,
+if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+that will be flagged as soon as the expression is parsed, before any input
+records are ingested.
 
 <p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
 in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
@@ -3296,14 +3298,16 @@ Miller. They are loops over key-value pairs, whether in stream records or
 out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
 example) PHP.
 
-<p/> There are a few variants, as follows. In each case the <tt>in</tt> keyword
-specifies the hashmap being iterated over, and the variable names between
-<tt>for</tt> and <tt>in</tt> are bound to the keys and values, respectively, of
-the hashmap's key-value pairs on each loop iteration.  Also, as with
-<tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or <tt>continue</tt>
-within nested control structures will propagate to the loop enclosing them, if
-any, and a <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
-that will be flagged as soon as the expression is parsed.
+<p/> There are a two variants: <b>for-loop over key-value pairs in the current
+stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
+variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
+iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
+bound to the keys and values, respectively, of the hashmap's key-value pairs on
+each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
+<tt>break</tt> or <tt>continue</tt> within nested control structures will
+propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
+<tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
+as the expression is parsed, before any input records are ingested.
 
 <p/><b>For-loop over the current stream record</b>:
 
@@ -3364,9 +3368,15 @@ but this can be synthesized using out-of-stream variables and <tt>while</tt>:
 </div>
 <p/>
 
+<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
+(and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
+record before the loop: reads are from the copy and writes are to the record itself</b>.
+
+<p/> xxx make an example of that.
+
 <p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
 record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
-an out-of-stream variable; you
+an out-of-stream variable; you can loop over nested keys; you can loop over all out-of-stream variables.
 
 <p/> xxx finish typing me up
 
