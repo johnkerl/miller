@@ -4,8 +4,7 @@ mlr --pprint put '
   $sum3 = 0;
   for (key, value in $*) {
     if (key =~ "^f[0-9]+") {
-      # xxx fix me
-      $sum2 += float(value);
+      $sum2 += value;
       $sum3 += $[key];
     }
   }

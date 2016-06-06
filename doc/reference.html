@@ -3331,16 +3331,15 @@ $ mlr --pprint put '
   $sum3 = 0;
   for (key, value in $*) {
     if (key =~ "^f[0-9]+") {
-      # xxx fix me
-      $sum2 += float(value);
+      $sum2 += value;
       $sum3 += $[key];
     }
   }
 ' data/for-srec-example.tbl
-label1 label2 f1  f2  f3  sum1 sum2       sum3
-blue   green  100 240 350 690  690.000000 690
-red    green  120 11  195 326  326.000000 326
-yellow blue   140 0   240 380  380.000000 380
+label1 label2 f1  f2  f3  sum1 sum2 sum3
+blue   green  100 240 350 690  690  690
+red    green  120 11  195 326  326  326
+yellow blue   140 0   240 380  380  380
 </pre>
 </div>
 <p/>

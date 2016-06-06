@@ -174,10 +174,16 @@ sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_nu
 // ----------------------------------------------------------------
 // Type-inferenced srec-field getters for the expression-evaluators, as well as for boundvars in srec for-loops.
 
-typedef mv_t type_infererenced_srec_field_getter_t(char* field_name, variables_t* pvars);
-
 mv_t get_srec_value_string_only(char* field_name, variables_t* pvars);
 mv_t get_srec_value_string_float(char* field_name, variables_t* pvars);
 mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars);
+
+typedef mv_t type_infererenced_srec_field_getter_t(lrece_t* pentry, variables_t* pvars);
+
+// xxx rename
+// xxx comment context
+mv_t get_srec_value_string_only_aux(lrece_t* pentry, variables_t* pvars);
+mv_t get_srec_value_string_float_aux(lrece_t* pentry, variables_t* pvars);
+mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, variables_t* pvars);
 
 #endif // LREC_FEVALUATORS_H

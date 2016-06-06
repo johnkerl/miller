@@ -843,9 +843,9 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 	pstatement->pblock_statements = pblock_statements;
 	pstatement->pbound_variables  = lhmsmv_alloc();
 	pstatement->ptype_infererenced_srec_field_getter =
-		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_srec_value_string_float_int :
+		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float_aux :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_srec_value_string_float_int_aux :
 		NULL;
 	if (pstatement->ptype_infererenced_srec_field_getter == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -1757,19 +1757,16 @@ static void handle_for_srec(
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
-		// Copy, not pointer-reference, in case of srec-unset in loop body:
-		mv_t mvkey = mv_from_string_no_free(pe->key);
 
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// xxx something like rval_evaluator_alloc_from_indirect_field_name (extract-method?)
 		// for typed eval here.
 
-		mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pe->key);
-		mv_t mvval = (poverlay != NULL)
-			? mv_copy(poverlay)
-			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pvars);
 
-		// xxx to do: compare w/free vs w/o free
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+		mv_t mvkey = mv_from_string_no_free(pe->key);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
