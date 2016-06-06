@@ -84,8 +84,12 @@ typedef void mlr_dsl_cst_statement_list_handler_t(
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-// Diffrence between keylist and namelist: in emit @a[$b]["c"], "d", @e,
-// the keylist is [$b, "c"] and the namelist is ["d", @e].
+// These hold all the member data needed to evaluate any CST statement. No one kind of statement
+// uses all of them. They aren't expressed as a union since their count is small: there's one CST
+// per mlr-put invocation, independent of the number of stream records processed.
+//
+// Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is [$b, "c"]
+// and the namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
 
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
@@ -127,6 +131,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* for_srec_k_name;
 	slls_t* pfor_oosvar_k_names;
 	char* for_v_name;
+	type_infererenced_srec_field_getter_t* ptype_infererenced_srec_field_getter;
 
 	// for-srec and for-oosvar:
 	lhmsmv_t* pbound_variables;

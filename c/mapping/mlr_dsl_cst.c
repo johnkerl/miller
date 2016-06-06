@@ -409,19 +409,21 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
-	pstatement->pnode_handler                    = NULL;
-	pstatement->pblock_handler                   = NULL;
-	pstatement->poosvar_lhs_keylist_evaluators   = NULL;
-	pstatement->srec_lhs_field_name              = NULL;
-	pstatement->psrec_lhs_evaluator              = NULL;
-	pstatement->prhs_evaluator                   = NULL;
-	pstatement->poosvar_rhs_keylist_evaluators   = NULL;
-	pstatement->pemit_oosvar_namelist_evaluators = NULL;
-	pstatement->pvarargs                         = NULL;
-	pstatement->pblock_statements                = NULL;
-	pstatement->pif_chain_statements             = NULL;
-	pstatement->pfor_oosvar_k_names              = NULL;
-	pstatement->pbound_variables                 = NULL;
+	pstatement->pnode_handler                        = NULL;
+	pstatement->pblock_handler                       = NULL;
+	pstatement->poosvar_lhs_keylist_evaluators       = NULL;
+	pstatement->srec_lhs_field_name                  = NULL;
+	pstatement->psrec_lhs_evaluator                  = NULL;
+	pstatement->prhs_evaluator                       = NULL;
+	pstatement->poosvar_rhs_keylist_evaluators       = NULL;
+	pstatement->pemit_oosvar_namelist_evaluators     = NULL;
+	pstatement->pvarargs                             = NULL;
+	pstatement->pblock_statements                    = NULL;
+	pstatement->pif_chain_statements                 = NULL;
+	pstatement->pfor_oosvar_k_names                  = NULL;
+	pstatement->for_v_name                           = NULL;
+	pstatement->ptype_infererenced_srec_field_getter = NULL;
+	pstatement->pbound_variables                     = NULL;
 
 	return pstatement;
 }
@@ -840,6 +842,16 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->pblock_statements = pblock_statements;
 	pstatement->pbound_variables  = lhmsmv_alloc();
+	pstatement->ptype_infererenced_srec_field_getter =
+		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_srec_value_string_float_int :
+		NULL;
+	if (pstatement->ptype_infererenced_srec_field_getter == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 
 	return pstatement;
 }
@@ -1755,6 +1767,8 @@ static void handle_for_srec(
 		mv_t mvval = (poverlay != NULL)
 			? mv_copy(poverlay)
 			: mv_from_string_with_free(mlr_strdup_or_die(pe->value));
+
+		// xxx to do: compare w/free vs w/o free
 
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);

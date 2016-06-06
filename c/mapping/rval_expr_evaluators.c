@@ -847,6 +847,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval) {
 
 // ================================================================
 // Type-inferenced srec-field getters
+
+// ----------------------------------------------------------------
 mv_t get_srec_value_string_only(char* field_name, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
@@ -867,7 +869,6 @@ mv_t get_srec_value_string_only(char* field_name, variables_t* pvars) {
 			rv = mv_from_string_no_free(strval);
 		}
 	}
-
 	return rv;
 }
 
@@ -897,7 +898,6 @@ mv_t get_srec_value_string_float(char* field_name, variables_t* pvars) {
 			}
 		}
 	}
-
 	return rv;
 }
 
@@ -930,6 +930,5 @@ mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars) {
 			}
 		}
 	}
-
 	return rv;
 }
