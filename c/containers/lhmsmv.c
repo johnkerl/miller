@@ -73,7 +73,6 @@ lhmsmv_t* lhmsmv_alloc() {
 }
 
 // ----------------------------------------------------------------
-// xxx test-ut
 lhmsmv_t* lhmsmv_copy(lhmsmv_t* pold) {
 	lhmsmv_t* pnew = lhmsmv_alloc();
 
@@ -84,6 +83,23 @@ lhmsmv_t* lhmsmv_copy(lhmsmv_t* pold) {
 	}
 
 	return pnew;
+}
+
+// ----------------------------------------------------------------
+void lhmsmv_clear(lhmsmv_t* pmap) {
+	if (pmap == NULL)
+		return;
+	for (lhmsmve_t* pe = pmap->phead; pe != NULL; pe = pe->pnext) {
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(pe->key);
+		if (pe->free_flags & FREE_ENTRY_VALUE)
+			mv_free(&pe->value);
+	}
+	pmap->num_occupied = 0;
+	pmap->num_freed    = 0;
+	memset(pmap->states, EMPTY, pmap->array_length);
+	pmap->phead        = NULL;
+	pmap->ptail        = NULL;
 }
 
 // ----------------------------------------------------------------

@@ -30,7 +30,7 @@
 
 #include "lib/context.h"
 #include "containers/lrec.h"
-#include "containers/lhmsv.h"
+#include "containers/lhmsmv.h"
 #include "containers/mlhmmv.h"
 #include "containers/mlrval.h"
 #include "containers/bind_stack.h"
@@ -41,7 +41,7 @@ struct _rval_evaluator_t; // forward reference for method declarations
 
 typedef struct _variables_t {
 	lrec_t*          pinrec;
-	lhmsv_t*         ptyped_overlay;
+	lhmsmv_t*        ptyped_overlay;
 	mlhmmv_t*        poosvars;
 	string_array_t** ppregex_captures;
 	context_t*       pctx;

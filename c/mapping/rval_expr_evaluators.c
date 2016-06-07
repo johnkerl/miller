@@ -851,7 +851,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval) {
 // ----------------------------------------------------------------
 mv_t get_srec_value_string_only(char* field_name, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, field_name);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
@@ -875,7 +875,7 @@ mv_t get_srec_value_string_only(char* field_name, variables_t* pvars) {
 // ----------------------------------------------------------------
 mv_t get_srec_value_string_float(char* field_name, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, field_name);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
@@ -904,7 +904,7 @@ mv_t get_srec_value_string_float(char* field_name, variables_t* pvars) {
 // ----------------------------------------------------------------
 mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, field_name);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, field_name);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
@@ -938,7 +938,7 @@ mv_t get_srec_value_string_float_int(char* field_name, variables_t* pvars) {
 // xxx rename
 mv_t get_srec_value_string_only_aux(lrece_t* pentry, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pentry->key);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, pentry->key);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
@@ -960,7 +960,7 @@ mv_t get_srec_value_string_only_aux(lrece_t* pentry, variables_t* pvars) {
 // ----------------------------------------------------------------
 mv_t get_srec_value_string_float_aux(lrece_t* pentry, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pentry->key);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, pentry->key);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy
@@ -987,7 +987,7 @@ mv_t get_srec_value_string_float_aux(lrece_t* pentry, variables_t* pvars) {
 // ----------------------------------------------------------------
 mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, variables_t* pvars) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
-	mv_t* poverlay = lhmsv_get(pvars->ptyped_overlay, pentry->key);
+	mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, pentry->key);
 	mv_t rv;
 	if (poverlay != NULL) {
 		// The lrec-evaluator logic will free its inputs and allocate new outputs, so we must copy

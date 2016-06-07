@@ -44,6 +44,7 @@ typedef struct _lhmsmv_t {
 // ----------------------------------------------------------------
 lhmsmv_t* lhmsmv_alloc();
 lhmsmv_t* lhmsmv_copy(lhmsmv_t* pmap);
+void  lhmsmv_clear(lhmsmv_t* pmap);
 void  lhmsmv_free(lhmsmv_t* pmap);
 
 void  lhmsmv_put(lhmsmv_t* pmap, char* key, mv_t* pvalue, char free_flags);

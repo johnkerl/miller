@@ -180,7 +180,7 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		return sllv_single(NULL);
 
 	mapper_filter_state_t* pstate = pvstate;
-	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	sllv_t* rv = NULL;
 
 	variables_t variables = (variables_t) {
@@ -206,11 +206,6 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		}
 	}
 
-	for (lhmsve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
-		mv_t* pmv = pe->pvvalue;
-		mv_free(pmv);
-		free(pmv);
-	}
-	lhmsv_free(ptyped_overlay);
+	lhmsmv_free(ptyped_overlay);
 	return rv;
 }

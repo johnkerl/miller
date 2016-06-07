@@ -844,7 +844,7 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 	pstatement->pnode_handler = handle_for_srec;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->pblock_statements = pblock_statements;
-	pstatement->pbound_variables  = lhmsmv_alloc();
+	pstatement->pbound_variables = lhmsmv_alloc();
 	pstatement->ptype_infererenced_srec_field_getter =
 		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
 		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float_aux :
@@ -1271,12 +1271,7 @@ static void handle_srec_assignment(
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(pval)) {
-		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
-		if (pold != NULL) {
-			mv_free(pold);
-			free(pold);
-		}
-		lhmsv_put(pvars->ptyped_overlay, srec_lhs_field_name, pval, FREE_ENTRY_VALUE);
+		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, pval, FREE_ENTRY_VALUE);
 		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
 	} else {
 		mv_free(pval);
@@ -1313,16 +1308,8 @@ static void handle_indirect_srec_assignment(
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
 	if (mv_is_present(prval)) {
-		mv_t* pold = lhmsv_get(pvars->ptyped_overlay, srec_lhs_field_name);
-		if (pold != NULL) {
-			mv_free(pold);
-			free(pold);
-			lhmsv_put(pvars->ptyped_overlay, srec_lhs_field_name, prval,
-				FREE_ENTRY_VALUE);
-		} else {
-			lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
-				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		}
+		lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY);
 	} else {
 		mv_free(prval);
@@ -1393,7 +1380,7 @@ static void handle_oosvar_from_full_srec_assignment(
 			for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
 				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
 				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
-				mv_t* pomv = lhmsv_get(pvars->ptyped_overlay, pe->key);
+				mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 				if (pomv != NULL) {
 					mlhmmv_put_terminal_from_level(plevel, &e, pomv);
 				} else {
@@ -1413,11 +1400,7 @@ static void handle_full_srec_from_oosvar_assignment(
 	cst_outputs_t*           pcst_outputs)
 {
 	lrec_clear(pvars->pinrec);
-	for (lhmsve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
-		mv_t* pmv = pe->pvvalue;
-		mv_free(pmv);
-	}
-	lhmsv_clear(pvars->ptyped_overlay);
+	lhmsmv_clear(pvars->ptyped_overlay);
 
 	int all_non_null_or_error = TRUE;
 	sllmv_t* prhskeys = evaluate_list(pnode->poosvar_rhs_keylist_evaluators, pvars, &all_non_null_or_error);
@@ -1443,12 +1426,7 @@ static void handle_full_srec_from_oosvar_assignment(
 					// lrec would result in double frees, or awkward bookkeeping. However, the NR
 					// variable evaluator reads prec->field_count, so we need to put something here.
 					// And putting something statically allocated minimizes copying/freeing.
-					mv_t* pold = lhmsv_get(pvars->ptyped_overlay, skey);
-					if (pold != NULL) {
-						mv_free(pold);
-						free(pold);
-					}
-					lhmsv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
+					lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
 					lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
 				}
 			}
@@ -1758,19 +1736,13 @@ static void handle_for_srec(
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
-	// xxx need to copy the overlay as well!
 	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
-	//lhmsv_t* pcopyoverlay = lhmsv_copy(pvars->ptyped_overlay);
+	// xxx need to use the copied overlay as well!
+	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
 
 	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
 
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// xxx something like rval_evaluator_alloc_from_indirect_field_name (extract-method?)
-		// for typed eval here.
-
 		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pvars);
-
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
@@ -1784,7 +1756,7 @@ static void handle_for_srec(
 			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
 		}
 	}
-	//lhmsv_free(pcopyoverlay);
+	lhmsmv_free(pcopyoverlay);
 	lrec_free(pcopyrec);
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_pop(pvars->pbind_stack);

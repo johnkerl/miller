@@ -73,6 +73,22 @@ HYGIENE:
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 
+HETEROGENIZE FEATURE?
+* outer=1
+  inner=2
+  inner=3
+  inner=4
+  outer=5
+  inner=6
+  inner=7
+  ->
+  outer=1,inner=2
+  outer=1,inner=3
+  outer=1,inner=4
+  outer=5,inner=6
+  outer=5,inner=7
+* impl as oosvar first for prototype; to cookbook; consider C-ifying
+
 NOTE FOR FUTURE:
 * find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
 ? local vars w/ decl syntax -- @vars for now?

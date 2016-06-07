@@ -21,7 +21,7 @@ static char * test_caps() {
 	rval_evaluator_t* pfilenum  = rval_evaluator_alloc_from_FILENUM();
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
@@ -75,7 +75,7 @@ static char * test_strings() {
 	rval_evaluator_t* ptoupper = rval_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
@@ -151,7 +151,7 @@ static char * test_numbers() {
 	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, TYPE_INFER_STRING_FLOAT_INT, 0);
 
 	lrec_t* prec = lrec_unbacked_alloc();
-	lhmsv_t* ptyped_overlay = lhmsv_alloc();
+	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
@@ -242,7 +242,7 @@ static char * test_logical_and() {
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;
-	lhmsv_t* ptyped_overlay = NULL;
+	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
@@ -307,7 +307,7 @@ static char * test_logical_or() {
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;
-	lhmsv_t* ptyped_overlay = NULL;
+	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
@@ -372,7 +372,7 @@ static char * test_logical_xor() {
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;
-	lhmsv_t* ptyped_overlay = NULL;
+	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	bind_stack_t* pbind_stack = bind_stack_alloc();
