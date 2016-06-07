@@ -1633,6 +1633,32 @@ mv_t b_x_isnotempty_func(mv_t* pval1) {
 	return rv;
 }
 
+mv_t b_x_isnumeric_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(pval1->type == MT_INT || pval1->type == MT_FLOAT);
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_isint_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(pval1->type == MT_INT);
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_isfloat_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(pval1->type == MT_FLOAT);
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_isbool_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(pval1->type == MT_BOOL);
+	mv_free(pval1);
+	return rv;
+}
+mv_t b_x_isstring_func(mv_t* pval1) {
+	mv_t rv = mv_from_bool(pval1->type == MT_STRING || pval1->type == MT_EMPTY);
+	mv_free(pval1);
+	return rv;
+}
+
 // ----------------------------------------------------------------
 static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
 static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }

@@ -1755,6 +1755,7 @@ static void handle_for_srec(
 	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
+	// xxx need to copy the overlay as well!
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
 

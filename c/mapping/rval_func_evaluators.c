@@ -65,6 +65,11 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "ispresent",   1, "True if field is present in input, false otherwise."},
 	{FUNC_CLASS_CONVERSION, "isempty",     1, "True if field is present in input with empty value, false otherwise."},
 	{FUNC_CLASS_CONVERSION, "isnotempty",  1, "False if field is present in input with empty value, false otherwise"},
+	{FUNC_CLASS_CONVERSION, "isnumeric",   1, "True if field is present with value inferred to be int or float"},
+	{FUNC_CLASS_CONVERSION, "isint",       1, "True if field is present with value inferred to be int "},
+	{FUNC_CLASS_CONVERSION, "isfloat",     1, "True if field is present with value inferred to be float"},
+	{FUNC_CLASS_CONVERSION, "isbool",      1, "True if field is present with boolean value"},
+	{FUNC_CLASS_CONVERSION, "isstring",    1, "True if field is present with string (including empty-string) value"},
 	{FUNC_CLASS_CONVERSION, "boolean",     1, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",       1, "Convert int/float/bool/string to float."},
 	{FUNC_CLASS_CONVERSION, "fmtnum",    2,
@@ -344,6 +349,11 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 	} else if (streq(fnnm, "isnotnull"))  { return rval_evaluator_alloc_from_x_x_func(b_x_isnotnull_func,   parg1);
 	} else if (streq(fnnm, "isnull"))     { return rval_evaluator_alloc_from_x_x_func(b_x_isnull_func,      parg1);
 	} else if (streq(fnnm, "ispresent"))  { return rval_evaluator_alloc_from_x_x_func(b_x_ispresent_func,   parg1);
+	} else if (streq(fnnm, "isnumeric"))  { return rval_evaluator_alloc_from_x_x_func(b_x_isnumeric_func,   parg1);
+	} else if (streq(fnnm, "isint"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isint_func,       parg1);
+	} else if (streq(fnnm, "isfloat"))    { return rval_evaluator_alloc_from_x_x_func(b_x_isfloat_func,     parg1);
+	} else if (streq(fnnm, "isbool"))     { return rval_evaluator_alloc_from_x_x_func(b_x_isbool_func,      parg1);
+	} else if (streq(fnnm, "isstring"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isstring_func,    parg1);
 	} else if (streq(fnnm, "log"))        { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
 	} else if (streq(fnnm, "log10"))      { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);
 	} else if (streq(fnnm, "log1p"))      { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,       parg1);

@@ -360,6 +360,13 @@ mv_t b_x_isabsent_func(mv_t* pval1);
 mv_t b_x_ispresent_func(mv_t* pval1);
 mv_t b_x_isempty_func(mv_t* pval1);
 mv_t b_x_isnotempty_func(mv_t* pval1);
+
+mv_t b_x_isnumeric_func(mv_t* pval1);
+mv_t b_x_isint_func(mv_t* pval1);
+mv_t b_x_isfloat_func(mv_t* pval1);
+mv_t b_x_isbool_func(mv_t* pval1);
+mv_t b_x_isstring_func(mv_t* pval1);
+
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);

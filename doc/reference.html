@@ -389,13 +389,13 @@ Verbs:
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
-   isnull isnotnull isabsent ispresent isempty isnotempty boolean float fmtnum
-   hexfmt int string typeof . gsub strlen sub tolower toupper abs acos acosh
-   asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor
-   invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm round
-   roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec
-   fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2hms
-   strftime strptime systime
+   isnull isnotnull isabsent ispresent isempty isnotempty isnumeric isint
+   isfloat isbool isstring boolean float fmtnum hexfmt int string typeof . gsub
+   strlen sub tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt
+   ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd
+   max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
+   urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
+   hms2fsec hms2sec sec2dhms sec2gmt sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 
@@ -1219,6 +1219,16 @@ double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
 appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
 through the record <tt>x=abc</tt>.  If field names have special characters such
 as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
+
+<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
+</pre>
+</div>
+<p/>
 
 <a id="Built-in_variables_for_filter"/><h3>Built-in variables for filter</h3>
 
@@ -2123,6 +2133,17 @@ through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
 have special characters such as <tt>.</tt> then you can use braces, e.g.
 <tt>'${field.name}'</tt>.
 
+<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
+s=green,t=blue,a=3,b=4,green_blue=12
+</pre>
+</div>
+<p/>
+
 <a id="Built-in_variables_for_put"/><h3>Built-in variables for put</h3>
 
 <p/>Miller supports the following five built-in variables for <a
@@ -2280,7 +2301,18 @@ only when you assign to them.
 <li/> Just as for field names in stream records, if you want to define out-of-stream variables
 with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
 
-<li/> They are scoped to the <tt>put</tt> command in which they appear.
+<li/>You may use a <b>computed key </b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+green_blue=12
+</pre>
+</div>
+<p/>
+
+<li/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
 In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
 each put will have its own set of out-of-stream variables:
 
@@ -2305,7 +2337,7 @@ sum=50
 </div>
 <p/>
 
-<li/> These are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+<li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
 
 <li/> You can output these in three ways: (1) assign them to stream-record
@@ -3343,9 +3375,42 @@ yellow blue   140 0   240 380  380  380
 </pre>
 </div>
 <p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
+a   b   i x                   y                   a_type    b_type    i_type x_type   y_type
+pan pan 1 0.3467901443380824  0.7268028627434533  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+eks pan 2 0.7586799647899636  0.5221511083334797  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+wye wye 3 0.20460330576630303 0.33831852551664776 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+eks wye 4 0.38139939387114097 0.13418874328430463 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+wye pan 5 0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+</pre>
+</div>
+<p/>
 
 <p/>Note that the value of the current field in the for-loop can be gotten either using the bound
 variable <tt>value</tt>, or through an <i>indirect field name</i> using <tt>$[key]</tt>.
+
+<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
+(and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
+record before the loop: reads are from the copy and writes are to the record itself</b>.
+
+<p/> xxx to do: update this
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '@sum = 0; for(k,v in $*) {if (isnumeric(v)) {@sum += v}} $sum = @sum'
+a   b   i x                   y                   sum
+pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
+eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
+wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
+eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
+wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
+</pre>
+</div>
+<p/>
 
 <p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
 
@@ -3366,12 +3431,6 @@ but this can be synthesized using out-of-stream variables and <tt>while</tt>:
 </pre>
 </div>
 <p/>
-
-<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
-(and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
-record before the loop: reads are from the copy and writes are to the record itself</b>.
-
-<p/> xxx make an example of that.
 
 <p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
 record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
@@ -4953,6 +5012,16 @@ ispresent (class=conversion #args=1): True if field is present in input, false o
 isempty (class=conversion #args=1): True if field is present in input with empty value, false otherwise.
 
 isnotempty (class=conversion #args=1): False if field is present in input with empty value, false otherwise
+
+isnumeric (class=conversion #args=1): True if field is present with value inferred to be int or float
+
+isint (class=conversion #args=1): True if field is present with value inferred to be int
+
+isfloat (class=conversion #args=1): True if field is present with value inferred to be float
+
+isbool (class=conversion #args=1): True if field is present with boolean value
+
+isstring (class=conversion #args=1): True if field is present with string (including empty-string) value
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 
