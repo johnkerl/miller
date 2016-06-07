@@ -7,6 +7,7 @@ BUGFIXES
 TOP OF LIST:
 
 ! copy the overlay in for-srec as well!
+! needs lhmsmv overlay first
 * xxxes
 * re-do valgrinds before release
 * doc:
@@ -30,6 +31,7 @@ COOKBOOK:
 
 FAQ:
 * faqent about NR from original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+* gunzip prepipe faqent
 
 MLD:
 * doc re newlines not replacing semicolons. no need for \ continuations that way; simple parser.

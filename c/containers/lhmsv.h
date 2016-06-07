@@ -43,7 +43,6 @@ typedef struct _lhmsv_t {
 
 // ----------------------------------------------------------------
 lhmsv_t* lhmsv_alloc();
-lhmsv_t* lhmsv_copy(lhmsv_t* pmap);
 void  lhmsv_free(lhmsv_t* pmap);
 void  lhmsv_clear(lhmsv_t* pmap);
 

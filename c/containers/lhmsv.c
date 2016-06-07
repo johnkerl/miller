@@ -73,17 +73,6 @@ lhmsv_t* lhmsv_alloc() {
 	return pmap;
 }
 
-//// ----------------------------------------------------------------
-//// xxx test-ut
-//lhmsv_t* lhmsv_copy(lhmsv_t* pold) {
-//	lhmsv_t* pnew = lhmsv_alloc();
-//
-//	for (lhmsve_t* pe = pold->phead; pe != NULL; pe = pe->pnext) {
-//	}
-//
-//	return pnew;
-//}
-
 // ----------------------------------------------------------------
 void lhmsv_free(lhmsv_t* pmap) {
 	if (pmap == NULL)

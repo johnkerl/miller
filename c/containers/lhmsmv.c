@@ -72,6 +72,21 @@ lhmsmv_t* lhmsmv_alloc() {
 	return pmap;
 }
 
+// ----------------------------------------------------------------
+// xxx test-ut
+lhmsmv_t* lhmsmv_copy(lhmsmv_t* pold) {
+	lhmsmv_t* pnew = lhmsmv_alloc();
+
+	for (lhmsmve_t* pe = pold->phead; pe != NULL; pe = pe->pnext) {
+		char* nkey = mlr_strdup_or_die(pe->key);
+		mv_t  nval = mv_copy(&pe->value);
+		lhmsmv_put(pnew, nkey, &nval, FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+	}
+
+	return pnew;
+}
+
+// ----------------------------------------------------------------
 void lhmsmv_free(lhmsmv_t* pmap) {
 	if (pmap == NULL)
 		return;
