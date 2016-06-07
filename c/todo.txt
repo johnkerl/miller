@@ -9,6 +9,8 @@ TOP OF LIST:
 ! typing for v in for-srec !
 * xxx
 * re-do valgrinds before release
+* doc:
+  - indirect field names: "computed field names" $[...]. likewise for oosvars. then, in for/boundvar context.
 
 COOKBOOK:
 * cookbook example: key<->val inverter
