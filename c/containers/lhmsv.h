@@ -43,8 +43,10 @@ typedef struct _lhmsv_t {
 
 // ----------------------------------------------------------------
 lhmsv_t* lhmsv_alloc();
+lhmsv_t* lhmsv_copy(lhmsv_t* pmap);
 void  lhmsv_free(lhmsv_t* pmap);
 void  lhmsv_clear(lhmsv_t* pmap);
+
 void  lhmsv_put(lhmsv_t* pmap, char* key, void* pvvalue, char free_flags);
 void* lhmsv_get(lhmsv_t* pmap, char* key);
 int   lhmsv_has_key(lhmsv_t* pmap, char* key);

@@ -154,8 +154,10 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
-// Example:
-
+// Main entry point for AST-to-CST for mlr put.
+//
+// Example AST (using put -v):
+//
 // $ mlr -n put -v '#begin{@a=1;@b=2};$m=2;$n=4;end{@y=5;@z=6}'
 // AST ROOT:
 // list (statement_list):
@@ -184,7 +186,8 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	int context_flags = 0;
-	// Root node is not populated on empty-string input to the parser.
+	// The root node is not populated on empty-string input to the parser.
+	// xxx move this to the finish-hook in the parser?
 	if (pnode->proot == NULL) {
 		pnode->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	}
@@ -1756,8 +1759,10 @@ static void handle_for_srec(
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	// xxx need to copy the overlay as well!
-	lrec_t* pcopy = lrec_copy(pvars->pinrec);
-	for (lrece_t* pe = pcopy->phead; pe != NULL; pe = pe->pnext) {
+	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
+	//lhmsv_t* pcopyoverlay = lhmsv_copy(pvars->ptyped_overlay);
+
+	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// xxx something like rval_evaluator_alloc_from_indirect_field_name (extract-method?)
@@ -1779,7 +1784,8 @@ static void handle_for_srec(
 			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
 		}
 	}
-	lrec_free(pcopy);
+	//lhmsv_free(pcopyoverlay);
+	lrec_free(pcopyrec);
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_pop(pvars->pbind_stack);
 }
