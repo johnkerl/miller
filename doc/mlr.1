@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-06-06
+.\"      Date: 2016-06-07
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-06-06" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-06-07" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,13 +156,13 @@ output separator to the given value.
 .\}
 .nf
  + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
- isnotnull isabsent ispresent isempty isnotempty boolean float fmtnum hexfmt
- int string typeof . gsub strlen sub tolower toupper abs acos acosh asin asinh
- atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log
- log10 log1p logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin
- sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms
- fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2hms strftime strptime
- systime
+ isnotnull isabsent ispresent isempty isnotempty isnumeric isint isfloat isbool
+ isstring boolean float fmtnum hexfmt int string typeof . gsub strlen sub
+ tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh
+ erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
+ mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
+ urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec
+ sec2dhms sec2gmt sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 .fi
@@ -1514,6 +1514,51 @@ and string results in string compare.
 .\}
 .nf
 (class=conversion #args=1): False if field is present in input with empty value, false otherwise
+.fi
+.if n \{\
+.RE
+.SS "isnumeric"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): True if field is present with value inferred to be int or float
+.fi
+.if n \{\
+.RE
+.SS "isint"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): True if field is present with value inferred to be int 
+.fi
+.if n \{\
+.RE
+.SS "isfloat"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): True if field is present with value inferred to be float
+.fi
+.if n \{\
+.RE
+.SS "isbool"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): True if field is present with boolean value
+.fi
+.if n \{\
+.RE
+.SS "isstring"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): True if field is present with string (including empty-string) value
 .fi
 .if n \{\
 .RE

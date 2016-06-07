@@ -998,7 +998,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'}}HERE
 
 <p/>Note that the value of the current field in the for-loop can be gotten either using the bound
-variable <tt>value</tt>, or through an <i>indirect field name</i> using <tt>$[key]</tt>.
+variable <tt>value</tt>, or through a <i>computed field name</i> using square brackets as in <tt>$[key]</tt>.
 
 <p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
 (and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
