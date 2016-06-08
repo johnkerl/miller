@@ -182,8 +182,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces_for_put">Semicolons, newlines, and curly braces for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements_for_put">If-statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While-loop_and_do-while-loop_statements_for_put">While-loop and do-while-loop statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_statements_for_put">For-loop statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops_for_put">While and do-while loops for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops_for_put">For-loops for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -3291,7 +3291,7 @@ mlr put '
 </div>
 <p/>
 
-<a id="While-loop_and_do-while-loop_statements_for_put"/><h3>While-loop and do-while-loop statements for put</h3>
+<a id="While_and_do-while_loops_for_put"/><h3>While and do-while loops for put</h3>
 
 <p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
 comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
@@ -3339,7 +3339,7 @@ once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
 otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
 <tt>NR</tt> is only incremented between records</b>.
 
-<a id="For-loop_statements_for_put"/><h3>For-loop statements for put</h3>
+<a id="For-loops_for_put"/><h3>For-loops for put</h3>
 
 <p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
 much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
