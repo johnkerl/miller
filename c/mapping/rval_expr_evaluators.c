@@ -935,7 +935,6 @@ mv_t get_srec_value_string_float_int(char* field_name, lrec_t* pinrec, lhmsmv_t*
 
 
 // ----------------------------------------------------------------
-// xxx rename
 mv_t get_srec_value_string_only_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay) {
 	// See comments in rval_evaluator.h and mapper_put.c regarding the typed-overlay map.
 	mv_t* poverlay = lhmsmv_get(ptyped_overlay, pentry->key);

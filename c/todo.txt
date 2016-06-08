@@ -6,7 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* xxxes
 * re-do valgrinds before release
 * isnumeric et al.: UTs
 
@@ -15,25 +14,24 @@ COOKBOOK:
 * cookbook example: komosa originals x 2
 * cookbook example: oosvar keyed mean
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
-  mlr --fs comma --nidx put '
+  mlr --from jb.csv --fs comma --nidx put '
     @maxnf = max(@maxnf, NF);
     @nf = NF;
     while(@nf < @maxnf) {
       @nf += 1;
       $[@nf] = ""
     }
-  ' jb.csv
+  '
 
 FAQ:
-* faqent about NR from original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+* NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
 * gunzip prepipe faqent
+* no triple-for with boundvars, but oosvars & while-loops
 
 MLD:
-* doc re newlines not replacing semicolons. no need for \ continuations that way; simple parser.
 * ref emph while is *within* each srec do don't loop over NR (for example)
 * doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 * -n can be used as syntax-checker flag for DSLs. and/or for dataless ops all in begin{}.
-* faqent: no triple-for with boundvars, but oosvars & while-loops
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
 ! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
 
@@ -43,7 +41,7 @@ GEN DOC:
 
 UT:
 * mixed for/while
-* dlb-chk UT coverage for 4.1.0 features
+* dbl-chk UT coverage for 4.1.0 features
 * move/filter all reg_test/dev -> reg_test/run
 
 HYGIENE:

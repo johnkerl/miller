@@ -187,7 +187,6 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
-	// xxx move this to the finish-hook in the parser?
 	if (pnode->proot == NULL) {
 		pnode->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	}
