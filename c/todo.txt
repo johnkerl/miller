@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! copy the overlay in for-srec as well!
-! needs lhmsmv overlay first
 * xxxes
 * re-do valgrinds before release
 * doc:

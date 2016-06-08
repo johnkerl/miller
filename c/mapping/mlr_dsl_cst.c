@@ -1737,12 +1737,11 @@ static void handle_for_srec(
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
-	// xxx need to use the copied overlay as well!
 	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
 
 	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
 
-		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pvars);
+		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pcopyoverlay);
 
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);

@@ -998,15 +998,15 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'}}HERE
 
 <p/>Note that the value of the current field in the for-loop can be gotten either using the bound
-variable <tt>value</tt>, or through a <i>computed field name</i> using square brackets as in <tt>$[key]</tt>.
+variable <tt>value</tt>, or through a <b>computed field name</b> using square brackets as in <tt>$[key]</tt>.
 
-<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
-(and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
-record before the loop: reads are from the copy and writes are to the record itself</b>.
+<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re
+setting new fields (and/or unsetting existing ones) while looping over the
+record, <b>Miller makes a copy of the record before the loop: loop variables
+are bound from the copy and all other reads/writes involve the record
+itself</b>:
 
-<p/> xxx to do: update this
-
-POKI_RUN_COMMAND{{mlr --from data/small --opprint put '@sum = 0; for(k,v in $*) {if (isnumeric(v)) {@sum += v}} $sum = @sum'}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)HERE
 
 <p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
 
@@ -1016,13 +1016,41 @@ but this can be synthesized using out-of-stream variables and <tt>while</tt>:
 
 POKI_CARDIFY{{@i = 1; while (@i <= 10) {...; @i += 1}}}HERE
 
-<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
-record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
-an out-of-stream variable; you can loop over nested keys; you can loop over all out-of-stream variables.
+<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
+over the current stream record except for additional degrees of freedom: you
+can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
+over nested keys; you can loop over all out-of-stream variables.  As with
+for-loops over stream records, the bound variables are bound to a copy of the
+sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
+square-bracketed indices after <tt>in</tt>, and additional deeper indices are
+bound to loop key-variables. The terminal values are bound to the loop
+value-variable whenever the keys are neither too shallow, nor too deep. Example
+indexing is as follows:
 
-<p/> xxx finish typing me up
+POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-1.sh)HERE
+<p/>That&rsquo;s confusing in the abstract, so a concrete example is in order.
+Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)HERE
+
+<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
+and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
+(basename and one index specify a terminal value) and can be gotten as follows:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)HERE
+
+<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
+aren&rsquo;t bound in either of these for-loops.
+
+<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
+two indices specify a terminal value) and can be gotten at by any of the
+following:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0f.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0g.sh)HERE
 
 <!-- ================================================================ -->
 <h2>regularize</h2>

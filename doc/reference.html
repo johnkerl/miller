@@ -3357,7 +3357,7 @@ yellow blue   140 0   240
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --pprint put '
+$ mlr --pprint --from data/for-srec-example.tbl put '
   $sum1 = $f1 + $f2 + $f3;
   $sum2 = 0;
   $sum3 = 0;
@@ -3367,7 +3367,7 @@ $ mlr --pprint put '
       $sum3 += $[key];
     }
   }
-' data/for-srec-example.tbl
+'
 label1 label2 f1  f2  f3  sum1 sum2 sum3
 blue   green  100 240 350 690  690  690
 red    green  120 11  195 326  326  326
@@ -3390,24 +3390,33 @@ wye pan 5 0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_
 <p/>
 
 <p/>Note that the value of the current field in the for-loop can be gotten either using the bound
-variable <tt>value</tt>, or through a <i>computed field name</i> using square brackets as in <tt>$[key]</tt>.
+variable <tt>value</tt>, or through a <b>computed field name</b> using square brackets as in <tt>$[key]</tt>.
 
-<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re setting new fields
-(and/or unsetting existing ones) while looping over the record, <b>Miller makes a copy of the
-record before the loop: reads are from the copy and writes are to the record itself</b>.
-
-<p/> xxx to do: update this
+<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re
+setting new fields (and/or unsetting existing ones) while looping over the
+record, <b>Miller makes a copy of the record before the loop: loop variables
+are bound from the copy and all other reads/writes involve the record
+itself</b>:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/small --opprint put '@sum = 0; for(k,v in $*) {if (isnumeric(v)) {@sum += v}} $sum = @sum'
-a   b   i x                   y                   sum
-pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
-wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
+$ mlr --from data/small --opprint put '
+  $sum1 = 0;
+  $sum2 = 0;
+  for (k,v in $*) {
+    if (isnumeric(v)) {
+      $sum1 +=v;
+      $sum2 += $[k];
+    }
+  }
+'
+a   b   i x                   y                   sum1     sum2
+pan pan 1 0.3467901443380824  0.7268028627434533  2.073593 8.294372
+eks pan 2 0.7586799647899636  0.5221511083334797  3.280831 13.123324
+wye wye 3 0.20460330576630303 0.33831852551664776 3.542922 14.171687
+eks wye 4 0.38139939387114097 0.13418874328430463 4.515588 18.062353
+wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
 </pre>
 </div>
 <p/>
@@ -3432,150 +3441,184 @@ but this can be synthesized using out-of-stream variables and <tt>while</tt>:
 </div>
 <p/>
 
-<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping over the current stream
-record except for additional degrees of freedom: you can start iterating on sub-hashmaps of
-an out-of-stream variable; you can loop over nested keys; you can loop over all out-of-stream variables.
-
-<p/> xxx finish typing me up
+<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
+over the current stream record except for additional degrees of freedom: you
+can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
+over nested keys; you can loop over all out-of-stream variables.  As with
+for-loops over stream records, the bound variables are bound to a copy of the
+sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
+square-bracketed indices after <tt>in</tt>, and additional deeper indices are
+bound to loop key-variables. The terminal values are bound to the loop
+value-variable whenever the keys are neither too shallow, nor too deep. Example
+indexing is as follows:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put -q '
-  @xes[NR] = $x;
-  @all_fields[NR] = $*;
-  end {
-    dump;
+# Parentheses are optional for single key:
+for (k1,           v in @a["b"]["c"]) { ... }
+for ((k1),         v in @a["b"]["c"]) { ... }
+# Parentheses are required for multiple keys:
+for ((k1, k2),     v in @a["b"]["c"]) { ... } # Loop over subhashmap of a variable
+for ((k1, k2, k3), v in @a["b"]["c"]) { ... } # Ditto
+for ((k1, k2, k3), v in @a { ... }            # Loop over variable starting from basename
+for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is bound to basename)
+</pre>
+</div>
+<p/>
 
-    # Simple loop over key-value pairs in an out-of-stream variable:
-    for (key, value in @xes) {
-      @item1[key] = value
-    }
-    emitp @item1, "key";
+<p/>That&rsquo;s confusing in the abstract, so a concrete example is in order.
+Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
 
-    # Simple loop over key-value pairs in a subhashmap of an out-of-stream variable:
-    for (key, value in @all_fields[4]) {
-      @item2[key] = value
-    }
-    emitp @item2, "key";
-
-    # Loop over multilevel key-value pairs:
-    for ((nr, key), value in @all_fields) {
-      @item3[nr][key] = value
-    }
-    emitp @item3, "NR", "key";
-
-    # Loop over all out-of-stream variables with depth two
-    for ((k1, k2), v in @*) {
-      @item4[string(k1)."_".string(k2)] = v;
-    }
-    emitp @item4, "key", "value"
-
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
   }
-' data/small
+  end {
+    dump
+  }
+'
 {
-  "xes": {
-    "1": 0.346790,
-    "2": 0.758680,
-    "3": 0.204603,
-    "4": 0.381399,
-    "5": 0.573289
-  },
-  "all_fields": {
-    "1": {
-      "a": "pan",
-      "b": "pan",
-      "i": 1,
-      "x": 0.3467901443380824,
-      "y": 0.7268028627434533
+  "myvar": {
+    "nesting-is-too-shallow": 1,
+    "nesting-is": {
+      "just-right": 2,
+      "also-just-right": 3
     },
-    "2": {
-      "a": "eks",
-      "b": "pan",
-      "i": 2,
-      "x": 0.7586799647899636,
-      "y": 0.5221511083334797
-    },
-    "3": {
-      "a": "wye",
-      "b": "wye",
-      "i": 3,
-      "x": 0.20460330576630303,
-      "y": 0.33831852551664776
-    },
-    "4": {
-      "a": "eks",
-      "b": "wye",
-      "i": 4,
-      "x": 0.38139939387114097,
-      "y": 0.13418874328430463
-    },
-    "5": {
-      "a": "wye",
-      "b": "pan",
-      "i": 5,
-      "x": 0.5732889198020006,
-      "y": 0.8636244699032729
+    "nesting": {
+      "is": {
+        "too-deep": 4
+      }
     }
   }
 }
-key item1
-1   0.346790
-2   0.758680
-3   0.204603
-4   0.381399
-5   0.573289
+</pre>
+</div>
+<p/>
 
-key item2
-a   eks
-b   wye
-i   4
-x   0.38139939387114097
-y   0.13418874328430463
+<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
+and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
+(basename and one index specify a terminal value) and can be gotten as follows:
 
-NR key item3
-1  a   pan
-1  b   pan
-1  i   1
-1  x   0.3467901443380824
-1  y   0.7268028627434533
-2  a   eks
-2  b   pan
-2  i   2
-2  x   0.7586799647899636
-2  y   0.5221511083334797
-3  a   wye
-3  b   wye
-3  i   3
-3  x   0.20460330576630303
-3  y   0.33831852551664776
-4  a   eks
-4  b   wye
-4  i   4
-4  x   0.38139939387114097
-4  y   0.13418874328430463
-5  a   wye
-5  b   pan
-5  i   5
-5  x   0.5732889198020006
-5  y   0.8636244699032729
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for (k, v in @myvar) {
+      @terminal[k] = v
+    }
+    emit @terminal, "index1"
+  }
+'
+index1=nesting-is-too-shallow,terminal=1
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2), v in @*) {
+      @terminal[k1][k2] = v
+    }
+    emit @terminal, "basename", "index1"
+  }
+'
+basename=myvar,index1=nesting-is-too-shallow,terminal=1
+</pre>
+</div>
+<p/>
 
-key     item4
-xes_1   0.346790
-xes_2   0.758680
-xes_3   0.204603
-xes_4   0.381399
-xes_5   0.573289
-item1_1 0.346790
-item1_2 0.758680
-item1_3 0.204603
-item1_4 0.381399
-item1_5 0.573289
-item2_a eks
-item2_b wye
-item2_i 4
-item2_x 0.38139939387114097
-item2_y 0.13418874328430463
+<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
+aren&rsquo;t bound in either of these for-loops.
+
+<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
+two indices specify a terminal value) and can be gotten at by any of the
+following:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1), v in @myvar["nesting-is"]) {
+      @terminal[k1] = v
+    }
+    emit @terminal, "index1"
+  }
+'
+index1=just-right,terminal=2
+index1=also-just-right,terminal=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2), v in @myvar) {
+      @terminal[k1][k2] = v
+    }
+    emit @terminal, "index1", "index2"
+  }
+'
+index1=nesting-is,index2=just-right,terminal=2
+index1=nesting-is,index2=also-just-right,terminal=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2, k3), v in @*) {
+      @terminal[k1][k2][k3] = v
+    }
+    emit @terminal, "basename", "index1", "index2"
+  }
+'
+basename=myvar,index1=nesting-is,index2=just-right,terminal=2
+basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
 </pre>
 </div>
 <p/>

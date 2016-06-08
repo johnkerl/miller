@@ -1,4 +1,4 @@
-mlr --pprint put '
+mlr --pprint --from data/for-srec-example.tbl put '
   $sum1 = $f1 + $f2 + $f3;
   $sum2 = 0;
   $sum3 = 0;
@@ -8,4 +8,4 @@ mlr --pprint put '
       $sum3 += $[key];
     }
   }
-' data/for-srec-example.tbl
+'
