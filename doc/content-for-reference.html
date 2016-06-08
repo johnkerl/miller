@@ -1013,6 +1013,12 @@ itself</b>:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)HERE
 
+It can be confusing to modify the stream record while iterating over a copy of it, so
+instead you might find it simpler to use an out-of-stream variable in the loop and only update
+the stream record after the loop:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
+
 <p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
 
 POKI_CARDIFY{{for (i = 1; i <= 10; i++) { ... } # No such}}HERE

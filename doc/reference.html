@@ -3438,6 +3438,32 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
 </div>
 <p/>
 
+It can be confusing to modify the stream record while iterating over a copy of it, so
+instead you might find it simpler to use an out-of-stream variable in the loop and only update
+the stream record after the loop:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  @sum = 0;
+  for (k,v in $*) {
+    if (isnumeric(v)) {
+      @sum += $[k];
+    }
+  }
+  $sum = @sum
+'
+a   b   i x                   y                   sum
+pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
+eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
+wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
+eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
+wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
+</pre>
+</div>
+<p/>
+
 <p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
 
 <p/>
