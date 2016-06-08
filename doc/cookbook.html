@@ -145,12 +145,13 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 &bull;&nbsp;<a href="#Using_out-of-stream_variables">Using out-of-stream variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Mean_with/without_oosvars">Mean with/without oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variance_and_standard_deviation_with/without_oosvars">Variance and standard deviation with/without oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Min/max_with/without_oosvars">Min/max with/without oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Delta_with/without_oosvars">Delta with/without oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_delta_with/without_oosvars">Keyed delta with/without oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Exponentially_weighted_moving_averages_with/without_oosvars">Exponentially weighted moving averages with/without oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Mean_without/with_oosvars">Mean without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_mean_without/with_oosvars">Keyed mean without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variance_and_standard_deviation_without/with_oosvars">Variance and standard deviation without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Min/max_without/with_oosvars">Min/max without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Delta_without/with_oosvars">Delta without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_delta_without/with_oosvars">Keyed delta without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Exponentially_weighted_moving_averages_without/with_oosvars">Exponentially weighted moving averages without/with oosvars</a><br/>
 </div>
 <p/>
 
@@ -469,26 +470,113 @@ to get it implemented directly in C as a Miller verb of its own.)
 <p/> The following examples compute some things using oosvars which are already
 computable using Miller verbs, by way of providing food for thought.
 
-<a id="Mean_with/without_oosvars"/><h2>Mean with/without oosvars</h2>
+<a id="Mean_without/with_oosvars"/><h2>Mean without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr stats1 -a mean -f x data/medium
-x_mean=0.498602
+$ mlr --opprint stats1 -a mean -f x data/medium
+x_mean
+0.498602
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put -q '@x_sum += $x; @x_count += 1; end{@x_mean=@x_sum/@x_count; emit @x_mean}' data/medium
-x_mean=0.498602
+$ mlr --opprint put -q '
+  @x_sum += $x;
+  @x_count += 1;
+  end{
+    @x_mean = @x_sum / @x_count;
+    emit @x_mean
+  }
+' data/medium
+x_mean
+0.498602
 </pre>
 </div>
 <p/>
 
-<a id="Variance_and_standard_deviation_with/without_oosvars"/><h2>Variance and standard deviation with/without oosvars</h2>
+<a id="Keyed_mean_without/with_oosvars"/><h2>Keyed mean without/with oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a mean -f x -g a,b data/medium
+a   b   x_mean
+pan pan 0.513314
+eks pan 0.485076
+wye wye 0.491501
+eks wye 0.483895
+wye pan 0.499612
+zee pan 0.519830
+eks zee 0.495463
+zee wye 0.514267
+hat wye 0.493813
+pan wye 0.502362
+zee eks 0.488393
+hat zee 0.509999
+hat eks 0.485879
+wye hat 0.497730
+pan eks 0.503672
+eks eks 0.522799
+hat hat 0.479931
+hat pan 0.464336
+zee zee 0.512756
+pan hat 0.492141
+pan zee 0.496604
+zee hat 0.467726
+wye zee 0.505907
+eks hat 0.500679
+wye eks 0.530604
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '
+  @x_sum[$a][$b] += $x;
+  @x_count[$a][$b] += 1;
+  end{
+    for ((a, b), v in @x_sum) {
+      @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b];
+    }
+    emit @x_mean, "a", "b"
+  }
+' data/medium
+a   b   x_mean
+pan pan 0.513314
+pan wye 0.502362
+pan eks 0.503672
+pan hat 0.492141
+pan zee 0.496604
+eks pan 0.485076
+eks wye 0.483895
+eks zee 0.495463
+eks eks 0.522799
+eks hat 0.500679
+wye wye 0.491501
+wye pan 0.499612
+wye hat 0.497730
+wye zee 0.505907
+wye eks 0.530604
+zee pan 0.519830
+zee wye 0.514267
+zee eks 0.488393
+zee zee 0.512756
+zee hat 0.467726
+hat wye 0.493813
+hat zee 0.509999
+hat eks 0.485879
+hat hat 0.479931
+hat pan 0.464336
+</pre>
+</div>
+<p/>
+
+<a id="Variance_and_standard_deviation_without/with_oosvars"/><h2>Variance and standard deviation without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">
@@ -532,7 +620,7 @@ stddev 0.290293
 </div>
 <p/>
 
-<a id="Min/max_with/without_oosvars"/><h2>Min/max with/without oosvars</h2>
+<a id="Min/max_without/with_oosvars"/><h2>Min/max without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">
@@ -554,7 +642,7 @@ max 0.999953
 </div>
 <p/>
 
-<a id="Delta_with/without_oosvars"/><h2>Delta with/without oosvars</h2>
+<a id="Delta_without/with_oosvars"/><h2>Delta without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">
@@ -584,7 +672,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
 </div>
 <p/>
 
-<a id="Keyed_delta_with/without_oosvars"/><h2>Keyed delta with/without oosvars</h2>
+<a id="Keyed_delta_without/with_oosvars"/><h2>Keyed delta without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">
@@ -614,7 +702,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
 </div>
 <p/>
 
-<a id="Exponentially_weighted_moving_averages_with/without_oosvars"/><h2>Exponentially weighted moving averages with/without oosvars</h2>
+<a id="Exponentially_weighted_moving_averages_without/with_oosvars"/><h2>Exponentially weighted moving averages without/with oosvars</h2>
 
 <p/>
 <div class="pokipanel">

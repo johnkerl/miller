@@ -80,36 +80,41 @@ to get it implemented directly in C as a Miller verb of its own.)
 <p/> The following examples compute some things using oosvars which are already
 computable using Miller verbs, by way of providing food for thought.
 
-<h2>Mean with/without oosvars</h2>
+<h2>Mean without/with oosvars</h2>
 
-POKI_RUN_COMMAND{{mlr stats1 -a mean -f x data/medium}}HERE
-POKI_RUN_COMMAND{{mlr put -q '@x_sum += $x; @x_count += 1; end{@x_mean=@x_sum/@x_count; emit @x_mean}' data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x data/medium}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)HERE
 
-<h2>Variance and standard deviation with/without oosvars</h2>
+<h2>Keyed mean without/with oosvars</h2>
+
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x -g a,b data/medium}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)HERE
+
+<h2>Variance and standard deviation without/with oosvars</h2>
 
 POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium}}HERE
 POKI_RUN_COMMAND{{cat variance.mlr}}HERE
 POKI_RUN_COMMAND{{mlr --oxtab put -q -f variance.mlr data/medium}}HERE
 
-<h2>Min/max with/without oosvars</h2>
+<h2>Min/max without/with oosvars</h2>
 
 POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,max -f x data/medium}}HERE
 
 POKI_RUN_COMMAND{{mlr --oxtab put -q '@min = min(@min, $x); @max = max(@max, $x); end{emitf @min, @max}' data/medium}}HERE
 
-<h2>Delta with/without oosvars</h2>
+<h2>Delta without/with oosvars</h2>
 
 POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last) ? $x - @last : 0; @last = $x' data/small}}HERE
 
-<h2>Keyed delta with/without oosvars</h2>
+<h2>Keyed delta without/with oosvars</h2>
 
 POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x -g a data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small}}HERE
 
-<h2>Exponentially weighted moving averages with/without oosvars</h2>
+<h2>Exponentially weighted moving averages without/with oosvars</h2>
 
 POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)HERE
 
