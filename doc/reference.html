@@ -3336,8 +3336,8 @@ records are ingested.
 in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
 inadvertently.  In particular, please recall that DSL statements are executed
 once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
-otherwise. For example, <tt>while (NR < 10)</tt> will never terminate as
-<tt>NR</tt> is only incremented <i>between</i> records.
+otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
+<tt>NR</tt> is only incremented between records</b>.
 
 <a id="For-loop_statements_for_put"/><h3>For-loop statements for put</h3>
 

@@ -7,7 +7,6 @@ BUGFIXES
 TOP OF LIST:
 
 * re-do valgrinds before release
-* isnumeric et al.: UTs
 
 COOKBOOK:
 * cookbook example: key<->val inverter
@@ -29,11 +28,9 @@ FAQ:
 * no triple-for with boundvars, but oosvars & while-loops
 
 MLD:
-* ref emph while is *within* each srec do don't loop over NR (for example)
 * doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it
 * -n can be used as syntax-checker flag for DSLs. and/or for dataless ops all in begin{}.
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
-! clear in doc re semicolon as statement separator, not terminator; blank line doesn't terminate. in its own subsubsection.
 
 GEN DOC:
 * dbl-chk mld:ref:put & cookbook for all 4.1.0 features
@@ -50,7 +47,7 @@ HYGIENE:
 ! lemon note/message-wording re resolvable conflicts
 * release poki mod
 
-4.1.0 release notes:
+4.1.0 RELEASE NOTES:
 * new forx2, while/do-while, if-chains
 * fully recursive; recursivity of existing conds
 * computed field names for filter & put
