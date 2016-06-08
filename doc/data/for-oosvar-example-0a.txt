@@ -1,0 +1,8 @@
+# Parentheses are optional for single key:
+for (k1,           v in @a["b"]["c"]) { ... }
+for ((k1),         v in @a["b"]["c"]) { ... }
+# Parentheses are required for multiple keys:
+for ((k1, k2),     v in @a["b"]["c"]) { ... } # Loop over subhashmap of a variable
+for ((k1, k2, k3), v in @a["b"]["c"]) { ... } # Ditto
+for ((k1, k2, k3), v in @a { ... }            # Loop over variable starting from basename
+for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is bound to basename)

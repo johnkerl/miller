@@ -179,7 +179,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons_and_curly_braces_for_put">Semicolons and curly braces for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces_for_put">Semicolons, newlines, and curly braces for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements_for_put">If-statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While-loop_and_do-while-loop_statements_for_put">While-loop and do-while-loop statements for put</a><br/>
@@ -3086,7 +3086,7 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 </div>
 <p/>
 
-<a id="Semicolons_and_curly_braces_for_put"/><h3>Semicolons and curly braces for put</h3>
+<a id="Semicolons,_newlines,_and_curly_braces_for_put"/><h3>Semicolons, newlines, and curly braces for put</h3>
 
 <p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
 
@@ -3094,40 +3094,50 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 <div class="pokipanel">
 <pre>
 mlr put 'x=1'
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
 mlr put 'x=1;$y=2'
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
 mlr put 'x=1;$y=2;'
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
 mlr put 'x=1;;;;$y=2;'
 </pre>
 </div>
 <p/>
-
-<p/>Semicolons are required between statements even if those statements are on separate lines.
 
 <p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""} $foo = "bar"'
+$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}  $foo = "bar"'
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}; $foo = "bar"'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+
+<p/>Semicolons are required between statements even if those statements are on
+separate lines.  Newlines are for your convenience but have no syntactic
+meaning: line endings do not terminate statements. For example, adjacent
+assignment statements must be separated by semicolons even if those statements
+are on separate lines:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put '
+  $x = 1
+  $y = 2 # Syntax error
+'
+
+mlr put '
+  $x = 1;
+  $y = 2 # This is OK
+'
 </pre>
 </div>
 <p/>
@@ -3137,6 +3147,13 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 <div class="pokipanel">
 <pre>
 mlr put 'if ($x == 1) $y = 2 # Syntax error
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) { $y = 2 } # This is OK
 </pre>
 </div>
 <p/>
@@ -3203,12 +3220,12 @@ a=xyz_789,b=left_xyz,c=right_789
 <p/>
 
 <p/>This produces heteregenous output which Miller, of course, has no problems
-with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if
-homogeneous output is desired, the curly braces can be replaced with a
-semicolon between the expression and the body statements.  This causes
-<tt>put</tt> to evaluate the boolean expression (along with any side effects,
-namely, regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it
-as a criterion for whether subsequent assignments should be executed. Instead,
+with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if you
+want homogeneous output, the curly braces can be replaced with a semicolon
+between the expression and the body statements.  This causes <tt>put</tt> to
+evaluate the boolean expression (along with any side effects, namely,
+regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it as a
+criterion for whether subsequent assignments should be executed. Instead,
 subsequent assignments are done unconditionally:
 
 <p/>

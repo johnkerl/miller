@@ -8,9 +8,6 @@ TOP OF LIST:
 
 * xxxes
 * re-do valgrinds before release
-* doc:
-  - indirect field names: "computed field names" $[...]. likewise for oosvars. then, in for/boundvar context.
-  - mlr --opprint put 'for(k,v in $*) {$["copy_of_".k]=v}' ../c/s
 * isnumeric et al.: UTs
 
 COOKBOOK:
@@ -50,7 +47,6 @@ UT:
 * move/filter all reg_test/dev -> reg_test/run
 
 HYGIENE:
-! lhmsv->lhmsmv @ typed overlay
 ! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 ! lemon note/message-wording re resolvable conflicts
@@ -112,7 +108,6 @@ NOTE FOR FUTURE:
 
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid
   double-searching.
-* typed overlay -> mlhmmv rather than lhmsv
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 * --strict? mlh/mld if so.
 

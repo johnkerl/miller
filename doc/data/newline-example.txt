@@ -1,0 +1,9 @@
+mlr put '
+  $x = 1
+  $y = 2 # Syntax error
+'
+
+mlr put '
+  $x = 1;
+  $y = 2 # This is OK
+'
