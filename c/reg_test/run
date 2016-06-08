@@ -1123,6 +1123,18 @@ run_mlr --ofs tab put 'begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x 
 run_mlr --ofs tab put 'begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t' $indir/typeof.dkvp
 
 # ----------------------------------------------------------------
+announce DSL TYPE PREDICATES
+
+run_mlr --from $indir/abixy --opprint put ' for (k, v in $*) { $[k."_type"]      = typeof(v)     } '
+
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isfloat(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }'
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isint(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }'
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isnumeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }'
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isstring(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }'
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isbool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }'
+run_mlr --from $indir/abixy-het put -q 'for (k,v in $*) {if (isbool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }'
+
+# ----------------------------------------------------------------
 announce DSL TYPE-INFERENCE
 
 run_mlr --xtab put       '$y     = $pi1 + $pi2' $indir/mixed-types.xtab
