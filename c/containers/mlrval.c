@@ -125,7 +125,7 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 		break;
 	case MT_STRING:
 		// Ownership transfer to the caller
-		*pfree_flags = pval->free_flags;;
+		*pfree_flags = pval->free_flags;
 		rv = pval->u.strv;
 		*pval = mv_empty();
 		break;

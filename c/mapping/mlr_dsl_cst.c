@@ -1104,20 +1104,31 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
+	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_print;
-	// xxx
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_eprint(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
+	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_eprint;
-	// xxx
 	return pstatement;
 }
 
@@ -1642,7 +1653,14 @@ static void handle_print(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	printf("STUB\n");
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	char free_flags;
+	char* sval = mv_format_val(&val, &free_flags);
+	printf("%s\n", sval);
+	if (free_flags)
+		free(sval);
+	mv_free(&val);
 }
 
 // ----------------------------------------------------------------
@@ -1651,7 +1669,14 @@ static void handle_eprint(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	fprintf(stderr, "STUB\n");
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	char free_flags;
+	char* sval = mv_format_val(&val, &free_flags);
+	fprintf(stderr, "%s\n", sval);
+	if (free_flags)
+		free(sval);
+	mv_free(&val);
 }
 
 // ----------------------------------------------------------------
