@@ -1410,7 +1410,7 @@ static void handle_full_srec_from_oosvar_assignment(
 			for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 				if (pentry->level_value.is_terminal) {
 					char* skey = mv_alloc_format_val(&pentry->level_key);
-					mv_t* pval = mv_alloc_copy(&pentry->level_value.u.mlrval);
+					mv_t val = mv_copy(&pentry->level_value.u.mlrval);
 
 					// Write typed mlrval output to the typed overlay rather than into the lrec
 					// (which holds only string values).
@@ -1425,7 +1425,8 @@ static void handle_full_srec_from_oosvar_assignment(
 					// lrec would result in double frees, or awkward bookkeeping. However, the NR
 					// variable evaluator reads prec->field_count, so we need to put something here.
 					// And putting something statically allocated minimizes copying/freeing.
-					lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), pval, FREE_ENTRY_KEY);
+					lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), &val,
+						FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 					lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
 				}
 			}
