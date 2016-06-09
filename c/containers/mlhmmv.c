@@ -51,7 +51,7 @@ static void mlhmmv_to_lrecs_aux_within_record(mlhmmv_level_t* plevel, char* pref
 	lrec_t* poutrec, int do_full_prefixing, char* flatten_separator);
 
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always);
+	int do_final_comma, int quote_values_always, FILE* ostream);
 
 static void json_decimal_print(char* s);
 
@@ -964,68 +964,68 @@ static void mlhmmv_to_lrecs_aux_within_record(
 //   }
 // }
 
-void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always) {
-	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always);
+void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, FILE* ostream) {
+	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, ostream);
 }
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always)
+	int do_final_comma, int quote_values_always, FILE* ostream)
 {
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
-		printf("{\n");
+		fprintf(ostream, "{\n");
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 		for (int i = 0; i <= depth; i++)
-			printf("%s", leader);
+			fprintf(ostream, "%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-			printf("\"%s\": ", level_key_string);
+			fprintf(ostream, "\"%s\": ", level_key_string);
 		free(level_key_string);
 
 		if (pentry->level_value.is_terminal) {
 			char* level_value_string = mv_alloc_format_val(&pentry->level_value.u.mlrval);
 
 			if (quote_values_always) {
-				printf("\"%s\"", level_value_string);
+				fprintf(ostream, "\"%s\"", level_value_string);
 			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
 				double unused;
 				if (mlr_try_float_from_string(level_value_string, &unused))
 					json_decimal_print(level_value_string);
 				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
-					printf("%s", level_value_string);
+					fprintf(ostream, "%s", level_value_string);
 				else
-					printf("\"%s\"", level_value_string);
+					fprintf(ostream, "\"%s\"", level_value_string);
 			} else {
-				printf("%s", level_value_string);
+				fprintf(ostream, "%s", level_value_string);
 			}
 
 			free(level_value_string);
 			if (pentry->pnext != NULL)
-				printf(",\n");
+				fprintf(ostream, ",\n");
 			else
-				printf("\n");
+				fprintf(ostream, "\n");
 		} else {
-			printf("{\n");
+			fprintf(ostream, "{\n");
 			mlhmmv_level_print_stacked(pentry->level_value.u.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_values_always);
+				pentry->pnext != NULL, quote_values_always, ostream);
 		}
 	}
 	for (int i = 0; i < depth; i++)
-		printf("%s", leader);
+		fprintf(ostream, "%s", leader);
 	if (do_final_comma)
-		printf("},\n");
+		fprintf(ostream, "},\n");
 	else
-		printf("}\n");
+		fprintf(ostream, "}\n");
 }
 
 // ----------------------------------------------------------------
-void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always) {
-	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE, quote_values_always);
+void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always, FILE* ostream) {
+	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE, quote_values_always, ostream);
 	printf("\n");
 }
 
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always)
+	int do_final_comma, int quote_values_always, FILE* ostream)
 {
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
@@ -1058,7 +1058,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		} else {
 			printf("{");
 			mlhmmv_level_print_single_line(pentry->level_value.u.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_values_always);
+				pentry->pnext != NULL, quote_values_always, ostream);
 		}
 	}
 	if (do_final_comma)

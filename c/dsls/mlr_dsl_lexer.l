@@ -55,6 +55,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_DUMP);
 	return MD_TOKEN_DUMP;
 }
+"edump" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EDUMP);
+	return MD_TOKEN_EDUMP;
+}
 "print" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRINT);
 	return MD_TOKEN_PRINT;

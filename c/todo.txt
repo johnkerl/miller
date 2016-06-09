@@ -61,6 +61,7 @@ HYGIENE:
 * computed field names for filter & put
   http://johnkerl.org/miller/doc/reference.html#Field_names_for_filter
   http://johnkerl.org/miller/doc/reference.html#Field_names_for_put
+* dump/edump/print/eprint
 * pound-to-EOL commenting for filter & put
 ! semicolon no longer required after closing curly brace
 * emit/unset @* same as emit/unset all

@@ -2422,16 +2422,17 @@ sum=50
 <li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
 
-<li/> You can output these in three ways: (1) assign them to stream-record
-fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use <tt>emit</tt>, e.g.
-<tt>@sum += $x; emit @sum</tt> which produces an extra output record such as
-<tt>sum=3.1648382</tt>; (3) use the <tt>dump</tt> keyword, which immediately
-prints all out-of-stream variables to the standard output as a JSON data
-structure. Note that the latter aren&rsquo;t output records which participate in
+<li/> You can <b>output</b> these in <b>three ways</b>: (1) <b>assign</b> them
+to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
+<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
+which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
+the <b>dump</b> keyword, which immediately prints all out-of-stream variables
+to the standard output as a JSON data structure, or the <b>print</b> or
+<b>eprint</b> keywords which immediately print an expression to standard output
+or standard error, respectively. Note that <tt>dump</tt>, <tt>print</tt>, and
+<tt>eprint</tt> do&rsquo;t output records which participate in
 <tt>then</tt>-chaining; rather, they&rsquo;re just immediately printed to
-stdout.
-
-</ul>
+stdout/stderr.  </ul>
 
 <p/>Features of out-of-stream variables, and examples of their use, will be
 presented in the following sections.
