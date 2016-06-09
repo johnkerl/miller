@@ -11,8 +11,6 @@ TOP OF LIST:
 
 COOKBOOK:
 * cookbook example: key<->val inverter
-* cookbook example: komosa originals x 2
-* cookbook example: oosvar keyed mean
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
   mlr --from jb.csv --fs comma --nidx put '
     @maxnf = max(@maxnf, NF);
