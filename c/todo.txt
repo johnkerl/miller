@@ -7,6 +7,12 @@ BUGFIXES
 TOP OF LIST:
 
 ! poki syntax for #-links
+! print/eprint UT/mld/mlh
+! dump/print/etc don't appear in mlr -f ... make a hook for this somewhere?
+    filter
+    unset
+    emitf emitp emit
+    dump print eprint
 * re-do valgrinds before release
 ! heterogenize feature?
 
