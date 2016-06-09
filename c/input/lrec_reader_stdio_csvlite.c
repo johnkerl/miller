@@ -372,7 +372,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 			p++;
 	}
 	char* key   = NULL;
-	char free_flags;
+	char free_flags = NO_FREE;
 	char* value = p;
 
 	int idx = 0;

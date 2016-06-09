@@ -119,7 +119,7 @@ typedef struct _mv_t {
 		int        boolv; // MT_BOOL
 	} u;
 	unsigned char type;
-	unsigned char free_flags;
+	char free_flags;
 } mv_t;
 
 // ----------------------------------------------------------------
@@ -165,7 +165,7 @@ static inline mv_t mv_from_string_with_free(char* s) {
 static inline mv_t mv_from_string_no_free(char* s) {
 	return (mv_t) {.type = MT_STRING, .free_flags = NO_FREE, .u.strv = s};
 }
-static inline mv_t mv_from_string(char* s, unsigned char free_flags) {
+static inline mv_t mv_from_string(char* s, char free_flags) {
 	return (mv_t) {.type = MT_STRING, .free_flags = free_flags, .u.strv = s};
 }
 

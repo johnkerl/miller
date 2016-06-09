@@ -107,7 +107,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 
 	char* line  = phandle->sol;
 	int idx = 0;
-	char free_flags = 0;
+	char free_flags = NO_FREE;
 
 	char* p = line;
 	if (allow_repeat_ifs) {
@@ -172,7 +172,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 
 	char* line  = phandle->sol;
 	int idx = 0;
-	char free_flags = 0;
+	char free_flags = NO_FREE;
 
 	char* p = line;
 	if (allow_repeat_ifs) {
@@ -237,7 +237,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phan
 
 	char* line  = phandle->sol;
 	int idx = 0;
-	char free_flags = 0;
+	char free_flags = NO_FREE;
 
 	char* p = line;
 	if (allow_repeat_ifs) {
@@ -302,7 +302,7 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phand
 
 	char* line  = phandle->sol;
 	int idx = 0;
-	char free_flags = 0;
+	char free_flags = NO_FREE;
 
 	char* p = line;
 	if (allow_repeat_ifs) {

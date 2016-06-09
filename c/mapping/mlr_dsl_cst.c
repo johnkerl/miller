@@ -1284,12 +1284,26 @@ static void handle_indirect_srec_assignment(
 	rval_evaluator_t* plhs_evaluator = pnode->psrec_lhs_evaluator;
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
+	// The lval may need freeing.
+	// After mv_format_val the lval will be invalidated and its free_flag (if any) transferred
+	// to our *pfree_flags.
+
 	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
+//char* foo = NULL;
+//foo = mv_describe_val(lval);
+//printf("XX1 %s %02x\n", foo, lval.free_flags);
+//free(foo);
 	char free_flags;
 	char* srec_lhs_field_name = mv_format_val(&lval, &free_flags);
+//foo = mv_describe_val(lval);
+//printf("XX2 %s %02x %02x\n", foo, lval.free_flags, free_flags);
+//free(foo);
 	// mv_format_val sets the FREE_ENTRY_VALUE bit (or not) but we'll be using this as a key for the
 	// lrec and typed overlay. So we convert this to the FREE_ENTRY_KEY.
 	free_flags = free_flags & FREE_ENTRY_VALUE ? FREE_ENTRY_KEY : NO_FREE;
+//foo = mv_describe_val(lval);
+//printf("XX3 %s %02x %02x\n", foo, lval.free_flags, free_flags);
+//free(foo);
 
 	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
@@ -1308,7 +1322,8 @@ static void handle_indirect_srec_assignment(
 		// Transfer key-alloc ownership to the lrec, not the typed overlay.
 		lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), &rval,
 			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", free_flags | FREE_ENTRY_KEY);
+		//lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", free_flags | FREE_ENTRY_KEY);
+		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY | FREE_ENTRY_KEY);
 	} else {
 		if (free_flags)
 			free(srec_lhs_field_name);

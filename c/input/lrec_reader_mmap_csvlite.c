@@ -527,7 +527,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 	}
 	char* key   = NULL;
 	char* value = p;
-	char  free_flags;
+	char  free_flags = NO_FREE;
 	int idx = 0;
 	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {
@@ -603,7 +603,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	}
 	char* key   = NULL;
 	char* value = p;
-	char  free_flags;
+	char free_flags;
 	int idx = 0;
 	int saw_rs = FALSE;
 	for ( ; p < phandle->eof && *p; ) {

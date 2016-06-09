@@ -146,7 +146,7 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 }
 
 char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
-	int *pmatched, int* pall_captured, unsigned char* pfree_flags)
+	int *pmatched, int* pall_captured, char* pfree_flags)
 {
 	const size_t nmatchmax = 10;
 	regmatch_t matches[nmatchmax];

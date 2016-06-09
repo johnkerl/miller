@@ -183,7 +183,7 @@ static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void
 				int all_captured = FALSE;
 				char* old_name = pf->key;
 				if (pstate->do_gsub) {
-					unsigned char free_flags = NO_FREE;
+					char free_flags = NO_FREE;
 					char* new_name = regex_gsub(old_name, pregex, pstate->psb, replacement, &matched,
 						&all_captured, &free_flags);
 					int new_needs_freeing = FALSE;

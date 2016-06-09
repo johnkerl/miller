@@ -31,7 +31,7 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
 	int* pmatched, int* pall_captured);
 
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, unsigned char *pfree_flags);
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, char *pfree_flags);
 
 // The regex library gives us an array of match pointers into the input string. This function strdups them
 // out into separate storage, to implement "\0", "\1", "\2", etc. regex-captures for the =~ and !=~ operators.

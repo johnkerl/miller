@@ -414,7 +414,7 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	int matched      = FALSE;
 	int all_captured = FALSE;
 	char* input      = pval1->u.strv;
-	unsigned char free_flags = NO_FREE;
+	char free_flags = NO_FREE;
 	char* output     = regex_gsub(input, pregex, psb, pval3->u.strv, &matched, &all_captured, &free_flags);
 
 	if (matched) {
@@ -1682,7 +1682,7 @@ static mv_t string_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"tr
 static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }
 static mv_t string_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_ll(pa->u.intv)); }
 static mv_t string_s_s(mv_t* pa) {
-	unsigned char free_flags = pa->free_flags;
+	char free_flags = pa->free_flags;
 	pa->free_flags = NO_FREE;
 	return mv_from_string(pa->u.strv, free_flags);
 }
@@ -1704,7 +1704,7 @@ static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"0x
 static mv_t hexfmt_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)); }
 static mv_t hexfmt_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll(pa->u.intv)); }
 static mv_t hexfmt_s_s(mv_t* pa) {
-	unsigned char free_flags = pa->free_flags;
+	char free_flags = pa->free_flags;
 	pa->free_flags = NO_FREE;
 	return mv_from_string(pa->u.strv, free_flags);
 }

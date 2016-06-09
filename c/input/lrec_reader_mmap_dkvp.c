@@ -138,7 +138,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
-				char  free_flags = 0;
+				char free_flags = NO_FREE;
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
@@ -173,7 +173,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
 		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			else
@@ -191,7 +191,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
 		// byte past the page and that will segv us.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			} else {
@@ -246,7 +246,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
-				char  free_flags = 0;
+				char free_flags = NO_FREE;
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
@@ -281,7 +281,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
 		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			else
@@ -299,7 +299,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
 		// byte past the page and that will segv us.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			} else {
@@ -354,7 +354,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
-				char  free_flags = 0;
+				char free_flags = NO_FREE;
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
@@ -390,7 +390,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
 		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			else
@@ -408,7 +408,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
 		// byte past the page and that will segv us.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			} else {
@@ -463,7 +463,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 				// E.g the pair has no equals sign: "a" rather than "a=1" or
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
-				char  free_flags = 0;
+				char free_flags = NO_FREE;
 				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
 			}
 			else {
@@ -498,7 +498,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
 		// C string so it's OK to retain a pointer to that.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			else
@@ -516,7 +516,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 		// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
 		// byte past the page and that will segv us.
 		if (*key == 0 || value <= key) {
-			char free_flags = 0;
+			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
 				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
 			} else {
