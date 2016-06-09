@@ -182,6 +182,10 @@ static void lhmsmv_put_no_enlarge(lhmsmv_t* pmap, char* key, mv_t* pvalue, char 
 		else
 			pe->free_flags &= ~FREE_ENTRY_VALUE;
 
+		// The caller asked us to free the key when we were done but another copy of the
+		// key is already present. So free now what they passed in.
+		if (free_flags & FREE_ENTRY_KEY)
+			free(key);
 	} else if (pmap->states[index] == EMPTY) {
 		// End of chain.
 		pe->ideal_index = ideal_index;
