@@ -149,6 +149,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_mean_without/with_oosvars">Keyed mean without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variance_and_standard_deviation_without/with_oosvars">Variance and standard deviation without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Min/max_without/with_oosvars">Min/max without/with oosvars</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_min/max_without/with_oosvars">Keyed min/max without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Delta_without/with_oosvars">Delta without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_delta_without/with_oosvars">Keyed delta without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Exponentially_weighted_moving_averages_without/with_oosvars">Exponentially weighted moving averages without/with oosvars</a><br/>
@@ -487,7 +488,7 @@ x_mean
 $ mlr --opprint put -q '
   @x_sum += $x;
   @x_count += 1;
-  end{
+  end {
     @x_mean = @x_sum / @x_count;
     emit @x_mean
   }
@@ -620,6 +621,8 @@ stddev 0.290293
 </div>
 <p/>
 
+You can also do this keyed, of course, imitating the keyed-mean example above.
+
 <a id="Min/max_without/with_oosvars"/><h2>Min/max without/with oosvars</h2>
 
 <p/>
@@ -635,9 +638,72 @@ x_max 0.999953
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --oxtab put -q '@min = min(@min, $x); @max = max(@max, $x); end{emitf @min, @max}' data/medium
-min 0.000045
-max 0.999953
+$ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
+x_min 0.000045
+x_max 0.999953
+</pre>
+</div>
+<p/>
+
+<a id="Keyed_min/max_without/with_oosvars"/><h2>Keyed min/max without/with oosvars</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a min,max -f x -g a data/medium
+a   x_min    x_max
+pan 0.000204 0.999403
+eks 0.000692 0.998811
+wye 0.000187 0.999823
+zee 0.000549 0.999490
+hat 0.000045 0.999953
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/medium put -q '
+  @min[$a] = min(@min[$a], $x);
+  @max[$a] = max(@max[$a], $x);
+  end{
+    emit @min, "a";
+    emit @max, "a"
+  }
+'
+a   min
+pan 0.000204
+eks 0.000692
+wye 0.000187
+zee 0.000549
+hat 0.000045
+
+a   max
+pan 0.999403
+eks 0.998811
+wye 0.999823
+zee 0.999490
+hat 0.999953
+</pre>
+</div>
+<p/>
+<p/>Alternatively:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/medium put -q '
+  @output[$a]["x_min"] = min(@output[$a]["x_min"], $x);
+  @output[$a]["x_max"] = max(@output[$a]["x_max"], $x);
+  end{
+    emit @output, "a"
+  }
+'
+a   x_min    x_max
+pan 0.000204 0.999403
+eks 0.000692 0.998811
+wye 0.000187 0.999823
+zee 0.000549 0.999490
+hat 0.000045 0.999953
 </pre>
 </div>
 <p/>

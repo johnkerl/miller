@@ -617,6 +617,33 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
 
+<h3>Semicolons, newlines, and curly braces for put</h3>
+
+<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+
+POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
+
+<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'}}HERE
+POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
+
+<p/>Semicolons are required between statements even if those statements are on
+separate lines.  Newlines are for your convenience but have no syntactic
+meaning: line endings do not terminate statements. For example, adjacent
+assignment statements must be separated by semicolons even if those statements
+are on separate lines:
+
+POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
+
+<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2 # Syntax error}}HERE
+POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 } # This is OK}}HERE
+
+<p/>Bodies for compound statements may be empty:
+
+POKI_CARDIFY{{mlr put 'if ($x == 1) { } # This no-op is syntactically acceptable}}HERE
+
 <h3>Out-of-stream variables for put</h3>
 
 There are three kinds of variables in Miller:
@@ -847,12 +874,12 @@ POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emi
 
 <h3>Emit-all statements for put</h3>
 
-<p/>Use <b>emit all</b> to output all out-of-stream variables. You can use the
-following idiom to get various accumulators output side-by-side (reminiscent of
-<tt>mlr stats1</tt>):
+<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
+out-of-stream variables. You can use the following idiom to get various
+accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
 
 POKI_RUN_COMMAND{{mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{emit all}' data/small}}HERE
-POKI_RUN_COMMAND{{mlr --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit all,"a","b"}' data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}' data/small}}HERE
 
 <h3>Unset statements for put</h3>
 
@@ -867,7 +894,8 @@ POKI_RUN_COMMAND{{mlr put 'unset $x, $a' data/small}}HERE
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small}}HERE
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small}}HERE
 
-<p/>If you use <tt>unset all</tt>, that will unset all out-of-stream variables which have been defined up to that point.
+<p/>If you use <tt>unset all</tt> (or <tt>unset @*</tt> which is synonymous), that will unset all out-of-stream
+variables which have been defined up to that point.
 
 <h3>More variable assignments for put</h3>
 
@@ -893,33 +921,6 @@ stream:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small}}HERE
-
-<h3>Semicolons, newlines, and curly braces for put</h3>
-
-<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
-
-POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
-
-<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
-
-POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'}}HERE
-POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
-
-<p/>Semicolons are required between statements even if those statements are on
-separate lines.  Newlines are for your convenience but have no syntactic
-meaning: line endings do not terminate statements. For example, adjacent
-assignment statements must be separated by semicolons even if those statements
-are on separate lines:
-
-POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
-
-<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
-POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2 # Syntax error}}HERE
-POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 } # This is OK}}HERE
-
-<p/>Bodies for compound statements may be empty:
-
-POKI_CARDIFY{{mlr put 'if ($x == 1) { } # This no-op is syntactically acceptable}}HERE
 
 <h3>Pattern-action blocks for put</h3>
 
