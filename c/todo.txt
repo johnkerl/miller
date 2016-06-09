@@ -11,7 +11,6 @@ TOP OF LIST:
 ! heterogenize feature?
 
 COOKBOOK:
-* cookbook example: key<->val inverter
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
   mlr --from jb.csv --fs comma --nidx put '
     @maxnf = max(@maxnf, NF);
@@ -21,6 +20,7 @@ COOKBOOK:
       $[@nf] = ""
     }
   '
+* rename example also w/ for-srec?
 
 gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 

@@ -30,6 +30,7 @@ static mlr_dsl_cst_statement_t*                            alloc_break(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                         alloc_continue(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* pnode, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_print(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
@@ -69,6 +70,7 @@ static void                        handle_emitp_all(mlr_dsl_cst_statement_t* s, 
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -400,6 +402,9 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 	case MD_AST_NODE_TYPE_DUMP:
 		return alloc_dump(pnode, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_PRINT:
+		return alloc_print(pnode, type_inferencing, context_flags);
 		break;
 	default:
 		return alloc_bare_boolean(pnode, type_inferencing, context_flags);
@@ -1080,6 +1085,7 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* pnode, int type
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1089,6 +1095,18 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	pstatement->pnode_handler = handle_print;
+	// xxx
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1601,6 +1619,15 @@ static void handle_dump(
 	cst_outputs_t*           pcst_outputs)
 {
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE);
+}
+
+// ----------------------------------------------------------------
+static void handle_print(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	printf("STUB\n");
 }
 
 // ----------------------------------------------------------------
