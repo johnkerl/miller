@@ -8,7 +8,7 @@
 // from mmapped file-input data.
 
 #define NO_FREE          0x00
-#define FREE_ENTRY_KEY   0x80
-#define FREE_ENTRY_VALUE 0x08
+#define FREE_ENTRY_KEY   0x40
+#define FREE_ENTRY_VALUE 0x04
 
 #endif // FREE_FLAGS_H
