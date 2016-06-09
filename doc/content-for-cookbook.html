@@ -13,9 +13,13 @@ POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repi
 
 <h1>Bulk rename of field names</h1>
 
-POKI_RUN_COMMAND{{cat spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --rs lf rename -r -g ' ,_'  spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --irs lf --opprint rename -r -g ' ,_'  spaces.csv}}HERE
+POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf rename -r -g ' ,_'  data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --irs lf --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
+
+<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
 <h1>Filtering paragraphs of text</h1>
 
