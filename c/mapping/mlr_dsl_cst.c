@@ -1255,8 +1255,6 @@ static void handle_srec_assignment(
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	mv_t* pval = mlr_malloc_or_die(sizeof(mv_t));
-	*pval = val;
 
 	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
@@ -1269,12 +1267,11 @@ static void handle_srec_assignment(
 	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
-	if (mv_is_present(pval)) {
-		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, pval, FREE_ENTRY_VALUE);
+	if (mv_is_present(&val)) {
+		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, &val, FREE_ENTRY_VALUE);
 		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
 	} else {
-		mv_free(pval);
-		free(pval);
+		mv_free(&val);
 	}
 }
 
@@ -1290,10 +1287,11 @@ static void handle_indirect_srec_assignment(
 	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
 	char free_flags;
 	char* srec_lhs_field_name = mv_format_val(&lval, &free_flags);
+	// mv_format_val sets the FREE_ENTRY_VALUE bit (or not) but we'll be using this as a key for the
+	// lrec and typed overlay. So we convert this to the FREE_ENTRY_KEY.
+	free_flags = free_flags & FREE_ENTRY_VALUE ? FREE_ENTRY_KEY : NO_FREE;
 
 	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	mv_t* prval = mlr_malloc_or_die(sizeof(mv_t));
-	*prval = rval;
 
 	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only
 	// string values).
@@ -1306,13 +1304,15 @@ static void handle_indirect_srec_assignment(
 	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
 	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
 	// here. And putting something statically allocated minimizes copying/freeing.
-	if (mv_is_present(prval)) {
-		lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), prval,
+	if (mv_is_present(&rval)) {
+		// Transfer key-alloc ownership to the lrec, not the typed overlay.
+		lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), &rval,
 			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY);
+		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", free_flags | FREE_ENTRY_KEY);
 	} else {
-		mv_free(prval);
-		free(prval);
+		if (free_flags)
+			free(srec_lhs_field_name);
+		mv_free(&rval);
 	}
 
 	if (free_flags & FREE_ENTRY_VALUE)
