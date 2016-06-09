@@ -8,6 +8,7 @@ TOP OF LIST:
 
 ! poki syntax for #-links
 * re-do valgrinds before release
+! heterogenize feature?
 
 COOKBOOK:
 * cookbook example: key<->val inverter
@@ -20,6 +21,8 @@ COOKBOOK:
       $[@nf] = ""
     }
   '
+
+gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
 FAQ:
 * NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.

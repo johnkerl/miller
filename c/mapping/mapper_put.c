@@ -324,16 +324,15 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			char* output_field_name = pe->key;
 			mv_t* pval = &pe->value;
 
+			// Ownership transfer from mv_t to lrec.
 			if (pval->type == MT_STRING) {
-				// Ownership transfer from mv_t to lrec.
-				lrec_put(pinrec, mlr_strdup_or_die(output_field_name), pval->u.strv,
-					FREE_ENTRY_KEY | pval->free_flags);
-				pval->free_flags &= ~FREE_ENTRY_VALUE;
+				lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
 			} else {
-				char free_flags = FREE_ENTRY_KEY;
+				char free_flags = NO_FREE;
 				char* string = mv_format_val(pval, &free_flags);
-				lrec_put(pinrec, mlr_strdup_or_die(output_field_name), string, free_flags);
+				lrec_put(pinrec, output_field_name, string, pval->free_flags | free_flags);
 			}
+			pval->free_flags = NO_FREE;
 		}
 	}
 	lhmsmv_free(ptyped_overlay);
