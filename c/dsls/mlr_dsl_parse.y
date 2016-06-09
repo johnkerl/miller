@@ -137,6 +137,7 @@ md_statement_not_braced_end ::= md_emitp.
 md_statement_not_braced_end ::= md_emit.
 md_statement_not_braced_end ::= md_dump.
 md_statement_not_braced_end ::= md_print.
+md_statement_not_braced_end ::= md_eprint.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
@@ -653,6 +654,9 @@ md_dump(A) ::= MD_TOKEN_DUMP(O). {
 }
 md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_PRINT, B);
+}
+md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINT, B);
 }
 
 // ================================================================
