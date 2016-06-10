@@ -3,6 +3,16 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
+// ================================================================
+// The Lemon parser in dsls/mlr_dsl_parse.y builds up an abstract syntax tree
+// specifically for the CST builder here.
+//
+// For clearer visuals on what the ASTs look like:
+// * See dsls/mlr_dsl_parse.y
+// * See reg_test/run's filter -v and put -v outputs
+// * Do "mlr -n put -v 'your expression goes here'"
+// ================================================================
+
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
 static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags);

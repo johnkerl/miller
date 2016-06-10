@@ -24,6 +24,12 @@
 // All of the above are enforced by the CST builder, which takes this parser's output AST as input.
 // This is done (a) to keep this grammar from being overly complex, and (b) so we can get much more
 // informative error messages in C than in Lemon ('syntax error').
+//
+// The parser hooks all build up an abstract syntax tree specifically for the CST builder.
+// For clearer visuals on what the ASTs look like:
+// * See mlr_dsl_cst.c
+// * See reg_test/run's filter -v and put -v outputs
+// * Do "mlr -n put -v 'your expression goes here'"
 // ================================================================
 
 }
