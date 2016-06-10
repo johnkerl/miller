@@ -164,6 +164,6 @@ void mlr_dsl_cst_handle_statement_list(
 void mlr_dsl_list_all_keywords_raw(FILE* output_stream);
 
 // Pass function_name == NULL to get usage for all keywords:
-void mlr_dsl_keyword_usage(FILE* output_stream, char* function_name);
+void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
 
 #endif // MLR_DSL_CST_H

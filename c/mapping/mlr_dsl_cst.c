@@ -2031,20 +2031,95 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_list_all_keywords_raw(FILE* output_stream) {
+void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
   printf("filter\n");
   printf("unset\n");
-  printf("emitf\n");
-  printf("emitp\n");
   printf("emit\n");
+  printf("emitp\n");
+  printf("emitf\n");
   printf("dump\n");
+  printf("edump\n");
   printf("print\n");
   printf("eprint\n");
 }
 
+static void mlr_dsl_filter_usage(FILE* ostream) {
+	fprintf(ostream, "filter (boolean expression): includes/excludes the record in the output record stream.\n");
+	fprintf(ostream, "  Example: 'filter (NR == 2 || $x > 5.4)'.\n");
+	fprintf(ostream, "  Instead of put with 'filter false' you can simply use put -q.\n");
+}
+static void mlr_dsl_unset_usage(FILE* ostream) {
+	fprintf(ostream, "unset: clears field(s) from the current record, or an out-of-stream variable.\n");
+	fprintf(ostream, "  Example: 'unset $x'\n");
+	fprintf(ostream, "  Example: 'unset $*'\n");
+	fprintf(ostream, "  Example: 'for (k, v in $*) { if (k =~ \"a.*\") {unset $[k] } }'\n");
+	fprintf(ostream, "  Example: 'unset @sums'\n");
+	fprintf(ostream, "  Example: 'unset @sums[\"green\"}'\n");
+	fprintf(ostream, "  Example: 'unset @*'\n");
+}
+static void mlr_dsl_emit_usage(FILE* ostream) {
+	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream\n");
+	fprintf(ostream, "  Please see HTML docs for more information.\n");
+}
+static void mlr_dsl_emitp_usage(FILE* ostream) {
+	fprintf(ostream, "emitp: inserts an out-of-stream variable into the output record stream\n");
+	fprintf(ostream, "  Please see HTML docs for more information.\n");
+}
+static void mlr_dsl_emitf_usage(FILE* ostream) {
+	fprintf(ostream, "emitf: inserts an out-of-stream variable into the output record stream\n");
+	fprintf(ostream, "  Please see HTML docs for more information.\n");
+}
+static void mlr_dsl_dump_usage(FILE* ostream) {
+	fprintf(ostream, "dump: prints all currently defined out-of-stream variables immediately to stdout as JSON.\n");
+}
+static void mlr_dsl_edump_usage(FILE* ostream) {
+	fprintf(ostream, "edump: prints all currently defined out-of-stream variables immediately to stderr as JSON.\n");
+}
+static void mlr_dsl_print_usage(FILE* ostream) {
+	fprintf(ostream, "print (expression): prints expression immediately to stdout.\n");
+	fprintf(ostream, "  Example: 'eprint \"The sum is \".string($x+y)'.\n");
+}
+static void mlr_dsl_eprint_usage(FILE* ostream) {
+	fprintf(ostream, "eprint (expression): prints expression immediately to stderr.\n");
+	fprintf(ostream, "  Example: 'eprint \"The sum is \".string($x+y)'.\n");
+}
+
 // Pass function_name == NULL to get usage for all functions.
-void mlr_dsl_keyword_usage(FILE* output_stream, char* function_name) {
-	printf("stub\n");
+void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
+	if (keyword == NULL) {
+		mlr_dsl_filter_usage(ostream); fprintf(ostream, "\n");
+		mlr_dsl_unset_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_emit_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_emitp_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_emitf_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_dump_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_edump_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_print_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_eprint_usage(ostream);
+		return;
+	}
+
+	if (streq(keyword, "filter")) {
+		mlr_dsl_filter_usage(ostream);
+	} else if (streq(keyword, "unset")) {
+		mlr_dsl_unset_usage(ostream);
+	} else if (streq(keyword, "emit")) {
+		mlr_dsl_emit_usage(ostream);
+	} else if (streq(keyword, "emitp")) {
+		mlr_dsl_emitp_usage(ostream);
+	} else if (streq(keyword, "emitf")) {
+		mlr_dsl_emitf_usage(ostream);
+	} else if (streq(keyword, "dump")) {
+		mlr_dsl_dump_usage(ostream);
+	} else if (streq(keyword, "edump")) {
+		mlr_dsl_edump_usage(ostream);
+	} else if (streq(keyword, "print")) {
+		mlr_dsl_print_usage(ostream);
+	} else if (streq(keyword, "eprint")) {
+		mlr_dsl_eprint_usage(ostream);
+	} else {
+	fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
+	}
 //	int found = FALSE;
 //	char* fmt = "%s (class=%s #args=%d): %s\n";
 //
@@ -2053,21 +2128,21 @@ void mlr_dsl_keyword_usage(FILE* output_stream, char* function_name) {
 //		if (plookup->function_name == NULL) // end of table
 //			break;
 //		if (function_name == NULL || streq(function_name, plookup->function_name)) {
-//			fprintf(output_stream, fmt, plookup->function_name,
+//			fprintf(ostream, fmt, plookup->function_name,
 //				function_class_to_desc(plookup->function_class),
 //				plookup->arity, plookup->usage_string);
 //			found = TRUE;
 //		}
 //		if (function_name == NULL)
-//			fprintf(output_stream, "\n");
+//			fprintf(ostream, "\n");
 //	}
 //	if (!found)
-//		fprintf(output_stream, "%s: no such function.\n", function_name);
+//		fprintf(ostream, "%s: no such function.\n", function_name);
 //	if (function_name == NULL) {
-//		fprintf(output_stream, "To set the seed for urand, you may specify decimal or hexadecimal 32-bit\n");
-//		fprintf(output_stream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
+//		fprintf(ostream, "To set the seed for urand, you may specify decimal or hexadecimal 32-bit\n");
+//		fprintf(ostream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
 //			MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-//		fprintf(output_stream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
-//		fprintf(output_stream, "along with the mathematical constants PI and E.\n");
+//		fprintf(ostream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
+//		fprintf(ostream, "along with the mathematical constants PI and E.\n");
 //	}
 }

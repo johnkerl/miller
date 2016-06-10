@@ -165,7 +165,7 @@ output separator to the given value.
  sec2dhms sec2gmt sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
-Please use "mlr --help-all-keywords" or "mlr -f" for help on all keywords.
+Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
 .fi
 .if n \{\
 .RE
@@ -2194,12 +2194,97 @@ e.g. 1440768801.748936.
 .SH "KEYWORDS FOR PUT"
 .sp
 
-.SS "STUB"
+.SS "filter"
 .if n \{\
 .RS 0
 .\}
 .nf
-STUB
+(boolean expression): includes/excludes the record in the output record stream.
+  Example: 'filter (NR == 2 || $x > 5.4)'.
+  Instead of put with 'filter false' you can simply use put -q.
+.fi
+.if n \{\
+.RE
+.SS "unset"
+.if n \{\
+.RS 0
+.\}
+.nf
+unset: clears field(s) from the current record, or an out-of-stream variable.
+  Example: '$x'
+  Example: 'unset $*'
+  Example: 'for (k, v in $*) { if (k =~ "a.*") {unset $[k] } }'
+  Example: 'unset @sums'
+  Example: 'unset @sums["green"}'
+  Example: 'unset @*'
+.fi
+.if n \{\
+.RE
+.SS "emit"
+.if n \{\
+.RS 0
+.\}
+.nf
+emit: inserts an out-of-stream variable into the output record stream
+  Please see HTML docs for more information.
+.fi
+.if n \{\
+.RE
+.SS "emitp"
+.if n \{\
+.RS 0
+.\}
+.nf
+emitp: inserts an out-of-stream variable into the output record stream
+  Please see HTML docs for more information.
+.fi
+.if n \{\
+.RE
+.SS "emitf"
+.if n \{\
+.RS 0
+.\}
+.nf
+emitf: inserts an out-of-stream variable into the output record stream
+  Please see HTML docs for more information.
+.fi
+.if n \{\
+.RE
+.SS "dump"
+.if n \{\
+.RS 0
+.\}
+.nf
+dump: prints all currently defined out-of-stream variables immediately to stdout as JSON.
+.fi
+.if n \{\
+.RE
+.SS "edump"
+.if n \{\
+.RS 0
+.\}
+.nf
+edump: prints all currently defined out-of-stream variables immediately to stderr as JSON.
+.fi
+.if n \{\
+.RE
+.SS "print"
+.if n \{\
+.RS 0
+.\}
+.nf
+(expression): prints expression immediately to stdout.
+  Example: 'eprint "The sum is ".string($x+y)'.
+.fi
+.if n \{\
+.RE
+.SS "eprint"
+.if n \{\
+.RS 0
+.\}
+.nf
+(expression): prints expression immediately to stderr.
+  Example: 'eprint "The sum is ".string($x+y)'.
 .fi
 .if n \{\
 .RE
