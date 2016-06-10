@@ -26,15 +26,12 @@ GEN DOC:
 ! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 
 UT:
-* mixed for/while
 * dbl-chk UT coverage for 4.1.0 features
-* move/filter all reg_test/dev -> reg_test/run
 
 HYGIENE:
 ! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 ! lemon note/message-wording re resolvable conflicts
-* release poki mod
 
 4.1.0 RELEASE NOTES:
 * new forx2, while/do-while, if-chains
