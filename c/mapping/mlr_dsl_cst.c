@@ -9,7 +9,7 @@
 //
 // For clearer visuals on what the ASTs look like:
 // * See dsls/mlr_dsl_parse.y
-// * See reg_test/run's filter -v and put -v outputs
+// * See reg_test/run's filter -v and put -v outputs, e.g. in reg_test/expected/out
 // * Do "mlr -n put -v 'your expression goes here'"
 // ================================================================
 

@@ -12,9 +12,6 @@ TOP OF LIST:
 FAQ:
 ! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
 
-GEN DOC:
-! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
-
 HYGIENE:
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 ! lemon note/message-wording re resolvable conflicts

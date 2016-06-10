@@ -28,7 +28,7 @@
 // The parser hooks all build up an abstract syntax tree specifically for the CST builder.
 // For clearer visuals on what the ASTs look like:
 // * See mlr_dsl_cst.c
-// * See reg_test/run's filter -v and put -v outputs
+// * See reg_test/run's filter -v and put -v outputs, e.g. in reg_test/expected/out
 // * Do "mlr -n put -v 'your expression goes here'"
 // ================================================================
 
