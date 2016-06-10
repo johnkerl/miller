@@ -2769,7 +2769,7 @@ run_mlr --opprint --from $indir/abixy put -q '
 # ----------------------------------------------------------------
 announce DSL PRINT
 
-run_mlr put -q 'print 1; print "two"; print $a; print "y is ".string($y); print ""' $indir/abixy
+run_mlr put -q 'print 1; print "two"; print $a; print $i < 4; print "y is ".string($y); print ""' $indir/abixy
 
 # ----------------------------------------------------------------
 announce ABSENT/EMPTY

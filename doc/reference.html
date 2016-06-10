@@ -2425,15 +2425,16 @@ sum=50
 <li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
 
-<li/> You can <b>output</b> these in <b>three ways</b>: (1) <b>assign</b> them
+<li/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them
 to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
 <b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
 which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
-the <b>dump</b> keyword, which immediately prints all out-of-stream variables
-to the standard output as a JSON data structure, or the <b>print</b> or
-<b>eprint</b> keywords which immediately print an expression to standard output
-or standard error, respectively. Note that <tt>dump</tt>, <tt>print</tt>, and
-<tt>eprint</tt> do&rsquo;t output records which participate in
+the <b>dump</b> or <b>edump</b> keywords, which immediately print all
+out-of-stream variables as a JSON data structure to the standard output or
+standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
+keywords which immediately print an expression to standard output or standard
+error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
+and <tt>eprint</tt> don&rsquo;t output records which participate in
 <tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
 stdout/stderr.  </ul>
 
@@ -3356,7 +3357,7 @@ example) PHP.
 stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
 variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
 iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
-bound to the keys and values, respectively, of the hashmap's key-value pairs on
+bound to the keys and values, respectively, of the hashmap&rsquo;s key-value pairs on
 each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
 <tt>break</tt> or <tt>continue</tt> within nested control structures will
 propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
