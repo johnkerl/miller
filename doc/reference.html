@@ -184,6 +184,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements_for_put">If-statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops_for_put">While and do-while loops for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops_for_put">For-loops for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements_for_put">Filter statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -3672,6 +3673,53 @@ basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
 <p/> Note that three key levels are specified here: basename and two indices.
 So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
 the hashmap.
+
+<a id="Filter_statements_for_put"/><h3>Filter statements for put</h3>
+
+<p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
+following two are synonymous:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter 'NR==2 || NR==3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'filter NR==2 || NR==3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+</pre>
+</div>
+<p/>
+
+<p/>The former, of course, is much easier to type. But the latter allows you to define more complex expressions
+for the filter, and/or do other things in addition to the filter:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '@running_sum += $x; filter @running_sum &gt; 1.3' data/small
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$z = $x * $y; filter $z &gt; 0.3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.396146
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="regularize"/><h2>regularize</h2>
