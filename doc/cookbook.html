@@ -140,6 +140,7 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
+&bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
 &bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
@@ -178,6 +179,10 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
 </pre>
 </div>
+<p/>
+
+<a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
+
 <p/>
 
 <a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
