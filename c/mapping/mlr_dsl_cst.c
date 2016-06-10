@@ -2044,7 +2044,7 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 }
 
 static void mlr_dsl_filter_usage(FILE* ostream) {
-	fprintf(ostream, "filter (boolean expression): includes/excludes the record in the output record\n");
+	fprintf(ostream, "filter: includes/excludes the record in the output record\n");
 	fprintf(ostream, "  stream.\n");
 	fprintf(ostream, "  Example: %s put 'filter (NR == 2 || $x > 5.4)'.\n", MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Instead of put with 'filter false' you can simply use put -q.  The following\n");
@@ -2056,7 +2056,7 @@ static void mlr_dsl_unset_usage(FILE* ostream) {
 	fprintf(ostream, "unset: clears field(s) from the current record, or an out-of-stream variable.\n");
 	fprintf(ostream, "  Example: %s put 'unset $x'\n", MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put 'unset $*'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put 'for (k, v in $*) { if (k =~ \"a.*\") {unset $[k] } }'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put 'for (k, v in $*) { if (k =~ \"a.*\") { unset $[k] } }'\n", MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put '...; unset @sums'\n", MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put '...; unset @sums[\"green\"]'\n", MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put '...; unset @*'\n", MLR_GLOBALS.bargv0);
@@ -2100,7 +2100,7 @@ static void mlr_dsl_edump_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_print_usage(FILE* ostream) {
-	fprintf(ostream, "print (expression): prints expression immediately to stdout.\n");
+	fprintf(ostream, "print: prints expression immediately to stdout.\n");
 	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".string($x+$y)'.\n",
 		MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print string(k) . \" => \" . string(v) }'.\n",
@@ -2108,7 +2108,7 @@ static void mlr_dsl_print_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_eprint_usage(FILE* ostream) {
-	fprintf(ostream, "eprint (expression): prints expression immediately to stderr.\n");
+	fprintf(ostream, "eprint: prints expression immediately to stderr.\n");
 	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
 		MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",

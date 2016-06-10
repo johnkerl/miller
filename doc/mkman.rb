@@ -114,7 +114,6 @@ output separator to the given value."""
   for keyword in keywords
     print make_subsection(keyword, [])
     text = `mlr --help-keyword '#{keyword}'`
-    text = text.sub(keyword + ' ', '')
     print make_code_block(text)
   end
 

@@ -2199,7 +2199,7 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(boolean expression): includes/excludes the record in the output record
+filter: includes/excludes the record in the output record
   stream.
   Example: mlr put 'filter (NR == 2 || $x > 5.4)'.
   Instead of put with 'filter false' you can simply use put -q.  The following
@@ -2214,9 +2214,9 @@ e.g. 1440768801.748936.
 .\}
 .nf
 unset: clears field(s) from the current record, or an out-of-stream variable.
-  Example: mlr put '$x'
+  Example: mlr put 'unset $x'
   Example: mlr put 'unset $*'
-  Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") {unset $[k] } }'
+  Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
   Example: mlr put '...; unset @sums'
   Example: mlr put '...; unset @sums["green"]'
   Example: mlr put '...; unset @*'
@@ -2229,7 +2229,7 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
 .\}
 .nf
 emit: inserts an out-of-stream variable into the output record stream. Hashmap
-  indices present in the data but not slotted by arguments are not output.
+  indices present in the data but not slotted by emit arguments are not output.
   Example: mlr put '... ; emit @sums'
   Example: mlr put '... ; emit @sums, "index1", "index2"'
   Example: mlr put '... ; emit @*, "index1", "index2"'
@@ -2243,7 +2243,7 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
 .\}
 .nf
 emitp: inserts an out-of-stream variable into the output record stream. Hashmap
-  indices present in the data but not slotted by arguments are output
+  indices present in the data but not slotted by emitp arguments are output
   concatenated with ":".
   Example: mlr put '... ; emitp @sums'
   Example: mlr put '... ; emitp @sums, "index1", "index2"'
@@ -2290,7 +2290,7 @@ edump: prints all currently defined out-of-stream variables immediately
 .RS 0
 .\}
 .nf
-(expression): prints expression immediately to stdout.
+print: prints expression immediately to stdout.
   Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
   Example: mlr put -q 'for (k, v in $*) { print string(k) . " => " . string(v) }'.
 .fi
@@ -2301,7 +2301,7 @@ edump: prints all currently defined out-of-stream variables immediately
 .RS 0
 .\}
 .nf
-(expression): prints expression immediately to stderr.
+eprint: prints expression immediately to stderr.
   Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
   Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
 .fi
