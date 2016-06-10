@@ -6,8 +6,10 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! re-do valgrinds before release
+* two remaining valgrinds
 ! new syntax @ cover x 2
+
+* note on DSL complexity from #101 ...
 
 FAQ:
 ! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.

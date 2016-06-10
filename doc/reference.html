@@ -185,6 +185,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops_for_put">While and do-while loops for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops_for_put">For-loops for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements_for_put">Filter statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#A_note_on_the_complexity_of_put">A note on the complexity of put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -3722,6 +3723,34 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
 </pre>
 </div>
 <p/>
+
+<a id="A_note_on_the_complexity_of_put"/><h3>A note on the complexity of put</h3>
+
+<p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker
+&mdash; and less error-prone &mdash; to type <tt>mlr stats1 -a sum -f x,y -g
+a,b</tt> than having to track summation variables as in <tt>awk</tt>, or using
+Miller&rsquo;s out-of-stream variables. And the more language features
+Miller&rsquo;s put-DSL has (for-loops, if-statements, nested control
+structures, etc.) then the <i>less</i> powerful it begins to seem: because of
+the other programming-language features it <i>doesn&rsquo;t</i> have.
+
+<p/> When I was originally prototyping Miller in 2015, the decision I had was
+whether to hand-code in a low-level language like C or Rust, with my own
+hand-rolled DSL, or whether to use a higher-level language (like Python or Lua
+or Nim) and let the <tt>put</tt> statements be handled by the implementation
+language&rsquo;s own <tt>eval</tt>: the implementation language would take the
+place of a DSL. Multiple performance experiments showed me I could get better
+throughput using the former, and using C in particular &mdash; by a wide margin. So
+Miller is C under the hood with a hand-rolled DSL.
+
+<p/> I do want to keep focusing on what Miller is good at &mdash; concise notation,
+low latency, and high throughput &mdash; and not add too much in terms of
+high-level-language features to the DSL.  That said, some sort of looping over
+field names is a basic thing to want. As of 4.1.0 we have recursive
+for/while/if structures on about the same complexity level as <tt>awk</tt>.
+While I&rsquo;m excited by these powerful language features, I hope to keep new
+features beyond 4.1.0 focused on Miller&rsquo;s sweet spot which is speed plus
+simplicity.
 
 <!-- ================================================================ -->
 <a id="regularize"/><h2>regularize</h2>
