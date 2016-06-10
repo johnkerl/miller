@@ -9,6 +9,7 @@ TOP OF LIST:
 ! dump/edump/print/etc don't appear in mlr -f ... make a hook for this somewhere.
   o filter; unset; emitf emitp emit; dump print eprint
   o -> mlh/mld/manpage 
+  o width-80 check
 ! poki syntax for #-links
 * re-do valgrinds before release
 * jb.csv task re cookbook link

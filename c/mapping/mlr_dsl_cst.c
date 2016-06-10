@@ -2044,44 +2044,75 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 }
 
 static void mlr_dsl_filter_usage(FILE* ostream) {
-	fprintf(ostream, "filter (boolean expression): includes/excludes the record in the output record stream.\n");
-	fprintf(ostream, "  Example: 'filter (NR == 2 || $x > 5.4)'.\n");
-	fprintf(ostream, "  Instead of put with 'filter false' you can simply use put -q.\n");
+	fprintf(ostream, "filter (boolean expression): includes/excludes the record in the output record\n");
+	fprintf(ostream, "  stream.\n");
+	fprintf(ostream, "  Example: %s put 'filter (NR == 2 || $x > 5.4)'.\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Instead of put with 'filter false' you can simply use put -q.  The following\n");
+	fprintf(ostream, "  uses the input record to accumulate data but only prints the running sum:\n");
+	fprintf(ostream, "  %s put -q '@running_sum += $x * $y; emit @running_sum'.\n", MLR_GLOBALS.bargv0);
 }
+
 static void mlr_dsl_unset_usage(FILE* ostream) {
 	fprintf(ostream, "unset: clears field(s) from the current record, or an out-of-stream variable.\n");
-	fprintf(ostream, "  Example: 'unset $x'\n");
-	fprintf(ostream, "  Example: 'unset $*'\n");
-	fprintf(ostream, "  Example: 'for (k, v in $*) { if (k =~ \"a.*\") {unset $[k] } }'\n");
-	fprintf(ostream, "  Example: 'unset @sums'\n");
-	fprintf(ostream, "  Example: 'unset @sums[\"green\"}'\n");
-	fprintf(ostream, "  Example: 'unset @*'\n");
+	fprintf(ostream, "  Example: %s put 'unset $x'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put 'unset $*'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put 'for (k, v in $*) { if (k =~ \"a.*\") {unset $[k] } }'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '...; unset @sums'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '...; unset @sums[\"green\"]'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '...; unset @*'\n", MLR_GLOBALS.bargv0);
 }
+
 static void mlr_dsl_emit_usage(FILE* ostream) {
-	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream\n");
-	fprintf(ostream, "  Please see HTML docs for more information.\n");
+	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream. Hashmap\n");
+	fprintf(ostream, "  indices present in the data but not slotted by emit arguments are not output.\n");
+	fprintf(ostream, "  Example: %s put '... ; emit @sums'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emit @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emit @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
+
 static void mlr_dsl_emitp_usage(FILE* ostream) {
-	fprintf(ostream, "emitp: inserts an out-of-stream variable into the output record stream\n");
-	fprintf(ostream, "  Please see HTML docs for more information.\n");
+	fprintf(ostream, "emitp: inserts an out-of-stream variable into the output record stream. Hashmap\n");
+	fprintf(ostream, "  indices present in the data but not slotted by emitp arguments are output\n");
+	fprintf(ostream, "  concatenated with \":\".\n");
+	fprintf(ostream, "  Example: %s put '... ; emitp @sums'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emitp @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emitp @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
+
 static void mlr_dsl_emitf_usage(FILE* ostream) {
-	fprintf(ostream, "emitf: inserts an out-of-stream variable into the output record stream\n");
-	fprintf(ostream, "  Please see HTML docs for more information.\n");
+	fprintf(ostream, "emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the\n");
+	fprintf(ostream, "  output record stream.\n");
+	fprintf(ostream, "  Example: %s put '... ; emit @a'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emit @a, @b, @c'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
+
 static void mlr_dsl_dump_usage(FILE* ostream) {
-	fprintf(ostream, "dump: prints all currently defined out-of-stream variables immediately to stdout as JSON.\n");
+	fprintf(ostream, "dump: prints all currently defined out-of-stream variables immediately\n");
+	fprintf(ostream, "  to stdout as JSON.\n");
 }
+
 static void mlr_dsl_edump_usage(FILE* ostream) {
-	fprintf(ostream, "edump: prints all currently defined out-of-stream variables immediately to stderr as JSON.\n");
+	fprintf(ostream, "edump: prints all currently defined out-of-stream variables immediately\n");
+	fprintf(ostream, "  to stderr as JSON.\n");
 }
+
 static void mlr_dsl_print_usage(FILE* ostream) {
 	fprintf(ostream, "print (expression): prints expression immediately to stdout.\n");
-	fprintf(ostream, "  Example: 'eprint \"The sum is \".string($x+y)'.\n");
+	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
 }
+
 static void mlr_dsl_eprint_usage(FILE* ostream) {
 	fprintf(ostream, "eprint (expression): prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: 'eprint \"The sum is \".string($x+y)'.\n");
+	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
 }
 
 // Pass function_name == NULL to get usage for all functions.
@@ -2118,31 +2149,6 @@ void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 	} else if (streq(keyword, "eprint")) {
 		mlr_dsl_eprint_usage(ostream);
 	} else {
-	fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
+		fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
 	}
-//	int found = FALSE;
-//	char* fmt = "%s (class=%s #args=%d): %s\n";
-//
-//	for (int i = 0; ; i++) {
-//		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
-//		if (plookup->function_name == NULL) // end of table
-//			break;
-//		if (function_name == NULL || streq(function_name, plookup->function_name)) {
-//			fprintf(ostream, fmt, plookup->function_name,
-//				function_class_to_desc(plookup->function_class),
-//				plookup->arity, plookup->usage_string);
-//			found = TRUE;
-//		}
-//		if (function_name == NULL)
-//			fprintf(ostream, "\n");
-//	}
-//	if (!found)
-//		fprintf(ostream, "%s: no such function.\n", function_name);
-//	if (function_name == NULL) {
-//		fprintf(ostream, "To set the seed for urand, you may specify decimal or hexadecimal 32-bit\n");
-//		fprintf(ostream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
-//			MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-//		fprintf(ostream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
-//		fprintf(ostream, "along with the mathematical constants PI and E.\n");
-//	}
 }

@@ -2199,9 +2199,12 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(boolean expression): includes/excludes the record in the output record stream.
-  Example: 'filter (NR == 2 || $x > 5.4)'.
-  Instead of put with 'filter false' you can simply use put -q.
+(boolean expression): includes/excludes the record in the output record
+  stream.
+  Example: mlr put 'filter (NR == 2 || $x > 5.4)'.
+  Instead of put with 'filter false' you can simply use put -q.  The following
+  uses the input record to accumulate data but only prints the running sum:
+  mlr put -q '@running_sum += $x * $y; emit @running_sum'.
 .fi
 .if n \{\
 .RE
@@ -2211,12 +2214,12 @@ e.g. 1440768801.748936.
 .\}
 .nf
 unset: clears field(s) from the current record, or an out-of-stream variable.
-  Example: '$x'
-  Example: 'unset $*'
-  Example: 'for (k, v in $*) { if (k =~ "a.*") {unset $[k] } }'
-  Example: 'unset @sums'
-  Example: 'unset @sums["green"}'
-  Example: 'unset @*'
+  Example: mlr put '$x'
+  Example: mlr put 'unset $*'
+  Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") {unset $[k] } }'
+  Example: mlr put '...; unset @sums'
+  Example: mlr put '...; unset @sums["green"]'
+  Example: mlr put '...; unset @*'
 .fi
 .if n \{\
 .RE
@@ -2225,8 +2228,12 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
 .RS 0
 .\}
 .nf
-emit: inserts an out-of-stream variable into the output record stream
-  Please see HTML docs for more information.
+emit: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by arguments are not output.
+  Example: mlr put '... ; emit @sums'
+  Example: mlr put '... ; emit @sums, "index1", "index2"'
+  Example: mlr put '... ; emit @*, "index1", "index2"'
+  Please see http://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE
@@ -2235,8 +2242,13 @@ emit: inserts an out-of-stream variable into the output record stream
 .RS 0
 .\}
 .nf
-emitp: inserts an out-of-stream variable into the output record stream
-  Please see HTML docs for more information.
+emitp: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by arguments are output
+  concatenated with ":".
+  Example: mlr put '... ; emitp @sums'
+  Example: mlr put '... ; emitp @sums, "index1", "index2"'
+  Example: mlr put '... ; emitp @*, "index1", "index2"'
+  Please see http://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE
@@ -2245,8 +2257,11 @@ emitp: inserts an out-of-stream variable into the output record stream
 .RS 0
 .\}
 .nf
-emitf: inserts an out-of-stream variable into the output record stream
-  Please see HTML docs for more information.
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+  output record stream.
+  Example: mlr put '... ; emit @a'
+  Example: mlr put '... ; emit @a, @b, @c'
+  Please see http://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE
@@ -2255,7 +2270,8 @@ emitf: inserts an out-of-stream variable into the output record stream
 .RS 0
 .\}
 .nf
-dump: prints all currently defined out-of-stream variables immediately to stdout as JSON.
+dump: prints all currently defined out-of-stream variables immediately
+  to stdout as JSON.
 .fi
 .if n \{\
 .RE
@@ -2264,7 +2280,8 @@ dump: prints all currently defined out-of-stream variables immediately to stdout
 .RS 0
 .\}
 .nf
-edump: prints all currently defined out-of-stream variables immediately to stderr as JSON.
+edump: prints all currently defined out-of-stream variables immediately
+  to stderr as JSON.
 .fi
 .if n \{\
 .RE
@@ -2274,7 +2291,8 @@ edump: prints all currently defined out-of-stream variables immediately to stder
 .\}
 .nf
 (expression): prints expression immediately to stdout.
-  Example: 'eprint "The sum is ".string($x+y)'.
+  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print string(k) . " => " . string(v) }'.
 .fi
 .if n \{\
 .RE
@@ -2284,7 +2302,8 @@ edump: prints all currently defined out-of-stream variables immediately to stder
 .\}
 .nf
 (expression): prints expression immediately to stderr.
-  Example: 'eprint "The sum is ".string($x+y)'.
+  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
 .fi
 .if n \{\
 .RE
