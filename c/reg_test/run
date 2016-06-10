@@ -1742,7 +1742,7 @@ run_mlr --opprint -n put -v '
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
-  };
+  }
   end {
     emit @n, "a", "b", "c", "d"
   }
@@ -1754,7 +1754,7 @@ run_mlr --opprint --from $indir/abixy put -q '
   @o[1][2][$a][$i*100] = $x;
   for((k1,k2),v in @o[1][2]) {
     @n[3][4][k2][k1] = v;
-  };
+  }
   end {
     emit @n, "a", "b", "c", "d"
   }
@@ -1766,7 +1766,7 @@ run_mlr --opprint --from $indir/abixy put -q '
   end {
     for ((k1, k2), v in @sum) {
       @mean[k1][k2] = @sum[k1][k2] / @count[k1][k2]
-    };
+    }
     emitp @sum, "a", "b";
     emitp @count, "a", "b";
     emitp @mean, "a", "b"
@@ -1779,7 +1779,7 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
   end {
     for ((k1, k2), v in @value["sum"]) {
       @value["mean"][k1][k2] = @value["sum"][k1][k2] / @value["count"][k1][k2]
-    };
+    }
     emitp @value, "stat", "a", "b";
   }
 '
