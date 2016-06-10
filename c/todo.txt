@@ -7,21 +7,19 @@ BUGFIXES
 TOP OF LIST:
 
 ! re-do valgrinds before release
+! new syntax @ cover x 2
 
 FAQ:
 ! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
 
-MLD:
-! readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
-
 GEN DOC:
-! dbl-chk mld:ref:put & cookbook for all 4.1.0 features
 ! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 
 HYGIENE:
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 ! lemon note/message-wording re resolvable conflicts
 
+----------------------------------------------------------------
 4.1.0 RELEASE NOTES:
 * new forx2, while/do-while, if-chains
 * fully recursive; recursivity of existing conds
@@ -37,6 +35,7 @@ HYGIENE:
 * mlr -n: can be used as syntax-checker flag for DSLs, and/or for dataless ops all in begin{}.
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
+----------------------------------------------------------------
 
 RELEASES:
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
