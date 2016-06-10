@@ -8,7 +8,7 @@ TOP OF LIST:
 
 ? poki syntax for #-links
 * re-do valgrinds before release
-* jb.csv task re cookbook link
+* UT edump, eprint, dump, print
 
 RELEASES:
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
@@ -52,22 +52,6 @@ HYGIENE:
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
 
-HETEROGENIZE FEATURE?
-* outer=1
-  inner=2
-  inner=3
-  inner=4
-  outer=5
-  inner=6
-  inner=7
-  ->
-  outer=1,inner=2
-  outer=1,inner=3
-  outer=1,inner=4
-  outer=5,inner=6
-  outer=5,inner=7
-* impl as oosvar first for prototype; to cookbook; consider C-ifying
-
 NOTE FOR FUTURE:
 * find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
 ? local vars w/ decl syntax -- @vars for now?
@@ -79,7 +63,7 @@ NOTE FOR FUTURE:
 ? autodetect format by file extension -- ?
 * double-quote-aware (non-lite) nidx & dkvp options ...
 ? triple-for with boundvars?
-! heterogenize feature? unset fields; and?or? emit fields; and?or?
+! c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
 
 ----------------------------------------------------------------
 ? substring?
