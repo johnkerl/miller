@@ -10,6 +10,7 @@
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "mapping/rval_evaluators.h"
+#include "mapping/mlr_dsl_cst.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
 #include "cli/quoting.h"
@@ -266,6 +267,7 @@ static void main_usage_functions(FILE* o, char* argv0, char* leader) {
 	rval_evaluator_list_functions(o, leader);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
+	fprintf(o, "Please use \"%s --help-all-keywords\" or \"%s -k\" for help on all keywords.\n", argv0, argv0);
 }
 
 static void main_usage_data_format_examples(FILE* o, char* argv0) {
@@ -674,6 +676,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--print-type-arithmetic-info")) {
 			print_type_arithmetic_info(stdout, argv[0]);
 			exit(0);
+
 		} else if (streq(argv[argi], "--help-all-verbs")) {
 			usage_all_verbs(argv[0]);
 		} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
@@ -682,16 +685,27 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--list-all-verbs-raw")) {
 			list_all_verbs_raw(stdout);
 			exit(0);
+
 		} else if (streq(argv[argi], "--list-all-functions-raw")) {
 			rval_evaluator_list_all_functions_raw(stdout);
 			exit(0);
 		} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 			rval_evaluator_function_usage(stdout, NULL);
 			exit(0);
-
 		} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 			check_arg_count(argv, argi, argc, 2);
 			rval_evaluator_function_usage(stdout, argv[argi+1]);
+			exit(0);
+
+		} else if (streq(argv[argi], "--list-all-keywords-raw")) {
+			mlr_dsl_list_all_keywords_raw(stdout);
+			exit(0);
+		} else if (streq(argv[argi], "--help-all-keywords") || streq(argv[argi], "-k")) {
+			mlr_dsl_keyword_usage(stdout, NULL);
+			exit(0);
+		} else if (streq(argv[argi], "--help-keyword") || streq(argv[argi], "--hk")) {
+			check_arg_count(argv, argi, argc, 2);
+			mlr_dsl_keyword_usage(stdout, argv[argi+1]);
 			exit(0);
 
 		// main-usage subsections, individually accessible for the benefit of

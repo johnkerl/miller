@@ -2029,3 +2029,45 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 	}
 	return pkeylist_evaluators;
 }
+
+// ----------------------------------------------------------------
+void mlr_dsl_list_all_keywords_raw(FILE* output_stream) {
+  printf("filter\n");
+  printf("unset\n");
+  printf("emitf\n");
+  printf("emitp\n");
+  printf("emit\n");
+  printf("dump\n");
+  printf("print\n");
+  printf("eprint\n");
+}
+
+// Pass function_name == NULL to get usage for all functions.
+void mlr_dsl_keyword_usage(FILE* output_stream, char* function_name) {
+	printf("stub\n");
+//	int found = FALSE;
+//	char* fmt = "%s (class=%s #args=%d): %s\n";
+//
+//	for (int i = 0; ; i++) {
+//		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
+//		if (plookup->function_name == NULL) // end of table
+//			break;
+//		if (function_name == NULL || streq(function_name, plookup->function_name)) {
+//			fprintf(output_stream, fmt, plookup->function_name,
+//				function_class_to_desc(plookup->function_class),
+//				plookup->arity, plookup->usage_string);
+//			found = TRUE;
+//		}
+//		if (function_name == NULL)
+//			fprintf(output_stream, "\n");
+//	}
+//	if (!found)
+//		fprintf(output_stream, "%s: no such function.\n", function_name);
+//	if (function_name == NULL) {
+//		fprintf(output_stream, "To set the seed for urand, you may specify decimal or hexadecimal 32-bit\n");
+//		fprintf(output_stream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
+//			MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
+//		fprintf(output_stream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
+//		fprintf(output_stream, "along with the mathematical constants PI and E.\n");
+//	}
+}

@@ -106,6 +106,18 @@ output separator to the given value."""
     print make_code_block(text)
   end
 
+  keywords = `mlr --list-all-keywords-raw`
+  print make_section('KEYWORDS FOR PUT', [
+    ""
+  ])
+  keywords = keywords.strip.split("\n").uniq
+  for keyword in keywords
+    print make_subsection(keyword, [])
+    text = `mlr --help-keyword '#{keyword}'`
+    text = text.sub(keyword + ' ', '')
+    print make_code_block(text)
+  end
+
   print make_section('AUTHOR', [
     "Miller is written by John Kerl <kerl.john.r@gmail.com>.",
     "This manual page has been composed from Miller's help output by Eric MSP Veith <eveith@veith-m.de>."
