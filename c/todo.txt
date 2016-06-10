@@ -8,13 +8,8 @@ TOP OF LIST:
 
 ! re-do valgrinds before release
 
-UT:
-! edump, eprint, dump, print
-
 FAQ:
 ! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
-! gunzip prepipe faqent
-! no triple-for with boundvars, but oosvars & while-loops
 
 MLD:
 ! readme note re head dev: announced features ok if build passing (and it is); unannounced features may change

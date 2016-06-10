@@ -20300,6 +20300,62 @@ NR1 name1 NR2 name2 output
 
 
 ================================================================
+DSL PRINT
+
+mlr put -q print 1; print "two"; print $a; print "y is ".string($y); print "" ./reg_test/input/abixy
+1
+two
+pan
+y is 0.726803
+
+1
+two
+eks
+y is 0.522151
+
+1
+two
+wye
+y is 0.338319
+
+1
+two
+eks
+y is 0.134189
+
+1
+two
+wye
+y is 0.863624
+
+1
+two
+zee
+y is 0.493221
+
+1
+two
+eks
+y is 0.187885
+
+1
+two
+zee
+y is 0.976181
+
+1
+two
+hat
+y is 0.749551
+
+1
+two
+pan
+y is 0.952618
+
+
+
+================================================================
 ABSENT/EMPTY
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg_test/input/abixy
