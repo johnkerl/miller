@@ -13,7 +13,33 @@ POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repi
 
 <h1>Rectangularizing data</h1>
 
-<p/>
+<p/>Suppose you have a method (in whatever language) which is printing things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-outer.txt)HERE
+
+and then calls another method which prints things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-middle.txt)HERE
+
+and then, perhaps, that second method calls a third method which prints things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-inner.txt)HERE
+
+with the result that your program&rsquo;s output is
+
+POKI_INCLUDE_ESCAPED(data/rect.txt)HERE
+
+The idea here is that middles starting with a 1 belong to the outer value of 1,
+and so on.  (The outer values might be account IDs, or table names, or what
+have you; the middle values might be invoiced IDs; the inner values might be
+line-items.) If you want all the middle and inner lines to have the context of
+which outers they belong to, you can modify your software to pass all those
+through your methods. Alternatively, you can use the following to
+rectangularize the data. The idea is to use an out-of-stream variable to accumulate
+fields across records. Clear that variable when you see an outer ID; accumulate
+fields; emit output when you see the inner IDs.
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 
 <h1>Bulk rename of field names</h1>
 

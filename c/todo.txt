@@ -6,29 +6,15 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! poki syntax for #-links
 ! dump/edump/print/etc don't appear in mlr -f ... make a hook for this somewhere.
   o filter; unset; emitf emitp emit; dump print eprint
   o -> mlh/mld/manpage 
+! poki syntax for #-links
 * re-do valgrinds before release
-! heterogenize feature?
-  - unset fields; and?or?
-  - emit fields; and?or?
 * jb.csv task re cookbook link
 
-COOKBOOK:
-* cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
-  mlr --from jb.csv --fs comma --nidx put '
-    @maxnf = max(@maxnf, NF);
-    @nf = NF;
-    while(@nf < @maxnf) {
-      @nf += 1;
-      $[@nf] = ""
-    }
-  '
-* rename example also w/ for-srec?
-
-gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
+RELEASES:
+* gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
 FAQ:
 * NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
@@ -98,6 +84,7 @@ NOTE FOR FUTURE:
 ? autodetect format by file extension -- ?
 * double-quote-aware (non-lite) nidx & dkvp options ...
 ? triple-for with boundvars?
+! heterogenize feature? unset fields; and?or? emit fields; and?or?
 
 ----------------------------------------------------------------
 ? substring?

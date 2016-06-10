@@ -183,6 +183,108 @@ grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab st
 
 <a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
 
+<p/>Suppose you have a method (in whatever language) which is printing things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+outer=1
+outer=2
+outer=3
+</pre>
+</div>
+<p/>
+
+and then calls another method which prints things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+middle=10
+middle=11
+middle=12
+middle=20
+middle=21
+middle=30
+middle=31
+</pre>
+</div>
+<p/>
+
+and then, perhaps, that second method calls a third method which prints things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+inner1=100,inner2=101
+inner1=120,inner2=121
+inner1=200,inner2=201
+inner1=210,inner2=211
+inner1=300,inner2=301
+inner1=312
+inner1=313,inner2=314
+</pre>
+</div>
+<p/>
+
+with the result that your program&rsquo;s output is
+
+<p/>
+<div class="pokipanel">
+<pre>
+outer=1
+middle=10
+inner1=100,inner2=101
+middle=11
+middle=12
+inner1=120,inner2=121
+outer=2
+middle=20
+inner1=200,inner2=201
+middle=21
+inner1=210,inner2=211
+outer=3
+middle=30
+inner1=300,inner2=301
+middle=31
+inner1=312
+inner1=313,inner2=314
+</pre>
+</div>
+<p/>
+
+The idea here is that middles starting with a 1 belong to the outer value of 1,
+and so on.  (The outer values might be account IDs, or table names, or what
+have you; the middle values might be invoiced IDs; the inner values might be
+line-items.) If you want all the middle and inner lines to have the context of
+which outers they belong to, you can modify your software to pass all those
+through your methods. Alternatively, you can use the following to
+rectangularize the data. The idea is to use an out-of-stream variable to accumulate
+fields across records. Clear that variable when you see an outer ID; accumulate
+fields; emit output when you see the inner IDs.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/rect.txt put -q '
+  ispresent($outer) {
+    unset @r
+  }
+  for (k, v in $*) {
+    @r[k] = v
+  }
+  ispresent($inner1) {
+    emit @r
+  }'
+outer=1,middle=10,inner1=100,inner2=101
+outer=1,middle=12,inner1=120,inner2=121
+outer=2,middle=20,inner1=200,inner2=201
+outer=2,middle=21,inner1=210,inner2=211
+outer=3,middle=30,inner1=300,inner2=301
+outer=3,middle=31,inner1=312,inner2=301
+outer=3,middle=31,inner1=313,inner2=314
+</pre>
+</div>
 <p/>
 
 <a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
