@@ -527,7 +527,8 @@ Other options:
                      "mlr cat a.dat b.dat".
   -n                 Process no input files, nor standard input either. Useful
                      for mlr put with begin/end statements only. (Same as --from
-                     /dev/null.)
+                     /dev/null.) Also useful in "mlr -n put -v '...'" for
+                     analyzing abstract syntax trees (if that's your thing).
 
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.

@@ -468,7 +468,8 @@ static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
 	fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n");
 	fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
-	fprintf(o, "                     /dev/null.)\n");
+	fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0);
+	fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n");
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {
