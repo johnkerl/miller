@@ -1311,7 +1311,6 @@ static void handle_srec_assignment(
 {
 	char* srec_lhs_field_name = pnode->srec_lhs_field_name;
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only

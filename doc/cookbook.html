@@ -378,6 +378,26 @@ a,b,c
 </div>
 <p/>
 
+or, more simply,
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/ragged.csv --fs comma --nidx put '
+  @maxnf = max(@maxnf, NF);
+  while(NF &lt; @maxnf) {
+    $[NF+1] = "";
+  }
+'
+a,b,c
+1,2,3
+4,5,
+6,,
+7,8,9
+</pre>
+</div>
+<p/>
+
 <a id="Filtering_paragraphs_of_text"/><h1>Filtering paragraphs of text</h1>
 
 <p/>The idea is to use a record separator which is a pair of newlines. Then, if
