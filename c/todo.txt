@@ -19,7 +19,6 @@ FAQ:
 * no triple-for with boundvars, but oosvars & while-loops
 
 MLD:
-* doc & mlr:filter:olh more complex filter expressions: xref to put w/ filter w/in it. filter-within-put @ mld:ref:put.
 * -n can be used as syntax-checker flag for DSLs. and/or for dataless ops all in begin{}.
 * readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
 
