@@ -6,30 +6,24 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-? poki syntax for #-links
-* re-do valgrinds before release
-* UT edump, eprint, dump, print
-
-RELEASES:
-* gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
-
-FAQ:
-* NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
-* gunzip prepipe faqent
-* no triple-for with boundvars, but oosvars & while-loops
-
-MLD:
-* readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
-
-GEN DOC:
-* dbl-chk mld:ref:put & cookbook for all 4.1.0 features
-! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
+! re-do valgrinds before release
 
 UT:
-* dbl-chk UT coverage for 4.1.0 features
+! edump, eprint, dump, print
+
+FAQ:
+! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+! gunzip prepipe faqent
+! no triple-for with boundvars, but oosvars & while-loops
+
+MLD:
+! readme note re head dev: announced features ok if build passing (and it is); unannounced features may change
+
+GEN DOC:
+! dbl-chk mld:ref:put & cookbook for all 4.1.0 features
+! cmt ast/cst stuff re (1) .y; (2) reg_test/expected/out
 
 HYGIENE:
-! chk copy/reference semantics for mlrvals esp. w/r/t evaluators
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
 ! lemon note/message-wording re resolvable conflicts
 
@@ -41,13 +35,16 @@ HYGIENE:
   http://johnkerl.org/miller/doc/reference.html#Field_names_for_put
 * dump/edump/print/eprint
 * pound-to-EOL commenting for filter & put
-! semicolon no longer required after closing curly brace
+* semicolon no longer required after closing curly brace
 * emit/unset @* same as emit/unset all
 * unset $*
 * isnumeric isint isfloat isbool isstring
 * mlr -n: can be used as syntax-checker flag for DSLs, and/or for dataless ops all in begin{}.
 * bugfix:
   ~/pub_http_internet/miller-releases/miller-4.0.0/c/mlr put -v '@a[1][2]=$b;$new=@a[1][2]' ../data/small
+
+RELEASES:
+* gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
 NOTE FOR FUTURE:
 * find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
@@ -60,7 +57,7 @@ NOTE FOR FUTURE:
 ? autodetect format by file extension -- ?
 * double-quote-aware (non-lite) nidx & dkvp options ...
 ? triple-for with boundvars?
-! c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
+? c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
 
 ----------------------------------------------------------------
 ? substring?
