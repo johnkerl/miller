@@ -8,13 +8,13 @@ TOP OF LIST:
 
 ! poki syntax for #-links
 ! dump/edump/print/etc don't appear in mlr -f ... make a hook for this somewhere.
-  o filter
-  o unset
-  o emitf emitp emit
-  o dump print eprint
-  -> mlh/mld/manpage 
+  o filter; unset; emitf emitp emit; dump print eprint
+  o -> mlh/mld/manpage 
 * re-do valgrinds before release
 ! heterogenize feature?
+  - unset fields; and?or?
+  - emit fields; and?or?
+* jb.csv task re cookbook link
 
 COOKBOOK:
 * cookbook https://github.com/johnkerl/miller/issues/103 to fix up short csv data lines
