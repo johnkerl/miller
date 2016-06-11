@@ -1447,10 +1447,12 @@ int main(int argc, char **argv) {
 			lem.nstate, lem.tablesize, lem.nconflict);
 	}
 	if (lem.nconflict) {
-		fprintf(stderr,"%d parsing conflicts.\n",lem.nconflict);
+		fprintf(stderr,"%d resolvable parsing conflicts.\n",lem.nconflict);
 	}
 	//exit(lem.errorcnt + lem.nconflict);
 	// JRK 2016-05-23
+	// According to the manual, these conflicts are resolved by taking the first match.
+	// This is OK for my purposes.
 	exit(lem.errorcnt);
 	return (lem.errorcnt + lem.nconflict);
 }

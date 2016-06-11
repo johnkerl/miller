@@ -27,7 +27,7 @@
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
 #ifndef INITIAL_ARRAY_LENGTH
-#define INITIAL_ARRAY_LENGTH 32
+#define INITIAL_ARRAY_LENGTH 1//32
 #endif
 
 #ifndef LOAD_FACTOR

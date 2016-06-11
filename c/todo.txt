@@ -8,13 +8,8 @@ TOP OF LIST:
 
 ! new syntax @ cover x 2
 
-FAQ:
-! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
-  mlr --opprint put 'begin{@nr1=0}@nr1+=1;$nr1=@nr1' then filter '$x>0.5' then put 'begin{@nr=0}@nr+=1;$nr=@nr' s
-
 HYGIENE:
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
-! lemon note/message-wording re resolvable conflicts
 
 ----------------------------------------------------------------
 4.1.0 RELEASE NOTES:
