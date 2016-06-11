@@ -81,6 +81,7 @@ they&rsquo;re just field names taken from the initial field ordering in the
 input data.
 
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp cat}}HERE
+POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --nidx cat}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --rs lf --implicit-csv-header cat}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,999}}HERE
@@ -101,6 +102,27 @@ command, which has the same semantics.
 <p/>The solution is to use the <tt>-o</tt> option:
 
 POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
+
+<h1>NR is not consecutive after then-chaining</h1>
+
+<p/> Given this input data:
+POKI_RUN_COMMAND{{cat data/small}}HERE
+
+why don&rsquo;t I see <tt>NR=1</tt> and <tt>NR=2</tt> here??
+
+POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then put '$NR = NR' data/small}}HERE
+
+<p/>The reason is that <tt>NR</tt> is computed for the original input records and isn&rsquo;t dynamically
+updated. By contrast, <tt>NF</tt> is dynamically updated: it&rsquo;s the number of fields in the
+current record, and if you add/remove a field, the value of <tt>NF</tt> will change:
+
+POKI_RUN_COMMAND{{echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'}}HERE
+
+<p/><tt>NR</tt>, by contrast (and <tt>FNR</tt> as well), retains the value from the original input stream,
+and records may be dropped by a <tt>filter</tt> within a <tt>then</tt>-chain. To recover consecutive record
+numbers, you can use out-of-stream variables as follows:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)HERE
 
 <h1>Why am I not seeing all possible joins occur?</h1>
 

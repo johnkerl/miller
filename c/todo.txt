@@ -6,11 +6,11 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* two remaining valgrinds
 ! new syntax @ cover x 2
 
 FAQ:
 ! NR is from the original input stream. NF is already dynamic; FILENUM/FILENAME don't make sense to change.
+  mlr --opprint put 'begin{@nr1=0}@nr1+=1;$nr1=@nr1' then filter '$x>0.5' then put 'begin{@nr=0}@nr+=1;$nr=@nr' s
 
 HYGIENE:
 ! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
@@ -49,6 +49,7 @@ NOTE FOR FUTURE:
 * double-quote-aware (non-lite) nidx & dkvp options ...
 ? triple-for with boundvars?
 ? c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
+* two remaining valgrinds -- both venial
 
 ----------------------------------------------------------------
 ? substring?

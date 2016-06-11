@@ -147,6 +147,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
 &bull;&nbsp;<a href="#I_assigned_$9_and_it&rsquo;s_not_9th">I assigned $9 and it&rsquo;s not 9th</a><br/>
 &bull;&nbsp;<a href="#Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?">Why doesn&rsquo;t mlr cut put fields in the order I want?</a><br/>
+&bull;&nbsp;<a href="#NR_is_not_consecutive_after_then-chaining">NR is not consecutive after then-chaining</a><br/>
 &bull;&nbsp;<a href="#Why_am_I_not_seeing_all_possible_joins_occur?">Why am I not seeing all possible joins occur?</a><br/>
 &bull;&nbsp;<a href="#What_about_XML_or_JSON_file_formats?">What about XML or JSON file formats?</a><br/>
 </div>
@@ -355,6 +356,14 @@ $ echo x,y,z | mlr --dkvp cat
 <p/>
 <div class="pokipanel">
 <pre>
+$ echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
+1=x,2=y,3=z,6=a,4=b,55=cde
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
 $ echo x,y,z | mlr --nidx cat
 x,y,z
 </pre>
@@ -439,6 +448,72 @@ x=0.7586799647899636,i=2,a=eks
 x=0.20460330576630303,i=3,a=wye
 x=0.38139939387114097,i=4,a=eks
 x=0.5732889198020006,i=5,a=wye
+</pre>
+</div>
+<p/>
+
+<a id="NR_is_not_consecutive_after_then-chaining"/><h1>NR is not consecutive after then-chaining</h1>
+
+<p/> Given this input data:
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+why don&rsquo;t I see <tt>NR=1</tt> and <tt>NR=2</tt> here??
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter '$x &gt; 0.5' then put '$NR = NR' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
+</pre>
+</div>
+<p/>
+
+<p/>The reason is that <tt>NR</tt> is computed for the original input records and isn&rsquo;t dynamically
+updated. By contrast, <tt>NF</tt> is dynamically updated: it&rsquo;s the number of fields in the
+current record, and if you add/remove a field, the value of <tt>NF</tt> will change:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
+nf1=3,u=4,nf2=5,nf3=3
+</pre>
+</div>
+<p/>
+
+<p/><tt>NR</tt>, by contrast (and <tt>FNR</tt> as well), retains the value from the original input stream,
+and records may be dropped by a <tt>filter</tt> within a <tt>then</tt>-chain. To recover consecutive record
+numbers, you can use out-of-stream variables as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/small put '
+  begin{ @nr1 = 0 }
+  @nr1 += 1;
+  $nr1 = @nr1
+' \
+then filter '$x&gt;0.5' \
+then put '
+  begin{ @nr2 = 0 }
+  @nr2 += 1;
+  $nr2 = @nr2
+'
+a   b   i x                  y                  nr1 nr2
+eks pan 2 0.7586799647899636 0.5221511083334797 2   1
+wye pan 5 0.5732889198020006 0.8636244699032729 5   2
 </pre>
 </div>
 <p/>
