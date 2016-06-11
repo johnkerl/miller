@@ -637,12 +637,12 @@ are on separate lines:
 POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
 
 <p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
-POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2 # Syntax error}}HERE
-POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 } # This is OK}}HERE
+POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2' # Syntax error}}HERE
+POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 }' # This is OK}}HERE
 
 <p/>Bodies for compound statements may be empty:
 
-POKI_CARDIFY{{mlr put 'if ($x == 1) { } # This no-op is syntactically acceptable}}HERE
+POKI_CARDIFY{{mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable}}HERE
 
 <h3>Out-of-stream variables for put</h3>
 
