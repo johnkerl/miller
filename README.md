@@ -23,6 +23,14 @@ indices.  Examples:
 % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 % mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
+% mlr --from estimates.tbl put '
+  for (k,v in $*) {
+    if (isnumeric(v) && k =~ "^[t-z].*$") {
+      $sum += v; $count += 1
+    }
+  }
+  $mean = $sum / $count # no assignment if count unset
+'
 ```
 
 This is something the Unix toolkit always could have done, and arguably always
