@@ -8,9 +8,6 @@ TOP OF LIST:
 
 ! new syntax @ cover x 2
 
-HYGIENE:
-! chk lhmsmv mem mgmt @ enlarge as in mlhmmv
-
 ----------------------------------------------------------------
 4.1.0 RELEASE NOTES:
 * new forx2, while/do-while, if-chains
