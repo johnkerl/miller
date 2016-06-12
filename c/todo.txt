@@ -7,21 +7,21 @@ BUGFIXES
 TOP OF LIST:
 
 ! rh/fedora/centos mlr-4.1.0
-
-RELEASES:
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
+
+? narrative/slides doc ...
+? stdin-then-tail-f
+? --strict
+? triple-for with boundvars?
+? user-defined functions?
+? localvars w/ decl syntax?
+? double-quote-aware (non-lite) nidx & dkvp options?
+? comma-number -- using locale?
+? pprint join?
 
 NOTE FOR FUTURE:
 * find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
-? local vars w/ decl syntax -- @vars for now?
-? user-defined functions ... ??
-- boundvar evaluators @ rval: pass in a bindstack. *for miller* it ought to be possible
-  to be better at nested-scope name resolution than stack backwalks w/ hashgets at each
-  step. at each level a name will have one nearest at-or-up binding or none at all.
-  needs replacing bindstack with bindtree.
 ? autodetect format by file extension -- ?
-* double-quote-aware (non-lite) nidx & dkvp options ...
-? triple-for with boundvars?
 ? c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
 * two remaining valgrinds -- both venial
 
@@ -50,20 +50,15 @@ NON-PRE4
 
 * interpolated percentiles
 
-? DSL comments: replace with spaces from # to EOL/EOS, whichever comes first
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
   - linregs; corr/cov?
   ? also, option of weighted stats w/ explicit weights field?
   ? maybe just EWMA with well-known sumw followed by then-chaining. write up the weights if so?
 
-* mld re cross-record stuff is limited to stats1/2 and step
-  o this will change with begin/end and oosvars
 * tbin/ok -> cookbook
 * debian screenshot
-* lrec_evaluators cleanup re strict, redundant statements, etc.
 * ruby @ optextdep @ mld; poki+mkman
-* comma-number -- using locale?
 * stdin filename keyword for read-from-file-then-tail-f mode (e.g. mlr etc)
   - needs refactor for lrec_reader_alloc callsite
 * perf page: (1) redo; (2) note GNU/etc; (3) compare to mawk (http://invisible-island.net/mawk/)
@@ -71,11 +66,6 @@ NON-PRE4
 * valgrind note @ new dev page/section
 * join: final sllv_free in destructor (lo-pri)
 * anim ref https://github.com/edi9999/path-extractor
-
-? json arrays -> nested w/ some delimiter? only if all array elements are terminals.
-
-* flight misc: .screenrc -> dotfiles; more dotfile currency
-* cump -> one-offs
 
 ----------------------------------------------------------------
 NARRATIVE INTRO:
@@ -122,7 +112,6 @@ COOKBOOK/FAQ/ETC.:
     ! emph mlr has light stats but for heavyweight analysis use R et al.
 
 * --mmap @ mlr -h
-* bus-insurance dev page
 
 ================================================================
 * ect feature?
@@ -169,10 +158,7 @@ COOKBOOK/FAQ/ETC.:
 
 ? wiki quickselect ?
 
-* sllv_free option with callback for void-star-payload free; likewise other void-star-payload containers
-* double-check for off-by-one buflen in cline/sline
 * hash-collision ifdef instrumentation -> maybe find a better hash function out there
-* pprint join?
 * lemon in-dir -- cf wiz note
 * gprof link with -lc on FreeBSD -- ?
 
