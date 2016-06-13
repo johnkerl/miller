@@ -8,47 +8,55 @@ TOP OF LIST:
 
 ! rh/fedora/centos mlr-4.1.0
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
+* call for use-cases? (go first.)
 
-? narrative/slides doc ...
-? stdin-then-tail-f
-? --strict
-? triple-for with boundvars?
-? user-defined functions?
-? localvars w/ decl syntax?
+! more mld:ref:put:for examples, incl. two-pass algo stuff. 2-pass & beyond are now doable.
+  mlr --from ../data/small put -q '
+    @x_min = min($x, @x_min);
+    @x_max = max($x, @x_max);
+    @x[NR] = $x;
+    end {
+      for(nr,v in @x) {
+        eprint nr;
+        @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
+      }
+      emit @x_pct, "NR"
+    }
+  '
+
 ? double-quote-aware (non-lite) nidx & dkvp options?
 ? comma-number -- using locale?
-? pprint join?
+* interpolated percentiles
 
-NOTE FOR FUTURE:
+? user-defined functions?
+? localvars w/ decl syntax?
+? triple-for with boundvars?
+
+----------------------------------------------------------------
+? narrative/slides doc ...
+? stdin-then-tail-f
+? --strict?
+
 * find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
 ? autodetect format by file extension -- ?
 ? c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
 * two remaining valgrinds -- both venial
 
-----------------------------------------------------------------
 ? substring?
 ? CONVFMT? IGNORECASE? MLRPATH?
-* in 4.1.0 release notes make the inspiration from awk explicit
-
-----------------------------------------------------------------
-? call for use-cases? (go first.)
 
 * lrec get followed by put/remove: getext variant returning node for unlink, valpoke, or null == append to avoid
   double-searching.
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
-* --strict? mlh/mld if so.
 
 ================================================================
-NON-PRE4
-================================================================
+MORE
 
 * look into 'perf'
 * linreg in terms of stats only ... check py book
 * cat/cut langcomps (w/ gh links) -> perf page
 
 * pipe-viewer-like feature to stderr?
-
-* interpolated percentiles
 
 * stats1/stats2 sliding-window feature? and/or with ewma-coefficients (much easier)
   - mean/stddev/var; skew/kurt?
