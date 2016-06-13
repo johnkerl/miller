@@ -8,7 +8,6 @@ TOP OF LIST:
 
 ! rh/fedora/centos mlr-4.1.0
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
-* call for use-cases? (go first.)
 
 ! more mld:ref:put:for examples, incl. two-pass algo stuff. 2-pass & beyond are now doable.
   mlr --from ../data/small put -q '
@@ -23,6 +22,8 @@ TOP OF LIST:
       emit @x_pct, "NR"
     }
   '
+
+* call for use-cases? (go first.)
 
 ? double-quote-aware (non-lite) nidx & dkvp options?
 ? comma-number -- using locale?

@@ -215,15 +215,24 @@ static void main_usage_synopsis(FILE* o, char* argv0) {
 }
 
 static void main_usage_examples(FILE* o, char* argv0, char* leader) {
-	fprintf(o, "%s%s --csv --rs lf --fs tab cut -f hostname,uptime file1.tsv file2.tsv\n", leader, argv0);
+
 	fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0);
-	fprintf(o, "%s%s --csv filter '$status != \"down\" && $upsec >= 10000' *.csv\n", leader, argv0);
-	fprintf(o, "%s%s --nidx put '$sum = $7 + 2.1*$8' *.dat\n", leader, argv0);
+	fprintf(o, "%s%s --csv --rs lf filter '$status != \"down\" && $upsec >= 10000' *.csv\n", leader, argv0);
+	fprintf(o, "%s%s --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat\n", leader, argv0);
 	fprintf(o, "%sgrep -v '^#' /etc/group | %s --ifs : --nidx --opprint label group,pass,gid,member then sort -f group\n", leader, argv0);
 	fprintf(o, "%s%s join -j account_id -f accounts.dat then group-by account_name balances.dat\n", leader, argv0);
-	fprintf(o, "%s%s put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*\n", leader, argv0);
+	fprintf(o, "%s%s --json put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*.json\n", leader, argv0);
 	fprintf(o, "%s%s stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*\n", leader, argv0);
 	fprintf(o, "%s%s stats2 -a linreg-pca -f u,v -g shape data/*\n", leader, argv0);
+	fprintf(o, "%s%s put -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}' data/*\n", leader, argv0);
+	fprintf(o, "%s%s --from estimates.tbl put '\n", leader, argv0);
+	fprintf(o, "  for (k,v in $*) {\n");
+	fprintf(o, "    if (isnumeric(v) && k =~ \"^[t-z].*$\") {\n");
+	fprintf(o, "      $sum += v; $count += 1\n");
+	fprintf(o, "    }\n");
+	fprintf(o, "  }\n");
+	fprintf(o, "  $mean = $sum / $count # no assignment if count unset\n");
+	fprintf(o, "'\n");
 }
 
 static void list_all_verbs_raw(FILE* o) {
