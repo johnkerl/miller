@@ -100,8 +100,12 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// micro-optimization.) For bodyless statements (e.g. assignment) this is null.
 	mlr_dsl_cst_statement_list_handler_t* pblock_handler;
 
-	// Assignment to oosvar, emit, and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
+	// Assignment to oosvar
 	sllv_t* poosvar_lhs_keylist_evaluators;
+
+	// emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
+	int num_emit_keylist_evaluators;
+	sllv_t** ppemit_keylist_evaluators;
 
 	// Assignment to srec
 	char* srec_lhs_field_name;
