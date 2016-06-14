@@ -143,6 +143,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
+&bull;&nbsp;<a href="#Two-pass_computation_of_percentages">Two-pass computation of percentages</a><br/>
 &bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
@@ -259,9 +260,9 @@ have you; the middle values might be invoiced IDs; the inner values might be
 line-items.) If you want all the middle and inner lines to have the context of
 which outers they belong to, you can modify your software to pass all those
 through your methods. Alternatively, you can use the following to
-rectangularize the data. The idea is to use an out-of-stream variable to accumulate
-fields across records. Clear that variable when you see an outer ID; accumulate
-fields; emit output when you see the inner IDs.
+rectangularize the data. The idea is to use an out-of-stream variable to
+accumulate fields across records. Clear that variable when you see an outer ID;
+accumulate fields; emit output when you see the inner IDs.
 
 <p/>
 <div class="pokipanel">
@@ -380,6 +381,8 @@ a,b,c
 
 or, more simply,
 
+POKI_RUN_COMMAND(cat data/small)HERE
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -394,6 +397,48 @@ a,b,c
 4,5,
 6,,
 7,8,9
+</pre>
+</div>
+<p/>
+
+<a id="Two-pass_computation_of_percentages"/><h1>Two-pass computation of percentages</h1>
+
+<p/>Miller is a streaming record processor; commands are performed once per
+record. This makes Miller particularly suitable for single-pass algorithms,
+allowing many of its verbs to process files that are (much) larger than the
+amount of RAM present in your system. (Of course, Miller verbs such as
+<tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
+before emitting any output records.)
+
+<p/>You can use out-of-stream variables to perform multi-pass computations.
+For example, mapping numeric values down a column to the percentage between
+their min and max values is two-pass: on the first pass you find the min and
+max values, then on the second, map each record&rsquo;s value to a percentage.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put -q '
+  # These are executed once per record, which is the first pass.
+  # The key is to use NR to index an out-of-stream variable to
+  # retain all the x-field values.
+  @x_min = min($x, @x_min);
+  @x_max = max($x, @x_max);
+  @x[NR] = $x;
+
+  # The second pass is in a for-loop in an end-block.
+  end {
+    for (nr,v in @x) {
+      @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
+    }
+    emit @x_pct, "NR"
+  }
+'
+NR=1,x_pct=25.661943
+NR=2,x_pct=100.000000
+NR=3,x_pct=0.000000
+NR=4,x_pct=31.908236
+NR=5,x_pct=66.540542
 </pre>
 </div>
 <p/>
