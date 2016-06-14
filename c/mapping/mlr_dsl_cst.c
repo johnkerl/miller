@@ -1616,18 +1616,47 @@ static void handle_emitp(
 	cst_outputs_t*           pcst_outputs)
 {
 	int keys_all_non_null_or_error = TRUE;
-	// xxx
-	sllmv_t* pmvkeys = evaluate_list(pnode->ppemit_keylist_evaluators[0], pvars, &keys_all_non_null_or_error);
+	// xxx any/all semantics ... array here?
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys[0], pmvnames, pcst_outputs->poutrecs,
 				FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
-	sllmv_free(pmvkeys);
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+// ----------------------------------------------------------------
+static void handle_emit(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	// xxx any/all semantics ... array here?
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys[0], pmvnames, pcst_outputs->poutrecs,
+				TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
 }
 
 // ----------------------------------------------------------------
@@ -1643,27 +1672,6 @@ static void handle_emitp_all(
 			FALSE, pcst_outputs->oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
-}
-
-// ----------------------------------------------------------------
-static void handle_emit(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	int keys_all_non_null_or_error = TRUE;
-	// xxx
-	sllmv_t* pmvkeys = evaluate_list(pnode->ppemit_keylist_evaluators[0], pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
-				TRUE, pcst_outputs->oosvar_flatten_separator);
-		}
-		sllmv_free(pmvnames);
-	}
-	sllmv_free(pmvkeys);
 }
 
 // ----------------------------------------------------------------
