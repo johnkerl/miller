@@ -9,23 +9,14 @@ TOP OF LIST:
 ! rh/fedora/centos mlr-4.1.0
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
-! more mld:ref:put:for examples, incl. two-pass algo stuff. 2-pass & beyond are now doable.
-  mlr --from ../data/small put -q '
-    @x_min = min($x, @x_min);
-    @x_max = max($x, @x_max);
-    @x[NR] = $x;
-    end {
-      for(nr,v in @x) {
-        eprint nr;
-        @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
-      }
-      emit @x_pct, "NR"
-    }
-  '
+! go through lmag article & clarify all unclears
+
+! indexed emitf variant
 
 * call for use-cases? (go first.)
 
 ? double-quote-aware (non-lite) nidx & dkvp options?
+
 ? comma-number -- using locale?
 * interpolated percentiles
 
