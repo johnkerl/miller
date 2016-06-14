@@ -6,12 +6,14 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! indexed emitf variant
+
 ! rh/fedora/centos mlr-4.1.0
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
 ! go through lmag article & clarify all unclears
-
-! indexed emitf variant
+  - headerless csv i/o args
+  - ...
 
 * call for use-cases? (go first.)
 

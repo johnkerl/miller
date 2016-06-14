@@ -88,7 +88,7 @@ typedef void mlr_dsl_cst_statement_list_handler_t(
 // uses all of them. They aren't expressed as a union since their count is small: there's one CST
 // per mlr-put invocation, independent of the number of stream records processed.
 //
-// Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is [$b, "c"]
+// Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is ["a", $b, "c"]
 // and the namelist is ["d", @e].
 typedef struct _mlr_dsl_cst_statement_t {
 
