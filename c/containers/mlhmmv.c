@@ -832,18 +832,19 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t
 	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
 {
 	sllmv_t* pkeys = ppkeys[0]; // xxx iterate
-
-	mv_t* pfirstkey = &pkeys->phead->value;
-
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
 	if (ptop_entry == NULL) {
 		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_entry->level_value.is_terminal) {
-		// E.g. '@v = 3' at the top level of the mlhmmv.
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		lrec_put(poutrec,
-			mv_alloc_format_val(pfirstkey),
-			mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		for (int i = 0; i < num_keylists; i++) {
+			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
+			mv_t* pfirstkey = &pkeys->phead->value;
+			// E.g. '@v = 3' at the top level of the mlhmmv.
+			lrec_put(poutrec,
+				mv_alloc_format_val(pfirstkey),
+				mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		}
 		sllv_append(poutrecs, poutrec);
 	} else {
 		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
@@ -851,10 +852,14 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t
 		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
 		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
 		lrec_t* ptemplate = lrec_unbacked_alloc();
-		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
-			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
-		free(oosvar_name);
+		for (int i = 0; i < num_keylists; i++) {
+			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
+			mv_t* pfirstkey = &pkeys->phead->value;
+			char* oosvar_name = mv_alloc_format_val(pfirstkey);
+			mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
+				ptemplate, poutrecs, do_full_prefixing, flatten_separator);
+			free(oosvar_name);
+		}
 		lrec_free(ptemplate);
 	}
 }
