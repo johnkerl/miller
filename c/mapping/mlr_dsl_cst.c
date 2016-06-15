@@ -30,6 +30,8 @@ static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int ti, int cf,
 	int do_full_prefixing);
+static mlr_dsl_cst_statement_t*             alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* pnode, int ti, int cf,
+	int do_full_prefixing);
 static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* pnode, int ti, int cf);
@@ -411,6 +413,12 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_EMIT:
 		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, FALSE);
 		break;
+	case MD_AST_NODE_TYPE_EMITP_LASHED:
+		return alloc_emit_or_emitp_lashed(pnode, type_inferencing, context_flags, TRUE);
+		break;
+	case MD_AST_NODE_TYPE_EMIT_LASHED:
+		return alloc_emit_or_emitp_lashed(pnode, type_inferencing, context_flags, FALSE);
+		break;
 	case MD_AST_NODE_TYPE_FILTER:
 		return alloc_filter(pnode, type_inferencing, context_flags);
 		break;
@@ -735,6 +743,79 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 //         z (strnum_literal).
 
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pkeylist_node = pnode->pchildren->phead->pvvalue;
+
+	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
+	// So if 'all' appears at all, it's the only name.
+	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_all
+			: handle_emitp_all;
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit
+			: handle_emitp;
+
+		// xxx
+		pstatement->num_emit_keylist_evaluators = 1;
+		pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+			* sizeof(sllv_t*));
+		pstatement->ppemit_keylist_evaluators[0] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	} else {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+// mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
+// list (statement_list):
+//     emit (emit):
+//         oosvar_keylist (oosvar_keylist):
+//             a (string_literal).
+//             2 (strnum_literal).
+//             3 (strnum_literal).
+//         x (strnum_literal).
+//         y (strnum_literal).
+//         z (strnum_literal).
+//
+// mlr -n put -v 'emit all, "x", "y", "z"'
+// list (statement_list):
+//     emit (emit):
+//         all (all).
+//         x (strnum_literal).
+//         y (strnum_literal).
+//         z (strnum_literal).
+
+// xxx iterate
+static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
