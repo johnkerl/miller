@@ -197,8 +197,8 @@ void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 //   a   sum:wye
 //   hat 0.031442
 
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
-	int do_full_prefixing, char* flatten_separator);
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
+	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
 
 // For 'emit all' and 'emitp all' in the DSL
 void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,

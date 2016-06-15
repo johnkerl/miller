@@ -20,6 +20,12 @@ static mv_t* imv(long long intv) {
 	return pmv;
 }
 
+static void mlhmmv_to_lrecs_1(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames,
+	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
+{
+	mlhmmv_to_lrecs(pmap, &pkeys, 1, pnames, poutrecs, do_full_prefixing, flatten_separator);
+}
+
 // ----------------------------------------------------------------
 static char* test_no_overlap() {
 	mlhmmv_t* pmap = mlhmmv_alloc();
@@ -218,7 +224,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("single")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("single")),
 		sllmv_alloc(), poutrecs, TRUE, ":");
 	printf("single-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -229,7 +235,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("single")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("single")),
 		sllmv_single_with_free(smv("first")), poutrecs, TRUE, ":");
 	printf("single-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -241,7 +247,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("double")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("double")),
 		sllmv_alloc(), poutrecs, TRUE, ":");
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -252,7 +258,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("double")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("double")),
 		sllmv_single_with_free(smv("first")), poutrecs, TRUE, ":");
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -263,7 +269,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("double")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("double")),
 		sllmv_double_with_free(smv("first"), smv("second")), poutrecs, TRUE, ":");
 	printf("double-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -275,7 +281,7 @@ static char* test_mlhmmv_to_lrecs() {
 
 	printf("----------------------------------------------------------------\n");
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("triple")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("triple")),
 		sllmv_alloc(), poutrecs, TRUE, ":");
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -286,7 +292,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("triple")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("triple")),
 		sllmv_single_with_free(smv("first")), poutrecs, TRUE, ":");
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -297,7 +303,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("triple")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("triple")),
 		sllmv_double_with_free(smv("first"), smv("second")), poutrecs, TRUE, ":");
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)
@@ -308,7 +314,7 @@ static char* test_mlhmmv_to_lrecs() {
 	sllv_free(poutrecs);
 
 	poutrecs = sllv_alloc();
-	mlhmmv_to_lrecs(pmap, sllmv_single_with_free(smv("triple")),
+	mlhmmv_to_lrecs_1(pmap, sllmv_single_with_free(smv("triple")),
 		sllmv_triple_with_free(smv("first"), smv("second"), smv("third")), poutrecs, TRUE, ":");
 	printf("triple-level outrecs (%lld):\n", poutrecs->length);
 	for (sllve_t* pe = poutrecs->phead; pe != NULL; pe = pe->pnext)

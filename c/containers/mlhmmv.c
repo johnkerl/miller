@@ -754,7 +754,7 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 {
 	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
 		sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
-		mlhmmv_to_lrecs(pmap, pkey, pnames, poutrecs, do_full_prefixing, flatten_separator);
+		mlhmmv_to_lrecs(pmap, &pkey, 1, pnames, poutrecs, do_full_prefixing, flatten_separator);
 		sllmv_free(pkey);
 	}
 }
@@ -828,9 +828,11 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 //   a   sum:wye
 //   hat 0.031442
 
-void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
-	char* flatten_separator)
+void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
+	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
 {
+	sllmv_t* pkeys = ppkeys[0]; // xxx iterate
+
 	mv_t* pfirstkey = &pkeys->phead->value;
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);

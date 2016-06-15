@@ -1623,11 +1623,12 @@ static void handle_emitp(
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys[0], pmvnames, pcst_outputs->poutrecs,
-				FALSE, pcst_outputs->oosvar_flatten_separator);
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+	// xxx make a free_evaluated_lists method
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -1648,8 +1649,8 @@ static void handle_emit(
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys[0], pmvnames, pcst_outputs->poutrecs,
-				TRUE, pcst_outputs->oosvar_flatten_separator);
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
