@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! update homebrew link @ readme.md:distros
+
 ! indexed emitf variant
 
 ! rh/fedora/centos mlr-4.1.0

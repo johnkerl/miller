@@ -80,8 +80,10 @@ static void                            handle_unset(mlr_dsl_cst_statement_t* s, 
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                        handle_emitp_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emitp_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                        handle_emitp_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_edump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -821,49 +823,31 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pkeylist_node = pnode->pchildren->phead->pvvalue;
-
-	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
-	// So if 'all' appears at all, it's the only name.
-	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-		}
-
-		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit_all
-			: handle_emitp_all;
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-		}
-
-		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit
-			: handle_emitp;
-
-		// xxx
-		pstatement->num_emit_keylist_evaluators = 1;
-		pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
-			* sizeof(sllv_t*));
-		pstatement->ppemit_keylist_evaluators[0] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing, context_flags);
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	} else {
+	if (pkeylist_node->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
+
+	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+	for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+		sllv_append(pemit_oosvar_namelist_evaluators,
+			rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+	}
+
+	pstatement->pnode_handler = do_full_prefixing
+		? handle_emit_lashed
+		: handle_emitp_lashed;
+
+	// xxx
+	pstatement->num_emit_keylist_evaluators = 1;
+	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+		* sizeof(sllv_t*));
+	pstatement->ppemit_keylist_evaluators[0] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+		type_inferencing, context_flags);
+	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
 	return pstatement;
 }
 
@@ -1718,6 +1702,57 @@ static void handle_emitp(
 
 // ----------------------------------------------------------------
 static void handle_emit(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	// xxx any/all semantics ... array here?
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+// ----------------------------------------------------------------
+static void handle_emitp_lashed(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	// xxx any/all semantics ... array here?
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	// xxx make a free_evaluated_lists method
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+// ----------------------------------------------------------------
+static void handle_emit_lashed(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
