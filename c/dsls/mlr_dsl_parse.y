@@ -687,7 +687,7 @@ md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 }
 
 md_emit_lashed_keylists(A) ::= md_oosvar_keylist(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT_LASHED, B);
+	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMIT_LASHED, B);
 }
 md_emit_lashed_keylists(A) ::= md_emit_lashed_keylists(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
