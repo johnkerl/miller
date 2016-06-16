@@ -50,6 +50,11 @@ static void mlhmmv_to_lrecs_aux_across_records(mlhmmv_level_t* plevel, char* pre
 static void mlhmmv_to_lrecs_aux_within_record(mlhmmv_level_t* plevel, char* prefix,
 	lrec_t* poutrec, int do_full_prefixing, char* flatten_separator);
 
+static void mlhmmv_to_lrecs_aux_across_records_lashed(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
+	lrec_t* ptemplate, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
+static void mlhmmv_to_lrecs_aux_within_record_lashed(mlhmmv_level_t* plevel, char* prefix,
+	lrec_t* poutrec, int do_full_prefixing, char* flatten_separator);
+
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, FILE* ostream);
 
@@ -857,42 +862,6 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* po
 	}
 }
 
-void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
-	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
-{
-	sllmv_t* pkeys = ppkeys[0]; // xxx iterate
-	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
-	if (ptop_entry == NULL) {
-		// No such entry in the mlhmmv results in no output records
-	} else if (ptop_entry->level_value.is_terminal) {
-		lrec_t* poutrec = lrec_unbacked_alloc();
-		for (int i = 0; i < num_keylists; i++) {
-			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
-			mv_t* pfirstkey = &pkeys->phead->value;
-			// E.g. '@v = 3' at the top level of the mlhmmv.
-			lrec_put(poutrec,
-				mv_alloc_format_val(pfirstkey),
-				mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		}
-		sllv_append(poutrecs, poutrec);
-	} else {
-		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
-		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
-		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
-		lrec_t* ptemplate = lrec_unbacked_alloc();
-		for (int i = 0; i < num_keylists; i++) {
-			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
-			mv_t* pfirstkey = &pkeys->phead->value;
-			char* oosvar_name = mv_alloc_format_val(pfirstkey);
-			mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
-				ptemplate, poutrecs, do_full_prefixing, flatten_separator);
-			free(oosvar_name);
-		}
-		lrec_free(ptemplate);
-	}
-}
-
 static void mlhmmv_to_lrecs_aux_across_records(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
@@ -980,6 +949,136 @@ static void mlhmmv_to_lrecs_aux_within_record(
 				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		} else {
 			mlhmmv_to_lrecs_aux_within_record(plevel_value->u.pnext_level, name, poutrec,
+				do_full_prefixing, flatten_separator);
+			free(name);
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
+	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
+{
+	sllmv_t* pkeys = ppkeys[0]; // xxx iterate
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
+	if (ptop_entry == NULL) {
+		// No such entry in the mlhmmv results in no output records
+	} else if (ptop_entry->level_value.is_terminal) {
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		for (int i = 0; i < num_keylists; i++) {
+			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
+			mv_t* pfirstkey = &pkeys->phead->value;
+			// E.g. '@v = 3' at the top level of the mlhmmv.
+			lrec_put(poutrec,
+				mv_alloc_format_val(pfirstkey),
+				mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		}
+		sllv_append(poutrecs, poutrec);
+	} else {
+		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
+		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
+		// mlhmmv_to_lrecs_aux_across_records_lashed for each of the name-list entries, one map level deeper each call,
+		// then from there invoke mlhmmv_to_lrecs_aux_within_record_lashed on any remaining map levels.
+		lrec_t* ptemplate = lrec_unbacked_alloc();
+		for (int i = 0; i < num_keylists; i++) {
+			sllmv_t* pkeys = ppkeys[i]; // xxx iterate
+			mv_t* pfirstkey = &pkeys->phead->value;
+			char* oosvar_name = mv_alloc_format_val(pfirstkey);
+			mlhmmv_to_lrecs_aux_across_records_lashed(ptop_entry->level_value.u.pnext_level, oosvar_name,
+				pnames->phead, ptemplate, poutrecs, do_full_prefixing, flatten_separator);
+			free(oosvar_name);
+		}
+		lrec_free(ptemplate);
+	}
+}
+
+static void mlhmmv_to_lrecs_aux_across_records_lashed(
+	mlhmmv_level_t* plevel,
+	char*           prefix,
+	sllmve_t*       prestnames,
+	lrec_t*         ptemplate,
+	sllv_t*         poutrecs,
+	int             do_full_prefixing,
+	char*           flatten_separator)
+{
+	if (prestnames != NULL) {
+		// If there is a namelist entry, pull it out to its own field on the output lrecs.
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			mlhmmv_value_t* plevel_value = &pe->level_value;
+			lrec_t* pnextrec = lrec_copy(ptemplate);
+			lrec_put(pnextrec,
+				mv_alloc_format_val(&prestnames->value),
+				mv_alloc_format_val(&pe->level_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			if (plevel_value->is_terminal) {
+				lrec_put(pnextrec,
+					mlr_strdup_or_die(prefix),
+					mv_alloc_format_val(&plevel_value->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, pnextrec);
+			} else {
+				mlhmmv_to_lrecs_aux_across_records_lashed(pe->level_value.u.pnext_level,
+					prefix, prestnames->pnext, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
+				lrec_free(pnextrec);
+			}
+		}
+
+	} else {
+		// If there are no more remaining namelist entries, flatten remaining map levels using the join separator
+		// (default ":") and use them to create lrec values.
+		lrec_t* pnextrec = lrec_copy(ptemplate);
+		int emit = TRUE;
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			mlhmmv_value_t* plevel_value = &pe->level_value;
+			if (plevel_value->is_terminal) {
+				char* temp = mv_alloc_format_val(&pe->level_key);
+				char* name = do_full_prefixing
+					? mlr_paste_3_strings(prefix, flatten_separator, temp)
+					: mlr_strdup_or_die(temp);
+				free(temp);
+				lrec_put(pnextrec,
+					name,
+					mv_alloc_format_val(&plevel_value->u.mlrval),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			} else if (do_full_prefixing) {
+				char* temp = mv_alloc_format_val(&pe->level_key);
+				char* name = mlr_paste_3_strings(prefix, flatten_separator, temp);
+				free(temp);
+				mlhmmv_to_lrecs_aux_within_record_lashed(plevel_value->u.pnext_level, name, pnextrec,
+					do_full_prefixing, flatten_separator);
+				free(name);
+			} else {
+				mlhmmv_to_lrecs_aux_across_records_lashed(pe->level_value.u.pnext_level,
+					prefix, NULL, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
+				emit = FALSE;
+			}
+		}
+		if (emit)
+			sllv_append(poutrecs, pnextrec);
+		else
+			lrec_free(pnextrec);
+	}
+}
+
+static void mlhmmv_to_lrecs_aux_within_record_lashed(
+	mlhmmv_level_t* plevel,
+	char*           prefix,
+	lrec_t*         poutrec,
+	int             do_full_prefixing,
+	char*           flatten_separator)
+{
+	for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+		mlhmmv_value_t* plevel_value = &pe->level_value;
+		char* temp = mv_alloc_format_val(&pe->level_key);
+		char* name = do_full_prefixing
+			? mlr_paste_3_strings(prefix, flatten_separator, temp)
+			: mlr_strdup_or_die(temp);
+		free(temp);
+		if (plevel_value->is_terminal) {
+			lrec_put(poutrec,
+				name,
+				mv_alloc_format_val(&plevel_value->u.mlrval),
+				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		} else {
+			mlhmmv_to_lrecs_aux_within_record_lashed(plevel_value->u.pnext_level, name, poutrec,
 				do_full_prefixing, flatten_separator);
 			free(name);
 		}
