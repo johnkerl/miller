@@ -122,7 +122,7 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FIL
 		return;
 	for (int i = 0; i < level; i++)
 		fprintf(o, "    ");
-	fprintf(o, "%s (%s)%s\n",
+	fprintf(o, "text=\"%s\", type=%s%s\n",
 		pnode->text,
 		mlr_dsl_ast_node_describe_type(pnode->type),
 		(pnode->pchildren != NULL) ? ":" : ".");
