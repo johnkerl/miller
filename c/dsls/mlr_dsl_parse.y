@@ -658,15 +658,15 @@ md_emit_namelist(A) ::= md_emit_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 }
 
 // ----------------------------------------------------------------
-// xxx iterate
 md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B);
 }
+
 md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN
-	MD_TOKEN_COMMA md_emitp_namelist(C).
+	MD_TOKEN_COMMA md_emitp_lashed_namelist(C).
 {
 	B = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
@@ -680,15 +680,23 @@ md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_oo
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
+md_emitp_lashed_namelist(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMITP_LASHED, B);
+}
+md_emitp_lashed_namelist(A) ::= md_emitp_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
 // ----------------------------------------------------------------
 md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B);
 }
+
 md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN
-	MD_TOKEN_COMMA md_emit_namelist(C).
+	MD_TOKEN_COMMA md_emit_lashed_namelist(C).
 {
 	B = mlr_dsl_ast_node_prepend_arg(C, B);
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
@@ -698,6 +706,13 @@ md_emit_lashed_keylists(A) ::= md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMIT_LASHED, B);
 }
 md_emit_lashed_keylists(A) ::= md_emit_lashed_keylists(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+md_emit_lashed_namelist(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT_LASHED, B);
+}
+md_emit_lashed_namelist(A) ::= md_emit_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
