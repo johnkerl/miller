@@ -674,7 +674,7 @@ md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_oo
 }
 
 md_emitp_lashed_namelist(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_namelists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
+	A = mlr_dsl_ast_node_alloc_unary("lashed_namelist", MD_AST_NODE_TYPE_EMITP_LASHED, B);
 }
 md_emitp_lashed_namelist(A) ::= md_emitp_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
@@ -702,7 +702,7 @@ md_emit_lashed_keylists(A) ::= md_emit_lashed_keylists(B) MD_TOKEN_COMMA md_oosv
 }
 
 md_emit_lashed_namelist(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_namelists", MD_AST_NODE_TYPE_EMIT_LASHED, B);
+	A = mlr_dsl_ast_node_alloc_unary("lashed_namelist", MD_AST_NODE_TYPE_EMIT_LASHED, B);
 }
 md_emit_lashed_namelist(A) ::= md_emit_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
