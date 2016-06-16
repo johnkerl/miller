@@ -750,17 +750,21 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	mlr_dsl_ast_node_t* pkeylist_node = pnode->pchildren->phead->pvvalue;
+	// xxx check #=2
+	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
 
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 	// So if 'all' appears at all, it's the only name.
 	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
 		}
 
 		pstatement->pnode_handler = do_full_prefixing
@@ -771,10 +775,13 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
 		}
 
 		pstatement->pnode_handler = do_full_prefixing
@@ -819,18 +826,16 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	mlr_dsl_ast_node_t* pkeylist_node = pnode->pchildren->phead->pvvalue;
-	if (pkeylist_node->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
 
 	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-	for (sllve_t* pe = pnode->pchildren->phead->pnext; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-		sllv_append(pemit_oosvar_namelist_evaluators,
-			rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+	if (pnode->pchildren->length == 2) {
+		mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
 	}
 
 	pstatement->pnode_handler = do_full_prefixing

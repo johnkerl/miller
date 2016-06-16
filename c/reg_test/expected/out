@@ -16336,10 +16336,11 @@ text="list", type=statement_list:
             text="emit", type=emit:
                 text="oosvar_keylist", type=oosvar_keylist:
                     text="n", type=string_literal.
-                text="a", type=strnum_literal.
-                text="b", type=strnum_literal.
-                text="c", type=strnum_literal.
-                text="d", type=strnum_literal.
+                text="emit_namelist", type=emit:
+                    text="a", type=strnum_literal.
+                    text="b", type=strnum_literal.
+                    text="c", type=strnum_literal.
+                    text="d", type=strnum_literal.
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
   @o[1][1]["text1"][NR] = $a;

@@ -598,28 +598,25 @@ md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_ALL(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B);
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C);
 }
 
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_FULL_OOSVAR(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B);
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C);
 }
 
 md_emitp(A) ::= MD_TOKEN_EMITP(O) md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B);
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C);
 }
 
 md_emitp_namelist(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMITP, B);
+	A = mlr_dsl_ast_node_alloc_unary("emitp_namelist", MD_AST_NODE_TYPE_EMITP, B);
 }
 md_emitp_namelist(A) ::= md_emitp_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
@@ -630,28 +627,25 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_ALL(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emit_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C);
 }
 
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_FULL_OOSVAR(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emit_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C);
 }
 
 md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emit_namelist(C). {
-	B = mlr_dsl_ast_node_prepend_arg(C, B);
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C);
 }
 
 md_emit_namelist(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_EMIT, B);
+	A = mlr_dsl_ast_node_alloc_unary("emit_namelist", MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit_namelist(A) ::= md_emit_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
