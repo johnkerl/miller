@@ -766,13 +766,16 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 			}
 		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit_all
 			: handle_emitp_all;
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+
+		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
 		if (pnode->pchildren->length == 2) {
@@ -783,14 +786,11 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 			}
 		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit
 			: handle_emitp;
-
-		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing, context_flags);
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 	} else {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -826,7 +826,18 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pkeylists_node  = pnode->pchildren->phead->pvvalue;
+
+	// xxx
+	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
+	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+		* sizeof(sllv_t*));
+	int i = 0;
+	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
+		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+	}
 
 	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
 	if (pnode->pchildren->length == 2) {
@@ -837,18 +848,11 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
 		}
 	}
+	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 	pstatement->pnode_handler = do_full_prefixing
 		? handle_emit_lashed
 		: handle_emitp_lashed;
-
-	// xxx
-	pstatement->num_emit_keylist_evaluators = 1;
-	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
-		* sizeof(sllv_t*));
-	pstatement->ppemit_keylist_evaluators[0] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-		type_inferencing, context_flags);
-	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
 	return pstatement;
 }
