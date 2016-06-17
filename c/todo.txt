@@ -8,7 +8,13 @@ TOP OF LIST:
 
 ! update homebrew link @ readme.md:distros
 
-! indexed emitf variant
+! lashed emit/emitp
+  - rename 'keylists' and 'namelists' ...
+  - xxxes
+  - valgrinds
+  - doc
+  - also doc emit w/in for-loops as alternative: implicit vs explicit looping.
+  - cookbook examples of each.
 
 ! rh/fedora/centos mlr-4.1.0
 * gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
