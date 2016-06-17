@@ -1177,7 +1177,6 @@ static void mlhmmv_to_lrecs_aux_within_record_lashed(
 						name,
 						mv_alloc_format_val(&plevel_value->u.mlrval),
 						FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-					free(name);
 				}
 			}
 		} else {
