@@ -9,6 +9,8 @@ TOP OF LIST:
 ! quoting-original task
 
 ! update homebrew link @ readme.md:distros
+! process inquire gentoo 4.1 (or wait and see)
+! put -f to cover x 3
 
 ! lashed emit/emitp
   - rename 'keylists' and 'namelists' ...
@@ -19,7 +21,6 @@ TOP OF LIST:
   - cookbook examples of each.
 
 ! rh/fedora/centos mlr-4.1.0
-* gentoo? http://euscan.gentooexperimental.org/package/sys-apps/miller/
 
 ! go through lmag article & clarify all unclears
   - headerless csv i/o args
