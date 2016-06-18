@@ -3120,6 +3120,72 @@ run_mlr -n put 'end {
 }'
 
 # ----------------------------------------------------------------
+announce LASHED EMITP PAIRS
+
+run_mlr -n put 'end {
+  @a = 111;
+  @b = 222;
+  emitp (@a, @b)
+}'
+
+run_mlr -n put 'end {
+  @a[1] = 111;
+  @b[1] = 222;
+  emitp (@a[1], @b[1])
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[1][2][3] = 8;
+  emitp (@a, @b), "s", "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emitp (@a[1], @b[5]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][6][3] = 8;
+  emitp (@a[1][2], @b[5][6]), "u"
+}'
+
+# ----------------------------------------------------------------
+announce LASHED EMIT PAIRS
+
+run_mlr -n put 'end {
+  @a = 111;
+  @b = 222;
+  emit (@a, @b)
+}'
+
+run_mlr -n put 'end {
+  @a[1] = 111;
+  @b[1] = 222;
+  emit (@a[1], @b[1])
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[1][2][3] = 8;
+  emit (@a, @b), "s", "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emit (@a[1], @b[5]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][6][3] = 8;
+  emit (@a[1][2], @b[5][6]), "u"
+}'
+
+# ----------------------------------------------------------------
 announce MORE LASHED EMIT 
 
 run_mlr --from $indir/abixy-wide --opprint put -q '
