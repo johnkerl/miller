@@ -3040,6 +3040,44 @@ run_mlr -n put 'end {
   emitp (@a), "s"
 }'
 
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp (@a), "s"
+}'
+
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  @a[444][555] = 666;
+  emitp @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  @a[444][555] = 666;
+  emitp (@a), "s"
+}'
+
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp @a, "s", "t"
+}'
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp (@a), "s", "t"
+}'
+
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp @a[111], "t"
+}'
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emitp (@a[111]), "t"
+}'
+
 # ----------------------------------------------------------------
 announce LASHED EMIT SINGLES
 

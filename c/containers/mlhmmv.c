@@ -1069,7 +1069,7 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 					}
 				}
 
-				mlhmmv_to_lrecs_aux_across_records_lashed(pplevels, prefixes, num_levels,
+				mlhmmv_to_lrecs_aux_across_records_lashed(ppnext_levels, prefixes, num_levels,
 					prestnames->pnext, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
 
 				free(ppnext_levels);
