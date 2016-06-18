@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! quoting-original task
+
 ! update homebrew link @ readme.md:distros
 
 ! lashed emit/emitp
