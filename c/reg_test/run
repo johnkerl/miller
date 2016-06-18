@@ -3120,6 +3120,31 @@ run_mlr -n put 'end {
 }'
 
 # ----------------------------------------------------------------
+announce MORE LASHED EMIT 
+
+run_mlr --from $indir/abixy-wide --opprint put -q '
+  @count[$a] += 1;
+  @sum[$a] += $x;
+  end {
+      for (a, c in @count) {
+          @mean[a] = @sum[a] / @count[a]
+      }
+      emit (@sum, @count, @mean), "a"
+  }
+'
+
+run_mlr --from $indir/abixy-wide --opprint put -q '
+  @count[$a][$b] += 1;
+  @sum[$a][$b] += $x;
+  end {
+      for ((a, b), c in @count) {
+          @mean[a][b] = @sum[a][b] / @count[a][b]
+      }
+      emit (@sum, @count, @mean), "a", "b"
+  }
+'
+
+# ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 
 run_mlr put -v '@v     = $*' /dev/null
