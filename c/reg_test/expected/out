@@ -23163,6 +23163,106 @@ I J K a   b   i x                  y
 
 
 ================================================================
+LASHED EMITP SINGLES
+
+mlr -n put end {
+  @a = 111;
+  emitp @a
+}
+a=111
+
+mlr -n put end {
+  @a = 111;
+  emitp (@a)
+}
+a=111
+
+mlr -n put end {
+  @a[111] = 222;
+  emitp @a, "s"
+}
+s=111,a=222
+
+mlr -n put end {
+  @a[111] = 222;
+  emitp (@a), "s"
+}
+s=111,a=222
+
+mlr -n put end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emitp @a, "s"
+}
+s=111,a=222
+s=333,a=444
+
+mlr -n put end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emitp (@a), "s"
+}
+s=111,a=222
+s=333,a=444
+
+
+================================================================
+LASHED EMIT SINGLES
+
+mlr -n put end {
+  @a = 111;
+  emit @a
+}
+a=111
+
+mlr -n put end {
+  @a = 111;
+  emit (@a)
+}
+a=111
+
+mlr -n put end {
+  @a[111] = 222;
+  emit @a, "s"
+}
+s=111,a=222
+
+mlr -n put end {
+  @a[111] = 222;
+  emit (@a), "s"
+}
+s=111,a=222
+
+mlr -n put end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emit @a, "s"
+}
+s=111,a=222
+s=333,a=444
+
+mlr -n put end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emit (@a), "s"
+}
+s=111,a=222
+s=333,a=444
+
+mlr -n put end {
+  @a[111][222] = 333;
+  emit @a, "s"
+}
+s=111,222=333
+
+mlr -n put end {
+  @a[111][222] = 333;
+  emit (@a), "s"
+}
+s=111,222=333
+
+
+================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
 
 mlr put -v @v     = $* /dev/null

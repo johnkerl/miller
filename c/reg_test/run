@@ -3009,6 +3009,79 @@ run_mlr --opprint head -n 2  then put -q '@v[NR][NR][NR]   =  $*; end{dump;emit 
 
 
 # ----------------------------------------------------------------
+announce LASHED EMITP SINGLES
+
+run_mlr -n put 'end {
+  @a = 111;
+  emitp @a
+}'
+run_mlr -n put 'end {
+  @a = 111;
+  emitp (@a)
+}'
+
+run_mlr -n put 'end {
+  @a[111] = 222;
+  emitp @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111] = 222;
+  emitp (@a), "s"
+}'
+
+run_mlr -n put 'end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emitp @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emitp (@a), "s"
+}'
+
+# ----------------------------------------------------------------
+announce LASHED EMIT SINGLES
+
+run_mlr -n put 'end {
+  @a = 111;
+  emit @a
+}'
+run_mlr -n put 'end {
+  @a = 111;
+  emit (@a)
+}'
+
+run_mlr -n put 'end {
+  @a[111] = 222;
+  emit @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111] = 222;
+  emit (@a), "s"
+}'
+
+run_mlr -n put 'end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emit @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111] = 222;
+  @a[333] = 444;
+  emit (@a), "s"
+}'
+
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emit @a, "s"
+}'
+run_mlr -n put 'end {
+  @a[111][222] = 333;
+  emit (@a), "s"
+}'
+
+# ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 
 run_mlr put -v '@v     = $*' /dev/null
