@@ -26,6 +26,8 @@ TOP OF LIST:
   - headerless csv i/o args
   - ...
 
+* nbu -d
+
 * call for use-cases? (go first.)
 
 ? double-quote-aware (non-lite) nidx & dkvp options?
@@ -36,6 +38,7 @@ TOP OF LIST:
 ? user-defined functions?
 ? localvars w/ decl syntax?
 ? triple-for with boundvars?
+! multiple -f w/ append so linker is cat
 
 ----------------------------------------------------------------
 ? narrative/slides doc ...
