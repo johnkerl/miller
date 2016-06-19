@@ -3242,6 +3242,31 @@ run_mlr -n put 'end {
   emit (@b, @a), "s", "t"
 }'
 
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emit (@a[1], @b[3]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emit (@a[1][2], @b[5][9]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emit (@a[1][2], @b[9][2]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emit (@a[9], @b[5]), "t", "u"
+}'
+
 # ----------------------------------------------------------------
 announce LASHED EMITP WITH VARYING DEPTH
 
@@ -3299,6 +3324,30 @@ run_mlr -n put 'end {
   emitp (@b, @a), "s", "t"
 }'
 
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emitp (@a[1], @b[3]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emitp (@a[1][2], @b[5][9]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emitp (@a[1][2], @b[9][2]), "t", "u"
+}'
+
+run_mlr -n put 'end {
+  @a[1][2][3] = 4;
+  @b[5][2][3] = 8;
+  emitp (@a[9], @b[5]), "t", "u"
+}'
 
 # ----------------------------------------------------------------
 announce CANONICAL LASHED EMIT 

@@ -975,7 +975,7 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 		ptop_entries[i] = mlhmmv_get_entry_at_level(pmap->proot_level, ppkeys[i]->phead, NULL);
 	}
 
-	// First is primary and rest are lashed to it.
+	// First is primary and rest are lashed to it (lookups with same keys as primary).
 	if (ptop_entries[0] == NULL) {
 		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_entries[0]->level_value.is_terminal) {
@@ -1002,7 +1002,7 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_t*));
 		char** oosvar_names = mlr_malloc_or_die(num_keylists * sizeof(char*));
 		for (int i = 0; i < num_keylists; i++) {
-			if (ptop_entries[i]->level_value.is_terminal) {
+			if (ptop_entries[i] == NULL || ptop_entries[i]->level_value.is_terminal) {
 				ppnext_levels[i] = NULL;
 				oosvar_names[i] = NULL;
 			} else {
@@ -1038,7 +1038,7 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 {
 	if (prestnames != NULL) {
 		// If there is a namelist entry, pull it out to its own field on the output lrecs.
-		// First is iterated over and the rest are lashed.
+		// First is iterated over and the rest are lashed (lookups with same keys as primary).
 		for (mlhmmv_level_entry_t* pe = pplevels[0]->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_value_t* pfirst_level_value = &pe->level_value;
 			lrec_t* pnextrec = lrec_copy(ptemplate);
