@@ -11,7 +11,6 @@ TOP OF LIST:
 4.2.0:
 - lashed emit
 
-! update homebrew link @ readme.md:distros
 ! process inquire gentoo 4.1 (or wait and see)
 ! put -f to cover x 3
 
@@ -25,6 +24,7 @@ TOP OF LIST:
   - headerless csv i/o args
   - ...
 
+----------------------------------------------------------------
 * call for use-cases? (go first.)
 
 ? double-quote-aware (non-lite) nidx & dkvp options?
@@ -32,9 +32,10 @@ TOP OF LIST:
 ? comma-number -- using locale?
 * interpolated percentiles
 
+? triple-for with boundvars?
 ? user-defined functions?
 ? localvars w/ decl syntax?
-? triple-for with boundvars?
+
 ! multiple -f w/ append so linker is cat
 
 ----------------------------------------------------------------
