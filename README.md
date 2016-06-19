@@ -32,6 +32,7 @@ indices.  Examples:
   }
   $mean = $sum / $count # no assignment if count unset
 '
+% mlr --from infile.dat put -f analyze.mlr
 ```
 
 This is something the Unix toolkit always could have done, and arguably always

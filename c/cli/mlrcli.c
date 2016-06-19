@@ -231,8 +231,8 @@ static void main_usage_examples(FILE* o, char* argv0, char* leader) {
 	fprintf(o, "      $sum += v; $count += 1\n");
 	fprintf(o, "    }\n");
 	fprintf(o, "  }\n");
-	fprintf(o, "  $mean = $sum / $count # no assignment if count unset\n");
-	fprintf(o, "'\n");
+	fprintf(o, "  $mean = $sum / $count # no assignment if count unset'\n");
+	fprintf(o, "%s%s --from infile.dat put -f analyze.mlr\n", leader, argv0);
 }
 
 static void list_all_verbs_raw(FILE* o) {
