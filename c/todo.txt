@@ -6,23 +6,20 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! quoting-original task
-
-4.2.0:
-- lashed emit
-
-! process inquire gentoo 4.1 (or wait and see)
-! put -f to cover x 3
-
-! lashed emit/emitp
-  - xxxes
-  - valgrinds
+! quoting-original task: doc-only, or some coding? 4.3.0 if so.
+!  4.2.0: lashed emit
 
 ! rh/fedora/centos
+! process inquire gentoo 4.1 (or wait and see)
+
+! put -f to cover x 3
+- xxxes for lashed emit
 
 ! go through lmag article & clarify all unclears
   - headerless csv i/o args
   - ...
+
+* neaten-valgrind @ cookbook
 
 ----------------------------------------------------------------
 * call for use-cases? (go first.)

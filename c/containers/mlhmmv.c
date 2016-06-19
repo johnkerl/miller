@@ -1061,8 +1061,7 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 				mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_levels * sizeof(mlhmmv_level_t*));
 				for (int i = 0; i < num_levels; i++) {
 					mlhmmv_value_t* plevel_value = mlhmmv_get_next_level_entry_value(pplevels[i], &pe->level_key);
-					if (plevel_value == NULL) {
-					} else if (plevel_value->is_terminal) {
+					if (plevel_value == NULL || plevel_value->is_terminal) {
 						ppnext_levels[i] = NULL;
 					} else {
 						ppnext_levels[i] = plevel_value->u.pnext_level;
