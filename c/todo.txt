@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! UT case for absents in lashed emit
+
 ! quoting-original task: doc-only, or some coding? 4.3.0 if so.
 !  4.2.0: lashed emit
 
@@ -13,7 +15,6 @@ TOP OF LIST:
 ! process inquire gentoo 4.1 (or wait and see)
 
 ! put -f to cover x 3
-- xxxes for lashed emit
 
 ! go through lmag article & clarify all unclears
   - headerless csv i/o args

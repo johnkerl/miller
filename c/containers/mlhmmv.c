@@ -975,7 +975,7 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 		ptop_entries[i] = mlhmmv_get_entry_at_level(pmap->proot_level, ppkeys[i]->phead, NULL);
 	}
 
-	// xxx comment lashing semantics here: first is primary and rest are lashed to it.
+	// First is primary and rest are lashed to it.
 	if (ptop_entries[0] == NULL) {
 		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_entries[0]->level_value.is_terminal) {
@@ -999,7 +999,6 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 
-		// xxx make func pair w/ alloc & free
 		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_t*));
 		char** oosvar_names = mlr_malloc_or_die(num_keylists * sizeof(char*));
 		for (int i = 0; i < num_keylists; i++) {
@@ -1039,7 +1038,7 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 {
 	if (prestnames != NULL) {
 		// If there is a namelist entry, pull it out to its own field on the output lrecs.
-		// xxx comment re first leader / rest lashed.
+		// First is iterated over and the rest are lashed.
 		for (mlhmmv_level_entry_t* pe = pplevels[0]->phead; pe != NULL; pe = pe->pnext) {
 			mlhmmv_value_t* pfirst_level_value = &pe->level_value;
 			lrec_t* pnextrec = lrec_copy(ptemplate);
@@ -1120,7 +1119,6 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 				free(ppnext_levels);
 				free(temp);
 			} else {
-				// xxx make func pair w/ alloc & free
 				mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_levels * sizeof(mlhmmv_level_t*));
 				for (int i = 0; i < num_levels; i++) {
 					mlhmmv_value_t* plevel_value = mlhmmv_get_next_level_entry_value(pplevels[i], &pe->level_key);

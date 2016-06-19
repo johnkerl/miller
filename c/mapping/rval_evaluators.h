@@ -170,7 +170,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_fun
 
 // Nominally for oosvar multikeys.
 sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_null_or_error);
-// xxx all non-null ... needs some mix of all/any/?!?
 sllmv_t** evaluate_lists(sllv_t** ppevaluators, int num_evaluators, variables_t* pvars, int* pall_non_null_or_error);
 
 // ----------------------------------------------------------------

@@ -726,31 +726,34 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
-// mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
-// list (statement_list):
-//     emit (emit):
-//         oosvar_keylist (oosvar_keylist):
-//             a (string_literal).
-//             2 (strnum_literal).
-//             3 (strnum_literal).
-//         x (strnum_literal).
-//         y (strnum_literal).
-//         z (strnum_literal).
+// $ mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="oosvar_keylist", type=oosvar_keylist:
+//             text="a", type=string_literal.
+//             text="2", type=strnum_literal.
+//             text="3", type=strnum_literal.
+//         text="emit_namelist", type=emit:
+//             text="x", type=strnum_literal.
+//             text="y", type=strnum_literal.
+//             text="z", type=strnum_literal.
 //
-// mlr -n put -v 'emit all, "x", "y", "z"'
-// list (statement_list):
-//     emit (emit):
-//         all (all).
-//         x (strnum_literal).
-//         y (strnum_literal).
-//         z (strnum_literal).
+// $ mlr -n put -v 'emit all, "x", "y", "z"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="all", type=all.
+//         text="emit_namelist", type=emit:
+//             text="x", type=strnum_literal.
+//             text="y", type=strnum_literal.
+//             text="z", type=strnum_literal.
 
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	// xxx check #=2
 	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
 
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
@@ -801,26 +804,23 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 }
 
 // ----------------------------------------------------------------
-// mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
-// list (statement_list):
-//     emit (emit):
-//         oosvar_keylist (oosvar_keylist):
-//             a (string_literal).
-//             2 (strnum_literal).
-//             3 (strnum_literal).
-//         x (strnum_literal).
-//         y (strnum_literal).
-//         z (strnum_literal).
-//
-// mlr -n put -v 'emit all, "x", "y", "z"'
-// list (statement_list):
-//     emit (emit):
-//         all (all).
-//         x (strnum_literal).
-//         y (strnum_literal).
-//         z (strnum_literal).
+// $ mlr -n put -v 'emit (@a[2][3], @b[4][5]), "x", "y", "z"'
+// text="list", type=statement_list:
+//     text="emit", type=emit_lashed:
+//         text="lashed_keylists", type=emit_lashed:
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="a", type=string_literal.
+//                 text="2", type=strnum_literal.
+//                 text="3", type=strnum_literal.
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="b", type=string_literal.
+//                 text="4", type=strnum_literal.
+//                 text="5", type=strnum_literal.
+//         text="lashed_namelist", type=emit_lashed:
+//             text="x", type=strnum_literal.
+//             text="y", type=strnum_literal.
+//             text="z", type=strnum_literal.
 
-// xxx iterate
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
 {
@@ -828,7 +828,6 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 
 	mlr_dsl_ast_node_t* pkeylists_node  = pnode->pchildren->phead->pvvalue;
 
-	// xxx
 	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
 	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
 		* sizeof(sllv_t*));
@@ -1735,7 +1734,6 @@ static void handle_emitp_lashed(
 	cst_outputs_t*           pcst_outputs)
 {
 	int keys_all_non_null_or_error = TRUE;
-	// xxx any/all semantics ... array here?
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
@@ -1747,7 +1745,6 @@ static void handle_emitp_lashed(
 		}
 		sllmv_free(pmvnames);
 	}
-	// xxx make a free_evaluated_lists method
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -1761,7 +1758,6 @@ static void handle_emit_lashed(
 	cst_outputs_t*           pcst_outputs)
 {
 	int keys_all_non_null_or_error = TRUE;
-	// xxx any/all semantics ... array here?
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
