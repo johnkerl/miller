@@ -13,8 +13,6 @@ TOP OF LIST:
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
 
-! put -f to cover x 3
-
 ! go through lmag article & clarify all unclears
   - headerless csv i/o args
   - ...
