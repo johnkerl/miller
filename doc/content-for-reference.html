@@ -800,7 +800,6 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
 <p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7a.sh)HERE
 
 The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
@@ -874,14 +873,26 @@ POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum,
 POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 
+<p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)HERE
+
+What this does is walk through the first out-of-stream variable
+(<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
+<tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
+(here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
+out-of-stream variables in the emit statement have the same shape and the same
+keylists.
+
 <h3>Emit-all statements for put</h3>
 
 <p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
 out-of-stream variables. You can use the following idiom to get various
 accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
 
-POKI_RUN_COMMAND{{mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{emit all}' data/small}}HERE
-POKI_RUN_COMMAND{{mlr --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}' data/small}}HERE
+POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'}}HERE
+POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'}}HERE
+POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'}}HERE
 
 <h3>Unset statements for put</h3>
 

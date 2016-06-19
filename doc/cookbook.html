@@ -418,7 +418,7 @@ max values, then on the second, map each record&rsquo;s value to a percentage.
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/small put -q '
+$ mlr --from data/small --opprint put -q '
   # These are executed once per record, which is the first pass.
   # The key is to use NR to index an out-of-stream variable to
   # retain all the x-field values.
@@ -431,14 +431,15 @@ $ mlr --from data/small put -q '
     for (nr,v in @x) {
       @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
     }
-    emit @x_pct, "NR"
+    emit (@x, @x_pct), "NR"
   }
 '
-NR=1,x_pct=25.661943
-NR=2,x_pct=100.000000
-NR=3,x_pct=0.000000
-NR=4,x_pct=31.908236
-NR=5,x_pct=66.540542
+NR x        x_pct
+1  0.346790 25.661943
+2  0.758680 100.000000
+3  0.204603 0.000000
+4  0.381399 31.908236
+5  0.573289 66.540542
 </pre>
 </div>
 <p/>
@@ -895,38 +896,10 @@ $ mlr --opprint --from data/medium put -q '
   @min[$a] = min(@min[$a], $x);
   @max[$a] = max(@max[$a], $x);
   end{
-    emit @min, "a";
-    emit @max, "a"
+    emit (@min, @max), "a";
   }
 '
-a   min
-pan 0.000204
-eks 0.000692
-wye 0.000187
-zee 0.000549
-hat 0.000045
-
-a   max
-pan 0.999403
-eks 0.998811
-wye 0.999823
-zee 0.999490
-hat 0.999953
-</pre>
-</div>
-<p/>
-<p/>Alternatively:
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint --from data/medium put -q '
-  @output[$a]["x_min"] = min(@output[$a]["x_min"], $x);
-  @output[$a]["x_max"] = max(@output[$a]["x_max"], $x);
-  end{
-    emit @output, "a"
-  }
-'
-a   x_min    x_max
+a   min      max
 pan 0.000204 0.999403
 eks 0.000692 0.998811
 wye 0.000187 0.999823

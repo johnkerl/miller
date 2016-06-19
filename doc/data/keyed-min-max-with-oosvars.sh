@@ -2,7 +2,6 @@ mlr --opprint --from data/medium put -q '
   @min[$a] = min(@min[$a], $x);
   @max[$a] = max(@max[$a], $x);
   end{
-    emit @min, "a";
-    emit @max, "a"
+    emit (@min, @max), "a";
   }
 '

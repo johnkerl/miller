@@ -1,4 +1,4 @@
-mlr --from data/small put -q '
+mlr --from data/small --opprint put -q '
   # These are executed once per record, which is the first pass.
   # The key is to use NR to index an out-of-stream variable to
   # retain all the x-field values.
@@ -11,6 +11,6 @@ mlr --from data/small put -q '
     for (nr,v in @x) {
       @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
     }
-    emit @x_pct, "NR"
+    emit (@x, @x_pct), "NR"
   }
 '

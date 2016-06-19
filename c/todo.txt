@@ -8,6 +8,9 @@ TOP OF LIST:
 
 ! quoting-original task
 
+4.2.0:
+- lashed emit
+
 ! update homebrew link @ readme.md:distros
 ! process inquire gentoo 4.1 (or wait and see)
 ! put -f to cover x 3

@@ -176,8 +176,6 @@ POKI_RUN_COMMAND{{mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_
 
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,max -f x -g a data/medium}}HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)HERE
-<p/>Alternatively:
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars-2.sh)HERE
 
 <h2>Delta without/with oosvars</h2>
 

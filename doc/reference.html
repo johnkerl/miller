@@ -2609,57 +2609,38 @@ a=hat,x_count=1,x_sum=0.031442
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put -q '
+$ mlr --from data/medium put -q '
   @x_count[$a][$b] += 1;
   @x_sum[$a][$b] += $x;
   end {
-    emit @x_count, "a", "b";
-    emit @x_sum, "a", "b";
+    emit (@x_count, @x_sum), "a", "b";
   }
-' ../data/small
-a=pan,b=pan,x_count=1
-a=pan,b=wye,x_count=1
-a=eks,b=pan,x_count=1
-a=eks,b=wye,x_count=1
-a=eks,b=zee,x_count=1
-a=wye,b=wye,x_count=1
-a=wye,b=pan,x_count=1
-a=zee,b=pan,x_count=1
-a=zee,b=wye,x_count=1
-a=hat,b=wye,x_count=1
-a=pan,b=pan,x_sum=0.346790
-a=pan,b=wye,x_sum=0.502626
-a=eks,b=pan,x_sum=0.758680
-a=eks,b=wye,x_sum=0.381399
-a=eks,b=zee,x_sum=0.611784
-a=wye,b=wye,x_sum=0.204603
-a=wye,b=pan,x_sum=0.573289
-a=zee,b=pan,x_sum=0.527126
-a=zee,b=wye,x_sum=0.598554
-a=hat,b=wye,x_sum=0.031442
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '
-  @v[$a][$b]["x_sum"] += 1;
-  @v[$a][$b]["x_count"] += $x;
-  end {
-    emit @v, "a", "b";
-  }
-' ../data/small
-a=pan,b=pan,x_sum=1,x_count=0.346790
-a=pan,b=wye,x_sum=1,x_count=0.502626
-a=eks,b=pan,x_sum=1,x_count=0.758680
-a=eks,b=wye,x_sum=1,x_count=0.381399
-a=eks,b=zee,x_sum=1,x_count=0.611784
-a=wye,b=wye,x_sum=1,x_count=0.204603
-a=wye,b=pan,x_sum=1,x_count=0.573289
-a=zee,b=pan,x_sum=1,x_count=0.527126
-a=zee,b=wye,x_sum=1,x_count=0.598554
-a=hat,b=wye,x_sum=1,x_count=0.031442
+'
+a=pan,b=pan,x_count=427,x_sum=219.185129
+a=pan,b=wye,x_count=395,x_sum=198.432931
+a=pan,b=eks,x_count=429,x_sum=216.075228
+a=pan,b=hat,x_count=417,x_sum=205.222776
+a=pan,b=zee,x_count=413,x_sum=205.097518
+a=eks,b=pan,x_count=371,x_sum=179.963030
+a=eks,b=wye,x_count=407,x_sum=196.945286
+a=eks,b=zee,x_count=357,x_sum=176.880365
+a=eks,b=eks,x_count=413,x_sum=215.916097
+a=eks,b=hat,x_count=417,x_sum=208.783171
+a=wye,b=wye,x_count=377,x_sum=185.295850
+a=wye,b=pan,x_count=392,x_sum=195.847900
+a=wye,b=hat,x_count=426,x_sum=212.033183
+a=wye,b=zee,x_count=385,x_sum=194.774048
+a=wye,b=eks,x_count=386,x_sum=204.812961
+a=zee,b=pan,x_count=389,x_sum=202.213804
+a=zee,b=wye,x_count=455,x_sum=233.991394
+a=zee,b=eks,x_count=391,x_sum=190.961778
+a=zee,b=zee,x_count=403,x_sum=206.640635
+a=zee,b=hat,x_count=409,x_sum=191.300006
+a=hat,b=wye,x_count=423,x_sum=208.883010
+a=hat,b=zee,x_count=385,x_sum=196.349450
+a=hat,b=eks,x_count=389,x_sum=189.006793
+a=hat,b=hat,x_count=381,x_sum=182.853532
+a=hat,b=pan,x_count=363,x_sum=168.553807
 </pre>
 </div>
 <p/>
@@ -2984,6 +2965,58 @@ sum/wye/pan 0.573289
 </div>
 <p/>
 
+<p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/medium --opprint put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+      for ((a, b), _ in @x_count) {
+          @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b]
+      }
+      emit (@x_sum, @x_count, @x_mean), "a", "b"
+  }
+'
+a   b   x_sum      x_count x_mean
+pan pan 219.185129 427     0.513314
+pan wye 198.432931 395     0.502362
+pan eks 216.075228 429     0.503672
+pan hat 205.222776 417     0.492141
+pan zee 205.097518 413     0.496604
+eks pan 179.963030 371     0.485076
+eks wye 196.945286 407     0.483895
+eks zee 176.880365 357     0.495463
+eks eks 215.916097 413     0.522799
+eks hat 208.783171 417     0.500679
+wye wye 185.295850 377     0.491501
+wye pan 195.847900 392     0.499612
+wye hat 212.033183 426     0.497730
+wye zee 194.774048 385     0.505907
+wye eks 204.812961 386     0.530604
+zee pan 202.213804 389     0.519830
+zee wye 233.991394 455     0.514267
+zee eks 190.961778 391     0.488393
+zee zee 206.640635 403     0.512756
+zee hat 191.300006 409     0.467726
+hat wye 208.883010 423     0.493813
+hat zee 196.349450 385     0.509999
+hat eks 189.006793 389     0.485879
+hat hat 182.853532 381     0.479931
+hat pan 168.553807 363     0.464336
+</pre>
+</div>
+<p/>
+
+What this does is walk through the first out-of-stream variable
+(<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
+<tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
+(here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
+out-of-stream variables in the emit statement have the same shape and the same
+keylists.
+
 <a id="Emit-all_statements_for_put"/><h3>Emit-all statements for put</h3>
 
 <p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
@@ -2993,16 +3026,40 @@ accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{emit all}' data/small
-sum      count
-2.264762 5
+$ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
+a   b   sum      count
+pan pan 0.346790 1
+eks pan 0.758680 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573289 1
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}' data/small
+$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
+a   b   sum
+pan pan 0.346790
+eks pan 0.758680
+eks wye 0.381399
+wye wye 0.204603
+wye pan 0.573289
+
+a   b   count
+pan pan 1
+eks pan 1
+eks wye 1
+wye wye 1
+wye pan 1
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
 a   b   sum      count
 pan pan 0.346790 1
 eks pan 0.758680 1
