@@ -16,20 +16,14 @@ TOP OF LIST:
 ! put -f to cover x 3
 
 ! lashed emit/emitp
-  - rename 'keylists' and 'namelists' ...
   - xxxes
   - valgrinds
-  - doc
-  - also doc emit w/in for-loops as alternative: implicit vs explicit looping.
-  - cookbook examples of each.
 
-! rh/fedora/centos mlr-4.1.0
+! rh/fedora/centos
 
 ! go through lmag article & clarify all unclears
   - headerless csv i/o args
   - ...
-
-* nbu -d
 
 * call for use-cases? (go first.)
 
