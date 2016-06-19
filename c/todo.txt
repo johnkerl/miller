@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! UT case for absents in lashed emit
-
 ! quoting-original task: doc-only, or some coding? 4.3.0 if so.
 !  4.2.0: lashed emit
 
