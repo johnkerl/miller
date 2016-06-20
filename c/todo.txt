@@ -6,7 +6,9 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-!  4.2.0: lashed emit
+!  4.2.0: lashed emit; also n.b. new/modified cookbook entries
+! neaten-valgrind @ cookbook
+! headerless csv (i/o) choices -> cookbook
 
 ! quoting-original task: doc-only, or some coding? 4.3.0 if so.
 
@@ -14,10 +16,6 @@ TOP OF LIST:
 ! process inquire gentoo 4.1 (or wait and see)
 
 ! go through lmag article & clarify all unclears
-  - headerless csv i/o args
-  - ...
-
-* neaten-valgrind @ cookbook
 
 ----------------------------------------------------------------
 * call for use-cases? (go first.)

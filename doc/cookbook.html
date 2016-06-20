@@ -255,14 +255,14 @@ inner1=313,inner2=314
 <p/>
 
 The idea here is that middles starting with a 1 belong to the outer value of 1,
-and so on.  (The outer values might be account IDs, or table names, or what
-have you; the middle values might be invoiced IDs; the inner values might be
-line-items.) If you want all the middle and inner lines to have the context of
-which outers they belong to, you can modify your software to pass all those
-through your methods. Alternatively, you can use the following to
-rectangularize the data. The idea is to use an out-of-stream variable to
-accumulate fields across records. Clear that variable when you see an outer ID;
-accumulate fields; emit output when you see the inner IDs.
+and so on.  (For example, the outer values might be account IDs, the middle
+values might be invoice IDs, and the inner values might be invoice line-items.)
+If you want all the middle and inner lines to have the context of which outers
+they belong to, you can modify your software to pass all those through your
+methods. Alternatively, you can use the following to rectangularize the data.
+The idea is to use an out-of-stream variable to accumulate fields across
+records. Clear that variable when you see an outer ID; accumulate fields; emit
+output when you see the inner IDs.
 
 <p/>
 <div class="pokipanel">
@@ -428,7 +428,7 @@ $ mlr --from data/small --opprint put -q '
 
   # The second pass is in a for-loop in an end-block.
   end {
-    for (nr,v in @x) {
+    for (nr, x in @x) {
       @x_pct[nr] = 100 * (@x[nr] - @x_min) / (@x_max - @x_min);
     }
     emit (@x, @x_pct), "NR"
