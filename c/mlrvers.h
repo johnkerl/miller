@@ -1,5 +1,5 @@
 #ifndef MLRVERS_H
 #define MLRVERS_H
 // Manually increment on updates to https://github.com/johnkerl/miller/releases
-#define MLR_VERSION "v4.1.0"
+#define MLR_VERSION "v4.2.0"
 #endif // MLRVERS_H
