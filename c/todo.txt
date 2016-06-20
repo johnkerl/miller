@@ -9,6 +9,7 @@ TOP OF LIST:
 !  4.2.0: lashed emit; also n.b. new/modified cookbook entries
 ! neaten-valgrind @ cookbook
 ! headerless csv (i/o) choices -> cookbook
+* missing-timestamp check @ cookbook
 
 ! quoting-original task: doc-only, or some coding? 4.3.0 if so.
 
