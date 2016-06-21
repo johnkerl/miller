@@ -932,6 +932,11 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
 
+	if (streq(pknode->text, pvnode->text)) {
+		fprintf(stderr, "%s: duplicate for-loop boundvars \"%s\" and \"%s\".\n",
+			MLR_GLOBALS.bargv0, pknode->text, pvnode->text);
+		exit(1);
+	}
 	pstatement->for_srec_k_name = pknode->text;
 	pstatement->for_v_name = pvnode->text;
 
