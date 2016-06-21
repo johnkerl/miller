@@ -873,6 +873,8 @@ POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum,
 POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 
+<h3>Multi-emit statements for put</h3>
+
 <p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)HERE

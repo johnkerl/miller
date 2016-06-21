@@ -11,6 +11,7 @@ TOP OF LIST:
 ! headerless csv (i/o) choices -> cookbook
 ! quantiles example to cookbook
 * missing-timestamp check @ cookbook
+! uniq-assert on boundvars w/in each for
 
 ! quoting-original task: doc-only, or some coding? 4.3.0 if so.
 
