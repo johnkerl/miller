@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+! output-quoting task !
+
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
