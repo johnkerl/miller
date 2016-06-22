@@ -17,7 +17,7 @@ TOP OF LIST:
 ! malformed strftime/strptime
   - expect-fail UTs
 
-! quoting-original task: doc-only, or some coding? 4.3.0 if so.
+! quote-originalbtask: 4.3.0, w/ xref to possible sticky/derived feature
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
