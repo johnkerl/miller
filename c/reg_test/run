@@ -1787,6 +1787,21 @@ run_mlr --opprint --from $indir/abixy-wide put -q '
   }
 '
 
+mlr_expect_fail -n put -v 'for (k, k in $*) {}'
+
+mlr_expect_fail -n put -v 'for (k, k in @*) {}'
+
+mlr_expect_fail -n put -v 'for ((a,a), c in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b), a in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b), b in @*) {}'
+
+mlr_expect_fail -n put -v 'for ((a,a,c), d in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b,a), d in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b,c), a in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b,b), d in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b,c), b in @*) {}'
+mlr_expect_fail -n put -v 'for ((a,b,c), c in @*) {}'
+
 # ----------------------------------------------------------------
 announce DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
 

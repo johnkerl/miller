@@ -1,8 +1,7 @@
 ================================================================
 BUGFIXES
 
-! mlr -n put 'end{@x=strptime("2014-04-05","%Y-m-%d");print @x}'
-  mlr: internal coding error detected in file containers/mlrval.c at line 596.
+:D
 
 ================================================================
 TOP OF LIST:
@@ -14,15 +13,16 @@ TOP OF LIST:
 * missing-timestamp check @ cookbook
 ! uniq-assert on boundvars w/in each for
   - expect-fail UTs
-! malformed strftime/strptime
-  - expect-fail UTs
-
-! quote-originalbtask: 4.3.0, w/ xref to possible sticky/derived feature
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
 
 ! go through lmag article & clarify all unclears
+
+* 4.3.0:
+  - --quote-original; xref to possible sticky/derived feature (or not).
+  - strptime message
+  - uniq-assert on boundvars w/in each for
 
 ----------------------------------------------------------------
 * call for use-cases? (go first.)

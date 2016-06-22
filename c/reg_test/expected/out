@@ -16510,6 +16510,161 @@ mean  hat pan 0.500456
 mean  hat cat 0.503701
 mean  hat dog 0.475824
 
+mlr -n put -v for (k, k in $*) {}
+mlr: duplicate for-loop boundvars "k" and "k".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_srec:
+        text="variables", type=for_variables:
+            text="k", type=non_sigil_name.
+            text="k", type=non_sigil_name.
+        text="list", type=statement_list:
+
+mlr -n put -v for (k, k in @*) {}
+mlr: duplicate for-loop boundvar "k".
+Boundvars: "k", "k".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="k", type=non_sigil_name.
+            text="k", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,a), c in @*) {}
+mlr: duplicate for-loop boundvar "a".
+Boundvars: "a", "a", "c".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="a", type=non_sigil_name.
+            text="c", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b), a in @*) {}
+mlr: duplicate for-loop boundvar "a".
+Boundvars: "a", "b", "a".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+            text="a", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b), b in @*) {}
+mlr: duplicate for-loop boundvar "b".
+Boundvars: "a", "b", "b".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+            text="b", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,a,c), d in @*) {}
+mlr: duplicate for-loop boundvar "a".
+Boundvars: "a", "a", "c", "d".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="a", type=non_sigil_name.
+                text="c", type=non_sigil_name.
+            text="d", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b,a), d in @*) {}
+mlr: duplicate for-loop boundvar "a".
+Boundvars: "a", "b", "a", "d".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+                text="a", type=non_sigil_name.
+            text="d", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b,c), a in @*) {}
+mlr: duplicate for-loop boundvar "a".
+Boundvars: "a", "b", "c", "a".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+                text="c", type=non_sigil_name.
+            text="a", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b,b), d in @*) {}
+mlr: duplicate for-loop boundvar "b".
+Boundvars: "a", "b", "b", "d".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+            text="d", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b,c), b in @*) {}
+mlr: duplicate for-loop boundvar "b".
+Boundvars: "a", "b", "c", "b".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+                text="c", type=non_sigil_name.
+            text="b", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
+mlr -n put -v for ((a,b,c), c in @*) {}
+mlr: duplicate for-loop boundvar "c".
+Boundvars: "a", "b", "c", "c".
+AST ROOT:
+text="list", type=statement_list:
+    text="for", type=for_oosvar:
+        text="key_and_value_variables", type=for_variables:
+            text="key_variables", type=for_variables:
+                text="a", type=non_sigil_name.
+                text="b", type=non_sigil_name.
+                text="c", type=non_sigil_name.
+            text="c", type=non_sigil_name.
+        text="empty_keylist", type=oosvar_keylist:
+        text="list", type=statement_list:
+
 
 ================================================================
 DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
