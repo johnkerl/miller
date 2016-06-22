@@ -93,7 +93,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 				if (nf > 0)
 					fputs(ofs, output_stream);
 				pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
-					pstate->orslen, pstate->ofslen, pe->quote_flags);
+					pstate->orslen, pstate->ofslen, 0);
 				nf++;
 			}
 			fputs(ors, output_stream);

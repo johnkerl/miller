@@ -303,16 +303,16 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
-						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, FIELD_QUOTED_ON_INPUT);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
-						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, FIELD_QUOTED_ON_INPUT);
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
-						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, FIELD_QUOTED_ON_INPUT);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -348,7 +348,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rsl
 		char free_flags = pd->free_flag;
 		char* key = make_nidx_key(idx, &free_flags);
 		// Transfer pointer-free responsibility from the rslls to the lrec object
-		lrec_put(prec, key, pd->value, free_flags);
+		lrec_put_ext(prec, key, pd->value, free_flags, pd->quote_flag);
 		pd->free_flag = 0;
 	}
 	return prec;
@@ -369,7 +369,7 @@ static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rsll
 	rsllse_t* pd = pdata_fields->phead;
 	for ( ; ph != NULL && pd != NULL; ph = ph->pnext, pd = pd->pnext) {
 		// Transfer pointer-free responsibility from the rslls to the lrec object
-		lrec_put(prec, ph->value, pd->value, pd->free_flag);
+		lrec_put_ext(prec, ph->value, pd->value, pd->free_flag, pd->quote_flag);
 		pd->free_flag = 0;
 	}
 	return prec;
