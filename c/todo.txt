@@ -6,37 +6,39 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! next release notes: n.b. new/modified cookbook entries
-! neaten-valgrind @ cookbook
-! headerless csv (i/o) choices -> cookbook
-! quantiles example to cookbook
-* missing-timestamp check @ cookbook
-! uniq-assert on boundvars w/in each for
-  - expect-fail UTs
+* cookbook:
+  - neaten-valgrind
+  - headerless csv (i/o) choices
+  - quantiles example
+  - missing-timestamp check
+  - two-pass linreg example w/ oosvars? @@vars?!?
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
 
+! call for use-cases? (go first.)
+
 ! go through lmag article & clarify all unclears
+
+* interpolated-percentile option
 
 * 4.3.0:
   - --quote-original; xref to possible sticky/derived feature (or not).
   - strptime message
   - uniq-assert on boundvars w/in each for
+  - new/modified cookbook entries
 
 ----------------------------------------------------------------
-* call for use-cases? (go first.)
-
 ? double-quote-aware (non-lite) nidx & dkvp options?
 
 ? comma-number -- using locale?
-* interpolated percentiles
 
 ? triple-for with boundvars?
 ? user-defined functions?
 ? localvars w/ decl syntax?
 
 ! multiple -f w/ append so linker is cat
+* MLRPATH
 
 ----------------------------------------------------------------
 ? narrative/slides doc ...
