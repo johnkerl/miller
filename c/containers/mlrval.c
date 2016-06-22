@@ -565,8 +565,8 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
 	int written_length = strftime(string, NZBUFLEN, format, ptm);
 	if (written_length > NZBUFLEN || written_length == 0) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		fprintf(stderr, "%s: could not strftime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 
@@ -592,8 +592,8 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 		memset(&tm, 0, sizeof(tm));
 		char* retval = strptime(time, format, &tm);
 		if (retval == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+			fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+				MLR_GLOBALS.bargv0, time, format, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 		if (*retval != 0) { // Parseable input followed by non-parseable
